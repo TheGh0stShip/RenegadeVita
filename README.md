@@ -62,7 +62,7 @@ For an internal candidate label, use only a `A<major>.<minor>-dev<build>`
 label, for example:
 
 ```bash
-RENEGADE_CANDIDATE_LABEL=A3.5-dev4 bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev5 bash ./tools/build.sh
 ```
 
 This creates artifacts under the managed `dist/` directory and never deploys

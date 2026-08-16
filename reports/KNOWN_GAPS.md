@@ -106,3 +106,10 @@ not be inferred as complete from host-only closure.
   is an emulator-automation gap, not a reason to delay physical Vita testing.
 - No campaign slice, playable combat claim, AI encounter, mission scripting,
   readable HUD, or essential feedback claim is made before A4.0.
+- The returned A3.5-dev4 static-world screenshot observed invisible NPC/player
+  bodies, an incorrect first-person weapon, upside-down doors, and an inverted
+  static overhead-camera vertical axis. Because its executable identity and
+  runtime evidence were contaminated, these are retained as visual/input
+  investigation leads, not physical validation of a corrected candidate. Do
+  not change original Combat player, NPC, weapon, or door behavior based on
+  that capture alone; collect a phase-labelled interactive capture first.

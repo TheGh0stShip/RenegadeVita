@@ -3,6 +3,7 @@
 #include "a30_vita_runtime.h"
 #include "a30_world_runtime.h"
 #include "a31_vita_runtime.h"
+#include "renegade_build_identity.h"
 #include "vita_platform.h"
 #include "ww3d_vita_renderer.h"
 #include "wwbitpack_selftest.h"
@@ -29,7 +30,8 @@ void Print_Startup(const VitaBootstrapStatus &status,
 {
 	psvDebugScreenClear(0x102030);
 	psvDebugScreenSetFgColor(0xFFFFFF);
-	psvDebugScreenPrintf("Renegade Vita A3.5-dev1\nCorrectness and Diagnostics Development Build\n\n");
+	psvDebugScreenPrintf("%s\nCorrectness and Diagnostics Development Build\n\n",
+		RENEGADE_BUILD_DISPLAY_LABEL);
 	psvDebugScreenPrintf("A2.0 regression: %s (%u/19)\n",
 		Vita_Pass_Fail(bitpack.passed), bitpack.checks);
 	psvDebugScreenPrintf("Framebuffer:     %s (%08X)\n",
@@ -58,7 +60,7 @@ void Print_Startup(const VitaBootstrapStatus &status,
 	psvDebugScreenPrintf("  CROSS/CIRCLE/L/R = original action mappings\n");
 	psvDebugScreenPrintf("  START        = clean exit\n\n");
 	psvDebugScreenPrintf("START exits cleanly after original runtime begins\n");
-	psvDebugScreenPrintf("Log: ux0:data/renegade/user/logs/a35-dev1-runtime.log\n");
+	psvDebugScreenPrintf("Log: %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);
 }
 
 void A30_World_Stage_Breadcrumb(void *, const char *stage)
@@ -79,7 +81,9 @@ int main()
 	VitaBootstrapStatus status = Vita_Initialize_Filesystem();
 	const int log_reset_result = A30_Vita_Log_Reset();
 	status.log_result = log_reset_result;
-	A30_Vita_Log("Renegade Vita A3.5-dev1 correctness and diagnostics development build\n");
+	A30_Vita_Log("Runtime identity: candidate=%s display=%s path=%s\n",
+		RENEGADE_BUILD_CANDIDATE_LABEL, RENEGADE_BUILD_DISPLAY_LABEL,
+		RENEGADE_BUILD_RUNTIME_LOG_PATH);
 	const A21FilesystemSelfTestResult filesystem =
 		Run_A21_Filesystem_Self_Test(kVitaRoots);
 	const bool a20_passed = screen_result >= 0 && bitpack.passed &&
@@ -197,6 +201,8 @@ int main()
 	A30_Vita_Log("A3.1 breadcrumb: application audio teardown singleton=%p\n",
 		static_cast<void *>(WWAudioClass::Get_Instance()));
 	A30_Vita_Log("A3.1 breadcrumb: clean teardown complete\n");
+	A30_Vita_Log("[LIFECYCLE] END status=clean candidate=%s\n",
+		RENEGADE_BUILD_CANDIDATE_LABEL);
 
 	/* The native app reaches this only after START or a durable diagnosed
 	** failure. Never touch or deploy retail data during shutdown. */

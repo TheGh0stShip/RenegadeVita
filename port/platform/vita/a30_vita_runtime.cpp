@@ -1,6 +1,7 @@
 #include "a30_vita_runtime.h"
 
 #include "a31_capture_telemetry.h"
+#include "renegade_build_identity.h"
 
 #include "camera.h"
 #include "matrix3d.h"
@@ -21,10 +22,8 @@
 
 namespace {
 
-const char *const kA30RuntimeLog =
-	"ux0:data/renegade/user/logs/a35-dev1-runtime.log";
-const char *const kA31CaptureRoot =
-	"ux0:data/renegade/user/captures";
+const char *const kA30RuntimeLog = RENEGADE_BUILD_RUNTIME_LOG_PATH;
+const char *const kA31CaptureRoot = RENEGADE_BUILD_CAPTURE_ROOT;
 const size_t kResolvedFrameBytes =
 	static_cast<size_t>(RenegadeVitaRenderer::DISPLAY_WIDTH) *
 	static_cast<size_t>(RenegadeVitaRenderer::DISPLAY_HEIGHT) * 4U;
@@ -262,14 +261,20 @@ A31RendererTelemetry Frame_Renderer_Telemetry(
 
 A31StateSnapshot Make_State_Snapshot(const A30WorldRuntimeFingerprint &world,
 	const A31FrameTelemetry *frame, const A31CameraTelemetry *camera,
-	const char *reason, uint64_t monotonic_us)
+	const char *reason, const char *phase, uint64_t monotonic_us)
 {
 	A31StateSnapshot state = {};
 	state.schema_version = A31_CAPTURE_SCHEMA_VERSION;
-	snprintf(state.milestone, sizeof(state.milestone), "A3.1");
-	snprintf(state.build_label, sizeof(state.build_label),
-		"Renegade Vita A3.1 development");
+	snprintf(state.milestone, sizeof(state.milestone), "%s",
+		RENEGADE_BUILD_CANDIDATE_LABEL);
+	snprintf(state.build_label, sizeof(state.build_label), "%s",
+		RENEGADE_BUILD_DISPLAY_LABEL);
+	snprintf(state.capture_overlay_label, sizeof(state.capture_overlay_label), "%s",
+		RENEGADE_BUILD_CAPTURE_OVERLAY);
+	snprintf(state.runtime_log_path, sizeof(state.runtime_log_path), "%s",
+		RENEGADE_BUILD_RUNTIME_LOG_PATH);
 	snprintf(state.reason, sizeof(state.reason), "%s", reason);
+	snprintf(state.phase, sizeof(state.phase), "%s", phase);
 	snprintf(state.benchmark_route, sizeof(state.benchmark_route),
 		"M00-fixed-camera-v1");
 	state.capture_monotonic_us = monotonic_us;
@@ -294,6 +299,7 @@ A31StateSnapshot Make_State_Snapshot(const A30WorldRuntimeFingerprint &world,
 }
 
 A31CaptureBundleResult Write_Bundle(const char *label, const char *reason,
+	const char *phase,
 	const uint8_t *pixels, const A31FrameHistory &history,
 	const A30WorldRuntimeFingerprint &world, const A31FrameTelemetry *frame,
 	const A31CameraTelemetry *camera, uint64_t monotonic_us,
@@ -306,7 +312,7 @@ A31CaptureBundleResult Write_Bundle(const char *label, const char *reason,
 	input.framebuffer_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
 	input.framebuffer_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 	input.write_annotated_screenshot = pixels != NULL;
-	input.state = Make_State_Snapshot(world, frame, camera, reason,
+	input.state = Make_State_Snapshot(world, frame, camera, reason, phase,
 		monotonic_us);
 	input.state.capture_stall_us = capture_readback_us;
 	input.history = &history;
@@ -318,13 +324,16 @@ A31CaptureBundleResult Write_Bundle(const char *label, const char *reason,
 int A30_Vita_Log_Reset()
 {
 	const SceUID file = sceIoOpen(kA30RuntimeLog,
-		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0666);
+		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
 	if (file < 0) {
 		return file;
 	}
-	const char header[] =
-		"Renegade Vita A3.5-dev1 correctness and diagnostics development build\n";
-	int result = sceIoWrite(file, header, sizeof(header) - 1U);
+	char header[320];
+	const int header_count = snprintf(header, sizeof(header),
+		"[LIFECYCLE] START status=begin mode=append candidate=%s log_path=%s\n",
+		RENEGADE_BUILD_CANDIDATE_LABEL, RENEGADE_BUILD_RUNTIME_LOG_PATH);
+	int result = header_count > 0 ? sceIoWrite(file, header,
+		static_cast<unsigned>(header_count)) : -1;
 	if (result >= 0) {
 		result = sceIoSyncByFd(file, 0);
 	}
@@ -441,6 +450,7 @@ bool A30_Vita_Render_Loaded_World(void *context, PhysicsSceneClass &scene,
 	uint64_t input_action_count = 0U;
 	A31FrameHistory frame_history;
 	A31M00BenchmarkRoute benchmark;
+	bool first_static_capture_pending = true;
 	A31MemoryTelemetry sampled_memory = {};
 	A31MemoryTelemetry memory_low_water = {};
 	/* The accepted A3.0 backend does not upload or bind texture resources yet.
@@ -478,7 +488,7 @@ bool A30_Vita_Render_Loaded_World(void *context, PhysicsSceneClass &scene,
 			RenegadeVitaRenderer::Get_Statistics();
 		const uint64_t input_start_us = sceKernelGetProcessTimeWide();
 		SceCtrlData controller = {};
-		bool capture_requested = false;
+		bool capture_requested = first_static_capture_pending;
 		if (sceCtrlPeekBufferPositive(0, &controller, 1) > 0) {
 			if ((controller.buttons & SCE_CTRL_START) != 0U) {
 				result->clean_exit_requested = true;
@@ -633,12 +643,14 @@ bool A30_Vita_Render_Loaded_World(void *context, PhysicsSceneClass &scene,
 
 		if (capture_requested) {
 			char label[96];
-			const char *reason = benchmark.Is_Active() ?
-				"benchmark-capture" : "select-capture";
+			const char *reason = first_static_capture_pending ?
+				"first-static-world-frame" : (benchmark.Is_Active() ?
+					"benchmark-capture" : "select-capture");
 			snprintf(label, sizeof(label), "%s-p%u-f%llu-t%llu", reason,
 				frame.benchmark_point, (unsigned long long)frame.frame_index,
 				(unsigned long long)frame.monotonic_us);
 			const A31CaptureBundleResult capture = Write_Bundle(label, reason,
+				"static-world",
 				capture_readback_ok ? resolved_frame : NULL, frame_history, world,
 				&frame, &camera_state, frame.monotonic_us,
 				frame.stages.capture_readback_us);
@@ -646,13 +658,18 @@ bool A30_Vita_Render_Loaded_World(void *context, PhysicsSceneClass &scene,
 				capture.write_stall_us;
 			excluded_capture_us += capture_stall;
 			previous_us = sceKernelGetProcessTimeWide();
+			if (first_static_capture_pending && capture.passed) {
+				first_static_capture_pending = false;
+			}
 			A30_Vita_Log(
-				"A3.1 capture: %s path=%s screenshot/annotated/state/csv/summary=%d/%d/%d/%d/%d stall_us=%llu excluded_from_timing=1 first_error=%s\n",
-				capture.passed ? "PASS" : "FAIL", capture.bundle_path,
+				"Capture: %s candidate=%s phase=static-world reason=%s path=%s screenshot/annotated/state/csv/summary/failure_marker=%d/%d/%d/%d/%d/%d error_code=%d stall_us=%llu excluded_from_timing=1 first_error=%s\n",
+				capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
+				reason, capture.bundle_path,
 				capture.screenshot_written ? 1 : 0,
 				capture.annotated_screenshot_written ? 1 : 0,
 				capture.state_written ? 1 : 0, capture.history_written ? 1 : 0,
 				capture.summary_written ? 1 : 0,
+				capture.failure_marker_written ? 1 : 0, capture.first_error_code,
 				(unsigned long long)capture_stall,
 				capture.first_error[0] != 0 ? capture.first_error : "none");
 		}
@@ -664,7 +681,7 @@ bool A30_Vita_Render_Loaded_World(void *context, PhysicsSceneClass &scene,
 			snprintf(label, sizeof(label), "benchmark-complete-f%u-t%llu",
 				local_frames, (unsigned long long)sceKernelGetProcessTimeWide());
 			const A31CaptureBundleResult completion = Write_Bundle(label,
-				"benchmark-complete", NULL, frame_history, world, &frame,
+				"benchmark-complete", "static-world", NULL, frame_history, world, &frame,
 				&camera_state, sceKernelGetProcessTimeWide(), 0U);
 			excluded_capture_us += completion.write_stall_us;
 			previous_us = sceKernelGetProcessTimeWide();
@@ -683,12 +700,14 @@ bool A30_Vita_Render_Loaded_World(void *context, PhysicsSceneClass &scene,
 	snprintf(flush_label, sizeof(flush_label), "%s-f%u-t%llu", flush_reason,
 		local_frames, (unsigned long long)flush_us);
 	const A31CaptureBundleResult flush = Write_Bundle(flush_label, flush_reason,
-		NULL, frame_history, world, last_frame, &camera_state, flush_us, 0U);
+		"static-world", NULL, frame_history, world, last_frame, &camera_state, flush_us, 0U);
 	A30_Vita_Log(
-		"A3.1 telemetry flush: %s reason=%s path=%s state/csv/summary=%d/%d/%d frames=%u stall_us=%llu first_error=%s\n",
-		flush.passed ? "PASS" : "FAIL", flush_reason, flush.bundle_path,
+		"Capture flush: %s candidate=%s phase=static-world reason=%s path=%s state/csv/summary/failure_marker=%d/%d/%d/%d error_code=%d frames=%u stall_us=%llu first_error=%s\n",
+		flush.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
+		flush_reason, flush.bundle_path,
 		flush.state_written ? 1 : 0, flush.history_written ? 1 : 0,
 		flush.summary_written ? 1 : 0,
+		flush.failure_marker_written ? 1 : 0, flush.first_error_code,
 		static_cast<unsigned>(frame_history.Count()),
 		(unsigned long long)flush.write_stall_us,
 		flush.first_error[0] != 0 ? flush.first_error : "none");

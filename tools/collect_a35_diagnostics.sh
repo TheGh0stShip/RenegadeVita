@@ -30,7 +30,8 @@ for rv_name in \
 	"$rv_candidate"-BUILD_REPORT.txt "$rv_candidate"-HOST-VALIDATION.log \
 	"$rv_candidate"-COMPILER_LOG.txt "$rv_candidate"-EXPECTED-RUNTIME-LOG.txt \
 	"$rv_candidate"-SOURCE_INTEGRATION_REPORT.json "$rv_candidate"-HARDWARE-CANDIDATE.txt \
-	"$rv_candidate"-MILESTONE-GATE.md "$rv_candidate"-CRASH-SYMBOLICATION.txt; do
+	"$rv_candidate"-MILESTONE-GATE.md "$rv_candidate"-CRASH-SYMBOLICATION.txt \
+	"$rv_candidate"-IDENTITY-VERIFICATION.json; do
 	test -f "$rv_dist/$rv_name" && cp -- "$rv_dist/$rv_name" "$rv_stage/candidate/"
 done
 

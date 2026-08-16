@@ -1,5 +1,12 @@
 # Architectural decisions
 
+- **2026-08-16 — Candidate identity is a compiled and post-link gate.** One
+  generated build-identity header owns executable, runtime-log, capture, and
+  report identity. Every hardware candidate uses a fresh ARM build directory;
+  the final ELF must contain the intended identities and no prohibited stale
+  identities, and packaged `eboot.bin` must hash-identically match the verified
+  SELF. Report/file renaming is never sufficient evidence.
+
 - **2026-08-15 — A3.1.4 frozen.** It is the visible original interactive M00
   baseline, not a playable-game milestone. Raw evidence is immutable.
 - **2026-08-15 — Input repair location.** Vita byte axes map centrally to

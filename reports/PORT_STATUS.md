@@ -3,9 +3,10 @@
 Updated: 2026-08-16. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **v3.6 host resource/memory infrastructure**, while the
-**A3.5-dev2 correctness candidate awaits physical Vita acceptance**. A3.2-dev1
-remains frozen failed evidence, not the active milestone.
+Current work: **A3.5-dev5 identity/evidence physical validation**, while the
+v3.6 host resource/memory work remains subordinate to that gate. A3.2-dev1
+remains frozen failed evidence, A3.5-dev4 is invalid identity evidence, and
+neither is the active candidate.
 
 Recent host diagnostics cover post-run evidence, resource-manifest deltas,
 cache consistency, warning trends, and PSP2 parser fixtures. Their focused
@@ -26,19 +27,22 @@ The returned dump and exact matching symbols establish a release-blocking
 stuck fire/crouch, reversed axes, perspective warp, muzzle transparency error,
 and non-clean exit. Its evidence remains immutable and must not be overwritten.
 
-### A3.5-dev2 — host/ARM/VPK candidate; physical acceptance pending
+### A3.5-dev5 — coherent host/ARM/VPK candidate; physical acceptance pending
 
-Host contracts now pass for original DirectInput state transitions (10/10),
-controller normalization (22/22), and ShaderClass opaque/cutout/alpha/additive
-state translation (4/4). Deterministic staging repairs the weapon-style table
-and has 101 explicit patches; the current original ARM source closure selects
-425 translation units and links as ARM EABI5. The GPU-preserved homogeneous
-mesh path and per-material alpha/blend/depth/cull mapping compile, but are not
-yet physically validated. The host-validated candidate is
-`../../dist/RenegadeVita-A3.5-dev2.vpk` with SHA-256
-`8ac77116c19d9eaf5093634ad9b5ff888ce9d42dcd42f34727ea52b9603a8b53` and
-matching `A3.5-dev2-BUILD-DIAGNOSTICS-20260816-124825.zip`. This is not an
-A3.5 milestone claim.
+The fresh canonical build passed the complete host gate, deterministic
+restaging, focused observer contract (46/46), input normalization (22/22),
+capture/evidence contract (24/24), renderer state (4/4), renderer lifecycle
+(11/11), ASan, LeakSanitizer, and targeted UBSan routes. The final ARM closure
+contains 424 original and 21 port translation units and completed 456 Ninja
+build actions. A mandatory post-link verifier passed all 15 identity and
+lineage checks against the exact final ELF, SELF, and VPK: the intended dev5
+display/capture/log identities are present, all prohibited dev1/A3.1 strings
+are absent, and packaged `eboot.bin` is byte-identical to the verified SELF.
+The physical candidate is `RenegadeVita-A3.5-dev5.vpk`, SHA-256
+`e69919b557b8b2a807ac6437310d4c62072635ce1a493e63eee604a0c935287c`.
+This is not an A3.5 milestone acceptance claim; the player/NPC body, weapon,
+door orientation, and static overhead-camera observations remain physically
+unresolved.
 
 ### v3.6 — bounded host foundation in progress
 

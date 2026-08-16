@@ -16,6 +16,14 @@ bool Exists(const char *directory, const char *name)
 	return stat(path, &status) == 0 && status.st_size > 0;
 }
 
+bool Root_Exists(const char *directory, const char *name)
+{
+	char path[512];
+	snprintf(path, sizeof(path), "%s/%s", directory, name);
+	struct stat status = {};
+	return stat(path, &status) == 0 && status.st_size > 0;
+}
+
 bool Summary_Contains(const char *directory, const char *needle)
 {
 	char path[512];
@@ -33,6 +41,20 @@ bool State_Contains(const char *directory, const char *needle)
 {
 	char path[512];
 	snprintf(path, sizeof(path), "%s/bundle/state.json", directory);
+	FILE *file = fopen(path, "rb");
+	if (file == NULL) return false;
+	char buffer[4096] = {};
+	const size_t bytes = fread(buffer, 1U, sizeof(buffer) - 1U, file);
+	fclose(file);
+	buffer[bytes] = 0;
+	return strstr(buffer, needle) != NULL;
+}
+
+bool Bundle_File_Contains(const char *directory, const char *bundle,
+	const char *name, const char *needle)
+{
+	char path[512];
+	snprintf(path, sizeof(path), "%s/%s/%s", directory, bundle, name);
 	FILE *file = fopen(path, "rb");
 	if (file == NULL) return false;
 	char buffer[4096] = {};
@@ -92,8 +114,15 @@ int main()
 	input.framebuffer_height = 4U;
 	input.write_annotated_screenshot = true;
 	input.state.schema_version = A31_CAPTURE_SCHEMA_VERSION;
-	snprintf(input.state.milestone, sizeof(input.state.milestone), "A3.1");
+	snprintf(input.state.milestone, sizeof(input.state.milestone), "A3.5-host");
+	snprintf(input.state.build_label, sizeof(input.state.build_label),
+		"Renegade Vita A3.5-host");
+	snprintf(input.state.capture_overlay_label, sizeof(input.state.capture_overlay_label),
+		"A3.5-host CAPTURE");
+	snprintf(input.state.runtime_log_path, sizeof(input.state.runtime_log_path),
+		"ux0:data/renegade/user/logs/a35-host-runtime.log");
 	snprintf(input.state.reason, sizeof(input.state.reason), "host-selftest");
+	snprintf(input.state.phase, sizeof(input.state.phase), "host-fixture");
 	snprintf(input.state.benchmark_route, sizeof(input.state.benchmark_route),
 		"M00-fixed-camera-v1");
 	input.state.capture_frame = 2U;
@@ -106,6 +135,15 @@ int main()
 	input.state.memory.vitagl_ram_free_low_water = 80U;
 	input.history = &history;
 	const A31CaptureBundleResult result = A31_Write_Capture_Bundle(input);
+	if (!result.passed) {
+		fprintf(stderr,
+			"capture result: screenshot/annotated/state/history/summary/marker=%d/%d/%d/%d/%d/%d error=%d:%s\n",
+			result.screenshot_written ? 1 : 0,
+			result.annotated_screenshot_written ? 1 : 0,
+			result.state_written ? 1 : 0, result.history_written ? 1 : 0,
+			result.summary_written ? 1 : 0, result.failure_marker_written ? 1 : 0,
+			result.first_error_code, result.first_error);
+	}
 	Check(result.passed, "correlated capture bundle", checks, failures);
 	Check(Exists(directory, "frame.bmp"), "clean screenshot", checks, failures);
 	Check(Exists(directory, "frame-annotated.bmp"), "annotated screenshot", checks, failures);
@@ -116,9 +154,58 @@ int main()
 		"summary percentiles", checks, failures);
 	Check(Summary_Contains(directory, "sampled low-water"),
 		"summary memory low-water", checks, failures);
-	Check(State_Contains(directory, "\"schema_version\":2") &&
+	Check(State_Contains(directory, "\"schema_version\":3") &&
 		State_Contains(directory, "\"system_user_free_low_water\":100"),
 		"schema two low-water state", checks, failures);
+	Check(State_Contains(directory, "\"phase\":\"host-fixture\"") &&
+		State_Contains(directory, "\"runtime_log_path\":\"ux0:data/renegade/user/logs/a35-host-runtime.log\""),
+		"capture identity and phase state", checks, failures);
+
+	A31CaptureBundleInput interactive_input = input;
+	interactive_input.bundle_label = "interactive-fixture";
+	snprintf(interactive_input.state.reason, sizeof(interactive_input.state.reason),
+		"first-interactive-player-frame");
+	snprintf(interactive_input.state.phase, sizeof(interactive_input.state.phase),
+		"interactive-player-owned");
+	interactive_input.state.player.present = true;
+	interactive_input.state.player.object_id = 73U;
+	interactive_input.state.camera.player_owned = true;
+	interactive_input.state.game_update_count = 1U;
+	interactive_input.state.physics_update_count = 1U;
+	interactive_input.state.input_action_count = 1U;
+	const A31CaptureBundleResult interactive_result =
+		A31_Write_Capture_Bundle(interactive_input);
+	Check(interactive_result.passed, "simulated interactive capture bundle", checks, failures);
+	Check(Bundle_File_Contains(directory, "interactive-fixture", "state.json",
+		"\"phase\":\"interactive-player-owned\"") &&
+		Bundle_File_Contains(directory, "interactive-fixture", "state.json",
+			"\"present\":true") &&
+		Bundle_File_Contains(directory, "interactive-fixture", "frame-annotated.bmp", "BM"),
+		"simulated interactive player capture metadata and BMP", checks, failures);
+
+	char overlay[256] = {};
+	A31StateSnapshot overlay_state = input.state;
+	overlay_state.capture_frame = 0U;
+	overlay_state.renderer.draw_calls = 0U;
+	overlay_state.renderer.triangles = 0U;
+	Check(A31_Format_Capture_Overlay(overlay, sizeof(overlay), overlay_state, history) &&
+		strstr(overlay, "FRAME 0") != NULL && strstr(overlay, "DRAW 0") != NULL,
+		"overlay formats zero telemetry", checks, failures);
+	overlay_state.capture_frame = UINT64_MAX;
+	overlay_state.renderer.draw_calls = 634U;
+	overlay_state.renderer.triangles = UINT64_MAX;
+	Check(A31_Format_Capture_Overlay(overlay, sizeof(overlay), overlay_state, history) &&
+		strstr(overlay, "DRAW 634") != NULL &&
+		strstr(overlay, "TRI 18446744073709551615") != NULL,
+		"overlay formats ordinary and maximum fixed-width telemetry", checks, failures);
+
+	A31CaptureBundleInput failed_input = input;
+	failed_input.bundle_label = "missing-parent/bundle";
+	const A31CaptureBundleResult failed_bundle = A31_Write_Capture_Bundle(failed_input);
+	Check(!failed_bundle.passed && failed_bundle.failure_marker_written,
+		"capture failure writes a marker outside incomplete bundle", checks, failures);
+	Check(Root_Exists(directory, "capture-write-failure.txt"),
+		"capture failure marker is nonempty", checks, failures);
 
 	A31M00BenchmarkRoute route;
 	route.Start(10U);

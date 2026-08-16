@@ -137,7 +137,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", required=True)
     parser.add_argument("--output", required=True)
-    parser.add_argument("--milestone", default="A3.5-dev1")
+    parser.add_argument("--milestone", default="A3.5-dev5")
     args = parser.parse_args()
 
     root = pathlib.Path(args.root).resolve()

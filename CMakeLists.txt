@@ -15,11 +15,15 @@ project(RenegadeVitaA31 VERSION 3.5.1 LANGUAGES C CXX)
 # This is provenance for a hardware candidate, not a public milestone claim.
 # Keep the artifact identity configurable so a newer candidate can never
 # overwrite the symbols and diagnostics that belong to an earlier one.
-set(RENEGADE_CANDIDATE_LABEL "A3.5-dev1" CACHE STRING
+set(RENEGADE_CANDIDATE_LABEL "A3.5-dev5" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
 if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
 endif()
+string(TOLOWER "${RENEGADE_CANDIDATE_LABEL}" RENEGADE_CANDIDATE_STEM)
+string(REPLACE "." "" RENEGADE_CANDIDATE_STEM "${RENEGADE_CANDIDATE_STEM}")
+set(RENEGADE_RUNTIME_LOG_PATH
+  "ux0:data/renegade/user/logs/${RENEGADE_CANDIDATE_STEM}-runtime.log")
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/RenegadeCcache.cmake")
 
@@ -40,6 +44,12 @@ set(RENEGADE_UPSTREAM "${RENEGADE_ROOT}/upstream/CnC_Renegade")
 set(RENEGADE_STAGE "${RENEGADE_ROOT}/staging")
 set(RENEGADE_COMPAT "${RENEGADE_ROOT}/port/compatibility/include")
 set(VITASDK_DEBUG_SCREEN "${VITASDK}/share/gcc-arm-vita-eabi/samples/common")
+set(RENEGADE_GENERATED_INCLUDE "${CMAKE_CURRENT_BINARY_DIR}/generated")
+file(MAKE_DIRECTORY "${RENEGADE_GENERATED_INCLUDE}")
+configure_file(
+  "${RENEGADE_ROOT}/port/platform/vita/build_identity.h.in"
+  "${RENEGADE_GENERATED_INCLUDE}/renegade_build_identity.h"
+  @ONLY)
 include("${RENEGADE_ROOT}/cmake/A31OriginalSources.cmake")
 
 # The Vita candidate uses the same direct original replication/session closure
@@ -125,6 +135,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+  ${RENEGADE_GENERATED_INCLUDE}
   ${RENEGADE_ROOT}/port/compatibility/include
 	${RENEGADE_ROOT}/port/developer
   ${RENEGADE_ROOT}/port/audio/miles

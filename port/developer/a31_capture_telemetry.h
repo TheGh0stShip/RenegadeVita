@@ -4,9 +4,9 @@
 #include <stdint.h>
 
 enum : uint32_t {
-	/* Schema v2 adds sampled free-memory low-water marks. They are deliberately
-	** sampled values, not allocator ownership accounting. */
-	A31_CAPTURE_SCHEMA_VERSION = 2U,
+	/* Schema v3 adds canonical candidate/log identity and explicit phase labels.
+	** Memory values remain sampled rather than ownership accounting. */
+	A31_CAPTURE_SCHEMA_VERSION = 3U,
 	A31_FRAME_HISTORY_CAPACITY = 240U,
 	A31_CAPTURE_PATH_CAPACITY = 320U
 };
@@ -163,7 +163,10 @@ struct A31StateSnapshot
 	uint32_t schema_version;
 	char milestone[16];
 	char build_label[64];
+	char capture_overlay_label[64];
+	char runtime_log_path[A31_CAPTURE_PATH_CAPACITY];
 	char reason[48];
+	char phase[48];
 	char benchmark_route[48];
 	uint64_t capture_monotonic_us;
 	uint64_t capture_frame;
@@ -217,6 +220,8 @@ struct A31CaptureBundleResult
 	bool state_written;
 	bool history_written;
 	bool summary_written;
+	bool failure_marker_written;
+	int first_error_code;
 	uint64_t write_stall_us;
 	char bundle_path[A31_CAPTURE_PATH_CAPACITY];
 	char first_error[128];
@@ -224,6 +229,12 @@ struct A31CaptureBundleResult
 
 A31CaptureBundleResult A31_Write_Capture_Bundle(
 	const A31CaptureBundleInput &input);
+
+/* Formats the exact annotation used in captured BMPs.  Keeping this bounded,
+ * fixed-width interface lets host tests cover zero, ordinary, and UINT64_MAX
+ * telemetry without depending on a framebuffer. */
+bool A31_Format_Capture_Overlay(char *output, size_t capacity,
+	const A31StateSnapshot &state, const A31FrameHistory &history);
 
 struct A31BenchmarkPoint
 {

@@ -16,16 +16,16 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev2}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev5}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
 case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
-rv_build="$rv_root/build/vita-${rv_candidate_stem}-candidate"
+rv_timestamp=$(date +%Y%m%d-%H%M%S)
+rv_build="$rv_root/build/vita-${rv_candidate_stem}-candidate-${rv_timestamp}"
 rv_host_output="$rv_root/build/${rv_candidate_label}-HOST-VALIDATION.log"
 rv_vitasdk=${VITASDK:-/usr/local/vitasdk}
 rv_revision=3e00c3a1b97381bb28be89a35b856375e0629a08
-rv_timestamp=$(date +%Y%m%d-%H%M%S)
 rv_log="$rv_logs/${rv_candidate_stem}-$rv_timestamp-build.log"
 rv_runtime_log="ux0:data/renegade/user/logs/${rv_candidate_stem}-runtime.log"
 
@@ -71,7 +71,7 @@ echo "Renegade Vita $rv_candidate_label correctness, diagnostics, and interactiv
 echo "Workspace: $rv_root"
 echo "Log: $rv_log"
 
-for rv_command in cmake ninja python3 git patch unzip zip sha256sum grep sed find tee wc ccache; do
+for rv_command in cmake ninja python3 git patch unzip zip sha256sum grep find tee wc ccache; do
 	require_command "$rv_command"
 done
 for rv_sdk_path in \
@@ -140,7 +140,7 @@ require_host_line "A3.1 hardware-equivalent interactive ASan PASS: two in-proces
 require_host_line "a31.interactive_first_frame_geometry=true"
 require_host_line "a31.interactive_first_frame_rejected=0"
 require_host_line "a31.interactive_first_frame_unsupported=0"
-require_host_line "A3.1 capture telemetry host self-test: PASS (17 checks, 0 failures)"
+require_host_line "A3.1 capture telemetry host self-test: PASS (24 checks, 0 failures)"
 require_host_line "A3.2 Vita controller axis-contract: PASS (22 checks, 0 failures)"
 require_host_line "A3.5 Vita button-state contract: PASS (10 checks, 0 failures)"
 require_host_line "A3.5 Vita ShaderClass render-state contract: 4 checks, 0 failures"
@@ -167,6 +167,7 @@ require_host_line "world.render.geometry_checksum=34FFAD42"
 require_host_line "world.render.unsupported_submissions=0"
 require_host_line "A3.0 original M00 world runtime: PASS"
 echo "Host semantic fingerprints: PASS"
+python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_identity
 
 echo "Clean-restaging original source pools with the deterministic patch set..."
 bash "$rv_root/tools/stage_sources.sh"
@@ -203,14 +204,17 @@ ccache --show-stats
 
 rv_vpk="$rv_build/RenegadeVita-$rv_candidate_label.vpk"
 rv_elf="$rv_build/RenegadeVitaA31"
+rv_self="$rv_build/eboot.bin"
 rv_map="$rv_build/RenegadeVita-$rv_candidate_label.map"
 rv_elf_header="$rv_build/RenegadeVita-$rv_candidate_label.elf-header.txt"
 rv_symbols="$rv_build/RenegadeVita-$rv_candidate_label.symbols.txt"
 rv_disassembly="$rv_build/RenegadeVita-$rv_candidate_label.disassembly.txt"
 rv_vpk_contents="$rv_build/RenegadeVita-$rv_candidate_label.vpk-contents.txt"
 rv_build_report="$rv_build/BUILD_REPORT.txt"
+rv_identity_report="$rv_build/$rv_candidate_label-IDENTITY-VERIFICATION.json"
 test -s "$rv_vpk"
 test -s "$rv_elf"
+test -s "$rv_self"
 test -s "$rv_map"
 
 echo "Validating ARM ELF, original A3 runtime symbols, and VPK contents..."
@@ -250,6 +254,11 @@ if grep -Eiq '(^|/)(retail|data)(/|$)|(^|/)(always[^/]*\.(dat|dbs)|[^/]+\.(mix|w
 	echo "Retail or custom asset content was unexpectedly packaged in the VPK." >&2
 	exit 9
 fi
+python3 "$rv_root/tools/verify_candidate_identity.py" \
+	--elf "$rv_elf" --self "$rv_self" --vpk "$rv_vpk" \
+	--candidate "$rv_candidate_label" --runtime-log "$rv_runtime_log" \
+	--output "$rv_identity_report"
+grep -Fq '"status": "PASS"' "$rv_identity_report"
 test -z "$(git -C "$rv_upstream" status --porcelain)"
 
 {
@@ -283,7 +292,15 @@ cp -- "$rv_elf_header" "$rv_dist/RenegadeVita-$rv_candidate_label.elf-header.txt
 cp -- "$rv_symbols" "$rv_dist/RenegadeVita-$rv_candidate_label.symbols.txt"
 cp -- "$rv_vpk_contents" "$rv_dist/RenegadeVita-$rv_candidate_label.vpk-contents.txt"
 cp -- "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" "$rv_dist/$rv_candidate_label-SOURCE_INTEGRATION_REPORT.json"
-sed "s/A3\\.5-dev1/$rv_candidate_label/g" "$rv_root/reports/A35_MILESTONE_GATE.md" > "$rv_dist/$rv_candidate_label-MILESTONE-GATE.md"
+	{
+		echo "# $rv_candidate_label candidate identity and physical gate"
+		echo
+		echo "Status: host-validated only; physical acceptance is not claimed."
+		echo "Runtime identity: Renegade Vita $rv_candidate_label"
+		echo "Runtime log: $rv_runtime_log"
+		echo "Identity verifier: PASS (exact ELF label/path, no prohibited stale identity, packaged eboot matches generated SELF)."
+		echo "Physical gate: verify startup identity and expected runtime log before collecting any further evidence."
+} > "$rv_dist/$rv_candidate_label-MILESTONE-GATE.md"
 {
 	echo "Renegade Vita $rv_candidate_label crash-symbolication status"
 	echo "Status: no matching hardware dump was available when this candidate was packaged."
@@ -292,6 +309,7 @@ sed "s/A3\\.5-dev1/$rv_candidate_label/g" "$rv_root/reports/A35_MILESTONE_GATE.m
 	echo "Historical A3.2-dev1 symbolication is retained separately and is not candidate evidence."
 } > "$rv_dist/$rv_candidate_label-CRASH-SYMBOLICATION.txt"
 cp -- "$rv_build_report" "$rv_dist/$rv_candidate_label-BUILD_REPORT.txt"
+cp -- "$rv_identity_report" "$rv_dist/$rv_candidate_label-IDENTITY-VERIFICATION.json"
 cp -- "$rv_root/RenegadeVita_BUILD.ps1" "$rv_dist/RenegadeVita_BUILD.ps1"
 cp -- "$rv_log" "$rv_dist/$rv_candidate_label-COMPILER_LOG.txt"
 cp -- "$rv_host_output" "$rv_dist/$rv_candidate_label-HOST-VALIDATION.log"
@@ -323,6 +341,7 @@ bash "$rv_root/tools/collect_a35_diagnostics.sh" "$rv_dist" \
 		RenegadeVita-"$rv_candidate_label".symbols.txt RenegadeVita-"$rv_candidate_label".vpk-contents.txt \
 		RenegadeVita_BUILD.ps1 "$rv_candidate_label"-SOURCE_INTEGRATION_REPORT.json \
 		"$rv_candidate_label"-MILESTONE-GATE.md "$rv_candidate_label"-CRASH-SYMBOLICATION.txt \
+		"$rv_candidate_label"-IDENTITY-VERIFICATION.json \
 		"$rv_candidate_label"-BUILD_REPORT.txt "$rv_candidate_label"-COMPILER_LOG.txt "$rv_candidate_label"-HOST-VALIDATION.log \
 		"$rv_candidate_label"-EXPECTED-RUNTIME-LOG.txt "$rv_candidate_label"-HARDWARE-CANDIDATE.txt \
 		"$rv_candidate_label"-BUILD-DIAGNOSTICS-"$rv_timestamp".zip > "$rv_candidate_label"-SHA256SUMS.txt

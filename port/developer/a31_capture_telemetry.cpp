@@ -1,6 +1,7 @@
 #include "a31_capture_telemetry.h"
 
 #include <errno.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -12,6 +13,9 @@
 #endif
 
 namespace {
+
+bool Open_Path(char *output, size_t capacity, const char *directory,
+	const char *name);
 
 uint64_t Monotonic_Us()
 {
@@ -37,11 +41,69 @@ bool Make_Directory(const char *path)
 	return result >= 0 || errno == EEXIST;
 }
 
-void Set_Error(A31CaptureBundleResult &result, const char *message)
+void Set_Error(A31CaptureBundleResult &result, const char *message,
+	int error_code = 0)
 {
 	if (result.first_error[0] == 0) {
 		snprintf(result.first_error, sizeof(result.first_error), "%s", message);
+		result.first_error_code = error_code;
 	}
+}
+
+bool Verify_Artifact(const char *path, const char *prefix, int &error_code)
+{
+	if (path == NULL || prefix == NULL) {
+		error_code = EINVAL;
+		return false;
+	}
+#if defined(__vita__)
+	SceIoStat status = {};
+	const int stat_result = sceIoGetstat(path, &status);
+	if (stat_result < 0 || status.st_size == 0U) {
+		error_code = stat_result < 0 ? stat_result : EIO;
+		return false;
+	}
+#else
+	struct stat status = {};
+	if (stat(path, &status) != 0 || status.st_size <= 0) {
+		error_code = errno != 0 ? errno : EIO;
+		return false;
+	}
+#endif
+	FILE *file = fopen(path, "rb");
+	if (file == NULL) {
+		error_code = errno != 0 ? errno : EIO;
+		return false;
+	}
+	char actual[256] = {};
+	const size_t wanted = strlen(prefix);
+	const bool content_valid = wanted < sizeof(actual) &&
+		fread(actual, 1U, wanted, file) == wanted &&
+		memcmp(actual, prefix, wanted) == 0;
+	const bool close_valid = fclose(file) == 0;
+	const bool valid = content_valid && close_valid;
+	if (!valid) {
+		error_code = EIO;
+	}
+	return valid;
+}
+
+bool Write_Failure_Marker(const A31CaptureBundleInput &input,
+	const A31CaptureBundleResult &result)
+{
+	char path[A31_CAPTURE_PATH_CAPACITY];
+	if (!Open_Path(path, sizeof(path), input.base_directory,
+		"capture-write-failure.txt")) {
+		return false;
+	}
+	FILE *file = fopen(path, "wb");
+	if (file == NULL) return false;
+	fprintf(file, "candidate=%s\nphase=%s\nreason=%s\nerror=%s\nerror_code=%d\n",
+		input.state.milestone, input.state.phase, input.state.reason,
+		result.first_error, result.first_error_code);
+	const bool flushed = fflush(file) == 0;
+	const bool closed = fclose(file) == 0;
+	return flushed && closed;
 }
 
 bool Open_Path(char *output, size_t capacity, const char *directory,
@@ -224,7 +286,10 @@ bool Write_State(const char *path, const A31StateSnapshot &state)
 	fprintf(file, "{\n  \"schema_version\":%u,\n  \"milestone\":", state.schema_version);
 	Json_String(file, state.milestone);
 	fprintf(file, ",\n  \"build_label\":"); Json_String(file, state.build_label);
+	fprintf(file, ",\n  \"capture_overlay_label\":"); Json_String(file, state.capture_overlay_label);
+	fprintf(file, ",\n  \"runtime_log_path\":"); Json_String(file, state.runtime_log_path);
 	fprintf(file, ",\n  \"reason\":"); Json_String(file, state.reason);
+	fprintf(file, ",\n  \"phase\":"); Json_String(file, state.phase);
 	fprintf(file, ",\n  \"capture\":{\"monotonic_us\":%llu,\"frame\":%llu,\"stall_us\":%llu},",
 		static_cast<unsigned long long>(state.capture_monotonic_us),
 		static_cast<unsigned long long>(state.capture_frame),
@@ -405,7 +470,8 @@ bool Write_Summary(const char *path, const A31StateSnapshot &state,
 		if (value > ordinary_max) ordinary_max = value;
 	}
 	fprintf(file,
-		"Renegade Vita A3.1 developer capture\nReason: %s\nFrame: %llu\nHistory frames: %u\nOrdinary frame min/p50/p95/p99/mean/max: %.3f / %.3f / %.3f / %.3f / %.3f / %.3f ms\nCapture stall excluded: %.3f ms\nWorld: %u static, %u dynamic, %u semantic meshes\nCamera: %s (%s)\nPlayer: %s id=%u type=%s\nRenderer: %llu draws, %llu vertices, %llu triangles, %llu material passes\nTextures: %llu resident, %llu bytes, %llu uploads, %llu binds\nBackend: %llu state changes, %llu errors, %llu rejected, %llu unsupported\nMemory samples: %u\nMemory user/cdram/phycont free: %lld / %lld / %lld\nMemory user/cdram/phycont sampled low-water: %lld / %lld / %lld\nMemory VitaGL RAM/VRAM/SLOW/ALL sampled low-water: %llu / %llu / %llu / %llu\nBenchmark: %s route=%s point=%u\n",
+		"%s developer capture\nCandidate: %s\nRuntime log: %s\nPhase: %s\nReason: %s\nFrame: %llu\nHistory frames: %u\nOrdinary frame min/p50/p95/p99/mean/max: %.3f / %.3f / %.3f / %.3f / %.3f / %.3f ms\nCapture stall excluded: %.3f ms\nWorld: %u static, %u dynamic, %u semantic meshes\nCamera: %s (%s)\nPlayer: %s id=%u type=%s\nRenderer: %llu draws, %llu vertices, %llu triangles, %llu material passes\nTextures: %llu resident, %llu bytes, %llu uploads, %llu binds\nBackend: %llu state changes, %llu errors, %llu rejected, %llu unsupported\nMemory samples: %u\nMemory user/cdram/phycont free: %lld / %lld / %lld\nMemory user/cdram/phycont sampled low-water: %lld / %lld / %lld\nMemory VitaGL RAM/VRAM/SLOW/ALL sampled low-water: %llu / %llu / %llu / %llu\nBenchmark: %s route=%s point=%u\n",
+		state.build_label, state.milestone, state.runtime_log_path, state.phase,
 		state.reason, (unsigned long long)state.capture_frame,
 		static_cast<unsigned>(history.Count()),
 		ordinary_min / 1000.0,
@@ -469,6 +535,22 @@ void A31FrameHistory::Push(const A31FrameTelemetry &frame) { Frames[Next] = fram
 size_t A31FrameHistory::Count() const { return Used; }
 const A31FrameTelemetry &A31FrameHistory::Oldest(size_t index) const { const size_t first = Used == A31_FRAME_HISTORY_CAPACITY ? Next : 0U; return Frames[(first + index) % A31_FRAME_HISTORY_CAPACITY]; }
 
+bool A31_Format_Capture_Overlay(char *output, size_t capacity,
+	const A31StateSnapshot &state, const A31FrameHistory &history)
+{
+	if (output == NULL || capacity == 0U) return false;
+	const double frame_ms = history.Count() != 0U ?
+		static_cast<double>(history.Oldest(history.Count() - 1U).ordinary_frame_time_us) /
+		1000.0 : 0.0;
+	const int count = snprintf(output, capacity,
+		"%s\nFRAME %" PRIu64 "\n%.2f MS\nDRAW %" PRIu64 "\nTRI %" PRIu64 "\nPOINT %" PRIu32,
+		state.capture_overlay_label[0] != '\0' ? state.capture_overlay_label : state.milestone,
+		state.capture_frame, frame_ms,
+		state.renderer.draw_calls, state.renderer.triangles,
+		state.benchmark_point);
+	return count > 0 && static_cast<size_t>(count) < capacity;
+}
+
 A31CaptureBundleResult A31_Write_Capture_Bundle(const A31CaptureBundleInput &input)
 {
 	A31CaptureBundleResult result = {};
@@ -480,47 +562,68 @@ A31CaptureBundleResult A31_Write_Capture_Bundle(const A31CaptureBundleInput &inp
 	if (snprintf(result.bundle_path, sizeof(result.bundle_path), "%s/%s",
 		input.base_directory, input.bundle_label) <= 0 ||
 		!Make_Directory(result.bundle_path)) {
-		Set_Error(result, "capture bundle directory unavailable"); return result;
+		Set_Error(result, "capture bundle directory unavailable");
+		result.failure_marker_written = Write_Failure_Marker(input, result);
+		return result;
 	}
 	char path[A31_CAPTURE_PATH_CAPACITY];
+	int history_error = 0;
+	int state_error = 0;
+	int summary_error = 0;
 	if (input.resolved_rgba_bottom_up != NULL &&
 		Open_Path(path, sizeof(path), result.bundle_path, "frame.bmp")) {
 		result.screenshot_written = Write_Bmp(path, input.resolved_rgba_bottom_up,
 			input.framebuffer_width, input.framebuffer_height, NULL);
-		if (!result.screenshot_written) Set_Error(result, "clean screenshot write failed");
+		int error_code = 0;
+		result.screenshot_written = result.screenshot_written &&
+			Verify_Artifact(path, "BM", error_code);
+		if (!result.screenshot_written)
+			Set_Error(result, "clean screenshot write/verify failed", error_code);
 	}
-	if (input.write_annotated_screenshot && input.resolved_rgba_bottom_up != NULL &&
-		Open_Path(path, sizeof(path), result.bundle_path, "frame-annotated.bmp")) {
-		char annotation[256];
-		snprintf(annotation, sizeof(annotation),
-			"A31 CAPTURE\nFRAME %llu\n%.2F MS\nDRAW %llu\nTRI %llu\nPOINT %u",
-			(unsigned long long)input.state.capture_frame,
-			input.history->Count() != 0U ?
-				input.history->Oldest(input.history->Count() - 1U).ordinary_frame_time_us / 1000.0 : 0.0,
-			(unsigned long long)input.state.renderer.draw_calls,
-			(unsigned long long)input.state.renderer.triangles,
-			input.state.benchmark_point);
-		result.annotated_screenshot_written = Write_Bmp(path,
-			input.resolved_rgba_bottom_up, input.framebuffer_width,
-			input.framebuffer_height, annotation);
-		if (!result.annotated_screenshot_written) Set_Error(result, "annotated screenshot write failed");
+		if (input.write_annotated_screenshot && input.resolved_rgba_bottom_up != NULL &&
+			Open_Path(path, sizeof(path), result.bundle_path, "frame-annotated.bmp")) {
+			char annotation[256];
+			result.annotated_screenshot_written =
+				A31_Format_Capture_Overlay(annotation, sizeof(annotation), input.state,
+					*input.history) && Write_Bmp(path,
+				input.resolved_rgba_bottom_up, input.framebuffer_width,
+				input.framebuffer_height, annotation);
+			int error_code = 0;
+			result.annotated_screenshot_written = result.annotated_screenshot_written &&
+				Verify_Artifact(path, "BM", error_code);
+			if (!result.annotated_screenshot_written)
+				Set_Error(result, "annotated screenshot write/verify failed", error_code);
 	}
-	if (Open_Path(path, sizeof(path), result.bundle_path, "frames.csv"))
+	if (Open_Path(path, sizeof(path), result.bundle_path, "frames.csv")) {
 		result.history_written = Write_History(path, *input.history);
-	if (!result.history_written) Set_Error(result, "frame history write failed");
+		result.history_written = result.history_written &&
+			Verify_Artifact(path, "frame,", history_error);
+	}
+	if (!result.history_written)
+		Set_Error(result, "frame history write/verify failed", history_error != 0 ? history_error : errno);
 	A31StateSnapshot final_state = input.state;
 	final_state.capture_stall_us += Monotonic_Us() - start_us;
-	if (Open_Path(path, sizeof(path), result.bundle_path, "state.json"))
+	if (Open_Path(path, sizeof(path), result.bundle_path, "state.json")) {
 		result.state_written = Write_State(path, final_state);
-	if (!result.state_written) Set_Error(result, "state snapshot write failed");
-	if (Open_Path(path, sizeof(path), result.bundle_path, "summary.txt"))
+		result.state_written = result.state_written && Verify_Artifact(path, "{", state_error);
+	}
+	if (!result.state_written)
+		Set_Error(result, "state snapshot write/verify failed", state_error != 0 ? state_error : errno);
+	if (Open_Path(path, sizeof(path), result.bundle_path, "summary.txt")) {
 		result.summary_written = Write_Summary(path, final_state, *input.history);
-	if (!result.summary_written) Set_Error(result, "summary write failed");
+		result.summary_written = result.summary_written && Verify_Artifact(path,
+			final_state.build_label, summary_error);
+	}
+	if (!result.summary_written)
+		Set_Error(result, "summary write/verify failed", summary_error != 0 ? summary_error : errno);
 	result.write_stall_us = Monotonic_Us() - start_us;
 	const bool screenshot_required = input.resolved_rgba_bottom_up != NULL;
 	result.passed = (!screenshot_required || result.screenshot_written) && result.state_written &&
 		result.history_written && result.summary_written &&
 		(!input.write_annotated_screenshot || result.annotated_screenshot_written);
+	if (!result.passed) {
+		result.failure_marker_written = Write_Failure_Marker(input, result);
+	}
 	return result;
 }
 

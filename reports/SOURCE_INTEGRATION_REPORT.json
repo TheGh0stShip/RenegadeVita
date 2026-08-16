@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev4",
+  "milestone": "A3.5-dev5",
   "objective": "First interactive original M00 gameplay runtime; current source seed preserves accepted A3.0, capture/telemetry, and replaces temporary gameplay scalar closures with original Combat owners",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",

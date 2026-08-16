@@ -1,5 +1,6 @@
 #include "vita_platform.h"
 #include "vita_runtime_log.h"
+#include "renegade_build_identity.h"
 
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
@@ -11,18 +12,8 @@
 namespace {
 
 const char *const kRetailRoot = "ux0:data/renegade/retail";
-#if defined(RENEGADE_VITA_A30)
-#if defined(RENEGADE_VITA_A31)
-const char *const kLogPath = "ux0:data/renegade/user/logs/a35-dev1-runtime.log";
-const char *const kRendererMilestone = "A3.5-dev1";
-#else
-const char *const kLogPath = "ux0:data/renegade/user/logs/a30-runtime.log";
-const char *const kRendererMilestone = "A3.0";
-#endif
-#else
-const char *const kLogPath = "ux0:data/renegade/user/logs/a22-runtime.log";
-const char *const kRendererMilestone = "A2.2";
-#endif
+const char *const kLogPath = RENEGADE_BUILD_RUNTIME_LOG_PATH;
+const char *const kRendererMilestone = RENEGADE_BUILD_CANDIDATE_LABEL;
 unsigned g_renderer_breadcrumb_sequence = 0;
 
 bool Is_Directory(const char *path)

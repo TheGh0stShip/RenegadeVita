@@ -211,3 +211,37 @@ LSan proof remains at `build/host-a31-asan/a36-pathmgr-lsan.log`.
   both pass (including ASan and UBSan build routes) with exit status `0`.
 - Still pending: physical Vita breadcrumb evidence for the `0x810EAFBE` session remains
   unverified; this step intentionally validates only deterministic host fixtures.
+
+## 2026-08-16 — A3.5-dev4 candidate identity correction
+
+`[██░░░░░░░░] 20% — candidate integrity gate, no physical acceptance`
+
+- Invalidated: `A3.5-dev4` physical evidence is not a valid candidate result.
+  Its VPK/report filename was dev4, but the returned ELF retained dev1/A3.1
+  runtime labels and the dev1 runtime-log path. The return does not prove the
+  observer, axis, player, NPC, weapon, or camera paths ran.
+- Returned static capture: framebuffer readback is valid, but the capture state
+  records static-world rather than interactive-player conditions. The empty
+  orderly-exit bundle is a failed evidence result, not a clean exit claim.
+- In progress: generated-at-configure build identity, final ELF/SELF/VPK
+  lineage verification, unified runtime log identity, phase-labelled capture
+  metadata, post-write artifact checks, and a fixed-width overlay formatter.
+- Gate: no successor VPK is called hardware-ready until a fresh ARM build and
+  retained diagnostics prove candidate identity, nonempty evidence artifacts,
+  and the candidate-specific runtime-log path.
+- Added: the live ARM interactive path now emits a first
+  `interactive-player-owned` capture only after original Combat reports both
+  its player object and camera. Static-world, simulated-host-interactive, and
+  device-interactive evidence remain explicitly distinct.
+- Built: fresh canonical `A3.5-dev5` host/ARM/VPK candidate. The complete host
+  gate and focused contracts pass; the ARM target selected 424 original plus
+  21 port translation units and completed 456 build actions.
+- Verified: final VPK SHA-256
+  `e69919b557b8b2a807ac6437310d4c62072635ce1a493e63eee604a0c935287c`;
+  final ELF SHA-256
+  `bf1a250554f0666fbc3814f0a47b784cd399a410bd823bf12885c8a92ebd2e05`.
+  All 15 identity/lineage checks pass and the VPK contains only `eboot.bin`
+  and `sce_sys/param.sfo`.
+- Physical gate: pending. The tester must stop immediately unless startup says
+  `A3.5-dev5` and `a35-dev5-runtime.log` is created. No visual defect or
+  milestone acceptance is claimed from host/ARM evidence.

@@ -2,9 +2,11 @@
 
 #include "a30_vita_runtime.h"
 #include "a31_interactive_runtime_policy.h"
+#include "a31_capture_telemetry.h"
 #include "renegade_cache_health.h"
 #include "renegade_file_factory.h"
 #include "renegade_vita_input_telemetry.h"
+#include "renegade_build_identity.h"
 #include "ww3d_vita_renderer.h"
 
 #include "assetmgr.h"
@@ -41,6 +43,9 @@
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 extern void _Force_Link_Soldier(void);
 
 namespace {
@@ -58,6 +63,68 @@ const char *const kAlwaysArchive = "Data\\Always.dat";
 const char *const kM00Archive = "Data\\M00_Tutorial.mix";
 const char *const kM01CacheIndex = "cache/m01-mix-index-v1.txt";
 const uint32_t kTimingWindowFrames = 120U;
+const uint32_t kCaptureWidth = RenegadeVitaRenderer::DISPLAY_WIDTH;
+const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
+const uint32_t kCaptureBytes = kCaptureWidth * kCaptureHeight * 4U;
+const unsigned kAutomaticCaptureAttempts = 3U;
+
+A31StateSnapshot Make_Interactive_Capture_State(const A31InteractiveRenderTrace &trace,
+	uint64_t frame, uint64_t monotonic_us, const char *reason)
+{
+	A31StateSnapshot state = {};
+	state.schema_version = A31_CAPTURE_SCHEMA_VERSION;
+	snprintf(state.milestone, sizeof(state.milestone), "%s", RENEGADE_BUILD_CANDIDATE_LABEL);
+	snprintf(state.build_label, sizeof(state.build_label), "%s", RENEGADE_BUILD_DISPLAY_LABEL);
+	snprintf(state.capture_overlay_label, sizeof(state.capture_overlay_label), "%s", RENEGADE_BUILD_CAPTURE_OVERLAY);
+	snprintf(state.runtime_log_path, sizeof(state.runtime_log_path), "%s", RENEGADE_BUILD_RUNTIME_LOG_PATH);
+	snprintf(state.reason, sizeof(state.reason), "%s", reason);
+	snprintf(state.phase, sizeof(state.phase), "%s", "interactive-player-owned");
+	state.capture_monotonic_us = monotonic_us;
+	state.capture_frame = frame;
+	state.world.loaded = trace.scene_available;
+	state.world.static_object_count = trace.static_object_count;
+	state.world.dynamic_object_count = trace.dynamic_object_count;
+	state.world.light_count = trace.static_light_count;
+	state.world.vis_sector_count = trace.visibility_table_count;
+	state.camera.present = trace.camera_available;
+	state.camera.original_camera_class = trace.camera_available;
+	state.camera.player_owned = trace.camera_available && trace.star_available;
+	state.camera.position[0] = trace.camera_x;
+	state.camera.position[1] = trace.camera_y;
+	state.camera.position[2] = trace.camera_z;
+	state.camera.near_clip = trace.near_clip;
+	state.camera.far_clip = trace.far_clip;
+	state.player.present = trace.star_available;
+	snprintf(state.player.type, sizeof(state.player.type), "%s", "SoldierGameObj");
+	state.player.position[0] = trace.player_x;
+	state.player.position[1] = trace.player_y;
+	state.player.position[2] = trace.player_z;
+	state.renderer.draw_calls = trace.mesh_submissions;
+	state.renderer.mesh_submissions = trace.mesh_submissions;
+	state.renderer.vertices = trace.vertex_submissions;
+	state.renderer.triangles = trace.triangle_submissions;
+	state.renderer.rejected_submissions = trace.rejected_submissions;
+	state.renderer.unsupported_submissions = trace.unsupported_submissions;
+	state.game_update_count = frame;
+	state.physics_update_count = frame;
+	state.input_action_count = Renegade_Vita_Last_Input_Telemetry().sample_count;
+	return state;
+}
+
+A31CaptureBundleResult Capture_Interactive_Frame(const A31StateSnapshot &state,
+	const A31FrameHistory &history, const uint8_t *pixels, const char *label)
+{
+	A31CaptureBundleInput input = {};
+	input.base_directory = RENEGADE_BUILD_CAPTURE_ROOT;
+	input.bundle_label = label;
+	input.resolved_rgba_bottom_up = pixels;
+	input.framebuffer_width = kCaptureWidth;
+	input.framebuffer_height = kCaptureHeight;
+	input.write_annotated_screenshot = pixels != NULL;
+	input.state = state;
+	input.history = &history;
+	return A31_Write_Capture_Bundle(input);
+}
 
 // Fixed-capacity timing aggregation keeps the physical candidate decisive
 // without adding allocator churn or per-object logging to a release frame.
@@ -270,6 +337,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 		static_cast<void *>(audio), static_cast<void *>(audio->Get_Sound_Scene()));
 	{
 		RenegadeCheatMgrClass cheat_manager;
+		A31FrameHistory capture_history;
+		uint8_t *capture_pixels = NULL;
+		bool first_interactive_capture_pending = true;
+		unsigned first_interactive_capture_attempts = 0U;
+		bool select_was_pressed = false;
+		A31InteractiveRenderTrace last_render_trace = {};
 		do {
 			if (!always2_factory.Is_Valid() || !always_dbs_factory.Is_Valid() ||
 				!always_factory.Is_Valid() || !m00_factory.Is_Valid()) {
@@ -410,6 +483,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 			A30_Vita_Log("A3.1 breadcrumb: original player/session ready; START exits\n");
 			RenegadeVitaRenderer::Reset_Statistics();
 			InteractiveTiming timing = {};
+			capture_pixels = static_cast<uint8_t *>(malloc(kCaptureBytes));
 			const uint64_t sync_origin = sceKernelGetProcessTimeWide() / 1000ULL;
 			while (!Is_Start_Pressed()) {
 				const uint64_t frame_begin = sceKernelGetProcessTimeWide();
@@ -427,6 +501,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 
 				const A31InteractiveRenderTrace render_trace =
 					A31_Interactive_Run_Render_Frame();
+				last_render_trace = render_trace;
 				const uint64_t frame_end = sceKernelGetProcessTimeWide();
 				timing.Add(static_cast<uint32_t>(simulation_begin - frame_begin),
 					static_cast<uint32_t>(render_begin - simulation_begin),
@@ -490,6 +565,66 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				}
 				++result.frames;
 				Copy_Render_Statistics(result);
+				A31FrameTelemetry capture_frame = {};
+				capture_frame.frame_index = result.frames;
+				capture_frame.monotonic_us = frame_end;
+				capture_frame.frame_time_us = frame_end - frame_begin;
+				capture_frame.ordinary_frame_time_us = capture_frame.frame_time_us;
+				capture_frame.stages.input_us = simulation_begin - frame_begin;
+				capture_frame.stages.game_update_us = render_begin - simulation_begin;
+				capture_frame.stages.render_us = frame_end - render_begin;
+				capture_frame.renderer.draw_calls = render_trace.mesh_submissions;
+				capture_frame.renderer.mesh_submissions = render_trace.mesh_submissions;
+				capture_frame.renderer.vertices = render_trace.vertex_submissions;
+				capture_frame.renderer.triangles = render_trace.triangle_submissions;
+				capture_frame.renderer.rejected_submissions = render_trace.rejected_submissions;
+				capture_frame.renderer.unsupported_submissions = render_trace.unsupported_submissions;
+				capture_frame.game_update_count = result.frames;
+				capture_frame.physics_update_count = result.frames;
+				const RenegadeVitaInputTelemetry &input_telemetry =
+					Renegade_Vita_Last_Input_Telemetry();
+				capture_frame.input_action_count = input_telemetry.sample_count;
+				capture_history.Push(capture_frame);
+				if (first_interactive_capture_pending && render_trace.star_available &&
+					render_trace.camera_available &&
+					first_interactive_capture_attempts < kAutomaticCaptureAttempts) {
+					++first_interactive_capture_attempts;
+					const bool readback = capture_pixels != NULL &&
+						RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels, kCaptureBytes);
+					char label[96];
+					snprintf(label, sizeof(label), "first-interactive-player-frame-f%u-t%llu",
+						result.frames, static_cast<unsigned long long>(frame_end));
+					const A31StateSnapshot state = Make_Interactive_Capture_State(render_trace,
+						result.frames, frame_end, "first-interactive-player-frame");
+					const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
+						capture_history, readback ? capture_pixels : NULL, label);
+					A30_Vita_Log("Capture: %s candidate=%s phase=interactive-player-owned reason=first-interactive-player-frame path=%s screenshot/state/csv/summary=%d/%d/%d/%d error_code=%d\n",
+						capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
+						capture.bundle_path, capture.screenshot_written ? 1 : 0,
+						capture.state_written ? 1 : 0, capture.history_written ? 1 : 0,
+						capture.summary_written ? 1 : 0, capture.first_error_code);
+					first_interactive_capture_pending = !capture.passed;
+				}
+				const bool select_pressed =
+					(input_telemetry.buttons & SCE_CTRL_SELECT) != 0U;
+				if (select_pressed && !select_was_pressed && render_trace.star_available &&
+					render_trace.camera_available) {
+					const bool readback = capture_pixels != NULL &&
+						RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels, kCaptureBytes);
+					char label[96];
+					snprintf(label, sizeof(label), "manual-select-interactive-f%u-t%llu",
+						result.frames, static_cast<unsigned long long>(frame_end));
+					const A31StateSnapshot state = Make_Interactive_Capture_State(render_trace,
+						result.frames, frame_end, "manual-select");
+					const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
+						capture_history, readback ? capture_pixels : NULL, label);
+					A30_Vita_Log("Capture: %s candidate=%s phase=interactive-player-owned reason=manual-select path=%s screenshot/state/csv/summary=%d/%d/%d/%d error_code=%d\n",
+						capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
+						capture.bundle_path, capture.screenshot_written ? 1 : 0,
+						capture.state_written ? 1 : 0, capture.history_written ? 1 : 0,
+						capture.summary_written ? 1 : 0, capture.first_error_code);
+				}
+				select_was_pressed = select_pressed;
 				if (!result.first_frame_completed) {
 					result.first_frame_completed = true;
 					result.first_frame_geometry = true;
@@ -505,13 +640,44 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 					Log_Input_Telemetry();
 				}
 			}
-			Copy_Timing_Statistics(result, timing);
-			Log_Timing_Statistics(timing, RenegadeVitaRenderer::Get_Statistics());
-			result.clean_exit_requested = !result.render_error;
+				result.clean_exit_requested = !result.render_error;
+				if (result.clean_exit_requested && capture_history.Count() != 0U &&
+					last_render_trace.star_available && last_render_trace.camera_available) {
+					char label[96];
+					const uint64_t exit_us = sceKernelGetProcessTimeWide();
+					snprintf(label, sizeof(label), "pre-clean-exit-f%u-t%llu", result.frames,
+						static_cast<unsigned long long>(exit_us));
+					const A31StateSnapshot state = Make_Interactive_Capture_State(last_render_trace,
+						result.frames, exit_us, "pre-clean-exit");
+					const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
+						capture_history, NULL, label);
+					A30_Vita_Log("Capture flush: %s candidate=%s phase=interactive-player-owned reason=pre-clean-exit path=%s state/csv/summary=%d/%d/%d error_code=%d\n",
+						capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
+						capture.bundle_path, capture.state_written ? 1 : 0,
+						capture.history_written ? 1 : 0, capture.summary_written ? 1 : 0,
+						capture.first_error_code);
+				} else if (result.render_error && capture_history.Count() != 0U) {
+					char label[96];
+					const uint64_t fatal_us = sceKernelGetProcessTimeWide();
+					snprintf(label, sizeof(label), "fatal-snapshot-f%u-t%llu", result.frames,
+						static_cast<unsigned long long>(fatal_us));
+					const A31StateSnapshot state = Make_Interactive_Capture_State(last_render_trace,
+						result.frames, fatal_us, "best-effort-fatal-snapshot");
+					const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
+						capture_history, NULL, label);
+					A30_Vita_Log("Capture flush: %s candidate=%s phase=interactive-player-owned reason=best-effort-fatal-snapshot path=%s state/csv/summary=%d/%d/%d error_code=%d\n",
+						capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
+						capture.bundle_path, capture.state_written ? 1 : 0,
+						capture.history_written ? 1 : 0, capture.summary_written ? 1 : 0,
+						capture.first_error_code);
+				}
+				Copy_Timing_Statistics(result, timing);
+				Log_Timing_Statistics(timing, RenegadeVitaRenderer::Get_Statistics());
 			if (result.clean_exit_requested) {
 				A30_Vita_Log("A3.1 breadcrumb: START exit request detected\n");
 			}
-		} while (false);
+			} while (false);
+			free(capture_pixels);
 
 			/* Match CombatGameModeClass::Core_Shutdown for the direct M00 route:
 			 * cGod leaves before the level frees static network wrappers, game

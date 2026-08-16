@@ -1,0 +1,286 @@
+--- a/camerashakesystem.h
++++ b/camerashakesystem.h
+@@ -72,7 +72,7 @@
+ 	void		Timestep(float dt);
+ 	void		Update_Camera(CameraClass & camera);
+ 
+-protected:
++public:
+ 
+ 	/**
+ 	** CameraShakerClass 
+@@ -101,6 +101,7 @@
+ 		Vector3				Phi;
+ 	};
+ 
++protected:
+ 	MultiListClass<CameraShakerClass>	CameraShakerList;
+ 
+ };
+--- a/dyntexproject.h
++++ b/dyntexproject.h
+@@ -79,8 +79,8 @@
+ 	PhysClass *			Peek_Projection_Object(void) const;
+ 	virtual void *		Get_Projection_Object_ID(void) const			{ return ProjectionObject; }
+ 
+-	void					Set_Light_Source_ID(uint32 id);
+-	uint32				Get_Light_Source_ID(void);
++	void					Set_Light_Source_ID(uintptr_t id);
++	uintptr_t			Get_Light_Source_ID(void);
+ 
+ 	void					Set_Light_Vector(const Vector3 & vector);
+ 	void					Get_Light_Vector(Vector3 * set_vector);
+@@ -99 +99 @@
+-	uint32				LightSourceID;				// ID of the light source (just its pointer,used for matching)
++	uintptr_t			LightSourceID;				// ID of the light source (just its pointer,used for matching)
+--- a/dyntexproject.cpp
++++ b/dyntexproject.cpp
+@@ -72,12 +72,12 @@
+ 	return ProjectionObject;
+ }
+ 
+-void DynTexProjectClass::Set_Light_Source_ID(uint32 id)
++void DynTexProjectClass::Set_Light_Source_ID(uintptr_t id)
+ {
+ 	LightSourceID = id;
+ }
+ 
+-uint32 DynTexProjectClass::Get_Light_Source_ID(void)
++uintptr_t DynTexProjectClass::Get_Light_Source_ID(void)
+ {
+ 	return LightSourceID;
+ }
+--- a/dynamicshadowmanager.cpp
++++ b/dynamicshadowmanager.cpp
+@@ -161,7 +161,7 @@
+ 		*/
+ 		LightClass * sun = scene->Get_Sun_Light();
+ 		Shadow->Enable_Perspective(false);
+-		Shadow->Set_Light_Source_ID((uint32)sun);
++		Shadow->Set_Light_Source_ID(reinterpret_cast<uintptr_t>(sun));
+ 		Shadow->Set_Light_Vector(sunlight);
+ 		sun->Release_Ref();
+ 		found_light = true;
+--- a/physinttest.h
++++ b/physinttest.h
+@@ -131,7 +131,7 @@
+ {
+ public:
+ 	
+-	PhysMeshIntersectionTestClass::PhysMeshIntersectionTestClass(MeshClass * mesh,int col_group,int col_type,NonRefPhysListClass * result_list) :
++	PhysMeshIntersectionTestClass(MeshClass * mesh,int col_group,int col_type,NonRefPhysListClass * result_list) :
+		IntersectionTestClass(col_type),
+		Mesh(NULL),
+		CollisionGroup(col_group),
+--- a/motorvehicle.cpp
++++ b/motorvehicle.cpp
+@@ -463 +463 @@
+-		char * fname = strrchr(EngineTorqueCurveFilename,'\\');
++		const char * fname = strrchr(EngineTorqueCurveFilename,'\\');
+--- a/Path.cpp
++++ b/Path.cpp
+@@ -1309 +1309 @@
+-	for (index = 0; index < portal_list.Count (); index ++) {
++	for (int index = 0; index < portal_list.Count (); index ++) {
+@@ -1317 +1317 @@
+-	for (index = 0; index < sector_list.Count (); index ++) {		
++	for (int index = 0; index < sector_list.Count (); index ++) {		
+--- a/Pathfind.cpp
++++ b/Pathfind.cpp
+@@ -413 +413 @@
+-	for (index = 0; index < count && retval; index ++) {		
++	for (int index = 0; index < count && retval; index ++) {		
+@@ -882 +882 @@
+-	for (index = 0; index < m_TemporaryPortalList.Count (); index ++) {
++	for (int index = 0; index < m_TemporaryPortalList.Count (); index ++) {
+@@ -890 +890 @@
+-	for (index = 0; index < m_WaypathPortalList.Count (); index ++) {
++	for (int index = 0; index < m_WaypathPortalList.Count (); index ++) {
+@@ -1470 +1470 @@
+-	for (index = 0; index < m_SectorList.Count (); index ++) {
++	for (int index = 0; index < m_SectorList.Count (); index ++) {
+--- a/pathmgr.cpp
++++ b/pathmgr.cpp
+@@ -129 +129 @@
+-	for (index = 0; index < UsedPathList.Count (); index ++) {
++	for (int index = 0; index < UsedPathList.Count (); index ++) {
+--- a/pathsolve.cpp
++++ b/pathsolve.cpp
+@@ -1549 +1549 @@
+-	for (index = m_Path.Count () - 2; index > 0; index --) {
++	for (int index = m_Path.Count () - 2; index > 0; index --) {
+@@ -1587 +1587 @@
+-	for (index = 1; index < m_Path.Count () - 1; index ++) {
++	for (int index = 1; index < m_Path.Count () - 1; index ++) {
+@@ -1627 +1627 @@
+-	for (index = 1; index < m_Path.Count () - 1; index ++) {
++	for (int index = 1; index < m_Path.Count () - 1; index ++) {
+@@ -1638 +1638 @@
+-	for (index = m_Path.Count () - 2; index > 1; index --) {
++	for (int index = m_Path.Count () - 2; index > 1; index --) {
+--- a/renegadeterrainmaterialpass.cpp
++++ b/renegadeterrainmaterialpass.cpp
+@@ -164 +164 @@
+-	for (index = 0; index < PASS_COUNT; index ++) {
++	for (int index = 0; index < PASS_COUNT; index ++) {
+--- a/renegadeterrainpatch.cpp
++++ b/renegadeterrainpatch.cpp
+@@ -362 +362 @@
+-		for (index = 0; index < MaterialPassList.Count (); index ++) {
++		for (int index = 0; index < MaterialPassList.Count (); index ++) {
+@@ -1805 +1805 @@
+-		for (index = 0; index < GridPointCount; index ++) {
++		for (int index = 0; index < GridPointCount; index ++) {
+@@ -1816 +1816 @@
+-		for (index = 0; index < GridPointCount; index ++) {
++		for (int index = 0; index < GridPointCount; index ++) {
+@@ -1837 +1837 @@
+-		for (index = 0; index < MaterialPassList.Count (); index ++) {
++		for (int index = 0; index < MaterialPassList.Count (); index ++) {
+--- a/phys3.cpp
++++ b/phys3.cpp
+@@ -2058 +2058,2 @@
+-		for (int j=0; j<contact_count; j++) {
++		int j=0;
++		for (; j<contact_count; j++) {
+--- a/pscene_projectors.cpp
++++ b/pscene_projectors.cpp
+@@ -332 +332,2 @@
+-	for (int i=max;i<curlen; i++) {
++	int i=max;
++	for (;i<curlen; i++) {
+--- a/projectormanager.h
++++ b/projectormanager.h
+@@ -136,13 +136,13 @@
+-	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name ## .IsEnabled, "EnableProjector");								\
+-	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name ## .IsPerspective, "Perspective Projection" );				\
+-	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name ## .IsAdditive, "Projector Is Additive" );					\
+-	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name ## .IsAnimated, "Projector Is Animated" );					\
+-	NAMED_FLOAT_UNITS_PARAM( class_name , member_name ## .OrthoWidth , 0.01f , 1000.0f, "meters","Ortho Width" );									\
+-	NAMED_FLOAT_UNITS_PARAM( class_name , member_name ## .OrthoHeight , 0.01f , 1000.0f, "meters","Ortho Height" );								\
+-	NAMED_ANGLE_EDITABLE_PARAM( class_name , member_name ## .HorizontalFOV, DEG_TO_RADF(0.01f), DEG_TO_RADF(89.99f), "Horizontal FOV" );	\
+-	NAMED_ANGLE_EDITABLE_PARAM( class_name , member_name ## .VerticalFOV, DEG_TO_RADF(0.01f), DEG_TO_RADF(89.99f), "Vertical FOV" );			\
+-	NAMED_FLOAT_UNITS_PARAM( class_name , member_name ## .NearZ , 0.01f , 1000.0f, "meters","NearZ" );													\
+-	NAMED_FLOAT_UNITS_PARAM( class_name , member_name ## .FarZ , 0.01f , 1000.0f, "meters","FarZ" );													\
+-	NAMED_FLOAT_UNITS_PARAM( class_name , member_name ## .Intensity , 0.01f , 1.0f, "","Intensity" );													\
+-	FILENAME_PARAM ( class_name , member_name ## .TextureName, "Texture files", ".tga");																	\
+-	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_STRING,	member_name ## .BoneName, "BoneName" );		
++	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name .IsEnabled, "EnableProjector");								\
++	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name .IsPerspective, "Perspective Projection" );				\
++	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name .IsAdditive, "Projector Is Additive" );					\
++	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_BOOL,		member_name .IsAnimated, "Projector Is Animated" );					\
++	NAMED_FLOAT_UNITS_PARAM( class_name , member_name .OrthoWidth , 0.01f , 1000.0f, "meters","Ortho Width" );									\
++	NAMED_FLOAT_UNITS_PARAM( class_name , member_name .OrthoHeight , 0.01f , 1000.0f, "meters","Ortho Height" );								\
++	NAMED_ANGLE_EDITABLE_PARAM( class_name , member_name .HorizontalFOV, DEG_TO_RADF(0.01f), DEG_TO_RADF(89.99f), "Horizontal FOV" );	\
++	NAMED_ANGLE_EDITABLE_PARAM( class_name , member_name .VerticalFOV, DEG_TO_RADF(0.01f), DEG_TO_RADF(89.99f), "Vertical FOV" );			\
++	NAMED_FLOAT_UNITS_PARAM( class_name , member_name .NearZ , 0.01f , 1000.0f, "meters","NearZ" );													\
++	NAMED_FLOAT_UNITS_PARAM( class_name , member_name .FarZ , 0.01f , 1000.0f, "meters","FarZ" );													\
++	NAMED_FLOAT_UNITS_PARAM( class_name , member_name .Intensity , 0.01f , 1.0f, "","Intensity" );													\
++	FILENAME_PARAM ( class_name , member_name .TextureName, "Texture files", ".tga");																	\
++	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_STRING,	member_name .BoneName, "BoneName" );		
+--- a/visrendercontext.cpp
++++ b/visrendercontext.cpp
+@@ -314,7 +314,7 @@
+ 	// scan for the min and max
+ 	min_v->X = max_v->X = corner[0].X;
+ 	min_v->Y = max_v->Y = corner[0].Y;
+-	for (ivert = 1; ivert<NUM_BOX_VERTS; ivert++) {
++	for (int ivert = 1; ivert<NUM_BOX_VERTS; ivert++) {
+ 		if (min_v->X > corner[ivert].X) min_v->X = corner[ivert].X;
+		if (min_v->Y > corner[ivert].Y) min_v->Y = corner[ivert].Y;
+		if (max_v->X < corner[ivert].X) max_v->X = corner[ivert].X;
+--- a/phys.cpp
++++ b/phys.cpp
+@@ -461,15 +461,18 @@
+ 
+ bool PhysClass::Save (ChunkSaveClass &csave)
+ {
+-	CullableClass * cullable_ptr = (CullableClass *)this;
+-	WidgetUserClass * widgetuser_ptr = (WidgetUserClass *)this;
+-	EditableClass * editable_ptr = (EditableClass *)this;
++	uint32 cullable_ptr_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>((CullableClass *)this));
++	uint32 widgetuser_ptr_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>((WidgetUserClass *)this));
++	uint32 editable_ptr_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>((EditableClass *)this));
+ 
+ 	csave.Begin_Chunk(PHYS_CHUNK_VARIABLES);
+ 	// (gth) not saving observer pointers any more!
+-	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_CULLABLE_PTR,cullable_ptr);
+-	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_WIDGETUSER_PTR,widgetuser_ptr);
+-	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_EDITABLE_PTR,editable_ptr);
++	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_CULLABLE_PTR,cullable_ptr_token);
++	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_WIDGETUSER_PTR,widgetuser_ptr_token);
++	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_EDITABLE_PTR,editable_ptr_token);
+ 	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_FLAGS,Flags);
+ 	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_INSTANCEID,InstanceID);	
+ 	if (Name.Get_Length() > 0) {
+@@ -496,9 +499,9 @@
+ bool PhysClass::Load (ChunkLoadClass &cload)
+ {
+ 	PersistFactoryClass * factory = NULL;
+-	CullableClass * cullable_ptr = NULL;
+-	WidgetUserClass * widgetuser_ptr = NULL;
+-	EditableClass * editable_ptr = NULL;
++	uint32 cullable_ptr_token = 0;
++	uint32 widgetuser_ptr_token = 0;
++	uint32 editable_ptr_token = 0;
+ 	int defid = -1;
+ 	char tmpstring[256];
+ 	tmpstring[0] = 0;
+@@ -512,9 +515,9 @@
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+ 						// (gth) not saving observer pointers any more!
+-						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_CULLABLE_PTR,cullable_ptr);
+-						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_WIDGETUSER_PTR,widgetuser_ptr);
+-						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_EDITABLE_PTR,editable_ptr);
++						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_CULLABLE_PTR,cullable_ptr_token);
++						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_WIDGETUSER_PTR,widgetuser_ptr_token);
++						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_EDITABLE_PTR,editable_ptr_token);
+ 						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_FLAGS,Flags);
+ 						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_DEFID,defid);
+ 						READ_MICRO_CHUNK(cload,PHYS_VARIABLE_INSTANCEID,InstanceID);
+@@ -543,8 +546,10 @@
+ 				break;
+ 		}
+ 		
+-		if (cullable_ptr != NULL) {
+-			SaveLoadSystemClass::Register_Pointer(cullable_ptr,(CullableClass *)this);
++		if (cullable_ptr_token != 0) {
++			SaveLoadSystemClass::Register_Pointer(
++				reinterpret_cast<CullableClass *>(static_cast<uintptr_t>(cullable_ptr_token)),
++				(CullableClass *)this);
+ 		}
+ 		cload.Close_Chunk();
+ 	}
+@@ -581,14 +586,20 @@
+	/*
+ 	** Register all of the multiple-inheritance versions of our this pointer
+ 	*/
+-	if (cullable_ptr != NULL) {
+-		SaveLoadSystemClass::Register_Pointer(cullable_ptr,(CullableClass *)this);
+-	}
+-	if (widgetuser_ptr != NULL) {
+-		SaveLoadSystemClass::Register_Pointer(widgetuser_ptr,(WidgetUserClass *)this);
+-	}
+-	if (editable_ptr != NULL) {
+-		SaveLoadSystemClass::Register_Pointer(editable_ptr,(EditableClass *)this);
++	if (cullable_ptr_token != 0) {
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<CullableClass *>(static_cast<uintptr_t>(cullable_ptr_token)),
++			(CullableClass *)this);
++	}
++	if (widgetuser_ptr_token != 0) {
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<WidgetUserClass *>(static_cast<uintptr_t>(widgetuser_ptr_token)),
++			(WidgetUserClass *)this);
++	}
++	if (editable_ptr_token != 0) {
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<EditableClass *>(static_cast<uintptr_t>(editable_ptr_token)),
++			(EditableClass *)this);
+ 	}
+ 
+ 	/*

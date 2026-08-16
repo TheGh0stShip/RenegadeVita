@@ -1,0 +1,5 @@
+--- a/multilinetextctrl.cpp
++++ b/multilinetextctrl.cpp
+@@ -147 +147 @@
+-				uint32 bytes	= ((uint32)src_end - (uint32)src_start);	\
++				uint32 bytes	= static_cast<uint32>((src_end - src_start) * sizeof(WCHAR));	\

@@ -1,0 +1,90 @@
+--- a/reflist.cpp
++++ b/reflist.cpp
+@@ -43,8 +43,10 @@
+ 
+ bool	ReferencerClass::Save( ChunkSaveClass & csave )
+ {
++	uint32 target_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>(ReferenceTarget));
+ 	csave.Begin_Chunk( CHUNKID_REF_VARIABLES );
+-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_TARGET, ReferenceTarget );
++		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_TARGET, target_token );
+ 	csave.End_Chunk();
+ 	return true;
+ }
+@@ -52,6 +54,7 @@
+ 
+ bool	ReferencerClass::Load( ChunkLoadClass & cload )
+ {
++	uint32 target_token = 0;
+ 	cload.Open_Chunk();
+ 	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_REF_VARIABLES );
+ 
+@@ -60,7 +63,7 @@
+ 
+ 	while (cload.Open_Micro_Chunk()) {
+ 		switch(cload.Cur_Micro_Chunk_ID()) {
+-			READ_MICRO_CHUNK( cload, MICROCHUNKID_TARGET, ReferenceTarget );
++			READ_MICRO_CHUNK( cload, MICROCHUNKID_TARGET, target_token );
+ 			default:
+ //				Debug_Say(( "Unrecognized REFLIST Variable chunkID\n" ));
+ 				break;
+@@ -69,6 +72,11 @@
+ 	}
+ 	cload.Close_Chunk();
+ 
++	ReferenceTarget = target_token != 0
++		? reinterpret_cast<ReferenceableClass<ScriptableGameObj> *>(
++			static_cast<uintptr_t>(target_token))
++		: NULL;
++
+ 	if ( ReferenceTarget != NULL ) {
+ 		REQUEST_POINTER_REMAP( (void **)&ReferenceTarget );
+ 	}
+--- a/reflist.h
++++ b/reflist.h
+@@ -154,9 +154,9 @@
+ template<class T>
+ bool	ReferenceableClass<T>::Save( ChunkSaveClass & csave )
+ {
++	uint32 ptr_token = static_cast<uint32>(reinterpret_cast<uintptr_t>(this));
+ 	csave.Begin_Chunk( CHUNKID_REF_VARIABLES );
+-		void * ptr = this;
+-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PTR, ptr );
++		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PTR, ptr_token );
+ 	csave.End_Chunk();
+ 	return true;
+ }
+@@ -164,7 +164,7 @@
+ template<class T>
+ bool	ReferenceableClass<T>::Load( ChunkLoadClass & cload )
+ {
+-	void * old_ptr;
++	uint32 old_ptr_token = 0;
+ 	cload.Open_Chunk();
+ 	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_REF_VARIABLES );
+ 
+@@ -173,8 +173,12 @@
+ 	while (cload.Open_Micro_Chunk()) {
+ 		switch(cload.Cur_Micro_Chunk_ID()) {
+ 			case MICROCHUNKID_PTR:
+-				cload.Read(&old_ptr,sizeof(void*));
+-				SaveLoadSystemClass::Register_Pointer(old_ptr, this);
++				cload.Read(&old_ptr_token,sizeof(old_ptr_token));
++				if (old_ptr_token != 0) {
++					SaveLoadSystemClass::Register_Pointer(
++						reinterpret_cast<void *>(static_cast<uintptr_t>(old_ptr_token)),
++						this);
++				}
+ 				break;
+ 
+ 			default:
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -488 +488,5 @@
+-							cload.Read(&ptr,sizeof(ptr));
++#if defined(RENEGADE_HOST_ABI_TEST)
++							RV_Read_Micro_Chunk_Value(cload, ptr);
++#else
++							cload.Read(&ptr,sizeof(ptr));
++#endif

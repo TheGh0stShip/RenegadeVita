@@ -1,0 +1,6 @@
+--- a/gamedata.h
++++ b/gamedata.h
+@@ -48 +48,2 @@
+-#include "DlgMPTeamSelect.h"
++#include <WWLib\Notify.h>
++typedef TypedEventPair<bool, int> MPChooseTeamSignal;

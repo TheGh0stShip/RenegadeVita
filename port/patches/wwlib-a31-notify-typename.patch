@@ -1,0 +1,11 @@
+--- a/Notify.h
++++ b/Notify.h
+@@ -75 +75 @@
+-			NotifierColl::iterator pos = std::find(mNotifiers.begin(),
++			typename NotifierColl::iterator pos = std::find(mNotifiers.begin(),
+@@ -142 +142 @@
+-			ObserverColl::iterator pos = std::find(mObservers.begin(),
++			typename ObserverColl::iterator pos = std::find(mObservers.begin(),
+@@ -155 +155 @@
+-			ObserverColl::iterator pos = std::find(mObservers.begin(),
++			typename ObserverColl::iterator pos = std::find(mObservers.begin(),

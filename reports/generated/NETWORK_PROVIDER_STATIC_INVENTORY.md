@@ -1,0 +1,283 @@
+# NETWORK_PROVIDER_STATIC_INVENTORY
+
+## Scope and constraints
+- Static-only mapping of current checked-out WWNet/Commando networking source and current platform boundary.
+- No implementation or build changes were made.
+- Read-only evidence used for this inventory is from repository source files under `staging/` and `port/platform/`.
+
+## transport/socket
+- `staging/wwnet/netutil.h`
+  - `cNetUtil::Protocol_Init`
+  - `cNetUtil::Create_Bound_Socket`
+  - `cNetUtil::Create_Unbound_Socket`
+  - `cNetUtil::Close_Socket`
+  - `cNetUtil::Broadcast`
+  - `cNetUtil::Lan_Servicing`
+- `staging/wwnet/connect.h`
+  - `cConnection::Init_As_Client`
+  - `cConnection::Init_As_Server`
+  - `cConnection::Connect_Cs`
+  - `cConnection::Send_Packet_To_Address`
+  - `cConnection::Service_Read`
+  - `cConnection::Service_Send`
+  - `cConnection::Send_Packet_To_Individual`
+- `staging/wwnet/connect.cpp` (internal implementation)
+  - `cConnection::Low_Level_Send_Wrapper`
+  - `cConnection::Low_Level_Receive_Wrapper`
+  - `cConnection::Is_Time_To_Resend_Packet_To_Remote_Host`
+  - `cConnection::Receive_Packet`
+- `staging/commando/cnetwork.cpp`
+  - `cNetwork::Update` invokes `Service_Read`/`Service_Send` on active `cConnection` objects.
+- `port/platform/renegade_network_provider.h`
+  - `RenegadeNetworkProvider::DatagramTransport::Open`
+  - `RenegadeNetworkProvider::DatagramTransport::Close`
+  - `RenegadeNetworkProvider::DatagramTransport::Send`
+  - `RenegadeNetworkProvider::DatagramTransport::Receive`
+- `port/platform/renegade_network_provider.cpp`
+  - `UdpDatagramTransport`
+  - `Create_Datagram_Transport`
+  - `Destroy_Datagram_Transport`
+- not established: direct injection of `RenegadeNetworkProvider::DatagramTransport` into WWNet `cConnection`.
+
+## discovery/list
+- `staging/commando/lanchat.h`
+  - `cLanChat::Init_Lan_Protocol_And_Socket`
+  - `cLanChat::Send_Position_Broadcast`
+  - `cLanChat::Lan_Packet_Handler`
+  - `cLanChat::Process_Position_Broadcast`
+- `staging/commando/gamechanlist.h`
+  - `cGameChannelList::Add_Channel`
+  - `cGameChannelList::Remove_Channel`
+  - `cGameChannelList::Find_Channel`
+  - `cGameChannelList::Get_Chan_List`
+- `staging/commando/gamechannel.h` and `staging/commando/gamechannel.cpp`
+  - `cGameChannel::Get_Game_Data`
+  - `cGameChannel::Get_Channel`
+  - `cGameChannel::Get_Wol_Channel`
+- `staging/commando/dlgmplangamelist.h` and `staging/commando/dlgmplangamelist.cpp`
+  - `MPLanGameListMenuClass::Update_Game_List`
+  - `MPLanGameListMenuClass::Join_Game`
+  - `MPLanGameListMenuClass::Connect_To_Server`
+- `staging/commando/wolgmode.h`
+  - `WolGameModeClass` (WOL game list path and public UI callbacks)
+- `staging/commando/WOLChatMgr.cpp`
+  - `WOLChatMgr::HandleNotification(ChannelListEvent&)`
+- `port/platform/renegade_network_provider.h`
+  - `RenegadeNetworkProvider::DiscoveryProvider::Start_Lan`
+  - `RenegadeNetworkProvider::DiscoveryProvider::Stop`
+  - `RenegadeNetworkProvider::DiscoveryProvider::Announce`
+  - `RenegadeNetworkProvider::DiscoveryProvider::Poll`
+- `port/platform/renegade_network_provider.cpp`
+  - `LanDiscovery`
+  - `Create_Lan_Discovery_Provider`
+  - `Destroy_Discovery_Provider`
+- not established: WWOnline/W3D channel discovery is not provided by the Vita network provider seam; it is still handled by `WOL`/WWOnline classes.
+
+## session lifecycle
+- `staging/wwnet/connect.h`
+  - `cConnection::Init_As_Client`
+  - `cConnection::Init_As_Server`
+  - `cConnection::Destroy_Connection`
+  - `cConnection::Install_Accept_Handler`
+  - `cConnection::Install_Refusal_Handler`
+  - `cConnection::Install_Server_Broken_Connection_Handler`
+  - `cConnection::Install_Client_Broken_Connection_Handler`
+  - `cConnection::Install_Connection_Handler`
+  - `cConnection::Install_Application_Acceptance_Handler`
+  - `cConnection::Install_Server_Packet_Handler`
+  - `cConnection::Install_Client_Packet_Handler`
+- `staging/wwnet/connect.h`
+  - `cConnection::Have_Id`
+  - `cConnection::Is_Established`
+- `staging/wwnet/connect.cpp` (session servicing implementation)
+  - `cConnection::Connect_Cs`
+  - `cConnection::Send_Packet_To_Individual`
+- `staging/commando/cnetwork.h`
+  - `cNetwork::Init_Client`
+  - `cNetwork::Init_Server`
+  - `cNetwork::Cleanup_Client`
+  - `cNetwork::Cleanup_Server`
+  - `cNetwork::Update`
+  - `cNetwork::Accept_Handler`
+  - `cNetwork::Refusal_Handler`
+  - `cNetwork::Connection_Handler`
+  - `cNetwork::Server_Packet_Handler`
+  - `cNetwork::Client_Packet_Handler`
+  - `cNetwork::Server_Broken_Connection_Handler`
+  - `cNetwork::Client_Broken_Connection_Handler`
+  - `cNetwork::Eviction_Handler`
+- `staging/commando/gameinitmgr.cpp` and `staging/commando/gameinitmgr.h`
+  - `GameInitMgrClass::Initialize_LAN`
+  - `GameInitMgrClass::Initialize_WOL`
+  - `GameInitMgrClass::Start_Client_Server`
+  - `GameInitMgrClass::End_Client_Server`
+- not established: no explicit session-mode seam for “disabled” inside WWNet itself; disabled behavior is enforced by mode/state checks in higher-level code.
+
+## packet/bitstream
+- `staging/wwnet/packettype.h`
+  - `PACKETTYPE_UNRELIABLE`
+  - `PACKETTYPE_RELIABLE`
+  - `PACKETTYPE_ACK`
+  - `PACKETTYPE_KEEPALIVE`
+  - `PACKETTYPE_CONNECT_CS`
+  - `PACKETTYPE_ACCEPT_SC`
+  - `PACKETTYPE_REFUSAL_SC`
+- `staging/wwnet/wwpacket.h`
+  - `cPacket::Set_Type`
+  - `cPacket::Get_Type`
+  - `cPacket::Set_Id`
+  - `cPacket::Set_Sender_Id`
+  - `cPacket::Set_Send_Time`
+  - `cPacket::Get_Send_Time`
+  - `cPacket::Set_Num_Sends`
+  - `cPacket::Get_Num_Sends`
+  - `cPacket::Add_Vector3`
+  - `cPacket::Get_Vector3`
+  - `cPacket::Construct_Full_Packet`
+  - `cPacket::Construct_App_Packet`
+- `staging/wwnet/packetmgr.h` and `staging/wwnet/packetmgr.cpp`
+  - `PacketManagerClass::Take_Packet`
+  - `PacketManagerClass::Get_Packet`
+  - `PacketManagerClass::Flush`
+  - `PacketManagerClass::Set_Flush_Frequency`
+  - `PacketManagerClass::Get_Total_Compressed_Bandwidth_In`
+  - `PacketManagerClass::Get_Total_Raw_Bandwidth_Out`
+  - `PacketManagerClass::Toggle_Allow_Deltas`
+  - `PacketManagerClass::Toggle_Allow_Combos`
+  - `PacketManagerClass::Disable_Optimizations`
+
+## replication
+- `staging/wwnet/networkobject.h`
+  - `NetworkObjectClass::Set_Object_Dirty_Bit`
+  - `NetworkObjectClass::Get_Object_Dirty_Bit`
+  - `NetworkObjectClass::Export_Creation`
+  - `NetworkObjectClass::Export_Rare`
+  - `NetworkObjectClass::Export_Occasional`
+  - `NetworkObjectClass::Export_Frequent`
+  - `NetworkObjectClass::Import_Creation`
+  - `NetworkObjectClass::Import_Rare`
+  - `NetworkObjectClass::Import_Occasional`
+  - `NetworkObjectClass::Import_Frequent`
+  - `NetworkObjectClass::Get_Object_Dirty_Bits`
+  - `NetworkObjectClass::Set_Update_Rate`
+  - `NetworkObjectClass::Set_Last_Clientside_Update_Time`
+- `staging/wwnet/networkobjectmgr.h`
+  - `NetworkObjectMgrClass::Register_Object`
+  - `NetworkObjectMgrClass::Unregister_Object`
+  - `NetworkObjectMgrClass::Register_Object_For_Deletion`
+  - `NetworkObjectMgrClass::Find_Object`
+  - `NetworkObjectMgrClass::Think`
+  - `NetworkObjectMgrClass::Get_New_Dynamic_ID`
+  - `NetworkObjectMgrClass::Get_New_Client_ID`
+  - `NetworkObjectMgrClass::Delete_Pending`
+  - `NetworkObjectMgrClass::Delete_Client_Objects`
+- `staging/commando/cnetwork.h` and `staging/commando/cnetwork.cpp`
+  - `cNetwork::Send_Object_Update`
+  - `cNetwork::Tell_Client_About_Dynamic_Objects`
+  - `cNetwork::Tell_Client_About_Delete_Notifications`
+  - `cNetwork::Tell_Server_About_Dynamic_Objects`
+  - `cNetwork::Process_Eviction_Sc`
+  - `cNetwork::Send_Object_Update`
+
+## timeout/disconnect
+- `staging/wwnet/netutil.h`
+  - `cNetUtil::KEEPALIVE_TIMEOUT_MS`
+  - `cNetUtil::RESEND_TIMEOUT_LAN_MS`
+  - `cNetUtil::RESEND_TIMEOUT_INTERNET_MS`
+  - `cNetUtil::CLIENT_CONNECTION_LOSS_TIMEOUT`
+  - `cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT`
+  - `cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE`
+- `staging/wwnet/connect.h`
+  - `cConnection::Allow_Extra_Timeout_For_Loading`
+  - `cConnection::Allow_Packet_Processing`
+  - `cConnection::Is_Packet_Too_Old`
+  - `cConnection::Is_Time_To_Resend_Packet_To_Remote_Host`
+  - `cConnection::Send_Keepalives`
+  - `cConnection::Is_Bad_Connection`
+- `staging/wwnet/rhost.h`
+  - `cRemoteHost::Get_Last_Contact_Time`
+  - `cRemoteHost::Set_Last_Contact_Time`
+  - `cRemoteHost::Get_Last_Keepalive_Time_Ms`
+  - `cRemoteHost::Set_Last_Keepalive_Time_Ms`
+  - `cRemoteHost::Get_Resend_Timeout_Ms`
+  - `cRemoteHost::Adjust_Resend_Timeout`
+  - `cRemoteHost::Set_Total_Resent_Packets_In_Queue`
+  - `cRemoteHost::Must_Evict`
+  - `cRemoteHost::Set_Must_Evict`
+- `staging/commando/cnetwork.cpp`
+  - `cNetwork::Server_Broken_Connection_Handler`
+  - `cNetwork::Client_Broken_Connection_Handler`
+  - `cNetwork::Eviction_Handler`
+- not established: no dedicated provider-level timeout policy interface; WWNet constants/functions are still owner-local.
+
+## UI boundary
+- `staging/commando/netinterface.h` and `staging/commando/netinterface.cpp`
+  - `cNetInterface::Get_Nickname`
+  - `cNetInterface::Set_Nickname`
+  - `cNetInterface::Set_Random_Nickname`
+  - `cNetInterface::Set_Side_Preference`
+- `staging/commando/dlgmplanhostoptions.cpp`
+  - `MPLanHostOptionsMenuClass` host option flow using LAN/WOL flags.
+- `staging/commando/dlgmplangamelist.cpp`
+  - `MPLanGameListMenuClass::Join_Game`
+  - `MPLanGameListMenuClass::Connect_To_Server`
+- `staging/commando/cnetwork.cpp`
+  - `cNetwork::Accept_Handler`
+  - `cNetwork::Refusal_Handler`
+  - branch to LAN (`GameModeManager::Find("LAN")`) and WOL (`WolGameModeClass`) action handlers.
+- `staging/commando/DlgMPConnect.cpp`, `staging/commando/renegadedialogmgr.cpp`
+  - user-facing connect-flow entry points (`DlgMPConnect::DoDialog`, menu location transitions).
+
+## currently isolated desktop/public-service dependency
+- `staging/commando/gamespyadmin.h` and `staging/commando/gamespyadmin.cpp`
+  - `cGameSpyAdmin::Is_Gamespy_Game`
+  - `cGameSpyAdmin::Set_Is_Server_Gamespy_Listed`
+  - `cGameSpyAdmin::Set_Game_Host_Ip`
+  - `cGameSpyAdmin::Set_Game_Host_Port`
+  - `cGameSpyAdmin::Connect_To_Game_Server`
+  - `cGameSpyAdmin::Think` + `HandleNotification`
+- `staging/commando/GameSpy_QnR.h` and `staging/commando/GameSpy_QnR.cpp`
+  - `CGameSpyQnR` (`Init`, `Think`, `TrackUsage`, `Shutdown`)
+- `staging/commando/gamespyauthmgr.h` and `staging/commando/gamespyauthmgr.cpp`
+  - `cGameSpyAuthMgr::Think`
+  - `cGameSpyAuthMgr::Initiate_Auth_Rejection`
+  - `cGameSpyAuthMgr::Evict_Player`
+- `staging/commando/wolgmode.h` and `staging/commando/wolgmode.cpp`
+  - `WolGameModeClass` public/session/quickmatch/event handlers
+- `staging/commando/WOLBuddyMgr.h`, `WOLChatMgr.cpp`, `WOLQuickMatch.cpp`
+  - WWOnline/WOL-specific chat/session/channel handlers and list events
+- `staging/commando/useroptions.cpp` / `staging/commando/useroptions.h`
+  - `+CONNECT`, `+NETPLAYERNAME`, `+PASS` command-line handling
+  - `GameSpyNickname`, `GameSpy*` registry keys and launch flags
+- `port/platform/renegade_network_provider.h` and `port/platform/renegade_network_provider.cpp`
+  - `cGameSpyAdmin` compatibility bridge exists only for capability queries (`Is_Gamespy_Game`) and state persistence; actual public-service transport is not implemented here.
+
+## Narrowest candidate seam for modes beneath original session/UI ownership
+- Disabled
+  - Session/UI seam candidate: do not instantiate or activate session connections.
+  - Symbols: `staging/commando/gameinitmgr.cpp` (`Mode` transitions to `MODE_UNKNOWN/SP/SKIRMISH`) and `staging/commando/cnetwork.cpp` (`cNetwork::I_Am_Client`/`I_Am_Server` checks).
+  - Status: not established as a dedicated transport-mode enum in provider boundary.
+
+- Direct IP
+  - Session/UI seam candidate: host/port input to `cGameSpyAdmin` then `cNetwork::Init_Client`.
+  - Symbols:
+    - `staging/commando/useroptions.cpp` (`+CONNECT` parse path, `Set_Game_Host_Ip`, `Set_Game_Host_Port`)
+    - `staging/commando/gamespyadmin.cpp` (`Connect_To_Game_Server`, `Set_Game_Host_Ip`, `Set_Game_Host_Port`, `Join_Server`)
+    - `staging/commando/cnetwork.cpp` (`Init_Client`, `Update`)
+  - Provider seam with `RenegadeNetworkProvider` is not established for direct-address connection setup.
+
+- LAN
+  - Session/UI seam candidate: activate LAN mode first, then build host session through existing WWNet stack.
+  - Symbols:
+    - `staging/commando/gameinitmgr.cpp` (`Initialize_LAN`, `Start_Client_Server`, `GameModeManager::Find("LAN")->Activate`)
+    - `staging/commando/lanchat.cpp` (`Init_Lan_Protocol_And_Socket`, `Send_Position_Broadcast`)
+    - `staging/commando/cnetwork.cpp` (`cNetwork::Init_Client`, `Init_Server`, bandwidth selection branch on LAN mode)
+  - Discovery seam currently duplicated by both WWNet/list/UI path and platform provider:
+    - `port/platform/renegade_network_provider.h` and `port/platform/renegade_network_provider.cpp` (`DiscoveryProvider`, `LanDiscovery`, `LAN_DISCOVERY_PORT`)
+    - `staging/commando/gamechanlist.h`, `staging/commando/gamechanlist.cpp`, `staging/commando/dlgmplangamelist.h`, and `staging/commando/dlgmplangamelist.cpp` consume discovered channel data.
+
+## Receipt
+- Task completed: static inventory generated at `reports/generated/NETWORK_PROVIDER_STATIC_INVENTORY.md`.
+- Method: read-only inspection of symbol ownership in checked-out WWNet/Commando and `port/platform` network boundary files.
+- Scope claim: inventory-only; no source/build/test changes and no runtime/build evidence collected.
+- External/public-service compatibility claim: not established and not claimed (no TT/W3DHub/WWWOL dependency claims made beyond static mapping).

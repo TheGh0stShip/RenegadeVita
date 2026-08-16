@@ -1,0 +1,89 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -93,6 +93,46 @@
+ ////////////////////////////////////////////////////////////////
+ //	Static data
+ ////////////////////////////////////////////////////////////////
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++DialogFactoryBaseClass *FactoryArray[FACTORY_COUNT] =
++{
++	// Preserve the original factory mechanism for the first playable route.
++	// Online/LAN and option pages whose real services are not linked yet stay
++	// unavailable instead of being replaced by synthetic dialogs.
++	new DialogFactoryClass<StartSPGameDialogClass>,
++	NULL,
++	NULL,
++	new DialogFactoryClass<OptionsMenuClass>,
++	new DialogFactoryClass<DifficultyMenuClass>,
++	NULL,
++	new DialogFactoryClass<LoadSPGameMenuClass>,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	new DialogFactoryClass<QuitVerificationDialogClass>,
++	NULL,
++	new DialogFactoryClass<MainMenuDialogClass>,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++};
++#else
+ DialogFactoryBaseClass *FactoryArray[FACTORY_COUNT] =
+ {
+ 	new DialogFactoryClass<StartSPGameDialogClass>,
+@@ -130,6 +172,7 @@
+ 	NULL,	//IDC_MENU_MP_LAN_JOIN_BUTTON
+ 	NULL,	//IDC_MENU_MP_LAN_START_BUTTON
+ };
++#endif
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+@@ -268,6 +311,7 @@
+ 			START_DIALOG (SplashOutroMenuDialogClass);
+ 			break;
+ 
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 		case LOC_INTERNET_MAIN:
+ 			MPWolMainMenuClass::Display ();
+ 			break;
+@@ -308,6 +352,7 @@
+ 		case LOC_GAMESPY_MAIN:
+ 			START_DIALOG (GameSpyMainDialogClass);
+ 			break;
++#endif
+ 	}
+ 
+ 	//
+@@ -387,6 +432,7 @@
+ 			break ;
+ 		}
+ 
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 		case IDC_MP_SHORTCUT_NEWS:
+ 			DlgWebPage::DoDialog("News");
+ 			break;
+@@ -433,6 +479,7 @@
+ 			START_DIALOG (MultiplayOptionsMenuClass);
+ 			break;
+ 
++#endif
+ 		case IDC_QUIT:
+ #ifdef MULTIPLAYERDEMO
+ 				DialogMgrClass::Flush_Dialogs ();

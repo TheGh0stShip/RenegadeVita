@@ -1,0 +1,343 @@
+--- a/gamedata.h
++++ b/gamedata.h
+@@ -62,2 +62,3 @@
+ class SoldierGameObj;
++class cPlayer;
+ class cPacket;
+@@ -293 +294 @@
+-		WideStringClass	Get_Settings_Description(void)						{return(SettingsDescription);}
++		WideStringClass	Get_Settings_Description(void)						{ WideStringClass result; result.Convert_From(SettingsDescription); return result; }
+--- a/player.cpp
++++ b/player.cpp
+@@ -64 +64 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -68 +68 @@
+-#include "consolemode.h"
++// Console mode is a desktop UI boundary; no declaration is needed here.
+@@ -69 +69 @@
+-#include "gamespyadmin.h"
++#include "a31_gamespy_stub.h"
+--- a/playermanager.cpp
++++ b/playermanager.cpp
+@@ -48 +48 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -64 +64 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+@@ -65 +65 @@
+-#include "gamespyadmin.h"
++#include "a31_gamespy_stub.h"
+@@ -66 +66 @@
+-#include "demosupport.h"
++// Demo playback is outside the offline campaign boundary.
+@@ -1303 +1303 @@
+-	DEMO_SECURITY_CHECK;
++	// Demo security is not part of the offline campaign boundary.
+@@ -1370 +1370 @@
+-	float text_len = PFont->String_Width(heading);
++	float text_len = PFont->String_Width(heading); int j;
+--- a/god.cpp
++++ b/god.cpp
+@@ -36 +36 @@
+-#include "dialogtests.h"
++#include "a31_god_ui_stub.h"
+@@ -38 +38 @@
+-#include "gameinitmgr.h"
++#include "a31_gameinit_stub.h"
+@@ -43 +43 @@
+-#include "renegadedialogmgr.h"
++// cGod dialog transitions are supplied by a31_god_ui_stub.h.
+@@ -46 +46 @@
+-#include "dialogmgr.h"
++#include "a31_dialogmgr_stub.h"
+@@ -47 +47 @@
+-#include "wolgmode.h"
++#include "a31_wol_stub.h"
+@@ -48 +48 @@
+-#include "demosupport.h"
++// Demo playback is outside the offline campaign boundary.
+@@ -162 +162 @@
+-	DEMO_SECURITY_CHECK;
++	// Demo security is not part of the offline campaign boundary.
+--- a/gamedata.cpp
++++ b/gamedata.cpp
+@@ -65 +65 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -76 +76 @@
+-#include "wolgmode.h"
++#include "a31_wol_stub.h"
+@@ -78 +78 @@
+-#include "nat.h"
++// WOL NAT is supplied by a31_wol_stub.h for the offline session.
+@@ -83 +83 @@
+-#include "wolgameinfo.h"
++// WOL game-info declaration is supplied by a31_wol_stub.h.
+@@ -85 +85 @@
+-#include "dlgcncwinscreen.h"
++// Match-result dialog is a desktop presentation boundary.
+@@ -86 +86 @@
+-#include "dialogmgr.h"
++#include "a31_dialogmgr_stub.h"
+@@ -93 +93 @@
+-#include "bandwidthcheck.h"
++// Online bandwidth probing is outside the offline campaign boundary.
+@@ -94 +94 @@
+-#include "serversettings.h"
++// Dedicated-server settings are outside the offline campaign boundary.
+@@ -96 +96 @@
+-#include "gamespyadmin.h"
++#include "a31_gamespy_stub.h"
+@@ -98 +98 @@
+-#include "demosupport.h"
++// Demo playback is outside the offline campaign boundary.
+@@ -186 +186,2 @@
+-   Set_Owner(							cNetInterface::Get_Nickname());
++   WideStringClass local_owner = cNetInterface::Get_Nickname();
++   Set_Owner(local_owner);
+@@ -836,2 +837,2 @@
+-	packet.Add(::CRC_Stringi(MapName));
+-	packet.Add(::CRC_Stringi(ModName));
++	packet.Add((uint32)::CRC_Stringi(MapName));
++	packet.Add((uint32)::CRC_Stringi(ModName));
+@@ -1252 +1252 @@
+-		START_DIALOG (CNCWinScreenMenuClass);
++		// Win-screen presentation is a desktop UI boundary.
+@@ -1868 +1868 @@
+-	float x,y;
++	float x,y; int j;
+@@ -1997 +1997 @@
+-	DEMO_SECURITY_CHECK;
++	// Demo security is not part of the offline campaign boundary.
+--- a/team.cpp
++++ b/team.cpp
+@@ -57 +57 @@
+-#include "gamespyadmin.h"
++#include "renegade_network_provider.h"
+--- a/teammanager.cpp
++++ b/teammanager.cpp
+@@ -62 +62 @@
+-#include "gamespyadmin.h"
++#include "renegade_network_provider.h"
+--- a/netinterface.cpp
++++ b/netinterface.cpp
+@@ -38 +38 @@
+-#include "gamespyadmin.h"
++#include "renegade_network_provider.h"
+@@ -56,44 +56,15 @@
+ //-----------------------------------------------------------------------------
+ WideStringClass cNetInterface::Get_Nickname(void)
+ {
+-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+-		
+-		//
+-		// If the gamespy nickname is blank, set it to "Unnamed"
+-		//
+-		if (!::strcmp(cUserOptions::GameSpyNickname.Get(), "")) {
+-			cUserOptions::GameSpyNickname.Set("Unnamed");
+-		}
+-
+-		WideStringClass wide_name;
+-		wide_name.Convert_From(cUserOptions::GameSpyNickname.Get());
+-		return wide_name;
+-	} else {
+-		return Nickname;
+-	}
++	// LAN/direct-IP identity remains the original cNetInterface nickname.
++	return Nickname;
+ }
+ 
+ //-----------------------------------------------------------------------------
+ void cNetInterface::Set_Nickname(WideStringClass & name)
+ {
+-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+-		WideStringClass wide_name = name;
+-		if (wide_name.Get_Length() > 30) {
+-			wide_name[30] = 0;
+-		}
+-		StringClass name;
+-		wide_name.Convert_To(name);
+-		cUserOptions::GameSpyNickname.Set(name.Peek_Buffer());
+-	} else {
+-		Nickname = name;
+-
+-		//
+-		// Abbreviate to 9 chars
+-		//
+-		if (Nickname.Get_Length() > 9) {
+-			Nickname[9] = 0;
+-		}
+-	}
++	Nickname = name;
++	if (Nickname.Get_Length() > 30) Nickname[30] = 0;
+ }
+ 
+ //-----------------------------------------------------------------------------
+--- a/cnetwork.cpp
++++ b/cnetwork.cpp
+@@ -39 +39 @@
+-#include <shellapi.h>
++#include "a31_shell_stub.h"
+@@ -44 +44 @@
+-#include "langmode.h"
++#include "a31_lanmode_stub.h"
+@@ -45 +45 @@
+-#include "wolgmode.h"
++#include "a31_wol_stub.h"
+@@ -49 +49 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -70 +70 @@
+-#include	"natter.h"
++// WOL NAT service is outside the LAN/direct-IP provider boundary.
+@@ -72 +72 @@
+-#include "gameinitmgr.h"
++#include "a31_gameinit_stub.h"
+@@ -73 +73 @@
+-#include "dlgmessagebox.h"
++#include "a31_messagebox_stub.h"
+@@ -76 +76 @@
+-#include "gamechanlist.h"
++// WOL channel-list service is outside the LAN/direct-IP provider boundary.
+@@ -83 +83 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+@@ -84 +84 @@
+-#include "slavemaster.h"
++#include "a31_slavemaster_stub.h"
+@@ -86 +86 @@
+-#include "gamespyadmin.h"
++#include "renegade_network_provider.h"
+@@ -87 +87 @@
+-#include "demosupport.h"
++// Demo playback is outside the Vita runtime boundary.
+@@ -88 +88 @@
+-#include "serversettings.h"
++#include "a31_serversettings_stub.h"
+@@ -89 +89 @@
+-#include "dlgmpconnectionrefused.h"
++#include "a31_network_dialog_stub.h"
+@@ -92 +92 @@
+-#include <WWUI\DialogMgr.h>
++// DialogMgrClass is supplied by a31_network_dialog_stub.h.
+@@ -598 +598 @@
+-	cGameChannelList::Remove_All();//TSS092201 added
++	// WOL channel-list teardown is owned by the optional public-discovery provider.
+@@ -966 +966 @@
+-	DEMO_SECURITY_CHECK;
++	// Demo security is outside the Vita runtime boundary.
+@@ -1096 +1096 @@
+-         strcat(ClientEnumerationString, itoa(rhost_id, temp_str, 10));
++         snprintf(temp_str, sizeof(temp_str), "%d", rhost_id); strcat(ClientEnumerationString, temp_str);
+@@ -1389 +1389 @@
+-	if ((int) hinst <= 32) {
++	if (reinterpret_cast<intptr_t>(hinst) <= 32) {
+--- a/sctextobj.cpp
++++ b/sctextobj.cpp
+@@ -51 +51 @@
+-#include "dlgmessagebox.h"
++#include "a31_messagebox_stub.h"
+--- a/gamedataupdateevent.cpp
++++ b/gamedataupdateevent.cpp
+@@ -60 +60 @@
+-	cGameDataUpdateEvent::cGameDataUpdateEvent();
++	TimeRemainingSeconds = 0; // GCC cannot invoke a constructor as a reset method.
+--- a/team.cpp
++++ b/team.cpp
+@@ -53 +53 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+--- a/teammanager.cpp
++++ b/teammanager.cpp
+@@ -43,2 +43,3 @@
+ #include "cnetwork.h"
++#include "gamemode.h"
+ //#include "gamesettings.h"
+@@ -44 +44 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -60 +60 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+@@ -568 +568 @@
+-   for (j = 0; j < MAX_TEAMS; j++) {
++   for (int j = 0; j < MAX_TEAMS; j++) {
+@@ -640 +640 @@
+-   for (j = 0; j < MAX_TEAMS; j++) {
++   for (int j = 0; j < MAX_TEAMS; j++) {
+--- a/sctextobj.cpp
++++ b/sctextobj.cpp
+@@ -55 +55 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+--- a/gamedata.cpp
++++ b/gamedata.cpp
+@@ -88 +88 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+--- a/comnetrcvinst.cpp
++++ b/comnetrcvinst.cpp
+@@ -49 +49 @@
+-#include "serversettings.h"
++#include "a31_serversettings_stub.h"
+@@ -50 +50 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+@@ -51 +51 @@
+-#include "demosupport.h"
++// Demo playback and its desktop service checks are outside the LAN/direct-IP baseline.
+@@ -143 +143 @@
+-	DEMO_SECURITY_CHECK;
++	// Demo security is outside the LAN/direct-IP baseline.
+--- a/gameoptionsevent.cpp
++++ b/gameoptionsevent.cpp
+@@ -46,12 +46,7 @@
+-#include "dialogbase.h"
+-#include "dialogmgr.h"
+-#include "dlgmpconnect.h"
+-#include "dialogresource.h"
+-#include "resource.h"
++#include "a31_network_dialog_stub.h"
+ #include "apppackettypes.h"
+ #include "modpackagemgr.h"
+ #include "specialbuilds.h"
+-#include "dlgmpconnectionrefused.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
+-#include <WWLib\RealCRC.h>
++#include "realcrc.h"
+--- a/evictionevent.cpp
++++ b/evictionevent.cpp
+@@ -48 +48 @@
+-#include "dialogtests.h"
++// The local eviction dialog is not part of the LAN/direct-IP protocol event.
+--- a/gameoptionsevent.cpp
++++ b/gameoptionsevent.cpp
+@@ -122,2 +122,2 @@
+-	packet.Add(CRC_Stringi(The_Game()->Get_Mod_Name()));
+-	packet.Add(CRC_Stringi(The_Game()->Get_Map_Name()));
++	packet.Add(static_cast<uint32>(CRC_Stringi(The_Game()->Get_Mod_Name())));
++	packet.Add(static_cast<uint32>(CRC_Stringi(The_Game()->Get_Map_Name())));
+--- a/regbool.cpp
++++ b/regbool.cpp
+@@ -42 +42,6 @@
+-	WWASSERT(registry_location != NULL);
++	if (registry_location == NULL) {
++		RegistryLocation[0] = '\0';
++		KeyName[0] = '\0';
++		Value = default_value ? 1 : 0;
++		return;
++	}
+--- a/player.cpp
++++ b/player.cpp
+@@ -85,2 +85,8 @@
+-	//WWDEBUG_SAY(("cPlayer::cPlayer\n"));
++	// The original constructor routes these through setters, which compare
++	// the fields first. Initialize the inactive public-service state before
++	// that comparison; LAN/direct-IP retains the original player object.
++	GameSpyAuthState = GAMESPY_AUTH_STATE_INITIAL;
++	GameSpyAuthStateEntryTimeMs = 0;
++	GameSpyKickState = GAMESPY_KICK_STATE_INITIAL;
++	GameSpyKickStateEntryTimeMs = 0;

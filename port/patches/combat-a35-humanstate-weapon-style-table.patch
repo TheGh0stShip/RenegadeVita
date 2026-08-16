@@ -1,0 +1,29 @@
+--- a/humanstate.cpp
++++ b/humanstate.cpp
+@@ -649,12 +649,15 @@
+-static const char * _weapon_style_names[ NUM_WEAPON_HOLD_STYLES ] = {
++static const char * _weapon_style_names[] = {
+ 		"A0",		//WEAPON_HOLD_STYLE_C4					= 0,
+ 		"A0",		//WEAPON_HOLD_STYLE_NOT_USED,
+ 		"C2",		//WEAPON_HOLD_STYLE_AT_SHOULDER,	// 2
+ 		"D2", 	//WEAPON_HOLD_STYLE_AT_HIP,
+ 		"E2",		//WEAPON_HOLD_STYLE_LAUNCHER,
+ 		"F2",		//WEAPON_HOLD_STYLE_HANDGUN,
+-		"A0",		//WEAPON_HOLD_STYLE_BEACON
++		"A0",		//WEAPON_HOLD_STYLE_BEACON,
+ 		"A0",		//WEAPON_HOLD_STYLE_EMPTY_HANDS,
+ 		"B0",		//WEAPON_HOLD_STYLE_AT_CHEST,
+ 		"A0",		//WEAPON_HOLD_STYLE_HANDS_DOWN,		
+ };
++
++static_assert((sizeof(_weapon_style_names) / sizeof(_weapon_style_names[0])) ==
++	NUM_WEAPON_HOLD_STYLES, "weapon hold style table must match enum");
+@@ -740 +743,8 @@
++		if ( hold_style < 0 || hold_style >= NUM_WEAPON_HOLD_STYLES ) {
++			// Corrupt serialized/mod data must not index the animation table.
++			hold_style = WEAPON_HOLD_STYLE_EMPTY_HANDS;
++		}
+ 		const char * torso_anim_name = _weapon_style_names[hold_style];
++		if ( torso_anim_name == NULL ) {
++			torso_anim_name = _weapon_style_names[WEAPON_HOLD_STYLE_EMPTY_HANDS];
++		}

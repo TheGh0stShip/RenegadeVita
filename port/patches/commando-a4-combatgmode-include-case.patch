@@ -1,0 +1,35 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -106,7 +106,7 @@
+ #include "radiocommanddisplay.h"
+ #include "consolemode.h"
+ #include "specialbuilds.h"
+-#include <wwlib\realcrc.h>
++#include "realcrc.h"
+ #include "demosupport.h"
+ #include "natter.h"
+ #include "gamespyadmin.h"
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -68 +68 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -107 +107 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+--- a/demosupport.h
++++ b/demosupport.h
+@@ -30 +30 @@
+-#include <wwlib\realcrc.h>
++#include "realcrc.h"
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -112 +112 @@
+-#include "natter.h"
++#include "a31_wol_stub.h"
+@@ -113 +113 @@
+-#include "gamespyadmin.h"
++#include "a31_gamespy_stub.h"
+@@ -116 +116 @@
+-#include "GameSpy_QnR.h"
++#include "a4_gameinit_online_boundary.h"

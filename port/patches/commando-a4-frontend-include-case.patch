@@ -1,0 +1,48 @@
+--- a/DlgWOLWait.h
++++ b/DlgWOLWait.h
+@@ -36,10 +36,10 @@
+ #ifndef __DLGWOLWAIT_H__
+ #define __DLGWOLWAIT_H__
+ 
+-#include <WWUI\PopupDialog.h>
+-#include <WWLib\Notify.h>
+-#include <WWOnline\RefPtr.h>
+-#include <WWOnline\WaitCondition.h>
++#include "popupdialog.h"
++#include "notify.h"
++#include <WWOnline/RefPtr.h>
++#include <WWOnline/WaitCondition.h>
+ 
+ namespace WWOnline
+ {
+--- a/dialogtests.h
++++ b/dialogtests.h
+@@ -48,6 +48,5 @@
+-#include "DlgWOLWait.h"
+-#include <WWLib\Notify.h>
+-#include <WWOnline\RefPtr.h>
++#include "notify.h"
+ 
+ 
++class DlgWOLWaitEvent;
+ class WheeledVehicleDefClass;
+--- a/DlgMessageBox.h
++++ b/DlgMessageBox.h
+@@ -40,2 +40,2 @@
+-#include <WWUI\PopupDialog.h>
+-#include <WWLib\Notify.h>
++#include "popupdialog.h"
++#include "notify.h"
+--- a/DlgMessageBox.cpp
++++ b/DlgMessageBox.cpp
+@@ -36,8 +36,8 @@
+ 
+ #include "DlgMessageBox.h"
+ #include "Resource.h"
+-#include <WWTranslateDB\TranslateDB.h>
+-#include "WWDebug.h"
++#include "translatedb.h"
++#include "wwdebug.h"
+ 
+ //
+ // Class statics

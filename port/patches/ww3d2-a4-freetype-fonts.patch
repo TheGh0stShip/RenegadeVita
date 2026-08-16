@@ -1,0 +1,128 @@
+--- a/assetmgr.cpp
++++ b/assetmgr.cpp
+@@ -1304,12 +1304,6 @@
+ FontCharsClass *	WW3DAssetManager::Get_FontChars( const char * name, int point_size, bool is_bold )
+ {
+ 	WWPROFILE( "WW3DAssetManager::Get_FontChars" );
+-#if defined(RENEGADE_VITA_PORT)
+-	(void)name;
+-	(void)point_size;
+-	(void)is_bold;
+-	return NULL;
+-#else
+ 
+ 	// loop through and see if we already have the font chars and we can just return it.
+ 	for ( int i = 0; i < FontCharsList.Count(); i++ ) {
+@@ -1325,7 +1319,6 @@
+ 	font->Add_Ref();
+ 	FontCharsList.Add( font );			// add it to the list	
+ 	return font;							// return it
+-#endif
+ }
+ 
+ 
+@@ -1582,4 +1575,3 @@
+ {
+ 	return WW3DAssetManager::Get_Instance()->HTreeManager.Get_Tree(Index)->Get_Name();
+ }
+-
+--- a/render2dsentence.cpp
++++ b/render2dsentence.cpp
+@@ -41,6 +41,10 @@
+ #include "wwmemlog.h"
+ #include "dx8wrapper.h"
+ 
++#if defined(RENEGADE_VITA_PORT)
++#include "renegade_freetype_font_provider.h"
++#endif
++
+ 
+ ////////////////////////////////////////////////////////////////////////////////////
+ //	Local constants
+@@ -1171,6 +1175,31 @@
+ const FontCharsClass::CharDataStruct *
+ FontCharsClass::Store_GDI_Char (WCHAR ch)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	int char_width = 0;
++	int char_height = 0;
++	if (!RenegadeVita_Font_Measure_Glyph(GDIFontName, PointSize, IsBold, ch,
++			&char_width, &char_height)) {
++		char_width = 0;
++	}
++	Update_Current_Buffer(char_width);
++	uint16 *curr_buffer = BufferList[BufferList.Count() - 1] + CurrPixelOffset;
++	if (char_width > 0) {
++		RenegadeVita_Font_Rasterize_Glyph(GDIFontName, PointSize, IsBold, ch,
++			curr_buffer, char_width, CharHeight);
++	}
++	CharDataStruct *char_data = new CharDataStruct;
++	char_data->Value = ch;
++	char_data->Width = char_width;
++	char_data->Buffer = curr_buffer;
++	if (ch < 256) {
++		ASCIICharArray[ch] = char_data;
++	} else {
++		UnicodeCharArray[ch - FirstUnicodeChar] = char_data;
++	}
++	CurrPixelOffset += char_width * CharHeight;
++	return char_data;
++#else
+ 	int width	= PointSize * 2;
+ 	int height	= PointSize * 2;
+ 
+@@ -1265,6 +1294,7 @@
+ 	//	Return the index of the entry we just added
+ 	//
+ 	return char_data;
++#endif
+ }
+ 
+ 
+@@ -1311,6 +1341,13 @@
+ void
+ FontCharsClass::Create_GDI_Font (const char *font_name)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	CharHeight = RenegadeVita_Font_Height(font_name, PointSize, IsBold);
++	if (CharHeight <= 0) {
++		CharHeight = PointSize > 0 ? PointSize : 1;
++	}
++	return;
++#else
+ 	HDC screen_dc = ::GetDC (NULL);
+ 
+ 	//
+@@ -1406,6 +1443,7 @@
+ 	// Release our temporary screen DC
+ 	//
+ 	::ReleaseDC (NULL, screen_dc);
++#endif
+ 	return ;
+ }
+ 
+@@ -1597,4 +1635,3 @@
+ 
+ 	return ;
+ }
+-
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -78,6 +78,9 @@
+ 
+ 
+ #include "ww3d.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "renegade_freetype_font_provider.h"
++#endif
+ #include "rinfo.h"
+ #include "assetmgr.h"
+ #include "boxrobj.h"
+@@ -354,6 +357,7 @@
+ 	if (WW3DAssetManager::Get_Instance()) {
+ 		WW3DAssetManager::Get_Instance()->Free_Assets();
+ 	}
++	RenegadeVita_Font_Shutdown();
+ 	VertexMaterialClass::Shutdown();
+ 	delete [] DefaultStaticSortLists;
+ 	DefaultStaticSortLists = NULL;

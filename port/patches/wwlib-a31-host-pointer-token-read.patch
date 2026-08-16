@@ -1,0 +1,22 @@
+--- a/chunkio.h
++++ b/chunkio.h
+@@ -338,3 +338,19 @@
++#if defined(RENEGADE_HOST_ABI_TEST)
++template<class T> inline void RV_Read_Micro_Chunk_Value(ChunkLoadClass &cload, T &value) { cload.Read(&value, sizeof(value)); }
++template<class T> inline void RV_Read_Micro_Chunk_Value(ChunkLoadClass &cload, T *&value)
++{
++	if (cload.Cur_Micro_Chunk_Length() == sizeof(uint32)) {
++		uint32 token = 0;
++		cload.Read(&token, sizeof(token));
++		value = reinterpret_cast<T *>(static_cast<uintptr_t>(token));
++	} else {
++		cload.Read(&value, sizeof(value));
++	}
++}
++#define READ_MICRO_CHUNK(cload,id,var) \
++	case (id): RV_Read_Micro_Chunk_Value(cload, var); break;
++#else
+ #define READ_MICRO_CHUNK(cload,id,var)						\
+ 	case (id):	cload.Read(&var,sizeof(var)); break;	\
+ 
++#endif

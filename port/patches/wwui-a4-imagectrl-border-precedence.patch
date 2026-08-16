@@ -1,0 +1,5 @@
+--- a/imagectrl.cpp
++++ b/imagectrl.cpp
+@@ -99 +99 @@
+-	if ( Style & WS_BORDER == WS_BORDER ) {
++	if ((Style & WS_BORDER) == WS_BORDER) {

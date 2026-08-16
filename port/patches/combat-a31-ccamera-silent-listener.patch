@@ -1,0 +1,9 @@
+--- a/ccamera.cpp
++++ b/ccamera.cpp
+@@ -336 +336,6 @@
++#if !defined(RENEGADE_VITA_PORT)
+ 	SniperListener = new Listener3DClass;
++#else
++	// Vita's no-output audio boundary has no 3D listener implementation yet.
++	SniperListener = NULL;
++#endif

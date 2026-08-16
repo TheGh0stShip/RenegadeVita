@@ -1,0 +1,36 @@
+--- a/listctrl.cpp
++++ b/listctrl.cpp
+@@ -728,7 +728,7 @@
+ 	// visibility changed
+ 	//
+ 	if (was_scrollbar_displayed != IsScrollBarDisplayed) {
+-		for (index = 0; index < RowInfoList.Count (); index ++) {
++		for (int index = 0; index < RowInfoList.Count (); index ++) {
+ 			Update_Row_Height (index);
+ 		}
+ 
+@@ -1958,7 +1958,7 @@
+ 	//
+ 	//	Now delete all the entries from each column
+ 	//
+-	for (index = 0; index < ColList.Count (); index ++) {
++	for (int index = 0; index < ColList.Count (); index ++) {
+ 		ColList[index]->Delete_All_Entries ();
+ 	}
+ 
+@@ -2265,13 +2265,14 @@
+ 	int count		= RowInfoList.Count ();
+ 	float height	= TextRect.Height ();
+ 
++	int index = ScrollPos;
+ 	bool found = false;
+ 
+ 	//
+ 	//	Scan either direction from the current scroll
+ 	// position until we've moved a whole page
+ 	//
+-	for (	int index = ScrollPos;
++	for (	;
+ 			index >= 0 && index < count;
+ 			index += direction)
+ 	{		

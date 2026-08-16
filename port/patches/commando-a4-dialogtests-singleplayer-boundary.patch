@@ -1,0 +1,146 @@
+--- a/dialogtests.cpp
++++ b/dialogtests.cpp
+@@ -37,11 +37,21 @@
+ #include "dialogtests.h"
+ #include "dialogresource.h"
+ #include "dialogcontrol.h"
++#include "resource.h"
++#include "useroptions.h"
++#include "gamemode.h"
++#include "campaign.h"
++#include "gameinitmgr.h"
++#include "dialogmgr.h"
++#include "god.h"
++#include "translatedb.h"
++#include "string_ids.h"
++
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "tabctrl.h"
+ #include "combatchunkid.h"
+ #include "basecontroller.h"
+ #include "building.h"
+-#include "resource.h"
+ #include "combat.h"
+ #include "soldier.h"
+ #include "playertype.h"
+@@ -59,27 +69,18 @@
+ #include "editctrl.h"
+ #include "comboboxctrl.h"
+ #include "gdcnc.h"
+-#include "useroptions.h"
+ #include "cnetwork.h"
+ #include "listctrl.h"
+ #include "gamechannel.h"
+ #include "gamechanlist.h"
+-#include "gamemode.h"
+ #include "wolgmode.h"
+ #include "langmode.h"
+ #include "dlgcontrolslisttab.h"
+-#include "campaign.h"
+-#include "gameinitmgr.h"
+-#include "dialogmgr.h"
+-#include "god.h"
+ #include "shortcutbarctrl.h"
+ #include "treectrl.h"
+ #include "wheelvehicle.h"
+ #include "trackedvehicle.h"
+-#include "useroptions.h"
+ #include "DlgMPConnect.h"
+-#include "translatedb.h"
+-#include "string_ids.h"
+ #include "dlgcharacteroptions.h"
+ #include "dlgmultiplayoptions.h"
+ #include "WWAudio.h"
+@@ -91,6 +92,7 @@
+ #include "gamespy_qnr.h"
+ #include <WWUI\ImageCtrl.h>
+ #include "bandwidthcheck.h"
++#endif
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+@@ -98,6 +100,8 @@
+ ////////////////////////////////////////////////////////////////
+ QuitVerificationDialogClass *	QuitVerificationDialogClass::_TheInstance	= NULL;
+ bool	SplashIntroMenuDialogClass::IsComplete = false;
++
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -303,6 +307,8 @@
+ 
+ 
+ 
++#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
++
+ ////////////////////////////////////////////////////////////////
+ //
+ //	QuitVerificationDialogClass
+@@ -336,6 +342,8 @@
+ 	_TheInstance = NULL;
+ 	return ;
+ }
++
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 
+ //GAMESPY
+ ////////////////////////////////////////////////////////////////
+@@ -797,6 +805,8 @@
+ }
+ 
+ 
++#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
++
+ ////////////////////////////////////////////////////////////////
+ //
+ //	StartSPGameDialogClass
+@@ -822,6 +832,8 @@
+ 	return ;
+ }
+ 
++
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -980,6 +992,8 @@
+ }*/
+ 
+ 
++#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
++
+ ////////////////////////////////////////////////////////////////
+ //
+ //	On_Init_Dialog
+@@ -1066,6 +1080,7 @@
+ }
+ 
+ 
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ /*
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -1387,6 +1402,8 @@
+ 	return ;
+ }
+ 
++
++#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -1501,6 +1518,8 @@
+ 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
+ 	return ;
+ }
++
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -1881,3 +1900,4 @@
+ 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
+ 	return ;
+ }
++#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER

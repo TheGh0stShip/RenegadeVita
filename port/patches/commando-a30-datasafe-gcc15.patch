@@ -1,0 +1,95 @@
+--- a/datasafe.h
++++ b/datasafe.h
+@@ -141,6 +141,7 @@
+ #include <malloc.h>
+ #include <memory.h>
+ #include <windows.h>
++#include <stdint.h>
+ #endif	//_ALWAYS_H
+ 
+ #ifndef 	_TIMEMGR_H
+@@ -483,7 +484,7 @@
+ 		/*
+ 		** A unique number used to match and assign type IDs. This can come from anywhere as long as it's different for every type.
+ 		*/
+-		unsigned long TypeCode;
++		uintptr_t TypeCode;
+ 
+ 		/*
+ 		** This is the user friendly ID that is stored along with entries in the data safe and returned in the handle that's
+@@ -793,8 +794,8 @@
+ 		/*
+ 		** Type identification.
+ 		*/
+-		static int Get_Type_ID(unsigned long type_code, int size);
+-		static unsigned long Get_Type_Code(void);
++		static int Get_Type_ID(uintptr_t type_code, int size);
++		static uintptr_t Get_Type_Code(void);
+ 
+ 		/*
+ 		** Type of this DataSafe.
+@@ -1267,7 +1268,7 @@
+ 	** same safe list.
+ 	*/
+ 	int data_size = sizeof(T);
+-	int type_code = Get_Type_Code();
++	uintptr_t type_code = Get_Type_Code();
+ 
+ 	/*
+ 	** Get_Type_ID will return the Type ID for this type code (instruction pointer). It will create a new type if this one
+@@ -1369,7 +1370,7 @@
+  *   7/2/2001 11:17AM ST : Created                                                             *
+  *=============================================================================================*/
+ template <class T>
+-unsigned long DataSafeClass<T>::Get_Type_Code(void)
++uintptr_t DataSafeClass<T>::Get_Type_Code(void)
+ {
+ 	/*
+ 	** Make sure this function gets expanded multiple times for different types by referencing the type.
+@@ -1382,13 +1383,17 @@
+ 	** code will get expanded once for each type it's used with. I will use the location in memory of the function to
+ 	** uniquely identify each type. What a cunning plan.
+ 	*/
+-	static unsigned long instruction_pointer;
++	static uintptr_t instruction_pointer;
+ 	instruction_pointer = 0;
++#if defined(_MSC_VER) && defined(_M_IX86)
+ 	__asm {
+ here:
+ 		lea	eax,here
+ 		mov	[instruction_pointer],eax
+ 	};
++#else
++	instruction_pointer = reinterpret_cast<uintptr_t>(&instruction_pointer);
++#endif
+ 
+ 	ds_assert(instruction_pointer != 0);
+ 
+@@ -1415,7 +1420,7 @@
+  *   6/27/2001 12:44PM ST : Created                                                            *
+  *=============================================================================================*/
+ template <class T>
+-int DataSafeClass<T>::Get_Type_ID(unsigned long type_code, int size)
++int DataSafeClass<T>::Get_Type_ID(uintptr_t type_code, int size)
+ {
+ 	int id = 0;
+ 
+@@ -1709,7 +1714,7 @@
+		}
+		Remove_From_List(list, entry_ptr);
+		Free_Handle_ID(list, id);
+-		delete [] (void*) entry_ptr;
++		delete [] reinterpret_cast<char *>(entry_ptr);
+		return;
+	}
+ 
+--- a/DlgMPTeamSelect.h
++++ b/DlgMPTeamSelect.h
+@@ -40 +40 @@
+-#include "PlayerManager.h"
++#include "playermanager.h"
+--- a/player.h
++++ b/player.h
+@@ -53 +53 @@
+-#include "gamespybanlist.h"
++#include "GameSpyBanList.h"

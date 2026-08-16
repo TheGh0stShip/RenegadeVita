@@ -1,0 +1,5 @@
+--- a/wwmath.cpp
++++ b/wwmath.cpp
+@@ -61 +61 @@
+-	for (a=0;a<SIN_TABLE_SIZE;++a) {
++	for (int a=0;a<SIN_TABLE_SIZE;++a) {

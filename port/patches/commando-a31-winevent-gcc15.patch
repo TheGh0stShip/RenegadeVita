@@ -1,0 +1,8 @@
+--- a/winevent.cpp
++++ b/winevent.cpp
+@@ -169,2 +169,2 @@ void cWinEvent::Export_Creation(BitStreamClass & packet)
+-	packet.Add(::CRC_Stringi(The_Game()->Get_Mod_Name()));
+-	packet.Add(::CRC_Stringi(The_Game()->Get_Map_Name()));
++	packet.Add((uint32)::CRC_Stringi(The_Game()->Get_Mod_Name()));
++	packet.Add((uint32)::CRC_Stringi(The_Game()->Get_Map_Name()));
+ }

@@ -1,0 +1,146 @@
+--- a/hud.h
++++ b/hud.h
+@@ -66,6 +66,7 @@
+ 	static	void	Toggle_Hide_Points( void );
+ 	static	bool	Is_Enabled( void );
+ 	static	void	Enable( bool );
++	static	bool	Are_Render_Resources_Available( void );
+ 
+ 	static	void	Force_Weapon_Chart_Update( void );
+ 	static	void	Force_Weapon_Chart_Display( void );
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -67,6 +67,9 @@
+ #include "stylemgr.h"
+ 
+ 
++static const WCHAR HUD_DECIMAL_FORMAT[] = { '%', 'd', 0 };
++static const WCHAR HUD_EMPTY_TEXT[] = { 0 };
++
+ static void Generate_WChar_Text_From_Number(WCHAR* text,int digits,int min_digits,int value)
+ {
+ 	text[digits]=0;
+@@ -529,7 +532,7 @@
+ 		// Draw powerup count
+ 		if ( RightPowerupIconList[i]->Number != 0 ) {
+ 			WideStringClass num(0,true);
+-			num.Format( L"%d", RightPowerupIconList[i]->Number );
++			num.Format( HUD_DECIMAL_FORMAT, RightPowerupIconList[i]->Number );
+ 			PowerupTextRenderer->Build_Sentence( num );
+ 			PowerupTextRenderer->Set_Location( Vector2( draw_box.Right - 12, draw_box.Top + 1 ) );
+ 			PowerupTextRenderer->Draw_Sentence( white );
+@@ -678,7 +681,7 @@
+ 			//	Clear the text if necessary
+ 			//
+ 			if (HUDHelpTextState >= HUD_HELP_TEXT_DONE) {
+-				HUDInfo::Set_HUD_Help_Text( L"" );
++				HUDInfo::Set_HUD_Help_Text( HUD_EMPTY_TEXT );
+ 				HUDHelpTextRenderer->Reset();
+ 			} else if (HUDHelpTextState == HUD_HELP_TEXT_FADING) {
+ 				HUDHelpTextTimer = HUD_HELP_TEXT_FADE_TIME;
+@@ -1004,7 +1007,7 @@
+ 
+ static	void	Clear_Weapon_Chart_Icons( void )
+ {
+-	if ( WeaponChartIcons.Count != 0 ) {
++	if ( WeaponChartIcons.Count() != 0 ) {
+ 		int i;
+ 		for ( i = 0; i < WeaponChartIcons.Count(); i++) {
+ 			delete WeaponChartIcons[i];
+@@ -2721,6 +2724,7 @@
+ */
+ static bool		_HUDEnabled = true;
+ static bool		_HUDInited = false;
++static bool		_HUDRenderResourcesAvailable = false;
+ 
+ #ifdef ATI_DEMO_HACK
+ typedef enum {
+@@ -2750,6 +2754,13 @@
+ */
+ void 	HUDClass::Init(bool render_available)
+ {
++	// Headless Combat initialization creates no HUD render resources; keep the
++	// existing display predicate consistent with that platform contract.
++	_HUDEnabled = render_available;
++	// Serialized HUD enablement is user state. It never proves that the
++	// render-owned HUD resources below were constructed in this lifecycle.
++	_HUDInited = false;
++	_HUDRenderResourcesAvailable = false;
+ 	for( int i = 0; i < NUM_RENDER_IMAGES; i++ ) {
+ 		RenderImages[i] = NULL;
+ 	}
+@@ -2798,6 +2809,7 @@
+ 		HUD_Help_Text_Init();
+ 
+ 		_HUDInited = true;
++		_HUDRenderResourcesAvailable = true;
+ 	}
+ }
+ 
+@@ -2828,10 +2840,23 @@
+ 
+ 		_HUDInited = false;
+ 	}
++	for( int i = 0; i < NUM_RENDER_IMAGES; i++ ) {
++		if ( RenderImages[i] ) {
++			delete RenderImages[i];
++			RenderImages[i] = NULL;
++		}
++	}
++	_HUDInited = false;
++	_HUDRenderResourcesAvailable = false;
++	_HUDEnabled = false;
+ }
+ 
+ void 	HUDClass::Reset( void )
+ {
++	if ( !_HUDRenderResourcesAvailable ) {
++		return;
++	}
++
+ 	Powerup_Reset();
+ 	Damage_Reset();
+ 	Weapon_Reset();
+@@ -2840,6 +2865,9 @@
+ void 	HUDClass::Render()
+ {
+ 	WWPROFILE( "HUD Render" );
++	if ( !_HUDRenderResourcesAvailable ) {
++		return;
++	}
+ 
+ #ifdef ATI_DEMO_HACK
+ 	RenderImages[DEMO_HUD_IMAGE]->Render();
+@@ -2875,7 +2903,8 @@
+ 
+ static bool	Is_HUD_Displayed( void )
+ {
+-	return (	_HUDEnabled &&
++	return (	_HUDRenderResourcesAvailable &&
++			_HUDEnabled &&
+ 				COMBAT_STAR &&
+ 				!COMBAT_STAR->Is_Dead() &&
+ 				!COMBAT_STAR->Is_Destroyed() );
+@@ -2887,6 +2916,9 @@
+ void 	HUDClass::Think()
+ {
+ 	WWPROFILE( "HUD Think" );
++	if ( !_HUDRenderResourcesAvailable ) {
++		return;
++	}
+ 
+ #ifndef ATI_DEMO_HACK
+ 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Draw_Sniper() ) {
+@@ -3065,6 +3097,11 @@
+ 	_HUDEnabled = enable;
+ }
+ 
++bool	HUDClass::Are_Render_Resources_Available( void )
++{
++	return _HUDRenderResourcesAvailable;
++}
++
+ #define	SNIPER_AMMO_UV		3, 139,79,191
+ #define	SNIPER_AMMO_OFFSET	-10,-4
+ #define	NUKE_UV				193,187,244,246
+

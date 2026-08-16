@@ -1,0 +1,13 @@
+--- a/cnetwork.cpp
++++ b/cnetwork.cpp
+@@ -485,6 +485,9 @@ int cNetwork::Get_Data_Files_CRC(void)
+ 				file->Close();
+ 			} else {
+-//				Debug_Say(( "******%s not found\n", name ));
++//				Debug_Say(( "******%s not found\n", name ));
+ 			}
++			if ( file != NULL ) {
++				_TheFileFactory->Return_File( file );
++			}
+ 		}
+ 	}

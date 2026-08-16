@@ -1,0 +1,24 @@
+--- a/dlgmainmenu.cpp
++++ b/dlgmainmenu.cpp
+@@ -86,6 +86,12 @@
+ 	GizmoModel (NULL),
+ 	IsStartingPractice (false)
+ {
++	// The original display route retains this singleton while DialogMgr owns
++	// the dialog reference. Without this assignment, subsequent menu routing
++	// cannot find or roll back the active main menu.
++	WWASSERT (_TheInstance == NULL);
++	_TheInstance = this;
++
+ 	LogoModel			= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_RENLOGO");
+ 	TitleTransModel	= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_TITLETRANS");
+ 	GizmoModel			= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_EVAGIZMO");
+@@ -124,6 +130,9 @@
+ MainMenuDialogClass::~MainMenuDialogClass (void)
+ {
++	if (_TheInstance == this) {
++		_TheInstance = NULL;
++	}
+ 	if (TitleTransModel != NULL) {
+ 		TitleTransModel->Remove ();
+ 	}

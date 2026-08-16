@@ -1,0 +1,132 @@
+--- a/lightenvironment.cpp
++++ b/lightenvironment.cpp
+@@ -52,8 +52,8 @@
+ /*
+ ** Static variables
+ */
+-static _LightingLODCutoff			= 0.5f;	
+-static _LightingLODCutoff2			= 0.5f * 0.5f;
++static float _LightingLODCutoff			= 0.5f;	
++static float _LightingLODCutoff2			= 0.5f * 0.5f;
+ 
+ 
+ /************************************************************************************************
+--- a/part_buf.cpp
++++ b/part_buf.cpp
+@@ -1387,7 +1387,8 @@ void ParticleBufferClass::Reset_Colors(ParticlePropertyStruct<Vector3> &new_prop
+ 		// keytime of MaxAge or larger. (If all keyframes below MaxAge, color is
+ 		// constant during the last segment between last keyframe and MaxAge).
+ 		ui_previous_key_time = 0;
+-		for (unsigned int ckey = 0; ckey < new_props.NumKeyFrames; ckey++) {
++		unsigned int ckey;
++		for (ckey = 0; ckey < new_props.NumKeyFrames; ckey++) {
+ 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[ckey] * 1000.0f);
+ 			WWASSERT(ui_current_key_time > ui_previous_key_time);
+ 			if (ui_current_key_time >= MaxAge) break;
+@@ -1546,7 +1547,8 @@ void ParticleBufferClass::Reset_Opacity(ParticlePropertyStruct<float> &new_props
+ 		// keytime of MaxAge or larger. (If all keyframes below MaxAge, alpha is
+ 		// constant during the last segment between last keyframe and MaxAge).
+ 		ui_previous_key_time = 0;
+-		for (unsigned int akey = 0; akey < new_props.NumKeyFrames; akey++) {
++		unsigned int akey;
++		for (akey = 0; akey < new_props.NumKeyFrames; akey++) {
+ 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[akey] * 1000.0f);
+ 			WWASSERT(ui_current_key_time > ui_previous_key_time);
+ 			if (ui_current_key_time >= MaxAge) break;
+@@ -1702,7 +1704,8 @@ void ParticleBufferClass::Reset_Size(ParticlePropertyStruct<float> &new_props)
+ 		// keytime of MaxAge or larger. (If all keyframes below MaxAge, size is
+ 		// constant during the last segment between last keyframe and MaxAge).
+ 		ui_previous_key_time = 0;
+-		for (unsigned int skey = 0; skey < new_props.NumKeyFrames; skey++) {
++		unsigned int skey;
++		for (skey = 0; skey < new_props.NumKeyFrames; skey++) {
+ 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[skey] * 1000.0f);
+ 			WWASSERT(ui_current_key_time > ui_previous_key_time);
+ 			if (ui_current_key_time >= MaxAge) break;
+@@ -1871,7 +1874,8 @@ void ParticleBufferClass::Reset_Rotations(ParticlePropertyStruct<float> &new_pro
+ 		// keytime of MaxAge or larger. (If all keyframes below MaxAge, the value is
+ 		// constant during the last segment between last keyframe and MaxAge).
+ 		ui_previous_key_time = 0;
+-		for (unsigned int key = 0; key < new_props.NumKeyFrames; key++) {
++		unsigned int key;
++		for (key = 0; key < new_props.NumKeyFrames; key++) {
+ 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[key] * 1000.0f);
+ 			WWASSERT(ui_current_key_time > ui_previous_key_time);
+ 			if (ui_current_key_time >= MaxAge) break;
+@@ -2085,7 +2089,8 @@ void ParticleBufferClass::Reset_Frames(ParticlePropertyStruct<float> &new_props)
+ 		// keytime of MaxAge or larger. (If all keyframes below MaxAge, the value is
+ 		// constant during the last segment between last keyframe and MaxAge).
+ 		ui_previous_key_time = 0;
+-		for (unsigned int key = 0; key < new_props.NumKeyFrames; key++) {
++		unsigned int key;
++		for (key = 0; key < new_props.NumKeyFrames; key++) {
+ 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[key] * 1000.0f);
+ 			WWASSERT(ui_current_key_time > ui_previous_key_time);
+ 			if (ui_current_key_time >= MaxAge) break;
+@@ -2232,7 +2237,8 @@ void ParticleBufferClass::Reset_Blur_Times(ParticlePropertyStruct<float> &new_bl
+ 		// keytime of MaxAge or larger. (If all keyframes below MaxAge, the value is
+ 		// constant during the last segment between last keyframe and MaxAge).
+ 		ui_previous_key_time = 0;
+-		for (unsigned int key = 0; key < new_blur_times.NumKeyFrames; key++) {
++		unsigned int key;
++		for (key = 0; key < new_blur_times.NumKeyFrames; key++) {
+ 			ui_current_key_time = (unsigned int)(new_blur_times.KeyTimes[key] * 1000.0f);
+ 			WWASSERT(ui_current_key_time > ui_previous_key_time);
+ 			if (ui_current_key_time >= MaxAge) break;
+--- a/part_ldr.cpp
++++ b/part_ldr.cpp
+@@ -327,7 +327,7 @@ ParticleEmitterDefClass::Normalize_Filename (void)
+ 	::lstrcpy (path, m_Info.TextureFilename);
+ 
+ 	// Find the last occurance of the directory deliminator
+-	LPCTSTR filename = ::strrchr (path, '\\');
++	const char *filename = ::strrchr (path, '\\');
+	if (filename != NULL) {
+		
+		// Increment past the directory deliminator
+--- a/dynamesh.cpp
++++ b/dynamesh.cpp
+@@ -712,7 +712,8 @@ int DynamicMeshClass::Set_Vertex_Material(VertexMaterialClass *material, bool do
+ 	// list.  if we are not supposed to search the list for it then just add
+ 	// it.
+ 	if (!dont_search) {
+-		for (int lp = 0, found = 0; lp < Peek_Material_Info()->Vertex_Material_Count(); lp ++) {
++		int found = 0;
++		for (int lp = 0; lp < Peek_Material_Info()->Vertex_Material_Count(); lp ++) {
+ 			VertexMaterialClass *mat = Peek_Material_Info()->Get_Vertex_Material(lp);
+ 			if (material == mat) {
+ 				VertexMaterialIdx[pass] = lp;
+@@ -773,7 +774,8 @@ int DynamicMeshClass::Set_Texture(TextureClass *texture, bool dont_search, int p
+ 	// list.  if we are not supposed to search the list for it then just add
+ 	// it.
+ 	if (!dont_search) {
+-		for (int lp = 0, found = 0; lp < Peek_Material_Info()->Texture_Count(); lp ++) {
++		int found = 0;
++		for (int lp = 0; lp < Peek_Material_Info()->Texture_Count(); lp ++) {
+ 			TextureClass *tex = Peek_Material_Info()->Get_Texture(lp);
+ 			if (texture == tex) {
+ 				TextureIdx[pass] = lp;
+--- a/pointgr.cpp
++++ b/pointgr.cpp
+@@ -971,9 +971,9 @@ void PointGroupClass::Update_Arrays(
+ 	// since they always all have the same length.
+ 	if (VertexLoc.Length() < total_vnum) {
+ 		// Resize arrays (2x guardband to prevent frequent reallocations).
+-		VertexLoc.Resize(total_vnum * 2, false);		
+-		VertexUV.Resize(total_vnum * 2, false);
+-		VertexDiffuse.Resize(total_vnum * 2, false);
++		VertexLoc.Resize(total_vnum * 2, nullptr);		
++		VertexUV.Resize(total_vnum * 2, nullptr);
++		VertexDiffuse.Resize(total_vnum * 2, nullptr);
+ 	}
+ 
+	int vert, i, j;
+
+--- a/animatedsoundmgr.cpp
++++ b/animatedsoundmgr.cpp
+@@ -138 +138 @@ Build_List_From_String
+-			for (entry = buffer;
++			for (const char *entry = buffer;
+@@ -154 +154 @@ Build_List_From_String
+-				char *delim_start = ::strstr (entry_string, delimiter);				
++				char *delim_start = ::strstr (entry_string.Peek_Buffer (), delimiter);				

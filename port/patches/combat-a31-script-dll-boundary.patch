@@ -1,0 +1,63 @@
+--- a/scripts.cpp
++++ b/scripts.cpp
+@@ -60,7 +60,11 @@
+ /*
+ **
+ */
++#if defined(RENEGADE_VITA_PORT)
++void * hDLL = NULL;
++#else
+ HINSTANCE hDLL = NULL;
++#endif
+ LPFN_CREATE_SCRIPT ScriptManager::ScriptCreateFunct = NULL;
+ LPFN_DESTROY_SCRIPT ScriptManager::ScriptDestroyFunct = NULL;
+ SimpleDynVecClass<ScriptClass *> ScriptManager::ActiveScriptList;
+@@ -77,6 +81,12 @@
+ 	hDLL = NULL;
+ 	EngineCommands = Get_Script_Commands();
+ 
++#if defined(RENEGADE_VITA_PORT)
++	// Script ownership remains original, but the retail Win32 script DLL has
++	// no executable Vita module equivalent yet. Keep creation disabled at the
++	// one script-module boundary until a native script provider is available.
++	Debug_Say(("Script Manager: external script DLL unavailable on Vita\n"));
++#else
+ #ifdef	PARAM_EDITING_ON	// Editor build
+ 	Load_Scripts("SCRIPTS.DLL");
+ #else
+@@ -94,6 +104,7 @@
+ 		Load_Scripts("SCRIPTS.DLL");		// RELEASE
+ 	#endif
+ #endif
++#endif
+ }
+ 
+ 
+@@ -114,7 +125,9 @@
+ 	}
+ 
+ 	if (hDLL != NULL) {
++#if !defined(RENEGADE_VITA_PORT)
+ 		FreeLibrary(hDLL);
++#endif
+ 		hDLL = NULL;
+ 	}
+ }
+@@ -148,6 +161,11 @@
+ */
+ void ScriptManager::Load_Scripts(const char* dll_filename)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)dll_filename;
++	Debug_Say(("Script Manager: native script provider is not installed\n"));
++	return;
++#else
+ 	Debug_Say(("Script Manager Loading Script File %s\n", dll_filename));
+ 
+ 
+@@ -255,6 +273,7 @@
+ 			Debug_Say(("Cound not find Set_Script_Commands\n"));
+ 		}
+ 	}
++#endif
+ }

@@ -1,0 +1,16 @@
+--- a/PriorityVector.h
++++ b/PriorityVector.h
+@@ -72 +72 @@
+-	if (Vector != NULL) {
++	if (this->Vector != NULL) {
+@@ -75 +75 @@
+-		object = Vector[0];
++		object = this->Vector[0];
+@@ -80,2 +80,2 @@
+-		for (int index = 1; index < ActiveCount; index ++) {
+-			Vector[index - 1] = Vector[index];
++		for (int index = 1; index < this->ActiveCount; index ++) {
++			this->Vector[index - 1] = this->Vector[index];
+@@ -83 +83 @@
+-		Vector[ActiveCount - 1] = object;
++		this->Vector[this->ActiveCount - 1] = object;

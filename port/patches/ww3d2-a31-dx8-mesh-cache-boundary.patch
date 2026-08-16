@@ -1,0 +1,22 @@
+--- a/meshmdl.cpp
++++ b/meshmdl.cpp
+@@ -445,7 +445,9 @@
+ 				compute_static_sort_levels();
+ 			
+ 			// TODO: Invalidate just this meshes DX8 data!!!
++#if !defined(RENEGADE_VITA_PORT)
+ 			TheDX8MeshRenderer.Invalidate();
++#endif
+ 		}
+ 	} else {
+ 		if (CurMatDesc != DefMatDesc) {
+@@ -457,7 +459,9 @@
+ 				compute_static_sort_levels();
+ 
+ 			// TODO: Invalidate this meshes DX8 data!!!
++#if !defined(RENEGADE_VITA_PORT)
+ 			TheDX8MeshRenderer.Invalidate();
++#endif
+ 		}
+ 	}
+ }

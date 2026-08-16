@@ -1,0 +1,23 @@
+--- a/packetmgr.cpp
++++ b/packetmgr.cpp
+@@ -361 +361 @@
+-		for (i=0 ; i<base_packet_size ; i+= 8) {
++		for (int i=0 ; i<base_packet_size ; i+= 8) {
+@@ -901,7 +901 @@
+-			_asm {
+-				push	eax;
+-				mov	eax,crc;
+-				bswap	eax;
+-				mov	crc,eax;
+-				pop	eax;
+-			};
++			crc = __builtin_bswap32(crc);
+@@ -1170,7 +1164 @@
+-				_asm {
+-					push	eax;
+-					mov	eax,crc;
+-					bswap	eax;
+-					mov	crc,eax;
+-					pop	eax;
+-				};
++				crc = __builtin_bswap32(crc);

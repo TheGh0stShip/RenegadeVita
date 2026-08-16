@@ -1,0 +1,5 @@
+--- a/gameinitmgr.cpp
++++ b/gameinitmgr.cpp
+@@ -725 +725 @@
+-#ifndef MULTIPLAYERDEMO
++#if !defined(MULTIPLAYERDEMO) && !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)

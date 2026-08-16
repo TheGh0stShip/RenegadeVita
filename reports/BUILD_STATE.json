@@ -1,0 +1,842 @@
+{
+  "active_milestone": "v3.6 host resource/memory infrastructure; A3.5-dev2 physical acceptance pending",
+  "active_objective": "Preserve accepted A3.1.4 and frozen failed A3.2-dev1 evidence; retain the packaged A3.5-dev2 correctness candidate pending physical Vita acceptance while advancing deterministic, host-only v3.6 asset inventory, second-scene load/lifecycle, and bounded memory telemetry. Do not promote either milestone without matching physical evidence.",
+  "execution_policy": "CONTINUOUS_UNTIL_PHYSICAL_VITA_CANDIDATE: compiler/linker/stage/cache/host/Vita/package/report events are progress only; preserve build/ccache across clean builds; preserve original WWNet/cNetwork replication; LAN and direct-IP are required baselines; public discovery is an optional provider extension; do not hand off while safe engineering work remains.",
+  "build_status": "A3_1_4_PHYSICAL_VISIBLE_INTERACTIVE_PASS_FROZEN__A3_2_DEV1_PHYSICAL_FAILURE_FROZEN__A3_5_DEV2_HOST_ARM_VPK_DIAGNOSTIC_PASS_PHYSICAL_PENDING__V3_6_HOST_INFRASTRUCTURE_IN_PROGRESS",
+  "last_successful_stage": "2026-08-16: complete canonical host gate a30-20260816-115428-host-runtime.log passed retained M00 normal/ASan/LeakSanitizer/targeted-UBSan lifecycle coverage plus two-cycle M01 and City original Combat load/render/teardown gates. Asset-manifest/cache-key/metadata/verifier/capture-comparison contracts passed 14/14; the new native cache-health contract passed 9/9; real M01 metadata verified valid, and original MixFileFactoryClass produced a byte-identical 231-entry M01 v1 index across two writes plus an 83-entry City index without content extraction. The native health probe only validates optional generated index structure and never redirects the original MIX route. Capture schema v2 low-water telemetry self-test passed 17/17, comparison tests passed 2/2, and the changed native runtime linked as ELF32 little-endian ARM. The A3.5-dev1 VPK/ELF/map/symbol/diagnostic package remains available for manual physical test.",
+  "latest_validation": "2026-08-16: the canonical run a30-20260816-121004-host-runtime.log exposed a deterministic 80,256-byte host LeakSanitizer retention in PathMgrClass after the direct Combat harness omitted the original Commando PathMgr lifecycle. The harness and Vita runtime now call PathMgrClass::Initialize after WWMath and PathMgrClass::Shutdown after WW3DAssetManager deletion, matching staging/commando/init.cpp and shutdown.cpp. Focused two-cycle M00 ASan/LeakSanitizer rerun PASS: build/host-a31-asan/a36-pathmgr-lsan.log contains no sanitizer finding and ends with interactive runtime PASS. The full ARM closure rebuilt and exports PathMgrClass Initialize/Shutdown plus rooted file-factory statistics. Canonical revalidation PASS at logs/a30-20260816-122251-host-runtime.log: M00 normal/ASan/LeakSanitizer/targeted-UBSan plus two-cycle M01 and City original Combat load/render/teardown completed with no sanitizer finding.",
+  "active_blocker": "No engineering blocker. A3.5-dev2 physical Vita evidence for controls, perspective, alpha, lifecycle, and clean exit remains mandatory; v3.6 device cache/residency/storage/memory conclusions also require device evidence. Do not auto-deploy or copy retail data.",
+  "implementation_context": {
+    "status": "CONTINUATION_IN_PROGRESS",
+    "current_configuration": "maintainer-controlled iterative engineering",
+    "recommended_configuration": "source-driven architecture and validation review",
+    "reason": "reports/A30_COMMANDO_NEXT_RUNTIME.md already establishes the dynamic load, player, physics, camera, input, network-boundary, and update ownership chain. Capture infrastructure is complete. The next phase is mechanical implementation and linker closure.",
+    "resume_action": "Let ../../logs/a31-20260815-gameplay-link-closure-host-build-attempt21.log reach its first causal compiler/linker result; then repair only the owning original source or established platform boundary and reproduce through deterministic staging.",
+    "return_condition": "Reassess after the dynamic LDD load and first original Combat frame pass, or earlier only if repeated evidence reveals contradictory ownership/corruption."
+  },
+  "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
+  "canonical_build_command": "bash ./tools/build.sh",
+  "canonical_host_command": "bash tools/run_a30_host.sh",
+  "latest_host_log": "../../dist/A3.1.4-HOST-VALIDATION.log",
+  "latest_arm_log": "../../dist/A3.1.4-COMPILER_LOG.txt",
+  "latest_canonical_build_log": "../../logs/a314-20260815-212219-build.log",
+  "canonical_workflow": "Bash/CMake/Ninja/VitaSDK",
+  "automatic_vita_deployment": false,
+  "a3_1_capture_telemetry_checkpoint": {
+    "status": "IMPLEMENTED_HOST_VALIDATED_AND_ARM_LINKED",
+    "milestone_baseline": false,
+    "frame_history_capacity": 240,
+    "capture_control": "SELECT",
+    "benchmark_control": "SELECT+L+R",
+    "benchmark_route": "M00-fixed-camera-v1; four fixed transforms; 120 frames per point; capture at frame 90",
+    "bundle_contents": "frame.bmp; optional frame-annotated.bmp; state.json; frames.csv; summary.txt",
+    "vita_bundle_root": "ux0:data/renegade/user/captures/",
+    "runtime_log": "ux0:data/renegade/user/logs/a31-runtime.log",
+    "capture_stall_policy": "resolved-frame readback and bundle-write stalls recorded and excluded from ordinary frame and WW3D elapsed-time statistics",
+    "host_capture_selftest": "PASS 14/14",
+    "host_comparator_test": "PASS",
+    "host_world_regression": "PASS 45/45; log ../../logs/a30-20260815-004642-host-runtime.log",
+    "arm_build": "PASS; ELF32 little-endian ARM; capture writer/readback symbols linked",
+    "development_vpk": "build/vita-a30-canonical/RenegadeVita-A3.1.vpk",
+    "development_vpk_sha256": "cfd0d70f10d6a41de5ee85685b2b7a6feb4f122272dc9710baea9343dbfd0e85",
+    "development_elf_sha256": "8764893108ff9044234af89bc3bd16b0372430ad4d48b883be0889d99e5b79e9",
+    "development_map_sha256": "10ad65135158e517d16869a000648e250082240282d0cbca64259de48ea57995",
+    "development_arm_log_sha256": "fd9e2767afbfe0f1360578e0820da2ac9bb6bb373cf59eede97d76ef945517b2",
+    "vpk_contents": "eboot.bin and sce_sys/param.sfo only",
+    "physical_validation": "NOT REQUESTED; infrastructure build is not an A3.1 acceptance candidate",
+    "texture_residency_status": "zero/zero bytes with zero uploads/binds because accepted backend has no native texture resource implementation",
+    "upstream_pristine": true,
+    "staging_residue": "none (.orig/.rej absent)"
+  },
+  "a3_1_4_visible_interactive_candidate": {
+    "status": "PHYSICAL_VITA_PASS__ACCEPTED_AND_FROZEN__FIRST_PHYSICALLY_ACCEPTED_VISIBLE_ORIGINAL_INTERACTIVE_M00_BASELINE",
+    "vpk": "../../dist/RenegadeVita-A3.1.4.vpk",
+    "vpk_sha256": "495c5c0954c0c2d92d04690ba53442c87277363e2ea7f92f2f394b4ac66afd2b",
+    "runtime_log": "ux0:data/renegade/user/logs/a31.4-runtime.log",
+    "a3_1_3_baseline": "FIRST_PHYSICALLY_ACCEPTED_ORIGINAL_INTERACTIVE_LIFECYCLE_BASELINE; 1354 stable frames and clean exit, but zero interactive geometry; raw stale-named evidence preserved under ../../baselines/A3.1.3/.",
+    "root_cause": "A3.1.3 called CombatManager::Render without the original GameModeManager PhysicsScene Pre_Render_Processing/Post_Render_Processing envelope, leaving the visible object lists empty.",
+    "repair": "Shared host/Vita orchestration owns the original Combat scene/camera pre-render, Begin_Render, CombatManager::Render, End_Render, and post-render sequence. No custom scene, camera, player, or mesh traversal was introduced.",
+    "host_visible_frame": "two in-process ASan lifecycle cycles, 120 original input/network/Combat/render frames each; first frame 205 meshes, 12426 vertices, 8661 triangles, rejected=0, unsupported=0; static/dynamic/lights=495/24/192.",
+    "deferred_renderer_capabilities": "Font3D HUD and procedural transition material passes remain explicitly unavailable at their central original subsystem boundaries; base scene traversal remains active.",
+    "arm_package_validation": "ELF32 ARM link, VELF/SELF/VPK, VPK inspection, retail-data exclusion, artifact manifest verification PASS; VPK contains eboot.bin and sce_sys/param.sfo only.",
+    "ccache": "persistent build/ccache directory verified after final canonical build: 1927/1930 cacheable-call hits (99.84%), cache size 1.3 GiB.",
+    "automatic_deployment_attempted": false,
+    "physical_validation": "PASS: user observed the A3.0 overview, START transition, visible original interactive M00 geometry, 1,226 stable interactive frames, zero rejected/unsupported submissions, and clean START exit. Analog look usability failed because the device boundary emitted ±32767 instead of the original ±1000 DirectInput axis contract. Textures were explicitly stubbed: no source decode, native upload, or material bind. Raw physical log and observation are immutable under ../../baselines/A3.1.4/."
+  },
+  "a3_1_1_audio_lifecycle_candidate": {
+    "status": "PHYSICAL_VITA_CANDIDATE_READY__HARDWARE_EVIDENCE_PENDING",
+    "vpk": "../../dist/RenegadeVita-A3.1.1.vpk",
+    "vpk_sha256": "6e2f77c79de584eff6bccdaad632704bc24b1a6d13cbc1efc8bf38bb0a65f49f",
+    "elf_sha256": "7124387e63efce640e3a16f91eef795bda2fab95c4ea21c3c90412b1771a6b46",
+    "map_sha256": "1af0f21db525ebe7ebad56cd37c89f374fe8c6a1913f676a7df188863678f92a",
+    "host_log_sha256": "5a2a6c73919d563926e10e4fc43e074022ac46527e43de2070256701b5292143",
+    "compiler_log_sha256": "2ce465a69a4e690421c40f348cd86e41b1c139ad8e4ea77477df1d3f4a57cf2d",
+    "host_regressions": "A2.0 19/19; A2.1 10/10; A2.2 14/14; A3.0 45/45 with two isolated audio/world cycles; A3.1 original interactive ASan PASS",
+    "root_cause": "A3.1 constructed WWAudioClass after preliminary M00 static-audio SaveLoad; original Commando ordering requires the singleton before any world load.",
+    "repair": "Single application-lifetime silent WWAudioClass spans retained validation and interactive session; static-audio singleton invariant and breadcrumbs added; teardown remains ordered and singular.",
+    "additional_compatibility_repair": "WWNet wide-string writer explicitly serializes WCHAR as USHORT, matching the original 16-bit reader and VC6 overload behavior.",
+    "arm_package_validation": "ELF32 ARM link, VELF, SELF, VPK, symbol audit and integrity checks PASS; VPK contains only eboot.bin and sce_sys/param.sfo; no retail assets.",
+    "ccache": "build/ccache survived clean staging; 1130/1537 cacheable calls hit (73.52%) after stats reset.",
+    "runtime_log": "ux0:data/renegade/user/logs/a31.1-runtime.log",
+    "automatic_deployment_attempted": false,
+    "physical_validation": "PENDING: manual install, M00/player/input/Combat/render/START check, and retrieved runtime log."
+  },
+  "a3_1_gameplay_seed_candidate": {
+    "status": "PHYSICAL_VITA_CANDIDATE_READY__HARDWARE_EVIDENCE_PENDING",
+    "vpk": "../../dist/RenegadeVita-A3.1.vpk",
+    "vpk_sha256": "5d4ca2d94c5b83433248606378fe90f9cfd789e2a3330a44d48a6adec33f2f71",
+    "elf_sha256": "1240ec8447093025b47b558057de333422f3a68eb7b7a306afccfd056214a479",
+    "map_sha256": "b13e4e48df910f97c41259c35f163dc24d9c8c41d6e9517db5ecbdb62e2f36ad",
+    "compiler_log_sha256": "989c12bad40d07567436e3c4d328fd85462592a87a2a668a34db76729e680ded",
+    "host_regressions": "A2.0 19/19; A2.1 10/10; A2.2 14/14; A3.0 45/45; A3.1 gameplay seed 45/45, definitions=3648, checksum=FE798749",
+    "ccache": "build/ccache persisted across clean staging; canonical Vita build 1020/1103 hits (92.48%), 83 misses",
+    "arm_package_validation": "ELF32 little-endian ARM; VELF/SELF/VPK PASS; required original world, WWAudio logical-listener, and Surface symbols present; VPK contains only eboot.bin and sce_sys/param.sfo",
+    "runtime_log": "ux0:data/renegade/user/logs/a31-runtime.log",
+    "capture_root": "ux0:data/renegade/user/captures/",
+    "retail_data_transfer_required": false,
+    "automatic_deployment_attempted": false,
+    "scope": "Original Combat/WWAudio source closure is linked. This candidate verifies the retained original M00 world route and gameplay-seed boundaries; original player/session activation remains a subsequent runtime integration step."
+  },
+  "a3_0_canonical_candidate": {
+    "status": "PHYSICAL_VITA_PASS__ACCEPTED_AND_FROZEN",
+    "vpk": "../../dist/RenegadeVita-A3.0.vpk",
+    "vpk_sha256": "b236b1b80361860f059dae9858bdc2fef67ee93df836e52df2cee3d89267270b",
+    "elf_sha256": "8485599f5f88489002284752e6b914485ac2582194e85344780620a03bfe20ed",
+    "compiler_log_sha256": "e2059b08767f08189c7792f3d309b33d4efed1989be68dd7822d55c5772fdcfa",
+    "vpk_contents": "eboot.bin and sce_sys/param.sfo only",
+    "upstream_pristine": true,
+    "staging_residue": "none (.orig/.rej absent)",
+    "host_regressions": "A2.0 19/19; A2.1 10/10; A2.2 14/14; host A3 M00 runtime 45/45",
+    "host_world_frame": "meshes=652; vertices=30603; triangles=16939; checksum=34FFAD42; unsupported=0",
+    "physical_regressions": "A2.0 19/19; A2.1 10/10; A2.2 14/14; physical A3.0 36/36",
+    "physical_semantic_world": "definitions=2157; static=495; lights=192; nodes=1615; meshes=1288; vertices=38158; polygons=21537; prototypes=1177; definition=90DB91BE; object=4A930F8A; render=BFA9C255; prototype=E835A45F",
+    "physical_first_frame": "meshes=654; vertices=30795; triangles=17041; indexed=0; unsupported=0; checksum=0C3D50E4",
+    "physical_complete_run": "frames=2585; meshes=736916; vertices=35029146; triangles=19365408; indexed=0; rejected=0; unsupported=0; checksum=4C35610C; render_error=0; START and clean teardown PASS",
+    "runtime_log": "../../dist/a30-runtime.log",
+    "runtime_log_sha256": "679b815dc8645a9676cf61305f4a8b8ca222d3d8960ca1db75deb0e9d6642b7a",
+    "host_and_physical_sets": "Distinct by design: host 45/45 deterministic callback and physical 36/36 runtime; do not force counts/fingerprints to match",
+    "visual_fidelity": "NOT FULLY ASSESSED FROM LOG EVIDENCE",
+    "baseline": "../../baselines/A3.0/",
+    "retail_data_transfer_required": false,
+    "deployment_attempted": false,
+    "physical_test_instruction": "Completed and accepted; no repeat A3.0 hardware test required."
+  },
+  "a2_2_candidate1_physical_validation": {
+    "candidate": 1,
+    "status": "PARTIAL PASS: ORIGINAL ASSET/OBJECT PATH; RENDERER/SCENE NOT ACCEPTED",
+    "required_runtime_log": "ux0:data/renegade/user/logs/a22-runtime.log",
+    "retrieved_runtime_log": "../../baselines/A2.2-candidate1-renderer-init-failure/a22-runtime.log",
+    "managed_runtime_log_copy": "../../logs/a22-candidate1-physical-runtime.log",
+    "external_shader_prerequisite": "default ur0:/data/libshacccg.suprx; fallback ur0:data/external/libshacccg.suprx",
+    "retail_data_transfer_required": false,
+    "candidate_vpk_sha256": "fd7dadbc09aed6b32e3631738ee8b851cf6f29f3635a89638720cea86b83081a",
+    "a2_0_regression": "PASS 19/19",
+    "a2_1_regression": "PASS 10/10; 15161/32081/32/00000100",
+    "original_chunk_loader": "PASS; 12 top-level chunks",
+    "hierarchy": "PASS; DSP_O2TANK; 11 pivots",
+    "asset_manager": "PASS; 10 prototypes",
+    "render_object": "PASS; DSP_O2TANK class 25; 10 nodes",
+    "mesh_fingerprint": "PASS; 8 meshes; 357 vertices; 324 polygons; 8 materials; 12 textures; exact host bounds",
+    "renderer_initialization": "FAIL as reported by boundary; installed vitaGL return semantics prove this is a false-negative interpretation",
+    "scene_camera_traversal": "NOT REACHED",
+    "render_counts": "0 frames; 0 meshes; 0 vertices; 0 triangles; 0 unsupported; checksum 00000000",
+    "display_observation": "animated vitaGL logo persisted",
+    "process_evidence": "complete post-init result block was written, proving vglInit returned",
+    "root_cause": "Caller treated raw GL_FALSE as failure, but audited vitaGL returns resolution_fallback and zero means normal native-resolution completion; caller returned before first glClear so splash persisted"
+  },
+  "a2_2_corrected_candidate": {
+    "candidate": 2,
+    "physical_status": "PASS / ACCEPTED PHYSICAL VISUAL BASELINE",
+    "preserved_candidate_archive": "../../baselines/A2.2-candidate2-renderer-init-corrected/",
+    "accepted_baseline_archive": "../../baselines/A2.2/",
+    "accepted_baseline_manifest_sha256": "9970aa9253b54a37ddb1a108a6cc2c8b2f6c6dec8a351bcfa5ecd1930c7a57cc",
+    "candidate_archive_sha256_manifest": "PASS",
+    "vpk_sha256": "7c57e238fb1e7abfa28f8bfce0630806cb3641680ec6dcae9b9d4fe1e9f67fb6",
+    "elf_sha256": "0a4ca02cbed8545cc0a9546f06b2e5ba7153a51eec97608fbdb058b803a40a59",
+    "runtime_log": "ux0:data/renegade/user/logs/a22-runtime.log",
+    "retail_data_transfer_required": false,
+    "deployment_attempted": false,
+    "vitagl_revision": "6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5",
+    "vitagl_init_contract": "raw return is resolution_fallback; zero is normal at 960x544",
+    "shader_diagnostics": "--wrap=shark_init captures exact default/fallback calls and results; four linked call sites audited",
+    "durable_breadcrumbs": "open/write-loop/sceIoSyncByFd/close per init, clear, present, frame, and first-mesh stage",
+    "splash_transition": "PASS; first glClear precedes vglSwapBuffers and physical splash exited",
+    "next_required_evidence": "None for A2.2; advance to A3.0 original world/runtime integration"
+  },
+  "a2_0_validation": {
+    "host": "PASS",
+    "physical_vita": "PASS",
+    "wwbitpack": "PASS (19 checks, 0 failures)",
+    "native_framebuffer": "PASS (00000000)",
+    "retail_and_writable_filesystem": "PASS",
+    "runtime_log": "PASS",
+    "start_clean_exit": "PASS",
+    "livearea_return": "PASS",
+    "crash_free": "PASS"
+  },
+  "a2_1_validation": {
+    "host": "PASS (10 checks, 0 failures)",
+    "physical_vita": "PASS (10 checks, 0 failures)",
+    "archive": "Data/always.dat",
+    "archive_entries": 15161,
+    "known_entry": "dsp_o2tank.w3d",
+    "known_entry_size": 32081,
+    "sample_read_bytes": 32,
+    "sample_prefix": "00000100",
+    "path_translation_case_resolution": "PASS",
+    "traversal_rejection": "PASS",
+    "write_routing_outside_retail": "PASS",
+    "original_file_factory_chain": "PASS",
+    "raw_file_bias_preserved": "PASS",
+    "start_clean_exit": "PASS",
+    "livearea_return": "PASS",
+    "crash_free": "PASS",
+    "accepted_vpk_sha256": "2c2a2cc543d5d5f0a9428a3817c0649c79d7ef69bbb45baec08d48d60337a1d7"
+  },
+  "a2_2_host_validation": {
+    "status": "PASS",
+    "original_translation_units": 105,
+    "host_port_test_translation_units": 8,
+    "zero_fuzz_clean_restage": "PASS",
+    "wwbitpack_regression": "PASS 19/19",
+    "filesystem_mix_regression": "PASS 10/10",
+    "archive_fingerprint": "15161/32081/32/00000100",
+    "w3d_chunk_checks": "PASS 14/14",
+    "top_level_chunks": 12,
+    "hierarchy": "DSP_O2TANK",
+    "hierarchy_pivots": 11,
+    "prototype_count": 10,
+    "render_object": "DSP_O2TANK",
+    "render_object_class": 25,
+    "render_object_nodes": 10,
+    "meshes": 8,
+    "vertices": 357,
+    "polygons": 324,
+    "materials": 8,
+    "textures": 12,
+    "scene_camera_traversal": "PASS",
+    "rendered_frames": 1,
+    "rendered_meshes": 8,
+    "rendered_vertices": 357,
+    "rendered_triangles": 324,
+    "unsupported_objects": 0,
+    "unsupported_cleanup": "PASS; DSP_O2TANK.BOUNDINGBOX class 27 was a counter false-positive before the original display-mask guard",
+    "geometry_checksum": "5704AB7D",
+    "normal_exit": "PASS",
+    "asan_exit": "PASS with detect_leaks=0"
+  },
+  "a2_2_physical_visual_validation": {
+    "status": "PASS / ACCEPTED",
+    "hardware": "physical PlayStation Vita",
+    "a2_0_regression": "PASS 19/19",
+    "a2_1_regression": "PASS 10/10; 15161/32081/32/00000100",
+    "a2_2_checks": "PASS 14/14",
+    "original_translation_units": 105,
+    "top_level_chunks": 12,
+    "prototype_count": 10,
+    "render_object": "DSP_O2TANK class 25 HLOD; 10 nodes",
+    "object_fingerprint": "8 meshes; 357 vertices; 324 polygons; 8 materials; 12 textures; 11 pivots",
+    "scene_camera": "PASS",
+    "renderer_initialization": "PASS; libshacccg default path, shark_init rc 0, vitaGL 960x544, first clear/present and splash transition",
+    "frames": 23,
+    "mesh_submissions": 184,
+    "submitted_vertices": 8211,
+    "submitted_triangles": 7452,
+    "geometry_checksum": "7DA9D975",
+    "first_mesh_submission": "60 vertices; 64 triangles; glGetError 00000000",
+    "unsupported_submissions_historical": 23,
+    "runtime_log": "../../baselines/A2.2/logs/a22-physical-visual-runtime.log",
+    "runtime_log_sha256": "4953b27c4c0381e81de9acc63c6ae6745d8f96ed0092307cbd206e36a7a600b7",
+    "start_exit": "PASS",
+    "crash_free": "PASS",
+    "visual_evidence": "photograph exists",
+    "accepted_vpk_sha256": "7c57e238fb1e7abfa28f8bfce0630806cb3641680ec6dcae9b9d4fe1e9f67fb6",
+    "accepted_elf_sha256": "0a4ca02cbed8545cc0a9546f06b2e5ba7153a51eec97608fbdb058b803a40a59",
+    "baseline": "../../baselines/A2.2/",
+    "baseline_manifest_sha256": "9970aa9253b54a37ddb1a108a6cc2c8b2f6c6dec8a351bcfa5ecd1930c7a57cc",
+    "retail_assets_packaged": 0
+  },
+  "a2_2_release_validation": {
+    "status": "PASS; PHYSICALLY ACCEPTED A2.2 VISUAL RELEASE",
+    "canonical_clean_restage": "PASS",
+    "zero_fuzz_patches": "PASS",
+    "canonical_upstream_pristine": "PASS",
+    "staging_orig_rej_residue": 0,
+    "vita_original_translation_units": 105,
+    "vita_port_translation_units": 9,
+    "arm_elf": "PASS ELF32 LSB ARM EABI5",
+    "vita_link": "PASS",
+    "velf": "PASS",
+    "self": "PASS",
+    "vpk": "PASS",
+    "original_and_renderer_symbol_audit": "PASS",
+    "renderer_archive_audit": "PASS",
+    "audited_graphics_identity": "PASS; vitaGL 6e7fe402 and vitaShaRK v1.5 header/archive SHA-256",
+    "shader_wrapper_call_target_audit": "PASS; 4 linked call sites",
+    "renderer_init_correction": "PASS; raw vglInit is diagnostic resolution_fallback, clear precedes first swap",
+    "vpk_entries": [
+      "sce_sys/param.sfo",
+      "eboot.bin"
+    ],
+    "retail_assets_packaged": 0,
+    "custom_assets_packaged": 0,
+    "sha256_manifest": "PASS",
+    "vpk_sha256": "7c57e238fb1e7abfa28f8bfce0630806cb3641680ec6dcae9b9d4fe1e9f67fb6",
+    "elf_sha256": "0a4ca02cbed8545cc0a9546f06b2e5ba7153a51eec97608fbdb058b803a40a59",
+    "runtime_log_accuracy": "PASS: TU counts say compiled; START PASS requires observed callback exit; unconditional append PASS removed",
+    "deployment_attempted": false
+  },
+  "a3_0_integration": {
+    "status": "HOST_M00_LIVE_WORLD_RENDER_PASS__VITA_ARM_FINAL_LINK_RENDER_TARGET_BOUNDARY_PENDING__DYNAMIC_LDD_FRONTIER_ACTIVE",
+    "source_manifest": "cmake/A30OriginalSources.cmake",
+    "canonical_migration_audit": "reports/A30_CANONICAL_BUILD_MIGRATION_AUDIT.md; root workflow remains A2.2 and must be migrated after isolated A3 link is green",
+    "staging_patch_files": 22,
+    "staging_unique_upstream_files_touched": 109,
+    "a2_2_original_sources_preserved": 105,
+    "wwphys_runtime_sources_selected": 93,
+    "wwsaveload_definition_sources": 11,
+    "ww3d_original_buffer_sources": 3,
+    "combat_world_factory_sources": 9,
+    "linked_definition_original_sources": 209,
+    "aggregate_original_compile_frontier": 220,
+    "wwphys_host_objects_compiled": 93,
+    "wwphys_vita_objects_compiled": 93,
+    "wwsaveload_host_objects_compiled": 11,
+    "wwsaveload_vita_objects_compiled": 11,
+    "ww3d_buffer_host_objects_compiled": 3,
+    "ww3d_buffer_vita_objects_compiled": 3,
+    "combat_host_objects_compiled": 9,
+    "combat_vita_objects_compiled": 9,
+    "datasafe_original_sources": 2,
+    "datasafe_frontier_objects_per_abi": 3,
+    "world_harness_host_compiled": "PASS",
+    "world_harness_vita_compiled": "PASS",
+    "m00_static_world_runtime": {
+      "status": "PASS 35/35 exact derived assertions",
+      "linked_original_sources": 248,
+      "definition_count": 2157,
+      "definition_checksum": "90DB91BE",
+      "static_objects": 495,
+      "static_lights": 192,
+      "definition_backed_objects": 93,
+      "definitionless_objects": 594,
+      "render_object_nodes": 1615,
+      "meshes": 1288,
+      "vertices": 38158,
+      "polygons": 21537,
+      "prototypes": 1177,
+      "vis_objects": 1684,
+      "vis_sectors": 347,
+      "object_checksum": "4A930F8A",
+      "render_graph_checksum": "BFA9C255",
+      "prototype_checksum": "E835A45F",
+      "pathfind": "PASS",
+      "optional_level_ddb": "original missing-file no-op PASS",
+      "unsupported_gpu_calls": 0,
+      "teardown": "PASS",
+      "link_log": "../../logs/a30-20260807-m00-world-link-frontier-4.log",
+      "runtime_log": "../../logs/a30-20260807-m00-world-runtime-fingerprint.log",
+      "report": "reports/A30_M00_WORLD_RUNTIME.md",
+      "preserved_bundle": "build/a30-m00-world-runtime-35of35/",
+      "preserved_manifest": "PASS"
+    },
+    "m00_live_world_render": {
+      "status": "PASS 45/45 twice; byte-identical logs",
+      "linked_original_sources": 248,
+      "sequence": "CameraClass::Apply -> PhysicsScene Pre_Render -> WW3D Begin_Render -> WW3D::Render -> WW3D End_Render -> PhysicsScene Post_Render",
+      "frames": 1,
+      "mesh_submissions": 652,
+      "submitted_vertices": 30603,
+      "submitted_triangles": 16939,
+      "geometry_checksum": "34FFAD42",
+      "indexed_submissions": 0,
+      "indexed_references": 0,
+      "indexed_triangles": 0,
+      "indexed_checksum": "00000000",
+      "rejected_indexed_submissions": 0,
+      "unsupported_submissions": 0,
+      "unexpected_gpu_boundary_calls": 0,
+      "default_render_target_restores": 1,
+      "non_null_render_targets": 0,
+      "render_target_creations": 0,
+      "teardown": "PASS",
+      "camera_patch": "port/patches/ww3d2-a30-camera-apply.patch",
+      "executable_sha256": "10bf3ad0c025a29214a2e84d021dccf44e32d12fcd5465b29aa60e79f279e7c1",
+      "asserted_runtime_log_sha256": "0780f12c69a7f956b303a3350934cfad5bb4b72e7c1bc10a65308761dfc566cb",
+      "build_log": "../../logs/a30-20260807-m00-world-render-fingerprint-build.log",
+      "runtime_log": "../../logs/a30-20260807-m00-world-render-fingerprint.log",
+      "repeat_runtime_log": "../../logs/a30-20260807-m00-world-render-fingerprint-repeat.log",
+      "report": "reports/A30_M00_WORLD_RUNTIME.md",
+      "preserved_bundle": "build/a30-m00-world-render-45of45/",
+      "preserved_manifest": "PASS"
+    },
+    "wwphys_clean_zero_fuzz_stage": "PASS",
+    "wwphys_upstream_pristine": "PASS",
+    "wwphys_orig_rej_residue": 0,
+    "wwphys_logs": {
+      "clean_stage": "../../logs/a30-20260807-wwphys-final-clean-stage.log",
+      "host": "../../logs/a30-20260807-wwphys-final-host-build.log",
+      "vita": "../../logs/a30-20260807-wwphys-final-vita-build.log"
+    },
+    "retail_route": {
+      "archive": "Data/M00_Tutorial.mix",
+      "archive_entries": 84,
+      "ldd": "m00_tutorial.ldd; 148616 bytes",
+      "lsd": "M00_Tutorial.lsd; 526835 bytes",
+      "dep": "m00_tutorial.dep; 4619 bytes",
+      "level_info_map": "M00_Tutorial.lsd",
+      "level_ddb": "absent; original optional lookup continues",
+      "global_definitions": "Objects.DDB; 5157396 bytes; original always.dbs provider"
+    },
+    "world_preflight": "PASS 17/17 through original FileFactory/MIX/FileClass/ChunkLoad; host and Vita GCC compile",
+    "definition_runtime_minimal": "PASS 13/13; original SaveLoadSystem/DefinitionMgr loaded Objects.DDB, 260 Twiddlers, optional m00_tutorial.ddb no-op preserved",
+    "definition_runtime_minimal_log": "../../logs/a30-20260807-definition-runtime-minimal.log",
+    "definition_runtime_full_wwphys": {
+      "status": "PASS 34/34",
+      "linked_objects": 244,
+      "definition_count": 1411,
+      "twiddler_count": 260,
+      "wwphys_definition_count": 1151,
+      "wwphys_factory_count": 17,
+      "class_fingerprint": "405/219/8/0/97/5/0/44/23/101/102/0/47/26/49/0/25",
+      "objects_ddb_size": 5157396,
+      "optional_level_ddb": "original missing-file no-op; count remains 1411",
+      "unsupported_gpu_calls": 0,
+      "build_log": "../../logs/a30-20260807-definition-wwphys-final-build.log",
+      "runtime_log": "../../logs/a30-20260807-definition-wwphys-runtime-final.log"
+    },
+    "world_preflight_source": "port/validation/a30_world_selftest.cpp",
+    "world_runtime_source": "port/validation/a30_world_runtime.cpp",
+    "world_target": "Original WWSaveLoad and WWPhys load 495 static objects plus 192 lights into PhysicsScene, then existing WW3D renderer traverses them",
+    "wwsaveload_parameter_cpp": "excluded; editor-only when PARAM_EDITING_ON is off",
+    "definition_frontier_logs": {
+      "clean_stage": "../../logs/a30-20260807-definition-final-clean-stage.log",
+      "host": "../../logs/a30-20260807-definition-final-host-build.log",
+      "vita": "../../logs/a30-20260807-definition-final-vita-build.log",
+      "validation": "../../logs/a30-20260807-definition-final-validation.log"
+    },
+    "combat_frontier": {
+      "status": "PASS host 9/9 and Vita ARM 9/9",
+      "sources": "assets, damage, reflist, buildingstate, doors, elevator, damageablestaticphys, buildingaggregate, savegame",
+      "clean_stage_log": "../../logs/a30-20260807-combat-integration-clean-stage.log",
+      "host_log": "../../logs/a30-20260807-combat-integration-host-build.log",
+      "vita_log": "../../logs/a30-20260807-combat-integration-vita-build.log"
+    },
+    "datasafe_frontier": {
+      "status": "PASS original DataSafe/crandom plus optional-services boundary 3/3 on host and Vita ARM; ASan semantic test PASS",
+      "resolved_combat_link_symbols": "32 of the prior 68",
+      "host_lp64_bug_fixed": "original unsigned long cipher words widened to 8 bytes; exact DWORD accommodation restores four-byte algorithm contract",
+      "patch_sha256": {
+        "commando_a30_datasafe_gcc15": "d82ed1bbc1406363314c14178059868eaf116fffd1f2ad60993eda45f254e99b",
+        "optional_services": "49edeebfe193523ae60f2f8df339e8100ac99a0be9ed1023aa10b445e523edf6",
+        "template_definitions": "13d47b30e4468a6453171c7e26a77da2efc85f0479036deb03984e84ab77bf7d",
+        "ilp32": "90390a04ca0b216fb56e2ee46b7a74f4ad32f8bf37fff410b1bd4aa40692f1ef"
+      },
+      "clean_stage_log": "../../logs/a30-20260807-datasafe-integration-clean-stage.log",
+      "host_log": "../../logs/a30-20260807-datasafe-integration-host-build.log",
+      "vita_log": "../../logs/a30-20260807-datasafe-integration-vita-build.log"
+    },
+    "current_compile_issue": "RESOLVED: the shared Vita DX8Wrapper::Create_Render_Target boundary truthfully returns NULL for unsupported render-to-texture creation; canonical host and ARM package validation pass.",
+    "definition_trace": "reports/A30_DEFINITION_TRACE.md; all 93 M00 definition references resolve; optional m00_tutorial.ddb is absent by design",
+    "fixed_width_remap_tokens": "PASS; reports/A30_POINTER_TOKEN_AUDIT.md; exact WWPhys and Combat patches integrated, independent zero-fuzz replay byte-identical, host/Vita aggregate 104/104",
+    "pointer_token_patch_sha256": {
+      "wwphys": "e7ff7b79d1240e2cb2b615625084d74fbeef83fcd1ff551e76ebc45062ccf990",
+      "combat": "18bacb9f28392e239b052871fed686eeb349cbdf35d98c7a7a6c74d237530d90"
+    },
+    "pointer_token_validation_log": "../../logs/a30-20260807-pointer-tokens-validation.log",
+    "definition_runtime_link_frontier": "CLOSED: 244-object executable links and passes 34/34 against unchanged retail Objects.DDB.",
+    "terrain_renderer_boundary": "reports/A30_TERRAIN_RENDER_BOUNDARY.md; preserve RenegadeTerrainPatchClass and use the generic original buffer/DX8Wrapper indexed path",
+    "indexed_renderer_boundary": {
+      "status": "PASS after independent homogeneous-transform review; host/sanitizer semantics and Vita ARM object compilation",
+      "host_raw_checks": "14/14",
+      "host_original_object_checks": "8/8",
+      "geometry_checksum": "65E5F668",
+      "supported_fvf": "0x152 XYZNDUV1 stride 36; 16-bit indices",
+      "homogeneous_transform": "PASS; raw XYZ plus original world/view and depth-converted projection matrices retain W for GPU clipping and perspective interpolation",
+      "sanitizers": "PASS ASan/UBSan 14/14",
+      "a2_regression": "PASS 19/19, 10/10, 14/14; 5704AB7D",
+      "report": "reports/A30_INDEXED_BUFFER_BACKEND.md",
+      "review_report": "reports/A30_INDEXED_BUFFER_BACKEND_REVIEW.md",
+      "host_log": "../../logs/a30-20260807-indexed-homogeneous-host.log",
+      "vita_log": "../../logs/a30-20260807-indexed-homogeneous-vita-object.log"
+    },
+    "m00_world_link_frontier": "CLOSED: 248-original-source host target passes 35/35 load fingerprint and 45/45 live original world-render traversal twice",
+    "vita_a3_target": {
+      "status": "CANONICAL ROOT TARGET PASS; ARM ELF/SELF/VPK AUDITED; PENDING MANUAL PHYSICAL VITA TEST",
+      "cmake": "CMakeLists.txt",
+      "build_directory": "build/vita-a30-canonical/",
+      "original_sources": 248,
+      "runtime_log": "ux0:data/renegade/user/logs/a30-runtime.log",
+      "build_log": "../../logs/a30-20260814-231841-build.log",
+      "first_causal_error": "a30_static_world_boundary.cpp device SetRenderState attempted protected DX8Wrapper::RenderStates access even though original wrapper already owns/cache-writes it",
+      "first_causal_error_resolution": "device SetRenderState no longer duplicates the protected cache write; original DX8Wrapper::Set_Render_State remains authoritative",
+      "current_link_error": "RESOLVED: original WWPhys pscene_projectors.cpp links through shared DX8Wrapper::Create_Render_Target.",
+      "current_link_error_resolution": "Implemented in port/renderer/vita/ww3d_dx8_boundary.cpp: record unsupported creation and return NULL, retaining the original caller's fallback path.",
+      "renderer_lifecycle_host": "PASS 11/11; exactly one native initialization, two logical sessions, two logical shutdowns",
+      "renderer_lifecycle_host_log": "../../logs/a30-20260807-renderer-lifecycle-root-runtime-2.log",
+      "sync_time_continuation": "PASS by construction; A3 calls WW3D::Sync(previous WW3D sync origin + process elapsed ms), preventing unsigned first-frame underflow after A2.2",
+      "lifecycle_requirement": "vglInit exactly once per process; logical WW3D renderer sessions may deactivate/reactivate known state across A2.2 regression and A3 world runtime",
+      "canonical_migration_pending": false,
+      "deployment_attempted": false
+    },
+    "m00_dynamic_ldd_frontier": {
+      "status": "SOURCE-TRACED; ISOLATED HOST/VITA COMPILE CLOSURE ACTIVE",
+      "top_level_subsystems": 6,
+      "combat_bytes": 102007,
+      "conversation_bytes": 25396,
+      "dynamic_physics_bytes": 20914,
+      "encyclopedia_bytes": 40,
+      "dynamic_audio_bytes": 25,
+      "map_bytes": 141,
+      "game_objects": "74 total: Soldier 22; ScriptZone 31; PowerUp 8; Simple 5; Transition 4; Building 4",
+      "dynamic_physics": "35 total: Deco 5; Human 22; Phys3 8",
+      "post_load_pointer_remap": "MANDATORY",
+      "temporary_static_shims_to_retire": "CombatManager::IAmServer/TheStar, GameObjManager::StarGameObjList, SmartGameObj::Is_Human_Controlled, VehicleGameObj::Get_Driver, DiagLogClass::Log_Timed",
+      "report": "reports/A30_COMMANDO_NEXT_RUNTIME.md"
+    },
+    "hardware_test_required": false
+  },
+  "upstream_modules_integrated": [
+    "wwbitpack (4 translation units)",
+    "wwutil mathutil",
+    "wwlib filesystem, factories, MIX, strings, chunks, CRC, hash, straws, buffers, INI, multilist, timing (23 translation units)",
+    "WWMath geometry, collision, matrix, quaternion, frustum, viewport (21 translation units)",
+    "wwsaveload persistence core (3 translation units)",
+    "Combat FileFactoryListClass",
+    "ww3d2 asset/prototype/RenderObj/Mesh/HLOD/Scene/Camera/WW3D cluster (52 translation units)"
+    ,"WWPhys complete original runtime compile frontier (93 translation units; host and Vita ARM PASS)"
+    ,"WWSaveLoad complete release definition/database closure (11 translation units; host and Vita ARM PASS)"
+    ,"WW3D original FVF/vertex/index buffer implementations (3 translation units; host and Vita ARM PASS)"
+    ,"Combat M00 world-factory slice (9 translation units; host and Vita ARM PASS)"
+  ],
+  "original_source_manifest": "cmake/A30OriginalSources.cmake (includes the accepted cmake/A22OriginalSources.cmake manifest)",
+  "original_sources_compiled": [
+    "105 accepted A2.2 exact paths in cmake/A22OriginalSources.cmake",
+    "93 original WWPhys runtime paths in cmake/A30OriginalSources.cmake",
+    "209 unique original translation units are selected in the linked full-WWPhys definition runtime",
+    "220 unique original translation units are selected at the aggregate compile frontier",
+    "248 original EA/Westwood translation units link in the exact M00 static-world runtime target",
+    "Host and Vita compile frontiers pass: WWPhys 93/93, WWSaveLoad 11/11, WW3D buffers 3/3, Combat world factories 9/9, DataSafe originals plus boundary 3/3"
+  ],
+  "vita_specific_files": [
+    "port/platform/vita/main.cpp",
+    "port/platform/vita/vita_platform.cpp",
+    "port/platform/vita/vita_runtime_log.h",
+    "port/platform/vita/a30_main.cpp",
+    "port/platform/vita/a30_vita_runtime.h",
+    "port/platform/vita/a30_vita_runtime.cpp",
+    "port/platform/vita/a30_static_world_boundary.cpp",
+    "port/filesystem/renegade_paths.cpp",
+    "port/filesystem/renegade_file_factory.cpp",
+    "port/renderer/vita/ww3d_vita_renderer.cpp",
+    "port/renderer/vita/ww3d_dx8_boundary.cpp",
+    "port/renderer/vita/d3d8.h",
+    "port/renderer/vita/D3dx8core.h",
+    "port/validation/wwbitpack_selftest.cpp",
+    "port/validation/a21_filesystem_selftest.cpp",
+    "port/validation/a22_w3d_selftest.cpp",
+    "port/validation/a30_world_selftest.cpp",
+    "port/validation/a30_world_runtime.cpp",
+    "port/validation/a30_indexed_backend_selftest.cpp",
+    "port/validation/a30_dx8wrapper_indexed_selftest.cpp"
+  ],
+  "portability_patches": [
+    {
+      "path": "port/patches/wwbitpack-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "VC6 syntax/scope compatibility and bounded serialization"
+    },
+    {
+      "path": "port/patches/wwlib-a21-posix.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "POSIX file semantics, GCC compatibility, pointer safety, and fixed-width MIX ABI"
+    },
+    {
+      "path": "port/patches/wwlib-a22-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Additional GCC fixes plus pointer-width ObjectPool block header for Linux LP64 while preserving Vita ILP32"
+    },
+    {
+      "path": "port/patches/wwmath-a22-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Modern GCC compatibility for the original geometry/collision cluster"
+    },
+    {
+      "path": "port/patches/ww3d2-a22-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "VC6, pointer-width, portable-color, and unavailable WWAudio boundary compatibility"
+    },
+    {
+      "path": "port/patches/ww3d2-a22-vita-boundaries.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Route original Mesh, Scene, Camera, and WW3D lifecycle beneath DX8 to the Vita renderer without replacing traversal"
+    },
+    {
+      "path": "port/patches/wwlib-a30-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Modern GCC BinaryHeap loop-scope compatibility required by WWPhys"
+    },
+    {
+      "path": "port/patches/wwmath-a30-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "WWPhys-reached WWMath qualification and non-MSVC include compatibility"
+    },
+    {
+      "path": "port/patches/wwsaveload-a30-abi.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Preserve exact four-byte serialized SimplePersistFactory old-pointer tokens on host LP64 and Vita ILP32"
+    },
+    {
+      "path": "port/patches/wwphys-a30-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Exact GCC/platform compatibility plus fixed-width PhysClass remap tokens for the complete original WWPhys runtime project"
+    },
+    {
+      "path": "port/patches/wwphys-a30-pointer-tokens.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Preserve audited WWPhys serialized old-address/remap tokens as exact four-byte fields on host LP64 and Vita ILP32"
+    },
+    {
+      "path": "port/patches/combat-a30-pointer-tokens.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Preserve original Combat Referencer/Referenceable four-byte remap tokens without widening the disk format"
+    },
+    {
+      "path": "port/patches/ww3d2-a30-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Narrow VC6/GCC compatibility in the WWPhys-reached light, particle, dynamic-mesh, and point-render cluster"
+    },
+    {
+      "path": "port/patches/ww3d2-a30-vita-buffers.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Place CPU-backed Vita storage beneath original FVF/vertex/index buffer abstractions without altering their ownership algorithms"
+    },
+    {
+      "path": "port/patches/ww3d2-a30-camera-apply.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Restore original CameraClass::Apply in the Vita WW3D scene-render branch after implementing the truthful Camera/DX8Caps platform boundary"
+    },
+    {
+      "path": "port/patches/combat-a30-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Exact Combat include-case, VC6 syntax, and ABI fixes for the M00 world-factory slice"
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Portable DataSafe declarations and case-sensitive Commando include paths"
+    },
+    {
+      "path": "port/patches/commando-a30-optional-services.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Route only DataSafe tamper notification away from unavailable multiplayer chat while retaining detection and engine behavior"
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-definitions-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Standards-correct explicit specialization definitions for original DataSafe templates"
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-ilp32.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Preserve original four-byte cipher words, keys, checksums, and sizes on host LP64 and Vita ILP32"
+    },
+    {
+      "path": "port/patches/wwaudio-a30-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Case-sensitive and dependent-base compatibility at the original WWAudio/Miles declaration boundary"
+    },
+    {
+      "path": "port/patches/wwnet-a30-gcc15.patch",
+      "application": "staging only, --fuzz=0",
+      "reason": "Header guard/socket declaration compatibility only; networking behavior remains excluded"
+    }
+  ],
+  "platform_boundary_corrections": [
+    "Interpret audited vitaGL vglInit return as resolution_fallback rather than success/failure",
+    "Issue first glClear before vglSwapBuffers so vitaGL scene_reset terminates the asynchronous splash",
+    "Wrap actual shark_init calls at link time and persist exact default/fallback return codes",
+    "Persist renderer breadcrumbs with partial-write handling, sceIoSyncByFd, and close per record",
+    "Record free system memory, vitaGL pools, requested display/depth/MSAA/GXM values, observable GL state, first frame, and first original mesh",
+    "Link SceSysmem_stub for free-memory diagnostics and pin audited vitaGL/vitaShaRK library identities",
+    "Preserve the original AABox/OBBox collision display-mask guard before reporting an unsupported Vita debug-box draw",
+    "Implement CPU-backed DX8-shaped vertex/index storage beneath original WW3D buffer ownership and generic indexed submission",
+    "Provide a truthful conservative DX8Caps object, original CameraClass viewport/projection/view state, and restore CameraClass::Apply before live scene traversal",
+    "Permit only the original NULL/default-framebuffer restore reached by PhysicsScene projector cleanup; non-NULL render targets remain explicit fail-fast boundaries",
+    "Treat vitaGL as process-lifetime initialized and reactivate logical renderer sessions without a second vglInit",
+    "Route optional DataSafe security-fault chat notification through a narrow platform callback while preserving original encryption/integrity behavior",
+    "Preserve the previously validated FileFactory/MIX/ChunkLoad/asset/prototype/RenderObj/HLOD/MeshModel/material/hierarchy code unchanged"
+  ],
+  "files_modified": [
+    "CMakeLists.txt",
+    "cmake/A22OriginalSources.cmake",
+    "tools/host_a22/CMakeLists.txt",
+    "tools/build.sh",
+    "tools/generate_integration_report.py",
+    "port/platform/vita/main.cpp",
+    "port/platform/vita/vita_platform.h",
+    "port/platform/vita/vita_platform.cpp",
+    "port/platform/vita/vita_runtime_log.h",
+    "port/renderer/vita/ww3d_vita_renderer.h",
+    "port/renderer/vita/ww3d_vita_renderer.cpp",
+    "port/renderer/vita/ww3d_dx8_boundary.cpp",
+    "port/renderer/vita/d3d8.h",
+    "port/renderer/vita/D3dx8core.h",
+    "port/validation/a22_w3d_selftest.h",
+    "port/validation/a22_w3d_selftest.cpp",
+    "port/validation/a30_world_selftest.h",
+    "port/validation/a30_world_selftest.cpp",
+    "port/validation/a30_world_runtime.h",
+    "port/validation/a30_world_runtime.cpp",
+    "port/validation/a30_indexed_backend_selftest.cpp",
+    "port/validation/a30_dx8wrapper_indexed_selftest.cpp",
+    "port/validation/a30_renderer_lifecycle_selftest.cpp",
+    "port/platform/renegade_optional_services.h",
+    "port/platform/renegade_optional_services.cpp",
+    "port/patches/wwlib-a22-gcc15.patch",
+    "port/patches/ww3d2-a22-vita-boundaries.patch",
+    "port/patches/wwlib-a30-gcc15.patch",
+    "port/patches/wwmath-a30-gcc15.patch",
+    "port/patches/wwsaveload-a30-abi.patch",
+    "port/patches/wwphys-a30-gcc15.patch",
+    "port/patches/wwphys-a30-pointer-tokens.patch",
+    "port/patches/combat-a30-pointer-tokens.patch",
+    "port/patches/ww3d2-a30-gcc15.patch",
+    "port/patches/ww3d2-a30-vita-buffers.patch",
+    "port/patches/ww3d2-a30-camera-apply.patch",
+    "port/patches/combat-a30-gcc15.patch",
+    "port/patches/commando-a30-datasafe-gcc15.patch",
+    "port/patches/commando-a30-optional-services.patch",
+    "port/patches/commando-a30-datasafe-definitions-gcc15.patch",
+    "port/patches/commando-a30-datasafe-ilp32.patch",
+    "port/patches/wwaudio-a30-gcc15.patch",
+    "port/patches/wwnet-a30-gcc15.patch",
+    "port/compatibility/include/win32_compat.h",
+    "cmake/A30OriginalSources.cmake",
+    "tools/host_a30/CMakeLists.txt",
+    "tools/run_a30_wwphys_frontier.sh",
+    "tools/host_a30_renderer_lifecycle/CMakeLists.txt",
+    "tools/host_a30_definitions/CMakeLists.txt",
+    "tools/host_a30_definitions/main.cpp",
+    "tools/host_a30_definitions/wwphys_definition_dx8_boundary.cpp",
+    "tools/host_a30_definitions/include/audiosaveload.h",
+    "tools/host_a30_definitions/include/winsock.h",
+    "reports/A30_DEFINITION_TRACE.md",
+    "reports/A30_POINTER_TOKEN_AUDIT.md",
+    "reports/A30_DEFINITION_RUNTIME.md",
+    "reports/A30_INDEXED_BUFFER_BACKEND.md",
+    "reports/A30_INDEXED_BUFFER_BACKEND_REVIEW.md",
+    "reports/A30_DATASAFE_CLOSURE.md",
+    "reports/A30_M00_WORLD_RUNTIME.md",
+    "reports/A30_CAMERA_STATE_BOUNDARY.md",
+    "reports/A30_COMMANDO_NEXT_RUNTIME.md",
+    "reports/A30_CANONICAL_BUILD_MIGRATION_AUDIT.md",
+    "reports/DEPENDENCY_ANALYSIS.md",
+    "reports/A22_RENDERER_DIAGNOSTICS.md",
+    "reports/A22_VITAGL_API_AUDIT.md",
+    "reports/A22_VITAGL_INIT_ANALYSIS.md",
+    "reports/A22_UNSUPPORTED_SUBMISSION_ANALYSIS.md",
+    "reports/milestones/A2.2-CANDIDATE1-RENDERER-INIT-FAILURE.md",
+    "reports/milestones/A2.2-HARDWARE-VISUAL-VALIDATION.md",
+    "reports/BUILD_STATE.json"
+  ],
+  "artifacts": [
+    "../../baselines/A2.0/",
+    "../../baselines/A2.1/",
+    "../../baselines/A2.2-candidate1-renderer-init-failure/",
+    "../../baselines/A2.2-candidate2-renderer-init-corrected/",
+    "../../baselines/A2.2/",
+    "../../logs/a22-candidate1-physical-runtime.log",
+    "../../dist/a22-runtime.log",
+    "build/host-a22-ninja/a22_asset_selftest",
+    "build/host-a22-asan/a22_asset_selftest",
+    "build/vita/RenegadeVitaA2",
+    "build/vita/RenegadeVitaA2.velf",
+    "build/vita/eboot.bin",
+    "build/vita/RenegadeVita-A2.2.vpk",
+    "build/vita/RenegadeVita-A2.2.map",
+    "../../dist/RenegadeVita-A2.2.vpk",
+    "../../dist/RenegadeVita-A2.2.elf",
+    "../../dist/RenegadeVita-A2.2.map",
+    "../../dist/RenegadeVita-A2.2.symbols.txt",
+    "../../dist/RenegadeVita-A2.2.elf-header.txt",
+    "../../dist/RenegadeVita-A2.2.vpk-contents.txt",
+    "../../dist/BUILD_REPORT.txt",
+    "../../dist/SOURCE_INTEGRATION_REPORT.json",
+    "../../dist/COMPILER_LOG.txt",
+    "../../dist/SHA256SUMS.txt"
+    ,"../../logs/a30-20260807-wwphys-final-clean-stage.log"
+    ,"../../logs/a30-20260807-wwphys-final-host-build.log"
+    ,"../../logs/a30-20260807-wwphys-final-vita-build.log"
+    ,"../../logs/a30-20260807-definition-final-clean-stage.log"
+    ,"../../logs/a30-20260807-definition-final-host-build.log"
+    ,"../../logs/a30-20260807-definition-final-vita-build.log"
+    ,"../../logs/a30-20260807-definition-final-validation.log"
+    ,"../../logs/a30-20260807-pointer-tokens-clean-stage.log"
+    ,"../../logs/a30-20260807-pointer-tokens-host-build.log"
+    ,"../../logs/a30-20260807-pointer-tokens-vita-build.log"
+    ,"../../logs/a30-20260807-pointer-tokens-validation.log"
+    ,"../../logs/a30-20260807-definition-wwphys-final-build.log"
+    ,"../../logs/a30-20260807-definition-wwphys-runtime-final.log"
+    ,"../../logs/a30-20260807-combat-integration-clean-stage.log"
+    ,"../../logs/a30-20260807-combat-integration-host-build.log"
+    ,"../../logs/a30-20260807-combat-integration-vita-build.log"
+    ,"../../logs/a30-20260807-world-harness-host-build.log"
+    ,"../../logs/a30-20260807-world-harness-vita-build.log"
+    ,"../../logs/a30-20260807-datasafe-integration-clean-stage.log"
+    ,"../../logs/a30-20260807-datasafe-integration-host-build.log"
+    ,"../../logs/a30-20260807-datasafe-integration-vita-build.log"
+    ,"../../logs/a30-20260807-datasafe-clean-host-asan-final.log"
+    ,"../../logs/a30-20260807-indexed-backend-host.log"
+    ,"../../logs/a30-20260807-indexed-backend-vita-objects.log"
+    ,"../../logs/a30-20260807-indexed-homogeneous-host.log"
+    ,"../../logs/a30-20260807-indexed-homogeneous-wrapper-host.log"
+    ,"../../logs/a30-20260807-indexed-homogeneous-sanitizer.log"
+    ,"../../logs/a30-20260807-indexed-homogeneous-vita-object.log"
+    ,"../../logs/a30-20260807-indexed-homogeneous-vita-boundary-object.log"
+    ,"../../logs/a30-20260807-indexed-homogeneous-a22-regression.log"
+    ,"../../logs/a30-20260807-m00-world-link-frontier-4.log"
+    ,"../../logs/a30-20260807-m00-world-runtime-1.log"
+    ,"../../logs/a30-20260807-m00-world-runtime-fingerprint.log"
+    ,"build/a30-m00-world-runtime-35of35/"
+    ,"../../logs/a30-20260807-m00-world-render-fingerprint-build.log"
+    ,"../../logs/a30-20260807-m00-world-render-fingerprint.log"
+    ,"../../logs/a30-20260807-m00-world-render-fingerprint-repeat.log"
+    ,"build/a30-m00-world-render-45of45/"
+    ,"../../logs/a30-20260807-vita-target-configure-1.log"
+    ,"../../logs/a30-20260807-vita-target-build-1.log"
+    ,"../../logs/a30-20260807-vita-target-build-2.log"
+    ,"../../logs/a30-20260807-renderer-lifecycle-root-configure-2.log"
+    ,"../../logs/a30-20260807-renderer-lifecycle-root-build-2.log"
+    ,"../../logs/a30-20260807-renderer-lifecycle-root-runtime-2.log"
+    ,"build/host-a30-definitions/a30_m00_world_runtime"
+    ,"build/a30-definition-runtime-34of34/"
+    ,"build/host-a30-wwphys/CMakeFiles/a30_wwphys_compile_frontier.dir/"
+    ,"build/vita-a30-wwphys/CMakeFiles/a30_wwphys_compile_frontier.dir/"
+  ],
+  "failed_approaches": [
+    "Do not reset RawFileClass filename after MixFileFactoryClass applies Bias",
+    "Do not use Linux LP64 long for MIX/W3D disk fields",
+    "Do not use a four-byte allocation header to hold a native host pointer",
+    "Do not stack-allocate original RefCount SceneClass or CameraClass objects",
+    "Do not bypass original Mesh hidden/static-sort/frustum/base-pass semantics",
+    "Do not count a RenderObj as unsupported before its original display/visibility guard",
+    "Do not make WW3D::Flush a total no-op",
+    "Do not initialize vitaGL more than once per process",
+    "Do not restart WW3D SyncTime at zero after the retained A2.2 session; continue from WW3D::Get_Sync_Time to prevent unsigned frame-time underflow",
+    "Do not treat vglInit's GLboolean return as initialization success; installed vitaGL 6e7fe40 returns resolution-fallback status and returns GL_FALSE after a successful native-resolution init",
+    "Do not let debugScreen and vitaGL own the display simultaneously",
+    "Do not use a custom runtime MIX/W3D parser, converted assets, A1.x architecture, or manual mesh draw path",
+    "Do not use arm-vita-eabi-run as physical hardware authority",
+    "Do not regenerate embedded PowerShell payloads during normal development"
+  ],
+  "next_steps": [
+    "Keep the A3.0 physical baseline, separate host 45/45 set, and prior verified M00 evidence bundles immutable",
+    "Implement the reusable in-memory frame-history and correlated resolved-frame capture bundle at the established Vita renderer/runtime boundary",
+    "Add and validate the deterministic fixed-camera M00 benchmark route and host bundle comparator",
+    "Preserve the verified one-time process-lifetime vitaGL initialization contract (host sequential-session test PASS 11/11)",
+    "Compile and integrate the original M00 dynamic LDD/GameObj closure, replacing temporary static-target scalar shims with original owner translation units",
+    "Continue into original player/session/physics/camera/input/timing/game-loop paths before requesting the next manual Vita test",
+    "Never auto-deploy or package/copy retail data"
+  ]
+}

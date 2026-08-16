@@ -1,0 +1,339 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+# Candidates must be reachable from Windows.  The Linux-tree fallback is for
+# standalone development only; managed Windows builds always publish here.
+# Optional managed output root.  When unset, retain the historical Windows
+# location only when the current WSL username maps to that Windows profile;
+# otherwise use the checkout itself.  This keeps forks self-contained.
+rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"}
+if [ -d "$rv_managed_builder_root" ] && [ -w "$rv_managed_builder_root" ]; then
+	rv_builder_root=$rv_managed_builder_root
+else
+	rv_builder_root=$rv_root
+fi
+rv_logs="$rv_builder_root/logs"
+rv_dist="$rv_builder_root/dist"
+rv_upstream="$rv_root/upstream/CnC_Renegade"
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev2}
+case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
+rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
+rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
+case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
+rv_build="$rv_root/build/vita-${rv_candidate_stem}-candidate"
+rv_host_output="$rv_root/build/${rv_candidate_label}-HOST-VALIDATION.log"
+rv_vitasdk=${VITASDK:-/usr/local/vitasdk}
+rv_revision=3e00c3a1b97381bb28be89a35b856375e0629a08
+rv_timestamp=$(date +%Y%m%d-%H%M%S)
+rv_log="$rv_logs/${rv_candidate_stem}-$rv_timestamp-build.log"
+rv_runtime_log="ux0:data/renegade/user/logs/${rv_candidate_stem}-runtime.log"
+
+mkdir -p "$rv_logs" "$rv_dist" "$rv_root/build"
+exec > >(tee "$rv_log") 2>&1
+
+on_error() {
+	local rv_status=$?
+	trap - ERR
+	set +e
+	echo
+	echo "$rv_candidate_label BUILD FAILED (exit $rv_status)"
+	echo "Complete log: $rv_log"
+	echo "Causal output tail:"
+	tail -n 180 "$rv_log"
+	echo "The last successful dist release was left unchanged."
+	exit "$rv_status"
+}
+trap on_error ERR
+
+require_command() {
+	command -v "$1" >/dev/null 2>&1 || {
+		echo "Required host command is unavailable: $1" >&2
+		exit 2
+	}
+}
+
+require_host_line() {
+	grep -Fqx -- "$1" "$rv_host_output" || {
+		echo "$rv_candidate_label host semantic fingerprint mismatch: $1" >&2
+		exit 7
+	}
+}
+
+require_linked_symbol() {
+	grep -Fq -- "$1" "$rv_symbols" || {
+		echo "Required $rv_candidate_label linked symbol is absent: $1" >&2
+		exit 8
+	}
+}
+
+echo "Renegade Vita $rv_candidate_label correctness, diagnostics, and interactive hardware candidate build"
+echo "Workspace: $rv_root"
+echo "Log: $rv_log"
+
+for rv_command in cmake ninja python3 git patch unzip zip sha256sum grep sed find tee wc ccache; do
+	require_command "$rv_command"
+done
+for rv_sdk_path in \
+	"$rv_vitasdk/bin/arm-vita-eabi-g++" \
+	"$rv_vitasdk/bin/arm-vita-eabi-readelf" \
+	"$rv_vitasdk/bin/arm-vita-eabi-nm" \
+	"$rv_vitasdk/bin/arm-vita-eabi-objdump" \
+	"$rv_vitasdk/share/vita.toolchain.cmake" \
+	"$rv_vitasdk/share/vita.cmake" \
+	"$rv_vitasdk/arm-vita-eabi/include/vitaGL.h" \
+	"$rv_vitasdk/arm-vita-eabi/lib/libvitaGL.a" \
+	"$rv_vitasdk/arm-vita-eabi/lib/libvitashark.a" \
+	"$rv_vitasdk/arm-vita-eabi/lib/libSceShaccCgExt.a"; do
+	test -e "$rv_sdk_path" || {
+		echo "Required VitaSDK A3.1 dependency is missing: $rv_sdk_path" >&2
+		exit 2
+	}
+done
+test -x "$rv_vitasdk/bin/arm-vita-eabi-g++"
+test -s "$rv_root/RenegadeVita_BUILD.ps1"
+if [[ "$(wc -c < "$rv_root/RenegadeVita_BUILD.ps1")" -ge 8192 ]] || \
+	! grep -Fq '& wsl.exe --cd $Workspace -e bash ./tools/build.sh' \
+		"$rv_root/RenegadeVita_BUILD.ps1" || \
+	grep -Eiq 'FromBase64String|-EncodedCommand' "$rv_root/RenegadeVita_BUILD.ps1"; then
+	echo "PowerShell launcher is not the expected small canonical Bash wrapper." >&2
+	exit 2
+fi
+export VITASDK="$rv_vitasdk"
+export CCACHE_DIR="$rv_root/build/ccache"
+export CCACHE_BASEDIR="$rv_root"
+ccache --zero-stats
+echo "ccache statistics reset; native-ext4 CMake launchers are required."
+
+test -d "$rv_upstream/.git"
+if [[ -n "$(git -C "$rv_upstream" status --porcelain)" ]]; then
+	echo "Canonical upstream checkout is dirty; refusing to overwrite it." >&2
+	git -C "$rv_upstream" status --short >&2
+	exit 3
+fi
+rv_revision_actual=$(git -C "$rv_upstream" rev-parse HEAD)
+if [[ "$rv_revision_actual" != "$rv_revision" ]]; then
+	echo "Unexpected upstream revision: $rv_revision_actual" >&2
+	exit 3
+fi
+echo "Upstream revision: $rv_revision_actual"
+
+rv_retail_root=${RENEGADE_RETAIL_ROOT:-"$rv_root/retail-pc"}
+test -f "$rv_retail_root/Data/always.dat"
+export RENEGADE_RETAIL_ROOT="$rv_retail_root"
+
+if [[ -n "${RENEGADE_REUSE_HOST_VALIDATION_LOG:-}" ]]; then
+	rv_reused_host_log=$(realpath -e -- "$RENEGADE_REUSE_HOST_VALIDATION_LOG")
+	echo "Reusing completed canonical host validation: $rv_reused_host_log"
+	cp -- "$rv_reused_host_log" "$rv_host_output"
+	rv_host_validation_mode="reused completed canonical host validation"
+else
+	echo "Building and running retained A2 plus original A3 M00 host validation..."
+	bash "$rv_root/tools/run_a30_host.sh" 2>&1 | tee "$rv_host_output"
+	rv_host_validation_mode="fresh canonical host validation"
+fi
+require_host_line "A2.2 host asset integration PASS"
+require_host_line "A3.0 canonical host integration PASS"
+require_host_line "A3.1 gameplay-seed host integration PASS"
+require_host_line "A3.1 original interactive ASan host integration PASS"
+require_host_line "A3.1 hardware-equivalent interactive ASan PASS: two in-process cycles; 120 original input/network/Combat/render frames each"
+require_host_line "a31.interactive_first_frame_geometry=true"
+require_host_line "a31.interactive_first_frame_rejected=0"
+require_host_line "a31.interactive_first_frame_unsupported=0"
+require_host_line "A3.1 capture telemetry host self-test: PASS (17 checks, 0 failures)"
+require_host_line "A3.2 Vita controller axis-contract: PASS (22 checks, 0 failures)"
+require_host_line "A3.5 Vita button-state contract: PASS (10 checks, 0 failures)"
+require_host_line "A3.5 Vita ShaderClass render-state contract: 4 checks, 0 failures"
+require_host_line "A3 renderer process lifecycle: 11 checks, 0 failures; native=1 sessions=2 shutdowns=2"
+require_host_line "A3.2 texture upload contract: PASS (4 checks, 0 failures)"
+require_host_line "runtime.checks=45"
+require_host_line "runtime.failures=0"
+require_host_line "audio.initial_singleton_null=true"
+require_host_line "audio.static_load_entries=1"
+require_host_line "audio.static_load_singleton_present=true"
+require_host_line "audio.static_load_sound_scene_present=false"
+require_host_line "audio.repeated_teardown_singleton_null=true"
+require_host_line "world.m00_static_world_loaded=true"
+require_host_line "world.definition_count=2157"
+require_host_line "world.definition_count=3648"
+require_host_line "world.definition_checksum=FE798749"
+require_host_line "world.static_object_count=495"
+require_host_line "world.static_light_count=192"
+require_host_line "world.render.frame_path_completed=true"
+require_host_line "world.render.mesh_submissions=652"
+require_host_line "world.render.vertex_submissions=30603"
+require_host_line "world.render.triangle_submissions=16939"
+require_host_line "world.render.geometry_checksum=34FFAD42"
+require_host_line "world.render.unsupported_submissions=0"
+require_host_line "A3.0 original M00 world runtime: PASS"
+echo "Host semantic fingerprints: PASS"
+
+echo "Clean-restaging original source pools with the deterministic patch set..."
+bash "$rv_root/tools/stage_sources.sh"
+if find "$rv_root/staging" -type f \
+	\( -name '*.orig' -o -name '*.rej' \) -print -quit | grep -q .; then
+	echo "Staging contains patch backup/reject debris." >&2
+	exit 5
+fi
+if [[ -n "$(git -C "$rv_upstream" status --porcelain)" ]]; then
+	echo "Upstream became dirty during staging or host validation." >&2
+	exit 4
+fi
+
+python3 "$rv_root/tools/generate_integration_report.py" \
+	--root "$rv_root" \
+	--output "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" \
+	--milestone "$rv_candidate_label"
+grep -Fq "\"milestone\": \"$rv_candidate_label\"" "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"original_source_files_compiled": 424' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"vita_platform_renderer_validation_files": 21' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 103' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+
+echo "Configuring Vita $rv_candidate_label target..."
+cmake -S "$rv_root" -B "$rv_build" -G Ninja \
+	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	-DCMAKE_TOOLCHAIN_FILE="$rv_vitasdk/share/vita.toolchain.cmake" \
+	-DRENEGADE_USE_CCACHE=ON \
+	-DRENEGADE_CANDIDATE_LABEL="$rv_candidate_label"
+grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
+echo "Compiling, linking, and packaging Vita $rv_candidate_label target..."
+cmake --build "$rv_build" --parallel "$rv_build_jobs" --verbose
+echo "ccache statistics after Vita build:"
+ccache --show-stats
+
+rv_vpk="$rv_build/RenegadeVita-$rv_candidate_label.vpk"
+rv_elf="$rv_build/RenegadeVitaA31"
+rv_map="$rv_build/RenegadeVita-$rv_candidate_label.map"
+rv_elf_header="$rv_build/RenegadeVita-$rv_candidate_label.elf-header.txt"
+rv_symbols="$rv_build/RenegadeVita-$rv_candidate_label.symbols.txt"
+rv_disassembly="$rv_build/RenegadeVita-$rv_candidate_label.disassembly.txt"
+rv_vpk_contents="$rv_build/RenegadeVita-$rv_candidate_label.vpk-contents.txt"
+rv_build_report="$rv_build/BUILD_REPORT.txt"
+test -s "$rv_vpk"
+test -s "$rv_elf"
+test -s "$rv_map"
+
+echo "Validating ARM ELF, original A3 runtime symbols, and VPK contents..."
+"$rv_vitasdk/bin/arm-vita-eabi-readelf" -h "$rv_elf" > "$rv_elf_header"
+grep -q 'Class:.*ELF32' "$rv_elf_header"
+grep -q 'Data:.*little endian' "$rv_elf_header"
+grep -q 'Machine:.*ARM' "$rv_elf_header"
+"$rv_vitasdk/bin/arm-vita-eabi-nm" -C "$rv_elf" > "$rv_symbols"
+"$rv_vitasdk/bin/arm-vita-eabi-objdump" -d "$rv_elf" > "$rv_disassembly"
+while IFS= read -r rv_symbol; do
+	require_linked_symbol "$rv_symbol"
+done <<'EOF'
+Run_Westwood_Bitpack_Self_Test
+Run_A21_Filesystem_Self_Test
+Run_A22_W3D_Self_Test
+Run_A30_World_Runtime
+WW3DAssetManager::Load_3D_Assets(FileClass&)
+PhysicsSceneClass::Load_Level
+WW3D::Render(SceneClass*
+MeshClass::Render(RenderInfoClass&)
+DX8Wrapper::Create_Render_Target(int, int, WW3DFormat)
+A30_Vita_Render_Loaded_World
+RenegadeVitaRenderer::Submit_Mesh(MeshClass&, RenderInfoClass&)
+A31_Write_Capture_Bundle(A31CaptureBundleInput const&)
+RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(unsigned char*, unsigned int)
+WWAudioClass::Create_Logical_Listener()
+LogicalListenerClass::LogicalListenerClass()
+SurfaceClass::Lock(int*)
+A31_Audio_Save_Load_Breadcrumb(char const*)
+EOF
+unzip -tq "$rv_vpk"
+unzip -Z1 "$rv_vpk" > "$rv_vpk_contents"
+grep -Fxq 'eboot.bin' "$rv_vpk_contents"
+grep -Fxq 'sce_sys/param.sfo' "$rv_vpk_contents"
+test "$(wc -l < "$rv_vpk_contents")" -eq 2
+if grep -Eiq '(^|/)(retail|data)(/|$)|(^|/)(always[^/]*\.(dat|dbs)|[^/]+\.(mix|w3d|rva))$' "$rv_vpk_contents"; then
+	echo "Retail or custom asset content was unexpectedly packaged in the VPK." >&2
+	exit 9
+fi
+test -z "$(git -C "$rv_upstream" status --porcelain)"
+
+{
+	echo "Renegade Vita $rv_candidate_label BUILD REPORT"
+	echo "Result: SUCCESS"
+	echo "Hardware validation: A3.1.4 baseline ACCEPTED; $rv_candidate_label is a host-validated physical candidate, not an accepted milestone."
+	echo "Canonical source: https://github.com/electronicarts/CnC_Renegade"
+	echo "Upstream revision: $rv_revision_actual"
+	echo "Canonical workflow: Bash/CMake/Ninja/VitaSDK"
+	echo "Host validation mode: $rv_host_validation_mode"
+	echo "Retained regressions: A2.0 19/19; A2.1 10/10; A2.2 14/14; A3 original runtime 45/45"
+	echo "A3.5 input contracts: axes=22/22; button state=10/10"
+	echo "A3.5 renderer state contract: opaque/cutout/alpha/additive=4/4; lifecycle=11/11"
+	echo "A3.5 crash repair: deterministic HumanState weapon-style table patch; bounds fallback; matching A3.2 dump parser evidence preserved"
+	echo "A3.5 projection repair: ordinary mesh positions retain homogeneous W through GPU projection; physical visual validation pending"
+	echo "A3.5 audio boundary: deferred no-output diagnostics are rate-limited; no fabricated sound objects"
+	echo "Original Westwood translation units: 424"
+	echo "Vita platform/renderer/validation/developer translation units: 21"
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=103; pristine upstream=PASS"
+	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
+	echo "Retail data packaged: none"
+	echo "Automatic Vita deployment: disabled"
+	echo "VPK: $rv_dist/RenegadeVita-$rv_candidate_label.vpk"
+	echo "Runtime log: $rv_runtime_log"
+} > "$rv_build_report"
+
+cp -- "$rv_vpk" "$rv_dist/RenegadeVita-$rv_candidate_label.vpk"
+cp -- "$rv_elf" "$rv_dist/RenegadeVita-$rv_candidate_label.elf"
+cp -- "$rv_map" "$rv_dist/RenegadeVita-$rv_candidate_label.map"
+cp -- "$rv_elf_header" "$rv_dist/RenegadeVita-$rv_candidate_label.elf-header.txt"
+cp -- "$rv_symbols" "$rv_dist/RenegadeVita-$rv_candidate_label.symbols.txt"
+cp -- "$rv_vpk_contents" "$rv_dist/RenegadeVita-$rv_candidate_label.vpk-contents.txt"
+cp -- "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" "$rv_dist/$rv_candidate_label-SOURCE_INTEGRATION_REPORT.json"
+sed "s/A3\\.5-dev1/$rv_candidate_label/g" "$rv_root/reports/A35_MILESTONE_GATE.md" > "$rv_dist/$rv_candidate_label-MILESTONE-GATE.md"
+{
+	echo "Renegade Vita $rv_candidate_label crash-symbolication status"
+	echo "Status: no matching hardware dump was available when this candidate was packaged."
+	echo "A candidate report must be regenerated with tools/symbolicate_vita_dump.sh only"
+	echo "against a dump and ELF/map/symbol set whose identities are recorded together."
+	echo "Historical A3.2-dev1 symbolication is retained separately and is not candidate evidence."
+} > "$rv_dist/$rv_candidate_label-CRASH-SYMBOLICATION.txt"
+cp -- "$rv_build_report" "$rv_dist/$rv_candidate_label-BUILD_REPORT.txt"
+cp -- "$rv_root/RenegadeVita_BUILD.ps1" "$rv_dist/RenegadeVita_BUILD.ps1"
+cp -- "$rv_log" "$rv_dist/$rv_candidate_label-COMPILER_LOG.txt"
+cp -- "$rv_host_output" "$rv_dist/$rv_candidate_label-HOST-VALIDATION.log"
+rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
+{
+	echo "Renegade Vita $rv_candidate_label hardware checkpoint"
+	echo "Status: host-validated candidate; physical Vita validation required."
+	echo "Source revision: $rv_revision_actual"
+	echo "VPK: RenegadeVita-$rv_candidate_label.vpk"
+	echo "SHA-256: $rv_vpk_sha256"
+	echo "Retain user-owned data: ux0:data/renegade/retail/Data/ (do not transfer retail assets)."
+	echo "Runtime log: $rv_runtime_log (remove or rename an older file before launch)."
+	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
+	echo "Controls: left-stick up=forward and down=backward; right-stick up=look up and down=look down by default. Cross=jump; Circle=crouch; Square=reload; L/R are original joystick buttons; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
+	echo "Test: in M00, verify granular aim, wall perspective at near/far distances, no black muzzle rectangle, released fire stops firing, released crouch clears crouch, then pause/resume and run through an A3.5 120-frame checkpoint. Press Start and wait for LiveArea."
+	echo "Return: $rv_runtime_log, ux0:data/renegade/user/captures/, screenshots, and any psp2core-*.psp2dmp. Run tools/collect_a35_diagnostics.sh with this dist directory and returned files."
+} > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"
+{
+	echo "Runtime log: $rv_runtime_log"
+	echo "Expected $rv_candidate_label breadcrumbs: input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; 120-frame checkpoint; clean teardown."
+	echo "Physical test: retain this log and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and START exit."
+} > "$rv_dist/$rv_candidate_label-EXPECTED-RUNTIME-LOG.txt"
+bash "$rv_root/tools/collect_a35_diagnostics.sh" "$rv_dist" \
+	"$rv_dist/$rv_candidate_label-BUILD-DIAGNOSTICS-$rv_timestamp.zip" "$rv_candidate_label"
+(
+	cd "$rv_dist"
+	sha256sum RenegadeVita-"$rv_candidate_label".vpk RenegadeVita-"$rv_candidate_label".elf \
+		RenegadeVita-"$rv_candidate_label".map RenegadeVita-"$rv_candidate_label".elf-header.txt \
+		RenegadeVita-"$rv_candidate_label".symbols.txt RenegadeVita-"$rv_candidate_label".vpk-contents.txt \
+		RenegadeVita_BUILD.ps1 "$rv_candidate_label"-SOURCE_INTEGRATION_REPORT.json \
+		"$rv_candidate_label"-MILESTONE-GATE.md "$rv_candidate_label"-CRASH-SYMBOLICATION.txt \
+		"$rv_candidate_label"-BUILD_REPORT.txt "$rv_candidate_label"-COMPILER_LOG.txt "$rv_candidate_label"-HOST-VALIDATION.log \
+		"$rv_candidate_label"-EXPECTED-RUNTIME-LOG.txt "$rv_candidate_label"-HARDWARE-CANDIDATE.txt \
+		"$rv_candidate_label"-BUILD-DIAGNOSTICS-"$rv_timestamp".zip > "$rv_candidate_label"-SHA256SUMS.txt
+	sha256sum -c "$rv_candidate_label"-SHA256SUMS.txt
+)
+
+trap - ERR
+echo
+echo "$rv_candidate_label BUILD SUCCESS"
+echo "Install manually only when requested: $rv_dist/RenegadeVita-$rv_candidate_label.vpk"
+echo "Retail Data transfer: not required."
+echo "Runtime shader prerequisite: ur0:/data/libshacccg.suprx must already be installed."
+echo "Expected runtime log: $rv_runtime_log"
+echo "No Vita filesystem was accessed and no deployment was attempted."

@@ -1,0 +1,14 @@
+--- a/texture.h
++++ b/texture.h
+@@ -222,6 +222,11 @@
+ 			return D3DTexture;
+ 		}
+ 
++		void Apply_For_Platform_Boundary(unsigned int stage)
++		{
++			Apply(stage);
++		}
++
+ 		bool Is_Missing_Texture();
+ 
+ 		// Support for self managed textures

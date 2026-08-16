@@ -1,0 +1,3 @@
+[submodule "upstream/CnC_Renegade"]
+	path = upstream/CnC_Renegade
+	url = https://github.com/electronicarts/CnC_Renegade.git

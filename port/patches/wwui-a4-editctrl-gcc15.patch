@@ -1,0 +1,6 @@
+--- a/editctrl.cpp
++++ b/editctrl.cpp
+@@ -343 +343,2 @@
+-		for (int index = 0; index < len; ++index) {
++		int index = 0;
++		for (; index < len; ++index) {

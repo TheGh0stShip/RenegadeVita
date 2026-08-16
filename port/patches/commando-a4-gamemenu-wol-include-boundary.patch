@@ -1,0 +1,11 @@
+--- a/gamemenu.cpp
++++ b/gamemenu.cpp
+@@ -47,6 +47,8 @@
+ #include "netinterface.h"
+ #include "langmode.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "wolgmode.h"
++#endif
+ #include "miscutil.h"
+ #include "_globals.h"
+ #include "player.h"

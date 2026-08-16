@@ -1,0 +1,39 @@
+--- a/FastAllocator.h
++++ b/FastAllocator.h
+@@ -588,7 +588,7 @@
+      const_pointer address(const_reference x) const { return &x; }
+ 
+-     T* allocate(size_type n, const void* = NULL) { return n != 0 ? static_cast<T*>(generalAllocator.Alloc(n*sizeof(T))) : NULL; }
+-     void deallocate(pointer p, size_type n)      { generalAllocator.Free(p); }
++     T* allocate(size_type n, const void* = NULL) { return n != 0 ? static_cast<T*>(FastAllocatorGeneral::Get_Allocator()->Alloc(n*sizeof(T))) : NULL; }
++     void deallocate(pointer p, size_type n)      { FastAllocatorGeneral::Get_Allocator()->Free(p); }
+      size_type max_size() const                   { return size_t(-1) / sizeof(T); }
+      void construct(pointer p, const T& val)      { new(p) T(val); }
+      void destroy(pointer p)                      { p->~T(); }
+--- a/FastAllocator.cpp
++++ b/FastAllocator.cpp
+@@ -21,2 +21,4 @@
+ #include "FastAllocator.h"
++
++#include <new>
+ 
+ static FastAllocatorGeneral* generalAllocator; //This general allocator will do all allocations for us.
+--- a/thread.cpp
++++ b/thread.cpp
+@@ -24 +24,3 @@
+-#include <process.h>
++#ifndef _UNIX
++#include <process.h>
++#endif
+--- a/hashtemplate.h
++++ b/hashtemplate.h
+@@ -423,6 +423,8 @@ template <> inline unsigned int HashTemplateKeyClass<StringClass>::Get_Hash_Value(const StringClass& s)
+ 		return hval;
+ 	}
+-	unsigned int hval = *((const unsigned int*)(buffer+len-8));
++	unsigned int hval;
++	::memcpy(&hval, buffer + len - 8, sizeof(hval));
++	// Preserve the original dword hash input without an unaligned ARM load.
+ 	hval = hval + (hval>>5) + (hval>>10) + (hval >> 20);
+ 	return hval;
+ }

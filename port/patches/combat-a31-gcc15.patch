@@ -1,0 +1,131 @@
+--- a/dialogue.cpp
++++ b/dialogue.cpp
+@@ -404 +404 @@ DialogueClass::Get_Conversation (void)
+-	for (index = 0; value > count && index < OptionList.Count (); index ++) {
++	for (int index = 0; value > count && index < OptionList.Count (); index ++) {
+
+--- a/beacongameobj.cpp
++++ b/beacongameobj.cpp
+@@ -1267 +1267 @@
+-			for (	index = ControlClass::BOOLEAN_ONE_TIME_FIRST;
++			for (	int index = ControlClass::BOOLEAN_ONE_TIME_FIRST;
+
+--- a/textwindow.h
++++ b/textwindow.h
+@@ -199,7 +199,7 @@
+ 	//	Public constructors/destructors
+ 	////////////////////////////////////////////////////////////////
+ 	TextItemClass (void) :
+-		Name (L""),
++		Name (),
+ 		Color (1, 1, 1),
+ 		UserData (0)	{}
+ 
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -346,7 +346,7 @@ void	CombatManager::Pre_Load_Level( bool render_available )
+ 	ScreenFadeManager::Enable_Letterbox( 0, 0 );
+ 	ScreenFadeManager::Set_Screen_Overlay_Opacity( 0, 0 );
+ 
+-	HUDInfo::Set_HUD_Help_Text( L"" );	// Clear text
++	HUDInfo::Set_HUD_Help_Text( NULL );	// Clear text
+ }
+ 
+ bool	_preload_assets;
+--- a/scriptzone.cpp
++++ b/scriptzone.cpp
+@@ -339 +339 @@
+-	if ( Get_Observers().Count == 0 && Get_Definition().ZoneType != TYPE_CTF ) {
++	if ( Get_Observers().Count() == 0 && Get_Definition().ZoneType != TYPE_CTF ) {
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -3716 +3716 @@
+-		char * start = ::strchr( collision_box_name, '.' );
++		const char * start = ::strchr( collision_box_name, '.' );
+--- a/building.cpp
++++ b/building.cpp
+@@ -680 +680 @@
+-		char * meshname = strchr(name,'.');
++		const char * meshname = strchr(name,'.');
+@@ -1583 +1583 @@
+-			for (index = 0; index < poly_count; index ++) {
++			for (int index = 0; index < poly_count; index ++) {
+--- a/control.h
++++ b/control.h
+@@ -127 +127 @@
+-	unsigned	long Get_One_Time_Boolean_Bits(void)	{return OneTimeBooleanBits;}
++	ULONG Get_One_Time_Boolean_Bits(void)	{return OneTimeBooleanBits;}
+@@ -146,2 +146,2 @@
+-	unsigned		long	OneTimeBooleanBits;
+-	unsigned		long	PendingOneTimeBooleanBits;
++	ULONG				OneTimeBooleanBits;
++	ULONG				PendingOneTimeBooleanBits;
+--- a/weapons.cpp
++++ b/weapons.cpp
+@@ -579 +579 @@ float	WeaponClass::Get_Range( void )
+-	return ( PrimaryAmmoDefinition != NULL ) ? PrimaryAmmoDefinition->Range : 0;
++	return ( PrimaryAmmoDefinition != NULL ) ? static_cast<float>( PrimaryAmmoDefinition->Range ) : 0.0f;
+--- a/weaponbag.cpp
++++ b/weaponbag.cpp
+@@ -400,9 +400,9 @@ void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
+-		WeaponClass * weapon = NULL;
++		WeaponClass * weapon_instance = NULL;
+ 		for( int i = 1; i < WeaponList.Count(); i++ ) {
+ 			if ( (int) WeaponList[i]->Get_Definition()->Get_ID() == weapon_id ) {
+-				weapon = WeaponList[i];
++				weapon_instance = WeaponList[i];
+ 			}
+ 		}
+-		if ( weapon != NULL ) {
+-			weapon->Set_Total_Rounds( total_rounds );
++		if ( weapon_instance != NULL ) {
++			weapon_instance->Set_Total_Rounds( total_rounds );
+ 		}
+
+--- a/input.cpp
++++ b/input.cpp
+@@ -1640 +1640 @@ void Input::Load_Misc_Settings (INIClass *input_ini)
+-	bool is_target_steering	= input_ini->Get_Bool (ENTRY_TARGET_STEERING, false);
++	bool is_target_steering	= input_ini->Get_Bool (SECTION_MISC_SETTINGS, ENTRY_TARGET_STEERING, false);
+
+--- a/objectivesviewer.cpp
++++ b/objectivesviewer.cpp
+@@ -205 +205 @@ void ObjectivesViewerClass::Update (void)
+-	for (index = 0; index < objective_count; index ++){
++	for (int index = 0; index < objective_count; index ++){
+
+--- a/messagewindow.cpp
++++ b/messagewindow.cpp
+@@ -162 +162 @@ void MessageWindowClass::Initialize (void)
+-	TextWindow->Add_Column (L"", 1.0F, Vector3 (1, 1, 1));
++	TextWindow->Add_Column (reinterpret_cast<const WCHAR *>(u""), 1.0F, Vector3 (1, 1, 1));
+@@ -275 +275 @@ void MessageWindowClass::On_Frame_Update (void)
+-		for (index = TextWindow->Get_Item_Count () - 1; index >= 0; index --) {
++		for (int index = TextWindow->Get_Item_Count () - 1; index >= 0; index --) {
+
+--- a/input.cpp
++++ b/input.cpp
+@@ -913 +913 @@ void Input::Update( void )
+-			for (index = 0; index < INPUT_FUNCTION_COUNT; index ++) {
++			for (int index = 0; index < INPUT_FUNCTION_COUNT; index ++) {
+@@ -941 +941 @@ void Input::Update( void )
+-		for (index = 0; index < AcceleratedKeyList.Count (); index ++) {
++		for (int index = 0; index < AcceleratedKeyList.Count (); index ++) {
+@@ -1141 +1141 @@ const char *Input::Get_Key_Name( short key_id )
+-	for (index = 0; index < NUM_SLIDER_NAMES; index ++) {
++	for (int index = 0; index < NUM_SLIDER_NAMES; index ++) {
+@@ -1170 +1170 @@ short Input::Get_Key( const char *name )
+-		for (index = 0; index < NUM_SLIDER_NAMES; index ++) {
++		for (int index = 0; index < NUM_SLIDER_NAMES; index ++) {
+
+--- a/textwindow.cpp
++++ b/textwindow.cpp
+@@ -326 +326 @@ void TextWindowClass::Set_Backdrop (const char *texture_name, const RectClass &scre
+-		for (index = 0; index < section_count; index ++) {
++		for (int index = 0; index < section_count; index ++) {
+@@ -514 +514 @@ int TextWindowClass::Insert_Item (int index, const WCHAR *text)
+-		column->Insert_Item (index, L"");
++		column->Insert_Item (index, reinterpret_cast<const WCHAR *>(u""));
+@@ -781 +781 @@ void TextWindowClass::Update_Row (int item_index, float time, float *height)
+-		const WCHAR *text	= L"";
++		const WCHAR *text	= reinterpret_cast<const WCHAR *>(u"");

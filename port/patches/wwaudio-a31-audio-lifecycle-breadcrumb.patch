@@ -1,0 +1,16 @@
+--- a/AudioSaveLoad.cpp
++++ b/AudioSaveLoad.cpp
+@@ -42,5 +42,6 @@
+ #include "SoundScene.h"
+ #include "wwmemlog.h"
++#include "a31_audio_lifecycle.h"
+ 
+ 
+ ///////////////////////////////////////////////////////////////////////
+@@ -133,5 +134,6 @@
+ 			case CHUNKID_STATIC_SCENE:
+ 			{
++				A31_Audio_Save_Load_Breadcrumb("static-audio SaveLoad entry");
+ 				SoundSceneClass *scene = WWAudioClass::Get_Instance ()->Get_Sound_Scene ();
+ 				if (scene != NULL) {
+ 					scene->Load_Static (cload);

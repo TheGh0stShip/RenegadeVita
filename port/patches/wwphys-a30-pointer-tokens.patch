@@ -1,0 +1,426 @@
+--- a/Path.cpp
++++ b/Path.cpp
+@@ -1478,8 +1478,8 @@
+ 		WRITE_MICRO_CHUNK (csave, VARID_ISLOOPING,				m_IsLooping);
+ 		WRITE_MICRO_CHUNK (csave, VARID_TOTAL_DIST,				m_TotalDist);
+ 		
+-		PathClass *this_ptr = this;
+-		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,					this_ptr);
++		uint32 this_ptr_token = static_cast<uint32>(reinterpret_cast<uintptr_t>(this));
++		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,					this_ptr_token);
+ 
+ 		//
+ 		//	Save each of the action nodes for this path
+@@ -1540,7 +1540,7 @@
+ void
+ PathClass::Load_Variables (ChunkLoadClass &cload)
+ {
+-	PathClass *old_ptr = NULL;
++	uint32 old_ptr_token = 0;
+ 
+ 	//
+ 	//	Loop through all the microchunks that define the variables
+@@ -1565,7 +1565,7 @@
+ 			READ_MICRO_CHUNK (cload, VARID_END_TIME,					m_EndTime);
+ 			READ_MICRO_CHUNK (cload, VARID_ISLOOPING,					m_IsLooping);
+ 			READ_MICRO_CHUNK (cload, VARID_TOTAL_DIST,				m_TotalDist);
+-			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,					old_ptr);			
++			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,					old_ptr_token);			
+ 
+ 			case VARID_PATH_ACTION:
+ 			{
+@@ -1585,8 +1585,9 @@
+ 	//
+ 	//	Register our old ptr so other objects can remap to us
+ 	//
+-	if (old_ptr != NULL) {
+-		SaveLoadSystemClass::Register_Pointer( old_ptr, this );
++	if (old_ptr_token != 0) {
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<PathClass *>(static_cast<uintptr_t>(old_ptr_token)), this );
+ 	}
+ 
+ 	return ;
+--- a/PathfindPortal.cpp
++++ b/PathfindPortal.cpp
+@@ -94,8 +94,8 @@
+ 		WRITE_MICRO_CHUNK (csave, VARID_DEST_SECTOR2,	m_DestSector2);
+ 		WRITE_MICRO_CHUNK (csave, VARID_ID,					m_ID);		
+ 		
+-		PathfindPortalClass *this_ptr = this;
+-		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR, this_ptr);
++		uint32 this_ptr_token = static_cast<uint32>(reinterpret_cast<uintptr_t>(this));
++		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR, this_ptr_token);
+ 
+ 	csave.End_Chunk ();
+ 
+@@ -141,7 +141,7 @@
+ bool
+ PathfindPortalClass::Load_Variables (ChunkLoadClass &cload)
+ {
+-	PathfindPortalClass *old_ptr = NULL;
++	uint32 old_ptr_token = 0;
+ 
+ 	//
+ 	//	Read all the micro chunks...
+@@ -153,7 +153,7 @@
+ 			READ_MICRO_CHUNK (cload, VARID_DEST_SECTOR1, m_DestSector1);
+ 			READ_MICRO_CHUNK (cload, VARID_DEST_SECTOR2, m_DestSector2);
+ 			READ_MICRO_CHUNK (cload, VARID_ID,				m_ID);
+-			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,		old_ptr);
++			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,		old_ptr_token);
+ 
+ 			default:
+ 				WWDEBUG_SAY (("Unknown micro chunk ID 0x%X", cload.Cur_Micro_Chunk_ID ()));
+@@ -166,8 +166,10 @@
+ 	//
+ 	//	Register our old ptr so other objects can remap to us
+ 	//
+-	if (old_ptr != NULL) {
+-		SaveLoadSystemClass::Register_Pointer (old_ptr, this);
++	if (old_ptr_token != 0) {
++		SaveLoadSystemClass::Register_Pointer (
++			reinterpret_cast<PathfindPortalClass *>(static_cast<uintptr_t>(old_ptr_token)),
++			this);
+ 	}
+ 
+ 	return true;
+@@ -182,6 +184,11 @@
+ bool
+ PathfindActionPortalClass::Save (ChunkSaveClass &csave)
+ {		
++	uint32 exit_portal_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>(m_ExitPortal));
++	uint32 enter_portal_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>(m_EnterPortal));
++
+ 	//
+ 	//	Save the parent to its own chunk
+ 	//
+@@ -196,8 +203,8 @@
+ 		WRITE_MICRO_CHUNK (csave, ACTION_VARID_DESTINATION,	m_Destination);
+ 		WRITE_MICRO_CHUNK (csave, ACTION_VARID_MECHANISM_ID,	m_MechanismID);
+ 		WRITE_MICRO_CHUNK (csave, ACTION_VARID_ACTION_ID,		m_ActionID);
+-		WRITE_MICRO_CHUNK (csave, ACTION_VARID_EXIT_PORTAL,	m_ExitPortal);
+-		WRITE_MICRO_CHUNK (csave, ACTION_VARID_ENTER_PORTAL,	m_EnterPortal);
++		WRITE_MICRO_CHUNK (csave, ACTION_VARID_EXIT_PORTAL,	exit_portal_token);
++		WRITE_MICRO_CHUNK (csave, ACTION_VARID_ENTER_PORTAL,	enter_portal_token);
+ 	csave.End_Chunk ();
+ 
+ 	return true;
+@@ -247,6 +254,9 @@
+ bool
+ PathfindActionPortalClass::Load_Variables (ChunkLoadClass &cload)
+ {
++	uint32 exit_portal_token = 0;
++	uint32 enter_portal_token = 0;
++
+ 	//
+ 	//	Read all the micro chunks...
+ 	//
+@@ -256,8 +266,8 @@
+ 			READ_MICRO_CHUNK (cload, ACTION_VARID_DESTINATION,		m_Destination);
+ 			READ_MICRO_CHUNK (cload, ACTION_VARID_MECHANISM_ID,	m_MechanismID);
+ 			READ_MICRO_CHUNK (cload, ACTION_VARID_ACTION_ID,		m_ActionID);
+-			READ_MICRO_CHUNK (cload, ACTION_VARID_EXIT_PORTAL,		m_ExitPortal);
+-			READ_MICRO_CHUNK (cload, ACTION_VARID_ENTER_PORTAL,	m_EnterPortal);
++			READ_MICRO_CHUNK (cload, ACTION_VARID_EXIT_PORTAL,		exit_portal_token);
++			READ_MICRO_CHUNK (cload, ACTION_VARID_ENTER_PORTAL,	enter_portal_token);
+ 
+ 			default:
+ 				WWASSERT (0);
+@@ -274,6 +284,15 @@
+ 	// problem, we don't want a reference on them.  This is why we don't
+ 	// do a ref-counted pointer remap.
+ 	//
++	m_EnterPortal = enter_portal_token != 0
++		? reinterpret_cast<PathfindActionPortalClass *>(
++			static_cast<uintptr_t>(enter_portal_token))
++		: NULL;
++	m_ExitPortal = exit_portal_token != 0
++		? reinterpret_cast<PathfindPortalClass *>(
++			static_cast<uintptr_t>(exit_portal_token))
++		: NULL;
++
+ 	if (m_EnterPortal != NULL) {
+ 		REQUEST_POINTER_REMAP ((void **)&m_EnterPortal);
+ 	}
+--- a/movephys.cpp
++++ b/movephys.cpp
+@@ -416,10 +416,14 @@
+ 	WRITE_MICRO_CHUNK(csave,MOVEABLE_VARIABLE_GRAVSCALE,GravScale);
+ 	WRITE_MICRO_CHUNK(csave,MOVEABLE_VARIABLE_ELASTICITY,Elasticity);
+ 	if (Controller != NULL) {
+-		WRITE_MICRO_CHUNK(csave,MOVEABLE_VARIABLE_CONTROLLER,Controller);
++		uint32 controller_token = static_cast<uint32>(
++			reinterpret_cast<uintptr_t>(Controller));
++		WRITE_MICRO_CHUNK(csave,MOVEABLE_VARIABLE_CONTROLLER,controller_token);
+ 	}
+ 	if (Carrier != NULL) {
+-		WRITE_MICRO_CHUNK(csave,MOVEABLE_VARIABLE_CARRIER,Carrier);
++		uint32 carrier_token = static_cast<uint32>(
++			reinterpret_cast<uintptr_t>(Carrier));
++		WRITE_MICRO_CHUNK(csave,MOVEABLE_VARIABLE_CARRIER,carrier_token);
+ 	}
+ 	csave.End_Chunk();
+ 
+@@ -443,6 +447,8 @@
+ {
+ 	Controller = NULL;
+ 	Carrier = NULL;
++	uint32 controller_token = 0;
++	uint32 carrier_token = 0;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		
+@@ -462,8 +468,8 @@
+ 						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_MASS,Mass);
+ 						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_GRAVSCALE,GravScale);
+ 						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_ELASTICITY,Elasticity);
+-						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_CONTROLLER,Controller);
+-						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_CARRIER,Carrier);
++						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_CONTROLLER,controller_token);
++						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_CARRIER,carrier_token);
+ 					}
+ 					cload.Close_Micro_Chunk();	
+ 				}
+@@ -477,6 +483,13 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
++	Controller = controller_token != 0
++		? reinterpret_cast<PhysControllerClass *>(static_cast<uintptr_t>(controller_token))
++		: NULL;
++	Carrier = carrier_token != 0
++		? reinterpret_cast<PhysClass *>(static_cast<uintptr_t>(carrier_token))
++		: NULL;
++
+ 	if (Controller != NULL) {
+ 		REQUEST_POINTER_REMAP((void**)&Controller);
+ 	}
+--- a/pathsolve.cpp
++++ b/pathsolve.cpp
+@@ -1846,6 +1846,12 @@
+ void
+ PathSolveClass::Save (ChunkSaveClass &csave)
+ {
++	uint32 start_sector_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>(m_StartSector));
++	uint32 dest_sector_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>(m_DestSector));
++	uint32 this_ptr_token = static_cast<uint32>(reinterpret_cast<uintptr_t>(this));
++
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 
+ 		//
+@@ -1853,13 +1859,12 @@
+ 		//
+ 		WRITE_MICRO_CHUNK (csave, VARID_STARTPOS,			m_StartPos);
+ 		WRITE_MICRO_CHUNK (csave, VARID_DESTPOS,			m_DestPos);
+-		WRITE_MICRO_CHUNK (csave, VARID_START_SECTOR,	m_StartSector);
+-		WRITE_MICRO_CHUNK (csave, VARID_DEST_SECTOR,		m_DestSector);
++		WRITE_MICRO_CHUNK (csave, VARID_START_SECTOR,	start_sector_token);
++		WRITE_MICRO_CHUNK (csave, VARID_DEST_SECTOR,		dest_sector_token);
+ 		WRITE_MICRO_CHUNK (csave, VARID_PATH_OBJECT,		m_PathObject);
+ 		WRITE_MICRO_CHUNK (csave, VARID_PRIORITY,			m_Priority);
+ 
+-		PathSolveClass *this_ptr = this;
+-		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,			this_ptr);
++		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,			this_ptr_token);
+ 
+ 	csave.End_Chunk ();
+ 	return ;
+@@ -1914,7 +1919,7 @@
+ void
+ PathSolveClass::Load_Variables (ChunkLoadClass &cload)
+ {
+-	PathSolveClass *old_ptr = NULL;
++	uint32 old_ptr_token = 0;
+ 	m_StartSector	= NULL;
+ 	m_DestSector	= NULL;
+ 
+@@ -1927,7 +1932,7 @@
+ 			READ_MICRO_CHUNK (cload, VARID_STARTPOS,		m_StartPos);
+ 			READ_MICRO_CHUNK (cload, VARID_DESTPOS,		m_DestPos);
+ 			READ_MICRO_CHUNK (cload, VARID_PATH_OBJECT,	m_PathObject);
+-			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,		old_ptr);
++			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,		old_ptr_token);
+ 			READ_MICRO_CHUNK (cload, VARID_PRIORITY,		m_Priority);
+ 		}
+ 
+@@ -1937,8 +1942,10 @@
+ 	//
+ 	//	Register our old ptr so other objects can remap to us
+ 	//
+-	if (old_ptr != NULL) {
+-		SaveLoadSystemClass::Register_Pointer (old_ptr, this);
++	if (old_ptr_token != 0) {
++		SaveLoadSystemClass::Register_Pointer (
++			reinterpret_cast<PathSolveClass *>(static_cast<uintptr_t>(old_ptr_token)),
++			this);
+ 	}
+ 
+ 	return ;
+--- a/pscene_saveload.cpp
++++ b/pscene_saveload.cpp
+@@ -655,8 +655,9 @@
+ 			csave.End_Chunk();
+ 
+ 			csave.Begin_Chunk(PSCENE_DD_CHUNK_STATIC_OLD_PTR);
+-			void * old_ptr = it.Peek_Obj();
+-			csave.Write(&old_ptr,sizeof(void *));
++			uint32 old_ptr_token = static_cast<uint32>(
++				reinterpret_cast<uintptr_t>(it.Peek_Obj()));
++			csave.Write(&old_ptr_token,sizeof(old_ptr_token));
+ 			csave.End_Chunk();
+ 
+ 			csave.Begin_Chunk(PSCENE_DD_CHUNK_STATIC_OBJECT_STATE);
+@@ -680,9 +681,10 @@
+ 
+ 		cload.Open_Chunk();
+ 		WWASSERT(cload.Cur_Chunk_ID()==PSCENE_DD_CHUNK_STATIC_OLD_PTR);
+-		void * old_ptr;
+-		cload.Read(&old_ptr,sizeof(void *));
+-		SaveLoadSystemClass::Register_Pointer(old_ptr, sphys);
++		uint32 old_ptr_token = 0;
++		cload.Read(&old_ptr_token,sizeof(old_ptr_token));
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<void *>(static_cast<uintptr_t>(old_ptr_token)), sphys);
+ 		cload.Close_Chunk();
+ 
+ 		cload.Open_Chunk();
+--- a/rbody.cpp
++++ b/rbody.cpp
+@@ -2097,9 +2097,10 @@
+ 	MoveablePhysClass::Save(csave);
+ 	csave.End_Chunk();
+ 	
+-	ODESystemClass * ode_ptr = (ODESystemClass *)this;
++	uint32 ode_ptr_token = static_cast<uint32>(
++		reinterpret_cast<uintptr_t>((ODESystemClass *)this));
+ 	csave.Begin_Chunk(RBODY_CHUNK_VARIABLES);
+-	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_ODESYSTEM_PTR,ode_ptr);
++	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_ODESYSTEM_PTR,ode_ptr_token);
+ 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_IBODY,IBody);
+ 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_IBODYINV,IBodyInv);
+ 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_STATE_POSITION,State.Position);
+@@ -2113,7 +2114,7 @@
+ 
+ bool RigidBodyClass::Load (ChunkLoadClass &cload)
+ {
+-	ODESystemClass * odesys = NULL;
++	uint32 odesys_token = 0;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		
+@@ -2127,7 +2128,7 @@
+ 			
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK(cload,RBODY_VARIABLE_ODESYSTEM_PTR,odesys);
++						READ_MICRO_CHUNK(cload,RBODY_VARIABLE_ODESYSTEM_PTR,odesys_token);
+ 						READ_MICRO_CHUNK(cload,RBODY_VARIABLE_IBODY,IBody);
+ 						READ_MICRO_CHUNK(cload,RBODY_VARIABLE_IBODYINV,IBodyInv);
+ 						READ_MICRO_CHUNK(cload,RBODY_VARIABLE_STATE_POSITION,State.Position);
+@@ -2150,8 +2151,10 @@
+ 	}
+ 
+ 	
+-	if (odesys != NULL) {
+-		SaveLoadSystemClass::Register_Pointer(odesys,(ODESystemClass *)this);
++	if (odesys_token != 0) {
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<ODESystemClass *>(static_cast<uintptr_t>(odesys_token)),
++			(ODESystemClass *)this);
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+--- a/waypath.cpp
++++ b/waypath.cpp
+@@ -205,8 +205,8 @@
+ {
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 				
+-		WaypathClass *this_ptr = this;
+-		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,	this_ptr);
++		uint32 this_ptr_token = static_cast<uint32>(reinterpret_cast<uintptr_t>(this));
++		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,	this_ptr_token);
+ 		WRITE_MICRO_CHUNK (csave, VARID_FLAGS,		m_Flags);
+ 		WRITE_MICRO_CHUNK (csave, VARID_ID,			m_ID);		
+ 
+@@ -215,8 +215,9 @@
+ 		// on load.
+ 		//
+ 		for (int index = 0; index < m_Waypoints.Count (); index ++) {
+-			WaypointClass *waypoint = m_Waypoints[index];
+-			WRITE_MICRO_CHUNK (csave, VARID_WAYPOINT_PTR, waypoint);
++			uint32 waypoint_token = static_cast<uint32>(
++				reinterpret_cast<uintptr_t>(m_Waypoints[index]));
++			WRITE_MICRO_CHUNK (csave, VARID_WAYPOINT_PTR, waypoint_token);
+ 		}
+ 
+ 	csave.End_Chunk ();
+@@ -271,8 +272,12 @@
+ 				//	Read the old waypoint ptr from the chunk and add it to our
+ 				// list.  We will remap it later.
+ 				//				
+-				WaypointClass *waypoint = NULL;
+-				cload.Read (&waypoint, sizeof (waypoint));				
++				uint32 waypoint_token = 0;
++				cload.Read (&waypoint_token, sizeof (waypoint_token));
++				WaypointClass *waypoint = waypoint_token != 0
++					? reinterpret_cast<WaypointClass *>(
++						static_cast<uintptr_t>(waypoint_token))
++					: NULL;
+ 				m_Waypoints.Add (waypoint);				
+ 			}
+ 			break;
+@@ -283,9 +288,14 @@
+ 				//	Read the old pointer from the chunk and submit it
+ 				// to the remapping system.
+ 				//				
+-				WaypathClass *old_ptr = NULL;
+-				cload.Read (&old_ptr, sizeof (old_ptr));
+-				SaveLoadSystemClass::Register_Pointer (old_ptr, this);
++				uint32 old_ptr_token = 0;
++				cload.Read (&old_ptr_token, sizeof (old_ptr_token));
++				if (old_ptr_token != 0) {
++					SaveLoadSystemClass::Register_Pointer (
++						reinterpret_cast<WaypathClass *>(
++							static_cast<uintptr_t>(old_ptr_token)),
++						this);
++				}
+ 			}
+ 			break;
+ 		}
+--- a/waypoint.cpp
++++ b/waypoint.cpp
+@@ -144,8 +144,8 @@
+ {
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 				
+-		WaypointClass *this_ptr = this;
+-		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,		this_ptr);
++		uint32 this_ptr_token = static_cast<uint32>(reinterpret_cast<uintptr_t>(this));
++		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,		this_ptr_token);
+ 		WRITE_MICRO_CHUNK (csave, VARID_FLAGS,			m_Flags);		
+ 		WRITE_MICRO_CHUNK (csave, VARID_POSITION,		m_Position);		
+ 		WRITE_MICRO_CHUNK (csave, VARID_ID,				m_ID);
+@@ -204,9 +204,14 @@
+ 				//	Read the old pointer from the chunk and submit it
+ 				// to the remapping system.
+ 				//				
+-				WaypointClass *old_ptr = NULL;
+-				cload.Read (&old_ptr, sizeof (old_ptr));
+-				SaveLoadSystemClass::Register_Pointer (old_ptr, this);
++				uint32 old_ptr_token = 0;
++				cload.Read (&old_ptr_token, sizeof (old_ptr_token));
++				if (old_ptr_token != 0) {
++					SaveLoadSystemClass::Register_Pointer (
++						reinterpret_cast<WaypointClass *>(
++							static_cast<uintptr_t>(old_ptr_token)),
++						this);
++				}
+ 			}
+ 			break;
+ 		}

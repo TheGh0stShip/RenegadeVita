@@ -1,0 +1,42 @@
+--- a/widestring.h
++++ b/widestring.h
+@@ -242 +242 @@
+-	int len=string ? wcslen(string) : 0;
++	int len=string ? rv_utf16_length(string) : 0;
+@@ -294 +294 @@
+-		return wcscmp (m_Buffer, string);
++		return rv_utf16_compare(m_Buffer, string);
+@@ -373 +373 @@
+-		return (wcscmp (m_Buffer, string) < 0);
++		return (rv_utf16_compare(m_Buffer, string) < 0);
+@@ -386 +386 @@
+-		return (wcscmp (m_Buffer, string) <= 0);
++		return (rv_utf16_compare(m_Buffer, string) <= 0);
+@@ -399 +399 @@
+-		return (wcscmp (m_Buffer, string) > 0);
++		return (rv_utf16_compare(m_Buffer, string) > 0);
+@@ -412 +412 @@
+-		return (wcscmp (m_Buffer, string) >= 0);
++		return (rv_utf16_compare(m_Buffer, string) >= 0);
+@@ -437 +437 @@
+-		Store_Length( wcslen(m_Buffer) );
++		Store_Length(rv_utf16_length(m_Buffer));
+@@ -448,2 +448,2 @@
+-	wcstrim(m_Buffer);
+-	int len = wcslen(m_Buffer);
++	rv_utf16_trim(m_Buffer);
++	int len = rv_utf16_length(m_Buffer);
+@@ -461 +461 @@
+-		int len = wcslen (string);
++		int len = rv_utf16_length(string);
+@@ -504 +504 @@
+-		int src_len = wcslen (string);
++		int src_len = rv_utf16_length(string);
+@@ -667 +667 @@
+-			length = wcslen (m_Buffer);
++			length = rv_utf16_length(m_Buffer);
+--- a/widestring.cpp
++++ b/widestring.cpp
+@@ -151 +151 @@
+-		wcscpy (new_buffer, m_Buffer);
++		rv_utf16_copy(new_buffer, m_Buffer);

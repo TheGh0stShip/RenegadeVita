@@ -1,0 +1,150 @@
+A3.1 host validation
+2026-08-15T22:38:56Z
+A3.0 original-world render stage: callback entry
+A3.0 original-world render stage: CameraClass initialized from world extents
+A3.0 original-world render stage: before PhysicsScene::Pre_Render_Processing
+A3.0 original-world render stage: after PhysicsScene::Pre_Render_Processing
+A3.0 original-world render stage: before WW3D::Begin_Render
+A3.0 original-world render stage: after WW3D::Begin_Render
+A3.0 original-world render stage: before WW3D::Render(PhysicsScene,Camera)
+A3.0 original-world render stage: after WW3D::Render(PhysicsScene,Camera)
+A3.0 original-world render stage: before WW3D::End_Render
+A3.0 original-world render stage: after WW3D::End_Render
+A3.0 original-world render stage: before PhysicsScene::Post_Render_Processing
+A3.0 original-world render stage: after PhysicsScene::Post_Render_Processing
+A3.0 original M00 world runtime
+runtime.checks=45
+runtime.failures=0
+runtime.first_failure=none
+world.attempted=true
+world.clean_engine_entry_state=true
+world.factory_chain_ready=true
+world.required_subsystems_registered=true
+world.required_persist_factories_registered=true
+world.ww3d_initialized=true
+world.wwphys_initialized=true
+world.wwsaveload_initialized=true
+world.armor_warhead_initialized=true
+world.asset_manager_load_on_demand=true
+world.physics_scene_initialized=true
+world.objects_ddb_loaded=true
+world.optional_level_ddb_missing=true
+world.optional_level_ddb_noop=true
+world.m00_static_world_loaded=true
+world.post_load_completed=true
+world.pathfind_data_loaded=true
+world.render_graph_complete=true
+world.world_callback_invoked=true
+world.world_callback_completed=true
+world.teardown_completed=true
+world.required_subsystem_count=3
+world.registered_subsystem_count=3
+world.required_persist_factory_count=33
+world.registered_persist_factory_count=33
+world.first_missing_persist_factory=00000000
+world.definition_count=3648
+world.twiddler_definition_count=260
+world.definition_count_after_optional_ddb=3648
+world.definition_checksum=FE798749
+world.definition_checksum_after_optional_ddb=FE798749
+world.static_phys_definition_count=44
+world.static_anim_phys_definition_count=101
+world.accessible_phys_definition_count=25
+world.door_phys_definition_count=102
+world.elevator_phys_definition_count=64
+world.damageable_static_phys_definition_count=331
+world.building_aggregate_definition_count=249
+world.m00_required_definition_count=916
+world.armor_type_count=31
+world.warhead_type_count=29
+world.static_object_count=495
+world.static_light_count=192
+world.static_anim_iterator_count=71
+world.dynamic_object_count=0
+world.definition_backed_object_count=93
+world.definitionless_object_count=594
+world.render_model_count=687
+world.null_render_model_count=0
+world.static_phys_count=424
+world.static_anim_phys_count=5
+world.door_phys_count=10
+world.elevator_phys_count=4
+world.damageable_static_phys_count=5
+world.building_aggregate_count=47
+world.unclassified_static_object_count=0
+world.render_object_node_count=1615
+world.mesh_count=1288
+world.mesh_vertex_count=38158
+world.mesh_polygon_count=21537
+world.terrain_patch_count=0
+world.terrain_vertex_count=0
+world.terrain_material_count=0
+world.loaded_prototype_count=1177
+world.object_identity_checksum=4A930F8A
+world.render_graph_checksum=BFA9C255
+world.prototype_checksum=E835A45F
+world.vis_object_count=1684
+world.vis_sector_count=347
+world.level_min=(-109.983284,-109.420731,-18.072906)
+world.level_max=(121.511314,118.983627,39.252510)
+world.render.attempted=true
+world.render.camera_initialized=true
+world.render.pre_render_completed=true
+world.render.begin_render_completed=true
+world.render.scene_render_completed=true
+world.render.end_render_completed=true
+world.render.post_render_completed=true
+world.render.frame_path_completed=true
+world.render.camera_position=(5.764015,-161.894669,84.668076)
+world.render.camera_target=(5.764015,4.781448,10.589802)
+world.render.clip=(0.500000,925.978394)
+world.render.frames=1
+world.render.mesh_submissions=652
+world.render.vertex_submissions=30603
+world.render.triangle_submissions=16939
+world.render.geometry_checksum=34FFAD42
+world.render.indexed_submissions=0
+world.render.indexed_vertex_references=0
+world.render.indexed_triangle_submissions=0
+world.render.indexed_geometry_checksum=00000000
+world.render.rejected_indexed_submissions=0
+world.render.unsupported_submissions=0
+world.default_render_target_resets=1
+world.unsupported_gpu_calls=0
+A3.0 original M00 world runtime: PASS
+a31.stage=audio_construct
+a31.stage=wwmath_init
+a31.stage=ww3d_init
+a31.stage=wwphys_init
+a31.stage=input_init
+a31.stage=gamedata_create
+a31.stage=network_onetime_init
+a31.stage=network_server_init
+a31.stage=network_client_init
+a31.stage=combat_scene_init
+a31.stage=combat_init
+a31.stage=network_handshake
+a31.original_singleplayer_transport_established=true
+a31.objects_ddb_visible_before_load=true
+a31.m00_ldd_visible_before_load=true
+a31.stage=combat_preload
+a31.stage=combat_load
+a31.stage=post_load_processing
+a31.stage=combat_postload
+a31.soldier_definition_factory_registered=true
+a31.definitions_total=3648
+a31.soldier_definitions_loaded=217
+a31.commando_definition_loaded=true
+a31.stage=player_create
+a31.original_session_player_created=true
+a31.original_session_player_registered=true
+a31.stage=god_think
+a31.original_god_created_commando=true
+a31.stage=control_think
+a31.factory_chain_ready=true
+a31.combat_scene_owned=true
+a31.original_camera_owned=true
+a31.original_star_restored=true
+a31.one_original_control_think_frame=true
+a31.stage=teardown
+A3.1 original M00 interactive runtime: PASS

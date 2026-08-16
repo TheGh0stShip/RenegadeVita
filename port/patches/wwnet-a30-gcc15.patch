@@ -1,0 +1,21 @@
+--- a/networkobject.h
++++ b/networkobject.h
+@@ -276,6 +276,9 @@
+ 
+ #endif	// __NETWORKOBJECT_H
+ 
++#ifndef __NETWORKOBJECT_INLINES_H
++#define __NETWORKOBJECT_INLINES_H
++
+ 
+ 
+ 
+@@ -334,6 +337,8 @@
+ 	return UpdateInfo[client_id].ClientHintCount;
+ }
+ 
++#endif	// __NETWORKOBJECT_INLINES_H
++
+ 
+ 
+ 

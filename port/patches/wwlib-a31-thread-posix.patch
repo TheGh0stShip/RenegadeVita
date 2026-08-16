@@ -1,0 +1,56 @@
+--- a/thread.cpp
++++ b/thread.cpp
+@@ -70,7 +70,15 @@ void __cdecl ThreadClass::Internal_Thread_Function(void* params)
+ #ifdef _WIN32
+ 	Unregister_Thread_ID(tc->ThreadID, tc->ThreadName);
+ #endif // _WIN32
++#ifdef _UNIX
++	/* Publish loader-thread writes before completion is observable.  Volatile
++	** alone is not synchronization on ARM or an optimizing host compiler. */
++	__atomic_store_n(&tc->handle, 0UL, __ATOMIC_RELEASE);
++	__atomic_store_n(&tc->running, false, __ATOMIC_RELEASE);
++#else
+ 	tc->handle=0;
++	tc->running=false;
++#endif
+ 	tc->ThreadID = 0;
+ }
+ 
+@@ -77,8 +85,16 @@ void ThreadClass::Execute()
+ {
+ 	WWASSERT(!handle);	// Only one thread at a time!
+ 	#ifdef _UNIX
+-		// assert(0);
+-		return;
++		pthread_t native_thread;
++		__atomic_store_n(&handle, 1UL, __ATOMIC_RELEASE);
++		if (pthread_create(&native_thread, NULL, [](void *params) -> void * {
++			ThreadClass::Internal_Thread_Function(params);
++			return NULL;
++		}, this) == 0) {
++			pthread_detach(native_thread);
++		} else {
++			__atomic_store_n(&handle, 0UL, __ATOMIC_RELEASE);
++		}
+ 	#else
+ 		handle=_beginthread(&Internal_Thread_Function,0,this);
+ 		SetThreadPriority((HANDLE)handle,THREAD_PRIORITY_NORMAL+thread_priority);
+@@ -90,7 +98,6 @@ void ThreadClass::Set_Priority(int priority)
+ {
+ 	#ifdef _UNIX
+-		// assert(0);
+-		return;
++		thread_priority=priority;
+ 	#else
+ 		thread_priority=priority;
+ 		if (handle) SetThreadPriority((HANDLE)handle,THREAD_PRIORITY_NORMAL+thread_priority);
+@@ -101,7 +108,7 @@ void ThreadClass::Stop(unsigned ms)
+ {
+ 	#ifdef _UNIX
+-		// assert(0);
+-		return;
++		__atomic_store_n(&running, false, __ATOMIC_RELEASE);
++		while (__atomic_load_n(&handle, __ATOMIC_ACQUIRE)) Sleep(1);
+ 	#else
+ 		running=false;
+ 		unsigned time=TIMEGETTIME();

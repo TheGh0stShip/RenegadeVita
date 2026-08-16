@@ -1,0 +1,132 @@
+--- a/wwuiinput.h
++++ b/wwuiinput.h
+@@ -45,7 +45,11 @@
+ #include "refcount.h"
+ #include "bittype.h"
+ #include "win.h"
++#if !defined(RENEGADE_VITA_PORT)
+ #include "IMEManager.h"
++#else
++namespace IME { class IMEManager; }
++#endif
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -55,10 +59,11 @@
+ // between WWUI and the outside application.
+ //
+ ////////////////////////////////////////////////////////////////
+-class WWUIInputClass :
+-	public RefCountClass,
+-	protected Observer<IME::UnicodeChar>,
+-	protected Observer<IME::IMEEvent>
++class WWUIInputClass : public RefCountClass
++#if !defined(RENEGADE_VITA_PORT)
++	, protected Observer<IME::UnicodeChar>
++	, protected Observer<IME::IMEEvent>
++#endif
+ {
+ public:
+ 
+@@ -104,11 +109,15 @@
+ 	IME::IMEManager* GetIME(void) const;
+ 		
+ 	protected:
++	#if !defined(RENEGADE_VITA_PORT)
+ 		void HandleNotification(IME::UnicodeChar& unicode);
+ 		void HandleNotification(IME::IMEEvent&);
++	#endif
+ 
+ 	private:
++	#if !defined(RENEGADE_VITA_PORT)
+ 		IME::IMEManager* mIMEManager;
++	#endif
+ };
+ 
+ 
+--- a/wwuiinput.cpp
++++ b/wwuiinput.cpp
+@@ -40,22 +40,29 @@
+ #include "wwmemlog.h"
+ 
+ 
+-WWUIInputClass::WWUIInputClass(void) :
+-	mIMEManager(NULL)
++WWUIInputClass::WWUIInputClass(void)
++#if !defined(RENEGADE_VITA_PORT)
++	: mIMEManager(NULL)
++#endif
+ {
+ }
+ 
+ 
+ WWUIInputClass::~WWUIInputClass(void)
+ {
++#if !defined(RENEGADE_VITA_PORT)
+ 	if (mIMEManager) {
+ 		mIMEManager->Release_Ref();
+ 	}
++#endif
+ }
+ 
+ 
+ void WWUIInputClass::InitIME(HWND hwnd)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)hwnd;
++#else
+ 	if (mIMEManager == NULL) {
+ 		mIMEManager = IME::IMEManager::Create(hwnd);
+ 
+@@ -64,16 +71,21 @@
+ 			Observer<IME::IMEEvent>::NotifyMe(*mIMEManager);
+ 		}
+ 	}
++#endif
+ }
+ 
+ 
+ IME::IMEManager* WWUIInputClass::GetIME(void) const
+ {
++#if defined(RENEGADE_VITA_PORT)
++	return NULL;
++#else
+ 	if (mIMEManager) {
+ 		mIMEManager->Add_Ref();
+ 	}
+ 
+ 	return mIMEManager;
++#endif
+ }
+ 
+ 
+@@ -81,11 +93,15 @@
+ {
+ 	WWMEMLOG(MEM_GAMEDATA);
+ 
++	#if !defined(RENEGADE_VITA_PORT)
+ 	if (mIMEManager) {
+ 		if (mIMEManager->ProcessMessage(hwnd, msg, wParam, lParam, result)) {
+ 			return true;
+ 		}
+ 	}
++	#else
++	(void)hwnd;
++	#endif
+ 
+ 	result = 0;
+ 
+@@ -111,6 +127,7 @@
+ }
+ 
+ 
++#if !defined(RENEGADE_VITA_PORT)
+ void WWUIInputClass::HandleNotification(IME::UnicodeChar& unicode)
+ {
+ 	DialogMgrClass::On_Unicode_Char(unicode.Subject());
+@@ -135,3 +152,5 @@
+ 			}
+ 		}
+ 	}
++
++#endif

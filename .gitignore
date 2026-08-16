@@ -1,0 +1,24 @@
+# Local/generated build products and caches.
+build/
+logs/
+*.tar.gz
+
+# User-provided retail assets and migration backups are not source provenance.
+retail-pc
+migration-backups/
+
+# Editor and Python transient files.
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Local coordination material and private work-packet automation.
+AGENTS.md
+reports/*HANDOFF.md
+reports/*WORK_PACKET*.md
+reports/*GAMEPLAN.md
+tools/*packet*/
+tools/*/run_packet.sh
+tools/*/run_s[0-9][0-9]_*.sh
+reports/a35-dev1/
+reports/crash/

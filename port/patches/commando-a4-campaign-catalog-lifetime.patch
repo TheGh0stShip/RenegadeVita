@@ -1,0 +1,10 @@
+--- a/campaign.cpp
++++ b/campaign.cpp
+@@ -130,6 +130,7 @@
+ void	CampaignManager::Shutdown( void )
+ {
+ 	CampaignFlowDescriptions.Clear();
++	BackdropDescriptions.Clear();
+ }
+ 
+ 

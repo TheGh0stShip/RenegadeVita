@@ -1,0 +1,39 @@
+--- a/datasafe.cpp
++++ b/datasafe.cpp
+@@ -47,6 +47,9 @@
+ /*
+ ** Renegade specific includes. For reporting tampering.
+ */
++#if defined(RENEGADE_VITA_PORT)
++#include "renegade_optional_services.h"
++#else
+ #include "cstextobj.h"
+ #include "cnetwork.h"
+ #include "player.h"
+@@ -54,7 +57,8 @@
+-#include "devoptions.h"
+ #include "string_ids.h"
+ #include "translatedb.h"
+ 
++#endif
++#include "devoptions.h"
+ 
+ /*
+ ** Unreferenced local variable.
+@@ -1228,6 +1232,9 @@
+  *=============================================================================================*/
+ void GenericDataSafeClass::Say_Security_Fault(void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	RenegadeOptionalServices::Report_DataSafe_Security_Fault();
++#else
+ 	WideStringClass text(TRANSLATION(IDS_DATASAFE_DETECTED_TAMPERING), true);
+ 	if (cNetwork::I_Am_Server()) {
+ 		text += L"Host";
+@@ -1242,5 +1249,6 @@
+ 		message->Init(text, TEXT_MESSAGE_PUBLIC, cNetwork::Get_My_Id(), -1);
+ 	}
++#endif
+ }
+ 
+ 

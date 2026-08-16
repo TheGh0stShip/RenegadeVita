@@ -1,0 +1,91 @@
+--- a/dlgloadspgame.cpp
++++ b/dlgloadspgame.cpp
+@@ -36,6 +36,7 @@
+ 
+ 
+ #include "dlgloadspgame.h"
++#include "renegade_ui_pointer_tokens.h"
+ #include "listctrl.h"
+ #include "dialogresource.h"
+ #include "gamedata.h"
+@@ -58,12 +59,12 @@
+ ////////////////////////////////////////////////////////////////
+ //	Local constants
+ ////////////////////////////////////////////////////////////////
+-static enum
++enum
+ {
+ 	MBEVENT_DELETE_PROMPT	= 1,
+ };
+ 
+-static enum
++enum
+ {
+ 	COL_DATE	= 0,
+ 	COL_TIME,
+@@ -246,9 +247,9 @@
+ 				file_path += "\\";
+ 				file_path += find_info.cFileName;
+ 				
+-				list_ctrl->Set_Entry_Data (item_index, 0, (uint32)new FILETIME(local_time));
+-				list_ctrl->Set_Entry_Data (item_index, 1, (uint32)new StringClass(file_path));
+-				list_ctrl->Set_Entry_Data (item_index, 2, (uint32)new StringClass(find_info.cFileName));
++				list_ctrl->Set_Entry_Data (item_index, 0, Renegade_Ui_Pointer_To_Token(new FILETIME(local_time)));
++				list_ctrl->Set_Entry_Data (item_index, 1, Renegade_Ui_Pointer_To_Token(new StringClass(file_path)));
++				list_ctrl->Set_Entry_Data (item_index, 2, Renegade_Ui_Pointer_To_Token(new StringClass(find_info.cFileName)));
+ 			}
+ 		}
+ 	}
+@@ -407,9 +408,9 @@
+ 		//
+ 		//	Remove the data we associated with this entry
+ 		//
+-		FILETIME *file_time		= (FILETIME *)list_ctrl->Get_Entry_Data (item_index, 0);
+-		StringClass *path			= (StringClass *)list_ctrl->Get_Entry_Data (item_index, 1);
+-		StringClass *filename	= (StringClass *)list_ctrl->Get_Entry_Data (item_index, 2);
++		FILETIME *file_time		= static_cast<FILETIME *>(Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 0)) );
++		StringClass *path			= static_cast<StringClass *>(Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 1)) );
++		StringClass *filename	= static_cast<StringClass *>(Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 2)) );
+ 		list_ctrl->Set_Entry_Data (item_index, 0, 0);
+ 		list_ctrl->Set_Entry_Data (item_index, 1, 0);
+ 		list_ctrl->Set_Entry_Data (item_index, 2, 0);
+@@ -455,8 +456,8 @@
+ 		//
+ 		//	Sort by time
+ 		//
+-		FILETIME *file_time1 = (FILETIME *)list_ctrl->Get_Entry_Data (item_index1, 0);
+-		FILETIME *file_time2 = (FILETIME *)list_ctrl->Get_Entry_Data (item_index2, 0);
++		FILETIME *file_time1 = static_cast<FILETIME *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index1, 0)) );
++		FILETIME *file_time2 = static_cast<FILETIME *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index2, 0)) );
+ 		retval = ::CompareFileTime (file_time1, file_time2);
+ 
+ 	} else {
+@@ -541,7 +542,7 @@
+ 		//
+ 		//	Get the name of the map
+ 		//
+-		StringClass *filename	= (StringClass *)list_ctrl->Get_Entry_Data (item_index, 2);
++		StringClass *filename	= static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2)) );
+ 		StringClass save_name(filename->Peek_Buffer(),true);
+ 
+ 		StringClass map_name(0,true);
+@@ -633,7 +634,7 @@
+ 		//	Get the filename associated with this entry
+ 		//		
+-		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
+-			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 1))->Peek_Buffer ();
++		if (list_ctrl->Get_Entry_Data (item_index, 0) != 0U) {
++			StringClass filename = (static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 1)) ))->Peek_Buffer ();
+			
+			//
+			//	Check to see if this is a saved game or a level file.
+@@ -698,7 +699,7 @@
+ 		//	Determine what filename this entry refers to
+ 		//		
+-		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
+-			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 1))->Peek_Buffer ();
++		if (list_ctrl->Get_Entry_Data (item_index, 0) != 0U) {
++			StringClass filename = (static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 1)) ))->Peek_Buffer ();
+
+			// Never delete .MIX files
+			int len = filename.Get_Length ();

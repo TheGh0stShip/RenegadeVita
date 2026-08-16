@@ -1,0 +1,25 @@
+--- a/transitioneffect.cpp
++++ b/transitioneffect.cpp
+@@ -191,16 +191,22 @@
+ 	if (RenderBaseMaterial == false) {
+ 		rinfo.Push_Override_Flags(RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY);
+ 	}
++#endif
+ }
+ 
+ void TransitionEffectClass::Render_Pop(RenderInfoClass & rinfo)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)rinfo;
++	return;
++#else
+ 	if (RenderBaseMaterial == false) {
+ 		rinfo.Pop_Override_Flags();
+ 	}
+ 	if (RenderTransitionMaterial) {
+ 		rinfo.Pop_Material_Pass();
+ 	}
++#endif
+ }
+ 
+ 

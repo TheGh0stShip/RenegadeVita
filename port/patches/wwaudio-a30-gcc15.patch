@@ -1,0 +1,115 @@
+--- a/AudioEvents.h
++++ b/AudioEvents.h
+@@ -190,7 +190,7 @@
+ template <class T> void
+ AudioCallbackListClass<T>::Add_Callback (T pointer, uint32 user_data)
+ {
+-	Add ( AUDIO_CALLBACK_STRUCT<T> (pointer, user_data));
++	this->Add ( AUDIO_CALLBACK_STRUCT<T> (pointer, user_data));
+ 	return ;
+ }
+ 
+@@ -202,10 +202,10 @@
+ AudioCallbackListClass<T>::Get_Callback (int index, uint32 *user_data)
+ {
+ 	if (user_data != NULL) {
+-		(*user_data) = Vector[index].user_data;
++		(*user_data) = this->Vector[index].user_data;
+ 	}
+ 
+-	return Vector[index].callback_ptr;
++	return this->Vector[index].callback_ptr;
+ }
+ 
+ /////////////////////////////////////////////////////////////////////////////////
+@@ -214,9 +214,9 @@
+ template <class T> void
+ AudioCallbackListClass<T>::Remove_Callback (T pointer)
+ {
+-	for (int index = 0; index < ActiveCount; index ++) {
+-		if (Vector[index].callback_ptr == pointer) {
+-			Delete (index);
++	for (int index = 0; index < this->ActiveCount; index ++) {
++		if (this->Vector[index].callback_ptr == pointer) {
++			this->Delete (index);
+ 			break;
+ 		}
+ 	}
+--- a/WWAudio.h
++++ b/WWAudio.h
+@@ -46,9 +46,9 @@
+-#include "Mss.H"
++#include "mss.h"
+ #pragma warning (pop)
+ 
+-#include "Vector.H"
+-#include "SoundBuffer.H"
+-#include "AudioEvents.H"
++#include "vector.h"
++#include "SoundBuffer.h"
++#include "AudioEvents.h"
+ #include "wwstring.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////////
+--- a/AudibleSound.h
++++ b/AudibleSound.h
+@@ -50,7 +50,7 @@
+ #include "matrix3d.h"
+ #include "refcount.h"
+ #include "rawfile.h"
+-#include "soundsceneobj.h"
++#include "SoundSceneObj.h"
+ #include "vector.h"
+ #include "wwstring.h"
+ #include "definition.h"
+--- a/SoundBuffer.h
++++ b/SoundBuffer.h
+@@ -46,7 +46,7 @@
+-#include "Mss.H"
++#include "mss.h"
+ #pragma warning (pop)
+ 
+-#include "RefCount.H"
++#include "refcount.h"
+ 
+ 
+ // Forward declarations
+--- a/SoundSceneObj.h
++++ b/SoundSceneObj.h
+@@ -39,9 +39,9 @@
+ #ifndef __SOUND_SCENE_OBJ_H
+ #define __SOUND_SCENE_OBJ_H
+ 
+-#include "Refcount.H"
+-#include "WWAudio.H"
+-#include "BitType.H"
++#include "refcount.h"
++#include "WWAudio.h"
++#include "bittype.h"
+ #include "persist.h"
+ #include "multilist.h"
+ #include "mutex.h"
+--- a/WWAudio.h
++++ b/WWAudio.h
+@@ -616,8 +616,8 @@
+ 			: string_id (0), buffer (NULL) {}
+ 
+ 		_CACHE_ENTRY_STRUCT &operator= (const _CACHE_ENTRY_STRUCT &src) { string_id = ::strdup (src.string_id); REF_PTR_SET (buffer, src.buffer); return *this; }
+-		operator== (const _CACHE_ENTRY_STRUCT &src) { return false; }
+-		operator!= (const _CACHE_ENTRY_STRUCT &src) { return true; }
++		bool operator== (const _CACHE_ENTRY_STRUCT &src) { return false; }
++		bool operator!= (const _CACHE_ENTRY_STRUCT &src) { return true; }
+ 	} CACHE_ENTRY_STRUCT;
+ 
+ 
+@@ -632,8 +632,8 @@
+ 		_LOGICAL_TYPE_STRUCT (int _id, LPCTSTR name)
+ 			:	display_name (name), id (_id) {}
+ 
+-		operator== (const _LOGICAL_TYPE_STRUCT &src) { return false; }
+-		operator!= (const _LOGICAL_TYPE_STRUCT &src) { return true; }
++		bool operator== (const _LOGICAL_TYPE_STRUCT &src) { return false; }
++		bool operator!= (const _LOGICAL_TYPE_STRUCT &src) { return true; }
+ 	} LOGICAL_TYPE_STRUCT;
+ 
+ 	//////////////////////////////////////////////////////////////////////

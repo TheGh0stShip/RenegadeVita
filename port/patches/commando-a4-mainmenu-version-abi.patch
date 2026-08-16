@@ -1,0 +1,12 @@
+--- a/dlgmainmenu.cpp
++++ b/dlgmainmenu.cpp
+@@ -489,7 +489,7 @@
+	// Version 1.0 by default
+ 	//
+-	DWORD version_major = 1;
+-	DWORD version_minor = 0;
++	unsigned long version_major = 1;
++	unsigned long version_minor = 0;
+ 	Get_Version_Number(&version_major, &version_minor);
+ 
+ 	//

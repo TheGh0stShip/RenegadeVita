@@ -1,0 +1,124 @@
+--- a/dx8vertexbuffer.cpp
++++ b/dx8vertexbuffer.cpp
+@@ -45,6 +45,10 @@
+ #include "thread.h"
+ #include "wwmemlog.h"
+ #include <D3dx8core.h>
++#if defined(RENEGADE_VITA_PORT)
++#include <new>
++#include <stdlib.h>
++#endif
+ 
+ #define DEFAULT_VB_SIZE 5000
+ 
+@@ -416,6 +420,16 @@
+ 	DX8_THREAD_ASSERT();
+ 	WWASSERT(!VertexBuffer);
+ 
++#if defined(RENEGADE_VITA_PORT)
++	(void)usage;
++	VertexBuffer = new (std::nothrow) IDirect3DVertexBuffer8(
++		FVF_Info().Get_FVF_Size() * VertexCount);
++	if (VertexBuffer == NULL || VertexBuffer->Get_Data() == NULL) {
++		abort();
++	}
++	return;
++#else
++
+ #ifdef VERTEX_BUFFER_LOG
+ 	StringClass fvf_name;
+ 	FVF_Info().Get_FVF_Name(fvf_name);
+@@ -474,6 +488,7 @@
+ 	// If it still fails it is fatal
+ 	DX8_ErrorCode(ret);
+ 
++#endif
+ }
+ 
+ // ----------------------------------------------------------------------------
+@@ -765,9 +780,11 @@
+ 	// Create a new vb if one doesn't exist currently
+ 	if (!_DynamicDX8VertexBuffer) {
+ 		unsigned usage=DX8VertexBufferClass::USAGE_DYNAMIC;
++#if !defined(RENEGADE_VITA_PORT)
+ 		if (DX8Wrapper::Get_Current_Caps()->Support_NPatches()) {
+ 			usage|=DX8VertexBufferClass::USAGE_NPATCHES;
+ 		}
++#endif
+ 
+ 		_DynamicDX8VertexBuffer=NEW_REF(DX8VertexBufferClass,(
+ 			dynamic_fvf_type, 
+--- a/dx8indexbuffer.cpp
++++ b/dx8indexbuffer.cpp
+@@ -44,6 +44,10 @@
+ #include "sphere.h"
+ #include "thread.h"
+ #include "wwmemlog.h"
++#if defined(RENEGADE_VITA_PORT)
++#include <new>
++#include <stdlib.h>
++#endif
+ 
+ #define DEFAULT_IB_SIZE 5000
+ 
+@@ -142,14 +146,14 @@
+ 		DX8IndexBufferClass::AppendLockClass l(this,first_index,count);
+ 		unsigned short* inds=l.Get_Index_Array();
+ 		for (unsigned v=0;v<count;++v) {
+-			*inds++=unsigned short(*indices++);
++			*inds++=static_cast<unsigned short>(*indices++);
+ 		}
+ 	}
+ 	else {
+ 		DX8IndexBufferClass::WriteLockClass l(this);
+ 		unsigned short* inds=l.Get_Index_Array();
+ 		for (unsigned v=0;v<count;++v) {
+-			*inds++=unsigned short(*indices++);
++			*inds++=static_cast<unsigned short>(*indices++);
+ 		}
+ 	}
+ }
+@@ -245,7 +249,7 @@
+ 			start_index*sizeof(unsigned short),
+ 			index_range*sizeof(unsigned short),
+ 			(unsigned char**)&indices,
+-			NULL));	// Optional pointer to receive the buffer size
++			0));	// Default (no) lock flags
+ 		break;
+ 	case BUFFER_TYPE_SORTING:
+ 		indices=static_cast<SortingIndexBufferClass*>(index_buffer)->index_buffer+start_index;
+@@ -287,6 +291,14 @@
+ {
+ 	DX8_THREAD_ASSERT();
+ 	WWASSERT(index_count);
++#if defined(RENEGADE_VITA_PORT)
++	(void)usage;
++	index_buffer = new (std::nothrow) IDirect3DIndexBuffer8(
++		static_cast<UINT>(sizeof(unsigned short) * index_count));
++	if (index_buffer == NULL || index_buffer->Get_Data() == NULL) {
++		abort();
++	}
++#else
+ 	unsigned usage_flags=
+ 		D3DUSAGE_WRITEONLY|
+ 		((usage&USAGE_DYNAMIC) ? D3DUSAGE_DYNAMIC : 0)|
+@@ -331,6 +343,7 @@
+ 
+ 	// If it still fails it is fatal
+ 	DX8_ErrorCode(ret);
++#endif
+ }
+ 
+ // ----------------------------------------------------------------------------
+@@ -486,9 +499,11 @@
+ 	// Create a new vb if one doesn't exist currently
+ 	if (!_DynamicDX8IndexBuffer) {
+ 		unsigned usage=DX8IndexBufferClass::USAGE_DYNAMIC;
++#if !defined(RENEGADE_VITA_PORT)
+ 		if (DX8Wrapper::Get_Current_Caps()->Support_NPatches()) {
+ 			usage|=DX8IndexBufferClass::USAGE_NPATCHES;
+ 		}
++#endif
+ 
+ 		_DynamicDX8IndexBuffer=NEW_REF(DX8IndexBufferClass,(
+ 			_DynamicDX8IndexBufferSize,

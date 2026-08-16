@@ -1,0 +1,19 @@
+--- a/bitstream.cpp
++++ b/bitstream.cpp
+@@ -177 +177 @@
+-	USHORT len = (USHORT)wcslen (string);
++	USHORT len = (USHORT)rv_utf16_length(string);
+@@ -184 +184 @@
+-		Add(string[i]);
++		Add(static_cast<USHORT>(string[i]));
+@@ -201,9 +201,9 @@
+-	WCHAR temp = L'?';
++	USHORT temp = '?';
+ 	int i = 0;
+ 	for (i = 0; i < len; i++) {
+ 		Get(temp);
+ 		if (i < buffer_len - 1) {
+-			buffer[i] = temp;
++			buffer[i] = static_cast<WCHAR>(temp);
+ 		}
+ 	}

@@ -1,0 +1,26 @@
+--- a/conversationmgr.cpp
++++ b/conversationmgr.cpp
+@@ -293,4 +293,4 @@
+-	for (index = 0; index < count; index ++) {
++	for (int index = 0; index < count; index ++) {
+ 		ActiveConversationClass *active_conversation = ActiveConversationList[index];
+ 		if (active_conversation != NULL) {
+ 			csave.Begin_Chunk (CHUNKID_ACTIVE_CONVERSATION);
+--- a/conversation.cpp
++++ b/conversation.cpp
+@@ -164,3 +164,3 @@
+-	for (index = 0; index < src.OratorList.Count (); index ++) {		
++	for (int index = 0; index < src.OratorList.Count (); index ++) {		
+ 		const OratorClass &orator = src.OratorList[index];
+ 		Add_Orator (orator);
+@@ -308,2 +308,2 @@
+-	for (index = 0; index < RemarkList.Count (); index ++) {
++	for (int index = 0; index < RemarkList.Count (); index ++) {
+ 		ConversationRemarkClass &remark = RemarkList[index];
+--- a/activeconversation.cpp
++++ b/activeconversation.cpp
+@@ -687,3 +687,3 @@
+-	for (index = 0; index < OratorList.Count (); index ++) {
++	for (int index = 0; index < OratorList.Count (); index ++) {
+ 		csave.Begin_Chunk (CHUNKID_ORATOR);
+ 			OratorList[index]->Save (csave);

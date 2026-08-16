@@ -1,0 +1,17 @@
+--- a/transitioneffect.cpp
++++ b/transitioneffect.cpp
+@@ -162,6 +162,14 @@
+ 
+ void TransitionEffectClass::Render_Push(RenderInfoClass & rinfo,PhysClass * obj)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	/* Legacy transition effects require procedural material passes. Preserve the
++	** owning Phys/Combat render traversal while selecting the established
++	** no-procedural-material capability boundary for this renderer. */
++	(void)rinfo;
++	(void)obj;
++	return;
++#else
+ 	if (RenderTransitionMaterial) {
+ 		
+ 		/*

@@ -1,0 +1,5 @@
+--- a/trim.cpp
++++ b/trim.cpp
+@@ -71 +71 @@
+-			strcpy(buffer, source);
++			memmove(buffer, source, strlen(source) + 1U);

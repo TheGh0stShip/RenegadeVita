@@ -1,0 +1,39 @@
+--- a/texture.cpp
++++ b/texture.cpp
+@@ -246,6 +246,7 @@
+ 	// Find original size from the thumbnail (but don't create thumbnail texture yet!)
+ #if defined(RENEGADE_VITA_PORT)
+-	Initialized=true;
++	// The native boundary loads the original DDS lazily through the file-factory
++	// chain in Init(); do not pretend that a GPU texture already exists.
+ #else
+ 	ThumbnailClass* thumb=NULL;
+ 	ThumbnailManagerClass* thumb_man=ThumbnailManagerClass::Peek_List().Head();
+@@ -378,2 +378,5 @@
+ #if defined(RENEGADE_VITA_PORT)
++	if (D3DTexture) {
++		D3DTexture->Release();
++	}
+ 	TextureLoadTask=NULL;
+@@ -430,7 +433,20 @@
+ void TextureClass::Init()
+ {
+ #if defined(RENEGADE_VITA_PORT)
+-	Initialized=true;
++	if (Initialized) return;
++	D3DTexture=DX8Wrapper::_Create_DX8_Texture(Get_Full_Path(),MipLevelCount);
++	// A missing source must not cause a per-triangle retry storm.  The platform
++	// loader records the first failure; the original texture object remains a
++	// valid owner of an unavailable presentation resource.
++	Initialized=true;
++	if (D3DTexture) {
++		D3DSURFACE_DESC desc;
++		if (D3DTexture->GetLevelDesc(0,&desc)==D3D_OK) {
++			Width=desc.Width;
++			Height=desc.Height;
++			TextureFormat=D3DFormat_To_WW3DFormat(desc.Format);
++		}
++	}
+ 	LastAccessed=WW3D::Get_Sync_Time();
+ 	return;
+ #else

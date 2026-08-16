@@ -1,0 +1,738 @@
+// A3.1 platform/middleware boundary for the original Combat ownership seed.
+//
+// The five temporary static-world gameplay definitions are intentionally not
+// repeated here: CombatManager, GameObjManager, SmartGameObj, VehicleGameObj,
+// and DiagLogClass are now supplied by their original owning translation units.
+// Audio and the DX8 device edge remain explicit platform boundaries until the
+// original WWAudio runtime is brought in as its own coherent closure.
+
+#include "dx8wrapper.h"
+#include "debug.h"
+#include "cnetwork.h"
+#include "gamemode.h"
+#include "modpackagemgr.h"
+#include "mpsettingsmgr.h"
+#include "textdisplay.h"
+#include "stackdump.h"
+#include "a31_audio_lifecycle.h"
+#include "a31_interactive_runtime_policy.h"
+#include "backgroundmgr.h"
+#include "ccamera.h"
+#include "combat.h"
+#include "hud.h"
+#include "input.h"
+#include "directinput.h"
+#include "dinput.h"
+#include "renegade_vita_input_contract.h"
+#include "pscene.h"
+#include "soldier.h"
+#include "timemgr.h"
+#include "ww3d.h"
+#include "ww3d_vita_renderer.h"
+
+// Replaces the Win32 message-loop focus global for the native Vita lifecycle.
+// The application starts foregrounded; original Input::Update retains its
+// existing focus guard without changing action or control ownership.
+bool GameInFocus = true;
+
+// These legacy game-mode globals are observed by the original cNetwork
+// broken-connection and packet-dispatch paths.  The original MenuGameMode
+// owns g_is_loading once the authentic A4 mode graph is selected; retain this
+// boundary-owned fallback only for the older direct gameplay targets.
+#if !defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
+bool g_is_loading = false;
+bool g_client_quit = false;
+// The full desktop CombatGameMode owns the restart presenter.  Replicated
+// packet handling only observes this transition flag, so keep that isolated
+// state at the same headless presentation boundary.
+bool g_b_core_restart = false;
+#endif
+
+// The original desktop initializer creates a registry of game modes together
+// with Win32 dialogs, movie playback, and WOL services.  Keep the original
+// gameplay query contract without importing those desktop presenters: these
+// headless lifecycle entries only report mode state.  Combat simulation,
+// replication, player ownership, and frame ordering remain in original
+// Commando/Combat owners.
+A31AudioLifecycleTrace g_audio_lifecycle_trace = {};
+#if !defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
+class A31HeadlessGameMode final : public GameModeClass {
+public:
+	explicit A31HeadlessGameMode(const char *name) : NameValue(name) {}
+	virtual const char *Name() { return NameValue; }
+	virtual void Init() {}
+	virtual void Shutdown() {}
+	virtual void Render() {}
+	virtual void Think() {}
+
+private:
+	const char *NameValue;
+};
+
+namespace {
+
+A31HeadlessGameMode g_combat_mode("Combat");
+A31HeadlessGameMode g_lan_mode("LAN");
+A31HeadlessGameMode g_wol_mode("WOL");
+A31HeadlessGameMode g_menu_mode("Menu");
+}
+
+GameModeClass *GameModeManager::Find(const char *name)
+{
+	if (name == NULL) return NULL;
+	if (stricmp(name, g_combat_mode.Name()) == 0) return &g_combat_mode;
+	if (stricmp(name, g_lan_mode.Name()) == 0) return &g_lan_mode;
+	if (stricmp(name, g_wol_mode.Name()) == 0) return &g_wol_mode;
+	if (stricmp(name, g_menu_mode.Name()) == 0) return &g_menu_mode;
+	return NULL;
+}
+
+// These are the unmodified lifecycle state transitions from
+// Commando/gamemode.cpp.  Their desktop manager owner is deliberately outside
+// the native headless presentation boundary, but cGameData's original
+// gameplay-permission query depends on the exact GameModeClass state machine.
+void GameModeClass::Activate()
+{
+	if (State == GAME_MODE_INACTIVE) {
+		Init();
+		State = GAME_MODE_ACTIVE;
+	}
+
+	if (State == GAME_MODE_INACTIVE_PENDING) {
+		State = GAME_MODE_ACTIVE;
+	}
+}
+
+void GameModeClass::Deactivate()
+{
+	if (!Is_Inactive()) {
+		State = GAME_MODE_INACTIVE_PENDING;
+	}
+}
+
+void GameModeClass::Safely_Deactivate()
+{
+	if (State == GAME_MODE_INACTIVE_PENDING) {
+		Shutdown();
+		State = GAME_MODE_INACTIVE;
+	}
+}
+
+void GameModeClass::Suspend()
+{
+	if (State == GAME_MODE_ACTIVE) {
+		State = GAME_MODE_SUSPENDED;
+	}
+}
+
+void GameModeClass::Resume()
+{
+	if (State == GAME_MODE_SUSPENDED) {
+		State = GAME_MODE_ACTIVE;
+	}
+}
+#endif // !RENEGADE_A4_ORIGINAL_GAMEMODE
+
+// The original DebugManager implementation owns Windows-only symbol lookup.
+// Keep the state observed by original Combat inline accessors at the platform
+// boundary until native diagnostic UI replaces that desktop facility.
+int DebugManager::VersionNumber = 0;
+bool DebugManager::AllowCinematicKeys = false;
+
+// The original replicated update path reports high-volume diagnostics through
+// this desktop debug sink.  Keep simulation and packet scheduling intact while
+// routing the unavailable presentation endpoint to the Vita log boundary.
+void DebugManager::Display_Network_Prolific(char const *, ...)
+{
+}
+
+// SEH is a Win32-only failure-reporting mechanism.  ThreadClass' POSIX/Vita
+// path never invokes this callback, but original Combat construction retains
+// it in the ThreadClass contract.  Keep the unavailable behavior at this
+// single platform boundary rather than altering Combat startup.
+int Exception_Handler(int, struct _EXCEPTION_POINTERS *)
+{
+	return 0;
+}
+
+// Desktop stack-symbol lookup is unavailable on Vita. Preserve the original
+// diagnostic call site while leaving collection to the native crash/log path.
+void cStackDump::Print_Call_Stack(void)
+{
+}
+
+/* Font3D now uses the same original FileFactory/Targa/SurfaceClass/
+** TextureClass chain as the rest of WW3D, ending only at the Vita texture
+** boundary.  Full HUD activation remains gated in the shipping target while
+** its first-frame lifecycle interaction is investigated.  The compile-time
+** switch is intentionally test-only: it lets the genuine Combat HUD run in a
+** separately instrumented host executable without changing device behavior
+** or introducing a substitute overlay. */
+bool A31_Interactive_Render_HUD_Available()
+{
+#if defined(RENEGADE_A4_ENABLE_HUD_TEST)
+	return true;
+#else
+	return false;
+#endif
+}
+
+A31InteractiveHUDState A31_Interactive_Get_HUD_State()
+{
+	A31InteractiveHUDState state = {};
+	state.serialized_enabled = HUDClass::Is_Enabled();
+	state.render_resources_available = HUDClass::Are_Render_Resources_Available();
+	state.effectively_displayable = state.serialized_enabled &&
+		state.render_resources_available;
+	return state;
+}
+
+void A31_Interactive_Apply_Render_Capabilities()
+{
+	PhysicsSceneClass *scene = CombatManager::Get_Scene();
+	if (scene != NULL) {
+		/* This is the original no-projector setting exposed by Commando's
+		** performance controls, not a replacement renderer or scene. */
+		scene->Enable_Static_Projectors(false);
+		scene->Enable_Dynamic_Projectors(false);
+		scene->Set_Shadow_Mode(PhysicsSceneClass::SHADOW_MODE_NONE);
+	}
+}
+
+void A31_Interactive_Configure_Vita_Controls()
+{
+	// Use the original action map.  Sliders retain analog magnitudes, while the
+	// secondary keyboard identifiers preserve the D-pad fallback supplied by
+	// DirectInput.  The named sensitivity participates in original
+	// Input::Update_Sliders and CCamera integration; it is not a Vita camera.
+	Input::Set_Mouse_Sensitivity(RenegadeVitaInput::DEFAULT_CAMERA_SENSITIVITY);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD,
+		Input::SLIDER_JOYSTICK_UP);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_BACKWARD,
+		Input::SLIDER_JOYSTICK_DOWN);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_LEFT,
+		Input::SLIDER_JOYSTICK_LEFT);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_RIGHT,
+		Input::SLIDER_JOYSTICK_RIGHT);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD, DIK_W);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_BACKWARD, DIK_S);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_LEFT, DIK_A);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_RIGHT, DIK_D);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_LEFT,
+		Input::SLIDER_MOUSE_LEFT);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_RIGHT,
+		Input::SLIDER_MOUSE_RIGHT);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_UP,
+		Input::SLIDER_MOUSE_UP);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_DOWN,
+		Input::SLIDER_MOUSE_DOWN);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_JUMP, DIK_SPACE);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_CROUCH, DIK_LCONTROL);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ACTION, DIK_R);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_PRIMARY,
+		DirectInput::BUTTON_JOYSTICK_B);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_SECONDARY,
+		DirectInput::BUTTON_JOYSTICK_A);
+}
+
+void A31_Interactive_Run_Simulation_Frame()
+{
+	TimeManager::Update();
+	Input::Update();
+	CombatManager::Generate_Control();
+	cNetwork::Update();
+	CombatManager::Think();
+}
+
+uint32_t Count_Physics_Objects(RefPhysListIterator iterator)
+{
+	uint32_t count = 0;
+	for (iterator.First(); !iterator.Is_Done(); iterator.Next()) {
+		++count;
+	}
+	return count;
+}
+
+A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
+{
+	A31InteractiveRenderTrace trace = {};
+	PhysicsSceneClass *scene = CombatManager::Get_Scene();
+	CCameraClass *camera = CombatManager::Get_Camera();
+	SoldierGameObj *star = CombatManager::Get_The_Star();
+	trace.scene_available = scene != NULL;
+	trace.camera_available = camera != NULL;
+	trace.star_available = star != NULL;
+	trace.scene_pointer = reinterpret_cast<uintptr_t>(scene);
+	trace.camera_pointer = reinterpret_cast<uintptr_t>(camera);
+	trace.star_pointer = reinterpret_cast<uintptr_t>(star);
+	if (scene == NULL || camera == NULL) {
+		return trace;
+	}
+
+	trace.static_object_count = Count_Physics_Objects(
+		scene->Get_Static_Object_Iterator());
+	trace.dynamic_object_count = Count_Physics_Objects(
+		scene->Get_Dynamic_Object_Iterator());
+	trace.static_light_count = static_cast<uint32_t>(scene->Get_Static_Light_Count());
+	trace.visibility_table_size = static_cast<uint32_t>(scene->Get_Vis_Table_Size());
+	trace.visibility_table_count = static_cast<uint32_t>(scene->Get_Vis_Table_Count());
+	const Vector3 camera_position = camera->Get_Position();
+	camera->Get_Clip_Planes(trace.near_clip, trace.far_clip);
+	trace.camera_x = camera_position.X;
+	trace.camera_y = camera_position.Y;
+	trace.camera_z = camera_position.Z;
+	if (star != NULL) {
+		Vector3 player_position;
+		star->Get_Position(&player_position);
+		trace.player_x = player_position.X;
+		trace.player_y = player_position.Y;
+		trace.player_z = player_position.Z;
+	}
+
+	/* Match the original GameModeManager::Render envelope.  PhysicsScene's
+	** render method consumes its visible lists; without this pre-pass an intact
+	** Combat frame can legally traverse zero objects. */
+	scene->Pre_Render_Processing(*camera);
+	trace.pre_render_completed = true;
+	trace.begin_render_completed =
+		WW3D::Begin_Render(true, true, BackgroundMgrClass::Get_Clear_Color()) ==
+		WW3D_ERROR_OK;
+	if (trace.begin_render_completed) {
+		CombatManager::Render();
+		trace.combat_render_called = true;
+	}
+	trace.end_render_completed = trace.begin_render_completed &&
+		WW3D::End_Render(true) == WW3D_ERROR_OK;
+	scene->Post_Render_Processing();
+	trace.post_render_completed = true;
+
+	const RenegadeVitaRenderer::Statistics &statistics =
+		RenegadeVitaRenderer::Get_Statistics();
+	trace.mesh_submissions = statistics.mesh_submissions;
+	trace.vertex_submissions = statistics.vertex_submissions;
+	trace.triangle_submissions = statistics.triangle_submissions;
+	trace.rejected_submissions = statistics.rejected_indexed_submissions;
+	trace.unsupported_submissions = statistics.unsupported_submissions;
+	return trace;
+}
+
+// Text display is an optional presentation mode. Original replicated text
+// events continue to be created and serialized; this is only the absent
+// desktop overlay while Vita UI work is pending.
+TextDisplayGameModeClass *TextDisplayGameModeClass::Instance = NULL;
+void TextDisplayGameModeClass::Flush(void)
+{
+}
+
+// MOD package enumeration was Win32-directory based. The normal retail
+// campaign has no selected package; retain deterministic metadata queries
+// until Vita mod discovery is implemented at this platform boundary.
+#if !defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
+void ModPackageMgrClass::Set_Current_Package(const char *)
+{
+}
+bool ModPackageMgrClass::Get_Mod_Map_Name_From_CRC(uint32, uint32,
+	StringClass *, StringClass *)
+{
+	return false;
+}
+#endif // !RENEGADE_A4_ORIGINAL_GAMEMODE
+
+// The local text filter starts with original defaults. WOL account preference
+// persistence is intentionally outside the LAN/direct-IP baseline.
+int MPSettingsMgrClass::OptionFlags = MPSettingsMgrClass::OPTION_DEFAULTS;
+#include "sortingrenderer.h"
+#include "texturethumbnail.h"
+#include "WWAudio.h"
+#include "LogicalListener.h"
+#include "SoundScene.h"
+#include "chunkio.h"
+#include "cpudetect.h"
+#include "stylemgr.h"
+
+#if !defined(RENEGADE_HOST_ABI_TEST)
+#include "a30_vita_runtime.h"
+#include "ww3d_vita_renderer.h"
+#endif
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+
+namespace {
+
+void Log_Deferred_Audio(const char *operation, int definition_id)
+{
+	/* A missing device must not turn an original per-frame retry into an I/O
+	 * workload. Keep one bounded counter per boundary operation and preserve
+	 * diagnostic visibility at exponentially spaced occurrences. */
+	struct DeferredAudioCounter { const char *operation; unsigned count; };
+	static DeferredAudioCounter counters[] = {
+		{ "Create_Sound", 0U }, { "Create_Instant_Sound", 0U },
+		{ "Create_Continuous_Sound", 0U }, { "Simple_Play_2D_Sound_Effect", 0U }
+	};
+	DeferredAudioCounter *counter = NULL;
+	for (unsigned i = 0U; i < sizeof(counters) / sizeof(counters[0]); ++i) {
+		if (strcmp(counters[i].operation, operation) == 0) { counter = &counters[i]; break; }
+	}
+	if (counter == NULL) return;
+	++counter->count;
+	const unsigned count = counter->count;
+	if (count != 1U && (count & (count - 1U)) != 0U) return;
+#if defined(RENEGADE_HOST_ABI_TEST)
+	fprintf(stderr, "A3.5 deferred WWAudio boundary: %s definition=%d occurrence=%u\n",
+		operation, definition_id, count);
+#else
+	A30_Vita_Log("A3.5 deferred WWAudio boundary: %s definition=%d occurrence=%u\n",
+		operation, definition_id, count);
+#endif
+}
+
+void Log_Audio_Lifecycle(const char *stage, WWAudioClass *audio,
+	SoundSceneClass *scene)
+{
+#if defined(RENEGADE_HOST_ABI_TEST)
+	fprintf(stderr,
+		"A3.1 breadcrumb: %s singleton=%p sound_scene=%p\n",
+		stage, static_cast<void *>(audio), static_cast<void *>(scene));
+	fflush(stderr);
+#else
+	A30_Vita_Log("A3.1 breadcrumb: %s singleton=%p sound_scene=%p\n",
+		stage, static_cast<void *>(audio), static_cast<void *>(scene));
+#endif
+}
+
+} // namespace
+
+void A31_Audio_Lifecycle_Reset_Trace()
+{
+	g_audio_lifecycle_trace = {};
+}
+
+A31AudioLifecycleTrace A31_Audio_Lifecycle_Get_Trace()
+{
+	return g_audio_lifecycle_trace;
+}
+
+void A31_Audio_Save_Load_Breadcrumb(const char *stage)
+{
+	WWAudioClass *audio = WWAudioClass::Get_Instance();
+	SoundSceneClass *scene = audio != NULL ? audio->Get_Sound_Scene() : NULL;
+	++g_audio_lifecycle_trace.static_audio_load_entries;
+	g_audio_lifecycle_trace.singleton_present_at_static_load = audio != NULL;
+	g_audio_lifecycle_trace.sound_scene_present_at_static_load = scene != NULL;
+	Log_Audio_Lifecycle(stage, audio, scene);
+}
+
+// The retail SaveGameManager registers thumbnail databases while preparing a
+// level. The established Vita texture path deliberately does not consume
+// those DX8/GDI-generated databases, so retain this optional desktop
+// preprocessing feature at its original subsystem boundary. This does not
+// alter retail MIX access, definition loading, or world texture residency.
+void ThumbnailManagerClass::Add_Thumbnail_Manager(const char *, const char *)
+{
+}
+
+WWAudioClass *WWAudioClass::_theInstance = NULL;
+
+// This is the A3.1 no-output audio-device implementation.  It intentionally
+// retains the original WWAudio object and original logical-listener ownership
+// so Combat's SmartGameObj lifecycle is unchanged; only Miles/device playback
+// is deferred below that interface.
+WWAudioClass::WWAudioClass(bool)
+	: m_PlaybackRate(44100),
+	  m_PlaybackBits(16),
+	  m_PlaybackStereo(true),
+	  m_MusicVolume(DEF_MUSIC_VOL),
+	  m_SoundVolume(DEF_SFX_VOL),
+	  m_RealMusicVolume(DEF_MUSIC_VOL),
+	  m_RealSoundVolume(DEF_SFX_VOL),
+	  m_UpdateTimer(NULL),
+	  m_IsMusicEnabled(true),
+	  m_IsDialogEnabled(true),
+	  m_IsCinematicSoundEnabled(true),
+	  m_AreSoundEffectsEnabled(true),
+	  m_AreNewSoundsEnabled(true),
+	  m_FileFactory(NULL),
+	  m_BackgroundMusic(NULL),
+	  m_SoundScene(NULL),
+	  m_CurrPage(PAGE_PRIMARY),
+	  m_MaxCacheSize(DEF_CACHE_SIZE * 1024),
+	  m_CurrentCacheSize(0),
+	  AudioIni(NULL)
+{
+	_theInstance = this;
+}
+
+WWAudioClass::~WWAudioClass(void)
+{
+	_theInstance = NULL;
+}
+
+void WWAudioClass::Initialize(bool, int, int)
+{
+}
+
+void WWAudioClass::Initialize(const char *)
+{
+}
+
+void WWAudioClass::Shutdown(void)
+{
+}
+
+void WWAudioClass::Add_Logical_Type(int id, LPCTSTR display_name)
+{
+	m_LogicalTypes.Add(LOGICAL_TYPE_STRUCT(id, display_name));
+}
+
+void WWAudioClass::Reset_Logical_Types(void)
+{
+	m_LogicalTypes.Delete_All();
+}
+
+void WWAudioClass::Set_Background_Music(const char *filename)
+{
+	// Music ownership remains below the silent-device boundary.  Preserve the
+	// original visible state for retail dynamic-level restoration, but do not
+	// synthesize a Miles sound object on Vita.
+	m_BackgroundMusicName = filename;
+}
+
+void WWAudioClass::Flush_Cache(void)
+{
+	/* The A3.1 Vita audio boundary never creates Miles-backed cache entries, but
+	 * CombatManager::Unload_Level still owns this call in the original level
+	 * lifecycle.  Reset the same observable cache state so an unloaded level
+	 * cannot retain stale accounting when a real device backend is added. */
+	for (int hash_index = 0; hash_index < MAX_CACHE_HASH; ++hash_index) {
+		m_CachedBuffers[hash_index].Delete_All();
+	}
+	m_CurrentCacheSize = 0;
+}
+
+// The original menu/game-init owners manipulate these WWAudio states even
+// while Vita has no Miles output device.  Preserve their state and playlist
+// lifecycle without constructing desktop sound objects.  This is deliberately
+// narrower than an audio replacement: the original WWAudio graph remains the
+// future owner once a Vita device backend is admitted.
+void WWAudioClass::Allow_Sound_Effects(bool onoff)
+{
+	m_AreSoundEffectsEnabled = onoff;
+}
+
+void WWAudioClass::Allow_Music(bool onoff)
+{
+	m_IsMusicEnabled = onoff;
+}
+
+void WWAudioClass::Flush_Playlist(SOUND_PAGE page)
+{
+	// The no-output boundary never inserts audible sounds.  Delete only the
+	// original pointer list entries; it owns no sound objects to release.
+	m_Playlist[page].Delete_All();
+}
+
+void WWAudioClass::Flush_Playlist(void)
+{
+	Flush_Playlist(PAGE_PRIMARY);
+	Flush_Playlist(PAGE_SECONDARY);
+}
+
+AudibleSoundClass *WWAudioClass::Create_Sound_Effect(const char *)
+{
+	/* MenuGameMode owns an optional looping music object.  The current Vita
+	 * boundary has no Miles-compatible device or decoder, so report the same
+	 * absence that the original method reports for an unavailable source; the
+	 * original menu explicitly handles NULL and remains its own lifecycle
+	 * owner.  Do not manufacture an audible object merely to advance the menu. */
+	return NULL;
+}
+
+void WWAudioClass::Set_Active_Sound_Page(SOUND_PAGE page)
+{
+	/* No-output builds have no active audible objects to pause/resume, but the
+	 * original page state is observed by MenuGameMode and later HUD/dialog
+	 * owners.  Preserve that state transition exactly without introducing a
+	 * replacement playlist or output backend. */
+	if (page == PAGE_PRIMARY || page == PAGE_SECONDARY) {
+		m_CurrPage = page;
+	}
+}
+
+void WWAudioClass::On_Frame_Update(unsigned int)
+{
+	// No Miles/device work is scheduled by this A3.1 boundary.  Keeping this
+	// entry point avoids menu lifecycle drift without per-frame diagnostics.
+}
+
+bool WWAudioClass::Simple_Play_2D_Sound_Effect(const char *, float, float)
+{
+	static bool logged = false;
+	if (!logged) {
+		Log_Deferred_Audio("Simple_Play_2D_Sound_Effect", -1);
+		logged = true;
+	}
+	return false;
+}
+
+// The external Win32 script DLL is intentionally unavailable on Vita.  The
+// original ScriptManager remains in charge of its no-provider state; this
+// boundary supplies only the otherwise-DLL-owned command table entry point.
+struct ScriptCommands;
+ScriptCommands *Get_Script_Commands(void)
+{
+	return NULL;
+}
+
+bool SoundSceneClass::Save_Static(ChunkSaveClass &)
+{
+	return true;
+}
+
+bool SoundSceneClass::Load_Static(ChunkLoadClass &)
+{
+	return true;
+}
+
+bool SoundSceneClass::Save_Dynamic(ChunkSaveClass &)
+{
+	return true;
+}
+
+bool SoundSceneClass::Load_Dynamic(ChunkLoadClass &)
+{
+	return true;
+}
+
+LogicalListenerClass *WWAudioClass::Create_Logical_Listener(void)
+{
+	return new LogicalListenerClass;
+}
+
+AudibleSoundClass *WWAudioClass::Create_Sound(int definition_id,
+	RefCountClass *, uint32, int)
+{
+	Log_Deferred_Audio("Create_Sound", definition_id);
+	return NULL;
+}
+
+AudibleSoundClass *WWAudioClass::Create_Sound(const char *, RefCountClass *,
+	uint32, int)
+{
+	Log_Deferred_Audio("Create_Sound", -1);
+	return NULL;
+}
+
+int WWAudioClass::Create_Instant_Sound(int definition_id, const Matrix3D &,
+	RefCountClass *, uint32, int)
+{
+	static bool logged = false;
+	if (!logged) {
+		Log_Deferred_Audio("Create_Instant_Sound", definition_id);
+		logged = true;
+	}
+	return 0;
+}
+
+AudibleSoundClass *WWAudioClass::Create_Continuous_Sound(int definition_id,
+	RefCountClass *, uint32, int)
+{
+	static bool logged = false;
+	if (!logged) {
+		Log_Deferred_Audio("Create_Continuous_Sound", definition_id);
+		logged = true;
+	}
+	return NULL;
+}
+
+int WWAudioClass::Create_Instant_Sound(const char *, const Matrix3D &,
+	RefCountClass *, uint32, int)
+{
+	Log_Deferred_Audio("Create_Instant_Sound", -1);
+	return 0;
+}
+
+AudibleSoundClass *WWAudioClass::Create_Continuous_Sound(const char *,
+	RefCountClass *, uint32, int)
+{
+	Log_Deferred_Audio("Create_Continuous_Sound", -1);
+	return NULL;
+}
+
+// The headless input/scene closure provides this storage only while the real
+// original StyleMgr owner is absent.  Once StyleMgr is selected, it owns its
+// own FontChars cache and lifecycle.
+#if !defined(RENEGADE_A4_REAL_STYLEMGR)
+FontCharsClass *StyleMgrClass::Fonts[StyleMgrClass::FONT_MAX] = {};
+#endif
+
+unsigned DX8Wrapper::RenderStates[256] = {};
+unsigned DX8Wrapper::render_state_changes = 0;
+
+void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass &name,
+	D3DRENDERSTATETYPE, unsigned)
+{
+	name = "VITA_BACKEND";
+}
+
+HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE, DWORD)
+{
+	return D3D_OK;
+}
+
+#if !defined(RENEGADE_HOST_ABI_TEST)
+
+unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4 &color)
+{
+	Vector4 clamped(color);
+	for (unsigned component = 0; component < 4U; ++component) {
+		if (clamped[component] < 0.0f) {
+			clamped[component] = 0.0f;
+		} else if (clamped[component] > 1.0f) {
+			clamped[component] = 1.0f;
+		}
+	}
+	return D3DCOLOR_COLORVALUE(clamped.X, clamped.Y, clamped.Z, clamped.W);
+}
+
+void DX8Wrapper::Set_Render_Target(TextureClass *texture)
+{
+	if (texture != NULL) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"non-default TextureClass render target is deferred", 0U);
+	}
+}
+
+void DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)
+{
+	if (surface != NULL) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"non-default surface render target is deferred", 0U);
+	}
+}
+
+void DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)
+{
+	// The accepted transitional MeshClass renderer retains engine-owned light
+	// state above this unimplemented fixed-function device edge.
+}
+
+void SortingRendererClass::Insert_Triangles(const SphereClass &,
+	unsigned short, unsigned short, unsigned short, unsigned short)
+{
+	RenegadeVitaRenderer::Reject_Indexed_Submission(
+		"sorted indexed submission is deferred", 0U);
+}
+
+void SortingRendererClass::Insert_Triangles(unsigned short, unsigned short,
+	unsigned short, unsigned short)
+{
+	RenegadeVitaRenderer::Reject_Indexed_Submission(
+		"sorted indexed submission is deferred", 0U);
+}
+
+#endif
+/* The original profiler only needs the calibrated reciprocal.  CPU feature
+ * probing is x86/Win32 assembly and stays behind the platform boundary. */
+double CPUDetectClass::InvProcessorTicksPerSecond = 1.0e-9;

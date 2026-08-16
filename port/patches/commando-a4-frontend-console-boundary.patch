@@ -1,0 +1,10 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -82,3 +82,7 @@
+ #include "wwmemlog.h"
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#include "a31_console_stub.h"
++#else
+ #include "consolemode.h"
++#endif
+ #include "specialbuilds.h"

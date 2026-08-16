@@ -1,0 +1,25 @@
+--- a/connect.cpp
++++ b/connect.cpp
+@@ -49,2 +49,2 @@
+-#include "commando\nat.h"
+-#include "commando\natter.h"
++// Retired WOL NAT traversal is outside the LAN/direct-IP provider boundary.
++// cConnection continues to own the original UDP/reliability transport.
+@@ -92,5 +92,3 @@
+-	sprintf(_string, "%d.%d.%d.%d ; %d", 	(int)(addr->sin_addr.S_un.S_un_b.s_b1),
+-																			(int)(addr->sin_addr.S_un.S_un_b.s_b2),
+-																			(int)(addr->sin_addr.S_un.S_un_b.s_b3),
+-																			(int)(addr->sin_addr.S_un.S_un_b.s_b4),
+-																			htonl((int)(addr->sin_port)));
++	char ip[INET_ADDRSTRLEN];
++	::inet_ntop(AF_INET, &addr->sin_addr, ip, sizeof(ip));
++	sprintf(_string, "%s ; %d", ip, (int)ntohs(addr->sin_port));
+@@ -350 +348 @@
+-		WOLNATInterface.Set_Server(true);
++		// WOL NAT traversal retired; original server transport remains active.
+@@ -681,4 +679 @@
+-		WOLNATInterface.Intercept_Game_Packet(packet);
+-		packet.Flush();
+-      WWDEBUG_SAY(("cConnection:: Packet transferred to WOLNAT interface\n"));
+-		return(true);
++		return(false);

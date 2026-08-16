@@ -1,0 +1,15 @@
+--- a/textmarqueectrl.cpp
++++ b/textmarqueectrl.cpp
+@@ -137,7 +137,8 @@
+ 	float start_height	= (ScrollPos - ctrl_height);
+ 
+ 	float curr_height		= 0;
+-	for (int curr_row = 0; curr_row < CreditLines.Count (); curr_row ++) {		
++	int curr_row = 0;
++	for (; curr_row < CreditLines.Count (); curr_row ++) {		
+ 		if ((curr_height + CreditLines[curr_row].Height) >= start_height) {
+ 			break;
+ 		}
+@@ -289 +290 @@
+-				uint32 bytes	= ((uint32)src_end - (uint32)src_start);	\
++				uint32 bytes	= static_cast<uint32>((src_end - src_start) * sizeof(WCHAR));	\

@@ -1,0 +1,11 @@
+--- a/assetdep.cpp
++++ b/assetdep.cpp
+@@ -334,7 +334,7 @@
+ 	::Get_Filename_From_Path (asset_name, filename);
+ 
+ 	// Find and strip off the extension (if it exists)
+-	char *extension = ::strrchr (asset_name, '.');
++	char *extension = ::strrchr (asset_name.Peek_Buffer (), '.');
+ 	if (extension != NULL) {
+ 		extension[0] = 0;
+ 	}

@@ -1,0 +1,52 @@
+--- a/connect.cpp
++++ b/connect.cpp
+@@ -46,8 +46,8 @@
+ #include "crc.h"
+ #include "msgstatlist.h"
+ #include "wwprofile.h"
+-#include "commando\nat.h"
+-#include "commando\natter.h"
++// Retired WOL NAT traversal is outside the LAN/direct-IP provider boundary.
++// cConnection continues to own the original UDP/reliability transport.
+ #include "packetmgr.h"
+ #include "bwbalance.h"
+ 
+@@ -89,11 +89,9 @@
+ char * Addr_As_String(sockaddr_in *addr)
+ {
+ 	static char _string[128];
+-	sprintf(_string, "%d.%d.%d.%d ; %d", 	(int)(addr->sin_addr.S_un.S_un_b.s_b1),
+-														(int)(addr->sin_addr.S_un.S_un_b.s_b2),
+-														(int)(addr->sin_addr.S_un.S_un_b.s_b3),
+-														(int)(addr->sin_addr.S_un.S_un_b.s_b4),
+-														htonl((int)(addr->sin_port)));
++	char ip[INET_ADDRSTRLEN];
++	::inet_ntop(AF_INET, &addr->sin_addr, ip, sizeof(ip));
++	sprintf(_string, "%s ; %d", ip, (int)ntohs(addr->sin_port));
+ 	return(_string);
+ }
+ //#endif //WWDEBUG
+@@ -347,7 +345,7 @@
+       WWASSERT(num_tries < 50 && server_port <= MAX_SERVER_PORT);
+ 
+ 		// Tell the firewall code that we started a new local server.
+-		WOLNATInterface.Set_Server(true);
++		// WOL NAT traversal retired; original server transport remains active.
+    }
+ 
+ 	InitDone = true;
+@@ -678,10 +676,7 @@
+ 	// Intercept packets intended for the firewall negotiation code.
+ 	//
+    if (packet.Get_Type() == PACKETTYPE_FIREWALL_PROBE) {
+-		WOLNATInterface.Intercept_Game_Packet(packet);
+-		packet.Flush();
+-      WWDEBUG_SAY(("cConnection:: Packet transferred to WOLNAT interface\n"));
+-		return(true);
++		return(false);
+	};
+ 
+ 
+@@ -2366 +2364 @@
+-			for (objnode = p_rhost->Get_Packet_List(UNRELIABLE_SEND_LIST).Head();
++			for (SLNode<cPacket> * objnode = p_rhost->Get_Packet_List(UNRELIABLE_SEND_LIST).Head();

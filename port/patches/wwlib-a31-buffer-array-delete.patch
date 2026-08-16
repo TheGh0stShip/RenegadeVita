@@ -1,0 +1,8 @@
+--- a/buff.cpp
++++ b/buff.cpp
+@@ -176 +176 @@
+-			delete [] BufferPtr;
++			delete [] static_cast<char *>(BufferPtr);
+@@ -226 +226 @@
+-		delete [] BufferPtr;
++		delete [] static_cast<char *>(BufferPtr);

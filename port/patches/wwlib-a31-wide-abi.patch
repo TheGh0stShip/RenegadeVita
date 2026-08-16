@@ -1,0 +1,19 @@
+--- a/ini.h
++++ b/ini.h
+@@ -150 +150 @@
+-		const WideStringClass& Get_Wide_String(WideStringClass& new_string, char const * section, char const * entry, unsigned short const * defvalue=reinterpret_cast<unsigned short const *>(u"")) const;
++		const WideStringClass& Get_Wide_String(WideStringClass& new_string, char const * section, char const * entry, WCHAR const * defvalue=reinterpret_cast<WCHAR const *>(u"")) const;
+@@ -183 +183 @@
+-		bool Put_Wide_String(char const * section, char const * entry, const unsigned short * string);
++		bool Put_Wide_String(char const * section, char const * entry, const WCHAR * string);
+--- a/ini.cpp
++++ b/ini.cpp
+@@ -995,3 +995,3 @@
+-const WideStringClass& INIClass::Get_Wide_String(WideStringClass& new_string, char const * section, char const * entry, unsigned short const * defvalue) const
++const WideStringClass& INIClass::Get_Wide_String(WideStringClass& new_string, char const * section, char const * entry, WCHAR const * defvalue) const
+ {
+-	unsigned short out[1024];
++	WCHAR out[1024];
+@@ -1034 +1034 @@
+-bool INIClass::Put_Wide_String(char const * section, char const * entry, const unsigned short * string)
++bool INIClass::Put_Wide_String(char const * section, char const * entry, const WCHAR * string)

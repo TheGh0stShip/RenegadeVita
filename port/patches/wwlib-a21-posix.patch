@@ -1,0 +1,221 @@
+--- a/vector.h
++++ b/vector.h
+@@ -487,6 +487,11 @@
+ class DynamicVectorClass : public VectorClass<T>
+ {
+ 	public:
++		using VectorClass<T>::IsAllocated;
++		using VectorClass<T>::Length;
++		using VectorClass<T>::Vector;
++		using VectorClass<T>::VectorMax;
++
+ 		DynamicVectorClass(unsigned size=0, T const * array=0);
+ 
+ 		// Stubbed equality operators so you can have dynamic vectors of dynamic vectors
+--- a/simplevec.h
++++ b/simplevec.h
+@@ -255,6 +255,9 @@
+ template <class T> class SimpleDynVecClass : public SimpleVecClass<T>
+ {
+ public:
++	using SimpleVecClass<T>::Length;
++	using SimpleVecClass<T>::Vector;
++	using SimpleVecClass<T>::VectorMax;
+ 
+ 	SimpleDynVecClass(int size = 0);
+ 	virtual ~SimpleDynVecClass(void);
+--- a/wwstring.h
++++ b/wwstring.h
+@@ -122,7 +122,7 @@
+ 
+ 	void			Erase (int start_index, int char_count);
+ 	int _cdecl  Format (const TCHAR *format, ...);
+-	int _cdecl  Format_Args (const TCHAR *format, const va_list & arg_list );
++	int _cdecl  Format_Args (const TCHAR *format, va_list & arg_list );
+ 
+ 	// Trim leading and trailing whitespace characters (values <= 32)
+ 	void Trim(void);
+--- a/wwstring.cpp
++++ b/wwstring.cpp
+@@ -38,6 +38,7 @@
+ #include "win.h"
+ #include "wwmemlog.h"
+ #include "mutex.h"
++#include <stdint.h>
+ #include <stdio.h>
+ 
+ 
+@@ -102,7 +103,7 @@
+ 				//
+ 				//	Grab this unused buffer for our string
+ 				//
+-				unsigned temp_string=reinterpret_cast<unsigned>(m_TempStrings);
++				uintptr_t temp_string=reinterpret_cast<uintptr_t>(m_TempStrings);
+ 				temp_string+=MAX_TEMP_BYTES*MAX_TEMP_STRING;
+ 				temp_string&=~(MAX_TEMP_BYTES*MAX_TEMP_STRING-1);
+ 				temp_string+=index*MAX_TEMP_BYTES;
+@@ -197,8 +198,8 @@
+ {
+ 	if (m_Buffer != m_EmptyString) {
+ 
+-		unsigned buffer_base=reinterpret_cast<unsigned>(m_Buffer-sizeof (StringClass::_HEADER));
+-		unsigned temp_base=reinterpret_cast<unsigned>(m_TempStrings+MAX_TEMP_BYTES*MAX_TEMP_STRING);
++		uintptr_t buffer_base=reinterpret_cast<uintptr_t>(m_Buffer-sizeof (StringClass::_HEADER));
++		uintptr_t temp_base=reinterpret_cast<uintptr_t>(m_TempStrings+MAX_TEMP_BYTES*MAX_TEMP_STRING);
+ 
+ 		if ((buffer_base>>11)==(temp_base>>11)) {
+ 			m_Buffer[0] = 0;
+@@ -238,7 +239,7 @@
+ //
+ ///////////////////////////////////////////////////////////////////
+ int _cdecl
+-StringClass::Format_Args (const TCHAR *format, const va_list & arg_list )
++StringClass::Format_Args (const TCHAR *format, va_list & arg_list )
+ {
+ 	//
+ 	// Make a guess at the maximum length of the resulting string
+--- a/rawfile.cpp
++++ b/rawfile.cpp
+@@ -323 +323 @@
+-		for (int i=0; i<Filename.Length(); i++)
++		for (int i=0; i<Filename.Get_Length(); i++)
+@@ -327 +326,0 @@
+-			Filename[i]=tolower(Filename[i]);  // don't preserve case
+@@ -419 +418 @@
+-					Handle = fopen(Filename, "r");
++					Handle = fopen(Filename, "rb");
+@@ -428 +427 @@
+-					Handle = fopen(Filename, "w");
++					Handle = fopen(Filename, "wb");
+@@ -437 +436,4 @@
+-					Handle = fopen(Filename, "w");
++					Handle = fopen(Filename, "r+b");
++					if (Handle == NULL_HANDLE) {
++						Handle = fopen(Filename, "w+b");
++					}
+@@ -517 +519 @@
+-			Handle=fopen(Filename,"r");
++			Handle=fopen(Filename,"rb");
+@@ -859,11 +861,12 @@
+-			fpos_t curpos,startpos,endpos;
+-			fgetpos(Handle,&curpos);	
+-
+-			fseek(Handle,0,SEEK_SET);
+-			fgetpos(Handle,&startpos);	
+-
+-			fseek(Handle,0,SEEK_END);
+-			fgetpos(Handle,&endpos);	
+-
+-			size=endpos-startpos;
+-			fsetpos(Handle,&curpos);
++			long curpos = ftell(Handle);
++			if (curpos < 0 || fseek(Handle, 0, SEEK_END) != 0) {
++				Error(errno, false, Filename);
++				return 0;
++			}
++			long endpos = ftell(Handle);
++			if (endpos < 0 || endpos > INT_MAX ||
++				fseek(Handle, curpos, SEEK_SET) != 0) {
++				Error(errno, false, Filename);
++				return 0;
++			}
++			size = (int)endpos;
+@@ -1155 +1158,10 @@
+-      pos=fseek(Handle, pos, dir);
++		if (fseek(Handle, pos, dir) != 0) {
++			Error(errno, false, Filename);
++			return -1;
++		}
++		long current_position = ftell(Handle);
++		if (current_position < 0 || current_position > INT_MAX) {
++			Error(errno, false, Filename);
++			return -1;
++		}
++		pos = (int)current_position;
+--- a/mixfile.h
++++ b/mixfile.h
+@@ -50,6 +50,7 @@
+ #endif
+ 
+ #include "vector.h"
++#include "bittype.h"
+ 
+ class FileClass;
+ 
+@@ -99,9 +100,9 @@
+ 		bool operator== (const FileInfoStruct &src)	{ return false; }
+ 		bool operator!= (const FileInfoStruct &src)	{ return true; }
+ 
+-		unsigned long CRC;				// CRC code for embedded file.
+-		unsigned long Offset;			// Offset from start of data section.
+-		unsigned long Size;				// Size of data subfile.
++		uint32 CRC;						// CRC code for embedded file.
++		uint32 Offset;					// Offset from start of data section.
++		uint32 Size;						// Size of data subfile.
+ 	};
+ 
+ 	struct AddInfoStruct {
+@@ -146,9 +147,9 @@
+ 		bool operator== (const FileInfoStruct &src)	{ return false; }
+ 		bool operator!= (const FileInfoStruct &src)	{ return true; }
+ 
+-		unsigned long	CRC;				// CRC code for embedded file.
+-		unsigned long	Offset;			// Offset from start of data section.
+-		unsigned long	Size;				// Size of data subfile.
++		uint32			CRC;				// CRC code for embedded file.
++		uint32			Offset;			// Offset from start of data section.
++		uint32			Size;				// Size of data subfile.
+ 		StringClass		Filename;
+ 	};
+ 
+--- a/mixfile.cpp
++++ b/mixfile.cpp
+@@ -49,14 +49,14 @@
+ typedef struct
+ {
+ 	char	signature[4];
+-	long	header_offset;
+-	long	names_offset;
++	sint32	header_offset;
++	sint32	names_offset;
+ 
+ } MIXFILE_HEADER;
+ 
+ typedef struct
+ {
+-	long	file_count;
++	sint32	file_count;
+ 
+ } MIXFILE_DATA_HEADER;
+ 
+@@ -72,6 +72,8 @@
+ 	Factory (NULL),
+ 	IsModified (false)
+ {
++	static_assert(sizeof(MIXFILE_HEADER) == 12, "MIX1 header must use 32-bit fields");
++	static_assert(sizeof(FileInfoStruct) == 12, "MIX1 file entry must use 32-bit fields");
+ //	WWDEBUG_SAY(( "MixFileFactory( %s )\n", mix_filename ));
+ 	MixFilename	= mix_filename;
+ 	Factory		= factory;
+@@ -354,7 +356,7 @@
+ 		//
+ 		//	Add the new files that are pending
+ 		//
+-		for (index = 0; index < PendingAddFileList.Count (); index ++) {
++		for (int index = 0; index < PendingAddFileList.Count (); index ++) {
+ 			new_mix_file.Add_File (PendingAddFileList[index].FullPath, PendingAddFileList[index].Filename);
+ 		}
+ 	}
+@@ -592,6 +594,7 @@
+ /*
+ **
+ */
++#if !defined(RENEGADE_RUNTIME_READ_ONLY)
+ void	Add_Files( const char * dir, MixFileCreator & mix )
+ {
+ 	BOOL bcontinue = TRUE;
+@@ -634,3 +637,4 @@
+ 	}
+ 
+ }
++#endif

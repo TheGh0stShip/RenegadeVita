@@ -1,0 +1,50 @@
+--- a/dialogbase.cpp
++++ b/dialogbase.cpp
+@@ -324,7 +324,7 @@
+ 	//
+ 	//	Release all child dialogs
+ 	//
+-	for (index = 0; index < ChildDialogList.Count (); index ++) {
++	for (int index = 0; index < ChildDialogList.Count (); index ++) {
+ 		ChildDialogList[index]->End_Dialog ();
+ 		ChildDialogList[index]->Set_Parent_Dialog (NULL);
+ 		ChildDialogList[index]->Release_Ref ();
+@@ -371,7 +371,7 @@
+ 		//
+ 		//	Let each control "think"
+ 		//
+-		for (index = 0; index < ChildDialogList.Count (); index ++) {
++		for (int index = 0; index < ChildDialogList.Count (); index ++) {
+ 			ChildDialogList[index]->On_Frame_Update ();
+ 		}
+ 	}
+@@ -404,7 +404,7 @@
+ 		//
+ 		//	Render each child - dialog
+ 		//
+-		for (index = 0; index < ChildDialogList.Count (); index ++) {
++		for (int index = 0; index < ChildDialogList.Count (); index ++) {
+ 			if (ChildDialogList[index]->Is_Visible ()) {
+ 				ChildDialogList[index]->Render ();
+ 			}
+@@ -1500,7 +1500,7 @@
+ 	//
+ 	//	Next, add in the control from each dialog
+ 	//
+-	for (index = 0; index < ChildDialogList.Count (); index ++) {
++	for (int index = 0; index < ChildDialogList.Count (); index ++) {
+ 		if (ChildDialogList[index]->Is_Visible ()) {
+ 			ChildDialogList[index]->Build_Control_List (list);
+ 		}
+@@ -1541,7 +1541,7 @@
+ 	//
+ 	//	Move all the child dialogs
+ 	//
+-	for (index = 0; index < ChildDialogList.Count (); index ++) {
++	for (int index = 0; index < ChildDialogList.Count (); index ++) {
+ 
+ 		//
+ 		//	Offset this dialog
+@@ -1637 +1637 @@
+-	for (index = 0; index < ChildDialogList.Count (); index ++) {
++	for (int index = 0; index < ChildDialogList.Count (); index ++) {

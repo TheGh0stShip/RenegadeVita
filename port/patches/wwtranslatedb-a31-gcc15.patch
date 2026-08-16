@@ -1,0 +1,115 @@
+--- a/translatedb.cpp
++++ b/translatedb.cpp
+@@ -94,7 +94,8 @@
+ 	VARID_LANGUAGE_ID
+ };
+ 
+-const WCHAR *	STRING_NOT_FOUND				= L"TDBERR";
++static const WCHAR STRING_NOT_FOUND_TEXT[] = { 'T', 'D', 'B', 'E', 'R', 0 };
++const WCHAR *	STRING_NOT_FOUND				= STRING_NOT_FOUND_TEXT;
+ const char *	ENGLISH_STRING_NOT_FOUND	= "TDBERR";
+ 
+ ///////////////////////////////////////////////////////////////////////
+@@ -237,7 +238,7 @@
+ 		//
+ 		//	Loop over and save all the translation objects
+ 		//
+-		for (index = 0; index < m_ObjectList.Count (); index ++) {			
++		for (int index = 0; index < m_ObjectList.Count (); index ++) {			
+ 			TDBObjClass *translate_obj = m_ObjectList[index];
+ 
+ 			//
+@@ -419,6 +420,10 @@
+ void
+ TranslateDBClass::Export_Table (const char *filename)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)filename;
++	return;
++#else
+ 	//
+ 	//	Create the file
+ 	//
+@@ -494,6 +499,7 @@
+ 	}
+ 	
+ 	return ;
++#endif
+ }
+ 
+ 
+@@ -505,6 +511,10 @@
+ void
+ TranslateDBClass::Export_C_Header (const char *filename)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)filename;
++	return;
++#else
+ 	//
+ 	//	Create the file
+ 	//
+@@ -570,6 +580,7 @@
+ 	}
+ 	
+ 	return ;
++#endif
+ }
+ 
+ 
+@@ -581,6 +592,10 @@
+ void
+ TranslateDBClass::Import_C_Header (const char *filename)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)filename;
++	return;
++#else
+ 	//
+ 	//	Create the file
+ 	//
+@@ -692,6 +707,7 @@
+ 	}
+ 	
+ 	return ;
++#endif
+ }
+ 
+ 
+@@ -1176,6 +1192,10 @@
+ void
+ TranslateDBClass::Import_Strings (const char *filename)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)filename;
++	return;
++#else
+ 	//
+ 	//	Open the file
+ 	//
+@@ -1262,6 +1282,7 @@
+ 	}
+ 
+ 	return ;
++#endif
+ }
+ 
+ 
+@@ -1318,7 +1339,7 @@
+ 			// Parse the string and pull out its entries.
+ 			//
+ 			count = 0;
+-			for (entry = buffer;
++			for (const char *entry = buffer;
+ 				  (entry != NULL) && (entry[1] != 0);
+ 				  entry = ::strstr (entry, delimiter))
+ 			{
+@@ -1334,7 +1355,7 @@
+ 				// Copy this entry into its own string
+ 				//
+ 				StringClass entry_string = entry;
+-				char *delim_start = ::strstr (entry_string, delimiter);				
++				char *delim_start = ::strstr (entry_string.Peek_Buffer (), delimiter);				
+ 				if (delim_start != NULL) {
+ 					delim_start[0] = 0;
+ 				}

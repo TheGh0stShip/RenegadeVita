@@ -1,0 +1,7 @@
+--- a/ddsfile.cpp
++++ b/ddsfile.cpp
+@@ -104,1 +104,1 @@
+-	for (level=0;level<MipLevels;++level) {
++	for (unsigned level=0;level<MipLevels;++level) {
+ 		LevelSizes[level]=level_size;
+ 		LevelOffsets[level]=level_offset;

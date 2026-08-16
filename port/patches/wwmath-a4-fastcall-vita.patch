@@ -1,0 +1,6 @@
+--- a/wwmath.h
++++ b/wwmath.h
+@@ -67,0 +68,3 @@
++#ifdef __fastcall
++#undef __fastcall
++#endif

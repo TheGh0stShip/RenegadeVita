@@ -1,0 +1,6 @@
+--- a/treectrl.cpp
++++ b/treectrl.cpp
+@@ -1111 +1111,2 @@
+-	for (int index = 0; index < child_count; index ++) {
++	int index = 0;
++	for (; index < child_count; index ++) {

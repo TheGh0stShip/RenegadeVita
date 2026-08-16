@@ -1,0 +1,16 @@
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -279,2 +279,8 @@
++	/* The native backend deliberately bypasses DX8Wrapper::Init, but 2D
++	** renderers still use the original VertexMaterial preset pool. */
++	Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
++		RenegadeVitaRenderer::DISPLAY_WIDTH, RenegadeVitaRenderer::DISPLAY_HEIGHT));
++	VertexMaterialClass::Init();
++
+ 	IsInitted = true;
+ 	return WW3D_ERROR_OK;
+@@ -351,3 +357,4 @@
++	VertexMaterialClass::Shutdown();
+ 	delete [] DefaultStaticSortLists;
+ 	DefaultStaticSortLists = NULL;
+ 	CurrentStaticSortLists = NULL;

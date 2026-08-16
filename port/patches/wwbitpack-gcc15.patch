@@ -1,0 +1,83 @@
+--- a/BitPacker.cpp
++++ b/BitPacker.cpp
+@@ -24,7 +24,7 @@
+ // Description:  Minimal bit encoding
+ //
+ 
+-#include "bitpacker.h"
++#include "BitPacker.h"
+ 
+ #include <string.h>	// for memset
+ 
+@@ -126,12 +126,12 @@
+ 	// Write the rest of the data as bytes
+ 	if (num_bits>8) {
+ 		for (unsigned a=0;a<num_bits;a+=8) {
+-			Buffer[byte_num++]=unsigned char(value>>24);
++			Buffer[byte_num++]=static_cast<unsigned char>(value>>24);
+ 			value<<=8;
+ 		}
+ 	}
+ 	else {
+-		Buffer[byte_num]=unsigned char(value>>24);
++		Buffer[byte_num]=static_cast<unsigned char>(value>>24);
+ 	}
+ #endif
+ }
+@@ -177,7 +177,8 @@
+ 	value = (ULONG(Buffer[byte_num++]) << (bit_offset+24));
+ 	num_bits-=bit_count;
+ 
+-	for (int shift=24-bit_count;shift>0;shift-=8,num_bits-=8) value|=unsigned(Buffer[byte_num++]) << shift;
++	int shift=24-bit_count;
++	for (;shift>0;shift-=8,num_bits-=8) value|=unsigned(Buffer[byte_num++]) << shift;
+ 	if (num_bits>0) value|=Buffer[byte_num++]>>(-shift);
+ 
+ 	value >>= 32-read_len;
+--- a/bitstream.h
++++ b/bitstream.h
+@@ -43,6 +43,7 @@
+-#include "bitpacker.h"
++#include "BitPacker.h"
+ #include "wwdebug.h"
+ #include "encoderlist.h"
++#include <string.h>
+ #include "mathutil.h"
+ #include "math.h"
+ #include "widestring.h"
+@@ -166,7 +167,10 @@
+ 				Add_Bits(scaled_value, entry.Get_Bit_Precision());
+ 
+ 			} else {
+-				Add_Bits(*(reinterpret_cast<ULONG *>(&value)), BIT_DEPTH(T));
++				static_assert(sizeof(T) <= sizeof(ULONG), "BitStream atom exceeds 32 bits");
++				ULONG raw_value = 0;
++				memcpy(&raw_value, &value, sizeof(T));
++				Add_Bits(raw_value, BIT_DEPTH(T));
+ 			}
+ 
+ 			UncompressedSizeBytes += BYTE_DEPTH(T);
+@@ -203,10 +207,10 @@
+ 				WWASSERT(entry.Is_Value_In_Range(value));
+ 
+ 			} else {
+-				ULONG u_value;
++				ULONG u_value = 0;
+ 				Get_Bits(u_value, BIT_DEPTH(T));
+ 
+-				value = *(reinterpret_cast<T *>(&u_value));
++				memcpy(&value, &u_value, sizeof(T));
+ 			}
+ 			return value;
+ 		}
+--- a/encodertypeentry.h
++++ b/encodertypeentry.h
+@@ -36,7 +36,7 @@
+ class cEncoderTypeEntry
+ {
+ 	public:
+-		cEncoderTypeEntry::cEncoderTypeEntry();
++		cEncoderTypeEntry();
+ 
+ 		void Init(double min, double max, double resolution);
+ 		void Init(int num_bits);

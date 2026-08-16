@@ -1,0 +1,229 @@
+--- a/rendobj.h
++++ b/rendobj.h
+@@ -187 +187 @@
+-	RenderObjClass & RenderObjClass::operator = (const RenderObjClass &);
++	RenderObjClass & operator = (const RenderObjClass &);
+--- a/vertmaterial.h
++++ b/vertmaterial.h
+@@ -258,7 +258,7 @@
+ 	** Apply the render states corresponding to a NULL vetex material to D3D
+ 	*/
+ 	static void			Apply_Null(void);
+-	unsigned long		VertexMaterialClass::Compute_CRC(void) const;
++	unsigned long		Compute_CRC(void) const;
+ 
+ 	static VertexMaterialClass *Presets[PRESET_COUNT];
+ };
+--- a/dllist.h
++++ b/dllist.h
+@@ -76,7 +76,7 @@
+ public:
+ 	virtual ~DLDestroyListClass()
+ 	{
+-		while (T* t=Head()) {		
++		while (T* t=this->Head()) {		
+ 			delete t;
+ 		}
+ 	}
+--- a/dx8renderer.h
++++ b/dx8renderer.h
+@@ -155 +155 @@
+-	void DX8FVFCategoryContainer::Insert_To_Texture_Category(
++	void Insert_To_Texture_Category(
+@@ -315,9 +315,12 @@
+ };
+ 
+ 
++template<>
+ inline unsigned int HashTemplateKeyClass<MeshRegKeyStruct>::Get_Hash_Value(const MeshRegKeyStruct& key)
+ {
+-	unsigned int hval = (unsigned int)(key.Model) + (unsigned int)(key.UserLighting);
++	uintptr_t pointer_sum = reinterpret_cast<uintptr_t>(key.Model) +
++		reinterpret_cast<uintptr_t>(key.UserLighting);
++	unsigned int hval = static_cast<unsigned int>(pointer_sum);
+ 	hval = hval + (hval>>5) + (hval>>10) + (hval >> 20);
+ 	return hval;
+ }
+--- a/dx8wrapper.h
++++ b/dx8wrapper.h
+@@ -721,7 +721,7 @@
+ 	return col;
+ }
+ 
+-#if 0
++#if !defined(_MSC_VER)
+ WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector3& color, const float alpha)
+ {
+ 	WWASSERT(color.X<=1.0f);
+--- a/meshmdl.h
++++ b/meshmdl.h
+@@ -326,7 +326,7 @@
+ 	ShaderClass* ShaderArray[MeshMatDescClass::MAX_PASSES];
+ 	MeshModelClass* mmc;
+ 
+-	GapFillerClass& operator = (const GapFillerClass & that) {}
++	GapFillerClass& operator = (const GapFillerClass &) { return *this; }
+ public:
+ 	GapFillerClass(MeshModelClass* mmc);
+ 	GapFillerClass(const GapFillerClass& that);
+--- a/collect.h
++++ b/collect.h
+@@ -67 +67 @@
+-	CollectionClass & CollectionClass::operator = (const CollectionClass &);
++	CollectionClass & operator = (const CollectionClass &);
+--- a/assetmgr.cpp
++++ b/assetmgr.cpp
+@@ -684 +684 @@
+-		char *mesh_name = ::strchr (name, '.');
++		const char *mesh_name = ::strchr (name, '.');
+@@ -686 +686 @@
+-			::lstrcpyn (filename, name, ((int)mesh_name) - ((int)name) + 1);
++			::lstrcpyn (filename, name, static_cast<int>(mesh_name - name) + 1);
+@@ -858 +858 @@
+-			char *animname = strchr( name, '.');
++			const char *animname = strchr( name, '.');
+--- a/meshmdl.cpp
++++ b/meshmdl.cpp
+@@ -388 +388,2 @@
+-			for (int cnt = vi; cnt < vertex_count; cnt++) if (idx!=bonelink[cnt]) break;
++			int cnt = vi;
++			for (; cnt < vertex_count; cnt++) if (idx!=bonelink[cnt]) break;
+@@ -774 +775 @@
+-	for (i=0;i<polygon_count;++i) {
++	for (unsigned i=0;i<polygon_count;++i) {
+--- a/meshmatdesc.cpp
++++ b/meshmatdesc.cpp
+@@ -853 +853 @@
+-	for (pass=0; pass<PassCount; pass++) {
++	for (int pass=0; pass<PassCount; pass++) {
+--- a/htree.cpp
++++ b/htree.cpp
+@@ -764 +764 @@
+-			for ( anim_num = 0; (anim_num < anim->Get_Num_Anims()) && (!pivot->IsVisible); anim_num++ ) {
++			for ( int anim_num = 0; (anim_num < anim->Get_Num_Anims()) && (!pivot->IsVisible); anim_num++ ) {
+--- a/distlod.cpp
++++ b/distlod.cpp
+@@ -122 +122 @@
+-	for (i=0; i<count; i++) {
++	for (int i=0; i<count; i++) {
+--- a/motchan.cpp
++++ b/motchan.cpp
+@@ -1306 +1306 @@
+-	for (i=0;i<count;++i) {
++	for (int i=0;i<count;++i) {
+@@ -1311 +1311 @@
+-		CompressedData[i]=unsigned short(ivalue);
++		CompressedData[i]=static_cast<unsigned short>(ivalue);
+--- a/dazzle.cpp
++++ b/dazzle.cpp
+@@ -671 +671,2 @@
+-		for (unsigned a=0;a<type_count;++a) {
++		unsigned a=0;
++		for (;a<type_count;++a) {
+@@ -694 +695,2 @@
+-		for (unsigned a=0;a<lensflare_count;++a) {
++		unsigned a=0;
++		for (;a<lensflare_count;++a) {
+--- a/intersec.h
++++ b/intersec.h
+@@ -173 +173 @@
+-	inline void IntersectionClass::Copy_Results(IntersectionResultClass *Destination, IntersectionResultClass *Source) {
++	inline void Copy_Results(IntersectionResultClass *Destination, IntersectionResultClass *Source) {
+@@ -181 +181 @@
+-	inline void IntersectionClass::Copy_Results(IntersectionResultClass *Source) {
++	inline void Copy_Results(IntersectionResultClass *Source) {
+@@ -190 +190 @@
+-	inline void IntersectionClass::Copy_Partial_Results(IntersectionResultClass *Destination, IntersectionResultClass *Source) 
++	inline void Copy_Partial_Results(IntersectionResultClass *Destination, IntersectionResultClass *Source) 
+@@ -225 +225 @@
+-	inline bool IntersectionClass::Intersect_Sphere_Quick(SphereClass &Sphere, IntersectionResultClass *FinalResult) 
++	inline bool Intersect_Sphere_Quick(SphereClass &Sphere, IntersectionResultClass *FinalResult) 
+@@ -243 +243 @@
+-	inline bool IntersectionClass::Intersect_Sphere(SphereClass &Sphere, IntersectionResultClass *FinalResult) 
++	inline bool Intersect_Sphere(SphereClass &Sphere, IntersectionResultClass *FinalResult) 
+@@ -363 +363 @@
+-	static inline bool IntersectionClass::In_Front_Of_Line
++	static inline bool In_Front_Of_Line
+@@ -370 +370 @@
+-	static inline float IntersectionClass::Intersect_Lines
++	static inline float Intersect_Lines
+@@ -378 +378 @@
+-	static inline int IntersectionClass::Clip_Triangle_To_LineXY(	
++	static inline int Clip_Triangle_To_LineXY(	
+--- a/textureloader.h
++++ b/textureloader.h
+@@ -31,0 +32 @@
++class TextureLoadTaskListClass;
+--- a/texturethumbnail.h
++++ b/texturethumbnail.h
+@@ -103,3 +103,3 @@
+-	void ThumbnailManagerClass::Remove_From_Hash(ThumbnailClass* thumb);
+-	void ThumbnailManagerClass::Insert_To_Hash(ThumbnailClass* thumb);
+-	ThumbnailClass* ThumbnailManagerClass::Get_From_Hash(const StringClass& name);
++	void Remove_From_Hash(ThumbnailClass* thumb);
++	void Insert_To_Hash(ThumbnailClass* thumb);
++	ThumbnailClass* Get_From_Hash(const StringClass& name);
+--- a/meshmdlio.cpp
++++ b/meshmdlio.cpp
+@@ -2004 +2004,2 @@
+-	for (int si=0; si<Shaders.Count(); si++) {
++	int si=0;
++	for (; si<Shaders.Count(); si++) {
+@@ -2018 +2019,2 @@
+-		for (int vi=0; vi<VertexMaterialCrcs.Count(); vi++) {
++		int vi=0;
++		for (; vi<VertexMaterialCrcs.Count(); vi++) {
+@@ -2034 +2036,2 @@
+-		for (int ti=0; ti<Textures.Count(); ti++) {
++		int ti=0;
++		for (; ti<Textures.Count(); ti++) {
+--- a/rendobj.cpp
++++ b/rendobj.cpp
+@@ -114 +114 @@
+-		char *suffix = ::strchr (filename, '.');
++		char *suffix = ::strchr (filename.Peek_Buffer(), '.');
+--- a/texture.cpp
++++ b/texture.cpp
+@@ -887 +887 @@
+-	for (i=0;i<MAX_TEXTURE_STAGES;++i) {
++	for (int i=0;i<MAX_TEXTURE_STAGES;++i) {
+--- a/hanimmgr.cpp
++++ b/hanimmgr.cpp
+@@ -358 +358,4 @@
+-	bool has_sound_trigger = AnimatedSoundMgrClass::Does_Animation_Have_Embedded_Sounds( new_anim );
++	bool has_sound_trigger = false;
++#if !defined(RENEGADE_VITA_PORT)
++	has_sound_trigger = AnimatedSoundMgrClass::Does_Animation_Have_Embedded_Sounds( new_anim );
++#endif
+--- a/hmorphanim.cpp
++++ b/hmorphanim.cpp
+@@ -255 +255,2 @@
+-		for (const char *entry = buffer;
++		const char *entry = buffer;
++		for (;
+@@ -298 +299 @@
+-				char *delim_start = ::strstr (entry_string, delimiter);				
++				char *delim_start = ::strstr (entry_string.Peek_Buffer(), delimiter);				
+@@ -492 +493 @@
+-	char *separator			= ::strchr (full_name, '.');
++	char *separator			= ::strchr (full_name.Peek_Buffer(), '.');
+--- a/metalmap.cpp
++++ b/metalmap.cpp
+@@ -95 +95,2 @@
+-	for (int lp = 0; ; lp++) {
++	int lp = 0;
++	for (; ; lp++) {
+--- a/segline.h
++++ b/segline.h
+@@ -61 +61 @@
+-		SegmentedLineClass & SegmentedLineClass::operator = (const SegmentedLineClass &that);
++		SegmentedLineClass & operator = (const SegmentedLineClass &that);
+--- a/rddesc.h
++++ b/rddesc.h
+@@ -70,3 +70,3 @@
+-	RenderDeviceDescClass(void) : DeviceName(NULL), DeviceVendor(NULL), DevicePlatform(NULL), 
+-											DriverName(NULL), DriverVendor(NULL), DriverVersion(NULL),
+-											HardwareName(NULL), HardwareVendor(NULL), HardwareChipset(NULL)
++	RenderDeviceDescClass(void) : DeviceName(""), DeviceVendor(""), DevicePlatform(""), 
++											DriverName(""), DriverVendor(""), DriverVersion(""),
++											HardwareName(""), HardwareVendor(""), HardwareChipset("")

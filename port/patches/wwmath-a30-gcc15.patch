@@ -1,0 +1,69 @@
+--- a/v3_rnd.h
++++ b/v3_rnd.h
+@@ -129,7 +129,7 @@
+ 	private:
+ 
+ 		// Derived classes should have a private dummy assignment operator to block usage
+-		Vector3SolidBoxRandomizer & Vector3SolidBoxRandomizer::operator = (const Vector3SolidBoxRandomizer &that) { that; return *this; }
++		Vector3SolidBoxRandomizer & operator = (const Vector3SolidBoxRandomizer &that) { that; return *this; }
+ 
+ 		Vector3	Extents;
+ };
+@@ -160,7 +160,7 @@
+ 	private:
+ 
+ 		// Derived classes should have a private dummy assignment operator to block usage
+-		Vector3SolidSphereRandomizer & Vector3SolidSphereRandomizer::operator = (const Vector3SolidSphereRandomizer &that) { that; return *this; }
++		Vector3SolidSphereRandomizer & operator = (const Vector3SolidSphereRandomizer &that) { that; return *this; }
+ 
+ 		float	Radius;
+ };
+@@ -191,7 +191,7 @@
+ 	private:
+ 
+ 		// Derived classes should have a private dummy assignment operator to block usage
+-		Vector3HollowSphereRandomizer & Vector3HollowSphereRandomizer::operator = (const Vector3HollowSphereRandomizer &that) { that; return *this; }
++		Vector3HollowSphereRandomizer & operator = (const Vector3HollowSphereRandomizer &that) { that; return *this; }
+ 
+ 		float	Radius;
+ };
+@@ -223,7 +223,7 @@
+ 	private:
+ 
+ 		// Derived classes should have a private dummy assignment operator to block usage
+-		Vector3SolidCylinderRandomizer & Vector3SolidCylinderRandomizer::operator = (const Vector3SolidCylinderRandomizer &that) { that; return *this; }
++		Vector3SolidCylinderRandomizer & operator = (const Vector3SolidCylinderRandomizer &that) { that; return *this; }
+ 
+		float	Extent;
+		float	Radius;
+--- a/gridcull.h
++++ b/gridcull.h
+@@ -54,3 +54 @@
+-#if defined(_MSC_VER)
+ #pragma once
+-#endif
+
+--- a/aabox.h
++++ b/aabox.h
+@@ -676,5 +676,10 @@ WWINLINE void MinMaxAABoxClass::Translate(const Vector3 & pos)
+ 	MaxCorner+=pos;
+ }
+ 
++// These overloads are declared by colmath.h but defined inline only after an
++// AABoxClass is complete.  VC6 obtained them transitively; make that contract
++// explicit without including the header during colmath.h's forward declarations.
++#include "colmathaabox.h"
++
+ 
+ #endif
+
+--- a/gridcull.cpp
++++ b/gridcull.cpp
+@@ -179,7 +179,7 @@ GridCullSystemClass::~GridCullSystemClass(void)
+ {
+ 	if (Cells != NULL) {
+-		delete Cells;
++		delete[] Cells;
+ 		Cells = NULL;
+ 	}
+ }

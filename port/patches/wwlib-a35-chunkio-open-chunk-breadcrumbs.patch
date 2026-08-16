@@ -1,0 +1,53 @@
+--- a/chunkio.cpp
++++ b/chunkio.cpp
+@@ -66,6 +66,7 @@
+ #include "chunkio.h"
+ #include <string.h>
+ #include <assert.h>
++#include "wwdebug.h"
+ 
+ 
+ /*********************************************************************************************** 
+@@ -413,20 +414,35 @@
+ bool ChunkLoadClass::Open_Chunk()
+ {
+ 	// if user didn't close any micro chunks that he opened, bad things could happen
+-	assert(InMicroChunk == false);							
+-	
++	assert(InMicroChunk == false);
++	if (File == NULL) {
++		WWDEBUG_ERROR(("ChunkLoadClass::Open_Chunk null file pointer depth=%d\n", StackIndex));
++		return false;
++	}
+ 	// check for stack overflow
+ 	assert(StackIndex < MAX_STACK_DEPTH-1);
+ 
+ 	// if the parent chunk has been completely eaten, return false
+ 	if ((StackIndex > 0) && (PositionStack[StackIndex-1] == HeaderStack[StackIndex-1].Get_Size())) {
++		WWDEBUG_WARNING(("ChunkLoadClass::Open_Chunk exhausted parent at depth=%d\n", StackIndex));
+ 		return false;
+ 	}
+ 
++	WWDEBUG_SAY(("ChunkLoadClass::Open_Chunk pre-read id/len depth=%d parent-depth=%d remaining=%u\n",
++		StackIndex + 1, StackIndex,
++		(StackIndex > 0) ? (HeaderStack[StackIndex-1].Get_Size() - PositionStack[StackIndex-1]) : 0U ));
++
+ 	// read the chunk header
+ 	if (File->Read(&HeaderStack[StackIndex],sizeof(ChunkHeader)) != sizeof(ChunkHeader)) {
++		WWDEBUG_WARNING(("ChunkLoadClass::Open_Chunk short header read at depth=%d expected=%u\n",
++			StackIndex + 1, (uint32)sizeof(ChunkHeader) ));
+ 		return false;
+ 	}
++	WWDEBUG_SAY(("ChunkLoadClass::Open_Chunk opened id=%u length=%u has_children=%u depth=%d\n",
++		HeaderStack[StackIndex].Get_Type(),
++		HeaderStack[StackIndex].Get_Size(),
++		(HeaderStack[StackIndex].Get_Sub_Chunk_Flag() != 0U),
++		StackIndex + 1 ));
+ 
+ 	PositionStack[StackIndex] = 0;
+ 	StackIndex++;
+@@ -838,4 +854,3 @@
+ 	assert(q != NULL);
+ 	return Read(q,sizeof(q));
+ }
+-

@@ -1,0 +1,47 @@
+--- a/dlgmainmenu.cpp
++++ b/dlgmainmenu.cpp
+@@ -59,12 +59,14 @@
+ #include "registry.h"
+ #include "_globals.h"
+ #include "dialogtests.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlgwolwait.h"
+ #include "nicenum.h"
+ #include "dlgmessagebox.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
+ #include "gamespyadmin.h"
++#endif
+ 
+ ////////////////////////////////////////////////////////////////
+ //	Static member initialization
+@@ -237,8 +239,11 @@
+ 	//	We only want to transition between menu dialogs
+ 	//
+ 	if (prev_dlg == NULL ||
+-			(prev_dlg != QuitVerificationDialogClass::Get_Instance () &&
+-			 prev_dlg != DlgWOLWait::Get_Instance ()))
++			(prev_dlg != QuitVerificationDialogClass::Get_Instance ()
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++			 && prev_dlg != DlgWOLWait::Get_Instance ()
++#endif
++			))
+ 	{
+ 		transition = new MainMenuTransitionClass;
+ 		transition->Set_Model (TitleTransModel);
+@@ -388,6 +393,7 @@
+ 			break;
+ 		}
+ 
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 		case IDC_MENU_MP_LAN_GAME_BUTTON:
+ 			
+ 			//
+@@ -409,6 +415,7 @@
+ 			START_DIALOG (InternetMainDialogClass);
+ 			allow_default = false;
+ 			break;
++#endif
+ 
+ 		default:
+ 			break;

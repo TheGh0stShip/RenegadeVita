@@ -1,0 +1,9 @@
+--- a/dialogparser.cpp
++++ b/dialogparser.cpp
+@@ -46,4 +46,4 @@
+-#define ALIGN_WORD_PTR(p)	((WORD *)(((DWORD)p + 1) & ~1))
+-#define ALIGN_DWORD_PTR(p) ((DWORD *)(((DWORD)p + 3) & ~3))
++#define ALIGN_WORD_PTR(p)	((WORD *)(((uintptr_t)p + 1U) & ~(uintptr_t)1U))
++#define ALIGN_DWORD_PTR(p) ((DWORD *)(((uintptr_t)p + 3U) & ~(uintptr_t)3U))
+ 
+ 

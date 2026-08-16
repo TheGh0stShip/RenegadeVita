@@ -1,0 +1,12 @@
+--- a/scriptcommands.cpp
++++ b/scriptcommands.cpp
+@@ -3250,7 +3250,8 @@
+ 		//
+ 		//	Clear the help text
+ 		//
+-		HUDInfo::Set_HUD_Help_Text( L"" );
++		static const WCHAR empty_help_text[] = { 0 };
++		HUDInfo::Set_HUD_Help_Text( empty_help_text );
+ 	} else {
+ 
+ 		//

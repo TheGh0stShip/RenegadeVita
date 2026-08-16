@@ -1,0 +1,5 @@
+--- a/gamemode.cpp
++++ b/gamemode.cpp
+@@ -67 +67 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"

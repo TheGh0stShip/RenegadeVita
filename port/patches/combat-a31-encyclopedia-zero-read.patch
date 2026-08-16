@@ -1,0 +1,7 @@
+--- a/encyclopediamgr.cpp
++++ b/encyclopediamgr.cpp
+@@ -355 +355,3 @@
+-				cload.Read (const_cast<unsigned char*>(&bit_array[0]), size);
++				if (size > 0) {
++					cload.Read (const_cast<unsigned char*>(&bit_array[0]), size);
++				}

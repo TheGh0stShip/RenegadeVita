@@ -1,0 +1,8 @@
+--- a/gameinitmgr.cpp
++++ b/gameinitmgr.cpp
+@@ -229,1 +229,2 @@
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	if (Mode == MODE_LAN) {
+@@ -242,1 +243,2 @@
++#endif
+ 	PhysicsSceneClass::Get_Instance()->Release_Projector_Resources ();

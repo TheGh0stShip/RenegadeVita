@@ -1,0 +1,9 @@
+--- a/gdcnc.cpp
++++ b/gdcnc.cpp
+@@ -44 +44 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -48 +48,2 @@
+-#include "consolemode.h"
++#include "playermanager.h"
++#include "a31_console_stub.h"

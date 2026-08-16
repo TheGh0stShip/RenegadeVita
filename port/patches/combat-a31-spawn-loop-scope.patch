@@ -1,0 +1,5 @@
+--- a/spawn.cpp
++++ b/spawn.cpp
+@@ -360 +360 @@ bool	SpawnerClass::Save( ChunkSaveClass & csave )
+-		for ( i = 0; i < ScriptNameList.Count(); i++ ) {
++		for ( int i = 0; i < ScriptNameList.Count(); i++ ) {

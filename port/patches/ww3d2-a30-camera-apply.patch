@@ -1,0 +1,10 @@
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -963,6 +963,7 @@ WW3DErrorType WW3D::Render(SceneClass * scene,CameraClass * cam,bool clear,bool
+ 	(void)clear;
+ 	(void)clearz;
+ 	(void)color;
++	cam->Apply();
+ 	scene->Render(rinfo);
+ 	Flush(rinfo);
+ 	return WW3D_ERROR_OK;

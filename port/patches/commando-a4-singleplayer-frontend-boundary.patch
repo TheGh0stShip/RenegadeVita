@@ -1,0 +1,47 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -41,36 +41,44 @@
+ #include "dialogtests.h"
+ #include "dialogresource.h"
+ #include "dlgloadspgame.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlgevaencyclopedia.h"
+ #include "dlgmultiplayoptions.h"
+ #include "dlgcharacteroptions.h"
+ #include "dlgcheatoptions.h"
+ #include "dlgtechoptions.h"
+ #include "dlgmovieoptions.h"
+ #include "dlgpreviewoptions.h"
+ #include "dlgcredits.h"
++#endif
+ #include "inputctrl.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlgmplanhostoptions.h"
+ #include "dlginternetoptions.h"
++#endif
+ #include "gamemode.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlgmplangamelist.h"
++#endif
+ #include "directinput.h"
+ #include "input.h"
+ #include "dlgmainmenu.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlgwebpage.h"
+ #include "dlgmpwolpagebuddy.h"
+ #include "dlgmpwolbuddies.h"
+ #include "dlgmpwolchat.h"
+ #include "dlgmpwolgamelist.h"
+ #include "dlgsavegame.h"
+ #include "dlgcontrols.h"
+ #include "dlgmpwolquickmatchoptions.h"
+ #include "dlgmpwolmain.h"
+ #include "dlgwolsettings.h"
+ #include "dlghelpscreen.h"
+ #include "dlgcncreference.h"
++#endif
+ #include "wwmemlog.h"
+ #include "consolemode.h"
+ #include "specialbuilds.h"

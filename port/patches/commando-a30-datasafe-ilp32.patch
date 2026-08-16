@@ -1,0 +1,270 @@
+--- a/datasafe.h
++++ b/datasafe.h
+@@ -392,7 +392,7 @@
+ 		/*
+ 		** Size of data.
+ 		*/
+-		unsigned long Size;
++		DWORD Size;
+ 
+ 		/*
+ 		** Is this a slop (fake, to allow swapping with only 1 real entry) entry?
+@@ -580,8 +580,8 @@
+ 		*/
+ 		static void Shuffle(bool forced = false);
+ 		static void Swap_Entries(DataSafeEntryClass *first, DataSafeEntryClass *second, int type);
+-		static void Encrypt(void *data, int size, unsigned long key = SimpleKey, bool do_checksum = true);
+-		static void Decrypt(void *data, int size, unsigned long key = SimpleKey, bool do_checksum = true);
++		static void Encrypt(void *data, int size, DWORD key = SimpleKey, bool do_checksum = true);
++		static void Decrypt(void *data, int size, DWORD key = SimpleKey, bool do_checksum = true);
+ 		static void Mem_Copy_Encrypt(void *dest, void *src, int size, bool do_checksum);
+ 		static void Mem_Copy_Decrypt(void *dest, void *src, int size, bool do_checksum);
+ 		static __forceinline void Security_Check(void);
+@@ -665,12 +665,12 @@
+ 		/*
+ 		** Simple key value used for xoring.
+ 		*/
+-		static unsigned long SimpleKey;
++		static DWORD SimpleKey;
+ 
+ 		/*
+ 		** Key used for encrypting handles.
+ 		*/
+-		static unsigned long HandleKey;
++		static DWORD HandleKey;
+ 
+ 		/*
+ 		** Number of valid entries in the Safe list.
+@@ -687,17 +687,17 @@
+ 		/*
+ 		** Integrity check.
+ 		*/
+-		static unsigned long Checksum;
++		static DWORD Checksum;
+ 
+ 		/*
+ 		** Shuffle delay.
+ 		*/
+-		static unsigned long ShuffleDelay;
++		static DWORD ShuffleDelay;
+ 
+ 		/*
+ 		** Security check delay.
+ 		*/
+-		static unsigned long SecurityCheckDelay;
++		static DWORD SecurityCheckDelay;
+ 
+ 		/*
+ 		** List of types that are stored in the data safe.
+@@ -728,7 +728,7 @@
+ 		** Statistics - debug only.
+ 		*/
+ #ifdef WWDEBUG
+-		static unsigned long LastDump;
++		static DWORD LastDump;
+ 		static int NumSwaps;
+ 		static int NumFetches;
+ 		static int SlopCount;
+@@ -764,7 +764,8 @@
+ 			if (ptr) {
+ 				void *temp = (void*)ptr;
+ 				if (temp >= &ReturnList[0][0] && temp < &ReturnList[MAX_OBJECT_COPIES][0]) {
+-					if (((unsigned long) temp - (unsigned long)(&ReturnList[0][0])) % sizeof(T) == 0) {
++					if ((reinterpret_cast<uintptr_t>(temp) -
++						reinterpret_cast<uintptr_t>(&ReturnList[0][0])) % sizeof(T) == 0) {
+ 						return(true);
+ 					}
+ 				}
+@@ -1094,7 +1095,7 @@
+ 	/*
+ 	** Only check the time every n calls.
+ 	*/
+-	static unsigned long _calls = 0;
++	static DWORD _calls = 0;
+ 	_calls++;
+ 	if (_calls < DATASAFE_TIME_CHECK_CALLS) {
+ 		return;
+@@ -1124,7 +1125,7 @@
+ 	** Since we are going through the whole safe here, we might as well make a note of where slop
+ 	** needs to be added or removed and count how many total slop entries we have.
+ 	*/
+-	unsigned long time = TIMEGETTIME();
++	DWORD time = TIMEGETTIME();
+ 	if (time < SecurityCheckDelay || (time | SecurityCheckDelay) == 0 || (time - SecurityCheckDelay) > SECURITY_CHECK_TIME) {
+ 
+ #ifdef WWDEBUG
+@@ -1140,7 +1141,7 @@
+ 			_checking = true;
+ 			//WWDEBUG_SAY(("Data Safe: Performing security check\n"));
+ 			SecurityCheckDelay = time;
+-			unsigned long checkey = ~SimpleKey;
++			DWORD checkey = ~SimpleKey;
+ 
+ 			/*
+ 			** Loop through every list.
+@@ -1153,7 +1154,7 @@
+ 					** Dereference stuff - make sure the list makes sense.
+ 					*/
+ 					DataSafeEntryClass *entry_ptr = Safe[i]->SafeList;
+-					unsigned long *data = NULL;
++					DWORD *data = NULL;
+ 					ds_assert(entry_ptr != NULL);
+ 					int data_size = entry_ptr->Size;
+ 					ds_assert((data_size & 3) == 0);
+@@ -1181,7 +1182,7 @@
+ 							/*
+ 							** Add in the data.
+ 							*/
+-							data = (unsigned long *) (((char*)entry_ptr) + sizeof(*entry_ptr));
++							data = reinterpret_cast<DWORD *>(((char*)entry_ptr) + sizeof(*entry_ptr));
+ 							for (int z=0 ; z<data_size ; z++) {
+ 								checkey ^= *data++;
+ 							}
+--- a/datasafe.cpp
++++ b/datasafe.cpp
+@@ -82,11 +82,11 @@
+ **
+ ** I need to make this stuff static so that I can templatize the derived class and have all expansions use the same data.
+ */
+-unsigned long GenericDataSafeClass::SimpleKey;
+-unsigned long GenericDataSafeClass::HandleKey;
+-unsigned long GenericDataSafeClass::Checksum;
+-unsigned long GenericDataSafeClass::ShuffleDelay;
+-unsigned long GenericDataSafeClass::SecurityCheckDelay;
++DWORD GenericDataSafeClass::SimpleKey;
++DWORD GenericDataSafeClass::HandleKey;
++DWORD GenericDataSafeClass::Checksum;
++DWORD GenericDataSafeClass::ShuffleDelay;
++DWORD GenericDataSafeClass::SecurityCheckDelay;
+ DataSafeHandleClass GenericDataSafeClass::SentinelOne = 0;
+ int GenericDataSafeClass::NumLists = 0;
+ DataSafeEntryListClass *GenericDataSafeClass::Safe[MAX_DATASAFE_LISTS];
+@@ -101,7 +101,7 @@
+ #endif //THREAD_SAFE_DATA_SAFE
+ 
+ #ifdef WWDEBUG
+-unsigned long GenericDataSafeClass::LastDump = TIMEGETTIME();
++DWORD GenericDataSafeClass::LastDump = TIMEGETTIME();
+ int GenericDataSafeClass::NumSwaps = 0;
+ int GenericDataSafeClass::NumFetches = 0;
+ int GenericDataSafeClass::SlopCount = 0;
+@@ -500,9 +500,9 @@
+ void GenericDataSafeClass::Mem_Copy_Encrypt(void *dest, void *src, int size, bool do_checksum)
+ {
+ 	ds_assert((size % 4) == 0);
+-	unsigned long temp;
+-	unsigned long *s = (unsigned long *) src;
+-	unsigned long *d = (unsigned long *) dest;
++	DWORD temp;
++	DWORD *s = static_cast<DWORD *>(src);
++	DWORD *d = static_cast<DWORD *>(dest);
+ 
+ 	if (do_checksum) {
+ 		for (int i = 0 ; i < (size / 4) ; i++) {
+@@ -541,9 +541,9 @@
+ void GenericDataSafeClass::Mem_Copy_Decrypt(void *dest, void *src, int size, bool do_checksum)
+ {
+ 	ds_assert((size % 4) == 0);
+-	unsigned long temp;
+-	unsigned long *s = (unsigned long *) src;
+-	unsigned long *d = (unsigned long *) dest;
++	DWORD temp;
++	DWORD *s = static_cast<DWORD *>(src);
++	DWORD *d = static_cast<DWORD *>(dest);
+ 
+ 	if (do_checksum) {
+ 		for (int i = 0 ; i < (size / 4) ; i++) {
+@@ -577,10 +577,10 @@
+  * HISTORY:                                                                                    *
+  *   6/19/2001 9:29PM ST : Created                                                             *
+  *=============================================================================================*/
+-void GenericDataSafeClass::Encrypt(void *data, int size, unsigned long key, bool do_checksum)
++void GenericDataSafeClass::Encrypt(void *data, int size, DWORD key, bool do_checksum)
+ {
+ 	ds_assert((size % 4) == 0);
+-	unsigned long *data_ptr = (unsigned long*)data;
++	DWORD *data_ptr = static_cast<DWORD *>(data);
+ 
+ 	if (do_checksum) {
+ 		for (int i = 0 ; i < (size / 4) ; i++) {
+@@ -612,10 +612,10 @@
+  * HISTORY:                                                                                    *
+  *   6/19/2001 9:29PM ST : Created                                                             *
+  *=============================================================================================*/
+-void GenericDataSafeClass::Decrypt(void *data, int size, unsigned long key, bool do_checksum)
++void GenericDataSafeClass::Decrypt(void *data, int size, DWORD key, bool do_checksum)
+ {
+ 	ds_assert((size % 4) == 0);
+-	unsigned long *data_ptr = (unsigned long*)data;
++	DWORD *data_ptr = static_cast<DWORD *>(data);
+ 
+ 	if (do_checksum) {
+ 		for (int i = 0 ; i < (size / 4) ; i++) {
+@@ -856,10 +856,10 @@
+ 			/*
+ 			** Convert to long pointers to make it easy to read.
+ 			*/
+-			long *p1 = (long*) first_data;
+-			long *p2 = (long*) second_data;
++			DWORD *p1 = static_cast<DWORD *>(first_data);
++			DWORD *p2 = static_cast<DWORD *>(second_data);
+ 
+-			long temp = *p1;
++			DWORD temp = *p1;
+ 			*p1 = *p2;
+ 			*p2 = temp;
+ 
+@@ -975,7 +975,7 @@
+ 	/*
+ 	** Only check the time every n calls.
+ 	*/
+-	static unsigned long _calls = 0;
++	static DWORD _calls = 0;
+ 	_calls++;
+ 	if (_calls < DATASAFE_TIME_CHECK_CALLS) {
+ 		return;
+@@ -985,14 +985,14 @@
+ 	/*
+ 	** Locals.
+ 	*/
+-	unsigned long new_key;
+-	unsigned long mod_key;
++	DWORD new_key;
++	DWORD mod_key;
+ 	int i,j;
+ 
+ 	/*
+ 	** We should only do this once in a while
+ 	*/
+-	unsigned long time = TIMEGETTIME();
++	DWORD time = TIMEGETTIME();
+ 
+ 	if (forced || time < ShuffleDelay || (time | ShuffleDelay) == 0 || (time - ShuffleDelay) > SHUFFLE_TIME) {
+ 		//WWDEBUG_SAY(("Data Safe: Performing data shuffle and re-key\n"));
+@@ -1371,7 +1371,7 @@
+ 	/*
+ 	** Precalculate some stats.
+ 	*/
+-	unsigned long time = TIMEGETTIME() - LastDump;
++	DWORD time = TIMEGETTIME() - LastDump;
+ 	LastDump = TIMEGETTIME();
+ 	time = time / 1000;
+ 	int fetches_per_second = 0;
+@@ -1416,7 +1416,7 @@
+ 	** Count the number of items currently stored in the data safe.
+ 	*/
+ 	int count = 0;
+-	unsigned long bytes = 0;
++	DWORD bytes = 0;
+ 	for (int i=0 ; i<NumLists ; i++) {
+ 		ds_assert(Safe[i] != NULL);
+ 		if (Safe[i] != NULL) {
+@@ -1436,7 +1436,7 @@
+ 	/*
+ 	** Print out the percentage of safe capacity in use.
+ 	*/
+-	unsigned long percent = (count * 100) / (MAX_DATASAFE_LISTS * MAX_ENTRIES_PER_LIST);
++	DWORD percent = (count * 100) / (MAX_DATASAFE_LISTS * MAX_ENTRIES_PER_LIST);
+ 	sprintf(dump_ptr, "\n  Safe is %d percent full\n\n", percent);
+ 	UPDATE_PTR;
+ 

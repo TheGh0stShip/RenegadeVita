@@ -1,0 +1,101 @@
+--- a/IMECandidateCtrl.h
++++ b/IMECandidateCtrl.h
+@@ -19,11 +19,11 @@
+ #ifndef __IMECANDIDATECTRL_H__
+ #define __IMECANDIDATECTRL_H__
+ 
+-#include "DialogControl.h"
+-#include "ScrollBarCtrl.h"
+-#include "Render2D.h"
+-#include "Render2DSentence.h"
+-#include "Vector.h"
++#include "dialogcontrol.h"
++#include "scrollbarctrl.h"
++#include "render2d.h"
++#include "render2dsentence.h"
++#include "vector.h"
+ 
+ namespace IME
+ {
+--- a/editctrl.h
++++ b/editctrl.h
+@@ -47,7 +47,7 @@
+ #include "bittype.h"
+ #include "IMEManager.h"
+ #include "IMECandidateCtrl.h"
+-#include "ToolTip.h"
++#include "tooltip.h"
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+--- a/IMECandidateCtrl.cpp
++++ b/IMECandidateCtrl.cpp
+@@ -18,9 +18,9 @@
+ 
+ #include "IMECandidateCtrl.h"
+ #include "IMECandidate.h"
+-#include "DialogBase.h"
+-#include "StyleMgr.h"
+-#include "MouseMgr.h"
++#include "dialogbase.h"
++#include "stylemgr.h"
++#include "mousemgr.h"
+ 
+ #define BORDER_WIDTH 2
+ #define BORDER_HEIGHT 2
+--- a/ProgressCtrl.cpp
++++ b/ProgressCtrl.cpp
+@@ -35,7 +35,7 @@
+ ******************************************************************************/
+ 
+ #include "ProgressCtrl.h"
+-#include "StyleMgr.h"
++#include "stylemgr.h"
+ 
+ #define BAR_INSET 3
+ 
+--- a/ProgressCtrl.h
++++ b/ProgressCtrl.h
+@@ -41,8 +41,8 @@
+ #ifndef __PROGRESS_CTRL_H
+ #define __PROGRESS_CTRL_H
+ 
+-#include "DialogControl.h"
+-#include "Render2D.h"
++#include "dialogcontrol.h"
++#include "render2d.h"
+ 
+ //#include "vector3.h"
+ //#include "bittype.h"
+--- a/comboboxctrl.h
++++ b/comboboxctrl.h
+@@ -46,7 +46,7 @@
+ #include "render2dsentence.h"
+ #include "bittype.h"
+ #include "dropdownctrl.h"
+-#include "EditCtrl.h"
++#include "editctrl.h"
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+--- a/IMEManager.cpp
++++ b/IMEManager.cpp
+@@ -34,7 +34,7 @@
+ 
+ #include "IMEManager.h"
+-#include "WWString.h"
+-#include "WWDebug.h"
++#include "wwstring.h"
++#include "wwdebug.h"
+ #include <locale.h>
+ #include <mbctype.h>
+ 
+--- a/IMECandidate.cpp
++++ b/IMECandidate.cpp
+@@ -33,5 +33,5 @@
+ 
+ #include "IMECandidate.h"
+-#include "WWDebug.h"
++#include "wwdebug.h"
+ 
+ namespace IME {

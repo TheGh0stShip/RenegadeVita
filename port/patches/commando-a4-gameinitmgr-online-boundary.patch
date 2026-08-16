@@ -1,0 +1,26 @@
+--- a/gameinitmgr.cpp
++++ b/gameinitmgr.cpp
+@@ -65,17 +65,17 @@
+ #include "bioevent.h"
+ #include "devoptions.h"
+ #include "svrgoodbyeevent.h"
+-#include	"natter.h"
++// WOL NAT is retired below the original offline GameInitMgr branch.
+ #include "apppacketstats.h"
+ #include "packetmgr.h"
+-#include "autostart.h"
++#include "a4_gameinit_online_boundary.h"
+ #include "wwmemlog.h"
+-#include "gamesideservercontrol.h"
+-#include "slavemaster.h"
++// GameSide server control is supplied by a4_gameinit_online_boundary.h.
++#include "a31_slavemaster_stub.h"
+ #include "hud.h"
+-#include "gamespyadmin.h"
+-#include "serversettings.h"
+-#include "gamespy_qnr.h"
++#include "a31_gamespy_stub.h"
++#include "a31_serversettings_stub.h"
++// GameSpy QnR is supplied by a4_gameinit_online_boundary.h.
+ #include "specialbuilds.h"
+ #include "modpackagemgr.h"

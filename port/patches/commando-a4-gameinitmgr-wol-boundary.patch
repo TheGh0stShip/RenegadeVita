@@ -1,0 +1,11 @@
+--- a/gameinitmgr.cpp
++++ b/gameinitmgr.cpp
+@@ -45,7 +45,7 @@
+ #include "renegadedialogmgr.h"
+ #include "netinterface.h"
+ #include "langmode.h"
+-#include "wolgmode.h"
++#include "a31_wol_stub.h"
+ #include "playermanager.h"
+ #include "wwaudio.h"
+ #include "saveloadstatus.h"

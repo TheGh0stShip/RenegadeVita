@@ -1,0 +1,47 @@
+--- a/stylemgr.cpp
++++ b/stylemgr.cpp
+@@ -218,15 +218,22 @@
+ 		//	Load each font into windows
+ 		//
+ 		int count = ini_file->Entry_Count (FONT_FILE_SECTION);
+-		for (int index = 0; index < count; index ++) {
++		int index;
++		for (index = 0; index < count; index ++) {
+ 			StringClass	filename (0, true);
+ 			ini_file->Get_String (filename, FONT_FILE_SECTION, ini_file->Get_Entry (FONT_FILE_SECTION, index));
+ 
+ 			//
+ 			//	Install the font into windows
+ 			//
++#if !defined(RENEGADE_VITA_PORT)
+ 			::AddFontResource (filename);
+ 			FontFileList.Add (filename);
++#else
++			// The Vita FontChars provider loads this retail face through
++			// _TheFileFactory; there is no process-global font registration.
++			(void)filename;
++#endif
+ 		}
+ 
+ 		//
+@@ -315,9 +322,11 @@
+ 	//
+ 	//	Unregister this font with windows
+ 	//
++#if !defined(RENEGADE_VITA_PORT)
+ 	for (index = 0; index < FontFileList.Count (); index ++) {
+ 		::RemoveFontResource (FontFileList[index]);
+ 	}
++#endif
+ 
+	//
+	//	Free the backdrop texture
+@@ -857,7 +866,7 @@
+ 			if (src_end == NULL) {						\
+ 				dest = src_start;							\
+ 			} else {											\
+-				uint32 bytes	= ((uint32)src_end - (uint32)src_start);	\
++				uint32 bytes	= static_cast<uint32>(src_end - src_start) * sizeof(WCHAR);	\
+ 				uint32 len		= bytes / sizeof (WCHAR);						\
+ 				::memcpy (dest.Get_Buffer (len + 1), src_start, bytes);	\
+ 				dest.Peek_Buffer ()[len] = 0;										\

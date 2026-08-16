@@ -1,0 +1,173 @@
+--- a/damage.h
++++ b/damage.h
+@@ -46,7 +46,7 @@
+ #endif
+ 
+ #ifndef _DATASAFE_H
+-	#include	"..\commando\datasafe.h"
++	#include	"../commando/datasafe.h"
+ #endif //_DATASAFE_H
+ 
+ #include "editable.h"
+--- a/playerdata.h
++++ b/playerdata.h
+@@ -46,7 +46,7 @@
+ #endif
+ 
+ #ifndef	_DATASAFE_H
+-	#include	"..\commando\datasafe.h"
++	#include	"../commando/datasafe.h"
+ #endif		//_DATASAFE_H
+ 
+ #ifndef	SIMPLEVEC_H
+--- a/weaponmanager.h
++++ b/weaponmanager.h
+@@ -50,7 +50,7 @@
+ #endif
+ 
+ #ifndef	_DATASAFE_H
+-	#include	"..\commando\datasafe.h"
++	#include	"../commando/datasafe.h"
+ #endif		//_DATASAFE_H
+ 
+ class		WeaponClass;
+--- a/soldier.h
++++ b/soldier.h
+@@ -63,6 +63,7 @@
+ class DynamicSpeechAnimClass;
+ class	TransitionEffectClass;
+ class PersistantSurfaceEmitterClass;
++class SoldierObserverClass;
+ 
+ //const int NO_FLAG = -1;
+ 
+--- a/damage.cpp
++++ b/damage.cpp
+@@ -183,7 +183,7 @@
+ 		Multipliers = new safe_float[ Get_Num_Armor_Types() * Get_Num_Warhead_Types() ];
+ 		for ( armor_num = 0; armor_num < ArmorNames.Count(); armor_num++ ) {
+ 			char section_name[80];
+-			sprintf( section_name, SECTION_SCALE, ArmorNames[armor_num] );
++			sprintf( section_name, SECTION_SCALE, ArmorNames[armor_num].Peek_Buffer() );
+ 			for ( int warhead_num = 0; warhead_num < WarheadNames.Count(); warhead_num++ ) {
+ 				Multipliers[ armor_num * Get_Num_Warhead_Types() + warhead_num ]  =
+ 					armorINI->Get_Float( section_name, WarheadNames[warhead_num], 1.0f );
+@@ -194,7 +194,7 @@
+ 		Absorbsion = new safe_float[ Get_Num_Armor_Types() * Get_Num_Warhead_Types() ];
+ 		for ( armor_num = 0; armor_num < ArmorNames.Count(); armor_num++ ) {
+ 			char section_name[80];
+-			sprintf( section_name, SECTION_SHIELD, ArmorNames[armor_num] );
++			sprintf( section_name, SECTION_SHIELD, ArmorNames[armor_num].Peek_Buffer() );
+ 			for ( int warhead_num = 0; warhead_num < WarheadNames.Count(); warhead_num++ ) {
+ 				Absorbsion[ armor_num * Get_Num_Warhead_Types() + warhead_num ]  =
+ 					armorINI->Get_Float( section_name, WarheadNames[warhead_num], 0.0f );
+@@ -1133,7 +1133,7 @@
+ 
+ 	packet.Add(health,							BITPACK_HEALTH);
+ 	packet.Add(shield_strength,				BITPACK_SHIELD_STRENGTH);
+-	packet.Add((unsigned long)ShieldType,	BITPACK_SHIELD_TYPE);
++	packet.Add(static_cast<ULONG>(ShieldType), BITPACK_SHIELD_TYPE);
+ 
+    //LastSentHealth = Health;
+    //LastSentSkin = Skin;
+--- a/scriptablegameobj.h
++++ b/scriptablegameobj.h
+@@ -66,8 +66,8 @@
+ #endif
+ 
+ #ifndef	__AUDIO_EVENTS_H
+-	#include "audioevents.h"
++	#include "AudioEvents.h"
+ #endif
+ 
+ 
+ typedef	SimpleDynVecClass<GameObjObserverClass *>		GameObjObserverList;
+--- a/doors.cpp
++++ b/doors.cpp
+@@ -45,7 +45,7 @@
+ #include "smartgameobj.h"
+ #include "gameobjmanager.h"
+ #include "soldier.h"
+-#include "wwaudio.h"
++#include "WWAudio.h"
+ #include "wwprofile.h"
+ #include "bitpackids.h"
+ #include "diaglog.h"
+--- a/elevator.cpp
++++ b/elevator.cpp
+@@ -47,8 +47,8 @@
+ #include "gameobjmanager.h"
+ #include "soldier.h"
+ #include "wwprofile.h"
+-#include "audiblesound.h"
+-#include "wwaudio.h"
++#include "AudibleSound.h"
++#include "WWAudio.h"
+ #include "bitpackids.h"
+ 
+ 
+--- a/buildingaggregate.cpp
++++ b/buildingaggregate.cpp
+@@ -62,7 +62,7 @@
+ #include "wwphysids.h"
+ #include "hanim.h"
+ #include "combat.h"
+-#include "wwaudio.h"
++#include "WWAudio.h"
+ #include "wwdebug.h"
+ #include "wwhack.h"
+ #include "wwprofile.h"
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -48,7 +48,7 @@
+ #include "combat.h"
+ #include "backgroundmgr.h"
+ #include "conversationmgr.h"
+-#include "weathermgr.h"
++#include "WeatherMgr.h"
+ #include "wwmemlog.h"
+ #include "translatedb.h"
+ #include "mapmgr.h"
+--- a/WeatherMgr.h
++++ b/WeatherMgr.h
+@@ -50,6 +50,6 @@
+ #include	"rendobj.h"
+ #include "saveloadsubsystem.h"
+-#include "soundenvironment.h"
++#include "SoundEnvironment.h"
+ #include "texture.h"
+ #include "vector.h"
+ #include "vector2.h"
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -42,7 +42,7 @@
+ #include "combatsaveload.h"
+ #include "physstaticsavesystem.h"
+ #include "physdynamicsavesystem.h"
+-#include "audiosaveload.h"
++#include "AudioSaveLoad.h"
+ #include "matrix3d.h"
+ #include "scripts.h"
+ #include "combat.h"
+--- a/backgroundmgr.h
++++ b/backgroundmgr.h
+@@ -272,7 +272,7 @@
+ class LightningBoltClass : public VisibilityClass, public SegmentedLineClass
+ {
+ 	public:
+-		 LightningBoltClass::LightningBoltClass (int branchcount, Matrix3D &m, float length, float childlength, float width, float amplitude);
++		 LightningBoltClass (int branchcount, Matrix3D &m, float length, float childlength, float width, float amplitude);
+ 		~LightningBoltClass ();
+ 
+ 				  void Configure (Vector3 &color);
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -411,7 +411,7 @@
+ 	//
+ 	if (mission_name_id == 0) {
+ 		mission_name.Convert_From ( map_filename );
+-		WCHAR *extension = ::wcsrchr (mission_name, L'.');
++		WCHAR *extension = ::wcsrchr (mission_name.Peek_Buffer(), static_cast<WCHAR>('.'));
+ 		if (extension != NULL) {
+ 			extension[0] = 0;
+ 		}

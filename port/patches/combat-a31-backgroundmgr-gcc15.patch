@@ -1,0 +1,80 @@
+--- a/backgroundmgr.cpp
++++ b/backgroundmgr.cpp
+@@ -3793,13 +3793,14 @@
+  * HISTORY:                                                                                    *
+  *   09/15/00    IML : Created.                                                                *
+  *=============================================================================================*/
++#define BACKGROUND_PARAMETER_INDEX(varname) PARAMETER_ ## varname
+ #define WRITE_PARAMETER(varname) \
+-WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _CURRENT_VALUE, _Parameters [PARAMETER_ ## varname ##].CurrentValue); \
+-WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _NORMAL_VALUE, _Parameters [PARAMETER_ ## varname ##].NormalValue);	\
+-WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _NORMAL_TARGET, _Parameters [PARAMETER_ ## varname ##].NormalTarget);	\
+-WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _NORMAL_DURATION, _Parameters [PARAMETER_ ## varname ##].NormalDuration);	\
+-WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _OVERRIDE_TARGET, _Parameters [PARAMETER_ ## varname ##].OverrideTarget);	\
+-WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _OVERRIDE_DURATION, _Parameters [PARAMETER_ ## varname ##].OverrideDuration)
++WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _CURRENT_VALUE, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].CurrentValue); \
++WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _NORMAL_VALUE, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalValue);	\
++WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _NORMAL_TARGET, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalTarget);	\
++WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _NORMAL_DURATION, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalDuration);	\
++WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _OVERRIDE_TARGET, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideTarget);	\
++WRITE_MICRO_CHUNK (csave, VARID_ ## varname ## _OVERRIDE_DURATION, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideDuration)
+ 
+ bool BackgroundMgrClass::Save (ChunkSaveClass &csave)
+ {
+@@ -3901,12 +3902,12 @@
+  *   09/15/00    IML : Created.                                                                *
+  *=============================================================================================*/
+ #define READ_PARAMETER(varname) \
+-READ_MICRO_CHUNK (cload, VARID_ ## varname ## _CURRENT_VALUE, _Parameters [PARAMETER_ ## varname ##].CurrentValue); \
+-READ_MICRO_CHUNK (cload, VARID_ ## varname ## _NORMAL_VALUE, _Parameters [PARAMETER_ ## varname ##].NormalValue);	\
+-READ_MICRO_CHUNK (cload, VARID_ ## varname ## _NORMAL_TARGET, _Parameters [PARAMETER_ ## varname ##].NormalTarget);	\
+-READ_MICRO_CHUNK (cload, VARID_ ## varname ## _NORMAL_DURATION, _Parameters [PARAMETER_ ## varname ##].NormalDuration);	\
+-READ_MICRO_CHUNK (cload, VARID_ ## varname ## _OVERRIDE_TARGET, _Parameters [PARAMETER_ ## varname ##].OverrideTarget);	\
+-READ_MICRO_CHUNK (cload, VARID_ ## varname ## _OVERRIDE_DURATION, _Parameters [PARAMETER_ ## varname ##].OverrideDuration)
++READ_MICRO_CHUNK (cload, VARID_ ## varname ## _CURRENT_VALUE, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].CurrentValue); \
++READ_MICRO_CHUNK (cload, VARID_ ## varname ## _NORMAL_VALUE, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalValue);	\
++READ_MICRO_CHUNK (cload, VARID_ ## varname ## _NORMAL_TARGET, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalTarget);	\
++READ_MICRO_CHUNK (cload, VARID_ ## varname ## _NORMAL_DURATION, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalDuration);	\
++READ_MICRO_CHUNK (cload, VARID_ ## varname ## _OVERRIDE_TARGET, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideTarget);	\
++READ_MICRO_CHUNK (cload, VARID_ ## varname ## _OVERRIDE_DURATION, _Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideDuration)
+ 
+ bool BackgroundMgrClass::Load_Micro_Chunks (ChunkLoadClass &cload)
+ {
+@@ -4010,10 +4011,10 @@
+  *   03/02/01    IML : Created.                                                                *
+  *=============================================================================================*/
+ #define EXPORT_PARAMETER(object, varname) \
+-object.Add (_Parameters [PARAMETER_ ## varname ##].NormalTarget); \
+-object.Add (_Parameters [PARAMETER_ ## varname ##].NormalDuration); \
+-object.Add (_Parameters [PARAMETER_ ## varname ##].OverrideTarget); \
+-object.Add (_Parameters [PARAMETER_ ## varname ##].OverrideDuration)
++object.Add (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalTarget); \
++object.Add (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalDuration); \
++object.Add (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideTarget); \
++object.Add (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideDuration)
+ 
+ void BackgroundMgrClass::Export_Rare (BitStreamClass &packet)
+ {
+@@ -4046,10 +4047,10 @@
+  *   03/02/01    IML : Created.                                                                *
+  *=============================================================================================*/
+ #define IMPORT_PARAMETER(object, varname) \
+-object.Get (_Parameters [PARAMETER_ ## varname ##].NormalTarget); \
+-object.Get (_Parameters [PARAMETER_ ## varname ##].NormalDuration); \
+-object.Get (_Parameters [PARAMETER_ ## varname ##].OverrideTarget); \
+-object.Get (_Parameters [PARAMETER_ ## varname ##].OverrideDuration)
++object.Get (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalTarget); \
++object.Get (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].NormalDuration); \
++object.Get (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideTarget); \
++object.Get (_Parameters [BACKGROUND_PARAMETER_INDEX(varname)].OverrideDuration)
+ 
+ void BackgroundMgrClass::Import_Rare (BitStreamClass &packet)
+ {
+@@ -4072,4 +4073,5 @@
+ #undef EXPORT_PARAMETER
+ #undef IMPORT_PARAMETER
+ #undef READ_PARAMETER
+-#undef WRITE_PARAMETER
+\ No newline at end of file
++#undef WRITE_PARAMETER
++#undef BACKGROUND_PARAMETER_INDEX

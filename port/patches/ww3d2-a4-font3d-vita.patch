@@ -1,0 +1,36 @@
+--- a/assetmgr.cpp
++++ b/assetmgr.cpp
+@@ -1179,8 +1179,3 @@
+	WWPROFILE( "WW3DAssetManager::Get_Font3DInstance" );
+-#if defined(RENEGADE_VITA_PORT)
+-	(void)name;
+-	return NULL;
+-#else
+ 	return NEW_REF( Font3DInstanceClass, ( name ));
+-#endif
+ }
+@@ -1203,24 +1198,19 @@
+	WWPROFILE( "WW3DAssetManager::Get_Font3DData" );
+-#if defined(RENEGADE_VITA_PORT)
+-	(void)name;
+-	return NULL;
+-#else
+	// loop through and see if the Font3D we are looking for has already been
+	// allocated and thus we can just return it.
+	for (	SLNode<Font3DDataClass> *node = Font3DDatas.Head(); node; node = node->Next()) {
+		if (!stricmp(name, node->Data()->Name)) {
+			node->Data()->Add_Ref();
+			return node->Data();
+		}
+	}
+
+	// if one hasn't been found and a font name has been specified then create it
+	Font3DDataClass * font = NEW_REF( Font3DDataClass, ( name ));
+
+	// add it to the asset manager
+	Add_Font3DData( font);
+
+	// return it
+	return font;
+-#endif
+ }

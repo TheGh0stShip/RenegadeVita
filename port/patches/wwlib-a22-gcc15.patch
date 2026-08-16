@@ -1,0 +1,232 @@
+--- a/index.h
++++ b/index.h
+@@ -695,7 +695,7 @@
+ #ifdef __BORLANDC__
+ NodeElement const * IndexClass<INDEX, T>::Search_For_Node(INDEX const & id) const
+ #else
+-IndexClass<INDEX, T>::NodeElement const * IndexClass<INDEX, T>::Search_For_Node(INDEX const & id) const
++typename IndexClass<INDEX, T>::NodeElement const * IndexClass<INDEX, T>::Search_For_Node(INDEX const & id) const
+ #endif
+ {
+ 	/*
+--- a/ini.cpp
++++ b/ini.cpp
+@@ -1558,7 +1558,7 @@
+ 
+ 	INIEntry * entryptr = Find_Entry(section, entry);
+ 	if (entryptr != NULL && entryptr->Value != NULL) {
+-		float val = defvalue;
++		double val = defvalue;
+ 		sscanf(entryptr->Value, "%lf", &val);
+ 		defvalue = val;
+ 		if (strchr(entryptr->Value, '%') != NULL) {
+--- a/ini.h
++++ b/ini.h
+@@ -147,7 +147,7 @@
+ 		int Get_Int(char const * section, char const * entry, int defvalue=0) const;
+ 		int Get_String(char const * section, char const * entry, char const * defvalue, char * buffer, int size) const;
+ 		const StringClass& Get_String(StringClass& new_string, char const * section, char const * entry, char const * defvalue="") const;
+-		const WideStringClass& Get_Wide_String(WideStringClass& new_string, char const * section, char const * entry, unsigned short const * defvalue=L"") const;
++		const WideStringClass& Get_Wide_String(WideStringClass& new_string, char const * section, char const * entry, unsigned short const * defvalue=reinterpret_cast<unsigned short const *>(u"")) const;
+ 		int Get_List_Index(char const * section, char const * entry, int const defvalue, char *list[]);
+ 		int *	Get_Alloc_Int_Array(char const * section, char const * entry, int listend);
+ 		int Get_Int_Bitfield(char const * section, char const * entry, int defvalue, char *list[]);
+--- a/mempool.h
++++ b/mempool.h
+@@ -91,7 +91,7 @@
+ protected:
+ 
+ 	T	*		FreeListHead;			
+-	uint32 *	BlockListHead;			
++	void **	BlockListHead;			
+ 	int		FreeObjectCount;
+ 	int		TotalObjectCount;
+ 	FastCriticalSectionClass ObjectPoolCS;
+@@ -158,7 +158,8 @@
+ ** the class.
+ */
+ #define DEFINE_AUTO_POOL(T,BLOCKSIZE) \
+-ObjectPoolClass<T,BLOCKSIZE> AutoPoolClass<T,BLOCKSIZE>::Allocator;
++template<> \
++ObjectPoolClass<T,BLOCKSIZE> AutoPoolClass<T,BLOCKSIZE>::Allocator{};
+ 
+ 
+ /***********************************************************************************************
+@@ -205,7 +206,7 @@
+ 	// delete all of the blocks we allocated
+ 	int block_count = 0;
+ 	while (BlockListHead != NULL) {
+-		uint32 * next_block = *(uint32 **)BlockListHead;
++		void ** next_block = static_cast<void **>(*BlockListHead);
+ 		::operator delete(BlockListHead);
+ 		BlockListHead = next_block;
+ 		block_count++;
+@@ -281,10 +282,11 @@
+ 	if ( FreeListHead == 0 ) {  
+ 
+ 		// No free objects, allocate another block
+-		uint32 * tmp_block_head = BlockListHead;
+-		BlockListHead = (uint32*)::operator new( sizeof(T) * BLOCK_SIZE + sizeof(uint32 *));
++		void ** tmp_block_head = BlockListHead;
++		BlockListHead = static_cast<void **>(::operator new(
++			sizeof(T) * BLOCK_SIZE + sizeof(void *)));
+ 		// Link this block into the block list
+-		*(void **)BlockListHead = tmp_block_head;
++		*BlockListHead = tmp_block_head;
+ 
+ 		// Link the objects in the block into the free object list
+ 		FreeListHead = (T*)(BlockListHead + 1);
+--- a/multilist.h
++++ b/multilist.h
+@@ -487,7 +487,7 @@
+ public:
+ 	PriorityMultiListIterator(MultiListClass<ObjectType> *list)
+ 		:	OriginalHead (NULL),
+-			MultiListIterator<ObjectType>(list)			{ First (); }
++			MultiListIterator<ObjectType>(list)			{ this->First (); }
+ 
+ 	bool
+ 	Process_Head (ObjectType **object)
+@@ -496,14 +496,14 @@
+ 
+ 		//	Check to ensure we don't wrap around the list (stop after iterating
+ 		// the list once).
+-		if (CurNode != NULL && CurNode->Object != NULL && OriginalHead != CurNode) {
+-			OriginalHead		= (OriginalHead == NULL) ? CurNode : OriginalHead;
+-			(*object)			= (ObjectType *)CurNode->Object;
++		if (this->CurNode != NULL && this->CurNode->Object != NULL && OriginalHead != this->CurNode) {
++			OriginalHead		= (OriginalHead == NULL) ? this->CurNode : OriginalHead;
++			(*object)			= (ObjectType *)this->CurNode->Object;
+ 
+ 
+ 			// Remove the node from the head of the list and
+ 			// add it to the tail of the list
+-			Remove_Current_Object();
++			this->Remove_Current_Object();
+ 			((MultiListClass<ObjectType> *)PriorityMultiListIterator::List)->Add_Tail ((*object));
+ 
+ 			retval = true;
+--- a/point.h
++++ b/point.h
+@@ -135,39 +135,39 @@
+ 		TPoint3D(BASECLASS const & rvalue) : TPoint2D<T>(rvalue), Z(0) {}
+ 		
+ 		// Equality comparison operators.
+-		bool operator == (TPoint3D<T> const & rvalue) const {return(X==rvalue.X && Y==rvalue.Y && Z==rvalue.Z);}
+-		bool operator != (TPoint3D<T> const & rvalue) const {return(X!=rvalue.X || Y!=rvalue.Y || Z!=rvalue.Z);}
++		bool operator == (TPoint3D<T> const & rvalue) const {return(this->X==rvalue.X && this->Y==rvalue.Y && Z==rvalue.Z);}
++		bool operator != (TPoint3D<T> const & rvalue) const {return(this->X!=rvalue.X || this->Y!=rvalue.Y || Z!=rvalue.Z);}
+ 
+ 		// Addition and subtraction operators.
+-		TPoint3D<T> const & operator += (TPoint3D<T> const & rvalue) {X += rvalue.X;Y += rvalue.Y;Z += rvalue.Z;return(*this);}
++		TPoint3D<T> const & operator += (TPoint3D<T> const & rvalue) {this->X += rvalue.X;this->Y += rvalue.Y;Z += rvalue.Z;return(*this);}
+ 		TPoint2D<T> const & operator += (TPoint2D<T> const & rvalue) {BASECLASS::operator += (rvalue);return(*this);}
+-		TPoint3D<T> const & operator -= (TPoint3D<T> const & rvalue) {X -= rvalue.X;Y -= rvalue.Y;Z -= rvalue.Z;return(*this);}
++		TPoint3D<T> const & operator -= (TPoint3D<T> const & rvalue) {this->X -= rvalue.X;this->Y -= rvalue.Y;Z -= rvalue.Z;return(*this);}
+ 		TPoint2D<T> const & operator -= (TPoint2D<T> const & rvalue) {BASECLASS::operator -= (rvalue);return(*this);}
+-		TPoint3D<T> const operator - (TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(X - rvalue.X, Y - rvalue.Y, Z - rvalue.Z));}
+-		TPoint3D<T> const operator - (TPoint2D<T> const & rvalue) const {return(TPoint3D<T>(X - rvalue.X, Y - rvalue.Y, Z));}
+-		TPoint3D<T> const operator + (TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(X + rvalue.X, Y + rvalue.Y, Z + rvalue.Z));}
+-		TPoint3D<T> const operator + (TPoint2D<T> const & rvalue) const {return(TPoint3D<T>(X + rvalue.X, Y + rvalue.Y, Z));}
++		TPoint3D<T> const operator - (TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(this->X - rvalue.X, this->Y - rvalue.Y, Z - rvalue.Z));}
++		TPoint3D<T> const operator - (TPoint2D<T> const & rvalue) const {return(TPoint3D<T>(this->X - rvalue.X, this->Y - rvalue.Y, Z));}
++		TPoint3D<T> const operator + (TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(this->X + rvalue.X, this->Y + rvalue.Y, Z + rvalue.Z));}
++		TPoint3D<T> const operator + (TPoint2D<T> const & rvalue) const {return(TPoint3D<T>(this->X + rvalue.X, this->Y + rvalue.Y, Z));}
+ 
+ 		// Scalar multiplication and division.
+-		TPoint3D<T> const operator * (T rvalue) const {return(TPoint3D<T>(X * rvalue, Y * rvalue, Z * rvalue));}
+-		TPoint3D<T> const & operator *= (T rvalue) {X *= rvalue;Y *= rvalue;Z *= rvalue;return(*this);}
+-		TPoint3D<T> const operator / (T rvalue) const {if (rvalue == T(0)) return(TPoint3D<T>(0,0,0));return(TPoint3D<T>(X / rvalue, Y / rvalue, Z / rvalue));}
+-		TPoint3D<T> const & operator /= (T rvalue) {if (rvalue != T(0)) {X /= rvalue;Y /= rvalue;Z /= rvalue;}return(*this);}
++		TPoint3D<T> const operator * (T rvalue) const {return(TPoint3D<T>(this->X * rvalue, this->Y * rvalue, Z * rvalue));}
++		TPoint3D<T> const & operator *= (T rvalue) {this->X *= rvalue;this->Y *= rvalue;Z *= rvalue;return(*this);}
++		TPoint3D<T> const operator / (T rvalue) const {if (rvalue == T(0)) return(TPoint3D<T>(0,0,0));return(TPoint3D<T>(this->X / rvalue, this->Y / rvalue, Z / rvalue));}
++		TPoint3D<T> const & operator /= (T rvalue) {if (rvalue != T(0)) {this->X /= rvalue;this->Y /= rvalue;Z /= rvalue;}return(*this);}
+ 
+ 		// Dot and cross product.
+-		TPoint3D<T> const operator * (TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(X * rvalue.X, Y * rvalue.Y, Z * rvalue.Z));}
+-		TPoint3D<T> const Dot_Product(TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(X * rvalue.X, Y * rvalue.Y, Z * rvalue.Z));}
+-		TPoint3D<T> const Cross_Product(TPoint3D<T> const & rvalue) const {return TPoint3D<T>(Y * rvalue.Z - Z * rvalue.Y, Z * rvalue.X - X * rvalue.Z, X * rvalue.Y - Y * rvalue.X);}
++		TPoint3D<T> const operator * (TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(this->X * rvalue.X, this->Y * rvalue.Y, Z * rvalue.Z));}
++		TPoint3D<T> const Dot_Product(TPoint3D<T> const & rvalue) const {return(TPoint3D<T>(this->X * rvalue.X, this->Y * rvalue.Y, Z * rvalue.Z));}
++		TPoint3D<T> const Cross_Product(TPoint3D<T> const & rvalue) const {return TPoint3D<T>(this->Y * rvalue.Z - Z * rvalue.Y, Z * rvalue.X - this->X * rvalue.Z, this->X * rvalue.Y - this->Y * rvalue.X);}
+ 
+ 		// Negation operator -- simple and effective
+-		TPoint3D<T> const operator - (void) const {return(TPoint3D<T>(-X, -Y, -Z));}
++		TPoint3D<T> const operator - (void) const {return(TPoint3D<T>(-this->X, -this->Y, -Z));}
+ 
+ 		// Vector support functions.
+-		T Length(void) const {return(T(sqrt(X*X + Y*Y + Z*Z)));}
++		T Length(void) const {return(T(sqrt(this->X*this->X + this->Y*this->Y + Z*Z)));}
+ 		TPoint3D<T> const Normalize(void) const {
+-			double len = sqrt(X*X + Y*Y + Z*Z);
++			double len = sqrt(this->X*this->X + this->Y*this->Y + Z*Z);
+ 			if (len != 0.0) {
+-				return(TPoint3D<T>(X / len, Y / len, Z / len));
++				return(TPoint3D<T>(this->X / len, this->Y / len, Z / len));
+ 			} else {
+ 				return(*this);
+ 			}
+--- a/random.cpp
++++ b/random.cpp
+@@ -234,19 +234,19 @@
+ **	and thus prevents the algorithm from breaking down as a result.
+ */
+ int Random3Class::Mix1[20] = {
+-	0x0baa96887, 0x01e17d32c, 0x003bcdc3c, 0x00f33d1b2,
+-	0x076a6491d, 0x0c570d85d, 0x0e382b1e3, 0x078db4362,
+-	0x07439a9d4, 0x09cea8ac5, 0x089537c5c, 0x02588f55d,
+-	0x0415b5e1d, 0x0216e3d95, 0x085c662e7, 0x05e8ab368,
+-	0x03ea5cc8c, 0x0d26a0f74, 0x0f3a9222b, 0x048aad7e4
++	static_cast<int>(0x0baa96887u), static_cast<int>(0x01e17d32cu), static_cast<int>(0x003bcdc3cu), static_cast<int>(0x00f33d1b2u),
++	static_cast<int>(0x076a6491du), static_cast<int>(0x0c570d85du), static_cast<int>(0x0e382b1e3u), static_cast<int>(0x078db4362u),
++	static_cast<int>(0x07439a9d4u), static_cast<int>(0x09cea8ac5u), static_cast<int>(0x089537c5cu), static_cast<int>(0x02588f55du),
++	static_cast<int>(0x0415b5e1du), static_cast<int>(0x0216e3d95u), static_cast<int>(0x085c662e7u), static_cast<int>(0x05e8ab368u),
++	static_cast<int>(0x03ea5cc8cu), static_cast<int>(0x0d26a0f74u), static_cast<int>(0x0f3a9222bu), static_cast<int>(0x048aad7e4u)
+ };
+ 
+ int Random3Class::Mix2[20] = {
+-	0x04b0f3b58, 0x0e874f0c3, 0x06955c5a6, 0x055a7ca46,
+-	0x04d9a9d86, 0x0fe28a195, 0x0b1ca7865, 0x06b235751,
+-	0x09a997a61, 0x0aa6e95c8, 0x0aaa98ee1, 0x05af9154c,
+-	0x0fc8e2263, 0x0390f5e8c, 0x058ffd802, 0x0ac0a5eba,
+-	0x0ac4874f6, 0x0a9df0913, 0x086be4c74, 0x0ed2c123b
++	static_cast<int>(0x04b0f3b58u), static_cast<int>(0x0e874f0c3u), static_cast<int>(0x06955c5a6u), static_cast<int>(0x055a7ca46u),
++	static_cast<int>(0x04d9a9d86u), static_cast<int>(0x0fe28a195u), static_cast<int>(0x0b1ca7865u), static_cast<int>(0x06b235751u),
++	static_cast<int>(0x09a997a61u), static_cast<int>(0x0aa6e95c8u), static_cast<int>(0x0aaa98ee1u), static_cast<int>(0x05af9154cu),
++	static_cast<int>(0x0fc8e2263u), static_cast<int>(0x0390f5e8cu), static_cast<int>(0x058ffd802u), static_cast<int>(0x0ac0a5ebau),
++	static_cast<int>(0x0ac4874f6u), static_cast<int>(0x0a9df0913u), static_cast<int>(0x086be4c74u), static_cast<int>(0x0ed2c123bu)
+ };
+ 
+ 
+--- a/refcount.cpp
++++ b/refcount.cpp
+@@ -87,7 +87,7 @@
+  * HISTORY:                                                                                    *
+  *   3/16/98    GTH : Created.                                                                 *
+  *=============================================================================================*/
+-RefCountClass *	RefCountClass::Set_Ref_Owner(RefCountClass *obj,char * file,int line) 
++RefCountClass *	RefCountClass::Set_Ref_Owner(RefCountClass *obj,const char * file,int line) 
+ { 
+ //	static RefCountClass *hunt = (RefCountClass *)0x06558890;
+ 	static RefCountClass *hunt = (RefCountClass *)0x0;
+--- a/refcount.h
++++ b/refcount.h
+@@ -55,7 +55,7 @@
+ 
+ struct ActiveRefStruct
+ {
+-	char *					File;
++	const char *			File;
+ 	int						Line;
+ };
+ 
+@@ -235,7 +235,7 @@
+ 	/*
+ 	** Updates the owner file/line for the given ref obj in the active ref list
+ 	*/
+-	static RefCountClass *			Set_Ref_Owner(RefCountClass *obj,char * file,int line);
++	static RefCountClass *			Set_Ref_Owner(RefCountClass *obj,const char * file,int line);
+ 
+ 	/*
+ 	** Remove the ref obj from the active ref list

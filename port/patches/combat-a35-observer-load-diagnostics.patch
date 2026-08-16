@@ -1,0 +1,57 @@
+--- a/persistentgameobjobserver.cpp
++++ b/persistentgameobjobserver.cpp
+@@ -157,16 +157,51 @@
+ 
+ bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
+ {
+-	cload.Open_Chunk();
+-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_OBSERVERS );
++	Debug_Say(( "PersistentGameObjObserverManager::Load enter\n" ));
++
++	if ( !cload.Open_Chunk() ) {
++		Debug_Error(( "PersistentGameObjObserverManager::Load failed required root Open_Chunk\n" ));
++		return false;
++	}
++	if ( cload.Cur_Chunk_ID() != CHUNKID_OBSERVERS ) {
++		Debug_Error(( "PersistentGameObjObserverManager::Load failed required root chunk; opened id=%u expected=%u length=%u depth=%d\n",
++			cload.Cur_Chunk_ID(), CHUNKID_OBSERVERS, cload.Cur_Chunk_Length(),
++			cload.Cur_Chunk_Depth() ));
++		cload.Close_Chunk();
++		Debug_Say(( "PersistentGameObjObserverManager::Load required-root failure: close issued, depth=%d\n",
++			cload.Cur_Chunk_Depth() ));
++		return false;
++	}
++
++	unsigned observer_child_count = 0U;
+ 	while (cload.Open_Chunk()) {
+-		PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( cload.Cur_Chunk_ID() );
++		const uint32 child_id = cload.Cur_Chunk_ID();
++		const uint32 child_len = cload.Cur_Chunk_Length();
++		const int child_depth = cload.Cur_Chunk_Depth();
++		Debug_Say(( "PersistentGameObjObserverManager::Load child open id=%u len=%u depth=%d\n",
++			child_id, child_len, child_depth ));
++		PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( child_id );
+ 		if ( factory ) {
++			Debug_Say(( "PersistentGameObjObserverManager::Load child factory found id=%u\n",
++				child_id ));
+ 			factory->Load( cload );
++		} else {
++			Debug_Say(( "PersistentGameObjObserverManager::Load child factory unknown id=%u\n",
++				child_id ));
+ 		}
+ 		cload.Close_Chunk();
++		Debug_Say(( "PersistentGameObjObserverManager::Load child close total=%u depth=%d\n",
++			observer_child_count, cload.Cur_Chunk_Depth() ));
++		++observer_child_count;
+ 	}
++
++	Debug_Say(( "PersistentGameObjObserverManager::Load child exhaustion after %u children\n",
++		observer_child_count ));
++
+ 	cload.Close_Chunk();
++	Debug_Say(( "PersistentGameObjObserverManager::Load final root close depth=%d\n",
++		cload.Cur_Chunk_Depth() ));
++	Debug_Say(( "PersistentGameObjObserverManager::Load exit success\n" ));
+ 	return true;
+ }
+ 

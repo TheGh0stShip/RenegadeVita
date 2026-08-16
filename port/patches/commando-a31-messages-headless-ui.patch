@@ -1,0 +1,26 @@
+--- a/messages.cpp
++++ b/messages.cpp
+@@ -48 +48 @@
+-#include "multihud.h"
++#include "a31_multihud_stub.h"
+@@ -55 +55 @@
+-#include "wolgmode.h"
++#include "a31_wol_stub.h"
+@@ -75 +75 @@
+-#include "DlgMPTeamSelect.h"
++#include "a31_team_select_stub.h"
+@@ -77 +77 @@
+-#include "dlgmessagebox.h"
++#include "a31_messagebox_stub.h"
+@@ -87 +87 @@
+-#include "gameinitmgr.h"
++#include "a31_gameinit_stub.h"
+@@ -88 +88 @@
+-#include "dlgcncwinscreen.h"
++#include "a31_win_screen_stub.h"
+@@ -89 +89 @@
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+@@ -90 +90 @@
+-#include "CDKeyAuth.h"
++#include "a31_cdkey_auth_stub.h"

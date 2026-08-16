@@ -1,0 +1,728 @@
+--- a/animobj.cpp
++++ b/animobj.cpp
+@@ -762,7 +762,11 @@
+ 			**	Play any sounds that are triggered by this frame of animation
+ 			*/
+ 			if ( ModeAnim.Motion->Has_Embedded_Sounds() ) {
++#if defined(RENEGADE_VITA_PORT)
++				ModeAnim.PrevFrame = ModeAnim.Frame;
++#else
+ 				ModeAnim.PrevFrame = AnimatedSoundMgrClass::Trigger_Sound(ModeAnim.Motion, ModeAnim.PrevFrame, ModeAnim.Frame, Get_Transform ());
++#endif
+ 			}
+ 			break;
+ 
+@@ -774,11 +778,19 @@
+ 			**	Play any sounds that are triggered by this frame of animation
+ 			*/
+ 			if ( ModeInterp.Motion0->Has_Embedded_Sounds() ) {
++#if defined(RENEGADE_VITA_PORT)
++				ModeInterp.PrevFrame0 = ModeInterp.Frame0;
++#else
+ 				ModeInterp.PrevFrame0 = AnimatedSoundMgrClass::Trigger_Sound(ModeInterp.Motion0, ModeInterp.PrevFrame0, ModeInterp.Frame0, Get_Transform ());
++#endif
+ 			}
+ 
+ 			if ( ModeInterp.Motion1->Has_Embedded_Sounds() ) {
++#if defined(RENEGADE_VITA_PORT)
++				ModeInterp.PrevFrame1 = ModeInterp.Frame1;
++#else
+ 				ModeInterp.PrevFrame1 = AnimatedSoundMgrClass::Trigger_Sound(ModeInterp.Motion1, ModeInterp.PrevFrame1, ModeInterp.Frame1, Get_Transform ());
++#endif
+ 			}
+ 
+   			break;
+@@ -795,9 +807,13 @@
+ 				HAnimClass *motion = ModeCombo.AnimCombo->Peek_Motion(index);
+ 
+ 				if ( motion != NULL && motion->Has_Embedded_Sounds() ) {
++#if defined(RENEGADE_VITA_PORT)
++					ModeCombo.AnimCombo->Set_Prev_Frame(index, ModeCombo.AnimCombo->Get_Frame(index));
++#else
+ 					float prev_frame = AnimatedSoundMgrClass::Trigger_Sound(motion, ModeCombo.AnimCombo->Get_Prev_Frame(index),
+-																				ModeCombo.AnimCombo->Get_Frame(index), Get_Transform ());
++															ModeCombo.AnimCombo->Get_Frame(index), Get_Transform ());
+ 					ModeCombo.AnimCombo->Set_Prev_Frame(index, prev_frame);
++#endif
+ 				}
+ 				
+ 			}
+@@ -1023,4 +1039,4 @@
+ }
+ 
+ 
+-// EOF - animobj.cpp
+\ No newline at end of file
++// EOF - animobj.cpp
+--- a/assetmgr.cpp
++++ b/assetmgr.cpp
+@@ -1177,7 +1177,12 @@
+ Font3DInstanceClass * WW3DAssetManager::Get_Font3DInstance( const char *name )
+ {
+ 	WWPROFILE( "WW3DAssetManager::Get_Font3DInstance" );
++#if defined(RENEGADE_VITA_PORT)
++	(void)name;
++	return NULL;
++#else
+ 	return NEW_REF( Font3DInstanceClass, ( name ));
++#endif
+ }
+ 
+ 
+@@ -1196,6 +1201,10 @@
+ Font3DDataClass * WW3DAssetManager::Get_Font3DData( const char *name )
+ {
+ 	WWPROFILE( "WW3DAssetManager::Get_Font3DData" );
++#if defined(RENEGADE_VITA_PORT)
++	(void)name;
++	return NULL;
++#else
+ 	// loop through and see if the Font3D we are looking for has already been
+ 	// allocated and thus we can just return it.
+ 	for (	SLNode<Font3DDataClass> *node = Font3DDatas.Head(); node; node = node->Next()) {
+@@ -1213,6 +1222,7 @@
+ 
+ 	// return it
+ 	return font;
++#endif
+ }
+ 
+ /***********************************************************************************************
+@@ -1304,6 +1314,12 @@
+ FontCharsClass *	WW3DAssetManager::Get_FontChars( const char * name, int point_size, bool is_bold )
+ {
+ 	WWPROFILE( "WW3DAssetManager::Get_FontChars" );
++#if defined(RENEGADE_VITA_PORT)
++	(void)name;
++	(void)point_size;
++	(void)is_bold;
++	return NULL;
++#else
+ 
+ 	// loop through and see if we already have the font chars and we can just return it.
+ 	for ( int i = 0; i < FontCharsList.Count(); i++ ) {
+@@ -1319,6 +1335,7 @@
+ 	font->Add_Ref();
+ 	FontCharsList.Add( font );			// add it to the list	
+ 	return font;							// return it
++#endif
+ }
+ 
+ 
+@@ -1576,4 +1593,3 @@
+ 	return WW3DAssetManager::Get_Instance()->HTreeManager.Get_Tree(Index)->Get_Name();
+ }
+ 
+-
+--- a/boxrobj.cpp
++++ b/boxrobj.cpp
+@@ -104,6 +104,9 @@
+ #include "sortingrenderer.h"
+ #include "visrasterizer.h"
+ #include "meshgeometry.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "ww3d_vita_renderer.h"
++#endif
+ 
+ 
+ #define NUM_BOX_VERTS	8
+@@ -702,10 +705,17 @@
+  *=============================================================================================*/
+ void AABoxRenderObjClass::Render(RenderInfoClass & rinfo)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)rinfo;
++	if (Get_Box_Display_Mask() & Get_Collision_Type()) {
++		RenegadeVitaRenderer::Submit_Unsupported(this);
++	}
++#else
+ 	Matrix3D temp(1);
+ 	temp.Translate(Transform.Get_Translation());
+ 	DX8Wrapper::Set_Transform(D3DTS_WORLD,temp);
+ 	render_box(rinfo,ObjSpaceCenter,ObjSpaceExtent);
++#endif
+ }
+ 
+ 
+@@ -1088,8 +1098,15 @@
+  *=============================================================================================*/
+ void OBBoxRenderObjClass::Render(RenderInfoClass & rinfo)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)rinfo;
++	if (Get_Box_Display_Mask() & Get_Collision_Type()) {
++		RenegadeVitaRenderer::Submit_Unsupported(this);
++	}
++#else
+ 	DX8Wrapper::Set_Transform(D3DTS_WORLD,Transform);
+ 	render_box(rinfo,ObjSpaceCenter,ObjSpaceExtent);
++#endif
+ }
+ 
+ 
+@@ -1387,5 +1404,3 @@
+ ** Global instance of the box loader
+ */
+ BoxLoaderClass _BoxLoader;
+-
+-
+--- a/dazzle.cpp
++++ b/dazzle.cpp
+@@ -38,6 +38,9 @@
+ 
+ 
+ #include "dazzle.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "ww3d_vita_renderer.h"
++#endif
+ #include "simplevec.h"
+ #include "vector2.h"
+ #include "camera.h"
+@@ -895,6 +898,11 @@
+ // ----------------------------------------------------------------------------
+ void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	(void)rinfo;
++	RenegadeVitaRenderer::Submit_Unsupported(this);
++	return;
++#else
+ 	WWPROFILE("Dazzle::Render");
+ 
+ 	if (	Is_Not_Hidden_At_All() &&
+@@ -993,6 +1001,7 @@
+ 	else {
+ 		visibility=0.0f;
+ 	}
++#endif
+ }
+ 
+ void DazzleRenderObjClass::Render_Dazzle(CameraClass* camera)
+--- a/decalmsh.cpp
++++ b/decalmsh.cpp
+@@ -51,6 +51,9 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ #include "decalmsh.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "ww3d_vita_renderer.h"
++#endif
+ #include "decalsys.h"
+ #include "rinfo.h"
+ #include "mesh.h"
+@@ -290,6 +293,10 @@
+  *=============================================================================================*/
+ void RigidDecalMeshClass::Render(void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	RenegadeVitaRenderer::Submit_Decals_Unsupported();
++	return;
++#else
+ 	if ((Decals.Count() == 0) || (WW3D::Are_Decals_Enabled() == false)) return;
+ 	
+ 	/*
+@@ -362,6 +369,7 @@
+ 		cur_poly_index = next_poly_index;
+ 	}
+ 		
++#endif
+ }
+ 
+ 
+@@ -773,6 +781,10 @@
+  *=============================================================================================*/
+ void SkinDecalMeshClass::Render(void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	RenegadeVitaRenderer::Submit_Decals_Unsupported();
++	return;
++#else
+ 	if ((Decals.Count() == 0) || (WW3D::Are_Decals_Enabled() == false)) return;
+ 
+ 	/*
+@@ -860,6 +872,7 @@
+ 		
+ 		cur_poly_index = next_poly_index;
+ 	}
++#endif
+ }
+ 
+ 
+--- a/mesh.cpp
++++ b/mesh.cpp
+@@ -105,6 +105,9 @@
+ #include "w3d_util.h"
+ #include "meshmdl.h"
+ #include "meshgeometry.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "ww3d_vita_renderer.h"
++#endif
+ #include "ww3d.h"
+ #include "camera.h"
+ #include "texture.h"
+@@ -223,7 +226,9 @@
+ {
+ 	if (this != &that) {
+ 
++#if !defined(RENEGADE_VITA_PORT)
+ 		TheDX8MeshRenderer.Unregister_Mesh_Type(this);
++#endif
+ 
+ 		RenderObjClass::operator = (that);
+ 
+@@ -257,7 +262,9 @@
+  *=============================================================================================*/
+ MeshClass::~MeshClass(void) 
+ {
++#if !defined(RENEGADE_VITA_PORT)
+ 	TheDX8MeshRenderer.Unregister_Mesh_Type(this);
++#endif
+ 	Free();
+ }
+ 
+@@ -718,6 +725,27 @@
+ 		if (	Model->Get_Flag(MeshGeometryClass::SKIN) ||
+ 				CollisionMath::Overlap_Test(frustum,Get_Bounding_Box())!=CollisionMath::OUTSIDE ) 
+ 		{
++#if defined(RENEGADE_VITA_PORT)
++			bool render_base_passes = ((rinfo.Current_Override_Flags() &
++				RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY) == 0);
++			bool is_alpha =
++				(Model->Get_Single_Shader().Get_Alpha_Test() == ShaderClass::ALPHATEST_ENABLE) ||
++				(Model->Get_Single_Shader().Get_Src_Blend_Func() == ShaderClass::SRCBLEND_SRC_ALPHA);
++			if ((rinfo.Current_Override_Flags() & RenderInfoClass::RINFO_OVERRIDE_SHADOW_RENDERING) &&
++				is_alpha) {
++				render_base_passes = true;
++			}
++			if (render_base_passes) {
++				RenegadeVitaRenderer::Submit_Mesh(*this, rinfo);
++			}
++			/* A retained but empty decal mesh is a no-op in the original
++			** DecalMeshClass::Render path.  Do not classify that no-op as an
++			** unsupported draw; an actual decal remains explicit. */
++			if (rinfo.Additional_Pass_Count() > 0 ||
++				(DecalMesh != NULL && DecalMesh->Decal_Count() > 0)) {
++				RenegadeVitaRenderer::Submit_Unsupported(this);
++			}
++#else
+ 			bool rendered_something = false;
+ 			
+ 			/*
+@@ -817,6 +841,7 @@
+ 			}
+ 
+ 			DX8RendererDebugger::Add_Mesh(this);
++#endif
+ 		}
+ 	}
+ }
+@@ -1599,8 +1624,6 @@
+ 
+ 
+ 
+-
+-
+ 
+ 
+ 
+--- a/scene.cpp
++++ b/scene.cpp
+@@ -208,6 +208,9 @@
+  *=============================================================================================*/
+ void SceneClass::Render(RenderInfoClass & rinfo)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	Customized_Render(rinfo);
++#else
+ 	DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd);
+ 
+ 	if (Get_Extra_Pass_Polygon_Mode()==EXTRA_PASS_DISABLE) {
+@@ -215,7 +218,6 @@
+ 	}
+ 	else {
+ 		bool old_enable=WW3D::Is_Texturing_Enabled();
+-
+ 		DX8Wrapper::Set_DX8_Render_State (D3DRS_ZBIAS, 0);
+ 		Customized_Render(rinfo);
+ 		switch (Get_Extra_Pass_Polygon_Mode()) {
+@@ -236,6 +238,7 @@
+ 
+ 		WW3D::Enable_Texturing(old_enable);
+ 	}
++#endif
+ }
+ 
+ /***********************************************************************************************
+@@ -545,6 +548,7 @@
+ 	// derived classes should use light environment
+ 	WWASSERT(rinfo.light_environment==NULL);
+ 	int count=0;
++#if !defined(RENEGADE_VITA_PORT)
+ 	// Turn off lights in case we have none
+ 	DX8Wrapper::Set_Light(0,NULL);
+ 	DX8Wrapper::Set_Light(1,NULL);
+@@ -562,6 +566,9 @@
+ 		}
+ 		count++;
+ 	}
++#else
++	(void)count;
++#endif
+ 
+ 	// loop through all render objects in the list:
+ 	for (it.First(&RenderList); !it.Is_Done(); it.Next()) {
+--- a/texture.cpp
++++ b/texture.cpp
+@@ -124,6 +124,9 @@
+ 	default:
+ 		break;
+ 	}
++#if defined(RENEGADE_VITA_PORT)
++	(void)rendertarget;
++#else
+ 	D3DPOOL d3dpool=(D3DPOOL) 0;
+ 	switch(pool)
+ 	{
+@@ -148,6 +151,7 @@
+ 		this);
+ 		DX8TextureManagerClass::Add(track);
+ 	}
++#endif
+ 	LastAccessed=WW3D::Get_Sync_Time();
+ }
+ 
+@@ -197,6 +201,9 @@
+ 		// If requesting bumpmap format that isn't available we'll just return the surface in whatever color
+ 		// format the texture file is in. (This is illegal case, the format support should always be queried
+ 		// before creating a bump texture!)
++#if defined(RENEGADE_VITA_PORT)
++		TextureFormat=WW3D_FORMAT_UNKNOWN;
++#else
+ 		if (!DX8Wrapper::Is_Initted() || !DX8Wrapper::Get_Current_Caps()->Support_Texture_Format(TextureFormat)) {
+ 			TextureFormat=WW3D_FORMAT_UNKNOWN;
+ 		}
+@@ -207,6 +214,7 @@
+ 			MipLevelCount=MIP_LEVELS_1;
+ 			MipMapFilter=FILTER_TYPE_NONE;
+ 		}
++#endif
+ 		break;
+ 
+ 	default:
+@@ -236,6 +244,9 @@
+ 	}
+ 
+ 	// Find original size from the thumbnail (but don't create thumbnail texture yet!)
++#if defined(RENEGADE_VITA_PORT)
++	Initialized=true;
++#else
+ 	ThumbnailClass* thumb=NULL;
+ 	ThumbnailManagerClass* thumb_man=ThumbnailManagerClass::Peek_List().Head();
+ 	while (thumb_man) {
+@@ -247,16 +258,19 @@
+ 		}
+ 		thumb_man=thumb_man->Succ();
+ 	}
++#endif
+ 
+ 	LastAccessed=WW3D::Get_Sync_Time();
+ 
+ 	// If the thumbnails are not enabled, init the texture at this point to avoid stalling when the
+ 	// mesh is rendered.
++#if !defined(RENEGADE_VITA_PORT)
+ 	if (!WW3D::Get_Thumbnail_Enabled()) {
+ 		if (TextureLoader::Is_DX8_Thread()) {
+ 			Init();
+ 		}
+ 	}
++#endif
+ }
+ 
+ // ----------------------------------------------------------------------------
+@@ -362,6 +376,11 @@
+ 
+ TextureClass::~TextureClass(void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	TextureLoadTask=NULL;
++	ThumbnailLoadTask=NULL;
++	D3DTexture=NULL;
++#else
+ 	delete TextureLoadTask;
+ 	TextureLoadTask=NULL;
+ 	delete ThumbnailLoadTask;
+@@ -372,6 +391,7 @@
+ 		D3DTexture = NULL;
+ 	}
+ 	DX8TextureManagerClass::Remove(this);
++#endif
+ }
+ 
+ void TextureClass::Invalidate_Old_Unused_Textures(unsigned invalidation_time_override)
+@@ -409,6 +429,11 @@
+ 
+ void TextureClass::Init()
+ {
++#if defined(RENEGADE_VITA_PORT)
++	Initialized=true;
++	LastAccessed=WW3D::Get_Sync_Time();
++	return;
++#else
+ 	// If the texture has already been initialised we should exit now
+ 	if (Initialized) return;
+ 
+@@ -440,6 +465,7 @@
+ 	}
+ 
+ 	LastAccessed=WW3D::Get_Sync_Time();
++#endif
+ }
+ 
+ void TextureClass::Invalidate()
+@@ -470,10 +496,15 @@
+ 
+ void TextureClass::Load_Locked_Surface()
+ {
++#if defined(RENEGADE_VITA_PORT)
++	D3DTexture=0;
++	Initialized=true;
++#else
+ 	if (D3DTexture) D3DTexture->Release();
+ 	D3DTexture=0;
+ 	TextureLoader::Request_Thumbnail(this);
+ 	Initialized=false;
++#endif
+ }
+ 
+ // ----------------------------------------------------------------------------
+@@ -992,6 +1023,7 @@
+ 
+ 				case W3DTEXTURE_TYPE_BUMPMAP:
+ 				{
++#if !defined(RENEGADE_VITA_PORT)
+ 					if (DX8Wrapper::Is_Initted() && DX8Wrapper::Get_Current_Caps()->Support_Bump_Envmap()) {
+ 						// No mipmaps to bumpmap for now
+ 						mipcount=TextureClass::MIP_LEVELS_1;
+@@ -1000,6 +1032,7 @@
+ 						else if (DX8Wrapper::Get_Current_Caps()->Support_Texture_Format(WW3D_FORMAT_X8L8V8U8)) format=WW3D_FORMAT_X8L8V8U8;
+ 						else if (DX8Wrapper::Get_Current_Caps()->Support_Texture_Format(WW3D_FORMAT_L6V5U5)) format=WW3D_FORMAT_L6V5U5;
+ 					}
++#endif
+ 					break;
+ 				}
+ 
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -114,6 +114,9 @@
+ #include "dx8texman.h"
+ #include "formconv.h"
+ #include "animatedsoundmgr.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "ww3d_vita_renderer.h"
++#endif
+ 
+ 
+ #ifndef _UNIX
+@@ -263,6 +266,20 @@
+ 	_Hwnd = (HWND)hwnd;
+ 	Lite = lite;
+ 
++#if defined(RENEGADE_VITA_PORT)
++	(void)defaultpal;
++	DefaultStaticSortLists = new RefRenderObjListClass[MAX_SORT_LEVEL + 1];
++	Reset_Current_Static_Sort_Lists_To_Default();
++	if (!RenegadeVitaRenderer::Initialize()) {
++		delete [] DefaultStaticSortLists;
++		DefaultStaticSortLists = NULL;
++		CurrentStaticSortLists = NULL;
++		return WW3D_ERROR_DIRECTX8_INITIALIZATION_FAILED;
++	}
++	IsInitted = true;
++	return WW3D_ERROR_OK;
++#else
++
+ 	/*
+ 	** Initialize d3d, this also enumerates the available devices and resolutions.
+ 	*/
+@@ -305,6 +322,7 @@
+ 	}
+ 	WWDEBUG_SAY(("WW3D Init completed\n"));
+ 	return WW3D_ERROR_OK;
++#endif
+ }
+ 
+ 
+@@ -325,6 +343,19 @@
+ 	assert(Lite || IsInitted == true);
+ //	WWDEBUG_SAY(("WW3D::Shutdown\n"));
+ 
++#if defined(RENEGADE_VITA_PORT)
++	PredictiveLODOptimizerClass::Free();
++	if (WW3DAssetManager::Get_Instance()) {
++		WW3DAssetManager::Get_Instance()->Free_Assets();
++	}
++	delete [] DefaultStaticSortLists;
++	DefaultStaticSortLists = NULL;
++	CurrentStaticSortLists = NULL;
++	RenegadeVitaRenderer::Shutdown();
++	IsInitted = false;
++	return WW3D_ERROR_OK;
++#else
++
+ #ifdef WW3D_DX8
+ 	if (IsCapturing) {
+ 		Stop_Movie_Capture();
+@@ -368,6 +399,7 @@
+ 
+ 	IsInitted = false;
+ 	return WW3D_ERROR_OK;
++#endif
+ }
+ 
+ 
+@@ -785,6 +817,16 @@
+ 	WWPROFILE("WW3D::Begin_Render");
+ 	WWASSERT(IsInitted);
+ 
++#if defined(RENEGADE_VITA_PORT)
++	(void)clear;
++	(void)clearz;
++	(void)network_callback;
++	WWASSERT(!IsRendering);
++	IsRendering = true;
++	RenegadeVitaRenderer::Begin_Frame(color.X, color.Y, color.Z);
++	return WW3D_ERROR_OK;
++#else
++
+ 	// Memory allocation statistics
+ 	LastFrameMemoryAllocations=WWMemoryLogClass::Get_Allocate_Count();
+ 	LastFrameMemoryFrees=WWMemoryLogClass::Get_Free_Count();
+@@ -827,6 +869,7 @@
+ 	DX8Wrapper::Begin_Scene();
+ 
+ 	return WW3D_ERROR_OK;
++#endif
+ }
+ 
+ /***********************************************************************************************
+@@ -916,6 +959,15 @@
+ 	cam->On_Frame_Update();
+ 	RenderInfoClass rinfo(*cam);
+ 
++#if defined(RENEGADE_VITA_PORT)
++	(void)clear;
++	(void)clearz;
++	(void)color;
++	scene->Render(rinfo);
++	Flush(rinfo);
++	return WW3D_ERROR_OK;
++#else
++
+ 	// Apply the camera and viewport (including depth range)
+ 	cam->Apply();
+ 
+@@ -951,6 +1003,7 @@
+ 	Flush(rinfo);
+ 
+ 	return WW3D_ERROR_OK;
++#endif
+ }
+ 
+ 
+@@ -984,6 +1037,12 @@
+ 		rinfo.Camera.On_Frame_Update();
+ 	}
+ 
++#if defined(RENEGADE_VITA_PORT)
++	obj.Render(rinfo);
++	Flush(rinfo);
++	return WW3D_ERROR_OK;
++#else
++
+ 	// Apply the camera and viewport (including depth range)
+ 	rinfo.Camera.Apply();
+ 
+@@ -1003,6 +1062,7 @@
+ 	Flush(rinfo);
+ 
+ 	return WW3D_ERROR_OK;
++#endif
+ }
+ 
+ 
+@@ -1026,10 +1086,14 @@
+  *=============================================================================================*/
+ void WW3D::Flush(RenderInfoClass & rinfo)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
++#else
+ 	TheDX8MeshRenderer.Flush();
+ 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
+ 	SortingRendererClass::Flush();
+ 	TheDX8MeshRenderer.Clear_Pending_Delete_Lists();
++#endif
+ }
+ 
+ 
+@@ -1056,6 +1120,13 @@
+ 	assert(IsRendering);
+ 	assert(IsInitted);
+ 
++#if defined(RENEGADE_VITA_PORT)
++	IsRendering = false;
++	RenegadeVitaRenderer::End_Frame(flip_frame);
++	FrameCount++;
++	return WW3D_ERROR_OK;
++#else
++
+ 	// If sorting renderer flush isn't called from within any of the render functions
+ 	// the sorting arrays will overflow!
+ 
+@@ -1077,6 +1148,7 @@
+ 	Activate_Snapshot(false);
+ 
+ 	return WW3D_ERROR_OK;
++#endif
+ }
+ 
+ 
+@@ -1254,6 +1326,10 @@
+ void WW3D::Make_Screen_Shot( const char * filename_base )
+ {
+ 
++#if defined(RENEGADE_VITA_PORT)
++	(void)filename_base;
++	return;
++#else
+ 	WWASSERT(!IsRendering);
+ 
+ 	char filename[80];
+@@ -1332,6 +1408,7 @@
+ 	targ.Save(filename,TGAF_IMAGE,false);
+ 
+ 	delete [] image;
++#endif
+ 
+ }
+ 
+@@ -1880,7 +1957,11 @@
+ 			robj->Render(rinfo);
+ 			render=true;
+ 		}
+-		if (render) TheDX8MeshRenderer.Flush();
++		if (render) {
++#if !defined(RENEGADE_VITA_PORT)
++			TheDX8MeshRenderer.Flush();
++#endif
++		}
+ 	}
+ 	AreStaticSortListsEnabled = old_enable;
+ }
+@@ -1911,4 +1992,4 @@
+ 	CurrentStaticSortLists = DefaultStaticSortLists;
+ 	MinStaticSortLevel = 1;	// The 0 list is not used
+ 	MaxStaticSortLevel = MAX_SORT_LEVEL;
+-}
+\ No newline at end of file
++}

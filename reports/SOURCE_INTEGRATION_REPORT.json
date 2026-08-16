@@ -1,0 +1,1706 @@
+{
+  "milestone": "A3.5-dev4",
+  "objective": "First interactive original M00 gameplay runtime; current source seed preserves accepted A3.0, capture/telemetry, and replaces temporary gameplay scalar closures with original Combat owners",
+  "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
+  "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
+  "original_source_manifest": "cmake/A31OriginalSources.cmake",
+  "original_source_files_discovered": 1490,
+  "original_source_files_compiled": 424,
+  "original_translation_units": [
+    "Code/Combat/CNCModeSettings.cpp",
+    "Code/Combat/SoundEnvironment.cpp",
+    "Code/Combat/WeatherMgr.cpp",
+    "Code/Combat/action.cpp",
+    "Code/Combat/activeconversation.cpp",
+    "Code/Combat/animcontrol.cpp",
+    "Code/Combat/armedgameobj.cpp",
+    "Code/Combat/assetdep.cpp",
+    "Code/Combat/assets.cpp",
+    "Code/Combat/backgroundmgr.cpp",
+    "Code/Combat/basecontroller.cpp",
+    "Code/Combat/basegameobj.cpp",
+    "Code/Combat/beacongameobj.cpp",
+    "Code/Combat/bones.cpp",
+    "Code/Combat/building.cpp",
+    "Code/Combat/buildingaggregate.cpp",
+    "Code/Combat/buildingmonitor.cpp",
+    "Code/Combat/buildingstate.cpp",
+    "Code/Combat/bullet.cpp",
+    "Code/Combat/c4.cpp",
+    "Code/Combat/ccamera.cpp",
+    "Code/Combat/cheatmgr.cpp",
+    "Code/Combat/clientcontrol.cpp",
+    "Code/Combat/colors.cpp",
+    "Code/Combat/combat.cpp",
+    "Code/Combat/combatdazzle.cpp",
+    "Code/Combat/combatmaterialeffectmanager.cpp",
+    "Code/Combat/combatsaveload.cpp",
+    "Code/Combat/combatsound.cpp",
+    "Code/Combat/control.cpp",
+    "Code/Combat/conversation.cpp",
+    "Code/Combat/conversationmgr.cpp",
+    "Code/Combat/conversationremark.cpp",
+    "Code/Combat/cover.cpp",
+    "Code/Combat/crandom.cpp",
+    "Code/Combat/csdamageevent.cpp",
+    "Code/Combat/damage.cpp",
+    "Code/Combat/damageablegameobj.cpp",
+    "Code/Combat/damageablestaticphys.cpp",
+    "Code/Combat/diaglog.cpp",
+    "Code/Combat/dialogue.cpp",
+    "Code/Combat/doors.cpp",
+    "Code/Combat/dynamicspeechanim.cpp",
+    "Code/Combat/effectrecycler.cpp",
+    "Code/Combat/elevator.cpp",
+    "Code/Combat/encyclopediamgr.cpp",
+    "Code/Combat/evasettings.cpp",
+    "Code/Combat/explosion.cpp",
+    "Code/Combat/ffactorylist.cpp",
+    "Code/Combat/gameobjmanager.cpp",
+    "Code/Combat/gameobjobserver.cpp",
+    "Code/Combat/gametype.cpp",
+    "Code/Combat/globalsettings.cpp",
+    "Code/Combat/hud.cpp",
+    "Code/Combat/hudinfo.cpp",
+    "Code/Combat/humanrecoil.cpp",
+    "Code/Combat/humanstate.cpp",
+    "Code/Combat/input.cpp",
+    "Code/Combat/inventory.cpp",
+    "Code/Combat/mapmgr.cpp",
+    "Code/Combat/messagewindow.cpp",
+    "Code/Combat/muzzlerecoil.cpp",
+    "Code/Combat/objectives.cpp",
+    "Code/Combat/objectivesviewer.cpp",
+    "Code/Combat/objlibrary.cpp",
+    "Code/Combat/orator.cpp",
+    "Code/Combat/oratortypes.cpp",
+    "Code/Combat/pathaction.cpp",
+    "Code/Combat/persistentgameobjobserver.cpp",
+    "Code/Combat/physicalgameobj.cpp",
+    "Code/Combat/pilot.cpp",
+    "Code/Combat/playerdata.cpp",
+    "Code/Combat/playerterminal.cpp",
+    "Code/Combat/playertype.cpp",
+    "Code/Combat/powerup.cpp",
+    "Code/Combat/radar.cpp",
+    "Code/Combat/reflist.cpp",
+    "Code/Combat/savegame.cpp",
+    "Code/Combat/scexplosionevent.cpp",
+    "Code/Combat/screenfademanager.cpp",
+    "Code/Combat/scriptablegameobj.cpp",
+    "Code/Combat/scripts.cpp",
+    "Code/Combat/scriptzone.cpp",
+    "Code/Combat/simplegameobj.cpp",
+    "Code/Combat/smartgameobj.cpp",
+    "Code/Combat/sniper.cpp",
+    "Code/Combat/soldier.cpp",
+    "Code/Combat/soldierobserver.cpp",
+    "Code/Combat/spawn.cpp",
+    "Code/Combat/staticnetworkobject.cpp",
+    "Code/Combat/surfaceeffects.cpp",
+    "Code/Combat/systeminfolog.cpp",
+    "Code/Combat/textwindow.cpp",
+    "Code/Combat/timemgr.cpp",
+    "Code/Combat/transition.cpp",
+    "Code/Combat/transitiongameobj.cpp",
+    "Code/Combat/unitcoordinationzonemgr.cpp",
+    "Code/Combat/vehicle.cpp",
+    "Code/Combat/vehicledriver.cpp",
+    "Code/Combat/viseme.cpp",
+    "Code/Combat/weaponbag.cpp",
+    "Code/Combat/weaponmanager.cpp",
+    "Code/Combat/weapons.cpp",
+    "Code/Combat/weaponview.cpp",
+    "Code/Commando/apppacketstats.cpp",
+    "Code/Commando/buildnum.cpp",
+    "Code/Commando/changeteamevent.cpp",
+    "Code/Commando/clientfps.cpp",
+    "Code/Commando/clientgoodbyeevent.cpp",
+    "Code/Commando/clienthintmanager.cpp",
+    "Code/Commando/clientpingmanager.cpp",
+    "Code/Commando/cnetwork.cpp",
+    "Code/Commando/comnetrcvinst.cpp",
+    "Code/Commando/cshint.cpp",
+    "Code/Commando/cspingrequestevent.cpp",
+    "Code/Commando/datasafe.cpp",
+    "Code/Commando/evictionevent.cpp",
+    "Code/Commando/gamedata.cpp",
+    "Code/Commando/gamedataupdateevent.cpp",
+    "Code/Commando/gameinitmgr.cpp",
+    "Code/Commando/gameoptionsevent.cpp",
+    "Code/Commando/gdcnc.cpp",
+    "Code/Commando/gdsingleplayer.cpp",
+    "Code/Commando/god.cpp",
+    "Code/Commando/messages.cpp",
+    "Code/Commando/netevent.cpp",
+    "Code/Commando/nethandler.cpp",
+    "Code/Commando/netinterface.cpp",
+    "Code/Commando/pkthandlers.cpp",
+    "Code/Commando/player.cpp",
+    "Code/Commando/playerkill.cpp",
+    "Code/Commando/playermanager.cpp",
+    "Code/Commando/priority.cpp",
+    "Code/Commando/regbool.cpp",
+    "Code/Commando/regfloat.cpp",
+    "Code/Commando/regint.cpp",
+    "Code/Commando/renegadecheatmgr.cpp",
+    "Code/Commando/sbbomanager.cpp",
+    "Code/Commando/scpingresponseevent.cpp",
+    "Code/Commando/sctextobj.cpp",
+    "Code/Commando/serverfps.cpp",
+    "Code/Commando/team.cpp",
+    "Code/Commando/teammanager.cpp",
+    "Code/Commando/winevent.cpp",
+    "Code/WWAudio/AudioEvents.cpp",
+    "Code/WWAudio/AudioSaveLoad.cpp",
+    "Code/WWAudio/LogicalListener.cpp",
+    "Code/WWAudio/SoundSceneObj.cpp",
+    "Code/WWMath/aabox.cpp",
+    "Code/WWMath/aabtreecull.cpp",
+    "Code/WWMath/cardinalspline.cpp",
+    "Code/WWMath/catmullromspline.cpp",
+    "Code/WWMath/colmath.cpp",
+    "Code/WWMath/colmathaabox.cpp",
+    "Code/WWMath/colmathaabtri.cpp",
+    "Code/WWMath/colmathfrustum.cpp",
+    "Code/WWMath/colmathline.cpp",
+    "Code/WWMath/colmathobbobb.cpp",
+    "Code/WWMath/colmathobbox.cpp",
+    "Code/WWMath/colmathobbtri.cpp",
+    "Code/WWMath/colmathplane.cpp",
+    "Code/WWMath/colmathsphere.cpp",
+    "Code/WWMath/cullsys.cpp",
+    "Code/WWMath/curve.cpp",
+    "Code/WWMath/euler.cpp",
+    "Code/WWMath/frustum.cpp",
+    "Code/WWMath/gridcull.cpp",
+    "Code/WWMath/hermitespline.cpp",
+    "Code/WWMath/lineseg.cpp",
+    "Code/WWMath/lookuptable.cpp",
+    "Code/WWMath/matrix3.cpp",
+    "Code/WWMath/matrix3d.cpp",
+    "Code/WWMath/matrix4.cpp",
+    "Code/WWMath/obbox.cpp",
+    "Code/WWMath/ode.cpp",
+    "Code/WWMath/pot.cpp",
+    "Code/WWMath/quat.cpp",
+    "Code/WWMath/tcbspline.cpp",
+    "Code/WWMath/tri.cpp",
+    "Code/WWMath/v3_rnd.cpp",
+    "Code/WWMath/vehiclecurve.cpp",
+    "Code/WWMath/vp.cpp",
+    "Code/WWMath/wwmath.cpp",
+    "Code/ww3d2/aabtree.cpp",
+    "Code/ww3d2/aabtreebuilder.cpp",
+    "Code/ww3d2/agg_def.cpp",
+    "Code/ww3d2/animatedsoundmgr.cpp",
+    "Code/ww3d2/animobj.cpp",
+    "Code/ww3d2/assetmgr.cpp",
+    "Code/ww3d2/assetstatus.cpp",
+    "Code/ww3d2/bitmaphandler.cpp",
+    "Code/ww3d2/boxrobj.cpp",
+    "Code/ww3d2/bwrender.cpp",
+    "Code/ww3d2/camera.cpp",
+    "Code/ww3d2/collect.cpp",
+    "Code/ww3d2/coltest.cpp",
+    "Code/ww3d2/composite.cpp",
+    "Code/ww3d2/dazzle.cpp",
+    "Code/ww3d2/ddsfile.cpp",
+    "Code/ww3d2/decalmsh.cpp",
+    "Code/ww3d2/decalsys.cpp",
+    "Code/ww3d2/distlod.cpp",
+    "Code/ww3d2/dx8fvf.cpp",
+    "Code/ww3d2/dx8indexbuffer.cpp",
+    "Code/ww3d2/dx8vertexbuffer.cpp",
+    "Code/ww3d2/dynamesh.cpp",
+    "Code/ww3d2/font3d.cpp",
+    "Code/ww3d2/formconv.cpp",
+    "Code/ww3d2/hanim.cpp",
+    "Code/ww3d2/hanimmgr.cpp",
+    "Code/ww3d2/hcanim.cpp",
+    "Code/ww3d2/hlod.cpp",
+    "Code/ww3d2/hmdldef.cpp",
+    "Code/ww3d2/hmorphanim.cpp",
+    "Code/ww3d2/hrawanim.cpp",
+    "Code/ww3d2/htree.cpp",
+    "Code/ww3d2/htreemgr.cpp",
+    "Code/ww3d2/light.cpp",
+    "Code/ww3d2/lightenvironment.cpp",
+    "Code/ww3d2/line3d.cpp",
+    "Code/ww3d2/linegrp.cpp",
+    "Code/ww3d2/mapper.cpp",
+    "Code/ww3d2/matinfo.cpp",
+    "Code/ww3d2/matpass.cpp",
+    "Code/ww3d2/matrixmapper.cpp",
+    "Code/ww3d2/mesh.cpp",
+    "Code/ww3d2/meshgeometry.cpp",
+    "Code/ww3d2/meshmatdesc.cpp",
+    "Code/ww3d2/meshmdl.cpp",
+    "Code/ww3d2/meshmdlio.cpp",
+    "Code/ww3d2/metalmap.cpp",
+    "Code/ww3d2/motchan.cpp",
+    "Code/ww3d2/nullrobj.cpp",
+    "Code/ww3d2/part_buf.cpp",
+    "Code/ww3d2/part_emt.cpp",
+    "Code/ww3d2/part_ldr.cpp",
+    "Code/ww3d2/pivot.cpp",
+    "Code/ww3d2/pointgr.cpp",
+    "Code/ww3d2/predlod.cpp",
+    "Code/ww3d2/projector.cpp",
+    "Code/ww3d2/proto.cpp",
+    "Code/ww3d2/render2d.cpp",
+    "Code/ww3d2/render2dsentence.cpp",
+    "Code/ww3d2/renderobjectrecycler.cpp",
+    "Code/ww3d2/rendobj.cpp",
+    "Code/ww3d2/rinfo.cpp",
+    "Code/ww3d2/scene.cpp",
+    "Code/ww3d2/segline.cpp",
+    "Code/ww3d2/seglinerenderer.cpp",
+    "Code/ww3d2/shader.cpp",
+    "Code/ww3d2/shattersystem.cpp",
+    "Code/ww3d2/snappts.cpp",
+    "Code/ww3d2/texproject.cpp",
+    "Code/ww3d2/texture.cpp",
+    "Code/ww3d2/vertmaterial.cpp",
+    "Code/ww3d2/visrasterizer.cpp",
+    "Code/ww3d2/w3d_util.cpp",
+    "Code/ww3d2/ww3d.cpp",
+    "Code/ww3d2/ww3dformat.cpp",
+    "Code/wwbitpack/BitPacker.cpp",
+    "Code/wwbitpack/bitstream.cpp",
+    "Code/wwbitpack/encoderlist.cpp",
+    "Code/wwbitpack/encodertypeentry.cpp",
+    "Code/wwdebug/wwprofile.cpp",
+    "Code/wwlib/FastAllocator.cpp",
+    "Code/wwlib/b64pipe.cpp",
+    "Code/wwlib/b64straw.cpp",
+    "Code/wwlib/base64.cpp",
+    "Code/wwlib/buff.cpp",
+    "Code/wwlib/bufffile.cpp",
+    "Code/wwlib/chunkio.cpp",
+    "Code/wwlib/crc.cpp",
+    "Code/wwlib/cstraw.cpp",
+    "Code/wwlib/ffactory.cpp",
+    "Code/wwlib/gcd_lcm.cpp",
+    "Code/wwlib/hash.cpp",
+    "Code/wwlib/ini.cpp",
+    "Code/wwlib/jshell.cpp",
+    "Code/wwlib/lzo.cpp",
+    "Code/wwlib/lzo1x_c.cpp",
+    "Code/wwlib/lzo1x_d.cpp",
+    "Code/wwlib/mixfile.cpp",
+    "Code/wwlib/multilist.cpp",
+    "Code/wwlib/nstrdup.cpp",
+    "Code/wwlib/pipe.cpp",
+    "Code/wwlib/random.cpp",
+    "Code/wwlib/rawfile.cpp",
+    "Code/wwlib/readline.cpp",
+    "Code/wwlib/realcrc.cpp",
+    "Code/wwlib/rndstrng.cpp",
+    "Code/wwlib/slnode.cpp",
+    "Code/wwlib/straw.cpp",
+    "Code/wwlib/systimer.cpp",
+    "Code/wwlib/thread.cpp",
+    "Code/wwlib/trim.cpp",
+    "Code/wwlib/vector.cpp",
+    "Code/wwlib/widestring.cpp",
+    "Code/wwlib/wwfile.cpp",
+    "Code/wwlib/wwstring.cpp",
+    "Code/wwlib/xpipe.cpp",
+    "Code/wwlib/xstraw.cpp",
+    "Code/wwnet/BWBalance.cpp",
+    "Code/wwnet/connect.cpp",
+    "Code/wwnet/msgstat.cpp",
+    "Code/wwnet/msgstatlist.cpp",
+    "Code/wwnet/msgstatlistgroup.cpp",
+    "Code/wwnet/netstats.cpp",
+    "Code/wwnet/netutil.cpp",
+    "Code/wwnet/networkobject.cpp",
+    "Code/wwnet/networkobjectfactory.cpp",
+    "Code/wwnet/networkobjectfactorymgr.cpp",
+    "Code/wwnet/networkobjectmgr.cpp",
+    "Code/wwnet/packetmgr.cpp",
+    "Code/wwnet/rhost.cpp",
+    "Code/wwnet/singlepl.cpp",
+    "Code/wwnet/wwpacket.cpp",
+    "Code/wwphys/Path.cpp",
+    "Code/wwphys/PathDebugPlotter.cpp",
+    "Code/wwphys/PathObject.cpp",
+    "Code/wwphys/Pathfind.cpp",
+    "Code/wwphys/PathfindPortal.cpp",
+    "Code/wwphys/PathfindSector.cpp",
+    "Code/wwphys/accessiblephys.cpp",
+    "Code/wwphys/animcollisionmanager.cpp",
+    "Code/wwphys/bin_aabox.cpp",
+    "Code/wwphys/bin_axes.cpp",
+    "Code/wwphys/bin_obbox.cpp",
+    "Code/wwphys/bin_point.cpp",
+    "Code/wwphys/bin_vector.cpp",
+    "Code/wwphys/bpt.cpp",
+    "Code/wwphys/camerashakesystem.cpp",
+    "Code/wwphys/decophys.cpp",
+    "Code/wwphys/dynamicaabtreecull.cpp",
+    "Code/wwphys/dynamicanimphys.cpp",
+    "Code/wwphys/dynamicphys.cpp",
+    "Code/wwphys/dynamicshadowmanager.cpp",
+    "Code/wwphys/dyntexproject.cpp",
+    "Code/wwphys/floodfillbox.cpp",
+    "Code/wwphys/floodfillgrid.cpp",
+    "Code/wwphys/grideffect.cpp",
+    "Code/wwphys/heightdb.cpp",
+    "Code/wwphys/humanphys.cpp",
+    "Code/wwphys/lightcull.cpp",
+    "Code/wwphys/lightphys.cpp",
+    "Code/wwphys/lightsolve.cpp",
+    "Code/wwphys/lightsolvecontext.cpp",
+    "Code/wwphys/materialeffect.cpp",
+    "Code/wwphys/motorcycle.cpp",
+    "Code/wwphys/motorvehicle.cpp",
+    "Code/wwphys/movephys.cpp",
+    "Code/wwphys/octbox.cpp",
+    "Code/wwphys/pathfindbox.cpp",
+    "Code/wwphys/pathmgr.cpp",
+    "Code/wwphys/pathnode.cpp",
+    "Code/wwphys/pathsolve.cpp",
+    "Code/wwphys/phys.cpp",
+    "Code/wwphys/phys3.cpp",
+    "Code/wwphys/physaabtreecull.cpp",
+    "Code/wwphys/physcon.cpp",
+    "Code/wwphys/physcontrol.cpp",
+    "Code/wwphys/physdecalsys.cpp",
+    "Code/wwphys/physdynamicsavesystem.cpp",
+    "Code/wwphys/physgridcull.cpp",
+    "Code/wwphys/physresourcemgr.cpp",
+    "Code/wwphys/physstaticsavesystem.cpp",
+    "Code/wwphys/phystexproject.cpp",
+    "Code/wwphys/progcall.cpp",
+    "Code/wwphys/projectile.cpp",
+    "Code/wwphys/projectormanager.cpp",
+    "Code/wwphys/pscene.cpp",
+    "Code/wwphys/pscene_collision.cpp",
+    "Code/wwphys/pscene_decal.cpp",
+    "Code/wwphys/pscene_lighting.cpp",
+    "Code/wwphys/pscene_projectors.cpp",
+    "Code/wwphys/pscene_saveload.cpp",
+    "Code/wwphys/pscene_vis.cpp",
+    "Code/wwphys/rbody.cpp",
+    "Code/wwphys/rbody_obsolete.cpp",
+    "Code/wwphys/renderobjphys.cpp",
+    "Code/wwphys/renegadeterrainmaterialpass.cpp",
+    "Code/wwphys/renegadeterrainpatch.cpp",
+    "Code/wwphys/ridermanager.cpp",
+    "Code/wwphys/shakeablestaticphys.cpp",
+    "Code/wwphys/staticaabtreecull.cpp",
+    "Code/wwphys/staticanimphys.cpp",
+    "Code/wwphys/staticphys.cpp",
+    "Code/wwphys/stealtheffect.cpp",
+    "Code/wwphys/terrainmaterial.cpp",
+    "Code/wwphys/timeddecophys.cpp",
+    "Code/wwphys/trackedvehicle.cpp",
+    "Code/wwphys/transitioneffect.cpp",
+    "Code/wwphys/umbrasupport.cpp",
+    "Code/wwphys/vehicledazzle.cpp",
+    "Code/wwphys/vehiclephys.cpp",
+    "Code/wwphys/visoptimizationcontext.cpp",
+    "Code/wwphys/visoptprogress.cpp",
+    "Code/wwphys/visrendercontext.cpp",
+    "Code/wwphys/vissample.cpp",
+    "Code/wwphys/vissectorstats.cpp",
+    "Code/wwphys/vistable.cpp",
+    "Code/wwphys/vistablemgr.cpp",
+    "Code/wwphys/vtolvehicle.cpp",
+    "Code/wwphys/waypath.cpp",
+    "Code/wwphys/waypoint.cpp",
+    "Code/wwphys/wheel.cpp",
+    "Code/wwphys/wheelvehicle.cpp",
+    "Code/wwphys/widgets.cpp",
+    "Code/wwphys/widgetuser.cpp",
+    "Code/wwphys/wwphys.cpp",
+    "Code/wwsaveload/definition.cpp",
+    "Code/wwsaveload/definitionfactory.cpp",
+    "Code/wwsaveload/definitionfactorymgr.cpp",
+    "Code/wwsaveload/definitionmgr.cpp",
+    "Code/wwsaveload/persistfactory.cpp",
+    "Code/wwsaveload/pointerremap.cpp",
+    "Code/wwsaveload/saveload.cpp",
+    "Code/wwsaveload/saveloadstatus.cpp",
+    "Code/wwsaveload/saveloadsubsystem.cpp",
+    "Code/wwsaveload/twiddler.cpp",
+    "Code/wwsaveload/wwsaveload.cpp",
+    "Code/wwtranslatedb/tdbcategory.cpp",
+    "Code/wwtranslatedb/translatedb.cpp",
+    "Code/wwui/stylemgr.cpp",
+    "Code/wwutil/mathutil.cpp"
+  ],
+  "vita_platform_renderer_validation_files": 21,
+  "vita_translation_units": [
+    "port/developer/a31_capture_telemetry.cpp",
+    "port/filesystem/renegade_paths.cpp",
+    "port/filesystem/renegade_file_factory.cpp",
+    "port/filesystem/renegade_registry.cpp",
+    "port/platform/renegade_directinput.cpp",
+    "port/platform/renegade_optional_services.cpp",
+    "port/platform/renegade_network_provider.cpp",
+    "port/renderer/vita/ww3d_vita_renderer.cpp",
+    "port/renderer/vita/ww3d_dx8_boundary.cpp",
+    "port/renderer/vita/surface_boundary.cpp",
+    "port/validation/wwbitpack_selftest.cpp",
+    "port/validation/a21_filesystem_selftest.cpp",
+    "port/validation/a22_w3d_selftest.cpp",
+    "port/validation/a30_world_runtime.cpp",
+    "port/platform/vita/vita_platform.cpp",
+    "port/platform/vita/a30_vita_runtime.cpp",
+    "port/platform/a31_gameplay_boundary.cpp",
+    "port/platform/a31_miscutil_boundary.cpp",
+    "port/platform/a31_network_options_boundary.cpp",
+    "port/platform/vita/a30_main.cpp",
+    "port/platform/vita/a31_vita_runtime.cpp"
+  ],
+  "sdk_framebuffer_helper_files": 1,
+  "compatibility_headers": 50,
+  "compatibility_header_paths": [
+    "port/compatibility/include/DialogControl.h",
+    "port/compatibility/include/GameMode.h",
+    "port/compatibility/include/LanChat.h",
+    "port/compatibility/include/RefCount.h",
+    "port/compatibility/include/Resource.h",
+    "port/compatibility/include/WWHack.h",
+    "port/compatibility/include/WWLib\\Notify.h",
+    "port/compatibility/include/WWLib\\Signaler.h",
+    "port/compatibility/include/WideString.h",
+    "port/compatibility/include/a31_cdkey_auth_stub.h",
+    "port/compatibility/include/a31_console_stub.h",
+    "port/compatibility/include/a31_dialogmgr_stub.h",
+    "port/compatibility/include/a31_gameinit_stub.h",
+    "port/compatibility/include/a31_gamespy_stub.h",
+    "port/compatibility/include/a31_god_ui_stub.h",
+    "port/compatibility/include/a31_lanmode_stub.h",
+    "port/compatibility/include/a31_messagebox_stub.h",
+    "port/compatibility/include/a31_multihud_stub.h",
+    "port/compatibility/include/a31_network_dialog_stub.h",
+    "port/compatibility/include/a31_serversettings_stub.h",
+    "port/compatibility/include/a31_shell_stub.h",
+    "port/compatibility/include/a31_slavemaster_stub.h",
+    "port/compatibility/include/a31_svr_goodbye_dialog_boundary.h",
+    "port/compatibility/include/a31_team_select_stub.h",
+    "port/compatibility/include/a31_win_screen_stub.h",
+    "port/compatibility/include/a31_wol_stub.h",
+    "port/compatibility/include/a31_wolgmode_stub.h",
+    "port/compatibility/include/a4_gameinit_online_boundary.h",
+    "port/compatibility/include/audiosaveload.h",
+    "port/compatibility/include/binkmovie.h",
+    "port/compatibility/include/bittype.h",
+    "port/compatibility/include/commctrl.h",
+    "port/compatibility/include/consolemode.h",
+    "port/compatibility/include/dinput.h",
+    "port/compatibility/include/direct.h",
+    "port/compatibility/include/gamespyadmin.h",
+    "port/compatibility/include/imm.h",
+    "port/compatibility/include/miscutil.h",
+    "port/compatibility/include/mmsystem.h",
+    "port/compatibility/include/msvc_compat.h",
+    "port/compatibility/include/mutex.h",
+    "port/compatibility/include/new.h",
+    "port/compatibility/include/osdep.h",
+    "port/compatibility/include/targa.h",
+    "port/compatibility/include/tchar.h",
+    "port/compatibility/include/win.h",
+    "port/compatibility/include/win32_compat.h",
+    "port/compatibility/include/windows.h",
+    "port/compatibility/include/winsock.h",
+    "port/compatibility/include/winuser.h"
+  ],
+  "patch_count": 103,
+  "mechanically_patched_upstream_files": 224,
+  "mechanically_patched_upstream_paths": [
+    "Code/Combat/WeatherMgr.cpp",
+    "Code/Combat/WeatherMgr.h",
+    "Code/Combat/activeconversation.cpp",
+    "Code/Combat/assetdep.cpp",
+    "Code/Combat/backgroundmgr.cpp",
+    "Code/Combat/backgroundmgr.h",
+    "Code/Combat/beacongameobj.cpp",
+    "Code/Combat/building.cpp",
+    "Code/Combat/buildingaggregate.cpp",
+    "Code/Combat/ccamera.cpp",
+    "Code/Combat/combat.cpp",
+    "Code/Combat/combatsound.cpp",
+    "Code/Combat/control.h",
+    "Code/Combat/conversation.cpp",
+    "Code/Combat/conversationmgr.cpp",
+    "Code/Combat/damage.cpp",
+    "Code/Combat/damage.h",
+    "Code/Combat/dialogue.cpp",
+    "Code/Combat/doors.cpp",
+    "Code/Combat/elevator.cpp",
+    "Code/Combat/encyclopediamgr.cpp",
+    "Code/Combat/hud.cpp",
+    "Code/Combat/hud.h",
+    "Code/Combat/humanstate.cpp",
+    "Code/Combat/input.cpp",
+    "Code/Combat/mapmgr.cpp",
+    "Code/Combat/messagewindow.cpp",
+    "Code/Combat/objectivesviewer.cpp",
+    "Code/Combat/persistentgameobjobserver.cpp",
+    "Code/Combat/playerdata.h",
+    "Code/Combat/reflist.cpp",
+    "Code/Combat/reflist.h",
+    "Code/Combat/savegame.cpp",
+    "Code/Combat/scriptablegameobj.cpp",
+    "Code/Combat/scriptablegameobj.h",
+    "Code/Combat/scriptcommands.cpp",
+    "Code/Combat/scripts.cpp",
+    "Code/Combat/scriptzone.cpp",
+    "Code/Combat/soldier.cpp",
+    "Code/Combat/soldier.h",
+    "Code/Combat/spawn.cpp",
+    "Code/Combat/textwindow.cpp",
+    "Code/Combat/textwindow.h",
+    "Code/Combat/weaponbag.cpp",
+    "Code/Combat/weaponmanager.h",
+    "Code/Combat/weapons.cpp",
+    "Code/Commando/AnnounceEvent.h",
+    "Code/Commando/DlgMPTeamSelect.h",
+    "Code/Commando/DlgMessageBox.cpp",
+    "Code/Commando/DlgMessageBox.h",
+    "Code/Commando/DlgWOLWait.h",
+    "Code/Commando/bioevent.cpp",
+    "Code/Commando/campaign.cpp",
+    "Code/Commando/cnetwork.cpp",
+    "Code/Commando/combatgmode.cpp",
+    "Code/Commando/comnetrcvinst.cpp",
+    "Code/Commando/datasafe.cpp",
+    "Code/Commando/datasafe.h",
+    "Code/Commando/demosupport.h",
+    "Code/Commando/dialogtests.cpp",
+    "Code/Commando/dialogtests.h",
+    "Code/Commando/dlgloadspgame.cpp",
+    "Code/Commando/dlgmainmenu.cpp",
+    "Code/Commando/evictionevent.cpp",
+    "Code/Commando/gamedata.cpp",
+    "Code/Commando/gamedata.h",
+    "Code/Commando/gamedataupdateevent.cpp",
+    "Code/Commando/gameinitmgr.cpp",
+    "Code/Commando/gamemenu.cpp",
+    "Code/Commando/gamemode.cpp",
+    "Code/Commando/gameoptionsevent.cpp",
+    "Code/Commando/gdcnc.cpp",
+    "Code/Commando/god.cpp",
+    "Code/Commando/messages.cpp",
+    "Code/Commando/modpackage.h",
+    "Code/Commando/netinterface.cpp",
+    "Code/Commando/player.cpp",
+    "Code/Commando/player.h",
+    "Code/Commando/playermanager.cpp",
+    "Code/Commando/regbool.cpp",
+    "Code/Commando/renegadedialogmgr.cpp",
+    "Code/Commando/sctextobj.cpp",
+    "Code/Commando/svrgoodbyeevent.cpp",
+    "Code/Commando/team.cpp",
+    "Code/Commando/teammanager.cpp",
+    "Code/Commando/textdisplay.h",
+    "Code/Commando/winevent.cpp",
+    "Code/WWAudio/AudibleSound.h",
+    "Code/WWAudio/AudioEvents.h",
+    "Code/WWAudio/AudioSaveLoad.cpp",
+    "Code/WWAudio/PriorityVector.h",
+    "Code/WWAudio/SoundBuffer.h",
+    "Code/WWAudio/SoundSceneObj.h",
+    "Code/WWAudio/WWAudio.h",
+    "Code/WWMath/aabox.h",
+    "Code/WWMath/gridcull.cpp",
+    "Code/WWMath/gridcull.h",
+    "Code/WWMath/v3_rnd.h",
+    "Code/WWMath/wwmath.cpp",
+    "Code/WWMath/wwmath.h",
+    "Code/ww3d2/animatedsoundmgr.cpp",
+    "Code/ww3d2/animobj.cpp",
+    "Code/ww3d2/assetmgr.cpp",
+    "Code/ww3d2/boxrobj.cpp",
+    "Code/ww3d2/collect.h",
+    "Code/ww3d2/dazzle.cpp",
+    "Code/ww3d2/ddsfile.cpp",
+    "Code/ww3d2/decalmsh.cpp",
+    "Code/ww3d2/distlod.cpp",
+    "Code/ww3d2/dllist.h",
+    "Code/ww3d2/dx8indexbuffer.cpp",
+    "Code/ww3d2/dx8renderer.h",
+    "Code/ww3d2/dx8vertexbuffer.cpp",
+    "Code/ww3d2/dx8wrapper.h",
+    "Code/ww3d2/dynamesh.cpp",
+    "Code/ww3d2/hanimmgr.cpp",
+    "Code/ww3d2/hmorphanim.cpp",
+    "Code/ww3d2/htree.cpp",
+    "Code/ww3d2/intersec.h",
+    "Code/ww3d2/lightenvironment.cpp",
+    "Code/ww3d2/mesh.cpp",
+    "Code/ww3d2/meshmatdesc.cpp",
+    "Code/ww3d2/meshmdl.cpp",
+    "Code/ww3d2/meshmdl.h",
+    "Code/ww3d2/meshmdlio.cpp",
+    "Code/ww3d2/metalmap.cpp",
+    "Code/ww3d2/motchan.cpp",
+    "Code/ww3d2/part_buf.cpp",
+    "Code/ww3d2/part_ldr.cpp",
+    "Code/ww3d2/pointgr.cpp",
+    "Code/ww3d2/rddesc.h",
+    "Code/ww3d2/render2dsentence.cpp",
+    "Code/ww3d2/rendobj.cpp",
+    "Code/ww3d2/rendobj.h",
+    "Code/ww3d2/scene.cpp",
+    "Code/ww3d2/segline.h",
+    "Code/ww3d2/texture.cpp",
+    "Code/ww3d2/texture.h",
+    "Code/ww3d2/textureloader.h",
+    "Code/ww3d2/texturethumbnail.h",
+    "Code/ww3d2/vertmaterial.h",
+    "Code/ww3d2/ww3d.cpp",
+    "Code/wwbitpack/BitPacker.cpp",
+    "Code/wwbitpack/bitstream.cpp",
+    "Code/wwbitpack/bitstream.h",
+    "Code/wwbitpack/encodertypeentry.h",
+    "Code/wwlib/FastAllocator.cpp",
+    "Code/wwlib/FastAllocator.h",
+    "Code/wwlib/Notify.h",
+    "Code/wwlib/binheap.h",
+    "Code/wwlib/buff.cpp",
+    "Code/wwlib/chunkio.cpp",
+    "Code/wwlib/chunkio.h",
+    "Code/wwlib/hashtemplate.h",
+    "Code/wwlib/index.h",
+    "Code/wwlib/ini.cpp",
+    "Code/wwlib/ini.h",
+    "Code/wwlib/mempool.h",
+    "Code/wwlib/mixfile.cpp",
+    "Code/wwlib/mixfile.h",
+    "Code/wwlib/multilist.h",
+    "Code/wwlib/point.h",
+    "Code/wwlib/random.cpp",
+    "Code/wwlib/rawfile.cpp",
+    "Code/wwlib/refcount.cpp",
+    "Code/wwlib/refcount.h",
+    "Code/wwlib/simplevec.h",
+    "Code/wwlib/thread.cpp",
+    "Code/wwlib/trim.cpp",
+    "Code/wwlib/vector.h",
+    "Code/wwlib/widestring.cpp",
+    "Code/wwlib/widestring.h",
+    "Code/wwlib/wwstring.cpp",
+    "Code/wwlib/wwstring.h",
+    "Code/wwnet/connect.cpp",
+    "Code/wwnet/networkobject.h",
+    "Code/wwnet/packetmgr.cpp",
+    "Code/wwphys/Path.cpp",
+    "Code/wwphys/Pathfind.cpp",
+    "Code/wwphys/PathfindPortal.cpp",
+    "Code/wwphys/camerashakesystem.h",
+    "Code/wwphys/dynamicshadowmanager.cpp",
+    "Code/wwphys/dyntexproject.cpp",
+    "Code/wwphys/dyntexproject.h",
+    "Code/wwphys/motorvehicle.cpp",
+    "Code/wwphys/movephys.cpp",
+    "Code/wwphys/pathmgr.cpp",
+    "Code/wwphys/pathsolve.cpp",
+    "Code/wwphys/phys.cpp",
+    "Code/wwphys/phys3.cpp",
+    "Code/wwphys/physinttest.h",
+    "Code/wwphys/projectormanager.h",
+    "Code/wwphys/pscene_projectors.cpp",
+    "Code/wwphys/pscene_saveload.cpp",
+    "Code/wwphys/rbody.cpp",
+    "Code/wwphys/renegadeterrainmaterialpass.cpp",
+    "Code/wwphys/renegadeterrainpatch.cpp",
+    "Code/wwphys/transitioneffect.cpp",
+    "Code/wwphys/visrendercontext.cpp",
+    "Code/wwphys/waypath.cpp",
+    "Code/wwphys/waypoint.cpp",
+    "Code/wwsaveload/definitionmgr.cpp",
+    "Code/wwsaveload/persistfactory.h",
+    "Code/wwtranslatedb/translatedb.cpp",
+    "Code/wwui/IMECandidate.cpp",
+    "Code/wwui/IMECandidateCtrl.cpp",
+    "Code/wwui/IMECandidateCtrl.h",
+    "Code/wwui/IMEManager.cpp",
+    "Code/wwui/ProgressCtrl.cpp",
+    "Code/wwui/ProgressCtrl.h",
+    "Code/wwui/buttonctrl.cpp",
+    "Code/wwui/comboboxctrl.h",
+    "Code/wwui/dialogbase.cpp",
+    "Code/wwui/dialogparser.cpp",
+    "Code/wwui/editctrl.cpp",
+    "Code/wwui/editctrl.h",
+    "Code/wwui/imagectrl.cpp",
+    "Code/wwui/listctrl.cpp",
+    "Code/wwui/multilinetextctrl.cpp",
+    "Code/wwui/stylemgr.cpp",
+    "Code/wwui/textmarqueectrl.cpp",
+    "Code/wwui/treectrl.cpp",
+    "Code/wwui/wwuiinput.cpp",
+    "Code/wwui/wwuiinput.h"
+  ],
+  "patches": [
+    {
+      "path": "port/patches/combat-a30-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "damage.h",
+        "playerdata.h",
+        "weaponmanager.h",
+        "soldier.h",
+        "damage.cpp",
+        "scriptablegameobj.h",
+        "doors.cpp",
+        "elevator.cpp",
+        "buildingaggregate.cpp",
+        "savegame.cpp",
+        "WeatherMgr.h",
+        "backgroundmgr.h"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a30-pointer-tokens.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "reflist.cpp",
+        "reflist.h",
+        "scriptablegameobj.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-assetdep-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "assetdep.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-backgroundmgr-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "backgroundmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-ccamera-silent-listener.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ccamera.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-combatsound-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatsound.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-conversation-loop-scope.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "conversationmgr.cpp",
+        "conversation.cpp",
+        "activeconversation.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-encyclopedia-zero-read.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "encyclopediamgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogue.cpp",
+        "beacongameobj.cpp",
+        "textwindow.h",
+        "combat.cpp",
+        "scriptzone.cpp",
+        "soldier.cpp",
+        "building.cpp",
+        "control.h",
+        "weapons.cpp",
+        "weaponbag.cpp",
+        "input.cpp",
+        "objectivesviewer.cpp",
+        "messagewindow.cpp",
+        "textwindow.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-hud-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "hud.h",
+        "hud.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-mapmgr-const.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "mapmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-script-dll-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scripts.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-scriptcommands-utf16.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scriptcommands.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-spawn-loop-scope.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "spawn.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-weather-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "WeatherMgr.h",
+        "WeatherMgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-humanstate-weapon-style-table.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "humanstate.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-observer-load-diagnostics.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "persistentgameobjobserver.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-definitions-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.h",
+        "DlgMPTeamSelect.h",
+        "player.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-ilp32.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.h",
+        "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-optional-services.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-gamedata-headless-ui.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamedata.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-gdcnc-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gdcnc.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-messages-headless-ui.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "messages.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-session-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamedata.h",
+        "player.cpp",
+        "playermanager.cpp",
+        "god.cpp",
+        "gamedata.cpp",
+        "team.cpp",
+        "teammanager.cpp",
+        "netinterface.cpp",
+        "cnetwork.cpp",
+        "sctextobj.cpp",
+        "gamedataupdateevent.cpp",
+        "comnetrcvinst.cpp",
+        "gameoptionsevent.cpp",
+        "evictionevent.cpp",
+        "regbool.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-winevent-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "winevent.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-announceevent-include-case.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AnnounceEvent.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-campaign-catalog-lifetime.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "campaign.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-cnetwork-crc-file-lifetime.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "cnetwork.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-combatgmode-include-case.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp",
+        "demosupport.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-combatgmode-wol-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-dialogtests-singleplayer-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogtests.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-event-gamespy-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "bioevent.cpp",
+        "svrgoodbyeevent.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-event-portability.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "svrgoodbyeevent.cpp",
+        "modpackage.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-frontend-console-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-frontend-include-case.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "DlgWOLWait.h",
+        "dialogtests.h",
+        "DlgMessageBox.h",
+        "DlgMessageBox.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-online-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-skirmish-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-wol-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gamemenu-wol-include-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamemenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gamemode-console-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamemode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-loadsp-vita-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgloadspgame.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-mainmenu-instance-lifecycle.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-mainmenu-singleplayer-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-mainmenu-version-abi.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-singleplayer-frontend-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-singleplayer-frontend-routes.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-textdisplay-vector-include.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "textdisplay.h"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a22-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "rendobj.h",
+        "vertmaterial.h",
+        "dllist.h",
+        "dx8renderer.h",
+        "dx8wrapper.h",
+        "meshmdl.h",
+        "collect.h",
+        "assetmgr.cpp",
+        "meshmdl.cpp",
+        "meshmatdesc.cpp",
+        "htree.cpp",
+        "distlod.cpp",
+        "motchan.cpp",
+        "dazzle.cpp",
+        "intersec.h",
+        "textureloader.h",
+        "texturethumbnail.h",
+        "meshmdlio.cpp",
+        "rendobj.cpp",
+        "texture.cpp",
+        "hanimmgr.cpp",
+        "hmorphanim.cpp",
+        "metalmap.cpp",
+        "segline.h",
+        "rddesc.h"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a22-vita-boundaries.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "animobj.cpp",
+        "assetmgr.cpp",
+        "boxrobj.cpp",
+        "dazzle.cpp",
+        "decalmsh.cpp",
+        "mesh.cpp",
+        "scene.cpp",
+        "texture.cpp",
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a30-camera-apply.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a30-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "lightenvironment.cpp",
+        "part_buf.cpp",
+        "part_ldr.cpp",
+        "dynamesh.cpp",
+        "pointgr.cpp",
+        "animatedsoundmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a30-vita-buffers.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dx8vertexbuffer.cpp",
+        "dx8indexbuffer.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "meshmdl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a31-wide-abi.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2dsentence.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a315-dds-vita.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ddsfile.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a315-texture-lifecycle.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "texture.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a32-texture-apply-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "texture.h"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a4-font3d-vita.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "assetmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a4-freetype-fonts.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "assetmgr.cpp",
+        "render2dsentence.cpp",
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a4-render2d-runtime-init.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a30-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AudioEvents.h",
+        "WWAudio.h",
+        "AudibleSound.h",
+        "SoundBuffer.h",
+        "SoundSceneObj.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a31-audio-lifecycle-breadcrumb.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AudioSaveLoad.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a31-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "PriorityVector.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwbitpack-a31-utf16-get.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "bitstream.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwbitpack-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "BitPacker.cpp",
+        "bitstream.h",
+        "encodertypeentry.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a21-posix.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "vector.h",
+        "simplevec.h",
+        "wwstring.h",
+        "wwstring.cpp",
+        "rawfile.cpp",
+        "mixfile.h",
+        "mixfile.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a22-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "index.h",
+        "ini.cpp",
+        "ini.h",
+        "mempool.h",
+        "multilist.h",
+        "point.h",
+        "random.cpp",
+        "refcount.cpp",
+        "refcount.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a30-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "binheap.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-buffer-array-delete.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "buff.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "FastAllocator.h",
+        "FastAllocator.cpp",
+        "thread.cpp",
+        "hashtemplate.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-host-pointer-token-read.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "chunkio.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-notify-typename.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Notify.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-short-wchar-host.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "widestring.h",
+        "widestring.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-thread-posix.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "thread.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-trim-overlap.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "trim.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a31-wide-abi.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ini.h",
+        "ini.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a35-chunkio-open-chunk-breadcrumbs.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "chunkio.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwmath-a22-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "wwmath.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwmath-a30-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "v3_rnd.h",
+        "gridcull.h",
+        "aabox.h",
+        "gridcull.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwmath-a4-fastcall-vita.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "wwmath.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwnet-a30-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "networkobject.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwnet-a31-packetmgr-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "packetmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwnet-a31-transport-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "connect.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a30-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "camerashakesystem.h",
+        "dyntexproject.h",
+        "dyntexproject.cpp",
+        "dynamicshadowmanager.cpp",
+        "physinttest.h",
+        "motorvehicle.cpp",
+        "Path.cpp",
+        "Pathfind.cpp",
+        "pathmgr.cpp",
+        "pathsolve.cpp",
+        "renegadeterrainmaterialpass.cpp",
+        "renegadeterrainpatch.cpp",
+        "phys3.cpp",
+        "pscene_projectors.cpp",
+        "projectormanager.h",
+        "visrendercontext.cpp",
+        "phys.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a30-pointer-tokens.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Path.cpp",
+        "PathfindPortal.cpp",
+        "movephys.cpp",
+        "pathsolve.cpp",
+        "pscene_saveload.cpp",
+        "rbody.cpp",
+        "waypath.cpp",
+        "waypoint.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a31-vita-material-effect-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "transitioneffect.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a31-vita-material-effect-close.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "transitioneffect.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwsaveload-a30-abi.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "persistfactory.h",
+        "definitionmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwtranslatedb-a31-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "translatedb.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-buttonctrl-modern-scope.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "buttonctrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-dialogbase-modern-scope.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogbase.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-dialogparser-lp64-alignment.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogparser.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-editctrl-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "editctrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-imagectrl-border-precedence.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "imagectrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-ime-include-case.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "IMECandidateCtrl.h",
+        "editctrl.h",
+        "IMECandidateCtrl.cpp",
+        "ProgressCtrl.cpp",
+        "ProgressCtrl.h",
+        "comboboxctrl.h",
+        "IMEManager.cpp",
+        "IMECandidate.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-ime-vita-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "wwuiinput.h",
+        "wwuiinput.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-listctrl-modern-scope.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "listctrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-multilinetext-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "multilinetextctrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-stylemgr-font-provider.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "stylemgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-textmarquee-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "textmarqueectrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-treectrl-gcc15.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "treectrl.cpp"
+      ]
+    }
+  ],
+  "upstream_files_modified_in_place": 0,
+  "custom_asset_formats": 0,
+  "custom_runtime_mix_parser": false,
+  "original_archive_runtime": "FileFactoryListClass/MixFileFactoryClass",
+  "original_world_runtime": "SaveLoadSystem/DefinitionMgr/WWPhys/PhysicsScene/M00_Tutorial.lsd",
+  "renderer_boundary": {
+    "backend": "vitaGL beneath original DX8Wrapper/WW3D",
+    "render_to_texture": "explicit unsupported boundary; projectors disabled",
+    "original_entry_path": "PhysicsScene -> Camera -> WW3D -> Scene/RenderObj/Mesh",
+    "custom_replacement_scene_graph": false
+  },
+  "module_status": {
+    "WWMath": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 35,
+      "total": 35
+    },
+    "wwbitpack": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 4,
+      "total": 4
+    },
+    "wwdebug": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 1,
+      "total": 3
+    },
+    "wwlib": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 37,
+      "total": 105
+    },
+    "wwsaveload": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 11,
+      "total": 12
+    },
+    "wwtranslatedb": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 2,
+      "total": 4
+    },
+    "wwutil": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 1,
+      "total": 3
+    },
+    "wwphys": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 93,
+      "total": 94
+    },
+    "ww3d2": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 76,
+      "total": 105
+    },
+    "Combat": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 104,
+      "total": 128
+    },
+    "Commando": {
+      "status": "integrated-a3-world-runtime",
+      "compiled": 40,
+      "total": 213
+    },
+    "WWAudio": {
+      "status": "original-headers-with-temporary-no-audio-boundary",
+      "compiled": 4,
+      "total": 20
+    },
+    "WWOnline": {
+      "status": "excluded-initially",
+      "compiled": 0,
+      "total": 22
+    },
+    "wolapi": {
+      "status": "excluded-initially",
+      "compiled": 0,
+      "total": 1
+    }
+  },
+  "runtime_filesystem_contract": {
+    "retail_root": "ux0:data/renegade/retail/",
+    "writable_root": "ux0:data/renegade/user/",
+    "retail_tree_packaged_in_vpk": false
+  },
+  "automatic_vita_deployment": false
+}

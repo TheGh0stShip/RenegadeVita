@@ -1,0 +1,48 @@
+--- a/bioevent.cpp
++++ b/bioevent.cpp
+@@ -50,7 +50,7 @@
+ #include "gamedataupdateevent.h"
+ #include "consolemode.h"
+ #include "winevent.h"
+-#include "gamespyadmin.h"
++#include "a31_gamespy_stub.h"
+ 
+ DECLARE_NETWORKOBJECT_FACTORY(cBioEvent, NETCLASSID_BIOEVENT);
+ 
+--- a/svrgoodbyeevent.cpp
++++ b/svrgoodbyeevent.cpp
+@@ -52,10 +52,10 @@
+ #include "apppackettypes.h"
+ #include "string_ids.h"
+ #include "dlgcncwinscreen.h"
+-#include "gamespyadmin.h"
++#include "a31_gamespy_stub.h"
+ #include "dlgmpconnectionrefused.h"
+ #include "specialbuilds.h"
+-#include "gamespyadmin.h"
++#include "a31_gamespy_stub.h"
+ 
+ // 
+ // TSS2001 Problem - we have lost the unreliable multiblast effect for this message
+--- a/bioevent.cpp
++++ b/bioevent.cpp
+@@ -48,7 +48,7 @@
+ #include "gametype.h"
+ #include "apppackettypes.h"
+ #include "gamedataupdateevent.h"
+-#include "consolemode.h"
++#include "a31_console_stub.h"
+ #include "winevent.h"
+ #include "a31_gamespy_stub.h"
+ 
+--- a/bioevent.cpp
++++ b/bioevent.cpp
+@@ -207 +207,2 @@
+-	packet.Add(ClanID);
++	const ULONG wire_clan_id = static_cast<ULONG>(ClanID);
++	packet.Add(wire_clan_id);
+@@ -226 +227,3 @@
+-	packet.Get(ClanID);
++	ULONG wire_clan_id = 0;
++	packet.Get(wire_clan_id);
++	ClanID = static_cast<unsigned long>(wire_clan_id);

@@ -1,0 +1,13 @@
+--- a/textdisplay.h
++++ b/textdisplay.h
+@@ -59,6 +59,10 @@
+ 	#include "wwstring.h"
+ #endif
+ 
++#ifndef VECTOR_H
++	#include "vector.h"
++#endif
++
+ #ifndef	DEBUG_H
+ 	#include "debug.h"
+ #endif

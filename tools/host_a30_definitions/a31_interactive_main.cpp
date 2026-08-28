@@ -288,6 +288,14 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 		MenuGameModeClass2 menu_mode;
 		GameModeManager::Add(&menu_mode);
 		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_MAIN_MENU);
+		for (unsigned pump_index = 0; pump_index < 180U &&
+				(DialogMgrClass::Get_Active_Dialog() == NULL ||
+				 DialogMgrClass::Get_Focus() == NULL);
+			 ++pump_index) {
+			WW3D::Sync(WW3D::Get_Sync_Time() + 16U);
+			DialogMgrClass::On_Frame_Update();
+			DialogMgrClass::Render();
+		}
 
 		MainMenuDialogClass *const menu = MainMenuDialogClass::Get_Instance();
 		DialogControlClass *const initial_focus = DialogMgrClass::Get_Focus();
@@ -299,15 +307,29 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 		A4_Frontend_Begin_Menu_Loop();
 		A4_Frontend_Set_Test_WWUI_Key_State(VK_DOWN, true);
 		A4_Frontend_Pump_WWUI_Key_Transitions();
+		DialogMgrClass::On_Frame_Update();
 		DialogControlClass *const after_down_focus = DialogMgrClass::Get_Focus();
 		A4_Frontend_Set_Test_WWUI_Key_State(VK_DOWN, false);
 		A4_Frontend_Pump_WWUI_Key_Transitions();
+		DialogMgrClass::On_Frame_Update();
 		A4_Frontend_Set_Test_WWUI_Key_State(VK_UP, true);
 		A4_Frontend_Pump_WWUI_Key_Transitions();
+		DialogMgrClass::On_Frame_Update();
 		DialogControlClass *const after_up_focus = DialogMgrClass::Get_Focus();
 		A4_Frontend_Set_Test_WWUI_Key_State(VK_UP, false);
 		A4_Frontend_Pump_WWUI_Key_Transitions();
+		DialogMgrClass::On_Frame_Update();
 		A4_Frontend_End_Menu_Loop();
+
+		if (DialogMgrClass::Get_Active_Dialog() != NULL) {
+			DialogMgrClass::Set_Active_Dialog(NULL);
+			for (unsigned pump_index = 0; pump_index < 180U &&
+					DialogMgrClass::Get_Active_Dialog() != NULL;
+				 ++pump_index) {
+				WW3D::Sync(WW3D::Get_Sync_Time() + 16U);
+				DialogMgrClass::Render();
+			}
+		}
 
 		menu_mode.Deactivate();
 		GameModeManager::Safely_Deactivate();

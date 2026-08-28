@@ -35,6 +35,7 @@ target_compile_definitions(a30_renderer_lifecycle_selftest PRIVATE
   NDEBUG=1
   _UNIX=1
   RENEGADE_HOST_ABI_TEST=1
+  RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST=1
   RENEGADE_VITA_PORT=1
 )
 target_compile_options(a30_renderer_lifecycle_selftest PRIVATE

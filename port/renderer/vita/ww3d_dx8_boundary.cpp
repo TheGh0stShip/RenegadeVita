@@ -29,6 +29,8 @@
 #endif
 
 bool DX8Wrapper::_EnableTriangleDraw = true;
+unsigned DX8Wrapper::RenderStates[256] = {};
+unsigned DX8Wrapper::render_state_changes = 0;
 bool SortingRendererClass::_EnableTriangleDraw = true;
 bool DX8RendererDebugger::Enabled = false;
 
@@ -39,6 +41,13 @@ void DX8RendererDebugger::Disable_Mesh(unsigned) {}
 void DX8RendererDebugger::Enable_Mesh(unsigned) {}
 void DX8RendererDebugger::Disable_All() {}
 void DX8RendererDebugger::Enable_All() {}
+
+void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass &name,
+	D3DRENDERSTATETYPE state, unsigned value)
+{
+	(void)state;
+	name.Format("%u", value);
+}
 
 namespace {
 
@@ -1959,6 +1968,13 @@ HRESULT IDirect3DDevice8::GetViewport(D3DVIEWPORT8 *viewport)
 	}
 	*viewport = g_boundary_viewport;
 	return D3D_OK;
+}
+
+HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE state, DWORD value)
+{
+	return RenegadeVitaRenderer::Apply_DX8_Render_State(
+		static_cast<uint32_t>(state), static_cast<uint32_t>(value)) ?
+		D3D_OK : static_cast<HRESULT>(D3DERR_INVALIDCALL);
 }
 
 HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,

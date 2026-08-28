@@ -318,7 +318,7 @@ TDBObjClass::Set_English_String (const TCHAR *string)
 	// we can index into the english string
 	//
 	while (TranslatedStrings.Count () <= TranslateDBClass::LANGID_ENGLISH) {
-		TranslatedStrings.Add (WideStringClass (L""));
+		TranslatedStrings.Add (WideStringClass ());
 	}
 
 	TranslatedStrings[TranslateDBClass::LANGID_ENGLISH].Convert_From (string);
@@ -399,7 +399,7 @@ TDBObjClass::Set_String (uint32 lang_id, const WCHAR *string)
 	// to cover the requested language
 	//
 	while ((uint32)TranslatedStrings.Count () <= lang_id) {
-		TranslatedStrings.Add (WideStringClass (L""));
+		TranslatedStrings.Add (WideStringClass ());
 	}
 
 	//

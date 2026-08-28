@@ -20,34 +20,43 @@
   `avformat_open_input`, `ff_bink_decoder`, `swr_convert`, and `sws_scale`;
   no proprietary RAD code and no retail movie assets are packaged.
 - Visual/UI fixes: gameplay DDS uploads now preserve retail top-down row order,
-  the original loading screen renders status/progress text, HUD/subtitle bounds
-  are tightened, sniper scope/icon placement is corrected toward fullscreen
-  Vita output, and first-person reload motion is visible during original reload
-  state.
+  passthrough texture-V correction now happens after the original DX8 texture
+  transform, `Render2DClass` initializes the dynamic FVF normal and UV1 fields
+  used by HUD/loading/subtitle/scope/bounding-box draws, the original loading
+  screen renders status/progress text, HUD/subtitle bounds are tightened,
+  sniper scope/icon placement is corrected toward fullscreen Vita output, and
+  a visible reload fallback keeps first-person reload motion for 0.8 seconds
+  while the original weapon state is reload.
+- Lifecycle fixes: frontend WWUI/controller input is gated so intro/menu
+  navigation cannot also drive gameplay bindings, `TextDisplayGameModeClass`
+  initializes after the final `StyleMgrClass` reinitialization, and the
+  no-output WWAudio boundary now supplies the original movie temp-disable
+  calls used by `MovieGameModeClass`.
 - Control map: Triangle is action/use/interact, Square is reload, D-pad
   Left/Right changes weapons without camera turn bindings, D-pad Up/Down zooms
   sniper in/out, front touch toggles first/third-person camera, and shoulder
   buttons are not remapped.
-- Validation: focused loading-screen, texture-surface, staging,
-  mission-conversation diagnostics, and original-frontend contracts passed
-  before packaging. The fast candidate passed 79 focused tests. The
-  full canonical build passed retained host-validation reuse, deterministic
-  restaging, 104 host unittest checks, source integration reporting, ARM
-  link/package, identity verification, compressed VPK validation, diagnostics
-  bundle generation, SHA manifest verification, and retail exclusion.
+- Validation: focused loading-screen, texture-surface, staging, indexed-state,
+  mission-conversation diagnostics, camera-input, and original-frontend
+  contracts passed before packaging. The full canonical build passed fresh host
+  validation, deterministic restaging, 105 host unittest checks, source
+  integration reporting, ARM link/package, identity verification, compressed
+  VPK validation, diagnostics bundle generation, SHA manifest verification,
+  retail exclusion, and symbol/string retention for Bink, render-state,
+  reload, texture-V, and TextDisplay diagnostics.
 - Source report: the canonical integration report records 506 original Westwood
   translation units plus one staged original-owner extraction, 26 Vita
   platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
-  files, 52 compatibility headers, 130 active deterministic patch files, and
+  files, 52 compatibility headers, 133 active deterministic patch files, and
   pristine upstream.
 - Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
-  `2f669e9e1fcfb86dc24bf81a477cac579ddc0d7b6ea35e08a19564459cc3b33f`;
+  `122746f972a61927460e7d4dd36700b4fc3a8f0ceab2287652d45f6fd13f58ab`;
   ELF SHA-256 is
-  `674ecce198a5fba0608e05d90df42caf5bd77caac8b7190a0cf62b61dc435202`;
+  `2fda3b27c3156673503f34f390c7af6bef09112cc7f2a694e41015b0ea0661b7`;
   MAP SHA-256 is
-  `1ce32ac520f877af3d8fa56739964ba8041e34bfe49edd702c82060e0b361899`;
+  `c80e145036ed0c36aecb87a7e6d6f564d1daf67b4e9ddba49f848a513d062656`;
   diagnostics bundle SHA-256 is
-  `d736614df800b5754f893e0ac5329f63eca5d032fa259959e56fbbb7237accd6`.
+  `38a85b69eae7bb81fda22c5fc162b69d4963b2b02654c6242ba71dbe9060089f`.
 - Boundary: this newest frontend+Bink VPK has not been uploaded to Vita. The
   previous user-authorized dev82 VitaShell FTP upload predates the
   frontend/Bink integration. Dev82 is not physically accepted. The next run must

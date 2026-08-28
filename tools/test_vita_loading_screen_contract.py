@@ -112,7 +112,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("state.loading_visual_gate.original_loading_screen_owner = true;", runtime)
         self.assertIn("state.loading_visual_gate.direct_vitagl_overlay_disabled = true;", runtime)
         self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = true;", runtime)
-        self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = true;", runtime)
+        self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = false;", runtime)
         self.assertNotIn("A31FrameHistory capture_history;", runtime)
         self.assertNotIn("A31FrameHistory loading_capture_history;", runtime)
         self.assertIn("new (std::nothrow) A31FrameHistory", runtime)
@@ -185,7 +185,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn('prefix[] = "loadscreen_"', renderer)
         self.assertIn("Has_Loadscreen_Texture_Prefix(texture_name)", renderer)
         self.assertIn("Should_Flip_Submitted_Texture_V(state, texture_name)", renderer)
-        self.assertIn("first gameplay passthrough texture V retained", renderer)
+        self.assertIn("first gameplay passthrough texture V correction", renderer)
         self.assertIn("first cached original ShaderClass state skip", renderer)
         self.assertIn("first cached original CameraClass viewport skip", renderer)
         self.assertIn("g_current_native_viewport_known", renderer)
@@ -205,7 +205,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             shader_apply.index("Apply_Original_Fog_State(shader);"),
             shader_apply.index("g_original_shader_state_known"),
         )
-        self.assertIn("source_t = 1.0f - source_t;", renderer)
+        self.assertIn("t = 1.0f - t;", renderer)
         self.assertIn("submission.texture_names[stage]", boundary)
         self.assertIn("submission.texture_names[0]", renderer)
         self.assertIn("submission.texture_names[1]", renderer)
@@ -292,6 +292,23 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("RENEGADE_A35_ORIGINAL_COMBATGMODE=1", cmake)
         self.assertIn("${RENEGADE_STAGE}/ww3d2/render2d.cpp", original_sources)
         self.assertIn("${RENEGADE_STAGE}/ww3d2/render2dsentence.cpp", original_sources)
+
+    def test_render2d_dynamic_vertices_initialize_declared_fvf_fields(self):
+        render2d = (ROOT / "staging/ww3d2/render2d.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
+        patch = (
+            ROOT / "port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch"
+        ).read_text(encoding="utf-8")
+        stage_sources = (ROOT / "tools/stage_sources.sh").read_text(
+            encoding="utf-8"
+        )
+
+        for source in (render2d, patch):
+            self.assertIn("const Vector3 normal(0.0f,0.0f,1.0f);", source)
+            self.assertIn("fi.Get_Normal_Offset()", source)
+            self.assertIn("fi.Get_Tex_Offset(1)", source)
+        self.assertIn("ww3d2-a35-render2d-dynamic-fvf-init.patch", stage_sources)
 
     def test_host_loading_backdrop_probe_uses_original_asset_owner(self):
         host_cmake = (ROOT / "tools/host_a30_definitions/CMakeLists.txt").read_text(

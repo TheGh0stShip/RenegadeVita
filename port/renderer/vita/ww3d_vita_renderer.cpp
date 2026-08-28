@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if defined(RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST) && defined(__GNUC__)
+void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
+#endif
+
 #if defined(__vita__)
 #include "vita_runtime_log.h"
 
@@ -79,7 +83,7 @@ bool g_logged_first_material_lighting = false;
 bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_loading_texture_v_flip = false;
-bool g_logged_first_passthrough_texture_v_retained = false;
+bool g_logged_first_passthrough_texture_v_correction = false;
 bool g_logged_first_skin_texture_color = false;
 bool g_logged_first_original_shader_state_skip = false;
 bool g_logged_first_viewport_state_skip = false;
@@ -192,7 +196,7 @@ void Invalidate_Native_State_Cache()
 	memset(&g_current_native_viewport, 0, sizeof(g_current_native_viewport));
 	g_current_native_viewport_known = false;
 	g_logged_first_state_cache_skip = false;
-	g_logged_first_passthrough_texture_v_retained = false;
+	g_logged_first_passthrough_texture_v_correction = false;
 	g_logged_first_original_shader_state_skip = false;
 	g_logged_first_viewport_state_skip = false;
 }
@@ -481,8 +485,8 @@ bool Uses_Generated_Texture_Coordinates(
 bool Should_Flip_Submitted_Texture_V(const OriginalTextureCoordinateState &state,
 	const char *texture_name)
 {
-	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
-		Has_Loadscreen_Texture_Prefix(texture_name);
+	(void)texture_name;
+	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;
 }
 
 const Vector2 *Resolve_UV_Array_For_Texture_State(MeshModelClass *model,
@@ -616,27 +620,29 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uvs[vertex_index].X;
 		source_t = uvs[vertex_index].Y;
 	}
-	if (Should_Flip_Submitted_Texture_V(state, texture_name)) {
-		source_t = 1.0f - source_t;
+	const bool flip_texture_v = Should_Flip_Submitted_Texture_V(state, texture_name);
+	if (flip_texture_v) {
 		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
 			!g_logged_first_loading_texture_v_flip) {
 			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
 				"first loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
+		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
+			!g_logged_first_passthrough_texture_v_correction) {
+			Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+				"first gameplay passthrough texture V correction: texture=%s stage=%u",
+				texture_name != NULL ? texture_name : "none", stage);
+			g_logged_first_passthrough_texture_v_correction = true;
 		}
-	} else if (Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
-		!Has_Loadscreen_Texture_Prefix(texture_name) &&
-		!g_logged_first_passthrough_texture_v_retained) {
-		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
-			"first gameplay passthrough texture V retained: texture=%s stage=%u",
-			texture_name != NULL ? texture_name : "none", stage);
-		g_logged_first_passthrough_texture_v_retained = true;
 	}
 	float s = 0.0f;
 	float t = 0.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
 		&s, &t);
+	if (flip_texture_v) {
+		t = 1.0f - t;
+	}
 	glMultiTexCoord2f(texture_unit, s, t);
 	if (Uses_Generated_Texture_Coordinates(state) &&
 		!g_logged_first_generated_texture_coordinate) {
@@ -749,28 +755,30 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uv[0];
 		source_t = uv[1];
 	}
-	if (Should_Flip_Submitted_Texture_V(state, texture_name)) {
-		source_t = 1.0f - source_t;
+	const bool flip_texture_v = Should_Flip_Submitted_Texture_V(state, texture_name);
+	if (flip_texture_v) {
 		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
 			!g_logged_first_loading_texture_v_flip) {
 			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
 				"first indexed loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
+		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
+			!g_logged_first_passthrough_texture_v_correction) {
+			Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+				"first indexed gameplay passthrough texture V correction: texture=%s stage=%u",
+				texture_name != NULL ? texture_name : "none", stage);
+			g_logged_first_passthrough_texture_v_correction = true;
 		}
-	} else if (Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
-		!Has_Loadscreen_Texture_Prefix(texture_name) &&
-		!g_logged_first_passthrough_texture_v_retained) {
-		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
-			"first indexed gameplay passthrough texture V retained: texture=%s stage=%u",
-			texture_name != NULL ? texture_name : "none", stage);
-		g_logged_first_passthrough_texture_v_retained = true;
 	}
 
 	float s = 0.0f;
 	float t = 0.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
 		&s, &t);
+	if (flip_texture_v) {
+		t = 1.0f - t;
+	}
 	glMultiTexCoord2f(texture_unit, s, t);
 	if (Uses_Generated_Texture_Coordinates(state) &&
 		!g_logged_first_generated_texture_coordinate) {
@@ -1775,7 +1783,13 @@ void Shutdown()
 	if (g_statistics.initialized || g_lifecycle.logical_session_active) {
 		++g_lifecycle.logical_shutdowns;
 	}
+#if defined(RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST) && defined(__GNUC__)
+	if (RenegadeVita_Release_DX8_Bound_Textures != NULL) {
+		RenegadeVita_Release_DX8_Bound_Textures();
+	}
+#else
 	RenegadeVita_Release_DX8_Bound_Textures();
+#endif
 	g_statistics.initialized = false;
 	g_lifecycle.logical_session_active = false;
 	Release_Deformed_Skin_Scratch();
@@ -1985,7 +1999,7 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
 	uint32_t mag_filter, uint32_t mip_filter)
 {
-	if (!Texture_Stage_Index_Valid(stage)) {
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
 		Record_Texture_Unsupported_Stage(stage);
 		return false;
 	}

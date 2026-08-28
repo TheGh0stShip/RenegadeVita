@@ -581,14 +581,17 @@ void Render2DClass::Render(void)
 		DynamicVBAccessClass::WriteLockClass Lock(&vb);
 		const FVFInfoClass &fi=vb.FVF_Info();
 		unsigned char *va=(unsigned char*)Lock.Get_Formatted_Vertex_Array();
+		const Vector3 normal(0.0f,0.0f,1.0f);
 		int i;
 
 		for (i=0; i<Vertices.Count(); i++)
 		{
 			Vector3 temp(Vertices[i].X,Vertices[i].Y,ZValue);
 			*(Vector3*)(va+fi.Get_Location_Offset())=temp;
+			*(Vector3*)(va+fi.Get_Normal_Offset())=normal;
 			*(unsigned int*)(va+fi.Get_Diffuse_Offset())=Colors[i];
 			*(Vector2*)(va+fi.Get_Tex_Offset(0))=UVCoordinates[i];
+			*(Vector2*)(va+fi.Get_Tex_Offset(1))=UVCoordinates[i];
 			va+=fi.Get_FVF_Size();
 		}		
 	}

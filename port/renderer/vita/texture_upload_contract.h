@@ -16,9 +16,9 @@ inline void Store_RGBA_From_ARGB(uint32_t argb, unsigned char *destination)
 	destination[3] = static_cast<unsigned char>((argb >> 24U) & 0xffU);
 }
 
-// DDSFileClass addresses pixels from the retail image's top row. Gameplay
-// uploads must preserve that row order; a previous Vita-side bottom-up
-// conversion mirrored character, door, powerup, scope, and objective textures.
+// DDSFileClass addresses pixels from the retail image's top row. Uploads
+// preserve that row order; the renderer converts original D3D passthrough V
+// coordinates to vitaGL/OpenGL texture coordinates at draw time.
 inline void Store_RGBA_From_ARGB_At(uint32_t argb, unsigned source_x,
 	unsigned source_y, unsigned width, unsigned char *destination)
 {
@@ -27,7 +27,7 @@ inline void Store_RGBA_From_ARGB_At(uint32_t argb, unsigned source_x,
 }
 
 // Retained only for intentionally bottom-up diagnostic surfaces. Retail DDS
-// gameplay uploads use Store_RGBA_From_ARGB_At.
+// uploads use Store_RGBA_From_ARGB_At.
 inline void Store_RGBA_From_ARGB_Flipped(uint32_t argb, unsigned source_x,
 	unsigned source_y, unsigned width, unsigned height,
 	unsigned char *destination)

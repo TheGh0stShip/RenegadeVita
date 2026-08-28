@@ -844,7 +844,7 @@ WWAudioClass *WWAudioClass::_theInstance = NULL;
 // retains the original WWAudio object and original logical-listener ownership
 // so Combat's SmartGameObj lifecycle is unchanged; only Miles/device playback
 // is deferred below that interface.
-WWAudioClass::WWAudioClass(bool)
+WWAudioClass::WWAudioClass(bool lite)
 	: m_PlaybackRate(44100),
 	  m_PlaybackBits(16),
 	  m_PlaybackStereo(true),
@@ -854,7 +854,11 @@ WWAudioClass::WWAudioClass(bool)
 	  m_RealSoundVolume(DEF_SFX_VOL),
 	  m_DialogVolume(DEF_DIALOG_VOL),
 	  m_CinematicVolume(DEF_CINEMATIC_VOL),
-	  m_UpdateTimer(NULL),
+	  m_Max2DSamples(DEF_2D_SAMPLE_COUNT),
+	  m_Max3DSamples(DEF_3D_SAMPLE_COUNT),
+	  m_Max2DBufferSize(DEF_MAX_2D_BUFFER_SIZE),
+	  m_Max3DBufferSize(DEF_MAX_3D_BUFFER_SIZE),
+	  m_UpdateTimer(-1),
 	  m_IsMusicEnabled(true),
 	  m_IsDialogEnabled(true),
 	  m_IsCinematicSoundEnabled(true),
@@ -862,11 +866,26 @@ WWAudioClass::WWAudioClass(bool)
 	  m_AreNewSoundsEnabled(true),
 	  m_FileFactory(NULL),
 	  m_BackgroundMusic(NULL),
+	  m_CachedIsMusicEnabled(true),
+	  m_CachedIsDialogEnabled(true),
+	  m_CachedIsCinematicSoundEnabled(true),
+	  m_CachedAreSoundEffectsEnabled(true),
 	  m_SoundScene(NULL),
 	  m_CurrPage(PAGE_PRIMARY),
+	  m_Driver2D(NULL),
+	  m_Driver3D(NULL),
+	  m_Driver3DPseudo(NULL),
+	  m_ReverbFilter(NULL),
+	  m_SpeakerType(0),
 	  m_MaxCacheSize(DEF_CACHE_SIZE * 1024),
 	  m_CurrentCacheSize(0),
-	  AudioIni(NULL)
+	  m_EffectsLevel(0.0f),
+	  m_ReverbRoomType(0),
+	  m_NonDialogFadeTime(DEF_FADE_TIME),
+	  m_FadeType(FADE_NONE),
+	  m_FadeTimer(0.0f),
+	  AudioIni(NULL),
+	  m_ForceDisable(lite)
 {
 	_theInstance = this;
 }
@@ -940,6 +959,16 @@ void WWAudioClass::Allow_Music(bool onoff)
 	m_IsMusicEnabled = onoff;
 }
 
+void WWAudioClass::Allow_Dialog(bool onoff)
+{
+	m_IsDialogEnabled = onoff;
+}
+
+void WWAudioClass::Allow_Cinematic_Sound(bool onoff)
+{
+	m_IsCinematicSoundEnabled = onoff;
+}
+
 void WWAudioClass::Flush_Playlist(SOUND_PAGE page)
 {
 	// The no-output boundary never inserts audible sounds.  Delete only the
@@ -971,6 +1000,40 @@ void WWAudioClass::Set_Active_Sound_Page(SOUND_PAGE page)
 	 * replacement playlist or output backend. */
 	if (page == PAGE_PRIMARY || page == PAGE_SECONDARY) {
 		m_CurrPage = page;
+	}
+}
+
+void WWAudioClass::Push_Active_Sound_Page(SOUND_PAGE page)
+{
+	m_PageStack.Add(m_CurrPage);
+	Set_Active_Sound_Page(page);
+}
+
+void WWAudioClass::Pop_Active_Sound_Page(void)
+{
+	if (m_PageStack.Count() > 0) {
+		const SOUND_PAGE previous = m_PageStack[m_PageStack.Count() - 1];
+		m_PageStack.Delete(m_PageStack.Count() - 1);
+		Set_Active_Sound_Page(previous);
+	}
+}
+
+void WWAudioClass::Temp_Disable_Audio(bool onoff)
+{
+	if (onoff) {
+		m_CachedIsMusicEnabled = m_IsMusicEnabled;
+		m_CachedIsDialogEnabled = m_IsDialogEnabled;
+		m_CachedIsCinematicSoundEnabled = m_IsCinematicSoundEnabled;
+		m_CachedAreSoundEffectsEnabled = m_AreSoundEffectsEnabled;
+		Allow_Sound_Effects(false);
+		Allow_Music(false);
+		Allow_Dialog(false);
+		Allow_Cinematic_Sound(false);
+	} else {
+		Allow_Sound_Effects(m_CachedAreSoundEffectsEnabled);
+		Allow_Music(m_CachedIsMusicEnabled);
+		Allow_Dialog(m_CachedIsDialogEnabled);
+		Allow_Cinematic_Sound(m_CachedIsCinematicSoundEnabled);
 	}
 }
 
@@ -1098,21 +1161,6 @@ AudibleSoundClass *WWAudioClass::Create_Continuous_Sound(const char *,
 #if !defined(RENEGADE_A4_REAL_STYLEMGR)
 FontCharsClass *StyleMgrClass::Fonts[StyleMgrClass::FONT_MAX] = {};
 #endif
-
-unsigned DX8Wrapper::RenderStates[256] = {};
-unsigned DX8Wrapper::render_state_changes = 0;
-
-void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass &name,
-	D3DRENDERSTATETYPE, unsigned)
-{
-	name = "VITA_BACKEND";
-}
-
-HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE state, DWORD value)
-{
-	return RenegadeVitaRenderer::Apply_DX8_Render_State(state, value) ?
-		D3D_OK : static_cast<HRESULT>(D3DERR_INVALIDCALL);
-}
 
 #if !defined(RENEGADE_HOST_ABI_TEST)
 

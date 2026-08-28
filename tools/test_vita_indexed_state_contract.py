@@ -136,7 +136,8 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, renderer)
         self.assertIn("IsFogAllowed(true)", dx8_boundary)
-        self.assertIn("RenegadeVitaRenderer::Apply_DX8_Render_State(state, value)", gameplay)
+        self.assertIn("HRESULT IDirect3DDevice8::SetRenderState", dx8_boundary)
+        self.assertIn("RenegadeVitaRenderer::Apply_DX8_Render_State(", dx8_boundary)
         self.assertIn('"fog start state"', host)
         self.assertIn('"fog end state"', host)
         self.assertIn('"ambient color state"', host)

@@ -70,19 +70,6 @@ AudibleSoundClass *WWAudioClass::Create_Continuous_Sound(int,
 	Unsupported_World_Load_Call("WWAudioClass::Create_Continuous_Sound");
 }
 
-// PhysicsSceneClass retains Customized_Render even though this executable
-// never renders. Keep its D3D8-shaped edge explicit and unenterable.
-unsigned DX8Wrapper::RenderStates[256] = {};
-unsigned DX8Wrapper::render_state_changes = 0;
-
-void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass &,
-	D3DRENDERSTATETYPE, unsigned)
-{
-	Unsupported_World_Load_Call(
-		"DX8Wrapper::Get_DX8_Render_State_Value_Name");
-}
-
-HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE, DWORD)
-{
-	Unsupported_World_Load_Call("IDirect3DDevice8::SetRenderState");
-}
+// PhysicsSceneClass retains Customized_Render even though this executable never
+// renders. The D3D8-shaped render-state symbols are owned by the shared Vita
+// DX8 boundary so every host/target executable resolves the same edge.

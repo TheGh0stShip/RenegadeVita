@@ -126,6 +126,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwtranslatedb" -p1 < "$rv_root/port/patches/wwtranslatedb-a31-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwtranslatedb" -p1 < "$rv_root/port/patches/wwtranslatedb-a35-empty-string-wide-abi.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a22-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a22-vita-boundaries.patch"
@@ -137,6 +139,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a4-font3d-vita.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a4-render2d-runtime-init.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a4-freetype-fonts.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -217,6 +221,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-m00-ui-hud-subtitles.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-motion.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-visible-fallback.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -429,12 +435,14 @@ echo "Applied: port/patches/wwmath-a30-gcc15.patch"
 echo "Applied: port/patches/wwmath-a4-fastcall-vita.patch"
 echo "Applied: port/patches/wwsaveload-a30-abi.patch"
 echo "Applied: port/patches/wwtranslatedb-a31-gcc15.patch"
+echo "Applied: port/patches/wwtranslatedb-a35-empty-string-wide-abi.patch"
 echo "Applied: port/patches/ww3d2-a22-gcc15.patch"
 echo "Applied: port/patches/ww3d2-a22-vita-boundaries.patch"
 echo "Applied: port/patches/ww3d2-a315-texture-lifecycle.patch"
 echo "Applied: port/patches/ww3d2-a32-texture-apply-boundary.patch"
 echo "Applied: port/patches/ww3d2-a4-font3d-vita.patch"
 echo "Applied: port/patches/ww3d2-a4-render2d-runtime-init.patch"
+echo "Applied: port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch"
 echo "Applied: port/patches/ww3d2-a4-freetype-fonts.patch"
 echo "Applied: port/patches/ww3d2-a315-dds-vita.patch"
 echo "Applied: port/patches/ww3d2-a30-gcc15.patch"
@@ -472,6 +480,7 @@ echo "Applied: port/patches/combat-a35-conversation-reentrant-think.patch"
 echo "Applied: port/patches/combat-a35-transition-action-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-latch.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-motion.patch"
+echo "Applied: port/patches/combat-a35-weaponview-reload-visible-fallback.patch"
 echo "Applied: port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 echo "Applied: port/patches/ww3d2-a31-wide-abi.patch"
 echo "Applied: port/patches/ww3d2-a35-vita-renderobj-load-trace.patch"

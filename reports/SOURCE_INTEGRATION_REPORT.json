@@ -612,8 +612,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 130,
-  "mechanically_patched_upstream_files": 250,
+  "patch_count": 133,
+  "mechanically_patched_upstream_files": 252,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -766,6 +766,7 @@
     "Code/ww3d2/part_ldr.cpp",
     "Code/ww3d2/pointgr.cpp",
     "Code/ww3d2/rddesc.h",
+    "Code/ww3d2/render2d.cpp",
     "Code/ww3d2/render2dsentence.cpp",
     "Code/ww3d2/rendobj.cpp",
     "Code/ww3d2/rendobj.h",
@@ -841,6 +842,7 @@
     "Code/wwsaveload/definitionmgr.cpp",
     "Code/wwsaveload/persistfactory.h",
     "Code/wwtranslatedb/translatedb.cpp",
+    "Code/wwtranslatedb/translateobj.cpp",
     "Code/wwui/IMECandidate.cpp",
     "Code/wwui/IMECandidateCtrl.cpp",
     "Code/wwui/IMECandidateCtrl.h",
@@ -1085,6 +1087,13 @@
     },
     {
       "path": "port/patches/combat-a35-weaponview-reload-motion.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "weaponview.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-weaponview-reload-visible-fallback.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "weaponview.cpp"
@@ -1537,6 +1546,13 @@
       ]
     },
     {
+      "path": "port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2d.cpp"
+      ]
+    },
+    {
       "path": "port/patches/ww3d2-a35-vita-renderobj-load-trace.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1864,6 +1880,13 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "translatedb.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwtranslatedb-a35-empty-string-wide-abi.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "translateobj.cpp"
       ]
     },
     {

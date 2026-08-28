@@ -24,7 +24,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-2f669e9e1fcfb86dc24bf81a477cac579ddc0d7b6ea35e08a19564459cc3b33f
+122746f972a61927460e7d4dd36700b4fc3a8f0ceab2287652d45f6fd13f58ab
 ```
 
 Runtime log:
@@ -43,13 +43,17 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 - Loading screen coverage, status text, and progress through the original
   one-bar path, including renderer/cache prewarm.
 - HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
-  rendering and bounds.
+  rendering and bounds, initializing TextDisplay after final StyleMgr
+  reinitialization, and initializing Render2D dynamic FVF fields used by HUD,
+  subtitles, scope, loading, and bounding boxes.
 - Vita control mapping: Triangle action/use, Square reload, D-pad Left/Right
   weapon-only switching, D-pad Up/Down sniper zoom, no shoulder remap.
 - Reload animation by adding visible first-person weapon motion while the
-  original weapon state is reload.
+  original weapon state is reload, with a bounded 0.8-second fallback when the
+  retail reload HAnim is absent, short, or delayed.
 - NPC/Havoc/door/powerup/objective texture orientation by preserving top-down
-  retail DDS rows in gameplay uploads.
+  retail DDS rows in gameplay uploads and applying passthrough texture-V
+  correction after the original DX8 texture transform.
 - FPS regression by caching repeated native viewport/texture/render-state
   changes and enabling a persistent vitaGL shader-cache path.
 - Gate/opening failures by adding original CombatGameMode finalization and

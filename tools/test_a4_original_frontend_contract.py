@@ -81,6 +81,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 
         self.assertIn('#include "a4_frontend_lifecycle_boundary.h"', directinput)
         self.assertIn("const bool frontend_menu_navigation = A4_Frontend_Is_Menu_Loop_Active();", directinput)
+        self.assertIn("const bool gameplay_input_active = !frontend_menu_navigation;", directinput)
         for key_name, sce_button in (
             ("VK_UP", "SCE_CTRL_UP"),
             ("VK_DOWN", "SCE_CTRL_DOWN"),
@@ -94,14 +95,21 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);",
             "Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);",
             "Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);",
-            "Set_Button(DIKeyboardButtons, DIK_UP, (buttons & SCE_CTRL_UP) != 0);",
-            "Set_Button(DIKeyboardButtons, DIK_DOWN, (buttons & SCE_CTRL_DOWN) != 0);",
-            "Set_Button(DIKeyboardButtons, DIK_LEFT, (buttons & SCE_CTRL_LEFT) != 0);",
-            "Set_Button(DIKeyboardButtons, DIK_RIGHT, (buttons & SCE_CTRL_RIGHT) != 0);",
-            "Set_Button(DIKeyboardButtons, DIK_E, (buttons & SCE_CTRL_TRIANGLE) != 0);",
-            "Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SQUARE) != 0);",
+            "gameplay_input_active && (buttons & SCE_CTRL_UP) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_DOWN) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_LEFT) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_RIGHT) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_CROSS) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_CIRCLE) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_LTRIGGER) != 0",
+            "gameplay_input_active && (buttons & SCE_CTRL_RTRIGGER) != 0",
+            "gameplay_input_active ? left.x.logical : 0",
+            "gameplay_input_active ? left.y.logical : 0",
         ):
             self.assertIn(token, directinput)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_ESCAPE, (buttons & SCE_CTRL_START) != 0);", directinput)
 
         self.assertIn("A4_Frontend_Pump_WWUI_Key_Transitions", header)
         self.assertIn("g_frontend_key_dispatcher.ProcessMessage(NULL, message", lifecycle)
@@ -122,6 +130,16 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("Run_Original_Frontend_Intro_And_Menu", runtime)
         self.assertIn("registered original CombatGameMode owner", runtime)
         self.assertIn("StyleMgrClass::Initialize_From_INI(kStyleManagerIni);", runtime[handoff_index:direct_route_index])
+        final_style_index = runtime.index(
+            "StyleMgrClass::Initialize_From_INI(kStyleManagerIni);",
+            handoff_index,
+        )
+        text_display_index = runtime.index(
+            "original TextDisplayGameMode init after final StyleMgr",
+            handoff_index,
+        )
+        self.assertLess(final_style_index, text_display_index)
+        self.assertLess(text_display_index, direct_route_index)
         self.assertIn("A4_Frontend_Latch_Start_Game", gameinit)
         self.assertIn("Validate_Frontend_Tutorial_Start_Latch", host)
         self.assertIn("frontend_tutorial_start_latched", host)

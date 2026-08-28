@@ -411,7 +411,7 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 	state.loading_visual_gate.original_loading_screen_owner = true;
 	state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
 	state.loading_visual_gate.loading_texture_v_flip_enabled = true;
-	state.loading_visual_gate.gameplay_texture_v_unchanged = true;
+	state.loading_visual_gate.gameplay_texture_v_unchanged = false;
 	state.scripts_active = ScriptManager::Is_Provider_Active()
 		&& ScriptManager::Get_Active_Script_Count() > 0;
 	return state;
@@ -1051,15 +1051,6 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 					kStyleManagerIni,
 					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT)),
 					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
-				text_display_mode.Init();
-				text_display_initialized =
-					TextDisplayGameModeClass::Get_Instance() == &text_display_mode;
-				if (text_display_initialized) {
-					DebugManager::Set_Display_Handler(&text_display_handler);
-				}
-				A30_Vita_Log("A3.5 text display: original TextDisplayGameMode init=%d handler=%d\n",
-					text_display_initialized ? 1 : 0,
-					text_display_initialized ? 1 : 0);
 				Input::Init(true);
 				Input::Load_Configuration("DEFAULT_INPUT.CFG");
 				A31_Interactive_Configure_Vita_Controls();
@@ -1097,6 +1088,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 						}
 					}
 #endif
+				text_display_mode.Init();
+				text_display_initialized =
+					TextDisplayGameModeClass::Get_Instance() == &text_display_mode;
+				if (text_display_initialized) {
+					DebugManager::Set_Display_Handler(&text_display_handler);
+				}
+				A30_Vita_Log("A3.5 text display: original TextDisplayGameMode init after final StyleMgr=%d handler=%d\n",
+					text_display_initialized ? 1 : 0,
+					text_display_initialized ? 1 : 0);
 					cServerFps::Create_Instance();
 			A30_Vita_Log("A4 breadcrumb: original GameInitMgr SP initialization entry\n");
 			GameInitMgrClass::Initialize_SP();

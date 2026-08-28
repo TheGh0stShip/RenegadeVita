@@ -13,6 +13,16 @@ ground shadows, FPS regression, unopened gate, top-screen white icon during
 Logan dialogue, and the freeze after trying the gate after pistol/fire
 interaction.
 
+The latest dev82 candidate includes source/build fixes for the highest-risk
+visual/input/reload regressions: frontend/menu input is gated from gameplay,
+TextDisplay initializes after final StyleMgr reinitialization, Render2D dynamic
+FVF normal/UV1 fields are initialized for HUD/loading/subtitle/scope/bounding
+box draws, passthrough texture V is corrected after original DX8 texture
+transforms, DX8 render-state ownership is centralized in the renderer boundary,
+and the first-person weapon view has a bounded visible reload fallback while
+the original weapon state is reload. These are build-verified only; physical
+Vita confirmation is still required before removing the defects from this list.
+
 The next engineering decisions must come from the dev82 runtime log and
 physical observation. If the gate still fails, inspect transition/action
 diagnostics and original `CombatGameModeClass` finalization before changing

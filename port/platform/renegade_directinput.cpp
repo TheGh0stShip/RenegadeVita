@@ -510,6 +510,7 @@ void DirectInput::Read(void)
 #else
 		const bool frontend_menu_navigation = false;
 #endif
+	const bool gameplay_input_active = !frontend_menu_navigation;
 		Set_Virtual_Key(VK_UP,
 			frontend_menu_navigation && (buttons & SCE_CTRL_UP) != 0);
 		Set_Virtual_Key(VK_DOWN,
@@ -521,25 +522,35 @@ void DirectInput::Read(void)
 	Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);
 	Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);
-	Set_Button(DIKeyboardButtons, DIK_UP, (buttons & SCE_CTRL_UP) != 0);
-	Set_Button(DIKeyboardButtons, DIK_DOWN, (buttons & SCE_CTRL_DOWN) != 0);
-	Set_Button(DIKeyboardButtons, DIK_LEFT, (buttons & SCE_CTRL_LEFT) != 0);
-	Set_Button(DIKeyboardButtons, DIK_RIGHT, (buttons & SCE_CTRL_RIGHT) != 0);
+	Set_Button(DIKeyboardButtons, DIK_UP,
+		gameplay_input_active && (buttons & SCE_CTRL_UP) != 0);
+	Set_Button(DIKeyboardButtons, DIK_DOWN,
+		gameplay_input_active && (buttons & SCE_CTRL_DOWN) != 0);
+	Set_Button(DIKeyboardButtons, DIK_LEFT,
+		gameplay_input_active && (buttons & SCE_CTRL_LEFT) != 0);
+	Set_Button(DIKeyboardButtons, DIK_RIGHT,
+		gameplay_input_active && (buttons & SCE_CTRL_RIGHT) != 0);
 	Set_Button(DIKeyboardButtons, DIK_W, false);
 	Set_Button(DIKeyboardButtons, DIK_S, false);
 	Set_Button(DIKeyboardButtons, DIK_A, false);
 	Set_Button(DIKeyboardButtons, DIK_D, false);
-	Set_Button(DIKeyboardButtons, DIK_SPACE, (buttons & SCE_CTRL_CROSS) != 0);
-	Set_Button(DIKeyboardButtons, DIK_LCONTROL, (buttons & SCE_CTRL_CIRCLE) != 0);
-	Set_Button(DIKeyboardButtons, DIK_E, (buttons & SCE_CTRL_TRIANGLE) != 0);
-	Set_Button(DIKeyboardButtons, DIK_F, front_touch_down);
-	Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SQUARE) != 0);
+	Set_Button(DIKeyboardButtons, DIK_SPACE,
+		gameplay_input_active && (buttons & SCE_CTRL_CROSS) != 0);
+	Set_Button(DIKeyboardButtons, DIK_LCONTROL,
+		gameplay_input_active && (buttons & SCE_CTRL_CIRCLE) != 0);
+	Set_Button(DIKeyboardButtons, DIK_E,
+		gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0);
+	Set_Button(DIKeyboardButtons, DIK_F, gameplay_input_active && front_touch_down);
+	Set_Button(DIKeyboardButtons, DIK_R,
+		gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0);
 	/* START remains the native direct-route clean-exit control and is sampled
 	** before Input::Update. Triangle supplies the original Action key, so it
 	** must not also feed the menu-toggle escape key. */
 	Set_Button(DIKeyboardButtons, DIK_ESCAPE, (buttons & SCE_CTRL_START) != 0);
-	Set_Button(DIJoystickButtons, 0, (buttons & SCE_CTRL_LTRIGGER) != 0);
-	Set_Button(DIJoystickButtons, 1, (buttons & SCE_CTRL_RTRIGGER) != 0);
+	Set_Button(DIJoystickButtons, 0,
+		gameplay_input_active && (buttons & SCE_CTRL_LTRIGGER) != 0);
+	Set_Button(DIJoystickButtons, 1,
+		gameplay_input_active && (buttons & SCE_CTRL_RTRIGGER) != 0);
 	if (!g_logged_action_hit &&
 		(DIKeyboardButtons[DIK_E] & DirectInput::DI_BUTTON_HIT) != 0) {
 		Vita_Append_A22_Runtime_Breadcrumb("input",
@@ -572,19 +583,26 @@ void DirectInput::Read(void)
 		RenegadeVitaInput::Sample_Device_Stick(controller.lx, controller.ly);
 	const RenegadeVitaInput::StickSample right =
 		RenegadeVitaInput::Sample_Device_Stick(controller.rx, controller.ry);
-	g_vita_joystick_axis[JOYSTICK_X_AXIS] = left.x.logical;
+	g_vita_joystick_axis[JOYSTICK_X_AXIS] =
+		gameplay_input_active ? left.x.logical : 0;
 	// Preserve the raw DirectInput slider orientation.  Input's original
 	// SLIDER_JOYSTICK_UP/DOWN bindings interpret a negative Y axis as up; an
 	// extra negation here reverses physical forward/backward movement.
-	g_vita_joystick_axis[JOYSTICK_Y_AXIS] = left.y.logical;
+	g_vita_joystick_axis[JOYSTICK_Y_AXIS] =
+		gameplay_input_active ? left.y.logical : 0;
 	const float frame_seconds = TimeManager::Get_Frame_Real_Seconds();
-	DIMouseAxis[MOUSE_X_AXIS] = RenegadeVitaInput::To_Camera_Mouse_Delta(
-		right.x.normalized, frame_seconds,
-		RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.horizontal_scale);
-	DIMouseAxis[MOUSE_Y_AXIS] = RenegadeVitaInput::To_Camera_Mouse_Delta(
-		right.y.normalized, frame_seconds,
-		RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.vertical_scale,
-		RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.invert_y);
+	if (gameplay_input_active) {
+		DIMouseAxis[MOUSE_X_AXIS] = RenegadeVitaInput::To_Camera_Mouse_Delta(
+			right.x.normalized, frame_seconds,
+			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.horizontal_scale);
+		DIMouseAxis[MOUSE_Y_AXIS] = RenegadeVitaInput::To_Camera_Mouse_Delta(
+			right.y.normalized, frame_seconds,
+			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.vertical_scale,
+			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.invert_y);
+	} else {
+		DIMouseAxis[MOUSE_X_AXIS] = 0;
+		DIMouseAxis[MOUSE_Y_AXIS] = 0;
+	}
 	g_vita_input_telemetry.lx = left.x.raw;
 	g_vita_input_telemetry.ly = left.y.raw;
 	g_vita_input_telemetry.rx = right.x.raw;

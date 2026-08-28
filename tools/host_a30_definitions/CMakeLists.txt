@@ -577,6 +577,7 @@ set(RV_A4_FRONTEND_RUNTIME_LINK_SOURCES
   ${RV_STAGE}/commando/gamemode.cpp
   ${RV_STAGE}/commando/movie.cpp
   ${RV_STAGE}/commando/campaign.cpp
+  ${RV_STAGE}/commando/loadingscreen.cpp
   ${RV_STAGE}/commando/gameinitmgr.cpp
   ${RV_STAGE}/commando/combatgmode.cpp
   ${RV_STAGE}/commando/devoptions.cpp

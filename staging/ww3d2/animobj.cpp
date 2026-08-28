@@ -547,8 +547,8 @@ void Animatable3DObjClass::Set_Animation
 {
 	Release();
 
-	CurMotionMode = MULTIPLE_ANIM;
 	ModeCombo.AnimCombo = anim_combo;
+	CurMotionMode = (anim_combo != NULL) ? MULTIPLE_ANIM : BASE_POSE;
 	Set_Hierarchy_Valid(false);
 }						 
 

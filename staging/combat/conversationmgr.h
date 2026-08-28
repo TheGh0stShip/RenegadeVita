@@ -129,6 +129,13 @@ public:
 	static ConversationClass *			Find_Conversation (const char *conversation_name);
 	static ConversationClass *			Find_Conversation (int conversation_id);
 	static ActiveConversationClass *	Find_Active_Conversation (int id);
+#if defined(RENEGADE_VITA_PORT)
+	static ActiveConversationClass *	Peek_Active_Conversation_For_Diagnostics (int index)
+	{
+		return index >= 0 && index < ActiveConversationList.Count () ?
+			ActiveConversationList[index] : NULL;
+	}
+#endif
 
 	static void								Reset_All_Other_Conversations (ActiveConversationClass *active_conversation);
 	static bool								Is_Key_Conversation_Playing (void);

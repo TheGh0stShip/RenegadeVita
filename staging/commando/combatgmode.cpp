@@ -35,6 +35,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "combatgmode.h"
+#include "loadingscreen.h"
 #include "level.h"
 #include "input.h"
 #include "cnetwork.h"
@@ -385,6 +386,10 @@ void 	CombatGameModeClass::Shutdown()
 	return ;
 }
 
+#if 0
+/* LoadingScreenClass was moved unchanged to loadingscreen.cpp so direct Vita,
+** frontend, campaign, and CombatGameMode loading paths can share one original
+** owner instead of cloning the load-screen implementation at platform seams. */
 class LoadingScreenClass
 {
 	MenuBackDropClass	backdrop;
@@ -549,6 +554,11 @@ public:
 	{
 	}
 
+	bool Has_Backdrop_Model( void ) const
+	{
+		return backdrop.Peek_Model() != NULL;
+	}
+
 	float	Get_Predicted_Percentage( int state )
 	{
 		switch( state )
@@ -604,6 +614,30 @@ public:
 		WW3D::End_Render();
 	}
 };
+
+void * Commando_Create_Original_Loading_Screen( void )
+{
+	return new LoadingScreenClass;
+}
+
+void Commando_Render_Original_Loading_Screen( void * screen, bool update_network )
+{
+	if ( screen != NULL ) {
+		((LoadingScreenClass *)screen)->Render( update_network );
+	}
+}
+
+bool Commando_Original_Loading_Screen_Has_Backdrop_Model( void * screen )
+{
+	return screen != NULL &&
+		((LoadingScreenClass *)screen)->Has_Backdrop_Model();
+}
+
+void Commando_Destroy_Original_Loading_Screen( void * screen )
+{
+	delete ((LoadingScreenClass *)screen);
+}
+#endif
 
 #define LOADTIME_NETWORK_UPDATE if (!IS_SOLOPLAY) cNetwork::Update()
 

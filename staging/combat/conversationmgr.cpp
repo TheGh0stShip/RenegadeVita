@@ -1059,7 +1059,11 @@ ConversationMgrClass::Think (void)
 		int index = ActiveConversationList.Count ();
 		while (index --) {
 			ActiveConversationClass *active_conversation = ActiveConversationList[index];
-			if (active_conversation->Peek_Conversation ()->Is_Key () == false || release_key_conv) {
+			if (active_conversation != NULL) {
+				active_conversation->Add_Ref ();
+			}
+			if (active_conversation != NULL &&
+					(active_conversation->Peek_Conversation ()->Is_Key () == false || release_key_conv)) {
 
 				//
 				//	Stop any non-key conversation
@@ -1067,12 +1071,25 @@ ConversationMgrClass::Think (void)
 				active_conversation->Stop_Conversation ();
 				
 				//
-				//	Remove the conversation from the list
+				//	Remove the same conversation from the list.  Stop_Conversation can
+				// notify scripts which synchronously reset or start conversations.
+				// Do not delete a newly chained conversation by using a stale index.
 				//
-				ActiveConversationList.Delete (index);
-				REF_PTR_RELEASE (active_conversation);
+				for (int remove_index = 0; remove_index < ActiveConversationList.Count (); remove_index ++) {
+					if (ActiveConversationList[remove_index] == active_conversation) {
+						ActiveConversationList.Delete (remove_index);
+						REF_PTR_RELEASE (active_conversation);
+						if (remove_index < index) {
+							index --;
+						}
+						break;
+					}
+				}
 			} else {
 				release_key_conv = true;
+			}
+			if (active_conversation != NULL) {
+				REF_PTR_RELEASE (active_conversation);
 			}
 		}
 	}
@@ -1083,6 +1100,9 @@ ConversationMgrClass::Think (void)
 	int count = ActiveConversationList.Count ();
 	for (int index = 0; index < count; index ++) {
 		ActiveConversationClass *active_conversation = ActiveConversationList[index];
+		if (active_conversation != NULL) {
+			active_conversation->Add_Ref ();
+		}
 		
 		//
 		//	Let this conversation process
@@ -1097,10 +1117,23 @@ ConversationMgrClass::Think (void)
 		//	Remove this conversation from our control (if necessary)
 		//
 		if (remove_from_list) {
-			ActiveConversationList.Delete (index);
+			for (int remove_index = 0; remove_index < ActiveConversationList.Count (); remove_index ++) {
+				if (ActiveConversationList[remove_index] == active_conversation) {
+					ActiveConversationList.Delete (remove_index);
+					if (active_conversation != NULL) {
+						REF_PTR_RELEASE (active_conversation);
+					}
+					if (remove_index <= index) {
+						index --;
+					}
+					break;
+				}
+			}
+			count = ActiveConversationList.Count ();
+		}
+
+		if (active_conversation != NULL) {
 			REF_PTR_RELEASE (active_conversation);
-			index --;
-			count --;
 		}
 	}
 

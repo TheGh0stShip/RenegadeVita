@@ -10,12 +10,12 @@ import subprocess
 MODULES = [
     "WWMath", "wwbitpack", "wwdebug", "wwlib", "wwsaveload",
     "wwtranslatedb", "wwutil", "wwphys", "ww3d2", "Combat",
-    "Commando", "WWAudio", "WWOnline", "wolapi",
+    "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi",
 ]
 
-EXPECTED_ORIGINAL_SOURCE_COUNT = 424
-EXPECTED_VITA_PORT_SOURCE_COUNT = 21
-EXPECTED_PATCH_COUNT = 103
+EXPECTED_ORIGINAL_SOURCE_COUNT = 447
+EXPECTED_VITA_PORT_SOURCE_COUNT = 26
+EXPECTED_PATCH_COUNT = 113
 
 STAGED_TO_UPSTREAM_MODULE = {
     "combat": "Combat",
@@ -26,6 +26,9 @@ STAGED_TO_UPSTREAM_MODULE = {
 
 VITA_PORT_SOURCES = [
     "port/developer/a31_capture_telemetry.cpp",
+	"port/audio/vita/renegade_miles_provider.cpp",
+	"port/audio/vita/renegade_wave_decoder.cpp",
+	"port/filesystem/renegade_cache_health.cpp",
     "port/filesystem/renegade_paths.cpp",
     "port/filesystem/renegade_file_factory.cpp",
     "port/filesystem/renegade_registry.cpp",
@@ -35,6 +38,7 @@ VITA_PORT_SOURCES = [
     "port/renderer/vita/ww3d_vita_renderer.cpp",
     "port/renderer/vita/ww3d_dx8_boundary.cpp",
     "port/renderer/vita/surface_boundary.cpp",
+	"port/renderer/vita/renegade_freetype_font_provider.cpp",
     "port/validation/wwbitpack_selftest.cpp",
     "port/validation/a21_filesystem_selftest.cpp",
     "port/validation/a22_w3d_selftest.cpp",
@@ -44,6 +48,7 @@ VITA_PORT_SOURCES = [
     "port/platform/a31_gameplay_boundary.cpp",
 	"port/platform/a31_miscutil_boundary.cpp",
 	"port/platform/a31_network_options_boundary.cpp",
+	"port/platform/renegade_script_static_provider.cpp",
     "port/platform/vita/a30_main.cpp",
 	"port/platform/vita/a31_vita_runtime.cpp",
 ]
@@ -76,6 +81,10 @@ def read_world_manifest(root: pathlib.Path) -> list[str]:
                 staged_module, staged_module
             )
             entries.append(f"Code/{upstream_module}/{filename}")
+        for filename in re.findall(
+                r"\$\{RENEGADE_SCRIPT_SOURCE\}/([^\s\)#]+\.cpp)",
+                manifest.read_text(encoding="utf-8")):
+            entries.append(f"Code/Scripts/{filename}")
     entries = sorted(set(entries))
     if len(entries) != EXPECTED_ORIGINAL_SOURCE_COUNT:
         raise RuntimeError(
@@ -180,7 +189,10 @@ def main() -> None:
         }
         for name in MODULES
     }
-    module_status["WWAudio"]["status"] = "original-headers-with-temporary-no-audio-boundary"
+    module_status["WWAudio"]["status"] = (
+        "original-runtime-over-vita-native-miles-compatible-provider"
+    )
+    module_status["Scripts"]["status"] = "native-static-m00-provider-with-direct-dependencies"
     module_status["WWOnline"]["status"] = "excluded-initially"
     module_status["wolapi"]["status"] = "excluded-initially"
 
@@ -191,9 +203,10 @@ def main() -> None:
     report = {
         "milestone": args.milestone,
         "objective": (
-            "First interactive original M00 gameplay runtime; current source "
-            "seed preserves accepted A3.0, capture/telemetry, and replaces "
-            "temporary gameplay scalar closures with original Combat owners"
+            "First authentic M00 tutorial runtime; current source seed "
+            "preserves accepted A3.0/Combat ownership, links the original "
+            "Mission00 provider and its direct dependencies, and retains "
+            "original WWAudio ownership over a Vita-native output boundary"
         ),
         "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
         "upstream_revision": revision,

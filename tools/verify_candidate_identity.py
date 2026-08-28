@@ -33,6 +33,14 @@ def contains(blob: bytes, value: str) -> bool:
     return value.encode("utf-8") in blob
 
 
+def contains_prohibited_identity(blob: bytes, value: str) -> bool:
+    """Match a stale candidate token without treating dev1 as part of dev10."""
+    encoded = re.escape(value.encode("utf-8"))
+    if re.fullmatch(r"A\d+\.\d+-dev\d+", value):
+        return re.search(encoded + rb"(?!\d)", blob) is not None
+    return re.search(encoded, blob) is not None
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--elf", required=True, type=Path)
@@ -62,7 +70,11 @@ def main(argv: list[str] | None = None) -> int:
           f"{args.candidate} CAPTURE")
     prohibited = tuple(DEFAULT_PROHIBITED) + tuple(args.prohibit)
     for stale in sorted(set(prohibited)):
-        check(f"elf_no_stale_{stale}", not contains(elf_bytes, stale), stale)
+        check(
+            f"elf_no_stale_{stale}",
+            not contains_prohibited_identity(elf_bytes, stale),
+            stale,
+        )
 
     self_hash = sha256(args.self) if args.self.is_file() else ""
     packaged = b""

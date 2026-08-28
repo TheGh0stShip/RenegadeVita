@@ -38,9 +38,6 @@
 
 
 #include "dazzle.h"
-#if defined(RENEGADE_VITA_PORT)
-#include "ww3d_vita_renderer.h"
-#endif
 #include "simplevec.h"
 #include "vector2.h"
 #include "camera.h"
@@ -899,8 +896,12 @@ RenderObjClass* DazzleRenderObjClass::Clone(void) const
 void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
 {
 #if defined(RENEGADE_VITA_PORT)
+	/* The original Dazzle renderer delegates lens-flare geometry to a DX8
+	** DazzleLayer that the Vita boundary does not yet provide.  Retaining the
+	** BackgroundMgr-owned object is still required for authentic sky
+	** construction, but an absent optional presentation layer is a bounded
+	** no-op rather than an unsupported world submission. */
 	(void)rinfo;
-	RenegadeVitaRenderer::Submit_Unsupported(this);
 	return;
 #else
 	WWPROFILE("Dazzle::Render");

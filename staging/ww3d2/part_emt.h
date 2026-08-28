@@ -85,6 +85,10 @@ void Copy_Emitter_Property_Struct
 	dest.Values			= NULL;
 
 	if (dest.NumKeyFrames > 0) {
+		if (src.KeyTimes == NULL || src.Values == NULL) {
+			dest.NumKeyFrames = 0;
+			return;
+		}
 		dest.KeyTimes	=  new float[dest.NumKeyFrames];
 		dest.Values		=  new T[dest.NumKeyFrames];
 		::memcpy (dest.KeyTimes, src.KeyTimes, sizeof (float) * dest.NumKeyFrames);

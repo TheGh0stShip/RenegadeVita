@@ -235,6 +235,11 @@ void GameObjManager::Destroy_All()		// Destroy each object in the list
 
 	NetworkObjectMgrClass::Delete_Pending ();	
 
+	// Object destruction detaches scripts into ScriptManager's pending list.
+	// The normal Post_Think drain is disabled in this teardown path, so finish
+	// the original observer lifecycle before the script provider shuts down.
+	ScriptManager::Destroy_Pending();
+
 	WWASSERT( GameObjList.Head() == NULL );
 	WWASSERT( SmartGameObjList.Head() == NULL );
 	WWASSERT( StarGameObjList.Head() == NULL );

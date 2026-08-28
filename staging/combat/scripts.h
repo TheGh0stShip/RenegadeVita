@@ -98,6 +98,8 @@ public:
 	static	bool				Load( ChunkLoadClass & cload );
 
 	static	void				Enable_Script_Creation( bool enable ) { EnableScriptCreation = enable; }
+	static	bool				Is_Provider_Active( void ) { return ScriptCreateFunct != NULL && ScriptDestroyFunct != NULL; }
+	static	int				Get_Active_Script_Count( void ) { return ActiveScriptList.Count(); }
 
 private:
 	static void Load_Scripts(const char * dll_filename);

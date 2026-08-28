@@ -1,0 +1,30 @@
+--- a/WWAudio.h
++++ b/WWAudio.h
+@@ -449 +449 @@
+-	bool					Set_Cache_Size (int kbytes = DEF_CACHE_SIZE)	{ m_MaxCacheSize = (kbytes * 1024); }
++	bool					Set_Cache_Size (int kbytes = DEF_CACHE_SIZE)	{ m_MaxCacheSize = (kbytes * 1024); return true; }
+@@ -501 +501 @@
+-	SOUND_PAGE			Get_Active_Sound_Page (void)					{ m_CurrPage; }
++	SOUND_PAGE			Get_Active_Sound_Page (void)					{ return m_CurrPage; }
+--- a/SoundBuffer.h
++++ b/SoundBuffer.h
+@@ -117 +117 @@
+-		virtual void			Determine_Stats (unsigned char *buffer);
++		virtual void			Determine_Stats (unsigned char *buffer, unsigned long available_bytes);
+--- a/SoundBuffer.cpp
++++ b/SoundBuffer.cpp
+@@ -119 +119 @@
+-SoundBufferClass::Determine_Stats (unsigned char *buffer)
++SoundBufferClass::Determine_Stats (unsigned char *buffer, unsigned long available_bytes)
+@@ -133 +133 @@
+-	if ((buffer != NULL) && (::AIL_WAV_info (buffer, &info) != 0)) {
++	if ((buffer != NULL) && (::AIL_WAV_info_bounded (buffer, available_bytes, &info) != 0)) {
+@@ -235 +235 @@
+-		Determine_Stats (m_Buffer);
++		Determine_Stats (m_Buffer, m_Length);
+@@ -284 +284 @@
+-		Determine_Stats (m_Buffer);
++		Determine_Stats (m_Buffer, m_Length);
+@@ -383 +383 @@
+-	Determine_Stats (buffer);
++	Determine_Stats (buffer, sizeof (buffer));

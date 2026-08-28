@@ -655,6 +655,11 @@ void HTreeClass::Combo_Update
 	HAnimComboClass *anim
 )
 {
+	if (anim == NULL) {
+		Base_Update(root);
+		return;
+	}
+
 	PivotClass *pivot;
 
 	Pivot[0].Transform = root;
@@ -662,7 +667,10 @@ void HTreeClass::Combo_Update
 	
 	int num_anim_pivots = 100000;
 	for ( int anim_num = 0; anim_num < anim->Get_Num_Anims(); anim_num++ ) {
-		num_anim_pivots = MIN( num_anim_pivots, anim->Peek_Motion( anim_num )->Get_Num_Pivots() );
+		HAnimClass *motion = anim->Peek_Motion( anim_num );
+		if ( motion != NULL ) {
+			num_anim_pivots = MIN( num_anim_pivots, motion->Get_Num_Pivots() );
+		}
 	}
 	if ( num_anim_pivots == 100000 ) {
 		num_anim_pivots = 0;

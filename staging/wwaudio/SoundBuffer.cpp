@@ -116,7 +116,7 @@ SoundBufferClass::Free_Buffer (void)
 //	Determine_Stats
 //
 void
-SoundBufferClass::Determine_Stats (unsigned char *buffer)
+SoundBufferClass::Determine_Stats (unsigned char *buffer, unsigned long available_bytes)
 {
 	WWPROFILE ("Determine_Stats");
 
@@ -130,7 +130,7 @@ SoundBufferClass::Determine_Stats (unsigned char *buffer)
 
 	// Attempt to get statistical information about this sound
 	AILSOUNDINFO info = { 0 };
-	if ((buffer != NULL) && (::AIL_WAV_info (buffer, &info) != 0)) {
+	if ((buffer != NULL) && (::AIL_WAV_info_bounded (buffer, available_bytes, &info) != 0)) {
 
 		// Cache this information
 		m_Rate = info.rate;
@@ -232,7 +232,7 @@ SoundBufferClass::Load_From_File (FileClass &file)
 		if (retval == false) {
 			Free_Buffer ();
 		}
-		Determine_Stats (m_Buffer);
+		Determine_Stats (m_Buffer, m_Length);
 	}
 
 	// Close the file if necessary
@@ -281,7 +281,7 @@ SoundBufferClass::Load_From_Memory
 		if (retval == false) {
 			Free_Buffer ();
 		}
-		Determine_Stats (m_Buffer);
+		Determine_Stats (m_Buffer, m_Length);
 	}
 
 	// Return the true/false result code
@@ -380,7 +380,7 @@ StreamSoundBufferClass::Load_From_File (FileClass &file)
 	// of the file into the buffer
 	unsigned char buffer[4096] = { 0 };
 	file.Read (buffer, sizeof (buffer));
-	Determine_Stats (buffer);
+	Determine_Stats (buffer, sizeof (buffer));
 
 	// Close the file if necessary
 	if (we_opened) {

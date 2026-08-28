@@ -66,6 +66,9 @@
 #include "wwdebug.h"
 #include "wwhack.h"
 #include "wwprofile.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 
 DECLARE_FORCE_LINK( buildingaggregate );
@@ -336,11 +339,23 @@ bool BuildingAggregateClass::Save(ChunkSaveClass & csave)
  *=============================================================================================*/
 bool BuildingAggregateClass::Load( ChunkLoadClass &cload )
 {
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("building-entry", 0U);
+#endif
 	while (cload.Open_Chunk()) {
+#if defined(__vita__)
+		A35_Vita_Static_Load_Trace_Step("building-chunk", cload.Cur_Chunk_ID());
+#endif
 		switch(cload.Cur_Chunk_ID()) {
 
 			case BAG_CHUNK_STATICANIMPHYS:
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("building-static-anim-entry", cload.Cur_Chunk_ID());
+#endif
 				StaticAnimPhysClass::Load( cload );
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("building-static-anim-return", cload.Cur_Chunk_ID());
+#endif
 				break;
 		
 			case BAG_CHUNK_VARIABLES:
@@ -364,6 +379,9 @@ bool BuildingAggregateClass::Load( ChunkLoadClass &cload )
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("building-return", 0U);
+#endif
 	return true;
 }
 

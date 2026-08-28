@@ -70,6 +70,9 @@
 #include <memory.h>
 #include "part_emt.h"
 #include "renegadeterrainpatch.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 #if UMBRASUPPORT
 #include <umbra.hpp>
@@ -590,12 +593,24 @@ bool StaticPhysClass::Save(ChunkSaveClass &csave)
  *=============================================================================================*/
 bool StaticPhysClass::Load(ChunkLoadClass &cload)
 {
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("static-phys-load-entry", 0U);
+#endif
 	while (cload.Open_Chunk()) {
+		#if defined(__vita__)
+			A35_Vita_Static_Load_Trace_Step("static-phys-chunk", cload.Cur_Chunk_ID());
+		#endif
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case STATICPHYS_CHUNK_PHYS:
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("phys-entry", cload.Cur_Chunk_ID());
+#endif
 				PhysClass::Load(cload);
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("phys-return", cload.Cur_Chunk_ID());
+#endif
 				break;
 
 			case STATICPHYS_CHUNK_VARIABLES:
@@ -617,6 +632,9 @@ bool StaticPhysClass::Load(ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("static-phys-load-return", 0U);
+#endif
 	return true;
 }
 

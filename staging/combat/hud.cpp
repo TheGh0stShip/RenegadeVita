@@ -349,6 +349,12 @@ static	void	Powerup_Shutdown( void )
 
 static	void	Powerup_Add( const WCHAR * name, int number, const char * texture_name, const RectClass & uv, const Vector2 & offset, bool right_list = true )
 {
+	// A headless validation lifecycle has no presentation resources. Keep the
+	// gameplay notification call valid without constructing an orphaned icon.
+	if ( PowerupBoxRenderer == NULL || PowerupTextRenderer == NULL ) {
+		return;
+	}
+
 	PowerupIconStruct * data = new PowerupIconStruct();
 	data->Renderer = new Render2DClass();
 	StringClass new_name(true);

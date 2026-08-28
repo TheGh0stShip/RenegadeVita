@@ -21,7 +21,7 @@ def load_bundle(path: Path) -> tuple[dict[str, Any], list[dict[str, str]]]:
         state = json.load(stream)
     with frames_path.open(newline="", encoding="utf-8") as stream:
         frames = list(csv.DictReader(stream))
-    if state.get("schema_version") not in (1, 2):
+    if state.get("schema_version") not in (1, 2, 3, 4):
         raise ValueError(f"{path}: unsupported capture schema")
     return state, frames
 
@@ -97,6 +97,10 @@ PATHS = {
         "renderer.backend_errors", "renderer.geometry_checksum",
         "renderer.indexed_checksum",
     ],
+    "gameplay": [
+        "player.position", "player.orientation", "player.velocity",
+        "player.health", "player.physics_registered", "player.grounded",
+    ],
     "memory": [
         "memory.system_user_free", "memory.system_cdram_free",
         "memory.system_phycont_free", "memory.vitagl_ram_free",
@@ -108,6 +112,20 @@ PATHS = {
         "memory.vitagl_vram_free_low_water",
         "memory.vitagl_slow_free_low_water",
         "memory.vitagl_all_free_low_water",
+    ],
+    "visual_gate": [
+        "loading_visual_gate.active",
+        "loading_visual_gate.framebuffer_width",
+        "loading_visual_gate.framebuffer_height",
+        "loading_visual_gate.original_logical_width",
+        "loading_visual_gate.original_logical_height",
+        "loading_visual_gate.native_display_width",
+        "loading_visual_gate.native_display_height",
+        "loading_visual_gate.logical_to_native_fullscreen",
+        "loading_visual_gate.original_loading_screen_owner",
+        "loading_visual_gate.direct_vitagl_overlay_disabled",
+        "loading_visual_gate.loading_texture_v_flip_enabled",
+        "loading_visual_gate.gameplay_texture_v_unchanged",
     ],
 }
 
@@ -135,7 +153,8 @@ def compare(first_path: Path, second_path: Path) -> dict[str, Any]:
     second_state, second_frames = load_bundle(second_path)
     output: dict[str, Any] = {
         "before": str(first_path), "after": str(second_path), "performance": {},
-        "stages": {}, "semantic": {}, "renderer": {}, "memory": {},
+        "stages": {}, "semantic": {}, "renderer": {}, "gameplay": {},
+        "memory": {}, "visual_gate": {},
     }
     first_perf = performance(first_frames)
     second_perf = performance(second_frames)
@@ -160,7 +179,8 @@ def format_value(value: Any) -> str:
 
 def print_text(result: dict[str, Any]) -> None:
     print(f"Capture comparison\n  before: {result['before']}\n  after:  {result['after']}")
-    for category in ("performance", "stages", "memory", "renderer", "semantic"):
+    for category in ("performance", "stages", "memory", "visual_gate", "renderer",
+                     "semantic", "gameplay"):
         print(f"\n{category.capitalize()}")
         for name, item in result[category].items():
             marker = "CHANGED" if item["changed"] else "same"

@@ -1,0 +1,55 @@
+diff --git a/hanim.cpp b/hanim.cpp
+--- a/hanim.cpp
++++ b/hanim.cpp
+@@ -284,7 +284,10 @@
+ 	bool none_pivot_maps = true;
+ 	int num_anim_pivots = 100000;
+ 	for (anim_idx = 0; anim_idx < anim_count; anim_idx++ ) {
+-		num_anim_pivots = MIN(num_anim_pivots, Peek_Motion(anim_idx)->Get_Num_Pivots());
++		HAnimClass *motion = Peek_Motion(anim_idx);
++		if (motion != NULL) {
++			num_anim_pivots = MIN(num_anim_pivots, motion->Get_Num_Pivots());
++		}
+ 		bool has_pivot_map = Peek_Pivot_Weight_Map(anim_idx) != NULL;
+ 		all_pivot_maps &= has_pivot_map;
+ 		none_pivot_maps &= !has_pivot_map;
+diff --git a/animobj.cpp b/animobj.cpp
+--- a/animobj.cpp
++++ b/animobj.cpp
+@@ -547,8 +547,8 @@
+ {
+ 	Release();
+ 
+-	CurMotionMode = MULTIPLE_ANIM;
+ 	ModeCombo.AnimCombo = anim_combo;
++	CurMotionMode = (anim_combo != NULL) ? MULTIPLE_ANIM : BASE_POSE;
+ 	Set_Hierarchy_Valid(false);
+ }						 
+ 
+diff --git a/htree.cpp b/htree.cpp
+--- a/htree.cpp
++++ b/htree.cpp
+@@ -655,6 +655,11 @@ void HTreeClass::Combo_Update
+ 	HAnimComboClass *anim
+ )
+ {
++	if (anim == NULL) {
++		Base_Update(root);
++		return;
++	}
++
+ 	PivotClass *pivot;
+ 
+ 	Pivot[0].Transform = root;
+@@ -662,7 +667,10 @@ void HTreeClass::Combo_Update
+ 	
+ 	int num_anim_pivots = 100000;
+ 	for ( int anim_num = 0; anim_num < anim->Get_Num_Anims(); anim_num++ ) {
+-		num_anim_pivots = MIN( num_anim_pivots, anim->Peek_Motion( anim_num )->Get_Num_Pivots() );
++		HAnimClass *motion = anim->Peek_Motion( anim_num );
++		if ( motion != NULL ) {
++			num_anim_pivots = MIN( num_anim_pivots, motion->Get_Num_Pivots() );
++		}
+ 	}
+ 	if ( num_anim_pivots == 100000 ) {
+ 		num_anim_pivots = 0;

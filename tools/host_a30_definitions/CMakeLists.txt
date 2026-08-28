@@ -10,6 +10,7 @@ include("${RV_ROOT}/cmake/RenegadeCcache.cmake")
 set(RV_STAGE "${RV_ROOT}/staging")
 set(RV_UPSTREAM "${RV_ROOT}/upstream/CnC_Renegade")
 set(RV_COMPAT "${RV_ROOT}/port/compatibility/include")
+set(RV_SCRIPT_SOURCE "${RV_STAGE}/scripts")
 
 # The original AssetManager and WW3D shutdown paths retain Font3D/Render2D
 # references even in the retained A3.0/A3.1 world probes.  Keep one explicit
@@ -125,7 +126,7 @@ target_include_directories(a30_definition_runtime PRIVATE
   ${RV_UPSTREAM}/Code/WWAudio
   ${RV_UPSTREAM}/Code/wwtranslatedb
   ${RV_UPSTREAM}/Code/wwnet
-  ${RV_UPSTREAM}/Code/Scripts
+  ${RV_SCRIPT_SOURCE}
 )
 
 target_compile_definitions(a30_definition_runtime PRIVATE
@@ -289,6 +290,54 @@ include("${RV_ROOT}/cmake/A31OriginalSources.cmake")
 # static factory registration and prevents the host runtime from drifting from
 # canonical Vita as new M00 dependencies are introduced.
 
+add_executable(a35_loading_backdrop_contract
+  ${RENEGADE_A22_ORIGINAL_SOURCES}
+  ${RV_STAGE}/wwlib/TARGA.CPP
+  ${RV_STAGE}/ww3d2/bitmaphandler.cpp
+  ${RV_STAGE}/ww3d2/ww3dformat.cpp
+  ${RV_STAGE}/ww3d2/font3d.cpp
+  ${RV_STAGE}/ww3d2/ddsfile.cpp
+  ${RV_STAGE}/ww3d2/formconv.cpp
+  ${RV_STAGE}/ww3d2/render2d.cpp
+  ${RV_STAGE}/ww3d2/render2dsentence.cpp
+  ${RV_ROOT}/port/filesystem/renegade_paths.cpp
+  ${RV_ROOT}/port/filesystem/renegade_file_factory.cpp
+  ${RV_ROOT}/port/renderer/vita/renegade_freetype_font_provider.cpp
+  ${RV_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp
+  ${RV_ROOT}/port/renderer/vita/ww3d_dx8_boundary.cpp
+  ${RV_ROOT}/port/renderer/vita/surface_boundary.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/loading_backdrop_contract_main.cpp
+)
+target_include_directories(a35_loading_backdrop_contract PRIVATE
+  ${RV_COMPAT}
+  ${RV_ROOT}/port/filesystem
+  ${RV_ROOT}/port/renderer/vita
+  /usr/local/vitasdk/arm-vita-eabi/include/freetype2
+  ${RV_STAGE}/wwbitpack
+  ${RV_STAGE}/wwlib
+  ${RV_STAGE}/wwmath
+  ${RV_STAGE}/wwsaveload
+  ${RV_STAGE}/combat
+  ${RV_STAGE}/ww3d2
+  ${RV_UPSTREAM}/Code/wwdebug
+  ${RV_UPSTREAM}/Code/wwlib
+  ${RV_UPSTREAM}/Code/wwutil
+  ${RV_UPSTREAM}/Code/WWMath
+  ${RV_UPSTREAM}/Code/wwsaveload
+  ${RV_UPSTREAM}/Code/ww3d2
+  ${RV_UPSTREAM}/Code/WWPhys
+  ${RV_UPSTREAM}/Code/Combat
+)
+target_compile_definitions(a35_loading_backdrop_contract PRIVATE
+  NDEBUG=1 _UNIX=1 UMBRASUPPORT=0 RENEGADE_RUNTIME_READ_ONLY=1
+  RENEGADE_HOST_ABI_TEST=1 RENEGADE_VITA_PORT=1)
+target_compile_options(a35_loading_backdrop_contract PRIVATE
+  -O1 -g -fno-strict-aliasing -fno-exceptions -fno-rtti
+  -ffunction-sections -fdata-sections -Wno-unknown-pragmas
+  "SHELL:-include ${RV_COMPAT}/msvc_compat.h")
+target_link_options(a35_loading_backdrop_contract PRIVATE -Wl,--gc-sections)
+target_link_libraries(a35_loading_backdrop_contract PRIVATE m pthread "${RV_WORLD_HOST_FREETYPE}")
+
 add_executable(a30_wwphys_definition_runtime
   ${RENEGADE_A30_WORLD_ORIGINAL_SOURCES}
   ${RV_STAGE}/ww3d2/ddsfile.cpp
@@ -348,7 +397,7 @@ target_include_directories(a30_wwphys_definition_runtime PRIVATE
   ${RV_UPSTREAM}/Code/wwnet
   ${RV_UPSTREAM}/Code/wwui
   ${RV_UPSTREAM}/Code/wwtranslatedb
-  ${RV_UPSTREAM}/Code/Scripts
+  ${RV_SCRIPT_SOURCE}
 )
 target_compile_definitions(a30_wwphys_definition_runtime PRIVATE
   NDEBUG=1
@@ -435,7 +484,7 @@ target_include_directories(a31_gameplay_seed_runtime PRIVATE
   ${RV_UPSTREAM}/Code/wwnet
   ${RV_UPSTREAM}/Code/wwui
   ${RV_UPSTREAM}/Code/wwtranslatedb
-  ${RV_UPSTREAM}/Code/Scripts
+  ${RV_SCRIPT_SOURCE}
 )
 target_compile_definitions(a31_gameplay_seed_runtime PRIVATE
   NDEBUG=1
@@ -460,9 +509,10 @@ target_compile_options(a31_gameplay_seed_runtime PRIVATE
 )
 # ScriptCommands is a binary callback table shared with the historical MSVC
 # script DLL. Its default values are MSVC-only syntax and do not affect the
-# table ABI; keep that tolerance scoped to the original script manager TU.
+# table ABI; keep that tolerance scoped to the original script manager TUs.
 set_source_files_properties(
   ${RV_STAGE}/combat/scripts.cpp
+  ${RV_STAGE}/combat/scriptcommands.cpp
   PROPERTIES
   COMPILE_OPTIONS "-fpermissive"
 )
@@ -552,6 +602,12 @@ set(RV_A4_FRONTEND_RUNTIME_LINK_SOURCES
 add_executable(a31_interactive_runtime
   ${RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCES}
   ${RV_A4_FRONTEND_RUNTIME_LINK_SOURCES}
+  ${RV_SCRIPT_SOURCE}/ScriptFactory.cpp
+  ${RV_SCRIPT_SOURCE}/ScriptRegistrar.cpp
+  ${RV_SCRIPT_SOURCE}/scripts.cpp
+  ${RV_SCRIPT_SOURCE}/Mission00.cpp
+  ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   ${RV_STAGE}/wwlib/pipe.cpp
   ${RV_STAGE}/wwlib/base64.cpp
   ${RV_STAGE}/wwlib/xpipe.cpp
@@ -645,6 +701,7 @@ add_executable(a31_interactive_runtime
   ${RV_ROOT}/port/platform/a31_network_options_boundary.cpp
   ${RV_ROOT}/port/platform/a31_gameplay_boundary.cpp
   ${RV_ROOT}/port/platform/a31_miscutil_boundary.cpp
+  ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
   ${RV_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp
   ${RV_ROOT}/port/renderer/vita/ww3d_dx8_boundary.cpp
   ${RV_ROOT}/port/renderer/vita/surface_boundary.cpp
@@ -696,7 +753,7 @@ target_include_directories(a31_interactive_runtime PRIVATE
   ${RV_UPSTREAM}/Code/wwnet
   ${RV_UPSTREAM}/Code/wwui
   ${RV_UPSTREAM}/Code/wwtranslatedb
-  ${RV_UPSTREAM}/Code/Scripts
+  ${RV_SCRIPT_SOURCE}
 )
 add_dependencies(a31_interactive_runtime a4_dialog_templates)
 target_compile_definitions(a31_interactive_runtime PRIVATE
@@ -723,6 +780,23 @@ target_compile_options(a31_interactive_runtime PRIVATE
   -Wno-unknown-pragmas
   "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
 )
+set_source_files_properties(
+  ${RV_SCRIPT_SOURCE}/ScriptFactory.cpp
+  ${RV_SCRIPT_SOURCE}/ScriptRegistrar.cpp
+  ${RV_SCRIPT_SOURCE}/scripts.cpp
+  ${RV_SCRIPT_SOURCE}/Mission00.cpp
+  ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
+  ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
+  PROPERTIES COMPILE_OPTIONS "-fpermissive"
+)
+set_property(SOURCE
+  ${RV_SCRIPT_SOURCE}/Mission00.cpp
+  ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
+  APPEND PROPERTY
+  COMPILE_OPTIONS
+  "-include${RV_COMPAT}/renegade_script_call_defaults.h")
 set_source_files_properties(
   ${RV_STAGE}/combat/scripts.cpp
   PROPERTIES
@@ -901,7 +975,7 @@ target_include_directories(a4_wwui_frontend_probe PRIVATE
   ${RV_UPSTREAM}/Code/wwnet
   ${RV_UPSTREAM}/Code/wwui
   ${RV_UPSTREAM}/Code/wwtranslatedb
-  ${RV_UPSTREAM}/Code/Scripts
+  ${RV_SCRIPT_SOURCE}
 )
 target_compile_definitions(a4_wwui_frontend_probe PRIVATE
   NDEBUG=1

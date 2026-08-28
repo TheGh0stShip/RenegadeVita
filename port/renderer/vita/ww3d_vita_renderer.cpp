@@ -1,16 +1,20 @@
 #include "ww3d_vita_renderer.h"
 
 #include "camera.h"
+#include "d3d8.h"
 #include "mesh.h"
 #include "meshmdl.h"
 #include "matrix4.h"
 #include "rendobj.h"
 #include "rinfo.h"
 #include "shader.h"
+#include "texture.h"
 #include "tri.h"
+#include "vertmaterial.h"
 #include "ww3d_vita_render_state_contract.h"
 
 #include <stddef.h>
+#include <new>
 #include <stdio.h>
 #include <string.h>
 
@@ -29,11 +33,44 @@ Statistics g_statistics = {};
 BackendLifecycleStatistics g_lifecycle = {};
 bool g_logged_first_unsupported = false;
 bool g_logged_first_indexed_rejection = false;
+Vector3 *g_deformed_skin_vertices = NULL;
+Vector3 *g_deformed_skin_normals = NULL;
+int g_deformed_skin_capacity = 0;
+
+bool Ensure_Deformed_Skin_Scratch(int vertex_count)
+{
+	if (vertex_count <= g_deformed_skin_capacity) return true;
+	Vector3 *vertices = new (std::nothrow) Vector3[vertex_count];
+	Vector3 *normals = new (std::nothrow) Vector3[vertex_count];
+	if (vertices == NULL || normals == NULL) {
+		delete[] vertices;
+		delete[] normals;
+		return false;
+	}
+	delete[] g_deformed_skin_vertices;
+	delete[] g_deformed_skin_normals;
+	g_deformed_skin_vertices = vertices;
+	g_deformed_skin_normals = normals;
+	g_deformed_skin_capacity = vertex_count;
+	return true;
+}
+
+void Release_Deformed_Skin_Scratch()
+{
+	delete[] g_deformed_skin_vertices;
+	delete[] g_deformed_skin_normals;
+	g_deformed_skin_vertices = NULL;
+	g_deformed_skin_normals = NULL;
+	g_deformed_skin_capacity = 0;
+}
 
 #if defined(__vita__)
 bool g_logged_first_frame = false;
 bool g_logged_first_present = false;
 bool g_logged_first_mesh = false;
+bool g_logged_first_skin = false;
+bool g_logged_skin_failure = false;
+bool g_logged_first_static_material_fallback = false;
 bool g_shader_compiler_available = false;
 unsigned g_shader_init_calls = 0;
 int g_shader_init_last_result = -1;
@@ -80,6 +117,27 @@ GLenum To_GL_Destination_Blend(ShaderClass::DstBlendFuncType function)
 void Apply_Original_Shader_State(const ShaderClass &shader)
 {
 	const ShaderStateContract state = Translate_Shader_State(shader);
+	if (shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE) {
+		glEnable(GL_TEXTURE_2D);
+		switch (shader.Get_Primary_Gradient()) {
+		case ShaderClass::GRADIENT_DISABLE:
+			/* Original ShaderClass::Apply maps this to D3DTOP_SELECTARG1 with
+			** D3DTA_TEXTURE for color and alpha.  The Vita fixed-function
+			** default is modulation; leaving that default multiplies valid
+			** M00 textures by black DCG/material colours and produces the
+			** physical all-black-surface regression seen in dev16. */
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			break;
+		case ShaderClass::GRADIENT_ADD:
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
+			break;
+		default:
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			break;
+		}
+	} else {
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	}
 	if (state.alpha_test) {
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
@@ -102,6 +160,41 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		glCullFace(GL_BACK);
 	} else glDisable(GL_CULL_FACE);
 	++g_statistics.state_changes;
+}
+
+float Clamp01(float value)
+{
+	return value < 0.0f ? 0.0f : (value > 1.0f ? 1.0f : value);
+}
+
+bool Is_Near_Black(const Vector3 &color)
+{
+	return color.X <= 0.003f && color.Y <= 0.003f && color.Z <= 0.003f;
+}
+
+Vector3 Max_Color(const Vector3 &left, const Vector3 &right)
+{
+	return Vector3(left.X > right.X ? left.X : right.X,
+		left.Y > right.Y ? left.Y : right.Y,
+		left.Z > right.Z ? left.Z : right.Z);
+}
+
+void Log_Static_Material_Fallback(MeshClass &mesh, TextureClass *texture,
+	VertexMaterialClass *material, const ShaderClass &shader,
+	const Vector3 &diffuse, const Vector3 &ambient, const Vector3 &emissive,
+	const Vector3 &selected, float opacity)
+{
+	if (g_logged_first_static_material_fallback) return;
+	Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+		"first static material black fallback: mesh=%s texture=%s shader=%08X gradient=%d material=%p diffuse=(%.3f,%.3f,%.3f) ambient=(%.3f,%.3f,%.3f) emissive=(%.3f,%.3f,%.3f) selected=(%.3f,%.3f,%.3f) opacity=%.3f",
+		mesh.Get_Name(),
+		texture != NULL ? texture->Get_Texture_Name().Peek_Buffer() : "none",
+		shader.Get_Bits(), static_cast<int>(shader.Get_Primary_Gradient()),
+		static_cast<void *>(material),
+		diffuse.X, diffuse.Y, diffuse.Z, ambient.X, ambient.Y, ambient.Z,
+		emissive.X, emissive.Y, emissive.Z, selected.X, selected.Y,
+		selected.Z, opacity);
+	g_logged_first_static_material_fallback = true;
 }
 
 void Log_System_Memory(const char *stage)
@@ -289,17 +382,40 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 	uint32_t width, uint32_t height, float min_depth, float max_depth,
 	NativeViewport &viewport)
 {
-	if (width == 0U || height == 0U || d3d_x > DISPLAY_WIDTH ||
-		d3d_y > DISPLAY_HEIGHT || width > DISPLAY_WIDTH - d3d_x ||
-		height > DISPLAY_HEIGHT - d3d_y || min_depth < 0.0f ||
-		max_depth > 1.0f || min_depth > max_depth) {
+	return Build_Native_Viewport(d3d_x, d3d_y, width, height, min_depth,
+		max_depth, DISPLAY_WIDTH, DISPLAY_HEIGHT, viewport);
+}
+
+bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
+	uint32_t width, uint32_t height, float min_depth, float max_depth,
+	uint32_t logical_width, uint32_t logical_height, NativeViewport &viewport)
+{
+	if (logical_width == 0U || logical_height == 0U || width == 0U ||
+		height == 0U || d3d_x > logical_width || d3d_y > logical_height ||
+		width > logical_width - d3d_x || height > logical_height - d3d_y ||
+		min_depth < 0.0f || max_depth > 1.0f || min_depth > max_depth) {
 		return false;
 	}
 
-	viewport.x = d3d_x;
-	viewport.y = DISPLAY_HEIGHT - d3d_y - height;
-	viewport.width = width;
-	viewport.height = height;
+	const uint64_t left =
+		(static_cast<uint64_t>(d3d_x) * DISPLAY_WIDTH) / logical_width;
+	const uint64_t right =
+		((static_cast<uint64_t>(d3d_x) + width) * DISPLAY_WIDTH +
+			logical_width - 1U) / logical_width;
+	const uint64_t top =
+		(static_cast<uint64_t>(d3d_y) * DISPLAY_HEIGHT) / logical_height;
+	const uint64_t bottom =
+		((static_cast<uint64_t>(d3d_y) + height) * DISPLAY_HEIGHT +
+			logical_height - 1U) / logical_height;
+	if (right <= left || bottom <= top || right > DISPLAY_WIDTH ||
+		bottom > DISPLAY_HEIGHT) {
+		return false;
+	}
+
+	viewport.x = static_cast<uint32_t>(left);
+	viewport.y = static_cast<uint32_t>(DISPLAY_HEIGHT - bottom);
+	viewport.width = static_cast<uint32_t>(right - left);
+	viewport.height = static_cast<uint32_t>(bottom - top);
 	viewport.min_depth = min_depth;
 	viewport.max_depth = max_depth;
 	return true;
@@ -308,9 +424,17 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	uint32_t height, float min_depth, float max_depth)
 {
+	return Apply_Viewport(d3d_x, d3d_y, width, height, min_depth, max_depth,
+		DISPLAY_WIDTH, DISPLAY_HEIGHT);
+}
+
+bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
+	uint32_t height, float min_depth, float max_depth,
+	uint32_t logical_width, uint32_t logical_height)
+{
 	NativeViewport viewport = {};
 	if (!Build_Native_Viewport(d3d_x, d3d_y, width, height, min_depth,
-		max_depth, viewport)) {
+		max_depth, logical_width, logical_height, viewport)) {
 		return false;
 	}
 
@@ -366,6 +490,16 @@ extern "C" int __wrap_shark_init(const char *path)
 	return result;
 }
 #endif
+
+void Apply_Indexed_Shader_State(const ShaderClass &shader)
+{
+	++g_statistics.indexed_state_applications;
+#if defined(__vita__)
+	Apply_Original_Shader_State(shader);
+#else
+	(void)shader;
+#endif
+}
 
 bool Initialize()
 {
@@ -515,6 +649,7 @@ void Shutdown()
 	}
 	g_statistics.initialized = false;
 	g_lifecycle.logical_session_active = false;
+	Release_Deformed_Skin_Scratch();
 #if defined(__vita__)
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-lifecycle",
 		"logical shutdown: shutdowns=%u sessions=%u native_calls=%u native_ready=%d",
@@ -730,11 +865,36 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 
 	const int vertex_count = model->Get_Vertex_Count();
 	const int triangle_count = model->Get_Polygon_Count();
+	const bool is_skin = model->Get_Flag(MeshGeometryClass::SKIN);
 	const Vector3 *vertices = model->Get_Vertex_Array();
 	const Vector3 *normals = model->Get_Vertex_Normal_Array();
 	const TriIndex *triangles = model->Get_Polygon_Array();
 	if (vertices == NULL || triangles == NULL || vertex_count <= 0 || triangle_count <= 0) {
 		return;
+	}
+	if (is_skin) {
+		if (!Ensure_Deformed_Skin_Scratch(vertex_count)) {
+			++g_statistics.skin_deformation_failures;
+			++g_statistics.backend_errors;
+#if defined(__vita__)
+			if (!g_logged_skin_failure) {
+				Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
+					"deformed scratch allocation failed: vertices=%d", vertex_count);
+				g_logged_skin_failure = true;
+			}
+#endif
+			return;
+		}
+		/* Original DX8SkinFVFCategoryContainer dynamically deforms every skin
+		** through its owning HTree before drawing it with an identity world
+		** transform. Preserve that ownership here; model-space source vertices
+		** are not a renderable substitute for animated character geometry. */
+		mesh.Get_Deformed_Vertices(g_deformed_skin_vertices,
+			g_deformed_skin_normals);
+		vertices = g_deformed_skin_vertices;
+		normals = g_deformed_skin_normals;
+		++g_statistics.skinned_mesh_submissions;
+		g_statistics.deformed_skin_vertices += static_cast<uint32_t>(vertex_count);
 	}
 
 	++g_statistics.mesh_submissions;
@@ -772,7 +932,10 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	 * the CPU and then submitted divided coordinates under identity matrices;
 	 * that discarded homogeneous W and made texture interpolation affine.
 	 */
-	const Matrix4 world_transform(mesh.Get_Transform());
+	Matrix3D original_world_transform;
+	if (is_skin) original_world_transform.Make_Identity();
+	else original_world_transform = mesh.Get_Transform();
+	const Matrix4 world_transform(original_world_transform);
 	const Matrix4 view_transform(render_info.Camera.Get_View_Matrix());
 	Matrix4 d3d_projection;
 	render_info.Camera.Get_D3D_Projection_Matrix(&d3d_projection);
@@ -792,12 +955,22 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(transform_matrices.modelview);
 	g_statistics.state_changes += 4U;
+	const Vector2 *uvs = model->Get_UV_Array(0, 0);
+	const unsigned *diffuse_colors = model->Get_DCG_Array(0);
+	TextureClass *first_texture = model->Peek_Texture(0, 0, 0);
 	if (!g_logged_first_mesh) {
 		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
 			"first original MeshClass submission entry: vertices=%d triangles=%d",
 			vertex_count, triangle_count);
 	}
-	const Vector2 *uvs = model->Get_UV_Array(0, 0);
+	if (is_skin && !g_logged_first_skin) {
+		Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
+			"first original deformed skin submission: mesh=%s vertices=%d triangles=%d passes=%d texture=%s uv=%d dcg=%d world=identity",
+			mesh.Get_Name(), vertex_count, triangle_count, pass_count,
+			first_texture != NULL ? first_texture->Get_Texture_Name().Peek_Buffer() : "none",
+			uvs != NULL ? 1 : 0, diffuse_colors != NULL ? 1 : 0);
+		g_logged_first_skin = true;
+	}
 	TextureClass *bound_texture = NULL;
 	unsigned current_shader_bits = 0xffffffffU;
 	bool primitive_open = false;
@@ -846,17 +1019,47 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		for (int corner = 0; corner < 3; ++corner) {
 			const unsigned vertex_index = vertex_indices[corner];
 			if (uvs != NULL && bound_texture != NULL) {
-				// DDS source rows are flipped at upload to retain original D3D
-				// UV semantics without changing engine-owned coordinates.
 				glTexCoord2f(uvs[vertex_index].X, uvs[vertex_index].Y);
 			}
-			if (normals != NULL) {
-				const Vector3 &normal = normals[vertex_index];
-				glColor3f(0.35f + 0.35f * (normal.X + 1.0f) * 0.5f,
-					0.45f + 0.35f * (normal.Y + 1.0f) * 0.5f,
-					0.50f + 0.35f * (normal.Z + 1.0f) * 0.5f);
+			/* Preserve the original mesh material color owner.  The former Vita
+			** bridge invented RGB from each normal, visibly recoloring otherwise
+			** valid NPC skin textures.  DCG is D3D ARGB; when no per-vertex DCG
+			** exists, the pass-0 VertexMaterial diffuse/opacity is authoritative. */
+			if (diffuse_colors != NULL) {
+				const unsigned diffuse = diffuse_colors[vertex_index];
+				glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
+					static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
+					static_cast<GLubyte>(diffuse & 0xffU),
+					static_cast<GLubyte>((diffuse >> 24U) & 0xffU));
 			} else {
-				glColor3f(0.65f, 0.72f, 0.78f);
+				VertexMaterialClass *material =
+					model->Peek_Material(static_cast<int>(vertex_index), 0);
+				Vector3 diffuse(1.0f, 1.0f, 1.0f);
+				Vector3 ambient(0.0f, 0.0f, 0.0f);
+				Vector3 emissive(0.0f, 0.0f, 0.0f);
+				float opacity = 1.0f;
+				if (material != NULL) {
+					material->Get_Diffuse(&diffuse);
+					material->Get_Ambient(&ambient);
+					material->Get_Emissive(&emissive);
+					opacity = material->Get_Opacity();
+				}
+				if (!is_skin && bound_texture != NULL && Is_Near_Black(diffuse)) {
+					Vector3 fallback = Max_Color(ambient, emissive);
+					if (Is_Near_Black(fallback)) {
+						/* Original DX8 lighting would combine scene/material
+						** state before texture modulation. Until that full
+						** lighting path is represented in vitaGL, keep
+						** textured static surfaces visible rather than
+						** multiplying valid retail textures by black. */
+						fallback = Vector3(1.0f, 1.0f, 1.0f);
+					}
+					Log_Static_Material_Fallback(mesh, bound_texture, material,
+						triangle_shader, diffuse, ambient, emissive, fallback, opacity);
+					diffuse = fallback;
+				}
+				glColor4f(Clamp01(diffuse.X), Clamp01(diffuse.Y),
+					Clamp01(diffuse.Z), Clamp01(opacity));
 			}
 			glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
 				vertices[vertex_index].Z);

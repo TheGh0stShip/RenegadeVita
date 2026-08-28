@@ -1,0 +1,207 @@
+--- a/SoundScene.h
++++ b/SoundScene.h
+@@ -178,6 +178,7 @@
+ 		//////////////////////////////////////////////////////////////////////
+ 		//	Collection methods
+ 		//////////////////////////////////////////////////////////////////////		
++	public:
+ 		class AudibleInfoClass : public MultiListObjectClass, public AutoPoolClass<AudibleInfoClass, 64>
+ 		{
+ 		public:
+@@ -195,6 +196,7 @@
+ 
+ 		typedef MultiListClass<AudibleInfoClass>	COLLECTED_SOUNDS;
+ 
++	protected:
+ 		virtual void			Collect_Audible_Sounds (Listener3DClass *listener, COLLECTED_SOUNDS &list);
+ 
+ 	private:
+--- a/WWAudio.cpp
++++ b/WWAudio.cpp
+@@ -147,6 +147,8 @@
+ 	  m_SoundVolume (DEF_SFX_VOL),
+ 	  m_RealMusicVolume (DEF_MUSIC_VOL),
+ 	  m_RealSoundVolume (DEF_SFX_VOL),
++	  m_DialogVolume (DEF_DIALOG_VOL),
++	  m_CinematicVolume (DEF_CINEMATIC_VOL),
+ 	  m_MaxCacheSize (DEF_CACHE_SIZE * 1024),
+ 	  m_CurrentCacheSize (0),
+ 	  m_Max2DSamples (DEF_2D_SAMPLE_COUNT),
+@@ -173,7 +173,9 @@
+	  m_CachedAreSoundEffectsEnabled (true),
+	  AudioIni (NULL)
+ {
++#if !defined(_UNIX)
+ 	::InitializeCriticalSection (&MMSLockClass::_MSSLockCriticalSection);
++#endif
+ 
+ 	m_ForceDisable = lite;
+ 
+@@ -184,7 +186,11 @@
+ 		AIL_startup ();
+ 	}
+ 	_theInstance = this;
++#if defined(_UNIX)
++	_TimerSyncEvent = NULL;
++#else
+ 	_TimerSyncEvent = ::CreateEvent (NULL, TRUE, FALSE, "WWAUDIO_TIMER_SYNC");
++#endif
+ 
+ 	//
+ 	// Set some default values
+@@ -230,10 +236,12 @@
+ 
+ 	Shutdown ();
+ 	_theInstance = NULL;
++#if !defined(_UNIX)
+ 	::CloseHandle(_TimerSyncEvent);
+ 	_TimerSyncEvent = NULL;
+ 
+ 	::DeleteCriticalSection (&MMSLockClass::_MSSLockCriticalSection);
++#endif
+ 
+ 	//
+ 	//	Free the list of logical "types".
+@@ -2501,10 +2509,12 @@
+ 		::AIL_release_timer_handle (m_UpdateTimer);
+ 		m_UpdateTimer = -1;
+ 
++#if !defined(_UNIX)
+ 		// Wait for the timer callback function to end
+ 		::WaitForSingleObject (_TimerSyncEvent, 20000);
+ 		::CloseHandle (_TimerSyncEvent);
+ 		_TimerSyncEvent = NULL;
++#endif
+ 	}
+ 
+ 	//
+@@ -3450,7 +3460,7 @@
+ 	//
+ 	//	Resume any sounds that are playing in the new page
+ 	//
+-	for (index = 0; index < m_Playlist[page].Count ();index ++) {
++	for (int index = 0; index < m_Playlist[page].Count ();index ++) {
+ 		m_Playlist[page][index]->Resume ();
+ 	}
+ 
+--- a/Threads.cpp
++++ b/Threads.cpp
+@@ -34,10 +34,22 @@
+ #include "Threads.h"
+ #include "refcount.h"
+ #include "Utils.h"
++#if defined(_UNIX)
++#include <errno.h>
++#include <pthread.h>
++#include <time.h>
++#else
+ #include <Process.h>
++#endif
+ #include "wwdebug.h"
+ #include "systimer.h"
+ 
++#if defined(_UNIX)
++static pthread_t g_WWAudioReleaseThread;
++static pthread_mutex_t g_WWAudioReleaseSignalMutex = PTHREAD_MUTEX_INITIALIZER;
++static pthread_cond_t g_WWAudioReleaseSignal = PTHREAD_COND_INITIALIZER;
++static bool g_WWAudioReleaseStop = false;
++#endif
+ 
+ ///////////////////////////////////////////////////////////////////////////////////////////
+ //	Static member initialization
+@@ -82,8 +94,26 @@
+ 	//	If the thread isn't already running, then
+ 	//
+ 	if (m_hDelayedReleaseThread == (HANDLE)-1) {
++#if defined(_UNIX)
++		pthread_mutex_lock (&g_WWAudioReleaseSignalMutex);
++		g_WWAudioReleaseStop = false;
++		pthread_mutex_unlock (&g_WWAudioReleaseSignalMutex);
++		const int create_result = pthread_create (&g_WWAudioReleaseThread, NULL,
++			[](void *thread_param) -> void * {
++				WWAudioThreadsClass::Delayed_Release_Thread_Proc (thread_param);
++				return NULL;
++			}, param);
++		if (create_result == 0) {
++			m_hDelayedReleaseEvent = (HANDLE)1;
++			m_hDelayedReleaseThread = (HANDLE)1;
++		} else {
++			m_hDelayedReleaseEvent = (HANDLE)-1;
++			m_hDelayedReleaseThread = (HANDLE)-1;
++		}
++#else
+ 		m_hDelayedReleaseEvent	= ::CreateEvent (NULL, FALSE, FALSE, NULL);
+ 		m_hDelayedReleaseThread = (HANDLE)::_beginthread (Delayed_Release_Thread_Proc, 0, param);
++#endif
+ 	}
+ 
+ 	return m_hDelayedReleaseThread;
+@@ -98,12 +128,23 @@
+ void
+ WWAudioThreadsClass::End_Delayed_Release_Thread (DWORD timeout)
+ {
++#if defined(_UNIX)
++	(void)timeout;
++#endif
+ 	//
+ 	//	If the thread is running, then wait for it to finish
+ 	//
+ 	if (m_hDelayedReleaseThread != (HANDLE)-1) {
++#if defined(_UNIX)
++		pthread_mutex_lock (&g_WWAudioReleaseSignalMutex);
++		g_WWAudioReleaseStop = true;
++		pthread_cond_broadcast (&g_WWAudioReleaseSignal);
++		pthread_mutex_unlock (&g_WWAudioReleaseSignalMutex);
++		pthread_join (g_WWAudioReleaseThread, NULL);
++#else
+ 		::SetEvent (m_hDelayedReleaseEvent);
+ 		::WaitForSingleObject (m_hDelayedReleaseThread, timeout);
++#endif
+ 
+ 		m_hDelayedReleaseEvent	= (HANDLE)-1;
+ 		m_hDelayedReleaseThread	= (HANDLE)-1;
+@@ -212,7 +253,28 @@
+ 	//
+ 	//	Keep looping forever until we are singalled to quit (or an error occurs)
+ 	//
++#if defined(_UNIX)
++	for (;;) {
++		struct timespec deadline;
++		clock_gettime (CLOCK_REALTIME, &deadline);
++		deadline.tv_sec += timeout / 1000;
++		deadline.tv_nsec += (long)(timeout % 1000) * 1000000L;
++		if (deadline.tv_nsec >= 1000000000L) {
++			deadline.tv_sec ++;
++			deadline.tv_nsec -= 1000000000L;
++		}
++		pthread_mutex_lock (&g_WWAudioReleaseSignalMutex);
++		while (!g_WWAudioReleaseStop) {
++			const int wait_result = pthread_cond_timedwait (
++				&g_WWAudioReleaseSignal, &g_WWAudioReleaseSignalMutex, &deadline);
++			if (wait_result == ETIMEDOUT) break;
++		}
++		const bool stop_requested = g_WWAudioReleaseStop;
++		pthread_mutex_unlock (&g_WWAudioReleaseSignalMutex);
++		if (stop_requested) break;
++#else
+ 	while (::WaitForSingleObject (m_hDelayedReleaseEvent, timeout) == WAIT_TIMEOUT) {
++#endif
+ 
+ 		{
+ 			CriticalSectionClass::LockClass lock(m_ListMutex);
+@@ -232,7 +294,7 @@
+ 				//
+ 				//	If the time has expired, free the object
+ 				//
+-				if (current_time >= curr->time) {
++				if ((S32)(current_time - curr->time) >= 0) {
+ 
+ 					//
+ 					//	Unlink the object
+@@ -308,4 +370,4 @@
+ 
+ 	return ;
+ }
+-*/
+\ No newline at end of file
++*/

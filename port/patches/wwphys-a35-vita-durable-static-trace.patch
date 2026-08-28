@@ -1,0 +1,209 @@
+--- a/pscene_saveload.cpp
++++ b/pscene_saveload.cpp
+@@ -48,6 +48,7 @@
+ #include "persistfactory.h"
+ #include "wwmemlog.h"
+ #if defined(__vita__)
++#include "a30_vita_runtime.h"
+ #include "saveloadstatus.h"
+ #include <stdio.h>
+ #endif
+@@ -463,6 +464,7 @@
+ 			const uint32 factory_id = cload.Cur_Chunk_ID();
+ #if defined(__vita__)
+ 			Set_Vita_Static_Object_Load_Status(object_index, factory_id, "factory-load");
++			A35_Vita_Static_Load_Trace_Begin(object_index, factory_id);
+ #endif
+ 			PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(factory_id);
+ 			WWASSERT(fact != NULL);
+@@ -470,6 +472,7 @@
+ 				obj = (StaticPhysClass *)fact->Load(cload);
+ 			}
+ #if defined(__vita__)
++			A35_Vita_Static_Load_Trace_End();
+ 			Set_Vita_Static_Object_Load_Status(object_index, factory_id, "factory-loaded");
+ #endif
+ 			cload.Close_Chunk();
+--- a/staticanimphys.cpp
++++ b/staticanimphys.cpp
+@@ -53,6 +53,9 @@
+ 
+ #include "vertmaterial.h"
+ #include "dx8wrapper.h"
++#if defined(__vita__)
++#include "a30_vita_runtime.h"
++#endif
+ 
+ DECLARE_FORCE_LINK(staticanimphys);
+ 
+@@ -341,16 +344,28 @@
+ bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
+ {
+ 	int legacy_collision_mode = -1;
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("static-anim-entry", 0U);
++#endif
+ 
+ 	/*
+ 	** Read in the chunks from the file
+ 	*/
+ 	while (cload.Open_Chunk()) {
++		#if defined(__vita__)
++			A35_Vita_Static_Load_Trace_Step("static-anim-chunk", cload.Cur_Chunk_ID());
++		#endif
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case STATICANIMPHYS_CHUNK_STATICPHYS:
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("static-phys-entry", cload.Cur_Chunk_ID());
++#endif
+ 				StaticPhysClass::Load(cload);
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("static-phys-return", cload.Cur_Chunk_ID());
++#endif
+ 				break;
+ 
+ 			case STATICANIMPHYS_CHUNK_VARIABLES:
+@@ -363,7 +378,13 @@
+ 				break;
+ 				
+ 			case STATICANIMPHYS_CHUNK_ANIMMANAGER:
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("anim-manager-entry", cload.Cur_Chunk_ID());
++#endif
+ 				AnimManager.Load(cload);
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("anim-manager-return", cload.Cur_Chunk_ID());
++#endif
+ 				break;
+ 
+ 			default:
+@@ -379,6 +400,9 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("static-anim-return", 0U);
++#endif
+ 	return true;
+ }
+ 
+--- a/staticphys.cpp
++++ b/staticphys.cpp
+@@ -70,6 +70,9 @@
+ #include <memory.h>
+ #include "part_emt.h"
+ #include "renegadeterrainpatch.h"
++#if defined(__vita__)
++#include "a30_vita_runtime.h"
++#endif
+ 
+ #if UMBRASUPPORT
+ #include <umbra.hpp>
+@@ -590,12 +593,24 @@
+  *=============================================================================================*/
+ bool StaticPhysClass::Load(ChunkLoadClass &cload)
+ {
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("static-phys-load-entry", 0U);
++#endif
+ 	while (cload.Open_Chunk()) {
++		#if defined(__vita__)
++			A35_Vita_Static_Load_Trace_Step("static-phys-chunk", cload.Cur_Chunk_ID());
++		#endif
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case STATICPHYS_CHUNK_PHYS:
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("phys-entry", cload.Cur_Chunk_ID());
++#endif
+ 				PhysClass::Load(cload);
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("phys-return", cload.Cur_Chunk_ID());
++#endif
+ 				break;
+ 
+ 			case STATICPHYS_CHUNK_VARIABLES:
+@@ -617,6 +632,9 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("static-phys-load-return", 0U);
++#endif
+ 	return true;
+ }
+ 
+--- a/phys.cpp
++++ b/phys.cpp
+@@ -57,6 +57,9 @@
+ #include "dx8wrapper.h"
+ #include "dx8vertexbuffer.h"
+ #include "dx8indexbuffer.h"
++#if defined(__vita__)
++#include "a30_vita_runtime.h"
++#endif
+ 
+ 
+ const float DEBUG_RENDER_DIST2 = (50.0f*50.0f);
+@@ -506,8 +509,14 @@
+ 	char tmpstring[256];
+ 	tmpstring[0] = 0;
+ 	RenderObjClass * render_model = NULL;
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("phys-load-entry", 0U);
++#endif
+ 
+ 	while (cload.Open_Chunk()) {
++		#if defined(__vita__)
++			A35_Vita_Static_Load_Trace_Step("phys-chunk", cload.Cur_Chunk_ID());
++		#endif
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+@@ -532,10 +541,19 @@
+ 
+ 			case PHYS_CHUNK_MODEL:
+ 				cload.Open_Chunk();
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("render-factory-lookup", cload.Cur_Chunk_ID());
++#endif
+ 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
+ 				WWASSERT(factory != NULL);
+ 				if (factory != NULL) {
++#if defined(__vita__)
++					A35_Vita_Static_Load_Trace_Step("render-factory-load-entry", cload.Cur_Chunk_ID());
++#endif
+ 					render_model = (RenderObjClass *)factory->Load(cload);
++#if defined(__vita__)
++					A35_Vita_Static_Load_Trace_Step("render-factory-load-return", cload.Cur_Chunk_ID());
++#endif
+ 					SET_REF_OWNER(render_model);
+ 				}
+ 				cload.Close_Chunk();
+@@ -573,7 +591,13 @@
+ 	/*
+ 	** Only install the model after our definition is installed
+ 	*/
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("set-model-entry", 0U);
++#endif
+ 	Set_Model(render_model);
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("set-model-return", 0U);
++#endif
+ 	REF_PTR_RELEASE(render_model);
+ 
+ 	/*
+@@ -614,6 +638,9 @@
+ 	UmbraSupport::Update_Umbra_Object(this);
+ #endif
+ 
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("phys-load-return", 0U);
++#endif
+ 	return true;
+ }
+ 

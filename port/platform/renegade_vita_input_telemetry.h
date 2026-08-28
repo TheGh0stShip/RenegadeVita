@@ -24,6 +24,13 @@ struct RenegadeVitaInputTelemetry
 	float frame_seconds;
 	uint32_t buttons;
 	uint64_t sample_count;
+	uint32_t route_mode;
+	uint32_t route_gameplay_active;
+	uint32_t route_sample_index;
+	uint32_t route_sample_count;
+	uint32_t route_truncated;
 };
 
 const RenegadeVitaInputTelemetry &Renegade_Vita_Last_Input_Telemetry();
+void Renegade_Vita_Input_Route_Set_Gameplay_Active(bool active, uint32_t frame_index);
+bool Renegade_Vita_Input_Route_Replay_Exit_Requested();

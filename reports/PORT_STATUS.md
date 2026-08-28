@@ -1,12 +1,108 @@
 # Renegade Vita port status
 
-Updated: 2026-08-16. Engineering changes use source-driven review, bounded
+Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **A3.5-dev5 identity/evidence physical validation**, while the
-v3.6 host resource/memory work remains subordinate to that gate. A3.2-dev1
-remains frozen failed evidence, A3.5-dev4 is invalid identity evidence, and
-neither is the active candidate.
+Current work: **post-dev49 dialogue/audio, texture, and route-fidelity correction for the
+restage-proven shared original `LoadingScreenClass` loading path, the dev35
+stack fix, dev36 camera-Y boundary correction, dev37 DataSafe guard, dev38
+loading capture metadata, dev39/dev40 TGA loading fixes, original
+WWAudio/background/material/conversation corrections, dev43 no-pullout route
+gate, dev45 replay-complete clean-exit bridge, dev46 original message-window
+render plus dialogue/audio diagnostics, and dev47 original TranslateDB
+object-factory closure. Dev48 adds a narrow WWAudio category-volume fix by
+initializing dialog/cinematic volume defaults in the Vita constructor path and
+logging those volumes in runtime audio breadcrumbs. Dev49 preserves that fix,
+adds stream/read/decode/start/mix/output counters for the Logan dialogue path,
+and changes the Vita DX8 texture boundary to try original `DDSFileClass`
+lookup before loose Targa decode so `.tga` material names can resolve retail
+`.dds` assets through the FileFactory/MIX chain. Dev46 physical replay used
+the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
+audio works, but all active M00 tutorial dialogue lookups returned missing
+strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
+(`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
+`wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
+dialogue was heard and the old route diverged/stuck because dialogue timing/
+control changed. Dev49 is built but not deployed; dev46 remains restored on
+device. Text-dialogue/audio acceptance, texture/material acceptance, and a
+valid post-dialogue route remain pending physical evidence**.
+Exact-dev6 pause passed on physical Vita.
+Exact-dev7 physically proved grounding, movement, Square delivery, and an
+isolated original weapon-fire path, while exposing a nondeterministic external
+input-provider sequence and invisible skinned bodies. The v3.6 host
+resource/memory work remains subordinate to the current visual-correctness
+gate. A3.2-dev1 remains frozen failed evidence, A3.5-dev4 is invalid identity
+evidence, and neither is the active candidate. Dev13 completed one matching
+physical record but failed sky/material/audio/Logan-progression acceptance;
+its route is retained and exact dev7 is restored. Dev15 proved provider/link
+closure but left the Vita runtime in lite, uninitialized, unserviced audio mode.
+Dev16 corrected that lifecycle. Dev19 physically proved Logan-to-pistol
+progression but crashed after six pistol shots. Dev43 supersedes that
+progression point for route/runtime only: 5,958 recorded samples, clean
+lifecycle, no new PSP2DMP, `Weapon_Pistol_Player`, `fired_total=36`, unchanged
+retail M00, and route SHA-256
+`5ef2ee8f2ed5d4f301ec20ef95c73fe7aea9956a32e9cc41aecf84999191e895` under
+`build/device-evidence/a3.5-dev43-route-record-20260825-022835/`. Dev45
+replays that route to automatic clean exit under
+`build/device-evidence/a3.5-dev45-route-replay-20260825-025927/`. Dev20 through dev24 are failed
+or superseded loading/replay attempts; dev24 physically proved the direct
+VitaGL loading shortcut still looked wrong despite tile residency. Dev25
+removed that shortcut and restored original `MenuBackDropClass` model-animation
+ownership. Dev26 completed the original loading text, string, style, and status
+lifecycle: `STRINGS.TDB`, `StyleMgrClass`, `Render2DSentence`,
+`SaveLoadStatus`, and Campaign backdrop description parsing. Dev27 restored
+original `CombatManager::Set_Load_Progress(0)` /
+`CombatManager::Get_Load_Progress()` ownership and removed manual terminal
+progress fractions. Dev28 supersedes it by restoring original
+`loading_screen.Render(true)` behavior: loading presentation passes
+`cNetwork::Update` through `WW3D::Begin_Render` instead of rendering as a
+network-idle frame. Dev29 supersedes dev28 by scoping `Render2DClass` to the
+original 640x480 loading logical resolution for `MenuBackDropClass` and
+`Render2DSentenceClass` layout, then restoring Vita 960x544 before gameplay.
+Dev30 supersedes dev29 by scoping WW3D/DX8Wrapper/Render2D together during
+loading, so original `Render2DClass::Render()` and `CameraClass::Apply()` use
+the same 640x480 logical viewport, while the Vita renderer scales that viewport
+to the full 960x544 framebuffer. Dev31 supersedes dev30 by removing the
+Vita-side loading-presenter clone and linking a shared original
+`LoadingScreenClass` owner in `staging/commando/loadingscreen.cpp`; direct Vita
+now constructs/renders/destroys that original owner through a narrow bridge,
+so the same implementation can be reused for other original loading states.
+Dev32 supersedes dev31 by making that extraction deterministic under
+`tools/stage_sources.sh` through `commando-a35-shared-loadingscreen-owner.patch`
+and proving it with a forced-restage fast package. Dev33 supersedes dev32 by
+leaving gameplay/world UV semantics unchanged while flipping V only for original
+loading-screen texture basenames beginning with `loadscreen_`, covering the
+original loading W3D/DDS orientation mismatch. Dev34 superseded dev33 by
+retaining that path and writing a returned loading-screen BMP/state capture at
+original `level_ready`; the route runner required that capture before accepting
+the user's fresh movement recording. Dev34 was deployed once for an approved
+route-record attempt and crashed before the first original-runtime log; VDB
+PSP2 analyzer maps the dump to `A31_Vita_Run_Interactive_Runtime()` line 605,
+the function prologue, and objdump showed a roughly 276 KB stack subtraction
+from stack-local `A31FrameHistory` diagnostics. Dev35 supersedes dev34 by
+moving that history storage off the Vita stack, reusing one heap history for
+loading/gameplay capture, and reducing the prologue stack subtraction to about
+17 KB. Dev36 supersedes dev35 by changing only the Vita right-stick Y
+mouse-delta default after the latest physical camera-inversion feedback, while
+leaving original Input and CCamera ownership unchanged. Dev37 supersedes dev36
+by fail-closing invalid `GenericDataSafeClass` list indexes in release builds:
+VDB symbolicated the retained dev19 pistol-shot PSP2 dump to
+`GenericDataSafeClass::Get_Entry` at `datasafe.cpp:350`, where compiled-out
+`ds_assert` checks allowed `Safe[list]` to be dereferenced. Dev38 supersedes
+dev37 by making the returned loading capture auditable with schema-v4 visual
+gate metadata. Dev39 supersedes dev38 by proving the original retail loading
+W3D uses `.tga` tiles (`loadscreen_beam.tga`, `loadscreen_cnc_1..4.tga`) and
+routing those requests through the existing TGA decoder at the Vita DX8
+boundary. Dev40 supersedes dev39 by matching original TextureLoader TGA
+Y-origin handling and removing the loadscreen-only UV workaround from mesh and
+indexed submissions. Dev46 restores the original message-window render pass
+and adds audio/dialogue diagnostics; its physical replay is the current
+no-dialogue diagnostic evidence. Dev47 links the missing original TranslateDB
+object factories and physically proves string/sound-id lookup, but fails
+audible dialogue and route fidelity. The next hardware gate requires a new
+source fix and either dialogue-aware replay synchronization or a fresh route;
+do not claim audible dialogue until physical output and provider counters
+support it.
 
 Recent host diagnostics cover post-run evidence, resource-manifest deltas,
 cache consistency, warning trends, and PSP2 parser fixtures. Their focused
@@ -27,7 +123,7 @@ The returned dump and exact matching symbols establish a release-blocking
 stuck fire/crouch, reversed axes, perspective warp, muzzle transparency error,
 and non-clean exit. Its evidence remains immutable and must not be overwritten.
 
-### A3.5-dev5 — coherent host/ARM/VPK candidate; physical acceptance pending
+### A3.5-dev5 — visible physical M00 and movement pass; acceptance incomplete
 
 The fresh canonical build passed the complete host gate, deterministic
 restaging, focused observer contract (46/46), input normalization (22/22),
@@ -38,11 +134,286 @@ build actions. A mandatory post-link verifier passed all 15 identity and
 lineage checks against the exact final ELF, SELF, and VPK: the intended dev5
 display/capture/log identities are present, all prohibited dev1/A3.1 strings
 are absent, and packaged `eboot.bin` is byte-identical to the verified SELF.
-The physical candidate is `RenegadeVita-A3.5-dev5.vpk`, SHA-256
-`e69919b557b8b2a807ac6437310d4c62072635ce1a493e63eee604a0c935287c`.
-This is not an A3.5 milestone acceptance claim; the player/NPC body, weapon,
-door orientation, and static overhead-camera observations remain physically
-unresolved.
+The current recursive-trace build is `20260824-004956`: ELF SHA-256
+`b8f0c6c6be2b9aba79000050ea2301e3700eafd7afc4e5cb174976c516e6d4c3`,
+SELF SHA-256
+`ec08e891087243a6a44da8db29ef80bf9c485d31a6ef1b0f27423ea9626b59b1`,
+and VPK SHA-256
+`0316009326b5c043edbb80f87f70792f02e9f597382f2cf0370fcc7bc675a5e6`.
+Its Vita-only trace is paired with the byte-identical retained completed host
+validation log; it does not claim a fresh host execution for the trace-only
+change.
+
+Physical Vita now proves that all 495 static objects load, the original loader
+returns, the original player/session/camera reaches visible textured M00, and
+movement/look input changes the player position. An untouched late capture at
+frame 355 is visually coherent; a separate interaction run reached frame 1,321
+with zero rejected submissions and zero renderer backend errors. This is not an
+A3.5 milestone acceptance claim: jump/action effects, collision/grounding, and
+pause remain unaccepted. Clean exit and restart/repeat now pass. Door/NPC
+interaction, HUD, audio, device-memory work, and repeated-session soak remain
+later milestone gates.
+
+### A3.5-dev6 — original Combat pause physical pass
+
+Triangle now enters the existing `INPUT_FUNCTION_MENU_TOGGLE` path and toggles
+original `GameModeClass::Suspend/Resume`; START remains the proven clean-exit
+control. While suspended, the direct M00 boundary continues time, input, and
+local-network service, skips original Combat simulation, and preserves the last
+original frame because the desktop pause-menu presenter is not linked.
+
+Focused normal and ASan compilation passed for the changed sources, as did the
+6/6 static pause contract. Canonical build `20260824-013626` completed all 456
+ARM actions and passed 15/15 identity checks. ELF, SELF, and VPK SHA-256 are
+`2b820d533815a135db020804b287affe6521ecc68ff8dc0602e9c7e74c4473a2`,
+`293768e9d79769b9872e1ad9d472c66305310032c74727d6e08a1a444ad52360`,
+and `929bdbcfbf10292f250c799faf74b254384482ddc1e8cb43d6d2b21e7f573bae`.
+The VPK contains only eboot and SFO. The build reused the exact completed dev5
+host log because no local retail tree was available; retail was not copied.
+Matching physical evidence proves one original Combat suspend/resume pair,
+stable player position across 316 paused input frames, resumed movement, zero
+renderer errors, clean teardown, and stopped app state. This raises the
+physical evidence gate count to 8/10 without claiming visual correctness.
+
+### A3.5-dev7 — physical effects observation and provider isolation
+
+The separate observation-only candidate samples the original player identity,
+state, transform, velocity, health, physical-object registration and
+`HumanPhysClass::Is_In_Contact`, plus original `WeaponClass` rounds/fire state
+and `ActionClass` activity. It does not mutate player, physics, weapon, action,
+mission, renderer, or asset state. The existing schema-3 capture comparator now
+reports these gameplay fields independently.
+
+Focused comparator, runtime-contract, hygiene, normal capture, ASan capture,
+and ARM syntax checks pass. Canonical build `20260824-020540` completed all 456
+ARM actions and passed 15/15 identity checks. ELF, SELF, and VPK SHA-256 are
+`6063c5eb2c5136ee4376fe6dc0b3944c54ce728ff7b59af76b90ffdaf6e62e21`,
+`7367b04a3fd19121e5360a0bfc8dd088d377c1063f060811a282056bbefeefd5`,
+and `234139c2411fed7be8f2003a15ba015bc2270608ef8e3ec5406308e5c3c1443e`.
+The VPK contains only eboot and SFO. Four matching physical sessions proved
+original physics registration, ground contact, movement, Square delivery,
+clean teardown, and stopped app state, but the external combined route did not
+deliver R in those same sessions. A separate exact-dev7 probe delivered raw R
+and fired 17 original weapon rounds, isolating the remaining failure to the
+external injection sequence rather than the VitaSDK/DirectInput/WeaponClass
+path. User observation also found missing Havoc forearm/hand geometry and NPC
+bodies while rigid attachments remained visible. Those visual defects are not
+a retail-data absence signal; they share the Vita skinned-mesh submission seam.
+
+### A3.5-dev12 — deformed skins physically pass; sky fails
+
+The Vita backend now follows the original DX8 skin container semantics:
+`MeshClass::Get_Deformed_Vertices` obtains HTree-owned animated positions and
+normals, and skinned vertices submit with identity world transform. Rigid mesh
+submission remains unchanged. Bounded runtime counters distinguish skin
+submissions, deformed vertices, and allocation/deformation failures.
+
+The existing DirectInput platform boundary can record or replay one version-1
+raw-controller route selected by exact one-shot marker files. The route is
+capped at 18,000 eight-byte samples, FNV-1a checksummed, committed through a
+temporary file and rename, and replay retains live physical START as an
+emergency abort. Original Input/Combat bindings and update ownership remain
+unchanged. VDB input control remains available for lifecycle/input release;
+recorded replay removes dependence on nondeterministic external sequencing.
+
+Canonical build `20260824-083354` completed all 465 ARM actions and passed
+identity, ELF/SELF/VPK, retail-exclusion, archive, and diagnostics-manifest
+checks. ELF/SELF/VPK SHA-256 are
+`cbf956dbd001ef13dd94da465ef756d69f882bcfb8b25d621045065f905dd1d0`,
+`805b853e737c884acc9f590a3c5793f9ba6f32f5ff80542454919bf1d2750b99`,
+and `86f08c02dab2829e9ef7e25c12983313c1eb3664d2d9a3aeebaf962ff037e284`.
+The VPK contains only eboot and SFO. Post-build tool discovery passes 74/74;
+the ARM symbols contain both `MeshClass::Get_Deformed_Vertices` and the Vita
+skin submission/scratch path. Physical observation confirms ordinary NPC body
+skins now render with zero deformation failures. The same run begins in the
+authentic unarmed tutorial state and reports a black sky, so dev12 is not a
+fully accepted candidate and exact dev7 was restored afterward.
+
+### A3.5-dev13 — physical route recorded; visual/progression failure
+
+Original Haze, Starfield, CloudLayer, sun, and moon retain their existing
+dynamic indexed geometry ownership. The Vita DX8 boundary now consumes the
+deferred original `ShaderClass` and stage-0 `TextureClass` immediately before
+indexed submission and records bounded indexed-state applications. It does not
+add a custom sky, scene graph, shader, or asset format.
+
+Clean staging also closes the official Scripts parameter-array `new[]`/`delete`
+lifetime, drains scripts queued by original object detach when teardown's
+`Post_Think` is disabled, and prevents headless validation from allocating HUD
+presentation icons without HUD resources. Fresh strict LeakSanitizer and
+targeted UBSan complete two authentic M00 cycles, plus retained M01 and City
+smokes. Canonical build `20260824-093614` completed all 465 ARM actions and all
+identity, ELF/SELF/VPK, retail-exclusion, archive, and diagnostics checks.
+ELF/SELF/VPK SHA-256 are
+`d3b7d69e40f1968a9beda0b46312c0609d73522b8ce30799cecb169a352d8b1b`,
+`5c254b8a914a603baca2c9b343bb075df58c7d05ed05448db267f2d599a14555`,
+and `7f7e31b37afff79ea1ab662cd9afc5d0e366f9252be6dd236b2ac8fabdf5d63d`.
+Post-build tool discovery passes 81/81. The VPK contains only eboot and SFO.
+Physical record evidence under
+`build/device-evidence/a3.5-dev13-route-record-20260824-144843` contains a
+committed 4,537-sample route (SHA-256
+`39d915e02611079b29fb43cb2ea11ede583b063745e9675efe15010c606b7cf8`),
+4,507 frames, clean START exit, 37,606 skin submissions, 7,207,630 deformed
+vertices, and zero skin/backend errors. The user observed wrong NPC materials,
+no audio, a black sky, and a Logan cutscene after the ladder that remained
+active with control disabled and did not reach the pistol grant. Indexed
+submissions and state applications were exactly zero. Capture frame 4,209
+corroborates the black sky and wrong material appearance. Retail M00 remained
+unchanged; exact dev7 was restored and verified.
+
+### A3.5-dev14 — original background/material correction; hardware candidate
+
+Source tracing found two concrete platform-boundary defects. The Vita runtime
+passed `false` to original `CombatManager::Pre_Load_Level`, so
+`BackgroundMgrClass::Init` never constructed its original Sky/Dazzle objects;
+the indexed bridge therefore could not execute. The runtime now declares world
+rendering available while retaining the separate HUD-resource gate. The absent
+Vita DazzleLayer is a bounded no-op, not a rejected world draw.
+
+The Vita mesh bridge also invented RGB from vertex normals. It now consumes the
+original pass-0 DCG color, or the original `VertexMaterialClass` diffuse and
+opacity when DCG is absent. Original TextureClass, HTree, mesh, shader, scene,
+and animation owners remain intact. Bounded first-skin telemetry records mesh,
+texture, UV/DCG, and pass presence without asset payloads.
+
+Read-only diagnostics expose the first active original conversation's name,
+ID, state, action, current/total remark, and remaining remark duration. They do
+not call `Stop_Conversation`, grant a weapon, or advance Mission00. The route
+runner now prints the user play instruction before launch; the later status is
+explicitly telemetry-ready because the former human prompt arrived after the
+game was already interactive.
+
+Deterministic 111-patch staging, focused contracts, complete 87-test discovery,
+and the affected 504-action host link pass. The fresh Vita build completed all
+465 ARM actions and passed ELF/SELF/VPK identity, compressed-package, manifest,
+symbol, and retail-exclusion gates. Exact ELF/SELF/VPK SHA-256 values are
+`0cc4b9f68967cfaef29d3927ebfd1c6791924b5c442e03f0a7c7fd5c738de8e0`,
+`eda78f4f3dd57a064cb915af9cab677e3e64fc340c16ad09f0c74e6839ca6860`,
+and `6528991ca58877cb159a5c57b396c84e0a29c55ffa74487e5bb22f9af3e7e0e4`.
+The VPK contains only `eboot.bin` and `sce_sys/param.sfo`; no Vita filesystem
+was accessed. Because the local retail link was unavailable, the package
+explicitly reused dev13's matching complete sanitizer/runtime log while
+freshly rebuilding the affected host and ARM targets; it does not claim a
+fresh retail sanitizer execution.
+
+The TT 4.8.4 revision-9000 reference audit is integrated; portable TT
+correctness semantics were already/equivalently present in EA source, while
+campaign/audio/controller/lighting engine changes remain study-only because
+their public implementations are absent or platform-specific. The historical
+dev14 route runner admitted the exact dev14 SELF and exact installed dev7
+fallback. Dev14 was not physically replayed and is superseded below.
+
+### A3.5-dev15 — original WWAudio/Vita-native provider linkage; superseded
+
+The source/link closure expanded without moving game ownership into platform
+code. Fifteen additional original WWAudio TUs retain definitions,
+buffers, sound/scene/listener objects, callbacks, playlists, priorities,
+looping, transforms, and timing. Together with the previously selected logical
+audio units and AudioSaveLoad, the source report records all 20 WWAudio TUs.
+
+The local Miles-compatible boundary provides bounded RIFF PCM8/16, Microsoft
+IMA ADPCM, and Microsoft ADPCM decode; 48 kHz stereo rate conversion/mixing;
+pan, volume, loop, playback rate, encoded-byte 3D seek/timing, and linear
+distance attenuation; original file callbacks; and blocking Vita
+`sceAudioOutOutput`. This is independently implemented platform code, not a
+TT or Windows Miles import. Whole-track stream decode is capped at 64 MiB and
+remains subject to v3.6 incremental-streaming and physical memory measurement.
+
+Fresh focused tests cover PCM8/16, mono/stereo IMA, mono/stereo Microsoft
+ADPCM, bounded/truncated inspection, encoded-byte timing, manual mixing, pan,
+and distance. ASan/UBSan and standalone Vita ARM `-Werror` checks pass. Full
+post-restage discovery passes 89/89.
+
+The canonical run completed deterministic 113-patch staging and all 482
+ARM/packaging actions. Identity 15/15, required original-WWAudio/provider
+symbols, ELF/SELF/VPK, compressed-package, manifest, diagnostics, and retail-
+exclusion gates pass. Source integration records 447 unique original and 26
+native boundary TUs. Exact ELF/SELF/VPK SHA-256 values are
+`db96d327219e77d4df99d0a2942a635eda1872b311aa0c6dceb2b2a42d2eb0c9`,
+`c4d5aaa1c04d93329617a086a7f57a423ff50ad40ee510f92a37ae9f8f9bfc1f`,
+and `e2036901c8edceaaee73a0bfb6d94f620476c794ab8dc94207feeb00b8ca17d3`.
+The VPK contains only eboot and SFO; no Vita filesystem was accessed.
+
+Because the local retail link is unavailable, the unchanged full M00 sanitizer
+route explicitly reuses the matching retained log SHA-256
+`97fc49202c76a04710964cf3939dd128329df88acc6b3005241632b69df5ec1e`.
+That is not a fresh retail sanitizer claim. The changed provider has the fresh
+focused/sanitizer/ARM evidence above. Source review after packaging found that
+the Vita entry point still constructed `WWAudioClass(true)`, did not call
+`Initialize()`, and never called `On_Frame_Update`; dev15 was never deployed and
+cannot support an audible-runtime claim. Its former route admission is retired.
+
+### A3.5-dev16 — original WWAudio lifecycle activation; hardware candidate
+
+Dev16 makes the smallest original-lifecycle correction at the Vita boundary.
+After the direct runtime installs the rooted retail/MIX chain, it creates the
+original basename-stripping audio adapter, constructs `WWAudioClass(false)`,
+calls `Initialize()` before engine/world setup, and refuses entry unless the
+original sound scene and Vita-backed 2D/3D drivers exist. The frame loop services
+`WWAudioClass::On_Frame_Update(0)` after each active render, matching original
+Commando ordering, and during the intentionally suspended Combat branch. Audio
+is destroyed after Combat/session/input teardown and before asset, WW3D, WWPhys,
+and factory teardown. This does not move conversation timing or mission
+progression into platform code.
+
+The pinned TT 4.8.4 r9000 audit passes 5/5 portable-pattern checks, but its
+607-file public scripts archive and nine-file update delta contain no WWAudio
+constructor, frame-update, main-loop, or conversation implementation. No TT
+implementation is interpolated; the correction restores semantics from the
+authoritative EA sources. `ActiveConversationClass` still owns remark timing,
+so the missing audio lifecycle is not represented as the proven cause of the
+Logan hang.
+
+The final canonical build used the retail tree at
+`/mnt/d/SteamLibrary/steamapps/common/Command & Conquer Renegade` and freshly
+passed M00/M01/City two-cycle host routes, ASan, LeakSanitizer, targeted UBSan,
+the canonical 42-test selection, deterministic 113-patch staging, all 482
+ARM/package actions, and identity 15/15. Post-build full discovery passes
+90/90. The host log SHA-256 is
+`d5503bf47ea37f184b268e18a3ec89101177fbbf8705538240ba033cabeda3fd`.
+Source integration records 447 unique original TUs, all 20 WWAudio TUs, and 26
+native boundary TUs. Exact ELF/SELF/VPK SHA-256 values are
+`684f15da87bb8e2d3fcdc45d7646132cb8f0ac65ec2612c0010d0365d10b8dea`,
+`4dd1f7fd4a10ee26605986c58c1aad9e63986fbbf5c91e48326c9d4a0c81169f`,
+and `fa7903ba94442c7f18b554dd986d868bd90fe4dedfbcbcfc732b9f506e741a63`.
+The VPK contains only `eboot.bin` and `sce_sys/param.sfo`; no Vita filesystem
+was accessed.
+
+The route runner now admits only exact dev16 SELF or exact installed dev7
+fallback and retains the 4,537-sample route plus live START abort. Physical
+audio, sky/material appearance, Havoc first-person meshes, original Logan
+progression, clean lifecycle, and matching visual evidence remain required.
+
+### A3.5-dev8 — native Mission00 script provider; physical pending
+
+The original Combat `ScriptManager` now uses a native static provider composed
+of the official `ScriptCommands`, `ScriptFactory`, `ScriptRegistrar`,
+`ScriptImp`, and `Mission00` sources. This preserves original script
+registration and attachment ownership without a Windows DLL loader or a
+replacement mission system. The selected closure is 430 unique original plus
+22 port translation units; only the script ABI translation units receive the
+scoped compatibility compilation mode. Provenance remains the existing
+pristine EA repository at revision
+`3e00c3a1b97381bb28be89a35b856375e0629a08`, licensed under GPL v3 with the
+repository's additional terms; no external source tree or retail asset was
+imported.
+
+The provider contract passes 4/4, the current core-tool suite passes 52/52,
+diagnostics pass 29/29, deterministic zero-fuzz staging is clean, and upstream
+is pristine. Canonical build `20260824-031918` completed all 463 ARM actions
+and passed 15/15 identity checks. ELF, SELF, and VPK SHA-256 are
+`3d4b1f56e82782d1958c9a82dd5f9f773ebd3f8046652caae4c8ecd01d9b4b21`,
+`7d944a8f0fe0425007cbb22b3ea039f8c173b64c4f8f6c4dce71a5670ee02c20`,
+and `86b00a0d4a07a2fde9bd1734934e9bb31bdae848a2d84da551545281ad8219ac`.
+Required original create/registrar/M00 controller symbols are present. The VPK
+contains only eboot and SFO; no retail data or device write occurred.
+
+This is host/ARM/package evidence only. On hardware, dev8 must report its
+provider active, a nonzero registered-script count, a nonzero attached-script
+count, and `scripts_active=true`, then complete the bounded walk/look/jump/
+fire/Square-action and clean-exit route. It may run only after exact dev6 and
+dev7 PASS receipts. The approximately 30-second normal load is covered by a
+45-second readiness timeout.
 
 ### v3.6 — bounded host foundation in progress
 

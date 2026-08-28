@@ -1,0 +1,37 @@
+diff --git a/activeconversation.h b/activeconversation.h
+index 969c3ee..9963c61 100644
+--- a/activeconversation.h
++++ b/activeconversation.h
+@@ -98,6 +98,14 @@ public:
+ 	void						Stop_Conversation (ActionCompleteReason reason = ACTION_COMPLETE_CONVERSATION_ENDED);
+ 	void						Think (void);
+ 	bool						Is_Finished (void)				{ return bool(State == STATE_FINISHED); }	
++
++#if defined(RENEGADE_VITA_PORT)
++	// Read-only flight-recorder access. Conversation/Mission00 retain all flow ownership.
++	int						Get_State_For_Diagnostics (void) const { return State; }
++	int						Get_Action_ID_For_Diagnostics (void) const { return ActionID; }
++	int						Get_Current_Remark_For_Diagnostics (void) const { return CurrentRemark; }
++	float					Get_Next_Remark_Seconds_For_Diagnostics (void) const { return NextRemarkTimer; }
++#endif
+ 
+ 	//
+ 	//	State evaluation methods
+diff --git a/conversationmgr.h b/conversationmgr.h
+index 619da19..e1cda45 100644
+--- a/conversationmgr.h
++++ b/conversationmgr.h
+@@ -126,6 +126,13 @@ public:
+ 	static ConversationClass *			Find_Conversation (const char *conversation_name);
+ 	static ConversationClass *			Find_Conversation (int conversation_id);
+ 	static ActiveConversationClass *	Find_Active_Conversation (int id);
++#if defined(RENEGADE_VITA_PORT)
++	static ActiveConversationClass *	Peek_Active_Conversation_For_Diagnostics (int index)
++	{
++		return index >= 0 && index < ActiveConversationList.Count () ?
++			ActiveConversationList[index] : NULL;
++	}
++#endif
+ 
+ 	static void								Reset_All_Other_Conversations (ActiveConversationClass *active_conversation);
+ 	static bool								Is_Key_Conversation_Playing (void);

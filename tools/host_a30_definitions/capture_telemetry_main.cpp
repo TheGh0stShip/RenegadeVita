@@ -133,6 +133,18 @@ int main()
 	input.state.memory.system_user_free = 120U;
 	input.state.memory.system_user_free_low_water = 100U;
 	input.state.memory.vitagl_ram_free_low_water = 80U;
+	input.state.loading_visual_gate.active = true;
+	input.state.loading_visual_gate.framebuffer_width = 960U;
+	input.state.loading_visual_gate.framebuffer_height = 544U;
+	input.state.loading_visual_gate.original_logical_width = 640U;
+	input.state.loading_visual_gate.original_logical_height = 480U;
+	input.state.loading_visual_gate.native_display_width = 960U;
+	input.state.loading_visual_gate.native_display_height = 544U;
+	input.state.loading_visual_gate.logical_to_native_fullscreen = true;
+	input.state.loading_visual_gate.original_loading_screen_owner = true;
+	input.state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
+	input.state.loading_visual_gate.loading_texture_v_flip_enabled = false;
+	input.state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	input.history = &history;
 	const A31CaptureBundleResult result = A31_Write_Capture_Bundle(input);
 	if (!result.passed) {
@@ -154,9 +166,16 @@ int main()
 		"summary percentiles", checks, failures);
 	Check(Summary_Contains(directory, "sampled low-water"),
 		"summary memory low-water", checks, failures);
-	Check(State_Contains(directory, "\"schema_version\":3") &&
+	Check(State_Contains(directory, "\"schema_version\":4") &&
 		State_Contains(directory, "\"system_user_free_low_water\":100"),
-		"schema two low-water state", checks, failures);
+		"schema four low-water state", checks, failures);
+	Check(State_Contains(directory, "\"loading_visual_gate\"") &&
+		State_Contains(directory, "\"original_logical_width\":640") &&
+		State_Contains(directory, "\"native_display_width\":960") &&
+		State_Contains(directory, "\"logical_to_native_fullscreen\":true") &&
+		State_Contains(directory, "\"direct_vitagl_overlay_disabled\":true") &&
+		Summary_Contains(directory, "Loading visual gate: active=1 logical=640x480 native=960x544 framebuffer=960x544 fullscreen=1"),
+		"loading visual gate state and summary", checks, failures);
 	Check(State_Contains(directory, "\"phase\":\"host-fixture\"") &&
 		State_Contains(directory, "\"runtime_log_path\":\"ux0:data/renegade/user/logs/a35-host-runtime.log\""),
 		"capture identity and phase state", checks, failures);

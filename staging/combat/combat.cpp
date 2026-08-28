@@ -93,6 +93,12 @@
 #include "fastallocator.h"
 #include "screenfademanager.h"
 #include "animatedsoundmgr.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#define VITA_LEVEL_LOAD_TRACE(...) A30_Vita_Log(__VA_ARGS__)
+#else
+#define VITA_LEVEL_LOAD_TRACE(...) ((void)0)
+#endif
 #include "render2dsentence.h"
 #include "stylemgr.h"
 #include "translatedb.h"
@@ -358,6 +364,8 @@ public:
 	LoadThreadClass(const char *thread_name = "Game loader thread") : ThreadClass(thread_name, &Exception_Handler) {}
 
 	void Thread_Function() {
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=thread-entry map=%s\n",
+			static_cast<const char *>(_load_map_name));
 
 		CombatManager::Set_Load_Progress( 0 );
 
@@ -376,10 +384,13 @@ public:
 		INIT_STATUS("Free definition databases");
 		DefinitionMgrClass::Free_Definitions();
 		WWLOG_INTERMEDIATE("Free definitions");
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=free-definitions-return\n");
 
 		INIT_STATUS("Load definition databases");
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-entry\n");
 		SaveGameManager::Load_Definitions();
 		WWLOG_INTERMEDIATE("Load definitions");
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-return\n");
 
 		CombatManager::Inc_Load_Progress();
 		//
@@ -387,6 +398,7 @@ public:
 		// to be done after the definition databases are loaded...
 		//
 		AnimatedSoundMgrClass::Initialize ();
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=animated-sound-return\n");
 
 		StringClass filename_to_load( _load_map_name, true );
 		StringClass lsd_filename( _load_map_name,true );
@@ -398,6 +410,8 @@ public:
 		SaveGameManager::Pre_Load_Game(_load_map_name, filename_to_load, lsd_filename);
 		CombatManager::Set_Last_LSD_Name( lsd_filename );
 		WWLOG_INTERMEDIATE("Preload game");
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=pre-load-game-return file=%s\n",
+			static_cast<const char *>(filename_to_load));
 
 		CombatManager::Inc_Load_Progress();
 
@@ -421,10 +435,14 @@ public:
 
 		// Now load the level
 		INIT_STATUS("Load level");
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-game-entry file=%s\n",
+			static_cast<const char *>(filename_to_load));
 		SaveGameManager::Load_Game( filename_to_load );
 		WWLOG_INTERMEDIATE("Load game");
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-game-return\n");
 
 		CombatManager::Inc_Load_Progress();
+		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=thread-return\n");
 
 	}
 } thread;
@@ -441,7 +459,18 @@ void	CombatManager::Load_Level_Threaded( const char * map_name, bool preload_ass
 	_load_map_name = map_name;
 
 	WWASSERT(!thread.Is_Running());
+#if defined(__vita__)
+	/* vitaGL owns its GL/GXM state on the thread that initialized it.  The
+	** original loader reaches render-model and on-demand animation creation,
+	** so running it on a pthread can enter non-thread-safe renderer services.
+	** Preserve the original LoadThreadClass routine and all Combat/SaveGame
+	** ownership, but execute that routine synchronously at this platform
+	** boundary.  This mirrors established native Vita ports that keep engine
+	** resource creation on their renderer thread. */
+	thread.Thread_Function();
+#else
 	thread.Execute();
+#endif
 }
 
 bool	CombatManager::Is_Load_Level_Complete( void )

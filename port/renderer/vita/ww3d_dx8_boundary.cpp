@@ -7,6 +7,7 @@
 #include "ww3d_vita_renderer.h"
 #include "ddsfile.h"
 #include "formconv.h"
+#include "render2d.h"
 #include "texture.h"
 #include "texture_upload_contract.h"
 #include "targa.h"
@@ -18,6 +19,7 @@
 #include <vector>
 
 #if defined(__vita__)
+#include "vita_runtime_log.h"
 #include <vitaGL.h>
 #endif
 
@@ -29,6 +31,8 @@ D3DVIEWPORT8 g_boundary_viewport = {
 	0U, 0U, RenegadeVitaRenderer::DISPLAY_WIDTH,
 	RenegadeVitaRenderer::DISPLAY_HEIGHT, 0.0f, 1.0f
 };
+uint32_t g_logical_viewport_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
+uint32_t g_logical_viewport_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 const D3DCAPS8 g_vita_caps_description = {};
 const D3DADAPTER_IDENTIFIER8 g_vita_adapter_description = {};
 
@@ -70,6 +74,15 @@ uint32_t Mix_Texture_Checksum(uint32_t checksum, uint32_t value)
 	return (checksum ^ value) * 16777619U;
 }
 
+bool Filename_Has_Extension(const char *filename, const char *extension)
+{
+	if (filename == NULL || extension == NULL) return false;
+	const size_t filename_length = strlen(filename);
+	const size_t extension_length = strlen(extension);
+	if (filename_length < extension_length) return false;
+	return stricmp(filename + filename_length - extension_length, extension) == 0;
+}
+
 bool Texture_Format_Has_Alpha(WW3DFormat format)
 {
 	return format == WW3D_FORMAT_DXT2 || format == WW3D_FORMAT_DXT3 ||
@@ -84,6 +97,22 @@ bool Texture_Format_Is_Supported(WW3DFormat format)
 }
 
 IDirect3DTexture8 *Create_Checkerboard_Fallback();
+
+void Log_Texture_Fallback(const char *reason, const char *filename)
+{
+#if defined(__vita__)
+	static unsigned logged_count = 0U;
+	if (logged_count >= 16U) return;
+	Vita_Append_A22_Runtime_Breadcrumb("texture-load",
+		"texture fallback: reason=%s name=%s",
+		reason != NULL ? reason : "unknown",
+		filename != NULL ? filename : "(null)");
+	++logged_count;
+#else
+	(void)reason;
+	(void)filename;
+#endif
+}
 
 unsigned Surface_Bytes_Per_Pixel(D3DFORMAT format)
 {
@@ -233,6 +262,7 @@ IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 	texture->NativeTexture = 1U;
 #endif
 	texture->Uploaded = true;
+	RenegadeVitaRenderer::Record_Texture_Decode();
 	RenegadeVitaRenderer::Record_Texture_Upload(texture->ResidentBytes);
 	return texture;
 }
@@ -294,24 +324,23 @@ IDirect3DTexture8 *Create_Checkerboard_Fallback()
 	return texture;
 }
 
-IDirect3DTexture8 *Load_Archive_Texture(const char *filename,
-	TextureClass::MipCountType requested_mips)
+IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
+	TextureClass::MipCountType requested_mips, bool *dds_available)
 {
-	RenegadeVitaRenderer::Record_Texture_Request();
-	if (filename == NULL || filename[0] == 0) {
-		RenegadeVitaRenderer::Record_Texture_Source_Missing();
-		return Create_Checkerboard_Fallback();
-	}
+	if (dds_available != NULL) *dds_available = false;
+	if (filename == NULL || filename[0] == 0) return NULL;
 	DDSFileClass dds(filename, 0U);
 	if (!dds.Is_Available()) {
-		RenegadeVitaRenderer::Record_Texture_Source_Missing();
-		return Create_Checkerboard_Fallback();
+		return NULL;
 	}
+	if (dds_available != NULL) *dds_available = true;
 	if (!dds.Load()) {
+		Log_Texture_Fallback("dds-decode", filename);
 		RenegadeVitaRenderer::Record_Texture_Decode_Failure();
 		return Create_Checkerboard_Fallback();
 	}
 	if (!Texture_Format_Is_Supported(dds.Get_Format())) {
+		Log_Texture_Fallback("dds-format", filename);
 		RenegadeVitaRenderer::Record_Texture_Unsupported_Format();
 		return Create_Checkerboard_Fallback();
 	}
@@ -320,11 +349,13 @@ IDirect3DTexture8 *Load_Archive_Texture(const char *filename,
 		available_mips : (static_cast<unsigned>(requested_mips) < available_mips ?
 			static_cast<unsigned>(requested_mips) : available_mips);
 	if (mip_count == 0U) {
+		Log_Texture_Fallback("dds-mips", filename);
 		RenegadeVitaRenderer::Record_Texture_Invalid_Data();
 		return Create_Checkerboard_Fallback();
 	}
 	IDirect3DTexture8 *texture = new (std::nothrow) IDirect3DTexture8;
 	if (texture == NULL) {
+		Log_Texture_Fallback("dds-alloc", filename);
 		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
 		return Create_Checkerboard_Fallback();
 	}
@@ -344,6 +375,7 @@ IDirect3DTexture8 *Load_Archive_Texture(const char *filename,
 	glGenTextures(1, &native);
 	if (native == 0U) {
 		delete texture;
+		Log_Texture_Fallback("dds-gl-gen", filename);
 		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
 		return Create_Checkerboard_Fallback();
 	}
@@ -376,6 +408,7 @@ IDirect3DTexture8 *Load_Archive_Texture(const char *filename,
 	if (glGetError() != GL_NO_ERROR) {
 		RenegadeVitaRenderer::Release_Texture(native);
 		delete texture;
+		Log_Texture_Fallback("dds-gl-upload", filename);
 		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
 		return Create_Checkerboard_Fallback();
 	}
@@ -391,6 +424,20 @@ IDirect3DTexture8 *Load_Archive_Texture(const char *filename,
 	texture->ResidentBytes = bytes;
 	RenegadeVitaRenderer::Record_Texture_Decode();
 	RenegadeVitaRenderer::Record_Texture_Upload(bytes);
+	return texture;
+}
+
+IDirect3DTexture8 *Load_Targa_Texture(const char *filename,
+	TextureClass::MipCountType mip_level_count)
+{
+	IDirect3DSurface8 *surface = DX8Wrapper::_Create_DX8_Surface(filename);
+	if (surface == NULL) {
+		Log_Texture_Fallback("tga-source-or-decode", filename);
+		return Create_Checkerboard_Fallback();
+	}
+	IDirect3DTexture8 *texture = DX8Wrapper::_Create_DX8_Texture(surface,
+		mip_level_count);
+	surface->Release();
 	return texture;
 }
 
@@ -457,6 +504,18 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	submission.world_transform = &state.world[0].X;
 	submission.view_transform = &state.view[0].X;
 	submission.projection_transform = &g_boundary_transforms[D3DTS_PROJECTION].m[0][0];
+	/* DynamicVB users such as the original Haze/Starfield/CloudLayer/SkyObject
+	** paths retain shader and texture changes in DX8Wrapper::render_state until
+	** Draw_Triangles.  The native boundary must consume those same owners before
+	** emitting their indexed geometry; otherwise a valid sky draw inherits stale
+	** mesh state and commonly renders black. */
+	RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader);
+	if (state.shader.Get_Texturing() != ShaderClass::TEXTURING_DISABLE &&
+		state.Textures[0] != NULL) {
+		state.Textures[0]->Apply_For_Platform_Boundary(0U);
+	} else {
+		RenegadeVitaRenderer::Bind_Texture(0U, false);
+	}
 	RenegadeVitaRenderer::Submit_Indexed_Triangles(submission);
 }
 
@@ -666,7 +725,11 @@ IDirect3DSurface8 *DX8Wrapper::_Create_DX8_Surface(const char *filename)
 		RenegadeVitaRenderer::Record_Texture_Source_Missing();
 		return NULL;
 	}
-	targa.Close();
+	/* Match original WW3D TextureLoader semantics exactly: after opening the
+	** TGA and reading its header, DX8 toggles the Y-origin bit before calling
+	** Targa::Load().  The same Targa object must remain open so Load consumes
+	** that adjusted descriptor instead of re-reading the file header. */
+	targa.Header.ImageDescriptor ^= TGAIDF_YORIGIN;
 	if (targa.Load(filename, TGAF_IMAGE, false) != 0) {
 		RenegadeVitaRenderer::Record_Texture_Decode_Failure();
 		return NULL;
@@ -710,7 +773,22 @@ IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(IDirect3DSurface8 *surface,
 IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(const char *filename,
 	TextureClass::MipCountType mip_level_count)
 {
-	return Load_Archive_Texture(filename, mip_level_count);
+	RenegadeVitaRenderer::Record_Texture_Request();
+	if (filename == NULL || filename[0] == 0) {
+		Log_Texture_Fallback("empty-name", filename);
+		RenegadeVitaRenderer::Record_Texture_Source_Missing();
+		return Create_Checkerboard_Fallback();
+	}
+	bool dds_available = false;
+	IDirect3DTexture8 *texture = Load_DDS_Texture(filename, mip_level_count,
+		&dds_available);
+	if (texture != NULL || dds_available) return texture;
+	if (Filename_Has_Extension(filename, ".tga")) {
+		return Load_Targa_Texture(filename, mip_level_count);
+	}
+	Log_Texture_Fallback("dds-missing", filename);
+	RenegadeVitaRenderer::Record_Texture_Source_Missing();
+	return Create_Checkerboard_Fallback();
 }
 
 ULONG IDirect3DBaseTexture8::AddRef()
@@ -863,7 +941,8 @@ HRESULT IDirect3DDevice8::SetViewport(const D3DVIEWPORT8 *viewport)
 {
 	if (viewport == NULL || !RenegadeVitaRenderer::Apply_Viewport(viewport->X,
 		viewport->Y, viewport->Width, viewport->Height, viewport->MinZ,
-		viewport->MaxZ)) {
+		viewport->MaxZ, g_logical_viewport_width,
+		g_logical_viewport_height)) {
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 	g_boundary_viewport = *viewport;
@@ -946,6 +1025,33 @@ void DX8Wrapper::Get_Render_Target_Resolution(int &width, int &height,
 	// renders to the immutable native display target, so retain its exact
 	// dimensions under the original query.
 	Get_Device_Resolution(width, height, bits, windowed);
+}
+
+bool DX8Wrapper::Set_Device_Resolution(int width, int height, int bits,
+	int windowed, bool resize_window)
+{
+	(void)resize_window;
+	if (width != -1) {
+		if (width <= 0) return false;
+		ResolutionWidth = width;
+	}
+	if (height != -1) {
+		if (height <= 0) return false;
+		ResolutionHeight = height;
+	}
+	if (bits != -1) {
+		if (bits != 16 && bits != 32) return false;
+		BitDepth = bits;
+	}
+	if (windowed != -1) {
+		IsWindowed = windowed != 0;
+	}
+	Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
+		static_cast<float>(ResolutionWidth),
+		static_cast<float>(ResolutionHeight)));
+	g_logical_viewport_width = static_cast<uint32_t>(ResolutionWidth);
+	g_logical_viewport_height = static_cast<uint32_t>(ResolutionHeight);
+	return true;
 }
 
 TextureClass *DX8Wrapper::Create_Render_Target(int width, int height,

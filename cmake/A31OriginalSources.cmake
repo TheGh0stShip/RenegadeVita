@@ -73,6 +73,7 @@ endif()
 set(RENEGADE_A31_DYNAMIC_LEVEL_SOURCES
   ${RENEGADE_STAGE}/combat/spawn.cpp
   ${RENEGADE_STAGE}/combat/scripts.cpp
+	${RENEGADE_STAGE}/combat/scriptcommands.cpp
   ${RENEGADE_STAGE}/combat/persistentgameobjobserver.cpp
   ${RENEGADE_STAGE}/combat/cover.cpp
   ${RENEGADE_STAGE}/combat/objectives.cpp
@@ -96,7 +97,7 @@ set(RENEGADE_A31_DYNAMIC_LEVEL_SOURCES
 )
 list(LENGTH RENEGADE_A31_DYNAMIC_LEVEL_SOURCES
   RENEGADE_A31_DYNAMIC_LEVEL_SOURCE_COUNT)
-if(NOT RENEGADE_A31_DYNAMIC_LEVEL_SOURCE_COUNT EQUAL 22)
+if(NOT RENEGADE_A31_DYNAMIC_LEVEL_SOURCE_COUNT EQUAL 23)
   message(FATAL_ERROR
     "A3.1 dynamic-level source manifest changed unexpectedly: ${RENEGADE_A31_DYNAMIC_LEVEL_SOURCE_COUNT}")
 endif()
@@ -118,9 +119,12 @@ set(RENEGADE_A31_GAMEPLAY_LINK_CLOSURE_SOURCES
   ${RENEGADE_STAGE}/ww3d2/render2dsentence.cpp
   ${RENEGADE_STAGE}/ww3d2/renderobjectrecycler.cpp
   ${RENEGADE_STAGE}/wwtranslatedb/tdbcategory.cpp
+  ${RENEGADE_STAGE}/wwtranslatedb/translateobj.cpp
   ${RENEGADE_STAGE}/wwtranslatedb/translatedb.cpp
+  ${RENEGADE_STAGE}/wwtranslatedb/stringtwiddler.cpp
   ${RENEGADE_STAGE}/wwaudio/AudioEvents.cpp
   ${RENEGADE_STAGE}/wwaudio/LogicalListener.cpp
+  ${RENEGADE_STAGE}/wwaudio/LogicalSound.cpp
   ${RENEGADE_STAGE}/wwaudio/SoundSceneObj.cpp
   ${RENEGADE_STAGE}/combat/assetdep.cpp
   ${RENEGADE_STAGE}/combat/basecontroller.cpp
@@ -159,9 +163,37 @@ set(RENEGADE_A31_GAMEPLAY_LINK_CLOSURE_SOURCES
 )
 list(LENGTH RENEGADE_A31_GAMEPLAY_LINK_CLOSURE_SOURCES
   RENEGADE_A31_GAMEPLAY_LINK_CLOSURE_SOURCE_COUNT)
-if(NOT RENEGADE_A31_GAMEPLAY_LINK_CLOSURE_SOURCE_COUNT EQUAL 48)
+if(NOT RENEGADE_A31_GAMEPLAY_LINK_CLOSURE_SOURCE_COUNT EQUAL 51)
   message(FATAL_ERROR
     "A3.1 gameplay link-closure manifest changed unexpectedly: ${RENEGADE_A31_GAMEPLAY_LINK_CLOSURE_SOURCE_COUNT}")
+endif()
+
+# Original WWAudio retains all game-facing sound definition, playlist,
+# priority, loop, scene, and callback ownership. The Vita executable selects
+# this coherent cluster together with the native provider below the Miles ABI;
+# host world-load targets can continue selecting the established lite boundary.
+set(RENEGADE_A35_ORIGINAL_AUDIO_SOURCES
+  ${RENEGADE_STAGE}/wwaudio/AudibleSound.cpp
+  ${RENEGADE_STAGE}/wwaudio/FilteredSound.cpp
+  ${RENEGADE_STAGE}/wwaudio/Listener.cpp
+  ${RENEGADE_STAGE}/wwaudio/Sound3D.cpp
+  ${RENEGADE_STAGE}/wwaudio/SoundBuffer.cpp
+  ${RENEGADE_STAGE}/wwaudio/SoundPseudo3D.cpp
+  ${RENEGADE_STAGE}/wwaudio/SoundScene.cpp
+  ${RENEGADE_STAGE}/wwaudio/Threads.cpp
+  ${RENEGADE_STAGE}/wwaudio/Utils.cpp
+  ${RENEGADE_STAGE}/wwaudio/WWAudio.cpp
+  ${RENEGADE_STAGE}/wwaudio/listenerhandle.cpp
+  ${RENEGADE_STAGE}/wwaudio/sound2dhandle.cpp
+  ${RENEGADE_STAGE}/wwaudio/sound3dhandle.cpp
+  ${RENEGADE_STAGE}/wwaudio/soundhandle.cpp
+  ${RENEGADE_STAGE}/wwaudio/soundstreamhandle.cpp
+)
+list(LENGTH RENEGADE_A35_ORIGINAL_AUDIO_SOURCES
+  RENEGADE_A35_ORIGINAL_AUDIO_SOURCE_COUNT)
+if(NOT RENEGADE_A35_ORIGINAL_AUDIO_SOURCE_COUNT EQUAL 15)
+  message(FATAL_ERROR
+    "A3.5 original WWAudio source closure changed unexpectedly: ${RENEGADE_A35_ORIGINAL_AUDIO_SOURCE_COUNT}")
 endif()
 
 set(RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCES
@@ -173,7 +205,7 @@ set(RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCES
 )
 list(LENGTH RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCES
   RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCE_COUNT)
-if(NOT RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCE_COUNT EQUAL 354)
+if(NOT RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCE_COUNT EQUAL 358)
   message(FATAL_ERROR
     "A3.1 gameplay seed source closure changed unexpectedly: ${RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCE_COUNT}")
 endif()

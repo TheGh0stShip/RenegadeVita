@@ -82,6 +82,8 @@ int main()
 		statistics.indexed_vertex_references == 3 &&
 		statistics.indexed_triangle_submissions == 1,
 		"original DX8Wrapper indexed draw", checks);
+	failures += !Check(statistics.indexed_state_applications == 1,
+		"deferred indexed shader state consumed at draw boundary", checks);
 	failures += !Check(statistics.indexed_geometry_checksum == 0x65e5f668U,
 		"original boundary semantic fingerprint", checks);
 

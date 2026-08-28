@@ -57,6 +57,9 @@
 #include "dx8wrapper.h"
 #include "dx8vertexbuffer.h"
 #include "dx8indexbuffer.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 
 const float DEBUG_RENDER_DIST2 = (50.0f*50.0f);
@@ -506,8 +509,14 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 	char tmpstring[256];
 	tmpstring[0] = 0;
 	RenderObjClass * render_model = NULL;
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("phys-load-entry", 0U);
+#endif
 
 	while (cload.Open_Chunk()) {
+		#if defined(__vita__)
+			A35_Vita_Static_Load_Trace_Step("phys-chunk", cload.Cur_Chunk_ID());
+		#endif
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
@@ -532,10 +541,19 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 
 			case PHYS_CHUNK_MODEL:
 				cload.Open_Chunk();
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("render-factory-lookup", cload.Cur_Chunk_ID());
+#endif
 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
 				WWASSERT(factory != NULL);
 				if (factory != NULL) {
+#if defined(__vita__)
+					A35_Vita_Static_Load_Trace_Step("render-factory-load-entry", cload.Cur_Chunk_ID());
+#endif
 					render_model = (RenderObjClass *)factory->Load(cload);
+#if defined(__vita__)
+					A35_Vita_Static_Load_Trace_Step("render-factory-load-return", cload.Cur_Chunk_ID());
+#endif
 					SET_REF_OWNER(render_model);
 				}
 				cload.Close_Chunk();
@@ -573,7 +591,13 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 	/*
 	** Only install the model after our definition is installed
 	*/
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("set-model-entry", 0U);
+#endif
 	Set_Model(render_model);
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("set-model-return", 0U);
+#endif
 	REF_PTR_RELEASE(render_model);
 
 	/*
@@ -614,6 +638,9 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 	UmbraSupport::Update_Umbra_Object(this);
 #endif
 
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("phys-load-return", 0U);
+#endif
 	return true;
 }
 

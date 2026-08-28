@@ -1,0 +1,88 @@
+--- a/pscene_saveload.cpp
++++ b/pscene_saveload.cpp
+@@ -47,6 +47,26 @@
+ #include "light.h"
+ #include "persistfactory.h"
+ #include "wwmemlog.h"
++#if defined(__vita__)
++#include "saveloadstatus.h"
++#include <stdio.h>
++#endif
++
++#if defined(__vita__)
++namespace {
++
++void Set_Vita_Static_Object_Load_Status(unsigned object_index,
++	uint32 factory_id, const char *phase)
++{
++	char status[96];
++	snprintf(status, sizeof(status),
++		"Static objects: index=%u factory=%u phase=%s",
++		object_index, static_cast<unsigned>(factory_id), phase);
++	SaveLoadStatus::Set_Status_Text(status, 1);
++}
++
++} // namespace
++#endif
+ 
+  
+ /*
+@@ -427,6 +447,7 @@
+ 
+ void PhysicsSceneClass::Load_Static_Objects(ChunkLoadClass & cload)
+ {
++	unsigned object_index = 0U;
+ 	while (cload.Open_Chunk()) {
+ 
+ 		if (cload.Cur_Chunk_ID() == PSCENE_SO_CHUNK_STATIC_OBJECT) {
+@@ -434,13 +455,23 @@
+ 			/*
+ 			** Load the object
+ 			*/ 
++#if defined(__vita__)
++			Set_Vita_Static_Object_Load_Status(object_index, 0U, "wrapper-open");
++#endif
+ 			cload.Open_Chunk();
+ 			StaticPhysClass * obj = NULL;
+-			PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
++			const uint32 factory_id = cload.Cur_Chunk_ID();
++#if defined(__vita__)
++			Set_Vita_Static_Object_Load_Status(object_index, factory_id, "factory-load");
++#endif
++			PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(factory_id);
+ 			WWASSERT(fact != NULL);
+ 			if (fact) {
+ 				obj = (StaticPhysClass *)fact->Load(cload);
+ 			}
++#if defined(__vita__)
++			Set_Vita_Static_Object_Load_Status(object_index, factory_id, "factory-loaded");
++#endif
+ 			cload.Close_Chunk();
+ 
+ 			cload.Close_Chunk();
+@@ -448,6 +479,9 @@
+ 			/*
+ 			** Load the object's linkage into the Static Culling System
+ 			*/
++#if defined(__vita__)
++			Set_Vita_Static_Object_Load_Status(object_index, factory_id, "linkage-load");
++#endif
+ 			cload.Open_Chunk();
+ 			if ((cload.Cur_Chunk_ID() == PSCENE_SO_CHUNK_STATIC_OBJECT_AABLINK) && (obj)) {
+ 				StaticCullingSystem->Load_Object_Linkage(cload,obj);
+@@ -460,8 +494,15 @@
+ 			** - If it requires time-stepping, add to the timestep list
+ 			** - Let the base SceneClass notify the render object that it has been added.
+ 			*/
++#if defined(__vita__)
++			Set_Vita_Static_Object_Load_Status(object_index, factory_id, "scene-add");
++#endif
+ 			Internal_Add_Static_Object(obj);
+ 			obj->Release_Ref();
++#if defined(__vita__)
++			Set_Vita_Static_Object_Load_Status(object_index, factory_id, "complete");
++#endif
++			++object_index;
+ 
+ 		} else {
+ 			WWDEBUG_SAY(("Unhandled Chunk: 0x%x in file %s, line %d\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));

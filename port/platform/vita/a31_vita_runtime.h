@@ -20,9 +20,16 @@ struct A31VitaInteractiveResult
 	bool first_frame_completed;
 	bool first_frame_geometry;
 	bool clean_exit_requested;
+	bool start_exit_requested;
+	bool mission_completion_observed;
+	bool mission_succeeded;
+	bool star_killed_observed;
 	bool render_error;
 	bool teardown_completed;
+	bool pause_observed;
+	bool resume_observed;
 	uint32_t frames;
+	uint32_t paused_input_frames;
 	uint32_t mesh_submissions;
 	uint32_t vertex_submissions;
 	uint32_t triangle_submissions;

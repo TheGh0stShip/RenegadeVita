@@ -100,6 +100,14 @@ public:
 	void						Think (void);
 	bool						Is_Finished (void)				{ return bool(State == STATE_FINISHED); }	
 
+#if defined(RENEGADE_VITA_PORT)
+	// Read-only flight-recorder access. Conversation/Mission00 retain all flow ownership.
+	int						Get_State_For_Diagnostics (void) const { return State; }
+	int						Get_Action_ID_For_Diagnostics (void) const { return ActionID; }
+	int						Get_Current_Remark_For_Diagnostics (void) const { return CurrentRemark; }
+	float					Get_Next_Remark_Seconds_For_Diagnostics (void) const { return NextRemarkTimer; }
+#endif
+
 	//
 	//	State evaluation methods
 	//

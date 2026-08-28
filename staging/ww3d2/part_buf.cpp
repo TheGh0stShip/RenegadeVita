@@ -48,6 +48,7 @@
 #include <limits.h>
 #include "vp.h"
 #include "texture.h"
+#include <stdint.h>
 #include "dx8wrapper.h"
 #include "vector3.h"
 
@@ -76,6 +77,42 @@ float ParticleBufferClass::LODMaxScreenSizes[17] = {
 
 static Random4Class rand_gen;
 const float oo_intmax = 1.0f / (float)INT_MAX;
+
+static const unsigned int MAX_PARTICLE_SIZE_KEYFRAMES = 4096U;
+
+static bool Is_Usable_Particle_Size_Keyframe_Pointer(const void *pointer)
+{
+	if (pointer == NULL) {
+		return false;
+	}
+	const uintptr_t address = reinterpret_cast<uintptr_t>(pointer);
+	if ((address & (sizeof(float) - 1U)) != 0U) {
+		return false;
+	}
+#if defined(__vita__)
+	// Particle keyframes passed to Reset_Size are regular process-heap arrays.
+	// Refuse obviously impossible Vita user pointers before a VFP load faults.
+	if (address < 0x81000000U || address >= 0x90000000U) {
+		return false;
+	}
+#endif
+	return true;
+}
+
+static unsigned int Usable_Size_Keyframe_Count(const ParticlePropertyStruct<float> &props)
+{
+	if (props.NumKeyFrames == 0U) {
+		return 0U;
+	}
+	if (props.NumKeyFrames > MAX_PARTICLE_SIZE_KEYFRAMES) {
+		return 0U;
+	}
+	if (!Is_Usable_Particle_Size_Keyframe_Pointer(props.KeyTimes) ||
+		 !Is_Usable_Particle_Size_Keyframe_Pointer(props.Values)) {
+		return 0U;
+	}
+	return props.NumKeyFrames;
+}
 
 // Default Line Emitter Properties
 static const W3dEmitterLinePropertiesStruct _DefaultLineEmitterProps=
@@ -1663,7 +1700,8 @@ void ParticleBufferClass::Reset_Size(ParticlePropertyStruct<float> &new_props)
 	// table will not be used in this case).
 	static const float eps_size = 1.0e-12f;	// Size scale unknown so must use very small epsilon
 	bool size_rand_zero	= (fabs(new_props.Rand) < eps_size);
-	if (size_rand_zero && new_props.NumKeyFrames == 0) {
+	const unsigned int usable_size_keyframes = Usable_Size_Keyframe_Count(new_props);
+	if (size_rand_zero && usable_size_keyframes == 0) {
 
 		// Release Size, SizeKeyFrameTimes and SizeaKeyFrameDeltas if present. Reuse
 		// SizeKeyFrameValues if the right size, otherwise release and reallocate.
@@ -1705,13 +1743,13 @@ void ParticleBufferClass::Reset_Size(ParticlePropertyStruct<float> &new_props)
 		// constant during the last segment between last keyframe and MaxAge).
 		ui_previous_key_time = 0;
 		unsigned int skey;
-		for (skey = 0; skey < new_props.NumKeyFrames; skey++) {
+		for (skey = 0; skey < usable_size_keyframes; skey++) {
 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[skey] * 1000.0f);
 			WWASSERT(ui_current_key_time > ui_previous_key_time);
 			if (ui_current_key_time >= MaxAge) break;
 			ui_previous_key_time = ui_current_key_time;
 		}
-		bool size_constant_at_end = (skey == new_props.NumKeyFrames);
+		bool size_constant_at_end = (skey == usable_size_keyframes);
 
 		// Reuse SizeKeyFrameValues, SizeKeyFrameTimes and SizeKeyFrameDeltas if the right size,
 		// otherwise release and reallocate.

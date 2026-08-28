@@ -1,0 +1,29 @@
+--- a/gameobjmanager.cpp
++++ b/gameobjmanager.cpp
+@@ -230,6 +230,11 @@ void GameObjManager::Destroy_All()		// Destroy each object in the list
+ 
+ 	NetworkObjectMgrClass::Delete_Pending ();	
+ 
++	// Object destruction detaches scripts into ScriptManager's pending list.
++	// The normal Post_Think drain is disabled in this teardown path, so finish
++	// the original observer lifecycle before the script provider shuts down.
++	ScriptManager::Destroy_Pending();
++
+ 	WWASSERT( GameObjList.Head() == NULL );
+ 	WWASSERT( SmartGameObjList.Head() == NULL );
+ 	WWASSERT( StarGameObjList.Head() == NULL );
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -349,6 +349,12 @@ static	void	Powerup_Shutdown( void )
+ 
+ static	void	Powerup_Add( const WCHAR * name, int number, const char * texture_name, const RectClass & uv, const Vector2 & offset, bool right_list = true )
+ {
++	// A headless validation lifecycle has no presentation resources. Keep the
++	// gameplay notification call valid without constructing an orphaned icon.
++	if ( PowerupBoxRenderer == NULL || PowerupTextRenderer == NULL ) {
++		return;
++	}
++
+ 	PowerupIconStruct * data = new PowerupIconStruct();
+ 	data->Renderer = new Render2DClass();
+ 	StringClass new_name(true);

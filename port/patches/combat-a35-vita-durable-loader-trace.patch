@@ -1,0 +1,116 @@
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -93,6 +93,12 @@
+ #include "fastallocator.h"
+ #include "screenfademanager.h"
+ #include "animatedsoundmgr.h"
++#if defined(__vita__)
++#include "a30_vita_runtime.h"
++#define VITA_LEVEL_LOAD_TRACE(...) A30_Vita_Log(__VA_ARGS__)
++#else
++#define VITA_LEVEL_LOAD_TRACE(...) ((void)0)
++#endif
+ #include "render2dsentence.h"
+ #include "stylemgr.h"
+ #include "translatedb.h"
+@@ -358,6 +364,8 @@
+ 	LoadThreadClass(const char *thread_name = "Game loader thread") : ThreadClass(thread_name, &Exception_Handler) {}
+ 
+ 	void Thread_Function() {
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=thread-entry map=%s\n",
++			static_cast<const char *>(_load_map_name));
+ 
+ 		CombatManager::Set_Load_Progress( 0 );
+ 
+@@ -376,10 +384,13 @@
+ 		INIT_STATUS("Free definition databases");
+ 		DefinitionMgrClass::Free_Definitions();
+ 		WWLOG_INTERMEDIATE("Free definitions");
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=free-definitions-return\n");
+ 
+ 		INIT_STATUS("Load definition databases");
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-entry\n");
+ 		SaveGameManager::Load_Definitions();
+ 		WWLOG_INTERMEDIATE("Load definitions");
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-return\n");
+ 
+ 		CombatManager::Inc_Load_Progress();
+ 		//
+@@ -387,6 +398,7 @@
+ 		// to be done after the definition databases are loaded...
+ 		//
+ 		AnimatedSoundMgrClass::Initialize ();
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=animated-sound-return\n");
+ 
+ 		StringClass filename_to_load( _load_map_name, true );
+ 		StringClass lsd_filename( _load_map_name,true );
+@@ -398,6 +410,8 @@
+ 		SaveGameManager::Pre_Load_Game(_load_map_name, filename_to_load, lsd_filename);
+ 		CombatManager::Set_Last_LSD_Name( lsd_filename );
+ 		WWLOG_INTERMEDIATE("Preload game");
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=pre-load-game-return file=%s\n",
++			static_cast<const char *>(filename_to_load));
+ 
+ 		CombatManager::Inc_Load_Progress();
+ 
+@@ -421,10 +435,14 @@
+ 
+ 		// Now load the level
+ 		INIT_STATUS("Load level");
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-game-entry file=%s\n",
++			static_cast<const char *>(filename_to_load));
+ 		SaveGameManager::Load_Game( filename_to_load );
+ 		WWLOG_INTERMEDIATE("Load game");
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-game-return\n");
+ 
+ 		CombatManager::Inc_Load_Progress();
++		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=thread-return\n");
+ 
+ 	}
+ } thread;
+--- a/buildingaggregate.cpp
++++ b/buildingaggregate.cpp
+@@ -66,6 +66,9 @@
+ #include "wwdebug.h"
+ #include "wwhack.h"
+ #include "wwprofile.h"
++#if defined(__vita__)
++#include "a30_vita_runtime.h"
++#endif
+ 
+ 
+ DECLARE_FORCE_LINK( buildingaggregate );
+@@ -336,11 +339,23 @@
+  *=============================================================================================*/
+ bool BuildingAggregateClass::Load( ChunkLoadClass &cload )
+ {
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("building-entry", 0U);
++#endif
+ 	while (cload.Open_Chunk()) {
++#if defined(__vita__)
++		A35_Vita_Static_Load_Trace_Step("building-chunk", cload.Cur_Chunk_ID());
++#endif
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case BAG_CHUNK_STATICANIMPHYS:
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("building-static-anim-entry", cload.Cur_Chunk_ID());
++#endif
+ 				StaticAnimPhysClass::Load( cload );
++#if defined(__vita__)
++				A35_Vita_Static_Load_Trace_Step("building-static-anim-return", cload.Cur_Chunk_ID());
++#endif
+ 				break;
+ 		
+ 			case BAG_CHUNK_VARIABLES:
+@@ -364,6 +379,9 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
++#if defined(__vita__)
++	A35_Vita_Static_Load_Trace_Step("building-return", 0U);
++#endif
+ 	return true;
+ }
+ 

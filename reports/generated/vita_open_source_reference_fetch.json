@@ -1,0 +1,488 @@
+{
+  "cache_root": "/tmp/renegade-vita-reference-cache",
+  "dry_run": false,
+  "external_sources_imported_to_repo": false,
+  "generated_at_utc": "2026-08-25T17:41:53+00:00",
+  "manifest": {
+    "byte_count": 7322,
+    "path": "tools/vita_open_source_references.yml",
+    "sha256": "ff1c7dd0556bf90f2bc0b4a67d8feee0b82514ee08531e4d5b136e5684ad0651"
+  },
+  "references": [
+    {
+      "blockers": [
+        "build_overhead",
+        "sdk_provenance"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/f342e38db822e8ad",
+      "commit": "79a92784094ee0543cdfa36c041ed8ee2702d28b",
+      "file_count": 2,
+      "files": [
+        "LICENSE",
+        "README.md"
+      ],
+      "id": "vitasdk-buildscripts",
+      "license": "MIT",
+      "license_policy": "compatible_tooling_reference",
+      "repository": "https://github.com/vitasdk/buildscripts.git",
+      "sparse_paths": [
+        "README.md",
+        "LICENSE"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "build_packaging",
+        "elf_self_vpk_identity"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/1062b3b03103a4f0",
+      "commit": "eacff34d18e9872a78c0e520e1997ef71900ebb4",
+      "file_count": 5,
+      "files": [
+        "COPYING",
+        "README.md",
+        "cmake_toolchain/CMakeLists.txt",
+        "cmake_toolchain/vita.cmake",
+        "cmake_toolchain/vita.toolchain.cmake"
+      ],
+      "id": "vitasdk-toolchain",
+      "license": "MIT",
+      "license_policy": "compatible_tooling_reference",
+      "repository": "https://github.com/vitasdk/vita-toolchain.git",
+      "sparse_paths": [
+        "README.md",
+        "COPYING",
+        "cmake_toolchain"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "sceaudio_smoke_test",
+        "controller_display_boundaries"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/06fc662fbd050481",
+      "commit": "fe8fbef570f3280586c0c20157146e3faefb2181",
+      "file_count": 5,
+      "files": [
+        "README.md",
+        "audio/CMakeLists.txt",
+        "audio/src/main.c",
+        "ctrl/CMakeLists.txt",
+        "ctrl/src/main.c"
+      ],
+      "id": "vitasdk-samples",
+      "license": "per_file_noassertion",
+      "license_policy": "study_only_per_file_review",
+      "repository": "https://github.com/vitasdk/samples.git",
+      "sparse_paths": [
+        "README.md",
+        "audio",
+        "ctrl"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "black_textures",
+        "wrong_loading_screen",
+        "shader_texture_cache_diagnostics"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/738ca181c19f632a",
+      "commit": "6440cf0e0c6573d7b3de6521462d8cbecd8fb4c1",
+      "file_count": 7,
+      "files": [
+        "README.md",
+        "source/draw.c",
+        "source/framebuffers.c",
+        "source/shaders.h",
+        "source/shared.h",
+        "source/textures.c",
+        "source/vgl.c"
+      ],
+      "id": "vitagl",
+      "license": "LGPL-3.0",
+      "license_policy": "linked_library_reference",
+      "repository": "https://github.com/Rinnegatamante/vitaGL.git",
+      "sparse_paths": [
+        "README.md",
+        "source/shared.h",
+        "source/vgl.c",
+        "source/textures.c",
+        "source/framebuffers.c",
+        "source/draw.c",
+        "source/shaders.h"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "emulator_regression_loop",
+        "shader_recompile_smoke"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/393c88886071f3cc",
+      "commit": "496939b602703951277263c7b3e60a9ae36879c1",
+      "file_count": 3,
+      "files": [
+        "README.md",
+        "vita3k/CMakeLists.txt",
+        "vita3k/config/src/config.cpp"
+      ],
+      "id": "vita3k",
+      "license": "GPL-2.0-only",
+      "license_policy": "study_only_no_code_copy",
+      "repository": "https://github.com/Vita3K/Vita3K.git",
+      "sparse_paths": [
+        "README.md",
+        "vita3k/config/src/config.cpp",
+        "vita3k/CMakeLists.txt"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "psp2dmp_symbolication",
+        "crash_backtrace_quality"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/ec058c96c800ca2a",
+      "commit": "86ef3ee05a02d08bb2daf039ee4161264b14ff67",
+      "file_count": 5,
+      "files": [
+        "Cargo.toml",
+        "README.md",
+        "src/cli.rs",
+        "src/gui.rs",
+        "src/lib.rs"
+      ],
+      "id": "vita-crashdump",
+      "license": "NOASSERTION",
+      "license_policy": "study_only_unknown_license",
+      "repository": "https://github.com/TibixDev/vita-crashdump.git",
+      "sparse_paths": [
+        "README.md",
+        "Cargo.toml",
+        "src"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "psp2dmp_note_inventory",
+        "addr2line_fallbacks"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/4123793582ec5314",
+      "commit": "644b5f081c5f3c9b205180793ab8f4209dfd9d97",
+      "file_count": 3,
+      "files": [
+        "README.md",
+        "main.py",
+        "requirements.txt"
+      ],
+      "id": "vita-parse-core",
+      "license": "NOASSERTION",
+      "license_policy": "study_only_unknown_license",
+      "repository": "https://github.com/xyzz/vita-parse-core.git",
+      "sparse_paths": [
+        "README.md",
+        "main.py",
+        "requirements.txt"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "psp2dmp_section_parsing",
+        "parser_cross_checks"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/f77ed04a479f8686",
+      "commit": "950c98f55c995d56bed9ab6c0485a9be68cc0f4f",
+      "file_count": 116,
+      "files": [
+        "LICENSE",
+        "README.md",
+        "cli/jsondump/CMakeLists.txt",
+        "cli/jsondump/json.hpp",
+        "cli/jsondump/main.cpp",
+        "cli/jsondump/tojson.hpp",
+        "cli/jsondump/zstr/strict_fstream.hpp",
+        "cli/jsondump/zstr/zstr.hpp",
+        "cli/jsondump/zstr/zstr_make_unique_polyfill.h",
+        "lib/include/coredumpparser.hpp",
+        "lib/include/defines.hpp",
+        "lib/include/elfio/elf_types.hpp",
+        "lib/include/elfio/elfio.hpp",
+        "lib/include/elfio/elfio_array.hpp",
+        "lib/include/elfio/elfio_dump.hpp",
+        "lib/include/elfio/elfio_dynamic.hpp",
+        "lib/include/elfio/elfio_header.hpp",
+        "lib/include/elfio/elfio_modinfo.hpp",
+        "lib/include/elfio/elfio_note.hpp",
+        "lib/include/elfio/elfio_relocation.hpp",
+        "lib/include/elfio/elfio_section.hpp",
+        "lib/include/elfio/elfio_segment.hpp",
+        "lib/include/elfio/elfio_strings.hpp",
+        "lib/include/elfio/elfio_symbols.hpp",
+        "lib/include/elfio/elfio_utils.hpp",
+        "lib/include/elfio/elfio_version.hpp",
+        "lib/include/elfio/elfio_versym.hpp",
+        "lib/include/info_appinfo.hpp",
+        "lib/include/info_applistinfo.hpp",
+        "lib/include/info_budgetinfo.hpp",
+        "lib/include/info_buildverinfo.hpp",
+        "lib/include/info_callbackinfo.hpp",
+        "lib/include/info_condvarinfo.hpp",
+        "lib/include/info_corefileinfo.hpp",
+        "lib/include/info_deviceinfo.hpp",
+        "lib/include/info_eventflaginfo.hpp",
+        "lib/include/info_eventloginfo.hpp",
+        "lib/include/info_extnlprocessinfo.hpp",
+        "lib/include/info_fiberinfo.hpp",
+        "lib/include/info_fileinfo.hpp",
+        "lib/include/info_gpuinfo.hpp",
+        "lib/include/info_hwinfo.hpp",
+        "lib/include/info_libraryinfo.hpp",
+        "lib/include/info_lwcondvarinfo.hpp",
+        "lib/include/info_lwmutexinfo.hpp",
+        "lib/include/info_memblockinfo.hpp",
+        "lib/include/info_moduleinfo.hpp",
+        "lib/include/info_msgpipeinfo.hpp",
+        "lib/include/info_mutexinfo.hpp",
+        "lib/include/info_processinfo.hpp",
+        "lib/include/info_rwlockinfo.hpp",
+        "lib/include/info_screenshotinfo.hpp",
+        "lib/include/info_semaphoreinfo.hpp",
+        "lib/include/info_simpleeventinfo.hpp",
+        "lib/include/info_stackinfo.hpp",
+        "lib/include/info_sysdeviceinfo.hpp",
+        "lib/include/info_systeminfo.hpp",
+        "lib/include/info_threadinfo.hpp",
+        "lib/include/info_threadreginfo.hpp",
+        "lib/include/info_timerinfo.hpp",
+        "lib/include/info_ttyinfo.hpp",
+        "lib/include/info_ultcondvarinfo.hpp",
+        "lib/include/info_ultinfo.hpp",
+        "lib/include/info_ultmutexinfo.hpp",
+        "lib/include/info_ultqpoolinfo.hpp",
+        "lib/include/info_ultqueueinfo.hpp",
+        "lib/include/info_ultrwlockinfo.hpp",
+        "lib/include/info_ultsemaphoreinfo.hpp",
+        "lib/include/info_ultwqpoolinfo.hpp",
+        "lib/include/sync_thread.hpp",
+        "lib/src/coredumpparser.cpp",
+        "lib/src/info_appinfo.cpp",
+        "lib/src/info_applistinfo.cpp",
+        "lib/src/info_budgetinfo.cpp",
+        "lib/src/info_buildverinfo.cpp",
+        "lib/src/info_callbackinfo.cpp",
+        "lib/src/info_condvarinfo.cpp",
+        "lib/src/info_corefileinfo.cpp",
+        "lib/src/info_deviceinfo.cpp",
+        "lib/src/info_eventflaginfo.cpp",
+        "lib/src/info_eventloginfo.cpp",
+        "lib/src/info_extnlprocessinfo.cpp",
+        "lib/src/info_fiberinfo.cpp",
+        "lib/src/info_fileinfo.cpp",
+        "lib/src/info_gpuinfo.cpp",
+        "lib/src/info_hwinfo.cpp",
+        "lib/src/info_libraryinfo.cpp",
+        "lib/src/info_lwcondvarinfo.cpp",
+        "lib/src/info_lwmutexinfo.cpp",
+        "lib/src/info_memblockinfo.cpp",
+        "lib/src/info_moduleinfo.cpp",
+        "lib/src/info_msgpipeinfo.cpp",
+        "lib/src/info_mutexinfo.cpp",
+        "lib/src/info_processinfo.cpp",
+        "lib/src/info_rwlockinfo.cpp",
+        "lib/src/info_screenshotinfo.cpp",
+        "lib/src/info_semaphoreinfo.cpp",
+        "lib/src/info_simpleeventinfo.cpp",
+        "lib/src/info_stackinfo.cpp",
+        "lib/src/info_sysdeviceinfo.cpp",
+        "lib/src/info_systeminfo.cpp",
+        "lib/src/info_threadinfo.cpp",
+        "lib/src/info_threadreginfo.cpp",
+        "lib/src/info_timerinfo.cpp",
+        "lib/src/info_ttyinfo.cpp",
+        "lib/src/info_ultcondvarinfo.cpp",
+        "lib/src/info_ultinfo.cpp",
+        "lib/src/info_ultmutexinfo.cpp",
+        "lib/src/info_ultqpoolinfo.cpp",
+        "lib/src/info_ultqueueinfo.cpp",
+        "lib/src/info_ultrwlockinfo.cpp",
+        "lib/src/info_ultsemaphoreinfo.cpp",
+        "lib/src/info_ultwqpoolinfo.cpp",
+        "lib/src/memstream.hpp",
+        "lib/src/note_types.h",
+        "lib/src/utils.h"
+      ],
+      "id": "libvcp",
+      "license": "MIT",
+      "license_policy": "compatible_tooling_reference",
+      "repository": "https://github.com/isage/vcp.git",
+      "sparse_paths": [
+        "README.md",
+        "LICENSE",
+        "lib/include",
+        "lib/src",
+        "cli/jsondump"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "sceaudio_smoke_test",
+        "audio_thread_buffering"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/f2a7083e2f9e9172",
+      "commit": "7cee0ba17c358985e4744fe8ac20b6829d328229",
+      "file_count": 2,
+      "files": [
+        "LICENSE",
+        "sokol_audio.h"
+      ],
+      "id": "sokol-audio",
+      "license": "Zlib",
+      "license_policy": "compatible_design_reference",
+      "repository": "https://github.com/floooh/sokol.git",
+      "sparse_paths": [
+        "sokol_audio.h",
+        "LICENSE"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "vitagl_shader_cache",
+        "texture_cache_regressions"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/aabaab6521a9db56",
+      "commit": "e814d1e0198f7b36e8dda30b51fc136df12297aa",
+      "file_count": 1,
+      "files": [
+        "README.md"
+      ],
+      "id": "daedalusx64-vitagl",
+      "license": "GPL-2.0-only",
+      "license_policy": "study_only_no_code_copy",
+      "repository": "https://github.com/Rinnegatamante/DaedalusX64-vitaGL.git",
+      "sparse_paths": [
+        "README.md"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "black_screen_texture_regression",
+        "framebuffer_copy_regression"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/7b935a53b786ac23",
+      "commit": "c00e0f09ee8b9567082f806e67800f110289fd0a",
+      "file_count": 1,
+      "files": [
+        "README.md"
+      ],
+      "id": "srb2kart-vita",
+      "license": "GPL-2.0-only",
+      "license_policy": "study_only_no_code_copy",
+      "repository": "https://github.com/Esodland/SRB2Kart-PSVita-PSTV.git",
+      "sparse_paths": [
+        "README.md"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "mesh_material_regressions",
+        "loading_scale_orientation"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/6b03d04cdb99f566",
+      "commit": "b9f358daefc8717e15b4c7aaa4ff6c06838cb66c",
+      "file_count": 1,
+      "files": [
+        "README.md"
+      ],
+      "id": "alisa-vita",
+      "license": "NOASSERTION",
+      "license_policy": "study_only_unknown_license",
+      "repository": "https://github.com/Rinnegatamante/Alisa-Vita.git",
+      "sparse_paths": [
+        "README.md"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "physical_visual_capture",
+        "frame_skip_video_capture"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/2a328648ded4b7a2",
+      "commit": "bdbe6c6b3282eacb8a3413d13bfe3608bf72ffc3",
+      "file_count": 4,
+      "files": [
+        "README.md",
+        "main.c",
+        "renderer.c",
+        "rescaler.c"
+      ],
+      "id": "vita-recorder",
+      "license": "GPL-3.0",
+      "license_policy": "compatible_study_reference",
+      "repository": "https://github.com/Rinnegatamante/Vita-Recorder.git",
+      "sparse_paths": [
+        "README.md",
+        "main.c",
+        "renderer.c",
+        "rescaler.c"
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "blockers": [
+        "shader_translation_experiments",
+        "vita3k_shader_recompile_crosscheck"
+      ],
+      "checkout": "/tmp/renegade-vita-reference-cache/06afee365e475876",
+      "commit": "1c296ab4e2e275c02f7b93b27653d8a299c7f48e",
+      "file_count": 26,
+      "files": [
+        "README.md",
+        "src/CMakeLists.txt",
+        "src/gxp/CMakeLists.txt",
+        "src/gxp/include/gxp/block.h",
+        "src/gxp/include/gxp/builder.h",
+        "src/gxp/include/gxp/disasm.h",
+        "src/gxp/include/gxp/gxp.h",
+        "src/gxp/include/gxp/instructions.h",
+        "src/gxp/include/gxp/usse.h",
+        "src/gxp/src/block.cpp",
+        "src/gxp/src/builder.cpp",
+        "src/gxp/src/disasm.cpp",
+        "src/gxp/src/gxp.cpp",
+        "src/gxp/src/instructions.cpp",
+        "src/gxp/src/usse.cpp",
+        "src/interface/CMakeLists.txt",
+        "src/interface/include/interface/interface.h",
+        "src/interface/src/interface.cpp",
+        "src/main.cpp",
+        "src/translator/CMakeLists.txt",
+        "src/translator/include/translator/translator.h",
+        "src/translator/src/codes.cpp",
+        "src/translator/src/translator.cpp",
+        "src/util/CMakeLists.txt",
+        "src/util/include/util/spirv.h",
+        "src/util/include/util/util.h"
+      ],
+      "id": "psp2spvc",
+      "license": "NOASSERTION",
+      "license_policy": "study_only_experimental",
+      "repository": "https://github.com/1whatleytay/psp2spvc.git",
+      "sparse_paths": [
+        "README.md",
+        "src"
+      ],
+      "status": "FETCHED"
+    }
+  ],
+  "schema": 1
+}

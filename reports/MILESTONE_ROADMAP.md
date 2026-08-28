@@ -4,7 +4,7 @@
 |---|---|---|
 | A3.1.4 | Visible original interactive M00 lifecycle | physically validated; frozen |
 | A3.2 | Frozen failed physical evidence: input, animation, projection, material, and exit defects | `A3.2-dev1` immutable; never promote from it |
-| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | `A3.5-dev5` coherent host/ARM/VPK candidate; physical acceptance pending |
+| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | `A3.5-dev40` is active source/build/package evidence after dev34 stack crash, dev36 camera-Y boundary correction, VDB-symbolicated dev19 pistol-shot DataSafe guard, schema-v4 returned loading visual-gate metadata, original-loading W3D `.tga` texture admission, and original TextureLoader-compatible TGA Y-origin handling; physical loading-screen/camera/route/progression/audio/visual/pistol-shot acceptance remains pending; soak remains v3.9 |
 | v3.6 | Resource, memory, deterministic cache/index, tutorial plus second scene and map smoke | pending v3.5 physical gate |
 | v3.7 | Perspective-correct efficient renderer and measured Balanced frame pacing | pending v3.6 infrastructure |
 | v3.8 | Original frontend, HUD, essential audio, intro path/fallback | host/ARM closure exists; physical integration pending |

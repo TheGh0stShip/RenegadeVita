@@ -343,6 +343,10 @@ DataSafeEntryClass *GenericDataSafeClass::Get_Entry(DataSafeHandleClass handle)
 	ds_assert(list >= 0);
 	ds_assert(list < NumLists);
 	ds_assert(Safe[list] != NULL);
+	if (list < 0 || list >= NumLists || Safe[list] == NULL) {
+		WWDEBUG_SAY(("WARNING: Data Safe: Invalid list %d for handle %08x\n", list, (int)handle));
+		return(NULL);
+	}
 
 	/*
 	** Get the head of the list.
@@ -409,6 +413,10 @@ int GenericDataSafeClass::Get_Entry_Type(DataSafeHandleClass handle)
 	ds_assert(list >= 0);
 	ds_assert(list < NumLists);
 	ds_assert(Safe[list] != NULL);
+	if (list < 0 || list >= NumLists || Safe[list] == NULL) {
+		WWDEBUG_SAY(("WARNING: Data Safe: Invalid list %d for type query handle %08x\n", list, (int)handle));
+		return(-1);
+	}
 
 	/*
 	** Return the type of data stored in this list.
@@ -449,6 +457,10 @@ DataSafeEntryClass *GenericDataSafeClass::Get_Entry_By_Index(int list, int index
 	ds_assert(list >= 0);
 	ds_assert(list < NumLists);
 	ds_assert(Safe[list] != NULL);
+	if (list < 0 || list >= NumLists || Safe[list] == NULL) {
+		WWDEBUG_SAY(("WARNING: Data Safe: Invalid list %d for index query %d\n", list, index));
+		return(NULL);
+	}
 
 	/*
 	** Get the head of the list.

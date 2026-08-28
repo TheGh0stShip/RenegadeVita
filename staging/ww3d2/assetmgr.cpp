@@ -111,6 +111,9 @@
 #include "texture.h"
 #include "wwprofile.h"
 #include "assetstatus.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 /*
 ** Static member variable which keeps track of the single instanced asset manager
@@ -674,8 +677,20 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 	WWPROFILE( "WW3DAssetManager::Create_Render_Obj" );
 	WWMEMLOG(MEM_GEOMETRY);
 
+#if defined(__vita__)
+	static uint32_t create_depth = 0U;
+	const uint32_t current_depth = ++create_depth;
+	A35_Vita_Static_Load_Trace_Name("asset-create-entry", name);
+	A35_Vita_Static_Load_Trace_Step("asset-create-depth", current_depth);
+	A35_Vita_Static_Load_Trace_Step("asset-find-initial-entry", current_depth);
+#endif
+
 	// Try to find a prototype
 	PrototypeClass * proto = Find_Prototype(name);
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("asset-find-initial-return",
+		(current_depth << 1U) | (proto != NULL ? 1U : 0U));
+#endif
 
 	if (WW3D_Load_On_Demand && proto == NULL) {	// If we didn't find one, try to load on demand
 		AssetStatusClass::Peek_Instance()->Report_Load_On_Demand_RObj(name);
@@ -690,21 +705,47 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 		}
 
 		// If we can't find it, try the parent directory
+#if defined(__vita__)
+		A35_Vita_Static_Load_Trace_Name("asset-load-on-demand-entry", filename);
+#endif
 		if ( Load_3D_Assets( filename ) == false ) {
 			StringClass	new_filename(StringClass("..\\"),true);
 			new_filename+=filename;
 			Load_3D_Assets( new_filename );
 		}
+#if defined(__vita__)
+		A35_Vita_Static_Load_Trace_Name("asset-load-on-demand-return", filename);
+		A35_Vita_Static_Load_Trace_Step("asset-find-retry-entry", current_depth);
+#endif
 
 		proto = Find_Prototype(name);		// try again
+#if defined(__vita__)
+		A35_Vita_Static_Load_Trace_Step("asset-find-retry-return",
+			(current_depth << 1U) | (proto != NULL ? 1U : 0U));
+#endif
 	}
 
 	if (proto == NULL) {
 		AssetStatusClass::Peek_Instance()->Report_Missing_RObj(name);
+#if defined(__vita__)
+		A35_Vita_Static_Load_Trace_Name("asset-create-missing", name);
+		A35_Vita_Static_Load_Trace_Step("asset-create-missing-depth", current_depth);
+		--create_depth;
+#endif
 		return NULL;		// Failed to find a prototype
 	}
 
-	return proto->Create();
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Name("prototype-create-entry", name);
+	A35_Vita_Static_Load_Trace_Step("prototype-create-depth", current_depth);
+#endif
+	RenderObjClass * created = proto->Create();
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Name("prototype-create-return", name);
+	A35_Vita_Static_Load_Trace_Step("prototype-create-return-depth", current_depth);
+	--create_depth;
+#endif
+	return created;
 }
 
 

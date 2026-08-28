@@ -1,0 +1,21 @@
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -441,7 +441,18 @@ void	CombatManager::Load_Level_Threaded( const char * map_name, bool preload_as
+ 	_load_map_name = map_name;
+ 
+ 	WWASSERT(!thread.Is_Running());
++#if defined(__vita__)
++	/* vitaGL owns its GL/GXM state on the thread that initialized it.  The
++	** original loader reaches render-model and on-demand animation creation,
++	** so running it on a pthread can enter non-thread-safe renderer services.
++	** Preserve the original LoadThreadClass routine and all Combat/SaveGame
++	** ownership, but execute that routine synchronously at this platform
++	** boundary.  This mirrors established native Vita ports that keep engine
++	** resource creation on their renderer thread. */
++	thread.Thread_Function();
++#else
+ 	thread.Execute();
++#endif
+ }
+ 
+ bool	CombatManager::Is_Load_Level_Complete( void )

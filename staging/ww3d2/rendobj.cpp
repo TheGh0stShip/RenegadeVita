@@ -89,6 +89,9 @@
 #include "saveload.h"
 #include "ww3dids.h"
 #include "intersec.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 
 
@@ -1175,8 +1178,14 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 	RenderObjClass * new_obj = NULL;
 	Matrix3D tm(1);
 	char name[64];
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("render-persist-entry", 0U);
+#endif
 
 	while (cload.Open_Chunk()) {
+#if defined(__vita__)
+		A35_Vita_Static_Load_Trace_Step("render-persist-chunk", cload.Cur_Chunk_ID());
+#endif
 		switch (cload.Cur_Chunk_ID()) {
 
 			case RENDOBJFACTORY_CHUNKID_VARIABLES:
@@ -1189,6 +1198,9 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 					}
 					cload.Close_Micro_Chunk();	
 				}
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Name("render-persist-name", name);
+#endif
 				
 				// if the object we saved didn't have a name, replace it with null
 				if (strlen(name) == 0) {
@@ -1200,7 +1212,13 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 					strcpy(name,"NULL");
 				}
 
+				#if defined(__vita__)
+					A35_Vita_Static_Load_Trace_Name("create-render-entry", name);
+				#endif
 				new_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
+				#if defined(__vita__)
+					A35_Vita_Static_Load_Trace_Name("create-render-return", name);
+				#endif
 				
 				if (new_obj == NULL) {
 					static int count = 0;
@@ -1235,6 +1253,9 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 	
 
 	SaveLoadSystemClass::Register_Pointer(old_obj,new_obj);
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("render-persist-return", 0U);
+#endif
 	return new_obj;
 }
 

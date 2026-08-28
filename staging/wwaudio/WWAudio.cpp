@@ -147,6 +147,8 @@ WWAudioClass::WWAudioClass (bool lite)
 	  m_SoundVolume (DEF_SFX_VOL),
 	  m_RealMusicVolume (DEF_MUSIC_VOL),
 	  m_RealSoundVolume (DEF_SFX_VOL),
+	  m_DialogVolume (DEF_DIALOG_VOL),
+	  m_CinematicVolume (DEF_CINEMATIC_VOL),
 	  m_MaxCacheSize (DEF_CACHE_SIZE * 1024),
 	  m_CurrentCacheSize (0),
 	  m_Max2DSamples (DEF_2D_SAMPLE_COUNT),
@@ -173,7 +175,9 @@ WWAudioClass::WWAudioClass (bool lite)
 	  m_CachedAreSoundEffectsEnabled (true),
 	  AudioIni (NULL)
 {
+#if !defined(_UNIX)
 	::InitializeCriticalSection (&MMSLockClass::_MSSLockCriticalSection);
+#endif
 
 	m_ForceDisable = lite;
 
@@ -184,7 +188,11 @@ WWAudioClass::WWAudioClass (bool lite)
 		AIL_startup ();
 	}
 	_theInstance = this;
+#if defined(_UNIX)
+	_TimerSyncEvent = NULL;
+#else
 	_TimerSyncEvent = ::CreateEvent (NULL, TRUE, FALSE, "WWAUDIO_TIMER_SYNC");
+#endif
 
 	//
 	// Set some default values
@@ -230,10 +238,12 @@ WWAudioClass::~WWAudioClass (void)
 
 	Shutdown ();
 	_theInstance = NULL;
+#if !defined(_UNIX)
 	::CloseHandle(_TimerSyncEvent);
 	_TimerSyncEvent = NULL;
 
 	::DeleteCriticalSection (&MMSLockClass::_MSSLockCriticalSection);
+#endif
 
 	//
 	//	Free the list of logical "types".
@@ -2501,10 +2511,12 @@ WWAudioClass::Shutdown (void)
 		::AIL_release_timer_handle (m_UpdateTimer);
 		m_UpdateTimer = -1;
 
+#if !defined(_UNIX)
 		// Wait for the timer callback function to end
 		::WaitForSingleObject (_TimerSyncEvent, 20000);
 		::CloseHandle (_TimerSyncEvent);
 		_TimerSyncEvent = NULL;
+#endif
 	}
 
 	//
@@ -3450,7 +3462,7 @@ WWAudioClass::Set_Active_Sound_Page (SOUND_PAGE page)
 	//
 	//	Resume any sounds that are playing in the new page
 	//
-	for (index = 0; index < m_Playlist[page].Count ();index ++) {
+	for (int index = 0; index < m_Playlist[page].Count ();index ++) {
 		m_Playlist[page][index]->Resume ();
 	}
 

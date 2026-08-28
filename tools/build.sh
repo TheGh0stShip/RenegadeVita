@@ -16,7 +16,7 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev5}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev49}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
@@ -118,9 +118,13 @@ if [[ "$rv_revision_actual" != "$rv_revision" ]]; then
 fi
 echo "Upstream revision: $rv_revision_actual"
 
-rv_retail_root=${RENEGADE_RETAIL_ROOT:-"$rv_root/retail-pc"}
-test -f "$rv_retail_root/Data/always.dat"
-export RENEGADE_RETAIL_ROOT="$rv_retail_root"
+if [[ -z "${RENEGADE_REUSE_HOST_VALIDATION_LOG:-}" ]]; then
+	rv_retail_root=${RENEGADE_RETAIL_ROOT:-"$rv_root/retail-pc"}
+	test -f "$rv_retail_root/Data/always.dat"
+	export RENEGADE_RETAIL_ROOT="$rv_retail_root"
+else
+	echo "Local retail preflight: not required for retained host validation mode"
+fi
 
 if [[ -n "${RENEGADE_REUSE_HOST_VALIDATION_LOG:-}" ]]; then
 	rv_reused_host_log=$(realpath -e -- "$RENEGADE_REUSE_HOST_VALIDATION_LOG")
@@ -167,7 +171,15 @@ require_host_line "world.render.geometry_checksum=34FFAD42"
 require_host_line "world.render.unsupported_submissions=0"
 require_host_line "A3.0 original M00 world runtime: PASS"
 echo "Host semantic fingerprints: PASS"
-python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_identity
+python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_identity \
+	tools.test_script_provider_contract tools.test_mission_completion_contract \
+	tools.test_mission_teardown_contract \
+	tools.test_input_route_contract tools.test_vita_skin_submission_contract \
+	tools.test_vita_indexed_state_contract \
+	tools.test_validate_vita_input_route tools.test_vita_route_session_runner \
+	tools.test_mission_conversation_diagnostics_contract \
+	tools.test_audit_tt_reference tools.test_vita_audio_provider \
+	tools.test_vita_open_source_references
 
 echo "Clean-restaging original source pools with the deterministic patch set..."
 bash "$rv_root/tools/stage_sources.sh"
@@ -186,9 +198,9 @@ python3 "$rv_root/tools/generate_integration_report.py" \
 	--output "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" \
 	--milestone "$rv_candidate_label"
 grep -Fq "\"milestone\": \"$rv_candidate_label\"" "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"original_source_files_compiled": 424' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"vita_platform_renderer_validation_files": 21' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 103' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"original_source_files_compiled": 447' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 113' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
@@ -227,21 +239,35 @@ grep -q 'Machine:.*ARM' "$rv_elf_header"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-Run_Westwood_Bitpack_Self_Test
-Run_A21_Filesystem_Self_Test
-Run_A22_W3D_Self_Test
-Run_A30_World_Runtime
+A31_Vita_Run_Interactive_Runtime()
+A31_Interactive_Begin_Mission_Completion_Observation()
+A31_Interactive_Get_Mission_Completion_State()
+A31_Interactive_End_Mission_Completion_Observation()
+A31_Interactive_Get_Mission_Progress_State()
+CombatManager::Load_Level_Threaded(char const*, bool)
+SaveGameManager::Load_Game(char const*)
+PhysicsSceneClass::Load_Level_Static_Objects(ChunkLoadClass&)
 WW3DAssetManager::Load_3D_Assets(FileClass&)
 PhysicsSceneClass::Load_Level
 WW3D::Render(SceneClass*
 MeshClass::Render(RenderInfoClass&)
 DX8Wrapper::Create_Render_Target(int, int, WW3DFormat)
-A30_Vita_Render_Loaded_World
 RenegadeVitaRenderer::Submit_Mesh(MeshClass&, RenderInfoClass&)
 A31_Write_Capture_Bundle(A31CaptureBundleInput const&)
 RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(unsigned char*, unsigned int)
+Get_Script_Commands()
+ScriptManager::Create_Script(char const*)
+ScriptRegistrar::CreateScript(char const*)
+MTU_Tutorial_Controller::Created(ScriptableGameObj*)
+Test_Cinematic::Created(ScriptableGameObj*)
+M00_Soldier_Powerup_Disable::Created(ScriptableGameObj*)
 WWAudioClass::Create_Logical_Listener()
 LogicalListenerClass::LogicalListenerClass()
+WWAudioClass::WWAudioClass(bool)
+WWAudioClass::Create_Sound(char const*, RefCountClass*, unsigned int, int)
+AIL_startup()
+AIL_start_3D_sample(RenegadeMilesSample*)
+RenegadeVitaAudio::Decode_Wave(unsigned char const*, unsigned int, RenegadeVitaAudio::DecodedWave*, char const**)
 SurfaceClass::Lock(int*)
 A31_Audio_Save_Load_Breadcrumb(char const*)
 EOF
@@ -274,10 +300,13 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "A3.5 renderer state contract: opaque/cutout/alpha/additive=4/4; lifecycle=11/11"
 	echo "A3.5 crash repair: deterministic HumanState weapon-style table patch; bounds fallback; matching A3.2 dump parser evidence preserved"
 	echo "A3.5 projection repair: ordinary mesh positions retain homogeneous W through GPU projection; physical visual validation pending"
-	echo "A3.5 audio boundary: deferred no-output diagnostics are rate-limited; no fabricated sound objects"
-	echo "Original Westwood translation units: 424"
-	echo "Vita platform/renderer/validation/developer translation units: 21"
-	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=103; pristine upstream=PASS"
+	echo "A3.5 audio boundary: provider codecs/mixing are host/sanitizer validated; after installing the rooted retail/MIX chain, the direct Vita runtime constructs a path-stripping factory and non-lite original WWAudio, initializes its Vita-native SceAudio provider, services it per frame, and tears it down before renderer/factory shutdown; the complete path is ARM-linked while physical audio and conversation causality remain pending"
+	echo "Original Westwood translation units: 447"
+	echo "Vita platform/renderer/validation/developer translation units: 26"
+	echo "M00 scripts: original ScriptCommands ABI plus EA/Westwood static Mission00 provider and direct cinematic/powerup dependencies"
+	echo "M00 completion: original CombatMiscHandler callback observed by a bounded Vita lifecycle latch; no objective or script state injection"
+	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=113; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"
@@ -323,13 +352,13 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 	echo "Retain user-owned data: ux0:data/renegade/retail/Data/ (do not transfer retail assets)."
 	echo "Runtime log: $rv_runtime_log (remove or rename an older file before launch)."
 	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
-	echo "Controls: left-stick up=forward and down=backward; right-stick up=look up and down=look down by default. Cross=jump; Circle=crouch; Square=reload; L/R are original joystick buttons; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
+	echo "Controls: left-stick up=forward and down=backward; right-stick up=look up and down=look down by default. Cross=jump; Circle=crouch; Square=action; L/R are original joystick buttons; Triangle=pause/resume; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
 	echo "Test: in M00, verify granular aim, wall perspective at near/far distances, no black muzzle rectangle, released fire stops firing, released crouch clears crouch, then pause/resume and run through an A3.5 120-frame checkpoint. Press Start and wait for LiveArea."
 	echo "Return: $rv_runtime_log, ux0:data/renegade/user/captures/, screenshots, and any psp2core-*.psp2dmp. Run tools/collect_a35_diagnostics.sh with this dist directory and returned files."
 } > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"
 {
 	echo "Runtime log: $rv_runtime_log"
-	echo "Expected $rv_candidate_label breadcrumbs: input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; 120-frame checkpoint; clean teardown."
+	echo "Expected $rv_candidate_label breadcrumbs: input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; original Combat mission-completion observation when achieved; 120-frame checkpoint or terminal transition; clean teardown."
 	echo "Physical test: retain this log and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and START exit."
 } > "$rv_dist/$rv_candidate_label-EXPECTED-RUNTIME-LOG.txt"
 bash "$rv_root/tools/collect_a35_diagnostics.sh" "$rv_dist" \

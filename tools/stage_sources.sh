@@ -3,22 +3,38 @@ set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_stage="$rv_root/staging"
+rv_stage_target="$rv_root/staging"
+rv_stage="$rv_stage_target"
+rv_incremental_stage=${RENEGADE_INCREMENTAL_STAGE:-0}
+case "$rv_incremental_stage" in 0|1) ;; *) echo "Invalid RENEGADE_INCREMENTAL_STAGE: $rv_incremental_stage" >&2; exit 2 ;; esac
 
-if [[ "$rv_stage" != "$rv_root/staging" ]]; then
+rv_managed_stage_dirs=(
+	wwbitpack wwutil wwdebug wwlib wwmath wwsaveload ww3d2 wwphys combat
+	commando wwaudio wwnet wwtranslatedb wwui scripts
+)
+
+if [[ "$rv_incremental_stage" == "1" ]]; then
+	mkdir -p "$rv_root/build"
+	rv_stage=$(mktemp -d "$rv_root/build/staging-incremental.XXXXXX")
+	rv_incremental_temp="$rv_stage"
+	cleanup_incremental_stage() {
+		rm -rf -- "$rv_incremental_temp"
+	}
+	trap cleanup_incremental_stage EXIT
+	echo "Incremental staging enabled: unchanged files in $rv_stage_target will keep their mtimes."
+fi
+
+case "$rv_stage" in
+	"$rv_stage_target"|"$rv_root"/build/staging-incremental.*) ;;
+	*)
 	echo "Refusing to clean an unexpected staging path: $rv_stage" >&2
 	exit 2
-fi
-rm -rf -- "$rv_stage/wwbitpack" "$rv_stage/wwutil" "$rv_stage/wwdebug" "$rv_stage/wwlib" \
-	"$rv_stage/wwmath" "$rv_stage/wwsaveload" "$rv_stage/ww3d2" \
-	"$rv_stage/wwphys" "$rv_stage/combat" "$rv_stage/commando" \
-	"$rv_stage/wwaudio" "$rv_stage/wwnet" "$rv_stage/wwtranslatedb" \
-	"$rv_stage/wwui"
-mkdir -p "$rv_stage/wwbitpack" "$rv_stage/wwutil" "$rv_stage/wwdebug" "$rv_stage/wwlib" \
-	"$rv_stage/wwmath" "$rv_stage/wwsaveload" "$rv_stage/ww3d2" \
-	"$rv_stage/wwphys" "$rv_stage/combat" "$rv_stage/commando" \
-	"$rv_stage/wwaudio" "$rv_stage/wwnet" "$rv_stage/wwtranslatedb" \
-	"$rv_stage/wwui"
+		;;
+esac
+for rv_dir in "${rv_managed_stage_dirs[@]}"; do
+	rm -rf -- "$rv_stage/$rv_dir"
+	mkdir -p "$rv_stage/$rv_dir"
+done
 
 for rv_file in BitPacker.cpp BitPacker.h bitstream.cpp bitstream.h encoderlist.cpp encoderlist.h encodertypeentry.cpp encodertypeentry.h bitpackids.h; do
 	cp "$rv_upstream/Code/wwbitpack/$rv_file" "$rv_stage/wwbitpack/$rv_file"
@@ -66,6 +82,10 @@ find "$rv_upstream/Code/wwtranslatedb" -maxdepth 1 -type f \
 # DirectInput/message bridge is deliberately closed.
 find "$rv_upstream/Code/wwui" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/wwui/" \;
+# Stage the official mission-script source pool so the selected provider can
+# receive deterministic portability fixes without modifying upstream.
+find "$rv_upstream/Code/Scripts" -maxdepth 1 -type f \
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/scripts/" \;
 
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwbitpack" -p1 < "$rv_root/port/patches/wwbitpack-gcc15.patch"
@@ -124,6 +144,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-particle-size-keyframe-guard.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-hanim-combo-null-motion-guard.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a30-vita-buffers.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a30-camera-apply.patch"
@@ -135,6 +159,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a31-vita-material-effect-close.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a30-pointer-tokens.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-static-object-load-diagnostics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-vita-durable-static-trace.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a30-pointer-tokens.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -170,9 +198,21 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-observer-load-diagnostics.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-main-thread-level-load.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-durable-loader-trace.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-teardown-lifecycle.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-conversation-diagnostics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-conversation-reentrant-think.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-wide-abi.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-vita-renderobj-load-trace.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a30-datasafe-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -181,6 +221,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a30-datasafe-definitions-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a30-datasafe-ilp32.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-datasafe-invalid-handle-guard.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a31-gamedata-headless-ui.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -238,11 +280,17 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-event-portability.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-shared-loadingscreen-owner.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a31-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a31-audio-lifecycle-breadcrumb.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-posix-runtime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-original-runtime-correctness.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -273,6 +321,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-editctrl-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-treectrl-gcc15.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-parameter-array-delete.patch"
 
 # Original source projects were authored on case-insensitive filesystems. The
 # staged copy is native ext4, so generate lower-case header aliases after all
@@ -320,7 +370,19 @@ touch "$rv_stage/wwbitpack"/* "$rv_stage/wwutil/mathutil.cpp" "$rv_stage/wwdebug
 	"$rv_stage/wwlib"/* "$rv_stage/wwmath"/* "$rv_stage/wwsaveload"/* \
 	"$rv_stage/ww3d2"/* "$rv_stage/wwphys"/* "$rv_stage/combat"/* \
 	"$rv_stage/commando"/* "$rv_stage/wwaudio"/* "$rv_stage/wwnet"/* \
-	"$rv_stage/wwtranslatedb"/*
+	"$rv_stage/wwtranslatedb"/* "$rv_stage/scripts"/*
+
+if [[ "$rv_incremental_stage" == "1" ]]; then
+	rv_sync_args=()
+	for rv_dir in "${rv_managed_stage_dirs[@]}"; do
+		rv_sync_args+=(--managed-dir "$rv_dir")
+	done
+	python3 "$rv_root/tools/sync_staged_tree.py" \
+		--source "$rv_stage" \
+		--target "$rv_stage_target" \
+		"${rv_sync_args[@]}"
+	rv_stage="$rv_stage_target"
+fi
 
 echo "Staged complete dependency pools; build manifests select translation units explicitly."
 echo "Applied: port/patches/wwbitpack-gcc15.patch"
@@ -337,6 +399,7 @@ echo "Applied: port/patches/wwlib-a31-trim-overlap.patch"
 echo "Applied: port/patches/wwlib-a31-buffer-array-delete.patch"
 echo "Applied: port/patches/wwlib-a31-host-pointer-token-read.patch"
 echo "Applied: port/patches/wwlib-a35-chunkio-open-chunk-breadcrumbs.patch"
+echo "Applied: port/patches/scripts-a35-parameter-array-delete.patch"
 echo "Applied: port/patches/wwmath-a22-gcc15.patch"
 echo "Applied: port/patches/wwmath-a30-gcc15.patch"
 echo "Applied: port/patches/wwmath-a4-fastcall-vita.patch"
@@ -357,6 +420,8 @@ echo "Applied: port/patches/wwphys-a30-gcc15.patch"
 echo "Applied: port/patches/wwphys-a31-vita-material-effect-boundary.patch"
 echo "Applied: port/patches/wwphys-a31-vita-material-effect-close.patch"
 echo "Applied: port/patches/wwphys-a30-pointer-tokens.patch"
+echo "Applied: port/patches/wwphys-a35-static-object-load-diagnostics.patch"
+echo "Applied: port/patches/wwphys-a35-vita-durable-static-trace.patch"
 echo "Applied: port/patches/combat-a30-pointer-tokens.patch"
 echo "Applied: port/patches/combat-a30-gcc15.patch"
 echo "Applied: port/patches/combat-a31-gcc15.patch"
@@ -374,8 +439,14 @@ echo "Applied: port/patches/combat-a31-ccamera-silent-listener.patch"
 echo "Applied: port/patches/combat-a31-encyclopedia-zero-read.patch"
 echo "Applied: port/patches/combat-a35-humanstate-weapon-style-table.patch"
 echo "Applied: port/patches/combat-a35-observer-load-diagnostics.patch"
+echo "Applied: port/patches/combat-a35-vita-main-thread-level-load.patch"
+echo "Applied: port/patches/combat-a35-vita-durable-loader-trace.patch"
+echo "Applied: port/patches/combat-a35-teardown-lifecycle.patch"
+echo "Applied: port/patches/combat-a35-conversation-diagnostics.patch"
+echo "Applied: port/patches/combat-a35-conversation-reentrant-think.patch"
 echo "Applied: port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 echo "Applied: port/patches/ww3d2-a31-wide-abi.patch"
+echo "Applied: port/patches/ww3d2-a35-vita-renderobj-load-trace.patch"
 echo "Applied: port/patches/commando-a30-datasafe-gcc15.patch"
 echo "Applied: port/patches/commando-a30-optional-services.patch"
 echo "Applied: port/patches/commando-a30-datasafe-definitions-gcc15.patch"
@@ -407,9 +478,12 @@ echo "Applied: port/patches/commando-a4-announceevent-include-case.patch"
 echo "Applied: port/patches/commando-a4-combatgmode-include-case.patch"
 echo "Applied: port/patches/commando-a4-event-gamespy-boundary.patch"
 echo "Applied: port/patches/commando-a4-event-portability.patch"
+echo "Applied: port/patches/commando-a35-shared-loadingscreen-owner.patch"
 echo "Applied: port/patches/wwaudio-a30-gcc15.patch"
 echo "Applied: port/patches/wwaudio-a31-gcc15.patch"
 echo "Applied: port/patches/wwaudio-a31-audio-lifecycle-breadcrumb.patch"
+echo "Applied: port/patches/wwaudio-a35-posix-runtime.patch"
+echo "Applied: port/patches/wwaudio-a35-original-runtime-correctness.patch"
 echo "Applied: port/patches/wwnet-a30-gcc15.patch"
 echo "Applied: port/patches/wwui-a4-stylemgr-font-provider.patch"
 echo "Applied: port/patches/wwui-a4-ime-vita-boundary.patch"

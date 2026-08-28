@@ -1,30 +1,87 @@
 # Known gaps
 
-## Reconciled program status (2026-08-16)
+## Reconciled program status (2026-08-24)
 
 The frozen A3.2-dev1 package is a failed physical checkpoint, not a candidate
-awaiting acceptance. A3.5-dev1 repairs are host/ARM/package evidence only
-until its already-produced candidate completes the physical matrix. v3.6–v4.0 contracts, including
-resource/memory, renderer performance, authentic frontend/HUD/audio, campaign,
-and Direct-IP/LAN provider work, are tracked in `PROGRAM_CHARTER.md` and must
-not be inferred as complete from host-only closure.
+awaiting acceptance. A3.5-dev6 now physically passes original Combat pause;
+A3.5-dev7 proves ground contact, movement, Square delivery, and isolated
+original fire while its combined external injection sequence remains
+nondeterministic. A3.5-dev12 physically restores ordinary NPC body geometry
+through the original deformed-skin/identity-world submission and adds a bounded
+native route recorder/replayer. Dev13 then physically recorded 4,537 samples
+and reached the post-ladder Logan interaction, but failed: NPC materials were
+wrong, audio was absent, the sky was black, and the original conversation
+remained active with control disabled and no pistol grant. Zero indexed draws
+proved the sky bridge was unreachable because Vita initialized original
+BackgroundMgr with rendering unavailable. Exact dev7 is restored; the dev13
+route is retained.
 
-- The direct host/Vita Combat route now restores the original `PathMgrClass`
+Dev14 restores original background construction, original mesh
+DCG/VertexMaterial color ownership, and observation-only conversation state.
+A3.5-dev15 retained those fixes and linked the essential audio device boundary
+beneath all 20 selected original WWAudio translation units, but later source
+review found its Vita entry point still used lite audio without initialization
+or per-frame service. It was never deployed and is superseded.
+
+A3.5-dev16 installs the rooted retail/MIX chain, creates Renegade's
+basename-stripping audio adapter, constructs and initializes non-lite original
+WWAudio before engine/world setup, requires the original sound scene and
+Vita-backed 2D/3D drivers, calls `On_Frame_Update` during active and suspended
+frames, and destroys audio before renderer/factory teardown. Fresh D:-retail
+M00/M01/City two-cycle routes, ASan, LeakSanitizer, targeted UBSan, 42 tests,
+deterministic 113-patch staging, all 482 ARM/package actions, identity,
+manifest, linked-symbol, and retail-exclusion gates pass. The provider has
+fresh focused/sanitizer/ARM evidence, while the full host harness intentionally
+does not claim audible execution. Exact physical route replay remains pending.
+Audio is therefore not physically accepted. The restored update is required
+for playback completion and sound-ended events, but original conversation
+remark timing is separately TimeManager-owned; diagnostics must isolate the
+Logan failure before any causality or behavioral claim. Whole-track stream
+decode is bounded but not yet resource-measured or incremental, and retail M00
+codec coverage is hardware-dependent. The official Mission00 provider's full
+completion remains unaccepted. Repeated-session soak remains a v3.9 gate.
+The retained dev19 pistol-shot crash is now source-addressed only: VDB
+symbolicated its data abort to `GenericDataSafeClass::Get_Entry`, and dev37
+adds release-build invalid-handle guards. Dev38 retains that guard and adds
+returned schema-v4 loading visual-gate metadata. This does not physically prove
+pistol-shot stability or loading-screen correctness; dev38 has no Vita run yet,
+and the latest user-reported dump was not retrieved because device FTP refused
+`ux0:/data`.
+
+v3.6–v4.0 contracts,
+including resource/memory, renderer performance,
+authentic frontend/HUD/audio, campaign, and Direct-IP/LAN provider work, are
+tracked in `PROGRAM_CHARTER.md` and must not be inferred as complete from this
+partial v3.5 return.
+
+- The direct host/Vita Combat route restores the original `PathMgrClass`
   application lifecycle after a canonical LSan run found one retained
   `PathSolveClass` (80,256 bytes). Its focused two-cycle M00 sanitizer rerun
-  is clean, but complete canonical regression and physical exit/restart proof
-  remain required. This does not validate device memory behavior.
+  is clean. A3.5-dev5 now physically completes two successive original
+  load/START-exit/teardown sessions; device memory behavior and the later v3.9
+  bounded soak remain unvalidated.
 
-- A3.2-dev1 restores the original texture route and diagnostic fallback, but
-  texture correctness still requires physical Vita observation; A3.1.4 remains
-  the accepted untextured visual baseline.
+- A3.2-dev1 restored the original texture route and diagnostic fallback. The
+  matching A3.5-dev5 late spawn capture physically shows the textured M00 subset
+  and first-person weapon, while complete texture/material/alpha/multistage
+  coverage remains unvalidated; A3.1.4 remains the frozen accepted baseline.
+- The official TT 4.8.4 revision-9000 source/diff audit is integrated as an
+  out-of-tree, checksum-pinned toolkit step. Its micro-chunk, LineSeg, and
+  relative-timer semantics are already/equivalently present in EA source. TT's
+  Communications Center crash, controller, WWAudio, lighting, and renderer
+  fixes cannot be imported from changelog prose: the public scripts.dll delta
+  lacks those engine implementations or they are PC-platform-specific. See
+  `TT_PATCH_INTEGRATION.md`.
 - A3.1.4 right-stick look was unusable because the platform emitted ±32767 to
-  an original consumer expecting ±1000. The central conversion is host-tested;
-  physical confirmation remains required.
+  an original consumer expecting ±1000. The central conversion is host-tested
+  and A3.5-dev5 physical checkpoints now record bounded logical look values and
+  camera input. Longer usability and pause behavior remain open.
 - Font3D/HUD now passes the original Targa/Surface/Texture, RadarManager, and
   Render2D path in optimized and ASan two-cycle M00 runs. Native HUD promotion
-  remains pending A3.2 hardware evidence and a separate candidate; audio output
-  is still deferred.
+  remains pending A3.2 hardware evidence and a separate candidate; the audio
+  provider is focused-host/sanitizer validated and dev16's original-WWAudio
+  lifecycle is contract-checked and ARM-linked, but physical output remains
+  unaccepted.
 - The authentic `FontCharsClass` provider now obtains Regatta and Arial from
   retail archives through the original file factory and passes ASan memory-safety
   cycles. The current HUD-enabled two-cycle M00 route is leak-free under
@@ -97,15 +154,19 @@ not be inferred as complete from host-only closure.
 - The frozen A3.2-dev1 diagnostics ZIP and collector are validated. The
   collector now resolves output paths before temporary staging and content-
   prefixes returned evidence to avoid basename collisions. Phase-specific
-  screenshots and runtime captures still require a physical Vita return; no
-  automatic device screenshot claim is made.
+  screenshots and runtime captures now have matching dev5 physical returns,
+  including a clear manual post-readiness M00 capture; the stale automatic
+  post-swap capture timing remains a diagnostic-readback defect and is not used
+  as visual acceptance evidence.
 - The configured Vita3K data root contains only the historical A3.1
   `RNEGA3101` installation; no A3.5 VPK is installed and no executable/log
   location is configured. `VITA3K_EVIDENCE.md` records the observed title
   identity and the controlled user-mediated replacement/collection loop. This
   is an emulator-automation gap, not a reason to delay physical Vita testing.
-- No campaign slice, playable combat claim, AI encounter, mission scripting,
-  readable HUD, or essential feedback claim is made before A4.0.
+- Official M00 script registration/creation code is now linked in dev8, but no
+  physical script attachment, mission progression, playable campaign slice,
+  AI encounter, readable HUD, or essential-feedback claim is made from that
+  host/ARM result. Representative campaign acceptance remains an A4.0 gate.
 - The returned A3.5-dev4 static-world screenshot observed invisible NPC/player
   bodies, an incorrect first-person weapon, upside-down doors, and an inverted
   static overhead-camera vertical axis. Because its executable identity and

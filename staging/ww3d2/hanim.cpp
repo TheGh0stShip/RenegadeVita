@@ -284,7 +284,10 @@ bool	HAnimComboClass::Normalize_Weights(void)
 	bool none_pivot_maps = true;
 	int num_anim_pivots = 100000;
 	for (anim_idx = 0; anim_idx < anim_count; anim_idx++ ) {
-		num_anim_pivots = MIN(num_anim_pivots, Peek_Motion(anim_idx)->Get_Num_Pivots());
+		HAnimClass *motion = Peek_Motion(anim_idx);
+		if (motion != NULL) {
+			num_anim_pivots = MIN(num_anim_pivots, motion->Get_Num_Pivots());
+		}
 		bool has_pivot_map = Peek_Pivot_Weight_Map(anim_idx) != NULL;
 		all_pivot_maps &= has_pivot_map;
 		none_pivot_maps &= !has_pivot_map;

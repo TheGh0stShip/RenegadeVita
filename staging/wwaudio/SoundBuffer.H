@@ -114,7 +114,7 @@ class SoundBufferClass : public RefCountClass
 		//	Protected methods
 		//////////////////////////////////////////////////////////////////////
 		virtual void			Free_Buffer (void);
-		virtual void			Determine_Stats (unsigned char *buffer);
+		virtual void			Determine_Stats (unsigned char *buffer, unsigned long available_bytes);
 
 		//////////////////////////////////////////////////////////////////////
 		//	Protected member data

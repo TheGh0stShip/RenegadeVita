@@ -28,6 +28,11 @@ const size_t kResolvedFrameBytes =
 	static_cast<size_t>(RenegadeVitaRenderer::DISPLAY_WIDTH) *
 	static_cast<size_t>(RenegadeVitaRenderer::DISPLAY_HEIGHT) * 4U;
 
+uint32_t gA35StaticTraceObjectIndex = 0U;
+uint32_t gA35StaticTraceFactoryId = 0U;
+bool gA35StaticTraceSummary = false;
+bool gA35StaticTraceDeep = false;
+
 float Analog_Axis(unsigned char value)
 {
 	const int offset = static_cast<int>(value) - 128;
@@ -382,6 +387,74 @@ int A30_Vita_Log(const char *format, ...)
 		result = close_result;
 	}
 	return result;
+}
+
+void A35_Vita_Static_Load_Trace_Begin(uint32_t object_index,
+	uint32_t factory_id)
+{
+	gA35StaticTraceObjectIndex = object_index;
+	gA35StaticTraceFactoryId = factory_id;
+	gA35StaticTraceSummary = object_index == 0U ||
+		(object_index % 25U) == 0U ||
+		(object_index >= 108U && object_index <= 124U);
+	gA35StaticTraceDeep = object_index == 116U;
+	if (gA35StaticTraceSummary) {
+		RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+		if (RenegadeVitaRenderer::Query_Backend_Memory(memory)) {
+			A30_Vita_Log(
+				"A3.5 static direct: index=%u factory=%u phase=factory-load-entry memory_user=%lld memory_cdram=%lld memory_phycont=%lld vitagl_ram_free=%llu vitagl_vram_free=%llu vitagl_slow_free=%llu vitagl_all_free=%llu\n",
+				static_cast<unsigned>(object_index),
+				static_cast<unsigned>(factory_id),
+				static_cast<long long>(memory.system_user_free),
+				static_cast<long long>(memory.system_cdram_free),
+				static_cast<long long>(memory.system_phycont_free),
+				static_cast<unsigned long long>(memory.ram_free),
+				static_cast<unsigned long long>(memory.vram_free),
+				static_cast<unsigned long long>(memory.slow_free),
+				static_cast<unsigned long long>(memory.all_free));
+		} else {
+			A30_Vita_Log(
+				"A3.5 static direct: index=%u factory=%u phase=factory-load-entry memory=unavailable\n",
+				static_cast<unsigned>(object_index),
+				static_cast<unsigned>(factory_id));
+		}
+	}
+}
+
+void A35_Vita_Static_Load_Trace_Step(const char *phase, uint32_t detail_id)
+{
+	if (!gA35StaticTraceDeep) {
+		return;
+	}
+	A30_Vita_Log(
+		"A3.5 static direct: index=%u factory=%u phase=%s detail=%08X\n",
+		static_cast<unsigned>(gA35StaticTraceObjectIndex),
+		static_cast<unsigned>(gA35StaticTraceFactoryId), phase,
+		static_cast<unsigned>(detail_id));
+}
+
+void A35_Vita_Static_Load_Trace_Name(const char *phase, const char *name)
+{
+	if (!gA35StaticTraceDeep) {
+		return;
+	}
+	A30_Vita_Log(
+		"A3.5 static direct: index=%u factory=%u phase=%s name=%.96s\n",
+		static_cast<unsigned>(gA35StaticTraceObjectIndex),
+		static_cast<unsigned>(gA35StaticTraceFactoryId), phase,
+		name != NULL ? name : "(null)");
+}
+
+void A35_Vita_Static_Load_Trace_End()
+{
+	if (gA35StaticTraceSummary) {
+		A30_Vita_Log(
+			"A3.5 static direct: index=%u factory=%u phase=factory-load-return\n",
+			static_cast<unsigned>(gA35StaticTraceObjectIndex),
+			static_cast<unsigned>(gA35StaticTraceFactoryId));
+	}
+	gA35StaticTraceSummary = false;
+	gA35StaticTraceDeep = false;
 }
 
 bool A30_Vita_Render_Loaded_World(void *context, PhysicsSceneClass &scene,

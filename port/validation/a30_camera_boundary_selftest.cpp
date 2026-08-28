@@ -84,6 +84,12 @@ int main()
 		native.height == 272U && Near(native.min_depth, 0.2f) &&
 		Near(native.max_depth, 0.8f),
 		"D3D top-left viewport converts to vitaGL lower-left", checks);
+	failures += !Check(RenegadeVitaRenderer::Build_Native_Viewport(
+		0U, 0U, 640U, 480U, 0.0f, 1.0f, 640U, 480U, native) &&
+		native.x == 0U && native.y == 0U && native.width == 960U &&
+		native.height == 544U && Near(native.min_depth, 0.0f) &&
+		Near(native.max_depth, 1.0f),
+		"logical 640x480 loading viewport scales to full Vita display", checks);
 	failures += !Check(!RenegadeVitaRenderer::Build_Native_Viewport(
 		0U, 0U, 0U, 544U, 0.0f, 1.0f, native) &&
 		!RenegadeVitaRenderer::Build_Native_Viewport(

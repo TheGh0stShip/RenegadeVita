@@ -1,0 +1,11 @@
+--- a/scripts.cpp
++++ b/scripts.cpp
+@@ -365,7 +365,7 @@ void ScriptImpClass::Clear_Parameters(void)
+ 			}
+ 		}
+ 
+-		delete (void*)mArgV;
++		delete[] mArgV;
+ 	}
+ 
+ 	mArgC = 0;

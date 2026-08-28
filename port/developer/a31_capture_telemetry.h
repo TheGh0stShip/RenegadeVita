@@ -4,9 +4,11 @@
 #include <stdint.h>
 
 enum : uint32_t {
-	/* Schema v3 adds canonical candidate/log identity and explicit phase labels.
-	** Memory values remain sampled rather than ownership accounting. */
-	A31_CAPTURE_SCHEMA_VERSION = 3U,
+	/* Schema v4 adds returned loading visual-gate facts so the first physical
+	** gate can audit viewport/orientation ownership from state.json instead of
+	** relying on logs alone. Memory values remain sampled rather than ownership
+	** accounting. */
+	A31_CAPTURE_SCHEMA_VERSION = 4U,
 	A31_FRAME_HISTORY_CAPACITY = 240U,
 	A31_CAPTURE_PATH_CAPACITY = 320U
 };
@@ -142,6 +144,22 @@ struct A31SensorTelemetry
 	float battery_temperature_c;
 };
 
+struct A31LoadingVisualGateTelemetry
+{
+	bool active;
+	uint32_t framebuffer_width;
+	uint32_t framebuffer_height;
+	uint32_t original_logical_width;
+	uint32_t original_logical_height;
+	uint32_t native_display_width;
+	uint32_t native_display_height;
+	bool logical_to_native_fullscreen;
+	bool original_loading_screen_owner;
+	bool direct_vitagl_overlay_disabled;
+	bool loading_texture_v_flip_enabled;
+	bool gameplay_texture_v_unchanged;
+};
+
 struct A31FrameTelemetry
 {
 	uint64_t frame_index;
@@ -177,6 +195,7 @@ struct A31StateSnapshot
 	A31RendererTelemetry renderer;
 	A31MemoryTelemetry memory;
 	A31SensorTelemetry sensors;
+	A31LoadingVisualGateTelemetry loading_visual_gate;
 	uint64_t game_update_count;
 	uint64_t physics_update_count;
 	uint64_t input_action_count;

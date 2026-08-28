@@ -12,20 +12,31 @@
  LPFN_CREATE_SCRIPT ScriptManager::ScriptCreateFunct = NULL;
  LPFN_DESTROY_SCRIPT ScriptManager::ScriptDestroyFunct = NULL;
  SimpleDynVecClass<ScriptClass *> ScriptManager::ActiveScriptList;
-@@ -77,6 +81,12 @@
+@@ -77,6 +81,23 @@
  	hDLL = NULL;
  	EngineCommands = Get_Script_Commands();
  
 +#if defined(RENEGADE_VITA_PORT)
-+	// Script ownership remains original, but the retail Win32 script DLL has
-+	// no executable Vita module equivalent yet. Keep creation disabled at the
-+	// one script-module boundary until a native script provider is available.
-+	Debug_Say(("Script Manager: external script DLL unavailable on Vita\n"));
++	/* Preserve the original ScriptManager/provider seam, but bind it to the
++	** statically linked EA/Westwood registrar instead of LoadLibrary. */
++	ScriptCommandsClass commands;
++	commands.Commands = EngineCommands;
++	if (Set_Script_Commands(&commands)) {
++		ScriptCreateFunct = &::Create_Script;
++		ScriptDestroyFunct = &Destroy_Script;
++		Set_Request_Destroy_Func(Request_Destroy_Script);
++		Debug_Say(("Script Manager: native provider active registered=%d\n",
++			Get_Script_Count()));
++	} else {
++		ScriptCreateFunct = NULL;
++		ScriptDestroyFunct = NULL;
++		Debug_Say(("Script Manager: native provider rejected command ABI\n"));
++	}
 +#else
  #ifdef	PARAM_EDITING_ON	// Editor build
  	Load_Scripts("SCRIPTS.DLL");
  #else
-@@ -94,6 +104,7 @@
+@@ -94,6 +115,7 @@
  		Load_Scripts("SCRIPTS.DLL");		// RELEASE
  	#endif
  #endif
@@ -33,7 +44,7 @@
  }
  
  
-@@ -114,7 +125,9 @@
+@@ -114,7 +136,9 @@
  	}
  
  	if (hDLL != NULL) {
@@ -43,7 +54,7 @@
  		hDLL = NULL;
  	}
  }
-@@ -148,6 +161,11 @@
+@@ -148,6 +172,11 @@
  */
  void ScriptManager::Load_Scripts(const char* dll_filename)
  {
@@ -55,9 +66,46 @@
  	Debug_Say(("Script Manager Loading Script File %s\n", dll_filename));
  
  
-@@ -255,6 +273,7 @@
+@@ -255,6 +284,7 @@
  			Debug_Say(("Cound not find Set_Script_Commands\n"));
  		}
  	}
 +#endif
  }
+ 
+ 
+@@ -271,6 +301,9 @@
+ 		if (script != NULL) {
+ 			script->Set_ID( GameObjObserverManager::Get_Next_Observer_ID() );
+ 			ActiveScriptList.Add(script);
++		} else {
++			Debug_Say(("Script Manager: native provider missing script '%s'\n",
++				script_name != NULL ? script_name : "<null>"));
+ 		}
+ 	}
+ 
+@@ -459,4 +492,4 @@
+ }
+ 
+ 
+- 
+\ No newline at end of file
++
+--- a/scripts.h
++++ b/scripts.h
+@@ -98,6 +98,8 @@
+ 	static	bool				Load( ChunkLoadClass & cload );
+ 
+ 	static	void				Enable_Script_Creation( bool enable ) { EnableScriptCreation = enable; }
++	static	bool				Is_Provider_Active( void ) { return ScriptCreateFunct != NULL && ScriptDestroyFunct != NULL; }
++	static	int				Get_Active_Script_Count( void ) { return ActiveScriptList.Count(); }
+ 
+ private:
+ 	static void Load_Scripts(const char * dll_filename);
+@@ -111,4 +113,4 @@
+ 	static bool	EnableScriptCreation;
+ };
+ 
+-#endif		// SCRIPTS_H
+\ No newline at end of file
++#endif		// SCRIPTS_H

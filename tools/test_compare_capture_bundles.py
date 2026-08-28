@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from compare_capture_bundles import compare
+from tools.compare_capture_bundles import compare
 
 
 class CaptureComparisonTest(unittest.TestCase):
@@ -27,7 +27,11 @@ class CaptureComparisonTest(unittest.TestCase):
                       "render_checksum": "BFA9C255",
                       "prototype_checksum": "E835A45F"},
             "player": {"present": False, "object_id": 0,
-                       "definition": "", "type": ""},
+                       "definition": "", "type": "",
+                       "position": [0.0, 0.0, 0.0],
+                       "orientation": [0.0, 0.0, 0.0, 1.0],
+                       "velocity": [0.0, 0.0, 0.0], "health": 100.0,
+                       "physics_registered": False, "grounded": False},
             "renderer": {"draw_calls": 654, "mesh_submissions": 654,
                          "vertices": 30795, "triangles": triangles,
                          "indexed_draw_calls": 0, "indexed_triangles": 0,
@@ -67,6 +71,49 @@ class CaptureComparisonTest(unittest.TestCase):
             self.assertEqual(result["memory"]["memory.system_user_free"]["delta"], -10)
             self.assertTrue(result["renderer"]["renderer.triangles"]["changed"])
             self.assertFalse(result["semantic"]["world.definitions"]["changed"])
+
+    def test_accepts_schema_four_and_reports_gameplay_and_visual_gate_state(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            before = self.write_bundle(root, "before", 16000, 100, 17041)
+            after = self.write_bundle(root, "after", 16000, 100, 17041)
+            for bundle in (before, after):
+                state_path = bundle / "state.json"
+                state = json.loads(state_path.read_text(encoding="utf-8"))
+                state["schema_version"] = 4
+                state["loading_visual_gate"] = {
+                    "active": True,
+                    "framebuffer_width": 960,
+                    "framebuffer_height": 544,
+                    "original_logical_width": 640,
+                    "original_logical_height": 480,
+                    "native_display_width": 960,
+                    "native_display_height": 544,
+                    "logical_to_native_fullscreen": True,
+                    "original_loading_screen_owner": True,
+                    "direct_vitagl_overlay_disabled": True,
+                    "loading_texture_v_flip_enabled": False,
+                    "gameplay_texture_v_unchanged": True,
+                }
+                state_path.write_text(json.dumps(state), encoding="utf-8")
+            after_path = after / "state.json"
+            after_state = json.loads(after_path.read_text(encoding="utf-8"))
+            after_state["player"]["position"] = [2.0, 0.0, 0.0]
+            after_state["player"]["velocity"] = [1.0, 0.0, 0.0]
+            after_state["player"]["physics_registered"] = True
+            after_state["player"]["grounded"] = True
+            after_state["loading_visual_gate"]["logical_to_native_fullscreen"] = False
+            after_path.write_text(json.dumps(after_state), encoding="utf-8")
+            result = compare(before, after)
+            self.assertTrue(result["gameplay"]["player.position"]["changed"])
+            self.assertTrue(result["gameplay"]["player.velocity"]["changed"])
+            self.assertTrue(result["gameplay"]["player.physics_registered"]["changed"])
+            self.assertTrue(result["gameplay"]["player.grounded"]["changed"])
+            self.assertTrue(
+                result["visual_gate"][
+                    "loading_visual_gate.logical_to_native_fullscreen"
+                ]["changed"]
+            )
 
     def test_accepts_schema_two_low_water_marks(self):
         with tempfile.TemporaryDirectory() as temporary:

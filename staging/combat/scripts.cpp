@@ -82,10 +82,21 @@ void ScriptManager::Init(void)
 	EngineCommands = Get_Script_Commands();
 
 #if defined(RENEGADE_VITA_PORT)
-	// Script ownership remains original, but the retail Win32 script DLL has
-	// no executable Vita module equivalent yet. Keep creation disabled at the
-	// one script-module boundary until a native script provider is available.
-	Debug_Say(("Script Manager: external script DLL unavailable on Vita\n"));
+	/* Preserve the original ScriptManager/provider seam, but bind it to the
+	** statically linked EA/Westwood registrar instead of LoadLibrary. */
+	ScriptCommandsClass commands;
+	commands.Commands = EngineCommands;
+	if (Set_Script_Commands(&commands)) {
+		ScriptCreateFunct = &::Create_Script;
+		ScriptDestroyFunct = &Destroy_Script;
+		Set_Request_Destroy_Func(Request_Destroy_Script);
+		Debug_Say(("Script Manager: native provider active registered=%d\n",
+			Get_Script_Count()));
+	} else {
+		ScriptCreateFunct = NULL;
+		ScriptDestroyFunct = NULL;
+		Debug_Say(("Script Manager: native provider rejected command ABI\n"));
+	}
 #else
 #ifdef	PARAM_EDITING_ON	// Editor build
 	Load_Scripts("SCRIPTS.DLL");
@@ -290,6 +301,9 @@ ScriptClass* ScriptManager::Create_Script(const char* script_name)
 		if (script != NULL) {
 			script->Set_ID( GameObjObserverManager::Get_Next_Observer_ID() );
 			ActiveScriptList.Add(script);
+		} else {
+			Debug_Say(("Script Manager: native provider missing script '%s'\n",
+				script_name != NULL ? script_name : "<null>"));
 		}
 	}
 
@@ -478,4 +492,4 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 }
 
 
- 
+

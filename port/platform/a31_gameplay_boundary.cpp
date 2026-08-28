@@ -12,6 +12,7 @@
 #include "gamemode.h"
 #include "modpackagemgr.h"
 #include "mpsettingsmgr.h"
+#include "logicalsound.h"
 #include "textdisplay.h"
 #include "stackdump.h"
 #include "a31_audio_lifecycle.h"
@@ -19,14 +20,27 @@
 #include "backgroundmgr.h"
 #include "ccamera.h"
 #include "combat.h"
+#include "activeconversation.h"
+#include "conversation.h"
+#include "conversationmgr.h"
+#include "conversationremark.h"
+#include "definition.h"
+#include "definitionmgr.h"
 #include "hud.h"
 #include "input.h"
+#include "messagewindow.h"
+#include "objectives.h"
 #include "directinput.h"
 #include "dinput.h"
 #include "renegade_vita_input_contract.h"
 #include "pscene.h"
 #include "soldier.h"
+#include "humanphys.h"
+#include "quat.h"
 #include "timemgr.h"
+#include "translateobj.h"
+#include "translatedb.h"
+#include "weapons.h"
 #include "ww3d.h"
 #include "ww3d_vita_renderer.h"
 
@@ -133,6 +147,31 @@ void GameModeClass::Resume()
 }
 #endif // !RENEGADE_A4_ORIGINAL_GAMEMODE
 
+namespace {
+
+/* The desktop CombatGameMode handler turns original Combat completion into a
+** campaign/menu transition.  Those Win32 presenters are not part of the
+** direct Vita route, so retain the same CombatMiscHandler ownership seam and
+** latch only the event needed for a stable native application transition. */
+A31MissionCompletionLatch g_mission_completion_latch;
+
+class A31VitaCombatMiscHandler final : public CombatMiscHandlerClass {
+public:
+	virtual void Mission_Complete(bool success)
+	{
+		g_mission_completion_latch.Mission_Complete(success);
+	}
+
+	virtual void Star_Killed()
+	{
+		g_mission_completion_latch.Star_Killed();
+	}
+};
+
+A31VitaCombatMiscHandler g_vita_combat_misc_handler;
+
+}
+
 // The original DebugManager implementation owns Windows-only symbol lookup.
 // Keep the state observed by original Combat inline accessors at the platform
 // boundary until native diagnostic UI replaces that desktop facility.
@@ -144,6 +183,11 @@ bool DebugManager::AllowCinematicKeys = false;
 // routing the unavailable presentation endpoint to the Vita log boundary.
 void DebugManager::Display_Network_Prolific(char const *, ...)
 {
+}
+
+void DebugManager::Display_Text(const WideStringClass &, const Vector3 &)
+{
+	// The desktop debug display handler has no Vita presentation endpoint.
 }
 
 // SEH is a Win32-only failure-reporting mechanism.  ThreadClass' POSIX/Vita
@@ -229,16 +273,127 @@ void A31_Interactive_Configure_Vita_Controls()
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_JUMP, DIK_SPACE);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_CROUCH, DIK_LCONTROL);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ACTION, DIK_R);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MENU_TOGGLE, DIK_ESCAPE);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_PRIMARY,
 		DirectInput::BUTTON_JOYSTICK_B);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_SECONDARY,
 		DirectInput::BUTTON_JOYSTICK_A);
 }
 
+void A31_Interactive_Begin_Mission_Completion_Observation()
+{
+	g_mission_completion_latch.Reset();
+	CombatManager::Set_Combat_Misc_Handler(&g_vita_combat_misc_handler);
+}
+
+A31MissionCompletionState A31_Interactive_Get_Mission_Completion_State()
+{
+	return g_mission_completion_latch.State();
+}
+
+void A31_Interactive_End_Mission_Completion_Observation()
+{
+	CombatManager::Set_Combat_Misc_Handler(NULL);
+}
+
+A31MissionProgressState A31_Interactive_Get_Mission_Progress_State()
+{
+	A31MissionProgressState state = {};
+	state.active_conversation_id = -1;
+	state.active_conversation_state = -1;
+	state.active_conversation_action_id = -1;
+	state.active_conversation_current_remark = -1;
+	state.active_conversation_remark_count = -1;
+	state.active_conversation_text_id = -1;
+	state.active_conversation_sound_id = -1;
+	for (unsigned index = 0U; index < 6U; ++index) {
+		state.objective_status[index] = -1;
+	}
+	SoldierGameObj *star = CombatManager::Get_The_Star();
+	state.star_available = star != NULL;
+	state.player_control_enabled = star != NULL && star->Is_Control_Enabled();
+	const int objective_count = ObjectiveManager::Get_Objective_Count();
+	state.objective_count = objective_count > 0 ?
+		static_cast<uint32_t>(objective_count) : 0U;
+	for (int index = 0; index < objective_count; ++index) {
+		const Objective *objective = ObjectiveManager::Get_Objective(index);
+		if (objective != NULL && objective->ID >= 1 && objective->ID <= 6) {
+			state.objective_status[objective->ID - 1] = objective->Status;
+		}
+	}
+	const int active_conversations = ConversationMgrClass::Get_Active_Conversation_Count();
+	state.active_conversation_count = active_conversations > 0 ?
+		static_cast<uint32_t>(active_conversations) : 0U;
+	if (active_conversations > 0) {
+		ActiveConversationClass *active =
+			ConversationMgrClass::Peek_Active_Conversation_For_Diagnostics(0);
+		if (active != NULL) {
+			state.active_conversation_id = active->Get_ID();
+			state.active_conversation_state = active->Get_State_For_Diagnostics();
+			state.active_conversation_action_id =
+				active->Get_Action_ID_For_Diagnostics();
+			state.active_conversation_current_remark =
+				active->Get_Current_Remark_For_Diagnostics();
+			state.active_conversation_next_remark_seconds =
+				active->Get_Next_Remark_Seconds_For_Diagnostics();
+			ConversationClass *conversation = active->Peek_Conversation();
+			if (conversation != NULL) {
+				state.active_conversation_remark_count =
+					conversation->Get_Remark_Count();
+				snprintf(state.active_conversation_name,
+					sizeof(state.active_conversation_name), "%s",
+					conversation->Get_Name());
+				const int current_remark =
+					state.active_conversation_current_remark;
+				if (current_remark >= 0 &&
+					current_remark < conversation->Get_Remark_Count()) {
+					ConversationRemarkClass remark;
+					conversation->Get_Remark_Info(current_remark, remark);
+					state.active_conversation_text_id = remark.Get_Text_ID();
+					TDBObjClass *text = TranslateDBClass::Find_Object(
+						state.active_conversation_text_id);
+					state.active_conversation_string_available =
+						text != NULL && text->Get_String() != NULL &&
+						text->Get_String()[0] != 0;
+					if (text != NULL) {
+						state.active_conversation_sound_id =
+							static_cast<int32_t>(text->Get_Sound_ID());
+						if (state.active_conversation_sound_id > 0) {
+							DefinitionClass *definition =
+								DefinitionMgrClass::Find_Definition(
+									state.active_conversation_sound_id, false);
+							state.active_conversation_sound_definition_available =
+								definition != NULL &&
+								definition->Get_Class_ID() == CLASSID_SOUND;
+						}
+					}
+				}
+			}
+		}
+	}
+	return state;
+}
+
 void A31_Interactive_Run_Simulation_Frame()
 {
 	TimeManager::Update();
 	Input::Update();
+	GameModeClass *combat_mode = GameModeManager::Find("Combat");
+	if (combat_mode != NULL && Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE)) {
+		if (combat_mode->Is_Active()) {
+			combat_mode->Suspend();
+		} else if (combat_mode->Is_Suspended()) {
+			combat_mode->Resume();
+		}
+	}
+	/* Match the desktop main loop: suspended Combat returns before control and
+	** simulation, while cNetwork still services the local session. The missing
+	** desktop menu is presentation-only and does not become a second pause
+	** owner at the Vita boundary. */
+	if (combat_mode != NULL && !combat_mode->Is_Active()) {
+		cNetwork::Update();
+		return;
+	}
 	CombatManager::Generate_Control();
 	cNetwork::Update();
 	CombatManager::Think();
@@ -287,6 +442,45 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 		trace.player_x = player_position.X;
 		trace.player_y = player_position.Y;
 		trace.player_z = player_position.Z;
+		trace.player_object_id = static_cast<uint32_t>(star->Get_ID());
+		snprintf(trace.player_definition, sizeof(trace.player_definition), "%s",
+			star->Get_Definition().Get_Name());
+		snprintf(trace.player_state, sizeof(trace.player_state), "%s",
+			star->Get_State_Name());
+		const Quaternion player_orientation = Build_Quaternion(star->Get_Transform());
+		trace.player_orientation[0] = player_orientation.X;
+		trace.player_orientation[1] = player_orientation.Y;
+		trace.player_orientation[2] = player_orientation.Z;
+		trace.player_orientation[3] = player_orientation.W;
+		Vector3 player_velocity;
+		star->Get_Velocity(player_velocity);
+		trace.player_velocity[0] = player_velocity.X;
+		trace.player_velocity[1] = player_velocity.Y;
+		trace.player_velocity[2] = player_velocity.Z;
+		trace.player_health = star->Get_Defense_Object()->Get_Health();
+		trace.player_physics_registered = star->Peek_Physical_Object() != NULL;
+		HumanPhysClass *human_phys = star->Peek_Human_Phys();
+		trace.player_grounded = human_phys != NULL && human_phys->Is_In_Contact();
+		WeaponClass *weapon = star->Get_Weapon();
+		if (weapon != NULL) {
+			trace.weapon_present = true;
+			trace.weapon_definition_id = static_cast<uint32_t>(weapon->Get_ID());
+			snprintf(trace.weapon_definition, sizeof(trace.weapon_definition), "%s",
+				weapon->Get_Name());
+			trace.weapon_total_rounds = weapon->Get_Total_Rounds();
+			trace.weapon_clip_rounds = weapon->Get_Clip_Rounds();
+			trace.weapon_total_rounds_fired =
+				static_cast<uint32_t>(weapon->Get_Total_Rounds_Fired());
+			trace.weapon_state = static_cast<int32_t>(weapon->Get_State());
+			trace.weapon_triggered = weapon->Is_Triggered();
+			trace.weapon_fired_this_frame = weapon->Is_Firing();
+		}
+		ActionClass *action = star->Get_Action();
+		if (action != NULL) {
+			trace.action_act_count = action->Get_Act_Count();
+			trace.action_active = action->Is_Active();
+			trace.action_busy = action->Is_Busy();
+		}
 	}
 
 	/* Match the original GameModeManager::Render envelope.  PhysicsScene's
@@ -300,6 +494,15 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 	if (trace.begin_render_completed) {
 		CombatManager::Render();
 		trace.combat_render_called = true;
+		MessageWindowClass *message_window =
+			CombatManager::Get_Message_Window();
+		trace.message_window_available = message_window != NULL;
+		if (message_window != NULL) {
+			message_window->Render();
+			trace.message_window_render_called = true;
+		}
+		ObjectiveManager::Render_Viewer();
+		trace.objective_viewer_render_called = true;
 	}
 	trace.end_render_completed = trace.begin_render_completed &&
 		WW3D::End_Render(true) == WW3D_ERROR_OK;
@@ -433,6 +636,7 @@ void ThumbnailManagerClass::Add_Thumbnail_Manager(const char *, const char *)
 {
 }
 
+#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
 WWAudioClass *WWAudioClass::_theInstance = NULL;
 
 // This is the A3.1 no-output audio-device implementation.  It intentionally
@@ -447,6 +651,8 @@ WWAudioClass::WWAudioClass(bool)
 	  m_SoundVolume(DEF_SFX_VOL),
 	  m_RealMusicVolume(DEF_MUSIC_VOL),
 	  m_RealSoundVolume(DEF_SFX_VOL),
+	  m_DialogVolume(DEF_DIALOG_VOL),
+	  m_CinematicVolume(DEF_CINEMATIC_VOL),
 	  m_UpdateTimer(NULL),
 	  m_IsMusicEnabled(true),
 	  m_IsDialogEnabled(true),
@@ -496,6 +702,13 @@ void WWAudioClass::Set_Background_Music(const char *filename)
 	// Music ownership remains below the silent-device boundary.  Preserve the
 	// original visible state for retail dynamic-level restoration, but do not
 	// synthesize a Miles sound object on Vita.
+	m_BackgroundMusicName = filename;
+}
+
+void WWAudioClass::Fade_Background_Music(const char *filename, int, int)
+{
+	// Preserve the original requested-track state.  Audible fade and playback
+	// remain below the deliberately silent Vita device boundary.
 	m_BackgroundMusicName = filename;
 }
 
@@ -576,15 +789,6 @@ bool WWAudioClass::Simple_Play_2D_Sound_Effect(const char *, float, float)
 	return false;
 }
 
-// The external Win32 script DLL is intentionally unavailable on Vita.  The
-// original ScriptManager remains in charge of its no-provider state; this
-// boundary supplies only the otherwise-DLL-owned command table entry point.
-struct ScriptCommands;
-ScriptCommands *Get_Script_Commands(void)
-{
-	return NULL;
-}
-
 bool SoundSceneClass::Save_Static(ChunkSaveClass &)
 {
 	return true;
@@ -608,6 +812,32 @@ bool SoundSceneClass::Load_Dynamic(ChunkLoadClass &)
 LogicalListenerClass *WWAudioClass::Create_Logical_Listener(void)
 {
 	return new LogicalListenerClass;
+}
+
+LogicalSoundClass *WWAudioClass::Create_Logical_Sound(void)
+{
+	// Logical sounds drive original listener/AI behavior and therefore retain
+	// their source-authentic object even while audible output is deferred.
+	return new LogicalSoundClass;
+}
+
+SoundSceneObjClass *WWAudioClass::Find_Sound_Object(uint32 sound_obj_id)
+{
+	int index = 0;
+	if (SoundSceneObjClass::Find_Sound_Object(sound_obj_id, &index)) {
+		return SoundSceneObjClass::m_GlobalSoundList[index];
+	}
+	return NULL;
+}
+
+Sound3DClass *WWAudioClass::Create_3D_Sound(const char *, int)
+{
+	static bool logged = false;
+	if (!logged) {
+		Log_Deferred_Audio("Create_3D_Sound", -1);
+		logged = true;
+	}
+	return NULL;
 }
 
 AudibleSoundClass *WWAudioClass::Create_Sound(int definition_id,
@@ -659,6 +889,7 @@ AudibleSoundClass *WWAudioClass::Create_Continuous_Sound(const char *,
 	Log_Deferred_Audio("Create_Continuous_Sound", -1);
 	return NULL;
 }
+#endif // !RENEGADE_A35_ORIGINAL_WWAUDIO
 
 // The headless input/scene closure provides this storage only while the real
 // original StyleMgr owner is absent.  Once StyleMgr is selected, it owns its

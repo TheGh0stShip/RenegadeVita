@@ -6,6 +6,8 @@
 class MeshClass;
 class RenderInfoClass;
 class RenderObjClass;
+class ShaderClass;
+class TextureClass;
 
 namespace RenegadeVitaRenderer {
 
@@ -13,6 +15,9 @@ struct Statistics {
 	bool initialized;
 	uint32_t frames;
 	uint32_t mesh_submissions;
+	uint32_t skinned_mesh_submissions;
+	uint32_t deformed_skin_vertices;
+	uint32_t skin_deformation_failures;
 	uint32_t vertex_submissions;
 	uint32_t triangle_submissions;
 	uint32_t unsupported_submissions;
@@ -22,6 +27,7 @@ struct Statistics {
 	uint32_t indexed_triangle_submissions;
 	uint32_t indexed_geometry_checksum;
 	uint32_t rejected_indexed_submissions;
+	uint64_t indexed_state_applications;
 	uint64_t material_passes;
 	uint64_t texture_uploads;
 	uint64_t texture_binds;
@@ -141,6 +147,7 @@ void Shutdown();
 void Begin_Frame(float red, float green, float blue);
 void End_Frame(bool present);
 void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info);
+void Apply_Indexed_Shader_State(const ShaderClass &shader);
 IndexedSubmissionResult Submit_Indexed_Triangles(
 	const IndexedTriangleSubmission &submission);
 bool Build_Indexed_Transform_Matrices(const float *world_transform,
@@ -149,8 +156,14 @@ bool Build_Indexed_Transform_Matrices(const float *world_transform,
 bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 	uint32_t width, uint32_t height, float min_depth, float max_depth,
 	NativeViewport &viewport);
+bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
+	uint32_t width, uint32_t height, float min_depth, float max_depth,
+	uint32_t logical_width, uint32_t logical_height, NativeViewport &viewport);
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	uint32_t height, float min_depth, float max_depth);
+bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
+	uint32_t height, float min_depth, float max_depth,
+	uint32_t logical_width, uint32_t logical_height);
 void Reject_Indexed_Submission(const char *reason, uint32_t vertex_format);
 void Record_Texture_Request();
 void Record_Texture_Decode();

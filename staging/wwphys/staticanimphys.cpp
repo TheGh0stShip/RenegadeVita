@@ -53,6 +53,9 @@
 
 #include "vertmaterial.h"
 #include "dx8wrapper.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 DECLARE_FORCE_LINK(staticanimphys);
 
@@ -341,16 +344,28 @@ bool StaticAnimPhysClass::Save(ChunkSaveClass &csave)
 bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 {
 	int legacy_collision_mode = -1;
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("static-anim-entry", 0U);
+#endif
 
 	/*
 	** Read in the chunks from the file
 	*/
 	while (cload.Open_Chunk()) {
+		#if defined(__vita__)
+			A35_Vita_Static_Load_Trace_Step("static-anim-chunk", cload.Cur_Chunk_ID());
+		#endif
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case STATICANIMPHYS_CHUNK_STATICPHYS:
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("static-phys-entry", cload.Cur_Chunk_ID());
+#endif
 				StaticPhysClass::Load(cload);
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("static-phys-return", cload.Cur_Chunk_ID());
+#endif
 				break;
 
 			case STATICANIMPHYS_CHUNK_VARIABLES:
@@ -363,7 +378,13 @@ bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 				break;
 				
 			case STATICANIMPHYS_CHUNK_ANIMMANAGER:
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("anim-manager-entry", cload.Cur_Chunk_ID());
+#endif
 				AnimManager.Load(cload);
+#if defined(__vita__)
+				A35_Vita_Static_Load_Trace_Step("anim-manager-return", cload.Cur_Chunk_ID());
+#endif
 				break;
 
 			default:
@@ -379,6 +400,9 @@ bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+#if defined(__vita__)
+	A35_Vita_Static_Load_Trace_Step("static-anim-return", 0U);
+#endif
 	return true;
 }
 

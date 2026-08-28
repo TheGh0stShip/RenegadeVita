@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev5",
-  "objective": "First interactive original M00 gameplay runtime; current source seed preserves accepted A3.0, capture/telemetry, and replaces temporary gameplay scalar closures with original Combat owners",
+  "milestone": "A3.5-dev18",
+  "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 424,
+  "original_source_files_compiled": 447,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -88,6 +88,7 @@
     "Code/Combat/scexplosionevent.cpp",
     "Code/Combat/screenfademanager.cpp",
     "Code/Combat/scriptablegameobj.cpp",
+    "Code/Combat/scriptcommands.cpp",
     "Code/Combat/scripts.cpp",
     "Code/Combat/scriptzone.cpp",
     "Code/Combat/simplegameobj.cpp",
@@ -151,10 +152,32 @@
     "Code/Commando/team.cpp",
     "Code/Commando/teammanager.cpp",
     "Code/Commando/winevent.cpp",
+    "Code/Scripts/Mission00.cpp",
+    "Code/Scripts/ScriptFactory.cpp",
+    "Code/Scripts/ScriptRegistrar.cpp",
+    "Code/Scripts/Test_Cinematic.cpp",
+    "Code/Scripts/Toolkit_Powerup.cpp",
+    "Code/Scripts/scripts.cpp",
+    "Code/WWAudio/AudibleSound.cpp",
     "Code/WWAudio/AudioEvents.cpp",
     "Code/WWAudio/AudioSaveLoad.cpp",
+    "Code/WWAudio/FilteredSound.cpp",
+    "Code/WWAudio/Listener.cpp",
     "Code/WWAudio/LogicalListener.cpp",
+    "Code/WWAudio/LogicalSound.cpp",
+    "Code/WWAudio/Sound3D.cpp",
+    "Code/WWAudio/SoundBuffer.cpp",
+    "Code/WWAudio/SoundPseudo3D.cpp",
+    "Code/WWAudio/SoundScene.cpp",
     "Code/WWAudio/SoundSceneObj.cpp",
+    "Code/WWAudio/Threads.cpp",
+    "Code/WWAudio/Utils.cpp",
+    "Code/WWAudio/WWAudio.cpp",
+    "Code/WWAudio/listenerhandle.cpp",
+    "Code/WWAudio/sound2dhandle.cpp",
+    "Code/WWAudio/sound3dhandle.cpp",
+    "Code/WWAudio/soundhandle.cpp",
+    "Code/WWAudio/soundstreamhandle.cpp",
     "Code/WWMath/aabox.cpp",
     "Code/WWMath/aabtreecull.cpp",
     "Code/WWMath/cardinalspline.cpp",
@@ -432,9 +455,12 @@
     "Code/wwui/stylemgr.cpp",
     "Code/wwutil/mathutil.cpp"
   ],
-  "vita_platform_renderer_validation_files": 21,
+  "vita_platform_renderer_validation_files": 26,
   "vita_translation_units": [
     "port/developer/a31_capture_telemetry.cpp",
+    "port/audio/vita/renegade_miles_provider.cpp",
+    "port/audio/vita/renegade_wave_decoder.cpp",
+    "port/filesystem/renegade_cache_health.cpp",
     "port/filesystem/renegade_paths.cpp",
     "port/filesystem/renegade_file_factory.cpp",
     "port/filesystem/renegade_registry.cpp",
@@ -444,6 +470,7 @@
     "port/renderer/vita/ww3d_vita_renderer.cpp",
     "port/renderer/vita/ww3d_dx8_boundary.cpp",
     "port/renderer/vita/surface_boundary.cpp",
+    "port/renderer/vita/renegade_freetype_font_provider.cpp",
     "port/validation/wwbitpack_selftest.cpp",
     "port/validation/a21_filesystem_selftest.cpp",
     "port/validation/a22_w3d_selftest.cpp",
@@ -453,14 +480,16 @@
     "port/platform/a31_gameplay_boundary.cpp",
     "port/platform/a31_miscutil_boundary.cpp",
     "port/platform/a31_network_options_boundary.cpp",
+    "port/platform/renegade_script_static_provider.cpp",
     "port/platform/vita/a30_main.cpp",
     "port/platform/vita/a31_vita_runtime.cpp"
   ],
   "sdk_framebuffer_helper_files": 1,
-  "compatibility_headers": 50,
+  "compatibility_headers": 52,
   "compatibility_header_paths": [
     "port/compatibility/include/DialogControl.h",
     "port/compatibility/include/GameMode.h",
+    "port/compatibility/include/Ini.h",
     "port/compatibility/include/LanChat.h",
     "port/compatibility/include/RefCount.h",
     "port/compatibility/include/Resource.h",
@@ -502,6 +531,7 @@
     "port/compatibility/include/mutex.h",
     "port/compatibility/include/new.h",
     "port/compatibility/include/osdep.h",
+    "port/compatibility/include/renegade_script_call_defaults.h",
     "port/compatibility/include/targa.h",
     "port/compatibility/include/tchar.h",
     "port/compatibility/include/win.h",
@@ -510,12 +540,13 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 103,
-  "mechanically_patched_upstream_files": 224,
+  "patch_count": 113,
+  "mechanically_patched_upstream_files": 235,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
     "Code/Combat/activeconversation.cpp",
+    "Code/Combat/activeconversation.h",
     "Code/Combat/assetdep.cpp",
     "Code/Combat/backgroundmgr.cpp",
     "Code/Combat/backgroundmgr.h",
@@ -528,12 +559,14 @@
     "Code/Combat/control.h",
     "Code/Combat/conversation.cpp",
     "Code/Combat/conversationmgr.cpp",
+    "Code/Combat/conversationmgr.h",
     "Code/Combat/damage.cpp",
     "Code/Combat/damage.h",
     "Code/Combat/dialogue.cpp",
     "Code/Combat/doors.cpp",
     "Code/Combat/elevator.cpp",
     "Code/Combat/encyclopediamgr.cpp",
+    "Code/Combat/gameobjmanager.cpp",
     "Code/Combat/hud.cpp",
     "Code/Combat/hud.h",
     "Code/Combat/humanstate.cpp",
@@ -550,6 +583,7 @@
     "Code/Combat/scriptablegameobj.h",
     "Code/Combat/scriptcommands.cpp",
     "Code/Combat/scripts.cpp",
+    "Code/Combat/scripts.h",
     "Code/Combat/scriptzone.cpp",
     "Code/Combat/soldier.cpp",
     "Code/Combat/soldier.h",
@@ -604,8 +638,12 @@
     "Code/WWAudio/AudioEvents.h",
     "Code/WWAudio/AudioSaveLoad.cpp",
     "Code/WWAudio/PriorityVector.h",
+    "Code/WWAudio/SoundBuffer.cpp",
     "Code/WWAudio/SoundBuffer.h",
+    "Code/WWAudio/SoundScene.h",
     "Code/WWAudio/SoundSceneObj.h",
+    "Code/WWAudio/Threads.cpp",
+    "Code/WWAudio/WWAudio.cpp",
     "Code/WWAudio/WWAudio.h",
     "Code/WWMath/aabox.h",
     "Code/WWMath/gridcull.cpp",
@@ -710,6 +748,8 @@
     "Code/wwphys/rbody.cpp",
     "Code/wwphys/renegadeterrainmaterialpass.cpp",
     "Code/wwphys/renegadeterrainpatch.cpp",
+    "Code/wwphys/staticanimphys.cpp",
+    "Code/wwphys/staticphys.cpp",
     "Code/wwphys/transitioneffect.cpp",
     "Code/wwphys/visrendercontext.cpp",
     "Code/wwphys/waypath.cpp",
@@ -736,7 +776,8 @@
     "Code/wwui/textmarqueectrl.cpp",
     "Code/wwui/treectrl.cpp",
     "Code/wwui/wwuiinput.cpp",
-    "Code/wwui/wwuiinput.h"
+    "Code/wwui/wwuiinput.h",
+    "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp"
   ],
   "patches": [
     {
@@ -849,7 +890,8 @@
       "path": "port/patches/combat-a31-script-dll-boundary.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "scripts.cpp"
+        "scripts.cpp",
+        "scripts.h"
       ]
     },
     {
@@ -875,6 +917,14 @@
       ]
     },
     {
+      "path": "port/patches/combat-a35-conversation-diagnostics.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "activeconversation.h",
+        "conversationmgr.h"
+      ]
+    },
+    {
       "path": "port/patches/combat-a35-humanstate-weapon-style-table.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -886,6 +936,29 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "persistentgameobjobserver.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-teardown-lifecycle.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameobjmanager.cpp",
+        "hud.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-durable-loader-trace.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combat.cpp",
+        "buildingaggregate.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-main-thread-level-load.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combat.cpp"
       ]
     },
     {
@@ -1136,6 +1209,13 @@
       ]
     },
     {
+      "path": "port/patches/scripts-a35-parameter-array-delete.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scripts.cpp"
+      ]
+    },
+    {
       "path": "port/patches/ww3d2-a22-gcc15.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1244,6 +1324,14 @@
       ]
     },
     {
+      "path": "port/patches/ww3d2-a35-vita-renderobj-load-trace.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "rendobj.cpp",
+        "assetmgr.cpp"
+      ]
+    },
+    {
       "path": "port/patches/ww3d2-a4-font3d-vita.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1289,6 +1377,24 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "PriorityVector.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-original-runtime-correctness.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "WWAudio.h",
+        "SoundBuffer.h",
+        "SoundBuffer.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-posix-runtime.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "SoundScene.h",
+        "WWAudio.cpp",
+        "Threads.cpp"
       ]
     },
     {
@@ -1507,6 +1613,23 @@
       ]
     },
     {
+      "path": "port/patches/wwphys-a35-static-object-load-diagnostics.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "pscene_saveload.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a35-vita-durable-static-trace.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "pscene_saveload.cpp",
+        "staticanimphys.cpp",
+        "staticphys.cpp",
+        "phys.cpp"
+      ]
+    },
+    {
       "path": "port/patches/wwsaveload-a30-abi.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1673,7 +1796,7 @@
     },
     "Combat": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 104,
+      "compiled": 105,
       "total": 128
     },
     "Commando": {
@@ -1681,9 +1804,14 @@
       "compiled": 40,
       "total": 213
     },
+    "Scripts": {
+      "status": "native-static-m00-provider-with-direct-dependencies",
+      "compiled": 6,
+      "total": 54
+    },
     "WWAudio": {
-      "status": "original-headers-with-temporary-no-audio-boundary",
-      "compiled": 4,
+      "status": "original-runtime-over-vita-native-miles-compatible-provider",
+      "compiled": 20,
       "total": 20
     },
     "WWOnline": {

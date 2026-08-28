@@ -40,8 +40,10 @@ struct CameraResponseConfiguration
 };
 
 static const CameraResponseConfiguration DEFAULT_CAMERA_RESPONSE = {
-	// Vita raw Y is negative when the stick is physically up.  The original
-	// mouse-up action expects that orientation, so default inversion is off.
+	// Physical dev19/dev34-route user evidence shows the previous inverted
+	// platform response still reversed look up/down in the original CCamera
+	// path. Keep the sign decision at this Vita mouse-delta boundary; original
+	// Input and CCamera still own action mapping and integration.
 	1.0f, 0.85f, false
 };
 

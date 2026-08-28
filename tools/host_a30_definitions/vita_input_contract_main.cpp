@@ -89,7 +89,7 @@ int main()
 		DEFAULT_CAMERA_RESPONSE.vertical_scale, DEFAULT_CAMERA_RESPONSE.invert_y) < 0 &&
 		To_Camera_Mouse_Delta(physical_down.y.normalized, 1.0f / 60.0f,
 		DEFAULT_CAMERA_RESPONSE.vertical_scale, DEFAULT_CAMERA_RESPONSE.invert_y) > 0,
-		"device Y preserves original mouse-up/down orientation by default", checks, failures);
+		"default Vita camera response corrects physical up/down orientation", checks, failures);
 	printf("A3.2 Vita controller axis-contract: %s (%u checks, %u failures)\n",
 		failures == 0U ? "PASS" : "FAIL", checks, failures);
 	return failures == 0U ? 0 : 1;

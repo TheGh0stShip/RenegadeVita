@@ -1,0 +1,213 @@
+schema_version: 1
+generated_policy: external_reference_cache_only
+default_cache_env: RENEGADE_VITA_REFERENCE_CACHE
+default_cache_root: /tmp/renegade-vita-reference-cache
+references:
+  - id: vitasdk-buildscripts
+    repository: https://github.com/vitasdk/buildscripts.git
+    branch: master
+    commit: 79a92784094ee0543cdfa36c041ed8ee2702d28b
+    license: MIT
+    license_policy: compatible_tooling_reference
+    blockers:
+      - build_overhead
+      - sdk_provenance
+    sparse_paths:
+      - README.md
+      - LICENSE
+    reuse_plan: Study pinned SDK component selection and package-managed snapshot flow; do not replace the current canonical VitaSDK unless separately approved.
+
+  - id: vitasdk-toolchain
+    repository: https://github.com/vitasdk/vita-toolchain.git
+    branch: master
+    commit: eacff34d18e9872a78c0e520e1997ef71900ebb4
+    license: MIT
+    license_policy: compatible_tooling_reference
+    blockers:
+      - build_packaging
+      - elf_self_vpk_identity
+    sparse_paths:
+      - README.md
+      - COPYING
+      - cmake_toolchain
+    reuse_plan: Keep Vita ELF, SELF, SFO, and VPK inspection aligned with the canonical VitaSDK CMake packaging tools.
+
+  - id: vitasdk-samples
+    repository: https://github.com/vitasdk/samples.git
+    branch: master
+    commit: fe8fbef570f3280586c0c20157146e3faefb2181
+    license: per_file_noassertion
+    license_policy: study_only_per_file_review
+    blockers:
+      - sceaudio_smoke_test
+      - controller_display_boundaries
+    sparse_paths:
+      - README.md
+      - audio
+      - ctrl
+    reuse_plan: Use as API behavior reference only after per-file license review; no source copy without a separate file-level notice check.
+
+  - id: vitagl
+    repository: https://github.com/Rinnegatamante/vitaGL.git
+    branch: master
+    commit: 6440cf0e0c6573d7b3de6521462d8cbecd8fb4c1
+    license: LGPL-3.0
+    license_policy: linked_library_reference
+    blockers:
+      - black_textures
+      - wrong_loading_screen
+      - shader_texture_cache_diagnostics
+    sparse_paths:
+      - README.md
+      - source/shared.h
+      - source/vgl.c
+      - source/textures.c
+      - source/framebuffers.c
+      - source/draw.c
+      - source/shaders.h
+    reuse_plan: Pin current build flags and renderer diagnostics for A/B VitaGL builds; do not replace WW3D traversal or import vitaGL source into the port.
+
+  - id: vita3k
+    repository: https://github.com/Vita3K/Vita3K.git
+    branch: master
+    commit: 496939b602703951277263c7b3e60a9ae36879c1
+    license: GPL-2.0-only
+    license_policy: study_only_no_code_copy
+    blockers:
+      - emulator_regression_loop
+      - shader_recompile_smoke
+    sparse_paths:
+      - README.md
+      - vita3k/config/src/config.cpp
+      - vita3k/CMakeLists.txt
+    reuse_plan: Use CLI behavior to drive an optional emulator-only smoke runner; no source copy, and never treat Vita3K as physical Vita acceptance.
+
+  - id: vita-crashdump
+    repository: https://github.com/TibixDev/vita-crashdump.git
+    branch: main
+    commit: 86ef3ee05a02d08bb2daf039ee4161264b14ff67
+    license: NOASSERTION
+    license_policy: study_only_unknown_license
+    blockers:
+      - psp2dmp_symbolication
+      - crash_backtrace_quality
+    sparse_paths:
+      - README.md
+      - Cargo.toml
+      - src
+    reuse_plan: Compare CLI output and ARM unwind coverage against retained dumps only; no source copy until license is resolved.
+
+  - id: vita-parse-core
+    repository: https://github.com/xyzz/vita-parse-core.git
+    branch: master
+    commit: 644b5f081c5f3c9b205180793ab8f4209dfd9d97
+    license: NOASSERTION
+    license_policy: study_only_unknown_license
+    blockers:
+      - psp2dmp_note_inventory
+      - addr2line_fallbacks
+    sparse_paths:
+      - README.md
+      - main.py
+      - requirements.txt
+    reuse_plan: Use as historical parser behavior reference only; the in-tree parser remains independently maintained.
+
+  - id: libvcp
+    repository: https://github.com/isage/vcp.git
+    branch: master
+    commit: 950c98f55c995d56bed9ab6c0485a9be68cc0f4f
+    license: MIT
+    license_policy: compatible_tooling_reference
+    blockers:
+      - psp2dmp_section_parsing
+      - parser_cross_checks
+    sparse_paths:
+      - README.md
+      - LICENSE
+      - lib/include
+      - lib/src
+      - cli/jsondump
+    reuse_plan: Compare coredump section inventory behavior with in-tree fixtures before adopting any parser detail.
+
+  - id: sokol-audio
+    repository: https://github.com/floooh/sokol.git
+    branch: master
+    commit: 7cee0ba17c358985e4744fe8ac20b6829d328229
+    license: Zlib
+    license_policy: compatible_design_reference
+    blockers:
+      - sceaudio_smoke_test
+      - audio_thread_buffering
+    sparse_paths:
+      - sokol_audio.h
+      - LICENSE
+    reuse_plan: Build a tiny independent SceAudio smoke oracle only if physical dialogue remains silent after WWAudio/provider counters prove nonzero streams.
+
+  - id: daedalusx64-vitagl
+    repository: https://github.com/Rinnegatamante/DaedalusX64-vitaGL.git
+    branch: master
+    commit: e814d1e0198f7b36e8dda30b51fc136df12297aa
+    license: GPL-2.0-only
+    license_policy: study_only_no_code_copy
+    blockers:
+      - vitagl_shader_cache
+      - texture_cache_regressions
+    sparse_paths:
+      - README.md
+    reuse_plan: Use documented vitaGL flags and cache behavior as renderer diagnostic inputs only; no code copy.
+
+  - id: srb2kart-vita
+    repository: https://github.com/Esodland/SRB2Kart-PSVita-PSTV.git
+    branch: master
+    commit: c00e0f09ee8b9567082f806e67800f110289fd0a
+    license: GPL-2.0-only
+    license_policy: study_only_no_code_copy
+    blockers:
+      - black_screen_texture_regression
+      - framebuffer_copy_regression
+    sparse_paths:
+      - README.md
+    reuse_plan: Study documented VitaGL black-screen and texture-regression history only; no source copy.
+
+  - id: alisa-vita
+    repository: https://github.com/Rinnegatamante/Alisa-Vita.git
+    branch: master
+    commit: b9f358daefc8717e15b4c7aaa4ff6c06838cb66c
+    license: NOASSERTION
+    license_policy: study_only_unknown_license
+    blockers:
+      - mesh_material_regressions
+      - loading_scale_orientation
+    sparse_paths:
+      - README.md
+    reuse_plan: Use release notes as a caution list for mesh tint, scale, and animation regressions; no implementation import.
+
+  - id: vita-recorder
+    repository: https://github.com/Rinnegatamante/Vita-Recorder.git
+    branch: main
+    commit: bdbe6c6b3282eacb8a3413d13bfe3608bf72ffc3
+    license: GPL-3.0
+    license_policy: compatible_study_reference
+    blockers:
+      - physical_visual_capture
+      - frame_skip_video_capture
+    sparse_paths:
+      - README.md
+      - main.c
+      - renderer.c
+      - rescaler.c
+    reuse_plan: Study capture timing and frame-skip tradeoffs for diagnostics only; keep release VPK free of recorder code.
+
+  - id: psp2spvc
+    repository: https://github.com/1whatleytay/psp2spvc.git
+    branch: master
+    commit: 1c296ab4e2e275c02f7b93b27653d8a299c7f48e
+    license: NOASSERTION
+    license_policy: study_only_experimental
+    blockers:
+      - shader_translation_experiments
+      - vita3k_shader_recompile_crosscheck
+    sparse_paths:
+      - README.md
+      - src
+    reuse_plan: Experimental shader-tool reference only; no production adoption without separate shader evidence and license review.

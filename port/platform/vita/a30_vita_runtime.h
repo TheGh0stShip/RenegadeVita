@@ -39,6 +39,19 @@ int A30_Vita_Log_Reset();
 int A30_Vita_Log(const char *format, ...);
 
 /*
+** Bounded, candidate-only flight recorder for the original static-object
+** loader.  The outer loader supplies object/factory context; nested original
+** loaders report only phase and chunk identifiers.  The implementation
+** samples outer objects and enables the deeper trace only around the physical
+** hang window, keeping durable I/O bounded.
+*/
+void A35_Vita_Static_Load_Trace_Begin(uint32_t object_index,
+	uint32_t factory_id);
+void A35_Vita_Static_Load_Trace_Step(const char *phase, uint32_t detail_id);
+void A35_Vita_Static_Load_Trace_Name(const char *phase, const char *name);
+void A35_Vita_Static_Load_Trace_End();
+
+/*
 ** Borrowed-world continuation passed to Run_A30_World_Runtime.  It preserves
 ** Westwood ownership and traversal and only bridges Vita controls to a
 ** temporary CameraClass development rig until the original player/input

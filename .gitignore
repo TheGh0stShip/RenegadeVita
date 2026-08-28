@@ -1,7 +1,15 @@
 # Local/generated build products and caches.
 build/
 logs/
+dist/
+.agents/
+.codex/
 *.tar.gz
+*.zip
+*.vpk
+*.elf
+*.self
+*.psp2dmp
 
 # User-provided retail assets and migration backups are not source provenance.
 retail-pc

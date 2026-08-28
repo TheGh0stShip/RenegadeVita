@@ -13,7 +13,16 @@ project_root=$(cd "$(dirname "$0")/.." && pwd)
 vdb=$project_root/.agents/skills/vita-automated-runtime/scripts/vdb-ps-vita.sh
 validator=$project_root/tools/validate_vita_input_route.py
 loading_validator=$project_root/tools/validate_vita_loading_capture.py
-dist_root=/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist
+default_builder_root=${RENEGADE_BUILDER_ROOT:-}
+if [[ -z "$default_builder_root" ]]; then
+	managed_builder_root="/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"
+	if [[ -d "$managed_builder_root" && -w "$managed_builder_root" ]]; then
+		default_builder_root=$managed_builder_root
+	else
+		default_builder_root=$project_root
+	fi
+fi
+dist_root=${RENEGADE_DIST_ROOT:-$default_builder_root/dist}
 candidate=A3.5-dev48
 expected_self=0e61044df081b36b1a74da88c6157149cc27e818fca26f7bde537d00f710ec23
 expected_elf=a4416e16a4678c645e492c91f55c4fc0decae095fb4589d947d9559ee1dc63bd

@@ -10,6 +10,12 @@ Git commits.
 
 ### Added
 
+- Human-facing documentation for quickstart, building, installing, architecture,
+  development workflow, controls, troubleshooting, and current A3.5-dev79
+  status.
+- GitHub issue and pull-request templates for physical test reports, build
+  bugs, evidence, and validation.
+- `tools/upload_vpk_ftp.sh`, a manual VitaShell FTP upload helper for VPKs.
 - Local Git history with the EA source registered as a pinned submodule at
   `3e00c3a1b97381bb28be89a35b856375e0629a08`.
 - Deterministic A3.5 observer-loader breadcrumbs and the focused host contract
@@ -18,6 +24,10 @@ Git commits.
 
 ### Fixed
 
+- Helper scripts no longer hardcode a specific Windows profile path for `dist/`;
+  they honor `RENEGADE_BUILDER_ROOT` or `RENEGADE_DIST_ROOT`.
+- `.gitignore` now excludes generated `dist/` artifacts, local automation
+  state, VPK/ELF/SELF packages, ZIP diagnostics, and Vita crash dumps.
 - `PersistentGameObjObserverManager::Load` now handles failure to open its
   required observer root and a wrong root chunk ID without dereferencing
   unavailable root metadata. It preserves chunk balance when a wrong root was
@@ -25,6 +35,8 @@ Git commits.
 
 ### Verification
 
+- Repository hygiene, shell syntax, and JSON syntax are expected to pass after
+  the documentation overhaul.
 - The observer diagnostic patch applies from pristine upstream with
   `--fuzz=0` and its staged result matches.
 - The focused loader contract passes 27 checks; the patched Combat translation

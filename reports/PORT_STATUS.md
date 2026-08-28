@@ -3,7 +3,18 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev77 original user-lighting color source and material
+Current candidate: **A3.5-dev79 M00 tutorial physical-test build**. It keeps
+the dev48-dev78 audio/dialogue/texture/material/render-state chain and targets
+the latest physical defects by fixing the loading-screen aspect/orientation/
+progress path, enabling original TextDisplay/HUD rendering, remapping Vita
+controls with Triangle as action/use and D-pad camera/weapon/objectives paths,
+restoring first-person default for weapon/reload animation, reducing textured
+skinned-mesh color tinting, adding renderer texture/render-state caching, and
+logging transition/action diagnostics for the gate. It has a full canonical
+build and was manually uploaded for physical testing; acceptance still depends
+on returned Vita evidence.
+
+Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original
 Scene/WW3D fog, fill-mode, and
 ambient state restoration,

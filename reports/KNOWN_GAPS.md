@@ -1,5 +1,24 @@
 # Known gaps
 
+## Current dev79 physical-test gaps (2026-08-28)
+
+A3.5-dev79 is built and uploaded for manual physical testing, but not accepted.
+It specifically targets the latest reported M00 tutorial defects: upside-down
+and wrongly scaled loading screen, non-advancing loading progress, missing HUD
+and Logan text, inverted camera Y, missing action/use mapping, missing reload
+animation, wrong NPC/Havoc skin materials, slight FPS regression, unopened gate,
+the top-screen white icon during Logan dialogue, and the freeze after trying
+the gate after pistol/fire interaction.
+
+The next engineering decisions must come from the dev79 runtime log and
+physical observation. If the gate still fails, inspect transition/action
+diagnostics before changing mission logic. If Logan text remains absent,
+inspect TextDisplay/HUD initialization and conversation breadcrumbs before
+adding UI shortcuts. If skins remain wrong, inspect texture provenance and
+first textured-skin breadcrumbs before changing material ownership. If the
+freeze repeats, collect and symbolicate only against the matching dev79
+ELF/map/symbol set.
+
 ## Reconciled program status (2026-08-24)
 
 The frozen A3.2-dev1 package is a failed physical checkpoint, not a candidate

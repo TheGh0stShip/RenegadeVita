@@ -17,7 +17,16 @@ fi
 
 project_root=$(cd "$(dirname "$0")/.." && pwd)
 candidate=${RENEGADE_CRASH_CANDIDATE:-A3.5-dev38}
-dist_root=${RENEGADE_DIST_ROOT:-/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist}
+default_builder_root=${RENEGADE_BUILDER_ROOT:-}
+if [[ -z "$default_builder_root" ]]; then
+	managed_builder_root="/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"
+	if [[ -d "$managed_builder_root" && -w "$managed_builder_root" ]]; then
+		default_builder_root=$managed_builder_root
+	else
+		default_builder_root=$project_root
+	fi
+fi
+dist_root=${RENEGADE_DIST_ROOT:-$default_builder_root/dist}
 candidate_elf=${RENEGADE_CRASH_ELF:-$dist_root/RenegadeVita-$candidate.elf}
 crash_root=${RENEGADE_CRASH_ROOT:-ux0:/data}
 helper=${RENEGADE_VDB_HELPER:-$project_root/.agents/skills/vita-automated-runtime/scripts/vdb-ps-vita.sh}

@@ -4,11 +4,23 @@ Optional Windows launcher for the canonical Renegade Vita Bash/CMake/VitaSDK
 build. It contains no embedded payload and never deploys to a Vita.
 #>
 [CmdletBinding()]
-param()
+param(
+    [string]$Workspace,
+    [string]$CandidateLabel,
+    [int]$BuildJobs = 0
+)
 
 $ErrorActionPreference = 'Stop'
-$BuilderRoot = Join-Path $env:LOCALAPPDATA 'RenegadeVitaBuilder'
-$Workspace = Join-Path $BuilderRoot 'workspace\A2.0'
+$ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+if ([string]::IsNullOrWhiteSpace($Workspace)) {
+    $Workspace = $ScriptRoot
+}
+$Workspace = (Resolve-Path -LiteralPath $Workspace).Path
+$BuilderRoot = if ($env:RENEGADE_BUILDER_ROOT) {
+    $env:RENEGADE_BUILDER_ROOT
+} else {
+    Join-Path $env:LOCALAPPDATA 'RenegadeVitaBuilder'
+}
 $Logs = Join-Path $BuilderRoot 'logs'
 $Dist = Join-Path $BuilderRoot 'dist'
 $BuildScript = Join-Path $Workspace 'tools\build.sh'
@@ -27,6 +39,12 @@ foreach ($Directory in @($Logs, $Dist)) {
 
 $Timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $ConsoleLog = Join-Path $Logs ($Timestamp + '-wsl-console.log')
+if (-not [string]::IsNullOrWhiteSpace($CandidateLabel)) {
+    $env:RENEGADE_CANDIDATE_LABEL = $CandidateLabel
+}
+if ($BuildJobs -gt 0) {
+    $env:RENEGADE_BUILD_JOBS = [string]$BuildJobs
+}
 Write-Host 'Starting canonical WSL Bash/CMake/VitaSDK build.'
 Write-Host 'No Vita connection or deployment will be attempted.'
 & wsl.exe --cd $Workspace -e bash ./tools/build.sh 2>&1 |

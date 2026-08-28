@@ -1,5 +1,42 @@
 # Live engineering progress
 
+## 2026-08-28 — dev79 M00 tutorial control/HUD/loading candidate
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Runtime boundary: dev79 preserves the dev48-dev78 audio, dialogue, texture,
+  material, and render-state chain, then addresses the latest physical report:
+  loading-screen aspect/orientation/progress, missing HUD/TextDisplay path,
+  camera-Y inversion, action/use mapping, first-person weapon/reload ownership,
+  D-pad camera/weapon/objectives controls, textured-skin color handling,
+  renderer texture/render-state churn, and gate transition diagnostics.
+- Control map: Triangle is action/use/interact, Square is reload, D-pad Down
+  toggles first/third person, D-pad Left/Right changes weapons, and D-pad Up
+  uses the original EVA/objectives path. Touch and rear touch remain unmapped.
+- Validation: focused conversation/loading/route/skin/camera contracts passed
+  before packaging. The full canonical build passed retained host-validation
+  reuse, deterministic restaging, 83 host unittest checks, source integration
+  reporting, ARM link/package, identity verification, compressed VPK
+  validation, diagnostics bundle generation, SHA manifest verification, and
+  retail exclusion.
+- Source report: the canonical integration report records 452 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita
+  platform/renderer/validation/developer files, 52 compatibility headers, and
+  121 deterministic patch files.
+- Artifact: `dist/RenegadeVita-A3.5-dev79.vpk` SHA-256 is
+  `0c34f954885f097f422c4f3670ccb3d9b20fc606fb0e9416d898855c92b84d74`;
+  ELF SHA-256 is
+  `b3483c419750cb33821b16205e04fcc97f969e6dfb6b14290b633066325c23c0`;
+  MAP SHA-256 is
+  `a37cfdaf00498a0e80874cba71462cbd4cf601cc92d4ee307e60110bd9aa462a`;
+  diagnostics bundle SHA-256 is
+  `7a155ded66cd82b1c094817d43142a7e5099d8aeec2c888ae9ec7bda61874a37`.
+- Boundary: the VPK was manually uploaded to the VitaShell FTP user tree on
+  request. No retail data was transferred. Physical acceptance is pending
+  returned observations, `ux0:data/renegade/user/logs/a35-dev79-runtime.log`,
+  screenshots/captures, and any matching crash dump.
+
 ## 2026-08-28 — dev78 original material color authority
 
 `[██████████] 12/12 canonical source/build gates complete`
@@ -2579,7 +2616,7 @@ contract pass.
   fast-build/staging contracts pass 8/8. A no-op run with
   `RENEGADE_FAST_SCOPE=compile RENEGADE_FAST_TESTS=none` completed in 2.1s,
   reported `ninja: no work to do`, validated ELF identity, and wrote
-  `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/A3.5-dev18-FAST-COMPILE-SHA256SUMS.txt`.
+  `<managed-dist>/A3.5-dev18-FAST-COMPILE-SHA256SUMS.txt`.
 - Route-runner update: `tools/run_a35_vita_route_session.sh` now admits exact
   dev18 SELF `058a10a594a8038833d8cced9a4b7a5207a4100079da44beef5c645a7ca69278`
   and exact predecessor hashes for dev17/dev16/dev7 only. Shell syntax and
@@ -2589,7 +2626,7 @@ contract pass.
   `1d4daca0cca2972dcaf76714d558bb21a34fa18dd03a39a02262180e4c82d092`
   after the incremental-staging validation rebuild.
   Dist manifest:
-  `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/A3.5-dev18-FAST-SHA256SUMS.txt`.
+  `<managed-dist>/A3.5-dev18-FAST-SHA256SUMS.txt`.
 - Boundary: no Vita filesystem was accessed and no deployment was attempted.
   This is not physical acceptance and not a substitute for the full canonical
   build gate before milestone acceptance.

@@ -1,56 +1,76 @@
 # Contributing
 
-This repository accepts changes through normal Git branches and pull requests.
-Please keep each change narrow, reviewable, and reproducible.
+This repository is an active source port, not a clean-room reimplementation.
+Changes should preserve original EA/Westwood ownership above the Vita platform
+boundary and should be small enough to review against evidence.
 
-## Before changing code
+## Before Changing Code
 
-1. Initialize the EA source submodule:
-   `git submodule update --init --recursive`.
-2. Check both working trees:
-   `git status --short` and `git -C upstream/CnC_Renegade status --short`.
-3. Read `AGENTS.md` and the relevant records in `reports/`.
+1. Initialize the upstream source submodule.
 
-The upstream submodule is canonical and should remain pristine. Add portability
-and behavior changes as explicit files in `port/patches/`, then register them
-in `tools/stage_sources.sh`. Regenerate `staging/` with:
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+2. Check both working trees.
+
+   ```bash
+   git status --short
+   git -C upstream/CnC_Renegade status --short
+   ```
+
+3. Read the current context:
+   `AGENTS.md`, `docs/CURRENT_STATUS.md`, `reports/BUILD_STATE.json`, and
+   `reports/LIVE_PROGRESS.md`.
+
+The upstream submodule is canonical and should remain pristine. If upstream
+source needs portability changes, add or update a deterministic patch under
+`port/patches/`, register it in `tools/stage_sources.sh`, and regenerate
+`staging/`:
 
 ```bash
 bash ./tools/stage_sources.sh
 ```
 
-Every patch must apply with `--fuzz=0`; do not leave `.orig` or `.rej` files.
+Every staging patch must apply with zero fuzz. Do not leave `.orig` or `.rej`
+files in `staging/`.
 
-## Validation expectations
+## Validation
 
-Run the smallest relevant host target first. For changes affecting a physical
-candidate, complete the project’s canonical build and preserve its logs,
-hashes, ELF/map/symbol files, VPK inventory, and report updates. Host results
-are never a substitute for physical Vita evidence.
-
-Do not automatically deploy to a Vita. Do not commit any of the following:
-
-- retail `Data/` content or extracts;
-- save files, user configuration, dumps, screenshots, credentials, or logs;
-- generated VPKs, SELF/ELF release artifacts, or build directories;
-- unreviewed changes inside the upstream submodule.
-
-Before opening a change for review, run the repository hygiene verifier:
+Use the smallest relevant test first, then expand based on risk:
 
 ```bash
-python3 tools/verify_repo_hygiene.py
+python3 -m unittest tools.test_vita_camera_input_contract
+RENEGADE_FAST_SCOPE=compile bash ./tools/build_fast_candidate.sh
+bash ./tools/build.sh
 ```
 
-## Commit conventions
+Host tests, Vita3K, and physical Vita runs are separate evidence classes. Host
+validation never proves physical visual correctness, controls, audio output,
+or frame pacing.
 
-Use imperative, scoped messages such as:
+Before a review or commit, run:
+
+```bash
+python3 tools/verify_repo_hygiene.py --root .
+```
+
+Do not commit retail data, generated build products, logs, screenshots, crash
+dumps, credentials, local `.agents/` automation, or unreviewed submodule
+changes.
+
+## Commit Expectations
+
+Use imperative, scoped commit messages:
 
 ```text
-Add observer loader diagnostics contract
-Fix Vita controller Y-axis mapping
-Document A3.5 hardware evidence
+Document Vita installation workflow
+Fix M00 action button mapping
+Add transition diagnostics contract
 ```
 
-Update durable reports when a change affects status, decisions, validation, or
-hardware evidence. Do not mark an internal developer build as a milestone or
-release without the required physical acceptance evidence.
+Update durable docs or reports when a change affects runtime status, evidence,
+controls, build workflow, or hardware-test instructions. Do not mark a dev
+candidate as a milestone until matching physical evidence exists.
+
+See [Development](docs/DEVELOPMENT.md) for the full modification workflow.

@@ -52,7 +52,16 @@ esac
 
 project_root=$(cd "$(dirname "$0")/.." && pwd)
 vdb=$project_root/.agents/skills/vita-automated-runtime/scripts/vdb-ps-vita.sh
-dist_root=/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist
+default_builder_root=${RENEGADE_BUILDER_ROOT:-}
+if [[ -z "$default_builder_root" ]]; then
+	managed_builder_root="/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"
+	if [[ -d "$managed_builder_root" && -w "$managed_builder_root" ]]; then
+		default_builder_root=$managed_builder_root
+	else
+		default_builder_root=$project_root
+	fi
+fi
+dist_root=${RENEGADE_DIST_ROOT:-$default_builder_root/dist}
 vpk=$dist_root/RenegadeVita-$candidate.vpk
 title_id=RNEGA3101
 remote_executable=ux0:/app/$title_id/eboot.bin

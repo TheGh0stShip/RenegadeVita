@@ -78,7 +78,6 @@ bool g_logged_first_generated_texture_coordinate = false;
 bool g_logged_first_material_lighting = false;
 bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
-bool g_logged_first_static_material_fallback = false;
 bool g_shader_compiler_available = false;
 unsigned g_shader_init_calls = 0;
 int g_shader_init_last_result = -1;
@@ -908,18 +907,6 @@ float Clamp01(float value)
 	return value < 0.0f ? 0.0f : (value > 1.0f ? 1.0f : value);
 }
 
-bool Is_Near_Black(const Vector3 &color)
-{
-	return color.X <= 0.003f && color.Y <= 0.003f && color.Z <= 0.003f;
-}
-
-Vector3 Max_Color(const Vector3 &left, const Vector3 &right)
-{
-	return Vector3(left.X > right.X ? left.X : right.X,
-		left.Y > right.Y ? left.Y : right.Y,
-		left.Z > right.Z ? left.Z : right.Z);
-}
-
 Vector3 Multiply_Color(const Vector3 &left, const Vector3 &right)
 {
 	return Vector3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
@@ -1057,24 +1044,6 @@ MaterialVertexColor Evaluate_Original_Material_Vertex_Color(
 	}
 	result.final_color = Clamp_Color(lit_color);
 	return result;
-}
-
-void Log_Static_Material_Fallback(MeshClass &mesh, TextureClass *texture,
-	VertexMaterialClass *material, const ShaderClass &shader,
-	const Vector3 &diffuse, const Vector3 &ambient, const Vector3 &emissive,
-	const Vector3 &selected, float opacity)
-{
-	if (g_logged_first_static_material_fallback) return;
-	Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
-		"first static material black fallback: mesh=%s texture=%s shader=%08X gradient=%d material=%p diffuse=(%.3f,%.3f,%.3f) ambient=(%.3f,%.3f,%.3f) emissive=(%.3f,%.3f,%.3f) selected=(%.3f,%.3f,%.3f) opacity=%.3f",
-		mesh.Get_Name(),
-		texture != NULL ? texture->Get_Texture_Name().Peek_Buffer() : "none",
-		shader.Get_Bits(), static_cast<int>(shader.Get_Primary_Gradient()),
-		static_cast<void *>(material),
-		diffuse.X, diffuse.Y, diffuse.Z, ambient.X, ambient.Y, ambient.Z,
-		emissive.X, emissive.Y, emissive.Z, selected.X, selected.Y,
-		selected.Z, opacity);
-	g_logged_first_static_material_fallback = true;
 }
 
 void Log_System_Memory(const char *stage)
@@ -2215,19 +2184,6 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 						color2 != NULL ? 1 : 0, final_color.X, final_color.Y,
 						final_color.Z, vertex_color.alpha);
 					g_logged_first_material_lighting = true;
-				}
-				if (!is_skin && bound_textures[0] != NULL &&
-					Is_Near_Black(final_color)) {
-					Vector3 fallback = Max_Color(vertex_color.ambient,
-						vertex_color.emissive);
-					if (Is_Near_Black(fallback)) {
-						fallback = Vector3(1.0f, 1.0f, 1.0f);
-					}
-					Log_Static_Material_Fallback(mesh, bound_textures[0], material,
-						triangle_shader, vertex_color.diffuse,
-						vertex_color.ambient, vertex_color.emissive, fallback,
-						vertex_color.alpha);
-					final_color = fallback;
 				}
 				glColor4f(Clamp01(final_color.X), Clamp01(final_color.Y),
 					Clamp01(final_color.Z), Clamp01(vertex_color.alpha));

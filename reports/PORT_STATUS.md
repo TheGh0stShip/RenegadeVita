@@ -242,6 +242,19 @@ reuse, current lightweight render-state contract 13/13, DDS/TGA alias contract
 reporting, ARM link/package, identity verification, compressed VPK validation,
 diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
 `0528357e6b4d47d7c1d8e49fef22faaf6e0bd9980c75403dd43c331cd5bf1252`.
+Dev78 preserves dev77 and removes the remaining non-original near-black
+textured static material fallback from the direct Vita mesh backend. Textured
+rigid meshes now submit the original evaluated material/user-lighting color
+directly instead of replacing black results with ambient, emissive, or white,
+matching the original WW3D `Set_Material`/`Set_Shader`/vertex-color authority
+and leaving bad lighting/material state visible in breadcrumbs for hardware
+review. A full canonical no-deploy dev78 build now passes retained
+host-validation reuse, current lightweight render-state contract 13/13,
+DDS/TGA alias contract 11/11, deterministic restaging, 82 host unittest checks,
+source integration reporting, ARM link/package, identity verification,
+compressed VPK validation, diagnostics generation, and SHA verification. The
+canonical VPK SHA-256 is
+`c0779b68172d13f6ff057c010697d9b65af210719a2e827de4acbfde61ebbb27`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -249,7 +262,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev77 is built but not deployed; dev46 remains restored on
+control changed. Dev78 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance,
 fog/material-state acceptance, and a valid post-dialogue route remain pending
 physical evidence**.

@@ -1,5 +1,53 @@
 # Live engineering progress
 
+## 2026-08-28 — dev78 original material color authority
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: dev78 preserves dev77 rigid user-lighting precedence and
+  removes the remaining non-original near-black textured static material
+  fallback from the direct Vita mesh backend. Textured rigid meshes now submit
+  the original evaluated material/user-lighting color directly instead of
+  replacing black results with ambient, emissive, or forced white.
+- Runtime purpose: this matches the original WW3D `Set_Material`,
+  `Set_Shader`, and vertex-color authority more closely and leaves bad
+  material, lighting, texture, or retail-asset state visible in runtime
+  breadcrumbs rather than masking it at the Vita backend boundary.
+- Validation: focused indexed render-state, texture-provenance, and skin
+  submission contracts passed 24/24. The fast no-deploy candidate passed 66
+  focused tests, the original `DDSFileClass` `.tga`-to-`.dds` executable
+  contract 11/11, package identity checks, and VPK packaging. The full
+  canonical no-deploy build passed retained host-validation reuse, the current
+  lightweight render-state contract 13/13, the DDS/TGA alias contract 11/11,
+  82 host unittest checks, deterministic restaging, source integration
+  reporting, ARM link/package, compressed VPK validation, identity
+  verification, diagnostics bundle generation, SHA manifest verification, and
+  retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 119 deterministic patch files covering 238 mechanically patched
+  staged upstream paths, 52 compatibility headers, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev78.vpk` SHA-256 is
+  `c0779b68172d13f6ff057c010697d9b65af210719a2e827de4acbfde61ebbb27`;
+  ELF SHA-256 is
+  `60257b346f579fb5750fb9e92a56dfeb21b44fbe067309ecced396b62d613978`;
+  MAP SHA-256 is
+  `c9e3a75257a015c177732f0fa7097ac22cf60a792c229c2bf0ac3937434347c1`;
+  diagnostics bundle SHA-256 is
+  `ce7772d29c9ae3ed996cc795370244ea747016df6029baedb434023573d86080`.
+- Boundary: dev78 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev78, verify M00
+  sky/fog/ambient/material lighting, texture appearance, muzzle rectangle and
+  other alpha cutouts, Logan dialogue text, Logan audible dialogue and timing,
+  and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev78-runtime.log`, especially
+  `first original user lighting color source`,
+  `first original material lighting`, `first original DX8 fog state`,
+  `first original DX8 ambient state`, `texture loaded`, `loaded_dds/tga`,
+  `checker_bind`, `invalid_bind`, `unsupported_stages`, and confirm
+  `first static material black fallback` does not appear.
+
 ## 2026-08-28 — dev77 original user-lighting color source
 
 `[██████████] 12/12 canonical source/build gates complete`

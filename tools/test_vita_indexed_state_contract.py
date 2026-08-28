@@ -171,14 +171,29 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertNotIn("scene->Render(rinfo);\n\tFlush(rinfo);\n\treturn WW3D_ERROR_OK;\n#else", render)
         self.assertIn("ww3d2-a35-vita-scene-state.patch", stage)
 
-    def test_textured_static_material_black_fallback_is_bounded_and_observable(self):
+    def test_direct_mesh_no_longer_fabricates_static_material_color_fallback(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
-        self.assertIn("first static material black fallback", renderer)
-        self.assertIn("!is_skin && bound_textures[0] != NULL &&", renderer)
-        self.assertIn("Is_Near_Black(final_color)", renderer)
+        original = (ROOT / "staging/ww3d2/dx8renderer.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
+        function = renderer[
+            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
+        ]
+
+        self.assertNotIn("first static material black fallback", renderer)
+        self.assertNotIn("Log_Static_Material_Fallback", renderer)
+        self.assertNotIn("Is_Near_Black(final_color)", function)
+        self.assertNotIn("fallback = Vector3(1.0f, 1.0f, 1.0f);", renderer)
+        self.assertIn("DX8Wrapper::Set_Material(Peek_Material());", original)
+        self.assertIn("DX8Wrapper::Set_Shader(Get_Shader());", original)
         self.assertIn("material->Get_Ambient(&material_ambient);", renderer)
         self.assertIn("material->Get_Emissive(&material_emissive);", renderer)
-        self.assertIn("fallback = Vector3(1.0f, 1.0f, 1.0f);", renderer)
+        self.assertIn("Vector3 final_color = vertex_color.final_color;", function)
+        self.assertLess(
+            function.index("Vector3 final_color = vertex_color.final_color;"),
+            function.index("glColor4f(Clamp01(final_color.X)")
+        )
 
     def test_direct_mesh_uses_original_material_lighting_sources(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()

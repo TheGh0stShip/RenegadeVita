@@ -179,6 +179,9 @@ int main()
 	failures += !Check(dds.Get_Full_Width() == 4 && dds.Get_Full_Height() == 4, "DDS dimensions retained", checks);
 	failures += !Check(dds.Get_Mip_Level_Count() == 1, "single mip level retained", checks);
 	failures += !Check(dds.Get_Format() == WW3D_FORMAT_DXT1, "D3DFMT_DXT1 maps to WW3D_FORMAT_DXT1", checks);
+	const D3DFORMAT dx8_format = WW3DFormat_To_D3DFormat(dds.Get_Format());
+	failures += !Check(dx8_format == D3DFMT_DXT1, "DDS WW3D format maps back to D3DFMT_DXT1 metadata", checks);
+	failures += !Check(D3DFormat_To_WW3DFormat(dx8_format) == dds.Get_Format(), "DDS DX8 metadata round-trips to WW3D format", checks);
 	const bool loaded = available && dds.Load();
 	failures += !Check(loaded, "DDS payload load succeeds through same dds filename", checks);
 	failures += !Check(factory.Last_Request() == "l02_mnt02.dds" && factory.Request_Count() == 2, "Load reuses dds factory lookup", checks);

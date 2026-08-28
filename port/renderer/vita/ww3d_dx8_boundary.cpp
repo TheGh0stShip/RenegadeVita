@@ -363,7 +363,7 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	texture->Width = dds.Get_Width(0U);
 	texture->Height = dds.Get_Height(0U);
 	texture->MipLevels = mip_count;
-	texture->SourceFormat = static_cast<uint32_t>(dds.Get_Format());
+	texture->SourceFormat = WW3DFormat_To_D3DFormat(dds.Get_Format());
 	texture->HasAlpha = Texture_Format_Has_Alpha(dds.Get_Format());
 	texture->ReferenceCount = 1U;
 	texture->DiagnosticFallback = false;

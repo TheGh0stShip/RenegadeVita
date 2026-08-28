@@ -41,6 +41,7 @@ class FastCandidateBuildContractTests(unittest.TestCase):
         self.assertIn("RENEGADE_FAST_TESTS", script)
         self.assertIn("focused|none", script)
         self.assertIn("Focused fast contracts skipped by RENEGADE_FAST_TESTS=none", script)
+        self.assertIn("rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}", script)
         self.assertIn("tools.test_vita_hanim_combo_guard", script)
         self.assertIn("tools.test_vita_camera_input_contract", script)
         self.assertIn("tools.test_input_route_contract", script)

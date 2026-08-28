@@ -1,5 +1,43 @@
 # Live engineering progress
 
+## 2026-08-28 — dev50 texture descriptor and SDK-root canonical candidate
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Source correction: the Vita DX8 texture boundary now reports DDS texture
+  descriptors in original DX8 `D3DFORMAT` terms instead of raw `WW3DFormat`
+  enum values. This preserves the original `TextureClass::Init()` round trip
+  through `D3DFormat_To_WW3DFormat()` and prevents the shipped
+  `WW3D_FORMAT_DXT1` value from being misread as `D3DFMT_R8G8B8`.
+- Audio contract: the Vita Miles provider mixer test now validates the whole
+  four-frame mixed buffer for mono/pan-left and stream/pan-center cases, locking
+  the single-rate cursor behavior needed for streamed dialogue.
+- Build-system fix: the canonical and fast build scripts now default to the
+  documented `/usr/local/vitasdk` via `RENEGADE_VITASDK`, and CMake detects
+  vitaGL physical-contiguous memory names with declaration-aware enum matching.
+  The dev50 canonical configure selected `VGL_MEM_SLOW` from `/usr/local/vitasdk`.
+- Validation: focused audio/loading/build-script contracts passed 10/10, the
+  fast no-deploy candidate passed 37/37 focused contracts, the executable
+  original `DDSFileClass` `.tga`-to-`.dds` alias contract passed 11/11, and the
+  full no-deploy canonical build passed retained host validation reuse,
+  deterministic restaging, source integration reporting, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, and SHA manifest verification.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev50.vpk` SHA-256 is
+  `2c9fe46c04596171ba1bc5fa7f47b13d7b95ba565b751b9e528147d982d722b1`;
+  packaged eboot/SELF SHA-256 is
+  `f9df6d460599154a061a1240465ca1fcfa5ec4fd29d717384c1ff42ba1e673ff`;
+  ELF SHA-256 is
+  `3b5ed7597bfc36f14240cff75fbe2d4437e2ae8298eba57a4aa3ce22d0238725`.
+- Boundary: dev50 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev50, verify
+  audible Logan dialogue and material/texture appearance, then inspect
+  `ux0:data/renegade/user/logs/a35-dev50-runtime.log`.
+
 ## 2026-08-28 — dev49 canonical dialogue telemetry and DDS-first texture candidate
 
 `[██████████] 12/12 canonical source/build gates complete`

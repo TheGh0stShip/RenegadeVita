@@ -3,7 +3,7 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev49 dialogue/audio, texture, and route-fidelity correction for the
+Current work: **post-dev50 dialogue/audio, texture, SDK-root, and route-fidelity correction for the
 restage-proven shared original `LoadingScreenClass` loading path, the dev35
 stack fix, dev36 camera-Y boundary correction, dev37 DataSafe guard, dev38
 loading capture metadata, dev39/dev40 TGA loading fixes, original
@@ -17,12 +17,16 @@ adds stream/read/decode/start/mix/output counters for the Logan dialogue path,
 and changes the Vita DX8 texture boundary to try original `DDSFileClass`
 lookup before loose Targa decode so `.tga` material names can resolve retail
 `.dds` assets through the FileFactory/MIX chain; that original DDS alias path
-is now covered by an executable host contract. A full canonical no-deploy
-dev49 build now passes retained host-validation reuse, deterministic restaging,
-source integration reporting, ARM link/package, identity verification,
-compressed VPK validation, diagnostics generation, and SHA verification. The
-canonical VPK SHA-256 is
-`abb0d3f8a6f895504ee78808ec834de3446d903ea912a8855d2f8e157fc75207`.
+is now covered by an executable host contract. Dev50 fixes DDS descriptor
+metadata so original `TextureClass::Init()` receives DX8 `D3DFORMAT` values
+instead of raw `WW3DFormat` values, avoiding the DXT1/RGB888 enum collision;
+it also pins the documented `/usr/local/vitasdk` default through
+`RENEGADE_VITASDK`, tightens vitaGL enum detection, and extends the audio
+mixer/source contracts. A full canonical no-deploy dev50 build now passes
+retained host-validation reuse, deterministic restaging, source integration
+reporting, ARM link/package, identity verification, compressed VPK validation,
+diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
+`2c9fe46c04596171ba1bc5fa7f47b13d7b95ba565b751b9e528147d982d722b1`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -30,7 +34,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev49 is built but not deployed; dev46 remains restored on
+control changed. Dev50 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

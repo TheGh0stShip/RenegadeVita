@@ -226,7 +226,8 @@ int main()
 	int16_t mixed[8] = {};
 	passed &= Require(Renegade_Miles_Mix_For_Test(mixed, 4), "manual mix failed");
 	passed &= Require(mixed[0] == 1000 && mixed[1] == 0 && mixed[2] == -1000 &&
-		mixed[3] == 0 && mixed[4] == 2000 && mixed[5] == 0,
+		mixed[3] == 0 && mixed[4] == 2000 && mixed[5] == 0 &&
+		mixed[6] == -2000 && mixed[7] == 0,
 		"provider volume/pan mix differs");
 	AIL_release_sample_handle(sample);
 	H3DSAMPLE sample3d = AIL_allocate_3D_sample_handle(1);
@@ -270,7 +271,9 @@ int main()
 	passed &= Require(Renegade_Miles_Mix_For_Test(streamed, 4),
 		"manual stream mix failed");
 	passed &= Require(streamed[0] == 1000 && streamed[1] == 1000 &&
-		streamed[2] == -1000 && streamed[3] == -1000,
+		streamed[2] == -1000 && streamed[3] == -1000 &&
+		streamed[4] == 2000 && streamed[5] == 2000 &&
+		streamed[6] == -2000 && streamed[7] == -2000,
 		"provider stream mix differs");
 	AIL_close_stream(stream);
 	RenegadeMilesRuntimeStats stats = {};

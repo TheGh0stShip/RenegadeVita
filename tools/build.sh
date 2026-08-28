@@ -16,7 +16,7 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev49}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev50}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
@@ -24,7 +24,7 @@ case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_b
 rv_timestamp=$(date +%Y%m%d-%H%M%S)
 rv_build="$rv_root/build/vita-${rv_candidate_stem}-candidate-${rv_timestamp}"
 rv_host_output="$rv_root/build/${rv_candidate_label}-HOST-VALIDATION.log"
-rv_vitasdk=${VITASDK:-/usr/local/vitasdk}
+rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
 rv_revision=3e00c3a1b97381bb28be89a35b856375e0629a08
 rv_log="$rv_logs/${rv_candidate_stem}-$rv_timestamp-build.log"
 rv_runtime_log="ux0:data/renegade/user/logs/${rv_candidate_stem}-runtime.log"
@@ -184,7 +184,7 @@ require_host_line "A3.1 capture telemetry host self-test: PASS (24 checks, 0 fai
 require_host_line "A3.2 Vita controller axis-contract: PASS (22 checks, 0 failures)"
 require_host_line "A3.5 Vita button-state contract: PASS (10 checks, 0 failures)"
 require_host_line "A3.5 Vita ShaderClass render-state contract: 4 checks, 0 failures"
-require_host_line "A3.5 DDSFileClass tga-alias contract: 9 checks, 0 failures"
+require_host_line "A3.5 DDSFileClass tga-alias contract: 11 checks, 0 failures"
 require_host_line "A3 renderer process lifecycle: 11 checks, 0 failures; native=1 sessions=2 shutdowns=2"
 require_host_line "A3.2 texture upload contract: PASS (4 checks, 0 failures)"
 require_host_line "runtime.checks=45"
@@ -215,6 +215,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_vita_indexed_state_contract \
 	tools.test_validate_vita_input_route tools.test_vita_route_session_runner \
 	tools.test_mission_conversation_diagnostics_contract \
+	tools.test_vita_loading_screen_contract \
 	tools.test_audit_tt_reference tools.test_vita_audio_provider \
 	tools.test_vita_open_source_references
 

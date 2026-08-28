@@ -167,6 +167,8 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("IDirect3DSurface8 *surface = DX8Wrapper::_Create_DX8_Surface(filename);", boundary)
         self.assertIn("IDirect3DTexture8 *texture = DX8Wrapper::_Create_DX8_Texture(surface,", boundary)
         self.assertIn("if (texture != NULL || dds_available) return texture;", boundary)
+        self.assertIn("texture->SourceFormat = WW3DFormat_To_D3DFormat(dds.Get_Format());", boundary)
+        self.assertNotIn("texture->SourceFormat = static_cast<uint32_t>(dds.Get_Format());", boundary)
         self.assertLess(
             boundary.index("Load_DDS_Texture(filename, mip_level_count,"),
             boundary.index('Filename_Has_Extension(filename, ".tga")'),
@@ -186,6 +188,12 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("loading_visual_gate", capture_source)
         self.assertIn("Loading visual gate: active=%d logical=%ux%u", capture_source)
         self.assertIn('"loading_visual_gate.logical_to_native_fullscreen"', compare_source)
+
+        cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn('MATCHES "VGL_MEM_PHYCONT[ \\t\\r\\n]*,"', cmake)
+        self.assertIn('MATCHES "VGL_MEM_SLOW[ \\t\\r\\n]*,"', cmake)
+        self.assertNotIn('MATCHES "VGL_MEM_PHYCONT"', cmake)
+        self.assertNotIn('MATCHES "VGL_MEM_SLOW"', cmake)
 
     def test_direct_runtime_rejects_the_failed_tile_overlay_path(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text(

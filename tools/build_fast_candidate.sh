@@ -9,10 +9,10 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev49}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev50}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
-rv_vitasdk=${VITASDK:-/usr/local/vitasdk}
+rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-$(nproc)}
 case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
 rv_fast_scope=${RENEGADE_FAST_SCOPE:-package}

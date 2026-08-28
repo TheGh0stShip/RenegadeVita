@@ -15,7 +15,7 @@ project(RenegadeVitaA31 VERSION 3.5.1 LANGUAGES C CXX)
 # This is provenance for a hardware candidate, not a public milestone claim.
 # Keep the artifact identity configurable so a newer candidate can never
 # overwrite the symbols and diagnostics that belong to an earlier one.
-set(RENEGADE_CANDIDATE_LABEL "A3.5-dev80" CACHE STRING
+set(RENEGADE_CANDIDATE_LABEL "A3.5-dev82" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
 if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
@@ -82,6 +82,7 @@ set(RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
 	${RENEGADE_STAGE}/wwui/stylemgr.cpp
 	${RENEGADE_STAGE}/wwui/menubackdrop.cpp
 	${RENEGADE_STAGE}/commando/loadingscreen.cpp
+	${RENEGADE_STAGE}/commando/combatgmode.cpp
 	${RENEGADE_STAGE}/commando/textdisplay.cpp
   ${RENEGADE_STAGE}/commando/gamedata.cpp ${RENEGADE_STAGE}/commando/gdsingleplayer.cpp ${RENEGADE_STAGE}/commando/gdcnc.cpp ${RENEGADE_STAGE}/commando/campaign.cpp ${RENEGADE_STAGE}/commando/winevent.cpp ${RENEGADE_STAGE}/commando/renegadecheatmgr.cpp ${RENEGADE_STAGE}/commando/player.cpp ${RENEGADE_STAGE}/commando/playermanager.cpp ${RENEGADE_STAGE}/commando/god.cpp ${RENEGADE_STAGE}/commando/team.cpp ${RENEGADE_STAGE}/commando/teammanager.cpp ${RENEGADE_STAGE}/commando/gamedataupdateevent.cpp ${RENEGADE_STAGE}/commando/sctextobj.cpp ${RENEGADE_STAGE}/commando/netinterface.cpp ${RENEGADE_STAGE}/commando/netevent.cpp ${RENEGADE_STAGE}/commando/cnetwork.cpp ${RENEGADE_STAGE}/commando/comnetrcvinst.cpp ${RENEGADE_STAGE}/commando/nethandler.cpp ${RENEGADE_STAGE}/commando/buildnum.cpp ${RENEGADE_STAGE}/commando/gameinitmgr.cpp ${RENEGADE_STAGE}/commando/pkthandlers.cpp ${RENEGADE_STAGE}/commando/apppacketstats.cpp ${RENEGADE_STAGE}/commando/sbbomanager.cpp ${RENEGADE_STAGE}/commando/gameoptionsevent.cpp ${RENEGADE_STAGE}/commando/evictionevent.cpp ${RENEGADE_STAGE}/commando/clientpingmanager.cpp ${RENEGADE_STAGE}/commando/cspingrequestevent.cpp ${RENEGADE_STAGE}/commando/scpingresponseevent.cpp ${RENEGADE_STAGE}/commando/clienthintmanager.cpp ${RENEGADE_STAGE}/commando/cshint.cpp ${RENEGADE_STAGE}/commando/clientgoodbyeevent.cpp ${RENEGADE_STAGE}/commando/playerkill.cpp ${RENEGADE_STAGE}/commando/serverfps.cpp ${RENEGADE_STAGE}/commando/clientfps.cpp ${RENEGADE_STAGE}/commando/priority.cpp ${RENEGADE_STAGE}/commando/regint.cpp ${RENEGADE_STAGE}/commando/regbool.cpp ${RENEGADE_STAGE}/commando/regfloat.cpp
   ${RENEGADE_STAGE}/wwnet/connect.cpp ${RENEGADE_STAGE}/wwnet/rhost.cpp ${RENEGADE_STAGE}/wwnet/netutil.cpp ${RENEGADE_STAGE}/wwnet/netstats.cpp ${RENEGADE_STAGE}/wwnet/msgstat.cpp ${RENEGADE_STAGE}/wwnet/msgstatlist.cpp ${RENEGADE_STAGE}/wwnet/msgstatlistgroup.cpp ${RENEGADE_STAGE}/wwnet/BWBalance.cpp ${RENEGADE_STAGE}/wwnet/packetmgr.cpp ${RENEGADE_STAGE}/wwnet/singlepl.cpp ${RENEGADE_STAGE}/commando/messages.cpp ${RENEGADE_STAGE}/commando/changeteamevent.cpp ${RENEGADE_STAGE}/combat/inventory.cpp ${RENEGADE_STAGE}/combat/colors.cpp
@@ -229,6 +230,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   RENEGADE_VITA_A30=1
   RENEGADE_VITA_A31=1
   RENEGADE_A35_ORIGINAL_WWAUDIO=1
+  RENEGADE_A35_ORIGINAL_COMBATGMODE=1
   RENEGADE_A4_REAL_STYLEMGR=1
   # Original UI and WideStringClass data is UTF-16, as it was under the
   # Win32 compiler.  Keep literals and wchar_t-based ABI calls at that width.

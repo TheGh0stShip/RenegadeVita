@@ -74,6 +74,11 @@ public:
 				void 	Core_Shutdown();
 				void 	Core_Restart();
 
+#if defined(RENEGADE_VITA_PORT)
+	static	void	Vita_Begin_Level_Load(void *loading_screen, bool update_network);
+	static	void	Vita_Finalize_Loaded_Level(void *loading_screen, bool update_network);
+#endif
+
 	static   void  Toggle_Multi_Hud( void );
 
 	static	AudibleSoundClass	* BackgroundMusic;
@@ -98,6 +103,5 @@ private:
 
 
 #endif
-
 
 

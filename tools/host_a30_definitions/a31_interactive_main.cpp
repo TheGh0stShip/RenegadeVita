@@ -367,6 +367,18 @@ int main(int argc, char **argv)
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_RIGHT) == Input::SLIDER_MOUSE_RIGHT &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_UP) == Input::SLIDER_MOUSE_UP &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_DOWN) == Input::SLIDER_MOUSE_DOWN &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_LEFT) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_RIGHT) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_UP) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_DOWN) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_TURN_LEFT) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_TURN_LEFT) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_TURN_RIGHT) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_TURN_RIGHT) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_LEFT) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_LEFT) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_RIGHT) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_RIGHT) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_ACTION) == DIK_E &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON) == DIK_R &&
@@ -383,10 +395,10 @@ int main(int argc, char **argv)
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT) == 0 &&
 					Input::Get_Primary_Key_For_Function(
 						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
-					Input::Get_Secondary_Key_For_Function(
-						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
-					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0 &&
-					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0;
+						Input::Get_Secondary_Key_For_Function(
+							INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == DIK_E &&
+						Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0;
 			Print("vita_controls_use_original_action_sliders", vita_control_bindings);
 			if (!vita_control_bindings) { passed = false; break; }
 			input_initialized = true;

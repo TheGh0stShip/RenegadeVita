@@ -214,6 +214,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-latch.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-m00-ui-hud-subtitles.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-motion.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-wide-abi.patch"
@@ -289,6 +293,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-event-portability.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-shared-loadingscreen-owner.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-combatgmode-vita-load-finalization.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-loading-status-text.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-loading-status-render.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -455,6 +465,7 @@ echo "Applied: port/patches/combat-a35-conversation-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-conversation-reentrant-think.patch"
 echo "Applied: port/patches/combat-a35-transition-action-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-latch.patch"
+echo "Applied: port/patches/combat-a35-weaponview-reload-motion.patch"
 echo "Applied: port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 echo "Applied: port/patches/ww3d2-a31-wide-abi.patch"
 echo "Applied: port/patches/ww3d2-a35-vita-renderobj-load-trace.patch"
@@ -491,6 +502,9 @@ echo "Applied: port/patches/commando-a4-combatgmode-include-case.patch"
 echo "Applied: port/patches/commando-a4-event-gamespy-boundary.patch"
 echo "Applied: port/patches/commando-a4-event-portability.patch"
 echo "Applied: port/patches/commando-a35-shared-loadingscreen-owner.patch"
+echo "Applied: port/patches/commando-a35-combatgmode-vita-load-finalization.patch"
+echo "Applied: port/patches/commando-a35-loading-status-text.patch"
+echo "Applied: port/patches/commando-a35-loading-status-render.patch"
 echo "Applied: port/patches/wwaudio-a30-gcc15.patch"
 echo "Applied: port/patches/wwaudio-a31-gcc15.patch"
 echo "Applied: port/patches/wwaudio-a31-audio-lifecycle-breadcrumb.patch"

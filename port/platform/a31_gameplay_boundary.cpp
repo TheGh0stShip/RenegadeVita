@@ -59,6 +59,8 @@ bool GameInFocus = true;
 // boundary-owned fallback only for the older direct gameplay targets.
 #if !defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
 bool g_is_loading = false;
+#endif
+#if !defined(RENEGADE_A4_ORIGINAL_GAMEMODE) && !defined(RENEGADE_A35_ORIGINAL_COMBATGMODE)
 bool g_client_quit = false;
 // The full desktop CombatGameMode owns the restart presenter.  Replicated
 // packet handling only observes this transition flag, so keep that isolated
@@ -341,6 +343,18 @@ void A31_Interactive_Configure_Vita_Controls()
 		Input::SLIDER_MOUSE_UP);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_DOWN,
 		Input::SLIDER_MOUSE_DOWN);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_LEFT, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_RIGHT, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_UP, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_WEAPON_DOWN, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_LEFT, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_TURN_LEFT, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_RIGHT, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_TURN_RIGHT, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_LEFT, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_LEFT, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_RIGHT, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_RIGHT, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_JUMP, DIK_SPACE);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_CROUCH, DIK_LCONTROL);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ACTION, DIK_E);
@@ -361,13 +375,13 @@ void A31_Interactive_Configure_Vita_Controls()
 		INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0);
 	Input::Set_Secondary_Key_For_Function(
 		INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0);
-	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
-	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MENU_TOGGLE, DIK_ESCAPE);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_PRIMARY,
 		DirectInput::BUTTON_JOYSTICK_B);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_SECONDARY,
 		DirectInput::BUTTON_JOYSTICK_A);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, DIK_E);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
 }
 
 void A31_Interactive_Begin_Mission_Completion_Observation()

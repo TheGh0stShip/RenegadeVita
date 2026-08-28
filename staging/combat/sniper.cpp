@@ -156,8 +156,12 @@ void  SniperHUDClass::Build_Base( void )
 	tint = 0xFF00FF00;	// Green
 
 	// Draw the center view
+#if defined(RENEGADE_VITA_PORT)
+	draw.Set( 0, 0, screen_size.X, screen_size.Y );
+#else
 	draw.Set( SNIPER_VIEW_UL, SNIPER_VIEW_LR );
 	draw.Scale( screen_scale );
+#endif
 	_Sniper2DBaseRenderer->Add_Quad( draw, uv, tint );
 
 	// Draw the black sides

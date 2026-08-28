@@ -913,6 +913,9 @@ static	void	Weapon_Update( void )
 				Strip_Path_From_Filename( filename, def->IconTextureName );
 				uv = def->IconTextureUV;
 				offset = def->IconOffset;
+			} else if ( weapon->Get_Can_Snipe() ) {
+				uv.Set( SNIPER_UV );
+				offset.Set( SNIPER_OFFSET );
 
 #if 0		// Used to find offsets
 				static	Vector2	tweak_add(0,0);

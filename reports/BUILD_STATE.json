@@ -6,6 +6,37 @@
   "last_successful_stage": "2026-08-28: A3.5-dev79 full canonical source/build/package candidate passed retained canonical host-validation reuse, deterministic restaging, 83 host unittest checks, source integration report checks, original DDSFileClass tga-to-dds executable contract 11/11, current lightweight render-state contract 13/13, ARM link/package, ELF/SELF/VPK identity, compressed VPK validation, diagnostics bundle generation, SHA manifest, and retail exclusion. The canonical integration report records 452 upstream original Westwood translation units plus 1 staged original-owner extraction, 26 Vita platform/renderer/validation files, 52 compatibility headers, and 121 deterministic staging patches. VPK/ELF/MAP/diagnostics SHA-256 are 0c34f954885f097f422c4f3670ccb3d9b20fc606fb0e9416d898855c92b84d74, b3483c419750cb33821b16205e04fcc97f969e6dfb6b14290b633066325c23c0, a37cfdaf00498a0e80874cba71462cbd4cf601cc92d4ee307e60110bd9aa462a, and 7a155ded66cd82b1c094817d43142a7e5099d8aeec2c888ae9ec7bda61874a37. The VPK was manually uploaded to VitaShell FTP on user request; no retail data was transferred.",
   "latest_validation": "2026-08-28: dev79 canonical source/build validation passed under bash ./tools/build.sh. Focused conversation/loading/route/skin/camera contracts passed before the canonical build; the canonical build passed retained semantic fingerprints, 83 unittest checks, deterministic staging, source integration reporting, ARM package identity, compressed VPK validation, diagnostics bundle generation, SHA manifest, and retail exclusion. Manual FTP upload placed only the VPK in the Vita user tree for physical testing.",
   "active_blocker": "Dev79 has not yet returned physical evidence for loading screen correctness, HUD/TextDisplay and Logan text, NPC/Havoc skin material correctness, camera/reload/control behavior, Triangle gate interaction, FPS impact, or the reported freeze after pistol/gate interaction. Next work depends on returned observations, a35-dev79-runtime.log, screenshots/captures, and any matching psp2core dump.",
+  "parallel_workers": {
+    "retail_frontend_intro_worker": {
+      "status": "STARTED_BY_EXTERNAL_CODEX_SESSION_ISOLATED_WORKTREE_PLANNED",
+      "recorded_on": "2026-08-28",
+      "last_reported_on": "2026-08-28",
+      "model_request": "Codex 5.5 Xtra High",
+      "target_branch": "feature/a35-dev82-retail-frontend",
+      "full_prompt": "reports/PARALLEL_WORKERS.md",
+      "workspace_policy": "Do not write directly into /home/steve/projects/RenegadeVitaBuilder/workspace/active concurrently with dev82. Use an isolated git worktree or branch and deliver a branch or deterministic patch series for integration.",
+      "objective": "Build the original retail-style Commando frontend path for Vita, including EA/Renegade/Westwood intro movie flow below the original movie/Bink boundary and a 1:1 retail main menu for single-player entry, controller navigation, menu hierarchy, tutorial launch, load/options/quit/back behavior, and clean handoff into the existing dev82 M00 loader.",
+      "latest_worker_report": "The worker selected the relevant project skills in its own session, read AGENTS.md and the standard reports, observed that the active tree contains substantial uncommitted dev82-era changes, and correctly decided to create or use an isolated branch/worktree rather than writing into active. It also noted that current reports still name dev79 while active/handoff name dev82 in progress, so it planned to inspect refs, staging patch inventory, and frontend-linked targets before creating the isolated workspace.",
+      "must_preserve": [
+        "original EA/Westwood ownership above platform boundaries",
+        "no A1/RVA/custom renderer/custom game-loop revival",
+        "upstream source pristine where possible",
+        "deterministic patches under port/patches/ or staged original-owner files",
+        "existing Vita retail-data, user, and cache filesystem contract",
+        "existing dev82 M00 loader, HUD owner, input owner, and single loading progress bar",
+        "no proprietary RAD/Bink code import and no packaged retail movies",
+        "no automatic Vita deployment and no retail-data transfer"
+      ],
+      "deliverables": [
+        "branch or worktree name and exact base commit",
+        "changed files and deterministic patch inventory",
+        "focused host tests for startup movie sequencing, main-menu navigation, and tutorial-entry handoff",
+        "canonical build evidence if buildable",
+        "documentation updates describing implemented, stubbed, and integration-required pieces",
+        "merge instructions for the core dev82 worker"
+      ]
+    }
+  },
   "implementation_context": {
     "status": "CONTINUATION_IN_PROGRESS",
     "current_configuration": "maintainer-controlled iterative engineering",

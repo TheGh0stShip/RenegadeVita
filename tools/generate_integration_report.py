@@ -13,9 +13,9 @@ MODULES = [
     "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi",
 ]
 
-EXPECTED_ORIGINAL_SOURCE_COUNT = 452
+EXPECTED_ORIGINAL_SOURCE_COUNT = 453
 EXPECTED_VITA_PORT_SOURCE_COUNT = 26
-EXPECTED_PATCH_COUNT = 122
+EXPECTED_PATCH_COUNT = 127
 
 STAGED_ORIGINAL_OWNER_SOURCES = {
     "Code/Commando/loadingscreen.cpp": "staging/commando/loadingscreen.cpp",
@@ -216,7 +216,8 @@ def main() -> None:
         "objective": (
             "First authentic M00 tutorial runtime; current source seed "
             "preserves accepted A3.0/Combat ownership, links the original "
-            "Mission00 provider and its direct dependencies, and retains "
+            "Mission00 provider and its direct dependencies, promotes the "
+            "original CombatGameMode post-load finalization owner, and retains "
             "original WWAudio ownership over a Vita-native output boundary"
         ),
         "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",

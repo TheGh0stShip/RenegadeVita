@@ -144,7 +144,7 @@ int main()
 	input.state.loading_visual_gate.original_loading_screen_owner = true;
 	input.state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
 	input.state.loading_visual_gate.loading_texture_v_flip_enabled = true;
-	input.state.loading_visual_gate.gameplay_texture_v_unchanged = false;
+	input.state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	input.history = &history;
 	const A31CaptureBundleResult result = A31_Write_Capture_Bundle(input);
 	if (!result.passed) {

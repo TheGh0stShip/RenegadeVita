@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev80",
+  "milestone": "A3.5-dev81",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -549,8 +549,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 122,
-  "mechanically_patched_upstream_files": 244,
+  "patch_count": 126,
+  "mechanically_patched_upstream_files": 248,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -594,6 +594,7 @@
     "Code/Combat/scripts.cpp",
     "Code/Combat/scripts.h",
     "Code/Combat/scriptzone.cpp",
+    "Code/Combat/sniper.cpp",
     "Code/Combat/soldier.cpp",
     "Code/Combat/soldier.h",
     "Code/Combat/spawn.cpp",
@@ -795,6 +796,9 @@
     "Code/wwui/treectrl.cpp",
     "Code/wwui/wwuiinput.cpp",
     "Code/wwui/wwuiinput.h",
+    "patch-target/commando-a35-loading-status-render.patch/loadingscreen.cpp",
+    "patch-target/commando-a35-loading-status-text.patch/loadingscreen.cpp",
+    "patch-target/commando-a35-loading-status-text.patch/loadingscreen.h",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp"
   ],
   "patches": [
@@ -958,6 +962,17 @@
       ]
     },
     {
+      "path": "port/patches/combat-a35-m00-ui-hud-subtitles.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "textwindow.cpp",
+        "soldier.cpp",
+        "sniper.cpp",
+        "hud.cpp",
+        "weaponview.cpp"
+      ]
+    },
+    {
       "path": "port/patches/combat-a35-observer-load-diagnostics.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1001,6 +1016,13 @@
         "weapons.cpp",
         "weaponview.cpp",
         "weaponview.h"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-weaponview-reload-motion.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "weaponview.cpp"
       ]
     },
     {
@@ -1096,6 +1118,21 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-status-render.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "loadingscreen.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-status-text.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "loadingscreen.h",
+        "loadingscreen.cpp"
       ]
     },
     {

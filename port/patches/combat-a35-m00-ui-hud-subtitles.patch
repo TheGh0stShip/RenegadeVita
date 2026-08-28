@@ -1,0 +1,102 @@
+diff --git a/textwindow.cpp b/textwindow.cpp
+index 04a8c4f..9b39e48 100644
+--- a/textwindow.cpp
++++ b/textwindow.cpp
+@@ -709,7 +709,7 @@ TextWindowClass::Update_View (bool info_only, float *total_height)
+ 		//
+ 		//	Check to see if we've gone outside the client area of the text window
+ 		//
+-		if ((y_pos + row_height) > TextRect.Right && info_only == false) {
++		if ((y_pos + row_height) > TextRect.Bottom && info_only == false) {
+ 			break;
+ 		}		
+ 		
+diff --git a/soldier.cpp b/soldier.cpp
+index 23ff0b4..0f0610d 100644
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -3470,6 +3470,10 @@ float SoldierGameObj::Say_Dynamic_Dialogue
+ 			}
+ 		}
+ 
++#if defined(RENEGADE_VITA_PORT)
++		display_text = true;
++#endif
++
+ 		//
+ 		//	Check to see if this string is commented out.
+ 		//
+diff --git a/sniper.cpp b/sniper.cpp
+index be98abc..85af67c 100644
+--- a/sniper.cpp
++++ b/sniper.cpp
+@@ -158,7 +158,11 @@ void  SniperHUDClass::Build_Base( void )
+ 	// Draw the center view
++#if defined(RENEGADE_VITA_PORT)
++	draw.Set( 0, 0, screen_size.X, screen_size.Y );
++#else
+ 	draw.Set( SNIPER_VIEW_UL, SNIPER_VIEW_LR );
+ 	draw.Scale( screen_scale );
++#endif
+ 	_Sniper2DBaseRenderer->Add_Quad( draw, uv, tint );
+ 
+ 	// Draw the black sides
+ 	RectClass blackuv( BLACK_UV_UL, BLACK_UV_LR );
+diff --git a/hud.cpp b/hud.cpp
+index 84f7104..329f781 100644
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -913,6 +913,9 @@ static	void	Weapon_Update( void )
+ 				Strip_Path_From_Filename( filename, def->IconTextureName );
+ 				uv = def->IconTextureUV;
+ 				offset = def->IconOffset;
++			} else if ( weapon->Get_Can_Snipe() ) {
++				uv.Set( SNIPER_UV );
++				offset.Set( SNIPER_OFFSET );
+ 
+ #if 0		// Used to find offsets
+ 				static	Vector2	tweak_add(0,0);
+diff --git a/weaponview.cpp b/weaponview.cpp
+index 8619324..83c7b1d 100644
+--- a/weaponview.cpp
++++ b/weaponview.cpp
+@@ -74,6 +74,7 @@ int					WeaponState;
+ bool				LastMuzzleFlash;
+ bool				ReloadAnimationPending;
+ const WeaponClass*	ReloadAnimationWeapon;
++float				ReloadAnimationViewTimer;
+ 
+ DecorationPhysClass*HandsPhysObj;
+ RenderObjClass*		WeaponModel;
+@@ -148,6 +149,7 @@ void 	WeaponViewClass::Init()
+ 	ClipModel = NULL;
+ 	ReloadAnimationPending = false;
+ 	ReloadAnimationWeapon = NULL;
++	ReloadAnimationViewTimer = 0.0f;
+ 	
+ 	for ( int i = 0; i < NUM_WEAPON_STATES; i++ ) {
+ 		WeaponAnims[i] = NULL;
+@@ -187,6 +189,7 @@ void 	WeaponViewClass::Reset()
+ 	Release_Hands_Assets();
+ 	ReloadAnimationPending = false;
+ 	ReloadAnimationWeapon = NULL;
++	ReloadAnimationViewTimer = 0.0f;
+ }
+ 
+ 
+@@ -260,6 +263,7 @@ void 	WeaponViewClass::Notify_Reload_Started( const WeaponClass *weapon )
+ {
+ 	ReloadAnimationPending = true;
+ 	ReloadAnimationWeapon = weapon;
++	ReloadAnimationViewTimer = 0.0f;
+ #if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+ 	A30_Vita_Log("A3.5 weapon view: reload animation latched weapon=%p\n",
+ 		static_cast<const void *>(weapon));
+@@ -862,6 +877,7 @@ static void	Release_Weapon_Assets( void )
+ 	}
+ 	ReloadAnimationPending = false;
+ 	ReloadAnimationWeapon = NULL;
++	ReloadAnimationViewTimer = 0.0f;
+ }
+ 
+ /*

@@ -1,0 +1,15 @@
+diff --git a/weaponview.cpp b/weaponview.cpp
+index 83c7b1d..b207b12 100644
+--- a/weaponview.cpp
++++ b/weaponview.cpp
+@@ -620,0 +621,10 @@ void 	WeaponViewClass::Think()
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
++		if (WeaponState == WEAPON_STATE_RELOAD) {
++			const float phase = WWMath::Clamp(ReloadAnimationViewTimer / 0.65f, 0.0f, 1.0f);
++			const float curve = WWMath::Sin(phase * WWMATH_PI);
++			fp_offset += Vector3(-0.08f * curve, -0.03f * curve, -0.075f * curve);
++			tm.Rotate_Z(DEG_TO_RADF(-8.0f * curve));
++			tm.Rotate_X(DEG_TO_RADF(3.0f * curve));
++			ReloadAnimationViewTimer += TimeManager::Get_Frame_Seconds();
++		}
++#endif

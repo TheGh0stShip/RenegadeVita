@@ -79,11 +79,15 @@ bool g_logged_first_material_lighting = false;
 bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_loading_texture_v_flip = false;
-bool g_logged_first_passthrough_texture_v_flip = false;
+bool g_logged_first_passthrough_texture_v_retained = false;
 bool g_logged_first_skin_texture_color = false;
+bool g_logged_first_original_shader_state_skip = false;
+bool g_logged_first_viewport_state_skip = false;
 bool g_shader_compiler_available = false;
 unsigned g_shader_init_calls = 0;
 int g_shader_init_last_result = -1;
+NativeViewport g_current_native_viewport = {};
+bool g_current_native_viewport_known = false;
 
 struct OriginalTextureCoordinateState {
 	DWORD texcoord_index;
@@ -171,12 +175,26 @@ struct NativeRenderStateCache {
 
 NativeTextureStageCache g_texture_stage_cache[MeshMatDescClass::MAX_TEX_STAGES] = {};
 NativeRenderStateCache g_render_state_cache = {};
+bool g_original_shader_state_known = false;
+uint32_t g_original_shader_state_bits = 0U;
+
+void Invalidate_Original_Shader_State_Cache()
+{
+	g_original_shader_state_known = false;
+	g_original_shader_state_bits = 0U;
+}
 
 void Invalidate_Native_State_Cache()
 {
 	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
 	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
+	Invalidate_Original_Shader_State_Cache();
+	memset(&g_current_native_viewport, 0, sizeof(g_current_native_viewport));
+	g_current_native_viewport_known = false;
 	g_logged_first_state_cache_skip = false;
+	g_logged_first_passthrough_texture_v_retained = false;
+	g_logged_first_original_shader_state_skip = false;
+	g_logged_first_viewport_state_skip = false;
 }
 
 bool Texture_Stage_Index_Valid(uint32_t stage)
@@ -460,10 +478,11 @@ bool Uses_Generated_Texture_Coordinates(
 		mode == D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR;
 }
 
-bool Should_Flip_Submitted_Texture_V(
-	const OriginalTextureCoordinateState &state)
+bool Should_Flip_Submitted_Texture_V(const OriginalTextureCoordinateState &state,
+	const char *texture_name)
 {
-	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;
+	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
+		Has_Loadscreen_Texture_Prefix(texture_name);
 }
 
 const Vector2 *Resolve_UV_Array_For_Texture_State(MeshModelClass *model,
@@ -597,7 +616,7 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uvs[vertex_index].X;
 		source_t = uvs[vertex_index].Y;
 	}
-	if (Should_Flip_Submitted_Texture_V(state)) {
+	if (Should_Flip_Submitted_Texture_V(state, texture_name)) {
 		source_t = 1.0f - source_t;
 		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
 			!g_logged_first_loading_texture_v_flip) {
@@ -605,13 +624,14 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 				"first loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
-		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
-			!g_logged_first_passthrough_texture_v_flip) {
-			Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
-				"first passthrough texture V correction: texture=%s stage=%u",
-				texture_name != NULL ? texture_name : "none", stage);
-			g_logged_first_passthrough_texture_v_flip = true;
 		}
+	} else if (Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name) &&
+		!g_logged_first_passthrough_texture_v_retained) {
+		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+			"first gameplay passthrough texture V retained: texture=%s stage=%u",
+			texture_name != NULL ? texture_name : "none", stage);
+		g_logged_first_passthrough_texture_v_retained = true;
 	}
 	float s = 0.0f;
 	float t = 0.0f;
@@ -729,7 +749,7 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uv[0];
 		source_t = uv[1];
 	}
-	if (Should_Flip_Submitted_Texture_V(state)) {
+	if (Should_Flip_Submitted_Texture_V(state, texture_name)) {
 		source_t = 1.0f - source_t;
 		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
 			!g_logged_first_loading_texture_v_flip) {
@@ -737,13 +757,14 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 				"first indexed loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
-		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
-			!g_logged_first_passthrough_texture_v_flip) {
-			Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
-				"first indexed passthrough texture V correction: texture=%s stage=%u",
-				texture_name != NULL ? texture_name : "none", stage);
-			g_logged_first_passthrough_texture_v_flip = true;
 		}
+	} else if (Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name) &&
+		!g_logged_first_passthrough_texture_v_retained) {
+		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+			"first indexed gameplay passthrough texture V retained: texture=%s stage=%u",
+			texture_name != NULL ? texture_name : "none", stage);
+		g_logged_first_passthrough_texture_v_retained = true;
 	}
 
 	float s = 0.0f;
@@ -765,6 +786,18 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 
 void Apply_Original_Shader_State(const ShaderClass &shader)
 {
+	Apply_Original_Fog_State(shader);
+	const uint32_t shader_bits = shader.Get_Bits();
+	if (g_original_shader_state_known &&
+		g_original_shader_state_bits == shader_bits) {
+		if (!g_logged_first_original_shader_state_skip) {
+			Vita_Append_A22_Runtime_Breadcrumb("render-state",
+				"first cached original ShaderClass state skip: bits=%08X",
+				static_cast<unsigned>(shader_bits));
+			g_logged_first_original_shader_state_skip = true;
+		}
+		return;
+	}
 	const ShaderStateContract state = Translate_Shader_State(shader);
 	if (shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE) {
 		glActiveTexture(GL_TEXTURE0);
@@ -812,7 +845,6 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 	} else glDisable(GL_CULL_FACE);
-	Apply_Original_Fog_State(shader);
 	g_texture_stage_cache[0].enabled_known = true;
 	g_texture_stage_cache[0].enabled =
 		shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;
@@ -826,6 +858,8 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 	Invalidate_Render_State_Cache(D3DRS_ZFUNC);
 	Invalidate_Render_State_Cache(D3DRS_ZWRITEENABLE);
 	Invalidate_Render_State_Cache(D3DRS_CULLMODE);
+	g_original_shader_state_known = true;
+	g_original_shader_state_bits = shader_bits;
 	++g_statistics.state_changes;
 }
 
@@ -1501,6 +1535,22 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	if (!g_statistics.initialized) {
 		return false;
 	}
+	if (g_current_native_viewport_known &&
+		g_current_native_viewport.x == viewport.x &&
+		g_current_native_viewport.y == viewport.y &&
+		g_current_native_viewport.width == viewport.width &&
+		g_current_native_viewport.height == viewport.height &&
+		g_current_native_viewport.min_depth == viewport.min_depth &&
+		g_current_native_viewport.max_depth == viewport.max_depth) {
+		if (!g_logged_first_viewport_state_skip) {
+			Vita_Append_A22_Runtime_Breadcrumb("camera-state",
+				"first cached original CameraClass viewport skip: d3d=%u,%u %ux%u native=%u,%u %ux%u",
+				d3d_x, d3d_y, width, height, viewport.x, viewport.y,
+				viewport.width, viewport.height);
+			g_logged_first_viewport_state_skip = true;
+		}
+		return true;
+	}
 	// Consume an older error before issuing the two camera-owned operations so
 	// the return value describes this viewport transition, not unrelated state.
 	const GLenum prior_error = glGetError();
@@ -1512,6 +1562,9 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	++g_statistics.state_changes;
 	if (operation_error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
+	} else {
+		g_current_native_viewport = viewport;
+		g_current_native_viewport_known = true;
 	}
 	static bool logged_first_camera_viewport = false;
 	if (!logged_first_camera_viewport) {
@@ -1609,6 +1662,11 @@ bool Initialize()
 	shark_set_warnings_level(SHARK_WARN_HIGH);
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"vitaShaRK diagnostic callback installation: complete");
+	const char *shader_cache_path = "ux0:data/renegade/cache/vitagl-shader-cache";
+	(void)sceIoMkdir(shader_cache_path, 0777);
+	vglSetShaderCachePath(shader_cache_path);
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"vitaGL shader cache path: %s", shader_cache_path);
 	g_shader_compiler_available = false;
 	g_shader_init_calls = 0;
 	g_shader_init_last_result = -1;
@@ -1638,6 +1696,15 @@ bool Initialize()
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "glViewport entry");
 	glViewport(0, 0, 960, 544);
 	const GLenum viewport_error = Log_GL_Result("glViewport");
+	if (viewport_error == GL_NO_ERROR) {
+		g_current_native_viewport.x = 0U;
+		g_current_native_viewport.y = 0U;
+		g_current_native_viewport.width = DISPLAY_WIDTH;
+		g_current_native_viewport.height = DISPLAY_HEIGHT;
+		g_current_native_viewport.min_depth = 0.0f;
+		g_current_native_viewport.max_depth = 1.0f;
+		g_current_native_viewport_known = true;
+	}
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "depth buffer state entry");
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -2067,8 +2134,10 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 		return true;
 	}
 	bool handled = true;
+	bool shader_state_overlap = false;
 	switch (state) {
 	case D3DRS_ALPHABLENDENABLE:
+		shader_state_overlap = true;
 		if (value != 0U) {
 			glEnable(GL_BLEND);
 			glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
@@ -2077,14 +2146,17 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 		}
 		break;
 	case D3DRS_SRCBLEND:
+		shader_state_overlap = true;
 		g_dx8_source_blend = To_GL_DX8_Blend(value);
 		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
 		break;
 	case D3DRS_DESTBLEND:
+		shader_state_overlap = true;
 		g_dx8_destination_blend = To_GL_DX8_Blend(value);
 		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
 		break;
 	case D3DRS_ALPHATESTENABLE:
+		shader_state_overlap = true;
 		if (value != 0U) {
 			glEnable(GL_ALPHA_TEST);
 		} else {
@@ -2092,21 +2164,26 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 		}
 		break;
 	case D3DRS_ALPHAREF:
+		shader_state_overlap = true;
 		g_dx8_alpha_reference =
 			static_cast<float>(value & 0xffU) / 255.0f;
 		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
 		break;
 	case D3DRS_ALPHAFUNC:
+		shader_state_overlap = true;
 		g_dx8_alpha_function = To_GL_DX8_Compare(value);
 		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
 		break;
 	case D3DRS_ZFUNC:
+		shader_state_overlap = true;
 		glDepthFunc(To_GL_DX8_Compare(value));
 		break;
 	case D3DRS_ZWRITEENABLE:
+		shader_state_overlap = true;
 		glDepthMask(value != 0U ? GL_TRUE : GL_FALSE);
 		break;
 	case D3DRS_CULLMODE:
+		shader_state_overlap = true;
 		if (value == D3DCULL_NONE) {
 			glDisable(GL_CULL_FACE);
 		} else {
@@ -2131,6 +2208,9 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 		return true;
 	}
 	++g_statistics.state_changes;
+	if (shader_state_overlap) {
+		Invalidate_Original_Shader_State_Cache();
+	}
 	const GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;

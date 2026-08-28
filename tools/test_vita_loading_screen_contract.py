@@ -27,6 +27,12 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("backdrop.Render();", loading_source)
         self.assertIn("backdropText.Render();", loading_source)
         self.assertIn("backdropText2.Render();", loading_source)
+        self.assertIn("statusText.Render();", loading_source)
+        self.assertLess(
+            loading_source.index("backdropText2.Render();"),
+            loading_source.index("statusText.Render();"),
+        )
+        self.assertIn("Update_Status_Text();", loading_source)
         self.assertIn("backdrop.Set_Animation_Percentage( LoadPercentageDrawn );", loading_source)
         self.assertLess(
             loading_source.index("backdrop.Set_Animation_Percentage( LoadPercentageDrawn );"),
@@ -81,10 +87,18 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertNotIn("Backdrop.Render();", runtime)
         self.assertNotIn("Backdrop.Set_Animation_Percentage(LoadPercentageDrawn);", runtime)
         self.assertIn("CombatManager::Set_Load_Progress(0);", runtime)
-        self.assertIn("void Render_Original_Progress(const char *phase, bool update_network = true)", runtime)
+        self.assertIn("void Render_Original_Progress(const char *phase, bool update_network = true,", runtime)
+        self.assertIn("SaveLoadStatus::Get_Status_Count();", runtime)
+        self.assertIn("CombatManager::Set_Load_Progress(mirrored_progress);", runtime)
+        self.assertIn("Warm_Original_M00_Presentation_Cache", runtime)
+        self.assertIn('"Prewarm renderer cache"', runtime)
+        self.assertIn("TextureLoader::Suspend_Texture_Load();", runtime)
+        self.assertIn("TextureLoader::Continue_Texture_Load();", runtime)
+        self.assertIn("CombatGameModeClass::Vita_Begin_Level_Load(", runtime)
+        self.assertIn("CombatGameModeClass::Vita_Finalize_Loaded_Level(", runtime)
         self.assertIn('loading_presenter.Render_Original_Progress("post_load_processing");', runtime)
         self.assertIn('loading_presenter.Render_Original_Progress("post_load_level");', runtime)
-        self.assertIn('loading_presenter.Render_Original_Progress("level_ready");', runtime)
+        self.assertIn('loading_presenter.Render_Original_Progress("level_ready", true, 7);', runtime)
         self.assertIn("Make_Loading_Capture_State", runtime)
         self.assertIn('"original-loading-screen"', runtime)
         self.assertIn('"level-ready"', runtime)
@@ -98,7 +112,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("state.loading_visual_gate.original_loading_screen_owner = true;", runtime)
         self.assertIn("state.loading_visual_gate.direct_vitagl_overlay_disabled = true;", runtime)
         self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = true;", runtime)
-        self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = false;", runtime)
+        self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = true;", runtime)
         self.assertNotIn("A31FrameHistory capture_history;", runtime)
         self.assertNotIn("A31FrameHistory loading_capture_history;", runtime)
         self.assertIn("new (std::nothrow) A31FrameHistory", runtime)
@@ -107,13 +121,26 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels, kCaptureBytes)", runtime)
         self.assertIn("Capture: %s candidate=%s phase=original-loading-screen reason=level-ready", runtime)
         self.assertLess(
-            runtime.index('loading_presenter.Render_Original_Progress("level_ready");'),
+            runtime.index('loading_presenter.Render_Original_Progress("level_ready", true, 7);'),
             runtime.index("phase=original-loading-screen reason=level-ready"),
         )
+        capture_log_index = runtime.index("phase=original-loading-screen reason=level-ready")
         self.assertLess(
-            runtime.index("phase=original-loading-screen reason=level-ready"),
-            runtime.index("A31_Interactive_Apply_Render_Capabilities();"),
+            capture_log_index,
+            runtime.index("TextWindowClass::Initialize(CombatManager::Get_Background_Scene())"),
         )
+        self.assertIn(
+            "A31_Interactive_Apply_Render_Capabilities();",
+            runtime[capture_log_index:],
+        )
+        prewarm_definition = runtime.index("void Warm_Original_M00_Presentation_Cache")
+        prewarm_call = runtime.index("Warm_Original_M00_Presentation_Cache(loading_presenter);")
+        level_ready_call = runtime.index('loading_presenter.Render_Original_Progress("level_ready", true, 7);')
+        self.assertIn(
+            "A31_Interactive_Apply_Render_Capabilities();",
+            runtime[prewarm_definition:prewarm_call],
+        )
+        self.assertLess(prewarm_call, level_ready_call)
         self.assertNotIn("Present_Fraction", runtime)
         self.assertNotIn("0.985f", runtime)
         self.assertNotIn("0.995f", runtime)
@@ -148,14 +175,36 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Render2DClass::Set_Screen_Resolution(RectClass(0, 0,", boundary)
         self.assertIn("g_logical_viewport_width", boundary)
         self.assertIn("g_logical_viewport_height", boundary)
+        self.assertIn("g_boundary_viewport.Width = g_logical_viewport_width;", boundary)
+        self.assertIn("RenegadeVitaRenderer::Apply_Viewport(g_boundary_viewport.X", boundary)
+        self.assertIn("DX8Wrapper::Set_Device_Resolution logical=%dx%d", boundary)
         self.assertIn("logical_width", renderer)
         self.assertIn("logical_height", renderer)
         self.assertNotIn("bool flip_texture_v;", renderer_h)
         self.assertIn("const char *texture_names[2];", renderer_h)
         self.assertIn('prefix[] = "loadscreen_"', renderer)
         self.assertIn("Has_Loadscreen_Texture_Prefix(texture_name)", renderer)
-        self.assertIn("Should_Flip_Submitted_Texture_V(state)", renderer)
-        self.assertIn("first passthrough texture V correction", renderer)
+        self.assertIn("Should_Flip_Submitted_Texture_V(state, texture_name)", renderer)
+        self.assertIn("first gameplay passthrough texture V retained", renderer)
+        self.assertIn("first cached original ShaderClass state skip", renderer)
+        self.assertIn("first cached original CameraClass viewport skip", renderer)
+        self.assertIn("g_current_native_viewport_known", renderer)
+        self.assertIn("Invalidate_Original_Shader_State_Cache();", renderer)
+        self.assertIn("shader_state_overlap = true;", renderer)
+        self.assertIn("vglSetShaderCachePath(shader_cache_path);", renderer)
+        self.assertLess(
+            renderer.index("vglSetShaderCachePath(shader_cache_path);"),
+            renderer.index("const GLboolean resolution_fallback = vglInit"),
+        )
+        shader_apply_start = renderer.index("void Apply_Original_Shader_State")
+        shader_apply = renderer[
+            shader_apply_start:
+            renderer.index("const ShaderStateContract state", shader_apply_start)
+        ]
+        self.assertLess(
+            shader_apply.index("Apply_Original_Fog_State(shader);"),
+            shader_apply.index("g_original_shader_state_known"),
+        )
         self.assertIn("source_t = 1.0f - source_t;", renderer)
         self.assertIn("submission.texture_names[stage]", boundary)
         self.assertIn("submission.texture_names[0]", renderer)
@@ -236,9 +285,11 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         )
 
         self.assertIn("${RENEGADE_STAGE}/commando/loadingscreen.cpp", cmake)
+        self.assertIn("${RENEGADE_STAGE}/commando/combatgmode.cpp", cmake)
         self.assertIn("${RENEGADE_STAGE}/commando/campaign.cpp", cmake)
         self.assertIn("${RENEGADE_STAGE}/wwui/menubackdrop.cpp", cmake)
         self.assertIn("${RENEGADE_STAGE}/wwui/stylemgr.cpp", cmake)
+        self.assertIn("RENEGADE_A35_ORIGINAL_COMBATGMODE=1", cmake)
         self.assertIn("${RENEGADE_STAGE}/ww3d2/render2d.cpp", original_sources)
         self.assertIn("${RENEGADE_STAGE}/ww3d2/render2dsentence.cpp", original_sources)
 

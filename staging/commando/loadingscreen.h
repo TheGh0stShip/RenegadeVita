@@ -19,11 +19,15 @@ class LoadingScreenClass
 	MenuBackDropClass	backdrop;
 	Render2DSentenceClass backdropText;
 	Render2DSentenceClass backdropText2;	// The BIG text
+	Render2DSentenceClass statusText;
 	float	LoadTime;
 	float	LoadPercentage;
 	float	LoadPercentageDrawn;
 	float	LoadPercentageClamp;
 	float	LoadPercentageRate;
+	char	StatusTextBuffer[128];
+
+	void Update_Status_Text(void);
 
 public:
 	LoadingScreenClass();

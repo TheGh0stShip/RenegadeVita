@@ -114,6 +114,29 @@ void Log_Texture_Fallback(const char *reason, const char *filename)
 #endif
 }
 
+void Log_Texture_Load(const char *source, const char *filename,
+	const IDirect3DTexture8 *texture)
+{
+#if defined(__vita__)
+	static unsigned logged_count = 0U;
+	if (logged_count >= 24U || texture == NULL) return;
+	Vita_Append_A22_Runtime_Breadcrumb("texture-load",
+		"texture loaded: source=%s name=%s size=%ux%u mips=%u fmt=%08X bytes=%llu checksum=%08X alpha=%u fallback=%u native=%u",
+		source != NULL ? source : "unknown",
+		filename != NULL ? filename : "(null)",
+		texture->Width, texture->Height, texture->MipLevels,
+		texture->SourceFormat,
+		static_cast<unsigned long long>(texture->ResidentBytes),
+		texture->PixelChecksum, texture->HasAlpha ? 1U : 0U,
+		texture->DiagnosticFallback ? 1U : 0U, texture->NativeTexture);
+	++logged_count;
+#else
+	(void)source;
+	(void)filename;
+	(void)texture;
+#endif
+}
+
 unsigned Surface_Bytes_Per_Pixel(D3DFORMAT format)
 {
 	switch (format) {
@@ -423,7 +446,9 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	texture->PixelChecksum = checksum;
 	texture->ResidentBytes = bytes;
 	RenegadeVitaRenderer::Record_Texture_Decode();
+	RenegadeVitaRenderer::Record_Texture_DDS_Load();
 	RenegadeVitaRenderer::Record_Texture_Upload(bytes);
+	Log_Texture_Load("dds", filename, texture);
 	return texture;
 }
 
@@ -438,6 +463,10 @@ IDirect3DTexture8 *Load_Targa_Texture(const char *filename,
 	IDirect3DTexture8 *texture = DX8Wrapper::_Create_DX8_Texture(surface,
 		mip_level_count);
 	surface->Release();
+	if (texture != NULL && !texture->DiagnosticFallback) {
+		RenegadeVitaRenderer::Record_Texture_Targa_Load();
+		Log_Texture_Load("tga", filename, texture);
+	}
 	return texture;
 }
 
@@ -994,6 +1023,9 @@ HRESULT IDirect3DDevice8::SetTexture(DWORD stage, IDirect3DBaseTexture8 *texture
 	if (texture == NULL) {
 		RenegadeVitaRenderer::Bind_Texture(0U, false);
 		return D3D_OK;
+	}
+	if (texture->DiagnosticFallback) {
+		RenegadeVitaRenderer::Record_Texture_Checkerboard_Bind();
 	}
 	RenegadeVitaRenderer::Bind_Texture(texture->NativeTexture,
 		texture->Uploaded && texture->NativeTexture != 0U);

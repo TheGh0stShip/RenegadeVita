@@ -1,5 +1,45 @@
 # Live engineering progress
 
+## 2026-08-28 — dev53 texture provenance telemetry
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Texture diagnostics: the Vita DX8 boundary now records successful retail
+  texture loads by source path (`dds` or `tga`) and logs the first 24 loaded
+  textures with size, mip count, DX8 format, resident bytes, checksum, alpha,
+  fallback state, and native texture id. Checkerboard fallback binds are counted
+  separately from invalid/null texture binds so pink/black visibility can be
+  tied to missing/decode/upload fallback rather than generic bind failure.
+- Runtime breadcrumbs: the `A3.5 perf` line now includes
+  `loaded_dds/tga=%llu/%llu` and
+  `source/invalid/unsupported/decode/upload_fail/checker/checker_bind/invalid_bind`.
+  Capture JSON and capture-bundle comparisons now carry `texture_dds_loads`,
+  `texture_tga_loads`, and `texture_checkerboard_binds`.
+- Validation: focused texture provenance, loading-screen, indexed-state, and
+  capture-compare contracts passed 17/17. The fast no-deploy candidate passed
+  the expanded 42-test focused gate plus package identity/hash checks. The full
+  no-deploy canonical build passed retained host validation reuse,
+  deterministic restaging, source integration reporting, the original
+  `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, and SHA manifest verification.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev53.vpk` SHA-256 is
+  `bf3116fb0e122edd359b3a0ce2dffaa90df0b58599e77cfd803d825fa8d85699`;
+  packaged eboot/SELF SHA-256 is
+  `c384aba19d06450fc8cd1f6071083028001f12d1a3252ccffa7bbf1362030b49`;
+  ELF SHA-256 is
+  `ea279c8848c6f9df15f20b9c582855fb5c4a252662a495ec9e320db66ca6badb`.
+- Boundary: dev53 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev53, verify
+  audible Logan dialogue and material/texture appearance, then inspect
+  `ux0:data/renegade/user/logs/a35-dev53-runtime.log`, especially `texture
+  loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`, `speech=`, and
+  `stream_mix` if dialogue is still inaudible or materials remain incorrect.
+
 ## 2026-08-28 — dev52 active-conversation speech object diagnostics
 
 `[██████████] 12/12 canonical source/build gates complete`

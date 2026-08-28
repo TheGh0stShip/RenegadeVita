@@ -33,6 +33,8 @@ struct Statistics {
 	uint64_t texture_binds;
 	uint64_t texture_requests;
 	uint64_t texture_decodes;
+	uint64_t texture_dds_loads;
+	uint64_t texture_tga_loads;
 	uint64_t texture_missing;
 	uint64_t texture_source_missing;
 	uint64_t texture_invalid_data;
@@ -40,6 +42,7 @@ struct Statistics {
 	uint64_t texture_decode_failures;
 	uint64_t texture_upload_failures;
 	uint64_t texture_checkerboard_fallbacks;
+	uint64_t texture_checkerboard_binds;
 	uint64_t texture_invalid_binds;
 	uint64_t texture_sampler_updates;
 	uint64_t texture_unsupported_stages;
@@ -167,6 +170,8 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 void Reject_Indexed_Submission(const char *reason, uint32_t vertex_format);
 void Record_Texture_Request();
 void Record_Texture_Decode();
+void Record_Texture_DDS_Load();
+void Record_Texture_Targa_Load();
 void Record_Texture_Missing();
 void Record_Texture_Source_Missing();
 void Record_Texture_Invalid_Data();
@@ -174,6 +179,7 @@ void Record_Texture_Unsupported_Format();
 void Record_Texture_Decode_Failure();
 void Record_Texture_Upload_Failure();
 void Record_Texture_Checkerboard_Fallback();
+void Record_Texture_Checkerboard_Bind();
 void Record_Texture_Upload(uint64_t resident_bytes);
 void Record_Texture_Release(uint64_t resident_bytes);
 bool Bind_Texture(uint32_t native_texture, bool valid);

@@ -338,7 +338,7 @@ bool Write_State(const char *path, const A31StateSnapshot &state)
 		state.player.health, state.player.physics_registered ? "true" : "false",
 		state.player.grounded ? "true" : "false");
 	const A31RendererTelemetry &r = state.renderer;
-	fprintf(file, "\n  \"renderer\":{\"render_objects\":%llu,\"mesh_candidates\":%llu,\"lod_selections\":%llu,\"draw_calls\":%llu,\"mesh_submissions\":%llu,\"vertices\":%llu,\"triangles\":%llu,\"indexed_draw_calls\":%llu,\"indexed_vertex_references\":%llu,\"indexed_triangles\":%llu,\"material_passes\":%llu,\"textures_resident\":%llu,\"texture_bytes_resident\":%llu,\"texture_uploads\":%llu,\"texture_binds\":%llu,\"texture_requests\":%llu,\"texture_decodes\":%llu,\"texture_missing\":%llu,\"texture_source_missing\":%llu,\"texture_invalid_data\":%llu,\"texture_unsupported_formats\":%llu,\"texture_decode_failures\":%llu,\"texture_upload_failures\":%llu,\"texture_checkerboard_fallbacks\":%llu,\"texture_invalid_binds\":%llu,\"state_changes\":%llu,\"rejected\":%llu,\"unsupported\":%llu,\"backend_errors\":%llu,\"geometry_checksum\":\"%08X\",\"indexed_checksum\":\"%08X\",\"visible_objects\":%u,\"visibility_sectors\":%u,\"mesh_candidates_not_submitted\":%u,\"culling_count_exact\":%s},",
+	fprintf(file, "\n  \"renderer\":{\"render_objects\":%llu,\"mesh_candidates\":%llu,\"lod_selections\":%llu,\"draw_calls\":%llu,\"mesh_submissions\":%llu,\"vertices\":%llu,\"triangles\":%llu,\"indexed_draw_calls\":%llu,\"indexed_vertex_references\":%llu,\"indexed_triangles\":%llu,\"material_passes\":%llu,\"textures_resident\":%llu,\"texture_bytes_resident\":%llu,\"texture_uploads\":%llu,\"texture_binds\":%llu,\"texture_requests\":%llu,\"texture_decodes\":%llu,\"texture_dds_loads\":%llu,\"texture_tga_loads\":%llu,\"texture_missing\":%llu,\"texture_source_missing\":%llu,\"texture_invalid_data\":%llu,\"texture_unsupported_formats\":%llu,\"texture_decode_failures\":%llu,\"texture_upload_failures\":%llu,\"texture_checkerboard_fallbacks\":%llu,\"texture_checkerboard_binds\":%llu,\"texture_invalid_binds\":%llu,\"state_changes\":%llu,\"rejected\":%llu,\"unsupported\":%llu,\"backend_errors\":%llu,\"geometry_checksum\":\"%08X\",\"indexed_checksum\":\"%08X\",\"visible_objects\":%u,\"visibility_sectors\":%u,\"mesh_candidates_not_submitted\":%u,\"culling_count_exact\":%s},",
 		(unsigned long long)r.render_objects, (unsigned long long)r.mesh_candidates,
 		(unsigned long long)r.lod_selections, (unsigned long long)r.draw_calls,
 		(unsigned long long)r.mesh_submissions, (unsigned long long)r.vertices,
@@ -349,6 +349,8 @@ bool Write_State(const char *path, const A31StateSnapshot &state)
 		(unsigned long long)r.texture_bytes_resident,
 		(unsigned long long)r.texture_uploads, (unsigned long long)r.texture_binds,
 		(unsigned long long)r.texture_requests, (unsigned long long)r.texture_decodes,
+		(unsigned long long)r.texture_dds_loads,
+		(unsigned long long)r.texture_tga_loads,
 		(unsigned long long)r.texture_missing,
 		(unsigned long long)r.texture_source_missing,
 		(unsigned long long)r.texture_invalid_data,
@@ -356,6 +358,7 @@ bool Write_State(const char *path, const A31StateSnapshot &state)
 		(unsigned long long)r.texture_decode_failures,
 		(unsigned long long)r.texture_upload_failures,
 		(unsigned long long)r.texture_checkerboard_fallbacks,
+		(unsigned long long)r.texture_checkerboard_binds,
 		(unsigned long long)r.texture_invalid_binds,
 		(unsigned long long)r.state_changes, (unsigned long long)r.rejected_submissions,
 		(unsigned long long)r.unsupported_submissions,

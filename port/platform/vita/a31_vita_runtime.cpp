@@ -205,6 +205,8 @@ void Copy_Renderer_Statistics(A31RendererTelemetry &telemetry)
 	telemetry.texture_binds = statistics.texture_binds;
 	telemetry.texture_requests = statistics.texture_requests;
 	telemetry.texture_decodes = statistics.texture_decodes;
+	telemetry.texture_dds_loads = statistics.texture_dds_loads;
+	telemetry.texture_tga_loads = statistics.texture_tga_loads;
 	telemetry.texture_missing = statistics.texture_missing;
 	telemetry.texture_source_missing = statistics.texture_source_missing;
 	telemetry.texture_invalid_data = statistics.texture_invalid_data;
@@ -212,6 +214,7 @@ void Copy_Renderer_Statistics(A31RendererTelemetry &telemetry)
 	telemetry.texture_decode_failures = statistics.texture_decode_failures;
 	telemetry.texture_upload_failures = statistics.texture_upload_failures;
 	telemetry.texture_checkerboard_fallbacks = statistics.texture_checkerboard_fallbacks;
+	telemetry.texture_checkerboard_binds = statistics.texture_checkerboard_binds;
 	telemetry.texture_invalid_binds = statistics.texture_invalid_binds;
 	telemetry.state_changes = statistics.state_changes;
 	telemetry.rejected_submissions = statistics.rejected_indexed_submissions;
@@ -578,7 +581,7 @@ void Log_Timing_Statistics(const InteractiveTiming &timing,
 	const RenegadeVitaRenderer::Statistics &renderer)
 {
 	if (timing.sample_count == 0U) return;
-	A30_Vita_Log("A3.5 perf: frames=%u rolling_samples=%u avg_fps=%.3f frame_us min/p50/p95/max=%u/%u/%u/%u slow_over_33ms=%u stage_us sync/sim/render=%u/%u/%u draws meshes=%u triangles=%u textures req/decode/upload/bind/missing=%llu/%llu/%llu/%llu/%llu source/invalid/unsupported/decode/upload_fail/checker=%llu/%llu/%llu/%llu/%llu/%llu state_changes=%llu backend_errors=%llu\n",
+	A30_Vita_Log("A3.5 perf: frames=%u rolling_samples=%u avg_fps=%.3f frame_us min/p50/p95/max=%u/%u/%u/%u slow_over_33ms=%u stage_us sync/sim/render=%u/%u/%u draws meshes=%u triangles=%u textures req/decode/upload/bind/missing=%llu/%llu/%llu/%llu/%llu loaded_dds/tga=%llu/%llu source/invalid/unsupported/decode/upload_fail/checker/checker_bind/invalid_bind=%llu/%llu/%llu/%llu/%llu/%llu/%llu/%llu state_changes=%llu backend_errors=%llu\n",
 		timing.total_frames, timing.sample_count,
 		static_cast<double>(timing.Average_FPS_Milli()) / 1000.0,
 		timing.minimum_frame_us, timing.Percentile(50U), timing.Percentile(95U),
@@ -591,12 +594,16 @@ void Log_Timing_Statistics(const InteractiveTiming &timing,
 		static_cast<unsigned long long>(renderer.texture_uploads),
 		static_cast<unsigned long long>(renderer.texture_binds),
 		static_cast<unsigned long long>(renderer.texture_missing),
+		static_cast<unsigned long long>(renderer.texture_dds_loads),
+		static_cast<unsigned long long>(renderer.texture_tga_loads),
 		static_cast<unsigned long long>(renderer.texture_source_missing),
 		static_cast<unsigned long long>(renderer.texture_invalid_data),
 		static_cast<unsigned long long>(renderer.texture_unsupported_formats),
 		static_cast<unsigned long long>(renderer.texture_decode_failures),
 		static_cast<unsigned long long>(renderer.texture_upload_failures),
 		static_cast<unsigned long long>(renderer.texture_checkerboard_fallbacks),
+		static_cast<unsigned long long>(renderer.texture_checkerboard_binds),
+		static_cast<unsigned long long>(renderer.texture_invalid_binds),
 		static_cast<unsigned long long>(renderer.state_changes),
 		static_cast<unsigned long long>(renderer.backend_errors));
 	A30_Vita_Log("A3.5 skin: submissions=%u deformed_vertices=%u deformation_failures=%u\n",

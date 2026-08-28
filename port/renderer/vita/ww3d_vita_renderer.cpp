@@ -744,6 +744,16 @@ void Record_Texture_Decode()
 	++g_statistics.texture_decodes;
 }
 
+void Record_Texture_DDS_Load()
+{
+	++g_statistics.texture_dds_loads;
+}
+
+void Record_Texture_Targa_Load()
+{
+	++g_statistics.texture_tga_loads;
+}
+
 void Record_Texture_Missing()
 {
 	++g_statistics.texture_missing;
@@ -782,6 +792,11 @@ void Record_Texture_Upload_Failure()
 void Record_Texture_Checkerboard_Fallback()
 {
 	++g_statistics.texture_checkerboard_fallbacks;
+}
+
+void Record_Texture_Checkerboard_Bind()
+{
+	++g_statistics.texture_checkerboard_binds;
 }
 
 void Record_Texture_Upload(uint64_t resident_bytes)

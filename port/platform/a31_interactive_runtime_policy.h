@@ -94,6 +94,18 @@ struct A31MissionProgressState
 	bool active_conversation_sound_definition_available;
 	float active_conversation_next_remark_seconds;
 	char active_conversation_name[96];
+	int32_t active_conversation_speech_source;
+	int32_t active_conversation_speech_class_id;
+	int32_t active_conversation_speech_type;
+	int32_t active_conversation_speech_state;
+	uint32_t active_conversation_speech_duration_ms;
+	bool active_conversation_speaker_available;
+	bool active_conversation_speech_available;
+	bool active_conversation_speech_in_scene;
+	bool active_conversation_speech_culled;
+	bool active_conversation_speech_playing;
+	float active_conversation_speech_dropoff_radius;
+	float active_conversation_speech_listener_distance;
 };
 
 bool A31_Interactive_Render_HUD_Available();

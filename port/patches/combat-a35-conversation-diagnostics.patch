@@ -2,7 +2,7 @@ diff --git a/activeconversation.h b/activeconversation.h
 index 969c3ee..9963c61 100644
 --- a/activeconversation.h
 +++ b/activeconversation.h
-@@ -98,6 +98,14 @@ public:
+@@ -98,6 +98,15 @@ public:
  	void						Stop_Conversation (ActionCompleteReason reason = ACTION_COMPLETE_CONVERSATION_ENDED);
  	void						Think (void);
  	bool						Is_Finished (void)				{ return bool(State == STATE_FINISHED); }	
@@ -13,6 +13,7 @@ index 969c3ee..9963c61 100644
 +	int						Get_Action_ID_For_Diagnostics (void) const { return ActionID; }
 +	int						Get_Current_Remark_For_Diagnostics (void) const { return CurrentRemark; }
 +	float					Get_Next_Remark_Seconds_For_Diagnostics (void) const { return NextRemarkTimer; }
++	AudibleSoundClass *	Peek_Current_Sound_For_Diagnostics (void) const { return CurrentSound; }
 +#endif
  
  	//
@@ -33,5 +34,14 @@ index 619da19..e1cda45 100644
 +	}
 +#endif
  
- 	static void								Reset_All_Other_Conversations (ActiveConversationClass *active_conversation);
- 	static bool								Is_Key_Conversation_Playing (void);
+	static void								Reset_All_Other_Conversations (ActiveConversationClass *active_conversation);
+	static bool								Is_Key_Conversation_Playing (void);
+diff --git a/soldier.h b/soldier.h
+index 0f31b71..118e891 100644
+--- a/soldier.h
++++ b/soldier.h
+@@ -292,0 +293,4 @@ public:
++#if defined(RENEGADE_VITA_PORT)
++	// Read-only flight-recorder access. Soldier/WWAudio retain speech ownership.
++	AudibleSoundClass *	Peek_Current_Speech_For_Diagnostics (void) const { return CurrentSpeech; }
++#endif

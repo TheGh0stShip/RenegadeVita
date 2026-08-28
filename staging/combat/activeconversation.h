@@ -106,6 +106,7 @@ public:
 	int						Get_Action_ID_For_Diagnostics (void) const { return ActionID; }
 	int						Get_Current_Remark_For_Diagnostics (void) const { return CurrentRemark; }
 	float					Get_Next_Remark_Seconds_For_Diagnostics (void) const { return NextRemarkTimer; }
+	AudibleSoundClass *	Peek_Current_Sound_For_Diagnostics (void) const { return CurrentSound; }
 #endif
 
 	//

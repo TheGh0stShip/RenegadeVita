@@ -13,12 +13,60 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("Peek_Active_Conversation_For_Diagnostics", patch)
         self.assertIn("Get_Current_Remark_For_Diagnostics", patch)
         self.assertIn("Get_Next_Remark_Seconds_For_Diagnostics", patch)
+        self.assertIn("Peek_Current_Sound_For_Diagnostics", patch)
+        self.assertIn("Peek_Current_Speech_For_Diagnostics", patch)
         self.assertIn("Peek_Active_Conversation_For_Diagnostics(0)", policy)
         self.assertIn("active_conversation_current_remark", runtime)
         self.assertIn("active_conversation_text_id", runtime)
         self.assertIn("active_conversation_sound_id", runtime)
+        self.assertIn("active_conversation_speech_culled", runtime)
+        self.assertIn("active_conversation_speech_listener_distance", runtime)
         self.assertIn("DefinitionMgrClass::Find_Definition", policy)
         self.assertNotIn("Stop_Conversation", policy[policy.index("A31MissionProgressState A31_Interactive_Get_Mission_Progress_State"):])
+
+    def test_mission_progress_logs_original_speech_culling_state(self):
+        policy = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        shared_policy = (ROOT / "port/platform/a31_interactive_runtime_policy.h").read_text()
+        progress = policy[
+            policy.index("A31MissionProgressState A31_Interactive_Get_Mission_Progress_State"):
+            policy.index("void A31_Interactive_Run_Simulation_Frame")
+        ]
+        helper = policy[
+            policy.index("AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics"):
+            policy.index("class A31VitaCombatMiscHandler")
+        ]
+        log_start = runtime.index('A30_Vita_Log("A3.5 mission progress:')
+        log_end = runtime.index("trace.player_x", log_start)
+        log_block = runtime[log_start:log_end]
+
+        for token in (
+            "active_conversation_speech_source",
+            "active_conversation_speech_class_id",
+            "active_conversation_speech_state",
+            "active_conversation_speech_duration_ms",
+            "active_conversation_speaker_available",
+            "active_conversation_speech_available",
+            "active_conversation_speech_in_scene",
+            "active_conversation_speech_culled",
+            "active_conversation_speech_playing",
+            "active_conversation_speech_dropoff_radius",
+            "active_conversation_speech_listener_distance",
+        ):
+            self.assertIn(token, shared_policy)
+            self.assertIn(token, policy)
+
+        self.assertIn("Fill_Conversation_Speech_Diagnostics(active, &state)", progress)
+        self.assertIn("Peek_Current_Speech_For_Diagnostics", helper)
+        self.assertIn("Peek_Current_Sound_For_Diagnostics", helper)
+        self.assertIn("Get_Listener_Position", helper)
+        self.assertIn("Quick_Length", helper)
+        self.assertIn(
+            "speech=speaker:%d src:%d present/scene/culled/playing=%d/%d/%d/%d",
+            log_block,
+        )
+        self.assertIn("dur/dropoff/dist=%u/%.3f/%.3f", log_block)
+        self.assertNotIn("Play(", progress)
 
     def test_direct_render_restores_original_message_window_pass(self):
         policy = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()

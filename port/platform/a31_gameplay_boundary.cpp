@@ -12,7 +12,9 @@
 #include "gamemode.h"
 #include "modpackagemgr.h"
 #include "mpsettingsmgr.h"
+#include "audiblesound.h"
 #include "logicalsound.h"
+#include "soundscene.h"
 #include "textdisplay.h"
 #include "stackdump.h"
 #include "a31_audio_lifecycle.h"
@@ -41,6 +43,7 @@
 #include "translateobj.h"
 #include "translatedb.h"
 #include "weapons.h"
+#include "wwaudio.h"
 #include "ww3d.h"
 #include "ww3d_vita_renderer.h"
 
@@ -154,6 +157,79 @@ namespace {
 ** direct Vita route, so retain the same CombatMiscHandler ownership seam and
 ** latch only the event needed for a stable native application transition. */
 A31MissionCompletionLatch g_mission_completion_latch;
+
+enum
+{
+	A31_SPEECH_SOURCE_NONE = 0,
+	A31_SPEECH_SOURCE_ORATOR = 1,
+	A31_SPEECH_SOURCE_ACTIVE_CONVERSATION = 2
+};
+
+AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics(
+	ActiveConversationClass *active, A31MissionProgressState *state)
+{
+	if (active == NULL || state == NULL) {
+		return NULL;
+	}
+
+	PhysicalGameObj *orator = active->Get_Current_Orator();
+	SoldierGameObj *soldier = orator != NULL ? orator->As_SoldierGameObj() : NULL;
+	state->active_conversation_speaker_available = orator != NULL;
+	if (soldier != NULL) {
+		AudibleSoundClass *speech =
+			soldier->Peek_Current_Speech_For_Diagnostics();
+		if (speech != NULL) {
+			state->active_conversation_speech_source =
+				A31_SPEECH_SOURCE_ORATOR;
+			return speech;
+		}
+	}
+
+	AudibleSoundClass *speech =
+		active->Peek_Current_Sound_For_Diagnostics();
+	if (speech != NULL) {
+		state->active_conversation_speech_source =
+			A31_SPEECH_SOURCE_ACTIVE_CONVERSATION;
+		return speech;
+	}
+
+	return NULL;
+}
+
+void Fill_Conversation_Speech_Diagnostics(
+	ActiveConversationClass *active, A31MissionProgressState *state)
+{
+	AudibleSoundClass *speech =
+		Find_Conversation_Speech_For_Diagnostics(active, state);
+	if (speech == NULL) {
+		return;
+	}
+
+	state->active_conversation_speech_available = true;
+	state->active_conversation_speech_in_scene = speech->Is_In_Scene();
+	state->active_conversation_speech_culled = speech->Is_Sound_Culled();
+	state->active_conversation_speech_playing = speech->Is_Playing();
+	state->active_conversation_speech_class_id =
+		static_cast<int32_t>(speech->Get_Class_ID());
+	state->active_conversation_speech_type =
+		static_cast<int32_t>(speech->Get_Type());
+	state->active_conversation_speech_state =
+		static_cast<int32_t>(speech->Get_State());
+	state->active_conversation_speech_duration_ms =
+		static_cast<uint32_t>(speech->Get_Duration());
+	state->active_conversation_speech_dropoff_radius =
+		speech->Get_DropOff_Radius();
+
+	WWAudioClass *audio = WWAudioClass::Get_Instance();
+	SoundSceneClass *sound_scene =
+		audio != NULL ? audio->Get_Sound_Scene() : NULL;
+	if (sound_scene != NULL) {
+		const Vector3 listener_pos = sound_scene->Get_Listener_Position();
+		const Vector3 speech_pos = speech->Get_Position();
+		state->active_conversation_speech_listener_distance =
+			(listener_pos - speech_pos).Quick_Length();
+	}
+}
 
 class A31VitaCombatMiscHandler final : public CombatMiscHandlerClass {
 public:
@@ -306,6 +382,10 @@ A31MissionProgressState A31_Interactive_Get_Mission_Progress_State()
 	state.active_conversation_remark_count = -1;
 	state.active_conversation_text_id = -1;
 	state.active_conversation_sound_id = -1;
+	state.active_conversation_speech_source = A31_SPEECH_SOURCE_NONE;
+	state.active_conversation_speech_class_id = -1;
+	state.active_conversation_speech_type = -1;
+	state.active_conversation_speech_state = -1;
 	for (unsigned index = 0U; index < 6U; ++index) {
 		state.objective_status[index] = -1;
 	}
@@ -369,6 +449,7 @@ A31MissionProgressState A31_Interactive_Get_Mission_Progress_State()
 					}
 				}
 			}
+			Fill_Conversation_Speech_Diagnostics(active, &state);
 		}
 	}
 	return state;

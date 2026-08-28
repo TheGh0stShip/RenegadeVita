@@ -1,5 +1,45 @@
 # Live engineering progress
 
+## 2026-08-28 — dev52 active-conversation speech object diagnostics
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Dialogue diagnostics: the active conversation state now reports the original
+  speech object that actually owns playback. Soldier/orator remarks are read
+  from `SoldierGameObj::CurrentSpeech`; non-orator conversation sounds still
+  use `ActiveConversationClass::CurrentSound`. The probe is read-only and does
+  not start, stop, advance, or create sounds.
+- Runtime breadcrumbs: the `A3.5 mission progress` line now includes
+  `speech=speaker:%d src:%d present/scene/culled/playing=%d/%d/%d/%d`,
+  `class/type/state=%d/%d/%d`, and `dur/dropoff/dist=%u/%.3f/%.3f`. Combined
+  with dev51 `stream_mix`, this separates "no original speech object",
+  "speech exists but is culled", "speech is in the scene but not playing", and
+  "speech is playing while decoded stream samples are zero or nonzero."
+- Validation: focused mission-conversation diagnostics passed 10/10, the Vita
+  audio provider contract passed 1/1, the route-session runner passed 11/11,
+  the fast no-deploy build passed package identity/hash checks, the executable
+  original `DDSFileClass` `.tga`-to-`.dds` alias contract passed 11/11, and
+  the full no-deploy canonical build passed retained host validation reuse,
+  deterministic restaging, source integration reporting, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, and SHA manifest verification.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream. The
+  conversation diagnostics patch now explicitly covers `soldier.h`.
+- Artifact: `dist/RenegadeVita-A3.5-dev52.vpk` SHA-256 is
+  `d411723bb38a34afb68e4e324799c0f6bccab2e61f08d02fbdf47ea8afc6d8c8`;
+  packaged eboot/SELF SHA-256 is
+  `536bb10b276ac2b1ead72869d8331692f419fcc2c5b8161fcb88ac29211fa666`;
+  ELF SHA-256 is
+  `602b35d8d9832937610e729a603d2ff871f14a1943e0d3e530ce2016364f0f9f`.
+- Boundary: dev52 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev52, verify
+  audible Logan dialogue and material/texture appearance, then inspect
+  `ux0:data/renegade/user/logs/a35-dev52-runtime.log`, especially the
+  `speech=` and `stream_mix` fields if dialogue is still inaudible.
+
 ## 2026-08-28 — dev51 streamed-dialogue mix isolation candidate
 
 `[██████████] 12/12 canonical source/build gates complete`

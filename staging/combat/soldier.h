@@ -290,6 +290,10 @@ public:
 	static float		Say_Dynamic_Dialogue( int text_id, SoldierGameObj *speaker = NULL, AudibleSoundClass **sound_obj_to_return = NULL );
 	void					Stop_Current_Speech( void );
 	RenderObjClass *	Find_Head_Model( void );
+#if defined(RENEGADE_VITA_PORT)
+	// Read-only flight-recorder access. Soldier/WWAudio retain speech ownership.
+	AudibleSoundClass *	Peek_Current_Speech_For_Diagnostics (void) const { return CurrentSpeech; }
+#endif
 	void					Prepare_Speech_Framework( void );
 
 

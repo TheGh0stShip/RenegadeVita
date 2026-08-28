@@ -411,6 +411,26 @@ bool Mission_Progress_Changed(const A31MissionProgressState &left,
 			right.active_conversation_string_available ||
 		left.active_conversation_sound_definition_available !=
 			right.active_conversation_sound_definition_available ||
+		left.active_conversation_speech_source !=
+			right.active_conversation_speech_source ||
+		left.active_conversation_speech_class_id !=
+			right.active_conversation_speech_class_id ||
+		left.active_conversation_speech_type !=
+			right.active_conversation_speech_type ||
+		left.active_conversation_speech_state !=
+			right.active_conversation_speech_state ||
+		left.active_conversation_speech_duration_ms !=
+			right.active_conversation_speech_duration_ms ||
+		left.active_conversation_speaker_available !=
+			right.active_conversation_speaker_available ||
+		left.active_conversation_speech_available !=
+			right.active_conversation_speech_available ||
+		left.active_conversation_speech_in_scene !=
+			right.active_conversation_speech_in_scene ||
+		left.active_conversation_speech_culled !=
+			right.active_conversation_speech_culled ||
+		left.active_conversation_speech_playing !=
+			right.active_conversation_speech_playing ||
 		strcmp(left.active_conversation_name,
 			right.active_conversation_name) != 0) {
 		return true;
@@ -426,7 +446,7 @@ bool Mission_Progress_Changed(const A31MissionProgressState &left,
 void Log_Mission_Progress(const A31MissionProgressState &progress,
 	const A31InteractiveRenderTrace &trace, uint32_t frame)
 {
-	A30_Vita_Log("A3.5 mission progress: frame=%u star/control=%d/%d objectives=%u status_1_6=%d/%d/%d/%d/%d/%d active_conversations=%u active=%s id/state/action/remark/count=%d/%d/%d/%d/%d text/sound/str/def=%d/%d/%d/%d next_seconds=%.3f player=(%.3f,%.3f,%.3f)\n",
+	A30_Vita_Log("A3.5 mission progress: frame=%u star/control=%d/%d objectives=%u status_1_6=%d/%d/%d/%d/%d/%d active_conversations=%u active=%s id/state/action/remark/count=%d/%d/%d/%d/%d text/sound/str/def=%d/%d/%d/%d next_seconds=%.3f speech=speaker:%d src:%d present/scene/culled/playing=%d/%d/%d/%d class/type/state=%d/%d/%d dur/dropoff/dist=%u/%.3f/%.3f player=(%.3f,%.3f,%.3f)\n",
 		frame, progress.star_available ? 1 : 0,
 		progress.player_control_enabled ? 1 : 0, progress.objective_count,
 		progress.objective_status[0], progress.objective_status[1],
@@ -444,6 +464,18 @@ void Log_Mission_Progress(const A31MissionProgressState &progress,
 		progress.active_conversation_string_available ? 1 : 0,
 		progress.active_conversation_sound_definition_available ? 1 : 0,
 		progress.active_conversation_next_remark_seconds,
+		progress.active_conversation_speaker_available ? 1 : 0,
+		progress.active_conversation_speech_source,
+		progress.active_conversation_speech_available ? 1 : 0,
+		progress.active_conversation_speech_in_scene ? 1 : 0,
+		progress.active_conversation_speech_culled ? 1 : 0,
+		progress.active_conversation_speech_playing ? 1 : 0,
+		progress.active_conversation_speech_class_id,
+		progress.active_conversation_speech_type,
+		progress.active_conversation_speech_state,
+		progress.active_conversation_speech_duration_ms,
+		progress.active_conversation_speech_dropoff_radius,
+		progress.active_conversation_speech_listener_distance,
 		trace.player_x, trace.player_y, trace.player_z);
 }
 

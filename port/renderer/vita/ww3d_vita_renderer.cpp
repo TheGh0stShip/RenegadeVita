@@ -308,6 +308,122 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	return true;
 }
 
+Vector3 Transform_DX8_Row_Point(const float *matrix, const Vector3 &position)
+{
+	return Vector3(
+		position.X * matrix[0] + position.Y * matrix[4] +
+			position.Z * matrix[8] + matrix[12],
+		position.X * matrix[1] + position.Y * matrix[5] +
+			position.Z * matrix[9] + matrix[13],
+		position.X * matrix[2] + position.Y * matrix[6] +
+			position.Z * matrix[10] + matrix[14]);
+}
+
+Vector3 Rotate_DX8_Row_Vector(const float *matrix, const Vector3 &vector)
+{
+	return Vector3(
+		vector.X * matrix[0] + vector.Y * matrix[4] +
+			vector.Z * matrix[8],
+		vector.X * matrix[1] + vector.Y * matrix[5] +
+			vector.Z * matrix[9],
+		vector.X * matrix[2] + vector.Y * matrix[6] +
+			vector.Z * matrix[10]);
+}
+
+Vector3 Compute_Indexed_Camera_Space_Position(const float *world_transform,
+	const float *view_transform, const float position[3])
+{
+	const Vector3 world_position = Transform_DX8_Row_Point(world_transform,
+		Vector3(position[0], position[1], position[2]));
+	return Transform_DX8_Row_Point(view_transform, world_position);
+}
+
+Vector3 Compute_Indexed_Camera_Space_Normal(const float *world_transform,
+	const float *view_transform, const float normal[3])
+{
+	const Vector3 world_normal = Rotate_DX8_Row_Vector(world_transform,
+		Vector3(normal[0], normal[1], normal[2]));
+	const Vector3 camera_normal = Rotate_DX8_Row_Vector(view_transform,
+		world_normal);
+	return Normalize_Or_Default(camera_normal, Vector3(0.0f, 0.0f, 1.0f));
+}
+
+Vector3 Compute_Indexed_Camera_Space_Reflection(const float *world_transform,
+	const float *view_transform, const float position[3], const float normal[3])
+{
+	const Vector3 camera_position = Compute_Indexed_Camera_Space_Position(
+		world_transform, view_transform, position);
+	const Vector3 camera_normal = Compute_Indexed_Camera_Space_Normal(
+		world_transform, view_transform, normal);
+	const Vector3 eye_vector =
+		Normalize_Or_Default(-camera_position, Vector3(0.0f, 0.0f, 1.0f));
+	const float dot = Vector3::Dot_Product(camera_normal, eye_vector);
+	return Normalize_Or_Default((2.0f * dot * camera_normal) - eye_vector,
+		Vector3(0.0f, 0.0f, 1.0f));
+}
+
+const float *Select_Indexed_UV_Array(
+	const OriginalTextureCoordinateState &state, const float uv0[2],
+	const float uv1[2])
+{
+	const DWORD uv_source = state.texcoord_index & 0xffffU;
+	return uv_source == 1U ? uv1 : uv0;
+}
+
+bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
+	const OriginalTextureCoordinateState &state, const float uv0[2],
+	const float uv1[2], const float position[3], const float normal[3],
+	const float *world_transform, const float *view_transform)
+{
+	float source_s = 0.0f;
+	float source_t = 0.0f;
+	float source_r = 0.0f;
+	const DWORD mode = Texture_Coordinate_Mode(state);
+	if (mode == D3DTSS_TCI_PASSTHRU) {
+		const float *uv = Select_Indexed_UV_Array(state, uv0, uv1);
+		source_s = uv[0];
+		source_t = uv[1];
+	} else if (mode == D3DTSS_TCI_CAMERASPACENORMAL) {
+		const Vector3 camera_normal = Compute_Indexed_Camera_Space_Normal(
+			world_transform, view_transform, normal);
+		source_s = camera_normal.X;
+		source_t = camera_normal.Y;
+		source_r = camera_normal.Z;
+	} else if (mode == D3DTSS_TCI_CAMERASPACEPOSITION) {
+		const Vector3 camera_position = Compute_Indexed_Camera_Space_Position(
+			world_transform, view_transform, position);
+		source_s = camera_position.X;
+		source_t = camera_position.Y;
+		source_r = camera_position.Z;
+	} else if (mode == D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR) {
+		const Vector3 reflection = Compute_Indexed_Camera_Space_Reflection(
+			world_transform, view_transform, position, normal);
+		source_s = reflection.X;
+		source_t = reflection.Y;
+		source_r = reflection.Z;
+	} else {
+		const float *uv = Select_Indexed_UV_Array(state, uv0, uv1);
+		source_s = uv[0];
+		source_t = uv[1];
+	}
+
+	float s = 0.0f;
+	float t = 0.0f;
+	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
+		&s, &t);
+	glMultiTexCoord2f(texture_unit, s, t);
+	if (Uses_Generated_Texture_Coordinates(state) &&
+		!g_logged_first_generated_texture_coordinate) {
+		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) final=(%.3f,%.3f)",
+			stage, static_cast<unsigned>(mode),
+			static_cast<unsigned>(state.texture_transform_flags),
+			source_s, source_t, source_r, s, t);
+		g_logged_first_generated_texture_coordinate = true;
+	}
+	return true;
+}
+
 void Apply_Original_Shader_State(const ShaderClass &shader)
 {
 	const ShaderStateContract state = Translate_Shader_State(shader);
@@ -1714,16 +1830,16 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	const uint32_t render2d_fvf = 0x00000252U; // legacy dynamic XYZ | N | D | TEX2
 	const bool mesh_layout = submission.vertex_format == mesh_fvf &&
 		submission.vertex_stride == 36U;
-	const bool render2d_layout = submission.vertex_format == render2d_fvf &&
+	const bool dynamic_two_uv_layout = submission.vertex_format == render2d_fvf &&
 		submission.vertex_stride == 44U;
-	if (!mesh_layout && !render2d_layout) {
+	if (!mesh_layout && !dynamic_two_uv_layout) {
 		++g_statistics.unsupported_submissions;
 		++g_statistics.rejected_indexed_submissions;
 		static bool logged_rejected_layout = false;
 		if (!logged_rejected_layout) {
-			fprintf(stderr, "A4 indexed layout rejected: fvf=%08X stride=%u mesh=%d render2d=%d\n",
+			fprintf(stderr, "A4 indexed layout rejected: fvf=%08X stride=%u mesh=%d dynamic2uv=%d\n",
 				submission.vertex_format, submission.vertex_stride,
-				mesh_layout ? 1 : 0, render2d_layout ? 1 : 0);
+				mesh_layout ? 1 : 0, dynamic_two_uv_layout ? 1 : 0);
 			logged_rejected_layout = true;
 		}
 		Log_Indexed_Rejection("unsupported FVF/stride", submission.vertex_format);
@@ -1813,6 +1929,15 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(transform_matrices.modelview);
 
+	OriginalTextureCoordinateState texture_coordinates[MAX_TEXTURE_STAGES] = {};
+	for (unsigned stage = 0U; stage < MAX_TEXTURE_STAGES; ++stage) {
+		Capture_Original_Texture_Coordinate_State(stage,
+			&texture_coordinates[stage]);
+	}
+	const uint32_t diffuse_offset = 24U;
+	const uint32_t uv0_offset = 28U;
+	const uint32_t uv1_offset = dynamic_two_uv_layout ? 36U : uv0_offset;
+
 	glBegin(GL_TRIANGLES);
 	for (uint32_t triangle = 0; triangle < submission.triangle_count; ++triangle) {
 		for (uint32_t corner = 0; corner < 3U; ++corner) {
@@ -1823,29 +1948,33 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 			const unsigned char *vertex = submission.vertex_data +
 				actual_index * submission.vertex_stride;
 			float position[3];
-			float uv[2];
+			float normal[3];
+			float uv0[2];
+			float uv1[2];
 			uint32_t diffuse = 0;
 			memcpy(position, vertex, 3U * sizeof(float));
 			/* Render2D's original dynamic FVF retains a second UV slot after
 			 * the populated first UV. Its leading position/normal/diffuse
 			 * layout is therefore identical to the mesh layout. */
-			const uint32_t diffuse_offset = 24U;
-			const uint32_t uv_offset = 28U;
 			memcpy(&diffuse, vertex + diffuse_offset, sizeof(diffuse));
-			memcpy(uv, vertex + uv_offset, 2U * sizeof(float));
+			memcpy(normal, vertex + 12U, 3U * sizeof(float));
+			memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
+			memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
 			glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
 				static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
 				static_cast<GLubyte>(diffuse & 0xffU),
 				static_cast<GLubyte>((diffuse >> 24U) & 0xffU));
-			if (mesh_layout || render2d_layout) {
-				float normal[3];
-				memcpy(normal, vertex + 12U, 3U * sizeof(float));
+			if (mesh_layout || dynamic_two_uv_layout) {
 				glNormal3f(normal[0], normal[1], normal[2]);
 			} else {
 				glNormal3f(0.0f, 0.0f, 1.0f);
 			}
-			glMultiTexCoord2f(GL_TEXTURE0, uv[0], uv[1]);
-			glMultiTexCoord2f(GL_TEXTURE1, uv[0], uv[1]);
+			Emit_Indexed_Texture_Coordinate(0U, GL_TEXTURE0,
+				texture_coordinates[0], uv0, uv1, position, normal,
+				submission.world_transform, submission.view_transform);
+			Emit_Indexed_Texture_Coordinate(1U, GL_TEXTURE1,
+				texture_coordinates[1], uv0, uv1, position, normal,
+				submission.world_transform, submission.view_transform);
 			glVertex3f(position[0], position[1], position[2]);
 		}
 	}

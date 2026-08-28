@@ -16,6 +16,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "state.Textures[stage]->Apply_For_Platform_Boundary(stage)")
         fallback = function.index("RenegadeVitaRenderer::Bind_Texture(0U, false)")
         stage1_disable = function.index("RenegadeVitaRenderer::Disable_Texture_Stage(stage)")
+        material = function.index("Apply_Indexed_Texture_Coordinate_State(state.material)")
         submit = function.index(
             "RenegadeVitaRenderer::Submit_Indexed_Triangles(submission)")
         self.assertLess(shader, loop)
@@ -23,6 +24,11 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertLess(texture, submit)
         self.assertLess(fallback, submit)
         self.assertLess(stage1_disable, submit)
+        self.assertLess(texture, material)
+        self.assertLess(material, submit)
+        self.assertIn("mapper->Apply(uv_source);", boundary)
+        self.assertIn("D3DTSS_TEXCOORDINDEX", boundary)
+        self.assertIn("D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE", boundary)
 
     def test_indexed_state_application_is_observable(self):
         header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text()
@@ -82,7 +88,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
 
         for needle in (
             "glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage))",
-            "glMultiTexCoord2f(GL_TEXTURE1",
+            "Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,",
             "model->Peek_Texture(triangle_index, pass, 1)",
             "model->Get_UV_Array(pass, 1)",
             "triangle_shader.Uses_Post_Detail_Texture()",
@@ -216,6 +222,35 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,",
             function,
         )
+
+    def test_indexed_submit_replays_second_uv_and_generated_texcoords(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        function = renderer[
+            renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles"):
+            renderer.index("void Reject_Indexed_Submission")
+        ]
+
+        for needle in (
+            "const bool dynamic_two_uv_layout",
+            "const uint32_t uv0_offset = 28U;",
+            "const uint32_t uv1_offset = dynamic_two_uv_layout ? 36U : uv0_offset;",
+            "memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));",
+            "memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));",
+            "Capture_Original_Texture_Coordinate_State(stage,",
+            "Emit_Indexed_Texture_Coordinate(0U, GL_TEXTURE0,",
+            "Emit_Indexed_Texture_Coordinate(1U, GL_TEXTURE1,",
+        ):
+            self.assertIn(needle, function)
+
+        for needle in (
+            "state.texcoord_index & 0xffffU",
+            "uv_source == 1U ? uv1 : uv0",
+            "Compute_Indexed_Camera_Space_Position",
+            "Compute_Indexed_Camera_Space_Normal",
+            "Compute_Indexed_Camera_Space_Reflection",
+            "Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,",
+        ):
+            self.assertIn(needle, renderer)
 
     def test_capture_state_uses_global_texture_statistics(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()

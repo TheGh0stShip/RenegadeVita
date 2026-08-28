@@ -8,10 +8,12 @@
 #include "ddsfile.h"
 #include "D3dx8core.h"
 #include "formconv.h"
+#include "mapper.h"
 #include "render2d.h"
 #include "texture.h"
 #include "texture_upload_contract.h"
 #include "targa.h"
+#include "vertmaterial.h"
 #include "ww3dformat.h"
 
 #include <new>
@@ -1063,6 +1065,42 @@ IDirect3DTexture8 *Load_Targa_Texture(const char *filename,
 	return texture;
 }
 
+int Get_Indexed_Material_UV_Source(VertexMaterialClass *material, unsigned stage)
+{
+	const int fallback_uv_source = static_cast<int>(stage);
+	if (material == NULL) return fallback_uv_source;
+	const int uv_source = material->Get_UV_Source(static_cast<int>(stage));
+	return uv_source >= 0 ? uv_source : fallback_uv_source;
+}
+
+void Apply_Indexed_Texture_Coordinate_State(VertexMaterialClass *material)
+{
+	static bool logged_first_mapper = false;
+	for (unsigned stage = 0U; stage < MAX_TEXTURE_STAGES; ++stage) {
+		const int uv_source = Get_Indexed_Material_UV_Source(material, stage);
+		TextureMapperClass *mapper = NULL;
+		if (material != NULL) mapper = material->Peek_Mapper(static_cast<int>(stage));
+		if (mapper != NULL) {
+			mapper->Apply(uv_source);
+#if defined(__vita__)
+			if (!logged_first_mapper) {
+				Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+					"first original indexed VertexMaterial mapper: material=%s stage=%u mapper=%d uv=%d",
+					material != NULL ? material->Get_Name() : "NULL",
+					stage, mapper->Mapper_ID(), uv_source);
+				logged_first_mapper = true;
+			}
+#endif
+		} else {
+			DX8Wrapper::Set_DX8_Texture_Stage_State(stage,
+				D3DTSS_TEXCOORDINDEX,
+				D3DTSS_TCI_PASSTHRU | static_cast<unsigned>(uv_source));
+			DX8Wrapper::Set_DX8_Texture_Stage_State(stage,
+				D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+		}
+	}
+}
+
 void Submit_Bound_Triangles(const RenderStateStruct &state,
 	unsigned short start_index, unsigned short polygon_count,
 	unsigned short min_vertex_index, unsigned short vertex_count)
@@ -1142,6 +1180,7 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 			RenegadeVitaRenderer::Disable_Texture_Stage(stage);
 		}
 	}
+	Apply_Indexed_Texture_Coordinate_State(state.material);
 	RenegadeVitaRenderer::Submit_Indexed_Triangles(submission);
 }
 

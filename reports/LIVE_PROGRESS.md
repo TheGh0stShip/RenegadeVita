@@ -1,5 +1,49 @@
 # Live engineering progress
 
+## 2026-08-28 — dev66 Vita stream-output submission telemetry
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Audio boundary: the Vita Miles-compatible provider now records streamed
+  audio that is actually submitted successfully to `sceAudioOutOutput` as
+  `output_stream=buffers/frames/nonzero/peak` and
+  `last_output_stream=active/frames/nonzero/peak`. Sample restart now rewinds
+  exhausted finite sample/stream cursors before playback resumes, preventing a
+  restarted handle from reporting `started` while mixing silence.
+- Runtime purpose: the next Logan hardware run can separate stream decoded but
+  not submitted, stream submitted as silence, and stream submitted with nonzero
+  samples. This remains below original WWAudio/conversation ownership.
+- Validation: focused audio/dialogue contracts passed 13/13, the fast
+  no-deploy candidate passed 56 focused tests, the original `DDSFileClass`
+  `.tga`-to-`.dds` executable contract 11/11, package identity checks, and VPK
+  packaging. The full canonical no-deploy build passed retained host-validation
+  reuse, 72 host unittest checks, deterministic restaging, source integration
+  reporting, ARM link/package, compressed VPK validation, identity
+  verification, diagnostics bundle generation, SHA manifest verification, and
+  retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev66.vpk` SHA-256 is
+  `99ad437fc05c9a8bde760df346816a33103875f620a605ba0fa7c9ca7a316543`;
+  ELF SHA-256 is
+  `6a1883663e36dd4556564c05fa804307a12f641369e30c6697c2cfcf45e2ce85`;
+  diagnostics bundle SHA-256 is
+  `46c0cac6a9a46417e96dd5beb9942439ad5ab647dc9262dabe6ed58c4c99705a`.
+- Boundary: dev66 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev66, verify Logan
+  audible dialogue and timing, dialog/message text, material/texture
+  appearance, and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev66-runtime.log`, especially
+  `output_stream`, `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, fact/estimate/untrimmed/trimmed
+  values, conversation state, `texture loaded`, `loaded_dds/tga`,
+  `checker_bind`, `invalid_bind`, `unsupported_stages`, and first original
+  `MeshClass` stage-1 texture breadcrumbs if dialogue remains silent or
+  materials remain incorrect.
+
 ## 2026-08-28 — dev65 per-buffer stream-mix telemetry
 
 `[██████████] 12/12 canonical source/build gates complete`

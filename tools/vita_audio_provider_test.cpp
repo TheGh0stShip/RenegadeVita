@@ -283,6 +283,11 @@ int main()
 		mixed[3] == 0 && mixed[4] == 2000 && mixed[5] == 0 &&
 		mixed[6] == -2000 && mixed[7] == 0,
 		"provider volume/pan mix differs");
+	AIL_start_sample(sample);
+	int16_t restarted[2] = {};
+	passed &= Require(Renegade_Miles_Mix_For_Test(restarted, 1) &&
+		restarted[0] == 1000 && restarted[1] == 0,
+		"provider exhausted sample restart did not rewind");
 	AIL_release_sample_handle(sample);
 	H3DSAMPLE sample3d = AIL_allocate_3D_sample_handle(1);
 	passed &= Require(sample3d != nullptr &&
@@ -419,7 +424,9 @@ int main()
 	RenegadeMilesRuntimeStats stats = {};
 	Renegade_Miles_Get_Runtime_Stats(&stats);
 	passed &= Require(stats.output_start_attempts == 1 &&
-		stats.output_start_successes == 1 && stats.output_start_failures == 0,
+		stats.output_start_successes == 1 && stats.output_start_failures == 0 &&
+		stats.output_stream_buffers_written == 0 &&
+		stats.last_output_stream_active == 0,
 		"provider output stats differ");
 	passed &= Require(stats.sample_file_load_attempts == 1 &&
 		stats.sample_file_load_successes == 1 &&
@@ -447,10 +454,10 @@ int main()
 		stats.last_stream_trimmed_frames == 0 &&
 		std::strcmp(stats.last_stream_name, "logan_test.wav") == 0,
 		"provider stream stats differ");
-	passed &= Require(stats.sample_start_attempts == 6 &&
-		stats.sample_start_successes == 6 &&
-		stats.mixed_buffers == 8 &&
-		stats.mixed_nonzero_buffers == 6 &&
+	passed &= Require(stats.sample_start_attempts == 7 &&
+		stats.sample_start_successes == 7 &&
+		stats.mixed_buffers == 9 &&
+		stats.mixed_nonzero_buffers == 7 &&
 		stats.mixed_peak_abs >= 1000 &&
 		stats.active_streams == 0 &&
 		stats.active_stream_position_ms == 0 &&

@@ -180,6 +180,14 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         log_block = runtime[log_start:log_end]
 
         self.assertIn("volumes_dialog/cinematic=%.3f/%.3f", log_block)
+        self.assertIn(
+            "output_stream=buffers:%llu frames:%llu nonzero:%llu peak:%u",
+            log_block,
+        )
+        self.assertIn(
+            "last_output_stream=active/frames/nonzero/peak:%u/%u/%u/%u",
+            log_block,
+        )
         self.assertIn("stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u", log_block)
         self.assertIn(
             "last_stream_mix=active/frames/nonzero/peak:%u/%u/%u/%u",
@@ -197,6 +205,11 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("audio->Get_Dialog_Volume()", runtime)
         self.assertIn("audio->Get_Cinematic_Volume()", runtime)
         self.assertIn("stats.stream_mixed_nonzero_buffers", log_block)
+        self.assertIn("stats.output_stream_buffers_written", log_block)
+        self.assertIn("stats.output_stream_nonzero_buffers_written", log_block)
+        self.assertIn("stats.last_output_stream_active", log_block)
+        self.assertIn("stats.last_output_stream_nonzero", log_block)
+        self.assertIn("stats.last_output_stream_peak_abs", log_block)
         self.assertIn("stats.last_stream_mix_active", log_block)
         self.assertIn("stats.last_stream_mix_nonzero", log_block)
         self.assertIn("stats.last_stream_mix_peak_abs", log_block)

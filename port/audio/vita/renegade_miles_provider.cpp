@@ -46,6 +46,13 @@ struct RenegadeMilesStream {
 	bool owns_sample = false;
 };
 
+struct RenegadeMilesMixSummary {
+	uint32_t stream_active = 0U;
+	uint32_t stream_frames = 0U;
+	uint32_t stream_nonzero = 0U;
+	uint32_t stream_peak_abs = 0U;
+};
+
 namespace {
 
 constexpr size_t kOutputFrames = 1024U;
@@ -196,6 +203,8 @@ bool Advance_Loop(RenegadeMilesSample *sample)
 bool Start_Sample_Locked(RenegadeMilesSample *sample)
 {
 	if (sample == nullptr || sample->wave.Frame_Count() == 0) return false;
+	const size_t frames = sample->wave.Frame_Count();
+	if (sample->cursor >= static_cast<double>(frames)) sample->cursor = 0.0;
 	sample->playing = true;
 	sample->paused = false;
 	sample->loops_remaining = sample->loop_count;
@@ -268,9 +277,30 @@ void Capture_Active_Stream_Locked(RenegadeMilesRuntimeStats *stats,
 		std::max<S32>(0, sample->pan));
 }
 
-void Mix_Locked(int16_t *output, size_t frames)
+#if !defined(RENEGADE_MILES_MANUAL_MIX) && defined(__vita__)
+void Record_Output_Stream_Submit_Locked(const RenegadeMilesMixSummary &summary)
+{
+	g_stats.last_output_stream_active = summary.stream_active;
+	g_stats.last_output_stream_frames = summary.stream_frames;
+	g_stats.last_output_stream_nonzero = summary.stream_nonzero;
+	g_stats.last_output_stream_peak_abs = summary.stream_peak_abs;
+	if (summary.stream_active != 0U) {
+		++g_stats.output_stream_buffers_written;
+		g_stats.output_stream_frames_written += summary.stream_frames;
+		if (summary.stream_nonzero != 0U) {
+			++g_stats.output_stream_nonzero_buffers_written;
+		}
+		g_stats.output_stream_peak_abs =
+			std::max(g_stats.output_stream_peak_abs, summary.stream_peak_abs);
+	}
+}
+#endif
+
+void Mix_Locked(int16_t *output, size_t frames,
+	RenegadeMilesMixSummary *summary = nullptr)
 {
 	if (frames > kOutputFrames) return;
+	if (summary != nullptr) *summary = {};
 	std::fill(output, output + frames * 2U, 0);
 	int32_t accumulator[kOutputFrames * 2U] = {};
 	int32_t stream_accumulator[kOutputFrames * 2U] = {};
@@ -371,6 +401,12 @@ void Mix_Locked(int16_t *output, size_t frames)
 		g_stats.last_stream_mix_frames = Saturate_Size_To_U32(frames);
 		g_stats.last_stream_mix_nonzero = stream_nonzero ? 1U : 0U;
 		g_stats.last_stream_mix_peak_abs = stream_mix_peak_abs;
+		if (summary != nullptr) {
+			summary->stream_active = 1U;
+			summary->stream_frames = Saturate_Size_To_U32(frames);
+			summary->stream_nonzero = stream_nonzero ? 1U : 0U;
+			summary->stream_peak_abs = stream_mix_peak_abs;
+		}
 	} else {
 		g_stats.last_stream_mix_active = 0U;
 		g_stats.last_stream_mix_frames = 0U;
@@ -384,13 +420,14 @@ void *Output_Thread(void *)
 {
 	std::vector<int16_t> output(kOutputFrames * 2U, 0);
 	for (;;) {
+		RenegadeMilesMixSummary mix_summary;
 		if (g_output_stop.load(std::memory_order_acquire)) break;
 		if (pthread_mutex_trylock(&g_mutex) != 0) {
 			struct timespec retry = { 0, 1000000L };
 			nanosleep(&retry, nullptr);
 			continue;
 		}
-		Mix_Locked(output.data(), kOutputFrames);
+		Mix_Locked(output.data(), kOutputFrames, &mix_summary);
 		pthread_mutex_unlock(&g_mutex);
 #if defined(__vita__)
 		if (g_audio_port >= 0) {
@@ -401,6 +438,7 @@ void *Output_Thread(void *)
 					++g_stats.output_write_failures;
 				} else {
 					++g_stats.output_buffers_written;
+					Record_Output_Stream_Submit_Locked(mix_summary);
 				}
 				pthread_mutex_unlock(&g_mutex);
 			}

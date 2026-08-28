@@ -8,6 +8,14 @@ struct RenegadeMilesRuntimeStats {
 	uint32_t output_start_failures;
 	uint32_t output_buffers_written;
 	uint32_t output_write_failures;
+	uint64_t output_stream_buffers_written;
+	uint64_t output_stream_frames_written;
+	uint64_t output_stream_nonzero_buffers_written;
+	uint32_t output_stream_peak_abs;
+	uint32_t last_output_stream_active;
+	uint32_t last_output_stream_frames;
+	uint32_t last_output_stream_nonzero;
+	uint32_t last_output_stream_peak_abs;
 	uint32_t sample_file_load_attempts;
 	uint32_t sample_file_load_successes;
 	uint32_t sample_file_load_failures;

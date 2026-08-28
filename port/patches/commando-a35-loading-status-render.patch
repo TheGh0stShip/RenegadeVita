@@ -1,0 +1,12 @@
+diff --git a/loadingscreen.cpp b/loadingscreen.cpp
+index a98f5f8..a049f2a 100644
+--- a/loadingscreen.cpp
++++ b/loadingscreen.cpp
+@@ -274,6 +274,7 @@ void LoadingScreenClass::Render(bool update_network)
+ 	backdrop.Render();
+ 	backdropText.Render();
+ 	backdropText2.Render();
++	statusText.Render();
+ 
+ #if 0
+ 	StringClass txt=SaveLoadStatus::Get_Status_Text(0);

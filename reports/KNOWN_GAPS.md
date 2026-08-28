@@ -1,22 +1,26 @@
 # Known gaps
 
-## Current dev79 physical-test gaps (2026-08-28)
+## Current dev82 physical-test gaps (2026-08-28)
 
-A3.5-dev79 is built and uploaded for manual physical testing, but not accepted.
-It specifically targets the latest reported M00 tutorial defects: upside-down
-and wrongly scaled loading screen, non-advancing loading progress, missing HUD
-and Logan text, inverted camera Y, missing action/use mapping, missing reload
-animation, wrong NPC/Havoc skin materials, slight FPS regression, unopened gate,
-the top-screen white icon during Logan dialogue, and the freeze after trying
-the gate after pistol/fire interaction.
+A3.5-dev82 is built for manual physical testing, but not accepted. It
+specifically targets the latest reported M00 tutorial defects: incomplete
+loading-screen coverage/text/progress, mangled HUD, missing subtitles/dialogue
+text, inverted or drifting camera controls, missing action/use mapping, missing
+reload animation, wrong or upside-down NPC/Havoc/door/powerup/objective
+textures, wrong sniper scope/icon/zoom behavior, D-pad weapon switching also
+turning the camera, bounding boxes floating off target meshes, random rectangle
+ground shadows, FPS regression, unopened gate, top-screen white icon during
+Logan dialogue, and the freeze after trying the gate after pistol/fire
+interaction.
 
-The next engineering decisions must come from the dev79 runtime log and
+The next engineering decisions must come from the dev82 runtime log and
 physical observation. If the gate still fails, inspect transition/action
-diagnostics before changing mission logic. If Logan text remains absent,
-inspect TextDisplay/HUD initialization and conversation breadcrumbs before
-adding UI shortcuts. If skins remain wrong, inspect texture provenance and
-first textured-skin breadcrumbs before changing material ownership. If the
-freeze repeats, collect and symbolicate only against the matching dev79
+diagnostics and original `CombatGameModeClass` finalization before changing
+mission logic. If dialogue text remains absent, inspect TextDisplay/HUD
+initialization and conversation breadcrumbs before adding UI shortcuts. If
+skins, doors, objectives, or powerups remain wrong, inspect texture provenance
+and DDS row-orientation breadcrumbs before changing material ownership. If the
+freeze repeats, collect and symbolicate only against the matching dev82
 ELF/map/symbol set.
 
 ## Reconciled program status (2026-08-24)

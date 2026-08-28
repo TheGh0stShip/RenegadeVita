@@ -3472,6 +3472,10 @@ float SoldierGameObj::Say_Dynamic_Dialogue
 			}
 		}
 
+#if defined(RENEGADE_VITA_PORT)
+		display_text = true;
+#endif
+
 		//
 		//	Check to see if this string is commented out.
 		//

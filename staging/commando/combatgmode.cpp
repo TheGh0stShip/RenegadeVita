@@ -641,6 +641,131 @@ void Commando_Destroy_Original_Loading_Screen( void * screen )
 
 #define LOADTIME_NETWORK_UPDATE if (!IS_SOLOPLAY) cNetwork::Update()
 
+#if defined(RENEGADE_VITA_PORT)
+static void Vita_Set_Minimum_Load_Progress(int minimum_progress)
+{
+	if (CombatManager::Get_Load_Progress() < minimum_progress) {
+		CombatManager::Set_Load_Progress(minimum_progress);
+	}
+}
+
+static void Vita_Render_Loading_Status(void *loading_screen,
+	const char *status, bool update_network, int minimum_progress)
+{
+	INIT_STATUS(status);
+	Vita_Set_Minimum_Load_Progress(minimum_progress);
+	if (loading_screen != NULL) {
+		((LoadingScreenClass *)loading_screen)->Render(update_network);
+	}
+	Windows_Message_Handler();
+	if (update_network && !IS_SOLOPLAY) {
+		cNetwork::Update();
+	}
+}
+
+void CombatGameModeClass::Vita_Begin_Level_Load(void *loading_screen,
+	bool update_network)
+{
+	Vita_Render_Loading_Status(loading_screen, "Load registry keys",
+		update_network, 0);
+	Load_Registry_Keys();
+
+	Vita_Render_Loading_Status(loading_screen, "Release current level",
+		update_network, 0);
+	LevelManager::Release_Level();
+	if (!ConsoleBox.Is_Exclusive()) {
+		WW3D::_Invalidate_Textures();
+		AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(false);
+	}
+
+	PendingCampaignContinue = false;
+	g_is_loading = true;
+
+	if (cNetwork::PServerConnection) {
+		cNetwork::PServerConnection->Allow_Packet_Processing(false);
+	}
+	if (!IS_SOLOPLAY && cNetwork::PClientConnection != NULL) {
+		cNetwork::PClientConnection->Allow_Extra_Timeout_For_Loading();
+	}
+
+	Vita_Render_Loading_Status(loading_screen, "Apply system settings",
+		update_network, 0);
+	SystemSettings::Apply_All();
+}
+
+void CombatGameModeClass::Vita_Finalize_Loaded_Level(void *loading_screen,
+	bool update_network)
+{
+	GenericDataSafeClass::Set_Preferred_Thread(GetCurrentThreadId());
+
+	Vita_Render_Loading_Status(loading_screen,
+		"Post_Load_Id_Uniqueness_Check", update_network, 6);
+	Post_Load_Id_Uniqueness_Check();
+
+	Vita_Render_Loading_Status(loading_screen,
+		"Post_Load_Dynamic_Object_Filtering", update_network, 6);
+	Post_Load_Dynamic_Object_Filtering();
+
+	Vita_Render_Loading_Status(loading_screen, "Spawn_Point_Validation",
+		update_network, 6);
+	Spawn_Point_Validation();
+
+	Vita_Render_Loading_Status(loading_screen, "Compute world size",
+		update_network, 6);
+	Compute_World_Size();
+
+	ControlClass::Set_Precision();
+	HumanStateClass::Set_Precision();
+	VehicleGameObj::Set_Precision();
+	DoorPhysClass::Set_Precision();
+	ElevatorPhysClass::Set_Precision();
+	DefenseObjectClass::Set_Precision();
+	BuildingGameObj::Set_Precision();
+
+	if (cNetwork::I_Am_Only_Server()) {
+		GameModeManager::Set_Background_Color(Vector3(0.0f, 0.0f, 0.4f));
+	}
+
+	Vita_Render_Loading_Status(loading_screen, "Registry keys",
+		update_network, 6);
+	Load_Registry_Keys();
+	Save_Registry_Keys();
+
+	Vita_Render_Loading_Status(loading_screen, "Init radar class",
+		update_network, 6);
+	RadarManager::Init();
+	WWASSERT(PTheGameData != NULL);
+	RadarManager::Set_Radar_Mode(The_Game()->Get_Radar_Mode());
+
+	const bool is_reloaded = true;
+	The_Game()->Reset_Game(is_reloaded);
+
+	Vita_Render_Loading_Status(loading_screen, "Init_Buildings",
+		update_network, 6);
+	GameObjManager::Init_Buildings();
+
+	Vita_Render_Loading_Status(loading_screen, "Init_Textures",
+		update_network, 6);
+	TextureLoader::Update(IS_SOLOPLAY ? NULL : &cNetwork::Update);
+
+	WWASSERT(PTheGameData != NULL);
+	The_Game()->On_Game_Begin();
+	ForceGodPending = ForceGod != 0;
+
+	AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(true);
+	g_is_loading = false;
+	Vita_Set_Minimum_Load_Progress(7);
+
+	ConsoleBox.Print("Load %d%% complete\n", 100);
+	ConsoleBox.Print("Level loaded OK\n");
+	GameSpyQnR.Init();
+
+	if (cNetwork::PServerConnection) {
+		cNetwork::PServerConnection->Allow_Packet_Processing(true);
+	}
+}
+#endif
+
 
 /*
 **

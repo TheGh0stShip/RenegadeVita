@@ -36,14 +36,17 @@ LoadingScreenClass::LoadingScreenClass()
 
 	backdropText.Set_Texture_Size_Hint( 256 );
 	backdropText2.Set_Texture_Size_Hint( 256 );
+	statusText.Set_Texture_Size_Hint( 256 );
 
 	LoadTime = 0.001f;
 	LoadPercentage = 0;
 	LoadPercentageDrawn = 0;
 	LoadPercentageRate = 0;
+	StatusTextBuffer[0] = '\0';
 
 	FontCharsClass *font	= StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_TXT );
 	backdropText.Set_Font( font );
+	statusText.Set_Font( font );
 
 	font = StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_BIG_TXT );
 	backdropText2.Set_Font( font );
@@ -202,6 +205,39 @@ float	LoadingScreenClass::Get_Predicted_Percentage( int state )
 	}
 }
 
+void LoadingScreenClass::Update_Status_Text(void)
+{
+	StringClass status;
+	SaveLoadStatus::Get_Status_Text(status, 0);
+	if (status.Get_Length() == 0) {
+		SaveLoadStatus::Get_Status_Text(status, 1);
+	}
+	if (status.Get_Length() == 0) {
+		status = "Loading M00 Tutorial";
+	}
+
+	int percent = (int)(LoadPercentageDrawn * 100.0f);
+	if (percent < 0) percent = 0;
+	if (percent > 100) percent = 100;
+	char text[128];
+	::snprintf(text, sizeof(text), "%s %d%%", (const char *)status, percent);
+	text[sizeof(text) - 1] = '\0';
+	if (::strcmp(StatusTextBuffer, text) == 0) {
+		return;
+	}
+	::snprintf(StatusTextBuffer, sizeof(StatusTextBuffer), "%s", text);
+	StatusTextBuffer[sizeof(StatusTextBuffer) - 1] = '\0';
+
+	WideStringClass wide_status;
+	wide_status.Convert_From(StatusTextBuffer);
+	const RectClass &screen = Render2DClass::Get_Screen_Resolution();
+	statusText.Reset();
+	statusText.Set_Wrapping_Width(screen.Right - 64.0f);
+	statusText.Build_Sentence(wide_status);
+	statusText.Set_Location(Vector2(32, (int)(screen.Bottom - 42.0f)));
+	statusText.Draw_Sentence(0xFFFFFFFF);
+}
+
 void LoadingScreenClass::Render(bool update_network)
 {
 	TimeManager::Update_Frame_Time();
@@ -225,6 +261,7 @@ void LoadingScreenClass::Render(bool update_network)
 		LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
 	}
 	backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
+	Update_Status_Text();
 	if (ConsoleBox.Is_Exclusive() && _last_percent_drawn != LoadPercentageDrawn) {
 		_last_percent_drawn = LoadPercentageDrawn;
 		ConsoleBox.Print("Load %d%% complete\r", (int)(LoadPercentageDrawn * 100.0f));
@@ -235,6 +272,7 @@ void LoadingScreenClass::Render(bool update_network)
 	backdrop.Render();
 	backdropText.Render();
 	backdropText2.Render();
+	statusText.Render();
 
 #if 0
 	StringClass txt=SaveLoadStatus::Get_Status_Text(0);

@@ -10,48 +10,59 @@ lifecycle, interactive player/camera ownership, and clean exit.
 
 ## Current Candidate
 
-**A3.5-dev79** is the current hardware-test candidate. It has a successful
-canonical build and has been prepared for manual physical testing, but it is
-not an accepted milestone until device observations and returned logs match.
+**A3.5-dev82** is the current hardware-test candidate. It has a successful
+canonical build and has been uploaded by user-authorized VitaShell FTP, but it
+is not an accepted milestone until device observations and returned logs match.
 
 Candidate VPK:
 
 ```text
-RenegadeVita-A3.5-dev79.vpk
+RenegadeVita-A3.5-dev82.vpk
 ```
 
 VPK SHA-256:
 
 ```text
-0c34f954885f097f422c4f3670ccb3d9b20fc606fb0e9416d898855c92b84d74
+0bd150942a13e39a84277449637e2ca7ce9a5ccce4329dcd2b05695fb4a24750
 ```
 
 Runtime log:
 
 ```text
-ux0:data/renegade/user/logs/a35-dev79-runtime.log
+ux0:data/renegade/user/logs/a35-dev82-runtime.log
 ```
 
-## What Dev79 Targets
+## What Dev82 Targets
 
-- Loading screen orientation, aspect scaling, and progress-bar render order.
-- Logan text/display path by enabling original TextDisplay handling.
-- No-HUD M00 by admitting the original HUD/TextDisplay render path.
-- Vita control mapping, including Triangle as action/use and D-pad camera,
-  weapon, and objectives functions.
-- Reload animation by restoring first-person default for the direct M00 route.
-- NPC/Havoc skin color by avoiding Vita material tinting on textured skinned
-  meshes.
-- FPS regression by caching repeated native texture/render-state changes.
-- Gate/opening failures by adding transition/action diagnostics.
+- Loading screen coverage, status text, and progress through the original
+  one-bar path, including renderer/cache prewarm.
+- HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
+  rendering and bounds.
+- Vita control mapping: Triangle action/use, Square reload, D-pad Left/Right
+  weapon-only switching, D-pad Up/Down sniper zoom, no shoulder remap.
+- Reload animation by adding visible first-person weapon motion while the
+  original weapon state is reload.
+- NPC/Havoc/door/powerup/objective texture orientation by preserving top-down
+  retail DDS rows in gameplay uploads.
+- FPS regression by caching repeated native viewport/texture/render-state
+  changes and enabling a persistent vitaGL shader-cache path.
+- Gate/opening failures by adding original CombatGameMode finalization and
+  preserving transition/action diagnostics.
+- Sniper scope/icon placement and zoom behavior.
 
 ## Still Open Until Physical Evidence Returns
 
-- Whether the loading screen is visually correct on the Vita panel.
-- Whether Logan subtitles/text appear in the original path.
-- Whether NPC and Havoc materials are correct rather than merely improved.
+- Whether the loading screen is visually correct and fullscreen on the Vita
+  panel.
+- Whether Logan, Sydney, and Gunner subtitles/text appear in the original path.
+- Whether NPC, Havoc, door, powerup, and objective textures/materials are
+  correct rather than merely improved.
 - Whether reload animation appears with the restored first-person weapon view.
 - Whether the gate opens with Triangle or records the owning transition miss.
+- Whether D-pad Left/Right weapon switching no longer turns the camera.
+- Whether D-pad Up/Down zooms the sniper scope correctly.
+- Whether sniper scope/icon placement is correct.
+- Whether random ground rectangles and floating bounding boxes are fixed.
 - Whether the freeze after pistol/gate interaction is fixed or symbolicates to
   a remaining owner.
 - Whether the renderer state cache recovers the observed FPS drop without new
@@ -59,9 +70,10 @@ ux0:data/renegade/user/logs/a35-dev79-runtime.log
 
 ## Useful Evidence To Return
 
-- Runtime log from `ux0:data/renegade/user/logs/a35-dev79-runtime.log`.
+- Runtime log from `ux0:data/renegade/user/logs/a35-dev82-runtime.log`.
 - Any screenshots showing loading screen, Logan text, NPC/Havoc materials, HUD,
   gate state, and freeze point.
 - Any `psp2core-*.psp2dmp` if the app crashes or the system captures a dump.
-- Whether D-pad Down toggles camera view, D-pad Left/Right switch weapons, and
-  Triangle interacts with the gate.
+- Whether D-pad Left/Right switch weapons without camera drift, D-pad Up/Down
+  zoom the sniper scope, Square reloads with animation, and Triangle interacts
+  with the gate.

@@ -47,7 +47,7 @@ Useful knobs:
 
 ```bash
 RENEGADE_BUILD_JOBS=8 bash ./tools/build.sh
-RENEGADE_CANDIDATE_LABEL=A3.5-dev79 bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev82 bash ./tools/build.sh
 RENEGADE_FAST_SCOPE=compile bash ./tools/build_fast_candidate.sh
 ```
 
@@ -67,7 +67,7 @@ ux0:data/renegade/retail/Data/
 For FTP upload to a VitaShell-accessible folder:
 
 ```bash
-bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev79.vpk
+bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev82.vpk
 ```
 
 Then install the VPK from VitaShell on the device.
@@ -83,7 +83,7 @@ ux0:data/renegade/user/logs/
 For the current candidate:
 
 ```text
-ux0:data/renegade/user/logs/a35-dev79-runtime.log
+ux0:data/renegade/user/logs/a35-dev82-runtime.log
 ```
 
 Return that log, screenshots, captures, and any `psp2core-*.psp2dmp` after a

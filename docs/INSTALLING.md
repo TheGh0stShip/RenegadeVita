@@ -33,7 +33,7 @@ Do not place generated caches, logs, or saves under `retail/`.
 Start VitaShell FTP on the Vita, then run:
 
 ```bash
-bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev79.vpk
+bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev82.vpk
 ```
 
 Default upload target:
@@ -45,7 +45,7 @@ ux0:/data/renegade/user/<vpk-file-name>
 You can choose a different remote directory:
 
 ```bash
-bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev79.vpk ux0:/VPK
+bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev82.vpk ux0:/VPK
 ```
 
 The helper only uploads the selected VPK. It does not install it, launch it,
@@ -55,7 +55,7 @@ or copy retail data.
 
 Return these if available:
 
-- `ux0:data/renegade/user/logs/a35-dev79-runtime.log`
+- `ux0:data/renegade/user/logs/a35-dev82-runtime.log`
 - any files under `ux0:data/renegade/user/captures/`
 - screenshots made by VitaShell or the system
 - any `psp2core-*.psp2dmp`

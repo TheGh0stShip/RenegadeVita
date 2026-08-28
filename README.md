@@ -11,11 +11,12 @@ or a replacement Renegade engine.
 
 ## Current State
 
-The current engineering candidate is **A3.5-dev79**. It builds, links, packages
+The current engineering candidate is **A3.5-dev82**. It builds, links, packages
 as a native Vita VPK, and is waiting on physical M00 tutorial validation for
-the latest fixes to loading-screen orientation/scaling, HUD/text display,
-Logan dialogue text, controls, reload/camera behavior, skinned character
-materials, transition diagnostics, and renderer state churn.
+the latest fixes to loading-screen coverage/text/progress, combined loading
+prewarm, HUD/text display, dialogue subtitles, controls, reload/sniper
+behavior, character/door/powerup/objective texture orientation, original
+CombatGameMode finalization, transition diagnostics, and renderer state churn.
 
 The latest accepted physical baseline is **A3.1.4**, which proves visible
 interactive M00 lifecycle. Later A3.5 builds are internal candidates until the

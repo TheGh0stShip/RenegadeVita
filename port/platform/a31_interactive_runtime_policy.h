@@ -154,6 +154,7 @@ void A31_Interactive_Apply_Render_Capabilities();
 // identifiers.  Player, camera, action, and simulation ownership remains in
 // Commando/Combat.
 void A31_Interactive_Configure_Vita_Controls();
+void A31_Interactive_Register_Headless_Game_Modes();
 void A31_Interactive_Run_Simulation_Frame();
 A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame();
 /* Install a presentation/lifecycle observer at CombatManager's original misc

@@ -52,13 +52,13 @@ Patch application must be deterministic and zero-fuzz.
 
 ## Current Source Integration
 
-A3.5-dev79 currently records:
+A3.5-dev82 currently records:
 
 - 1,490 original EA/Westwood source files discovered.
-- 452 original source files compiled.
+- 455 original source files compiled.
 - 1 staged original-owner extraction for the shared loading-screen path.
-- 26 Vita platform/renderer/validation/developer translation units.
+- 27 Vita platform/renderer/validation/developer translation units.
 - 52 compatibility headers.
-- 121 deterministic staging patches.
+- 127 deterministic staging patches.
 
 See `reports/SOURCE_INTEGRATION_REPORT.json` for the exact source list.

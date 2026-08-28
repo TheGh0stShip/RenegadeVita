@@ -93,7 +93,7 @@ class CaptureComparisonTest(unittest.TestCase):
                     "original_loading_screen_owner": True,
                     "direct_vitagl_overlay_disabled": True,
                     "loading_texture_v_flip_enabled": True,
-                    "gameplay_texture_v_unchanged": False,
+                    "gameplay_texture_v_unchanged": True,
                 }
                 state_path.write_text(json.dumps(state), encoding="utf-8")
             after_path = after / "state.json"

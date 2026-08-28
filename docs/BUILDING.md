@@ -40,7 +40,7 @@ handing a VPK to a physical tester.
   no writable managed root exists.
 - `RENEGADE_DIST_ROOT`: override artifact lookup/output for helper scripts.
 - `RENEGADE_BUILD_JOBS`: parallel build jobs. Canonical default is conservative.
-- `RENEGADE_CANDIDATE_LABEL`: candidate label such as `A3.5-dev79`.
+- `RENEGADE_CANDIDATE_LABEL`: candidate label such as `A3.5-dev82`.
 - `RENEGADE_RETAIL_ROOT`: host retail Renegade root used by host validation.
 - `RENEGADE_REUSE_HOST_VALIDATION_LOG`: explicit retained host-validation log
   when host retail data is unavailable.
@@ -70,7 +70,7 @@ does not contain an embedded payload:
 
 ```powershell
 .\RenegadeVita_BUILD.ps1
-.\RenegadeVita_BUILD.ps1 -CandidateLabel A3.5-dev79 -BuildJobs 8
+.\RenegadeVita_BUILD.ps1 -CandidateLabel A3.5-dev82 -BuildJobs 8
 ```
 
 When in doubt, run the Bash script directly from WSL.

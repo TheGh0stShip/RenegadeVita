@@ -129,11 +129,14 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, DIK_RIGHT);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_IN, DIK_UP);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT, DIK_DOWN);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, DIK_E);", controls)
         self.assertIn(
             "INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0",
             controls,
         )
         self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD, 0);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_LEFT, 0);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_RIGHT, 0);", controls)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_E, (buttons & SCE_CTRL_TRIANGLE) != 0);", directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_F, front_touch_down);", directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SQUARE) != 0);", directinput)
@@ -183,11 +186,13 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
 
     def test_reload_animation_path_has_bounded_vita_diagnostics(self):
         patch = (ROOT / "port/patches/combat-a35-weaponview-reload-latch.patch").read_text()
+        reload_motion = (ROOT / "port/patches/combat-a35-weaponview-reload-motion.patch").read_text()
         stage_sources = (ROOT / "tools/stage_sources.sh").read_text()
         weaponview = (ROOT / "staging/combat/weaponview.cpp").read_text()
         weaponview_header = (ROOT / "staging/combat/weaponview.h").read_text()
         weapons = (ROOT / "staging/combat/weapons.cpp").read_text()
         self.assertIn("combat-a35-weaponview-reload-latch.patch", stage_sources)
+        self.assertIn("combat-a35-m00-ui-hud-subtitles.patch", stage_sources)
         for source in (patch, weaponview_header, weapons, weaponview):
             self.assertIn("Notify_Reload_Started", source)
         for source in (patch, weaponview):
@@ -198,6 +203,9 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
             self.assertIn("missing first-person hands reload anim", source)
         for source in (patch, weapons):
             self.assertIn("WeaponViewClass::Notify_Reload_Started(this);", source)
+        for source in (reload_motion, weaponview):
+            self.assertIn("ReloadAnimationViewTimer", source)
+            self.assertIn("WWMath::Sin(phase * WWMATH_PI)", source)
 
     def test_deferred_dazzle_layer_does_not_reject_original_sky_scene(self):
         patch = (ROOT / "port/patches/ww3d2-a22-vita-boundaries.patch").read_text()

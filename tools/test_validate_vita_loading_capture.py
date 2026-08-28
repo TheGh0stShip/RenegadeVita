@@ -60,7 +60,7 @@ def state(candidate: str = "A3.5-dev38") -> dict:
             "original_loading_screen_owner": True,
             "direct_vitagl_overlay_disabled": True,
             "loading_texture_v_flip_enabled": True,
-            "gameplay_texture_v_unchanged": False,
+            "gameplay_texture_v_unchanged": True,
         },
     }
 

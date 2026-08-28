@@ -999,8 +999,8 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 		for (unsigned y = 0U; y < height; ++y) {
 			for (unsigned x = 0U; x < width; ++x) {
 				const uint32_t argb = dds.Get_Pixel(level, x, y);
-				RenegadeVitaTextureUpload::Store_RGBA_From_ARGB_Flipped(argb,
-					x, y, width, height, rgba.data());
+				RenegadeVitaTextureUpload::Store_RGBA_From_ARGB_At(argb,
+					x, y, width, rgba.data());
 				checksum = Mix_Texture_Checksum(checksum, argb);
 			}
 		}
@@ -1668,6 +1668,8 @@ IDirect3DSurface8::IDirect3DSurface8(UINT width, UINT height,
 	if (Storage == NULL) {
 		StorageSize = 0U;
 		Pitch = 0U;
+	} else {
+		memset(Storage, 0, StorageSize);
 	}
 }
 
@@ -2071,7 +2073,29 @@ bool DX8Wrapper::Set_Device_Resolution(int width, int height, int bits,
 		static_cast<float>(ResolutionHeight)));
 	g_logical_viewport_width = static_cast<uint32_t>(ResolutionWidth);
 	g_logical_viewport_height = static_cast<uint32_t>(ResolutionHeight);
+	g_boundary_viewport.X = 0U;
+	g_boundary_viewport.Y = 0U;
+	g_boundary_viewport.Width = g_logical_viewport_width;
+	g_boundary_viewport.Height = g_logical_viewport_height;
+	g_boundary_viewport.MinZ = 0.0f;
+	g_boundary_viewport.MaxZ = 1.0f;
+#if defined(__vita__)
+	const bool viewport_applied = !RenegadeVitaRenderer::Get_Statistics().initialized ||
+		RenegadeVitaRenderer::Apply_Viewport(g_boundary_viewport.X,
+			g_boundary_viewport.Y, g_boundary_viewport.Width,
+			g_boundary_viewport.Height, g_boundary_viewport.MinZ,
+			g_boundary_viewport.MaxZ, g_logical_viewport_width,
+			g_logical_viewport_height);
+	Vita_Append_A22_Runtime_Breadcrumb("camera-state",
+		"DX8Wrapper::Set_Device_Resolution logical=%dx%d viewport=%u,%u %ux%u native_display=%ux%u applied=%d",
+		ResolutionWidth, ResolutionHeight, g_boundary_viewport.X,
+		g_boundary_viewport.Y, g_boundary_viewport.Width,
+		g_boundary_viewport.Height, RenegadeVitaRenderer::DISPLAY_WIDTH,
+		RenegadeVitaRenderer::DISPLAY_HEIGHT, viewport_applied ? 1 : 0);
+	return viewport_applied;
+#else
 	return true;
+#endif
 }
 
 TextureClass *DX8Wrapper::Create_Render_Target(int width, int height,

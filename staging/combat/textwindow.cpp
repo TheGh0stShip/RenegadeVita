@@ -709,7 +709,7 @@ TextWindowClass::Update_View (float *total_height, bool info_only)
 		//
 		//	Check to see if we've gone outside the client area of the text window
 		//
-		if ((y_pos + row_height) > TextRect.Right && info_only == false) {
+		if ((y_pos + row_height) > TextRect.Bottom && info_only == false) {
 			break;
 		}		
 		

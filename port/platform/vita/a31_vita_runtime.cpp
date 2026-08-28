@@ -15,8 +15,10 @@
 #include "campaign.h"
 #include "chunkio.h"
 #include "combat.h"
+#include "combatgmode.h"
 #include "cnetwork.h"
 #include "d3d8.h"
+#include "datasafe.h"
 #include "debug.h"
 #include "definitionfactorymgr.h"
 #include "ffactory.h"
@@ -48,6 +50,7 @@
 #include "textdisplay.h"
 #include "textwindow.h"
 #include "timemgr.h"
+#include "textureloader.h"
 #include "menubackdrop.h"
 #include "translatedb.h"
 #include "ww3d.h"
@@ -233,7 +236,8 @@ class A31VitaLoadingPresenter
 public:
 	A31VitaLoadingPresenter() :
 		Screen(NULL),
-		BackdropReady(false)
+		BackdropReady(false),
+		LastMirroredLoadProgress(-1)
 	{
 	}
 
@@ -271,17 +275,45 @@ public:
 		return Screen != NULL && BackdropReady;
 	}
 
-	void Render_Original_Progress(const char *phase, bool update_network = true)
+	void *Peek_Screen() const
 	{
+		return Screen;
+	}
+
+	void Render_Original_Progress(const char *phase, bool update_network = true,
+		int minimum_progress = -1)
+	{
+		StringClass load_status;
+		StringClass load_sub_status;
+		SaveLoadStatus::Get_Status_Text(load_status, 0);
+		SaveLoadStatus::Get_Status_Text(load_sub_status, 1);
+		const int status_count = SaveLoadStatus::Get_Status_Count();
+		const int current_progress = CombatManager::Get_Load_Progress();
+		int mirrored_progress = current_progress;
+		if (status_count > mirrored_progress) mirrored_progress = status_count;
+		if (minimum_progress > mirrored_progress) mirrored_progress = minimum_progress;
+		if (mirrored_progress > current_progress) {
+			CombatManager::Set_Load_Progress(mirrored_progress);
+		}
 		Commando_Render_Original_Loading_Screen(Screen, update_network);
-		A30_Vita_Log("A3.5 loading screen: phase=%s original_class=1 original_backdrop=%d state=%d\n",
+		if (LastMirroredLoadProgress != mirrored_progress ||
+			phase == NULL ||
+			::strstr(phase, "complete") != NULL ||
+			::strstr(phase, "ready") != NULL ||
+			::strstr(phase, "prewarm") != NULL) {
+			LastMirroredLoadProgress = mirrored_progress;
+		}
+		A30_Vita_Log("A3.5 loading screen: phase=%s original_class=1 original_backdrop=%d progress=%d status_count=%d status=%s sub_status=%s\n",
 			phase != NULL ? phase : "unknown", BackdropReady ? 1 : 0,
-			CombatManager::Get_Load_Progress());
+			CombatManager::Get_Load_Progress(), status_count,
+			static_cast<const char *>(load_status),
+			static_cast<const char *>(load_sub_status));
 	}
 
 private:
 	void *Screen;
 	bool BackdropReady;
+	int LastMirroredLoadProgress;
 };
 
 	A31StateSnapshot Make_Interactive_Capture_State(const A31InteractiveRenderTrace &trace,
@@ -370,10 +402,48 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 	state.loading_visual_gate.original_loading_screen_owner = true;
 	state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
 	state.loading_visual_gate.loading_texture_v_flip_enabled = true;
-	state.loading_visual_gate.gameplay_texture_v_unchanged = false;
+	state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	state.scripts_active = ScriptManager::Is_Provider_Active()
 		&& ScriptManager::Get_Active_Script_Count() > 0;
 	return state;
+}
+
+bool Apply_Original_Gameplay_Render_Resolution()
+{
+	const bool applied = WW3D::Set_Device_Resolution(
+		static_cast<int>(kOriginalLoadingLogicalWidth),
+		static_cast<int>(kOriginalLoadingLogicalHeight), -1, -1, false) == WW3D_ERROR_OK;
+	int width = 0;
+	int height = 0;
+	int bits = 0;
+	bool windowed = false;
+	WW3D::Get_Device_Resolution(width, height, bits, windowed);
+	A30_Vita_Log("A3.5 HUD: original gameplay logical render resolution requested=%dx%d current=%dx%d bits=%d windowed=%d native=%ux%u applied=%d\n",
+		static_cast<int>(kOriginalLoadingLogicalWidth),
+		static_cast<int>(kOriginalLoadingLogicalHeight), width, height, bits,
+		windowed ? 1 : 0, RenegadeVitaRenderer::DISPLAY_WIDTH,
+		RenegadeVitaRenderer::DISPLAY_HEIGHT, applied ? 1 : 0);
+	return applied && width == static_cast<int>(kOriginalLoadingLogicalWidth) &&
+		height == static_cast<int>(kOriginalLoadingLogicalHeight);
+}
+
+void Warm_Original_M00_Presentation_Cache(A31VitaLoadingPresenter &loading_presenter)
+{
+	SaveLoadStatus::Set_Status_Text("Prewarm renderer cache", 0);
+	CombatManager::Set_Load_Progress(7);
+	for (unsigned frame = 0U; frame < 4U; ++frame) {
+		TextureLoader::Update(IS_SOLOPLAY ? NULL : &cNetwork::Update);
+		A31_Interactive_Apply_Render_Capabilities();
+		loading_presenter.Render_Original_Progress("prewarm_renderer_cache",
+			true, 7);
+		sceKernelDelayThread(16666);
+	}
+	const RenegadeVitaRenderer::Statistics &statistics =
+		RenegadeVitaRenderer::Get_Statistics();
+	A30_Vita_Log("A3.5 prewarm: loading-screen-owned frames=4 textures=%u uploads=%u binds=%u shader_cache=ux0:data/renegade/cache/vitagl-shader-cache state_changes=%u backend_errors=%u\n",
+		statistics.texture_resident, statistics.texture_uploads,
+		statistics.texture_binds, statistics.state_changes,
+		statistics.backend_errors);
 }
 
 void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
@@ -886,6 +956,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				A30_Vita_Log("A3.1 interactive: WW3D init FAIL\n");
 				break;
 			}
+			if (!Apply_Original_Gameplay_Render_Resolution()) {
+				A30_Vita_Log("A3.5 HUD: FAIL original gameplay logical render resolution unavailable\n");
+				break;
+			}
 			A30_Vita_Log("A3.1 breadcrumb: WW3D asset manager ready\n");
 			/* Font3D now follows the original FileFactory/Targa/Surface/texture
 			 * chain. HUD promotion remains a separately tested A4 decision, so log
@@ -934,10 +1008,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 			A30_Vita_Log("A4 breadcrumb: original GameInitMgr SP initialization entry\n");
 			GameInitMgrClass::Initialize_SP();
 			single_player_transport_initialized = cSinglePlayerData::Is_Single_Player();
-			A30_Vita_Log("A4 breadcrumb: original GameInitMgr SP initialized=%d data=%p\n",
-				single_player_transport_initialized ? 1 : 0,
-				static_cast<void *>(PTheGameData));
-			GameModeClass *combat_mode = GameModeManager::Find("Combat");
+				A30_Vita_Log("A4 breadcrumb: original GameInitMgr SP initialized=%d data=%p\n",
+					single_player_transport_initialized ? 1 : 0,
+					static_cast<void *>(PTheGameData));
+				A31_Interactive_Register_Headless_Game_Modes();
+				GameModeClass *combat_mode = GameModeManager::Find("Combat");
 			if (!single_player_transport_initialized || PTheGameData == NULL || combat_mode == NULL) {
 				A30_Vita_Log("A3.1 interactive: game-data/mode FAIL\n");
 				break;
@@ -995,6 +1070,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				break;
 			}
 			loading_presenter.Render_Original_Progress("before_pre_load");
+			CombatGameModeClass::Vita_Begin_Level_Load(
+				loading_presenter.Peek_Screen(), true);
+			loading_presenter.Render_Original_Progress("after_combatgmode_begin_load");
 			/* The direct Vita runtime has a real WW3D presentation backend even
 			** while the full HUD remains independently gated.  Passing false here
 			** prevented the original BackgroundMgr from constructing SkyClass and
@@ -1005,6 +1083,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 			loading_presenter.Render_Original_Progress("after_pre_load");
 			A30_Vita_Log("A3.5 background: original render_available=1\n");
 			NetworkObjectMgrClass::Set_Is_Level_Loading(true);
+			TextureLoader::Suspend_Texture_Load();
+			A30_Vita_Log("A3.5 texture loader: suspended during threaded M00 load\n");
 			CombatManager::Load_Level_Threaded("M00_Tutorial.mix", false);
 			int last_load_progress = -1;
 			int last_load_status_count = -1;
@@ -1043,12 +1123,21 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				CombatManager::Get_Load_Progress(),
 				static_cast<unsigned long long>(
 					(sceKernelGetProcessTimeWide() - load_started_us) / 1000ULL));
+			GenericDataSafeClass::Set_Preferred_Thread(GetCurrentThreadId());
+			TextureLoader::Continue_Texture_Load();
+			loading_presenter.Render_Original_Progress("texture_load_continued");
+			A30_Vita_Log("A3.5 texture loader: continued before post-load processing\n");
 			loading_presenter.Render_Original_Progress("post_load_processing");
 			SaveLoadSystemClass::Post_Load_Processing(NULL);
 				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
 				loading_presenter.Render_Original_Progress("post_load_level");
 				CombatManager::Post_Load_Level();
-				loading_presenter.Render_Original_Progress("level_ready");
+				CombatGameModeClass::Vita_Finalize_Loaded_Level(
+					loading_presenter.Peek_Screen(), true);
+				radar_initialized = true;
+				A30_Vita_Log("A3.5 CombatGameMode: original post-load finalization complete radar_initialized=1\n");
+				Warm_Original_M00_Presentation_Cache(loading_presenter);
+				loading_presenter.Render_Original_Progress("level_ready", true, 7);
 				if (capture_pixels == NULL) {
 					capture_pixels = static_cast<uint8_t *>(malloc(kCaptureBytes));
 				}
@@ -1089,14 +1178,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				A30_Vita_Log("A3.5 scripts: provider_active=%d registered=%d active=%d\n",
 					ScriptManager::Is_Provider_Active() ? 1 : 0,
 					Get_Script_Count(), ScriptManager::Get_Active_Script_Count());
-			if (render_hud) {
-				/* Match CombatGameModeClass::Load_Level: RadarManager owns its
-				 * Render2D resources after level post-load and before HUD Think. */
-				RadarManager::Init();
-				RadarManager::Set_Radar_Mode(The_Game()->Get_Radar_Mode());
-				radar_initialized = true;
-				A30_Vita_Log("A4 breadcrumb: original RadarManager initialized for HUD\n");
-			}
+			A30_Vita_Log("A4 breadcrumb: original RadarManager initialized by CombatGameMode finalization for HUD=%d\n",
+				render_hud ? 1 : 0);
 			const A31InteractiveHUDState post_load_hud =
 				A31_Interactive_Get_HUD_State();
 			A30_Vita_Log("A3.1 breadcrumb: post-load HUD serialized=%d resources=%d effective=%d\n",

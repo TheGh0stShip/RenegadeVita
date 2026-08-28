@@ -1,5 +1,51 @@
 # Live engineering progress
 
+## 2026-08-28 — dev82 M00 tutorial full-correction candidate
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Runtime boundary: dev82 keeps the dev48-dev81 audio, dialogue, texture,
+  material, and render-state chain, then expands the physical-test fixes with
+  original `CombatGameModeClass` post-load finalization, building/radar
+  initialization, `On_Game_Begin`, texture-loader continuation, shader-cache
+  setup, single-bar loading/prewarm progress, and synchronized
+  640x480-to-960x544 viewport state.
+- Visual/UI fixes: gameplay DDS uploads now preserve retail top-down row order,
+  the original loading screen renders status/progress text, HUD/subtitle bounds
+  are tightened, sniper scope/icon placement is corrected toward fullscreen
+  Vita output, and first-person reload motion is visible during original reload
+  state.
+- Control map: Triangle is action/use/interact, Square is reload, D-pad
+  Left/Right changes weapons without camera turn bindings, D-pad Up/Down zooms
+  sniper in/out, front touch toggles first/third-person camera, and shoulder
+  buttons are not remapped.
+- Validation: focused loading-screen, texture-surface, and staging contracts
+  passed before packaging. The fast candidate passed 74 focused tests. The
+  full canonical build passed retained host-validation reuse, deterministic
+  restaging, 99 host unittest checks, source integration reporting, ARM
+  link/package, identity verification, compressed VPK validation, diagnostics
+  bundle generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 455 upstream
+  original Westwood translation units plus one staged original-owner extraction,
+  27 Vita platform/renderer/validation/developer files, 52 compatibility
+  headers, 127 deterministic patch files, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
+  `0bd150942a13e39a84277449637e2ca7ce9a5ccce4329dcd2b05695fb4a24750`;
+  ELF SHA-256 is
+  `617db9951e3981fed4f6b462f192991f0b495be3d1d505b7fb2d235a02487564`;
+  MAP SHA-256 is
+  `dfb73af1e0353e89c3986c084340ea5d52e10df7984440aead59aa982337ea27`;
+  diagnostics bundle SHA-256 is
+  `2228b3d40b41fb2d1b941cfbda01b9c65e43f84713549e4367b123cb56b3a0e7`.
+- Boundary: on user request, the VPK was uploaded by VitaShell FTP to
+  `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk`; no retail data was
+  transferred. Dev82 is not physically accepted. The next run must check
+  loading screen coverage/text/progress, HUD/subtitle placement, Logan/Sydney/Gunner
+  text and audio, character/door/powerup/objective texture orientation,
+  bounding boxes, random ground rectangles, reload animation, Triangle gate
+  use, sniper scope/icon/zoom, FPS, freeze/crash behavior, clean Start exit,
+  and `ux0:data/renegade/user/logs/a35-dev82-runtime.log`.
+
 ## 2026-08-28 — dev79 M00 tutorial control/HUD/loading candidate
 
 `[██████████] 12/12 canonical source/build gates complete`

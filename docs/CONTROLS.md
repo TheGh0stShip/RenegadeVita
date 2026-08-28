@@ -1,6 +1,6 @@
 # Controls
 
-Current A3.5-dev79 mapping:
+Current A3.5-dev82 mapping:
 
 | Vita input | Current function |
 | --- | --- |
@@ -10,15 +10,15 @@ Current A3.5-dev79 mapping:
 | Circle | Crouch / back in UI contexts |
 | Square | Reload |
 | Triangle | Action/use/interact |
-| D-pad Down | First-person / third-person camera toggle |
 | D-pad Left | Previous weapon |
 | D-pad Right | Next weapon |
-| D-pad Up | EVA/objectives viewer toggle path |
+| D-pad Up | Sniper zoom in |
+| D-pad Down | Sniper zoom out |
 | Left shoulder | Original joystick button 0, currently primary-fire path |
 | Right shoulder | Original joystick button 1, currently secondary-fire path |
 | Start | Clean exit/menu escape path, sampled early for LiveArea return |
 | Select | Debug/capture path only |
-| Front touch | Unmapped |
+| Front touch | First-person / third-person camera toggle |
 | Rear touch pad | Unmapped |
 
 Notes:
@@ -27,5 +27,6 @@ Notes:
   gameplay movement.
 - Square and Circle are no longer both reload. Circle is crouch/back; Square
   is reload.
-- D-pad Up is reserved for the original EVA/objectives path because that is
-  useful during tutorial progression without competing with movement.
+- D-pad Left/Right must not emit gameplay camera turn while changing weapons.
+- D-pad Up/Down are reserved for sniper zoom so shoulder buttons remain
+  available to the original weapon behaviors.

@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev80",
-  "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, and retains original WWAudio ownership over a Vita-native output boundary",
+  "milestone": "A3.5-dev82",
+  "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 452,
+  "original_source_files_compiled": 455,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -121,6 +121,7 @@
     "Code/Commando/clienthintmanager.cpp",
     "Code/Commando/clientpingmanager.cpp",
     "Code/Commando/cnetwork.cpp",
+    "Code/Commando/combatgmode.cpp",
     "Code/Commando/comnetrcvinst.cpp",
     "Code/Commando/cshint.cpp",
     "Code/Commando/cspingrequestevent.cpp",
@@ -129,10 +130,12 @@
     "Code/Commando/gamedata.cpp",
     "Code/Commando/gamedataupdateevent.cpp",
     "Code/Commando/gameinitmgr.cpp",
+    "Code/Commando/gamemode.cpp",
     "Code/Commando/gameoptionsevent.cpp",
     "Code/Commando/gdcnc.cpp",
     "Code/Commando/gdsingleplayer.cpp",
     "Code/Commando/god.cpp",
+    "Code/Commando/level.cpp",
     "Code/Commando/messages.cpp",
     "Code/Commando/netevent.cpp",
     "Code/Commando/nethandler.cpp",
@@ -464,7 +467,7 @@
   "staged_original_owner_paths": [
     "staging/commando/loadingscreen.cpp"
   ],
-  "vita_platform_renderer_validation_files": 26,
+  "vita_platform_renderer_validation_files": 27,
   "vita_translation_units": [
     "port/developer/a31_capture_telemetry.cpp",
     "port/audio/vita/renegade_miles_provider.cpp",
@@ -490,6 +493,7 @@
     "port/platform/a31_miscutil_boundary.cpp",
     "port/platform/a31_network_options_boundary.cpp",
     "port/platform/renegade_script_static_provider.cpp",
+    "port/platform/a4_frontend_lifecycle_boundary.cpp",
     "port/platform/vita/a30_main.cpp",
     "port/platform/vita/a31_vita_runtime.cpp"
   ],
@@ -549,8 +553,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 122,
-  "mechanically_patched_upstream_files": 244,
+  "patch_count": 127,
+  "mechanically_patched_upstream_files": 249,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -594,6 +598,7 @@
     "Code/Combat/scripts.cpp",
     "Code/Combat/scripts.h",
     "Code/Combat/scriptzone.cpp",
+    "Code/Combat/sniper.cpp",
     "Code/Combat/soldier.cpp",
     "Code/Combat/soldier.h",
     "Code/Combat/spawn.cpp",
@@ -616,6 +621,7 @@
     "Code/Commando/campaign.cpp",
     "Code/Commando/cnetwork.cpp",
     "Code/Commando/combatgmode.cpp",
+    "Code/Commando/combatgmode.h",
     "Code/Commando/comnetrcvinst.cpp",
     "Code/Commando/datasafe.cpp",
     "Code/Commando/datasafe.h",
@@ -795,6 +801,9 @@
     "Code/wwui/treectrl.cpp",
     "Code/wwui/wwuiinput.cpp",
     "Code/wwui/wwuiinput.h",
+    "patch-target/commando-a35-loading-status-render.patch/loadingscreen.cpp",
+    "patch-target/commando-a35-loading-status-text.patch/loadingscreen.cpp",
+    "patch-target/commando-a35-loading-status-text.patch/loadingscreen.h",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp"
   ],
   "patches": [
@@ -958,6 +967,17 @@
       ]
     },
     {
+      "path": "port/patches/combat-a35-m00-ui-hud-subtitles.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "textwindow.cpp",
+        "soldier.cpp",
+        "sniper.cpp",
+        "hud.cpp",
+        "weaponview.cpp"
+      ]
+    },
+    {
       "path": "port/patches/combat-a35-observer-load-diagnostics.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1001,6 +1021,13 @@
         "weapons.cpp",
         "weaponview.cpp",
         "weaponview.h"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-weaponview-reload-motion.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "weaponview.cpp"
       ]
     },
     {
@@ -1084,6 +1111,14 @@
       ]
     },
     {
+      "path": "port/patches/commando-a35-combatgmode-vita-load-finalization.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp",
+        "combatgmode.h"
+      ]
+    },
+    {
       "path": "port/patches/commando-a35-consolemode-add-message-return.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1096,6 +1131,21 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-status-render.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "loadingscreen.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-status-text.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "loadingscreen.h",
+        "loadingscreen.cpp"
       ]
     },
     {
@@ -1892,7 +1942,7 @@
     },
     "Commando": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 42,
+      "compiled": 45,
       "total": 213
     },
     "Scripts": {

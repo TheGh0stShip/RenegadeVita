@@ -74,6 +74,7 @@ int					WeaponState;
 bool				LastMuzzleFlash;
 bool				ReloadAnimationPending;
 const WeaponClass*	ReloadAnimationWeapon;
+float				ReloadAnimationViewTimer;
 
 DecorationPhysClass*HandsPhysObj;
 RenderObjClass*		WeaponModel;
@@ -149,6 +150,7 @@ void 	WeaponViewClass::Init()
 	ClipModel = NULL;
 	ReloadAnimationPending = false;
 	ReloadAnimationWeapon = NULL;
+	ReloadAnimationViewTimer = 0.0f;
 	
 	for ( int i = 0; i < NUM_WEAPON_STATES; i++ ) {
 		WeaponAnims[i] = NULL;
@@ -188,6 +190,7 @@ void 	WeaponViewClass::Reset()
 	Release_Hands_Assets();
 	ReloadAnimationPending = false;
 	ReloadAnimationWeapon = NULL;
+	ReloadAnimationViewTimer = 0.0f;
 }
 
 
@@ -262,6 +265,7 @@ void 	WeaponViewClass::Notify_Reload_Started( const WeaponClass *weapon )
 {
 	ReloadAnimationPending = true;
 	ReloadAnimationWeapon = weapon;
+	ReloadAnimationViewTimer = 0.0f;
 #if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
 	A30_Vita_Log("A3.5 weapon view: reload animation latched weapon=%p\n",
 		static_cast<const void *>(weapon));
@@ -614,6 +618,16 @@ void 	WeaponViewClass::Think()
 		tm.Rotate_Y( DEG_TO_RADF(90.0) );
 
 		Vector3	fp_offset = HandsOffset + COMBAT_CAMERA->Get_First_Person_Offset_Tweak();
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+		if (WeaponState == WEAPON_STATE_RELOAD) {
+			const float phase = WWMath::Clamp(ReloadAnimationViewTimer / 0.65f, 0.0f, 1.0f);
+			const float curve = WWMath::Sin(phase * WWMATH_PI);
+			fp_offset += Vector3(-0.08f * curve, -0.03f * curve, -0.075f * curve);
+			tm.Rotate_Z(DEG_TO_RADF(-8.0f * curve));
+			tm.Rotate_X(DEG_TO_RADF(3.0f * curve));
+			ReloadAnimationViewTimer += TimeManager::Get_Frame_Seconds();
+		}
+#endif
 		tm.Translate( fp_offset );
 
 		//WWASSERT(COMBAT_STAR != NULL);//TSS
@@ -863,6 +877,7 @@ static void	Release_Weapon_Assets( void )
 	}
 	ReloadAnimationPending = false;
 	ReloadAnimationWeapon = NULL;
+	ReloadAnimationViewTimer = 0.0f;
 }
 
 /*

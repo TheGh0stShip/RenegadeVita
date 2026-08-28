@@ -3,8 +3,9 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev59 streamed-dialogue duration metadata, dialogue/audio
-diagnostics, texture provenance, DX8 texture surface ownership, DX8
+Current work: **post-dev60 WAVE fact-duration metadata, streamed-dialogue
+duration metadata, dialogue/audio diagnostics, texture provenance, DX8
+texture surface ownership, DX8
 surface-copy compatibility, DDS retained surface levels, direct mesh base-pass
 replay, and native stage-1 multitexture boundary for the restage-proven shared
 original `LoadingScreenClass` loading path, the dev35 stack fix, dev36 camera-Y
@@ -62,12 +63,15 @@ binding Vita texture units 0/1, and emitting stage-1 UVs for original
 post-detail materials. Dev59 preserves dev58 and fixes streamed dialogue timing
 metadata by carrying decoded WAVE sample-frame counts through
 `AILSOUNDINFO.samples` and computing original `SoundBufferClass` duration from
-frames/rate before falling back to byte-length estimates. A full canonical
-no-deploy dev59 build now passes retained host-validation reuse, deterministic
+frames/rate before falling back to byte-length estimates. Dev60 preserves
+dev59 and reads exact WAVE `fact` sample-frame metadata, preferring it over
+estimated frame counts and trimming decoded ADPCM output to the exact frame
+count before playback. A full canonical no-deploy dev60 build now passes
+retained host-validation reuse, deterministic
 restaging, source integration reporting, ARM link/package, identity
 verification, compressed VPK validation, diagnostics generation, and SHA
 verification. The canonical VPK SHA-256 is
-`f183d356ae60692f88d7676e06f8077af1537bb0398c6c5766e7f1225d7e5ab4`.
+`98c32184861058c3168f511c8bef9fe9bb9db77055626d3a506ef217f556ad51`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -75,7 +79,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev59 is built but not deployed; dev46 remains restored on
+control changed. Dev60 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

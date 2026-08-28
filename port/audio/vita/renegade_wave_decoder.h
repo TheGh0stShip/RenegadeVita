@@ -21,6 +21,7 @@ struct WaveInfo {
 	uint16_t samples_per_block = 0;
 	uint32_t sample_rate = 0;
 	uint32_t data_bytes = 0;
+	uint32_t fact_sample_frames = 0;
 	uint32_t sample_frames = 0;
 	size_t data_offset = 0;
 	std::vector<int16_t> coefficients;

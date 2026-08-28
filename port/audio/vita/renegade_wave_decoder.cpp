@@ -404,13 +404,18 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 			parsed.data_offset = payload;
 			parsed.data_bytes = chunk_bytes;
 			data_found = true;
+		} else if (identifier == UINT32_C(0x74636166)) {
+			if (chunk_bytes >= 4U) {
+				parsed.fact_sample_frames = Read_U32(data + payload);
+			}
 		}
 		const size_t padded = static_cast<size_t>(chunk_bytes) + (chunk_bytes & 1U);
 		if (padded > scan_bytes - payload) break;
 		offset = payload + padded;
 	}
 	if (!format_found || !data_found) return Fail("WAVE format or data chunk absent", error);
-	parsed.sample_frames = Estimate_Frame_Count(parsed);
+	parsed.sample_frames = parsed.fact_sample_frames != 0U
+		? parsed.fact_sample_frames : Estimate_Frame_Count(parsed);
 	*info = std::move(parsed);
 	return true;
 }
@@ -438,6 +443,10 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 	}
 	if (!success || output.samples.empty()) {
 		return success ? Fail("decoded WAVE is empty", error) : false;
+	}
+	if (info.sample_frames != 0U && output.Frame_Count() > info.sample_frames) {
+		output.samples.resize(static_cast<size_t>(info.sample_frames) *
+			static_cast<size_t>(output.channels));
 	}
 	*decoded = std::move(output);
 	return true;

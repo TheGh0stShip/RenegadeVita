@@ -200,7 +200,10 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
             self.assertIn("static_cast<double>(info.samples)", source)
 
         self.assertIn("info->samples = wave.sample_frames;", provider)
-        self.assertIn("parsed.sample_frames = Estimate_Frame_Count(parsed);", decoder)
+        self.assertIn("fact_sample_frames", decoder)
+        self.assertIn("UINT32_C(0x74636166)", decoder)
+        self.assertIn("parsed.sample_frames = parsed.fact_sample_frames != 0U", decoder)
+        self.assertIn("output.samples.resize(static_cast<size_t>(info.sample_frames)", decoder)
 
     def test_conversation_think_removes_same_pointer_after_script_callbacks(self):
         patch = (ROOT / "port/patches/combat-a35-conversation-reentrant-think.patch").read_text()

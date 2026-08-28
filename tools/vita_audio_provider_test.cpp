@@ -32,7 +32,8 @@ void FourCC(std::vector<uint8_t> &data, const char text[5])
 
 std::vector<uint8_t> Wave(uint16_t encoding, uint16_t channels,
 	uint32_t rate, uint16_t block_align, uint16_t bits,
-	const std::vector<uint8_t> &extension, const std::vector<uint8_t> &samples)
+	const std::vector<uint8_t> &extension, const std::vector<uint8_t> &samples,
+	uint32_t fact_frames = 0U)
 {
 	std::vector<uint8_t> result;
 	FourCC(result, "RIFF");
@@ -47,6 +48,11 @@ std::vector<uint8_t> Wave(uint16_t encoding, uint16_t channels,
 	Write_U16(result, block_align);
 	Write_U16(result, bits);
 	result.insert(result.end(), extension.begin(), extension.end());
+	if (fact_frames != 0U) {
+		FourCC(result, "fact");
+		Write_U32(result, 4U);
+		Write_U32(result, fact_frames);
+	}
 	FourCC(result, "data");
 	Write_U32(result, static_cast<uint32_t>(samples.size()));
 	result.insert(result.end(), samples.begin(), samples.end());
@@ -161,6 +167,18 @@ int main()
 	passed &= Require(AIL_WAV_info_bounded(ima.data(), ima.size(), &ima_info) != 0 &&
 		ima_info.samples == 9 && ima_info.rate == 8000,
 		"IMA ADPCM WAVE frame count differs");
+	const std::vector<uint8_t> ima_fact = Wave(0x11, 1, 8000, 8, 4,
+		ima_extension, { 0, 0, 0, 0, 0, 0, 0, 0 }, 5);
+	passed &= Require(RenegadeVitaAudio::Decode_Wave(
+		ima_fact.data(), ima_fact.size(), &decoded),
+		"IMA ADPCM fact-count decode failed");
+	passed &= Require(decoded.Frame_Count() == 5,
+		"IMA ADPCM fact-count trim differs");
+	AILSOUNDINFO ima_fact_info = {};
+	passed &= Require(AIL_WAV_info_bounded(
+		ima_fact.data(), ima_fact.size(), &ima_fact_info) != 0 &&
+		ima_fact_info.samples == 5 && ima_fact_info.rate == 8000,
+		"IMA ADPCM fact-count WAVE metadata differs");
 
 	const std::vector<uint8_t> ima_stereo = Wave(0x11, 2, 8000, 16, 4,
 		ima_extension, {
@@ -190,6 +208,18 @@ int main()
 	passed &= Require(AIL_WAV_info_bounded(ms.data(), ms.size(), &ms_info) != 0 &&
 		ms_info.samples == 4 && ms_info.rate == 8000,
 		"Microsoft ADPCM WAVE frame count differs");
+	const std::vector<uint8_t> ms_fact = Wave(2, 1, 8000, 8, 4, ms_extension,
+		{ 0, 16, 0, 0xe8, 3, 0xf4, 1, 0 }, 3);
+	passed &= Require(RenegadeVitaAudio::Decode_Wave(
+		ms_fact.data(), ms_fact.size(), &decoded),
+		"Microsoft ADPCM fact-count decode failed");
+	passed &= Require(decoded.Frame_Count() == 3,
+		"Microsoft ADPCM fact-count trim differs");
+	AILSOUNDINFO ms_fact_info = {};
+	passed &= Require(AIL_WAV_info_bounded(
+		ms_fact.data(), ms_fact.size(), &ms_fact_info) != 0 &&
+		ms_fact_info.samples == 3 && ms_fact_info.rate == 8000,
+		"Microsoft ADPCM fact-count WAVE metadata differs");
 
 	std::vector<uint8_t> ms_stereo_extension;
 	Write_U16(ms_stereo_extension, 8);

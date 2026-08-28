@@ -871,6 +871,7 @@ void Shutdown()
 	if (g_statistics.initialized || g_lifecycle.logical_session_active) {
 		++g_lifecycle.logical_shutdowns;
 	}
+	RenegadeVita_Release_DX8_Bound_Textures();
 	g_statistics.initialized = false;
 	g_lifecycle.logical_session_active = false;
 	Release_Deformed_Skin_Scratch();

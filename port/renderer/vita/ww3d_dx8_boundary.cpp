@@ -72,6 +72,24 @@ IDirect3DBaseTexture8 *g_texture_stage_textures[MAX_TEXTURE_STAGES] = {};
 // still bound by another failed material.
 IDirect3DTexture8 *g_checkerboard_fallback = NULL;
 
+bool Retain_Bound_Texture_Stage(DWORD stage, IDirect3DBaseTexture8 *texture)
+{
+	if (stage >= MAX_TEXTURE_STAGES) return false;
+	IDirect3DBaseTexture8 *previous = g_texture_stage_textures[stage];
+	if (previous == texture) return true;
+	if (texture != NULL) texture->AddRef();
+	g_texture_stage_textures[stage] = texture;
+	if (previous != NULL) previous->Release();
+	return true;
+}
+
+void Release_Bound_Texture_Stages()
+{
+	for (DWORD stage = 0; stage < MAX_TEXTURE_STAGES; ++stage) {
+		Retain_Bound_Texture_Stage(stage, NULL);
+	}
+}
+
 bool Apply_Texture_Stage_Sampler(DWORD stage)
 {
 	if (stage >= MAX_TEXTURE_STAGES) return false;
@@ -1775,6 +1793,11 @@ HRESULT D3DXFilterTexture(IDirect3DTexture8 *texture, const void *palette,
 	return D3D_OK;
 }
 
+void RenegadeVita_Release_DX8_Bound_Textures()
+{
+	Release_Bound_Texture_Stages();
+}
+
 HRESULT IDirect3DDevice8::SetTransform(D3DTRANSFORMSTATETYPE state,
 	const D3DMATRIX *matrix)
 {
@@ -1862,7 +1885,9 @@ HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 HRESULT IDirect3DDevice8::SetTexture(DWORD stage, IDirect3DBaseTexture8 *texture)
 {
 	if (stage >= MAX_TEXTURE_STAGES) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
-	g_texture_stage_textures[stage] = texture;
+	if (!Retain_Bound_Texture_Stage(stage, texture)) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 	if (texture == NULL) {
 		if (stage == 0U) RenegadeVitaRenderer::Bind_Texture(0U, false);
 		else RenegadeVitaRenderer::Disable_Texture_Stage(stage);

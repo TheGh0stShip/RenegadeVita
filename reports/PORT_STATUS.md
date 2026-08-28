@@ -3,13 +3,14 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev62 WWAudio stream loop-count return,
-streamed-dialogue fact runtime telemetry, WAVE fact-duration metadata,
+Current work: **post-dev63 Vita DX8 bound-texture lifetime,
+WWAudio stream loop-count return, streamed-dialogue fact runtime telemetry, WAVE fact-duration metadata,
 streamed-dialogue duration metadata, dialogue/audio
 diagnostics, texture provenance, DX8
 texture surface ownership, DX8
 surface-copy compatibility, DDS retained surface levels, direct mesh base-pass
-replay, and native stage-1 multitexture boundary for the restage-proven shared
+replay, native stage-1 multitexture boundary, and DX8 bound-texture lifetime
+for the restage-proven shared
 original `LoadingScreenClass` loading path, the dev35 stack fix, dev36 camera-Y
 boundary correction, dev37 DataSafe guard, dev38 loading capture metadata,
 dev39/dev40 TGA loading fixes, original WWAudio/background/material/conversation
@@ -74,12 +75,15 @@ and the A3.5 audio log beside the post-trim streamed frame count. Dev62
 preserves dev61 and fixes staged original `SoundStreamHandleClass` so
 `Get_Sample_Loop_Count()` returns the Miles-compatible provider
 `AIL_stream_loop_count` value instead of discarding it and always reporting
-zero. A full canonical no-deploy dev62 build now passes
-retained host-validation reuse, deterministic
-restaging, 72 host unittest checks, source integration reporting, ARM link/package, identity
-verification, compressed VPK validation, diagnostics generation, and SHA
-verification. The canonical VPK SHA-256 is
-`f501288b7bb302923502fcf89e0b74c3f35a5aaa824f0eb68531b05cf05acddd`.
+zero. Dev63 preserves dev62 and fixes the Vita DX8 bound texture-stage cache
+so `IDirect3DDevice8::SetTexture` retains bound textures with `AddRef`/
+`Release` semantics instead of storing raw potentially stale backend pointers
+during retail material and checkerboard-fallback churn. A full canonical
+no-deploy dev63 build now passes retained host-validation reuse, deterministic
+restaging, 72 host unittest checks, source integration reporting, ARM
+link/package, identity verification, compressed VPK validation, diagnostics
+generation, and SHA verification. The canonical VPK SHA-256 is
+`d749f1db9318ffd6b6c03c6edb591a0b1dd6fa81397e922f84d22382ff01ecd9`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -87,7 +91,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev62 is built but not deployed; dev46 remains restored on
+control changed. Dev63 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

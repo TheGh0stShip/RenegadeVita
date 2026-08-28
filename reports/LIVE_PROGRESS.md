@@ -1,5 +1,51 @@
 # Live engineering progress
 
+## 2026-08-28 — dev63 Vita DX8 bound-texture lifetime
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: `IDirect3DDevice8::SetTexture` now retains the texture
+  stored in the Vita DX8 bound-stage cache with COM-style `AddRef`/`Release`
+  semantics, matching the lifetime contract expected by original
+  `DX8Wrapper::Set_DX8_Texture` and D3D texture binding.
+- Runtime purpose: material and fallback churn can no longer leave
+  `g_texture_stage_textures[]` pointing at a released `TextureClass` backend
+  object. This is a narrow Vita DX8 boundary fix aimed at pink/black
+  checkerboard fallback and stale retail material binds without changing
+  original `TextureClass`, `MaterialPassClass`, `ShaderClass`, or mesh
+  ownership.
+- Validation: the texture provenance contract now covers bound-stage texture
+  lifetime ordering. Focused texture provenance passed 5/5, the broader local
+  texture/audio/loading/indexed/staging contract set passed 37/37, and the
+  fast no-deploy candidate passed 56 focused tests, the original
+  `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, package identity
+  and hash checks, and VPK packaging. The full canonical no-deploy build passed
+  retained host-validation reuse, 72 host unittest checks, deterministic
+  restaging, source integration reporting, ARM link/package, compressed VPK
+  validation, identity verification, diagnostics bundle generation, SHA
+  manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev63.vpk` SHA-256 is
+  `d749f1db9318ffd6b6c03c6edb591a0b1dd6fa81397e922f84d22382ff01ecd9`;
+  ELF SHA-256 is
+  `1ec4e648bbff13c0f3c8408e06f1fe490395104a3f56872cd4dd21b568c814c6`;
+  diagnostics bundle SHA-256 is
+  `c276573302ec12b4fef38b1b28a9200fc584c1ddde38c690fffff99dbbfc84bf`.
+- Boundary: dev63 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev63, verify
+  Logan audible dialogue and timing, dialog/message text, material/texture
+  appearance, and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev63-runtime.log`, especially stream
+  loop-count behavior, speech duration/dropoff/distance, stream bytes/frames/
+  mix/last_stream fields, fact/estimate/untrimmed/trimmed values,
+  conversation state, `texture loaded`, `loaded_dds/tga`, `checker_bind`,
+  `invalid_bind`, `unsupported_stages`, and first original `MeshClass` stage-1
+  texture breadcrumbs if dialogue remains silent or materials remain
+  incorrect.
+
 ## 2026-08-28 — dev62 WWAudio stream loop-count return
 
 `[██████████] 12/12 canonical source/build gates complete`

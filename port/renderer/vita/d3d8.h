@@ -228,6 +228,8 @@ struct IDirect3DDevice8 {
 		UINT count, IDirect3DSurface8 *destination, const POINT *destination_points);
 };
 
+void RenegadeVita_Release_DX8_Bound_Textures();
+
 enum : uint32_t {
 	D3D_OK = 0,
 	D3DERR_INVALIDCALL = 0x8876086cU,

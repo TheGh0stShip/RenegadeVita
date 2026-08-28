@@ -81,6 +81,55 @@ class VitaTextureProvenanceContractTests(unittest.TestCase):
             ),
         )
 
+    def test_device_bound_texture_stages_retain_dx8_lifetime(self):
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text(
+            encoding="utf-8"
+        )
+        header = (ROOT / "port/renderer/vita/d3d8.h").read_text(encoding="utf-8")
+        helper = boundary[
+            boundary.index("bool Retain_Bound_Texture_Stage"):
+            boundary.index("bool Apply_Texture_Stage_Sampler")
+        ]
+        set_texture = boundary[boundary.index("HRESULT IDirect3DDevice8::SetTexture"):]
+        set_texture = set_texture[:set_texture.index("void DX8Wrapper::Get_DX8_Texture_Stage_State_Value_Name")]
+        release_helper = boundary[
+            boundary.index("void Release_Bound_Texture_Stages"):
+            boundary.index("bool Apply_Texture_Stage_Sampler")
+        ]
+        public_release = boundary[
+            boundary.index("void RenegadeVita_Release_DX8_Bound_Textures"):
+            boundary.index("HRESULT IDirect3DDevice8::SetTransform")
+        ]
+        renderer_shutdown = renderer[renderer.index("void Shutdown()"):]
+        renderer_shutdown = renderer_shutdown[:renderer_shutdown.index("void Begin_Frame")]
+
+        self.assertIn("IDirect3DBaseTexture8 *previous = g_texture_stage_textures[stage];", helper)
+        self.assertIn("if (previous == texture) return true;", helper)
+        self.assertIn("if (texture != NULL) texture->AddRef();", helper)
+        self.assertIn("g_texture_stage_textures[stage] = texture;", helper)
+        self.assertIn("if (previous != NULL) previous->Release();", helper)
+        self.assertLess(
+            helper.index("if (texture != NULL) texture->AddRef();"),
+            helper.index("if (previous != NULL) previous->Release();"),
+        )
+        self.assertIn("Retain_Bound_Texture_Stage(stage, texture)", set_texture)
+        self.assertLess(
+            set_texture.index("Retain_Bound_Texture_Stage(stage, texture)"),
+            set_texture.index("if (texture == NULL)"),
+        )
+        self.assertIn("void RenegadeVita_Release_DX8_Bound_Textures();", header)
+        self.assertIn("for (DWORD stage = 0; stage < MAX_TEXTURE_STAGES; ++stage)", release_helper)
+        self.assertIn("Retain_Bound_Texture_Stage(stage, NULL);", release_helper)
+        self.assertIn("Release_Bound_Texture_Stages();", public_release)
+        self.assertIn("RenegadeVita_Release_DX8_Bound_Textures();", renderer_shutdown)
+        self.assertLess(
+            renderer_shutdown.index("RenegadeVita_Release_DX8_Bound_Textures();"),
+            renderer_shutdown.index("g_statistics.initialized = false;"),
+        )
+
     def test_runtime_and_capture_carry_texture_provenance(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text(
             encoding="utf-8"

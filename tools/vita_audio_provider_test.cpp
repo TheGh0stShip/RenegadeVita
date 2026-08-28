@@ -292,13 +292,18 @@ int main()
 		stats.stream_start_successes == 1 &&
 		stats.stream_bytes_read == pcm.size() &&
 		stats.stream_decoded_frames == 4 &&
+		stats.stream_mixed_buffers == 1 &&
+		stats.stream_mixed_frames == 4 &&
+		stats.stream_mixed_nonzero_buffers == 1 &&
+		stats.stream_mixed_peak_abs >= 1000 &&
 		std::strcmp(stats.last_stream_name, "logan_test.wav") == 0,
 		"provider stream stats differ");
 	passed &= Require(stats.sample_start_attempts == 4 &&
 		stats.sample_start_successes == 4 &&
 		stats.mixed_buffers == 4 &&
 		stats.mixed_nonzero_buffers == 3 &&
-		stats.mixed_peak_abs >= 1000,
+		stats.mixed_peak_abs >= 1000 &&
+		stats.active_streams == 0,
 		"provider start stats differ");
 	AIL_waveOutClose(driver);
 	AIL_shutdown();

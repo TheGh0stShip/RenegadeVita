@@ -9,7 +9,7 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev50}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev51}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}

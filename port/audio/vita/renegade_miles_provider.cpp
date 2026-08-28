@@ -36,6 +36,7 @@ struct RenegadeMilesSample {
 	F32 maximum_distance = 100.0F;
 	F32 minimum_distance = 1.0F;
 	bool spatial = false;
+	bool streaming = false;
 	bool playing = false;
 	bool paused = false;
 };
@@ -159,6 +160,7 @@ void Reset_Sample(RenegadeMilesSample *sample)
 	sample->maximum_distance = 100.0F;
 	sample->minimum_distance = 1.0F;
 	sample->spatial = false;
+	sample->streaming = false;
 	sample->playing = false;
 	sample->paused = false;
 }
@@ -211,9 +213,13 @@ void Mix_Locked(int16_t *output, size_t frames)
 	if (frames > kOutputFrames) return;
 	std::fill(output, output + frames * 2U, 0);
 	int32_t accumulator[kOutputFrames * 2U] = {};
+	int32_t stream_accumulator[kOutputFrames * 2U] = {};
+	bool stream_mix_attempted = false;
 	for (RenegadeMilesSample *sample : g_samples) {
 		if (sample == nullptr || !sample->playing || sample->paused ||
 			sample->wave.Frame_Count() == 0) continue;
+		const bool is_stream = sample->streaming;
+		if (is_stream) stream_mix_attempted = true;
 		const double step = static_cast<double>(
 			sample->playback_rate > 0 ? sample->playback_rate :
 			static_cast<S32>(sample->wave.sample_rate)) / kOutputRate;
@@ -254,8 +260,12 @@ void Mix_Locked(int16_t *output, size_t frames)
 				const float start = Source_Sample(sample, first, channel);
 				const float end = Source_Sample(sample, second, channel);
 				const float interpolated = start + (end - start) * fraction;
-				accumulator[output_frame * 2U + channel] +=
+				const int32_t contribution =
 					static_cast<int32_t>(interpolated * gains[channel]);
+				accumulator[output_frame * 2U + channel] += contribution;
+				if (is_stream) {
+					stream_accumulator[output_frame * 2U + channel] += contribution;
+				}
 			}
 			sample->cursor += step;
 		}
@@ -277,6 +287,23 @@ void Mix_Locked(int16_t *output, size_t frames)
 			++g_stats.mixed_nonzero_buffers;
 			break;
 		}
+	}
+	if (stream_mix_attempted) {
+		++g_stats.stream_mixed_buffers;
+		g_stats.stream_mixed_frames += frames;
+		bool stream_nonzero = false;
+		for (size_t index = 0; index < frames * 2U; ++index) {
+			const int32_t clamped = std::max<int32_t>(-32768,
+				std::min<int32_t>(32767, stream_accumulator[index]));
+			const uint32_t magnitude = static_cast<uint32_t>(
+				clamped < 0 ? -clamped : clamped);
+			if (magnitude != 0U) {
+				stream_nonzero = true;
+				g_stats.stream_mixed_peak_abs =
+					std::max(g_stats.stream_mixed_peak_abs, magnitude);
+			}
+		}
+		if (stream_nonzero) ++g_stats.stream_mixed_nonzero_buffers;
 	}
 }
 
@@ -799,6 +826,7 @@ HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 		stream = new (std::nothrow) RenegadeMilesStream;
 		if (stream != nullptr) {
 			stream->sample = sample;
+			sample->streaming = true;
 			g_stats.stream_decoded_frames += sample->wave.Frame_Count();
 			g_stats.last_stream_frames = static_cast<uint32_t>(
 				std::min<size_t>(sample->wave.Frame_Count(),
@@ -831,6 +859,7 @@ void AIL_close_stream(HSTREAM stream)
 	if (stream == nullptr) return;
 	AIL_lock();
 	AIL_end_sample(stream->sample);
+	if (stream->sample != nullptr) stream->sample->streaming = false;
 	if (stream->owns_sample) Release_Sample(stream->sample);
 	delete stream;
 	AIL_unlock();
@@ -954,9 +983,11 @@ void Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats)
 	*stats = g_stats;
 	stats->allocated_samples = static_cast<uint32_t>(g_samples.size());
 	stats->active_samples = 0U;
+	stats->active_streams = 0U;
 	for (RenegadeMilesSample *sample : g_samples) {
 		if (sample != nullptr && sample->playing && !sample->paused) {
 			++stats->active_samples;
+			if (sample->streaming) ++stats->active_streams;
 		}
 	}
 	std::snprintf(stats->last_error, sizeof(stats->last_error), "%s",

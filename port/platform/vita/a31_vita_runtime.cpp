@@ -603,7 +603,7 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 	WWAudioClass *audio = WWAudioClass::Get_Instance();
 	const float dialog_volume = audio != NULL ? audio->Get_Dialog_Volume() : -1.0F;
 	const float cinematic_volume = audio != NULL ? audio->Get_Cinematic_Volume() : -1.0F;
-	A30_Vita_Log("A3.5 audio: reason=%s frame=%u output_start=%u/%u/%u output_written/fail=%u/%u sample_file=%u/%u/%u sample_3d=%u/%u/%u stream=%u/%u/%u stream_start=%u/%u/%u/%u stream_bytes/frames=%llu/%llu last_stream=%s frames/rate/vol/pan=%u/%u/%u/%u starts=%u/%u/%u mix=buffers:%llu frames:%llu nonzero:%llu peak:%u allocated/active=%u/%u volumes_dialog/cinematic=%.3f/%.3f last_error=%s\n",
+	A30_Vita_Log("A3.5 audio: reason=%s frame=%u output_start=%u/%u/%u output_written/fail=%u/%u sample_file=%u/%u/%u sample_3d=%u/%u/%u stream=%u/%u/%u stream_start=%u/%u/%u/%u stream_bytes/frames=%llu/%llu stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u last_stream=%s frames/rate/vol/pan=%u/%u/%u/%u starts=%u/%u/%u mix=buffers:%llu frames:%llu nonzero:%llu peak:%u allocated/active/streams=%u/%u/%u volumes_dialog/cinematic=%.3f/%.3f last_error=%s\n",
 		reason != NULL ? reason : "unknown", frame,
 		stats.output_start_attempts, stats.output_start_successes,
 		stats.output_start_failures, stats.output_buffers_written,
@@ -619,6 +619,10 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 		stats.stream_start_silent, stats.stream_start_zero_volume,
 		static_cast<unsigned long long>(stats.stream_bytes_read),
 		static_cast<unsigned long long>(stats.stream_decoded_frames),
+		static_cast<unsigned long long>(stats.stream_mixed_buffers),
+		static_cast<unsigned long long>(stats.stream_mixed_frames),
+		static_cast<unsigned long long>(stats.stream_mixed_nonzero_buffers),
+		stats.stream_mixed_peak_abs,
 		stats.last_stream_name[0] != '\0' ? stats.last_stream_name : "none",
 		stats.last_stream_frames, stats.last_stream_rate,
 		stats.last_stream_volume, stats.last_stream_pan,
@@ -628,7 +632,7 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 		static_cast<unsigned long long>(stats.mixed_frames),
 		static_cast<unsigned long long>(stats.mixed_nonzero_buffers),
 		stats.mixed_peak_abs,
-		stats.allocated_samples, stats.active_samples,
+		stats.allocated_samples, stats.active_samples, stats.active_streams,
 		static_cast<double>(dialog_volume),
 		static_cast<double>(cinematic_volume),
 		stats.last_error[0] != '\0' ? stats.last_error : "none");

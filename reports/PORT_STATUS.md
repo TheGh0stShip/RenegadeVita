@@ -3,7 +3,7 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev50 dialogue/audio, texture, SDK-root, and route-fidelity correction for the
+Current work: **post-dev51 streamed-dialogue mix telemetry, texture, SDK-root, and route-fidelity correction for the
 restage-proven shared original `LoadingScreenClass` loading path, the dev35
 stack fix, dev36 camera-Y boundary correction, dev37 DataSafe guard, dev38
 loading capture metadata, dev39/dev40 TGA loading fixes, original
@@ -22,11 +22,15 @@ metadata so original `TextureClass::Init()` receives DX8 `D3DFORMAT` values
 instead of raw `WW3DFormat` values, avoiding the DXT1/RGB888 enum collision;
 it also pins the documented `/usr/local/vitasdk` default through
 `RENEGADE_VITASDK`, tightens vitaGL enum detection, and extends the audio
-mixer/source contracts. A full canonical no-deploy dev50 build now passes
+mixer/source contracts. Dev51 keeps those source fixes and adds stream-only
+mix isolation counters inside the Vita Miles provider: opened streams are
+tracked separately from ordinary samples, mixed into a diagnostic accumulator,
+and reported as streamed buffers, frames, nonzero buffers, peak sample, and
+currently active streams. A full canonical no-deploy dev51 build now passes
 retained host-validation reuse, deterministic restaging, source integration
 reporting, ARM link/package, identity verification, compressed VPK validation,
 diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
-`2c9fe46c04596171ba1bc5fa7f47b13d7b95ba565b751b9e528147d982d722b1`.
+`5e4d371ac6f1c509a31f0b6c3fb47580dcb7dc4fef15a20aa6da01532f4f2e74`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -34,7 +38,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev50 is built but not deployed; dev46 remains restored on
+control changed. Dev51 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

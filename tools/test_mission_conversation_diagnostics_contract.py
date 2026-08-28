@@ -132,8 +132,12 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         log_block = runtime[log_start:log_end]
 
         self.assertIn("volumes_dialog/cinematic=%.3f/%.3f", log_block)
+        self.assertIn("stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u", log_block)
+        self.assertIn("allocated/active/streams=%u/%u/%u", log_block)
         self.assertIn("audio->Get_Dialog_Volume()", runtime)
         self.assertIn("audio->Get_Cinematic_Volume()", runtime)
+        self.assertIn("stats.stream_mixed_nonzero_buffers", log_block)
+        self.assertIn("stats.active_streams", log_block)
         self.assertEqual(log_block.count("stats.sample_start_silent"), 1)
 
     def test_conversation_think_removes_same_pointer_after_script_callbacks(self):

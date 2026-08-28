@@ -1,5 +1,44 @@
 # Live engineering progress
 
+## 2026-08-28 — dev51 streamed-dialogue mix isolation candidate
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Audio diagnostics: the Vita Miles provider now marks opened streams,
+  isolates their contribution into a stream-only mix accumulator, and reports
+  stream buffers, frames, nonzero buffers, peak sample, and active streamed
+  sample count. This preserves original WWAudio/conversation ownership while
+  separating "stream decoded but silent in the output mix" from "stream mixed
+  nonzero samples but still not audible on hardware."
+- Runtime breadcrumbs: the `A3.5 audio` line now includes
+  `stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u` and
+  `allocated/active/streams=%u/%u/%u`, alongside the existing dialogue,
+  cinematic, stream-read/decode/start, and Vita output counters.
+- Validation: the host Vita Miles provider test now asserts stream-only mixed
+  buffer/frame/nonzero/peak behavior and post-close active-stream accounting.
+  Focused audio/build-script/diagnostic contracts passed 14/14, the fast
+  no-deploy candidate passed 37/37 focused contracts, the executable original
+  `DDSFileClass` `.tga`-to-`.dds` alias contract passed 11/11, and the full
+  no-deploy canonical build passed retained host validation reuse,
+  deterministic restaging, source integration reporting, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, and SHA manifest verification.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev51.vpk` SHA-256 is
+  `5e4d371ac6f1c509a31f0b6c3fb47580dcb7dc4fef15a20aa6da01532f4f2e74`;
+  packaged eboot/SELF SHA-256 is
+  `10ff2488c2ea19d003c4ec328c74a683b0654b4f8a4f2917a7c3e97794293e24`;
+  ELF SHA-256 is
+  `e43764f3a6eacec16544c59340fa7bcadfc8f17ca3bcdf0035ad6b1fe7452e6d`.
+- Boundary: dev51 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev51, verify
+  audible Logan dialogue and material/texture appearance, then inspect
+  `ux0:data/renegade/user/logs/a35-dev51-runtime.log`, especially the
+  `stream_mix` fields if dialogue is still inaudible.
+
 ## 2026-08-28 — dev50 texture descriptor and SDK-root canonical candidate
 
 `[██████████] 12/12 canonical source/build gates complete`

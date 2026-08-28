@@ -1,5 +1,45 @@
 # Live engineering progress
 
+## 2026-08-28 — dev59 streamed-dialogue duration metadata
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Audio boundary: the Vita Miles-compatible WAVE inspection path now reports
+  decoded sample-frame counts through `AILSOUNDINFO.samples`. The staged
+  original `SoundBufferClass::Determine_Stats` path computes streamed-dialogue
+  duration from `samples / rate`, falling back to the old byte-length estimate
+  only when frame metadata is unavailable.
+- Runtime purpose: original `ActiveConversationClass` and `SoldierGameObj`
+  conversation scheduling use `speech->Get_Duration()`. For streamed ADPCM
+  dialogue, using compressed RIFF byte length could skew Logan conversation
+  timing and route fidelity even when the sound object and stream provider
+  were present.
+- Validation: focused dialogue/audio diagnostics passed 12/12, and the broader
+  local texture/audio/loading/indexed/skin contract set passed 39/39. The fast
+  no-deploy candidate passed 54 focused tests, the original `DDSFileClass`
+  `.tga`-to-`.dds` executable contract 11/11, ARM package identity/hash checks,
+  and the full canonical no-deploy build passed retained host-validation reuse,
+  71 host unittest checks, deterministic restaging, source integration
+  reporting, ARM link/package, compressed VPK validation, identity
+  verification, diagnostics bundle generation, SHA manifest verification, and
+  retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev59.vpk` SHA-256 is
+  `f183d356ae60692f88d7676e06f8077af1537bb0398c6c5766e7f1225d7e5ab4`;
+  ELF SHA-256 is
+  `13d823d8f2d3641e4af4e34e9ddfdfc5acb08de658750d8ce720d2c3242b227e`.
+- Boundary: dev59 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev59, verify
+  Logan audible dialogue, dialog/message text, material/texture appearance, and
+  route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev59-runtime.log`, especially speech
+  duration/dropoff/distance, stream bytes/frames/mix/last-stream fields,
+  conversation state, and texture/material provenance if dialogue remains
+  silent or materials remain incorrect.
+
 ## 2026-08-28 — dev58 stage-1 multitexture boundary
 
 `[██████████] 12/12 canonical source/build gates complete`

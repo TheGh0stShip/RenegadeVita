@@ -3,67 +3,71 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev58 dialogue/audio, texture provenance, DX8 texture
-surface ownership, DX8 surface-copy compatibility, DDS retained surface
-levels, direct mesh base-pass replay, and native stage-1 multitexture boundary for the
-restage-proven shared original `LoadingScreenClass` loading path, the dev35
-stack fix, dev36 camera-Y boundary correction, dev37 DataSafe guard, dev38
-loading capture metadata, dev39/dev40 TGA loading fixes, original
-WWAudio/background/material/conversation corrections, dev43 no-pullout route
-gate, dev45 replay-complete clean-exit bridge, dev46 original message-window
-render plus dialogue/audio diagnostics, and dev47 original TranslateDB
-object-factory closure. Dev48 adds a narrow WWAudio category-volume fix by
-initializing dialog/cinematic volume defaults in the Vita constructor path and
-logging those volumes in runtime audio breadcrumbs. Dev49 preserves that fix,
-adds stream/read/decode/start/mix/output counters for the Logan dialogue path,
-and changes the Vita DX8 texture boundary to try original `DDSFileClass`
-lookup before loose Targa decode so `.tga` material names can resolve retail
-`.dds` assets through the FileFactory/MIX chain; that original DDS alias path
-is now covered by an executable host contract. Dev50 fixes DDS descriptor
-metadata so original `TextureClass::Init()` receives DX8 `D3DFORMAT` values
-instead of raw `WW3DFormat` values, avoiding the DXT1/RGB888 enum collision;
-it also pins the documented `/usr/local/vitasdk` default through
-`RENEGADE_VITASDK`, tightens vitaGL enum detection, and extends the audio
-mixer/source contracts. Dev51 keeps those source fixes and adds stream-only
-mix isolation counters inside the Vita Miles provider: opened streams are
-tracked separately from ordinary samples, mixed into a diagnostic accumulator,
-and reported as streamed buffers, frames, nonzero buffers, peak sample, and
-currently active streams. Dev52 keeps those counters and adds read-only
-original speech-object diagnostics from the active conversation path: source
-owner, speaker presence, sound object presence, scene membership, cull state,
-playing state, class/type/state, duration, dropoff radius, and listener
-distance. Dev53 keeps those dialogue diagnostics and adds texture provenance
-telemetry: successful DDS/TGA load counters, first-load breadcrumbs with
-dimensions/format/checksum/native texture id, checkerboard fallback bind
-counts, runtime `loaded_dds/tga` breadcrumbs, and capture-bundle comparison
-coverage for those fields. Dev54 keeps those diagnostics and restores the Vita
-DX8 texture surface boundary: texture-owned refcounted surface levels, original
-`GetSurfaceLevel`, texture `LockRect`/`UnlockRect` with writable mip uploads,
-priority storage, and width/height `_Create_DX8_Texture`. Dev55 keeps that
-ownership and replaces the remaining `IDirect3DDevice8::CopyRects`
-invalid-call stub with bounded CPU-backed surface copies plus texture-owner
-uploads, and exposes fail-closed `D3DXLoadSurfaceFromSurface` /
-`D3DXFilterTexture` compatibility for original surface/mip call sites. This
-restores original `Render2DSentence` pending surface-to-texture copy semantics
-needed by message, loading, and dialogue text textures. Dev56 preserves dev55
-and gives DDS-loaded retail textures decoded CPU-backed `D3DFMT_A8R8G8B8`
-surface levels for every mip while keeping the DX8 source-format descriptor
-metadata from `DDSFileClass`, so original `GetSurfaceLevel`/D3DX/`SurfaceClass`
-callers receive actual decoded retail pixels instead of blank descriptor
-surfaces after DDS loads. Dev57 preserves dev56 and makes the direct Vita
-`MeshClass` submitter replay every original base material pass, reading
-pass-specific stage-0 texture, shader, UV, DCG, and vertex material data
-instead of drawing only pass 0. This restores the original multi-pass fallback
-shape for lightmap/detail/emissive/shiny-mask material data that survived W3D
-load under the current direct mesh boundary. Dev58 preserves dev57 and removes
-the stage-1 unsupported renderer gap by translating original DX8 sampler and
-texture-stage combiner state for both WW3D texture stages, binding Vita texture
-units 0/1, and emitting stage-1 UVs for original post-detail materials. A full
-canonical no-deploy dev58 build now passes
-retained host-validation reuse, deterministic restaging, source integration
-reporting, ARM link/package, identity verification, compressed VPK validation,
-diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
-`d9555d54aa3a577a8bb5a3b5ef6f32bf67aa96de4cc128e8726137a1798d0bb3`.
+Current work: **post-dev59 streamed-dialogue duration metadata, dialogue/audio
+diagnostics, texture provenance, DX8 texture surface ownership, DX8
+surface-copy compatibility, DDS retained surface levels, direct mesh base-pass
+replay, and native stage-1 multitexture boundary for the restage-proven shared
+original `LoadingScreenClass` loading path, the dev35 stack fix, dev36 camera-Y
+boundary correction, dev37 DataSafe guard, dev38 loading capture metadata,
+dev39/dev40 TGA loading fixes, original WWAudio/background/material/conversation
+corrections, dev43 no-pullout route gate, dev45 replay-complete clean-exit
+bridge, dev46 original message-window render plus dialogue/audio diagnostics,
+and dev47 original TranslateDB object-factory closure. Dev48 adds a narrow
+WWAudio category-volume fix by initializing dialog/cinematic volume defaults in
+the Vita constructor path and logging those volumes in runtime audio
+breadcrumbs. Dev49 preserves that fix, adds stream/read/decode/start/mix/output
+counters for the Logan dialogue path, and changes the Vita DX8 texture boundary
+to try original `DDSFileClass` lookup before loose Targa decode so `.tga`
+material names can resolve retail `.dds` assets through the FileFactory/MIX
+chain; that original DDS alias path is now covered by an executable host
+contract. Dev50 fixes DDS descriptor metadata so original `TextureClass::Init()`
+receives DX8 `D3DFORMAT` values instead of raw `WW3DFormat` values, avoiding
+the DXT1/RGB888 enum collision; it also pins the documented
+`/usr/local/vitasdk` default through `RENEGADE_VITASDK`, tightens vitaGL enum
+detection, and extends the audio mixer/source contracts. Dev51 keeps those
+source fixes and adds stream-only mix isolation counters inside the Vita Miles
+provider: opened streams are tracked separately from ordinary samples, mixed
+into a diagnostic accumulator, and reported as streamed buffers, frames, nonzero
+buffers, peak sample, and currently active streams. Dev52 keeps those counters
+and adds read-only original speech-object diagnostics from the active
+conversation path: source owner, speaker presence, sound object presence, scene
+membership, cull state, playing state, class/type/state, duration, dropoff
+radius, and listener distance. Dev53 keeps those dialogue diagnostics and adds
+texture provenance telemetry: successful DDS/TGA load counters, first-load
+breadcrumbs with dimensions/format/checksum/native texture id, checkerboard
+fallback bind counts, runtime `loaded_dds/tga` breadcrumbs, and capture-bundle
+comparison coverage for those fields. Dev54 keeps those diagnostics and
+restores the Vita DX8 texture surface boundary: texture-owned refcounted surface
+levels, original `GetSurfaceLevel`, texture `LockRect`/`UnlockRect` with
+writable mip uploads, priority storage, and width/height `_Create_DX8_Texture`.
+Dev55 keeps that ownership and replaces the remaining
+`IDirect3DDevice8::CopyRects` invalid-call stub with bounded CPU-backed surface
+copies plus texture-owner uploads, and exposes fail-closed
+`D3DXLoadSurfaceFromSurface` / `D3DXFilterTexture` compatibility for original
+surface/mip call sites. This restores original `Render2DSentence` pending
+surface-to-texture copy semantics needed by message, loading, and dialogue text
+textures. Dev56 preserves dev55 and gives DDS-loaded retail textures decoded
+CPU-backed `D3DFMT_A8R8G8B8` surface levels for every mip while keeping the DX8
+source-format descriptor metadata from `DDSFileClass`, so original
+`GetSurfaceLevel`/D3DX/`SurfaceClass` callers receive actual decoded retail
+pixels instead of blank descriptor surfaces after DDS loads. Dev57 preserves
+dev56 and makes the direct Vita `MeshClass` submitter replay every original
+base material pass, reading pass-specific stage-0 texture, shader, UV, DCG, and
+vertex material data instead of drawing only pass 0. This restores the original
+multi-pass fallback shape for lightmap/detail/emissive/shiny-mask material data
+that survived W3D load under the current direct mesh boundary. Dev58 preserves
+dev57 and removes the stage-1 unsupported renderer gap by translating original
+DX8 sampler and texture-stage combiner state for both WW3D texture stages,
+binding Vita texture units 0/1, and emitting stage-1 UVs for original
+post-detail materials. Dev59 preserves dev58 and fixes streamed dialogue timing
+metadata by carrying decoded WAVE sample-frame counts through
+`AILSOUNDINFO.samples` and computing original `SoundBufferClass` duration from
+frames/rate before falling back to byte-length estimates. A full canonical
+no-deploy dev59 build now passes retained host-validation reuse, deterministic
+restaging, source integration reporting, ARM link/package, identity
+verification, compressed VPK validation, diagnostics generation, and SHA
+verification. The canonical VPK SHA-256 is
+`f183d356ae60692f88d7676e06f8077af1537bb0398c6c5766e7f1225d7e5ab4`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -71,7 +75,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev58 is built but not deployed; dev46 remains restored on
+control changed. Dev59 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

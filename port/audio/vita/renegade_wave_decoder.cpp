@@ -279,6 +279,43 @@ bool Decode_Microsoft_Adpcm(const uint8_t *data, const WaveInfo &info,
 	return true;
 }
 
+uint32_t Saturating_U64_To_U32(uint64_t value)
+{
+	return value > std::numeric_limits<uint32_t>::max()
+		? std::numeric_limits<uint32_t>::max()
+		: static_cast<uint32_t>(value);
+}
+
+uint32_t Estimate_Partial_Adpcm_Frames(const WaveInfo &info, uint32_t bytes)
+{
+	const uint32_t header = info.encoding == WaveEncoding::MicrosoftAdpcm
+		? static_cast<uint32_t>(info.channels) * 7U
+		: static_cast<uint32_t>(info.channels) * 4U;
+	if (info.samples_per_block == 0U || bytes <= header) return 0U;
+	const uint32_t payload = bytes - header;
+	uint32_t frames = info.encoding == WaveEncoding::MicrosoftAdpcm ? 2U : 1U;
+	if (info.encoding == WaveEncoding::MicrosoftAdpcm) {
+		frames += payload * (info.channels == 1U ? 2U : 1U);
+	} else {
+		frames += (payload * 2U) / info.channels;
+	}
+	return std::min<uint32_t>(frames, info.samples_per_block);
+}
+
+uint32_t Estimate_Frame_Count(const WaveInfo &info)
+{
+	if (info.block_align == 0U) return 0U;
+	if (info.encoding == WaveEncoding::Pcm) {
+		return info.data_bytes / info.block_align;
+	}
+	if (info.samples_per_block == 0U) return 0U;
+	const uint32_t full_blocks = info.data_bytes / info.block_align;
+	const uint32_t remainder = info.data_bytes % info.block_align;
+	const uint64_t frames = static_cast<uint64_t>(full_blocks) *
+		info.samples_per_block + Estimate_Partial_Adpcm_Frames(info, remainder);
+	return Saturating_U64_To_U32(frames);
+}
+
 } // namespace
 
 bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
@@ -373,6 +410,7 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 		offset = payload + padded;
 	}
 	if (!format_found || !data_found) return Fail("WAVE format or data chunk absent", error);
+	parsed.sample_frames = Estimate_Frame_Count(parsed);
 	*info = std::move(parsed);
 	return true;
 }

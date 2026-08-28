@@ -928,6 +928,7 @@ S32 AIL_WAV_info_bounded(const void *data, size_t bytes, AILSOUNDINFO *info)
 	info->rate = wave.sample_rate;
 	info->bits = wave.bits_per_sample;
 	info->channels = wave.channels;
+	info->samples = wave.sample_frames;
 	info->block_size = wave.block_align;
 	info->initial_ptr = data;
 	return 1;

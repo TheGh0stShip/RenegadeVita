@@ -138,9 +138,14 @@ SoundBufferClass::Determine_Stats (unsigned char *buffer, unsigned long availabl
 		m_Bits = info.bits;
 		m_Type = info.format;
 
-		// Determine how long this sound will play for
-		float bytes_sec = float((m_Channels * m_Rate * m_Bits) >> 3);
-		m_Duration = (unsigned long)((((float)m_Length) / bytes_sec) * 1000.0F);
+		// Determine how long this sound will play for.
+		if (info.samples != 0 && m_Rate != 0) {
+			m_Duration = (unsigned long)((static_cast<double>(info.samples) *
+				1000.0) / static_cast<double>(m_Rate));
+		} else {
+			float bytes_sec = float((m_Channels * m_Rate * m_Bits) >> 3);
+			m_Duration = (unsigned long)((((float)m_Length) / bytes_sec) * 1000.0F);
+		}
 	}
 
 	return ;

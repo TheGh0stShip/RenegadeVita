@@ -188,6 +188,20 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("stats.active_streams", log_block)
         self.assertEqual(log_block.count("stats.sample_start_silent"), 1)
 
+    def test_streamed_dialogue_duration_uses_wave_frame_count(self):
+        staged = (ROOT / "staging" / "wwaudio" / "SoundBuffer.cpp").read_text()
+        patch = (ROOT / "port" / "patches" / "wwaudio-a35-original-runtime-correctness.patch").read_text()
+        provider = (ROOT / "port" / "audio" / "vita" / "renegade_miles_provider.cpp").read_text()
+        decoder = (ROOT / "port" / "audio" / "vita" / "renegade_wave_decoder.cpp").read_text()
+
+        for source in (staged, patch):
+            self.assertIn("AIL_WAV_info_bounded", source)
+            self.assertIn("info.samples != 0 && m_Rate != 0", source)
+            self.assertIn("static_cast<double>(info.samples)", source)
+
+        self.assertIn("info->samples = wave.sample_frames;", provider)
+        self.assertIn("parsed.sample_frames = Estimate_Frame_Count(parsed);", decoder)
+
     def test_conversation_think_removes_same_pointer_after_script_callbacks(self):
         patch = (ROOT / "port/patches/combat-a35-conversation-reentrant-think.patch").read_text()
         staged = (ROOT / "staging" / "combat" / "conversationmgr.cpp").read_text()

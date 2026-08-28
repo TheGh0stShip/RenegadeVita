@@ -135,6 +135,10 @@ int main()
 	passed &= Require(decoded.channels == 1 && decoded.sample_rate == 48000 &&
 		decoded.samples == std::vector<int16_t>({ 1000, -1000, 2000, -2000 }),
 		"PCM decode values differ");
+	AILSOUNDINFO pcm_info = {};
+	passed &= Require(AIL_WAV_info_bounded(pcm.data(), pcm.size(), &pcm_info) != 0 &&
+		pcm_info.samples == 4 && pcm_info.rate == 48000,
+		"PCM WAVE frame count differs");
 
 	const std::vector<uint8_t> pcm8 = Wave(1, 2, 22050, 2, 8, {},
 		{ 128, 255, 0, 128 });
@@ -153,6 +157,10 @@ int main()
 		ima.data(), ima.size(), &decoded), "IMA ADPCM decode failed");
 	passed &= Require(decoded.Frame_Count() == 9 && decoded.samples.front() == 0 &&
 		decoded.samples.back() == 0, "IMA ADPCM frame contract differs");
+	AILSOUNDINFO ima_info = {};
+	passed &= Require(AIL_WAV_info_bounded(ima.data(), ima.size(), &ima_info) != 0 &&
+		ima_info.samples == 9 && ima_info.rate == 8000,
+		"IMA ADPCM WAVE frame count differs");
 
 	const std::vector<uint8_t> ima_stereo = Wave(0x11, 2, 8000, 16, 4,
 		ima_extension, {
@@ -178,6 +186,10 @@ int main()
 		ms.data(), ms.size(), &decoded), "Microsoft ADPCM decode failed");
 	passed &= Require(decoded.samples == std::vector<int16_t>({ 500, 1000, 1000, 1000 }),
 		"Microsoft ADPCM values differ");
+	AILSOUNDINFO ms_info = {};
+	passed &= Require(AIL_WAV_info_bounded(ms.data(), ms.size(), &ms_info) != 0 &&
+		ms_info.samples == 4 && ms_info.rate == 8000,
+		"Microsoft ADPCM WAVE frame count differs");
 
 	std::vector<uint8_t> ms_stereo_extension;
 	Write_U16(ms_stereo_extension, 8);
@@ -202,7 +214,8 @@ int main()
 		large_pcm_samples);
 	AILSOUNDINFO bounded_info = {};
 	passed &= Require(AIL_WAV_info_bounded(large_pcm.data(), 64, &bounded_info) != 0 &&
-		bounded_info.data_len == large_pcm_samples.size(),
+		bounded_info.data_len == large_pcm_samples.size() &&
+		bounded_info.samples == large_pcm_samples.size(),
 		"bounded WAVE header inspection failed");
 	passed &= Require(!RenegadeVitaAudio::Decode_Wave(
 		large_pcm.data(), 64, &decoded),

@@ -216,6 +216,13 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("parsed.sample_frames = parsed.fact_sample_frames != 0U", decoder)
         self.assertIn("output.samples.resize(static_cast<size_t>(info.sample_frames)", decoder)
 
+    def test_stream_handle_loop_count_returns_provider_value(self):
+        staged = (ROOT / "staging" / "wwaudio" / "soundstreamhandle.cpp").read_text()
+        patch = (ROOT / "port" / "patches" / "wwaudio-a35-original-runtime-correctness.patch").read_text()
+
+        for source in (staged, patch):
+            self.assertIn("retval = ::AIL_stream_loop_count (StreamHandle);", source)
+
     def test_conversation_think_removes_same_pointer_after_script_callbacks(self):
         patch = (ROOT / "port/patches/combat-a35-conversation-reentrant-think.patch").read_text()
         staged = (ROOT / "staging" / "combat" / "conversationmgr.cpp").read_text()

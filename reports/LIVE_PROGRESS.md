@@ -1,5 +1,47 @@
 # Live engineering progress
 
+## 2026-08-28 — dev62 WWAudio stream loop-count return
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Audio boundary: staged original `SoundStreamHandleClass` now returns the
+  provider value from `AIL_stream_loop_count(StreamHandle)` instead of
+  discarding it and always reporting zero. The deterministic WWAudio runtime
+  correctness patch carries the same fix so clean restaging preserves it.
+- Runtime purpose: any original WWAudio or conversation-side caller that polls
+  stream loop completion now sees the Miles-compatible provider state. This is
+  a source-side correctness fix under original WWAudio ownership, not a custom
+  conversation scheduler.
+- Validation: focused dialogue/audio diagnostics passed 12/12, the Vita audio
+  provider loop-count contract passed, the combined local provider/dialogue/
+  staging contract set passed 16/16, and the fast no-deploy candidate passed
+  55 focused tests, the original `DDSFileClass` `.tga`-to-`.dds` executable
+  contract 11/11, ARM package identity/hash checks, and VPK packaging. The
+  full canonical no-deploy build passed retained host-validation reuse, 72
+  host unittest checks, deterministic restaging, source integration reporting,
+  ARM link/package, compressed VPK validation, identity verification,
+  diagnostics bundle generation, SHA manifest verification, and retail
+  exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev62.vpk` SHA-256 is
+  `f501288b7bb302923502fcf89e0b74c3f35a5aaa824f0eb68531b05cf05acddd`;
+  ELF SHA-256 is
+  `9d16c948e3212c705333fddb50fd42cc6eed7816d8af350cdd8312e062d03ef7`;
+  diagnostics bundle SHA-256 is
+  `f0eda4ec27dc3c292fed92d3fc415738c069548a94951f600e4c472eaff15f9b`.
+- Boundary: dev62 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev62, verify
+  Logan audible dialogue and timing, dialog/message text, material/texture
+  appearance, and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev62-runtime.log`, especially stream
+  loop-count behavior, speech duration/dropoff/distance, stream bytes/frames/
+  mix/last_stream fields, fact/estimate/untrimmed/trimmed values,
+  conversation state, and texture/material provenance if dialogue remains
+  silent or materials remain incorrect.
+
 ## 2026-08-28 — dev61 streamed-dialogue fact runtime telemetry
 
 `[██████████] 12/12 canonical source/build gates complete`

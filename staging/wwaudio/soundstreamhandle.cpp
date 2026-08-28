@@ -247,7 +247,7 @@ SoundStreamHandleClass::Get_Sample_Loop_Count (void)
 	U32 retval = 0;
 
 	if (StreamHandle != (HSTREAM)INVALID_MILES_HANDLE) {
-		::AIL_stream_loop_count (StreamHandle);
+		retval = ::AIL_stream_loop_count (StreamHandle);
 	}
 
 	return retval;

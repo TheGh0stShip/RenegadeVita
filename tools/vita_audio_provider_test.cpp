@@ -318,6 +318,10 @@ int main()
 	AIL_set_file_callbacks(Stream_Open, Stream_Close, Stream_Seek, Stream_Read);
 	HSTREAM stream = AIL_open_stream(driver, "logan_test.wav", 0);
 	passed &= Require(stream != nullptr, "provider stream open failed");
+	AIL_set_stream_loop_count(stream, 2);
+	passed &= Require(AIL_stream_loop_count(stream) == 2,
+		"provider stream loop-count query differs");
+	AIL_set_stream_loop_count(stream, 1);
 	AIL_set_stream_volume(stream, 127);
 	AIL_set_stream_pan(stream, 64);
 	AIL_start_stream(stream);

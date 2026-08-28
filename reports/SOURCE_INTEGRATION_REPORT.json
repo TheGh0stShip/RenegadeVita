@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev61",
+  "milestone": "A3.5-dev62",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -549,7 +549,7 @@
     "port/compatibility/include/winuser.h"
   ],
   "patch_count": 118,
-  "mechanically_patched_upstream_files": 237,
+  "mechanically_patched_upstream_files": 238,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -653,6 +653,7 @@
     "Code/WWAudio/Threads.cpp",
     "Code/WWAudio/WWAudio.cpp",
     "Code/WWAudio/WWAudio.h",
+    "Code/WWAudio/soundstreamhandle.cpp",
     "Code/WWMath/aabox.h",
     "Code/WWMath/gridcull.cpp",
     "Code/WWMath/gridcull.h",
@@ -1434,7 +1435,8 @@
       "upstream_targets": [
         "WWAudio.h",
         "SoundBuffer.h",
-        "SoundBuffer.cpp"
+        "SoundBuffer.cpp",
+        "soundstreamhandle.cpp"
       ]
     },
     {

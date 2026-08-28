@@ -205,6 +205,209 @@ bool Convert_Surface_Pixel_To_RGBA(D3DFORMAT format,
 	}
 }
 
+bool Surface_Format_Can_Convert_To_RGBA(D3DFORMAT format)
+{
+	switch (format) {
+	case D3DFMT_A8R8G8B8:
+	case D3DFMT_X8R8G8B8:
+	case D3DFMT_R8G8B8:
+	case D3DFMT_A4R4G4B4:
+	case D3DFMT_A1R5G5B5:
+	case D3DFMT_R5G6B5:
+	case D3DFMT_A8:
+	case D3DFMT_L8:
+		return true;
+	default:
+		return false;
+	}
+}
+
+UINT Texture_Level_Dimension(UINT base, UINT level)
+{
+	const UINT dimension = base >> level;
+	return dimension == 0U ? 1U : dimension;
+}
+
+UINT Calculate_Texture_Mip_Count(UINT width, UINT height,
+	TextureClass::MipCountType requested_mips)
+{
+	UINT full_count = 1U;
+	for (UINT w = width, h = height; w > 1U || h > 1U; ) {
+		if (w > 1U) w >>= 1U;
+		if (h > 1U) h >>= 1U;
+		++full_count;
+	}
+	if (requested_mips == TextureClass::MIP_LEVELS_ALL) return full_count;
+	UINT mip_count = static_cast<UINT>(requested_mips);
+	if (mip_count == 0U) mip_count = 1U;
+	return mip_count < full_count ? mip_count : full_count;
+}
+
+uint64_t Calculate_Texture_Resident_Bytes(UINT width, UINT height,
+	UINT mip_count)
+{
+	uint64_t bytes = 0U;
+	for (UINT level = 0U; level < mip_count; ++level) {
+		bytes += static_cast<uint64_t>(Texture_Level_Dimension(width, level)) *
+			static_cast<uint64_t>(Texture_Level_Dimension(height, level)) * 4U;
+	}
+	return bytes;
+}
+
+void Destroy_Texture_Surface_Levels(IDirect3DTexture8 *texture)
+{
+	if (texture == NULL) return;
+	const UINT mip_count = texture->GetLevelCount();
+	if (texture->SurfaceLevels != NULL) {
+		for (UINT level = 0U; level < mip_count; ++level) {
+			if (texture->SurfaceLevels[level] != NULL) {
+				texture->SurfaceLevels[level]->Release();
+				texture->SurfaceLevels[level] = NULL;
+			}
+		}
+		delete [] texture->SurfaceLevels;
+		texture->SurfaceLevels = NULL;
+	}
+	delete [] texture->SurfaceLocked;
+	texture->SurfaceLocked = NULL;
+	delete [] texture->SurfaceLockFlags;
+	texture->SurfaceLockFlags = NULL;
+	texture->LockedSurfaceCount = 0U;
+	texture->TextureLocked = false;
+}
+
+bool Allocate_Texture_Surface_Levels(IDirect3DTexture8 *texture)
+{
+	if (texture == NULL) return false;
+	const UINT mip_count = texture->GetLevelCount();
+	if (texture->SurfaceLevels == NULL) {
+		texture->SurfaceLevels = new (std::nothrow) IDirect3DSurface8 *[mip_count];
+		if (texture->SurfaceLevels == NULL) return false;
+		memset(texture->SurfaceLevels, 0, sizeof(IDirect3DSurface8 *) * mip_count);
+	}
+	if (texture->SurfaceLocked == NULL) {
+		texture->SurfaceLocked = new (std::nothrow) bool[mip_count];
+		if (texture->SurfaceLocked == NULL) {
+			Destroy_Texture_Surface_Levels(texture);
+			return false;
+		}
+		memset(texture->SurfaceLocked, 0, sizeof(bool) * mip_count);
+	}
+	if (texture->SurfaceLockFlags == NULL) {
+		texture->SurfaceLockFlags = new (std::nothrow) DWORD[mip_count];
+		if (texture->SurfaceLockFlags == NULL) {
+			Destroy_Texture_Surface_Levels(texture);
+			return false;
+		}
+		memset(texture->SurfaceLockFlags, 0, sizeof(DWORD) * mip_count);
+	}
+	return true;
+}
+
+bool Convert_Surface_To_RGBA(IDirect3DSurface8 *surface,
+	std::vector<unsigned char> &rgba, uint32_t *checksum)
+{
+	if (surface == NULL || surface->Get_Data() == NULL) return false;
+	D3DSURFACE_DESC description = {};
+	if (surface->GetDesc(&description) != D3D_OK || description.Width == 0U ||
+		description.Height == 0U ||
+		!Surface_Format_Can_Convert_To_RGBA(description.Format)) {
+		return false;
+	}
+	const unsigned bytes_per_pixel = Surface_Bytes_Per_Pixel(description.Format);
+	rgba.assign(static_cast<size_t>(description.Width) * description.Height * 4U, 0U);
+	uint32_t mixed = 2166136261U;
+	for (unsigned y = 0U; y < description.Height; ++y) {
+		const unsigned char *source_row = surface->Get_Data() +
+			static_cast<size_t>(y) * surface->Get_Pitch();
+		for (unsigned x = 0U; x < description.Width; ++x) {
+			unsigned char *destination = rgba.data() +
+				(static_cast<size_t>(y) * description.Width + x) * 4U;
+			if (!Convert_Surface_Pixel_To_RGBA(description.Format,
+				source_row + static_cast<size_t>(x) * bytes_per_pixel, destination)) {
+				return false;
+			}
+			mixed = Mix_Texture_Checksum(mixed,
+				static_cast<uint32_t>(destination[0]) |
+				(static_cast<uint32_t>(destination[1]) << 8U) |
+				(static_cast<uint32_t>(destination[2]) << 16U) |
+				(static_cast<uint32_t>(destination[3]) << 24U));
+		}
+	}
+	if (checksum != NULL) *checksum = mixed;
+	return true;
+}
+
+bool Upload_Texture_Level_From_Surface(IDirect3DTexture8 *texture, UINT level)
+{
+	if (texture == NULL || texture->SurfaceLevels == NULL ||
+		level >= texture->GetLevelCount() || texture->SurfaceLevels[level] == NULL) {
+		return false;
+	}
+	D3DSURFACE_DESC description = {};
+	if (texture->SurfaceLevels[level]->GetDesc(&description) != D3D_OK) {
+		return false;
+	}
+	std::vector<unsigned char> rgba;
+	uint32_t checksum = 0U;
+	if (!Convert_Surface_To_RGBA(texture->SurfaceLevels[level], rgba, &checksum)) {
+		return false;
+	}
+#if defined(__vita__)
+	(void)glGetError();
+	if (texture->NativeTexture == 0U) {
+		GLuint native = 0U;
+		glGenTextures(1, &native);
+		if (native == 0U) return false;
+		texture->NativeTexture = native;
+	}
+	glBindTexture(GL_TEXTURE_2D, texture->NativeTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		texture->GetLevelCount() > 1U ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, description.Width,
+		description.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
+	if (glGetError() != GL_NO_ERROR) return false;
+#else
+	if (texture->NativeTexture == 0U) texture->NativeTexture = 1U;
+#endif
+	texture->Uploaded = true;
+	if (level == 0U) texture->PixelChecksum = checksum;
+	return true;
+}
+
+bool Attach_Texture_Surface_Copy(IDirect3DTexture8 *texture, UINT level,
+	IDirect3DSurface8 *source)
+{
+	if (texture == NULL || source == NULL || level >= texture->GetLevelCount() ||
+		source->Get_Data() == NULL || !Allocate_Texture_Surface_Levels(texture)) {
+		return false;
+	}
+	D3DSURFACE_DESC description = {};
+	if (source->GetDesc(&description) != D3D_OK) return false;
+	IDirect3DSurface8 *copy = new (std::nothrow) IDirect3DSurface8(
+		description.Width, description.Height, description.Format,
+		Surface_Bytes_Per_Pixel(description.Format));
+	if (copy == NULL || copy->Get_Data() == NULL) {
+		if (copy != NULL) copy->Release();
+		return false;
+	}
+	const size_t row_bytes = static_cast<size_t>(description.Width) *
+		Surface_Bytes_Per_Pixel(description.Format);
+	for (unsigned y = 0U; y < description.Height; ++y) {
+		memcpy(copy->Get_Data() + static_cast<size_t>(y) * copy->Get_Pitch(),
+			source->Get_Data() + static_cast<size_t>(y) * source->Get_Pitch(),
+			row_bytes);
+	}
+	if (texture->SurfaceLevels[level] != NULL) {
+		texture->SurfaceLevels[level]->Release();
+	}
+	texture->SurfaceLevels[level] = copy;
+	return true;
+}
+
 IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 	TextureClass::MipCountType mip_level_count)
 {
@@ -287,6 +490,7 @@ IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 	texture->Uploaded = true;
 	RenegadeVitaRenderer::Record_Texture_Decode();
 	RenegadeVitaRenderer::Record_Texture_Upload(texture->ResidentBytes);
+	(void)Attach_Texture_Surface_Copy(texture, 0U, surface);
 	return texture;
 }
 
@@ -799,6 +1003,73 @@ IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(IDirect3DSurface8 *surface,
 	return Create_Texture_From_Surface(surface, mip_level_count);
 }
 
+IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(unsigned int width,
+	unsigned int height, WW3DFormat format,
+	TextureClass::MipCountType mip_level_count, D3DPOOL pool,
+	bool rendertarget)
+{
+	(void)pool;
+	(void)rendertarget;
+	if (width == 0U || height == 0U) {
+		RenegadeVitaRenderer::Record_Texture_Invalid_Data();
+		return NULL;
+	}
+	const D3DFORMAT d3d_format = WW3DFormat_To_D3DFormat(format);
+	if (d3d_format == D3DFMT_UNKNOWN ||
+		!Surface_Format_Can_Convert_To_RGBA(d3d_format)) {
+		RenegadeVitaRenderer::Record_Texture_Unsupported_Format();
+		return NULL;
+	}
+	IDirect3DTexture8 *texture = new (std::nothrow) IDirect3DTexture8;
+	if (texture == NULL) {
+		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+		return NULL;
+	}
+	memset(texture, 0, sizeof(*texture));
+	texture->Width = width;
+	texture->Height = height;
+	texture->MipLevels = Calculate_Texture_Mip_Count(width, height,
+		mip_level_count);
+	texture->SourceFormat = d3d_format;
+	texture->ResidentBytes = Calculate_Texture_Resident_Bytes(width, height,
+		texture->MipLevels);
+	texture->ReferenceCount = 1U;
+	texture->HasAlpha = d3d_format == D3DFMT_A8R8G8B8 ||
+		d3d_format == D3DFMT_A4R4G4B4 ||
+		d3d_format == D3DFMT_A1R5G5B5 || d3d_format == D3DFMT_A8;
+	if (!Allocate_Texture_Surface_Levels(texture)) {
+		delete texture;
+		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+		return NULL;
+	}
+	for (UINT level = 0U; level < texture->MipLevels; ++level) {
+		const UINT level_width = Texture_Level_Dimension(width, level);
+		const UINT level_height = Texture_Level_Dimension(height, level);
+		IDirect3DSurface8 *surface = new (std::nothrow) IDirect3DSurface8(
+			level_width, level_height, d3d_format,
+			Surface_Bytes_Per_Pixel(d3d_format));
+		if (surface == NULL || surface->Get_Data() == NULL) {
+			if (surface != NULL) surface->Release();
+			Destroy_Texture_Surface_Levels(texture);
+			delete texture;
+			RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+			return NULL;
+		}
+		texture->SurfaceLevels[level] = surface;
+		if (!Upload_Texture_Level_From_Surface(texture, level)) {
+			Destroy_Texture_Surface_Levels(texture);
+			if (texture->NativeTexture != 0U) {
+				RenegadeVitaRenderer::Release_Texture(texture->NativeTexture);
+			}
+			delete texture;
+			RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+			return NULL;
+		}
+	}
+	RenegadeVitaRenderer::Record_Texture_Upload(texture->ResidentBytes);
+	return texture;
+}
+
 IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(const char *filename,
 	TextureClass::MipCountType mip_level_count)
 {
@@ -830,6 +1101,7 @@ ULONG IDirect3DBaseTexture8::Release()
 	if (ReferenceCount == 0U) return 0U;
 	const ULONG remaining = --ReferenceCount;
 	if (remaining == 0U) {
+		Destroy_Texture_Surface_Levels(static_cast<IDirect3DTexture8 *>(this));
 		RenegadeVitaRenderer::Release_Texture(NativeTexture);
 		RenegadeVitaRenderer::Record_Texture_Release(ResidentBytes);
 		delete static_cast<IDirect3DTexture8 *>(this);
@@ -854,14 +1126,88 @@ HRESULT IDirect3DTexture8::GetLevelDesc(UINT level, D3DSURFACE_DESC *description
 	if (description->Width == 0U) description->Width = 1U;
 	if (description->Height == 0U) description->Height = 1U;
 	description->Format = SourceFormat;
-	description->Size = static_cast<UINT>(description->Width * description->Height * 4U);
+	description->Size = static_cast<UINT>(description->Width * description->Height *
+		Surface_Bytes_Per_Pixel(SourceFormat));
 	return D3D_OK;
 }
 
-HRESULT IDirect3DTexture8::GetSurfaceLevel(UINT, IDirect3DSurface8 **surface)
+HRESULT IDirect3DTexture8::GetSurfaceLevel(UINT level, IDirect3DSurface8 **surface)
 {
 	if (surface != NULL) *surface = NULL;
-	return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	if (surface == NULL || level >= GetLevelCount()) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	if (SurfaceLevels != NULL && SurfaceLevels[level] != NULL) {
+		SurfaceLevels[level]->AddRef();
+		*surface = SurfaceLevels[level];
+		return D3D_OK;
+	}
+	D3DSURFACE_DESC description = {};
+	if (GetLevelDesc(level, &description) != D3D_OK) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	IDirect3DSurface8 *descriptor_surface = new (std::nothrow) IDirect3DSurface8(
+		description.Width, description.Height, description.Format,
+		Surface_Bytes_Per_Pixel(description.Format));
+	if (descriptor_surface == NULL || descriptor_surface->Get_Data() == NULL) {
+		if (descriptor_surface != NULL) descriptor_surface->Release();
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	*surface = descriptor_surface;
+	return D3D_OK;
+}
+
+HRESULT IDirect3DTexture8::LockRect(UINT level, D3DLOCKED_RECT *locked,
+	const RECT *rectangle, DWORD flags)
+{
+	if (locked == NULL || level >= GetLevelCount() ||
+		SurfaceLevels == NULL || SurfaceLevels[level] == NULL ||
+		SurfaceLocked == NULL || SurfaceLockFlags == NULL ||
+		SurfaceLocked[level]) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	const HRESULT result = SurfaceLevels[level]->LockRect(locked, rectangle, flags);
+	if (result == D3D_OK) {
+		SurfaceLocked[level] = true;
+		SurfaceLockFlags[level] = flags;
+		++LockedSurfaceCount;
+		TextureLocked = true;
+	}
+	return result;
+}
+
+HRESULT IDirect3DTexture8::UnlockRect(UINT level)
+{
+	if (level >= GetLevelCount() || SurfaceLevels == NULL ||
+		SurfaceLevels[level] == NULL || SurfaceLocked == NULL ||
+		SurfaceLockFlags == NULL || !SurfaceLocked[level]) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	const HRESULT result = SurfaceLevels[level]->UnlockRect();
+	const DWORD flags = SurfaceLockFlags[level];
+	SurfaceLocked[level] = false;
+	SurfaceLockFlags[level] = 0U;
+	if (LockedSurfaceCount > 0U) --LockedSurfaceCount;
+	TextureLocked = LockedSurfaceCount != 0U;
+	if (result != D3D_OK) return result;
+	if ((flags & D3DLOCK_READONLY) != 0U) return D3D_OK;
+	if (!Upload_Texture_Level_From_Surface(this, level)) {
+		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	return D3D_OK;
+}
+
+DWORD IDirect3DTexture8::GetPriority()
+{
+	return Priority;
+}
+
+DWORD IDirect3DTexture8::SetPriority(DWORD priority)
+{
+	const DWORD previous = Priority;
+	Priority = priority;
+	return previous;
 }
 
 IDirect3DSurface8::IDirect3DSurface8(UINT width, UINT height,

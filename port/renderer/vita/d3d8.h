@@ -180,8 +180,14 @@ struct IDirect3DBaseTexture8 {
 	uint32_t PixelChecksum;
 	uint64_t ResidentBytes;
 	ULONG ReferenceCount;
+	IDirect3DSurface8 **SurfaceLevels;
+	DWORD *SurfaceLockFlags;
+	DWORD Priority;
+	UINT LockedSurfaceCount;
 	bool HasAlpha;
 	bool Uploaded;
+	bool *SurfaceLocked;
+	bool TextureLocked;
 	// A shared, intentionally conspicuous diagnostic texture.  This remains
 	// distinct from a successfully decoded retail texture in both ownership
 	// and telemetry; callers must not infer asset success from Uploaded alone.
@@ -193,6 +199,9 @@ struct IDirect3DTexture8 : IDirect3DBaseTexture8 {
 	HRESULT GetLevelDesc(UINT level, D3DSURFACE_DESC *description);
 	UINT GetLevelCount();
 	HRESULT GetSurfaceLevel(UINT level, IDirect3DSurface8 **surface);
+	HRESULT LockRect(UINT level, D3DLOCKED_RECT *locked, const RECT *rectangle,
+		DWORD flags);
+	HRESULT UnlockRect(UINT level);
 	DWORD GetPriority();
 	DWORD SetPriority(DWORD priority);
 };

@@ -9,7 +9,7 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev53}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev54}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
@@ -116,6 +116,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_vita_hanim_combo_guard \
 		tools.test_mission_conversation_diagnostics_contract \
 		tools.test_vita_texture_provenance_contract \
+		tools.test_vita_texture_surface_contract \
 		tools.test_vita_camera_input_contract \
 		tools.test_input_route_contract \
 		tools.test_validate_vita_input_route \
@@ -247,7 +248,7 @@ grep -Fq '"status": "PASS"' "$rv_identity_report"
 	echo "Upstream revision: $rv_revision_actual"
 	echo "Restage mode: ${RENEGADE_FAST_RESTAGE:-0}"
 	echo "Fast tests: $rv_fast_tests"
-	echo "Focused contracts: loading screen, indexed state, skin submission, animation combo guard, conversation diagnostics, texture provenance, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias"
+	echo "Focused contracts: loading screen, indexed state, skin submission, animation combo guard, conversation diagnostics, texture provenance, texture surface ownership, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias"
 	echo "VPK contains: eboot.bin and sce_sys/param.sfo only"
 	echo "Runtime log: $rv_runtime_log"
 } > "$rv_build_report"

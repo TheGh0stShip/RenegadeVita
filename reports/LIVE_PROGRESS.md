@@ -1,5 +1,46 @@
 # Live engineering progress
 
+## 2026-08-28 — dev54 DX8 texture surface ownership
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: the Vita `IDirect3DTexture8` boundary now owns
+  refcounted CPU-backed surface levels for lockable textures and implements
+  `GetSurfaceLevel`, `LockRect`, `UnlockRect`, `GetPriority`/`SetPriority`,
+  and width/height `_Create_DX8_Texture`. `SurfaceClass(IDirect3DSurface8*)`
+  now mirrors desktop COM ownership by adding a reference and reading the
+  surface description, so original `TextureClass::Get_Surface_Level()` can wrap
+  and release the raw D3D surface safely.
+- Runtime purpose: this removes the descriptor-only texture-surface stub that
+  blocked original texture surface semantics in current `texture.cpp` and the
+  staged `missingtexture.cpp`/`textureloader.cpp`/`dx8texman.cpp` frontier.
+  Writable texture unlocks now upload the changed mip level through the Vita
+  backend instead of losing the CPU-side update.
+- Validation: focused texture surface/provenance/loading/indexed-state
+  contracts passed 19/19. The fast no-deploy candidate passed the expanded
+  47-test focused gate plus package identity/hash checks. The full no-deploy
+  canonical build passed retained host-validation reuse, 68 host unittest
+  checks, deterministic restaging, source integration reporting, the original
+  `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, and SHA manifest verification.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev54.vpk` SHA-256 is
+  `11d78031946e7e5b8becd710d7dfe3bce04d52ad5f88e347f5850feeef55a4b2`;
+  packaged eboot/SELF SHA-256 is
+  `82a66e1d06e244ef6a1bc1a82a3f06dd73d296f079f7f501645abfe7df0fb657`;
+  ELF SHA-256 is
+  `3b2afcd0337b316fff4b9a1c24a0877d94156c24b67b0596fc6d9517cd236b08`.
+- Boundary: dev54 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev54, verify
+  audible Logan dialogue and material/texture appearance, then inspect
+  `ux0:data/renegade/user/logs/a35-dev54-runtime.log`, especially `texture
+  loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`, `speech=`, and
+  `stream_mix` if dialogue is still inaudible or materials remain incorrect.
+
 ## 2026-08-28 — dev53 texture provenance telemetry
 
 `[██████████] 12/12 canonical source/build gates complete`
@@ -33,12 +74,10 @@
   `c384aba19d06450fc8cd1f6071083028001f12d1a3252ccffa7bbf1362030b49`;
   ELF SHA-256 is
   `ea279c8848c6f9df15f20b9c582855fb5c4a252662a495ec9e320db66ca6badb`.
-- Boundary: dev53 has not been physically tested and no Vita deployment was
-  attempted. The next hardware run should manually install dev53, verify
-  audible Logan dialogue and material/texture appearance, then inspect
-  `ux0:data/renegade/user/logs/a35-dev53-runtime.log`, especially `texture
-  loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`, `speech=`, and
-  `stream_mix` if dialogue is still inaudible or materials remain incorrect.
+- Historical boundary: dev53 was not physically tested before dev54 superseded
+  it. Its diagnostics remain retained for comparing texture provenance,
+  checkerboard fallback binds, active speech state, and stream-mix evidence if
+  a later physical log needs source-level comparison.
 
 ## 2026-08-28 — dev52 active-conversation speech object diagnostics
 

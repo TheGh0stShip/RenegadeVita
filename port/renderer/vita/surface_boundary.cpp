@@ -84,6 +84,12 @@ SurfaceClass::SurfaceClass(const char *filename)
 SurfaceClass::SurfaceClass(IDirect3DSurface8 *surface)
 	: D3DSurface(surface), SurfaceFormat(WW3D_FORMAT_UNKNOWN)
 {
+	if (D3DSurface != NULL) {
+		D3DSurface->AddRef();
+	}
+	SurfaceDescription description = {};
+	Get_Description(description);
+	SurfaceFormat = description.Format;
 }
 
 SurfaceClass::~SurfaceClass(void)

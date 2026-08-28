@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev81",
-  "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, and retains original WWAudio ownership over a Vita-native output boundary",
+  "milestone": "A3.5-dev82",
+  "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 452,
+  "original_source_files_compiled": 508,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -112,7 +112,9 @@
     "Code/Combat/weaponmanager.cpp",
     "Code/Combat/weapons.cpp",
     "Code/Combat/weaponview.cpp",
+    "Code/Commando/DlgMessageBox.cpp",
     "Code/Commando/apppacketstats.cpp",
+    "Code/Commando/bioevent.cpp",
     "Code/Commando/buildnum.cpp",
     "Code/Commando/campaign.cpp",
     "Code/Commando/changeteamevent.cpp",
@@ -121,19 +123,33 @@
     "Code/Commando/clienthintmanager.cpp",
     "Code/Commando/clientpingmanager.cpp",
     "Code/Commando/cnetwork.cpp",
+    "Code/Commando/combatgmode.cpp",
+    "Code/Commando/commandosaveload.cpp",
     "Code/Commando/comnetrcvinst.cpp",
     "Code/Commando/cshint.cpp",
     "Code/Commando/cspingrequestevent.cpp",
     "Code/Commando/datasafe.cpp",
+    "Code/Commando/devoptions.cpp",
+    "Code/Commando/dialogtests.cpp",
+    "Code/Commando/dlgloadspgame.cpp",
+    "Code/Commando/dlgmainmenu.cpp",
     "Code/Commando/evictionevent.cpp",
     "Code/Commando/gamedata.cpp",
     "Code/Commando/gamedataupdateevent.cpp",
     "Code/Commando/gameinitmgr.cpp",
+    "Code/Commando/gamemenu.cpp",
+    "Code/Commando/gamemode.cpp",
     "Code/Commando/gameoptionsevent.cpp",
     "Code/Commando/gdcnc.cpp",
     "Code/Commando/gdsingleplayer.cpp",
     "Code/Commando/god.cpp",
+    "Code/Commando/level.cpp",
+    "Code/Commando/loadingevent.cpp",
+    "Code/Commando/mainmenutransition.cpp",
     "Code/Commando/messages.cpp",
+    "Code/Commando/modpackage.cpp",
+    "Code/Commando/modpackagemgr.cpp",
+    "Code/Commando/movie.cpp",
     "Code/Commando/netevent.cpp",
     "Code/Commando/nethandler.cpp",
     "Code/Commando/netinterface.cpp",
@@ -142,14 +158,17 @@
     "Code/Commando/playerkill.cpp",
     "Code/Commando/playermanager.cpp",
     "Code/Commando/priority.cpp",
+    "Code/Commando/radiocommanddisplay.cpp",
     "Code/Commando/regbool.cpp",
     "Code/Commando/regfloat.cpp",
     "Code/Commando/regint.cpp",
     "Code/Commando/renegadecheatmgr.cpp",
+    "Code/Commando/renegadedialogmgr.cpp",
     "Code/Commando/sbbomanager.cpp",
     "Code/Commando/scpingresponseevent.cpp",
     "Code/Commando/sctextobj.cpp",
     "Code/Commando/serverfps.cpp",
+    "Code/Commando/svrgoodbyeevent.cpp",
     "Code/Commando/team.cpp",
     "Code/Commando/teammanager.cpp",
     "Code/Commando/textdisplay.cpp",
@@ -456,8 +475,45 @@
     "Code/wwtranslatedb/tdbcategory.cpp",
     "Code/wwtranslatedb/translatedb.cpp",
     "Code/wwtranslatedb/translateobj.cpp",
+    "Code/wwui/IMECandidateCtrl.cpp",
+    "Code/wwui/ProgressCtrl.cpp",
+    "Code/wwui/buttonctrl.cpp",
+    "Code/wwui/checkboxctrl.cpp",
+    "Code/wwui/childdialog.cpp",
+    "Code/wwui/comboboxctrl.cpp",
+    "Code/wwui/dialogbase.cpp",
+    "Code/wwui/dialogcontrol.cpp",
+    "Code/wwui/dialogmgr.cpp",
+    "Code/wwui/dialogparser.cpp",
+    "Code/wwui/dialogtext.cpp",
+    "Code/wwui/dialogtransition.cpp",
+    "Code/wwui/dropdownctrl.cpp",
+    "Code/wwui/editctrl.cpp",
+    "Code/wwui/healthbarctrl.cpp",
+    "Code/wwui/imagectrl.cpp",
+    "Code/wwui/inputctrl.cpp",
+    "Code/wwui/listctrl.cpp",
+    "Code/wwui/listiconmgr.cpp",
+    "Code/wwui/mapctrl.cpp",
     "Code/wwui/menubackdrop.cpp",
+    "Code/wwui/menudialog.cpp",
+    "Code/wwui/menuentryctrl.cpp",
+    "Code/wwui/merchandisectrl.cpp",
+    "Code/wwui/mousemgr.cpp",
+    "Code/wwui/multilinetextctrl.cpp",
+    "Code/wwui/popupdialog.cpp",
+    "Code/wwui/screencursor.cpp",
+    "Code/wwui/scrollbarctrl.cpp",
+    "Code/wwui/shortcutbarctrl.cpp",
+    "Code/wwui/sliderctrl.cpp",
     "Code/wwui/stylemgr.cpp",
+    "Code/wwui/tabctrl.cpp",
+    "Code/wwui/textmarqueectrl.cpp",
+    "Code/wwui/tooltip.cpp",
+    "Code/wwui/tooltipmgr.cpp",
+    "Code/wwui/treectrl.cpp",
+    "Code/wwui/viewerctrl.cpp",
+    "Code/wwui/wwuiinput.cpp",
     "Code/wwutil/mathutil.cpp"
   ],
   "staged_original_owner_files": 1,
@@ -492,6 +548,15 @@
     "port/platform/renegade_script_static_provider.cpp",
     "port/platform/vita/a30_main.cpp",
     "port/platform/vita/a31_vita_runtime.cpp"
+  ],
+  "a4_frontend_boundary_files": 6,
+  "a4_frontend_boundary_paths": [
+    "port/filesystem/renegade_find_files.cpp",
+    "port/platform/renegade_vita_ime_boundary.cpp",
+    "port/platform/renegade_ui_pointer_tokens.cpp",
+    "port/platform/renegade_dialog_resource_provider.cpp",
+    "port/platform/a4_frontend_lifecycle_boundary.cpp",
+    "port/platform/a4_binkmovie_boundary.cpp"
   ],
   "sdk_framebuffer_helper_files": 1,
   "compatibility_headers": 52,
@@ -549,8 +614,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 126,
-  "mechanically_patched_upstream_files": 248,
+  "patch_count": 129,
+  "mechanically_patched_upstream_files": 250,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -617,6 +682,7 @@
     "Code/Commando/campaign.cpp",
     "Code/Commando/cnetwork.cpp",
     "Code/Commando/combatgmode.cpp",
+    "Code/Commando/combatgmode.h",
     "Code/Commando/comnetrcvinst.cpp",
     "Code/Commando/datasafe.cpp",
     "Code/Commando/datasafe.h",
@@ -637,6 +703,7 @@
     "Code/Commando/god.cpp",
     "Code/Commando/messages.cpp",
     "Code/Commando/modpackage.h",
+    "Code/Commando/movie.cpp",
     "Code/Commando/netinterface.cpp",
     "Code/Commando/player.cpp",
     "Code/Commando/player.h",
@@ -1106,6 +1173,14 @@
       ]
     },
     {
+      "path": "port/patches/commando-a35-combatgmode-vita-load-finalization.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp",
+        "combatgmode.h"
+      ]
+    },
+    {
       "path": "port/patches/commando-a35-consolemode-add-message-return.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1219,6 +1294,13 @@
       ]
     },
     {
+      "path": "port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
       "path": "port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1286,6 +1368,13 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-movie-vita-provider-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "movie.cpp"
       ]
     },
     {
@@ -1929,7 +2018,7 @@
     },
     "Commando": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 42,
+      "compiled": 61,
       "total": 213
     },
     "Scripts": {
@@ -1957,6 +2046,13 @@
     "retail_root": "ux0:data/renegade/retail/",
     "writable_root": "ux0:data/renegade/user/",
     "retail_tree_packaged_in_vpk": false
+  },
+  "frontend_runtime_contract": {
+    "owner": "original Commando MovieGameMode/MenuGameMode/RenegadeDialogMgr/WWUI",
+    "menu_to_tutorial": "A4 menu selection latches original GameInitMgrClass::Start_Game and re-enters the existing direct M00 route until full menu-to-combat equivalence is proven",
+    "movie_provider": "BINKMovie platform boundary is fail-closed without proprietary RAD code or packaged movies",
+    "custom_game_loop": false,
+    "custom_frontend_renderer": false
   },
   "automatic_vita_deployment": false
 }

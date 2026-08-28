@@ -1985,7 +1985,7 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
 	uint32_t mag_filter, uint32_t mip_filter)
 {
-	if (!Texture_Stage_Index_Valid(stage)) {
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
 		Record_Texture_Unsupported_Stage(stage);
 		return false;
 	}

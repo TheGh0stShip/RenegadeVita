@@ -10,6 +10,7 @@
 #include "formconv.h"
 #include "mapper.h"
 #include "render2d.h"
+#include "sortingrenderer.h"
 #include "texture.h"
 #include "texture_upload_contract.h"
 #include "targa.h"
@@ -20,6 +21,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+
+bool DX8Wrapper::_EnableTriangleDraw = true;
+bool SortingRendererClass::_EnableTriangleDraw = true;
 
 #if defined(__vita__)
 #include "vita_runtime_log.h"

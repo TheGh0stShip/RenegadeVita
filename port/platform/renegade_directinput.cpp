@@ -10,6 +10,9 @@
 #include "renegade_vita_input_route.h"
 #include "renegade_vita_input_telemetry.h"
 #include "timemgr.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "a4_frontend_lifecycle_boundary.h"
+#endif
 
 #if !defined(RENEGADE_HOST_ABI_TEST)
 #include <psp2/ctrl.h>
@@ -498,14 +501,23 @@ void DirectInput::Read(void)
 		Flush();
 		return;
 	}
-	Apply_Replay_Sample(controller);
-	Record_Sample(controller);
-	const unsigned int buttons = controller.buttons;
-	const bool front_touch_down = Is_Front_Touch_Down();
-	Set_Virtual_Key(VK_UP, false);
-	Set_Virtual_Key(VK_DOWN, false);
-	Set_Virtual_Key(VK_LEFT, false);
-	Set_Virtual_Key(VK_RIGHT, false);
+		Apply_Replay_Sample(controller);
+		Record_Sample(controller);
+		const unsigned int buttons = controller.buttons;
+		const bool front_touch_down = Is_Front_Touch_Down();
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+		const bool frontend_menu_navigation = A4_Frontend_Is_Menu_Loop_Active();
+#else
+		const bool frontend_menu_navigation = false;
+#endif
+		Set_Virtual_Key(VK_UP,
+			frontend_menu_navigation && (buttons & SCE_CTRL_UP) != 0);
+		Set_Virtual_Key(VK_DOWN,
+			frontend_menu_navigation && (buttons & SCE_CTRL_DOWN) != 0);
+		Set_Virtual_Key(VK_LEFT,
+			frontend_menu_navigation && (buttons & SCE_CTRL_LEFT) != 0);
+		Set_Virtual_Key(VK_RIGHT,
+			frontend_menu_navigation && (buttons & SCE_CTRL_RIGHT) != 0);
 	Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);
 	Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);

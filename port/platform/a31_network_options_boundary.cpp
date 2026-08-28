@@ -71,3 +71,4 @@ ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM type)
 // The graph's desktop renderer is intentionally not linked.  cNetwork still
 // preserves the original scale selection as state for later Vita diagnostics.
 int cBandwidthGraph::BandwidthScaler = kLanBaselineBps;
+void cBandwidthGraph::Render(void) {}

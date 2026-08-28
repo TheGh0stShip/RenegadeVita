@@ -147,6 +147,16 @@ void	MovieGameModeClass::Start_Movie( const char * filename )
 	force_cd = false;
 #endif //BETACLIENT
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+	/*
+	** Vita keeps movie decode/admission under the BINKMovie provider boundary.
+	** Route the original requested filename there so missing playback fails
+	** closed while MovieGameMode still owns the intro-to-menu sequence.
+	*/
+	Play_Movie( filename );
+	return ;
+#endif
+
 	//
 	//	Play the movie (if it exists locally)
 	//

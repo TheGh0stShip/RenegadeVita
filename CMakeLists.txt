@@ -46,6 +46,10 @@ set(RENEGADE_COMPAT "${RENEGADE_ROOT}/port/compatibility/include")
 set(VITASDK_DEBUG_SCREEN "${VITASDK}/share/gcc-arm-vita-eabi/samples/common")
 set(RENEGADE_GENERATED_INCLUDE "${CMAKE_CURRENT_BINARY_DIR}/generated")
 file(MAKE_DIRECTORY "${RENEGADE_GENERATED_INCLUDE}")
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+option(RENEGADE_A4_ORIGINAL_FRONTEND
+  "Link original Commando/WWUI frontend and fail-closed Bink provider path" ON)
 
 # The original Scripts project is staged deterministically so its Windows
 # include casing and narrow portability corrections never modify upstream.
@@ -67,6 +71,97 @@ configure_file(
   "${RENEGADE_GENERATED_INCLUDE}/renegade_build_identity.h"
   @ONLY)
 include("${RENEGADE_ROOT}/cmake/A31OriginalSources.cmake")
+
+if(RENEGADE_A4_ORIGINAL_FRONTEND)
+  set(RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE
+    "${RENEGADE_GENERATED_INCLUDE}/renegade_dialog_templates.inc")
+  add_custom_command(
+    OUTPUT "${RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE}"
+    COMMAND Python3::Interpreter
+      "${RENEGADE_ROOT}/tools/generate_wwui_dialog_templates.py"
+      --rc "${RENEGADE_UPSTREAM}/Code/Commando/chat.rc"
+      --resource-h "${RENEGADE_UPSTREAM}/Code/Commando/resource.h"
+      --dialog-resource-h "${RENEGADE_UPSTREAM}/Code/Commando/dialogresource.h"
+      --out "${RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE}"
+    DEPENDS
+      "${RENEGADE_ROOT}/tools/generate_wwui_dialog_templates.py"
+      "${RENEGADE_UPSTREAM}/Code/Commando/chat.rc"
+      "${RENEGADE_UPSTREAM}/Code/Commando/resource.h"
+      "${RENEGADE_UPSTREAM}/Code/Commando/dialogresource.h"
+    VERBATIM)
+  add_custom_target(a4_dialog_templates
+    DEPENDS "${RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE}")
+
+  set(RENEGADE_A4_FRONTEND_ORIGINAL_SOURCES
+    ${RENEGADE_STAGE}/wwui/dialogparser.cpp
+    ${RENEGADE_STAGE}/wwui/dialogbase.cpp
+    ${RENEGADE_STAGE}/wwui/dialogmgr.cpp
+    ${RENEGADE_STAGE}/wwui/wwuiinput.cpp
+    ${RENEGADE_STAGE}/wwui/dialogcontrol.cpp
+    ${RENEGADE_STAGE}/wwui/dialogtext.cpp
+    ${RENEGADE_STAGE}/wwui/buttonctrl.cpp
+    ${RENEGADE_STAGE}/wwui/checkboxctrl.cpp
+    ${RENEGADE_STAGE}/wwui/imagectrl.cpp
+    ${RENEGADE_STAGE}/wwui/textmarqueectrl.cpp
+    ${RENEGADE_STAGE}/wwui/multilinetextctrl.cpp
+    ${RENEGADE_STAGE}/wwui/editctrl.cpp
+    ${RENEGADE_STAGE}/wwui/comboboxctrl.cpp
+    ${RENEGADE_STAGE}/wwui/dropdownctrl.cpp
+    ${RENEGADE_STAGE}/wwui/sliderctrl.cpp
+    ${RENEGADE_STAGE}/wwui/tabctrl.cpp
+    ${RENEGADE_STAGE}/wwui/treectrl.cpp
+    ${RENEGADE_STAGE}/wwui/mapctrl.cpp
+    ${RENEGADE_STAGE}/wwui/viewerctrl.cpp
+    ${RENEGADE_STAGE}/wwui/inputctrl.cpp
+    ${RENEGADE_STAGE}/wwui/shortcutbarctrl.cpp
+    ${RENEGADE_STAGE}/wwui/merchandisectrl.cpp
+    ${RENEGADE_STAGE}/wwui/ProgressCtrl.cpp
+    ${RENEGADE_STAGE}/wwui/healthbarctrl.cpp
+    ${RENEGADE_STAGE}/wwui/childdialog.cpp
+    ${RENEGADE_STAGE}/wwui/menuentryctrl.cpp
+    ${RENEGADE_STAGE}/wwui/menudialog.cpp
+    ${RENEGADE_STAGE}/wwui/mousemgr.cpp
+    ${RENEGADE_STAGE}/wwui/tooltip.cpp
+    ${RENEGADE_STAGE}/wwui/tooltipmgr.cpp
+    ${RENEGADE_STAGE}/wwui/dialogtransition.cpp
+    ${RENEGADE_STAGE}/wwui/listctrl.cpp
+    ${RENEGADE_STAGE}/wwui/listiconmgr.cpp
+    ${RENEGADE_STAGE}/wwui/scrollbarctrl.cpp
+    ${RENEGADE_STAGE}/wwui/popupdialog.cpp
+    ${RENEGADE_STAGE}/wwui/screencursor.cpp
+    ${RENEGADE_STAGE}/wwui/IMECandidateCtrl.cpp
+    ${RENEGADE_STAGE}/commando/renegadedialogmgr.cpp
+    ${RENEGADE_STAGE}/commando/dlgmainmenu.cpp
+    ${RENEGADE_STAGE}/commando/DlgMessageBox.cpp
+    ${RENEGADE_STAGE}/commando/dialogtests.cpp
+    ${RENEGADE_STAGE}/commando/dlgloadspgame.cpp
+    ${RENEGADE_STAGE}/commando/mainmenutransition.cpp
+    ${RENEGADE_STAGE}/commando/gamemode.cpp
+    ${RENEGADE_STAGE}/commando/gamemenu.cpp
+    ${RENEGADE_STAGE}/commando/movie.cpp
+    ${RENEGADE_STAGE}/commando/devoptions.cpp
+    ${RENEGADE_STAGE}/commando/level.cpp
+    ${RENEGADE_STAGE}/commando/radiocommanddisplay.cpp
+    ${RENEGADE_STAGE}/commando/commandosaveload.cpp
+    ${RENEGADE_STAGE}/commando/loadingevent.cpp
+    ${RENEGADE_STAGE}/commando/bioevent.cpp
+    ${RENEGADE_STAGE}/commando/svrgoodbyeevent.cpp
+    ${RENEGADE_STAGE}/commando/modpackage.cpp
+    ${RENEGADE_STAGE}/commando/modpackagemgr.cpp
+    ${RENEGADE_STAGE}/combat/savegame.cpp
+  )
+  set(RENEGADE_A4_FRONTEND_PORT_SOURCES
+    ${RENEGADE_ROOT}/port/filesystem/renegade_find_files.cpp
+    ${RENEGADE_ROOT}/port/platform/renegade_vita_ime_boundary.cpp
+    ${RENEGADE_ROOT}/port/platform/renegade_ui_pointer_tokens.cpp
+    ${RENEGADE_ROOT}/port/platform/renegade_dialog_resource_provider.cpp
+    ${RENEGADE_ROOT}/port/platform/a4_frontend_lifecycle_boundary.cpp
+    ${RENEGADE_ROOT}/port/platform/a4_binkmovie_boundary.cpp
+  )
+else()
+  set(RENEGADE_A4_FRONTEND_ORIGINAL_SOURCES)
+  set(RENEGADE_A4_FRONTEND_PORT_SOURCES)
+endif()
 
 # The Vita candidate uses the same direct original replication/session closure
 # proven by the A3.1 host harness.  Keep WWNet/Combat ownership in upstream
@@ -92,7 +187,8 @@ set(RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
 	${RENEGADE_SCRIPT_SOURCE}/Mission00.cpp
 	${RENEGADE_SCRIPT_SOURCE}/Test_Cinematic.cpp
 	${RENEGADE_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
-)
+	${RENEGADE_A4_FRONTEND_ORIGINAL_SOURCES}
+	)
 list(LENGTH RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCE_COUNT)
 
 foreach(required_library
@@ -178,8 +274,12 @@ endif()
 add_executable(${PROJECT_NAME}
   ${RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES}
   ${RENEGADE_A30_PORT_SOURCES}
+  ${RENEGADE_A4_FRONTEND_PORT_SOURCES}
   ${VITASDK_DEBUG_SCREEN}/debugScreen.c
 )
+if(RENEGADE_A4_ORIGINAL_FRONTEND)
+  add_dependencies(${PROJECT_NAME} a4_dialog_templates)
+endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${RENEGADE_GENERATED_INCLUDE}
@@ -199,6 +299,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${RENEGADE_STAGE}/wwsaveload
   ${RENEGADE_STAGE}/combat
   ${RENEGADE_STAGE}/commando
+  ${RENEGADE_STAGE}/wwui
   ${RENEGADE_STAGE}/wwaudio
   ${RENEGADE_STAGE}/wwnet
   ${RENEGADE_STAGE}/wwtranslatedb
@@ -242,7 +343,16 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   RENEGADE_VITA_A30_PORT_SOURCES=${RENEGADE_A30_PORT_SOURCE_COUNT}
   RENEGADE_VITAGL_HAS_PHYCONT_MEM=${RENEGADE_VITAGL_HAS_PHYCONT_MEM}
   RENEGADE_VITAGL_PHYCONT_MEM=${RENEGADE_VITAGL_PHYCONT_MEM}
-)
+	)
+if(RENEGADE_A4_ORIGINAL_FRONTEND)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE
+    RENEGADE_A4_ORIGINAL_FRONTEND=1
+    RENEGADE_A4_ORIGINAL_GAMEMODE=1
+    RENEGADE_A4_ORIGINAL_MOVIE_OWNER=1
+    RENEGADE_VITA_FRONTEND_SINGLEPLAYER=1
+    RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=6
+  )
+endif()
 target_compile_options(${PROJECT_NAME} PRIVATE
   -fshort-wchar
   -fno-strict-aliasing

@@ -13,9 +13,10 @@ MODULES = [
     "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi",
 ]
 
-EXPECTED_ORIGINAL_SOURCE_COUNT = 453
+EXPECTED_ORIGINAL_SOURCE_COUNT = 508
 EXPECTED_VITA_PORT_SOURCE_COUNT = 26
-EXPECTED_PATCH_COUNT = 127
+EXPECTED_A4_FRONTEND_PORT_SOURCE_COUNT = 6
+EXPECTED_PATCH_COUNT = 129
 
 STAGED_ORIGINAL_OWNER_SOURCES = {
     "Code/Commando/loadingscreen.cpp": "staging/commando/loadingscreen.cpp",
@@ -55,6 +56,15 @@ VITA_PORT_SOURCES = [
 	"port/platform/renegade_script_static_provider.cpp",
     "port/platform/vita/a30_main.cpp",
 	"port/platform/vita/a31_vita_runtime.cpp",
+]
+
+A4_FRONTEND_PORT_SOURCES = [
+    "port/filesystem/renegade_find_files.cpp",
+    "port/platform/renegade_vita_ime_boundary.cpp",
+    "port/platform/renegade_ui_pointer_tokens.cpp",
+    "port/platform/renegade_dialog_resource_provider.cpp",
+    "port/platform/a4_frontend_lifecycle_boundary.cpp",
+    "port/platform/a4_binkmovie_boundary.cpp",
 ]
 
 
@@ -177,6 +187,13 @@ def main() -> None:
             raise RuntimeError(
                 f"Native A3.1 manifest references missing file: {relative_path}"
             )
+    if len(A4_FRONTEND_PORT_SOURCES) != EXPECTED_A4_FRONTEND_PORT_SOURCE_COUNT:
+        raise RuntimeError("Internal A4 frontend boundary source count is inconsistent")
+    for relative_path in A4_FRONTEND_PORT_SOURCES:
+        if not (root / relative_path).is_file():
+            raise RuntimeError(
+                f"Native A4 frontend manifest references missing file: {relative_path}"
+            )
     staged_original_owner_sources = []
     for staged_path in STAGED_ORIGINAL_OWNER_SOURCES.values():
         if not (root / staged_path).is_file():
@@ -230,6 +247,8 @@ def main() -> None:
         "staged_original_owner_paths": sorted(staged_original_owner_sources),
         "vita_platform_renderer_validation_files": len(VITA_PORT_SOURCES),
         "vita_translation_units": VITA_PORT_SOURCES,
+        "a4_frontend_boundary_files": len(A4_FRONTEND_PORT_SOURCES),
+        "a4_frontend_boundary_paths": A4_FRONTEND_PORT_SOURCES,
         "sdk_framebuffer_helper_files": 1,
         "compatibility_headers": len(compatibility_headers),
         "compatibility_header_paths": compatibility_headers,
@@ -257,6 +276,13 @@ def main() -> None:
             "retail_root": "ux0:data/renegade/retail/",
             "writable_root": "ux0:data/renegade/user/",
             "retail_tree_packaged_in_vpk": False,
+        },
+        "frontend_runtime_contract": {
+            "owner": "original Commando MovieGameMode/MenuGameMode/RenegadeDialogMgr/WWUI",
+            "menu_to_tutorial": "A4 menu selection latches original GameInitMgrClass::Start_Game and re-enters the existing direct M00 route until full menu-to-combat equivalence is proven",
+            "movie_provider": "BINKMovie platform boundary is fail-closed without proprietary RAD code or packaged movies",
+            "custom_game_loop": False,
+            "custom_frontend_renderer": False,
         },
         "automatic_vita_deployment": False,
     }

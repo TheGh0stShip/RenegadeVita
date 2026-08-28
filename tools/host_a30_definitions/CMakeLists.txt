@@ -575,11 +575,16 @@ set(RV_A4_FRONTEND_RUNTIME_LINK_SOURCES
   ${RV_STAGE}/commando/dlgloadspgame.cpp
   ${RV_STAGE}/commando/mainmenutransition.cpp
   ${RV_STAGE}/commando/gamemode.cpp
+  ${RV_STAGE}/commando/movie.cpp
   ${RV_STAGE}/commando/campaign.cpp
   ${RV_STAGE}/commando/gameinitmgr.cpp
   ${RV_STAGE}/commando/combatgmode.cpp
+  ${RV_STAGE}/commando/loadingscreen.cpp
   ${RV_STAGE}/commando/devoptions.cpp
   ${RV_STAGE}/commando/level.cpp
+  ${RV_STAGE}/commando/radiocommanddisplay.cpp
+  ${RV_STAGE}/commando/commandosaveload.cpp
+  ${RV_STAGE}/commando/loadingevent.cpp
   # Original game-init/session owners needed by the genuine campaign route.
   ${RV_STAGE}/commando/bioevent.cpp
   ${RV_STAGE}/commando/svrgoodbyeevent.cpp
@@ -765,8 +770,11 @@ target_compile_definitions(a31_interactive_runtime PRIVATE
   RENEGADE_VITA_PORT=1
   RENEGADE_VITA_A31=1
   RENEGADE_A4_REAL_STYLEMGR=1
+  RENEGADE_A4_ORIGINAL_FRONTEND=1
   RENEGADE_A4_ORIGINAL_GAMEMODE=1
+  RENEGADE_A4_ORIGINAL_MOVIE_OWNER=1
   RENEGADE_VITA_FRONTEND_SINGLEPLAYER=1
+  RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=6
   RENEGADE_SHORT_WCHAR_ABI=1
   RENEGADE_A30_FULL_WWPHYS=1
 )

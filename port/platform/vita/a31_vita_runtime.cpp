@@ -3,6 +3,9 @@
 #include "a30_vita_runtime.h"
 #include "a31_interactive_runtime_policy.h"
 #include "a31_capture_telemetry.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "a4_frontend_lifecycle_boundary.h"
+#endif
 #include "renegade_cache_health.h"
 #include "renegade_file_factory.h"
 #include "renegade_miles_runtime_stats.h"
@@ -26,6 +29,12 @@
 #include "gamedata.h"
 #include "gameinitmgr.h"
 #include "gamemode.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "dialogmgr.h"
+#include "gamemenu.h"
+#include "movie.h"
+#include "renegadedialogmgr.h"
+#endif
 #include "gdsingleplayer.h"
 #include "gametype.h"
 #include "god.h"
@@ -838,6 +847,56 @@ bool Is_Start_Pressed()
 		Renegade_Vita_Input_Route_Replay_Exit_Requested();
 }
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
+	MovieGameModeClass &movie_mode, WWAudioClass *audio)
+{
+	A4_Frontend_Reset_Trace();
+	A4_Frontend_Begin_Menu_Loop();
+	RenegadeDialogMgrClass::Initialize();
+	GameModeManager::Add(&menu_mode);
+	GameModeManager::Add(&movie_mode);
+	movie_mode.Activate();
+	movie_mode.Startup_Movies();
+	A30_Vita_Log("A4 frontend: original MovieGameMode startup sequence entered; Bink provider may fail closed\n");
+
+	while (!A4_Frontend_Exit_Requested() &&
+		!A4_Frontend_Get_Trace().tutorial_start_latched) {
+		TimeManager::Update();
+		Input::Update();
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+		GameModeManager::Think();
+		GameInitMgrClass::Think();
+		DialogMgrClass::On_Frame_Update();
+		GameModeManager::Render();
+		if (audio != NULL) audio->On_Frame_Update(0);
+		sceKernelDelayThread(16667);
+	}
+
+	const A4FrontendTrace trace = A4_Frontend_Get_Trace();
+	A30_Vita_Log("A4 frontend: menu loop exit latched=%d map=%s movie_play/skip=%u/%u last_movie=%s exit=%d code=%d\n",
+		trace.tutorial_start_latched ? 1 : 0,
+		trace.tutorial_map[0] != '\0' ? trace.tutorial_map : "none",
+		trace.movie_play_requests, trace.movie_skip_requests,
+		trace.last_movie[0] != '\0' ? trace.last_movie : "none",
+		trace.exit_requested ? 1 : 0, trace.exit_code);
+
+	if (!movie_mode.Is_Inactive()) {
+		movie_mode.Deactivate();
+	}
+	if (!menu_mode.Is_Inactive()) {
+		menu_mode.Deactivate();
+	}
+	GameModeManager::Safely_Deactivate();
+	GameModeManager::Remove(&movie_mode);
+	GameModeManager::Remove(&menu_mode);
+	RenegadeDialogMgrClass::Shutdown();
+	A4_Frontend_End_Menu_Loop();
+	return trace.tutorial_start_latched &&
+		stricmp(trace.tutorial_map, "M00_Tutorial.mix") == 0;
+}
+#endif
+
 } // namespace
 
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
@@ -880,9 +939,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 		bool session_initialized = false;
 		bool single_player_transport_initialized = false;
 		bool audio_teardown_completed = false;
-		WW3DAssetManager *asset_manager = NULL;
-		TextDebugDisplayHandlerClass text_display_handler;
-		TextDisplayGameModeClass text_display_mode;
+			WW3DAssetManager *asset_manager = NULL;
+			TextDebugDisplayHandlerClass text_display_handler;
+			TextDisplayGameModeClass text_display_mode;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+			CombatGameModeClass frontend_combat_mode;
+			bool frontend_combat_mode_registered = false;
+#endif
 
 	{
 		/* Match original Commando ownership.  WWAudio must see the installed
@@ -1001,10 +1064,40 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				Input::Load_Configuration("DEFAULT_INPUT.CFG");
 				A31_Interactive_Configure_Vita_Controls();
 				input_initialized = true;
-				CampaignManager::Init();
-				campaign_initialized = true;
-				A30_Vita_Log("A3.5 loading screen: original CampaignManager catalog initialized\n");
-				cServerFps::Create_Instance();
+					CampaignManager::Init();
+					campaign_initialized = true;
+					A30_Vita_Log("A3.5 loading screen: original CampaignManager catalog initialized\n");
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+					if (GameModeManager::Find("Combat") == NULL) {
+						GameModeManager::Add(&frontend_combat_mode);
+						frontend_combat_mode_registered = true;
+						A30_Vita_Log("A4 frontend: registered original CombatGameMode owner for menu/direct M00 route\n");
+					}
+					{
+						MenuGameModeClass2 frontend_menu_mode;
+						MovieGameModeClass frontend_movie_mode;
+						const bool frontend_tutorial_selected =
+							Run_Original_Frontend_Intro_And_Menu(frontend_menu_mode,
+								frontend_movie_mode, audio);
+						stylemgr_initialized = false;
+						if (!frontend_tutorial_selected) {
+							result.clean_exit_requested = A4_Frontend_Exit_Requested();
+							A30_Vita_Log("A4 frontend: menu exited without supported tutorial selection; direct M00 route not entered\n");
+							break;
+						}
+						StyleMgrClass::Initialize_From_INI(kStyleManagerIni);
+						stylemgr_initialized = true;
+						A30_Vita_Log("A4 frontend: original StyleMgr reinitialized for direct M00 loading screen after menu shutdown\n");
+						if (StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT) == NULL ||
+							StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT) == NULL) {
+							A30_Vita_Log("A4 frontend: FAIL StyleMgr fonts unavailable after menu handoff normal=%p big=%p\n",
+								static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT)),
+								static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
+							break;
+						}
+					}
+#endif
+					cServerFps::Create_Instance();
 			A30_Vita_Log("A4 breadcrumb: original GameInitMgr SP initialization entry\n");
 			GameInitMgrClass::Initialize_SP();
 			single_player_transport_initialized = cSinglePlayerData::Is_Single_Player();
@@ -1510,13 +1603,27 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 			free(capture_pixels);
 			delete capture_history;
 			capture_history = NULL;
-			if (mission_completion_observer_installed) {
-				A31_Interactive_End_Mission_Completion_Observation();
-				mission_completion_observer_installed = false;
-			}
+				if (mission_completion_observer_installed) {
+					A31_Interactive_End_Mission_Completion_Observation();
+					mission_completion_observer_installed = false;
+				}
 
-			/* Match CombatGameModeClass::Core_Shutdown for the direct M00 route:
-			 * cGod leaves before the level frees static network wrappers, game
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+				if (frontend_combat_mode_registered) {
+					if (!frontend_combat_mode.Is_Inactive()) {
+						frontend_combat_mode.Deactivate();
+						GameModeManager::Safely_Deactivate();
+						result.level_loaded = false;
+						radar_initialized = false;
+						A30_Vita_Log("A4 frontend: original CombatGameMode shutdown consumed level/radar teardown\n");
+					}
+					GameModeManager::Remove(&frontend_combat_mode);
+					frontend_combat_mode_registered = false;
+				}
+#endif
+
+				/* Match CombatGameModeClass::Core_Shutdown for the direct M00 route:
+				 * cGod leaves before the level frees static network wrappers, game
 			 * objects, and load-on-demand assets. This precedes Radar/Combat
 			 * shutdown and keeps the original ownership hierarchy intact. */
 			if (result.level_loaded) {

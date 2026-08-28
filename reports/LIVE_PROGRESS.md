@@ -1,5 +1,32 @@
 # Live engineering progress
 
+## 2026-08-28 — dev82 retail frontend source/build candidate
+
+`[████████░░] 8/10 accepted evidence gates complete`
+
+- Runtime boundary: `feature/a35-dev82-retail-frontend` admits original
+  Commando `MovieGameModeClass`, `MenuGameModeClass2`,
+  `RenegadeDialogMgrClass`, `MainMenuDialogClass`, single-player dialog
+  surfaces, and WWUI controls behind `RENEGADE_A4_ORIGINAL_FRONTEND`.
+- Movie path: intro movie requests remain original-owner routed through
+  `MovieGameModeClass`; the Vita `BINKMovie` provider is fail-closed for this
+  pass, logs/skips the requested movies, imports no proprietary RAD code, and
+  packages no retail movies.
+- Menu-to-M00 path: original Start-SP tutorial selection latches
+  `GameInitMgrClass::Start_Game("M00_Tutorial.mix", -1, 0)` and then reuses
+  the existing dev82 direct M00 loader to avoid a duplicate loader, HUD,
+  input owner, or progress bar.
+- Validation: `bash ./tools/stage_sources.sh`, the focused frontend/loading/
+  incremental/conversation host contract suite, `bash ./tools/build_fast_candidate.sh`,
+  and canonical `bash ./tools/build.sh` passed. The canonical VPK is
+  `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
+  `a00d6021581d95272519c8084f592fc0435866412c5df92765749295fdae90d0`;
+  ELF SHA-256 is
+  `6884c0c665aeb543ee68a5109fc724f2f158e94aa0f991e71d76ee22692a9580`;
+  diagnostics bundle SHA-256 is
+  `6e330166e45fd993a1040a4c8284496d7f780cdca4deb64e0772f75fe2b0e559`.
+  No physical Vita acceptance is claimed and no Vita deployment was attempted.
+
 ## 2026-08-28 — dev79 M00 tutorial control/HUD/loading candidate
 
 `[██████████] 12/12 canonical source/build gates complete`

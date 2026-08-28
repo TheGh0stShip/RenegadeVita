@@ -1,5 +1,26 @@
 # Known gaps
 
+## Current dev82 retail-frontend source/build gaps (2026-08-28)
+
+The `feature/a35-dev82-retail-frontend` branch reconnects the original
+Commando `MovieGameModeClass`, `MenuGameModeClass2`, `RenegadeDialogMgrClass`,
+`MainMenuDialogClass`, single-player dialog surfaces, and WWUI stack into the
+Vita source closure. It is not physical evidence. Device rendering, focus,
+button behavior, back/quit behavior, options/load surfaces, and menu-to-M00
+handoff remain unaccepted until a matching Vita run returns logs/screenshots.
+
+Bink movie decode/playback remains fail-closed. The current provider records
+the original requested intro movie names and advances through the original
+movie owner without importing proprietary RAD code or packaging retail movie
+assets. A real decoder must be added only below the original Bink/movie
+boundary, with license/build impact documented.
+
+Tutorial selection from the original Start SP menu is deliberately latched at
+`GameInitMgrClass::Start_Game("M00_Tutorial.mix", -1, 0)` and then routed into
+the existing dev82 direct M00 loader. This avoids a second loader, HUD owner,
+input owner, or progress bar, but it is not yet proof that the full original
+menu-to-combat graph is equivalent on Vita.
+
 ## Current dev79 physical-test gaps (2026-08-28)
 
 A3.5-dev79 is built and uploaded for manual physical testing, but not accepted.

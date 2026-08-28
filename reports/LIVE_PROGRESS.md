@@ -2,7 +2,7 @@
 
 ## 2026-08-28 — dev49 dialogue telemetry and DDS-first texture candidate
 
-`[██████████] 10/10 fast source/build gates complete`
+`[██████████] 11/11 fast source/build gates complete`
 
 - Source correction: the Vita DX8 texture boundary now tries the original
   `DDSFileClass` route before the loose Targa route, so retail material names
@@ -17,10 +17,12 @@
   fields alongside dialog/cinematic category volumes.
 - Validation: focused fast contracts passed 37/37, including a new WWAudio
   stream-callback provider test and the updated DDS-first texture boundary
-  contract. The no-deploy fast Vita package completed, identity verification
-  passed, compressed VPK validation passed, and the SHA manifest verified.
+  contract. A new executable host contract also links original `DDSFileClass`
+  and verifies `.tga` material names map to `.dds` factory lookups: 9/9. The
+  no-deploy fast Vita package completed, identity verification passed,
+  compressed VPK validation passed, and the SHA manifest verified.
 - Artifact: `dist/RenegadeVita-A3.5-dev49.vpk` SHA-256 is
-  `d26d0f84759bcea1eca41de44c948b118d2266b24f37f7fe6edac413741866da`;
+  `7f723fb0a0b9894ddc14c0e65d463c16b370ca891b94d4888ee7e58c6fa4ec51`;
   SELF SHA-256 is
   `3fda984963a2c8531e51b4663a9ace0919fffd4c2a4254f01bb7b90dd7c3f595`;
   ELF SHA-256 is

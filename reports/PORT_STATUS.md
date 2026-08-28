@@ -16,7 +16,8 @@ logging those volumes in runtime audio breadcrumbs. Dev49 preserves that fix,
 adds stream/read/decode/start/mix/output counters for the Logan dialogue path,
 and changes the Vita DX8 texture boundary to try original `DDSFileClass`
 lookup before loose Targa decode so `.tga` material names can resolve retail
-`.dds` assets through the FileFactory/MIX chain. Dev46 physical replay used
+`.dds` assets through the FileFactory/MIX chain; that original DDS alias path
+is now covered by an executable host contract. Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
 strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups

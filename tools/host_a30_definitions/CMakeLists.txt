@@ -1078,6 +1078,12 @@ add_executable(a35_vita_button_state_contract_selftest
 add_executable(a35_vita_render_state_contract_selftest
   ${CMAKE_CURRENT_LIST_DIR}/vita_render_state_contract_main.cpp
 )
+add_executable(a35_ddsfile_tga_alias_contract_selftest
+  ${RV_WWLIB_SOURCES}
+  ${RV_STAGE}/ww3d2/formconv.cpp
+  ${RV_STAGE}/ww3d2/ddsfile.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/ddsfile_tga_alias_contract_main.cpp
+)
 target_include_directories(a35_vita_button_state_contract_selftest PRIVATE
   ${RV_ROOT}/port/platform
 )
@@ -1097,6 +1103,26 @@ target_compile_options(a35_vita_render_state_contract_selftest PRIVATE
   -O1 -g -fno-strict-aliasing -Wno-unknown-pragmas
   "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
 )
+target_include_directories(a35_ddsfile_tga_alias_contract_selftest PRIVATE
+  ${RV_COMPAT}
+  ${RV_ROOT}/port/renderer/vita
+  ${RV_STAGE}/wwlib
+  ${RV_STAGE}/ww3d2
+  ${RV_UPSTREAM}/Code/wwdebug
+  ${RV_UPSTREAM}/Code/wwlib
+  ${RV_UPSTREAM}/Code/ww3d2
+  ${RV_UPSTREAM}/Code/WWMath
+)
+target_compile_definitions(a35_ddsfile_tga_alias_contract_selftest PRIVATE
+  NDEBUG=1 _UNIX=1 RENEGADE_HOST_ABI_TEST=1 RENEGADE_VITA_PORT=1
+)
+target_compile_options(a35_ddsfile_tga_alias_contract_selftest PRIVATE
+  -O1 -g -fno-strict-aliasing -fno-exceptions -fno-rtti
+  -ffunction-sections -fdata-sections -Wno-unknown-pragmas
+  "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
+)
+target_link_options(a35_ddsfile_tga_alias_contract_selftest PRIVATE -Wl,--gc-sections)
+target_link_libraries(a35_ddsfile_tga_alias_contract_selftest PRIVATE m pthread)
 add_executable(a32_texture_upload_contract_selftest
   ${CMAKE_CURRENT_LIST_DIR}/texture_upload_contract_main.cpp
 )

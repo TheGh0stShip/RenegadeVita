@@ -21,6 +21,7 @@ rv_fast_tests=${RENEGADE_FAST_TESTS:-focused}
 case "$rv_fast_tests" in focused|none) ;; *) echo "Invalid RENEGADE_FAST_TESTS: $rv_fast_tests (expected focused or none)" >&2; exit 2 ;; esac
 
 rv_build=${RENEGADE_FAST_BUILD_DIR:-"$rv_root/build/vita-fast-candidate"}
+rv_host_contract_build=${RENEGADE_FAST_HOST_CONTRACT_BUILD_DIR:-"$rv_root/build/host-a30-definitions-fast"}
 rv_timestamp=$(date +%Y%m%d-%H%M%S)
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
@@ -118,6 +119,14 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_input_route_contract \
 		tools.test_validate_vita_input_route \
 		tools.test_vita_audio_provider
+	echo "Running original DDSFileClass tga-alias executable contract..."
+	cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_host_contract_build" -G Ninja \
+		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+		-DRENEGADE_USE_CCACHE=ON
+	cmake --build "$rv_host_contract_build" \
+		--target a35_ddsfile_tga_alias_contract_selftest \
+		--parallel "$rv_build_jobs"
+	"$rv_host_contract_build/a35_ddsfile_tga_alias_contract_selftest"
 else
 	echo "Focused fast contracts skipped by RENEGADE_FAST_TESTS=none."
 fi
@@ -237,7 +246,7 @@ grep -Fq '"status": "PASS"' "$rv_identity_report"
 	echo "Upstream revision: $rv_revision_actual"
 	echo "Restage mode: ${RENEGADE_FAST_RESTAGE:-0}"
 	echo "Fast tests: $rv_fast_tests"
-	echo "Focused contracts: loading screen, indexed state, skin submission, animation combo guard, conversation diagnostics, camera/input route, audio provider, DDS-first texture boundary"
+	echo "Focused contracts: loading screen, indexed state, skin submission, animation combo guard, conversation diagnostics, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias"
 	echo "VPK contains: eboot.bin and sce_sys/param.sfo only"
 	echo "Runtime log: $rv_runtime_log"
 } > "$rv_build_report"

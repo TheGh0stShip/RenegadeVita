@@ -31,8 +31,8 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text(
             encoding="utf-8"
         )
-        self.assertIn("const unsigned *diffuse_colors = model->Get_DCG_Array(0);", renderer)
-        self.assertIn("model->Peek_Material(static_cast<int>(vertex_index), 0)", renderer)
+        self.assertIn("const unsigned *diffuse_colors = model->Get_DCG_Array(pass);", renderer)
+        self.assertIn("model->Peek_Material(static_cast<int>(vertex_index), pass)", renderer)
         self.assertIn("material->Get_Diffuse(&diffuse);", renderer)
         self.assertNotIn("0.35f + 0.35f * (normal.X + 1.0f)", renderer)
 

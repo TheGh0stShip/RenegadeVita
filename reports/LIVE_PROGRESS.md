@@ -1,5 +1,42 @@
 # Live engineering progress
 
+## 2026-08-28 — dev57 direct mesh base-pass replay
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: the direct Vita `MeshClass` submitter now replays every
+  original base material pass instead of drawing only pass 0. Each pass reads
+  its own stage-0 texture, shader, UV array, DCG colors, and vertex material
+  from `MeshModelClass`, while the existing geometry fingerprint counters
+  remain stable for host regression checks.
+- Runtime purpose: retail lightmap/detail/emissive/shiny-mask material data
+  that survived W3D load under original ownership now reaches the Vita draw
+  boundary as pass-specific work instead of being silently skipped. Stage-1
+  multitexture remains a bounded renderer gap.
+- Validation: focused texture surface/provenance/loading/indexed-state
+  contracts passed 24/24. The fast no-deploy candidate passed the expanded
+  52-test focused gate, the original `DDSFileClass` `.tga`-to-`.dds`
+  executable contract 11/11, and package identity/hash checks. The full
+  no-deploy canonical build passed retained host-validation reuse,
+  deterministic restaging, source integration reporting, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev57.vpk` SHA-256 is
+  `b318946facbd3a732ae8bc314965985d7aebb918d09f15ea38df38a222165d90`;
+  ELF SHA-256 is
+  `176fc44a0139e59492c25ab1f54710290f3676b27bbb503efab51ec6b0bdb597`.
+- Boundary: dev57 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev57, verify
+  audible Logan dialogue, message/dialog text, and material/texture appearance,
+  then inspect `ux0:data/renegade/user/logs/a35-dev57-runtime.log`, especially
+  `texture loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`,
+  `unsupported_stages`, `speech=`, and `stream_mix` if dialogue is still
+  inaudible or materials remain incorrect.
+
 ## 2026-08-28 — dev56 DDS retained surface levels
 
 `[██████████] 12/12 canonical source/build gates complete`

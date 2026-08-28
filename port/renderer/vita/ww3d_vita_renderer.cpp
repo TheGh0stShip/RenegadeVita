@@ -930,6 +930,8 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		g_statistics.deformed_skin_vertices += static_cast<uint32_t>(vertex_count);
 	}
 
+	const int pass_count = model->Get_Pass_Count();
+	const int base_pass_count = pass_count > 0 ? pass_count : 1;
 	++g_statistics.mesh_submissions;
 	g_statistics.vertex_submissions += static_cast<uint32_t>(vertex_count);
 	g_statistics.triangle_submissions += static_cast<uint32_t>(triangle_count);
@@ -937,9 +939,8 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		static_cast<uint32_t>(vertex_count));
 	g_statistics.geometry_checksum = Mix_Checksum(g_statistics.geometry_checksum,
 		static_cast<uint32_t>(triangle_count));
-	const int pass_count = model->Get_Pass_Count();
 	g_statistics.material_passes +=
-		static_cast<uint64_t>(pass_count > 0 ? pass_count : 1);
+		static_cast<uint64_t>(base_pass_count);
 
 #if !defined(__vita__)
 	// The host target has no Vita framebuffer, but it must still execute the
@@ -947,13 +948,15 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	// This validates archive lookup, DDS decode, upload representation, bind
 	// ownership, and repeat lifecycle teardown rather than mistaking a
 	// geometry-only headless frame for a textured-frame proof.
-	TextureClass *bound_texture = NULL;
-	for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
-		TextureClass *texture = model->Peek_Texture(triangle_index, 0, 0);
-		if (texture != bound_texture) {
-			bound_texture = texture;
-			if (bound_texture != NULL) bound_texture->Apply_For_Platform_Boundary(0U);
-			else Bind_Texture(0U, false);
+	for (int pass = 0; pass < base_pass_count; ++pass) {
+		TextureClass *bound_texture = NULL;
+		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
+			TextureClass *texture = model->Peek_Texture(triangle_index, pass, 0);
+			if (texture != bound_texture) {
+				bound_texture = texture;
+				if (bound_texture != NULL) bound_texture->Apply_For_Platform_Boundary(0U);
+				else Bind_Texture(0U, false);
+			}
 		}
 	}
 #endif
@@ -988,117 +991,121 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(transform_matrices.modelview);
 	g_statistics.state_changes += 4U;
-	const Vector2 *uvs = model->Get_UV_Array(0, 0);
-	const unsigned *diffuse_colors = model->Get_DCG_Array(0);
 	TextureClass *first_texture = model->Peek_Texture(0, 0, 0);
 	if (!g_logged_first_mesh) {
 		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
-			"first original MeshClass submission entry: vertices=%d triangles=%d",
-			vertex_count, triangle_count);
+			"first original MeshClass submission entry: vertices=%d triangles=%d passes=%d",
+			vertex_count, triangle_count, base_pass_count);
 	}
 	if (is_skin && !g_logged_first_skin) {
 		Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
 			"first original deformed skin submission: mesh=%s vertices=%d triangles=%d passes=%d texture=%s uv=%d dcg=%d world=identity",
 			mesh.Get_Name(), vertex_count, triangle_count, pass_count,
 			first_texture != NULL ? first_texture->Get_Texture_Name().Peek_Buffer() : "none",
-			uvs != NULL ? 1 : 0, diffuse_colors != NULL ? 1 : 0);
+			model->Get_UV_Array(0, 0) != NULL ? 1 : 0,
+			model->Get_DCG_Array(0) != NULL ? 1 : 0);
 		g_logged_first_skin = true;
 	}
-	TextureClass *bound_texture = NULL;
-	unsigned current_shader_bits = 0xffffffffU;
-	bool primitive_open = false;
-	for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
-		TextureClass *triangle_texture = model->Peek_Texture(triangle_index, 0, 0);
-		const ShaderClass triangle_shader = model->Get_Shader(triangle_index, 0);
-		const unsigned triangle_shader_bits = triangle_shader.Get_Bits();
-		if (triangle_texture != bound_texture ||
-			triangle_shader_bits != current_shader_bits || !primitive_open) {
-			if (primitive_open) glEnd();
-			bound_texture = triangle_texture;
-			current_shader_bits = triangle_shader_bits;
-			// ShaderClass remains the authoritative original material policy.
-			// Translate only the fixed-function state VitaGL exposes here; this
-			// preserves alpha-cutout, conventional transparency and additive fire.
-			Apply_Original_Shader_State(triangle_shader);
-			if (bound_texture != NULL) {
-				// Retain TextureClass as the resource/lifetime owner and invoke its
-				// original filter, mip, wrap, and bind sequence through the narrow
-				// platform bridge.
-				bound_texture->Apply_For_Platform_Boundary(0U);
-			} else {
-				Bind_Texture(0U, false);
-			}
-			glBegin(GL_TRIANGLES);
-			primitive_open = true;
-		}
-		const TriIndex &triangle = triangles[triangle_index];
-		unsigned vertex_indices[3] = {
-			static_cast<unsigned>(vertex_count), static_cast<unsigned>(vertex_count),
-			static_cast<unsigned>(vertex_count)
-		};
-		for (int corner = 0; corner < 3; ++corner) {
-			const unsigned vertex_index = triangle[corner];
-			if (vertex_index >= static_cast<unsigned>(vertex_count)) {
-				vertex_indices[corner] = static_cast<unsigned>(vertex_count);
-				break;
-			}
-			vertex_indices[corner] = vertex_index;
-		}
-		if (vertex_indices[0] >= static_cast<unsigned>(vertex_count) ||
-			vertex_indices[1] >= static_cast<unsigned>(vertex_count) ||
-			vertex_indices[2] >= static_cast<unsigned>(vertex_count)) {
-			continue;
-		}
-		for (int corner = 0; corner < 3; ++corner) {
-			const unsigned vertex_index = vertex_indices[corner];
-			if (uvs != NULL && bound_texture != NULL) {
-				glTexCoord2f(uvs[vertex_index].X, uvs[vertex_index].Y);
-			}
-			/* Preserve the original mesh material color owner.  The former Vita
-			** bridge invented RGB from each normal, visibly recoloring otherwise
-			** valid NPC skin textures.  DCG is D3D ARGB; when no per-vertex DCG
-			** exists, the pass-0 VertexMaterial diffuse/opacity is authoritative. */
-			if (diffuse_colors != NULL) {
-				const unsigned diffuse = diffuse_colors[vertex_index];
-				glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
-					static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
-					static_cast<GLubyte>(diffuse & 0xffU),
-					static_cast<GLubyte>((diffuse >> 24U) & 0xffU));
-			} else {
-				VertexMaterialClass *material =
-					model->Peek_Material(static_cast<int>(vertex_index), 0);
-				Vector3 diffuse(1.0f, 1.0f, 1.0f);
-				Vector3 ambient(0.0f, 0.0f, 0.0f);
-				Vector3 emissive(0.0f, 0.0f, 0.0f);
-				float opacity = 1.0f;
-				if (material != NULL) {
-					material->Get_Diffuse(&diffuse);
-					material->Get_Ambient(&ambient);
-					material->Get_Emissive(&emissive);
-					opacity = material->Get_Opacity();
+	for (int pass = 0; pass < base_pass_count; ++pass) {
+		const Vector2 *uvs = model->Get_UV_Array(pass, 0);
+		const unsigned *diffuse_colors = model->Get_DCG_Array(pass);
+		TextureClass *bound_texture = NULL;
+		unsigned current_shader_bits = 0xffffffffU;
+		bool primitive_open = false;
+		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
+			TextureClass *triangle_texture = model->Peek_Texture(triangle_index, pass, 0);
+			const ShaderClass triangle_shader = model->Get_Shader(triangle_index, pass);
+			const unsigned triangle_shader_bits = triangle_shader.Get_Bits();
+			if (triangle_texture != bound_texture ||
+				triangle_shader_bits != current_shader_bits || !primitive_open) {
+				if (primitive_open) glEnd();
+				bound_texture = triangle_texture;
+				current_shader_bits = triangle_shader_bits;
+				// ShaderClass remains the authoritative original material policy.
+				// Translate only the fixed-function state VitaGL exposes here; this
+				// preserves alpha-cutout, conventional transparency and additive fire.
+				Apply_Original_Shader_State(triangle_shader);
+				if (bound_texture != NULL) {
+					// Retain TextureClass as the resource/lifetime owner and invoke its
+					// original filter, mip, wrap, and bind sequence through the narrow
+					// platform bridge.
+					bound_texture->Apply_For_Platform_Boundary(0U);
+				} else {
+					Bind_Texture(0U, false);
 				}
-				if (!is_skin && bound_texture != NULL && Is_Near_Black(diffuse)) {
-					Vector3 fallback = Max_Color(ambient, emissive);
-					if (Is_Near_Black(fallback)) {
-						/* Original DX8 lighting would combine scene/material
-						** state before texture modulation. Until that full
-						** lighting path is represented in vitaGL, keep
-						** textured static surfaces visible rather than
-						** multiplying valid retail textures by black. */
-						fallback = Vector3(1.0f, 1.0f, 1.0f);
+				glBegin(GL_TRIANGLES);
+				primitive_open = true;
+			}
+			const TriIndex &triangle = triangles[triangle_index];
+			unsigned vertex_indices[3] = {
+				static_cast<unsigned>(vertex_count), static_cast<unsigned>(vertex_count),
+				static_cast<unsigned>(vertex_count)
+			};
+			for (int corner = 0; corner < 3; ++corner) {
+				const unsigned vertex_index = triangle[corner];
+				if (vertex_index >= static_cast<unsigned>(vertex_count)) {
+					vertex_indices[corner] = static_cast<unsigned>(vertex_count);
+					break;
+				}
+				vertex_indices[corner] = vertex_index;
+			}
+			if (vertex_indices[0] >= static_cast<unsigned>(vertex_count) ||
+				vertex_indices[1] >= static_cast<unsigned>(vertex_count) ||
+				vertex_indices[2] >= static_cast<unsigned>(vertex_count)) {
+				continue;
+			}
+			for (int corner = 0; corner < 3; ++corner) {
+				const unsigned vertex_index = vertex_indices[corner];
+				if (uvs != NULL && bound_texture != NULL) {
+					glTexCoord2f(uvs[vertex_index].X, uvs[vertex_index].Y);
+				}
+				/* Preserve the original mesh material color owner.  The former Vita
+				** bridge invented RGB from each normal, visibly recoloring otherwise
+				** valid NPC skin textures.  DCG is D3D ARGB; when no per-vertex DCG
+				** exists, the current pass VertexMaterial diffuse/opacity is
+				** authoritative. */
+				if (diffuse_colors != NULL) {
+					const unsigned diffuse = diffuse_colors[vertex_index];
+					glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
+						static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
+						static_cast<GLubyte>(diffuse & 0xffU),
+						static_cast<GLubyte>((diffuse >> 24U) & 0xffU));
+				} else {
+					VertexMaterialClass *material =
+						model->Peek_Material(static_cast<int>(vertex_index), pass);
+					Vector3 diffuse(1.0f, 1.0f, 1.0f);
+					Vector3 ambient(0.0f, 0.0f, 0.0f);
+					Vector3 emissive(0.0f, 0.0f, 0.0f);
+					float opacity = 1.0f;
+					if (material != NULL) {
+						material->Get_Diffuse(&diffuse);
+						material->Get_Ambient(&ambient);
+						material->Get_Emissive(&emissive);
+						opacity = material->Get_Opacity();
 					}
-					Log_Static_Material_Fallback(mesh, bound_texture, material,
-						triangle_shader, diffuse, ambient, emissive, fallback, opacity);
-					diffuse = fallback;
+					if (!is_skin && bound_texture != NULL && Is_Near_Black(diffuse)) {
+						Vector3 fallback = Max_Color(ambient, emissive);
+						if (Is_Near_Black(fallback)) {
+							/* Original DX8 lighting would combine scene/material
+							** state before texture modulation. Until that full
+							** lighting path is represented in vitaGL, keep
+							** textured static surfaces visible rather than
+							** multiplying valid retail textures by black. */
+							fallback = Vector3(1.0f, 1.0f, 1.0f);
+						}
+						Log_Static_Material_Fallback(mesh, bound_texture, material,
+							triangle_shader, diffuse, ambient, emissive, fallback, opacity);
+						diffuse = fallback;
+					}
+					glColor4f(Clamp01(diffuse.X), Clamp01(diffuse.Y),
+						Clamp01(diffuse.Z), Clamp01(opacity));
 				}
-				glColor4f(Clamp01(diffuse.X), Clamp01(diffuse.Y),
-					Clamp01(diffuse.Z), Clamp01(opacity));
+				glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
+					vertices[vertex_index].Z);
 			}
-			glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
-				vertices[vertex_index].Z);
 		}
+		if (primitive_open) glEnd();
 	}
-	if (primitive_open) glEnd();
 	// Submit_Indexed_Triangles may be used later in the same frame by HUD or
 	// native DX8 boundary callers. Restore its explicit identity baseline only
 	// after this homogeneous mesh submission is complete.

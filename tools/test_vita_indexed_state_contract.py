@@ -47,6 +47,22 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("material->Get_Emissive(&emissive);", renderer)
         self.assertIn("fallback = Vector3(1.0f, 1.0f, 1.0f);", renderer)
 
+    def test_direct_mesh_submit_renders_original_base_passes(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        function = renderer[
+            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
+        ]
+        self.assertIn("const int base_pass_count = pass_count > 0 ? pass_count : 1;", function)
+        self.assertIn("for (int pass = 0; pass < base_pass_count; ++pass)", function)
+        self.assertIn("model->Peek_Texture(triangle_index, pass, 0)", function)
+        self.assertIn("model->Get_Shader(triangle_index, pass)", function)
+        self.assertIn("model->Get_UV_Array(pass, 0)", function)
+        self.assertIn("model->Get_DCG_Array(pass)", function)
+        self.assertIn("model->Peek_Material(static_cast<int>(vertex_index), pass)", function)
+        self.assertNotIn("model->Peek_Texture(triangle_index, 0, 0)", function)
+        self.assertNotIn("model->Get_Shader(triangle_index, 0)", function)
+
     def test_capture_state_uses_global_texture_statistics(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
         self.assertIn("void Copy_Renderer_Statistics(A31RendererTelemetry &telemetry)", runtime)

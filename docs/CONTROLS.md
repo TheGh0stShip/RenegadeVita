@@ -23,8 +23,8 @@ Current A3.5-dev82 mapping:
 
 Notes:
 
-- D-pad buttons still emit virtual keys for UI navigation, but no longer drive
-  gameplay movement.
+- D-pad navigates the original WWUI focus while the frontend menu loop is
+  active; during gameplay it remains bound to weapon switching and sniper zoom.
 - Square and Circle are no longer both reload. Circle is crouch/back; Square
   is reload.
 - D-pad Left/Right must not emit gameplay camera turn while changing weapons.

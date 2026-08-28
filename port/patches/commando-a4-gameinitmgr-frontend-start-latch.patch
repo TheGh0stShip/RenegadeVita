@@ -1,0 +1,24 @@
+--- a/gameinitmgr.cpp
++++ b/gameinitmgr.cpp
+@@ -78,6 +78,9 @@
+ // GameSpy QnR is supplied by a4_gameinit_online_boundary.h.
+ #include "specialbuilds.h"
+ #include "modpackagemgr.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
++#include "a4_frontend_lifecycle_boundary.h"
++#endif
+ 
+ #include "translatedb.h"
+ #include "damage.h"
+@@ -132,4 +135,10 @@
+ 	WWASSERT(map_name != NULL);
+-   WWDEBUG_SAY (("GameInitMgrClass::Start_Game(%s)\n", map_name));
++   WWDEBUG_SAY (("GameInitMgrClass::Start_Game(%s)\n", map_name));
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
++	if (A4_Frontend_Latch_Start_Game(map_name, teamChoice, clanID)) {
++		return ;
++	}
++#endif
++
+ 	// NOTE: Multi-play does not need this fix because it does not sound page swap.

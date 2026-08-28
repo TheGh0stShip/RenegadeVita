@@ -18,6 +18,11 @@ prewarm, HUD/text display, dialogue subtitles, controls, reload/sniper
 behavior, character/door/powerup/objective texture orientation, original
 CombatGameMode finalization, transition diagnostics, and renderer state churn.
 
+Dev82 also source-routes the original startup movie and retail main-menu owners.
+Its Vita movie boundary uses a reproducible, Bink-only FFmpeg software build to
+decode the user-owned `EA_WW.BIK` and `R_INTRO.BIK` files in place; neither
+retail movies nor proprietary RAD code are included in the repository or VPK.
+
 The latest accepted physical baseline is **A3.1.4**, which proves visible
 interactive M00 lifecycle. Later A3.5 builds are internal candidates until the
 matching VPK, logs, and physical Vita observations pass their gates.

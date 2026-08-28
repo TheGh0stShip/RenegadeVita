@@ -1,9 +1,8 @@
 #pragma once
 
-// Original movie ownership remains above this boundary. Vita has no Bink
-// decoder in this milestone, so the platform implementation completes any
-// requested playback and lets the original state machine continue to its
-// authentic MainMenu route.
+// Original movie ownership remains above this boundary. The Vita provider
+// decodes retail Bink streams through the pinned FFmpeg build. Missing or
+// invalid files still complete cleanly into the authentic MainMenu route.
 class FontCharsClass;
 
 class BINKMovie

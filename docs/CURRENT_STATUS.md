@@ -11,19 +11,20 @@ lifecycle, interactive player/camera ownership, and clean exit.
 ## Current Candidate
 
 **A3.5-dev82** is the current hardware-test candidate. It has a successful
-canonical build and has been uploaded by user-authorized VitaShell FTP, but it
-is not an accepted milestone until device observations and returned logs match.
+canonical build with the retail frontend worker integrated and a real Vita
+FFmpeg Bink playback boundary wired below the original movie owner. It is not
+an accepted milestone until device observations and returned logs match.
 
 Candidate VPK:
 
 ```text
-RenegadeVita-A3.5-dev82.vpk
+/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev82.vpk
 ```
 
 VPK SHA-256:
 
 ```text
-0bd150942a13e39a84277449637e2ca7ce9a5ccce4329dcd2b05695fb4a24750
+2f669e9e1fcfb86dc24bf81a477cac579ddc0d7b6ea35e08a19564459cc3b33f
 ```
 
 Runtime log:
@@ -34,6 +35,11 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 
 ## What Dev82 Targets
 
+- Original retail frontend path: startup movie owner, WWUI main menu, controller
+  menu navigation, and Tutorial selection handoff into the existing direct M00
+  route.
+- Retail intro movie playback: Vita FFmpeg Bink video/audio decode without RAD
+  code and without packaging retail movie assets in the VPK.
 - Loading screen coverage, status text, and progress through the original
   one-bar path, including renderer/cache prewarm.
 - HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
@@ -52,6 +58,9 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 
 ## Still Open Until Physical Evidence Returns
 
+- Whether EA/Renegade/Westwood intro movies play, sync, and skip correctly on
+  hardware.
+- Whether original WWUI menu navigation works and Tutorial launches M00.
 - Whether the loading screen is visually correct and fullscreen on the Vita
   panel.
 - Whether Logan, Sydney, and Gunner subtitles/text appear in the original path.
@@ -71,8 +80,8 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 ## Useful Evidence To Return
 
 - Runtime log from `ux0:data/renegade/user/logs/a35-dev82-runtime.log`.
-- Any screenshots showing loading screen, Logan text, NPC/Havoc materials, HUD,
-  gate state, and freeze point.
+- Any screenshots showing intro/menu state, loading screen, Logan text,
+  NPC/Havoc materials, HUD, gate state, and freeze point.
 - Any `psp2core-*.psp2dmp` if the app crashes or the system captures a dump.
 - Whether D-pad Left/Right switch weapons without camera drift, D-pad Up/Down
   zoom the sniper scope, Square reloads with animation, and Triangle interacts

@@ -258,6 +258,7 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 	//
 	// Display the server info screen
 	//
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	if (!IS_MISSION && Input::Get_State( INPUT_FUNCTION_SERVER_INFO_TOGGLE )) {
 		START_DIALOG (CNCServerInfoDialogClass);
 	}
@@ -337,6 +338,7 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 		p_dialog->Start_Dialog();
 		REF_PTR_RELEASE (p_dialog);
 	}
+#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
 
 	if ( Input::Get_State( INPUT_FUNCTION_QUICKSAVE )) {
 		// Only for singeplay
@@ -362,7 +364,9 @@ void	CombatGameModeClass::Init()
 	//
 	//	Initialize the radio command display window
 	//
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	RadioCommandDisplayClass::Initialize ();
+#endif
 
 	//
 	// Notify combat about the state of the CameraLockedToTurret user option.
@@ -382,7 +386,9 @@ void 	CombatGameModeClass::Shutdown()
 	//
 	//	Shutdown the radio command display window
 	//
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	RadioCommandDisplayClass::Shutdown ();
+#endif
 	return ;
 }
 
@@ -1474,6 +1480,7 @@ void 	CombatGameModeClass::Think()
 #endif // MULTIPLAYERDEMO
 
 
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	if (g_b_core_restart)	{
 		WWPROFILE( "g_b_core_restart" );
 
@@ -1516,6 +1523,7 @@ void 	CombatGameModeClass::Think()
 #endif
 */
 	}
+#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
 
 	// Autosave, after one run throught main loop
 	if ( CombatManager::Is_Autosave_Requested() ) {
@@ -1588,7 +1596,9 @@ void 	CombatGameModeClass::Render()
 	cTeamManager::Render();
 	WWASSERT(PTheGameData != NULL);
 	The_Game()->Render();
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	RadioCommandDisplayClass::Render ();
+#endif
 }
 
 //-----------------------------------------------------------------------------

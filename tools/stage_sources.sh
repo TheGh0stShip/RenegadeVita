@@ -279,10 +279,14 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-gameinitmgr-online-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-gameinitmgr-skirmish-boundary.patch"
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch"
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-combatgmode-wol-boundary.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-movie-vita-provider-boundary.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-combatgmode-wol-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-announceevent-include-case.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -293,10 +297,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-event-portability.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-shared-loadingscreen-owner.patch"
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-combatgmode-vita-load-finalization.patch"
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-loading-status-text.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-combatgmode-vita-load-finalization.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-combatgmode-singleplayer-runtime.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-loading-status-text.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-loading-status-render.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -496,6 +502,8 @@ echo "Applied: port/patches/commando-a4-gameinitmgr-wol-boundary.patch"
 echo "Applied: port/patches/commando-a4-gameinitmgr-online-boundary.patch"
 echo "Applied: port/patches/commando-a4-gameinitmgr-skirmish-boundary.patch"
 echo "Applied: port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch"
+echo "Applied: port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch"
+echo "Applied: port/patches/commando-a4-movie-vita-provider-boundary.patch"
 echo "Applied: port/patches/commando-a4-combatgmode-wol-boundary.patch"
 echo "Applied: port/patches/commando-a4-announceevent-include-case.patch"
 echo "Applied: port/patches/commando-a4-combatgmode-include-case.patch"
@@ -503,6 +511,7 @@ echo "Applied: port/patches/commando-a4-event-gamespy-boundary.patch"
 echo "Applied: port/patches/commando-a4-event-portability.patch"
 echo "Applied: port/patches/commando-a35-shared-loadingscreen-owner.patch"
 echo "Applied: port/patches/commando-a35-combatgmode-vita-load-finalization.patch"
+echo "Applied: port/patches/commando-a4-combatgmode-singleplayer-runtime.patch"
 echo "Applied: port/patches/commando-a35-loading-status-text.patch"
 echo "Applied: port/patches/commando-a35-loading-status-render.patch"
 echo "Applied: port/patches/wwaudio-a30-gcc15.patch"

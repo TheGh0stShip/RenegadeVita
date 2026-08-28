@@ -5,6 +5,7 @@
 
 #include "renegade_file_factory.h"
 #include "a31_interactive_runtime_policy.h"
+#include "a4_frontend_lifecycle_boundary.h"
 
 #include "assetmgr.h"
 #include "campaign.h"
@@ -13,6 +14,8 @@
 #include "definitionfactorymgr.h"
 #include "definitionmgr.h"
 #include "definition.h"
+#include "directinput.h"
+#include "dinput.h"
 #include "networkobjectmgr.h"
 #include "ffactory.h"
 #include "ffactorylist.h"
@@ -50,8 +53,11 @@
 
 #include "a31_console_stub.h"
 #include "dialogmgr.h"
+#include "dialogtests.h"
+#include "dialogresource.h"
 #include "dlgmainmenu.h"
 #include "gamemenu.h"
+#include "movie.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -118,11 +124,17 @@ unsigned Count_Definitions(uint32 class_id)
 	return count;
 }
 
-void Print_Number(const char *name, unsigned value)
-{
-	printf("a31.%s=%u\n", name, value);
-	fflush(stdout);
-}
+	void Print_Number(const char *name, unsigned value)
+	{
+		printf("a31.%s=%u\n", name, value);
+		fflush(stdout);
+	}
+
+	void Print_Text(const char *name, const char *value)
+	{
+		printf("a31.%s=%s\n", name, value != NULL ? value : "");
+		fflush(stdout);
+	}
 
 void Stage(const char *name)
 {
@@ -216,8 +228,8 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 ** than a locally constructed presenter, and restores the former console
 ** state before gameplay setup continues.
 */
-bool Validate_Authentic_Main_Menu_Lifecycle(unsigned *control_count_out,
-	unsigned *render_frames_out, bool *mode_lifecycle_out)
+	bool Validate_Authentic_Main_Menu_Lifecycle(unsigned *control_count_out,
+		unsigned *render_frames_out, bool *mode_lifecycle_out)
 {
 	if (control_count_out != NULL) *control_count_out = 0;
 	if (render_frames_out != NULL) *render_frames_out = 0;
@@ -263,13 +275,135 @@ bool Validate_Authentic_Main_Menu_Lifecycle(unsigned *control_count_out,
 
 	if (control_count_out != NULL) *control_count_out = controls;
 	if (render_frames_out != NULL) *render_frames_out = rendered_frames;
-	if (mode_lifecycle_out != NULL) *mode_lifecycle_out =
-		mode_active && mode_shutdown;
-	return valid;
-}
+		if (mode_lifecycle_out != NULL) *mode_lifecycle_out =
+			mode_active && mode_shutdown;
+		return valid;
+	}
+
+	bool Validate_Frontend_Controller_Navigation(unsigned *control_count_out)
+	{
+		if (control_count_out != NULL) *control_count_out = 0;
+		ConsoleBox.Set_Exclusive(false);
+		RenegadeDialogMgrClass::Initialize();
+		MenuGameModeClass2 menu_mode;
+		GameModeManager::Add(&menu_mode);
+		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_MAIN_MENU);
+
+		MainMenuDialogClass *const menu = MainMenuDialogClass::Get_Instance();
+		DialogControlClass *const initial_focus = DialogMgrClass::Get_Focus();
+		if (control_count_out != NULL && menu != NULL) {
+			*control_count_out = static_cast<unsigned>(menu->Get_Control_Count());
+		}
+
+		A4_Frontend_Reset_Trace();
+		A4_Frontend_Begin_Menu_Loop();
+		A4_Frontend_Set_Test_WWUI_Key_State(VK_DOWN, true);
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+		DialogControlClass *const after_down_focus = DialogMgrClass::Get_Focus();
+		A4_Frontend_Set_Test_WWUI_Key_State(VK_DOWN, false);
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+		A4_Frontend_Set_Test_WWUI_Key_State(VK_UP, true);
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+		DialogControlClass *const after_up_focus = DialogMgrClass::Get_Focus();
+		A4_Frontend_Set_Test_WWUI_Key_State(VK_UP, false);
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+		A4_Frontend_End_Menu_Loop();
+
+		menu_mode.Deactivate();
+		GameModeManager::Safely_Deactivate();
+		GameModeManager::Remove(&menu_mode);
+		RenegadeDialogMgrClass::Shutdown();
+		ConsoleBox.Set_Exclusive(true);
+
+		return menu != NULL && initial_focus != NULL &&
+			after_down_focus != NULL && after_down_focus != initial_focus &&
+			after_up_focus == initial_focus;
+	}
+
+	bool Validate_Frontend_Movie_Provider_Route(unsigned *play_requests_out,
+		unsigned *skip_requests_out, char *last_movie_out, unsigned last_movie_size)
+	{
+		if (play_requests_out != NULL) *play_requests_out = 0;
+		if (skip_requests_out != NULL) *skip_requests_out = 0;
+		if (last_movie_out != NULL && last_movie_size != 0U) last_movie_out[0] = '\0';
+
+		ConsoleBox.Set_Exclusive(false);
+		A4_Frontend_Reset_Trace();
+		A4_Frontend_Begin_Menu_Loop();
+		RenegadeDialogMgrClass::Initialize();
+		MenuGameModeClass2 menu_mode;
+		MovieGameModeClass movie_mode;
+		GameModeManager::Add(&menu_mode);
+		GameModeManager::Add(&movie_mode);
+		movie_mode.Activate();
+		movie_mode.Startup_Movies();
+
+		for (unsigned frame = 0; frame < 4U; ++frame) {
+			GameModeManager::Think();
+			DialogMgrClass::On_Frame_Update();
+		}
+		const A4FrontendTrace trace = A4_Frontend_Get_Trace();
+		if (play_requests_out != NULL) *play_requests_out = trace.movie_play_requests;
+		if (skip_requests_out != NULL) *skip_requests_out = trace.movie_skip_requests;
+		if (last_movie_out != NULL && last_movie_size != 0U) {
+			::strncpy(last_movie_out, trace.last_movie, last_movie_size - 1U);
+			last_movie_out[last_movie_size - 1U] = '\0';
+		}
+
+		const bool valid = trace.movie_play_requests >= 2U &&
+			trace.movie_skip_requests >= 2U &&
+			::strstr(trace.last_movie, "R_INTRO.BIK") != NULL &&
+			MainMenuDialogClass::Get_Instance() != NULL &&
+			DialogMgrClass::Get_Dialog_Count() > 0;
+
+		menu_mode.Deactivate();
+		movie_mode.Deactivate();
+		GameModeManager::Safely_Deactivate();
+		GameModeManager::Remove(&movie_mode);
+		GameModeManager::Remove(&menu_mode);
+		RenegadeDialogMgrClass::Shutdown();
+		A4_Frontend_End_Menu_Loop();
+		ConsoleBox.Set_Exclusive(true);
+		return valid;
+	}
+
+	bool Validate_Frontend_Tutorial_Start_Latch(char *map_out, unsigned map_size)
+	{
+		if (map_out != NULL && map_size != 0U) map_out[0] = '\0';
+		ConsoleBox.Set_Exclusive(false);
+		A4_Frontend_Reset_Trace();
+		A4_Frontend_Begin_Menu_Loop();
+		RenegadeDialogMgrClass::Initialize();
+		MenuGameModeClass2 menu_mode;
+		GameModeManager::Add(&menu_mode);
+
+		StartSPGameDialogClass *dialog = new StartSPGameDialogClass;
+		dialog->Start_Dialog();
+		dialog->On_Command(IDC_MENU_START_TUTORIAL_BUTTON, BN_CLICKED, 0);
+		REF_PTR_RELEASE(dialog);
+
+		const A4FrontendTrace trace = A4_Frontend_Get_Trace();
+		if (map_out != NULL && map_size != 0U) {
+			::strncpy(map_out, trace.tutorial_map, map_size - 1U);
+			map_out[map_size - 1U] = '\0';
+		}
+		const bool valid = trace.tutorial_start_latched &&
+			::strcmp(trace.tutorial_map, "M00_Tutorial.mix") == 0 &&
+			trace.tutorial_team_choice == -1 &&
+			GameModeManager::Find("Combat") != NULL;
+
+		menu_mode.Deactivate();
+		GameModeManager::Safely_Deactivate();
+		GameModeManager::Remove(&menu_mode);
+		RenegadeDialogMgrClass::Shutdown();
+		GameInitMgrClass::Shutdown();
+		A4_Frontend_End_Menu_Loop();
+		ConsoleBox.Set_Exclusive(true);
+		return valid;
+	}
 
 
-} // namespace
+	} // namespace
 
 int main(int argc, char **argv)
 {
@@ -417,12 +551,42 @@ int main(int argc, char **argv)
 			const bool authentic_main_menu_lifecycle =
 				Validate_Authentic_Main_Menu_Lifecycle(&main_menu_control_count,
 					&main_menu_render_frames, &original_menu_mode_lifecycle);
-			Print("frontend_dialog_manager_initialized", authentic_main_menu_lifecycle);
-			Print("frontend_original_menu_mode_lifecycle", original_menu_mode_lifecycle);
-			Print_Number("frontend_mainmenu_original_controls", main_menu_control_count);
-			Print_Number("frontend_mainmenu_original_render_frames", main_menu_render_frames);
-			if (!authentic_main_menu_lifecycle) { passed = false; break; }
-			Stage("gamedata_create");
+				Print("frontend_dialog_manager_initialized", authentic_main_menu_lifecycle);
+				Print("frontend_original_menu_mode_lifecycle", original_menu_mode_lifecycle);
+				Print_Number("frontend_mainmenu_original_controls", main_menu_control_count);
+				Print_Number("frontend_mainmenu_original_render_frames", main_menu_render_frames);
+				if (!authentic_main_menu_lifecycle) { passed = false; break; }
+				Stage("frontend_controller_navigation");
+				unsigned frontend_navigation_controls = 0;
+				const bool frontend_controller_navigation =
+					Validate_Frontend_Controller_Navigation(&frontend_navigation_controls);
+				Print("frontend_controller_navigation_mapping", frontend_controller_navigation);
+				Print_Number("frontend_controller_navigation_controls",
+					frontend_navigation_controls);
+				if (!frontend_controller_navigation) { passed = false; break; }
+				Stage("frontend_movie_provider_route");
+				unsigned frontend_movie_play_requests = 0;
+				unsigned frontend_movie_skip_requests = 0;
+				char frontend_last_movie[160] = {};
+				const bool frontend_movie_route = Validate_Frontend_Movie_Provider_Route(
+					&frontend_movie_play_requests, &frontend_movie_skip_requests,
+					frontend_last_movie, sizeof(frontend_last_movie));
+				Print("frontend_movie_provider_fail_closed", frontend_movie_route);
+				Print_Number("frontend_movie_play_requests",
+					frontend_movie_play_requests);
+				Print_Number("frontend_movie_skip_requests",
+					frontend_movie_skip_requests);
+				Print_Text("frontend_movie_last_request", frontend_last_movie);
+				if (!frontend_movie_route) { passed = false; break; }
+				Stage("frontend_tutorial_start_latch");
+				char frontend_tutorial_map[96] = {};
+				const bool frontend_tutorial_latch =
+					Validate_Frontend_Tutorial_Start_Latch(frontend_tutorial_map,
+						sizeof(frontend_tutorial_map));
+				Print("frontend_tutorial_start_latched", frontend_tutorial_latch);
+				Print_Text("frontend_tutorial_latched_map", frontend_tutorial_map);
+				if (!frontend_tutorial_latch) { passed = false; break; }
+				Stage("gamedata_create");
 			// The original local session owns both WWNet endpoints.  Rendering/UI
 			// one-time setup remains under the existing Vita presentation path.
 			cServerFps::Create_Instance();

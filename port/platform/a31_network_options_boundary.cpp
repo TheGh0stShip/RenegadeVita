@@ -6,7 +6,9 @@
 
 #include "bandwidth.h"
 #include "bandwidthgraph.h"
+#include "console.h"
 #include "devoptions.h"
+#include "diagnostics.h"
 #include "useroptions.h"
 
 namespace {
@@ -71,3 +73,16 @@ ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM type)
 // The graph's desktop renderer is intentionally not linked.  cNetwork still
 // preserves the original scale selection as state for later Vita diagnostics.
 int cBandwidthGraph::BandwidthScaler = kLanBaselineBps;
+
+void cBandwidthGraph::Onetime_Init(void) {}
+void cBandwidthGraph::Onetime_Shutdown(void) {}
+void cBandwidthGraph::Think(void) {}
+void cBandwidthGraph::Render(void) {}
+
+// These desktop-only overlays remain inactive in the Vita single-player
+// frontend, while their original callers continue to query the owners.
+ConsoleGameModeClass *ConsoleGameModeClass::Instance = NULL;
+
+void cDiagnostics::Init(void) {}
+void cDiagnostics::Close(void) {}
+void cDiagnostics::Render(void) {}

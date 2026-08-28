@@ -3,30 +3,36 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current candidate: **A3.5-dev82 M00 tutorial full-correction physical-test
-build**. It keeps the dev48-dev81 audio/dialogue/texture/material/render-state
-chain and targets the latest physical defects by moving direct M00 load
-completion back through original `CombatGameModeClass` finalization, rendering
-loading-screen text/progress, using one progress stream for loading and
-prewarm, setting a persistent Vita shader-cache path, synchronizing HUD/loading
-viewports, preserving top-down retail DDS rows for gameplay textures, tightening
-HUD/subtitle/sniper presentation, adding visible reload motion, and applying
-the requested controls: Triangle action/use, Square reload, D-pad Left/Right
-weapon-only switching, D-pad Up/Down sniper zoom, and no shoulder remap. It has
-a full canonical build; acceptance still depends on returned Vita evidence.
+Current candidate: **A3.5-dev82 M00 tutorial plus retail frontend/Bink
+physical-test build**. It keeps the dev48-dev81
+audio/dialogue/texture/material/render-state chain and targets the latest
+physical defects by moving direct M00 load completion back through original
+`CombatGameModeClass` finalization, rendering loading-screen text/progress,
+using one progress stream for loading and prewarm, setting a persistent Vita
+shader-cache path, synchronizing HUD/loading viewports, preserving top-down
+retail DDS rows for gameplay textures, tightening HUD/subtitle/sniper
+presentation, adding visible reload motion, and applying the requested
+controls: Triangle action/use, Square reload, D-pad Left/Right weapon-only
+switching, D-pad Up/Down sniper zoom, and no shoulder remap. It also integrates
+the external `feature/a35-dev82-retail-frontend` worker and replaces that
+branch's fail-closed Bink stub with Vita FFmpeg Bink video/audio playback below
+the original movie owner. It has a full canonical build; acceptance still
+depends on returned Vita evidence.
 
-Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-28 with 99
-host unittest checks, deterministic staging, source integration checks,
-DDS/TGA alias 11/11, lightweight render-state 13/13, ARM link/package,
-identity, compressed VPK validation, diagnostics bundle, SHA manifest, and
-retail exclusion. The source report records 455 original Westwood translation
-units plus one staged original-owner extraction, 27 Vita
-platform/renderer/validation/developer files, 52 compatibility headers, and
-127 deterministic staging patches. The VPK SHA-256 is
-`0bd150942a13e39a84277449637e2ca7ce9a5ccce4329dcd2b05695fb4a24750`. On user
-request, the VPK was uploaded by VitaShell FTP to
-`ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk`; no retail data was
-transferred.
+Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-28 in
+`logs/a35-dev82-20260828-163207-build.log` with 104 host unittest checks,
+deterministic staging, source integration checks, DDS/TGA alias 11/11,
+lightweight render-state 13/13, ARM link/package, identity, compressed VPK
+validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
+Bink symbols. The source report records 506 original Westwood translation units
+plus one staged original-owner extraction, 26 Vita
+platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
+files, 52 compatibility headers, and 130 active deterministic staging patches.
+The VPK SHA-256 is
+`2f669e9e1fcfb86dc24bf81a477cac579ddc0d7b6ea35e08a19564459cc3b33f`. This
+newest frontend+Bink candidate has not been uploaded to the Vita; an earlier
+pre-frontend/Bink dev82 VPK was uploaded on request and should not be treated
+as the latest artifact.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

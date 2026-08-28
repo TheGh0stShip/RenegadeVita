@@ -21,6 +21,13 @@ The script checks:
 - VPK contents, confirming no retail assets are packaged;
 - candidate diagnostics and SHA-256 manifests.
 
+The first build also downloads the pinned FFmpeg source archive and builds a
+small Vita static dependency containing only the Bink demuxer, Bink video and
+Bink audio decoders, scaling, and resampling support. The archive checksum and
+configure flags are fixed in `tools/build_ffmpeg_bink_vita.sh`; later builds
+reuse the stamped local installation under `build/deps/ffmpeg-bink-vita/`.
+No RAD Game Tools code or retail movie is downloaded or packaged.
+
 ## Fast Iteration
 
 Use the fast builder only for local iteration:
@@ -44,6 +51,8 @@ handing a VPK to a physical tester.
 - `RENEGADE_RETAIL_ROOT`: host retail Renegade root used by host validation.
 - `RENEGADE_REUSE_HOST_VALIDATION_LOG`: explicit retained host-validation log
   when host retail data is unavailable.
+- `RENEGADE_SOURCE_CACHE`: optional directory for the pinned FFmpeg source
+  archive. It defaults to the managed builder source cache.
 
 ## Outputs
 

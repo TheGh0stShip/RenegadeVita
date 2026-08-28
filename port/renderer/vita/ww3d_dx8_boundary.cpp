@@ -6,10 +6,12 @@
 #include "dx8wrapper.h"
 #include "ww3d_vita_renderer.h"
 #include "ddsfile.h"
+#include "dx8rendererdebugger.h"
 #include "D3dx8core.h"
 #include "formconv.h"
 #include "mapper.h"
 #include "render2d.h"
+#include "sortingrenderer.h"
 #include "texture.h"
 #include "texture_upload_contract.h"
 #include "targa.h"
@@ -25,6 +27,18 @@
 #include "vita_runtime_log.h"
 #include <vitaGL.h>
 #endif
+
+bool DX8Wrapper::_EnableTriangleDraw = true;
+bool SortingRendererClass::_EnableTriangleDraw = true;
+bool DX8RendererDebugger::Enabled = false;
+
+void DX8RendererDebugger::Enable(bool enable) { Enabled = enable; }
+void DX8RendererDebugger::Get_String(StringClass &) {}
+void DX8RendererDebugger::Update() {}
+void DX8RendererDebugger::Disable_Mesh(unsigned) {}
+void DX8RendererDebugger::Enable_Mesh(unsigned) {}
+void DX8RendererDebugger::Disable_All() {}
+void DX8RendererDebugger::Enable_All() {}
 
 namespace {
 

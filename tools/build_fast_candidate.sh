@@ -66,7 +66,7 @@ echo "Fast scope: $rv_fast_scope"
 echo "Fast tests: $rv_fast_tests"
 echo "Scope: hardware-testable iteration only; this does not replace tools/build.sh canonical acceptance."
 
-for rv_command in cmake ninja python3 git unzip sha256sum grep find tee wc ccache; do
+for rv_command in cmake ninja python3 git unzip sha256sum grep find tee wc ccache curl tar make; do
 	require_command "$rv_command"
 done
 for rv_sdk_path in \
@@ -85,6 +85,9 @@ done
 export VITASDK="$rv_vitasdk"
 export CCACHE_DIR="$rv_root/build/ccache"
 export CCACHE_BASEDIR="$rv_root"
+
+echo "Verifying the pinned Bink-enabled Vita FFmpeg dependency..."
+bash "$rv_root/tools/build_ffmpeg_bink_vita.sh"
 
 rv_upstream="$rv_root/upstream/CnC_Renegade"
 test -d "$rv_upstream/.git"
@@ -117,6 +120,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_mission_conversation_diagnostics_contract \
 		tools.test_vita_texture_provenance_contract \
 		tools.test_vita_texture_surface_contract \
+		tools.test_a4_original_frontend_contract \
 		tools.test_vita_camera_input_contract \
 		tools.test_input_route_contract \
 		tools.test_validate_vita_input_route \
@@ -177,6 +181,15 @@ done <<'EOF'
 A31_Vita_Run_Interactive_Runtime()
 CombatManager::Load_Level_Threaded(char const*, bool)
 CombatGameModeClass::Vita_Finalize_Loaded_Level(void*, bool)
+RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOCATION)
+MainMenuDialogClass::Display()
+StartSPGameDialogClass::On_Command(int, int, unsigned long)
+MenuGameModeClass2::Init()
+MovieGameModeClass::Startup_Movies()
+MovieGameModeClass::Start_Movie(char const*)
+BINKMovie::Play(char const*, char const*, FontCharsClass*)
+A4_Frontend_Latch_Start_Game(char const*, int, unsigned long)
+A4_Frontend_Pump_WWUI_Key_Transitions()
 WW3D::Render(SceneClass*
 MeshClass::Render(RenderInfoClass&)
 RenegadeVitaRenderer::Submit_Mesh(MeshClass&, RenderInfoClass&)
@@ -250,7 +263,7 @@ grep -Fq '"status": "PASS"' "$rv_identity_report"
 	echo "Upstream revision: $rv_revision_actual"
 	echo "Restage mode: ${RENEGADE_FAST_RESTAGE:-0}"
 	echo "Fast tests: $rv_fast_tests"
-	echo "Focused contracts: loading screen, CombatGameMode load-finalization, shader cache/prewarm, indexed state, direct mesh base-pass replay, stage-1 multitexture boundary, streamed-dialogue fact/duration runtime metadata, skin submission, animation combo guard, conversation diagnostics, texture provenance, texture surface copy/upload ownership, retail DDS top-down upload ownership, DDS retained surface levels, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias"
+	echo "Focused contracts: loading screen, CombatGameMode load-finalization, shader cache/prewarm, indexed state, direct mesh base-pass replay, stage-1 multitexture boundary, streamed-dialogue fact/duration runtime metadata, skin submission, animation combo guard, conversation diagnostics, texture provenance, texture surface copy/upload ownership, retail DDS top-down upload ownership, DDS retained surface levels, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias, original Commando frontend source/movie/menu/tutorial route"
 	echo "VPK contains: eboot.bin and sce_sys/param.sfo only"
 	echo "Runtime log: $rv_runtime_log"
 } > "$rv_build_report"

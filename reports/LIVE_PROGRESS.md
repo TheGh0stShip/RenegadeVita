@@ -1,5 +1,61 @@
 # Live engineering progress
 
+## 2026-08-28 — dev68 original material mapper texture-coordinate state
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: the direct Vita `MeshClass` submit path now groups base
+  material submissions by original `VertexMaterialClass` as well as texture and
+  shader state, then replays original per-stage texture-coordinate state before
+  binding textures. If an original material has a `TextureMapperClass`, dev68
+  calls its `Apply()` path; otherwise it restores the original default
+  `D3DTSS_TEXCOORDINDEX` pass-through UV source and disabled texture transform
+  state. The direct emitter now also selects the texture-coordinate arrays by
+  that original material UV source instead of assuming stage index equals UV
+  array index.
+- Vita DX8 boundary: `D3DTSS_TEXCOORDINDEX` and
+  `D3DTSS_TEXTURETRANSFORMFLAGS` are now retained as supported sampler-stage
+  state, and texture-stage transforms are applied through the Vita texture
+  matrix path when `D3DTS_TEXTURE0+n` or transform flags change. This preserves
+  original mapper/default UV ownership below WW3D instead of baking a new
+  renderer-side interpretation.
+- Runtime purpose: the next material/texture hardware log can determine whether
+  remaining pink/black or mis-mapped surfaces are caused by missing retail
+  texture loads, fallback binds, or previously skipped original mapper/UV
+  stage state and UV-array selection.
+- Validation: focused indexed texture-state, texture provenance,
+  mission-conversation diagnostics, and Vita audio-provider contracts passed
+  26/26. The fast no-deploy candidate passed 57 focused tests, the original
+  `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, package identity
+  checks, and VPK packaging. The full canonical no-deploy build passed retained
+  host-validation reuse, 73 host unittest checks, deterministic restaging,
+  source integration reporting, ARM link/package, compressed VPK validation,
+  identity verification, diagnostics bundle generation, SHA manifest
+  verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic patch files covering 238 mechanically patched staged
+  upstream paths, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev68.vpk` SHA-256 is
+  `bccfb2e4ef99b5246331b3bb4d6c09e46364c314eedfc19b98c9fe0e236b80d8`;
+  ELF SHA-256 is
+  `47248ea91ecf177fe7ad38ed3373d4b68c4a628b71aaf4081b2a60db16c88c7a`;
+  diagnostics bundle SHA-256 is
+  `4a5707300a4b072cf10609dbf279de68ad44d2be529a423a7eb93875492e6883`.
+- Boundary: dev68 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev68, verify Logan
+  audible dialogue and timing, dialog/message text, material/texture
+  appearance, and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev68-runtime.log`, especially
+  `output_stream`, `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, fact/estimate/untrimmed/trimmed
+  values, conversation state, `texture loaded`, `loaded_dds/tga`,
+  `checker_bind`, `invalid_bind`, `unsupported_stages`, and the new
+  `first original VertexMaterial mapper` breadcrumb if dialogue remains silent
+  or materials remain incorrect.
+
 ## 2026-08-28 — dev67 null texture stage-disable semantics
 
 `[██████████] 12/12 canonical source/build gates complete`

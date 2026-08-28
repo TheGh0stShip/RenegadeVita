@@ -2,6 +2,7 @@
 
 #include "camera.h"
 #include "d3d8.h"
+#include "dx8wrapper.h"
 #include "mesh.h"
 #include "meshmatdesc.h"
 #include "meshmdl.h"
@@ -71,6 +72,7 @@ bool g_logged_first_present = false;
 bool g_logged_first_mesh = false;
 bool g_logged_first_skin = false;
 bool g_logged_first_stage1_mesh = false;
+bool g_logged_first_texture_mapper = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_static_material_fallback = false;
 bool g_shader_compiler_available = false;
@@ -366,6 +368,39 @@ void Apply_Original_Texture_Stage_State(const ShaderClass &shader,
 		Original_Post_Detail_Color_Arg2(shader),
 		Original_Post_Detail_Alpha_Op(shader), D3DTA_TEXTURE, D3DTA_CURRENT,
 		stage1_texture);
+}
+
+int Get_Original_UV_Source(VertexMaterialClass *material, unsigned stage)
+{
+	const int fallback_uv_source = static_cast<int>(stage);
+	if (material == NULL) return fallback_uv_source;
+	const int uv_source = material->Get_UV_Source(static_cast<int>(stage));
+	return uv_source >= 0 ? uv_source : fallback_uv_source;
+}
+
+void Apply_Original_Texture_Coordinate_State(VertexMaterialClass *material)
+{
+	for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+		const int uv_source = Get_Original_UV_Source(material, stage);
+		TextureMapperClass *mapper = NULL;
+		if (material != NULL) mapper = material->Peek_Mapper(static_cast<int>(stage));
+		if (mapper != NULL) {
+			mapper->Apply(uv_source);
+			if (!g_logged_first_texture_mapper) {
+				Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+					"first original VertexMaterial mapper: material=%s stage=%u mapper=%d uv=%d",
+					material != NULL ? material->Get_Name() : "NULL",
+					stage, mapper->Mapper_ID(), uv_source);
+				g_logged_first_texture_mapper = true;
+			}
+		} else {
+			DX8Wrapper::Set_DX8_Texture_Stage_State(stage,
+				D3DTSS_TEXCOORDINDEX,
+				D3DTSS_TCI_PASSTHRU | static_cast<unsigned>(uv_source));
+			DX8Wrapper::Set_DX8_Texture_Stage_State(stage,
+				D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+		}
+	}
 }
 
 float Clamp01(float value)
@@ -1297,6 +1332,8 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		const unsigned *diffuse_colors = model->Get_DCG_Array(pass);
 		TextureClass *bound_textures[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		unsigned current_shader_bits = 0xffffffffU;
+		VertexMaterialClass *current_material = NULL;
+		const Vector2 *current_uvs[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		bool current_detail_stage = false;
 		bool primitive_open = false;
 		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
@@ -1304,6 +1341,11 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				model->Peek_Texture(triangle_index, pass, 0),
 				model->Peek_Texture(triangle_index, pass, 1)
 			};
+			const TriIndex &group_triangle = triangles[triangle_index];
+			VertexMaterialClass *triangle_material =
+				group_triangle[0] < vertex_count ?
+					model->Peek_Material(static_cast<int>(group_triangle[0]), pass) :
+					NULL;
 			const ShaderClass triangle_shader = model->Get_Shader(triangle_index, pass);
 			const unsigned triangle_shader_bits = triangle_shader.Get_Bits();
 			const bool detail_stage =
@@ -1311,11 +1353,23 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				triangle_textures[1] != NULL;
 			if (triangle_textures[0] != bound_textures[0] ||
 				triangle_textures[1] != bound_textures[1] ||
+				triangle_material != current_material ||
 				detail_stage != current_detail_stage ||
 				triangle_shader_bits != current_shader_bits || !primitive_open) {
 				if (primitive_open) glEnd();
 				bound_textures[0] = triangle_textures[0];
 				bound_textures[1] = triangle_textures[1];
+				current_material = triangle_material;
+				for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+					const int uv_source = Get_Original_UV_Source(current_material, stage);
+					current_uvs[stage] = NULL;
+					if (uv_source >= 0 && uv_source < MeshMatDescClass::MAX_UV_ARRAYS) {
+						current_uvs[stage] = model->Get_UV_Array_By_Index(uv_source);
+					}
+					if (current_uvs[stage] == NULL) {
+						current_uvs[stage] = uvs[stage];
+					}
+				}
 				current_detail_stage = detail_stage;
 				current_shader_bits = triangle_shader_bits;
 				// ShaderClass remains the authoritative original material policy.
@@ -1335,6 +1389,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				} else {
 					Disable_Texture_Stage(1U);
 				}
+				Apply_Original_Texture_Coordinate_State(current_material);
 				Apply_Original_Texture_Stage_State(triangle_shader,
 					bound_textures[0] != NULL, current_detail_stage);
 				if (current_detail_stage && !g_logged_first_stage1_mesh) {
@@ -1348,7 +1403,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 						triangle_shader_bits,
 						static_cast<int>(triangle_shader.Get_Post_Detail_Color_Func()),
 						static_cast<int>(triangle_shader.Get_Post_Detail_Alpha_Func()),
-						uvs[1] != NULL ? 1 : 0);
+						current_uvs[1] != NULL ? 1 : 0);
 					g_logged_first_stage1_mesh = true;
 				}
 				glBegin(GL_TRIANGLES);
@@ -1374,12 +1429,14 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			}
 			for (int corner = 0; corner < 3; ++corner) {
 				const unsigned vertex_index = vertex_indices[corner];
-				if (uvs[0] != NULL && bound_textures[0] != NULL) {
+				if (current_uvs[0] != NULL && bound_textures[0] != NULL) {
 					glMultiTexCoord2f(GL_TEXTURE0,
-						uvs[0][vertex_index].X, uvs[0][vertex_index].Y);
+						current_uvs[0][vertex_index].X,
+						current_uvs[0][vertex_index].Y);
 				}
 				if (current_detail_stage) {
-					const Vector2 *detail_uvs = uvs[1] != NULL ? uvs[1] : uvs[0];
+					const Vector2 *detail_uvs =
+						current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
 					if (detail_uvs != NULL) {
 						glMultiTexCoord2f(GL_TEXTURE1,
 							detail_uvs[vertex_index].X,
@@ -1434,6 +1491,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		if (primitive_open) glEnd();
 	}
 	Disable_Texture_Stage(1U);
+	Apply_Original_Texture_Coordinate_State(NULL);
 	// Submit_Indexed_Triangles may be used later in the same frame by HUD or
 	// native DX8 boundary callers. Restore its explicit identity baseline only
 	// after this homogeneous mesh submission is complete.

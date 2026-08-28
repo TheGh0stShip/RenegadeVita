@@ -43,6 +43,8 @@ struct TextureStageSamplerState {
 	DWORD min_filter;
 	DWORD mag_filter;
 	DWORD mip_filter;
+	DWORD texcoord_index;
+	DWORD texture_transform_flags;
 };
 
 struct TextureStageCombinerState {
@@ -54,7 +56,18 @@ struct TextureStageCombinerState {
 	DWORD alpha_arg2;
 };
 
-TextureStageSamplerState g_texture_sampler_states[MAX_TEXTURE_STAGES] = {};
+TextureStageSamplerState g_texture_sampler_states[MAX_TEXTURE_STAGES] = {
+	{
+		D3DTADDRESS_WRAP, D3DTADDRESS_WRAP,
+		D3DTEXF_LINEAR, D3DTEXF_LINEAR, D3DTEXF_NONE,
+		D3DTSS_TCI_PASSTHRU | 0U, D3DTTFF_DISABLE
+	},
+	{
+		D3DTADDRESS_WRAP, D3DTADDRESS_WRAP,
+		D3DTEXF_LINEAR, D3DTEXF_LINEAR, D3DTEXF_NONE,
+		D3DTSS_TCI_PASSTHRU | 1U, D3DTTFF_DISABLE
+	}
+};
 TextureStageCombinerState g_texture_combiner_states[MAX_TEXTURE_STAGES] = {
 	{
 		D3DTOP_MODULATE, D3DTA_TEXTURE, D3DTA_DIFFUSE,
@@ -111,6 +124,27 @@ bool Apply_Texture_Stage_Combiner(DWORD stage)
 		combiner.color_op, combiner.color_arg1, combiner.color_arg2,
 		combiner.alpha_op, combiner.alpha_arg1, combiner.alpha_arg2,
 		texture != NULL && texture->Uploaded && texture->NativeTexture != 0U);
+}
+
+bool Apply_Texture_Stage_Transform(DWORD stage)
+{
+	if (stage >= MAX_TEXTURE_STAGES) return false;
+#if defined(__vita__)
+	const TextureStageSamplerState &sampler = g_texture_sampler_states[stage];
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
+	glMatrixMode(GL_TEXTURE);
+	if ((sampler.texture_transform_flags & 0xffU) == D3DTTFF_DISABLE) {
+		glLoadIdentity();
+	} else {
+		glLoadMatrixf(&g_boundary_transforms[D3DTS_TEXTURE0 + stage].m[0][0]);
+	}
+	glMatrixMode(GL_MODELVIEW);
+	glActiveTexture(GL_TEXTURE0);
+	if (glGetError() != GL_NO_ERROR) {
+		return false;
+	}
+#endif
+	return true;
 }
 
 bool Is_DX8_Buffer_Type(unsigned type)
@@ -1803,6 +1837,12 @@ HRESULT IDirect3DDevice8::SetTransform(D3DTRANSFORMSTATETYPE state,
 {
 	if (matrix != NULL && state < 257U) {
 		g_boundary_transforms[state] = *matrix;
+		if (state >= D3DTS_TEXTURE0 &&
+			state < static_cast<D3DTRANSFORMSTATETYPE>(D3DTS_TEXTURE0 + MAX_TEXTURE_STAGES)) {
+			const DWORD stage = static_cast<DWORD>(state - D3DTS_TEXTURE0);
+			return Apply_Texture_Stage_Transform(stage) ? D3D_OK :
+				static_cast<HRESULT>(D3DERR_INVALIDCALL);
+		}
 	}
 	return D3D_OK;
 }
@@ -1860,6 +1900,8 @@ HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 	case D3DTSS_MINFILTER: sampler.min_filter = value; break;
 	case D3DTSS_MAGFILTER: sampler.mag_filter = value; break;
 	case D3DTSS_MIPFILTER: sampler.mip_filter = value; break;
+	case D3DTSS_TEXCOORDINDEX: sampler.texcoord_index = value; break;
+	case D3DTSS_TEXTURETRANSFORMFLAGS: sampler.texture_transform_flags = value; break;
 	default:
 		// TextureClass owns sampler state above this boundary.  Other original
 		// stage semantics remain deliberately counted rather than discarded.
@@ -1874,6 +1916,10 @@ HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 	case D3DTSS_ALPHAARG1:
 	case D3DTSS_ALPHAARG2:
 		return Apply_Texture_Stage_Combiner(stage) ? D3D_OK :
+			static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	case D3DTSS_TEXCOORDINDEX:
+	case D3DTSS_TEXTURETRANSFORMFLAGS:
+		return Apply_Texture_Stage_Transform(stage) ? D3D_OK :
 			static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	default:
 		break;

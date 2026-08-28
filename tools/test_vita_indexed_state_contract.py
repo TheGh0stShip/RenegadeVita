@@ -89,11 +89,15 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "bound_textures[1]->Apply_For_Platform_Boundary(1U)",
             "Apply_Original_Texture_Stage_State(triangle_shader,",
             "first original MeshClass stage1 texture",
+            "Apply_Original_Texture_Coordinate_State(current_material);",
         ):
             self.assertIn(needle, renderer)
 
         for needle in (
             "struct TextureStageCombinerState",
+            "DWORD texcoord_index;",
+            "DWORD texture_transform_flags;",
+            "Apply_Texture_Stage_Transform(stage)",
             "state.Textures[stage]->Apply_For_Platform_Boundary(stage)",
             "RenegadeVitaRenderer::Bind_Texture_Stage(stage, texture->NativeTexture,",
             "Apply_Texture_Stage_Combiner(stage)",
@@ -109,6 +113,51 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "\t}",
             boundary,
         )
+
+    def test_direct_mesh_submit_replays_original_material_mapper_state(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
+        function = renderer[
+            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
+        ]
+        mapper_helper = renderer[
+            renderer.index("void Apply_Original_Texture_Coordinate_State"):
+            renderer.index("float Clamp01")
+        ]
+
+        self.assertIn('#include "dx8wrapper.h"', renderer)
+        self.assertIn("TextureMapperClass *mapper = NULL;", mapper_helper)
+        self.assertIn("mapper = material->Peek_Mapper(static_cast<int>(stage));", mapper_helper)
+        self.assertIn("mapper->Apply(uv_source);", mapper_helper)
+        self.assertIn("D3DTSS_TEXCOORDINDEX", mapper_helper)
+        self.assertIn("D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE", mapper_helper)
+        self.assertIn("first original VertexMaterial mapper", mapper_helper)
+
+        self.assertIn("VertexMaterialClass *current_material = NULL;", function)
+        self.assertIn("const Vector2 *current_uvs[MeshMatDescClass::MAX_TEX_STAGES] = {};", function)
+        self.assertIn("VertexMaterialClass *triangle_material =", function)
+        self.assertIn("model->Peek_Material(static_cast<int>(group_triangle[0]), pass)", function)
+        self.assertIn("triangle_material != current_material", function)
+        self.assertIn("current_material = triangle_material;", function)
+        self.assertIn("Get_Original_UV_Source(current_material, stage)", function)
+        self.assertIn("current_uvs[stage] = model->Get_UV_Array_By_Index(uv_source);", function)
+        self.assertIn("current_uvs[stage] = uvs[stage];", function)
+        self.assertIn("current_uvs[0][vertex_index].X", function)
+        self.assertIn("current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0]", function)
+        self.assertLess(
+            function.index("current_material = triangle_material;"),
+            function.index("Apply_Original_Texture_Coordinate_State(current_material);"),
+        )
+        self.assertIn("Apply_Original_Texture_Coordinate_State(NULL);", function)
+
+        self.assertIn("case D3DTSS_TEXCOORDINDEX: sampler.texcoord_index = value; break;", boundary)
+        self.assertIn(
+            "case D3DTSS_TEXTURETRANSFORMFLAGS: sampler.texture_transform_flags = value; break;",
+            boundary,
+        )
+        self.assertIn("glMatrixMode(GL_TEXTURE);", boundary)
+        self.assertIn("glLoadMatrixf(&g_boundary_transforms[D3DTS_TEXTURE0 + stage].m[0][0]);", boundary)
 
     def test_capture_state_uses_global_texture_statistics(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()

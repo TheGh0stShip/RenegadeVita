@@ -3,7 +3,10 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev67 null texture-stage disable semantics, Vita stream-output submission telemetry, stream restart handling, per-buffer stream-mix telemetry, active streamed-audio telemetry, Vita DX8 bound-texture lifetime,
+Current work: **post-dev68 original material mapper texture-coordinate state,
+null texture-stage disable semantics, Vita stream-output submission telemetry,
+stream restart handling, per-buffer stream-mix telemetry, active streamed-audio
+telemetry, Vita DX8 bound-texture lifetime,
 WWAudio stream loop-count return, streamed-dialogue fact runtime telemetry, WAVE fact-duration metadata,
 streamed-dialogue duration metadata, dialogue/audio
 diagnostics, texture provenance, DX8
@@ -106,6 +109,19 @@ restaging, 72 host unittest checks, source integration reporting, ARM
 link/package, identity verification, compressed VPK validation, diagnostics
 generation, and SHA verification. The canonical VPK SHA-256 is
 `3c6279ed13db704e2416b41ff073dace7d772da20d7424541a1846017efb9403`.
+Dev68 preserves dev67 and replays original `VertexMaterialClass`
+texture-coordinate mapper/default UV-source state in the direct Vita
+`MeshClass` path. Base-pass submissions now split when the original vertex
+material changes, call the original `TextureMapperClass::Apply()` path when a
+mapper exists, restore original default `D3DTSS_TEXCOORDINDEX` /
+`D3DTSS_TEXTURETRANSFORMFLAGS` state otherwise, carry texture-stage transforms
+through the Vita DX8 boundary texture matrix path, and emit UV arrays selected
+by the original material UV source rather than assuming texture stage equals UV
+array index. A full canonical no-deploy dev68 build now passes retained
+host-validation reuse, deterministic restaging, 73 host unittest checks, source
+integration reporting, ARM link/package, identity verification, compressed VPK
+validation, diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
+`bccfb2e4ef99b5246331b3bb4d6c09e46364c314eedfc19b98c9fe0e236b80d8`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -113,7 +129,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev67 is built but not deployed; dev46 remains restored on
+control changed. Dev68 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

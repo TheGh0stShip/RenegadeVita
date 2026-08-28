@@ -3,8 +3,9 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev75 original Scene/WW3D fog, fill-mode, and ambient
-state restoration,
+Current work: **post-dev76 original material lighting/color-source evaluation
+in direct Vita mesh submissions, original Scene/WW3D fog, fill-mode, and
+ambient state restoration,
 original DX8 render-state/fog bridge,
 original ADDSMOOTH detail combiner,
 supported texture-stage telemetry,
@@ -216,6 +217,18 @@ reuse, current lightweight render-state contract 13/13, DDS/TGA alias contract
 reporting, ARM link/package, identity verification, compressed VPK validation,
 diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
 `3d324ae1887860b57c190abe6528bcb5335ca3aa0efec55b79fc719c73b70e45`.
+Dev76 preserves dev75 and replaces the direct Vita mesh path's simplified
+material color shortcut with original `VertexMaterialClass` diffuse, ambient,
+emissive, opacity, lighting, color-source, and `LightEnvironmentClass`
+evaluation. Pass-specific DCG data is now used as the original color1/color2
+source fallback, and the runtime logs the first evaluated material-lighting
+breadcrumb for M00 hardware review. A full canonical no-deploy dev76 build now
+passes retained host-validation reuse, current lightweight render-state
+contract 13/13, DDS/TGA alias contract 11/11, deterministic restaging, 81 host
+unittest checks, source integration reporting, ARM link/package, identity
+verification, compressed VPK validation, diagnostics generation, and SHA
+verification. The canonical VPK SHA-256 is
+`371ed075af325d8909a96b492411f9cbef93d5f6698e627f1aa8b1a2d14c9c38`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing

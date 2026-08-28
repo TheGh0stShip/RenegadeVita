@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "d3d8.h"
 #include "dx8wrapper.h"
+#include "lightenvironment.h"
 #include "mesh.h"
 #include "meshmatdesc.h"
 #include "meshmdl.h"
@@ -74,6 +75,7 @@ bool g_logged_first_skin = false;
 bool g_logged_first_stage1_mesh = false;
 bool g_logged_first_texture_mapper = false;
 bool g_logged_first_generated_texture_coordinate = false;
+bool g_logged_first_material_lighting = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_static_material_fallback = false;
 bool g_shader_compiler_available = false;
@@ -358,6 +360,14 @@ Vector3 Compute_Camera_Space_Normal(const Matrix3D &world_transform,
 	Vector3 camera_normal;
 	Matrix3D::Rotate_Vector(view_transform, world_normal, &camera_normal);
 	return Normalize_Or_Default(camera_normal, Vector3(0.0f, 0.0f, 1.0f));
+}
+
+Vector3 Compute_World_Space_Normal(const Matrix3D &world_transform,
+	const Vector3 &normal)
+{
+	Vector3 world_normal;
+	Matrix3D::Rotate_Vector(world_transform, normal, &world_normal);
+	return Normalize_Or_Default(world_normal, Vector3(0.0f, 0.0f, 1.0f));
 }
 
 Vector3 Compute_Camera_Space_Reflection(const Matrix3D &world_transform,
@@ -907,6 +917,145 @@ Vector3 Max_Color(const Vector3 &left, const Vector3 &right)
 	return Vector3(left.X > right.X ? left.X : right.X,
 		left.Y > right.Y ? left.Y : right.Y,
 		left.Z > right.Z ? left.Z : right.Z);
+}
+
+Vector3 Multiply_Color(const Vector3 &left, const Vector3 &right)
+{
+	return Vector3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
+}
+
+Vector3 Scale_Color(const Vector3 &color, float scale)
+{
+	return Vector3(color.X * scale, color.Y * scale, color.Z * scale);
+}
+
+Vector3 Clamp_Color(Vector3 color)
+{
+	color.X = Clamp01(color.X);
+	color.Y = Clamp01(color.Y);
+	color.Z = Clamp01(color.Z);
+	return color;
+}
+
+Vector3 Decode_DX8_ARGB_Color(unsigned color)
+{
+	return Vector3(
+		static_cast<float>((color >> 16U) & 0xffU) / 255.0f,
+		static_cast<float>((color >> 8U) & 0xffU) / 255.0f,
+		static_cast<float>(color & 0xffU) / 255.0f);
+}
+
+float Decode_DX8_ARGB_Alpha(unsigned color)
+{
+	return static_cast<float>((color >> 24U) & 0xffU) / 255.0f;
+}
+
+struct SourceColor {
+	Vector3 color;
+	float alpha;
+	bool from_vertex_color;
+};
+
+SourceColor Select_Material_Color_Source(
+	VertexMaterialClass::ColorSourceType source, const Vector3 &material_color,
+	float material_alpha, const unsigned *color1, const unsigned *color2,
+	unsigned vertex_index)
+{
+	const unsigned *source_color = NULL;
+	if (source == VertexMaterialClass::COLOR1) {
+		source_color = color1;
+	} else if (source == VertexMaterialClass::COLOR2) {
+		source_color = color2;
+	}
+	if (source_color != NULL) {
+		const unsigned color = source_color[vertex_index];
+		SourceColor result = {
+			Decode_DX8_ARGB_Color(color),
+			Decode_DX8_ARGB_Alpha(color),
+			true
+		};
+		return result;
+	}
+	SourceColor result = { material_color, material_alpha, false };
+	return result;
+}
+
+struct MaterialVertexColor {
+	Vector3 diffuse;
+	Vector3 ambient;
+	Vector3 emissive;
+	Vector3 final_color;
+	float alpha;
+	bool lighting;
+	unsigned light_count;
+};
+
+MaterialVertexColor Evaluate_Original_Material_Vertex_Color(
+	VertexMaterialClass *material, const unsigned *color1,
+	const unsigned *color2, unsigned vertex_index, const Vector3 *normals,
+	const Matrix3D &world_transform, const RenderInfoClass &render_info)
+{
+	Vector3 material_diffuse(1.0f, 1.0f, 1.0f);
+	Vector3 material_ambient(1.0f, 1.0f, 1.0f);
+	Vector3 material_emissive(0.0f, 0.0f, 0.0f);
+	float material_alpha = 1.0f;
+	bool lighting = false;
+	VertexMaterialClass::ColorSourceType diffuse_source = VertexMaterialClass::MATERIAL;
+	VertexMaterialClass::ColorSourceType ambient_source = VertexMaterialClass::MATERIAL;
+	VertexMaterialClass::ColorSourceType emissive_source = VertexMaterialClass::MATERIAL;
+	if (material != NULL) {
+		material->Get_Diffuse(&material_diffuse);
+		material->Get_Ambient(&material_ambient);
+		material->Get_Emissive(&material_emissive);
+		material_alpha = material->Get_Opacity();
+		lighting = material->Get_Lighting();
+		diffuse_source = material->Get_Diffuse_Color_Source();
+		ambient_source = material->Get_Ambient_Color_Source();
+		emissive_source = material->Get_Emissive_Color_Source();
+	}
+	const SourceColor diffuse = Select_Material_Color_Source(diffuse_source,
+		material_diffuse, material_alpha, color1, color2, vertex_index);
+	const SourceColor ambient = Select_Material_Color_Source(ambient_source,
+		material_ambient, material_alpha, color1, color2, vertex_index);
+	const SourceColor emissive = Select_Material_Color_Source(emissive_source,
+		material_emissive, material_alpha, color1, color2, vertex_index);
+
+	MaterialVertexColor result = {
+		diffuse.color, ambient.color, emissive.color, diffuse.color,
+		diffuse.alpha, lighting, 0U
+	};
+	if (!lighting) {
+		result.final_color = Clamp_Color(diffuse.color);
+		return result;
+	}
+
+	Vector3 ambient_light = Decode_DX8_ARGB_Color(g_dx8_ambient_color);
+	const LightEnvironmentClass *light_environment = render_info.light_environment;
+	if (light_environment != NULL) {
+		ambient_light = light_environment->Get_Equivalent_Ambient();
+	}
+	Vector3 lit_color =
+		Multiply_Color(ambient.color, ambient_light) + emissive.color;
+	if (light_environment != NULL && normals != NULL) {
+		const Vector3 normal = Compute_World_Space_Normal(world_transform,
+			normals[vertex_index]);
+		const int light_count = light_environment->Get_Light_Count();
+		for (int light_index = 0; light_index < light_count && light_index < 4;
+			++light_index) {
+			const Vector3 light_direction = Normalize_Or_Default(
+				light_environment->Get_Light_Direction(light_index),
+				Vector3(0.0f, 0.0f, 1.0f));
+			const float dot = Vector3::Dot_Product(normal, light_direction);
+			if (dot > 0.0f) {
+				lit_color += Multiply_Color(diffuse.color,
+					Scale_Color(light_environment->Get_Light_Diffuse(light_index),
+						dot));
+			}
+		}
+		result.light_count = static_cast<unsigned>(light_count > 4 ? 4 : light_count);
+	}
+	result.final_color = Clamp_Color(lit_color);
+	return result;
 }
 
 void Log_Static_Material_Fallback(MeshClass &mesh, TextureClass *texture,
@@ -1914,6 +2063,14 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			model->Get_UV_Array(pass, 1)
 		};
 		const unsigned *diffuse_colors = model->Get_DCG_Array(pass);
+		const unsigned *color1 = model->Get_Color_Array(0, false);
+		const unsigned *color2 = model->Get_Color_Array(1, false);
+		if (color1 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR1) {
+			color1 = diffuse_colors;
+		}
+		if (color2 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR2) {
+			color2 = diffuse_colors;
+		}
 		TextureClass *bound_textures[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		unsigned current_shader_bits = 0xffffffffU;
 		VertexMaterialClass *current_material = NULL;
@@ -2027,45 +2184,40 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				}
 				/* Preserve the original mesh material color owner.  The former Vita
 				** bridge invented RGB from each normal, visibly recoloring otherwise
-				** valid NPC skin textures.  DCG is D3D ARGB; when no per-vertex DCG
-				** exists, the current pass VertexMaterial diffuse/opacity is
-				** authoritative. */
-				if (diffuse_colors != NULL) {
-					const unsigned diffuse = diffuse_colors[vertex_index];
-					glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
-						static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
-						static_cast<GLubyte>(diffuse & 0xffU),
-						static_cast<GLubyte>((diffuse >> 24U) & 0xffU));
-				} else {
-					VertexMaterialClass *material =
-						model->Peek_Material(static_cast<int>(vertex_index), pass);
-					Vector3 diffuse(1.0f, 1.0f, 1.0f);
-					Vector3 ambient(0.0f, 0.0f, 0.0f);
-					Vector3 emissive(0.0f, 0.0f, 0.0f);
-					float opacity = 1.0f;
-					if (material != NULL) {
-						material->Get_Diffuse(&diffuse);
-						material->Get_Ambient(&ambient);
-						material->Get_Emissive(&emissive);
-						opacity = material->Get_Opacity();
-					}
-					if (!is_skin && bound_textures[0] != NULL && Is_Near_Black(diffuse)) {
-						Vector3 fallback = Max_Color(ambient, emissive);
-						if (Is_Near_Black(fallback)) {
-							/* Original DX8 lighting would combine scene/material
-							** state before texture modulation. Until that full
-							** lighting path is represented in vitaGL, keep
-							** textured static surfaces visible rather than
-							** multiplying valid retail textures by black. */
-							fallback = Vector3(1.0f, 1.0f, 1.0f);
-						}
-						Log_Static_Material_Fallback(mesh, bound_textures[0], material,
-							triangle_shader, diffuse, ambient, emissive, fallback, opacity);
-						diffuse = fallback;
-					}
-					glColor4f(Clamp01(diffuse.X), Clamp01(diffuse.Y),
-						Clamp01(diffuse.Z), Clamp01(opacity));
+				** valid NPC skin textures.  The current path now evaluates original
+				** VertexMaterial lighting and color-source state below the WW3D
+				** boundary before handing the result to vitaGL for texture modulation. */
+				VertexMaterialClass *material =
+					model->Peek_Material(static_cast<int>(vertex_index), pass);
+				MaterialVertexColor vertex_color =
+					Evaluate_Original_Material_Vertex_Color(material, color1,
+						color2, vertex_index, normals, original_world_transform,
+						render_info);
+				Vector3 final_color = vertex_color.final_color;
+				if (!g_logged_first_material_lighting) {
+					Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+						"first original material lighting: mesh=%s pass=%d lighting=%d lights=%u color1=%d color2=%d rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
+						mesh.Get_Name(), pass, vertex_color.lighting ? 1 : 0,
+						vertex_color.light_count, color1 != NULL ? 1 : 0,
+						color2 != NULL ? 1 : 0, final_color.X, final_color.Y,
+						final_color.Z, vertex_color.alpha);
+					g_logged_first_material_lighting = true;
 				}
+				if (!is_skin && bound_textures[0] != NULL &&
+					Is_Near_Black(final_color)) {
+					Vector3 fallback = Max_Color(vertex_color.ambient,
+						vertex_color.emissive);
+					if (Is_Near_Black(fallback)) {
+						fallback = Vector3(1.0f, 1.0f, 1.0f);
+					}
+					Log_Static_Material_Fallback(mesh, bound_textures[0], material,
+						triangle_shader, vertex_color.diffuse,
+						vertex_color.ambient, vertex_color.emissive, fallback,
+						vertex_color.alpha);
+					final_color = fallback;
+				}
+				glColor4f(Clamp01(final_color.X), Clamp01(final_color.Y),
+					Clamp01(final_color.Z), Clamp01(vertex_color.alpha));
 				glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
 					vertices[vertex_index].Z);
 			}

@@ -174,10 +174,43 @@ class VitaIndexedStateContractTests(unittest.TestCase):
     def test_textured_static_material_black_fallback_is_bounded_and_observable(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         self.assertIn("first static material black fallback", renderer)
-        self.assertIn("!is_skin && bound_textures[0] != NULL && Is_Near_Black(diffuse)", renderer)
-        self.assertIn("material->Get_Ambient(&ambient);", renderer)
-        self.assertIn("material->Get_Emissive(&emissive);", renderer)
+        self.assertIn("!is_skin && bound_textures[0] != NULL &&", renderer)
+        self.assertIn("Is_Near_Black(final_color)", renderer)
+        self.assertIn("material->Get_Ambient(&material_ambient);", renderer)
+        self.assertIn("material->Get_Emissive(&material_emissive);", renderer)
         self.assertIn("fallback = Vector3(1.0f, 1.0f, 1.0f);", renderer)
+
+    def test_direct_mesh_uses_original_material_lighting_sources(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        function = renderer[
+            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
+        ]
+
+        for needle in (
+            '#include "lightenvironment.h"',
+            "struct MaterialVertexColor",
+            "Evaluate_Original_Material_Vertex_Color",
+            "material->Get_Lighting()",
+            "material->Get_Diffuse_Color_Source()",
+            "material->Get_Ambient_Color_Source()",
+            "material->Get_Emissive_Color_Source()",
+            "Select_Material_Color_Source(diffuse_source",
+            "Select_Material_Color_Source(ambient_source",
+            "Select_Material_Color_Source(emissive_source",
+            "light_environment->Get_Equivalent_Ambient()",
+            "light_environment->Get_Light_Direction(light_index)",
+            "light_environment->Get_Light_Diffuse(light_index)",
+            "Compute_World_Space_Normal(world_transform,",
+            "first original material lighting",
+        ):
+            self.assertIn(needle, renderer)
+
+        self.assertIn("const unsigned *color1 = model->Get_Color_Array(0, false);", function)
+        self.assertIn("const unsigned *color2 = model->Get_Color_Array(1, false);", function)
+        self.assertIn("Evaluate_Original_Material_Vertex_Color(material, color1,", function)
+        self.assertIn("render_info);", function)
+        self.assertNotIn("if (diffuse_colors != NULL) {\n\t\t\t\t\tconst unsigned diffuse", function)
 
     def test_direct_mesh_submit_renders_original_base_passes(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()

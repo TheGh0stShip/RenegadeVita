@@ -33,7 +33,9 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         )
         self.assertIn("const unsigned *diffuse_colors = model->Get_DCG_Array(pass);", renderer)
         self.assertIn("model->Peek_Material(static_cast<int>(vertex_index), pass)", renderer)
-        self.assertIn("material->Get_Diffuse(&diffuse);", renderer)
+        self.assertIn("Evaluate_Original_Material_Vertex_Color(material, color1,", renderer)
+        self.assertIn("material->Get_Diffuse(&material_diffuse);", renderer)
+        self.assertIn("glColor4f(Clamp01(final_color.X)", renderer)
         self.assertNotIn("0.35f + 0.35f * (normal.X + 1.0f)", renderer)
 
 

@@ -974,19 +974,17 @@ WW3DErrorType WW3D::Render(SceneClass * scene,CameraClass * cam,bool clear,bool 
 	(void)clear;
 	(void)clearz;
 	(void)color;
-	cam->Apply();
-	scene->Render(rinfo);
-	Flush(rinfo);
-	return WW3D_ERROR_OK;
-#else
+#endif
 
 	// Apply the camera and viewport (including depth range)
 	cam->Apply();
 
+#if !defined(RENEGADE_VITA_PORT)
 	// Clear the viewport
 	if (clear || clearz) {
 		DX8Wrapper::Clear(clear, clearz, color);
 	}
+#endif
 
 	// set the rendering mode
 	switch(scene->Get_Polygon_Mode()) {
@@ -1008,14 +1006,15 @@ WW3DErrorType WW3D::Render(SceneClass * scene,CameraClass * cam,bool clear,bool 
 
 	// render the scene
 
+#if !defined(RENEGADE_VITA_PORT)
 	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
+#endif
 
 	scene->Render(rinfo);
 
 	Flush(rinfo);
 
 	return WW3D_ERROR_OK;
-#endif
 }
 
 

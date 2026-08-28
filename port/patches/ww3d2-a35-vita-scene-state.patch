@@ -1,0 +1,43 @@
+--- a/scene.cpp
++++ b/scene.cpp
+@@ -208,6 +208,7 @@
+ void SceneClass::Render(RenderInfoClass & rinfo)
+ {
+ #if defined(RENEGADE_VITA_PORT)
++	DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd);
+ 	Customized_Render(rinfo);
+ #else
+ 	DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd);
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -971,11 +971,7 @@
+ 	(void)clear;
+ 	(void)clearz;
+ 	(void)color;
+-	cam->Apply();
+-	scene->Render(rinfo);
+-	Flush(rinfo);
+-	return WW3D_ERROR_OK;
+-#else
++#endif
+ 
+ 	// Apply the camera and viewport (including depth range)
+ 	cam->Apply();
+@@ -983,9 +979,11 @@
++#if !defined(RENEGADE_VITA_PORT)
+ 	// Clear the viewport
+ 	if (clear || clearz) {
+ 		DX8Wrapper::Clear(clear, clearz, color);
+ 	}
++#endif
+ 
+ 	// set the rendering mode
+ 	switch(scene->Get_Polygon_Mode()) {
+ 		case SceneClass::POINT:
+ 			DX8Wrapper::Set_DX8_Render_State(D3DRS_FILLMODE,D3DFILL_POINT);
+@@ -1009,1 +1007,3 @@
++#if !defined(RENEGADE_VITA_PORT)
+ 	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
++#endif
+@@ -1016,1 +1016,0 @@
+-#endif

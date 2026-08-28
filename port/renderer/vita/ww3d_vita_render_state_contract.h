@@ -90,6 +90,16 @@ inline float D3D_Color_Blue_Unit(uint32_t color)
 	return static_cast<float>(color & 0xffU) / 255.0f;
 }
 
+inline bool Update_Ambient_State_From_DX8_Render_State(uint32_t render_state,
+	uint32_t value, uint32_t &ambient_color)
+{
+	if (render_state != D3DRS_AMBIENT) {
+		return false;
+	}
+	ambient_color = value;
+	return true;
+}
+
 inline BlendFactorContract Translate_Source_Blend(ShaderClass::SrcBlendFuncType value)
 {
 	switch (value) {

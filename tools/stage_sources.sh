@@ -152,6 +152,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a30-camera-apply.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-vita-scene-state.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a31-vita-material-effect-boundary.patch"
@@ -416,6 +418,7 @@ echo "Applied: port/patches/ww3d2-a315-dds-vita.patch"
 echo "Applied: port/patches/ww3d2-a30-gcc15.patch"
 echo "Applied: port/patches/ww3d2-a30-vita-buffers.patch"
 echo "Applied: port/patches/ww3d2-a30-camera-apply.patch"
+echo "Applied: port/patches/ww3d2-a35-vita-scene-state.patch"
 echo "Applied: port/patches/wwphys-a30-gcc15.patch"
 echo "Applied: port/patches/wwphys-a31-vita-material-effect-boundary.patch"
 echo "Applied: port/patches/wwphys-a31-vita-material-effect-close.patch"

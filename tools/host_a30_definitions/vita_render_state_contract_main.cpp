@@ -76,6 +76,14 @@ int main()
 		"fog end state", checks);
 	failures += !Check(!Update_Fog_State_From_DX8_Render_State(D3DRS_AMBIENT,
 		0x00ffffffU, fog), "non-fog render state ignored", checks);
+	uint32_t ambient = 0U;
+	failures += !Check(Update_Ambient_State_From_DX8_Render_State(D3DRS_AMBIENT,
+		0x00010203U, ambient) && ambient == 0x00010203U &&
+		D3D_Color_Red_Unit(ambient) > 0.003f &&
+		D3D_Color_Green_Unit(ambient) > 0.007f &&
+		D3D_Color_Blue_Unit(ambient) > 0.011f, "ambient color state", checks);
+	failures += !Check(!Update_Ambient_State_From_DX8_Render_State(D3DRS_FOGCOLOR,
+		0x00040506U, ambient), "non-ambient render state ignored", checks);
 	printf("A3.5 Vita ShaderClass render-state contract: %u checks, %u failures\n", checks, failures);
 	return failures == 0U ? 0 : 1;
 }

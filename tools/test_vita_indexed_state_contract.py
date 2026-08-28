@@ -115,27 +115,61 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "D3D_Color_Red_Unit",
             "D3D_Color_Green_Unit",
             "D3D_Color_Blue_Unit",
+            "Update_Ambient_State_From_DX8_Render_State",
         ):
             self.assertIn(needle, contract)
 
         for needle in (
             "bool Apply_DX8_Render_State(uint32_t state, uint32_t value)",
             "Update_Fog_State_From_DX8_Render_State(state, value, g_fog_state)",
+            "Update_Ambient_State_From_DX8_Render_State(state, value,",
             "glFogi(GL_FOG_MODE, GL_LINEAR);",
             "glFogf(GL_FOG_START, g_fog_state.start);",
             "glFogf(GL_FOG_END, g_fog_state.end);",
             "glFogfv(GL_FOG_COLOR, color);",
             "glEnable(GL_FOG);",
             "glDisable(GL_FOG);",
+            "glLightModelfv(GL_LIGHT_MODEL_AMBIENT, color);",
             "Apply_Original_Fog_State(shader);",
             "first original DX8 fog state",
+            "first original DX8 ambient state",
         ):
             self.assertIn(needle, renderer)
         self.assertIn("IsFogAllowed(true)", dx8_boundary)
         self.assertIn("RenegadeVitaRenderer::Apply_DX8_Render_State(state, value)", gameplay)
         self.assertIn('"fog start state"', host)
         self.assertIn('"fog end state"', host)
+        self.assertIn('"ambient color state"', host)
         self.assertNotIn("HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE, DWORD)\n{\n\treturn D3D_OK;\n}", gameplay)
+
+    def test_vita_scene_restores_original_fog_fill_and_ambient_state(self):
+        scene = (ROOT / "staging/ww3d2/scene.cpp").read_text(errors="replace")
+        ww3d = (ROOT / "staging/ww3d2/ww3d.cpp").read_text(errors="replace")
+        stage = (ROOT / "tools/stage_sources.sh").read_text()
+
+        vita_scene = scene[
+            scene.index("#if defined(RENEGADE_VITA_PORT)"):
+            scene.index("#else", scene.index("#if defined(RENEGADE_VITA_PORT)"))
+        ]
+        self.assertIn("DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd);", vita_scene)
+        self.assertLess(
+            vita_scene.index("DX8Wrapper::Set_Fog"),
+            vita_scene.index("Customized_Render(rinfo);")
+        )
+
+        render_start = ww3d.index("WW3DErrorType WW3D::Render(SceneClass * scene")
+        render_end = ww3d.index(
+            "* WW3D::Render -- Render a single render object", render_start)
+        render = ww3d[render_start:render_end]
+        self.assertIn("switch(scene->Get_Polygon_Mode())", render)
+        self.assertIn("D3DRS_FILLMODE,D3DFILL_POINT", render)
+        self.assertIn("D3DRS_FILLMODE,D3DFILL_WIREFRAME", render)
+        self.assertIn("D3DRS_FILLMODE,D3DFILL_SOLID", render)
+        self.assertIn("Vector3 ambient = scene->Get_Ambient_Light();", render)
+        self.assertIn("D3DRS_AMBIENT, DX8Wrapper::Convert_Color(ambient,0.0f)", render)
+        self.assertIn("#if !defined(RENEGADE_VITA_PORT)\n\tTheDX8MeshRenderer.Set_Camera", render)
+        self.assertNotIn("scene->Render(rinfo);\n\tFlush(rinfo);\n\treturn WW3D_ERROR_OK;\n#else", render)
+        self.assertIn("ww3d2-a35-vita-scene-state.patch", stage)
 
     def test_textured_static_material_black_fallback_is_bounded_and_observable(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()

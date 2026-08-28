@@ -87,11 +87,13 @@ struct OriginalTextureCoordinateState {
 };
 
 FogStateContract g_fog_state = Default_Fog_State();
+uint32_t g_dx8_ambient_color = 0U;
 GLenum g_dx8_alpha_function = GL_ALWAYS;
 float g_dx8_alpha_reference = 0.0f;
 GLenum g_dx8_source_blend = GL_ONE;
 GLenum g_dx8_destination_blend = GL_ZERO;
 bool g_logged_first_fog_state = false;
+bool g_logged_first_ambient_state = false;
 bool g_logged_first_unsupported_render_state = false;
 
 GLenum To_GL_Depth_Function(ShaderClass::DepthCompareType function)
@@ -209,6 +211,36 @@ bool Apply_Current_Fog_State()
 			g_fog_state.enabled ? 1 : 0, g_fog_state.color & 0x00ffffffU,
 			g_fog_state.start, g_fog_state.end, static_cast<unsigned>(error));
 		g_logged_first_fog_state = true;
+	}
+	return error == GL_NO_ERROR;
+#else
+	return true;
+#endif
+}
+
+bool Apply_Current_Ambient_State()
+{
+#if defined(__vita__)
+	if (!g_statistics.initialized) {
+		return true;
+	}
+	const GLfloat color[4] = {
+		D3D_Color_Red_Unit(g_dx8_ambient_color),
+		D3D_Color_Green_Unit(g_dx8_ambient_color),
+		D3D_Color_Blue_Unit(g_dx8_ambient_color),
+		1.0f
+	};
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, color);
+	++g_statistics.state_changes;
+	const GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		++g_statistics.backend_errors;
+	}
+	if (!g_logged_first_ambient_state) {
+		Vita_Append_A22_Runtime_Breadcrumb("render-state",
+			"first original DX8 ambient state: color=%06X glGetError=%08X",
+			g_dx8_ambient_color & 0x00ffffffU, static_cast<unsigned>(error));
+		g_logged_first_ambient_state = true;
 	}
 	return error == GL_NO_ERROR;
 #else
@@ -1649,6 +1681,10 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 #if defined(__vita__)
 	if (Update_Fog_State_From_DX8_Render_State(state, value, g_fog_state)) {
 		return Apply_Current_Fog_State();
+	}
+	if (Update_Ambient_State_From_DX8_Render_State(state, value,
+		g_dx8_ambient_color)) {
+		return Apply_Current_Ambient_State();
 	}
 	if (!g_statistics.initialized) {
 		return true;

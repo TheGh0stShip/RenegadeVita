@@ -209,6 +209,7 @@ void SceneClass::Remove_Render_Object(RenderObjClass * obj)
 void SceneClass::Render(RenderInfoClass & rinfo)
 {
 #if defined(RENEGADE_VITA_PORT)
+	DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd);
 	Customized_Render(rinfo);
 #else
 	DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd);

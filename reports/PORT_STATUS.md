@@ -3,7 +3,9 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev74 original DX8 render-state/fog bridge,
+Current work: **post-dev75 original Scene/WW3D fog, fill-mode, and ambient
+state restoration,
+original DX8 render-state/fog bridge,
 original ADDSMOOTH detail combiner,
 supported texture-stage telemetry,
 original ShaderClass alpha-test reference semantics,
@@ -200,6 +202,20 @@ deterministic restaging, 79 host unittest checks, source integration reporting,
 ARM link/package, identity verification, compressed VPK validation,
 diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
 `c65767ce6b35c693e7d3abbb0b5bf4764ab89dd2bc8e313b1b143c591f4d07ee`.
+Dev75 preserves dev74 and removes the remaining Vita early-return from the
+original `WW3D::Render(SceneClass*)` path. Vita now follows the original
+camera apply, polygon fill-mode state, scene ambient state, scene render, and
+flush sequence while excluding only desktop-only clear and mesh-renderer camera
+calls. Staged `SceneClass::Render` again calls original
+`DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd)` on Vita, and
+`D3DRS_AMBIENT` now reaches the Vita backend through
+`glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ...)` with a first-state breadcrumb.
+A full canonical no-deploy dev75 build now passes retained host-validation
+reuse, current lightweight render-state contract 13/13, DDS/TGA alias contract
+11/11, deterministic restaging, 80 host unittest checks, source integration
+reporting, ARM link/package, identity verification, compressed VPK validation,
+diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
+`3d324ae1887860b57c190abe6528bcb5335ca3aa0efec55b79fc719c73b70e45`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -207,7 +223,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev74 is built but not deployed; dev46 remains restored on
+control changed. Dev75 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance,
 fog/material-state acceptance, and a valid post-dialogue route remain pending
 physical evidence**.

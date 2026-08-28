@@ -1,5 +1,60 @@
 # Live engineering progress
 
+## 2026-08-28 — dev75 original scene fog/fill/ambient restoration
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: dev75 preserves dev74 render-state handling and removes
+  the remaining Vita early-return from the original `WW3D::Render(SceneClass*)`
+  path. Vita now follows the original camera apply, polygon fill-mode,
+  scene ambient, scene render, and flush sequence while still excluding only
+  desktop-only clear and mesh-renderer camera calls.
+- Scene state: staged `SceneClass::Render` now restores the original
+  `DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd)` call on Vita,
+  and `D3DRS_AMBIENT` is routed through the Vita render-state boundary to
+  `glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ...)` with a first-state runtime
+  breadcrumb.
+- Runtime purpose: this keeps original WW3D/Scene ownership of fog, fill mode,
+  and scene ambient lighting for M00 instead of treating Vita scene rendering
+  as a shortened backend-only path. The change is aimed at the black/fogless
+  sky, wrong material lighting, and retail scene-state fidelity gates.
+- Validation: focused indexed render-state and texture-provenance contracts
+  passed 20/20. The fast no-deploy candidate passed 64 focused tests, the
+  original `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, package
+  identity checks, and VPK packaging. The full canonical no-deploy build
+  passed retained host-validation reuse, the current lightweight render-state
+  contract 13/13, the DDS/TGA alias contract 11/11, 80 host unittest checks,
+  deterministic restaging, source integration reporting, ARM link/package,
+  compressed VPK validation, identity verification, diagnostics bundle
+  generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 119 deterministic patch files covering 238 mechanically patched
+  staged upstream paths, 52 compatibility headers, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev75.vpk` SHA-256 is
+  `3d324ae1887860b57c190abe6528bcb5335ca3aa0efec55b79fc719c73b70e45`;
+  ELF SHA-256 is
+  `bf3e918357f5153b02ad94ee2579949f205fa4e1084e37bee4f38375e990a5b1`;
+  MAP SHA-256 is
+  `807db91e1c15d7ce44e678612d9b7ba8bda3a3abfe3344a92ba14384f345971b`;
+  diagnostics bundle SHA-256 is
+  `1289b87f0b9efc504ea31f6a1629aa2da965bab6f36f693dc7280720a6c760ae`.
+- Boundary: dev75 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev75, verify M00
+  sky/material fog, scene ambient/material appearance, muzzle rectangle and
+  other alpha cutouts, Logan dialogue text, Logan audible dialogue and timing,
+  and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev75-runtime.log`, especially
+  `first original DX8 fog state`, `first original DX8 ambient state`,
+  `texture loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`,
+  `unsupported_stages`, `first original indexed VertexMaterial mapper`,
+  `first generated texture coordinates`, `output_stream`,
+  `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, and conversation state if
+  dialogue or materials remain incorrect.
+
 ## 2026-08-28 — dev74 original DX8 render-state and fog bridge
 
 `[██████████] 12/12 canonical source/build gates complete`

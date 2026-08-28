@@ -122,23 +122,82 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION, 0);", controls)
         self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON, 0);", controls)
         self.assertIn(
-            "Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, DIK_DOWN);",
+            "Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, DIK_F);",
             controls,
         )
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON, DIK_LEFT);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, DIK_RIGHT);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_IN, DIK_UP);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT, DIK_DOWN);", controls)
         self.assertIn(
-            "INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, DIK_UP",
+            "INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0",
             controls,
         )
         self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD, 0);", controls)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_E, (buttons & SCE_CTRL_TRIANGLE) != 0);", directinput)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_F, front_touch_down);", directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SQUARE) != 0);", directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_UP, (buttons & SCE_CTRL_UP) != 0);", directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_DOWN, (buttons & SCE_CTRL_DOWN) != 0);", directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_LEFT, (buttons & SCE_CTRL_LEFT) != 0);", directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_RIGHT, (buttons & SCE_CTRL_RIGHT) != 0);", directinput)
+        self.assertIn("Set_Virtual_Key(VK_LEFT, false);", directinput)
+        self.assertIn("Set_Virtual_Key(VK_RIGHT, false);", directinput)
+        self.assertIn("Set_Virtual_Key(VK_UP, false);", directinput)
+        self.assertIn("Set_Virtual_Key(VK_DOWN, false);", directinput)
+        self.assertIn("g_vita_input_telemetry.zoom_in_key_state", directinput)
+        self.assertIn("g_vita_input_telemetry.zoom_out_key_state", directinput)
+        self.assertIn("g_vita_input_telemetry.objectives_toggle_key_state = 0U;", directinput)
+        self.assertIn(
+            "D-pad Up delivered original sniper zoom-in key DIK_UP",
+            directinput,
+        )
+        self.assertIn(
+            "D-pad Down delivered original sniper zoom-out key DIK_DOWN",
+            directinput,
+        )
         self.assertNotIn("Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SELECT) != 0);", directinput)
+
+    def test_direct_route_initializes_original_text_window_scene_binding(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        self.assertIn('#include "textwindow.h"', runtime)
+        init_index = runtime.index(
+            "TextWindowClass::Initialize(CombatManager::Get_Background_Scene());"
+        )
+        shutdown_index = runtime.index("TextWindowClass::Shutdown();", init_index)
+        combat_shutdown = runtime.index("CombatManager::Shutdown();", shutdown_index)
+        self.assertLess(init_index, shutdown_index)
+        self.assertLess(shutdown_index, combat_shutdown)
+
+    def test_projectors_remain_disabled_after_original_combat_scripts_think(self):
+        policy = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
+        simulation = policy[
+            policy.index("void A31_Interactive_Run_Simulation_Frame"):
+            policy.index("uint32_t Count_Physics_Objects")
+        ]
+        combat_think = simulation.index("CombatManager::Think();")
+        projector_policy = simulation.index(
+            "A31_Interactive_Apply_Render_Capabilities();", combat_think
+        )
+        self.assertLess(combat_think, projector_policy)
+
+    def test_reload_animation_path_has_bounded_vita_diagnostics(self):
+        patch = (ROOT / "port/patches/combat-a35-weaponview-reload-latch.patch").read_text()
+        stage_sources = (ROOT / "tools/stage_sources.sh").read_text()
+        weaponview = (ROOT / "staging/combat/weaponview.cpp").read_text()
+        weaponview_header = (ROOT / "staging/combat/weaponview.h").read_text()
+        weapons = (ROOT / "staging/combat/weapons.cpp").read_text()
+        self.assertIn("combat-a35-weaponview-reload-latch.patch", stage_sources)
+        for source in (patch, weaponview_header, weapons, weaponview):
+            self.assertIn("Notify_Reload_Started", source)
+        for source in (patch, weaponview):
+            self.assertIn("ReloadAnimationPending", source)
+            self.assertIn("A3.5 weapon view: state candidate", source)
+            self.assertIn("A3.5 weapon view: play state=%s", source)
+            self.assertIn("missing first-person weapon reload anim", source)
+            self.assertIn("missing first-person hands reload anim", source)
+        for source in (patch, weapons):
+            self.assertIn("WeaponViewClass::Notify_Reload_Started(this);", source)
 
     def test_deferred_dazzle_layer_does_not_reject_original_sky_scene(self):
         patch = (ROOT / "port/patches/ww3d2-a22-vita-boundaries.patch").read_text()

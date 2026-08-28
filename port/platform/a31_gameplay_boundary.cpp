@@ -347,14 +347,18 @@ void A31_Interactive_Configure_Vita_Controls()
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON, DIK_R);
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON, 0);
-	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, DIK_DOWN);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, DIK_F);
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON, DIK_LEFT);
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, DIK_RIGHT);
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_IN, DIK_UP);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_ZOOM_IN, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT, DIK_DOWN);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT, 0);
 	Input::Set_Primary_Key_For_Function(
-		INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, DIK_UP);
+		INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0);
 	Input::Set_Secondary_Key_For_Function(
 		INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
@@ -488,6 +492,7 @@ void A31_Interactive_Run_Simulation_Frame()
 	CombatManager::Generate_Control();
 	cNetwork::Update();
 	CombatManager::Think();
+	A31_Interactive_Apply_Render_Capabilities();
 #if !defined(RENEGADE_HOST_ABI_TEST)
 	TextDisplayGameModeClass *text_display =
 		TextDisplayGameModeClass::Get_Instance();
@@ -594,6 +599,10 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 			Input::Peek_State(INPUT_FUNCTION_PREV_WEAPON);
 			trace.input_next_weapon_active =
 				Input::Peek_State(INPUT_FUNCTION_NEXT_WEAPON);
+			trace.input_zoom_in_active =
+				Input::Peek_State(INPUT_FUNCTION_ZOOM_IN);
+			trace.input_zoom_out_active =
+				Input::Peek_State(INPUT_FUNCTION_ZOOM_OUT);
 			trace.input_objectives_toggle_active =
 				Input::Peek_State(INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE);
 			const RenegadeVitaInputTelemetry &input =
@@ -602,6 +611,10 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 		trace.input_triangle_down = input.triangle_down != 0U;
 		trace.input_select_down = input.select_down != 0U;
 		trace.input_circle_down = input.circle_down != 0U;
+		trace.input_cross_down = input.cross_down != 0U;
+		trace.input_left_shoulder_down = input.left_shoulder_down != 0U;
+		trace.input_right_shoulder_down = input.right_shoulder_down != 0U;
+		trace.input_front_touch_down = input.front_touch_down != 0U;
 		trace.input_dpad_up_down = input.dpad_up_down != 0U;
 		trace.input_dpad_down_down = input.dpad_down_down != 0U;
 		trace.input_dpad_left_down = input.dpad_left_down != 0U;
@@ -611,7 +624,9 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 		trace.input_camera_toggle_key_state = input.camera_toggle_key_state;
 		trace.input_previous_weapon_key_state =
 			input.previous_weapon_key_state;
-			trace.input_next_weapon_key_state = input.next_weapon_key_state;
+		trace.input_next_weapon_key_state = input.next_weapon_key_state;
+		trace.input_zoom_in_key_state = input.zoom_in_key_state;
+		trace.input_zoom_out_key_state = input.zoom_out_key_state;
 			trace.input_objectives_toggle_key_state =
 				input.objectives_toggle_key_state;
 			trace.input_buttons = input.buttons;

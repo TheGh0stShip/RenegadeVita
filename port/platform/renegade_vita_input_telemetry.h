@@ -33,6 +33,10 @@ struct RenegadeVitaInputTelemetry
 	uint32_t triangle_down;
 	uint32_t select_down;
 	uint32_t circle_down;
+	uint32_t cross_down;
+	uint32_t left_shoulder_down;
+	uint32_t right_shoulder_down;
+	uint32_t front_touch_down;
 	uint32_t dpad_up_down;
 	uint32_t dpad_down_down;
 	uint32_t dpad_left_down;
@@ -42,6 +46,8 @@ struct RenegadeVitaInputTelemetry
 	uint32_t camera_toggle_key_state;
 	uint32_t previous_weapon_key_state;
 	uint32_t next_weapon_key_state;
+	uint32_t zoom_in_key_state;
+	uint32_t zoom_out_key_state;
 	uint32_t objectives_toggle_key_state;
 };
 

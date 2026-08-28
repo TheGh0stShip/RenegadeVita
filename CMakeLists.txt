@@ -15,7 +15,7 @@ project(RenegadeVitaA31 VERSION 3.5.1 LANGUAGES C CXX)
 # This is provenance for a hardware candidate, not a public milestone claim.
 # Keep the artifact identity configurable so a newer candidate can never
 # overwrite the symbols and diagnostics that belong to an earlier one.
-set(RENEGADE_CANDIDATE_LABEL "A3.5-dev79" CACHE STRING
+set(RENEGADE_CANDIDATE_LABEL "A3.5-dev80" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
 if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
@@ -303,10 +303,11 @@ target_link_libraries(${PROJECT_NAME}
   vitashark
   SceShaccCgExt
   taihen_stub
-  SceShaccCg_stub
-  SceKernelDmacMgr_stub
-  SceCtrl_stub
-  SceAudio_stub
+	  SceShaccCg_stub
+	  SceKernelDmacMgr_stub
+	  SceCtrl_stub
+	  SceTouch_stub
+	  SceAudio_stub
   SceNet_stub
   SceIofilemgr_stub
   # VitaSDK FreeType is static.  Keep its optional decoders after it so the

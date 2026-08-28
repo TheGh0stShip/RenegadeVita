@@ -75,6 +75,10 @@
 #include "playerdata.h"
 #include "cheatmgr.h"
 
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+#include "a30_vita_runtime.h"
+#endif
+
 
 /*
 **
@@ -1500,6 +1504,14 @@ void	WeaponClass::Force_Reload( void )
 //	if ( Is_Reload_OK() && State != STATE_RELOAD ) {
 	if ( Is_Reload_OK() && State <= STATE_READY ) {
 		Set_State( STATE_RELOAD );
+		if ( Get_Owner() == COMBAT_STAR ) {
+			WeaponViewClass::Notify_Reload_Started(this);
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+			A30_Vita_Log("A3.5 weapon reload: accepted weapon=%s clip/inventory=%d/%d timer=%.3f state=%d\n",
+				Get_Name(), Get_Clip_Rounds(), Get_Total_Rounds(),
+				static_cast<double>(StateTimer), static_cast<int>(State));
+#endif
+		}
 
 		if ( Definition->ReloadSoundDefID != 0 ) {
 			// Make the reload sound

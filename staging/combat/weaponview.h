@@ -47,6 +47,7 @@
 
 class	ChunkSaveClass;
 class	ChunkLoadClass;
+class	WeaponClass;
 
 /*
 **
@@ -63,6 +64,7 @@ public:
 	static	bool	Save( ChunkSaveClass &csave );
 	static	bool	Load( ChunkLoadClass &cload );
 
+	static	void	Notify_Reload_Started( const WeaponClass *weapon );
 	static	Vector3	Get_Muzzle_Pos();
 };
 

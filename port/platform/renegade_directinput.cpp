@@ -15,6 +15,7 @@
 #include <psp2/ctrl.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
+#include <psp2/touch.h>
 #include "vita_runtime_log.h"
 #endif
 
@@ -62,6 +63,12 @@ bool g_route_replay_exit_requested = false;
 float g_route_replay_elapsed_seconds = 0.0f;
 uint64_t g_route_replay_elapsed_us = 0U;
 uint64_t g_route_current_sample_elapsed_us = 0U;
+bool g_front_touch_sampling_initialized = false;
+bool g_logged_front_touch_camera_toggle = false;
+bool g_logged_action_hit = false;
+bool g_logged_reload_hit = false;
+bool g_logged_zoom_in_hit = false;
+bool g_logged_zoom_out_hit = false;
 const float kLegacyRouteV1SampleRate = 60.0f;
 const float kLegacyRouteV1FrameSeconds = 1.0f / kLegacyRouteV1SampleRate;
 const float kLegacyRouteV1MaximumFrameStep = 0.25f;
@@ -123,6 +130,24 @@ uint32_t Frame_Delta_Microseconds()
 	}
 	const uint32_t delta_us = static_cast<uint32_t>(frame_seconds * 1000000.0f + 0.5f);
 	return delta_us != 0U ? delta_us : kDefaultTimedRouteDeltaUs;
+}
+
+bool Is_Front_Touch_Down()
+{
+	if (!g_front_touch_sampling_initialized) {
+		sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT,
+			SCE_TOUCH_SAMPLING_STATE_START);
+		g_front_touch_sampling_initialized = true;
+	}
+	SceTouchData touch = {};
+	const int samples = sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
+	const bool down = samples > 0 && touch.reportNum > 0U;
+	if (down && !g_logged_front_touch_camera_toggle) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"front touch feeds original first/third-person toggle key");
+		g_logged_front_touch_camera_toggle = true;
+	}
+	return down;
 }
 
 bool Load_Replay_Route()
@@ -476,10 +501,11 @@ void DirectInput::Read(void)
 	Apply_Replay_Sample(controller);
 	Record_Sample(controller);
 	const unsigned int buttons = controller.buttons;
-	Set_Virtual_Key(VK_UP, (buttons & SCE_CTRL_UP) != 0);
-	Set_Virtual_Key(VK_DOWN, (buttons & SCE_CTRL_DOWN) != 0);
-	Set_Virtual_Key(VK_LEFT, (buttons & SCE_CTRL_LEFT) != 0);
-	Set_Virtual_Key(VK_RIGHT, (buttons & SCE_CTRL_RIGHT) != 0);
+	const bool front_touch_down = Is_Front_Touch_Down();
+	Set_Virtual_Key(VK_UP, false);
+	Set_Virtual_Key(VK_DOWN, false);
+	Set_Virtual_Key(VK_LEFT, false);
+	Set_Virtual_Key(VK_RIGHT, false);
 	Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);
 	Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);
@@ -494,6 +520,7 @@ void DirectInput::Read(void)
 	Set_Button(DIKeyboardButtons, DIK_SPACE, (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Button(DIKeyboardButtons, DIK_LCONTROL, (buttons & SCE_CTRL_CIRCLE) != 0);
 	Set_Button(DIKeyboardButtons, DIK_E, (buttons & SCE_CTRL_TRIANGLE) != 0);
+	Set_Button(DIKeyboardButtons, DIK_F, front_touch_down);
 	Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SQUARE) != 0);
 	/* START remains the native direct-route clean-exit control and is sampled
 	** before Input::Update. Triangle supplies the original Action key, so it
@@ -501,6 +528,30 @@ void DirectInput::Read(void)
 	Set_Button(DIKeyboardButtons, DIK_ESCAPE, (buttons & SCE_CTRL_START) != 0);
 	Set_Button(DIJoystickButtons, 0, (buttons & SCE_CTRL_LTRIGGER) != 0);
 	Set_Button(DIJoystickButtons, 1, (buttons & SCE_CTRL_RTRIGGER) != 0);
+	if (!g_logged_action_hit &&
+		(DIKeyboardButtons[DIK_E] & DirectInput::DI_BUTTON_HIT) != 0) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"Triangle delivered original Action/Use key DIK_E");
+		g_logged_action_hit = true;
+	}
+	if (!g_logged_reload_hit &&
+		(DIKeyboardButtons[DIK_R] & DirectInput::DI_BUTTON_HIT) != 0) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"Square delivered original Reload key DIK_R");
+		g_logged_reload_hit = true;
+	}
+	if (!g_logged_zoom_in_hit &&
+		(DIKeyboardButtons[DIK_UP] & DirectInput::DI_BUTTON_HIT) != 0) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"D-pad Up delivered original sniper zoom-in key DIK_UP");
+		g_logged_zoom_in_hit = true;
+	}
+	if (!g_logged_zoom_out_hit &&
+		(DIKeyboardButtons[DIK_DOWN] & DirectInput::DI_BUTTON_HIT) != 0) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"D-pad Down delivered original sniper zoom-out key DIK_DOWN");
+		g_logged_zoom_out_hit = true;
+	}
 	// Keep the two physical sticks independent.  The old boundary reused the
 	// mouse array for joystick storage, so mapping the camera overwrote movement
 	// input.  Left stick is an original joystick slider; right stick becomes an
@@ -549,6 +600,12 @@ void DirectInput::Read(void)
 		(buttons & SCE_CTRL_TRIANGLE) != 0 ? 1U : 0U;
 	g_vita_input_telemetry.select_down = (buttons & SCE_CTRL_SELECT) != 0 ? 1U : 0U;
 	g_vita_input_telemetry.circle_down = (buttons & SCE_CTRL_CIRCLE) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.cross_down = (buttons & SCE_CTRL_CROSS) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.left_shoulder_down =
+		(buttons & SCE_CTRL_LTRIGGER) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.right_shoulder_down =
+		(buttons & SCE_CTRL_RTRIGGER) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.front_touch_down = front_touch_down ? 1U : 0U;
 	g_vita_input_telemetry.dpad_up_down =
 		(buttons & SCE_CTRL_UP) != 0 ? 1U : 0U;
 	g_vita_input_telemetry.dpad_down_down =
@@ -562,13 +619,16 @@ void DirectInput::Read(void)
 	g_vita_input_telemetry.reload_key_state =
 		static_cast<uint32_t>(DIKeyboardButtons[DIK_R]);
 	g_vita_input_telemetry.camera_toggle_key_state =
-		static_cast<uint32_t>(DIKeyboardButtons[DIK_DOWN]);
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_F]);
 	g_vita_input_telemetry.previous_weapon_key_state =
 		static_cast<uint32_t>(DIKeyboardButtons[DIK_LEFT]);
 	g_vita_input_telemetry.next_weapon_key_state =
 		static_cast<uint32_t>(DIKeyboardButtons[DIK_RIGHT]);
-	g_vita_input_telemetry.objectives_toggle_key_state =
+	g_vita_input_telemetry.zoom_in_key_state =
 		static_cast<uint32_t>(DIKeyboardButtons[DIK_UP]);
+	g_vita_input_telemetry.zoom_out_key_state =
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_DOWN]);
+	g_vita_input_telemetry.objectives_toggle_key_state = 0U;
 #endif
 }
 

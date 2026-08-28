@@ -79,6 +79,7 @@ bool g_logged_first_material_lighting = false;
 bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_loading_texture_v_flip = false;
+bool g_logged_first_passthrough_texture_v_flip = false;
 bool g_logged_first_skin_texture_color = false;
 bool g_shader_compiler_available = false;
 unsigned g_shader_init_calls = 0;
@@ -223,6 +224,13 @@ void Store_Render_State_Cache(uint32_t state, uint32_t value)
 	if (state < 256U) {
 		g_render_state_cache.valid[state] = true;
 		g_render_state_cache.values[state] = value;
+	}
+}
+
+void Invalidate_Render_State_Cache(uint32_t state)
+{
+	if (state < 256U) {
+		g_render_state_cache.valid[state] = false;
 	}
 }
 
@@ -452,6 +460,12 @@ bool Uses_Generated_Texture_Coordinates(
 		mode == D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR;
 }
 
+bool Should_Flip_Submitted_Texture_V(
+	const OriginalTextureCoordinateState &state)
+{
+	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;
+}
+
 const Vector2 *Resolve_UV_Array_For_Texture_State(MeshModelClass *model,
 	const OriginalTextureCoordinateState &state, const Vector2 *fallback)
 {
@@ -583,13 +597,20 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uvs[vertex_index].X;
 		source_t = uvs[vertex_index].Y;
 	}
-	if (Has_Loadscreen_Texture_Prefix(texture_name)) {
+	if (Should_Flip_Submitted_Texture_V(state)) {
 		source_t = 1.0f - source_t;
-		if (!g_logged_first_loading_texture_v_flip) {
+		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
+			!g_logged_first_loading_texture_v_flip) {
 			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
 				"first loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
+		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
+			!g_logged_first_passthrough_texture_v_flip) {
+			Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+				"first passthrough texture V correction: texture=%s stage=%u",
+				texture_name != NULL ? texture_name : "none", stage);
+			g_logged_first_passthrough_texture_v_flip = true;
 		}
 	}
 	float s = 0.0f;
@@ -708,13 +729,20 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uv[0];
 		source_t = uv[1];
 	}
-	if (Has_Loadscreen_Texture_Prefix(texture_name)) {
+	if (Should_Flip_Submitted_Texture_V(state)) {
 		source_t = 1.0f - source_t;
-		if (!g_logged_first_loading_texture_v_flip) {
+		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
+			!g_logged_first_loading_texture_v_flip) {
 			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
 				"first indexed loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
+		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
+			!g_logged_first_passthrough_texture_v_flip) {
+			Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+				"first indexed passthrough texture V correction: texture=%s stage=%u",
+				texture_name != NULL ? texture_name : "none", stage);
+			g_logged_first_passthrough_texture_v_flip = true;
 		}
 	}
 
@@ -759,6 +787,7 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		}
 	} else {
 		glActiveTexture(GL_TEXTURE0);
+		glDisable(GL_TEXTURE_2D);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
 	if (state.alpha_test) {
@@ -784,9 +813,19 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		glCullFace(GL_BACK);
 	} else glDisable(GL_CULL_FACE);
 	Apply_Original_Fog_State(shader);
-	g_texture_stage_cache[0].enabled_known = false;
+	g_texture_stage_cache[0].enabled_known = true;
+	g_texture_stage_cache[0].enabled =
+		shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;
 	g_texture_stage_cache[0].combiner_known = false;
-	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
+	Invalidate_Render_State_Cache(D3DRS_ALPHATESTENABLE);
+	Invalidate_Render_State_Cache(D3DRS_ALPHAREF);
+	Invalidate_Render_State_Cache(D3DRS_ALPHAFUNC);
+	Invalidate_Render_State_Cache(D3DRS_ALPHABLENDENABLE);
+	Invalidate_Render_State_Cache(D3DRS_SRCBLEND);
+	Invalidate_Render_State_Cache(D3DRS_DESTBLEND);
+	Invalidate_Render_State_Cache(D3DRS_ZFUNC);
+	Invalidate_Render_State_Cache(D3DRS_ZWRITEENABLE);
+	Invalidate_Render_State_Cache(D3DRS_CULLMODE);
 	++g_statistics.state_changes;
 }
 
@@ -1417,31 +1456,15 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 		return false;
 	}
 
-	uint32_t fitted_width = DISPLAY_WIDTH;
-	uint32_t fitted_height = DISPLAY_HEIGHT;
-	if (static_cast<uint64_t>(DISPLAY_WIDTH) * logical_height >
-		static_cast<uint64_t>(DISPLAY_HEIGHT) * logical_width) {
-		fitted_width = static_cast<uint32_t>(
-			(static_cast<uint64_t>(DISPLAY_HEIGHT) * logical_width) /
-				logical_height);
-	} else if (static_cast<uint64_t>(DISPLAY_WIDTH) * logical_height <
-		static_cast<uint64_t>(DISPLAY_HEIGHT) * logical_width) {
-		fitted_height = static_cast<uint32_t>(
-			(static_cast<uint64_t>(DISPLAY_WIDTH) * logical_height) /
-				logical_width);
-	}
-	if (fitted_width == 0U || fitted_height == 0U) return false;
-	const uint32_t fitted_x = (DISPLAY_WIDTH - fitted_width) / 2U;
-	const uint32_t fitted_y = (DISPLAY_HEIGHT - fitted_height) / 2U;
-	const uint64_t left = fitted_x +
-		(static_cast<uint64_t>(d3d_x) * fitted_width) / logical_width;
-	const uint64_t right = fitted_x +
-		((static_cast<uint64_t>(d3d_x) + width) * fitted_width +
+	const uint64_t left =
+		(static_cast<uint64_t>(d3d_x) * DISPLAY_WIDTH) / logical_width;
+	const uint64_t right =
+		((static_cast<uint64_t>(d3d_x) + width) * DISPLAY_WIDTH +
 			logical_width - 1U) / logical_width;
-	const uint64_t top = fitted_y +
-		(static_cast<uint64_t>(d3d_y) * fitted_height) / logical_height;
-	const uint64_t bottom = fitted_y +
-		((static_cast<uint64_t>(d3d_y) + height) * fitted_height +
+	const uint64_t top =
+		(static_cast<uint64_t>(d3d_y) * DISPLAY_HEIGHT) / logical_height;
+	const uint64_t bottom =
+		((static_cast<uint64_t>(d3d_y) + height) * DISPLAY_HEIGHT +
 			logical_height - 1U) / logical_height;
 	if (right <= left || bottom <= top || right > DISPLAY_WIDTH ||
 		bottom > DISPLAY_HEIGHT) {
@@ -1850,7 +1873,9 @@ bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
 		return false;
 	}
 	if (!valid || native_texture == 0U) {
-		++g_statistics.texture_invalid_binds;
+		if (valid && native_texture == 0U) {
+			++g_statistics.texture_invalid_binds;
+		}
 #if defined(__vita__)
 		Set_Texture_Stage_Enabled(stage, false);
 #endif
@@ -1898,7 +1923,9 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 		return false;
 	}
 	if (!valid || native_texture == 0U) {
-		++g_statistics.texture_invalid_binds;
+		if (valid && native_texture == 0U) {
+			++g_statistics.texture_invalid_binds;
+		}
 		return false;
 	}
 #if defined(__vita__)

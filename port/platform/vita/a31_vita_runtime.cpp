@@ -42,9 +42,11 @@
 #include "serverfps.h"
 #include "singlepl.h"
 #include "scripts.h"
+#include "scene.h"
 #include "stylemgr.h"
 #include "teammanager.h"
 #include "textdisplay.h"
+#include "textwindow.h"
 #include "timemgr.h"
 #include "menubackdrop.h"
 #include "translatedb.h"
@@ -364,15 +366,11 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 		static_cast<uint32_t>(kOriginalLoadingLogicalHeight);
 	state.loading_visual_gate.native_display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
 	state.loading_visual_gate.native_display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
-	state.loading_visual_gate.logical_to_native_fullscreen =
-		static_cast<uint32_t>(kOriginalLoadingLogicalWidth) *
-			RenegadeVitaRenderer::DISPLAY_HEIGHT ==
-		static_cast<uint32_t>(kOriginalLoadingLogicalHeight) *
-			RenegadeVitaRenderer::DISPLAY_WIDTH;
+	state.loading_visual_gate.logical_to_native_fullscreen = true;
 	state.loading_visual_gate.original_loading_screen_owner = true;
 	state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
 	state.loading_visual_gate.loading_texture_v_flip_enabled = true;
-	state.loading_visual_gate.gameplay_texture_v_unchanged = true;
+	state.loading_visual_gate.gameplay_texture_v_unchanged = false;
 	state.scripts_active = ScriptManager::Is_Provider_Active()
 		&& ScriptManager::Get_Active_Script_Count() > 0;
 	return state;
@@ -381,7 +379,7 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
 	uint32_t frame, const char *reason)
 {
-	A30_Vita_Log("A3.5 effects: reason=%s frame=%u player=%u definition=%s state=%s position=(%.3f,%.3f,%.3f) velocity=(%.3f,%.3f,%.3f) health=%.3f physics=%d grounded=%d first_person=%d weapon=%s/%u rounds=%d/%d fired_total=%u weapon_state=%d triggered/fired=%d/%d action_count/active/busy=%u/%d/%d control action/reload=%d/%d input action/reload/use/camera/prev/next/objectives=%d/%d/%d/%d/%d/%d/%d physical square/triangle/select/circle/dpad_udlr=%d/%d/%d/%d/%d/%d/%d/%d key action/reload/camera/prev/next/objectives=%u/%u/%u/%u/%u/%u buttons=%08X\n",
+	A30_Vita_Log("A3.5 effects: reason=%s frame=%u player=%u definition=%s state=%s position=(%.3f,%.3f,%.3f) velocity=(%.3f,%.3f,%.3f) health=%.3f physics=%d grounded=%d first_person=%d weapon=%s/%u rounds=%d/%d fired_total=%u weapon_state=%d triggered/fired=%d/%d action_count/active/busy=%u/%d/%d control action/reload=%d/%d input action/reload/use/camera/prev/next/zoom/objectives=%d/%d/%d/%d/%d/%d/%d/%d/%d physical square/triangle/select/circle/cross/l/r/front/dpad_udlr=%d/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d key action/reload/camera/prev/next/zoom/objectives=%u/%u/%u/%u/%u/%u/%u/%u buttons=%08X\n",
 		reason, frame, trace.player_object_id, trace.player_definition,
 		trace.player_state, trace.player_x, trace.player_y, trace.player_z,
 		trace.player_velocity[0], trace.player_velocity[1],
@@ -403,11 +401,17 @@ void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
 			trace.input_first_person_toggle_active ? 1 : 0,
 			trace.input_previous_weapon_active ? 1 : 0,
 			trace.input_next_weapon_active ? 1 : 0,
+			trace.input_zoom_in_active ? 1 : 0,
+			trace.input_zoom_out_active ? 1 : 0,
 			trace.input_objectives_toggle_active ? 1 : 0,
 			trace.input_square_down ? 1 : 0,
 		trace.input_triangle_down ? 1 : 0,
 		trace.input_select_down ? 1 : 0,
 		trace.input_circle_down ? 1 : 0,
+		trace.input_cross_down ? 1 : 0,
+		trace.input_left_shoulder_down ? 1 : 0,
+		trace.input_right_shoulder_down ? 1 : 0,
+		trace.input_front_touch_down ? 1 : 0,
 		trace.input_dpad_up_down ? 1 : 0,
 		trace.input_dpad_down_down ? 1 : 0,
 		trace.input_dpad_left_down ? 1 : 0,
@@ -416,6 +420,8 @@ void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
 			trace.input_camera_toggle_key_state,
 			trace.input_previous_weapon_key_state,
 			trace.input_next_weapon_key_state,
+			trace.input_zoom_in_key_state,
+			trace.input_zoom_out_key_state,
 			trace.input_objectives_toggle_key_state,
 			trace.input_buttons);
 }
@@ -646,7 +652,7 @@ void Log_Timing_Statistics(const InteractiveTiming &timing,
 void Log_Input_Telemetry()
 {
 	const RenegadeVitaInputTelemetry &input = Renegade_Vita_Last_Input_Telemetry();
-	A30_Vita_Log("A3.5 input: samples=%llu raw lx/ly/rx/ry=%u/%u/%u/%u normalized=%.3f/%.3f/%.3f/%.3f logical=%ld/%ld/%ld/%ld mouse_delta=%ld/%ld dt=%.4f buttons=%08X physical square/triangle/select/circle/dpad_udlr=%u/%u/%u/%u/%u/%u/%u/%u key action/reload/camera/prev/next/objectives=%u/%u/%u/%u/%u/%u route_mode/active/index/count/truncated=%u/%u/%u/%u/%u\n",
+	A30_Vita_Log("A3.5 input: samples=%llu raw lx/ly/rx/ry=%u/%u/%u/%u normalized=%.3f/%.3f/%.3f/%.3f logical=%ld/%ld/%ld/%ld mouse_delta=%ld/%ld dt=%.4f buttons=%08X physical square/triangle/select/circle/cross/l/r/front/dpad_udlr=%u/%u/%u/%u/%u/%u/%u/%u/%u/%u/%u/%u key action/reload/camera/prev/next/zoom/objectives=%u/%u/%u/%u/%u/%u/%u/%u route_mode/active/index/count/truncated=%u/%u/%u/%u/%u\n",
 		static_cast<unsigned long long>(input.sample_count),
 		static_cast<unsigned>(input.lx), static_cast<unsigned>(input.ly),
 		static_cast<unsigned>(input.rx), static_cast<unsigned>(input.ry),
@@ -659,11 +665,14 @@ void Log_Input_Telemetry()
 		static_cast<long>(input.mouse_dx), static_cast<long>(input.mouse_dy),
 		static_cast<double>(input.frame_seconds), input.buttons,
 		input.square_down, input.triangle_down, input.select_down,
-		input.circle_down, input.dpad_up_down, input.dpad_down_down,
+		input.circle_down, input.cross_down, input.left_shoulder_down,
+		input.right_shoulder_down, input.front_touch_down,
+		input.dpad_up_down, input.dpad_down_down,
 		input.dpad_left_down, input.dpad_right_down,
 		input.action_key_state, input.reload_key_state,
 		input.camera_toggle_key_state, input.previous_weapon_key_state,
-		input.next_weapon_key_state, input.objectives_toggle_key_state,
+		input.next_weapon_key_state, input.zoom_in_key_state,
+		input.zoom_out_key_state, input.objectives_toggle_key_state,
 		input.route_mode, input.route_gameplay_active,
 		input.route_sample_index, input.route_sample_count,
 		input.route_truncated);
@@ -796,6 +805,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 			bool campaign_initialized = false;
 			bool mission_completion_observer_installed = false;
 			bool text_display_initialized = false;
+			bool text_window_scene_initialized = false;
 		bool radar_initialized = false;
 		bool session_initialized = false;
 		bool single_player_transport_initialized = false;
@@ -1070,6 +1080,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 					loading_capture.first_error_code);
 				capture_history->Reset();
 				A31_Interactive_Apply_Render_Capabilities();
+				if (render_hud && CombatManager::Get_Background_Scene() != NULL) {
+					TextWindowClass::Initialize(CombatManager::Get_Background_Scene());
+					text_window_scene_initialized = true;
+					A30_Vita_Log("A3.5 text window: original scene binding initialized for message/objective HUD scene=%p\n",
+						static_cast<void *>(CombatManager::Get_Background_Scene()));
+				}
 				A30_Vita_Log("A3.5 scripts: provider_active=%d registered=%d active=%d\n",
 					ScriptManager::Is_Provider_Active() ? 1 : 0,
 					Get_Script_Count(), ScriptManager::Get_Active_Script_Count());
@@ -1453,6 +1469,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 			}
 				if (combat_initialized) {
 					A30_Vita_Log("A3.1 breadcrumb: Combat shutdown entry\n");
+					if (text_window_scene_initialized) {
+						TextWindowClass::Shutdown();
+						text_window_scene_initialized = false;
+						A30_Vita_Log("A3.5 text window: original scene binding shutdown complete\n");
+					}
 					CombatManager::Shutdown();
 					A30_Vita_Log("A3.1 breadcrumb: Combat shutdown complete\n");
 				}

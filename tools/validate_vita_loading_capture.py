@@ -205,11 +205,11 @@ def validate(candidate: str, frame: Path, state: Path) -> dict[str, object]:
         "original_logical_height": EXPECTED_LOGICAL[1],
         "native_display_width": EXPECTED_FRAMEBUFFER[0],
         "native_display_height": EXPECTED_FRAMEBUFFER[1],
-        "logical_to_native_fullscreen": False,
+        "logical_to_native_fullscreen": True,
         "original_loading_screen_owner": True,
         "direct_vitagl_overlay_disabled": True,
         "loading_texture_v_flip_enabled": True,
-        "gameplay_texture_v_unchanged": True,
+        "gameplay_texture_v_unchanged": False,
     }
     if isinstance(visual, dict):
         for key, expected in expected_visual.items():

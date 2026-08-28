@@ -212,6 +212,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-transition-action-diagnostics.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-latch.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-wide-abi.patch"
@@ -452,6 +454,7 @@ echo "Applied: port/patches/combat-a35-teardown-lifecycle.patch"
 echo "Applied: port/patches/combat-a35-conversation-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-conversation-reentrant-think.patch"
 echo "Applied: port/patches/combat-a35-transition-action-diagnostics.patch"
+echo "Applied: port/patches/combat-a35-weaponview-reload-latch.patch"
 echo "Applied: port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 echo "Applied: port/patches/ww3d2-a31-wide-abi.patch"
 echo "Applied: port/patches/ww3d2-a35-vita-renderobj-load-trace.patch"

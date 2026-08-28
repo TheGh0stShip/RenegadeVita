@@ -51,6 +51,10 @@
 #include "stealtheffect.h"
 #include "animcontrol.h"
 
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+#include "a30_vita_runtime.h"
+#endif
+
 
 /*
 **
@@ -68,6 +72,8 @@ enum {
 int					WeaponViewEnabled;
 int					WeaponState;
 bool				LastMuzzleFlash;
+bool				ReloadAnimationPending;
+const WeaponClass*	ReloadAnimationWeapon;
 
 DecorationPhysClass*HandsPhysObj;
 RenderObjClass*		WeaponModel;
@@ -104,6 +110,32 @@ static	void		Release_Hands_Assets( void );
 static	void		Aquire_Weapon_Assets( const WeaponClass * weapon );
 static	void		Release_Weapon_Assets( void );
 
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+static int g_vita_last_logged_weapon_view_state = -2;
+
+static const char *Vita_Weapon_View_State_Name(int state)
+{
+	switch (state) {
+		case WEAPON_STATE_IDLE: return "idle";
+		case WEAPON_STATE_FIRE: return "fire";
+		case WEAPON_STATE_RELOAD: return "reload";
+		case WEAPON_STATE_ENTER: return "enter";
+		case WEAPON_STATE_EXIT: return "exit";
+		default: return "unknown";
+	}
+}
+
+static const char *Vita_Safe_Weapon_Name(WeaponClass *weapon)
+{
+	return weapon != NULL && weapon->Get_Name() != NULL ? weapon->Get_Name() : "none";
+}
+
+static const char *Vita_Safe_Render_Object_Name(RenderObjClass *model)
+{
+	return model != NULL && model->Get_Name() != NULL ? model->Get_Name() : "none";
+}
+#endif
+
 /*
 **
 */
@@ -115,6 +147,8 @@ void 	WeaponViewClass::Init()
 	WeaponAnimControl.Set_Model( NULL );
 
 	ClipModel = NULL;
+	ReloadAnimationPending = false;
+	ReloadAnimationWeapon = NULL;
 	
 	for ( int i = 0; i < NUM_WEAPON_STATES; i++ ) {
 		WeaponAnims[i] = NULL;
@@ -152,6 +186,8 @@ void 	WeaponViewClass::Reset()
 
 	Release_Weapon_Assets();
 	Release_Hands_Assets();
+	ReloadAnimationPending = false;
+	ReloadAnimationWeapon = NULL;
 }
 
 
@@ -220,6 +256,16 @@ bool	WeaponViewClass::Load( ChunkLoadClass &cload )
 void 	WeaponViewClass::Enable( bool enable )
 {
 	WeaponViewEnabled = enable;
+}
+
+void 	WeaponViewClass::Notify_Reload_Started( const WeaponClass *weapon )
+{
+	ReloadAnimationPending = true;
+	ReloadAnimationWeapon = weapon;
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+	A30_Vita_Log("A3.5 weapon view: reload animation latched weapon=%p\n",
+		static_cast<const void *>(weapon));
+#endif
 }
 
 /*
@@ -337,7 +383,9 @@ void 	WeaponViewClass::Think()
 	if ( COMBAT_STAR ) {
 		WeaponClass	* star_weapon = COMBAT_STAR->Get_Weapon();
 		if ( star_weapon != NULL ) {
-			if ( star_weapon->Is_Reloading() ) {
+			const bool reload_pending =
+				ReloadAnimationPending && ReloadAnimationWeapon == star_weapon;
+			if ( star_weapon->Is_Reloading() || reload_pending ) {
 				new_weapon_state = WEAPON_STATE_RELOAD;
 			} else if ( star_weapon->Is_Firing() ) {
 				if ( WeaponState == WEAPON_STATE_FIRE ) {
@@ -374,6 +422,23 @@ void 	WeaponViewClass::Think()
 	if ( weapon ) {
 		Get_Render_Obj_Name_From_Filename( new_weapon_model_name, weapon->Get_First_Person_Model_Name() );
 	}
+
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+	if (new_weapon_state != g_vita_last_logged_weapon_view_state ||
+		new_weapon_state == WEAPON_STATE_RELOAD) {
+		A30_Vita_Log("A3.5 weapon view: state candidate current=%s new=%s weapon=%s model=%s first_person=%d reload=%d firing=%d complete=%d enabled=%d\n",
+			Vita_Weapon_View_State_Name(WeaponState),
+			Vita_Weapon_View_State_Name(new_weapon_state),
+			Vita_Safe_Weapon_Name(weapon),
+			Vita_Safe_Render_Object_Name(WeaponModel),
+			CombatManager::Is_First_Person() ? 1 : 0,
+			weapon != NULL && weapon->Is_Reloading() ? 1 : 0,
+			weapon != NULL && weapon->Is_Firing() ? 1 : 0,
+			is_current_complete ? 1 : 0,
+			WeaponViewEnabled ? 1 : 0);
+		g_vita_last_logged_weapon_view_state = new_weapon_state;
+	}
+#endif
 
 	// If we need to change the assets,
 	if ( stricmp( cur_weapon_model_name,new_weapon_model_name)!=0) {
@@ -490,6 +555,24 @@ void 	WeaponViewClass::Think()
   				WeaponAnimControl.Set_Animation( WeaponAnims[ WeaponState ], anim_blend_time );
 				mode = ( WeaponState == WEAPON_STATE_IDLE ) ? ANIM_MODE_LOOP : ANIM_MODE_ONCE;
   				WeaponAnimControl.Set_Mode( (AnimMode)mode );
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+				if (WeaponState == WEAPON_STATE_RELOAD ||
+					WeaponState == WEAPON_STATE_FIRE ||
+					WeaponState == WEAPON_STATE_ENTER ||
+					WeaponState == WEAPON_STATE_EXIT) {
+					A30_Vita_Log("A3.5 weapon view: play state=%s weapon=%s model=%s hands_anim=%p weapon_anim=%p blend=%.3f mode=%d\n",
+						Vita_Weapon_View_State_Name(WeaponState),
+						Vita_Safe_Weapon_Name(weapon),
+						Vita_Safe_Render_Object_Name(WeaponModel),
+						static_cast<void *>(HandsAnims[WeaponState]),
+						static_cast<void *>(WeaponAnims[WeaponState]),
+						static_cast<double>(anim_blend_time), mode);
+				}
+#endif
+				if (WeaponState == WEAPON_STATE_RELOAD) {
+					ReloadAnimationPending = false;
+					ReloadAnimationWeapon = NULL;
+				}
 
 //				if ( HandsAnims[ WeaponState ] != NULL ) {
 //					Debug_Say(( "Playing %s\n", HandsAnims[ WeaponState ]->Get_Name() ));
@@ -713,6 +796,13 @@ static void	Aquire_Weapon_Assets( const WeaponClass * weapon )
 			WeaponAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( anim_name );
 			if ( WeaponAnims[i] == NULL ) {
 				Debug_Say(( "Missing Weapon Anim %s\n", anim_name ));
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+				if (i == WEAPON_STATE_RELOAD) {
+					A30_Vita_Log("A3.5 weapon view: missing first-person weapon reload anim weapon=%s anim=%s model=%s\n",
+						(const char *)weapon_name, (const char *)anim_name,
+						Vita_Safe_Render_Object_Name(WeaponModel));
+				}
+#endif
 			}
 
 			// Get Hands Anims
@@ -721,6 +811,12 @@ static void	Aquire_Weapon_Assets( const WeaponClass * weapon )
 			HandsAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( anim_name );
 			if ( HandsAnims[i] == NULL ) {
 				Debug_Say(( "Missing Hands Anim %s\n", anim_name ));
+#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
+				if (i == WEAPON_STATE_RELOAD) {
+					A30_Vita_Log("A3.5 weapon view: missing first-person hands reload anim weapon=%s anim=%s fallback=F_SKELETON.F_HA_PIST_IDLE\n",
+						(const char *)weapon_name, (const char *)anim_name);
+				}
+#endif
 				HandsAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( "F_SKELETON.F_HA_PIST_IDLE" );
 			}
 		}
@@ -765,6 +861,8 @@ static void	Release_Weapon_Assets( void )
 			HandsAnims[i] = NULL;
 		}
 	}
+	ReloadAnimationPending = false;
+	ReloadAnimationWeapon = NULL;
 }
 
 /*
@@ -844,4 +942,3 @@ static void	Set_Bob_Recoil( float amount )
 { 
 	BobRecoil = amount; 
 }
-

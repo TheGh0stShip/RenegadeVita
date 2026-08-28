@@ -371,14 +371,18 @@ int main(int argc, char **argv)
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON) == DIK_R &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON) == 0 &&
-					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE) == DIK_DOWN &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE) == DIK_F &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON) == DIK_LEFT &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON) == DIK_RIGHT &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_IN) == DIK_UP &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_ZOOM_IN) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT) == DIK_DOWN &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT) == 0 &&
 					Input::Get_Primary_Key_For_Function(
-						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == DIK_UP &&
+						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
 					Input::Get_Secondary_Key_For_Function(
 						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0 &&

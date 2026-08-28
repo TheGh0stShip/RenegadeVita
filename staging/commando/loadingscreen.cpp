@@ -219,7 +219,11 @@ void LoadingScreenClass::Render(bool update_network)
 
 	LoadPercentage += LoadPercentageRate * TimeManager::Get_Frame_Seconds();
 	LoadPercentage = WWMath::Clamp( LoadPercentage, 0, LoadPercentageClamp );
-	LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
+	if ( LoadPercentage > LoadPercentageDrawn ) {
+		LoadPercentageDrawn = LoadPercentage;
+	} else {
+		LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
+	}
 	backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
 	if (ConsoleBox.Is_Exclusive() && _last_percent_drawn != LoadPercentageDrawn) {
 		_last_percent_drawn = LoadPercentageDrawn;

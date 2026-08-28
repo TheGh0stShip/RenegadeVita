@@ -89,11 +89,11 @@ class CaptureComparisonTest(unittest.TestCase):
                     "original_logical_height": 480,
                     "native_display_width": 960,
                     "native_display_height": 544,
-                    "logical_to_native_fullscreen": False,
+                    "logical_to_native_fullscreen": True,
                     "original_loading_screen_owner": True,
                     "direct_vitagl_overlay_disabled": True,
                     "loading_texture_v_flip_enabled": True,
-                    "gameplay_texture_v_unchanged": True,
+                    "gameplay_texture_v_unchanged": False,
                 }
                 state_path.write_text(json.dumps(state), encoding="utf-8")
             after_path = after / "state.json"

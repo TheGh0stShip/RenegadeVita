@@ -81,11 +81,17 @@ struct A31InteractiveRenderTrace
 	bool input_first_person_toggle_active;
 	bool input_previous_weapon_active;
 	bool input_next_weapon_active;
+	bool input_zoom_in_active;
+	bool input_zoom_out_active;
 	bool input_objectives_toggle_active;
 	bool input_square_down;
 	bool input_triangle_down;
 	bool input_select_down;
 	bool input_circle_down;
+	bool input_cross_down;
+	bool input_left_shoulder_down;
+	bool input_right_shoulder_down;
+	bool input_front_touch_down;
 	bool input_dpad_up_down;
 	bool input_dpad_down_down;
 	bool input_dpad_left_down;
@@ -95,6 +101,8 @@ struct A31InteractiveRenderTrace
 	uint32_t input_camera_toggle_key_state;
 	uint32_t input_previous_weapon_key_state;
 	uint32_t input_next_weapon_key_state;
+	uint32_t input_zoom_in_key_state;
+	uint32_t input_zoom_out_key_state;
 	uint32_t input_objectives_toggle_key_state;
 	uint32_t input_buttons;
 	float near_clip;

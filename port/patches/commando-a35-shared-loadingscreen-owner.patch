@@ -109,7 +109,7 @@
 +#endif // LOADINGSCREEN_H
 --- /dev/null
 +++ b/loadingscreen.cpp
-@@ -0,0 +1,264 @@
+@@ -0,0 +1,268 @@
 +/*
 +**	Command & Conquer Renegade(tm)
 +**	Copyright 2025 Electronic Arts Inc.
@@ -331,7 +331,11 @@
 +
 +	LoadPercentage += LoadPercentageRate * TimeManager::Get_Frame_Seconds();
 +	LoadPercentage = WWMath::Clamp( LoadPercentage, 0, LoadPercentageClamp );
-+	LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
++	if ( LoadPercentage > LoadPercentageDrawn ) {
++		LoadPercentageDrawn = LoadPercentage;
++	} else {
++		LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
++	}
 +	backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
 +	if (ConsoleBox.Is_Exclusive() && _last_percent_drawn != LoadPercentageDrawn) {
 +		_last_percent_drawn = LoadPercentageDrawn;

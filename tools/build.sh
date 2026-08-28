@@ -16,7 +16,7 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev79}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev80}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
@@ -241,7 +241,7 @@ grep -Fq "\"milestone\": \"$rv_candidate_label\"" "$rv_root/reports/SOURCE_INTEG
 grep -Fq '"original_source_files_compiled": 452' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"staged_original_owner_files": 1' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 121' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 122' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
@@ -347,7 +347,7 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "M00 scripts: original ScriptCommands ABI plus EA/Westwood static Mission00 provider and direct cinematic/powerup dependencies"
 	echo "M00 completion: original CombatMiscHandler callback observed by a bounded Vita lifecycle latch; no objective or script state injection"
 	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
-	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=121; pristine upstream=PASS"
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=122; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"
@@ -393,8 +393,8 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 	echo "Retain user-owned data: ux0:data/renegade/retail/Data/ (do not transfer retail assets)."
 	echo "Runtime log: $rv_runtime_log (remove or rename an older file before launch)."
 	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
-	echo "Controls: left-stick up=forward and down=backward; right-stick up=look up and down=look down by default. Cross=jump; Circle=crouch; Square=action; L/R are original joystick buttons; Triangle=pause/resume; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
-	echo "Test: in M00, verify granular aim, wall perspective at near/far distances, no black muzzle rectangle, released fire stops firing, released crouch clears crouch, then pause/resume and run through an A3.5 120-frame checkpoint. Press Start and wait for LiveArea."
+	echo "Controls: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=first/third-person camera toggle; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
+	echo "Test: in M00, verify fullscreen loading/HUD/scope placement, loading progress, normal texture orientation on characters/doors/powerups, Logan/Sydney/Gunner subtitles, Triangle action/use gates, Square reload animation, D-pad weapon cycling without camera drift, D-pad sniper zoom, and frame rate. Press Start and wait for LiveArea."
 	echo "Return: $rv_runtime_log, ux0:data/renegade/user/captures/, screenshots, and any psp2core-*.psp2dmp. Run tools/collect_a35_diagnostics.sh with this dist directory and returned files."
 } > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"
 {

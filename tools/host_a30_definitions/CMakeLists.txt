@@ -857,10 +857,11 @@ if(CMAKE_CROSSCOMPILING)
     vitashark
     SceShaccCgExt
     taihen_stub
-    SceShaccCg_stub
-    SceKernelDmacMgr_stub
-    SceCtrl_stub
-    SceNet_stub
+	    SceShaccCg_stub
+	    SceKernelDmacMgr_stub
+	    SceCtrl_stub
+	    SceTouch_stub
+	    SceNet_stub
     SceIofilemgr_stub
     freetype
     png

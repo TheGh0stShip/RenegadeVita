@@ -67,6 +67,10 @@ class VitaTextureProvenanceContractTests(unittest.TestCase):
         )
         set_texture = boundary[boundary.index("HRESULT IDirect3DDevice8::SetTexture"):]
         set_texture = set_texture[:set_texture.index("void DX8Wrapper::Get_DX8_Texture_Stage_State_Value_Name")]
+        null_texture = set_texture[
+            set_texture.index("if (texture == NULL)"):
+            set_texture.index("if (texture->DiagnosticFallback)")
+        ]
 
         self.assertIn("if (texture->DiagnosticFallback)", set_texture)
         self.assertIn("RenegadeVitaRenderer::Record_Texture_Checkerboard_Bind();", set_texture)
@@ -80,6 +84,8 @@ class VitaTextureProvenanceContractTests(unittest.TestCase):
                 "RenegadeVitaRenderer::Bind_Texture_Stage(stage, texture->NativeTexture,"
             ),
         )
+        self.assertIn("RenegadeVitaRenderer::Disable_Texture_Stage(stage);", null_texture)
+        self.assertNotIn("RenegadeVitaRenderer::Bind_Texture(0U, false);", null_texture)
 
     def test_device_bound_texture_stages_retain_dx8_lifetime(self):
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(

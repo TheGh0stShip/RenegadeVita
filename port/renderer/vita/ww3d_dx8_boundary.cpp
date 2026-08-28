@@ -1889,8 +1889,7 @@ HRESULT IDirect3DDevice8::SetTexture(DWORD stage, IDirect3DBaseTexture8 *texture
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 	if (texture == NULL) {
-		if (stage == 0U) RenegadeVitaRenderer::Bind_Texture(0U, false);
-		else RenegadeVitaRenderer::Disable_Texture_Stage(stage);
+		RenegadeVitaRenderer::Disable_Texture_Stage(stage);
 		return D3D_OK;
 	}
 	if (texture->DiagnosticFallback) {

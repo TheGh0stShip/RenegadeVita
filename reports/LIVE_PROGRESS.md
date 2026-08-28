@@ -1,5 +1,51 @@
 # Live engineering progress
 
+## 2026-08-28 — dev67 null texture stage-disable semantics
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: `IDirect3DDevice8::SetTexture(NULL)` now disables the
+  requested Vita texture stage for every stage instead of routing stage 0
+  through an invalid texture bind. This matches D3D disable semantics and keeps
+  `invalid_bind` focused on real non-null invalid/unuploaded texture binds while
+  checkerboard fallback binds remain independently counted.
+- Runtime purpose: the next material/texture hardware log can separate
+  intentional fixed-function stage disables from actual missing or bad retail
+  texture submissions. This helps diagnose any remaining pink/black square
+  materials without changing original `TextureClass`, `MeshClass`, or WW3D
+  ownership.
+- Validation: focused texture/indexed/conversation contracts passed 24/24, the
+  fast no-deploy candidate passed 56 focused tests, the original `DDSFileClass`
+  `.tga`-to-`.dds` executable contract 11/11, package identity checks, and VPK
+  packaging. The full canonical no-deploy build passed retained host-validation
+  reuse, 72 host unittest checks, deterministic restaging, source integration
+  reporting, ARM link/package, compressed VPK validation, identity
+  verification, diagnostics bundle generation, SHA manifest verification, and
+  retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic patch files covering 238 mechanically patched staged
+  upstream paths, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev67.vpk` SHA-256 is
+  `3c6279ed13db704e2416b41ff073dace7d772da20d7424541a1846017efb9403`;
+  ELF SHA-256 is
+  `681c043c98c706a18f1b1a55a6b539ae19aa542db1f7d2e83d73e189a620ec92`;
+  diagnostics bundle SHA-256 is
+  `e11222eac9d65f7988eca42bfe71f8f91683c87086a4cabdc4f351047264cb3d`.
+- Boundary: dev67 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev67, verify Logan
+  audible dialogue and timing, dialog/message text, material/texture appearance,
+  and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev67-runtime.log`, especially
+  `output_stream`, `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, fact/estimate/untrimmed/trimmed
+  values, conversation state, `texture loaded`, `loaded_dds/tga`,
+  `checker_bind`, `invalid_bind`, `unsupported_stages`, and first original
+  `MeshClass` stage-1 texture breadcrumbs if dialogue remains silent or
+  materials remain incorrect.
+
 ## 2026-08-28 — dev66 Vita stream-output submission telemetry
 
 `[██████████] 12/12 canonical source/build gates complete`

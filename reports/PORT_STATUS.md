@@ -3,7 +3,7 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev66 Vita stream-output submission telemetry, stream restart handling, per-buffer stream-mix telemetry, active streamed-audio telemetry, Vita DX8 bound-texture lifetime,
+Current work: **post-dev67 null texture-stage disable semantics, Vita stream-output submission telemetry, stream restart handling, per-buffer stream-mix telemetry, active streamed-audio telemetry, Vita DX8 bound-texture lifetime,
 WWAudio stream loop-count return, streamed-dialogue fact runtime telemetry, WAVE fact-duration metadata,
 streamed-dialogue duration metadata, dialogue/audio
 diagnostics, texture provenance, DX8
@@ -96,6 +96,16 @@ restaging, 72 host unittest checks, source integration reporting, ARM
 link/package, identity verification, compressed VPK validation, diagnostics
 generation, and SHA verification. The canonical VPK SHA-256 is
 `99ad437fc05c9a8bde760df346816a33103875f620a605ba0fa7c9ca7a316543`.
+Dev67 preserves dev66 and changes `IDirect3DDevice8::SetTexture(NULL)` to use
+the Vita renderer stage-disable path for all stages. That keeps `invalid_bind`
+from counting intentional stage-0 fixed-function texture disables, so the next
+material/texture hardware log better separates real non-null invalid/unuploaded
+texture submissions from normal D3D stage-disable traffic. A full canonical
+no-deploy dev67 build now passes retained host-validation reuse, deterministic
+restaging, 72 host unittest checks, source integration reporting, ARM
+link/package, identity verification, compressed VPK validation, diagnostics
+generation, and SHA verification. The canonical VPK SHA-256 is
+`3c6279ed13db704e2416b41ff073dace7d772da20d7424541a1846017efb9403`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -103,7 +113,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev66 is built but not deployed; dev46 remains restored on
+control changed. Dev67 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

@@ -22,6 +22,7 @@ struct WaveInfo {
 	uint32_t sample_rate = 0;
 	uint32_t data_bytes = 0;
 	uint32_t fact_sample_frames = 0;
+	uint32_t estimated_sample_frames = 0;
 	uint32_t sample_frames = 0;
 	size_t data_offset = 0;
 	std::vector<int16_t> coefficients;
@@ -30,6 +31,10 @@ struct WaveInfo {
 struct DecodedWave {
 	uint16_t channels = 0;
 	uint32_t sample_rate = 0;
+	uint32_t fact_sample_frames = 0;
+	uint32_t estimated_sample_frames = 0;
+	uint32_t untrimmed_sample_frames = 0;
+	uint32_t trimmed_sample_frames = 0;
 	std::vector<int16_t> samples;
 
 	size_t Frame_Count() const

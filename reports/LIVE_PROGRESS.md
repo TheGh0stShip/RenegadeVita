@@ -1,5 +1,46 @@
 # Live engineering progress
 
+## 2026-08-28 — dev61 streamed-dialogue fact runtime telemetry
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Audio boundary: dev61 preserves exact RIFF `fact` frame handling and now
+  carries fact, estimated, untrimmed, and trimmed streamed-dialogue frame
+  metadata into Miles runtime stats. The A3.5 audio log line now includes
+  `frames/fact/estimate/untrimmed/trimmed/rate/vol/pan`.
+- Runtime purpose: the next Logan hardware run can prove whether streamed
+  dialogue used exact `fact` frames or estimated frames, and whether padded
+  decode output was trimmed, while original `ActiveConversationClass`,
+  `SoldierGameObj`, and WWAudio ownership remain unchanged.
+- Validation: focused dialogue/audio diagnostics passed 12/12, and the broader
+  local texture/audio/loading/indexed/skin contract set passed 39/39. The fast
+  no-deploy candidate passed 54 focused tests, the original `DDSFileClass`
+  `.tga`-to-`.dds` executable contract 11/11, ARM package identity/hash
+  checks, and the full canonical no-deploy build passed retained
+  host-validation reuse, 71 host unittest checks, deterministic restaging,
+  source integration reporting, ARM link/package, compressed VPK validation,
+  identity verification, diagnostics bundle generation, SHA manifest
+  verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev61.vpk` SHA-256 is
+  `37c0bcf7d1ffdfff45787437fd2128915bc18d83a8b7c3ac23144704b9108d23`;
+  ELF SHA-256 is
+  `cfae7e566d9eccbee058f5b82df5ff03fbc8d13d2d386bf32fdfc90165a0442a`;
+  diagnostics bundle SHA-256 is
+  `cde3d3817cfb19cd5c99d655bccd9e2d577a97cdba9e71141f806d6fc0e1b017`.
+- Boundary: dev61 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev61, verify
+  Logan audible dialogue and timing, dialog/message text, material/texture
+  appearance, and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev61-runtime.log`, especially speech
+  duration/dropoff/distance, stream bytes/frames/mix/last_stream fields, the
+  new fact/estimate/untrimmed/trimmed values, conversation state, and
+  texture/material provenance if dialogue remains silent or materials remain
+  incorrect.
+
 ## 2026-08-28 — dev60 WAVE fact-duration metadata
 
 `[██████████] 12/12 canonical source/build gates complete`

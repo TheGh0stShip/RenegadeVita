@@ -208,6 +208,24 @@ void Count_Sample_Start_Locked(bool started)
 	else ++g_stats.sample_start_silent;
 }
 
+void Capture_Last_Stream_Locked(const RenegadeMilesSample *sample)
+{
+	if (sample == nullptr) return;
+	g_stats.last_stream_frames = static_cast<uint32_t>(
+		std::min<size_t>(sample->wave.Frame_Count(),
+			std::numeric_limits<uint32_t>::max()));
+	g_stats.last_stream_fact_frames = sample->wave.fact_sample_frames;
+	g_stats.last_stream_estimated_frames = sample->wave.estimated_sample_frames;
+	g_stats.last_stream_untrimmed_frames = sample->wave.untrimmed_sample_frames;
+	g_stats.last_stream_trimmed_frames = sample->wave.trimmed_sample_frames;
+	g_stats.last_stream_rate = static_cast<uint32_t>(
+		std::max<S32>(0, sample->playback_rate));
+	g_stats.last_stream_volume = static_cast<uint32_t>(
+		std::max<S32>(0, sample->volume));
+	g_stats.last_stream_pan = static_cast<uint32_t>(
+		std::max<S32>(0, sample->pan));
+}
+
 void Mix_Locked(int16_t *output, size_t frames)
 {
 	if (frames > kOutputFrames) return;
@@ -828,15 +846,7 @@ HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 			stream->sample = sample;
 			sample->streaming = true;
 			g_stats.stream_decoded_frames += sample->wave.Frame_Count();
-			g_stats.last_stream_frames = static_cast<uint32_t>(
-				std::min<size_t>(sample->wave.Frame_Count(),
-					std::numeric_limits<uint32_t>::max()));
-			g_stats.last_stream_rate = static_cast<uint32_t>(
-				std::max<S32>(0, sample->playback_rate));
-			g_stats.last_stream_volume = static_cast<uint32_t>(
-				std::max<S32>(0, sample->volume));
-			g_stats.last_stream_pan = static_cast<uint32_t>(
-				std::max<S32>(0, sample->pan));
+			Capture_Last_Stream_Locked(sample);
 		}
 	}
 	if (stream != nullptr) ++g_stats.stream_open_successes;
@@ -871,15 +881,7 @@ void AIL_start_stream(HSTREAM stream)
 	++g_stats.stream_start_attempts;
 	RenegadeMilesSample *sample = Stream_Sample(stream);
 	if (sample != nullptr) {
-		g_stats.last_stream_frames = static_cast<uint32_t>(
-			std::min<size_t>(sample->wave.Frame_Count(),
-				std::numeric_limits<uint32_t>::max()));
-		g_stats.last_stream_rate = static_cast<uint32_t>(
-			std::max<S32>(0, sample->playback_rate));
-		g_stats.last_stream_volume = static_cast<uint32_t>(
-			std::max<S32>(0, sample->volume));
-		g_stats.last_stream_pan = static_cast<uint32_t>(
-			std::max<S32>(0, sample->pan));
+		Capture_Last_Stream_Locked(sample);
 	}
 	const bool started = Start_Sample_Locked(sample);
 	Count_Sample_Start_Locked(started);

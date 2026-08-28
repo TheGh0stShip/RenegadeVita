@@ -414,8 +414,9 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 		offset = payload + padded;
 	}
 	if (!format_found || !data_found) return Fail("WAVE format or data chunk absent", error);
+	parsed.estimated_sample_frames = Estimate_Frame_Count(parsed);
 	parsed.sample_frames = parsed.fact_sample_frames != 0U
-		? parsed.fact_sample_frames : Estimate_Frame_Count(parsed);
+		? parsed.fact_sample_frames : parsed.estimated_sample_frames;
 	*info = std::move(parsed);
 	return true;
 }
@@ -429,6 +430,8 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 	DecodedWave output;
 	output.channels = info.channels;
 	output.sample_rate = info.sample_rate;
+	output.fact_sample_frames = info.fact_sample_frames;
+	output.estimated_sample_frames = info.estimated_sample_frames;
 	bool success = false;
 	switch (info.encoding) {
 		case WaveEncoding::Pcm:
@@ -444,7 +447,11 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 	if (!success || output.samples.empty()) {
 		return success ? Fail("decoded WAVE is empty", error) : false;
 	}
+	const size_t untrimmed_frames = output.Frame_Count();
+	output.untrimmed_sample_frames = Saturating_U64_To_U32(untrimmed_frames);
 	if (info.sample_frames != 0U && output.Frame_Count() > info.sample_frames) {
+		output.trimmed_sample_frames = Saturating_U64_To_U32(
+			output.Frame_Count() - info.sample_frames);
 		output.samples.resize(static_cast<size_t>(info.sample_frames) *
 			static_cast<size_t>(output.channels));
 	}

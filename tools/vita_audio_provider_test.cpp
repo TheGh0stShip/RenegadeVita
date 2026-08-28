@@ -145,6 +145,17 @@ int main()
 	passed &= Require(AIL_WAV_info_bounded(pcm.data(), pcm.size(), &pcm_info) != 0 &&
 		pcm_info.samples == 4 && pcm_info.rate == 48000,
 		"PCM WAVE frame count differs");
+	const std::vector<uint8_t> pcm_fact = Wave(1, 1, 48000, 2, 16, {},
+		pcm_samples, 3);
+	passed &= Require(RenegadeVitaAudio::Decode_Wave(
+		pcm_fact.data(), pcm_fact.size(), &decoded),
+		"PCM fact-count decode failed");
+	passed &= Require(decoded.Frame_Count() == 3 &&
+		decoded.fact_sample_frames == 3 &&
+		decoded.estimated_sample_frames == 4 &&
+		decoded.untrimmed_sample_frames == 4 &&
+		decoded.trimmed_sample_frames == 1,
+		"PCM fact-count metadata differs");
 
 	const std::vector<uint8_t> pcm8 = Wave(1, 2, 22050, 2, 8, {},
 		{ 128, 255, 0, 128 });
@@ -303,7 +314,7 @@ int main()
 		spatial[0] == 0 && spatial[1] == 0,
 		"3D provider maximum-distance cutoff differs");
 	AIL_release_3D_sample_handle(sample3d);
-	g_stream_fixture = pcm;
+	g_stream_fixture = pcm_fact;
 	AIL_set_file_callbacks(Stream_Open, Stream_Close, Stream_Seek, Stream_Read);
 	HSTREAM stream = AIL_open_stream(driver, "logan_test.wav", 0);
 	passed &= Require(stream != nullptr, "provider stream open failed");
@@ -315,8 +326,8 @@ int main()
 		"manual stream mix failed");
 	passed &= Require(streamed[0] == 1000 && streamed[1] == 1000 &&
 		streamed[2] == -1000 && streamed[3] == -1000 &&
-		streamed[4] == 2000 && streamed[5] == 2000 &&
-		streamed[6] == -2000 && streamed[7] == -2000,
+		streamed[4] == 2000 && streamed[5] == 2000 && streamed[6] == 0 &&
+		streamed[7] == 0,
 		"provider stream mix differs");
 	AIL_close_stream(stream);
 	RenegadeMilesRuntimeStats stats = {};
@@ -333,12 +344,17 @@ int main()
 		stats.stream_open_successes == 1 &&
 		stats.stream_start_attempts == 1 &&
 		stats.stream_start_successes == 1 &&
-		stats.stream_bytes_read == pcm.size() &&
-		stats.stream_decoded_frames == 4 &&
+		stats.stream_bytes_read == pcm_fact.size() &&
+		stats.stream_decoded_frames == 3 &&
 		stats.stream_mixed_buffers == 1 &&
 		stats.stream_mixed_frames == 4 &&
 		stats.stream_mixed_nonzero_buffers == 1 &&
 		stats.stream_mixed_peak_abs >= 1000 &&
+		stats.last_stream_frames == 3 &&
+		stats.last_stream_fact_frames == 3 &&
+		stats.last_stream_estimated_frames == 4 &&
+		stats.last_stream_untrimmed_frames == 4 &&
+		stats.last_stream_trimmed_frames == 1 &&
 		std::strcmp(stats.last_stream_name, "logan_test.wav") == 0,
 		"provider stream stats differ");
 	passed &= Require(stats.sample_start_attempts == 4 &&
@@ -352,6 +368,6 @@ int main()
 	AIL_shutdown();
 
 	if (!passed) return 1;
-	std::puts("vita_audio_provider=passed pcm=2 ima_adpcm=2 ms_adpcm=2 bounds=2 mixer=1 spatial=2 stream=1");
+	std::puts("vita_audio_provider=passed pcm=3 ima_adpcm=2 ms_adpcm=2 bounds=2 mixer=1 spatial=2 stream=1");
 	return 0;
 }

@@ -181,10 +181,18 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
 
         self.assertIn("volumes_dialog/cinematic=%.3f/%.3f", log_block)
         self.assertIn("stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u", log_block)
+        self.assertIn(
+            "frames/fact/estimate/untrimmed/trimmed/rate/vol/pan=%u/%u/%u/%u/%u/%u/%u/%u",
+            log_block,
+        )
         self.assertIn("allocated/active/streams=%u/%u/%u", log_block)
         self.assertIn("audio->Get_Dialog_Volume()", runtime)
         self.assertIn("audio->Get_Cinematic_Volume()", runtime)
         self.assertIn("stats.stream_mixed_nonzero_buffers", log_block)
+        self.assertIn("stats.last_stream_fact_frames", log_block)
+        self.assertIn("stats.last_stream_estimated_frames", log_block)
+        self.assertIn("stats.last_stream_untrimmed_frames", log_block)
+        self.assertIn("stats.last_stream_trimmed_frames", log_block)
         self.assertIn("stats.active_streams", log_block)
         self.assertEqual(log_block.count("stats.sample_start_silent"), 1)
 
@@ -201,6 +209,9 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
 
         self.assertIn("info->samples = wave.sample_frames;", provider)
         self.assertIn("fact_sample_frames", decoder)
+        self.assertIn("estimated_sample_frames", decoder)
+        self.assertIn("untrimmed_sample_frames", decoder)
+        self.assertIn("trimmed_sample_frames", decoder)
         self.assertIn("UINT32_C(0x74636166)", decoder)
         self.assertIn("parsed.sample_frames = parsed.fact_sample_frames != 0U", decoder)
         self.assertIn("output.samples.resize(static_cast<size_t>(info.sample_frames)", decoder)

@@ -1,6 +1,10 @@
 #pragma once
 
+#include "d3d8.h"
 #include "shader.h"
+
+#include <stdint.h>
+#include <string.h>
 
 namespace RenegadeVitaRenderer {
 
@@ -25,6 +29,66 @@ struct ShaderStateContract {
 	bool color_write;
 	bool cull;
 };
+
+struct FogStateContract {
+	bool enabled;
+	uint32_t color;
+	float start;
+	float end;
+};
+
+inline FogStateContract Default_Fog_State()
+{
+	FogStateContract state = {};
+	state.enabled = false;
+	state.color = 0U;
+	state.start = 0.0f;
+	state.end = 1000.0f;
+	return state;
+}
+
+inline float Decode_DX8_Float_Render_State(uint32_t value)
+{
+	float decoded = 0.0f;
+	memcpy(&decoded, &value, sizeof(decoded));
+	return decoded;
+}
+
+inline bool Update_Fog_State_From_DX8_Render_State(uint32_t render_state,
+	uint32_t value, FogStateContract &state)
+{
+	switch (render_state) {
+	case D3DRS_FOGENABLE:
+		state.enabled = value != 0U;
+		return true;
+	case D3DRS_FOGCOLOR:
+		state.color = value;
+		return true;
+	case D3DRS_FOGSTART:
+		state.start = Decode_DX8_Float_Render_State(value);
+		return true;
+	case D3DRS_FOGEND:
+		state.end = Decode_DX8_Float_Render_State(value);
+		return true;
+	default:
+		return false;
+	}
+}
+
+inline float D3D_Color_Red_Unit(uint32_t color)
+{
+	return static_cast<float>((color >> 16U) & 0xffU) / 255.0f;
+}
+
+inline float D3D_Color_Green_Unit(uint32_t color)
+{
+	return static_cast<float>((color >> 8U) & 0xffU) / 255.0f;
+}
+
+inline float D3D_Color_Blue_Unit(uint32_t color)
+{
+	return static_cast<float>(color & 0xffU) / 255.0f;
+}
 
 inline BlendFactorContract Translate_Source_Blend(ShaderClass::SrcBlendFuncType value)
 {

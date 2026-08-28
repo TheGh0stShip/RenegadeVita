@@ -3,7 +3,8 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev73 original ADDSMOOTH detail combiner,
+Current work: **post-dev74 original DX8 render-state/fog bridge,
+original ADDSMOOTH detail combiner,
 supported texture-stage telemetry,
 original ShaderClass alpha-test reference semantics,
 indexed dynamic texture-coordinate replay,
@@ -186,6 +187,19 @@ integration reporting, ARM link/package, identity verification, compressed VPK
 validation, diagnostics generation, and SHA verification. The canonical VPK
 SHA-256 is
 `251d9335c97056f15f69398a2bfd7c4ef9a9ec9242dab55719896d39acf67c32`.
+Dev74 preserves dev73 and replaces the remaining Vita
+`IDirect3DDevice8::SetRenderState()` no-op boundary with a source-backed
+renderer bridge. Original `DX8Wrapper::Set_DX8_Render_State()`,
+`DX8Wrapper::Set_Fog()`, and `ShaderClass::Apply()` now drive Vita fog
+enable/color/start/end, alpha test/reference/compare, alpha blend
+source/destination, depth compare/write, cull mode, and fill mode. The Vita
+caps now allow original fog only after the backend applies it. A full canonical
+no-deploy dev74 build now passes retained host-validation reuse, current
+lightweight render-state contract 11/11, DDS/TGA alias contract 11/11,
+deterministic restaging, 79 host unittest checks, source integration reporting,
+ARM link/package, identity verification, compressed VPK validation,
+diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
+`c65767ce6b35c693e7d3abbb0b5bf4764ab89dd2bc8e313b1b143c591f4d07ee`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -193,9 +207,10 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev73 is built but not deployed; dev46 remains restored on
-device. Text-dialogue/audio acceptance, texture/material acceptance, and a
-valid post-dialogue route remain pending physical evidence**.
+control changed. Dev74 is built but not deployed; dev46 remains restored on
+device. Text-dialogue/audio acceptance, texture/material acceptance,
+fog/material-state acceptance, and a valid post-dialogue route remain pending
+physical evidence**.
 Exact-dev6 pause passed on physical Vita.
 Exact-dev7 physically proved grounding, movement, Square delivery, and an
 isolated original weapon-fire path, while exposing a nondeterministic external

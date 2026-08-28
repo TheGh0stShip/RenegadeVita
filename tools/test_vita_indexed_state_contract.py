@@ -79,6 +79,64 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertNotIn("glAlphaFunc(GL_GREATER, 0.0f);", renderer)
         self.assertIn('"inverse alpha cutout"', host)
 
+    def test_original_dx8_render_state_bridge_restores_fog(self):
+        header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text()
+        contract = (ROOT / "port/renderer/vita/ww3d_vita_render_state_contract.h").read_text()
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        dx8_boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
+        gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
+        original_shader = (ROOT / "staging/ww3d2/shader.cpp").read_text(errors="replace")
+        original_wrapper = (ROOT / "staging/ww3d2/Dx8Wrapper.h").read_text(errors="replace")
+        host = (ROOT / "tools/host_a30_definitions/vita_render_state_contract_main.cpp").read_text()
+
+        for needle in (
+            "DX8Wrapper::Get_Current_Caps()->Is_Fog_Allowed()",
+            "DX8Wrapper::Get_Fog_Enable()",
+            "D3DRS_FOGENABLE,fm",
+            "D3DRS_FOGCOLOR,fogColor",
+        ):
+            self.assertIn(needle, original_shader)
+        for needle in (
+            "Set_DX8_Render_State(D3DRS_FOGSTART",
+            "Set_DX8_Render_State(D3DRS_FOGEND",
+        ):
+            self.assertIn(needle, original_wrapper)
+
+        self.assertIn("bool Apply_DX8_Render_State(uint32_t state, uint32_t value);", header)
+        for needle in (
+            "struct FogStateContract",
+            "Default_Fog_State()",
+            "Decode_DX8_Float_Render_State",
+            "Update_Fog_State_From_DX8_Render_State",
+            "case D3DRS_FOGENABLE:",
+            "case D3DRS_FOGCOLOR:",
+            "case D3DRS_FOGSTART:",
+            "case D3DRS_FOGEND:",
+            "D3D_Color_Red_Unit",
+            "D3D_Color_Green_Unit",
+            "D3D_Color_Blue_Unit",
+        ):
+            self.assertIn(needle, contract)
+
+        for needle in (
+            "bool Apply_DX8_Render_State(uint32_t state, uint32_t value)",
+            "Update_Fog_State_From_DX8_Render_State(state, value, g_fog_state)",
+            "glFogi(GL_FOG_MODE, GL_LINEAR);",
+            "glFogf(GL_FOG_START, g_fog_state.start);",
+            "glFogf(GL_FOG_END, g_fog_state.end);",
+            "glFogfv(GL_FOG_COLOR, color);",
+            "glEnable(GL_FOG);",
+            "glDisable(GL_FOG);",
+            "Apply_Original_Fog_State(shader);",
+            "first original DX8 fog state",
+        ):
+            self.assertIn(needle, renderer)
+        self.assertIn("IsFogAllowed(true)", dx8_boundary)
+        self.assertIn("RenegadeVitaRenderer::Apply_DX8_Render_State(state, value)", gameplay)
+        self.assertIn('"fog start state"', host)
+        self.assertIn('"fog end state"', host)
+        self.assertNotIn("HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE, DWORD)\n{\n\treturn D3D_OK;\n}", gameplay)
+
     def test_textured_static_material_black_fallback_is_bounded_and_observable(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         self.assertIn("first static material black fallback", renderer)

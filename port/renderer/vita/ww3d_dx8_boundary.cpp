@@ -1198,7 +1198,7 @@ DX8Caps::DX8Caps(IDirect3D8 *direct3d, const D3DCAPS8 &caps,
 	  SupportNPatches(false), SupportBumpEnvmap(false),
 	  SupportBumpEnvmapLuminance(false), SupportZBias(false),
 	  SupportAnisotropicFiltering(false), CanDoMultiPass(true),
-	  IsFogAllowed(false), MaxTexturesPerPass(MAX_TEXTURE_STAGES), VertexShaderVersion(0),
+	  IsFogAllowed(true), MaxTexturesPerPass(MAX_TEXTURE_STAGES), VertexShaderVersion(0),
 	  PixelShaderVersion(0), DeviceId(0), DriverBuildVersion(0),
 	  DriverVersionStatus(DRIVER_STATUS_UNKNOWN), VendorId(VENDOR_UNKNOWN),
 	  DriverDLL("Vita native renderer boundary"), Direct3D(direct3d),
@@ -1361,6 +1361,8 @@ float DX8Wrapper::ZNear = 0.1f;
 float DX8Wrapper::ZFar = 1000.0f;
 Matrix4 DX8Wrapper::ProjectionMatrix(true);
 DX8Caps *DX8Wrapper::CurrentCaps = &g_vita_caps;
+bool DX8Wrapper::FogEnable = false;
+D3DCOLOR DX8Wrapper::FogColor = 0;
 
 namespace Debug_Statistics {
 // The original texture application records this optional desktop diagnostic.

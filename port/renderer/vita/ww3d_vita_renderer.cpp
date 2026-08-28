@@ -86,6 +86,14 @@ struct OriginalTextureCoordinateState {
 	D3DMATRIX texture_transform;
 };
 
+FogStateContract g_fog_state = Default_Fog_State();
+GLenum g_dx8_alpha_function = GL_ALWAYS;
+float g_dx8_alpha_reference = 0.0f;
+GLenum g_dx8_source_blend = GL_ONE;
+GLenum g_dx8_destination_blend = GL_ZERO;
+bool g_logged_first_fog_state = false;
+bool g_logged_first_unsupported_render_state = false;
+
 GLenum To_GL_Depth_Function(ShaderClass::DepthCompareType function)
 {
 	switch (function) {
@@ -98,6 +106,50 @@ GLenum To_GL_Depth_Function(ShaderClass::DepthCompareType function)
 	case ShaderClass::PASS_GEQUAL: return GL_GEQUAL;
 	case ShaderClass::PASS_ALWAYS: return GL_ALWAYS;
 	default: return GL_LEQUAL;
+	}
+}
+
+GLenum To_GL_DX8_Compare(uint32_t function)
+{
+	switch (function) {
+	case D3DCMP_NEVER: return GL_NEVER;
+	case D3DCMP_LESS: return GL_LESS;
+	case D3DCMP_EQUAL: return GL_EQUAL;
+	case D3DCMP_LESSEQUAL: return GL_LEQUAL;
+	case D3DCMP_GREATER: return GL_GREATER;
+	case D3DCMP_NOTEQUAL: return GL_NOTEQUAL;
+	case D3DCMP_GREATEREQUAL: return GL_GEQUAL;
+	case D3DCMP_ALWAYS: return GL_ALWAYS;
+	default: return GL_LEQUAL;
+	}
+}
+
+GLenum To_GL_DX8_Blend(uint32_t function)
+{
+	switch (function) {
+	case D3DBLEND_ZERO: return GL_ZERO;
+	case D3DBLEND_ONE: return GL_ONE;
+	case D3DBLEND_SRCCOLOR: return GL_SRC_COLOR;
+	case D3DBLEND_INVSRCCOLOR: return GL_ONE_MINUS_SRC_COLOR;
+	case D3DBLEND_SRCALPHA: return GL_SRC_ALPHA;
+	case D3DBLEND_INVSRCALPHA: return GL_ONE_MINUS_SRC_ALPHA;
+	case D3DBLEND_DESTALPHA: return GL_DST_ALPHA;
+	case D3DBLEND_INVDESTALPHA: return GL_ONE_MINUS_DST_ALPHA;
+	case D3DBLEND_DESTCOLOR: return GL_DST_COLOR;
+	case D3DBLEND_INVDESTCOLOR: return GL_ONE_MINUS_DST_COLOR;
+	case D3DBLEND_SRCALPHASAT: return GL_SRC_ALPHA_SATURATE;
+	default: return GL_ONE;
+	}
+}
+
+GLenum To_GL_DX8_Fill_Mode(uint32_t mode)
+{
+	switch (mode) {
+	case D3DFILL_POINT: return GL_POINT;
+	case D3DFILL_WIREFRAME: return GL_LINE;
+	case D3DFILL_SOLID:
+	default:
+		return GL_FILL;
 	}
 }
 
@@ -122,6 +174,75 @@ GLenum To_GL_Destination_Blend(ShaderClass::DstBlendFuncType function)
 	case ShaderClass::DSTBLEND_SRC_ALPHA: return GL_SRC_ALPHA;
 	case ShaderClass::DSTBLEND_ONE_MINUS_SRC_ALPHA: return GL_ONE_MINUS_SRC_ALPHA;
 	default: return GL_ZERO;
+	}
+}
+
+bool Apply_Current_Fog_State()
+{
+#if defined(__vita__)
+	if (!g_statistics.initialized) {
+		return true;
+	}
+	const GLfloat color[4] = {
+		D3D_Color_Red_Unit(g_fog_state.color),
+		D3D_Color_Green_Unit(g_fog_state.color),
+		D3D_Color_Blue_Unit(g_fog_state.color),
+		1.0f
+	};
+	glFogi(GL_FOG_MODE, GL_LINEAR);
+	glFogf(GL_FOG_START, g_fog_state.start);
+	glFogf(GL_FOG_END, g_fog_state.end);
+	glFogfv(GL_FOG_COLOR, color);
+	if (g_fog_state.enabled) {
+		glEnable(GL_FOG);
+	} else {
+		glDisable(GL_FOG);
+	}
+	++g_statistics.state_changes;
+	const GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		++g_statistics.backend_errors;
+	}
+	if (!g_logged_first_fog_state) {
+		Vita_Append_A22_Runtime_Breadcrumb("render-state",
+			"first original DX8 fog state: enabled=%d color=%06X start=%.3f end=%.3f glGetError=%08X",
+			g_fog_state.enabled ? 1 : 0, g_fog_state.color & 0x00ffffffU,
+			g_fog_state.start, g_fog_state.end, static_cast<unsigned>(error));
+		g_logged_first_fog_state = true;
+	}
+	return error == GL_NO_ERROR;
+#else
+	return true;
+#endif
+}
+
+void Apply_Original_Fog_State(const ShaderClass &shader)
+{
+	bool fog_enabled = false;
+	uint32_t fog_color = DX8Wrapper::Get_Fog_Color();
+	if (DX8Wrapper::Get_Current_Caps()->Is_Fog_Allowed() &&
+		DX8Wrapper::Get_Fog_Enable()) {
+		switch (shader.Get_Fog_Func()) {
+		case ShaderClass::FOG_ENABLE:
+			fog_enabled = true;
+			break;
+		case ShaderClass::FOG_SCALE_FRAGMENT:
+			fog_color = 0U;
+			fog_enabled = true;
+			break;
+		case ShaderClass::FOG_WHITE:
+			fog_color = 0x00ffffffU;
+			fog_enabled = true;
+			break;
+		case ShaderClass::FOG_DISABLE:
+		default:
+			fog_enabled = false;
+			break;
+		}
+	}
+	Apply_DX8_Render_State(D3DRS_FOGENABLE, fog_enabled ? 1U : 0U);
+	if (fog_enabled) {
+		Apply_DX8_Render_State(D3DRS_FOGCOLOR, fog_color);
 	}
 }
 
@@ -472,6 +593,7 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 	} else glDisable(GL_CULL_FACE);
+	Apply_Original_Fog_State(shader);
 	++g_statistics.state_changes;
 }
 
@@ -872,6 +994,7 @@ bool Reactivate_Native_Backend_State()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_CULL_FACE);
+	glDisable(GL_FOG);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
@@ -1178,6 +1301,7 @@ bool Initialize()
 	const GLenum depth_error = Log_GL_Result("depth enable/function");
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "raster state-cache entry");
 	glDisable(GL_CULL_FACE);
+	glDisable(GL_FOG);
 	const GLenum raster_error = Log_GL_Result("cull disable/state cache");
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "projection state entry");
 	glMatrixMode(GL_PROJECTION);
@@ -1516,6 +1640,92 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	(void)alpha_arg1;
 	(void)alpha_arg2;
 	(void)texture_enabled;
+#endif
+	return true;
+}
+
+bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
+{
+#if defined(__vita__)
+	if (Update_Fog_State_From_DX8_Render_State(state, value, g_fog_state)) {
+		return Apply_Current_Fog_State();
+	}
+	if (!g_statistics.initialized) {
+		return true;
+	}
+	bool handled = true;
+	switch (state) {
+	case D3DRS_ALPHABLENDENABLE:
+		if (value != 0U) {
+			glEnable(GL_BLEND);
+			glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+		} else {
+			glDisable(GL_BLEND);
+		}
+		break;
+	case D3DRS_SRCBLEND:
+		g_dx8_source_blend = To_GL_DX8_Blend(value);
+		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+		break;
+	case D3DRS_DESTBLEND:
+		g_dx8_destination_blend = To_GL_DX8_Blend(value);
+		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+		break;
+	case D3DRS_ALPHATESTENABLE:
+		if (value != 0U) {
+			glEnable(GL_ALPHA_TEST);
+		} else {
+			glDisable(GL_ALPHA_TEST);
+		}
+		break;
+	case D3DRS_ALPHAREF:
+		g_dx8_alpha_reference =
+			static_cast<float>(value & 0xffU) / 255.0f;
+		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
+		break;
+	case D3DRS_ALPHAFUNC:
+		g_dx8_alpha_function = To_GL_DX8_Compare(value);
+		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
+		break;
+	case D3DRS_ZFUNC:
+		glDepthFunc(To_GL_DX8_Compare(value));
+		break;
+	case D3DRS_ZWRITEENABLE:
+		glDepthMask(value != 0U ? GL_TRUE : GL_FALSE);
+		break;
+	case D3DRS_CULLMODE:
+		if (value == D3DCULL_NONE) {
+			glDisable(GL_CULL_FACE);
+		} else {
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+		}
+		break;
+	case D3DRS_FILLMODE:
+		glPolygonMode(GL_FRONT_AND_BACK, To_GL_DX8_Fill_Mode(value));
+		break;
+	default:
+		handled = false;
+		break;
+	}
+	if (!handled) {
+		if (!g_logged_first_unsupported_render_state) {
+			Vita_Append_A22_Runtime_Breadcrumb("render-state",
+				"first deferred DX8 render state: state=%u value=%08X",
+				state, value);
+			g_logged_first_unsupported_render_state = true;
+		}
+		return true;
+	}
+	++g_statistics.state_changes;
+	const GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		++g_statistics.backend_errors;
+		return false;
+	}
+#else
+	(void)state;
+	(void)value;
 #endif
 	return true;
 }

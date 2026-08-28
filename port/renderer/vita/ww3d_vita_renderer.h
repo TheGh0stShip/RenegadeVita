@@ -194,6 +194,7 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	uint32_t color_arg1, uint32_t color_arg2, uint32_t alpha_op,
 	uint32_t alpha_arg1, uint32_t alpha_arg2, bool texture_enabled);
+bool Apply_DX8_Render_State(uint32_t state, uint32_t value);
 void Record_Texture_Unsupported_Stage(uint32_t stage);
 void Release_Texture(uint32_t native_texture);
 void Submit_Unsupported(RenderObjClass *object);

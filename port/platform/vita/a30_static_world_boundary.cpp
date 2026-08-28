@@ -99,12 +99,11 @@ HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE state,
 	DWORD value)
 {
 	/* DX8Wrapper::Set_Render_State owns and updates its protected cache before
-	** crossing this device boundary.  The accepted Vita mesh path does not yet
-	** need a second platform-side render-state cache; retain the successful
-	** device result without violating that original ownership contract. */
-	(void)state;
-	(void)value;
-	return D3D_OK;
+	** crossing this device boundary.  The Vita renderer consumes supported
+	** states below the original wrapper without duplicating that protected
+	** ownership cache. */
+	return RenegadeVitaRenderer::Apply_DX8_Render_State(state, value) ?
+		D3D_OK : static_cast<HRESULT>(D3DERR_INVALIDCALL);
 }
 
 unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4 &color)

@@ -1,5 +1,57 @@
 # Live engineering progress
 
+## 2026-08-28 — dev74 original DX8 render-state and fog bridge
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: dev74 preserves dev73 detail-combiner behavior and routes
+  original `IDirect3DDevice8::SetRenderState()` calls through the Vita renderer
+  instead of treating them as no-ops. The bridge now carries original fog
+  enable/color/start/end state, alpha test/reference/compare, alpha blend
+  source/destination, depth compare/write, cull mode, and fill mode into the
+  fixed-function GL backend.
+- Runtime purpose: this keeps `DX8Wrapper::Set_DX8_Render_State()`,
+  `DX8Wrapper::Set_Fog()`, and `ShaderClass::Apply()` as the original owners
+  of material/render state while making the Vita backend honor the state they
+  emit. `IsFogAllowed` is enabled only after the Vita path gained an actual fog
+  implementation.
+- Validation: focused indexed render-state and texture-provenance contracts
+  passed 19/19. The fast no-deploy candidate passed 63 focused tests, the
+  original `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, package
+  identity checks, and VPK packaging. The full canonical no-deploy build passed
+  retained host-validation reuse, the current lightweight render-state
+  contract 11/11, the DDS/TGA alias contract 11/11, 79 host unittest checks,
+  deterministic restaging, source integration reporting, ARM link/package,
+  compressed VPK validation, identity verification, diagnostics bundle
+  generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic patch files covering 238 mechanically patched
+  staged upstream paths, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev74.vpk` SHA-256 is
+  `c65767ce6b35c693e7d3abbb0b5bf4764ab89dd2bc8e313b1b143c591f4d07ee`;
+  ELF SHA-256 is
+  `504718966a606646aecd197c69bb33f94878bb0b37eac358cba13bfc814c7c3a`;
+  MAP SHA-256 is
+  `dd7aa440c9cf9c83029838857ee0eb04ef2a3366ba2e9a03b66894b634d512c5`;
+  diagnostics bundle SHA-256 is
+  `81771595a4c18ba79d723d93b80b523fd17d734cbcc1b2dcd791dfc4cd062697`.
+- Boundary: dev74 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev74, verify M00
+  sky/material fog, material/texture appearance, muzzle rectangle and other
+  alpha cutouts, Logan dialogue text, Logan audible dialogue and timing, and
+  route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev74-runtime.log`, especially
+  `first original DX8 fog state`, `texture loaded`, `loaded_dds/tga`,
+  `checker_bind`, `invalid_bind`, `unsupported_stages`,
+  `first original indexed VertexMaterial mapper`,
+  `first generated texture coordinates`, `output_stream`,
+  `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, and conversation state if
+  dialogue or materials remain incorrect.
+
 ## 2026-08-28 — dev73 original ADDSMOOTH detail combiner
 
 `[██████████] 12/12 canonical source/build gates complete`

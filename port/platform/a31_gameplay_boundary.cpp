@@ -988,9 +988,10 @@ void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass &name,
 	name = "VITA_BACKEND";
 }
 
-HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE, DWORD)
+HRESULT IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE state, DWORD value)
 {
-	return D3D_OK;
+	return RenegadeVitaRenderer::Apply_DX8_Render_State(state, value) ?
+		D3D_OK : static_cast<HRESULT>(D3DERR_INVALIDCALL);
 }
 
 #if !defined(RENEGADE_HOST_ABI_TEST)

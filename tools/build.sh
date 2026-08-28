@@ -16,7 +16,7 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev73}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev74}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
@@ -185,7 +185,7 @@ require_host_line "a31.interactive_first_frame_unsupported=0"
 require_host_line "A3.1 capture telemetry host self-test: PASS (24 checks, 0 failures)"
 require_host_line "A3.2 Vita controller axis-contract: PASS (22 checks, 0 failures)"
 require_host_line "A3.5 Vita button-state contract: PASS (10 checks, 0 failures)"
-require_host_line "A3.5 Vita ShaderClass render-state contract: 5 checks, 0 failures"
+require_host_line "A3.5 Vita ShaderClass render-state contract: 11 checks, 0 failures"
 require_host_line "A3.5 DDSFileClass tga-alias contract: 11 checks, 0 failures"
 require_host_line "A3 renderer process lifecycle: 11 checks, 0 failures; native=1 sessions=2 shutdowns=2"
 require_host_line "A3.2 texture upload contract: PASS (4 checks, 0 failures)"

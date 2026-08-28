@@ -1,13 +1,22 @@
 #include "shader.h"
 #include "ww3d_vita_render_state_contract.h"
 
+#include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 static bool Check(bool value, const char *label, unsigned &checks)
 {
 	++checks;
 	if (!value) fprintf(stderr, "FAIL: %s\n", label);
 	return value;
+}
+
+static uint32_t Float_Bits(float value)
+{
+	uint32_t bits = 0U;
+	memcpy(&bits, &value, sizeof(bits));
+	return bits;
 }
 
 int main()
@@ -49,6 +58,24 @@ int main()
 	state = Translate_Shader_State(additive);
 	failures += !Check(state.blend && state.source_blend == BLEND_FACTOR_ONE &&
 		state.destination_blend == BLEND_FACTOR_ONE && !state.cull, "additive", checks);
+	FogStateContract fog = Default_Fog_State();
+	failures += !Check(!fog.enabled && fog.color == 0U &&
+		fog.start == 0.0f && fog.end == 1000.0f, "default fog disabled", checks);
+	failures += !Check(Update_Fog_State_From_DX8_Render_State(D3DRS_FOGENABLE,
+		1U, fog) && fog.enabled, "fog enable state", checks);
+	failures += !Check(Update_Fog_State_From_DX8_Render_State(D3DRS_FOGCOLOR,
+		0x00123456U, fog) && fog.color == 0x00123456U &&
+		D3D_Color_Red_Unit(fog.color) > 0.070f &&
+		D3D_Color_Green_Unit(fog.color) > 0.200f &&
+		D3D_Color_Blue_Unit(fog.color) > 0.330f, "fog color state", checks);
+	failures += !Check(Update_Fog_State_From_DX8_Render_State(D3DRS_FOGSTART,
+		Float_Bits(12.5f), fog) && fog.start == 12.5f,
+		"fog start state", checks);
+	failures += !Check(Update_Fog_State_From_DX8_Render_State(D3DRS_FOGEND,
+		Float_Bits(250.0f), fog) && fog.end == 250.0f,
+		"fog end state", checks);
+	failures += !Check(!Update_Fog_State_From_DX8_Render_State(D3DRS_AMBIENT,
+		0x00ffffffU, fog), "non-fog render state ignored", checks);
 	printf("A3.5 Vita ShaderClass render-state contract: %u checks, %u failures\n", checks, failures);
 	return failures == 0U ? 0 : 1;
 }

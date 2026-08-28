@@ -1,5 +1,50 @@
 # Live engineering progress
 
+## 2026-08-28 — dev64 active streamed-audio telemetry
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Audio boundary: the Vita Miles-compatible provider now reports the first
+  active streamed sample's playback position, length, cursor frame, total
+  frames, loop count, volume, and pan in bounded runtime stats. Finite streams
+  that exhaust their final loop now report `loops_remaining=0` before stopping,
+  so original loop-count polling no longer sees a stale final-loop value after
+  playback has ended.
+- Runtime purpose: the next Logan hardware run can distinguish a decoded stream
+  that is active but inaudible from a stream that never advances, stalls while
+  paused, finishes early, or carries unexpected loop/volume/pan state. This
+  stays under the Miles-compatible Vita provider and preserves original
+  `ActiveConversationClass`, `SoldierGameObj`, and WWAudio ownership.
+- Validation: focused audio/dialogue contract checks passed 19/19, the fast
+  no-deploy candidate passed 56 focused tests, the original `DDSFileClass`
+  `.tga`-to-`.dds` executable contract 11/11, package identity and hash checks,
+  and VPK packaging. The full canonical no-deploy build passed retained
+  host-validation reuse, 72 host unittest checks, deterministic restaging,
+  source integration reporting, ARM link/package, compressed VPK validation,
+  identity verification, diagnostics bundle generation, SHA manifest
+  verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev64.vpk` SHA-256 is
+  `f9c99affa44f24cfa058d1cf9c6021a932c6c61f28cdd31cbe15c78248056706`;
+  ELF SHA-256 is
+  `64c3b4b43208a09a20a782dd71ca803648420e690ac80f6b3b733fa47cba8efc`;
+  diagnostics bundle SHA-256 is
+  `800f59e911350b4dbd2f9a6bb076add9fce6451cc4fd5011255a7d7ed376fb67`.
+- Boundary: dev64 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev64, verify
+  Logan audible dialogue and timing, dialog/message text, material/texture
+  appearance, and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev64-runtime.log`, especially active
+  stream position/length/cursor/frames/loops/volume/pan, speech duration/
+  dropoff/distance, stream bytes/frames/mix/last_stream fields,
+  fact/estimate/untrimmed/trimmed values, conversation state, `texture loaded`,
+  `loaded_dds/tga`, `checker_bind`, `invalid_bind`, `unsupported_stages`, and
+  first original `MeshClass` stage-1 texture breadcrumbs if dialogue remains
+  silent or materials remain incorrect.
+
 ## 2026-08-28 — dev63 Vita DX8 bound-texture lifetime
 
 `[██████████] 12/12 canonical source/build gates complete`

@@ -187,6 +187,7 @@ bool Advance_Loop(RenegadeMilesSample *sample)
 		sample->cursor = 0.0;
 		return true;
 	}
+	sample->loops_remaining = 0U;
 	sample->playing = false;
 	sample->paused = false;
 	return false;
@@ -223,6 +224,47 @@ void Capture_Last_Stream_Locked(const RenegadeMilesSample *sample)
 	g_stats.last_stream_volume = static_cast<uint32_t>(
 		std::max<S32>(0, sample->volume));
 	g_stats.last_stream_pan = static_cast<uint32_t>(
+		std::max<S32>(0, sample->pan));
+}
+
+uint32_t Saturate_Size_To_U32(size_t value)
+{
+	return static_cast<uint32_t>(
+		std::min<size_t>(value, std::numeric_limits<uint32_t>::max()));
+}
+
+uint32_t Saturate_Double_To_U32(double value)
+{
+	if (value <= 0.0) return 0U;
+	return static_cast<uint32_t>(
+		std::min<double>(value, std::numeric_limits<uint32_t>::max()));
+}
+
+uint32_t Frame_Position_To_MS(double frame, uint32_t rate)
+{
+	if (rate == 0U) return 0U;
+	return Saturate_Double_To_U32(frame * 1000.0 / static_cast<double>(rate));
+}
+
+void Capture_Active_Stream_Locked(RenegadeMilesRuntimeStats *stats,
+	const RenegadeMilesSample *sample)
+{
+	if (stats == nullptr || sample == nullptr) return;
+	const size_t total_frames = sample->wave.Frame_Count();
+	const double cursor = std::max(0.0,
+		std::min(sample->cursor, static_cast<double>(total_frames)));
+	const uint32_t rate = static_cast<uint32_t>(
+		std::max<S32>(0, sample->playback_rate > 0
+			? sample->playback_rate : static_cast<S32>(sample->wave.sample_rate)));
+	stats->active_stream_position_ms = Frame_Position_To_MS(cursor, rate);
+	stats->active_stream_length_ms = Frame_Position_To_MS(
+		static_cast<double>(total_frames), rate);
+	stats->active_stream_cursor_frame = Saturate_Double_To_U32(cursor);
+	stats->active_stream_total_frames = Saturate_Size_To_U32(total_frames);
+	stats->active_stream_loop_count = sample->loops_remaining;
+	stats->active_stream_volume = static_cast<uint32_t>(
+		std::max<S32>(0, sample->volume));
+	stats->active_stream_pan = static_cast<uint32_t>(
 		std::max<S32>(0, sample->pan));
 }
 
@@ -987,10 +1029,24 @@ void Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats)
 	stats->allocated_samples = static_cast<uint32_t>(g_samples.size());
 	stats->active_samples = 0U;
 	stats->active_streams = 0U;
+	stats->active_stream_position_ms = 0U;
+	stats->active_stream_length_ms = 0U;
+	stats->active_stream_cursor_frame = 0U;
+	stats->active_stream_total_frames = 0U;
+	stats->active_stream_loop_count = 0U;
+	stats->active_stream_volume = 0U;
+	stats->active_stream_pan = 0U;
+	bool captured_active_stream = false;
 	for (RenegadeMilesSample *sample : g_samples) {
 		if (sample != nullptr && sample->playing && !sample->paused) {
 			++stats->active_samples;
-			if (sample->streaming) ++stats->active_streams;
+			if (sample->streaming) {
+				++stats->active_streams;
+				if (!captured_active_stream) {
+					Capture_Active_Stream_Locked(stats, sample);
+					captured_active_stream = true;
+				}
+			}
 		}
 	}
 	std::snprintf(stats->last_error, sizeof(stats->last_error), "%s",

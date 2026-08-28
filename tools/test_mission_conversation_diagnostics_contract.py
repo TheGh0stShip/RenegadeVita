@@ -186,6 +186,10 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
             log_block,
         )
         self.assertIn("allocated/active/streams=%u/%u/%u", log_block)
+        self.assertIn(
+            "active_stream=pos/len/cursor/frames/loops/vol/pan=%u/%u/%u/%u/%u/%u/%u",
+            log_block,
+        )
         self.assertIn("audio->Get_Dialog_Volume()", runtime)
         self.assertIn("audio->Get_Cinematic_Volume()", runtime)
         self.assertIn("stats.stream_mixed_nonzero_buffers", log_block)
@@ -194,6 +198,9 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("stats.last_stream_untrimmed_frames", log_block)
         self.assertIn("stats.last_stream_trimmed_frames", log_block)
         self.assertIn("stats.active_streams", log_block)
+        self.assertIn("stats.active_stream_position_ms", log_block)
+        self.assertIn("stats.active_stream_cursor_frame", log_block)
+        self.assertIn("stats.active_stream_loop_count", log_block)
         self.assertEqual(log_block.count("stats.sample_start_silent"), 1)
 
     def test_streamed_dialogue_duration_uses_wave_frame_count(self):

@@ -333,6 +333,77 @@ int main()
 		streamed[4] == 2000 && streamed[5] == 2000 && streamed[6] == 0 &&
 		streamed[7] == 0,
 		"provider stream mix differs");
+	passed &= Require(AIL_stream_loop_count(stream) == 0,
+		"provider exhausted stream loop count stayed nonzero");
+	AIL_close_stream(stream);
+
+	std::vector<uint8_t> long_pcm_samples;
+	for (int frame = 0; frame < 960; ++frame) {
+		Write_U16(long_pcm_samples,
+			static_cast<uint16_t>(int16_t(1000 + (frame % 32) * 32)));
+	}
+	const std::vector<uint8_t> long_pcm = Wave(1, 1, 48000, 2, 16, {},
+		long_pcm_samples);
+	g_stream_fixture = long_pcm;
+	stream = AIL_open_stream(driver, "logan_test.wav", 0);
+	passed &= Require(stream != nullptr, "provider long stream open failed");
+	AIL_set_stream_loop_count(stream, 1);
+	AIL_set_stream_volume(stream, 127);
+	AIL_set_stream_pan(stream, 64);
+	AIL_start_stream(stream);
+	int16_t long_streamed[480] = {};
+	passed &= Require(Renegade_Miles_Mix_For_Test(long_streamed, 240),
+		"manual long stream mix failed");
+	S32 stream_length = 0;
+	S32 stream_position = 0;
+	AIL_stream_ms_position(stream, &stream_length, &stream_position);
+	passed &= Require(stream_length == 20 && stream_position == 5,
+		"provider long stream position after mix differs");
+	RenegadeMilesRuntimeStats active_stats = {};
+	Renegade_Miles_Get_Runtime_Stats(&active_stats);
+	passed &= Require(active_stats.active_streams == 1 &&
+		active_stats.active_stream_position_ms == 5 &&
+		active_stats.active_stream_length_ms == 20 &&
+		active_stats.active_stream_cursor_frame == 240 &&
+		active_stats.active_stream_total_frames == 960 &&
+		active_stats.active_stream_loop_count == 1 &&
+		active_stats.active_stream_volume == 127 &&
+		active_stats.active_stream_pan == 64,
+		"provider active stream telemetry differs");
+	AIL_pause_stream(stream, 1);
+	int16_t paused_streamed[32] = {};
+	std::fill(std::begin(paused_streamed), std::end(paused_streamed), 123);
+	passed &= Require(Renegade_Miles_Mix_For_Test(paused_streamed, 16) &&
+		std::all_of(std::begin(paused_streamed), std::end(paused_streamed),
+			[](int16_t value) { return value == 0; }),
+		"provider paused stream still mixed audio");
+	AIL_stream_ms_position(stream, &stream_length, &stream_position);
+	passed &= Require(stream_length == 20 && stream_position == 5,
+		"provider paused stream position advanced");
+	AIL_pause_stream(stream, 0);
+	passed &= Require(Renegade_Miles_Mix_For_Test(long_streamed, 240),
+		"manual resumed stream mix failed");
+	AIL_stream_ms_position(stream, &stream_length, &stream_position);
+	passed &= Require(stream_length == 20 && stream_position == 10,
+		"provider resumed stream position differs");
+	AIL_close_stream(stream);
+
+	g_stream_fixture = pcm;
+	stream = AIL_open_stream(driver, "logan_test.wav", 0);
+	passed &= Require(stream != nullptr, "provider finite-loop stream open failed");
+	AIL_set_stream_loop_count(stream, 2);
+	passed &= Require(AIL_stream_loop_count(stream) == 2,
+		"provider finite-loop query before start differs");
+	AIL_set_stream_volume(stream, 127);
+	AIL_set_stream_pan(stream, 64);
+	AIL_start_stream(stream);
+	int16_t looped_streamed[18] = {};
+	passed &= Require(Renegade_Miles_Mix_For_Test(looped_streamed, 9),
+		"manual finite-loop stream mix failed");
+	passed &= Require(looped_streamed[0] == 1000 &&
+		looped_streamed[8] == 1000 && looped_streamed[16] == 0 &&
+		AIL_stream_loop_count(stream) == 0,
+		"provider finite-loop exhaustion differs");
 	AIL_close_stream(stream);
 	RenegadeMilesRuntimeStats stats = {};
 	Renegade_Miles_Get_Runtime_Stats(&stats);
@@ -344,34 +415,36 @@ int main()
 		stats.sample_3d_file_load_attempts == 2 &&
 		stats.sample_3d_file_load_successes == 2,
 		"provider decode stats differ");
-	passed &= Require(stats.stream_open_attempts == 1 &&
-		stats.stream_open_successes == 1 &&
-		stats.stream_start_attempts == 1 &&
-		stats.stream_start_successes == 1 &&
-		stats.stream_bytes_read == pcm_fact.size() &&
-		stats.stream_decoded_frames == 3 &&
-		stats.stream_mixed_buffers == 1 &&
-		stats.stream_mixed_frames == 4 &&
-		stats.stream_mixed_nonzero_buffers == 1 &&
+	passed &= Require(stats.stream_open_attempts == 3 &&
+		stats.stream_open_successes == 3 &&
+		stats.stream_start_attempts == 3 &&
+		stats.stream_start_successes == 3 &&
+		stats.stream_bytes_read == pcm_fact.size() + long_pcm.size() + pcm.size() &&
+		stats.stream_decoded_frames == 967 &&
+		stats.stream_mixed_buffers == 4 &&
+		stats.stream_mixed_frames == 493 &&
+		stats.stream_mixed_nonzero_buffers == 4 &&
 		stats.stream_mixed_peak_abs >= 1000 &&
-		stats.last_stream_frames == 3 &&
-		stats.last_stream_fact_frames == 3 &&
+		stats.last_stream_frames == 4 &&
+		stats.last_stream_fact_frames == 0 &&
 		stats.last_stream_estimated_frames == 4 &&
 		stats.last_stream_untrimmed_frames == 4 &&
-		stats.last_stream_trimmed_frames == 1 &&
+		stats.last_stream_trimmed_frames == 0 &&
 		std::strcmp(stats.last_stream_name, "logan_test.wav") == 0,
 		"provider stream stats differ");
-	passed &= Require(stats.sample_start_attempts == 4 &&
-		stats.sample_start_successes == 4 &&
-		stats.mixed_buffers == 4 &&
-		stats.mixed_nonzero_buffers == 3 &&
+	passed &= Require(stats.sample_start_attempts == 6 &&
+		stats.sample_start_successes == 6 &&
+		stats.mixed_buffers == 8 &&
+		stats.mixed_nonzero_buffers == 6 &&
 		stats.mixed_peak_abs >= 1000 &&
-		stats.active_streams == 0,
+		stats.active_streams == 0 &&
+		stats.active_stream_position_ms == 0 &&
+		stats.active_stream_loop_count == 0,
 		"provider start stats differ");
 	AIL_waveOutClose(driver);
 	AIL_shutdown();
 
 	if (!passed) return 1;
-	std::puts("vita_audio_provider=passed pcm=3 ima_adpcm=2 ms_adpcm=2 bounds=2 mixer=1 spatial=2 stream=1");
+	std::puts("vita_audio_provider=passed pcm=3 ima_adpcm=2 ms_adpcm=2 bounds=2 mixer=1 spatial=2 stream=3");
 	return 0;
 }

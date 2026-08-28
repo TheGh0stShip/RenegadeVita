@@ -45,6 +45,13 @@ struct RenegadeMilesRuntimeStats {
 	uint32_t allocated_samples;
 	uint32_t active_samples;
 	uint32_t active_streams;
+	uint32_t active_stream_position_ms;
+	uint32_t active_stream_length_ms;
+	uint32_t active_stream_cursor_frame;
+	uint32_t active_stream_total_frames;
+	uint32_t active_stream_loop_count;
+	uint32_t active_stream_volume;
+	uint32_t active_stream_pan;
 	char last_stream_name[96];
 	char last_error[160];
 };

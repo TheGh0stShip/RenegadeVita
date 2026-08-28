@@ -1,5 +1,47 @@
 # Live engineering progress
 
+## 2026-08-28 — dev55 DX8 surface-copy boundary
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: the Vita `IDirect3DDevice8::CopyRects` compatibility
+  path now performs bounded CPU-backed surface copies instead of returning an
+  invalid-call stub. Copies validate source/destination rectangles, preserve
+  same-surface overlap with row-safe `memmove`, reject block-compressed
+  formats, and upload a changed destination texture owner once after the copy.
+- D3DX compatibility: `D3DXLoadSurfaceFromSurface` and `D3DXFilterTexture`
+  are now declared and implemented for the original surface/mip frontier. The
+  direct same-format path uses byte copies; scaled or format-converting paths
+  use bounded RGBA sampling. Palette and color-key paths fail closed until an
+  original caller proves they are needed.
+- Runtime purpose: this restores the original `Render2DSentenceClass`
+  pending-surface to texture-surface copy behavior used by message, loading,
+  and dialogue text rendering, while also giving the staged original
+  texture-loader frontier real surface/mip generation semantics.
+- Validation: focused texture surface/provenance/loading/indexed-state
+  contracts passed 22/22. The fast no-deploy candidate passed the expanded
+  50-test focused gate, the original `DDSFileClass` `.tga`-to-`.dds`
+  executable contract 11/11, and package identity/hash checks. The full
+  no-deploy canonical build passed retained host-validation reuse, 68 host
+  unittest checks, deterministic restaging, source integration reporting, ARM
+  link/package, identity verification, compressed VPK validation, diagnostics
+  bundle generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev55.vpk` SHA-256 is
+  `559b91c07e871a9171f704b59433c33dee14602edeba742ff51278925a24ca4d`;
+  ELF SHA-256 is
+  `3fa450de230e964b6da6794d607453ec0a157c7bf2226985473e4b322f528e11`.
+- Boundary: dev55 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev55, verify
+  audible Logan dialogue, message/dialog text, and material/texture appearance,
+  then inspect `ux0:data/renegade/user/logs/a35-dev55-runtime.log`, especially
+  `texture loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`,
+  `speech=`, and `stream_mix` if dialogue is still inaudible or materials
+  remain incorrect.
+
 ## 2026-08-28 — dev54 DX8 texture surface ownership
 
 `[██████████] 12/12 canonical source/build gates complete`

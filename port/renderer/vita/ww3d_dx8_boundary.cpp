@@ -6,6 +6,7 @@
 #include "dx8wrapper.h"
 #include "ww3d_vita_renderer.h"
 #include "ddsfile.h"
+#include "D3dx8core.h"
 #include "formconv.h"
 #include "render2d.h"
 #include "texture.h"
@@ -222,6 +223,276 @@ bool Surface_Format_Can_Convert_To_RGBA(D3DFORMAT format)
 	}
 }
 
+bool Write_RGBA_To_Surface_Pixel(D3DFORMAT format, const unsigned char *rgba,
+	unsigned char *destination)
+{
+	if (rgba == NULL || destination == NULL) return false;
+	switch (format) {
+	case D3DFMT_A8R8G8B8:
+		destination[0] = rgba[2];
+		destination[1] = rgba[1];
+		destination[2] = rgba[0];
+		destination[3] = rgba[3];
+		return true;
+	case D3DFMT_X8R8G8B8:
+		destination[0] = rgba[2];
+		destination[1] = rgba[1];
+		destination[2] = rgba[0];
+		destination[3] = 0xffU;
+		return true;
+	case D3DFMT_R8G8B8:
+		destination[0] = rgba[2];
+		destination[1] = rgba[1];
+		destination[2] = rgba[0];
+		return true;
+	case D3DFMT_A4R4G4B4: {
+		const uint16_t pixel =
+			(static_cast<uint16_t>(rgba[3] >> 4U) << 12U) |
+			(static_cast<uint16_t>(rgba[0] >> 4U) << 8U) |
+			(static_cast<uint16_t>(rgba[1] >> 4U) << 4U) |
+			static_cast<uint16_t>(rgba[2] >> 4U);
+		destination[0] = static_cast<unsigned char>(pixel & 0xffU);
+		destination[1] = static_cast<unsigned char>(pixel >> 8U);
+		return true;
+	}
+	case D3DFMT_A1R5G5B5: {
+		const uint16_t pixel =
+			(rgba[3] >= 0x80U ? 0x8000U : 0U) |
+			(static_cast<uint16_t>(rgba[0] >> 3U) << 10U) |
+			(static_cast<uint16_t>(rgba[1] >> 3U) << 5U) |
+			static_cast<uint16_t>(rgba[2] >> 3U);
+		destination[0] = static_cast<unsigned char>(pixel & 0xffU);
+		destination[1] = static_cast<unsigned char>(pixel >> 8U);
+		return true;
+	}
+	case D3DFMT_R5G6B5: {
+		const uint16_t pixel =
+			(static_cast<uint16_t>(rgba[0] >> 3U) << 11U) |
+			(static_cast<uint16_t>(rgba[1] >> 2U) << 5U) |
+			static_cast<uint16_t>(rgba[2] >> 3U);
+		destination[0] = static_cast<unsigned char>(pixel & 0xffU);
+		destination[1] = static_cast<unsigned char>(pixel >> 8U);
+		return true;
+	}
+	case D3DFMT_A8:
+		destination[0] = rgba[3];
+		return true;
+	case D3DFMT_L8:
+		destination[0] = static_cast<unsigned char>(
+			(static_cast<unsigned>(rgba[0]) * 30U +
+			static_cast<unsigned>(rgba[1]) * 59U +
+			static_cast<unsigned>(rgba[2]) * 11U) / 100U);
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool Surface_Format_Can_Write_RGBA(D3DFORMAT format)
+{
+	switch (format) {
+	case D3DFMT_A8R8G8B8:
+	case D3DFMT_X8R8G8B8:
+	case D3DFMT_R8G8B8:
+	case D3DFMT_A4R4G4B4:
+	case D3DFMT_A1R5G5B5:
+	case D3DFMT_R5G6B5:
+	case D3DFMT_A8:
+	case D3DFMT_L8:
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool Surface_Format_Is_Block_Compressed(D3DFORMAT format)
+{
+	return format == D3DFMT_DXT1 || format == D3DFMT_DXT2 ||
+		format == D3DFMT_DXT3 || format == D3DFMT_DXT4 ||
+		format == D3DFMT_DXT5;
+}
+
+bool Validate_Surface_Copy_Rect(const D3DSURFACE_DESC &description,
+	const RECT *rectangle, RECT *out)
+{
+	if (out == NULL || description.Width == 0U || description.Height == 0U) {
+		return false;
+	}
+	if (rectangle == NULL) {
+		out->left = 0;
+		out->top = 0;
+		out->right = static_cast<LONG>(description.Width);
+		out->bottom = static_cast<LONG>(description.Height);
+		return true;
+	}
+	if (rectangle->left < 0 || rectangle->top < 0 ||
+		rectangle->right < rectangle->left ||
+		rectangle->bottom < rectangle->top ||
+		static_cast<UINT>(rectangle->right) > description.Width ||
+		static_cast<UINT>(rectangle->bottom) > description.Height) {
+		return false;
+	}
+	*out = *rectangle;
+	return true;
+}
+
+bool Validate_Surface_Destination_Rect(const D3DSURFACE_DESC &description,
+	const RECT &source_rect, const POINT *point, const RECT *destination_rect,
+	RECT *out)
+{
+	if (out == NULL) return false;
+	if (destination_rect != NULL) {
+		return Validate_Surface_Copy_Rect(description, destination_rect, out);
+	}
+	const LONG width = source_rect.right - source_rect.left;
+	const LONG height = source_rect.bottom - source_rect.top;
+	const LONG left = point != NULL ? point->x : source_rect.left;
+	const LONG top = point != NULL ? point->y : source_rect.top;
+	if (left < 0 || top < 0 || width < 0 || height < 0 ||
+		static_cast<UINT>(left) > description.Width ||
+		static_cast<UINT>(top) > description.Height ||
+		static_cast<UINT>(width) > description.Width - static_cast<UINT>(left) ||
+		static_cast<UINT>(height) > description.Height - static_cast<UINT>(top)) {
+		return false;
+	}
+	out->left = left;
+	out->top = top;
+	out->right = left + width;
+	out->bottom = top + height;
+	return true;
+}
+
+bool Copy_Surface_Rect_Bytes(IDirect3DSurface8 *source, const RECT &source_rect,
+	IDirect3DSurface8 *destination, const RECT &destination_rect,
+	UINT bytes_per_pixel)
+{
+	if (source == NULL || destination == NULL || source->Get_Data() == NULL ||
+		destination->Get_Data() == NULL || bytes_per_pixel == 0U) {
+		return false;
+	}
+	const UINT width = static_cast<UINT>(source_rect.right - source_rect.left);
+	const UINT height = static_cast<UINT>(source_rect.bottom - source_rect.top);
+	if (width == 0U || height == 0U) return true;
+	if (width != static_cast<UINT>(destination_rect.right - destination_rect.left) ||
+		height != static_cast<UINT>(destination_rect.bottom - destination_rect.top)) {
+		return false;
+	}
+	const size_t row_bytes = static_cast<size_t>(width) * bytes_per_pixel;
+	const size_t source_offset = static_cast<size_t>(source_rect.top) *
+		source->Get_Pitch() + static_cast<size_t>(source_rect.left) *
+		bytes_per_pixel;
+	const size_t destination_offset = static_cast<size_t>(destination_rect.top) *
+		destination->Get_Pitch() + static_cast<size_t>(destination_rect.left) *
+		bytes_per_pixel;
+	const unsigned char *source_base = source->Get_Data() + source_offset;
+	unsigned char *destination_base = destination->Get_Data() + destination_offset;
+	if (source == destination && destination_offset > source_offset) {
+		for (UINT y = height; y > 0U; --y) {
+			const UINT row = y - 1U;
+			memmove(destination_base + static_cast<size_t>(row) *
+				destination->Get_Pitch(),
+				source_base + static_cast<size_t>(row) * source->Get_Pitch(),
+				row_bytes);
+		}
+		return true;
+	}
+	for (UINT y = 0U; y < height; ++y) {
+		memmove(destination_base + static_cast<size_t>(y) *
+			destination->Get_Pitch(),
+			source_base + static_cast<size_t>(y) * source->Get_Pitch(),
+			row_bytes);
+	}
+	return true;
+}
+
+bool Load_Surface_Rect_Filtered(IDirect3DSurface8 *destination,
+	const RECT &destination_rect, IDirect3DSurface8 *source,
+	const RECT &source_rect, DWORD filter)
+{
+	D3DSURFACE_DESC source_description = {};
+	D3DSURFACE_DESC destination_description = {};
+	if (source == NULL || destination == NULL || source->Get_Data() == NULL ||
+		destination->Get_Data() == NULL ||
+		source->GetDesc(&source_description) != D3D_OK ||
+		destination->GetDesc(&destination_description) != D3D_OK ||
+		!Surface_Format_Can_Convert_To_RGBA(source_description.Format) ||
+		!Surface_Format_Can_Write_RGBA(destination_description.Format)) {
+		return false;
+	}
+	const UINT source_width =
+		static_cast<UINT>(source_rect.right - source_rect.left);
+	const UINT source_height =
+		static_cast<UINT>(source_rect.bottom - source_rect.top);
+	const UINT destination_width =
+		static_cast<UINT>(destination_rect.right - destination_rect.left);
+	const UINT destination_height =
+		static_cast<UINT>(destination_rect.bottom - destination_rect.top);
+	if (source_width == 0U || source_height == 0U ||
+		destination_width == 0U || destination_height == 0U) {
+		return true;
+	}
+	const UINT source_bpp = Surface_Bytes_Per_Pixel(source_description.Format);
+	const UINT destination_bpp =
+		Surface_Bytes_Per_Pixel(destination_description.Format);
+	const bool point_sample = filter == D3DX_FILTER_NONE ||
+		filter == D3DX_FILTER_POINT || destination_width >= source_width ||
+		destination_height >= source_height;
+	for (UINT y = 0U; y < destination_height; ++y) {
+		for (UINT x = 0U; x < destination_width; ++x) {
+			unsigned rgba_sum[4] = {};
+			unsigned sample_count = 0U;
+			UINT begin_x = static_cast<UINT>(
+				(static_cast<uint64_t>(x) * source_width) / destination_width);
+			UINT begin_y = static_cast<UINT>(
+				(static_cast<uint64_t>(y) * source_height) / destination_height);
+			UINT end_x = point_sample ? begin_x + 1U : static_cast<UINT>(
+				(static_cast<uint64_t>(x + 1U) * source_width +
+				destination_width - 1U) / destination_width);
+			UINT end_y = point_sample ? begin_y + 1U : static_cast<UINT>(
+				(static_cast<uint64_t>(y + 1U) * source_height +
+				destination_height - 1U) / destination_height);
+			if (end_x <= begin_x) end_x = begin_x + 1U;
+			if (end_y <= begin_y) end_y = begin_y + 1U;
+			if (end_x > source_width) end_x = source_width;
+			if (end_y > source_height) end_y = source_height;
+			for (UINT sy = begin_y; sy < end_y; ++sy) {
+				const unsigned char *source_row = source->Get_Data() +
+					static_cast<size_t>(source_rect.top + sy) *
+					source->Get_Pitch();
+				for (UINT sx = begin_x; sx < end_x; ++sx) {
+					unsigned char rgba[4] = {};
+					if (!Convert_Surface_Pixel_To_RGBA(source_description.Format,
+						source_row + static_cast<size_t>(source_rect.left + sx) *
+						source_bpp, rgba)) {
+						return false;
+					}
+					rgba_sum[0] += rgba[0];
+					rgba_sum[1] += rgba[1];
+					rgba_sum[2] += rgba[2];
+					rgba_sum[3] += rgba[3];
+					++sample_count;
+				}
+			}
+			if (sample_count == 0U) return false;
+			unsigned char averaged[4] = {
+				static_cast<unsigned char>(rgba_sum[0] / sample_count),
+				static_cast<unsigned char>(rgba_sum[1] / sample_count),
+				static_cast<unsigned char>(rgba_sum[2] / sample_count),
+				static_cast<unsigned char>(rgba_sum[3] / sample_count)
+			};
+			unsigned char *destination_pixel = destination->Get_Data() +
+				static_cast<size_t>(destination_rect.top + y) *
+				destination->Get_Pitch() +
+				static_cast<size_t>(destination_rect.left + x) * destination_bpp;
+			if (!Write_RGBA_To_Surface_Pixel(destination_description.Format,
+				averaged, destination_pixel)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 UINT Texture_Level_Dimension(UINT base, UINT level)
 {
 	const UINT dimension = base >> level;
@@ -261,6 +532,7 @@ void Destroy_Texture_Surface_Levels(IDirect3DTexture8 *texture)
 	if (texture->SurfaceLevels != NULL) {
 		for (UINT level = 0U; level < mip_count; ++level) {
 			if (texture->SurfaceLevels[level] != NULL) {
+				texture->SurfaceLevels[level]->Set_Texture_Owner(NULL, 0U);
 				texture->SurfaceLevels[level]->Release();
 				texture->SurfaceLevels[level] = NULL;
 			}
@@ -402,8 +674,10 @@ bool Attach_Texture_Surface_Copy(IDirect3DTexture8 *texture, UINT level,
 			row_bytes);
 	}
 	if (texture->SurfaceLevels[level] != NULL) {
+		texture->SurfaceLevels[level]->Set_Texture_Owner(NULL, 0U);
 		texture->SurfaceLevels[level]->Release();
 	}
+	copy->Set_Texture_Owner(texture, level);
 	texture->SurfaceLevels[level] = copy;
 	return true;
 }
@@ -1055,6 +1329,7 @@ IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(unsigned int width,
 			RenegadeVitaRenderer::Record_Texture_Upload_Failure();
 			return NULL;
 		}
+		surface->Set_Texture_Owner(texture, level);
 		texture->SurfaceLevels[level] = surface;
 		if (!Upload_Texture_Level_From_Surface(texture, level)) {
 			Destroy_Texture_Surface_Levels(texture);
@@ -1191,10 +1466,6 @@ HRESULT IDirect3DTexture8::UnlockRect(UINT level)
 	TextureLocked = LockedSurfaceCount != 0U;
 	if (result != D3D_OK) return result;
 	if ((flags & D3DLOCK_READONLY) != 0U) return D3D_OK;
-	if (!Upload_Texture_Level_From_Surface(this, level)) {
-		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
-		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
-	}
 	return D3D_OK;
 }
 
@@ -1213,7 +1484,8 @@ DWORD IDirect3DTexture8::SetPriority(DWORD priority)
 IDirect3DSurface8::IDirect3DSurface8(UINT width, UINT height,
 	D3DFORMAT format, UINT bytes_per_pixel)
 	: Storage(NULL), StorageSize(0U), Width(width), Height(height), Pitch(0U),
-	  Format(format), ReferenceCount(1U)
+	  Format(format), ReferenceCount(1U), OwnerTexture(NULL),
+	  OwnerTextureLevel(0U), LockFlags(0U), Locked(false)
 {
 	if (width == 0U || height == 0U || bytes_per_pixel == 0U ||
 		width > UINT32_MAX / bytes_per_pixel) return;
@@ -1260,9 +1532,11 @@ HRESULT IDirect3DSurface8::GetDesc(D3DSURFACE_DESC *description)
 }
 
 HRESULT IDirect3DSurface8::LockRect(D3DLOCKED_RECT *locked,
-	const RECT *rectangle, DWORD)
+	const RECT *rectangle, DWORD flags)
 {
-	if (locked == NULL || Storage == NULL) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	if (locked == NULL || Storage == NULL || Locked) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 	UINT left = 0U;
 	UINT top = 0U;
 	if (rectangle != NULL) {
@@ -1275,18 +1549,158 @@ HRESULT IDirect3DSurface8::LockRect(D3DLOCKED_RECT *locked,
 	locked->Pitch = static_cast<int>(Pitch);
 	locked->pBits = Storage + static_cast<size_t>(top) * Pitch +
 		static_cast<size_t>(left) * Surface_Bytes_Per_Pixel(Format);
+	LockFlags = flags;
+	Locked = true;
 	return D3D_OK;
 }
 
 HRESULT IDirect3DSurface8::UnlockRect()
 {
+	if (!Locked) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	const DWORD flags = LockFlags;
+	LockFlags = 0U;
+	Locked = false;
+	if ((flags & D3DLOCK_READONLY) != 0U) return D3D_OK;
+	return Upload_Texture_Owner();
+}
+
+void IDirect3DSurface8::Set_Texture_Owner(IDirect3DTexture8 *texture, UINT level)
+{
+	OwnerTexture = texture;
+	OwnerTextureLevel = level;
+}
+
+HRESULT IDirect3DSurface8::Upload_Texture_Owner()
+{
+	if (OwnerTexture == NULL) return D3D_OK;
+	if (OwnerTexture->SurfaceLevels == NULL ||
+		OwnerTextureLevel >= OwnerTexture->GetLevelCount() ||
+		OwnerTexture->SurfaceLevels[OwnerTextureLevel] != this) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	if (!Upload_Texture_Level_From_Surface(OwnerTexture, OwnerTextureLevel)) {
+		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 	return D3D_OK;
 }
 
-HRESULT IDirect3DDevice8::CopyRects(IDirect3DSurface8 *, const RECT *, UINT,
-	IDirect3DSurface8 *, const POINT *)
+HRESULT IDirect3DDevice8::CopyRects(IDirect3DSurface8 *source,
+	const RECT *source_rects, UINT count, IDirect3DSurface8 *destination,
+	const POINT *destination_points)
 {
-	return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	if (source == NULL || destination == NULL || source->Get_Data() == NULL ||
+		destination->Get_Data() == NULL ||
+		(source_rects == NULL && count != 0U)) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	D3DSURFACE_DESC source_description = {};
+	D3DSURFACE_DESC destination_description = {};
+	if (source->GetDesc(&source_description) != D3D_OK ||
+		destination->GetDesc(&destination_description) != D3D_OK ||
+		source_description.Format != destination_description.Format ||
+		Surface_Format_Is_Block_Compressed(source_description.Format)) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	const UINT bytes_per_pixel =
+		Surface_Bytes_Per_Pixel(source_description.Format);
+	if (bytes_per_pixel == 0U) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	if (source_rects == NULL && count == 0U) {
+		RECT source_rect = {};
+		RECT destination_rect = {};
+		if (!Validate_Surface_Copy_Rect(source_description, NULL, &source_rect) ||
+			!Validate_Surface_Destination_Rect(destination_description, source_rect,
+			destination_points, NULL, &destination_rect) ||
+			!Copy_Surface_Rect_Bytes(source, source_rect, destination,
+			destination_rect, bytes_per_pixel)) {
+			return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+		}
+		return destination->Upload_Texture_Owner();
+	}
+	for (UINT index = 0U; index < count; ++index) {
+		RECT source_rect = {};
+		RECT destination_rect = {};
+		const POINT *destination_point = destination_points != NULL ?
+			&destination_points[index] : NULL;
+		if (!Validate_Surface_Copy_Rect(source_description, &source_rects[index],
+			&source_rect) ||
+			!Validate_Surface_Destination_Rect(destination_description, source_rect,
+			destination_point, NULL, &destination_rect) ||
+			!Copy_Surface_Rect_Bytes(source, source_rect, destination,
+			destination_rect, bytes_per_pixel)) {
+			return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+		}
+	}
+	return destination->Upload_Texture_Owner();
+}
+
+HRESULT D3DXLoadSurfaceFromSurface(IDirect3DSurface8 *destination,
+	const void *destination_palette, const RECT *destination_rect,
+	IDirect3DSurface8 *source, const void *source_palette,
+	const RECT *source_rect, DWORD filter, D3DCOLOR color_key)
+{
+	if (destination == NULL || source == NULL || destination_palette != NULL ||
+		source_palette != NULL || color_key != 0U ||
+		destination->Get_Data() == NULL || source->Get_Data() == NULL) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	D3DSURFACE_DESC source_description = {};
+	D3DSURFACE_DESC destination_description = {};
+	RECT validated_source = {};
+	RECT validated_destination = {};
+	if (source->GetDesc(&source_description) != D3D_OK ||
+		destination->GetDesc(&destination_description) != D3D_OK ||
+		!Validate_Surface_Copy_Rect(source_description, source_rect,
+		&validated_source) ||
+		!Validate_Surface_Copy_Rect(destination_description, destination_rect,
+		&validated_destination)) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	const UINT source_width =
+		static_cast<UINT>(validated_source.right - validated_source.left);
+	const UINT source_height =
+		static_cast<UINT>(validated_source.bottom - validated_source.top);
+	const UINT destination_width =
+		static_cast<UINT>(validated_destination.right - validated_destination.left);
+	const UINT destination_height =
+		static_cast<UINT>(validated_destination.bottom - validated_destination.top);
+	if (source_width == destination_width && source_height == destination_height &&
+		source_description.Format == destination_description.Format &&
+		!Surface_Format_Is_Block_Compressed(source_description.Format)) {
+		const UINT bytes_per_pixel =
+			Surface_Bytes_Per_Pixel(source_description.Format);
+		if (!Copy_Surface_Rect_Bytes(source, validated_source, destination,
+			validated_destination, bytes_per_pixel)) {
+			return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+		}
+		return destination->Upload_Texture_Owner();
+	}
+	if (!Load_Surface_Rect_Filtered(destination, validated_destination, source,
+		validated_source, filter)) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	return destination->Upload_Texture_Owner();
+}
+
+HRESULT D3DXFilterTexture(IDirect3DTexture8 *texture, const void *palette,
+	UINT source_level, DWORD filter)
+{
+	if (texture == NULL || palette != NULL || source_level >= texture->GetLevelCount() ||
+		texture->SurfaceLevels == NULL) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	const UINT level_count = texture->GetLevelCount();
+	for (UINT level = source_level + 1U; level < level_count; ++level) {
+		if (texture->SurfaceLevels[level - 1U] == NULL ||
+			texture->SurfaceLevels[level] == NULL) {
+			return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+		}
+		const HRESULT result = D3DXLoadSurfaceFromSurface(
+			texture->SurfaceLevels[level], NULL, NULL,
+			texture->SurfaceLevels[level - 1U], NULL, NULL, filter, 0U);
+		if (result != D3D_OK) return result;
+	}
+	return D3D_OK;
 }
 
 HRESULT IDirect3DDevice8::SetTransform(D3DTRANSFORMSTATETYPE state,

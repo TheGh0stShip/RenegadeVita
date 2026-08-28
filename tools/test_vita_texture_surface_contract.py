@@ -21,6 +21,12 @@ class VitaTextureSurfaceContractTests(unittest.TestCase):
             "UINT LockedSurfaceCount;",
             "bool *SurfaceLocked;",
             "bool TextureLocked;",
+            "void Set_Texture_Owner(IDirect3DTexture8 *texture, UINT level);",
+            "HRESULT Upload_Texture_Owner();",
+            "IDirect3DTexture8 *OwnerTexture;",
+            "UINT OwnerTextureLevel;",
+            "DWORD LockFlags;",
+            "bool Locked;",
             "HRESULT LockRect(UINT level, D3DLOCKED_RECT *locked, const RECT *rectangle,",
             "HRESULT UnlockRect(UINT level);",
         ):
@@ -76,8 +82,91 @@ class VitaTextureSurfaceContractTests(unittest.TestCase):
         self.assertIn("SurfaceLockFlags[level] = 0U;", unlock_method)
         self.assertIn("TextureLocked = LockedSurfaceCount != 0U;", unlock_method)
         self.assertIn("(flags & D3DLOCK_READONLY) != 0U", unlock_method)
-        self.assertIn("Upload_Texture_Level_From_Surface(this, level)", unlock_method)
-        self.assertIn("RenegadeVitaRenderer::Record_Texture_Upload_Failure();", unlock_method)
+        self.assertIn("SurfaceLevels[level]->UnlockRect()", unlock_method)
+        self.assertNotIn("Upload_Texture_Level_From_Surface(this, level)", unlock_method)
+
+        surface_unlock = boundary[
+            boundary.index("HRESULT IDirect3DSurface8::UnlockRect"):
+            boundary.index("void IDirect3DSurface8::Set_Texture_Owner")
+        ]
+        owner_upload = boundary[
+            boundary.index("HRESULT IDirect3DSurface8::Upload_Texture_Owner"):
+            boundary.index("HRESULT IDirect3DDevice8::CopyRects")
+        ]
+        self.assertIn("return Upload_Texture_Owner();", surface_unlock)
+        self.assertIn("Upload_Texture_Level_From_Surface(OwnerTexture, OwnerTextureLevel)", owner_upload)
+        self.assertIn("RenegadeVitaRenderer::Record_Texture_Upload_Failure();", owner_upload)
+
+    def test_copy_rects_keeps_original_render2d_surface_copy_live(self):
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+        render_sentence = (ROOT / "staging/ww3d2/render2dsentence.cpp").read_text(
+            encoding="utf-8"
+        )
+        method = boundary[
+            boundary.index("HRESULT IDirect3DDevice8::CopyRects"):
+            boundary.index("HRESULT D3DXLoadSurfaceFromSurface")
+        ]
+
+        self.assertIn("DX8Wrapper::_Copy_DX8_Rects", render_sentence)
+        self.assertIn("curr_surface->Peek_D3D_Surface", render_sentence)
+        self.assertIn("texture_surface->Peek_D3D_Surface", render_sentence)
+        self.assertGreater(
+            len(method.splitlines()),
+            40,
+            "CopyRects must not collapse back to a one-line invalid-call stub",
+        )
+        self.assertIn("source_description.Format != destination_description.Format", method)
+        self.assertIn("Validate_Surface_Copy_Rect", method)
+        self.assertIn("Validate_Surface_Destination_Rect", method)
+        self.assertIn("Copy_Surface_Rect_Bytes", method)
+        self.assertIn("destination->Upload_Texture_Owner()", method)
+        self.assertIn("memmove(", boundary)
+
+    def test_texture_surface_owner_is_attached_and_detached_at_lifetime_edges(self):
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("surface->Set_Texture_Owner(texture, level);", boundary)
+        self.assertIn("copy->Set_Texture_Owner(texture, level);", boundary)
+        self.assertIn("texture->SurfaceLevels[level]->Set_Texture_Owner(NULL, 0U);", boundary)
+        self.assertIn("OwnerTexture->SurfaceLevels[OwnerTextureLevel] != this", boundary)
+
+    def test_d3dx_surface_copy_and_filter_boundary_is_available(self):
+        header = (ROOT / "port/renderer/vita/D3dx8core.h").read_text(
+            encoding="utf-8"
+        )
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+        load_method = boundary[
+            boundary.index("HRESULT D3DXLoadSurfaceFromSurface"):
+            boundary.index("HRESULT D3DXFilterTexture")
+        ]
+        filter_method = boundary[
+            boundary.index("HRESULT D3DXFilterTexture"):
+            boundary.index("HRESULT IDirect3DDevice8::SetTransform")
+        ]
+
+        for needle in (
+            "D3DX_FILTER_NONE",
+            "D3DX_FILTER_POINT",
+            "D3DX_FILTER_LINEAR",
+            "D3DX_FILTER_TRIANGLE",
+            "D3DX_FILTER_BOX",
+            "HRESULT D3DXLoadSurfaceFromSurface(IDirect3DSurface8 *destination,",
+            "HRESULT D3DXFilterTexture(IDirect3DTexture8 *texture,",
+        ):
+            self.assertIn(needle, header)
+        self.assertIn("destination_palette != NULL", load_method)
+        self.assertIn("source_palette != NULL", load_method)
+        self.assertIn("color_key != 0U", load_method)
+        self.assertIn("Load_Surface_Rect_Filtered", load_method)
+        self.assertIn("destination->Upload_Texture_Owner()", load_method)
+        self.assertIn("D3DXLoadSurfaceFromSurface(", filter_method)
+        self.assertIn("texture->SurfaceLevels[level - 1U]", filter_method)
 
     def test_lock_state_supports_original_multi_level_texture_loader_pattern(self):
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(

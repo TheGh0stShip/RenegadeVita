@@ -100,6 +100,7 @@ struct D3DCAPS8 {
 	float MaxPixelShaderValue;
 };
 
+struct IDirect3DTexture8;
 struct IDirect3DSurface8 {
 	IDirect3DSurface8(UINT width, UINT height, D3DFORMAT format,
 		UINT bytes_per_pixel);
@@ -109,6 +110,8 @@ struct IDirect3DSurface8 {
 	HRESULT GetDesc(D3DSURFACE_DESC *description);
 	HRESULT LockRect(D3DLOCKED_RECT *locked, const RECT *rectangle, DWORD flags);
 	HRESULT UnlockRect();
+	void Set_Texture_Owner(IDirect3DTexture8 *texture, UINT level);
+	HRESULT Upload_Texture_Owner();
 
 	const unsigned char *Get_Data() const { return Storage; }
 	unsigned char *Get_Data() { return Storage; }
@@ -122,6 +125,10 @@ private:
 	UINT Pitch;
 	D3DFORMAT Format;
 	ULONG ReferenceCount;
+	IDirect3DTexture8 *OwnerTexture;
+	UINT OwnerTextureLevel;
+	DWORD LockFlags;
+	bool Locked;
 };
 struct IDirect3DSwapChain8;
 

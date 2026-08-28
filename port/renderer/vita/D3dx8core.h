@@ -6,6 +6,21 @@
 
 #include "d3d8.h"
 
+enum : DWORD {
+	D3DX_FILTER_NONE = 0x00000001U,
+	D3DX_FILTER_POINT = 0x00000002U,
+	D3DX_FILTER_LINEAR = 0x00000003U,
+	D3DX_FILTER_TRIANGLE = 0x00000004U,
+	D3DX_FILTER_BOX = 0x00000005U
+};
+
+HRESULT D3DXLoadSurfaceFromSurface(IDirect3DSurface8 *destination,
+	const void *destination_palette, const RECT *destination_rect,
+	IDirect3DSurface8 *source, const void *source_palette,
+	const RECT *source_rect, DWORD filter, D3DCOLOR color_key);
+HRESULT D3DXFilterTexture(IDirect3DTexture8 *texture, const void *palette,
+	UINT source_level, DWORD filter);
+
 // D3DXGetFVFVertexSize is a format-description helper, not a GPU operation.
 // Keep the original WW3D FVFInfoClass intact and provide the byte-count
 // calculation at the D3DX compatibility boundary.

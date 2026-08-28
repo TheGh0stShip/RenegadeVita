@@ -3,7 +3,8 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev54 dialogue/audio, texture provenance, and DX8 texture surface ownership for the
+Current work: **post-dev55 dialogue/audio, texture provenance, DX8 texture
+surface ownership, and DX8 surface-copy compatibility for the
 restage-proven shared original `LoadingScreenClass` loading path, the dev35
 stack fix, dev36 camera-Y boundary correction, dev37 DataSafe guard, dev38
 loading capture metadata, dev39/dev40 TGA loading fixes, original
@@ -37,12 +38,18 @@ counts, runtime `loaded_dds/tga` breadcrumbs, and capture-bundle comparison
 coverage for those fields. Dev54 keeps those diagnostics and restores the Vita
 DX8 texture surface boundary: texture-owned refcounted surface levels, original
 `GetSurfaceLevel`, texture `LockRect`/`UnlockRect` with writable mip uploads,
-priority storage, and width/height `_Create_DX8_Texture`. A full canonical
-no-deploy dev54 build now passes
+priority storage, and width/height `_Create_DX8_Texture`. Dev55 keeps that
+ownership and replaces the remaining `IDirect3DDevice8::CopyRects`
+invalid-call stub with bounded CPU-backed surface copies plus texture-owner
+uploads, and exposes fail-closed `D3DXLoadSurfaceFromSurface` /
+`D3DXFilterTexture` compatibility for original surface/mip call sites. This
+restores original `Render2DSentence` pending surface-to-texture copy semantics
+needed by message, loading, and dialogue text textures. A full canonical
+no-deploy dev55 build now passes
 retained host-validation reuse, deterministic restaging, source integration
 reporting, ARM link/package, identity verification, compressed VPK validation,
 diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
-`11d78031946e7e5b8becd710d7dfe3bce04d52ad5f88e347f5850feeef55a4b2`.
+`559b91c07e871a9171f704b59433c33dee14602edeba742ff51278925a24ca4d`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -50,7 +57,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev54 is built but not deployed; dev46 remains restored on
+control changed. Dev55 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

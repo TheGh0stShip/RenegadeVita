@@ -9,7 +9,7 @@ Status: **host-validated hardware candidate; not physically accepted.**
 | PSP2 core metadata extraction | PASS, bounded | `tools/parse_psp2_core.py` validates the gzip ELF envelope and extracts public thread metadata without inventing private register fields. |
 | Button release semantics | PASS | Host contract: 10 checks, including press/held/release/tap and independent actions. |
 | Axis convention and camera response | PASS | Host contract: 22 checks; physical up maps to forward/look-up and invert-Y remains a distinct setting. |
-| WW3D shader state mapping | PASS, unit scope | Host contract: 4 checks for opaque, cutout, alpha, and additive state. Hardware muzzle material is not yet verified. |
+| WW3D shader state mapping | PASS, unit scope | Host contract: 5 checks for opaque, cutout, inverse cutout, alpha, and additive state. Hardware muzzle material is not yet verified. |
 | Renderer lifecycle idempotence | PASS | Host contract: 11 checks across two logical sessions and one native initialization. |
 | Perspective-correct normal mesh path | ARM-built; hardware pending | The backend now submits original positions with model/view/projection matrices, retaining homogeneous W. |
 | Full retained host integration | PASS | Canonical A2/A3 host gate: retained runtime plus ASan, LeakSanitizer, and targeted UBSan cycles passed. |

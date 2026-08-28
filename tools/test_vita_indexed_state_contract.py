@@ -149,6 +149,39 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "\t}",
             boundary,
         )
+        self.assertNotIn(
+            "if (stage != 0U) RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);",
+            boundary,
+        )
+
+    def test_texture_unsupported_stage_telemetry_excludes_supported_stage1(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
+        recorder = renderer[
+            renderer.index("void Record_Texture_Unsupported_Stage"):
+            renderer.index("void Release_Texture")
+        ]
+        set_stage = boundary[
+            boundary.index("HRESULT IDirect3DDevice8::SetTextureStageState"):
+            boundary.index("HRESULT IDirect3DDevice8::SetTexture(")
+        ]
+        set_texture = boundary[
+            boundary.index("HRESULT IDirect3DDevice8::SetTexture("):
+            boundary.index("void DX8Wrapper::Get_DX8_Texture_Stage_State_Value_Name")
+        ]
+
+        self.assertIn("stage >= MeshMatDescClass::MAX_TEX_STAGES", recorder)
+        self.assertIn("++g_statistics.texture_unsupported_stages;", recorder)
+        self.assertNotIn("stage != 0U", recorder)
+        self.assertIn("if (stage >= MAX_TEXTURE_STAGES) {", set_stage)
+        self.assertIn("RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);", set_stage)
+        self.assertLess(
+            set_stage.index("RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);"),
+            set_stage.index("return static_cast<HRESULT>(D3DERR_INVALIDCALL);"),
+        )
+        self.assertIn("if (stage >= MAX_TEXTURE_STAGES) {", set_texture)
+        self.assertIn("RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);", set_texture)
+        self.assertIn("retail stage-1 materials remain visible", set_stage)
 
     def test_direct_mesh_submit_replays_original_material_mapper_state(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()

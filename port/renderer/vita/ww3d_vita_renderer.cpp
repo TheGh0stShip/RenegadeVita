@@ -1494,7 +1494,9 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 
 void Record_Texture_Unsupported_Stage(uint32_t stage)
 {
-	if (stage != 0U) ++g_statistics.texture_unsupported_stages;
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
+		++g_statistics.texture_unsupported_stages;
+	}
 }
 
 void Release_Texture(uint32_t native_texture)

@@ -1,5 +1,55 @@
 # Live engineering progress
 
+## 2026-08-28 — dev72 supported texture-stage telemetry
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: dev72 preserves dev71 alpha-test reference semantics and
+  changes Vita texture-stage unsupported telemetry to count only stages outside
+  the original two-stage `MeshMatDescClass` material contract. DX8 boundary
+  calls with stages beyond the emulated device limit are still recorded before
+  returning `D3DERR_INVALIDCALL`, but ordinary retail stage-1 material traffic
+  no longer pollutes `unsupported_stages`.
+- Runtime purpose: this keeps the dev58-dev70 stage-1 material path visible as
+  supported traffic in hardware logs, so the next M00 texture/material replay
+  can separate real unsupported stage requests from expected lightmap/detail/
+  generated-coordinate submissions.
+- Validation: focused indexed texture-state and texture-provenance contracts
+  passed 17/17. The fast no-deploy candidate passed 61 focused tests, the
+  original `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, package
+  identity checks, and VPK packaging. The full canonical no-deploy build passed
+  retained host-validation reuse, the current lightweight render-state
+  contract 5/5, the DDS/TGA alias contract 11/11, 77 host unittest checks,
+  deterministic restaging, source integration reporting, ARM link/package,
+  compressed VPK validation, identity verification, diagnostics bundle
+  generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic patch files covering 238 mechanically patched
+  staged upstream paths, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev72.vpk` SHA-256 is
+  `aec6c8ee0f16743133dff2f4f762470cf66f3c1c0b6deae087e270d76c7315c8`;
+  ELF SHA-256 is
+  `8d5f7e8ced9f004f3a6703b97a5d7c8e3059826c035a708b8e53fc394c024fa4`;
+  MAP SHA-256 is
+  `1438f637696c7d7e55de47ab6bbf611af3847cab6fa2f5eed0d0b3319306c53b`;
+  diagnostics bundle SHA-256 is
+  `901a82aa3d2f9fd6ce805fa288aaba45fc8c3c67272eb6ab2c716561f0783a4d`.
+- Boundary: dev72 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev72, verify M00
+  sky/materials, muzzle rectangle and other alpha cutouts, Logan dialogue text,
+  Logan audible dialogue and timing, material/texture appearance, and route
+  fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev72-runtime.log`, especially
+  `texture loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`,
+  `unsupported_stages`, `first original indexed VertexMaterial mapper`,
+  `first generated texture coordinates`, `output_stream`,
+  `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, and conversation state if
+  dialogue or materials remain incorrect.
+
 ## 2026-08-28 — dev71 original ShaderClass alpha-test reference semantics
 
 `[██████████] 12/12 canonical source/build gates complete`

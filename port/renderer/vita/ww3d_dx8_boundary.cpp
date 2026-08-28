@@ -1942,7 +1942,10 @@ HRESULT IDirect3DDevice8::GetViewport(D3DVIEWPORT8 *viewport)
 HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 	D3DTEXTURESTAGESTATETYPE state, DWORD value)
 {
-	if (stage >= MAX_TEXTURE_STAGES) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	if (stage >= MAX_TEXTURE_STAGES) {
+		RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 	TextureStageSamplerState &sampler = g_texture_sampler_states[stage];
 	TextureStageCombinerState &combiner = g_texture_combiner_states[stage];
 	switch (state) {
@@ -1960,9 +1963,11 @@ HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 	case D3DTSS_TEXCOORDINDEX: sampler.texcoord_index = value; break;
 	case D3DTSS_TEXTURETRANSFORMFLAGS: sampler.texture_transform_flags = value; break;
 	default:
-		// TextureClass owns sampler state above this boundary.  Other original
-		// stage semantics remain deliberately counted rather than discarded.
-		if (stage != 0U) RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);
+		// In-range states that are not needed by the current Vita backend stay
+		// accepted at the DX8 edge; unsupported-stage telemetry is reserved for
+		// out-of-range stage requests so retail stage-1 materials remain visible
+		// as supported traffic in hardware logs.
+		RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);
 		return D3D_OK;
 	}
 	switch (state) {
@@ -1987,7 +1992,10 @@ HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 
 HRESULT IDirect3DDevice8::SetTexture(DWORD stage, IDirect3DBaseTexture8 *texture)
 {
-	if (stage >= MAX_TEXTURE_STAGES) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	if (stage >= MAX_TEXTURE_STAGES) {
+		RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 	if (!Retain_Bound_Texture_Stage(stage, texture)) {
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}

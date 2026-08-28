@@ -3,7 +3,8 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev71 original ShaderClass alpha-test reference semantics,
+Current work: **post-dev72 supported texture-stage telemetry,
+original ShaderClass alpha-test reference semantics,
 indexed dynamic texture-coordinate replay,
 generated texture-coordinate evaluation, original material mapper
 texture-coordinate state, null texture-stage disable semantics,
@@ -163,6 +164,16 @@ restaging, 76 host unittest checks, source integration reporting, ARM
 link/package, identity verification, compressed VPK validation, diagnostics
 generation, and SHA verification. The canonical VPK SHA-256 is
 `79db5808b4a5e03f1ab5ac0977970ca992ca5fdbc313167072005b7890c89c14`.
+Dev72 preserves dev71 and tightens Vita texture-stage unsupported telemetry so
+supported retail stage-1 material traffic no longer increments
+`unsupported_stages`; only stages outside the original two-stage material
+contract or beyond the emulated device limit are recorded. A full canonical
+no-deploy dev72 build now passes retained host-validation reuse, current
+lightweight render-state contract 5/5, DDS/TGA alias contract 11/11,
+deterministic restaging, 77 host unittest checks, source integration reporting,
+ARM link/package, identity verification, compressed VPK validation, diagnostics
+generation, and SHA verification. The canonical VPK SHA-256 is
+`aec6c8ee0f16743133dff2f4f762470cf66f3c1c0b6deae087e270d76c7315c8`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -170,7 +181,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev71 is built but not deployed; dev46 remains restored on
+control changed. Dev72 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

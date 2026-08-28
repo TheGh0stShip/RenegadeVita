@@ -11,14 +11,18 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         function = boundary[boundary.index("void Submit_Bound_Triangles"):]
         shader = function.index(
             "RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader)")
+        loop = function.index("for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage)")
         texture = function.index(
-            "state.Textures[0]->Apply_For_Platform_Boundary(0U)")
+            "state.Textures[stage]->Apply_For_Platform_Boundary(stage)")
         fallback = function.index("RenegadeVitaRenderer::Bind_Texture(0U, false)")
+        stage1_disable = function.index("RenegadeVitaRenderer::Disable_Texture_Stage(stage)")
         submit = function.index(
             "RenegadeVitaRenderer::Submit_Indexed_Triangles(submission)")
-        self.assertLess(shader, texture)
+        self.assertLess(shader, loop)
+        self.assertLess(loop, texture)
         self.assertLess(texture, submit)
         self.assertLess(fallback, submit)
+        self.assertLess(stage1_disable, submit)
 
     def test_indexed_state_application_is_observable(self):
         header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text()
@@ -42,7 +46,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
     def test_textured_static_material_black_fallback_is_bounded_and_observable(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         self.assertIn("first static material black fallback", renderer)
-        self.assertIn("!is_skin && bound_texture != NULL && Is_Near_Black(diffuse)", renderer)
+        self.assertIn("!is_skin && bound_textures[0] != NULL && Is_Near_Black(diffuse)", renderer)
         self.assertIn("material->Get_Ambient(&ambient);", renderer)
         self.assertIn("material->Get_Emissive(&emissive);", renderer)
         self.assertIn("fallback = Vector3(1.0f, 1.0f, 1.0f);", renderer)
@@ -62,6 +66,49 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("model->Peek_Material(static_cast<int>(vertex_index), pass)", function)
         self.assertNotIn("model->Peek_Texture(triangle_index, 0, 0)", function)
         self.assertNotIn("model->Get_Shader(triangle_index, 0)", function)
+
+    def test_vita_boundary_applies_original_stage1_multitexture(self):
+        header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text()
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
+
+        for needle in (
+            "bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid);",
+            "void Disable_Texture_Stage(uint32_t stage);",
+            "bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,",
+            "bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,",
+        ):
+            self.assertIn(needle, header)
+
+        for needle in (
+            "glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage))",
+            "glMultiTexCoord2f(GL_TEXTURE1",
+            "model->Peek_Texture(triangle_index, pass, 1)",
+            "model->Get_UV_Array(pass, 1)",
+            "triangle_shader.Uses_Post_Detail_Texture()",
+            "bound_textures[1]->Apply_For_Platform_Boundary(1U)",
+            "Apply_Original_Texture_Stage_State(triangle_shader,",
+            "first original MeshClass stage1 texture",
+        ):
+            self.assertIn(needle, renderer)
+
+        for needle in (
+            "struct TextureStageCombinerState",
+            "state.Textures[stage]->Apply_For_Platform_Boundary(stage)",
+            "RenegadeVitaRenderer::Bind_Texture_Stage(stage, texture->NativeTexture,",
+            "Apply_Texture_Stage_Combiner(stage)",
+            "Caps.MaxSimultaneousTextures = MAX_TEXTURE_STAGES;",
+            "Caps.MaxTextureBlendStages = MAX_TEXTURE_STAGES;",
+        ):
+            self.assertIn(needle, boundary)
+
+        self.assertNotIn(
+            "if (stage != 0U) {\n"
+            "\t\tRenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);\n"
+            "\t\treturn D3D_OK;\n"
+            "\t}",
+            boundary,
+        )
 
     def test_capture_state_uses_global_texture_statistics(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()

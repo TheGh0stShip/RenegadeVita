@@ -1,5 +1,46 @@
 # Live engineering progress
 
+## 2026-08-28 — dev58 stage-1 multitexture boundary
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: the Vita DX8/WW3D boundary now treats the original two
+  texture stages as real backend state instead of declaring stage 1
+  unsupported. `IDirect3DDevice8::SetTexture`, sampler state, and texture-stage
+  combiner state now track both original stages, and the direct Vita
+  `MeshClass` submitter binds texture units 0/1 while emitting stage-1 UVs for
+  original post-detail materials.
+- Runtime purpose: retail materials that depend on original detail,
+  scale/invscale, add/subtract, blend, and detail-blend stage-1 texture
+  semantics now reach vitaGL through a bounded fixed-function combiner mapping.
+  This preserves original `ShaderClass`, `TextureClass`, `MaterialPassClass`,
+  and `MeshModelClass` ownership while removing the dev57 stage-1 unsupported
+  renderer gap.
+- Validation: focused texture surface/provenance/loading/indexed-state and
+  skin/material contracts passed 27/27. The fast no-deploy candidate passed
+  the expanded 53-test focused gate, the original `DDSFileClass`
+  `.tga`-to-`.dds` executable contract 11/11, and package identity/hash checks.
+  The full no-deploy canonical build passed retained host-validation reuse,
+  70 host unittest checks, deterministic restaging, source integration
+  reporting, ARM link/package, identity verification, compressed VPK
+  validation, diagnostics bundle generation, SHA manifest verification, and
+  retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev58.vpk` SHA-256 is
+  `d9555d54aa3a577a8bb5a3b5ef6f32bf67aa96de4cc128e8726137a1798d0bb3`;
+  ELF SHA-256 is
+  `82be35efe2d243d04f29844aa0bc196573a33573f57353ab198166a4d4153ae6`.
+- Boundary: dev58 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev58, verify
+  audible Logan dialogue, message/dialog text, and material/texture appearance,
+  then inspect `ux0:data/renegade/user/logs/a35-dev58-runtime.log`, especially
+  `first original MeshClass stage1 texture`, `unsupported_stages`, `texture
+  loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`, `speech=`, and
+  `stream_mix` if dialogue is still inaudible or materials remain incorrect.
+
 ## 2026-08-28 — dev57 direct mesh base-pass replay
 
 `[██████████] 12/12 canonical source/build gates complete`

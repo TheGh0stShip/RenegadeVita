@@ -70,10 +70,15 @@ class VitaTextureProvenanceContractTests(unittest.TestCase):
 
         self.assertIn("if (texture->DiagnosticFallback)", set_texture)
         self.assertIn("RenegadeVitaRenderer::Record_Texture_Checkerboard_Bind();", set_texture)
-        self.assertIn("RenegadeVitaRenderer::Bind_Texture(texture->NativeTexture,", set_texture)
+        self.assertIn(
+            "RenegadeVitaRenderer::Bind_Texture_Stage(stage, texture->NativeTexture,",
+            set_texture,
+        )
         self.assertLess(
             set_texture.index("RenegadeVitaRenderer::Record_Texture_Checkerboard_Bind();"),
-            set_texture.index("RenegadeVitaRenderer::Bind_Texture(texture->NativeTexture,"),
+            set_texture.index(
+                "RenegadeVitaRenderer::Bind_Texture_Stage(stage, texture->NativeTexture,"
+            ),
         )
 
     def test_runtime_and_capture_carry_texture_provenance(self):

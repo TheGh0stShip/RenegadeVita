@@ -45,7 +45,26 @@ struct TextureStageSamplerState {
 	DWORD mip_filter;
 };
 
+struct TextureStageCombinerState {
+	DWORD color_op;
+	DWORD color_arg1;
+	DWORD color_arg2;
+	DWORD alpha_op;
+	DWORD alpha_arg1;
+	DWORD alpha_arg2;
+};
+
 TextureStageSamplerState g_texture_sampler_states[MAX_TEXTURE_STAGES] = {};
+TextureStageCombinerState g_texture_combiner_states[MAX_TEXTURE_STAGES] = {
+	{
+		D3DTOP_MODULATE, D3DTA_TEXTURE, D3DTA_DIFFUSE,
+		D3DTOP_MODULATE, D3DTA_TEXTURE, D3DTA_DIFFUSE
+	},
+	{
+		D3DTOP_DISABLE, D3DTA_TEXTURE, D3DTA_CURRENT,
+		D3DTOP_DISABLE, D3DTA_TEXTURE, D3DTA_CURRENT
+	}
+};
 IDirect3DBaseTexture8 *g_texture_stage_textures[MAX_TEXTURE_STAGES] = {};
 // This cache owns one permanent reference for the native renderer's process
 // lifetime.  Failed TextureClass requests receive a separate AddRef(), so an
@@ -59,10 +78,21 @@ bool Apply_Texture_Stage_Sampler(DWORD stage)
 	IDirect3DBaseTexture8 *texture = g_texture_stage_textures[stage];
 	if (texture == NULL) return true;
 	const TextureStageSamplerState &sampler = g_texture_sampler_states[stage];
-	return RenegadeVitaRenderer::Configure_Texture_Sampler(texture->NativeTexture,
-		texture->Uploaded && texture->NativeTexture != 0U, sampler.address_u,
-		sampler.address_v, sampler.min_filter, sampler.mag_filter,
-		sampler.mip_filter);
+	return RenegadeVitaRenderer::Configure_Texture_Sampler_Stage(stage,
+		texture->NativeTexture, texture->Uploaded && texture->NativeTexture != 0U,
+		sampler.address_u, sampler.address_v, sampler.min_filter,
+		sampler.mag_filter, sampler.mip_filter);
+}
+
+bool Apply_Texture_Stage_Combiner(DWORD stage)
+{
+	if (stage >= MAX_TEXTURE_STAGES) return false;
+	const TextureStageCombinerState &combiner = g_texture_combiner_states[stage];
+	IDirect3DBaseTexture8 *texture = g_texture_stage_textures[stage];
+	return RenegadeVitaRenderer::Apply_DX8_Texture_Stage_State(stage,
+		combiner.color_op, combiner.color_arg1, combiner.color_arg2,
+		combiner.alpha_op, combiner.alpha_arg1, combiner.alpha_arg2,
+		texture != NULL && texture->Uploaded && texture->NativeTexture != 0U);
 }
 
 bool Is_DX8_Buffer_Type(unsigned type)
@@ -1050,11 +1080,15 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	** emitting their indexed geometry; otherwise a valid sky draw inherits stale
 	** mesh state and commonly renders black. */
 	RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader);
-	if (state.shader.Get_Texturing() != ShaderClass::TEXTURING_DISABLE &&
-		state.Textures[0] != NULL) {
-		state.Textures[0]->Apply_For_Platform_Boundary(0U);
-	} else {
-		RenegadeVitaRenderer::Bind_Texture(0U, false);
+	for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage) {
+		if (state.shader.Get_Texturing() != ShaderClass::TEXTURING_DISABLE &&
+			state.Textures[stage] != NULL) {
+			state.Textures[stage]->Apply_For_Platform_Boundary(stage);
+		} else if (stage == 0U) {
+			RenegadeVitaRenderer::Bind_Texture(0U, false);
+		} else {
+			RenegadeVitaRenderer::Disable_Texture_Stage(stage);
+		}
 	}
 	RenegadeVitaRenderer::Submit_Indexed_Triangles(submission);
 }
@@ -1072,8 +1106,8 @@ DX8Caps::DX8Caps(IDirect3D8 *direct3d, const D3DCAPS8 &caps,
 	  SupportTnL(true), SupportDXTC(false), supportGamma(false),
 	  SupportNPatches(false), SupportBumpEnvmap(false),
 	  SupportBumpEnvmapLuminance(false), SupportZBias(false),
-	  SupportAnisotropicFiltering(false), CanDoMultiPass(false),
-	  IsFogAllowed(false), MaxTexturesPerPass(0), VertexShaderVersion(0),
+	  SupportAnisotropicFiltering(false), CanDoMultiPass(true),
+	  IsFogAllowed(false), MaxTexturesPerPass(MAX_TEXTURE_STAGES), VertexShaderVersion(0),
 	  PixelShaderVersion(0), DeviceId(0), DriverBuildVersion(0),
 	  DriverVersionStatus(DRIVER_STATUS_UNKNOWN), VendorId(VENDOR_UNKNOWN),
 	  DriverDLL("Vita native renderer boundary"), Direct3D(direct3d),
@@ -1082,6 +1116,11 @@ DX8Caps::DX8Caps(IDirect3D8 *direct3d, const D3DCAPS8 &caps,
 {
 	(void)display_format;
 	(void)adapter_id;
+	Caps.TextureOpCaps = D3DTEXOPCAPS_SELECTARG1 | D3DTEXOPCAPS_MODULATE |
+		D3DTEXOPCAPS_ADD | D3DTEXOPCAPS_SUBTRACT | D3DTEXOPCAPS_ADDSMOOTH |
+		D3DTEXOPCAPS_BLENDTEXTUREALPHA | D3DTEXOPCAPS_BLENDCURRENTALPHA;
+	Caps.MaxTextureBlendStages = MAX_TEXTURE_STAGES;
+	Caps.MaxSimultaneousTextures = MAX_TEXTURE_STAGES;
 	memset(SupportTextureFormat, 0, sizeof(SupportTextureFormat));
 	memset(SupportRenderToTextureFormat, 0,
 		sizeof(SupportRenderToTextureFormat));
@@ -1785,7 +1824,14 @@ HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 {
 	if (stage >= MAX_TEXTURE_STAGES) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	TextureStageSamplerState &sampler = g_texture_sampler_states[stage];
+	TextureStageCombinerState &combiner = g_texture_combiner_states[stage];
 	switch (state) {
+	case D3DTSS_COLOROP: combiner.color_op = value; break;
+	case D3DTSS_COLORARG1: combiner.color_arg1 = value; break;
+	case D3DTSS_COLORARG2: combiner.color_arg2 = value; break;
+	case D3DTSS_ALPHAOP: combiner.alpha_op = value; break;
+	case D3DTSS_ALPHAARG1: combiner.alpha_arg1 = value; break;
+	case D3DTSS_ALPHAARG2: combiner.alpha_arg2 = value; break;
 	case D3DTSS_ADDRESSU: sampler.address_u = value; break;
 	case D3DTSS_ADDRESSV: sampler.address_v = value; break;
 	case D3DTSS_MINFILTER: sampler.min_filter = value; break;
@@ -1797,9 +1843,17 @@ HRESULT IDirect3DDevice8::SetTextureStageState(DWORD stage,
 		if (stage != 0U) RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);
 		return D3D_OK;
 	}
-	if (stage != 0U) {
-		RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);
-		return D3D_OK;
+	switch (state) {
+	case D3DTSS_COLOROP:
+	case D3DTSS_COLORARG1:
+	case D3DTSS_COLORARG2:
+	case D3DTSS_ALPHAOP:
+	case D3DTSS_ALPHAARG1:
+	case D3DTSS_ALPHAARG2:
+		return Apply_Texture_Stage_Combiner(stage) ? D3D_OK :
+			static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	default:
+		break;
 	}
 	return Apply_Texture_Stage_Sampler(stage) ? D3D_OK :
 		static_cast<HRESULT>(D3DERR_INVALIDCALL);
@@ -1809,20 +1863,20 @@ HRESULT IDirect3DDevice8::SetTexture(DWORD stage, IDirect3DBaseTexture8 *texture
 {
 	if (stage >= MAX_TEXTURE_STAGES) return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	g_texture_stage_textures[stage] = texture;
-	if (stage != 0U) {
-		RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);
-		return D3D_OK;
-	}
 	if (texture == NULL) {
-		RenegadeVitaRenderer::Bind_Texture(0U, false);
+		if (stage == 0U) RenegadeVitaRenderer::Bind_Texture(0U, false);
+		else RenegadeVitaRenderer::Disable_Texture_Stage(stage);
 		return D3D_OK;
 	}
 	if (texture->DiagnosticFallback) {
 		RenegadeVitaRenderer::Record_Texture_Checkerboard_Bind();
 	}
-	RenegadeVitaRenderer::Bind_Texture(texture->NativeTexture,
+	RenegadeVitaRenderer::Bind_Texture_Stage(stage, texture->NativeTexture,
 		texture->Uploaded && texture->NativeTexture != 0U);
-	return Apply_Texture_Stage_Sampler(stage) ? D3D_OK :
+	if (!Apply_Texture_Stage_Sampler(stage)) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	return Apply_Texture_Stage_Combiner(stage) ? D3D_OK :
 		static_cast<HRESULT>(D3DERR_INVALIDCALL);
 }
 

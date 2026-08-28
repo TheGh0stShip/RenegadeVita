@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "d3d8.h"
 #include "mesh.h"
+#include "meshmatdesc.h"
 #include "meshmdl.h"
 #include "matrix4.h"
 #include "rendobj.h"
@@ -69,6 +70,7 @@ bool g_logged_first_frame = false;
 bool g_logged_first_present = false;
 bool g_logged_first_mesh = false;
 bool g_logged_first_skin = false;
+bool g_logged_first_stage1_mesh = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_static_material_fallback = false;
 bool g_shader_compiler_available = false;
@@ -118,6 +120,7 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 {
 	const ShaderStateContract state = Translate_Shader_State(shader);
 	if (shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE) {
+		glActiveTexture(GL_TEXTURE0);
 		glEnable(GL_TEXTURE_2D);
 		switch (shader.Get_Primary_Gradient()) {
 		case ShaderClass::GRADIENT_DISABLE:
@@ -136,6 +139,7 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 			break;
 		}
 	} else {
+		glActiveTexture(GL_TEXTURE0);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
 	if (state.alpha_test) {
@@ -160,6 +164,208 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		glCullFace(GL_BACK);
 	} else glDisable(GL_CULL_FACE);
 	++g_statistics.state_changes;
+}
+
+GLenum To_GL_Texture_Argument(uint32_t argument)
+{
+	switch (argument) {
+	case D3DTA_TEXTURE: return GL_TEXTURE;
+	case D3DTA_DIFFUSE: return GL_PRIMARY_COLOR;
+	case D3DTA_CURRENT: return GL_PREVIOUS;
+	default: return GL_PREVIOUS;
+	}
+}
+
+void Apply_GL_RGB_Texture_Op(uint32_t operation, uint32_t argument0,
+	uint32_t argument1)
+{
+	switch (operation) {
+	case D3DTOP_SELECTARG1:
+	case D3DTOP_SELECTARG2:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+			To_GL_Texture_Argument(operation == D3DTOP_SELECTARG1 ?
+				argument0 : argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		break;
+	case D3DTOP_MODULATE:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+			To_GL_Texture_Argument(argument0));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+			To_GL_Texture_Argument(argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		break;
+	case D3DTOP_ADD:
+	case D3DTOP_ADDSMOOTH:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+			To_GL_Texture_Argument(argument0));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+			To_GL_Texture_Argument(argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		break;
+	case D3DTOP_SUBTRACT:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_SUBTRACT);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+			To_GL_Texture_Argument(argument0));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+			To_GL_Texture_Argument(argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		break;
+	case D3DTOP_BLENDTEXTUREALPHA:
+	case D3DTOP_BLENDCURRENTALPHA:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+			To_GL_Texture_Argument(argument0));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+			To_GL_Texture_Argument(argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB,
+			operation == D3DTOP_BLENDTEXTUREALPHA ? GL_TEXTURE : GL_PREVIOUS);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
+		break;
+	case D3DTOP_DISABLE:
+	default:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		break;
+	}
+}
+
+void Apply_GL_Alpha_Texture_Op(uint32_t operation, uint32_t argument0,
+	uint32_t argument1)
+{
+	switch (operation) {
+	case D3DTOP_SELECTARG1:
+	case D3DTOP_SELECTARG2:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+			To_GL_Texture_Argument(operation == D3DTOP_SELECTARG1 ?
+				argument0 : argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		break;
+	case D3DTOP_MODULATE:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+			To_GL_Texture_Argument(argument0));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+			To_GL_Texture_Argument(argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		break;
+	case D3DTOP_ADD:
+	case D3DTOP_ADDSMOOTH:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_ADD);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+			To_GL_Texture_Argument(argument0));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+			To_GL_Texture_Argument(argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		break;
+	case D3DTOP_SUBTRACT:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_SUBTRACT);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+			To_GL_Texture_Argument(argument0));
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+			To_GL_Texture_Argument(argument1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		break;
+	case D3DTOP_DISABLE:
+	default:
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PREVIOUS);
+		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		break;
+	}
+}
+
+uint32_t Original_Primary_Color_Op(const ShaderClass &shader)
+{
+	if (shader.Get_Texturing() != ShaderClass::TEXTURING_ENABLE) {
+		return D3DTOP_DISABLE;
+	}
+	switch (shader.Get_Primary_Gradient()) {
+	case ShaderClass::GRADIENT_DISABLE: return D3DTOP_SELECTARG1;
+	case ShaderClass::GRADIENT_ADD: return D3DTOP_ADD;
+	default: return D3DTOP_MODULATE;
+	}
+}
+
+uint32_t Original_Primary_Alpha_Op(const ShaderClass &shader)
+{
+	if (shader.Get_Texturing() != ShaderClass::TEXTURING_ENABLE) {
+		return D3DTOP_DISABLE;
+	}
+	switch (shader.Get_Primary_Gradient()) {
+	case ShaderClass::GRADIENT_DISABLE: return D3DTOP_SELECTARG1;
+	default: return D3DTOP_MODULATE;
+	}
+}
+
+uint32_t Original_Post_Detail_Color_Op(const ShaderClass &shader)
+{
+	if (shader.Get_Texturing() != ShaderClass::TEXTURING_ENABLE) {
+		return D3DTOP_DISABLE;
+	}
+	switch (shader.Get_Post_Detail_Color_Func()) {
+	case ShaderClass::DETAILCOLOR_DETAIL: return D3DTOP_SELECTARG1;
+	case ShaderClass::DETAILCOLOR_SCALE: return D3DTOP_MODULATE;
+	case ShaderClass::DETAILCOLOR_INVSCALE: return D3DTOP_ADDSMOOTH;
+	case ShaderClass::DETAILCOLOR_ADD: return D3DTOP_ADD;
+	case ShaderClass::DETAILCOLOR_SUB: return D3DTOP_SUBTRACT;
+	case ShaderClass::DETAILCOLOR_SUBR: return D3DTOP_SUBTRACT;
+	case ShaderClass::DETAILCOLOR_BLEND: return D3DTOP_BLENDTEXTUREALPHA;
+	case ShaderClass::DETAILCOLOR_DETAILBLEND: return D3DTOP_BLENDCURRENTALPHA;
+	default: return D3DTOP_DISABLE;
+	}
+}
+
+uint32_t Original_Post_Detail_Color_Arg1(const ShaderClass &shader)
+{
+	return shader.Get_Post_Detail_Color_Func() == ShaderClass::DETAILCOLOR_SUBR ?
+		D3DTA_CURRENT : D3DTA_TEXTURE;
+}
+
+uint32_t Original_Post_Detail_Color_Arg2(const ShaderClass &shader)
+{
+	return shader.Get_Post_Detail_Color_Func() == ShaderClass::DETAILCOLOR_SUBR ?
+		D3DTA_TEXTURE : D3DTA_CURRENT;
+}
+
+uint32_t Original_Post_Detail_Alpha_Op(const ShaderClass &shader)
+{
+	if (shader.Get_Texturing() != ShaderClass::TEXTURING_ENABLE) {
+		return D3DTOP_DISABLE;
+	}
+	switch (shader.Get_Post_Detail_Alpha_Func()) {
+	case ShaderClass::DETAILALPHA_DETAIL: return D3DTOP_SELECTARG1;
+	case ShaderClass::DETAILALPHA_SCALE: return D3DTOP_MODULATE;
+	case ShaderClass::DETAILALPHA_INVSCALE: return D3DTOP_ADDSMOOTH;
+	default: return D3DTOP_DISABLE;
+	}
+}
+
+void Apply_Original_Texture_Stage_State(const ShaderClass &shader,
+	bool stage0_texture, bool stage1_texture)
+{
+	Apply_DX8_Texture_Stage_State(0U,
+		Original_Primary_Color_Op(shader), D3DTA_TEXTURE, D3DTA_DIFFUSE,
+		Original_Primary_Alpha_Op(shader), D3DTA_TEXTURE, D3DTA_DIFFUSE,
+		stage0_texture);
+	Apply_DX8_Texture_Stage_State(1U,
+		Original_Post_Detail_Color_Op(shader),
+		Original_Post_Detail_Color_Arg1(shader),
+		Original_Post_Detail_Color_Arg2(shader),
+		Original_Post_Detail_Alpha_Op(shader), D3DTA_TEXTURE, D3DTA_CURRENT,
+		stage1_texture);
 }
 
 float Clamp01(float value)
@@ -818,23 +1024,51 @@ void Record_Texture_Release(uint64_t resident_bytes)
 
 bool Bind_Texture(uint32_t native_texture, bool valid)
 {
+	return Bind_Texture_Stage(0U, native_texture, valid);
+}
+
+bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
+{
 	if (!valid || native_texture == 0U) {
 		++g_statistics.texture_invalid_binds;
 #if defined(__vita__)
+		glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 		glDisable(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0);
 #endif
 		return false;
 	}
 	++g_statistics.texture_binds;
 #if defined(__vita__)
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, native_texture);
+	glActiveTexture(GL_TEXTURE0);
 #endif
 	return true;
 }
 
+void Disable_Texture_Stage(uint32_t stage)
+{
+#if defined(__vita__)
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
+	glDisable(GL_TEXTURE_2D);
+	glActiveTexture(GL_TEXTURE0);
+#else
+	(void)stage;
+#endif
+}
+
 bool Configure_Texture_Sampler(uint32_t native_texture, bool valid,
 	uint32_t address_u, uint32_t address_v, uint32_t min_filter,
+	uint32_t mag_filter, uint32_t mip_filter)
+{
+	return Configure_Texture_Sampler_Stage(0U, native_texture, valid,
+		address_u, address_v, min_filter, mag_filter, mip_filter);
+}
+
+bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
+	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
 	uint32_t mag_filter, uint32_t mip_filter)
 {
 	if (!valid || native_texture == 0U) {
@@ -855,12 +1089,14 @@ bool Configure_Texture_Sampler(uint32_t native_texture, bool valid,
 	} else if (mip_filter == 2U || mip_filter == 3U) {
 		native_min = point_min ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR;
 	}
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glBindTexture(GL_TEXTURE_2D, native_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_u);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_v);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, native_min);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
 		mag_filter == 1U ? GL_NEAREST : GL_LINEAR);
+	glActiveTexture(GL_TEXTURE0);
 	if (glGetError() != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
 		return false;
@@ -871,6 +1107,44 @@ bool Configure_Texture_Sampler(uint32_t native_texture, bool valid,
 	(void)min_filter;
 	(void)mag_filter;
 	(void)mip_filter;
+#endif
+	return true;
+}
+
+bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
+	uint32_t color_arg1, uint32_t color_arg2, uint32_t alpha_op,
+	uint32_t alpha_arg1, uint32_t alpha_arg2, bool texture_enabled)
+{
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
+		Record_Texture_Unsupported_Stage(stage);
+		return false;
+	}
+#if defined(__vita__)
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
+	if (!texture_enabled) {
+		glDisable(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0);
+		return true;
+	}
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+	Apply_GL_RGB_Texture_Op(color_op, color_arg1, color_arg2);
+	Apply_GL_Alpha_Texture_Op(alpha_op, alpha_arg1, alpha_arg2);
+	glActiveTexture(GL_TEXTURE0);
+	++g_statistics.state_changes;
+	if (glGetError() != GL_NO_ERROR) {
+		++g_statistics.backend_errors;
+		return false;
+	}
+#else
+	(void)stage;
+	(void)color_op;
+	(void)color_arg1;
+	(void)color_arg2;
+	(void)alpha_op;
+	(void)alpha_arg1;
+	(void)alpha_arg2;
+	(void)texture_enabled;
 #endif
 	return true;
 }
@@ -949,13 +1223,21 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	// ownership, and repeat lifecycle teardown rather than mistaking a
 	// geometry-only headless frame for a textured-frame proof.
 	for (int pass = 0; pass < base_pass_count; ++pass) {
-		TextureClass *bound_texture = NULL;
+		TextureClass *bound_textures[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
-			TextureClass *texture = model->Peek_Texture(triangle_index, pass, 0);
-			if (texture != bound_texture) {
-				bound_texture = texture;
-				if (bound_texture != NULL) bound_texture->Apply_For_Platform_Boundary(0U);
-				else Bind_Texture(0U, false);
+			for (int stage = 0; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+				TextureClass *texture = model->Peek_Texture(triangle_index, pass, stage);
+				if (texture != bound_textures[stage]) {
+					bound_textures[stage] = texture;
+					if (bound_textures[stage] != NULL) {
+						bound_textures[stage]->Apply_For_Platform_Boundary(
+							static_cast<unsigned int>(stage));
+					} else if (stage == 0) {
+						Bind_Texture(0U, false);
+					} else {
+						Disable_Texture_Stage(static_cast<uint32_t>(stage));
+					}
+				}
 			}
 		}
 	}
@@ -1007,31 +1289,66 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		g_logged_first_skin = true;
 	}
 	for (int pass = 0; pass < base_pass_count; ++pass) {
-		const Vector2 *uvs = model->Get_UV_Array(pass, 0);
+		const Vector2 *uvs[MeshMatDescClass::MAX_TEX_STAGES] = {
+			model->Get_UV_Array(pass, 0),
+			model->Get_UV_Array(pass, 1)
+		};
 		const unsigned *diffuse_colors = model->Get_DCG_Array(pass);
-		TextureClass *bound_texture = NULL;
+		TextureClass *bound_textures[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		unsigned current_shader_bits = 0xffffffffU;
+		bool current_detail_stage = false;
 		bool primitive_open = false;
 		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
-			TextureClass *triangle_texture = model->Peek_Texture(triangle_index, pass, 0);
+			TextureClass *triangle_textures[MeshMatDescClass::MAX_TEX_STAGES] = {
+				model->Peek_Texture(triangle_index, pass, 0),
+				model->Peek_Texture(triangle_index, pass, 1)
+			};
 			const ShaderClass triangle_shader = model->Get_Shader(triangle_index, pass);
 			const unsigned triangle_shader_bits = triangle_shader.Get_Bits();
-			if (triangle_texture != bound_texture ||
+			const bool detail_stage =
+				triangle_shader.Uses_Post_Detail_Texture() &&
+				triangle_textures[1] != NULL;
+			if (triangle_textures[0] != bound_textures[0] ||
+				triangle_textures[1] != bound_textures[1] ||
+				detail_stage != current_detail_stage ||
 				triangle_shader_bits != current_shader_bits || !primitive_open) {
 				if (primitive_open) glEnd();
-				bound_texture = triangle_texture;
+				bound_textures[0] = triangle_textures[0];
+				bound_textures[1] = triangle_textures[1];
+				current_detail_stage = detail_stage;
 				current_shader_bits = triangle_shader_bits;
 				// ShaderClass remains the authoritative original material policy.
 				// Translate only the fixed-function state VitaGL exposes here; this
 				// preserves alpha-cutout, conventional transparency and additive fire.
 				Apply_Original_Shader_State(triangle_shader);
-				if (bound_texture != NULL) {
+				if (bound_textures[0] != NULL) {
 					// Retain TextureClass as the resource/lifetime owner and invoke its
 					// original filter, mip, wrap, and bind sequence through the narrow
 					// platform bridge.
-					bound_texture->Apply_For_Platform_Boundary(0U);
+					bound_textures[0]->Apply_For_Platform_Boundary(0U);
 				} else {
 					Bind_Texture(0U, false);
+				}
+				if (current_detail_stage) {
+					bound_textures[1]->Apply_For_Platform_Boundary(1U);
+				} else {
+					Disable_Texture_Stage(1U);
+				}
+				Apply_Original_Texture_Stage_State(triangle_shader,
+					bound_textures[0] != NULL, current_detail_stage);
+				if (current_detail_stage && !g_logged_first_stage1_mesh) {
+					Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+						"first original MeshClass stage1 texture: mesh=%s pass=%d texture0=%s texture1=%s shader=%08X color=%d alpha=%d uv1=%d",
+						mesh.Get_Name(), pass,
+						bound_textures[0] != NULL ?
+							bound_textures[0]->Get_Texture_Name().Peek_Buffer() : "none",
+						bound_textures[1] != NULL ?
+							bound_textures[1]->Get_Texture_Name().Peek_Buffer() : "none",
+						triangle_shader_bits,
+						static_cast<int>(triangle_shader.Get_Post_Detail_Color_Func()),
+						static_cast<int>(triangle_shader.Get_Post_Detail_Alpha_Func()),
+						uvs[1] != NULL ? 1 : 0);
+					g_logged_first_stage1_mesh = true;
 				}
 				glBegin(GL_TRIANGLES);
 				primitive_open = true;
@@ -1056,8 +1373,17 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			}
 			for (int corner = 0; corner < 3; ++corner) {
 				const unsigned vertex_index = vertex_indices[corner];
-				if (uvs != NULL && bound_texture != NULL) {
-					glTexCoord2f(uvs[vertex_index].X, uvs[vertex_index].Y);
+				if (uvs[0] != NULL && bound_textures[0] != NULL) {
+					glMultiTexCoord2f(GL_TEXTURE0,
+						uvs[0][vertex_index].X, uvs[0][vertex_index].Y);
+				}
+				if (current_detail_stage) {
+					const Vector2 *detail_uvs = uvs[1] != NULL ? uvs[1] : uvs[0];
+					if (detail_uvs != NULL) {
+						glMultiTexCoord2f(GL_TEXTURE1,
+							detail_uvs[vertex_index].X,
+							detail_uvs[vertex_index].Y);
+					}
 				}
 				/* Preserve the original mesh material color owner.  The former Vita
 				** bridge invented RGB from each normal, visibly recoloring otherwise
@@ -1083,7 +1409,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 						material->Get_Emissive(&emissive);
 						opacity = material->Get_Opacity();
 					}
-					if (!is_skin && bound_texture != NULL && Is_Near_Black(diffuse)) {
+					if (!is_skin && bound_textures[0] != NULL && Is_Near_Black(diffuse)) {
 						Vector3 fallback = Max_Color(ambient, emissive);
 						if (Is_Near_Black(fallback)) {
 							/* Original DX8 lighting would combine scene/material
@@ -1093,7 +1419,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 							** multiplying valid retail textures by black. */
 							fallback = Vector3(1.0f, 1.0f, 1.0f);
 						}
-						Log_Static_Material_Fallback(mesh, bound_texture, material,
+						Log_Static_Material_Fallback(mesh, bound_textures[0], material,
 							triangle_shader, diffuse, ambient, emissive, fallback, opacity);
 						diffuse = fallback;
 					}
@@ -1106,6 +1432,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		}
 		if (primitive_open) glEnd();
 	}
+	Disable_Texture_Stage(1U);
 	// Submit_Indexed_Triangles may be used later in the same frame by HUD or
 	// native DX8 boundary callers. Restore its explicit identity baseline only
 	// after this homogeneous mesh submission is complete.
@@ -1269,12 +1596,14 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 			} else {
 				glNormal3f(0.0f, 0.0f, 1.0f);
 			}
-			glTexCoord2f(uv[0], uv[1]);
+			glMultiTexCoord2f(GL_TEXTURE0, uv[0], uv[1]);
+			glMultiTexCoord2f(GL_TEXTURE1, uv[0], uv[1]);
 			glVertex3f(position[0], position[1], position[2]);
 		}
 	}
 	glEnd();
 	const uint32_t emitted_triangles = submission.triangle_count;
+	Disable_Texture_Stage(1U);
 
 	// The accepted A2.2 Submit_Mesh path emits already-projected coordinates
 	// and deliberately remains unchanged.  Restore its identity convention in

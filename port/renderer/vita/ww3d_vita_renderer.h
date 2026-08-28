@@ -183,9 +183,17 @@ void Record_Texture_Checkerboard_Bind();
 void Record_Texture_Upload(uint64_t resident_bytes);
 void Record_Texture_Release(uint64_t resident_bytes);
 bool Bind_Texture(uint32_t native_texture, bool valid);
+bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid);
+void Disable_Texture_Stage(uint32_t stage);
 bool Configure_Texture_Sampler(uint32_t native_texture, bool valid,
 	uint32_t address_u, uint32_t address_v, uint32_t min_filter,
 	uint32_t mag_filter, uint32_t mip_filter);
+bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
+	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
+	uint32_t mag_filter, uint32_t mip_filter);
+bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
+	uint32_t color_arg1, uint32_t color_arg2, uint32_t alpha_op,
+	uint32_t alpha_arg1, uint32_t alpha_arg2, bool texture_enabled);
 void Record_Texture_Unsupported_Stage(uint32_t stage);
 void Release_Texture(uint32_t native_texture);
 void Submit_Unsupported(RenderObjClass *object);

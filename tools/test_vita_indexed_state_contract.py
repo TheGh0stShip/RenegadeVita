@@ -183,6 +183,49 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("RenegadeVitaRenderer::Record_Texture_Unsupported_Stage(stage);", set_texture)
         self.assertIn("retail stage-1 materials remain visible", set_stage)
 
+    def test_addsmooth_uses_original_inverse_scale_combiner(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        original_header = (ROOT / "staging/ww3d2/shader.h").read_text(errors="replace")
+        original_shader = (ROOT / "staging/ww3d2/shader.cpp").read_text(errors="replace")
+        rgb = renderer[
+            renderer.index("void Apply_GL_RGB_Texture_Op"):
+            renderer.index("void Apply_GL_Alpha_Texture_Op")
+        ]
+        alpha = renderer[
+            renderer.index("void Apply_GL_Alpha_Texture_Op"):
+            renderer.index("uint32_t Original_Primary_Color_Op")
+        ]
+
+        self.assertIn("DETAILCOLOR_INVSCALE", original_header)
+        self.assertIn("DETAILALPHA_INVSCALE", original_header)
+        self.assertIn("local + (1-local)*other", original_header)
+        self.assertIn("case ShaderClass::DETAILCOLOR_INVSCALE:", original_shader)
+        self.assertIn("case ShaderClass::DETAILALPHA_INVSCALE:", original_shader)
+        self.assertIn("cOp = D3DTOP_ADDSMOOTH;", original_shader)
+        self.assertIn("aOp = D3DTOP_ADDSMOOTH;", original_shader)
+        self.assertIn("void Set_Texture_Env_White_Constant()", renderer)
+        self.assertIn("glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, white);", renderer)
+
+        self.assertIn("case D3DTOP_ADDSMOOTH:", rgb)
+        self.assertIn("Set_Texture_Env_White_Constant();", rgb)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);", rgb)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_CONSTANT);", rgb)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,", rgb)
+        self.assertIn("To_GL_Texture_Argument(argument0));", rgb)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB,", rgb)
+        self.assertIn("To_GL_Texture_Argument(argument1));", rgb)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_COLOR);", rgb)
+        self.assertNotIn("case D3DTOP_ADD:\n\tcase D3DTOP_ADDSMOOTH:", rgb)
+
+        self.assertIn("case D3DTOP_ADDSMOOTH:", alpha)
+        self.assertIn("Set_Texture_Env_White_Constant();", alpha)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_INTERPOLATE);", alpha)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_CONSTANT);", alpha)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,", alpha)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_ALPHA,", alpha)
+        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);", alpha)
+        self.assertNotIn("case D3DTOP_ADD:\n\tcase D3DTOP_ADDSMOOTH:", alpha)
+
     def test_direct_mesh_submit_replays_original_material_mapper_state(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()

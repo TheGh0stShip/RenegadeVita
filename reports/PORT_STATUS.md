@@ -3,7 +3,8 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev72 supported texture-stage telemetry,
+Current work: **post-dev73 original ADDSMOOTH detail combiner,
+supported texture-stage telemetry,
 original ShaderClass alpha-test reference semantics,
 indexed dynamic texture-coordinate replay,
 generated texture-coordinate evaluation, original material mapper
@@ -174,6 +175,17 @@ deterministic restaging, 77 host unittest checks, source integration reporting,
 ARM link/package, identity verification, compressed VPK validation, diagnostics
 generation, and SHA verification. The canonical VPK SHA-256 is
 `aec6c8ee0f16743133dff2f4f762470cf66f3c1c0b6deae087e270d76c7315c8`.
+Dev73 preserves dev72 and translates original `D3DTOP_ADDSMOOTH` inverse-scale
+detail color/alpha through a Vita fixed-function GL interpolate combiner with a
+white texture-env constant instead of plain `GL_ADD`, matching the original
+`local + (1-local)*other` material behavior without moving shader ownership out
+of WW3D. A full canonical no-deploy dev73 build now passes retained
+host-validation reuse, current lightweight render-state contract 5/5, DDS/TGA
+alias contract 11/11, deterministic restaging, 78 host unittest checks, source
+integration reporting, ARM link/package, identity verification, compressed VPK
+validation, diagnostics generation, and SHA verification. The canonical VPK
+SHA-256 is
+`251d9335c97056f15f69398a2bfd7c4ef9a9ec9242dab55719896d39acf67c32`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -181,7 +193,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev72 is built but not deployed; dev46 remains restored on
+control changed. Dev73 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

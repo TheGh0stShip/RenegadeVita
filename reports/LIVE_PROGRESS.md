@@ -1,5 +1,52 @@
 # Live engineering progress
 
+## 2026-08-28 — dev73 original ADDSMOOTH detail combiner
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: dev73 preserves dev72 supported texture-stage telemetry
+  and translates original `D3DTOP_ADDSMOOTH` inverse-scale detail color/alpha
+  through a fixed-function GL interpolate combiner with a white texture-env
+  constant instead of plain `GL_ADD`.
+- Runtime purpose: this keeps `ShaderClass::Apply()` ownership in original
+  WW3D while making retail detail/lightmap materials render closer to the
+  original `local + (1-local)*other` behavior when M00 assets load.
+- Validation: focused indexed texture-state and texture-provenance contracts
+  passed 18/18. The fast no-deploy candidate passed 62 focused tests, the
+  original `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, package
+  identity checks, and VPK packaging. The full canonical no-deploy build passed
+  retained host-validation reuse, the current lightweight render-state
+  contract 5/5, the DDS/TGA alias contract 11/11, 78 host unittest checks,
+  deterministic restaging, source integration reporting, ARM link/package,
+  compressed VPK validation, identity verification, diagnostics bundle
+  generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic patch files covering 238 mechanically patched
+  staged upstream paths, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev73.vpk` SHA-256 is
+  `251d9335c97056f15f69398a2bfd7c4ef9a9ec9242dab55719896d39acf67c32`;
+  ELF SHA-256 is
+  `a0a9b823b9434e9c7b86ce962462b9ba5bc5078d2bacfff1c3564bd8b1ccf02b`;
+  MAP SHA-256 is
+  `97fa72861b3598f2522ce4a06fd9f720b19022e4bdff24aa59d30710aae6d8aa`;
+  diagnostics bundle SHA-256 is
+  `74dee4dea56fe2c49921979c95f6358088b7bfaabdc53f8e74a330628ba48dc0`.
+- Boundary: dev73 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev73, verify M00
+  sky/materials, muzzle rectangle and other alpha cutouts, Logan dialogue text,
+  Logan audible dialogue and timing, material/texture appearance, and route
+  fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev73-runtime.log`, especially
+  `texture loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`,
+  `unsupported_stages`, `first original indexed VertexMaterial mapper`,
+  `first generated texture coordinates`, `output_stream`,
+  `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, and conversation state if
+  dialogue or materials remain incorrect.
+
 ## 2026-08-28 — dev72 supported texture-stage telemetry
 
 `[██████████] 12/12 canonical source/build gates complete`

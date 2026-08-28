@@ -868,6 +868,12 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	texture->HasAlpha = Texture_Format_Has_Alpha(dds.Get_Format());
 	texture->ReferenceCount = 1U;
 	texture->DiagnosticFallback = false;
+	if (!Allocate_Texture_Surface_Levels(texture)) {
+		delete texture;
+		Log_Texture_Fallback("dds-surface-levels", filename);
+		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+		return Create_Checkerboard_Fallback();
+	}
 	uint32_t checksum = 2166136261U;
 	uint64_t bytes = 0U;
 #if defined(__vita__)
@@ -875,6 +881,7 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	GLuint native = 0U;
 	glGenTextures(1, &native);
 	if (native == 0U) {
+		Destroy_Texture_Surface_Levels(texture);
 		delete texture;
 		Log_Texture_Fallback("dds-gl-gen", filename);
 		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
@@ -891,6 +898,20 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 		const unsigned width = dds.Get_Width(level);
 		const unsigned height = dds.Get_Height(level);
 		std::vector<unsigned char> rgba(static_cast<size_t>(width) * height * 4U);
+		IDirect3DSurface8 *surface = new (std::nothrow) IDirect3DSurface8(
+			width, height, D3DFMT_A8R8G8B8,
+			Surface_Bytes_Per_Pixel(D3DFMT_A8R8G8B8));
+		if (surface == NULL || surface->Get_Data() == NULL) {
+			if (surface != NULL) surface->Release();
+#if defined(__vita__)
+			RenegadeVitaRenderer::Release_Texture(native);
+#endif
+			Destroy_Texture_Surface_Levels(texture);
+			delete texture;
+			Log_Texture_Fallback("dds-surface-alloc", filename);
+			RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+			return Create_Checkerboard_Fallback();
+		}
 		for (unsigned y = 0U; y < height; ++y) {
 			for (unsigned x = 0U; x < width; ++x) {
 				const uint32_t argb = dds.Get_Pixel(level, x, y);
@@ -899,6 +920,17 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 				checksum = Mix_Texture_Checksum(checksum, argb);
 			}
 		}
+		for (unsigned y = 0U; y < height; ++y) {
+			for (unsigned x = 0U; x < width; ++x) {
+				Write_RGBA_To_Surface_Pixel(D3DFMT_A8R8G8B8,
+					rgba.data() + (static_cast<size_t>(y) * width + x) * 4U,
+					surface->Get_Data() + static_cast<size_t>(y) *
+					surface->Get_Pitch() + static_cast<size_t>(x) *
+					Surface_Bytes_Per_Pixel(D3DFMT_A8R8G8B8));
+			}
+		}
+		surface->Set_Texture_Owner(texture, level);
+		texture->SurfaceLevels[level] = surface;
 		bytes += rgba.size();
 #if defined(__vita__)
 		glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0,
@@ -908,6 +940,7 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 #if defined(__vita__)
 	if (glGetError() != GL_NO_ERROR) {
 		RenegadeVitaRenderer::Release_Texture(native);
+		Destroy_Texture_Surface_Levels(texture);
 		delete texture;
 		Log_Texture_Fallback("dds-gl-upload", filename);
 		RenegadeVitaRenderer::Record_Texture_Upload_Failure();

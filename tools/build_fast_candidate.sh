@@ -9,7 +9,7 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev55}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev56}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
@@ -248,7 +248,7 @@ grep -Fq '"status": "PASS"' "$rv_identity_report"
 	echo "Upstream revision: $rv_revision_actual"
 	echo "Restage mode: ${RENEGADE_FAST_RESTAGE:-0}"
 	echo "Fast tests: $rv_fast_tests"
-	echo "Focused contracts: loading screen, indexed state, skin submission, animation combo guard, conversation diagnostics, texture provenance, texture surface copy/upload ownership, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias"
+	echo "Focused contracts: loading screen, indexed state, skin submission, animation combo guard, conversation diagnostics, texture provenance, texture surface copy/upload ownership, DDS retained surface levels, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias"
 	echo "VPK contains: eboot.bin and sce_sys/param.sfo only"
 	echo "Runtime log: $rv_runtime_log"
 } > "$rv_build_report"

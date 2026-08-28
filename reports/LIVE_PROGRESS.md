@@ -1,5 +1,42 @@
 # Live engineering progress
 
+## 2026-08-28 — dev56 DDS retained surface levels
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: DDS retail texture loads now retain decoded CPU-backed
+  `D3DFMT_A8R8G8B8` surface levels for every mip while preserving DX8
+  `SourceFormat` descriptor metadata from
+  `WW3DFormat_To_D3DFormat(dds.Get_Format())`.
+- Runtime purpose: original `GetSurfaceLevel()` callers no longer receive
+  blank descriptor-only surfaces after DDS loads. The retained decoded retail
+  pixels are available under original WW3D ownership for
+  `SurfaceClass`, texture-loader, D3DX, missing-texture, and message/dialog
+  text surface-copy paths.
+- Validation: focused texture surface/provenance/loading/indexed-state
+  contracts passed 23/23. The fast no-deploy candidate passed the expanded
+  51-test focused gate, the original `DDSFileClass` `.tga`-to-`.dds`
+  executable contract 11/11, and package identity/hash checks. The full
+  no-deploy canonical build passed retained host-validation reuse,
+  deterministic restaging, source integration reporting, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, SHA manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev56.vpk` SHA-256 is
+  `ecea466be07e7648429c2f0daa653530a37aeb60c60940fe6befa444caebca17`;
+  ELF SHA-256 is
+  `fe25fdfa6b2dcc4e36be8c02b1defacd0e12207c4501d4d0f9ee5b086482a2ab`.
+- Boundary: dev56 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev56, verify
+  audible Logan dialogue, message/dialog text, and material/texture appearance,
+  then inspect `ux0:data/renegade/user/logs/a35-dev56-runtime.log`, especially
+  `texture loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`,
+  `speech=`, and `stream_mix` if dialogue is still inaudible or materials
+  remain incorrect.
+
 ## 2026-08-28 — dev55 DX8 surface-copy boundary
 
 `[██████████] 12/12 canonical source/build gates complete`

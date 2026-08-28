@@ -168,6 +168,25 @@ class VitaTextureSurfaceContractTests(unittest.TestCase):
         self.assertIn("D3DXLoadSurfaceFromSurface(", filter_method)
         self.assertIn("texture->SurfaceLevels[level - 1U]", filter_method)
 
+    def test_dds_loaded_textures_retain_decoded_surface_levels(self):
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+        method = boundary[
+            boundary.index("IDirect3DTexture8 *Load_DDS_Texture"):
+            boundary.index("IDirect3DTexture8 *Load_Targa_Texture")
+        ]
+
+        self.assertIn("texture->SourceFormat = WW3DFormat_To_D3DFormat(dds.Get_Format());", method)
+        self.assertIn("Allocate_Texture_Surface_Levels(texture)", method)
+        self.assertIn("new (std::nothrow) IDirect3DSurface8(", method)
+        self.assertIn("width, height, D3DFMT_A8R8G8B8,", method)
+        self.assertIn("RenegadeVitaTextureUpload::Store_RGBA_From_ARGB_Flipped", method)
+        self.assertIn("Write_RGBA_To_Surface_Pixel(D3DFMT_A8R8G8B8,", method)
+        self.assertIn("surface->Set_Texture_Owner(texture, level);", method)
+        self.assertIn("texture->SurfaceLevels[level] = surface;", method)
+        self.assertIn("Destroy_Texture_Surface_Levels(texture);", method)
+
     def test_lock_state_supports_original_multi_level_texture_loader_pattern(self):
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
             encoding="utf-8"

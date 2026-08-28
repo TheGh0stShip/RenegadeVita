@@ -3,10 +3,11 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev68 original material mapper texture-coordinate state,
-null texture-stage disable semantics, Vita stream-output submission telemetry,
-stream restart handling, per-buffer stream-mix telemetry, active streamed-audio
-telemetry, Vita DX8 bound-texture lifetime,
+Current work: **post-dev69 generated texture-coordinate evaluation, original
+material mapper texture-coordinate state, null texture-stage disable semantics,
+Vita stream-output submission telemetry, stream restart handling, per-buffer
+stream-mix telemetry, active streamed-audio telemetry, Vita DX8 bound-texture
+lifetime,
 WWAudio stream loop-count return, streamed-dialogue fact runtime telemetry, WAVE fact-duration metadata,
 streamed-dialogue duration metadata, dialogue/audio
 diagnostics, texture provenance, DX8
@@ -122,6 +123,19 @@ host-validation reuse, deterministic restaging, 73 host unittest checks, source
 integration reporting, ARM link/package, identity verification, compressed VPK
 validation, diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
 `bccfb2e4ef99b5246331b3bb4d6c09e46364c314eedfc19b98c9fe0e236b80d8`.
+Dev69 preserves dev68 and evaluates original generated texture-coordinate
+states on the CPU for the direct Vita `MeshClass` path. After replaying the
+original material mapper state, the renderer reads back
+`D3DTSS_TEXCOORDINDEX`, `D3DTSS_TEXTURETRANSFORMFLAGS`, and
+`D3DTS_TEXTURE0+n`, generates camera-space normal/position/reflection-vector
+coordinates when the original mapper requested them, applies DX8 texture
+transforms including projected divide, and resets Vita GL texture matrices for
+direct submissions so mapper transforms are not double-applied. A full
+canonical no-deploy dev69 build now passes retained host-validation reuse,
+deterministic restaging, 74 host unittest checks, source integration reporting,
+ARM link/package, identity verification, compressed VPK validation, diagnostics
+generation, and SHA verification. The canonical VPK SHA-256 is
+`bddc2433707a23682cefecca2c9b63c19b9276e0b612bab65da9a5babc08ed2e`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -129,7 +143,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev68 is built but not deployed; dev46 remains restored on
+control changed. Dev69 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

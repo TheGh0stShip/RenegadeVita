@@ -1,5 +1,64 @@
 # Live engineering progress
 
+## 2026-08-28 — dev69 generated texture-coordinate evaluation
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: the direct Vita `MeshClass` submit path now reads back
+  original DX8 texture-coordinate stage state after replaying
+  `TextureMapperClass::Apply()`, including `D3DTSS_TEXCOORDINDEX`,
+  `D3DTSS_TEXTURETRANSFORMFLAGS`, and the `D3DTS_TEXTURE0+n` transform matrix.
+  Because the VitaGL public API available here only exposes 2D immediate
+  texture coordinates, dev69 evaluates original generated coordinates on the
+  CPU for camera-space normal, camera-space position, and camera-space
+  reflection-vector modes, then submits the final 2D coordinates through the
+  existing Vita fixed-function path.
+- Transform semantics: dev69 applies the original DX8 texture transform flags
+  on the CPU, including projected divide for projected mapper states, and
+  resets Vita GL texture matrices for direct mesh submissions so mapper
+  transforms are not applied twice. Plain pass-through stages still use the UV
+  array selected by the original material state rather than the texture-stage
+  number.
+- Runtime purpose: this closes the next material-mapper gap behind
+  pink/black or incorrectly mapped retail materials while preserving original
+  WW3D material ownership. The next hardware log should show whether remaining
+  visual issues are missing texture loads/fallback binds or material states
+  beyond 2D generated-coordinate submission.
+- Validation: focused indexed texture-state and generated-coordinate contracts
+  passed 9/9. The fast no-deploy candidate passed 58 focused tests, the
+  original `DDSFileClass` `.tga`-to-`.dds` executable contract 11/11, package
+  identity checks, and VPK packaging. The full canonical no-deploy build passed
+  retained host-validation reuse, 74 host unittest checks, deterministic
+  restaging, source integration reporting, ARM link/package, compressed VPK
+  validation, identity verification, diagnostics bundle generation, SHA
+  manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic patch files covering 238 mechanically patched staged
+  upstream paths, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev69.vpk` SHA-256 is
+  `bddc2433707a23682cefecca2c9b63c19b9276e0b612bab65da9a5babc08ed2e`;
+  ELF SHA-256 is
+  `366f1be5ea978a5500041e5052f6a61d95bef476fefbd6338f2031d9e330a626`;
+  MAP SHA-256 is
+  `07828227773fab269d8f4fa72633f32900d98637d86bddf9fb2da77a6252f114`;
+  diagnostics bundle SHA-256 is
+  `377016462fbbcb793e1a17b2fb805f1b963ef607204f5786724946912aaca886`.
+- Boundary: dev69 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev69, verify Logan
+  audible dialogue and timing, dialog/message text, material/texture
+  appearance, and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev69-runtime.log`, especially
+  `output_stream`, `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, fact/estimate/untrimmed/trimmed
+  values, conversation state, `texture loaded`, `loaded_dds/tga`,
+  `checker_bind`, `invalid_bind`, `unsupported_stages`,
+  `first original VertexMaterial mapper`, and the new
+  `first generated texture coordinates` breadcrumb if dialogue remains silent
+  or materials remain incorrect.
+
 ## 2026-08-28 — dev68 original material mapper texture-coordinate state
 
 `[██████████] 12/12 canonical source/build gates complete`

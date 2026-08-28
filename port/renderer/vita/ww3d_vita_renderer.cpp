@@ -73,11 +73,18 @@ bool g_logged_first_mesh = false;
 bool g_logged_first_skin = false;
 bool g_logged_first_stage1_mesh = false;
 bool g_logged_first_texture_mapper = false;
+bool g_logged_first_generated_texture_coordinate = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_static_material_fallback = false;
 bool g_shader_compiler_available = false;
 unsigned g_shader_init_calls = 0;
 int g_shader_init_last_result = -1;
+
+struct OriginalTextureCoordinateState {
+	DWORD texcoord_index;
+	DWORD texture_transform_flags;
+	D3DMATRIX texture_transform;
+};
 
 GLenum To_GL_Depth_Function(ShaderClass::DepthCompareType function)
 {
@@ -116,6 +123,189 @@ GLenum To_GL_Destination_Blend(ShaderClass::DstBlendFuncType function)
 	case ShaderClass::DSTBLEND_ONE_MINUS_SRC_ALPHA: return GL_ONE_MINUS_SRC_ALPHA;
 	default: return GL_ZERO;
 	}
+}
+
+void Make_D3D_Identity(D3DMATRIX *matrix)
+{
+	memset(matrix, 0, sizeof(*matrix));
+	matrix->m[0][0] = 1.0f;
+	matrix->m[1][1] = 1.0f;
+	matrix->m[2][2] = 1.0f;
+	matrix->m[3][3] = 1.0f;
+}
+
+void Reset_Texture_Matrix_Stage(unsigned stage)
+{
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glActiveTexture(GL_TEXTURE0);
+}
+
+void Capture_Original_Texture_Coordinate_State(unsigned stage,
+	OriginalTextureCoordinateState *state)
+{
+	state->texcoord_index = D3DTSS_TCI_PASSTHRU | stage;
+	state->texture_transform_flags = D3DTTFF_DISABLE;
+	Make_D3D_Identity(&state->texture_transform);
+	RenegadeVita_Get_DX8_Texture_Coordinate_State(stage,
+		&state->texcoord_index, &state->texture_transform_flags,
+		&state->texture_transform);
+	Reset_Texture_Matrix_Stage(stage);
+}
+
+DWORD Texture_Coordinate_Mode(const OriginalTextureCoordinateState &state)
+{
+	return state.texcoord_index & 0xffff0000U;
+}
+
+bool Uses_Generated_Texture_Coordinates(
+	const OriginalTextureCoordinateState &state)
+{
+	const DWORD mode = Texture_Coordinate_Mode(state);
+	return mode == D3DTSS_TCI_CAMERASPACENORMAL ||
+		mode == D3DTSS_TCI_CAMERASPACEPOSITION ||
+		mode == D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR;
+}
+
+const Vector2 *Resolve_UV_Array_For_Texture_State(MeshModelClass *model,
+	const OriginalTextureCoordinateState &state, const Vector2 *fallback)
+{
+	const int uv_source = static_cast<int>(state.texcoord_index & 0xffffU);
+	if (uv_source >= 0 && uv_source < MeshMatDescClass::MAX_UV_ARRAYS) {
+		const Vector2 *uvs = model->Get_UV_Array_By_Index(uv_source);
+		if (uvs != NULL) return uvs;
+	}
+	return fallback;
+}
+
+Vector3 Normalize_Or_Default(Vector3 value, const Vector3 &fallback)
+{
+	if (value.Length2() <= 0.000001f) return fallback;
+	value.Normalize();
+	return value;
+}
+
+Vector3 Compute_Camera_Space_Position(const Matrix3D &world_transform,
+	const Matrix3D &view_transform, const Vector3 &position)
+{
+	Vector3 world_position;
+	Matrix3D::Transform_Vector(world_transform, position, &world_position);
+	Vector3 camera_position;
+	Matrix3D::Transform_Vector(view_transform, world_position, &camera_position);
+	return camera_position;
+}
+
+Vector3 Compute_Camera_Space_Normal(const Matrix3D &world_transform,
+	const Matrix3D &view_transform, const Vector3 &normal)
+{
+	Vector3 world_normal;
+	Matrix3D::Rotate_Vector(world_transform, normal, &world_normal);
+	Vector3 camera_normal;
+	Matrix3D::Rotate_Vector(view_transform, world_normal, &camera_normal);
+	return Normalize_Or_Default(camera_normal, Vector3(0.0f, 0.0f, 1.0f));
+}
+
+Vector3 Compute_Camera_Space_Reflection(const Matrix3D &world_transform,
+	const Matrix3D &view_transform, const Vector3 &position,
+	const Vector3 &normal)
+{
+	const Vector3 camera_position =
+		Compute_Camera_Space_Position(world_transform, view_transform, position);
+	const Vector3 camera_normal =
+		Compute_Camera_Space_Normal(world_transform, view_transform, normal);
+	const Vector3 eye_vector =
+		Normalize_Or_Default(-camera_position, Vector3(0.0f, 0.0f, 1.0f));
+	const float dot = Vector3::Dot_Product(camera_normal, eye_vector);
+	return Normalize_Or_Default((2.0f * dot * camera_normal) - eye_vector,
+		Vector3(0.0f, 0.0f, 1.0f));
+}
+
+void Apply_DX8_Texture_Transform(const OriginalTextureCoordinateState &state,
+	float in_s, float in_t, float in_r, float in_q, float *out_s,
+	float *out_t)
+{
+	float transformed[4] = { in_s, in_t, in_r, in_q };
+	const DWORD coordinate_count = state.texture_transform_flags & 0xffU;
+	if (coordinate_count != D3DTTFF_DISABLE) {
+		const D3DMATRIX &matrix = state.texture_transform;
+		const float source[4] = { in_s, in_t, in_r, in_q };
+		for (unsigned column = 0U; column < 4U; ++column) {
+			transformed[column] =
+				source[0] * matrix.m[0][column] +
+				source[1] * matrix.m[1][column] +
+				source[2] * matrix.m[2][column] +
+				source[3] * matrix.m[3][column];
+		}
+	}
+	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U &&
+		coordinate_count >= D3DTTFF_COUNT2 &&
+		coordinate_count <= D3DTTFF_COUNT4) {
+		const float divisor = transformed[coordinate_count - 1U];
+		if (divisor < -0.000001f || divisor > 0.000001f) {
+			transformed[0] /= divisor;
+			transformed[1] /= divisor;
+		}
+	}
+	*out_s = transformed[0];
+	*out_t = coordinate_count == D3DTTFF_COUNT1 ? 0.0f : transformed[1];
+}
+
+bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
+	const OriginalTextureCoordinateState &state, const Vector2 *uvs,
+	const Vector3 *vertices, const Vector3 *normals, unsigned vertex_index,
+	const Matrix3D &world_transform, const Matrix3D &view_transform)
+{
+	float source_s = 0.0f;
+	float source_t = 0.0f;
+	float source_r = 0.0f;
+	const DWORD mode = Texture_Coordinate_Mode(state);
+	if (mode == D3DTSS_TCI_PASSTHRU) {
+		if (uvs == NULL) return false;
+		source_s = uvs[vertex_index].X;
+		source_t = uvs[vertex_index].Y;
+	} else if (mode == D3DTSS_TCI_CAMERASPACENORMAL) {
+		if (normals == NULL) return false;
+		const Vector3 camera_normal = Compute_Camera_Space_Normal(
+			world_transform, view_transform, normals[vertex_index]);
+		source_s = camera_normal.X;
+		source_t = camera_normal.Y;
+		source_r = camera_normal.Z;
+	} else if (mode == D3DTSS_TCI_CAMERASPACEPOSITION) {
+		const Vector3 camera_position = Compute_Camera_Space_Position(
+			world_transform, view_transform, vertices[vertex_index]);
+		source_s = camera_position.X;
+		source_t = camera_position.Y;
+		source_r = camera_position.Z;
+	} else if (mode == D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR) {
+		if (normals == NULL) return false;
+		const Vector3 reflection = Compute_Camera_Space_Reflection(
+			world_transform, view_transform, vertices[vertex_index],
+			normals[vertex_index]);
+		source_s = reflection.X;
+		source_t = reflection.Y;
+		source_r = reflection.Z;
+	} else {
+		if (uvs == NULL) return false;
+		source_s = uvs[vertex_index].X;
+		source_t = uvs[vertex_index].Y;
+	}
+	float s = 0.0f;
+	float t = 0.0f;
+	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
+		&s, &t);
+	glMultiTexCoord2f(texture_unit, s, t);
+	if (Uses_Generated_Texture_Coordinates(state) &&
+		!g_logged_first_generated_texture_coordinate) {
+		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) final=(%.3f,%.3f)",
+			stage, static_cast<unsigned>(mode),
+			static_cast<unsigned>(state.texture_transform_flags),
+			source_s, source_t, source_r, s, t);
+		g_logged_first_generated_texture_coordinate = true;
+	}
+	return true;
 }
 
 void Apply_Original_Shader_State(const ShaderClass &shader)
@@ -1290,7 +1480,8 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	if (is_skin) original_world_transform.Make_Identity();
 	else original_world_transform = mesh.Get_Transform();
 	const Matrix4 world_transform(original_world_transform);
-	const Matrix4 view_transform(render_info.Camera.Get_View_Matrix());
+	const Matrix3D &original_view_transform = render_info.Camera.Get_View_Matrix();
+	const Matrix4 view_transform(original_view_transform);
 	Matrix4 d3d_projection;
 	render_info.Camera.Get_D3D_Projection_Matrix(&d3d_projection);
 	const Matrix4 dx8_world = world_transform.Transpose();
@@ -1334,6 +1525,8 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		unsigned current_shader_bits = 0xffffffffU;
 		VertexMaterialClass *current_material = NULL;
 		const Vector2 *current_uvs[MeshMatDescClass::MAX_TEX_STAGES] = {};
+		OriginalTextureCoordinateState
+			current_texture_coordinates[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		bool current_detail_stage = false;
 		bool primitive_open = false;
 		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
@@ -1360,16 +1553,6 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				bound_textures[0] = triangle_textures[0];
 				bound_textures[1] = triangle_textures[1];
 				current_material = triangle_material;
-				for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
-					const int uv_source = Get_Original_UV_Source(current_material, stage);
-					current_uvs[stage] = NULL;
-					if (uv_source >= 0 && uv_source < MeshMatDescClass::MAX_UV_ARRAYS) {
-						current_uvs[stage] = model->Get_UV_Array_By_Index(uv_source);
-					}
-					if (current_uvs[stage] == NULL) {
-						current_uvs[stage] = uvs[stage];
-					}
-				}
 				current_detail_stage = detail_stage;
 				current_shader_bits = triangle_shader_bits;
 				// ShaderClass remains the authoritative original material policy.
@@ -1390,6 +1573,12 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 					Disable_Texture_Stage(1U);
 				}
 				Apply_Original_Texture_Coordinate_State(current_material);
+				for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+					Capture_Original_Texture_Coordinate_State(stage,
+						&current_texture_coordinates[stage]);
+					current_uvs[stage] = Resolve_UV_Array_For_Texture_State(model,
+						current_texture_coordinates[stage], uvs[stage]);
+				}
 				Apply_Original_Texture_Stage_State(triangle_shader,
 					bound_textures[0] != NULL, current_detail_stage);
 				if (current_detail_stage && !g_logged_first_stage1_mesh) {
@@ -1429,19 +1618,19 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			}
 			for (int corner = 0; corner < 3; ++corner) {
 				const unsigned vertex_index = vertex_indices[corner];
-				if (current_uvs[0] != NULL && bound_textures[0] != NULL) {
-					glMultiTexCoord2f(GL_TEXTURE0,
-						current_uvs[0][vertex_index].X,
-						current_uvs[0][vertex_index].Y);
+				if (bound_textures[0] != NULL) {
+					Emit_Original_Texture_Coordinate(0U, GL_TEXTURE0,
+						current_texture_coordinates[0], current_uvs[0], vertices,
+						normals, vertex_index, original_world_transform,
+						original_view_transform);
 				}
 				if (current_detail_stage) {
 					const Vector2 *detail_uvs =
 						current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
-					if (detail_uvs != NULL) {
-						glMultiTexCoord2f(GL_TEXTURE1,
-							detail_uvs[vertex_index].X,
-							detail_uvs[vertex_index].Y);
-					}
+					Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,
+						current_texture_coordinates[1], detail_uvs, vertices,
+						normals, vertex_index, original_world_transform,
+						original_view_transform);
 				}
 				/* Preserve the original mesh material color owner.  The former Vita
 				** bridge invented RGB from each normal, visibly recoloring otherwise

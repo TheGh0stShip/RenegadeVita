@@ -1832,6 +1832,24 @@ void RenegadeVita_Release_DX8_Bound_Textures()
 	Release_Bound_Texture_Stages();
 }
 
+bool RenegadeVita_Get_DX8_Texture_Coordinate_State(DWORD stage,
+	DWORD *texcoord_index, DWORD *texture_transform_flags,
+	D3DMATRIX *texture_transform)
+{
+	if (stage >= MAX_TEXTURE_STAGES) return false;
+	const TextureStageSamplerState &sampler = g_texture_sampler_states[stage];
+	if (texcoord_index != NULL) {
+		*texcoord_index = sampler.texcoord_index;
+	}
+	if (texture_transform_flags != NULL) {
+		*texture_transform_flags = sampler.texture_transform_flags;
+	}
+	if (texture_transform != NULL) {
+		*texture_transform = g_boundary_transforms[D3DTS_TEXTURE0 + stage];
+	}
+	return true;
+}
+
 HRESULT IDirect3DDevice8::SetTransform(D3DTRANSFORMSTATETYPE state,
 	const D3DMATRIX *matrix)
 {

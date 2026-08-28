@@ -140,10 +140,10 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("model->Peek_Material(static_cast<int>(group_triangle[0]), pass)", function)
         self.assertIn("triangle_material != current_material", function)
         self.assertIn("current_material = triangle_material;", function)
-        self.assertIn("Get_Original_UV_Source(current_material, stage)", function)
-        self.assertIn("current_uvs[stage] = model->Get_UV_Array_By_Index(uv_source);", function)
-        self.assertIn("current_uvs[stage] = uvs[stage];", function)
-        self.assertIn("current_uvs[0][vertex_index].X", function)
+        self.assertIn("Resolve_UV_Array_For_Texture_State(model,", function)
+        self.assertIn("model->Get_UV_Array_By_Index(uv_source);", renderer)
+        self.assertIn("return fallback;", renderer)
+        self.assertIn("uvs[vertex_index].X", renderer)
         self.assertIn("current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0]", function)
         self.assertLess(
             function.index("current_material = triangle_material;"),
@@ -158,6 +158,64 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         )
         self.assertIn("glMatrixMode(GL_TEXTURE);", boundary)
         self.assertIn("glLoadMatrixf(&g_boundary_transforms[D3DTS_TEXTURE0 + stage].m[0][0]);", boundary)
+
+    def test_direct_mesh_submit_evaluates_generated_texture_coordinates(self):
+        header = (ROOT / "port/renderer/vita/d3d8.h").read_text()
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
+        function = renderer[
+            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
+        ]
+
+        self.assertIn("RenegadeVita_Get_DX8_Texture_Coordinate_State", header)
+        self.assertIn("RenegadeVita_Get_DX8_Texture_Coordinate_State", boundary)
+        self.assertIn("*texcoord_index = sampler.texcoord_index;", boundary)
+        self.assertIn(
+            "*texture_transform_flags = sampler.texture_transform_flags;",
+            boundary,
+        )
+        self.assertIn(
+            "*texture_transform = g_boundary_transforms[D3DTS_TEXTURE0 + stage];",
+            boundary,
+        )
+
+        for needle in (
+            "struct OriginalTextureCoordinateState",
+            "Capture_Original_Texture_Coordinate_State",
+            "Reset_Texture_Matrix_Stage(stage);",
+            "D3DTSS_TCI_CAMERASPACENORMAL",
+            "D3DTSS_TCI_CAMERASPACEPOSITION",
+            "D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR",
+            "Compute_Camera_Space_Position",
+            "Compute_Camera_Space_Normal",
+            "Compute_Camera_Space_Reflection",
+            "Apply_DX8_Texture_Transform",
+            "glMultiTexCoord2f(texture_unit, s, t);",
+            "first generated texture coordinates",
+        ):
+            self.assertIn(needle, renderer)
+
+        self.assertIn(
+            "current_texture_coordinates[MeshMatDescClass::MAX_TEX_STAGES]",
+            function,
+        )
+        self.assertLess(
+            function.index("Apply_Original_Texture_Coordinate_State(current_material);"),
+            function.index("Capture_Original_Texture_Coordinate_State(stage,"),
+        )
+        self.assertLess(
+            function.index("Capture_Original_Texture_Coordinate_State(stage,"),
+            function.index("Apply_Original_Texture_Stage_State(triangle_shader,"),
+        )
+        self.assertIn(
+            "Emit_Original_Texture_Coordinate(0U, GL_TEXTURE0,",
+            function,
+        )
+        self.assertIn(
+            "Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,",
+            function,
+        )
 
     def test_capture_state_uses_global_texture_statistics(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()

@@ -76,6 +76,7 @@ bool g_logged_first_stage1_mesh = false;
 bool g_logged_first_texture_mapper = false;
 bool g_logged_first_generated_texture_coordinate = false;
 bool g_logged_first_material_lighting = false;
+bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_static_material_fallback = false;
 bool g_shader_compiler_available = false;
@@ -2063,7 +2064,11 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			model->Get_UV_Array(pass, 1)
 		};
 		const unsigned *diffuse_colors = model->Get_DCG_Array(pass);
-		const unsigned *color1 = model->Get_Color_Array(0, false);
+		const unsigned *user_lighting =
+			is_skin ? NULL : mesh.Get_User_Lighting_Array(false);
+		const unsigned *color1 =
+			user_lighting != NULL ? user_lighting :
+				model->Get_Color_Array(0, false);
 		const unsigned *color2 = model->Get_Color_Array(1, false);
 		if (color1 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR1) {
 			color1 = diffuse_colors;
@@ -2071,6 +2076,14 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		if (color2 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR2) {
 			color2 = diffuse_colors;
 		}
+#if defined(__vita__)
+		if (user_lighting != NULL && !g_logged_first_user_lighting) {
+			Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+				"first original user lighting color source: mesh=%s pass=%d vertices=%d first=%08X",
+				mesh.Get_Name(), pass, vertex_count, user_lighting[0]);
+			g_logged_first_user_lighting = true;
+		}
+#endif
 		TextureClass *bound_textures[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		unsigned current_shader_bits = 0xffffffffU;
 		VertexMaterialClass *current_material = NULL;

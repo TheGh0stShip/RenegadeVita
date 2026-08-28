@@ -206,11 +206,40 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, renderer)
 
-        self.assertIn("const unsigned *color1 = model->Get_Color_Array(0, false);", function)
+        self.assertIn("const unsigned *user_lighting =", function)
+        self.assertIn("is_skin ? NULL : mesh.Get_User_Lighting_Array(false);", function)
+        self.assertIn("user_lighting != NULL ? user_lighting :", function)
+        self.assertIn("model->Get_Color_Array(0, false);", function)
+        self.assertIn("first original user lighting color source", function)
         self.assertIn("const unsigned *color2 = model->Get_Color_Array(1, false);", function)
         self.assertIn("Evaluate_Original_Material_Vertex_Color(material, color1,", function)
         self.assertIn("render_info);", function)
         self.assertNotIn("if (diffuse_colors != NULL) {\n\t\t\t\t\tconst unsigned diffuse", function)
+
+    def test_direct_mesh_color1_prefers_original_user_lighting_for_rigid_meshes(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        original = (ROOT / "staging/ww3d2/dx8renderer.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
+        function = renderer[
+            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
+        ]
+        original_split_table = original[
+            original.index("class Vertex_Split_Table"):
+            original.index("unsigned Get_Vertex_Count() const")
+        ]
+
+        self.assertIn("mesh->Get_User_Lighting_Array() != NULL", original_split_table)
+        self.assertIn("return mesh->Get_User_Lighting_Array();", original_split_table)
+        self.assertIn("return mmc->Get_Color_Array(index,false);", original_split_table)
+        self.assertLess(
+            function.index("mesh.Get_User_Lighting_Array(false)"),
+            function.index("model->Get_Color_Array(0, false)")
+        )
+        self.assertIn("const unsigned *color1 =\n\t\t\tuser_lighting != NULL ? user_lighting :", function)
+        self.assertIn("if (color1 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR1)", function)
+        self.assertIn("is_skin ? NULL : mesh.Get_User_Lighting_Array(false);", function)
 
     def test_direct_mesh_submit_renders_original_base_passes(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()

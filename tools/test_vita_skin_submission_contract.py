@@ -36,6 +36,7 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         self.assertIn("Evaluate_Original_Material_Vertex_Color(material, color1,", renderer)
         self.assertIn("material->Get_Diffuse(&material_diffuse);", renderer)
         self.assertIn("glColor4f(Clamp01(final_color.X)", renderer)
+        self.assertIn("is_skin ? NULL : mesh.Get_User_Lighting_Array(false);", renderer)
         self.assertNotIn("0.35f + 0.35f * (normal.X + 1.0f)", renderer)
 
 

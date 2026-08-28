@@ -1,5 +1,60 @@
 # Live engineering progress
 
+## 2026-08-28 — dev77 original user-lighting color source
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: dev77 preserves dev76 material-lighting evaluation and
+  restores the original rigid-mesh color1 precedence used by
+  `DX8FVFCategoryContainer` / `Vertex_Split_Table`: non-skinned direct
+  `MeshClass` submissions now prefer `MeshClass::Get_User_Lighting_Array(false)`
+  before falling back to model color array 0 and pass-specific DCG. Skinned
+  meshes remain on the original model color-array path.
+- Runtime purpose: this keeps precomputed/original user lighting available to
+  M00 static and rigid world geometry at the Vita backend boundary without
+  moving ownership out of WW3D or inventing a replacement material path.
+  The runtime logs the first `first original user lighting color source`
+  breadcrumb for hardware review.
+- Validation: focused indexed render-state, texture-provenance, and skin
+  submission contracts passed 24/24. The fast no-deploy candidate passed 66
+  focused tests, the original `DDSFileClass` `.tga`-to-`.dds` executable
+  contract 11/11, package identity checks, and VPK packaging. The full
+  canonical no-deploy build passed retained host-validation reuse, the current
+  lightweight render-state contract 13/13, the DDS/TGA alias contract 11/11,
+  82 host unittest checks, deterministic restaging, source integration
+  reporting, ARM link/package, compressed VPK validation, identity
+  verification, diagnostics bundle generation, SHA manifest verification, and
+  retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 119 deterministic patch files covering 238 mechanically patched
+  staged upstream paths, 52 compatibility headers, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev77.vpk` SHA-256 is
+  `0528357e6b4d47d7c1d8e49fef22faaf6e0bd9980c75403dd43c331cd5bf1252`;
+  ELF SHA-256 is
+  `18c91bfb2851b9515e82851b058e0dd1dd5eca7f62fb0cb774f3e6ac134e0264`;
+  MAP SHA-256 is
+  `92622879ef7e5747698927dce14e589ce33043e844da5e3b0cc07f5757e5006a`;
+  diagnostics bundle SHA-256 is
+  `b73067c8ed507fe7d7769e105bafb1d7bdefe49c8fec72168d650c7073352d38`.
+- Boundary: dev77 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev77, verify M00
+  sky/fog/ambient/material lighting, texture appearance, muzzle rectangle and
+  other alpha cutouts, Logan dialogue text, Logan audible dialogue and timing,
+  and route fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev77-runtime.log`, especially
+  `first original user lighting color source`,
+  `first original material lighting`, `first original DX8 fog state`,
+  `first original DX8 ambient state`, `texture loaded`, `loaded_dds/tga`,
+  `checker_bind`, `invalid_bind`, `unsupported_stages`,
+  `first original indexed VertexMaterial mapper`,
+  `first generated texture coordinates`, `output_stream`,
+  `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, and conversation state if
+  dialogue or materials remain incorrect.
+
 ## 2026-08-28 — dev76 original material lighting/color-source evaluation
 
 `[██████████] 12/12 canonical source/build gates complete`

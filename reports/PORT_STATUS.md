@@ -3,8 +3,9 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev76 original material lighting/color-source evaluation
-in direct Vita mesh submissions, original Scene/WW3D fog, fill-mode, and
+Current work: **post-dev77 original user-lighting color source and material
+lighting/color-source evaluation in direct Vita mesh submissions, original
+Scene/WW3D fog, fill-mode, and
 ambient state restoration,
 original DX8 render-state/fog bridge,
 original ADDSMOOTH detail combiner,
@@ -229,6 +230,18 @@ unittest checks, source integration reporting, ARM link/package, identity
 verification, compressed VPK validation, diagnostics generation, and SHA
 verification. The canonical VPK SHA-256 is
 `371ed075af325d8909a96b492411f9cbef93d5f6698e627f1aa8b1a2d14c9c38`.
+Dev77 preserves dev76 and restores the original rigid direct-mesh color1
+precedence from `DX8FVFCategoryContainer` / `Vertex_Split_Table`: non-skinned
+`MeshClass` submissions now prefer `MeshClass::Get_User_Lighting_Array(false)`
+before model color array 0 and pass-specific DCG fallback, while skinned meshes
+remain on the model color-array path. The runtime logs
+`first original user lighting color source` for physical M00 material review.
+A full canonical no-deploy dev77 build now passes retained host-validation
+reuse, current lightweight render-state contract 13/13, DDS/TGA alias contract
+11/11, deterministic restaging, 82 host unittest checks, source integration
+reporting, ARM link/package, identity verification, compressed VPK validation,
+diagnostics generation, and SHA verification. The canonical VPK SHA-256 is
+`0528357e6b4d47d7c1d8e49fef22faaf6e0bd9980c75403dd43c331cd5bf1252`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -236,7 +249,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev75 is built but not deployed; dev46 remains restored on
+control changed. Dev77 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance,
 fog/material-state acceptance, and a valid post-dialogue route remain pending
 physical evidence**.

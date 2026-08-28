@@ -1,5 +1,55 @@
 # Live engineering progress
 
+## 2026-08-28 — dev71 original ShaderClass alpha-test reference semantics
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Renderer boundary: dev71 preserves dev70 indexed/dynamic texture-coordinate
+  replay and carries original `ShaderClass::Apply()` alpha-test reference and
+  compare semantics into the Vita fixed-function backend. Normal cutout
+  shaders now translate to reference `0x60` with `PASS_GEQUAL`; inverse source
+  alpha cutouts translate to `0xff - 0x60` with `PASS_LEQUAL`.
+- Runtime purpose: this replaces the previous zero-threshold
+  `glAlphaFunc(GL_GREATER, 0.0f)` approximation below the original shader
+  abstraction, reducing alpha-tested fringe or rectangle artifacts such as
+  muzzle flashes, sprites, fences, and other retail cutout materials without
+  moving shader ownership out of WW3D.
+- Validation: focused indexed texture-state contracts passed 11/11. The fast
+  no-deploy candidate passed 60 focused tests, the original `DDSFileClass`
+  `.tga`-to-`.dds` executable contract 11/11, package identity checks, and VPK
+  packaging. The full canonical no-deploy build passed retained
+  host-validation reuse, the current lightweight render-state contract 5/5,
+  the DDS/TGA alias contract 11/11, 76 host unittest checks, deterministic
+  restaging, source integration reporting, ARM link/package, compressed VPK
+  validation, identity verification, diagnostics bundle generation, SHA
+  manifest verification, and retail exclusion.
+- Source report: the canonical integration report records 451 upstream original
+  Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic patch files covering 238 mechanically patched
+  staged upstream paths, and pristine upstream.
+- Artifact: `dist/RenegadeVita-A3.5-dev71.vpk` SHA-256 is
+  `79db5808b4a5e03f1ab5ac0977970ca992ca5fdbc313167072005b7890c89c14`;
+  ELF SHA-256 is
+  `58d7cad97f54f9e84ce1d9f73bccdd34a6a27f3fb82fc26399a8c329bc644d3e`;
+  MAP SHA-256 is
+  `681617ebfb098d1ae69299460f83881f7539cbd26a7ce7690c8d204ee143c25d`;
+  diagnostics bundle SHA-256 is
+  `853c0164b3ba3848a452b6b356dd41c97e9fe6242eda2030c2d14e7ea16bcf16`.
+- Boundary: dev71 has not been physically tested and no Vita deployment was
+  attempted. The next hardware run should manually install dev71, verify M00
+  sky/materials, muzzle rectangle and other alpha cutouts, Logan dialogue text,
+  Logan audible dialogue and timing, material/texture appearance, and route
+  fidelity, then inspect
+  `ux0:data/renegade/user/logs/a35-dev71-runtime.log`, especially
+  `texture loaded`, `loaded_dds/tga`, `checker_bind`, `invalid_bind`,
+  `unsupported_stages`, `first original indexed VertexMaterial mapper`,
+  `first generated texture coordinates`, `output_stream`,
+  `last_output_stream`, `last_stream_mix`, active stream
+  position/length/cursor/frames/loops/volume/pan, speech duration/dropoff/
+  distance, stream bytes/frames/mix counters, and conversation state if
+  dialogue or materials remain incorrect.
+
 ## 2026-08-28 — dev70 indexed dynamic texture-coordinate replay
 
 `[██████████] 12/12 canonical source/build gates complete`

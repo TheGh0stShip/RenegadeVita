@@ -22,7 +22,18 @@ int main()
 	ShaderClass cutout;
 	cutout.Set_Alpha_Test(ShaderClass::ALPHATEST_ENABLE);
 	state = Translate_Shader_State(cutout);
-	failures += !Check(state.alpha_test && !state.blend, "alpha cutout", checks);
+	failures += !Check(state.alpha_test && !state.blend &&
+		state.alpha_reference == 0x60U &&
+		state.alpha_compare == ShaderClass::PASS_GEQUAL,
+		"alpha cutout", checks);
+	ShaderClass inverse_cutout;
+	inverse_cutout.Set_Alpha_Test(ShaderClass::ALPHATEST_ENABLE);
+	inverse_cutout.Set_Src_Blend_Func(ShaderClass::SRCBLEND_ONE_MINUS_SRC_ALPHA);
+	state = Translate_Shader_State(inverse_cutout);
+	failures += !Check(state.alpha_test &&
+		state.alpha_reference == static_cast<unsigned char>(0xffU - 0x60U) &&
+		state.alpha_compare == ShaderClass::PASS_LEQUAL,
+		"inverse alpha cutout", checks);
 	ShaderClass alpha;
 	alpha.Set_Src_Blend_Func(ShaderClass::SRCBLEND_SRC_ALPHA);
 	alpha.Set_Dst_Blend_Func(ShaderClass::DSTBLEND_ONE_MINUS_SRC_ALPHA);

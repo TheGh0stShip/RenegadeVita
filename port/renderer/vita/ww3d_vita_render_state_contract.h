@@ -15,6 +15,8 @@ enum BlendFactorContract {
 
 struct ShaderStateContract {
 	bool alpha_test;
+	unsigned char alpha_reference;
+	ShaderClass::DepthCompareType alpha_compare;
 	bool blend;
 	BlendFactorContract source_blend;
 	BlendFactorContract destination_blend;
@@ -54,6 +56,18 @@ inline ShaderStateContract Translate_Shader_State(const ShaderClass &shader)
 	state.alpha_test = shader.Get_Alpha_Test() == ShaderClass::ALPHATEST_ENABLE;
 	state.source_blend = Translate_Source_Blend(shader.Get_Src_Blend_Func());
 	state.destination_blend = Translate_Destination_Blend(shader.Get_Dst_Blend_Func());
+	state.alpha_reference = 0U;
+	state.alpha_compare = ShaderClass::PASS_ALWAYS;
+	if (state.alpha_test) {
+		const unsigned char reference = 0x60U;
+		if (state.source_blend == BLEND_FACTOR_ONE_MINUS_SRC_ALPHA) {
+			state.alpha_reference = static_cast<unsigned char>(0xffU - reference);
+			state.alpha_compare = ShaderClass::PASS_LEQUAL;
+		} else {
+			state.alpha_reference = reference;
+			state.alpha_compare = ShaderClass::PASS_GEQUAL;
+		}
+	}
 	state.blend = !(state.source_blend == BLEND_FACTOR_ONE &&
 		state.destination_blend == BLEND_FACTOR_ZERO);
 	state.depth_compare = shader.Get_Depth_Compare();

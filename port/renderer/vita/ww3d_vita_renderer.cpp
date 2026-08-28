@@ -452,7 +452,8 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 	}
 	if (state.alpha_test) {
 		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
+		glAlphaFunc(To_GL_Depth_Function(state.alpha_compare),
+			static_cast<float>(state.alpha_reference) / 255.0f);
 	} else {
 		glDisable(GL_ALPHA_TEST);
 	}

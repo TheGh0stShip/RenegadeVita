@@ -49,6 +49,36 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             renderer.index("if (state.alpha_test)")
         )
 
+    def test_alpha_test_uses_original_shader_reference(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        contract = (ROOT / "port/renderer/vita/ww3d_vita_render_state_contract.h").read_text()
+        original = (ROOT / "staging/ww3d2/shader.cpp").read_text(errors="replace")
+        host = (ROOT / "tools/host_a30_definitions/vita_render_state_contract_main.cpp").read_text()
+
+        for needle in (
+            "unsigned char alphareference = 0x60",
+            "D3DRS_ALPHAREF,0xff - alphareference",
+            "D3DRS_ALPHAFUNC,D3DCMP_LESSEQUAL",
+            "D3DRS_ALPHAREF,alphareference",
+            "D3DRS_ALPHAFUNC,D3DCMP_GREATEREQUAL",
+        ):
+            self.assertIn(needle, original)
+
+        for needle in (
+            "unsigned char alpha_reference;",
+            "ShaderClass::DepthCompareType alpha_compare;",
+            "const unsigned char reference = 0x60U;",
+            "BLEND_FACTOR_ONE_MINUS_SRC_ALPHA",
+            "state.alpha_compare = ShaderClass::PASS_LEQUAL;",
+            "state.alpha_compare = ShaderClass::PASS_GEQUAL;",
+        ):
+            self.assertIn(needle, contract)
+
+        self.assertIn("glAlphaFunc(To_GL_Depth_Function(state.alpha_compare),", renderer)
+        self.assertIn("static_cast<float>(state.alpha_reference) / 255.0f", renderer)
+        self.assertNotIn("glAlphaFunc(GL_GREATER, 0.0f);", renderer)
+        self.assertIn('"inverse alpha cutout"', host)
+
     def test_textured_static_material_black_fallback_is_bounded_and_observable(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         self.assertIn("first static material black fallback", renderer)

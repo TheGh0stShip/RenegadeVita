@@ -16,7 +16,7 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev70}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev71}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
@@ -164,13 +164,15 @@ else
 	bash "$rv_root/tools/run_a30_host.sh" 2>&1 | tee "$rv_host_output"
 	rv_host_validation_mode="fresh canonical host validation"
 fi
-echo "Running original DDSFileClass tga-alias host contract..."
+echo "Running lightweight current host contracts..."
 cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_root/build/host-a30-definitions" -G Ninja \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DRENEGADE_USE_CCACHE=ON
 cmake --build "$rv_root/build/host-a30-definitions" \
-	--target a35_ddsfile_tga_alias_contract_selftest \
+	--target a35_vita_render_state_contract_selftest \
+		a35_ddsfile_tga_alias_contract_selftest \
 	--parallel "$rv_build_jobs"
+"$rv_root/build/host-a30-definitions/a35_vita_render_state_contract_selftest" | tee -a "$rv_host_output"
 "$rv_root/build/host-a30-definitions/a35_ddsfile_tga_alias_contract_selftest" | tee -a "$rv_host_output"
 require_host_line "A2.2 host asset integration PASS"
 require_host_line "A3.0 canonical host integration PASS"
@@ -183,7 +185,7 @@ require_host_line "a31.interactive_first_frame_unsupported=0"
 require_host_line "A3.1 capture telemetry host self-test: PASS (24 checks, 0 failures)"
 require_host_line "A3.2 Vita controller axis-contract: PASS (22 checks, 0 failures)"
 require_host_line "A3.5 Vita button-state contract: PASS (10 checks, 0 failures)"
-require_host_line "A3.5 Vita ShaderClass render-state contract: 4 checks, 0 failures"
+require_host_line "A3.5 Vita ShaderClass render-state contract: 5 checks, 0 failures"
 require_host_line "A3.5 DDSFileClass tga-alias contract: 11 checks, 0 failures"
 require_host_line "A3 renderer process lifecycle: 11 checks, 0 failures; native=1 sessions=2 shutdowns=2"
 require_host_line "A3.2 texture upload contract: PASS (4 checks, 0 failures)"
@@ -336,7 +338,7 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "Host validation mode: $rv_host_validation_mode"
 	echo "Retained regressions: A2.0 19/19; A2.1 10/10; A2.2 14/14; A3 original runtime 45/45"
 	echo "A3.5 input contracts: axes=22/22; button state=10/10"
-	echo "A3.5 renderer state contract: opaque/cutout/alpha/additive=4/4; lifecycle=11/11"
+	echo "A3.5 renderer state contract: opaque/cutout/inverse-cutout/alpha/additive=5/5; lifecycle=11/11"
 	echo "A3.5 crash repair: deterministic HumanState weapon-style table patch; bounds fallback; matching A3.2 dump parser evidence preserved"
 	echo "A3.5 projection repair: ordinary mesh positions retain homogeneous W through GPU projection; physical visual validation pending"
 	echo "A3.5 audio boundary: provider codecs/mixing are host/sanitizer validated; after installing the rooted retail/MIX chain, the direct Vita runtime constructs a path-stripping factory and non-lite original WWAudio, initializes its Vita-native SceAudio provider, services it per frame, and tears it down before renderer/factory shutdown; the complete path is ARM-linked while physical audio and conversation causality remain pending"

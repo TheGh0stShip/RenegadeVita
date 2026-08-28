@@ -3,7 +3,8 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev70 indexed dynamic texture-coordinate replay,
+Current work: **post-dev71 original ShaderClass alpha-test reference semantics,
+indexed dynamic texture-coordinate replay,
 generated texture-coordinate evaluation, original material mapper
 texture-coordinate state, null texture-stage disable semantics,
 Vita stream-output submission telemetry, stream restart handling, per-buffer
@@ -150,6 +151,18 @@ dev70 build now passes retained host-validation reuse, deterministic restaging,
 identity verification, compressed VPK validation, diagnostics generation, and
 SHA verification. The canonical VPK SHA-256 is
 `3693687d9608734ace67d703e5e9347e37273d09e767a91fb9fc869263b708ec`.
+Dev71 preserves dev70 and restores the original `ShaderClass::Apply()`
+alpha-test reference semantics at the Vita render-state boundary. The
+translated state now carries normal cutouts as `0x60` plus `PASS_GEQUAL` and
+inverse-source-alpha cutouts as `0xff - 0x60` plus `PASS_LEQUAL`, replacing
+the previous zero-threshold `glAlphaFunc(GL_GREATER, 0.0f)` approximation
+without moving shader ownership out of WW3D. A full canonical no-deploy dev71
+build now passes retained host-validation reuse, current lightweight
+render-state contract 5/5, DDS/TGA alias contract 11/11, deterministic
+restaging, 76 host unittest checks, source integration reporting, ARM
+link/package, identity verification, compressed VPK validation, diagnostics
+generation, and SHA verification. The canonical VPK SHA-256 is
+`79db5808b4a5e03f1ab5ac0977970ca992ca5fdbc313167072005b7890c89c14`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -157,7 +170,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev70 is built but not deployed; dev46 remains restored on
+control changed. Dev71 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

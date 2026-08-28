@@ -13,9 +13,9 @@ MODULES = [
     "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi",
 ]
 
-EXPECTED_ORIGINAL_SOURCE_COUNT = 451
+EXPECTED_ORIGINAL_SOURCE_COUNT = 452
 EXPECTED_VITA_PORT_SOURCE_COUNT = 26
-EXPECTED_PATCH_COUNT = 119
+EXPECTED_PATCH_COUNT = 121
 
 STAGED_ORIGINAL_OWNER_SOURCES = {
     "Code/Commando/loadingscreen.cpp": "staging/commando/loadingscreen.cpp",

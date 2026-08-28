@@ -40,11 +40,10 @@ struct CameraResponseConfiguration
 };
 
 static const CameraResponseConfiguration DEFAULT_CAMERA_RESPONSE = {
-	// Physical dev19/dev34-route user evidence shows the previous inverted
-	// platform response still reversed look up/down in the original CCamera
-	// path. Keep the sign decision at this Vita mouse-delta boundary; original
-	// Input and CCamera still own action mapping and integration.
-	1.0f, 0.85f, false
+	// Physical dev78 evidence showed CCamera still inverted for look up/down.
+	// Keep the sign decision at this Vita mouse-delta boundary; original Input
+	// and CCamera still own action mapping and integration.
+	1.0f, 0.85f, true
 };
 
 inline float Clamp(float value, float minimum, float maximum)

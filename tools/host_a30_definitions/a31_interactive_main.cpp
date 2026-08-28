@@ -359,10 +359,30 @@ int main(int argc, char **argv)
 				Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_BACKWARD) == Input::SLIDER_JOYSTICK_DOWN &&
 				Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_LEFT) == Input::SLIDER_JOYSTICK_LEFT &&
 				Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_RIGHT) == Input::SLIDER_JOYSTICK_RIGHT &&
-				Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_LEFT) == Input::SLIDER_MOUSE_LEFT &&
-				Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_RIGHT) == Input::SLIDER_MOUSE_RIGHT &&
-				Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_UP) == Input::SLIDER_MOUSE_UP &&
-				Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_DOWN) == Input::SLIDER_MOUSE_DOWN;
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_BACKWARD) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_LEFT) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_RIGHT) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_LEFT) == Input::SLIDER_MOUSE_LEFT &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_RIGHT) == Input::SLIDER_MOUSE_RIGHT &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_UP) == Input::SLIDER_MOUSE_UP &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_DOWN) == Input::SLIDER_MOUSE_DOWN &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_ACTION) == DIK_E &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON) == DIK_R &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE) == DIK_DOWN &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON) == DIK_LEFT &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON) == DIK_RIGHT &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON) == 0 &&
+					Input::Get_Primary_Key_For_Function(
+						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == DIK_UP &&
+					Input::Get_Secondary_Key_For_Function(
+						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0 &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0;
 			Print("vita_controls_use_original_action_sliders", vita_control_bindings);
 			if (!vita_control_bindings) { passed = false; break; }
 			input_initialized = true;

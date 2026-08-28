@@ -207,12 +207,6 @@ void LoadingScreenClass::Render(bool update_network)
 	TimeManager::Update_Frame_Time();
 	LoadTime += TimeManager::Get_Frame_Seconds();
 
-   WW3D::Begin_Render( true, true, Vector3(0.0f,0.0f,0.0f), update_network ? &cNetwork::Update : NULL);
-
-	backdrop.Render();
-	backdropText.Render();
-	backdropText2.Render();
-
 	static int last_count = -1;
 	static int _last_percent_drawn = -1;
 	if ( last_count != CombatManager::Get_Load_Progress() ) {
@@ -231,6 +225,12 @@ void LoadingScreenClass::Render(bool update_network)
 		_last_percent_drawn = LoadPercentageDrawn;
 		ConsoleBox.Print("Load %d%% complete\r", (int)(LoadPercentageDrawn * 100.0f));
 	}
+
+   WW3D::Begin_Render( true, true, Vector3(0.0f,0.0f,0.0f), update_network ? &cNetwork::Update : NULL);
+
+	backdrop.Render();
+	backdropText.Render();
+	backdropText2.Render();
 
 #if 0
 	StringClass txt=SaveLoadStatus::Get_Status_Text(0);

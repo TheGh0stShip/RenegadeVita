@@ -72,15 +72,17 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         policy = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
         render = policy[
             policy.index("A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame"):
-            policy.index("// Text display is an optional presentation mode.")
+            policy.index("scene->Post_Render_Processing();")
         ]
         combat = render.index("CombatManager::Render();")
         message = render.index("message_window->Render();", combat)
         objective = render.index("ObjectiveManager::Render_Viewer();", message)
-        end = render.index("WW3D::End_Render(true)", objective)
+        text_display = render.index("text_display->Render();", objective)
+        end = render.index("WW3D::End_Render(true)", text_display)
         self.assertLess(combat, message)
         self.assertLess(message, objective)
-        self.assertLess(objective, end)
+        self.assertLess(objective, text_display)
+        self.assertLess(text_display, end)
 
     def test_direct_m00_links_translate_db_object_factories(self):
         manifest = (ROOT / "cmake" / "A31OriginalSources.cmake").read_text()
@@ -94,11 +96,49 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertLess(tdb_database, tdb_twiddler)
         self.assertLess(tdb_twiddler, audio_events)
 
-    def test_world_render_availability_is_independent_from_deferred_hud(self):
+    def test_direct_m00_enables_original_hud_for_message_window(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        policy = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
         self.assertIn("CombatManager::Init(render_hud);", runtime)
         self.assertIn("CombatManager::Pre_Load_Level(true);", runtime)
         self.assertNotIn("CombatManager::Pre_Load_Level(false);", runtime)
+        hud_function = policy[
+            policy.index("bool A31_Interactive_Render_HUD_Available()"):
+            policy.index("A31InteractiveHUDState A31_Interactive_Get_HUD_State")
+        ]
+        self.assertIn("return true;", hud_function)
+        self.assertNotIn("RENEGADE_A4_ENABLE_HUD_TEST", hud_function)
+
+    def test_direct_vita_action_and_reload_are_not_the_same_button(self):
+        policy = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
+        directinput = (ROOT / "port/platform/renegade_directinput.cpp").read_text()
+
+        controls = policy[
+            policy.index("void A31_Interactive_Configure_Vita_Controls()"):
+            policy.index("void A31_Interactive_Begin_Mission_Completion_Observation")
+        ]
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ACTION, DIK_E);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON, DIK_R);", controls)
+        self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION, 0);", controls)
+        self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON, 0);", controls)
+        self.assertIn(
+            "Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, DIK_DOWN);",
+            controls,
+        )
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON, DIK_LEFT);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, DIK_RIGHT);", controls)
+        self.assertIn(
+            "INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, DIK_UP",
+            controls,
+        )
+        self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD, 0);", controls)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_E, (buttons & SCE_CTRL_TRIANGLE) != 0);", directinput)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SQUARE) != 0);", directinput)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_UP, (buttons & SCE_CTRL_UP) != 0);", directinput)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_DOWN, (buttons & SCE_CTRL_DOWN) != 0);", directinput)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_LEFT, (buttons & SCE_CTRL_LEFT) != 0);", directinput)
+        self.assertIn("Set_Button(DIKeyboardButtons, DIK_RIGHT, (buttons & SCE_CTRL_RIGHT) != 0);", directinput)
+        self.assertNotIn("Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SELECT) != 0);", directinput)
 
     def test_deferred_dazzle_layer_does_not_reject_original_sky_scene(self):
         patch = (ROOT / "port/patches/ww3d2-a22-vita-boundaries.patch").read_text()

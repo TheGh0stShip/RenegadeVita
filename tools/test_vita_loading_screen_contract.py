@@ -28,6 +28,10 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("backdropText.Render();", loading_source)
         self.assertIn("backdropText2.Render();", loading_source)
         self.assertIn("backdrop.Set_Animation_Percentage( LoadPercentageDrawn );", loading_source)
+        self.assertLess(
+            loading_source.index("backdrop.Set_Animation_Percentage( LoadPercentageDrawn );"),
+            loading_source.index("backdrop.Render();"),
+        )
         self.assertIn("loading_screen.Render(true);", original)
         self.assertIn("Commando_Create_Original_Loading_Screen", loading_source)
         self.assertIn("Commando_Render_Original_Loading_Screen", loading_source)
@@ -93,7 +97,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("state.loading_visual_gate.logical_to_native_fullscreen", runtime)
         self.assertIn("state.loading_visual_gate.original_loading_screen_owner = true;", runtime)
         self.assertIn("state.loading_visual_gate.direct_vitagl_overlay_disabled = true;", runtime)
-        self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = false;", runtime)
+        self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = true;", runtime)
         self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = true;", runtime)
         self.assertNotIn("A31FrameHistory capture_history;", runtime)
         self.assertNotIn("A31FrameHistory loading_capture_history;", runtime)
@@ -147,13 +151,16 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("logical_width", renderer)
         self.assertIn("logical_height", renderer)
         self.assertNotIn("bool flip_texture_v;", renderer_h)
-        self.assertNotIn("Is_Loading_Screen_Texture_Name", renderer_h)
-        self.assertNotIn("Should_Flip_Loading_Texture_V", renderer_h)
-        self.assertNotIn('prefix[] = "loadscreen_"', renderer)
+        self.assertIn("const char *texture_names[2];", renderer_h)
+        self.assertIn('prefix[] = "loadscreen_"', renderer)
+        self.assertIn("Has_Loadscreen_Texture_Prefix(texture_name)", renderer)
+        self.assertIn("source_t = 1.0f - source_t;", renderer)
+        self.assertIn("submission.texture_names[stage]", boundary)
+        self.assertIn("submission.texture_names[0]", renderer)
+        self.assertIn("submission.texture_names[1]", renderer)
         self.assertNotIn("1.0f - uvs[vertex_index].Y", renderer)
         self.assertNotIn("submission.flip_texture_v ? 1.0f - uv[1] : uv[1]", renderer)
         self.assertNotIn("submission.flip_texture_v =", boundary)
-        self.assertNotIn("Should_Flip_Loading_Texture_V(state.Textures[0])", boundary)
         self.assertIn("targa.Header.ImageDescriptor ^= TGAIDF_YORIGIN;", boundary)
         self.assertLess(
             boundary.index("targa.Header.ImageDescriptor ^= TGAIDF_YORIGIN;"),

@@ -23,7 +23,7 @@ EXPECTED_FRAMEBUFFER = (960, 544)
 EXPECTED_LOGICAL = (640, 480)
 BMP_FILE_HEADER = struct.Struct("<2sIHHI")
 BMP_INFO_HEADER_PREFIX = struct.Struct("<IiiHHI")
-MIN_CONTENT_WIDTH_RATIO = 0.80
+MIN_CONTENT_WIDTH_RATIO = 0.74
 MIN_CONTENT_HEIGHT_RATIO = 0.70
 
 
@@ -205,10 +205,10 @@ def validate(candidate: str, frame: Path, state: Path) -> dict[str, object]:
         "original_logical_height": EXPECTED_LOGICAL[1],
         "native_display_width": EXPECTED_FRAMEBUFFER[0],
         "native_display_height": EXPECTED_FRAMEBUFFER[1],
-        "logical_to_native_fullscreen": True,
+        "logical_to_native_fullscreen": False,
         "original_loading_screen_owner": True,
         "direct_vitagl_overlay_disabled": True,
-        "loading_texture_v_flip_enabled": False,
+        "loading_texture_v_flip_enabled": True,
         "gameplay_texture_v_unchanged": True,
     }
     if isinstance(visual, dict):

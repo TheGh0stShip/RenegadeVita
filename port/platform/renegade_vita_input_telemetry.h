@@ -29,6 +29,20 @@ struct RenegadeVitaInputTelemetry
 	uint32_t route_sample_index;
 	uint32_t route_sample_count;
 	uint32_t route_truncated;
+	uint32_t square_down;
+	uint32_t triangle_down;
+	uint32_t select_down;
+	uint32_t circle_down;
+	uint32_t dpad_up_down;
+	uint32_t dpad_down_down;
+	uint32_t dpad_left_down;
+	uint32_t dpad_right_down;
+	uint32_t action_key_state;
+	uint32_t reload_key_state;
+	uint32_t camera_toggle_key_state;
+	uint32_t previous_weapon_key_state;
+	uint32_t next_weapon_key_state;
+	uint32_t objectives_toggle_key_state;
 };
 
 const RenegadeVitaInputTelemetry &Renegade_Vita_Last_Input_Telemetry();

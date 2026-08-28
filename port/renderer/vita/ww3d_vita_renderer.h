@@ -103,6 +103,7 @@ struct IndexedTriangleSubmission {
 	const float *world_transform;
 	const float *view_transform;
 	const float *projection_transform;
+	const char *texture_names[2];
 };
 
 // Matrix payload passed to vitaGL's fixed-function transform path.  WW3D's

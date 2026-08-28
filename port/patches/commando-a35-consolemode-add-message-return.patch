@@ -1,0 +1,10 @@
+--- a/ConsoleMode.h
++++ b/ConsoleMode.h
+@@ -76 +76 @@
+-		Add_Message(WideStringClass *formatted_text, Vector3 *text_color, bool forced = false);
++		void Add_Message(WideStringClass *formatted_text, Vector3 *text_color, bool forced = false);
+--- a/ConsoleMode.cpp
++++ b/ConsoleMode.cpp
+@@ -752 +752 @@
+-ConsoleModeClass::Add_Message(WideStringClass *formatted_text, Vector3 *text_color, bool forced)
++void ConsoleModeClass::Add_Message(WideStringClass *formatted_text, Vector3 *text_color, bool forced)

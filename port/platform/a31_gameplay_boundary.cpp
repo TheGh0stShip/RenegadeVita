@@ -35,6 +35,7 @@
 #include "directinput.h"
 #include "dinput.h"
 #include "renegade_vita_input_contract.h"
+#include "renegade_vita_input_telemetry.h"
 #include "pscene.h"
 #include "soldier.h"
 #include "humanphys.h"
@@ -253,6 +254,7 @@ A31VitaCombatMiscHandler g_vita_combat_misc_handler;
 // boundary until native diagnostic UI replaces that desktop facility.
 int DebugManager::VersionNumber = 0;
 bool DebugManager::AllowCinematicKeys = false;
+DebugDisplayHandlerClass *DebugManager::DisplayHandler = NULL;
 
 // The original replicated update path reports high-volume diagnostics through
 // this desktop debug sink.  Keep simulation and packet scheduling intact while
@@ -283,18 +285,11 @@ void cStackDump::Print_Call_Stack(void)
 
 /* Font3D now uses the same original FileFactory/Targa/SurfaceClass/
 ** TextureClass chain as the rest of WW3D, ending only at the Vita texture
-** boundary.  Full HUD activation remains gated in the shipping target while
-** its first-frame lifecycle interaction is investigated.  The compile-time
-** switch is intentionally test-only: it lets the genuine Combat HUD run in a
-** separately instrumented host executable without changing device behavior
-** or introducing a substitute overlay. */
+** boundary.  Device builds now exercise the genuine Combat HUD so M00 can
+** present Logan text, the weapon HUD, and original objective overlays. */
 bool A31_Interactive_Render_HUD_Available()
 {
-#if defined(RENEGADE_A4_ENABLE_HUD_TEST)
 	return true;
-#else
-	return false;
-#endif
 }
 
 A31InteractiveHUDState A31_Interactive_Get_HUD_State()
@@ -321,9 +316,9 @@ void A31_Interactive_Apply_Render_Capabilities()
 
 void A31_Interactive_Configure_Vita_Controls()
 {
-	// Use the original action map.  Sliders retain analog magnitudes, while the
-	// secondary keyboard identifiers preserve the D-pad fallback supplied by
-	// DirectInput.  The named sensitivity participates in original
+	// Use the original action map.  Analog sliders own movement/camera, while
+	// physical D-pad buttons become original gameplay functions below the
+	// DirectInput boundary.  The named sensitivity participates in original
 	// Input::Update_Sliders and CCamera integration; it is not a Vita camera.
 	Input::Set_Mouse_Sensitivity(RenegadeVitaInput::DEFAULT_CAMERA_SENSITIVITY);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD,
@@ -334,10 +329,10 @@ void A31_Interactive_Configure_Vita_Controls()
 		Input::SLIDER_JOYSTICK_LEFT);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_RIGHT,
 		Input::SLIDER_JOYSTICK_RIGHT);
-	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD, DIK_W);
-	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_BACKWARD, DIK_S);
-	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_LEFT, DIK_A);
-	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_RIGHT, DIK_D);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_BACKWARD, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_LEFT, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_RIGHT, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_LEFT,
 		Input::SLIDER_MOUSE_LEFT);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_WEAPON_RIGHT,
@@ -348,7 +343,22 @@ void A31_Interactive_Configure_Vita_Controls()
 		Input::SLIDER_MOUSE_DOWN);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_JUMP, DIK_SPACE);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_CROUCH, DIK_LCONTROL);
-	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ACTION, DIK_R);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ACTION, DIK_E);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON, DIK_R);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, DIK_DOWN);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_FIRST_PERSON_TOGGLE, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON, DIK_LEFT);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_PREV_WEAPON, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, DIK_RIGHT);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, 0);
+	Input::Set_Primary_Key_For_Function(
+		INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, DIK_UP);
+	Input::Set_Secondary_Key_For_Function(
+		INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MENU_TOGGLE, DIK_ESCAPE);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_PRIMARY,
 		DirectInput::BUTTON_JOYSTICK_B);
@@ -478,6 +488,11 @@ void A31_Interactive_Run_Simulation_Frame()
 	CombatManager::Generate_Control();
 	cNetwork::Update();
 	CombatManager::Think();
+#if !defined(RENEGADE_HOST_ABI_TEST)
+	TextDisplayGameModeClass *text_display =
+		TextDisplayGameModeClass::Get_Instance();
+	if (text_display != NULL) text_display->Think();
+#endif
 }
 
 uint32_t Count_Physics_Objects(RefPhysListIterator iterator)
@@ -542,6 +557,7 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 		trace.player_physics_registered = star->Peek_Physical_Object() != NULL;
 		HumanPhysClass *human_phys = star->Peek_Human_Phys();
 		trace.player_grounded = human_phys != NULL && human_phys->Is_In_Contact();
+		trace.first_person_active = CombatManager::Is_First_Person();
 		WeaponClass *weapon = star->Get_Weapon();
 		if (weapon != NULL) {
 			trace.weapon_present = true;
@@ -562,7 +578,44 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 			trace.action_active = action->Is_Active();
 			trace.action_busy = action->Is_Busy();
 		}
-	}
+		ControlClass &control = star->Get_Control();
+		trace.control_action_active =
+			control.Get_Boolean(ControlClass::BOOLEAN_ACTION);
+		trace.control_reload_active =
+			control.Get_Boolean(ControlClass::BOOLEAN_WEAPON_RELOAD);
+		trace.input_action_active = Input::Peek_State(INPUT_FUNCTION_ACTION);
+		trace.input_reload_active =
+			Input::Peek_State(INPUT_FUNCTION_RELOAD_WEAPON);
+		trace.input_use_weapon_active =
+			Input::Peek_State(INPUT_FUNCTION_USE_WEAPON);
+		trace.input_first_person_toggle_active =
+			Input::Peek_State(INPUT_FUNCTION_FIRST_PERSON_TOGGLE);
+		trace.input_previous_weapon_active =
+			Input::Peek_State(INPUT_FUNCTION_PREV_WEAPON);
+			trace.input_next_weapon_active =
+				Input::Peek_State(INPUT_FUNCTION_NEXT_WEAPON);
+			trace.input_objectives_toggle_active =
+				Input::Peek_State(INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE);
+			const RenegadeVitaInputTelemetry &input =
+				Renegade_Vita_Last_Input_Telemetry();
+		trace.input_square_down = input.square_down != 0U;
+		trace.input_triangle_down = input.triangle_down != 0U;
+		trace.input_select_down = input.select_down != 0U;
+		trace.input_circle_down = input.circle_down != 0U;
+		trace.input_dpad_up_down = input.dpad_up_down != 0U;
+		trace.input_dpad_down_down = input.dpad_down_down != 0U;
+		trace.input_dpad_left_down = input.dpad_left_down != 0U;
+		trace.input_dpad_right_down = input.dpad_right_down != 0U;
+		trace.input_action_key_state = input.action_key_state;
+		trace.input_reload_key_state = input.reload_key_state;
+		trace.input_camera_toggle_key_state = input.camera_toggle_key_state;
+		trace.input_previous_weapon_key_state =
+			input.previous_weapon_key_state;
+			trace.input_next_weapon_key_state = input.next_weapon_key_state;
+			trace.input_objectives_toggle_key_state =
+				input.objectives_toggle_key_state;
+			trace.input_buttons = input.buttons;
+		}
 
 	/* Match the original GameModeManager::Render envelope.  PhysicsScene's
 	** render method consumes its visible lists; without this pre-pass an intact
@@ -584,6 +637,15 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 		}
 		ObjectiveManager::Render_Viewer();
 		trace.objective_viewer_render_called = true;
+#if !defined(RENEGADE_HOST_ABI_TEST)
+		TextDisplayGameModeClass *text_display =
+			TextDisplayGameModeClass::Get_Instance();
+		trace.text_display_available = text_display != NULL;
+		if (text_display != NULL) {
+			text_display->Render();
+			trace.text_display_render_called = true;
+		}
+#endif
 	}
 	trace.end_render_completed = trace.begin_render_completed &&
 		WW3D::End_Render(true) == WW3D_ERROR_OK;
@@ -600,13 +662,14 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 	return trace;
 }
 
-// Text display is an optional presentation mode. Original replicated text
-// events continue to be created and serialized; this is only the absent
-// desktop overlay while Vita UI work is pending.
+#if defined(RENEGADE_HOST_ABI_TEST)
+// Host closure targets do not link Commando's full text display owner.
+// Device builds provide the original TextDisplayGameModeClass from textdisplay.cpp.
 TextDisplayGameModeClass *TextDisplayGameModeClass::Instance = NULL;
 void TextDisplayGameModeClass::Flush(void)
 {
 }
+#endif
 
 // MOD package enumeration was Win32-directory based. The normal retail
 // campaign has no selected package; retain deterministic metadata queries

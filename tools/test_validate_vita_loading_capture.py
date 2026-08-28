@@ -56,10 +56,10 @@ def state(candidate: str = "A3.5-dev38") -> dict:
             "original_logical_height": 480,
             "native_display_width": 960,
             "native_display_height": 544,
-            "logical_to_native_fullscreen": True,
+            "logical_to_native_fullscreen": False,
             "original_loading_screen_owner": True,
             "direct_vitagl_overlay_disabled": True,
-            "loading_texture_v_flip_enabled": False,
+            "loading_texture_v_flip_enabled": True,
             "gameplay_texture_v_unchanged": True,
         },
     }
@@ -71,17 +71,18 @@ class LoadingCaptureValidatorTests(unittest.TestCase):
         path.write_text(json.dumps(payload), encoding="utf-8")
         return path
 
-    def test_accepts_candidate_matched_schema_four_native_nonblank_capture(self):
+    def test_accepts_candidate_matched_schema_four_aspect_fit_nonblank_capture(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             frame = root / "frame.bmp"
-            write_bmp(frame)
+            write_bmp(frame, content_rect=(117, 0, 842, 544))
             result = validate("A3.5-dev38", frame, self.write_state(root, state()))
         self.assertEqual(result["status"], "PASS")
         self.assertEqual(result["frame_info"]["width"], 960)
         self.assertEqual(result["frame_info"]["height"], 544)
         self.assertGreater(result["frame_info"]["nonblack_ratio"], 0.10)
-        self.assertGreaterEqual(result["frame_info"]["content_width_ratio"], 0.80)
+        self.assertGreaterEqual(result["frame_info"]["content_width_ratio"], 0.74)
+        self.assertLess(result["frame_info"]["content_width_ratio"], 0.80)
         self.assertGreaterEqual(result["frame_info"]["content_height_ratio"], 0.70)
 
     def test_rejects_schema_three_or_missing_visual_gate(self):

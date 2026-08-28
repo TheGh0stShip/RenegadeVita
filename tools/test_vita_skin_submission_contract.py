@@ -27,7 +27,7 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         self.assertIn("mesh->Get_Deformed_Vertices(loc,norm);", original)
         self.assertIn("Set world identity (for skin)", original)
 
-    def test_vita_boundary_uses_original_material_color_not_normal_debug_tint(self):
+    def test_vita_boundary_uses_original_material_color_with_textured_skin_passthrough(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text(
             encoding="utf-8"
         )
@@ -37,6 +37,13 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         self.assertIn("material->Get_Diffuse(&material_diffuse);", renderer)
         self.assertIn("glColor4f(Clamp01(final_color.X)", renderer)
         self.assertIn("is_skin ? NULL : mesh.Get_User_Lighting_Array(false);", renderer)
+        self.assertIn(
+            "if (is_skin && bound_textures[0] != NULL &&\n"
+            "\t\t\t\t\ttriangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE)",
+            renderer,
+        )
+        self.assertIn("first textured skin color pass-through", renderer)
+        self.assertIn("final_color = Vector3(1.0f, 1.0f, 1.0f);", renderer)
         self.assertNotIn("0.35f + 0.35f * (normal.X + 1.0f)", renderer)
 
 

@@ -16,7 +16,7 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev78}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev79}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
@@ -238,10 +238,10 @@ python3 "$rv_root/tools/generate_integration_report.py" \
 	--output "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" \
 	--milestone "$rv_candidate_label"
 grep -Fq "\"milestone\": \"$rv_candidate_label\"" "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"original_source_files_compiled": 451' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"original_source_files_compiled": 452' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"staged_original_owner_files": 1' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 119' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 121' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
@@ -342,12 +342,12 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "A3.5 crash repair: deterministic HumanState weapon-style table patch; bounds fallback; matching A3.2 dump parser evidence preserved"
 	echo "A3.5 projection repair: ordinary mesh positions retain homogeneous W through GPU projection; physical visual validation pending"
 	echo "A3.5 audio boundary: provider codecs/mixing are host/sanitizer validated; after installing the rooted retail/MIX chain, the direct Vita runtime constructs a path-stripping factory and non-lite original WWAudio, initializes its Vita-native SceAudio provider, services it per frame, and tears it down before renderer/factory shutdown; the complete path is ARM-linked while physical audio and conversation causality remain pending"
-	echo "Original Westwood translation units: 451 plus 1 staged original-owner extraction"
+	echo "Original Westwood translation units: 452 plus 1 staged original-owner extraction"
 	echo "Vita platform/renderer/validation/developer translation units: 26"
 	echo "M00 scripts: original ScriptCommands ABI plus EA/Westwood static Mission00 provider and direct cinematic/powerup dependencies"
 	echo "M00 completion: original CombatMiscHandler callback observed by a bounded Vita lifecycle latch; no objective or script state injection"
 	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
-	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=119; pristine upstream=PASS"
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=121; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"

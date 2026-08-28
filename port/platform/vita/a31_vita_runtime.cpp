@@ -17,6 +17,7 @@
 #include "combat.h"
 #include "cnetwork.h"
 #include "d3d8.h"
+#include "debug.h"
 #include "definitionfactorymgr.h"
 #include "ffactory.h"
 #include "ffactorylist.h"
@@ -43,6 +44,7 @@
 #include "scripts.h"
 #include "stylemgr.h"
 #include "teammanager.h"
+#include "textdisplay.h"
 #include "timemgr.h"
 #include "menubackdrop.h"
 #include "translatedb.h"
@@ -363,11 +365,13 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 	state.loading_visual_gate.native_display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
 	state.loading_visual_gate.native_display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 	state.loading_visual_gate.logical_to_native_fullscreen =
-		kCaptureWidth == RenegadeVitaRenderer::DISPLAY_WIDTH &&
-		kCaptureHeight == RenegadeVitaRenderer::DISPLAY_HEIGHT;
+		static_cast<uint32_t>(kOriginalLoadingLogicalWidth) *
+			RenegadeVitaRenderer::DISPLAY_HEIGHT ==
+		static_cast<uint32_t>(kOriginalLoadingLogicalHeight) *
+			RenegadeVitaRenderer::DISPLAY_WIDTH;
 	state.loading_visual_gate.original_loading_screen_owner = true;
 	state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
-	state.loading_visual_gate.loading_texture_v_flip_enabled = false;
+	state.loading_visual_gate.loading_texture_v_flip_enabled = true;
 	state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	state.scripts_active = ScriptManager::Is_Provider_Active()
 		&& ScriptManager::Get_Active_Script_Count() > 0;
@@ -377,19 +381,43 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
 	uint32_t frame, const char *reason)
 {
-	A30_Vita_Log("A3.5 effects: reason=%s frame=%u player=%u definition=%s state=%s position=(%.3f,%.3f,%.3f) velocity=(%.3f,%.3f,%.3f) health=%.3f physics=%d grounded=%d weapon=%s/%u rounds=%d/%d fired_total=%u weapon_state=%d triggered/fired=%d/%d action_count/active/busy=%u/%d/%d\n",
+	A30_Vita_Log("A3.5 effects: reason=%s frame=%u player=%u definition=%s state=%s position=(%.3f,%.3f,%.3f) velocity=(%.3f,%.3f,%.3f) health=%.3f physics=%d grounded=%d first_person=%d weapon=%s/%u rounds=%d/%d fired_total=%u weapon_state=%d triggered/fired=%d/%d action_count/active/busy=%u/%d/%d control action/reload=%d/%d input action/reload/use/camera/prev/next/objectives=%d/%d/%d/%d/%d/%d/%d physical square/triangle/select/circle/dpad_udlr=%d/%d/%d/%d/%d/%d/%d/%d key action/reload/camera/prev/next/objectives=%u/%u/%u/%u/%u/%u buttons=%08X\n",
 		reason, frame, trace.player_object_id, trace.player_definition,
 		trace.player_state, trace.player_x, trace.player_y, trace.player_z,
 		trace.player_velocity[0], trace.player_velocity[1],
 		trace.player_velocity[2], trace.player_health,
 		trace.player_physics_registered ? 1 : 0,
 		trace.player_grounded ? 1 : 0,
+		trace.first_person_active ? 1 : 0,
 		trace.weapon_present ? trace.weapon_definition : "none",
 		trace.weapon_definition_id, trace.weapon_total_rounds,
 		trace.weapon_clip_rounds, trace.weapon_total_rounds_fired,
 		trace.weapon_state, trace.weapon_triggered ? 1 : 0,
 		trace.weapon_fired_this_frame ? 1 : 0, trace.action_act_count,
-		trace.action_active ? 1 : 0, trace.action_busy ? 1 : 0);
+		trace.action_active ? 1 : 0, trace.action_busy ? 1 : 0,
+		trace.control_action_active ? 1 : 0,
+		trace.control_reload_active ? 1 : 0,
+		trace.input_action_active ? 1 : 0,
+		trace.input_reload_active ? 1 : 0,
+		trace.input_use_weapon_active ? 1 : 0,
+			trace.input_first_person_toggle_active ? 1 : 0,
+			trace.input_previous_weapon_active ? 1 : 0,
+			trace.input_next_weapon_active ? 1 : 0,
+			trace.input_objectives_toggle_active ? 1 : 0,
+			trace.input_square_down ? 1 : 0,
+		trace.input_triangle_down ? 1 : 0,
+		trace.input_select_down ? 1 : 0,
+		trace.input_circle_down ? 1 : 0,
+		trace.input_dpad_up_down ? 1 : 0,
+		trace.input_dpad_down_down ? 1 : 0,
+		trace.input_dpad_left_down ? 1 : 0,
+		trace.input_dpad_right_down ? 1 : 0,
+		trace.input_action_key_state, trace.input_reload_key_state,
+			trace.input_camera_toggle_key_state,
+			trace.input_previous_weapon_key_state,
+			trace.input_next_weapon_key_state,
+			trace.input_objectives_toggle_key_state,
+			trace.input_buttons);
 }
 
 bool Mission_Progress_Changed(const A31MissionProgressState &left,
@@ -618,7 +646,7 @@ void Log_Timing_Statistics(const InteractiveTiming &timing,
 void Log_Input_Telemetry()
 {
 	const RenegadeVitaInputTelemetry &input = Renegade_Vita_Last_Input_Telemetry();
-	A30_Vita_Log("A3.5 input: samples=%llu raw lx/ly/rx/ry=%u/%u/%u/%u normalized=%.3f/%.3f/%.3f/%.3f logical=%ld/%ld/%ld/%ld mouse_delta=%ld/%ld dt=%.4f buttons=%08X route_mode/active/index/count/truncated=%u/%u/%u/%u/%u\n",
+	A30_Vita_Log("A3.5 input: samples=%llu raw lx/ly/rx/ry=%u/%u/%u/%u normalized=%.3f/%.3f/%.3f/%.3f logical=%ld/%ld/%ld/%ld mouse_delta=%ld/%ld dt=%.4f buttons=%08X physical square/triangle/select/circle/dpad_udlr=%u/%u/%u/%u/%u/%u/%u/%u key action/reload/camera/prev/next/objectives=%u/%u/%u/%u/%u/%u route_mode/active/index/count/truncated=%u/%u/%u/%u/%u\n",
 		static_cast<unsigned long long>(input.sample_count),
 		static_cast<unsigned>(input.lx), static_cast<unsigned>(input.ly),
 		static_cast<unsigned>(input.rx), static_cast<unsigned>(input.ry),
@@ -630,9 +658,15 @@ void Log_Input_Telemetry()
 		static_cast<long>(input.logical_rx), static_cast<long>(input.logical_ry),
 		static_cast<long>(input.mouse_dx), static_cast<long>(input.mouse_dy),
 		static_cast<double>(input.frame_seconds), input.buttons,
-			input.route_mode, input.route_gameplay_active,
-			input.route_sample_index, input.route_sample_count,
-			input.route_truncated);
+		input.square_down, input.triangle_down, input.select_down,
+		input.circle_down, input.dpad_up_down, input.dpad_down_down,
+		input.dpad_left_down, input.dpad_right_down,
+		input.action_key_state, input.reload_key_state,
+		input.camera_toggle_key_state, input.previous_weapon_key_state,
+		input.next_weapon_key_state, input.objectives_toggle_key_state,
+		input.route_mode, input.route_gameplay_active,
+		input.route_sample_index, input.route_sample_count,
+		input.route_truncated);
 	}
 
 void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
@@ -758,14 +792,17 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 	bool translatedb_initialized = false;
 	bool stylemgr_initialized = false;
 		bool input_initialized = false;
-		bool combat_initialized = false;
-		bool campaign_initialized = false;
-		bool mission_completion_observer_installed = false;
-	bool radar_initialized = false;
-	bool session_initialized = false;
-	bool single_player_transport_initialized = false;
-	bool audio_teardown_completed = false;
-	WW3DAssetManager *asset_manager = NULL;
+			bool combat_initialized = false;
+			bool campaign_initialized = false;
+			bool mission_completion_observer_installed = false;
+			bool text_display_initialized = false;
+		bool radar_initialized = false;
+		bool session_initialized = false;
+		bool single_player_transport_initialized = false;
+		bool audio_teardown_completed = false;
+		WW3DAssetManager *asset_manager = NULL;
+		TextDebugDisplayHandlerClass text_display_handler;
+		TextDisplayGameModeClass text_display_mode;
 
 	{
 		/* Match original Commando ownership.  WWAudio must see the installed
@@ -863,11 +900,20 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
 				break;
 			}
-			A30_Vita_Log("A3.5 loading screen: original StyleMgr initialized ini=%s normal_font=%p big_font=%p\n",
-				kStyleManagerIni,
-				static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT)),
-				static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
-			Input::Init(true);
+				A30_Vita_Log("A3.5 loading screen: original StyleMgr initialized ini=%s normal_font=%p big_font=%p\n",
+					kStyleManagerIni,
+					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT)),
+					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
+				text_display_mode.Init();
+				text_display_initialized =
+					TextDisplayGameModeClass::Get_Instance() == &text_display_mode;
+				if (text_display_initialized) {
+					DebugManager::Set_Display_Handler(&text_display_handler);
+				}
+				A30_Vita_Log("A3.5 text display: original TextDisplayGameMode init=%d handler=%d\n",
+					text_display_initialized ? 1 : 0,
+					text_display_initialized ? 1 : 0);
+				Input::Init(true);
 				Input::Load_Configuration("DEFAULT_INPUT.CFG");
 				A31_Interactive_Configure_Vita_Controls();
 				input_initialized = true;
@@ -1065,6 +1111,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 					result.commando_created ? 1 : 0);
 				break;
 			}
+			CombatManager::Set_First_Person_Default(true);
+			CombatManager::Set_First_Person(true);
+			A30_Vita_Log("A3.5 camera: original first-person default restored for direct M00 route first_person=%d\n",
+				CombatManager::Is_First_Person() ? 1 : 0);
 
 				result.initialized = true;
 				A30_Vita_Log("A3.1 breadcrumb: original player/session ready; original mission completion or START exits\n");
@@ -1401,12 +1451,18 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				campaign_initialized = false;
 				A30_Vita_Log("A3.5 loading screen: original CampaignManager catalog shutdown complete\n");
 			}
-			if (combat_initialized) {
-				A30_Vita_Log("A3.1 breadcrumb: Combat shutdown entry\n");
-				CombatManager::Shutdown();
-				A30_Vita_Log("A3.1 breadcrumb: Combat shutdown complete\n");
-			}
-			if (stylemgr_initialized) {
+				if (combat_initialized) {
+					A30_Vita_Log("A3.1 breadcrumb: Combat shutdown entry\n");
+					CombatManager::Shutdown();
+					A30_Vita_Log("A3.1 breadcrumb: Combat shutdown complete\n");
+				}
+				if (text_display_initialized) {
+					DebugManager::Set_Display_Handler(NULL);
+					TextDisplayGameModeClass::Get_Instance()->Shutdown();
+					text_display_initialized = false;
+					A30_Vita_Log("A3.5 text display: original TextDisplayGameMode shutdown complete\n");
+				}
+				if (stylemgr_initialized) {
 				StyleMgrClass::Shutdown();
 				stylemgr_initialized = false;
 				A30_Vita_Log("A3.5 loading screen: original StyleMgr shutdown complete\n");

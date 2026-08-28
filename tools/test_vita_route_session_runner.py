@@ -244,7 +244,7 @@ class VitaRouteSessionRunnerTests(unittest.TestCase):
         self.assertNotIn("candidate did not arm the input route at original player control", self.runner)
         self.assertIn("Press Select once, then START to finish", self.runner)
         self.assertIn("wait about 10 seconds for original control to return", self.runner)
-        self.assertIn("background_upright_fullscreen_text_bar_aligned_progress_moving", self.runner)
+        self.assertIn("background_upright_aspect_fit_text_bar_aligned_progress_moving", self.runner)
         self.assertIn("No log-only result will be treated as visual acceptance", self.runner)
 
     def test_route_gate_requires_skin_deformation_and_unchanged_retail(self):

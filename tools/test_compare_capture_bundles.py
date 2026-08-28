@@ -89,10 +89,10 @@ class CaptureComparisonTest(unittest.TestCase):
                     "original_logical_height": 480,
                     "native_display_width": 960,
                     "native_display_height": 544,
-                    "logical_to_native_fullscreen": True,
+                    "logical_to_native_fullscreen": False,
                     "original_loading_screen_owner": True,
                     "direct_vitagl_overlay_disabled": True,
-                    "loading_texture_v_flip_enabled": False,
+                    "loading_texture_v_flip_enabled": True,
                     "gameplay_texture_v_unchanged": True,
                 }
                 state_path.write_text(json.dumps(state), encoding="utf-8")
@@ -102,7 +102,7 @@ class CaptureComparisonTest(unittest.TestCase):
             after_state["player"]["velocity"] = [1.0, 0.0, 0.0]
             after_state["player"]["physics_registered"] = True
             after_state["player"]["grounded"] = True
-            after_state["loading_visual_gate"]["logical_to_native_fullscreen"] = False
+            after_state["loading_visual_gate"]["loading_texture_v_flip_enabled"] = False
             after_path.write_text(json.dumps(after_state), encoding="utf-8")
             result = compare(before, after)
             self.assertTrue(result["gameplay"]["player.position"]["changed"])
@@ -111,7 +111,7 @@ class CaptureComparisonTest(unittest.TestCase):
             self.assertTrue(result["gameplay"]["player.grounded"]["changed"])
             self.assertTrue(
                 result["visual_gate"][
-                    "loading_visual_gate.logical_to_native_fullscreen"
+                    "loading_visual_gate.loading_texture_v_flip_enabled"
                 ]["changed"]
             )
 

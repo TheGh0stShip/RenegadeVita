@@ -19,7 +19,7 @@ class VitaCameraInputContractTests(unittest.TestCase):
 
             int main() {
                 using namespace RenegadeVitaInput;
-                if (DEFAULT_CAMERA_RESPONSE.invert_y) return 1;
+	                if (!DEFAULT_CAMERA_RESPONSE.invert_y) return 1;
                 const StickSample physical_up = Sample_Device_Stick(128U, 0U);
                 const StickSample physical_down = Sample_Device_Stick(128U, 255U);
                 const int up_dy = To_Camera_Mouse_Delta(
@@ -32,8 +32,8 @@ class VitaCameraInputContractTests(unittest.TestCase):
                     1.0f / 60.0f,
                     DEFAULT_CAMERA_RESPONSE.vertical_scale,
                     DEFAULT_CAMERA_RESPONSE.invert_y);
-                if (up_dy >= 0) return 2;
-                if (down_dy <= 0) return 3;
+	                if (up_dy <= 0) return 2;
+	                if (down_dy >= 0) return 3;
                 if (To_Camera_Mouse_Delta(0.6f, 1.0f / 60.0f, 1.0f, true) !=
                     -To_Camera_Mouse_Delta(0.6f, 1.0f / 60.0f)) return 4;
                 return 0;

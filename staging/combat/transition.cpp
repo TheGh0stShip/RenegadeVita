@@ -54,6 +54,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "pathaction.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 
 /*
@@ -704,13 +707,40 @@ void	TransitionManager::Destroy_Pending( void )
 bool	TransitionManager::Check( SoldierGameObj *obj, bool action_trigger )
 {
 	WWPROFILE( "Transition Check" );
+#if defined(__vita__)
+	static unsigned logged_action_checks = 0;
+	bool log_action_check = false;
+	if ( obj == COMBAT_STAR && action_trigger && logged_action_checks < 24U ) {
+		++logged_action_checks;
+		log_action_check = true;
+		Vector3 position;
+		obj->Get_Position( &position );
+		A30_Vita_Log("A3.5 transition: action check start count=%ld pos=(%.3f,%.3f,%.3f)\n",
+			Transitions.Get_Count(), position.X, position.Y, position.Z);
+	}
+#endif
 	SLNode<TransitionInstanceClass> *ti_node;
 	for (	ti_node = Transitions.Head(); ti_node; ti_node = ti_node->Next()) {
 		if ( ti_node->Data()->Check( obj, action_trigger ) ) {
+#if defined(__vita__)
+			if ( log_action_check ) {
+				TransitionDataClass::StyleType type = ti_node->Data()->Get_Type();
+				const int type_value = static_cast<int>(type);
+				A30_Vita_Log("A3.5 transition: action check match type=%d/%s\n",
+					type_value,
+					type_value >= 0 && type_value < TransitionDataClass::Get_Num_Types() ?
+						TransitionDataClass::Get_Type_Name(type) : "unknown");
+			}
+#endif
 			Destroy_Pending();
 			return true;
 		}
 	}
+#if defined(__vita__)
+	if ( log_action_check ) {
+		A30_Vita_Log("A3.5 transition: action check no_match\n");
+	}
+#endif
 	return false;
 }
 

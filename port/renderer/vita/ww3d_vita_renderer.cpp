@@ -78,6 +78,8 @@ bool g_logged_first_generated_texture_coordinate = false;
 bool g_logged_first_material_lighting = false;
 bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
+bool g_logged_first_loading_texture_v_flip = false;
+bool g_logged_first_skin_texture_color = false;
 bool g_shader_compiler_available = false;
 unsigned g_shader_init_calls = 0;
 int g_shader_init_last_result = -1;
@@ -88,6 +90,46 @@ struct OriginalTextureCoordinateState {
 	D3DMATRIX texture_transform;
 };
 
+char To_Lower_Ascii(char value)
+{
+	return value >= 'A' && value <= 'Z' ?
+		static_cast<char>(value - 'A' + 'a') : value;
+}
+
+bool Contains_Ascii_No_Case(const char *text, const char *needle)
+{
+	if (text == NULL || needle == NULL || needle[0] == '\0') return false;
+	for (const char *scan = text; *scan != '\0'; ++scan) {
+		unsigned index = 0U;
+		while (needle[index] != '\0' && scan[index] != '\0' &&
+			To_Lower_Ascii(scan[index]) == To_Lower_Ascii(needle[index])) {
+			++index;
+		}
+		if (needle[index] == '\0') return true;
+	}
+	return false;
+}
+
+bool Has_Loadscreen_Texture_Prefix(const char *name)
+{
+	if (name == NULL) return false;
+	const char *base = name;
+	for (const char *scan = name; *scan != '\0'; ++scan) {
+		if (*scan == '/' || *scan == '\\') base = scan + 1;
+	}
+	const char prefix[] = "loadscreen_";
+	for (unsigned index = 0U; prefix[index] != '\0'; ++index) {
+		if (To_Lower_Ascii(base[index]) != prefix[index]) return false;
+	}
+	return true;
+}
+
+bool Is_Loading_Screen_Diagnostic_Name(const char *name)
+{
+	return Has_Loadscreen_Texture_Prefix(name) ||
+		Contains_Ascii_No_Case(name, "lvl94load");
+}
+
 FogStateContract g_fog_state = Default_Fog_State();
 uint32_t g_dx8_ambient_color = 0U;
 GLenum g_dx8_alpha_function = GL_ALWAYS;
@@ -97,6 +139,92 @@ GLenum g_dx8_destination_blend = GL_ZERO;
 bool g_logged_first_fog_state = false;
 bool g_logged_first_ambient_state = false;
 bool g_logged_first_unsupported_render_state = false;
+bool g_logged_first_state_cache_skip = false;
+
+struct NativeTextureStageCache {
+	bool enabled_known;
+	bool enabled;
+	bool texture_known;
+	uint32_t texture;
+	bool sampler_known;
+	uint32_t sampler_texture;
+	uint32_t address_u;
+	uint32_t address_v;
+	uint32_t min_filter;
+	uint32_t mag_filter;
+	uint32_t mip_filter;
+	bool combiner_known;
+	bool combiner_texture_enabled;
+	uint32_t color_op;
+	uint32_t color_arg1;
+	uint32_t color_arg2;
+	uint32_t alpha_op;
+	uint32_t alpha_arg1;
+	uint32_t alpha_arg2;
+};
+
+struct NativeRenderStateCache {
+	bool valid[256];
+	uint32_t values[256];
+};
+
+NativeTextureStageCache g_texture_stage_cache[MeshMatDescClass::MAX_TEX_STAGES] = {};
+NativeRenderStateCache g_render_state_cache = {};
+
+void Invalidate_Native_State_Cache()
+{
+	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
+	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
+	g_logged_first_state_cache_skip = false;
+}
+
+bool Texture_Stage_Index_Valid(uint32_t stage)
+{
+	return stage < MeshMatDescClass::MAX_TEX_STAGES;
+}
+
+bool Set_Texture_Stage_Enabled(uint32_t stage, bool enabled)
+{
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
+		Record_Texture_Unsupported_Stage(stage);
+		return false;
+	}
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	if (cache.enabled_known && cache.enabled == enabled) {
+		if (!g_logged_first_state_cache_skip) {
+			Vita_Append_A22_Runtime_Breadcrumb("render-state",
+				"first cached VitaGL texture-stage enable skip: stage=%u enabled=%d",
+				stage, enabled ? 1 : 0);
+			g_logged_first_state_cache_skip = true;
+		}
+		return true;
+	}
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
+	if (enabled) {
+		glEnable(GL_TEXTURE_2D);
+	} else {
+		glDisable(GL_TEXTURE_2D);
+	}
+	glActiveTexture(GL_TEXTURE0);
+	cache.enabled_known = true;
+	cache.enabled = enabled;
+	++g_statistics.state_changes;
+	return true;
+}
+
+bool Render_State_Cache_Matches(uint32_t state, uint32_t value)
+{
+	return state < 256U && g_render_state_cache.valid[state] &&
+		g_render_state_cache.values[state] == value;
+}
+
+void Store_Render_State_Cache(uint32_t state, uint32_t value)
+{
+	if (state < 256U) {
+		g_render_state_cache.valid[state] = true;
+		g_render_state_cache.values[state] = value;
+	}
+}
 
 GLenum To_GL_Depth_Function(ShaderClass::DepthCompareType function)
 {
@@ -418,7 +546,8 @@ void Apply_DX8_Texture_Transform(const OriginalTextureCoordinateState &state,
 bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	const OriginalTextureCoordinateState &state, const Vector2 *uvs,
 	const Vector3 *vertices, const Vector3 *normals, unsigned vertex_index,
-	const Matrix3D &world_transform, const Matrix3D &view_transform)
+	const Matrix3D &world_transform, const Matrix3D &view_transform,
+	const char *texture_name)
 {
 	float source_s = 0.0f;
 	float source_t = 0.0f;
@@ -453,6 +582,15 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		if (uvs == NULL) return false;
 		source_s = uvs[vertex_index].X;
 		source_t = uvs[vertex_index].Y;
+	}
+	if (Has_Loadscreen_Texture_Prefix(texture_name)) {
+		source_t = 1.0f - source_t;
+		if (!g_logged_first_loading_texture_v_flip) {
+			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
+				"first loading texture V correction: texture=%s stage=%u",
+				texture_name != NULL ? texture_name : "none", stage);
+			g_logged_first_loading_texture_v_flip = true;
+		}
 	}
 	float s = 0.0f;
 	float t = 0.0f;
@@ -536,7 +674,8 @@ const float *Select_Indexed_UV_Array(
 bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	const OriginalTextureCoordinateState &state, const float uv0[2],
 	const float uv1[2], const float position[3], const float normal[3],
-	const float *world_transform, const float *view_transform)
+	const float *world_transform, const float *view_transform,
+	const char *texture_name)
 {
 	float source_s = 0.0f;
 	float source_t = 0.0f;
@@ -568,6 +707,15 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		const float *uv = Select_Indexed_UV_Array(state, uv0, uv1);
 		source_s = uv[0];
 		source_t = uv[1];
+	}
+	if (Has_Loadscreen_Texture_Prefix(texture_name)) {
+		source_t = 1.0f - source_t;
+		if (!g_logged_first_loading_texture_v_flip) {
+			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
+				"first indexed loading texture V correction: texture=%s stage=%u",
+				texture_name != NULL ? texture_name : "none", stage);
+			g_logged_first_loading_texture_v_flip = true;
+		}
 	}
 
 	float s = 0.0f;
@@ -636,6 +784,9 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		glCullFace(GL_BACK);
 	} else glDisable(GL_CULL_FACE);
 	Apply_Original_Fog_State(shader);
+	g_texture_stage_cache[0].enabled_known = false;
+	g_texture_stage_cache[0].combiner_known = false;
+	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
 	++g_statistics.state_changes;
 }
 
@@ -1158,6 +1309,7 @@ bool Reactivate_Native_Backend_State()
 	if (error != GL_NO_ERROR) {
 		return false;
 	}
+	Invalidate_Native_State_Cache();
 	g_logged_first_frame = false;
 	g_logged_first_present = false;
 	g_logged_first_mesh = false;
@@ -1265,15 +1417,31 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 		return false;
 	}
 
-	const uint64_t left =
-		(static_cast<uint64_t>(d3d_x) * DISPLAY_WIDTH) / logical_width;
-	const uint64_t right =
-		((static_cast<uint64_t>(d3d_x) + width) * DISPLAY_WIDTH +
+	uint32_t fitted_width = DISPLAY_WIDTH;
+	uint32_t fitted_height = DISPLAY_HEIGHT;
+	if (static_cast<uint64_t>(DISPLAY_WIDTH) * logical_height >
+		static_cast<uint64_t>(DISPLAY_HEIGHT) * logical_width) {
+		fitted_width = static_cast<uint32_t>(
+			(static_cast<uint64_t>(DISPLAY_HEIGHT) * logical_width) /
+				logical_height);
+	} else if (static_cast<uint64_t>(DISPLAY_WIDTH) * logical_height <
+		static_cast<uint64_t>(DISPLAY_HEIGHT) * logical_width) {
+		fitted_height = static_cast<uint32_t>(
+			(static_cast<uint64_t>(DISPLAY_WIDTH) * logical_height) /
+				logical_width);
+	}
+	if (fitted_width == 0U || fitted_height == 0U) return false;
+	const uint32_t fitted_x = (DISPLAY_WIDTH - fitted_width) / 2U;
+	const uint32_t fitted_y = (DISPLAY_HEIGHT - fitted_height) / 2U;
+	const uint64_t left = fitted_x +
+		(static_cast<uint64_t>(d3d_x) * fitted_width) / logical_width;
+	const uint64_t right = fitted_x +
+		((static_cast<uint64_t>(d3d_x) + width) * fitted_width +
 			logical_width - 1U) / logical_width;
-	const uint64_t top =
-		(static_cast<uint64_t>(d3d_y) * DISPLAY_HEIGHT) / logical_height;
-	const uint64_t bottom =
-		((static_cast<uint64_t>(d3d_y) + height) * DISPLAY_HEIGHT +
+	const uint64_t top = fitted_y +
+		(static_cast<uint64_t>(d3d_y) * fitted_height) / logical_height;
+	const uint64_t bottom = fitted_y +
+		((static_cast<uint64_t>(d3d_y) + height) * fitted_height +
 			logical_height - 1U) / logical_height;
 	if (right <= left || bottom <= top || right > DISPLAY_WIDTH ||
 		bottom > DISPLAY_HEIGHT) {
@@ -1421,6 +1589,7 @@ bool Initialize()
 	g_shader_compiler_available = false;
 	g_shader_init_calls = 0;
 	g_shader_init_last_result = -1;
+	Invalidate_Native_State_Cache();
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "vglInit entry");
 	const GLboolean resolution_fallback = vglInit(4 * 1024 * 1024);
@@ -1521,6 +1690,7 @@ void Shutdown()
 	g_lifecycle.logical_session_active = false;
 	Release_Deformed_Skin_Scratch();
 #if defined(__vita__)
+	Invalidate_Native_State_Cache();
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-lifecycle",
 		"logical shutdown: shutdowns=%u sessions=%u native_calls=%u native_ready=%d",
 		g_lifecycle.logical_shutdowns, g_lifecycle.logical_sessions,
@@ -1675,31 +1845,37 @@ bool Bind_Texture(uint32_t native_texture, bool valid)
 
 bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
 {
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
+		Record_Texture_Unsupported_Stage(stage);
+		return false;
+	}
 	if (!valid || native_texture == 0U) {
 		++g_statistics.texture_invalid_binds;
 #if defined(__vita__)
-		glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
-		glDisable(GL_TEXTURE_2D);
-		glActiveTexture(GL_TEXTURE0);
+		Set_Texture_Stage_Enabled(stage, false);
 #endif
 		return false;
 	}
-	++g_statistics.texture_binds;
 #if defined(__vita__)
+	Set_Texture_Stage_Enabled(stage, true);
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	if (cache.texture_known && cache.texture == native_texture) {
+		return true;
+	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
-	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, native_texture);
 	glActiveTexture(GL_TEXTURE0);
+	cache.texture_known = true;
+	cache.texture = native_texture;
 #endif
+	++g_statistics.texture_binds;
 	return true;
 }
 
 void Disable_Texture_Stage(uint32_t stage)
 {
 #if defined(__vita__)
-	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
-	glDisable(GL_TEXTURE_2D);
-	glActiveTexture(GL_TEXTURE0);
+	Set_Texture_Stage_Enabled(stage, false);
 #else
 	(void)stage;
 #endif
@@ -1717,15 +1893,25 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
 	uint32_t mag_filter, uint32_t mip_filter)
 {
+	if (!Texture_Stage_Index_Valid(stage)) {
+		Record_Texture_Unsupported_Stage(stage);
+		return false;
+	}
 	if (!valid || native_texture == 0U) {
 		++g_statistics.texture_invalid_binds;
 		return false;
 	}
-	++g_statistics.texture_sampler_updates;
 #if defined(__vita__)
 	// D3D8's TextureClass owns the state choices.  This narrow translation only
 	// maps its established address/filter contract to VitaGL; it does not add a
 	// Vita sensitivity, cache, or material policy of its own.
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	if (cache.sampler_known && cache.sampler_texture == native_texture &&
+		cache.address_u == address_u && cache.address_v == address_v &&
+		cache.min_filter == min_filter && cache.mag_filter == mag_filter &&
+		cache.mip_filter == mip_filter) {
+		return true;
+	}
 	const GLenum wrap_u = address_u == 3U ? GL_CLAMP_TO_EDGE : GL_REPEAT;
 	const GLenum wrap_v = address_v == 3U ? GL_CLAMP_TO_EDGE : GL_REPEAT;
 	const bool point_min = min_filter == 1U;
@@ -1743,6 +1929,16 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
 		mag_filter == 1U ? GL_NEAREST : GL_LINEAR);
 	glActiveTexture(GL_TEXTURE0);
+	cache.texture_known = true;
+	cache.texture = native_texture;
+	cache.sampler_known = true;
+	cache.sampler_texture = native_texture;
+	cache.address_u = address_u;
+	cache.address_v = address_v;
+	cache.min_filter = min_filter;
+	cache.mag_filter = mag_filter;
+	cache.mip_filter = mip_filter;
+	++g_statistics.texture_sampler_updates;
 	if (glGetError() != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
 		return false;
@@ -1753,6 +1949,7 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	(void)min_filter;
 	(void)mag_filter;
 	(void)mip_filter;
+	++g_statistics.texture_sampler_updates;
 #endif
 	return true;
 }
@@ -1766,17 +1963,40 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 		return false;
 	}
 #if defined(__vita__)
-	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	if (!texture_enabled) {
-		glDisable(GL_TEXTURE_2D);
-		glActiveTexture(GL_TEXTURE0);
+		Set_Texture_Stage_Enabled(stage, false);
+		NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+		cache.combiner_known = true;
+		cache.combiner_texture_enabled = false;
+		cache.color_op = color_op;
+		cache.color_arg1 = color_arg1;
+		cache.color_arg2 = color_arg2;
+		cache.alpha_op = alpha_op;
+		cache.alpha_arg1 = alpha_arg1;
+		cache.alpha_arg2 = alpha_arg2;
 		return true;
 	}
-	glEnable(GL_TEXTURE_2D);
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	Set_Texture_Stage_Enabled(stage, true);
+	if (cache.combiner_known && cache.combiner_texture_enabled &&
+		cache.color_op == color_op && cache.color_arg1 == color_arg1 &&
+		cache.color_arg2 == color_arg2 && cache.alpha_op == alpha_op &&
+		cache.alpha_arg1 == alpha_arg1 && cache.alpha_arg2 == alpha_arg2) {
+		return true;
+	}
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 	Apply_GL_RGB_Texture_Op(color_op, color_arg1, color_arg2);
 	Apply_GL_Alpha_Texture_Op(alpha_op, alpha_arg1, alpha_arg2);
 	glActiveTexture(GL_TEXTURE0);
+	cache.combiner_known = true;
+	cache.combiner_texture_enabled = true;
+	cache.color_op = color_op;
+	cache.color_arg1 = color_arg1;
+	cache.color_arg2 = color_arg2;
+	cache.alpha_op = alpha_op;
+	cache.alpha_arg1 = alpha_arg1;
+	cache.alpha_arg2 = alpha_arg2;
 	++g_statistics.state_changes;
 	if (glGetError() != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
@@ -1798,12 +2018,23 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 {
 #if defined(__vita__)
+	if (Render_State_Cache_Matches(state, value)) {
+		return true;
+	}
 	if (Update_Fog_State_From_DX8_Render_State(state, value, g_fog_state)) {
-		return Apply_Current_Fog_State();
+		const bool applied = Apply_Current_Fog_State();
+		if (applied && g_statistics.initialized) {
+			Store_Render_State_Cache(state, value);
+		}
+		return applied;
 	}
 	if (Update_Ambient_State_From_DX8_Render_State(state, value,
 		g_dx8_ambient_color)) {
-		return Apply_Current_Ambient_State();
+		const bool applied = Apply_Current_Ambient_State();
+		if (applied && g_statistics.initialized) {
+			Store_Render_State_Cache(state, value);
+		}
+		return applied;
 	}
 	if (!g_statistics.initialized) {
 		return true;
@@ -1878,6 +2109,7 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 		++g_statistics.backend_errors;
 		return false;
 	}
+	Store_Render_State_Cache(state, value);
 #else
 	(void)state;
 	(void)value;
@@ -2018,13 +2250,17 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			"first original MeshClass submission entry: vertices=%d triangles=%d passes=%d",
 			vertex_count, triangle_count, base_pass_count);
 	}
-	if (is_skin && !g_logged_first_skin) {
-		Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
-			"first original deformed skin submission: mesh=%s vertices=%d triangles=%d passes=%d texture=%s uv=%d dcg=%d world=identity",
-			mesh.Get_Name(), vertex_count, triangle_count, pass_count,
-			first_texture != NULL ? first_texture->Get_Texture_Name().Peek_Buffer() : "none",
-			model->Get_UV_Array(0, 0) != NULL ? 1 : 0,
-			model->Get_DCG_Array(0) != NULL ? 1 : 0);
+		const char *first_texture_name = first_texture != NULL ?
+			first_texture->Get_Texture_Name().Peek_Buffer() : "none";
+		if (is_skin && !g_logged_first_skin &&
+			!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
+			!Is_Loading_Screen_Diagnostic_Name(first_texture_name)) {
+			Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
+				"first original deformed skin submission: mesh=%s vertices=%d triangles=%d passes=%d texture=%s uv=%d dcg=%d world=identity",
+				mesh.Get_Name(), vertex_count, triangle_count, pass_count,
+				first_texture_name,
+				model->Get_UV_Array(0, 0) != NULL ? 1 : 0,
+				model->Get_DCG_Array(0) != NULL ? 1 : 0);
 		g_logged_first_skin = true;
 	}
 	for (int pass = 0; pass < base_pass_count; ++pass) {
@@ -2150,20 +2386,22 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			}
 			for (int corner = 0; corner < 3; ++corner) {
 				const unsigned vertex_index = vertex_indices[corner];
-				if (bound_textures[0] != NULL) {
-					Emit_Original_Texture_Coordinate(0U, GL_TEXTURE0,
-						current_texture_coordinates[0], current_uvs[0], vertices,
-						normals, vertex_index, original_world_transform,
-						original_view_transform);
-				}
-				if (current_detail_stage) {
-					const Vector2 *detail_uvs =
-						current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
-					Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,
-						current_texture_coordinates[1], detail_uvs, vertices,
-						normals, vertex_index, original_world_transform,
-						original_view_transform);
-				}
+					if (bound_textures[0] != NULL) {
+						Emit_Original_Texture_Coordinate(0U, GL_TEXTURE0,
+							current_texture_coordinates[0], current_uvs[0], vertices,
+							normals, vertex_index, original_world_transform,
+							original_view_transform,
+							bound_textures[0]->Get_Texture_Name().Peek_Buffer());
+					}
+					if (current_detail_stage) {
+						const Vector2 *detail_uvs =
+							current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
+						Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,
+							current_texture_coordinates[1], detail_uvs, vertices,
+							normals, vertex_index, original_world_transform,
+							original_view_transform,
+							bound_textures[1]->Get_Texture_Name().Peek_Buffer());
+					}
 				/* Preserve the original mesh material color owner.  The former Vita
 				** bridge invented RGB from each normal, visibly recoloring otherwise
 				** valid NPC skin textures.  The current path now evaluates original
@@ -2176,6 +2414,22 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 						color2, vertex_index, normals, original_world_transform,
 						render_info);
 				Vector3 final_color = vertex_color.final_color;
+				if (is_skin && bound_textures[0] != NULL &&
+					triangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE) {
+					if (!g_logged_first_skin_texture_color &&
+						!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
+						!Is_Loading_Screen_Diagnostic_Name(
+							bound_textures[0]->Get_Texture_Name().Peek_Buffer())) {
+						Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
+							"first textured skin color pass-through: mesh=%s pass=%d texture=%s material_lighting=%d original_rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
+							mesh.Get_Name(), pass,
+							bound_textures[0]->Get_Texture_Name().Peek_Buffer(),
+							vertex_color.lighting ? 1 : 0, final_color.X,
+							final_color.Y, final_color.Z, vertex_color.alpha);
+						g_logged_first_skin_texture_color = true;
+					}
+					final_color = Vector3(1.0f, 1.0f, 1.0f);
+				}
 				if (!g_logged_first_material_lighting) {
 					Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
 						"first original material lighting: mesh=%s pass=%d lighting=%d lights=%u color1=%d color2=%d rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
@@ -2367,12 +2621,14 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 			} else {
 				glNormal3f(0.0f, 0.0f, 1.0f);
 			}
-			Emit_Indexed_Texture_Coordinate(0U, GL_TEXTURE0,
-				texture_coordinates[0], uv0, uv1, position, normal,
-				submission.world_transform, submission.view_transform);
-			Emit_Indexed_Texture_Coordinate(1U, GL_TEXTURE1,
-				texture_coordinates[1], uv0, uv1, position, normal,
-				submission.world_transform, submission.view_transform);
+				Emit_Indexed_Texture_Coordinate(0U, GL_TEXTURE0,
+					texture_coordinates[0], uv0, uv1, position, normal,
+					submission.world_transform, submission.view_transform,
+					submission.texture_names[0]);
+				Emit_Indexed_Texture_Coordinate(1U, GL_TEXTURE1,
+					texture_coordinates[1], uv0, uv1, position, normal,
+					submission.world_transform, submission.view_transform,
+					submission.texture_names[1]);
 			glVertex3f(position[0], position[1], position[2]);
 		}
 	}

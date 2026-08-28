@@ -481,7 +481,7 @@ fi
 
 if [[ $session_mode == record ]]; then
 	printf '\nPRELAUNCH_USER_NOTICE candidate=%s\n' "$candidate"
-	printf 'LOADING_SCREEN_VISUAL_GATE candidate=%s requirement=background_upright_fullscreen_text_bar_aligned_progress_moving\n' "$candidate"
+	printf 'LOADING_SCREEN_VISUAL_GATE candidate=%s requirement=background_upright_aspect_fit_text_bar_aligned_progress_moving\n' "$candidate"
 	printf 'If the loading screen is still wrong, abort now or press START after control returns; do not continue into route recording. No log-only result will be treated as visual acceptance.\n'
 	printf 'If the loading screen is acceptable, begin playing as soon as the real M00 view accepts your controls; do not wait for the later telemetry-ready notice. The runner records both readiness checkpoints.\n\n'
 fi

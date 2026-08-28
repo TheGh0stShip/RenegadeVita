@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev78",
+  "milestone": "A3.5-dev79",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 451,
+  "original_source_files_compiled": 452,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -152,6 +152,7 @@
     "Code/Commando/serverfps.cpp",
     "Code/Commando/team.cpp",
     "Code/Commando/teammanager.cpp",
+    "Code/Commando/textdisplay.cpp",
     "Code/Commando/winevent.cpp",
     "Code/Scripts/Mission00.cpp",
     "Code/Scripts/ScriptFactory.cpp",
@@ -548,8 +549,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 119,
-  "mechanically_patched_upstream_files": 238,
+  "patch_count": 121,
+  "mechanically_patched_upstream_files": 242,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -598,10 +599,13 @@
     "Code/Combat/spawn.cpp",
     "Code/Combat/textwindow.cpp",
     "Code/Combat/textwindow.h",
+    "Code/Combat/transition.cpp",
     "Code/Combat/weaponbag.cpp",
     "Code/Combat/weaponmanager.h",
     "Code/Combat/weapons.cpp",
     "Code/Commando/AnnounceEvent.h",
+    "Code/Commando/ConsoleMode.cpp",
+    "Code/Commando/ConsoleMode.h",
     "Code/Commando/DlgMPTeamSelect.h",
     "Code/Commando/DlgMessageBox.cpp",
     "Code/Commando/DlgMessageBox.h",
@@ -640,6 +644,7 @@
     "Code/Commando/svrgoodbyeevent.cpp",
     "Code/Commando/team.cpp",
     "Code/Commando/teammanager.cpp",
+    "Code/Commando/textdisplay.cpp",
     "Code/Commando/textdisplay.h",
     "Code/Commando/winevent.cpp",
     "Code/WWAudio/AudibleSound.h",
@@ -966,6 +971,13 @@
       ]
     },
     {
+      "path": "port/patches/combat-a35-transition-action-diagnostics.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "transition.cpp"
+      ]
+    },
+    {
       "path": "port/patches/combat-a35-vita-durable-loader-trace.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1058,6 +1070,14 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "winevent.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-consolemode-add-message-return.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ConsoleMode.h",
+        "ConsoleMode.cpp"
       ]
     },
     {
@@ -1238,7 +1258,8 @@
       "path": "port/patches/commando-a4-textdisplay-vector-include.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "textdisplay.h"
+        "textdisplay.h",
+        "textdisplay.cpp"
       ]
     },
     {
@@ -1860,7 +1881,7 @@
     },
     "Commando": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 41,
+      "compiled": 42,
       "total": 213
     },
     "Scripts": {

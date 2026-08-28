@@ -140,10 +140,10 @@ int main()
 	input.state.loading_visual_gate.original_logical_height = 480U;
 	input.state.loading_visual_gate.native_display_width = 960U;
 	input.state.loading_visual_gate.native_display_height = 544U;
-	input.state.loading_visual_gate.logical_to_native_fullscreen = true;
+	input.state.loading_visual_gate.logical_to_native_fullscreen = false;
 	input.state.loading_visual_gate.original_loading_screen_owner = true;
 	input.state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
-	input.state.loading_visual_gate.loading_texture_v_flip_enabled = false;
+	input.state.loading_visual_gate.loading_texture_v_flip_enabled = true;
 	input.state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	input.history = &history;
 	const A31CaptureBundleResult result = A31_Write_Capture_Bundle(input);
@@ -172,9 +172,10 @@ int main()
 	Check(State_Contains(directory, "\"loading_visual_gate\"") &&
 		State_Contains(directory, "\"original_logical_width\":640") &&
 		State_Contains(directory, "\"native_display_width\":960") &&
-		State_Contains(directory, "\"logical_to_native_fullscreen\":true") &&
+		State_Contains(directory, "\"logical_to_native_fullscreen\":false") &&
 		State_Contains(directory, "\"direct_vitagl_overlay_disabled\":true") &&
-		Summary_Contains(directory, "Loading visual gate: active=1 logical=640x480 native=960x544 framebuffer=960x544 fullscreen=1"),
+		State_Contains(directory, "\"loading_texture_v_flip_enabled\":true") &&
+		Summary_Contains(directory, "Loading visual gate: active=1 logical=640x480 native=960x544 framebuffer=960x544 fullscreen=0"),
 		"loading visual gate state and summary", checks, failures);
 	Check(State_Contains(directory, "\"phase\":\"host-fixture\"") &&
 		State_Contains(directory, "\"runtime_log_path\":\"ux0:data/renegade/user/logs/a35-host-runtime.log\""),

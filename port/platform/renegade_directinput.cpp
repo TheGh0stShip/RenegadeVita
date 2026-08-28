@@ -482,20 +482,23 @@ void DirectInput::Read(void)
 	Set_Virtual_Key(VK_RIGHT, (buttons & SCE_CTRL_RIGHT) != 0);
 	Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);
-	Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SQUARE) != 0);
-	Set_Button(DIKeyboardButtons, DIK_W, (buttons & SCE_CTRL_UP) != 0);
-	Set_Button(DIKeyboardButtons, DIK_S, (buttons & SCE_CTRL_DOWN) != 0);
-	Set_Button(DIKeyboardButtons, DIK_A, (buttons & SCE_CTRL_LEFT) != 0);
-	Set_Button(DIKeyboardButtons, DIK_D, (buttons & SCE_CTRL_RIGHT) != 0);
+	Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);
+	Set_Button(DIKeyboardButtons, DIK_UP, (buttons & SCE_CTRL_UP) != 0);
+	Set_Button(DIKeyboardButtons, DIK_DOWN, (buttons & SCE_CTRL_DOWN) != 0);
+	Set_Button(DIKeyboardButtons, DIK_LEFT, (buttons & SCE_CTRL_LEFT) != 0);
+	Set_Button(DIKeyboardButtons, DIK_RIGHT, (buttons & SCE_CTRL_RIGHT) != 0);
+	Set_Button(DIKeyboardButtons, DIK_W, false);
+	Set_Button(DIKeyboardButtons, DIK_S, false);
+	Set_Button(DIKeyboardButtons, DIK_A, false);
+	Set_Button(DIKeyboardButtons, DIK_D, false);
 	Set_Button(DIKeyboardButtons, DIK_SPACE, (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Button(DIKeyboardButtons, DIK_LCONTROL, (buttons & SCE_CTRL_CIRCLE) != 0);
+	Set_Button(DIKeyboardButtons, DIK_E, (buttons & SCE_CTRL_TRIANGLE) != 0);
 	Set_Button(DIKeyboardButtons, DIK_R, (buttons & SCE_CTRL_SQUARE) != 0);
 	/* START remains the native direct-route clean-exit control and is sampled
-	** before Input::Update. Triangle supplies the original menu-toggle key so
-	** Combat's existing suspend/resume state machine remains the pause owner. */
-	Set_Button(DIKeyboardButtons, DIK_ESCAPE,
-		(buttons & (SCE_CTRL_START | SCE_CTRL_TRIANGLE)) != 0);
-	Set_Button(DIKeyboardButtons, DIK_TAB, (buttons & SCE_CTRL_SELECT) != 0);
+	** before Input::Update. Triangle supplies the original Action key, so it
+	** must not also feed the menu-toggle escape key. */
+	Set_Button(DIKeyboardButtons, DIK_ESCAPE, (buttons & SCE_CTRL_START) != 0);
 	Set_Button(DIJoystickButtons, 0, (buttons & SCE_CTRL_LTRIGGER) != 0);
 	Set_Button(DIJoystickButtons, 1, (buttons & SCE_CTRL_RTRIGGER) != 0);
 	// Keep the two physical sticks independent.  The old boundary reused the
@@ -541,6 +544,31 @@ void DirectInput::Read(void)
 	g_vita_input_telemetry.route_sample_index = g_route_sample_index;
 	g_vita_input_telemetry.route_sample_count = g_route_sample_count;
 	g_vita_input_telemetry.route_truncated = g_route_truncated ? 1U : 0U;
+	g_vita_input_telemetry.square_down = (buttons & SCE_CTRL_SQUARE) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.triangle_down =
+		(buttons & SCE_CTRL_TRIANGLE) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.select_down = (buttons & SCE_CTRL_SELECT) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.circle_down = (buttons & SCE_CTRL_CIRCLE) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.dpad_up_down =
+		(buttons & SCE_CTRL_UP) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.dpad_down_down =
+		(buttons & SCE_CTRL_DOWN) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.dpad_left_down =
+		(buttons & SCE_CTRL_LEFT) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.dpad_right_down =
+		(buttons & SCE_CTRL_RIGHT) != 0 ? 1U : 0U;
+	g_vita_input_telemetry.action_key_state =
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_E]);
+	g_vita_input_telemetry.reload_key_state =
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_R]);
+	g_vita_input_telemetry.camera_toggle_key_state =
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_DOWN]);
+	g_vita_input_telemetry.previous_weapon_key_state =
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_LEFT]);
+	g_vita_input_telemetry.next_weapon_key_state =
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_RIGHT]);
+	g_vita_input_telemetry.objectives_toggle_key_state =
+		static_cast<uint32_t>(DIKeyboardButtons[DIK_UP]);
 #endif
 }
 

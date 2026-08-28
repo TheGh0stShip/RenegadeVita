@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev18",
+  "milestone": "A3.5-dev49",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 447,
+  "original_source_files_compiled": 451,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -114,6 +114,7 @@
     "Code/Combat/weaponview.cpp",
     "Code/Commando/apppacketstats.cpp",
     "Code/Commando/buildnum.cpp",
+    "Code/Commando/campaign.cpp",
     "Code/Commando/changeteamevent.cpp",
     "Code/Commando/clientfps.cpp",
     "Code/Commando/clientgoodbyeevent.cpp",
@@ -450,10 +451,17 @@
     "Code/wwsaveload/saveloadsubsystem.cpp",
     "Code/wwsaveload/twiddler.cpp",
     "Code/wwsaveload/wwsaveload.cpp",
+    "Code/wwtranslatedb/stringtwiddler.cpp",
     "Code/wwtranslatedb/tdbcategory.cpp",
     "Code/wwtranslatedb/translatedb.cpp",
+    "Code/wwtranslatedb/translateobj.cpp",
+    "Code/wwui/menubackdrop.cpp",
     "Code/wwui/stylemgr.cpp",
     "Code/wwutil/mathutil.cpp"
+  ],
+  "staged_original_owner_files": 1,
+  "staged_original_owner_paths": [
+    "staging/commando/loadingscreen.cpp"
   ],
   "vita_platform_renderer_validation_files": 26,
   "vita_translation_units": [
@@ -540,8 +548,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 113,
-  "mechanically_patched_upstream_files": 235,
+  "patch_count": 118,
+  "mechanically_patched_upstream_files": 237,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -666,6 +674,7 @@
     "Code/ww3d2/dx8vertexbuffer.cpp",
     "Code/ww3d2/dx8wrapper.h",
     "Code/ww3d2/dynamesh.cpp",
+    "Code/ww3d2/hanim.cpp",
     "Code/ww3d2/hanimmgr.cpp",
     "Code/ww3d2/hmorphanim.cpp",
     "Code/ww3d2/htree.cpp",
@@ -679,6 +688,7 @@
     "Code/ww3d2/metalmap.cpp",
     "Code/ww3d2/motchan.cpp",
     "Code/ww3d2/part_buf.cpp",
+    "Code/ww3d2/part_emt.h",
     "Code/ww3d2/part_ldr.cpp",
     "Code/ww3d2/pointgr.cpp",
     "Code/ww3d2/rddesc.h",
@@ -925,6 +935,13 @@
       ]
     },
     {
+      "path": "port/patches/combat-a35-conversation-reentrant-think.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "conversationmgr.cpp"
+      ]
+    },
+    {
       "path": "port/patches/combat-a35-humanstate-weapon-style-table.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
@@ -1039,6 +1056,20 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "winevent.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-datasafe-invalid-handle-guard.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-shared-loadingscreen-owner.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp"
       ]
     },
     {
@@ -1321,6 +1352,23 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "texture.h"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-hanim-combo-null-motion-guard.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "hanim.cpp",
+        "animobj.cpp",
+        "htree.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-particle-size-keyframe-guard.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "part_buf.cpp",
+        "part_emt.h"
       ]
     },
     {
@@ -1776,7 +1824,7 @@
     },
     "wwtranslatedb": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 2,
+      "compiled": 4,
       "total": 4
     },
     "wwutil": {
@@ -1801,7 +1849,7 @@
     },
     "Commando": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 40,
+      "compiled": 41,
       "total": 213
     },
     "Scripts": {

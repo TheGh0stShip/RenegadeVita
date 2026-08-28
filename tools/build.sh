@@ -119,9 +119,37 @@ fi
 echo "Upstream revision: $rv_revision_actual"
 
 if [[ -z "${RENEGADE_REUSE_HOST_VALIDATION_LOG:-}" ]]; then
-	rv_retail_root=${RENEGADE_RETAIL_ROOT:-"$rv_root/retail-pc"}
-	test -f "$rv_retail_root/Data/always.dat"
-	export RENEGADE_RETAIL_ROOT="$rv_retail_root"
+	if [[ -n "${RENEGADE_RETAIL_ROOT:-}" ]]; then
+		rv_retail_root="$RENEGADE_RETAIL_ROOT"
+		test -f "$rv_retail_root/Data/always.dat" || {
+			echo "Explicit RENEGADE_RETAIL_ROOT does not contain Data/always.dat: $rv_retail_root" >&2
+			exit 3
+		}
+	else
+		rv_retail_root=""
+		for rv_candidate_retail_root in \
+			"$rv_root/retail-pc" \
+			"/mnt/c/Program Files (x86)/Steam/steamapps/common/Command & Conquer Renegade"; do
+			if [[ -f "$rv_candidate_retail_root/Data/always.dat" ]]; then
+				rv_retail_root="$rv_candidate_retail_root"
+				break
+			fi
+		done
+		if [[ -z "$rv_retail_root" ]]; then
+			rv_retained_host_log="$rv_root/build/A3.5-dev18-HOST-VALIDATION.log"
+			if [[ -f "$rv_retained_host_log" ]]; then
+				export RENEGADE_REUSE_HOST_VALIDATION_LOG="$rv_retained_host_log"
+				echo "Local retail preflight unavailable; reusing retained canonical host validation: $RENEGADE_REUSE_HOST_VALIDATION_LOG"
+			else
+				echo "Local retail preflight failed: set RENEGADE_RETAIL_ROOT or provide RENEGADE_REUSE_HOST_VALIDATION_LOG." >&2
+				exit 3
+			fi
+		fi
+	fi
+	if [[ -n "${rv_retail_root:-}" ]]; then
+		export RENEGADE_RETAIL_ROOT="$rv_retail_root"
+		echo "Local retail preflight: $rv_retail_root"
+	fi
 else
 	echo "Local retail preflight: not required for retained host validation mode"
 fi
@@ -136,6 +164,14 @@ else
 	bash "$rv_root/tools/run_a30_host.sh" 2>&1 | tee "$rv_host_output"
 	rv_host_validation_mode="fresh canonical host validation"
 fi
+echo "Running original DDSFileClass tga-alias host contract..."
+cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_root/build/host-a30-definitions" -G Ninja \
+	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	-DRENEGADE_USE_CCACHE=ON
+cmake --build "$rv_root/build/host-a30-definitions" \
+	--target a35_ddsfile_tga_alias_contract_selftest \
+	--parallel "$rv_build_jobs"
+"$rv_root/build/host-a30-definitions/a35_ddsfile_tga_alias_contract_selftest" | tee -a "$rv_host_output"
 require_host_line "A2.2 host asset integration PASS"
 require_host_line "A3.0 canonical host integration PASS"
 require_host_line "A3.1 gameplay-seed host integration PASS"
@@ -148,6 +184,7 @@ require_host_line "A3.1 capture telemetry host self-test: PASS (24 checks, 0 fai
 require_host_line "A3.2 Vita controller axis-contract: PASS (22 checks, 0 failures)"
 require_host_line "A3.5 Vita button-state contract: PASS (10 checks, 0 failures)"
 require_host_line "A3.5 Vita ShaderClass render-state contract: 4 checks, 0 failures"
+require_host_line "A3.5 DDSFileClass tga-alias contract: 9 checks, 0 failures"
 require_host_line "A3 renderer process lifecycle: 11 checks, 0 failures; native=1 sessions=2 shutdowns=2"
 require_host_line "A3.2 texture upload contract: PASS (4 checks, 0 failures)"
 require_host_line "runtime.checks=45"
@@ -198,9 +235,10 @@ python3 "$rv_root/tools/generate_integration_report.py" \
 	--output "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" \
 	--milestone "$rv_candidate_label"
 grep -Fq "\"milestone\": \"$rv_candidate_label\"" "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"original_source_files_compiled": 447' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"original_source_files_compiled": 451' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"staged_original_owner_files": 1' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 113' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 118' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
@@ -301,12 +339,12 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "A3.5 crash repair: deterministic HumanState weapon-style table patch; bounds fallback; matching A3.2 dump parser evidence preserved"
 	echo "A3.5 projection repair: ordinary mesh positions retain homogeneous W through GPU projection; physical visual validation pending"
 	echo "A3.5 audio boundary: provider codecs/mixing are host/sanitizer validated; after installing the rooted retail/MIX chain, the direct Vita runtime constructs a path-stripping factory and non-lite original WWAudio, initializes its Vita-native SceAudio provider, services it per frame, and tears it down before renderer/factory shutdown; the complete path is ARM-linked while physical audio and conversation causality remain pending"
-	echo "Original Westwood translation units: 447"
+	echo "Original Westwood translation units: 451 plus 1 staged original-owner extraction"
 	echo "Vita platform/renderer/validation/developer translation units: 26"
 	echo "M00 scripts: original ScriptCommands ABI plus EA/Westwood static Mission00 provider and direct cinematic/powerup dependencies"
 	echo "M00 completion: original CombatMiscHandler callback observed by a bounded Vita lifecycle latch; no objective or script state injection"
 	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
-	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=113; pristine upstream=PASS"
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=118; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"

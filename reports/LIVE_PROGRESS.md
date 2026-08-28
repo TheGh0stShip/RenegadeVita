@@ -1,8 +1,8 @@
 # Live engineering progress
 
-## 2026-08-28 — dev49 dialogue telemetry and DDS-first texture candidate
+## 2026-08-28 — dev49 canonical dialogue telemetry and DDS-first texture candidate
 
-`[██████████] 11/11 fast source/build gates complete`
+`[██████████] 12/12 canonical source/build gates complete`
 
 - Source correction: the Vita DX8 texture boundary now tries the original
   `DDSFileClass` route before the loose Targa route, so retail material names
@@ -15,18 +15,30 @@
   last stream name/rate/volume/pan, mix buffer/frame/nonzero/peak counters, and
   Vita output write counts. Runtime `A3.5 audio` breadcrumbs include those
   fields alongside dialog/cinematic category volumes.
+- Build-system fix: canonical CMake now detects whether the installed vitaGL
+  headers expose physical-contiguous memory as `VGL_MEM_PHYCONT` or
+  `VGL_MEM_SLOW`, keeping the renderer memory telemetry portable across the
+  two VitaSDK layouts present on this machine. The canonical build script also
+  records the no-retail retained-host-validation fallback instead of failing
+  when the local Steam retail tree is unavailable in WSL.
 - Validation: focused fast contracts passed 37/37, including a new WWAudio
   stream-callback provider test and the updated DDS-first texture boundary
   contract. A new executable host contract also links original `DDSFileClass`
   and verifies `.tga` material names map to `.dds` factory lookups: 9/9. The
-  no-deploy fast Vita package completed, identity verification passed,
-  compressed VPK validation passed, and the SHA manifest verified.
+  full no-deploy canonical build passed retained host validation reuse,
+  deterministic restaging, source integration reporting, ARM link/package,
+  identity verification, compressed VPK validation, diagnostics bundle
+  generation, and SHA manifest verification.
+- Source report: the canonical integration report now records 451 upstream
+  original Westwood translation units plus one staged original-owner extraction
+  (`staging/commando/loadingscreen.cpp`), 26 Vita platform/renderer/validation
+  files, 118 deterministic staging patches, and pristine upstream.
 - Artifact: `dist/RenegadeVita-A3.5-dev49.vpk` SHA-256 is
-  `7f723fb0a0b9894ddc14c0e65d463c16b370ca891b94d4888ee7e58c6fa4ec51`;
+  `abb0d3f8a6f895504ee78808ec834de3446d903ea912a8855d2f8e157fc75207`;
   SELF SHA-256 is
-  `3fda984963a2c8531e51b4663a9ace0919fffd4c2a4254f01bb7b90dd7c3f595`;
+  `d6212ac5abd77f825c7d19eca3b9d549b3087d0919be7e7296d066476d0b38e0`;
   ELF SHA-256 is
-  `fc153f1744d1a153e29ea76b164a8be798cc00f1382e6a1afe7671c98d22b866`.
+  `78c76b5da8af4692a3ea20327d80b95fdc85ffd37547932e65eebe66ccd5c270`.
 - Boundary: dev49 has not been physically tested and no Vita deployment was
   attempted. The next hardware run should manually install dev49, verify
   audible Logan dialogue and texture appearance, then inspect

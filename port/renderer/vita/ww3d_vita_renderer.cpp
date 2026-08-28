@@ -247,6 +247,24 @@ GLenum Log_GL_Result(const char *operation)
 	return error;
 }
 
+uint64_t VitaGL_Phycont_Mem_Total()
+{
+#if defined(RENEGADE_VITAGL_HAS_PHYCONT_MEM) && RENEGADE_VITAGL_HAS_PHYCONT_MEM
+	return vglMemTotal(RENEGADE_VITAGL_PHYCONT_MEM);
+#else
+	return 0;
+#endif
+}
+
+uint64_t VitaGL_Phycont_Mem_Free()
+{
+#if defined(RENEGADE_VITAGL_HAS_PHYCONT_MEM) && RENEGADE_VITAGL_HAS_PHYCONT_MEM
+	return vglMemFree(RENEGADE_VITAGL_PHYCONT_MEM);
+#else
+	return 0;
+#endif
+}
+
 void Log_VitaGL_Memory()
 {
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
@@ -255,8 +273,8 @@ void Log_VitaGL_Memory()
 		static_cast<unsigned long long>(vglMemFree(VGL_MEM_RAM)),
 		static_cast<unsigned long long>(vglMemTotal(VGL_MEM_VRAM)),
 		static_cast<unsigned long long>(vglMemFree(VGL_MEM_VRAM)),
-		static_cast<unsigned long long>(vglMemTotal(VGL_MEM_SLOW)),
-		static_cast<unsigned long long>(vglMemFree(VGL_MEM_SLOW)),
+		static_cast<unsigned long long>(VitaGL_Phycont_Mem_Total()),
+		static_cast<unsigned long long>(VitaGL_Phycont_Mem_Free()),
 		static_cast<unsigned long long>(vglMemTotal(VGL_MEM_BUDGET)),
 		static_cast<unsigned long long>(vglMemFree(VGL_MEM_BUDGET)),
 		static_cast<unsigned long long>(vglMemTotal(VGL_MEM_ALL)),
@@ -1350,8 +1368,8 @@ bool Query_Backend_Memory(BackendMemoryStatistics &memory)
 	memory.ram_free = vglMemFree(VGL_MEM_RAM);
 	memory.vram_total = vglMemTotal(VGL_MEM_VRAM);
 	memory.vram_free = vglMemFree(VGL_MEM_VRAM);
-	memory.slow_total = vglMemTotal(VGL_MEM_SLOW);
-	memory.slow_free = vglMemFree(VGL_MEM_SLOW);
+	memory.slow_total = VitaGL_Phycont_Mem_Total();
+	memory.slow_free = VitaGL_Phycont_Mem_Free();
 	memory.all_total = vglMemTotal(VGL_MEM_ALL);
 	memory.all_free = vglMemFree(VGL_MEM_ALL);
 #endif

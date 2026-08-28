@@ -17,7 +17,13 @@ adds stream/read/decode/start/mix/output counters for the Logan dialogue path,
 and changes the Vita DX8 texture boundary to try original `DDSFileClass`
 lookup before loose Targa decode so `.tga` material names can resolve retail
 `.dds` assets through the FileFactory/MIX chain; that original DDS alias path
-is now covered by an executable host contract. Dev46 physical replay used
+is now covered by an executable host contract. A full canonical no-deploy
+dev49 build now passes retained host-validation reuse, deterministic restaging,
+source integration reporting, ARM link/package, identity verification,
+compressed VPK validation, diagnostics generation, and SHA verification. The
+canonical VPK SHA-256 is
+`abb0d3f8a6f895504ee78808ec834de3446d903ea912a8855d2f8e157fc75207`.
+Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
 strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups

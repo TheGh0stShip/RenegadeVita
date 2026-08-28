@@ -13,9 +13,13 @@ MODULES = [
     "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi",
 ]
 
-EXPECTED_ORIGINAL_SOURCE_COUNT = 447
+EXPECTED_ORIGINAL_SOURCE_COUNT = 451
 EXPECTED_VITA_PORT_SOURCE_COUNT = 26
-EXPECTED_PATCH_COUNT = 113
+EXPECTED_PATCH_COUNT = 118
+
+STAGED_ORIGINAL_OWNER_SOURCES = {
+    "Code/Commando/loadingscreen.cpp": "staging/commando/loadingscreen.cpp",
+}
 
 STAGED_TO_UPSTREAM_MODULE = {
     "combat": "Combat",
@@ -85,7 +89,7 @@ def read_world_manifest(root: pathlib.Path) -> list[str]:
                 r"\$\{RENEGADE_SCRIPT_SOURCE\}/([^\s\)#]+\.cpp)",
                 manifest.read_text(encoding="utf-8")):
             entries.append(f"Code/Scripts/{filename}")
-    entries = sorted(set(entries))
+    entries = sorted(set(entries) - set(STAGED_ORIGINAL_OWNER_SOURCES))
     if len(entries) != EXPECTED_ORIGINAL_SOURCE_COUNT:
         raise RuntimeError(
             "A3.1 gameplay seed source manifests contain "
@@ -173,6 +177,13 @@ def main() -> None:
             raise RuntimeError(
                 f"Native A3.1 manifest references missing file: {relative_path}"
             )
+    staged_original_owner_sources = []
+    for staged_path in STAGED_ORIGINAL_OWNER_SOURCES.values():
+        if not (root / staged_path).is_file():
+            raise RuntimeError(
+                f"Staged original owner source is missing: {staged_path}"
+            )
+        staged_original_owner_sources.append(staged_path)
 
     patches, patched_sources, patch_report = read_patched_sources(root, upstream)
     module_compiled = collections.Counter(
@@ -214,6 +225,8 @@ def main() -> None:
         "original_source_files_discovered": len(all_sources),
         "original_source_files_compiled": len(original_translation_units),
         "original_translation_units": original_translation_units,
+        "staged_original_owner_files": len(staged_original_owner_sources),
+        "staged_original_owner_paths": sorted(staged_original_owner_sources),
         "vita_platform_renderer_validation_files": len(VITA_PORT_SOURCES),
         "vita_translation_units": VITA_PORT_SOURCES,
         "sdk_framebuffer_helper_files": 1,

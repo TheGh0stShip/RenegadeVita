@@ -27,6 +27,10 @@ struct RenegadeMilesRuntimeStats {
 	uint64_t stream_mixed_frames;
 	uint64_t stream_mixed_nonzero_buffers;
 	uint32_t stream_mixed_peak_abs;
+	uint32_t last_stream_mix_active;
+	uint32_t last_stream_mix_frames;
+	uint32_t last_stream_mix_nonzero;
+	uint32_t last_stream_mix_peak_abs;
 	uint32_t last_stream_frames;
 	uint32_t last_stream_fact_frames;
 	uint32_t last_stream_estimated_frames;

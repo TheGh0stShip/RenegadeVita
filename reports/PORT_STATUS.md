@@ -3,7 +3,7 @@
 Updated: 2026-08-28. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-Current work: **post-dev64 active streamed-audio telemetry, Vita DX8 bound-texture lifetime,
+Current work: **post-dev65 per-buffer stream-mix telemetry, active streamed-audio telemetry, Vita DX8 bound-texture lifetime,
 WWAudio stream loop-count return, streamed-dialogue fact runtime telemetry, WAVE fact-duration metadata,
 streamed-dialogue duration metadata, dialogue/audio
 diagnostics, texture provenance, DX8
@@ -82,12 +82,15 @@ during retail material and checkerboard-fallback churn. Dev64 preserves dev63
 and adds active-stream cursor/length/loop/volume/pan telemetry while forcing
 exhausted finite streams to report zero remaining loops before stop, so Logan
 dialogue logs can distinguish active but inaudible streams from stalled or
-completed streams. A full canonical
-no-deploy dev64 build now passes retained host-validation reuse, deterministic
+completed streams. Dev65 preserves dev64 and adds per-buffer stream-mix
+telemetry (`last_stream_mix=active/frames/nonzero/peak`) so Logan dialogue
+logs can prove whether the most recent active stream buffer is contributing
+nonzero samples or silence. A full canonical
+no-deploy dev65 build now passes retained host-validation reuse, deterministic
 restaging, 72 host unittest checks, source integration reporting, ARM
 link/package, identity verification, compressed VPK validation, diagnostics
 generation, and SHA verification. The canonical VPK SHA-256 is
-`f9c99affa44f24cfa058d1cf9c6021a932c6c61f28cdd31cbe15c78248056706`.
+`f4d9ff1837d224a3f9a5ec995482801a4c9a21faa3b3bcc83a625787702d995f`.
 Dev46 physical replay used
 the retained dev43 route, returned PASS and LiveArea cleanly, and proved SFX
 audio works, but all active M00 tutorial dialogue lookups returned missing
@@ -95,7 +98,7 @@ strings and sound ids (`str=0`, `sound=-1`). Dev47 fixed those lookups
 (`str=1`, valid sound ids) by linking `wwtranslatedb/translateobj.cpp` and
 `wwtranslatedb/stringtwiddler.cpp`, but its physical replay failed: no audible
 dialogue was heard and the old route diverged/stuck because dialogue timing/
-control changed. Dev64 is built but not deployed; dev46 remains restored on
+control changed. Dev65 is built but not deployed; dev46 remains restored on
 device. Text-dialogue/audio acceptance, texture/material acceptance, and a
 valid post-dialogue route remain pending physical evidence**.
 Exact-dev6 pause passed on physical Vita.

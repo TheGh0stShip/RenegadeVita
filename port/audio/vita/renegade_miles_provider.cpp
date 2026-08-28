@@ -275,6 +275,7 @@ void Mix_Locked(int16_t *output, size_t frames)
 	int32_t accumulator[kOutputFrames * 2U] = {};
 	int32_t stream_accumulator[kOutputFrames * 2U] = {};
 	bool stream_mix_attempted = false;
+	uint32_t stream_mix_peak_abs = 0U;
 	for (RenegadeMilesSample *sample : g_samples) {
 		if (sample == nullptr || !sample->playing || sample->paused ||
 			sample->wave.Frame_Count() == 0) continue;
@@ -359,11 +360,22 @@ void Mix_Locked(int16_t *output, size_t frames)
 				clamped < 0 ? -clamped : clamped);
 			if (magnitude != 0U) {
 				stream_nonzero = true;
+				stream_mix_peak_abs =
+					std::max(stream_mix_peak_abs, magnitude);
 				g_stats.stream_mixed_peak_abs =
 					std::max(g_stats.stream_mixed_peak_abs, magnitude);
 			}
 		}
 		if (stream_nonzero) ++g_stats.stream_mixed_nonzero_buffers;
+		g_stats.last_stream_mix_active = 1U;
+		g_stats.last_stream_mix_frames = Saturate_Size_To_U32(frames);
+		g_stats.last_stream_mix_nonzero = stream_nonzero ? 1U : 0U;
+		g_stats.last_stream_mix_peak_abs = stream_mix_peak_abs;
+	} else {
+		g_stats.last_stream_mix_active = 0U;
+		g_stats.last_stream_mix_frames = 0U;
+		g_stats.last_stream_mix_nonzero = 0U;
+		g_stats.last_stream_mix_peak_abs = 0U;
 	}
 }
 

@@ -368,7 +368,11 @@ int main()
 		active_stats.active_stream_total_frames == 960 &&
 		active_stats.active_stream_loop_count == 1 &&
 		active_stats.active_stream_volume == 127 &&
-		active_stats.active_stream_pan == 64,
+		active_stats.active_stream_pan == 64 &&
+		active_stats.last_stream_mix_active == 1 &&
+		active_stats.last_stream_mix_frames == 240 &&
+		active_stats.last_stream_mix_nonzero == 1 &&
+		active_stats.last_stream_mix_peak_abs >= 1000,
 		"provider active stream telemetry differs");
 	AIL_pause_stream(stream, 1);
 	int16_t paused_streamed[32] = {};
@@ -380,6 +384,13 @@ int main()
 	AIL_stream_ms_position(stream, &stream_length, &stream_position);
 	passed &= Require(stream_length == 20 && stream_position == 5,
 		"provider paused stream position advanced");
+	RenegadeMilesRuntimeStats paused_stats = {};
+	Renegade_Miles_Get_Runtime_Stats(&paused_stats);
+	passed &= Require(paused_stats.last_stream_mix_active == 0 &&
+		paused_stats.last_stream_mix_frames == 0 &&
+		paused_stats.last_stream_mix_nonzero == 0 &&
+		paused_stats.last_stream_mix_peak_abs == 0,
+		"provider paused stream mix telemetry differs");
 	AIL_pause_stream(stream, 0);
 	passed &= Require(Renegade_Miles_Mix_For_Test(long_streamed, 240),
 		"manual resumed stream mix failed");
@@ -425,6 +436,10 @@ int main()
 		stats.stream_mixed_frames == 493 &&
 		stats.stream_mixed_nonzero_buffers == 4 &&
 		stats.stream_mixed_peak_abs >= 1000 &&
+		stats.last_stream_mix_active == 1 &&
+		stats.last_stream_mix_frames == 9 &&
+		stats.last_stream_mix_nonzero == 1 &&
+		stats.last_stream_mix_peak_abs >= 1000 &&
 		stats.last_stream_frames == 4 &&
 		stats.last_stream_fact_frames == 0 &&
 		stats.last_stream_estimated_frames == 4 &&

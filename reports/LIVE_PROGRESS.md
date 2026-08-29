@@ -66,15 +66,13 @@
   records source/build/artifact requirements as PASS and keeps hardware-only
   observations explicitly PENDING.
 - Historical visual evidence: `docs/HISTORICAL_SCREENSHOT_TIMELINE.md`
-  publishes 152 diagnostic screenshot PNGs from `build/device-evidence/` plus a
-  read-only VitaShell FTP pull under
-  `build/device-evidence/vitashell-gallery-pull-20260828/`. It now leads with a
-  gameplay/first-interactive quick historical view across every
-  screenshot-bearing build, keeps loading-screen evidence in the detailed
-  sections, caps each build section at 15 screenshots, recovers
-  dev6/dev19/dev20/dev21/dev24/dev42/dev44/dev47/dev79 frames from Vita logs,
-  and labels builds with fewer than 15 recovered screenshots explicitly. README
-  now surfaces a 20-build gameplay-first visual grid near the top.
+  publishes 171 GitHub-renderable PNGs from `build/device-evidence/`, read-only
+  VitaShell FTP pulls, targeted Vita3K AppData checks, and older A3.1 captures
+  from `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/`. The README and quick
+  timeline now show only actual gameplay/world/detail frames, including NPC
+  detail crops from dev13 and dev19. Diagnostic-only builds and black/logo,
+  magenta, and loading frames remain in the complete manifest and inventory,
+  with only one displayed loading-screen regression reference.
 - Boundary: on user request, this newest frontend+Bink VPK was uploaded by
   VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a

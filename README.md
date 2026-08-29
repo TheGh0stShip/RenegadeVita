@@ -11,40 +11,30 @@ or a replacement Renegade engine.
 
 ## Historical Visual Progress
 
-The first project artifact a GitHub reader sees is a gameplay-first visual
-progression grid.
-The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md)
-includes up to 15 screenshots per build where local or Vita-pulled captures
-exist.
+The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames except inside the full inventory.
+The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, plus a complete manifest of all GitHub-hosted evidence PNGs.
 
 <table>
 <tr>
-<td width="20%"><img src="docs/history/screenshots/a35-dev5-spawn-control.png" width="180" alt="A3.5-dev5 spawn/control gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev6-vita-first-interactive-player-frame-f1-t31158328.png" width="180" alt="A3.5-dev6 recovered Vita gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev7-effects-131326.png" width="180" alt="A3.5-dev7 effects diagnostic gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev12-first-frame.png" width="180" alt="A3.5-dev12 first frame capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev13-selected-frame.png" width="180" alt="A3.5-dev13 route-record gameplay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a31-vita-log-select-capture-f2278.png" width="180" alt="Select Capture F2278"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev5-spawn-control.png" width="180" alt="Spawn Control"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev5-walk-manual.png" width="180" alt="Walk Manual"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev5-vita-manual-select-interactive-f355-t39869172.png" width="180" alt="Vita Manual Select Interactive F355 T39869172"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev7-effects-131326.png" width="180" alt="Effects 131326"></td>
 </tr>
 <tr>
-<td width="20%"><img src="docs/history/screenshots/a35-dev16-selected-frame.png" width="180" alt="A3.5-dev16 route gameplay frame"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev17-selected-frame.png" width="180" alt="A3.5-dev17 route replay frame"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev18-capture1.png" width="180" alt="A3.5-dev18 replay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-first-interactive-player-frame-f1-t31156569.png" width="180" alt="A3.5-dev19 recovered Vita gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev20-vita-first-interactive-player-frame-f1-t30968807.png" width="180" alt="A3.5-dev20 recovered Vita gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev7-vita-manual-select-interactive-f1527-t61897982.png" width="180" alt="Vita Manual Select Interactive F1527 T61897982"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev13-selected-frame.png" width="180" alt="Selected Frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev13-npc-crop.png" width="180" alt="Npc Crop"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev16-selected-frame.png" width="180" alt="Selected Frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev17-selected-frame.png" width="180" alt="Selected Frame"></td>
 </tr>
 <tr>
-<td width="20%"><img src="docs/history/screenshots/a35-dev21-vita-first-interactive-player-frame-f1-t30678441.png" width="180" alt="A3.5-dev21 recovered Vita gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev24-vita-first-interactive-player-frame-f1-t31590612.png" width="180" alt="A3.5-dev24 recovered Vita gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev42-vita-first-interactive-player-frame-f1-t33048100.png" width="180" alt="A3.5-dev42 recovered Vita gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev43-vita-first-interactive-player-frame-f1-t33124628.png" width="180" alt="A3.5-dev43 recovered route gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev44-vita-first-interactive-player-frame-f1-t32936764.png" width="180" alt="A3.5-dev44 recovered Vita gameplay capture"></td>
-</tr>
-<tr>
-<td width="20%"><img src="docs/history/screenshots/a35-dev45-vita-first-interactive-player-frame-f1-t33067680.png" width="180" alt="A3.5-dev45 recovered replay gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev46-vita-first-interactive-player-frame-f1-t32916058.png" width="180" alt="A3.5-dev46 recovered no-dialogue gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev47-vita-first-interactive-player-frame-f1-t32303654.png" width="180" alt="A3.5-dev47 recovered Vita gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev78-vita-first-interactive-player-frame-f1-t39358334.png" width="180" alt="A3.5-dev78 physical gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png" width="180" alt="A3.5-dev79 recovered gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev18-capture2.png" width="180" alt="Capture2"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev18-vita-manual-select-interactive-f2184-t75384736.png" width="180" alt="Vita Manual Select Interactive F2184 T75384736"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-manual-select-interactive-f2570-t85917941.png" width="180" alt="Vita Manual Select Interactive F2570 T85917941"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev19-npc-detail-crop.png" width="180" alt="Npc Detail Crop"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-manual-select-interactive-f4146-t118405956.png" width="180" alt="Vita Manual Select Interactive F4146 T118405956"></td>
 </tr>
 </table>
 

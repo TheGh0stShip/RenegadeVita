@@ -40,8 +40,12 @@
 - Boundary: this newest `8decd4ce...` VPK has not yet been uploaded to Vita. The
   earlier user-authorized `9e67b02c...` upload predates the visible startup
   pre-cache/HUD/texture-cache work and must not be treated as the current
-  artifact. 2026-08-29 VitaShell FTP/VDB probes found the known PS Vita/PSTV
-  endpoints unreachable before this current VPK could be transferred.
+  artifact. A 2026-08-29 upload probe at
+  `build/device-evidence/a35-dev82-upload-20260829-024605-precache-receipt/`
+  verified the current VPK hash, scanned known PS Vita/PSTV and ARP-visible
+  FTP endpoints, and found no open VitaShell FTP service; VDB read-only
+  `doctor/status` probes for the PS Vita and PSTV profiles both returned no
+  route to host, so no current VPK transfer occurred.
   `tools/upload_dev82_current_vpk.sh --scan-arp` now provides a repeatable
   hash-checked upload/probe path for the next reachability window.
   Dev82 remains physically pending; return both

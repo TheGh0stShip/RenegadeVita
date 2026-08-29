@@ -11,42 +11,44 @@ this bash workspace after validation.
 
 All source/build/artifact minimum deliverables for the dev82 physical-test
 candidate are met by the compiled bash-workspace source state and the canonical
-build `logs/a35-dev82-20260829-032344-build.log`. The current artifact includes
+build `logs/a35-dev82-20260829-042813-build.log`. The current artifact includes
 the visible startup pre-cache/pre-warm/pre-compute phase that runs before intro
 movies, menus, and M00 input, original 640x480 HUD Render2D coordinate scoping,
 an aspect-preserved original 640x480 loading presentation rect at native
 `117,0 725x544`, and renderer texture-bind cache invalidation after direct
-DX8/Bink GL uploads. The pre-cache phase now has a five-second visible minimum
-and reports intro movie-file availability before the movie/menu route starts.
-It also writes `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, so
-the next physical return can prove the phase even if the display capture misses
-it.
+DX8/Bink GL uploads. The pre-cache phase now has a five-second visible minimum,
+reports intro movie-file availability before the movie/menu route starts, and
+writes persistent M00/M01 MIX filename cache indexes under
+`ux0:data/renegade/cache/`. It also writes
+`ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, so the next
+physical return can prove the phase even if the display capture misses it.
 
 This is not a physical acceptance claim. The Vita still must prove the movie,
 menu, M00, controls, HUD, texture, FPS, gate, freeze/crash, and clean-exit
 behavior with returned `a35-dev82-runtime.log`, captures/screenshots, and any
 matching `psp2core` dump.
 
-Vita3K check: the current dev82 VPK payload is installed in the emulator data
-root, and after fixing the emulator-only retail tree by adding the unchanged
-local `always.dat`, the installed-title run
-`build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/`
-produced `a35-dev82-startup-precache.txt` with `pass=1`, `required_files=14/14`,
-`movie_files=3/3`, `elapsed_ms=5001`, `visible_minimum_ms=5000`, and
-`before_frontend/before_movies/before_gameplay=1`. The earlier emulator run
-failed before pre-cache with `always/always2/dbs=0/1/1`; this was emulator
-retail-data setup, not a source/runtime pre-cache failure.
+Vita3K check: the current canonical `cc19ce1a...` VPK payload was imported into
+the emulator data root in
+`build/vita3k-evidence/a35-dev82-20260829-044413-canonical-cache-index-precompute/`.
+The installed-title run produced `a35-dev82-startup-precache.txt` with
+`pass=1`, `required_files=14/14`, `movie_files=3/3`, `cache_indexes=2/2`,
+`cache_entries=315`, `elapsed_ms=5001`, `visible_minimum_ms=5000`, and
+`before_frontend/before_movies/before_gameplay=1`. Runtime cache health reports
+`M00_Tutorial.mix` valid with 84 entries and `M01.mix` valid with 231 entries.
+The earlier emulator run failed before pre-cache with `always/always2/dbs=0/1/1`;
+this was emulator retail-data setup, not a source/runtime pre-cache failure.
 
 ## Canonical artifact set
 
 | Deliverable | Status | Evidence |
 |---|---|---|
-| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260829-032344-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
-| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560` |
-| ELF/map/symbols exist and match manifest | PASS | ELF `bcddd3e6527b5af1fc19415a62887cf1d543fdebe3c7c957742a2b789c2d1f91`; map `a889ac41691065d901b3674e653372d06ab2d346e229dddac138916319ac9f53`; symbols `cbb317220ad253b7dfa78a617e5a0c83d5cdb584a95f63d3898312a3a55a5ac3` |
-| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-032344.zip` SHA-256 `aae3defeda7dbcd9eddd9b84b56af52635382d0b9e262633954d7d9f79bf222f` |
+| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260829-042813-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
+| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7` |
+| ELF/map/symbols exist and match manifest | PASS | ELF `656082800a32ddc2b666c5c65f8ce49f21125eb2115afe0af05fb1244ea42cd2`; map `bf274d9bbcd78a6789fa22c70f57bc1e3c28da71bbe7e772cb32d6ebc66d50c6`; symbols `fe40d7e11e2f3954ab5a41932802fe40089eedc65d379b3474ce1b43bc0d4f61` |
+| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-042813.zip` SHA-256 `edab17056974c155c941c65f0f1e08027cbf83557a2719a596a23e5a2339765a` |
 | Retail exclusion | PASS | `dist/RenegadeVita-A3.5-dev82.vpk-contents.txt` contains only `sce_sys/param.sfo` and `eboot.bin`; no retail assets, saves, credentials, dumps, or user files are packaged |
-| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `8db53e2a...` artifact and 2026-08-29 FTP/VDB probes found the known PS Vita/PSTV endpoints unreachable before this current VPK could be transferred |
+| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `cc19ce1a...` artifact and 2026-08-29 FTP/VDB probes found the known PS Vita/PSTV endpoints unreachable before this current VPK could be transferred |
 
 ## Source and staging deliverables
 
@@ -55,7 +57,7 @@ retail-data setup, not a source/runtime pre-cache failure.
 | Upstream remains pristine; deterministic staging is used | PASS | `reports/SOURCE_INTEGRATION_REPORT.json` records upstream revision `3e00c3a1b97381bb28be89a35b856375e0629a08`, `patch_count: 135`, and `custom_asset_formats: 0` |
 | Original source ownership is preserved | PASS | source report records 506 original Westwood translation units plus 1 staged original-owner extraction and 26 Vita platform/renderer/validation/developer files |
 | Deterministic patch count is guarded | PASS | `tools/generate_integration_report.py` and `tools/build.sh` expect `patch_count=135`; `tools/stage_sources.sh` applies patches with zero fuzz |
-| Visible startup pre-cache/pre-warm/pre-compute phase is active | PASS | `A31_Vita_Run_Interactive_Runtime(int)` runs `Run_Visible_Startup_Precache_Phase()` before frontend movies, menus, and gameplay input; the ELF contains `Pre-cache / pre-warm / pre-compute`, `startup-precache begin`, `startup-precache touch`, `startup-precache visible hold`, `startup-precache receipt`, `startup-precache complete`, `a35-dev82-startup-precache.txt`, and `visible_minimum_ms=5000` |
+| Visible startup pre-cache/pre-warm/pre-compute phase is active | PASS | `A31_Vita_Run_Interactive_Runtime(int)` runs `Run_Visible_Startup_Precache_Phase()` before frontend movies, menus, and gameplay input; the ELF contains `Pre-cache / pre-warm / pre-compute`, `startup-precache begin`, `startup-precache touch`, `startup-precache cache-index`, `startup-precache visible hold`, `startup-precache receipt`, `startup-precache complete`, `a35-dev82-startup-precache.txt`, `m00-tutorial-mix-index-v1.txt`, `m01-mix-index-v1.txt`, and `visible_minimum_ms=5000` |
 | Loading screen preserves authored 4:3 presentation | PASS | `Build_Original_Loading_Presentation_Rect()` maps the original 640x480 loading layout to native `117,0 725x544`; capture telemetry records `native_presentation_x/y/width/height`, `logical_to_native_fullscreen=false`, and `aspect_preserved=true` |
 | Original HUD coordinate placement uses authored 640x480 Render2D space | PASS | `A31VitaScopedOriginalHUDRender2DResolution` and `A31ScopedOriginalHUDRender2DResolution` scope TextDisplay, CombatManager init/finalization, and per-frame HUD/subtitle/scope/bounding-box renders to the original 640x480 Render2D coordinate system without changing the native 960x544 device presentation |
 | Render2D viewport restore is durable | PASS | `port/patches/ww3d2-a35-render2d-viewport-restore.patch` and `staging/ww3d2/render2d.cpp` save the active DX8 viewport before the fullscreen 2D pass and restore it after drawing |
@@ -95,7 +97,7 @@ retail-data setup, not a source/runtime pre-cache failure.
 | Deliverable | Source/build status | Physical status |
 |---|---|---|
 | Original CombatGameMode post-load finalization, building/radar init, texture-loader update, and `On_Game_Begin` | PASS | PENDING |
-| Visible startup pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input, with five-second visible minimum and movie-file availability counts | PASS | PENDING |
+| Visible startup pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input, with five-second visible minimum, movie-file availability counts, and persistent M00/M01 cache-index receipts | PASS | PENDING |
 | Loading screen coverage, text, progress, loading/prewarm progress stream, and aspect-preserved `117,0 725x544` presentation | PASS | PENDING |
 | HUD/TextDisplay/subtitle path, authored 640x480 placement, and final StyleMgr/TextDisplay initialization order | PASS | PENDING |
 | Audible dialogue boundary and streamed-audio diagnostics | PASS | PENDING |
@@ -113,31 +115,36 @@ retail-data setup, not a source/runtime pre-cache failure.
 
 - `python3 -m unittest tools.test_vita_loading_screen_contract tools.test_vita_texture_surface_contract tools.test_a4_original_frontend_contract tools.test_vita_skin_submission_contract tools.test_mission_conversation_diagnostics_contract tools.test_vita_camera_input_contract tools.test_vita_indexed_state_contract`
   passed 71/71 after the HUD/texture-cache/pre-cache visibility fixes.
+- `python3 -m unittest tools.test_vita_loading_screen_contract tools.test_upload_dev82_current_vpk tools.test_vita_texture_surface_contract`
+  passed 22/22 after the persistent M00/M01 cache-index implementation.
 - `git diff --check` passed.
 - `jq empty reports/BUILD_STATE.json reports/SOURCE_INTEGRATION_REPORT.json`
   passed.
 - `bash ./tools/build_fast_candidate.sh` passed in
-  `logs/a35-dev82-fast-20260829-031924-build.log` with 86 focused tests.
+  `logs/a35-dev82-fast-20260829-042551-build.log` with 86 focused tests.
 - `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-032344-build.log` with 111 host unittest checks.
+  `logs/a35-dev82-20260829-042813-build.log` with 111 host unittest checks.
   The ELF string check confirms the startup-precache receipt path, visible
-  pre-cache screen text, native presentation rect logging, and loading
-  `aspect_preserved` capture fields are present in the packaged executable.
+  pre-cache screen text, persistent cache-index strings, native presentation
+  rect logging, and loading `aspect_preserved` capture fields are present in
+  the packaged executable.
 - `python3 -m unittest tools.test_demo_recorder_workflow` passed 5/5, and
   `bash ./tools/build_renegade_demo_recorder_plugin.sh` produced the optional
   recorder `.suprx`, `.skprx`, tai config snippet, and SHA manifest without
   touching the Vita filesystem.
-- `python3 -m unittest tools.test_upload_dev82_current_vpk` passed 4/4. A
-  probe-only `tools/upload_dev82_current_vpk.sh --scan-arp` run verified the
-  current VPK hash, scanned the known PS Vita/PSTV addresses and Windows
-  ARP-visible Wi-Fi hosts for VitaShell FTP, and found no reachable
-  `1337` endpoint, so no upload was attempted.
+- `python3 -m unittest tools.test_upload_dev82_current_vpk` passed 4/4. The
+  `tools/upload_dev82_current_vpk.sh --scan-arp` run at
+  `build/device-evidence/a35-dev82-upload-20260829-042813-cache-index-precompute/`
+  verified the current VPK hash, scanned the known PS Vita/PSTV addresses and
+  Windows ARP-visible Wi-Fi hosts for VitaShell FTP, and found no reachable
+  `1337` endpoint, so no upload occurred.
 - Vita3K installed-title run
-  `build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/`
-  produced the current dev82 startup-precache receipt after adding missing
-  `always.dat` to the emulator data root. This proves the current artifact
-  executes the pre-cache phase in emulator but does not replace physical Vita
-  proof.
+  `build/vita3k-evidence/a35-dev82-20260829-044413-canonical-cache-index-precompute/`
+  imported the current canonical VPK, produced the current dev82
+  startup-precache receipt with `cache_indexes=2/2` and `cache_entries=315`,
+  and wrote valid M00/M01 cache-index files. This proves the current artifact
+  executes the pre-cache/precompute phase in emulator but does not replace
+  physical Vita proof.
 
 ## Not dev82 minimum deliverables
 

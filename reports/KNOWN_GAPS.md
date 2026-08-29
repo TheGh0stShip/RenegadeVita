@@ -21,8 +21,11 @@ box draws, Render2D restores the previous DX8 viewport after fullscreen 2D
 passes, passthrough texture V is corrected after original DX8 texture
 transforms, DX8 render-state ownership is centralized in the renderer boundary,
 and the first-person weapon view has a bounded visible reload fallback while
-the original weapon state is reload. These are build-verified only; physical
-Vita confirmation is still required before removing the defects from this list.
+the original weapon state is reload. The current source also writes persistent
+M00/M01 MIX filename cache indexes during the visible startup
+pre-cache/pre-warm/pre-compute phase; Vita3K evidence proves those cache indexes
+are generated before frontend, movies, or gameplay, but physical Vita
+confirmation is still required before removing the defect from this list.
 
 The next engineering decisions must come from the dev82 runtime log and
 physical observation. If the gate still fails, inspect transition/action

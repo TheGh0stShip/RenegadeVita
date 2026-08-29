@@ -70,15 +70,19 @@
 
 #include <psp2/ctrl.h>
 #include <psp2/io/fcntl.h>
+#include <psp2/io/stat.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 
 #include <debugScreen.h>
 
 #include <new>
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
+#include <vector>
 
 extern void _Force_Link_Soldier(void);
 extern void *Commando_Create_Original_Loading_Screen(void);
@@ -99,8 +103,10 @@ const char *const kAlways2Archive = "Data\\Always2.dat";
 const char *const kAlwaysDbsArchive = "Data\\always.dbs";
 const char *const kAlwaysArchive = "Data\\Always.dat";
 const char *const kM00Archive = "Data\\M00_Tutorial.mix";
+const char *const kM01Archive = "Data\\M01.mix";
 const char *const kStringsDatabase = "STRINGS.TDB";
 const char *const kStyleManagerIni = "stylemgr.ini";
+const char *const kM00CacheIndex = "cache/m00-tutorial-mix-index-v1.txt";
 const char *const kM01CacheIndex = "cache/m01-mix-index-v1.txt";
 const char *const kStartupPrecacheReceiptPath =
 	"ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt";
@@ -109,7 +115,7 @@ const uint32_t kCaptureWidth = RenegadeVitaRenderer::DISPLAY_WIDTH;
 const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 const uint32_t kCaptureBytes = kCaptureWidth * kCaptureHeight * 4U;
 const unsigned kAutomaticCaptureAttempts = 3U;
-const unsigned kStartupPrecacheVisibleSteps = 5U;
+const unsigned kStartupPrecacheVisibleSteps = 6U;
 const uint64_t kStartupPrecacheMinimumVisibleUs = 5000000ULL;
 const unsigned kStartupPrecacheRequiredReadBytes = 32768U;
 const unsigned kStartupPrecacheOptionalReadBytes = 8192U;
@@ -144,9 +150,13 @@ struct A31StartupPrecacheResult
 	unsigned optional_files_opened;
 	unsigned movie_files_touched;
 	unsigned movie_files_opened;
+	unsigned cache_indexes_attempted;
+	unsigned cache_indexes_written;
+	unsigned cache_entries_written;
 	uint64_t bytes_read;
 	char first_missing_required[96];
 	char first_missing_optional[96];
+	char first_cache_failure[96];
 };
 
 struct A31StartupPrecacheFileSpec
@@ -279,11 +289,17 @@ void Draw_Startup_Precache_Screen(int startup_screen_result, const char *phase,
 		state.optional_files_opened, state.optional_files_touched);
 	psvDebugScreenPrintf("Movie files:           %u/%u\n",
 		state.movie_files_opened, state.movie_files_touched);
+	psvDebugScreenPrintf("Cache indexes:         %u/%u (%u entries)\n",
+		state.cache_indexes_written, state.cache_indexes_attempted,
+		state.cache_entries_written);
 	psvDebugScreenPrintf("Bytes touched:         %llu\n",
 		static_cast<unsigned long long>(state.bytes_read));
 	if (state.first_missing_required[0] != 0) {
 		psvDebugScreenPrintf("Missing required:      %s\n",
 			state.first_missing_required);
+	} else if (state.first_cache_failure[0] != 0) {
+		psvDebugScreenPrintf("Cache issue:           %s\n",
+			state.first_cache_failure);
 	} else if (state.first_missing_optional[0] != 0) {
 		psvDebugScreenPrintf("Missing optional:      %s\n",
 			state.first_missing_optional);
@@ -313,6 +329,74 @@ bool Startup_Index_Mix_Archive(const char *name, MixFileFactoryClass &factory,
 		name != NULL ? name : "unknown", factory.Is_Valid() ? 1 : 0,
 		listed ? 1 : 0, count);
 	return count != 0U;
+}
+
+bool Safe_Startup_Cache_Entry_Name(const char *name)
+{
+	if (name == NULL || name[0] == 0) return false;
+	for (const char *cursor = name; *cursor != 0; ++cursor) {
+		if (*cursor == '\r' || *cursor == '\n') return false;
+	}
+	return true;
+}
+
+bool Startup_Write_Mix_Index_Cache(const char *archive_label, bool required,
+	const char *cache_logical, MixFileFactoryClass &factory,
+	A31StartupPrecacheResult &state)
+{
+	++state.cache_indexes_attempted;
+	DynamicVectorClass<StringClass> names;
+	names.Set_Growth_Step(1000);
+	std::vector<std::string> entries;
+	bool ok = factory.Is_Valid() && factory.Build_Filename_List(names);
+	for (int index = 0; ok && index < names.Count(); ++index) {
+		const char *name = names[index];
+		if (!Safe_Startup_Cache_Entry_Name(name)) {
+			ok = false;
+			break;
+		}
+		entries.push_back(name);
+	}
+	std::sort(entries.begin(), entries.end());
+	const RenegadeResolvedPath resolved = Renegade_Resolve_Path(kVitaRoots,
+		cache_logical, RENEGADE_PATH_WRITE);
+	ok = ok && !entries.empty() && resolved.success &&
+		resolved.writable_namespace &&
+		strncasecmp(resolved.normalized_logical, "cache/", 6U) == 0;
+	if (ok) {
+		(void)sceIoMkdir(kVitaRoots.cache, 0777);
+		FILE *output = fopen(resolved.physical, "wb");
+		ok = output != NULL;
+		if (ok) {
+			ok = fprintf(output,
+				"schema=renegade-vita-mix-index-v1\n"
+				"archive=%s\n"
+				"entry_count=%u\n",
+				archive_label != NULL ? archive_label : "unknown",
+				static_cast<unsigned>(entries.size())) > 0;
+			for (std::vector<std::string>::const_iterator entry =
+					entries.begin();
+				ok && entry != entries.end(); ++entry) {
+				ok = fprintf(output, "entry=%s\n", entry->c_str()) > 0;
+			}
+			const bool flushed = fflush(output) == 0;
+			const bool closed = fclose(output) == 0;
+			ok = ok && flushed && closed;
+		}
+	}
+	if (ok) {
+		++state.cache_indexes_written;
+		state.cache_entries_written += static_cast<unsigned>(entries.size());
+	} else if (required && state.first_cache_failure[0] == 0) {
+		snprintf(state.first_cache_failure,
+			sizeof(state.first_cache_failure), "%s",
+			archive_label != NULL ? archive_label : "unknown");
+	}
+	A30_Vita_Log("A3.5 prewarm: startup-precache cache-index archive=%s path=%s written=%d entries=%u original_mix_owner=1 cache_namespace=1\n",
+		archive_label != NULL ? archive_label : "unknown",
+		resolved.success ? resolved.physical : cache_logical,
+		ok ? 1 : 0, static_cast<unsigned>(entries.size()));
+	return ok;
 }
 
 bool Startup_Touch_File(FileFactoryClass &factory,
@@ -409,6 +493,8 @@ void Write_Startup_Precache_Receipt(const A31StartupPrecacheResult &state,
 		"required_files=%u/%u\n"
 		"optional_files=%u/%u\n"
 		"movie_files=%u/%u\n"
+		"cache_indexes=%u/%u\n"
+		"cache_entries=%u\n"
 		"bytes=%llu\n"
 		"elapsed_ms=%llu\n"
 		"visible_minimum_ms=%llu\n"
@@ -416,13 +502,16 @@ void Write_Startup_Precache_Receipt(const A31StartupPrecacheResult &state,
 		"before_movies=1\n"
 		"before_gameplay=1\n"
 		"first_missing_required=%s\n"
-		"first_missing_optional=%s\n",
+		"first_missing_optional=%s\n"
+		"cache_issue=%s\n",
 		RENEGADE_BUILD_CANDIDATE_LABEL, state.passed ? 1 : 0,
 		state.archives_valid, state.archives_total, state.entries_indexed,
 		state.files_opened, state.files_touched,
 		state.required_files_opened, state.required_files_touched,
 		state.optional_files_opened, state.optional_files_touched,
 		state.movie_files_opened, state.movie_files_touched,
+		state.cache_indexes_written, state.cache_indexes_attempted,
+		state.cache_entries_written,
 		static_cast<unsigned long long>(state.bytes_read),
 		static_cast<unsigned long long>(elapsed_us / 1000ULL),
 		static_cast<unsigned long long>(
@@ -430,7 +519,9 @@ void Write_Startup_Precache_Receipt(const A31StartupPrecacheResult &state,
 		state.first_missing_required[0] != 0 ?
 			state.first_missing_required : "none",
 		state.first_missing_optional[0] != 0 ?
-			state.first_missing_optional : "none");
+			state.first_missing_optional : "none",
+		state.first_cache_failure[0] != 0 ?
+			state.first_cache_failure : "none");
 	unsigned written_total = 0U;
 	if (count > 0) {
 		const unsigned length = static_cast<unsigned>(
@@ -452,7 +543,7 @@ void Write_Startup_Precache_Receipt(const A31StartupPrecacheResult &state,
 bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	FileFactoryClass &factory, MixFileFactoryClass &always2_factory,
 	MixFileFactoryClass &always_dbs_factory, MixFileFactoryClass &always_factory,
-	MixFileFactoryClass &m00_factory)
+	MixFileFactoryClass &m00_factory, MixFileFactoryClass &m01_factory)
 {
 	A31StartupPrecacheResult state = {};
 	const uint64_t started_us = sceKernelGetProcessTimeWide();
@@ -480,6 +571,17 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	sceKernelDelayThread(250000);
 	archives_ok = Startup_Index_Mix_Archive(kM00Archive, m00_factory, state) &&
 		archives_ok;
+	Draw_Startup_Precache_Screen(startup_screen_result,
+		"Writing persistent cache indexes", 4U, 55U, state,
+		"M00_Tutorial.mix/M01.mix");
+	const bool m00_cache_ok = Startup_Write_Mix_Index_Cache(
+		"M00_Tutorial.mix", true, kM00CacheIndex, m00_factory, state);
+	(void)Startup_Write_Mix_Index_Cache("M01.mix", false, kM01CacheIndex,
+		m01_factory, state);
+	Draw_Startup_Precache_Screen(startup_screen_result,
+		"Persistent cache indexes ready", 4U, 60U, state,
+		m00_cache_ok ? "M00 cache written" : "M00 cache unavailable");
+	sceKernelDelayThread(250000);
 
 	const A31StartupPrecacheFileSpec startup_files[] = {
 		{ kAlways2Archive, true, kStartupPrecacheRequiredReadBytes },
@@ -511,17 +613,18 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 			snprintf(detail, sizeof(detail), "%s", startup_files[index].name);
 			Draw_Startup_Precache_Screen(startup_screen_result,
 				"Touching startup menu, movie, loading, and M00 files",
-				4U, 55U + ((index + 1U) * 35U) /
+				5U, 62U + ((index + 1U) * 30U) /
 					(sizeof(startup_files) / sizeof(startup_files[0])),
 				state, detail);
 			sceKernelDelayThread(180000);
 		}
 	}
 	state.passed = archives_ok && state.archives_valid == state.archives_total &&
-		state.required_files_opened == state.required_files_touched;
+		state.required_files_opened == state.required_files_touched &&
+		m00_cache_ok;
 	Draw_Startup_Precache_Screen(startup_screen_result,
 		state.passed ? "Startup pre-cache complete" :
-			"Startup pre-cache incomplete", 5U, 100U, state,
+			"Startup pre-cache incomplete", 6U, 100U, state,
 		state.passed ? "starting original intro/menu" :
 			"continuing only if required archives are present");
 	const uint64_t after_work_us = sceKernelGetProcessTimeWide();
@@ -539,12 +642,14 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	}
 	Write_Startup_Precache_Receipt(state,
 		sceKernelGetProcessTimeWide() - started_us);
-	A30_Vita_Log("A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u required_files=%u/%u optional_files=%u/%u movie_files=%u/%u bytes=%llu elapsed_ms=%llu visible_minimum_ms=%llu receipt=%s missing_required=%s missing_optional=%s before_frontend=1 before_movies=1 before_gameplay=1 original_mix_owner=1\n",
+	A30_Vita_Log("A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u required_files=%u/%u optional_files=%u/%u movie_files=%u/%u cache_indexes=%u/%u cache_entries=%u bytes=%llu elapsed_ms=%llu visible_minimum_ms=%llu receipt=%s missing_required=%s missing_optional=%s cache_issue=%s before_frontend=1 before_movies=1 before_gameplay=1 original_mix_owner=1\n",
 		state.passed ? 1 : 0, state.archives_valid, state.archives_total,
 		state.entries_indexed, state.files_opened, state.files_touched,
 		state.required_files_opened, state.required_files_touched,
 		state.optional_files_opened, state.optional_files_touched,
 		state.movie_files_opened, state.movie_files_touched,
+		state.cache_indexes_written, state.cache_indexes_attempted,
+		state.cache_entries_written,
 		static_cast<unsigned long long>(state.bytes_read),
 		static_cast<unsigned long long>(
 			(sceKernelGetProcessTimeWide() - started_us) / 1000ULL),
@@ -554,7 +659,9 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 		state.first_missing_required[0] != 0 ?
 			state.first_missing_required : "none",
 		state.first_missing_optional[0] != 0 ?
-			state.first_missing_optional : "none");
+			state.first_missing_optional : "none",
+		state.first_cache_failure[0] != 0 ?
+			state.first_cache_failure : "none");
 	return state.passed;
 }
 
@@ -1489,6 +1596,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	MixFileFactoryClass always_dbs_factory(kAlwaysDbsArchive, &root_factory);
 	MixFileFactoryClass always_factory(kAlwaysArchive, &root_factory);
 	MixFileFactoryClass m00_factory(kM00Archive, &root_factory);
+	MixFileFactoryClass m01_factory(kM01Archive, &root_factory);
 	FileFactoryListClass factory_list;
 	factory_list.Add_FileFactory(&root_factory, "");
 	factory_list.Add_FileFactory(&always2_factory, "Always2.dat");
@@ -1502,7 +1610,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	_TheWritingFileFactory = &root_factory;
 	const bool startup_precache_ok = Run_Visible_Startup_Precache_Phase(
 		startup_screen_result, factory_list, always2_factory,
-		always_dbs_factory, always_factory, m00_factory);
+		always_dbs_factory, always_factory, m00_factory, m01_factory);
 	if (startup_screen_result >= 0) {
 		psvDebugScreenFinish();
 	}
@@ -1558,7 +1666,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		A30_Vita_Log("Alpha direct M00: original audio initialized over path-stripped Vita retail provider; entering original tutorial runtime\n");
 
 		A30_Vita_Log("A3.1 interactive: begin original Commando/Combat session\n");
-		const RenegadeCacheHealth cache_health = Renegade_Inspect_Mix_Index_Cache(
+		const RenegadeCacheHealth m00_cache_health =
+			Renegade_Inspect_Mix_Index_Cache(
+				kVitaRoots, "M00_Tutorial.mix", kM00CacheIndex);
+		A30_Vita_Log("A3.6 cache health: state=%s archive=%s entries=%u detail=%s path=%s; original MIX route unchanged\n",
+			Renegade_Cache_Health_Name(m00_cache_health.state),
+			m00_cache_health.archive, m00_cache_health.entry_count,
+			m00_cache_health.detail, m00_cache_health.physical_path);
+		const RenegadeCacheHealth cache_health =
+			Renegade_Inspect_Mix_Index_Cache(
 			kVitaRoots, "M01.mix", kM01CacheIndex);
 		A30_Vita_Log("A3.6 cache health: state=%s archive=%s entries=%u detail=%s path=%s; original MIX route unchanged\n",
 			Renegade_Cache_Health_Name(cache_health.state), cache_health.archive,

@@ -6,38 +6,37 @@
   `main`; this bash workspace is the source authority, not the E: mirror. The
   latest material source pass adds a visible startup
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
-  M00 gameplay input, plus original 640x480 HUD Render2D coordinate scoping and
-  an aspect-preserved original 640x480 loading presentation at native `117,0
-  725x544`, plus renderer texture-bind cache invalidation after direct DX8/Bink
-  GL uploads.
-- Last completed work: the 03:23 canonical `bash ./tools/build.sh` run passed
+  M00 gameplay input, persistent M00/M01 MIX filename cache-index writes, plus
+  original 640x480 HUD Render2D coordinate scoping and an aspect-preserved
+  original 640x480 loading presentation at native `117,0 725x544`, plus
+  renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
+- Last completed work: the 04:28 canonical `bash ./tools/build.sh` run passed
   fresh host validation, 111 host unittests, deterministic 135-patch restaging,
   source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
   manifest, retail exclusion, and Bink/FFmpeg symbol retention.
 - Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
-  `8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560`;
+  `cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7`;
   diagnostics bundle
-  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-032344.zip` with SHA-256
-  `aae3defeda7dbcd9eddd9b84b56af52635382d0b9e262633954d7d9f79bf222f`.
-- Vita3K checkpoint: the current installed emulator `RNEGA3101` executable
-  matches the packaged dev82 VPK payload (`e88151d0...` packaged/installed
-  `eboot.bin`). The first Vita3K run failed before pre-cache because the
-  emulator retail tree was missing `always.dat` (`always/always2/dbs=0/1/1`).
-  After copying the unchanged local retail `always.dat` into the emulator-only
-  `ux0:data/renegade/retail/Data/` tree, the current dev82 run produced
-  `build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/a35-dev82-startup-precache.txt`
-  with `pass=1`, `archives=4/4`, `entries=15429`, `required_files=14/14`,
-  `movie_files=3/3`, `elapsed_ms=5001`, and
-  `before_frontend/before_movies/before_gameplay=1`. Vita3K remains
-  non-physical evidence only.
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-042813.zip` with SHA-256
+  `edab17056974c155c941c65f0f1e08027cbf83557a2719a596a23e5a2339765a`.
+- Vita3K checkpoint: current-canonical evidence in
+  `build/vita3k-evidence/a35-dev82-20260829-044413-canonical-cache-index-precompute/`
+  imported the `cc19ce1a...` VPK payload and installed `RNEGA3101` `eboot.bin`
+  SHA-256 `eb8585c88e9425e22d12bce8195a2cbc853c4906f882f24c23d82c075dd48f5b`.
+  The run produced `a35-dev82-startup-precache.txt` with `pass=1`,
+  `archives=4/4`, `entries=15429`, `required_files=14/14`, `movie_files=3/3`,
+  `cache_indexes=2/2`, `cache_entries=315`, `elapsed_ms=5001`, and
+  `before_frontend/before_movies/before_gameplay=1`; runtime cache health
+  reports `M00_Tutorial.mix` valid with 84 entries and `M01.mix` valid with
+  231 entries. Vita3K remains non-physical evidence only.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
   retained. On user request, an earlier dev82 frontend/Bink/visual/input/
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
-  `8db53e2a...` startup-precache/loading-aspect/HUD/texture-cache build; dev82
+  `cc19ce1a...` startup-precache/loading-aspect/HUD/texture-cache build; dev82
   has not been physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch,
@@ -56,8 +55,10 @@
 - Exact next external action: when the Vita is reachable, run
   `tools/upload_dev82_current_vpk.sh --scan-arp` from the active bash
   workspace or manually install/test the current VPK from VitaShell. The most
-  recent scan still found no reachable VitaShell FTP endpoint, so no current
-  VPK transfer occurred. After install, return physical Vita observations plus
+  recent scan at
+  `build/device-evidence/a35-dev82-upload-20260829-042813-cache-index-precompute/`
+  still found no reachable VitaShell FTP endpoint, so no current VPK transfer
+  occurred. After install, return physical Vita observations plus
   `ux0:data/renegade/user/logs/a35-dev82-runtime.log`,
   `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, captures,
   and any matching crash dump.

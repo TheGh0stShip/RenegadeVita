@@ -7,9 +7,11 @@
 - Runtime boundary: the current dev82 VPK now runs a visible
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
   M00 gameplay input. It indexes the retained original MIX filename tables,
-  touches critical startup movie/menu/loading/M00 files through the original
-  FileFactory/MIX owners, keeps input disabled during that phase, displays for
-  at least five seconds, reports movie-file availability, and logs
+  writes persistent M00/M01 cache-index files under
+  `ux0:data/renegade/cache/`, touches critical startup movie/menu/loading/M00
+  files through the original FileFactory/MIX owners, keeps input disabled
+  during that phase, displays for at least five seconds, reports movie-file
+  availability, and logs
   `startup-precache begin`, per-file `startup-precache touch`,
   `startup-precache visible hold`, receipt-write, and `startup-precache
   complete` breadcrumbs. It also writes
@@ -24,26 +26,26 @@
   panel. This specifically targets the reported wrong HUD/loading placement and
   stale character texture reuse such as face textures appearing on Havoc legs.
 - Validation: focused pre-cache/loading/skin/texture/frontend/input contracts
-  passed 71/71, fast candidate `logs/a35-dev82-fast-20260829-031924-build.log`
+  passed 71/71, fast candidate `logs/a35-dev82-fast-20260829-042551-build.log`
   passed 86 focused tests, `git diff --check` passed, and canonical
   `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-032344-build.log` with 111 host unittest checks,
+  `logs/a35-dev82-20260829-042813-build.log` with 111 host unittest checks,
   deterministic 135-patch restaging, DDS/TGA alias 11/11, render-state 13/13,
   ARM link/package, identity, compressed VPK validation, diagnostics bundle,
   SHA manifest, and retail exclusion.
 - Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
-  `8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560`;
+  `cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7`;
   ELF SHA-256 is
-  `bcddd3e6527b5af1fc19415a62887cf1d543fdebe3c7c957742a2b789c2d1f91`;
+  `656082800a32ddc2b666c5c65f8ce49f21125eb2115afe0af05fb1244ea42cd2`;
   MAP SHA-256 is
-  `a889ac41691065d901b3674e653372d06ab2d346e229dddac138916319ac9f53`;
+  `bf274d9bbcd78a6789fa22c70f57bc1e3c28da71bbe7e772cb32d6ebc66d50c6`;
   diagnostics bundle SHA-256 is
-  `aae3defeda7dbcd9eddd9b84b56af52635382d0b9e262633954d7d9f79bf222f`.
-- Boundary: this newest `8db53e2a...` VPK has not yet been uploaded to Vita. The
+  `edab17056974c155c941c65f0f1e08027cbf83557a2719a596a23e5a2339765a`.
+- Boundary: this newest `cc19ce1a...` VPK has not yet been uploaded to Vita. The
   earlier user-authorized `9e67b02c...` upload predates the visible startup
   pre-cache/HUD/texture-cache work and must not be treated as the current
   artifact. A 2026-08-29 upload probe at
-  `build/device-evidence/a35-dev82-upload-20260829-032344-precache-loading-aspect/`
+  `build/device-evidence/a35-dev82-upload-20260829-042813-cache-index-precompute/`
   verified the current VPK hash, scanned known PS Vita/PSTV and ARP-visible
   FTP endpoints, and found no open VitaShell FTP service; VDB read-only
   `doctor/status` probes for the PS Vita and PSTV profiles both returned no
@@ -54,16 +56,18 @@
   `a35-dev82-startup-precache.txt`, and check loading telemetry for
   `native_presentation_x=117`, `native_presentation_width=725`,
   `logical_to_native_fullscreen=false`, and `aspect_preserved=true`.
-- Vita3K pre-cache evidence: installed-title run
-  `build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/`
-  used the current installed dev82 `eboot.bin` and produced
-  `a35-dev82-startup-precache.txt` with `pass=1`, `archives=4/4`,
-  `required_files=14/14`, `movie_files=3/3`, `elapsed_ms=5001`,
+- Vita3K pre-cache evidence: current-canonical installed-title run
+  `build/vita3k-evidence/a35-dev82-20260829-044413-canonical-cache-index-precompute/`
+  imported the `cc19ce1a...` VPK payload, updated installed `eboot.bin` to
+  SHA-256 `eb8585c88e9425e22d12bce8195a2cbc853c4906f882f24c23d82c075dd48f5b`,
+  and produced `a35-dev82-startup-precache.txt` with `pass=1`,
+  `archives=4/4`, `required_files=14/14`, `movie_files=3/3`,
+  `cache_indexes=2/2`, `cache_entries=315`, `elapsed_ms=5001`,
   `visible_minimum_ms=5000`, and
-  `before_frontend/before_movies/before_gameplay=1`. The prior Vita3K attempt
-  failed before pre-cache because the emulator retail tree was missing
-  `always.dat`; copying the unchanged local retail file fixed emulator setup.
-  This is emulator evidence only and does not physically accept dev82.
+  `before_frontend/before_movies/before_gameplay=1`. Runtime cache health then
+  reported `M00_Tutorial.mix` valid with 84 cached entries and `M01.mix` valid
+  with 231 cached entries. This is emulator evidence only and does not
+  physically accept dev82.
 
 ## 2026-08-28 — dev82 M00 tutorial plus retail frontend/Bink candidate
 

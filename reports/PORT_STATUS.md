@@ -10,7 +10,8 @@ physical defects by moving direct M00 load completion back through original
 `CombatGameModeClass` finalization, rendering loading-screen text/progress,
 using one progress stream for loading and prewarm, running a visible startup
 pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input with a
-five-second minimum display and separate movie-file availability reporting,
+five-second minimum display, separate movie-file availability reporting, and
+persistent M00/M01 MIX filename cache-index writes,
 setting a persistent Vita shader-cache path, presenting the original 640x480
 loading layout as an aspect-preserved native `117,0 725x544` rect instead of
 stretching it, synchronizing HUD/loading viewports, preserving top-down
@@ -32,7 +33,7 @@ has a full canonical build; acceptance still
 depends on returned Vita evidence.
 
 Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-29 in
-`logs/a35-dev82-20260829-032344-build.log` with 111 host unittest checks,
+`logs/a35-dev82-20260829-042813-build.log` with 111 host unittest checks,
 deterministic staging, source integration checks, DDS/TGA alias 11/11,
 lightweight render-state 13/13, ARM link/package, identity, compressed VPK
 validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
@@ -41,10 +42,12 @@ translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
 files, 52 compatibility headers, and 135 active deterministic staging patches.
 The VPK SHA-256 is
-`8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560`. The
+`cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7`. The
 earlier user-authorized FTP upload predates this visible-startup-precache/
 loading-aspect/HUD/texture-cache artifact and must not be treated as the
-current VPK.
+current VPK. The latest upload probe
+`build/device-evidence/a35-dev82-upload-20260829-042813-cache-index-precompute/`
+verified the current hash but found no reachable VitaShell FTP endpoint.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

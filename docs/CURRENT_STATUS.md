@@ -34,7 +34,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560
+cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7
 ```
 
 Runtime log:
@@ -59,9 +59,11 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   725x544`.
 - Visible startup pre-cache/pre-warm/pre-compute before intro movies, menu
   navigation, or M00 gameplay input. It indexes original MIX filename tables,
-  touches startup movie/menu/loading/M00 files through the original
-  FileFactory/MIX owners, displays for at least five seconds, and reports intro
-  movie-file availability before the movie/menu route starts.
+  writes persistent M00/M01 cache-index files under
+  `ux0:data/renegade/cache/`, touches startup movie/menu/loading/M00 files
+  through the original FileFactory/MIX owners, displays for at least five
+  seconds, and reports intro movie-file availability before the movie/menu
+  route starts.
 - HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
   rendering and bounds, initializing TextDisplay after final StyleMgr
   reinitialization, and initializing Render2D dynamic FVF fields used by HUD,

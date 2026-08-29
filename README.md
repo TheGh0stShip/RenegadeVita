@@ -11,7 +11,8 @@ or a replacement Renegade engine.
 
 ## Historical Visual Progress
 
-The first project artifact a GitHub reader sees is the visual progression grid.
+The first project artifact a GitHub reader sees is a gameplay-first visual
+progression grid.
 The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md)
 includes up to 15 screenshots per build where local or Vita-pulled captures
 exist.
@@ -34,16 +35,16 @@ exist.
 <tr>
 <td width="20%"><img src="docs/history/screenshots/a35-dev21-vita-first-interactive-player-frame-f1-t30678441.png" width="180" alt="A3.5-dev21 recovered Vita gameplay capture"></td>
 <td width="20%"><img src="docs/history/screenshots/a35-dev24-vita-first-interactive-player-frame-f1-t31590612.png" width="180" alt="A3.5-dev24 recovered Vita gameplay capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev42-vita-original-loading-screen-level-ready-t28329716.png" width="180" alt="A3.5-dev42 recovered loading screen capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev43-loading-replay-annotated.png" width="180" alt="A3.5-dev43 annotated loading replay frame"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev44-vita-original-loading-screen-level-ready-t28260447.png" width="180" alt="A3.5-dev44 recovered loading screen capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev42-vita-first-interactive-player-frame-f1-t33048100.png" width="180" alt="A3.5-dev42 recovered Vita gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev43-vita-first-interactive-player-frame-f1-t33124628.png" width="180" alt="A3.5-dev43 recovered route gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev44-vita-first-interactive-player-frame-f1-t32936764.png" width="180" alt="A3.5-dev44 recovered Vita gameplay capture"></td>
 </tr>
 <tr>
-<td width="20%"><img src="docs/history/screenshots/a35-dev45-loading-replay-annotated.png" width="180" alt="A3.5-dev45 annotated loading replay frame"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev46-loading-replay-annotated.png" width="180" alt="A3.5-dev46 annotated loading replay frame"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev47-vita-original-loading-screen-level-ready-t27631919.png" width="180" alt="A3.5-dev47 recovered loading screen capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev78-loading-physical.png" width="180" alt="A3.5-dev78 loading screen physical capture"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev79-vita-original-loading-screen-level-ready-t29494542.png" width="180" alt="A3.5-dev79 recovered loading screen capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev45-vita-first-interactive-player-frame-f1-t33067680.png" width="180" alt="A3.5-dev45 recovered replay gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev46-vita-first-interactive-player-frame-f1-t32916058.png" width="180" alt="A3.5-dev46 recovered no-dialogue gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev47-vita-first-interactive-player-frame-f1-t32303654.png" width="180" alt="A3.5-dev47 recovered Vita gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev78-vita-first-interactive-player-frame-f1-t39358334.png" width="180" alt="A3.5-dev78 physical gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png" width="180" alt="A3.5-dev79 recovered gameplay capture"></td>
 </tr>
 </table>
 

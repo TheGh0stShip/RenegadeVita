@@ -24,6 +24,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         self.assertIn("## Quick Historical View", doc)
         self.assertIn("up to 15", doc)
         self.assertIn("fewer than 15 local or Vita-pulled screenshots exist", doc)
+        self.assertIn("prefers gameplay, first-interactive, or route-progress frames", doc)
         lead = doc.split("## Quick Historical View", 1)[1].split(
             "## Timeline", 1
         )[0]
@@ -33,9 +34,15 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         self.assertIn("a35-dev5-spawn-control.png", lead)
         self.assertIn("a35-dev6-vita-first-interactive-player-frame-f1-t31158328.png", lead)
         self.assertIn("a35-dev7-effects-131326.png", lead)
-        self.assertIn("a35-dev42-vita-original-loading-screen-level-ready-t28329716.png", lead)
-        self.assertIn("a35-dev78-loading-physical.png", lead)
-        self.assertIn("a35-dev79-vita-original-loading-screen-level-ready-t29494542.png", lead)
+        self.assertIn("a35-dev42-vita-first-interactive-player-frame-f1-t33048100.png", lead)
+        self.assertIn("a35-dev43-vita-first-interactive-player-frame-f1-t33124628.png", lead)
+        self.assertIn("a35-dev45-vita-first-interactive-player-frame-f1-t33067680.png", lead)
+        self.assertIn("a35-dev78-vita-first-interactive-player-frame-f1-t39358334.png", lead)
+        self.assertIn("a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png", lead)
+        for image_ref in image_refs:
+            self.assertNotIn("loading-screen", image_ref)
+            self.assertNotIn("loading-replay", image_ref)
+            self.assertNotIn("loading-physical", image_ref)
 
     def test_each_build_section_is_capped_at_fifteen_images(self):
         doc = TIMELINE.read_text(encoding="utf-8")
@@ -105,9 +112,15 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             "## Current State", 1
         )[0]
         self.assertIn("docs/history/screenshots/a35-dev5-spawn-control.png", readme)
-        self.assertIn("docs/history/screenshots/a35-dev79-vita-original-loading-screen-level-ready-t29494542.png", readme)
+        self.assertIn("gameplay-first visual", readme)
+        self.assertIn("docs/history/screenshots/a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png", readme)
         self.assertIn("historical screenshot timeline", readme)
-        self.assertGreaterEqual(len(re.findall(r"docs/history/screenshots/[^\"<\s]+\.png", lead)), 20)
+        image_refs = re.findall(r"docs/history/screenshots/[^\"<\s]+\.png", lead)
+        self.assertGreaterEqual(len(image_refs), 20)
+        for image_ref in image_refs:
+            self.assertNotIn("loading-screen", image_ref)
+            self.assertNotIn("loading-replay", image_ref)
+            self.assertNotIn("loading-physical", image_ref)
 
 
 if __name__ == "__main__":

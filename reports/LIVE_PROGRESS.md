@@ -69,11 +69,12 @@
   publishes 152 diagnostic screenshot PNGs from `build/device-evidence/` plus a
   read-only VitaShell FTP pull under
   `build/device-evidence/vitashell-gallery-pull-20260828/`. It now leads with a
-  broad quick historical view across every screenshot-bearing build, caps each
-  build section at 15 screenshots, recovers dev6/dev19/dev20/dev21/dev24/dev42/
-  dev44/dev47/dev79 frames from Vita logs, and labels builds with fewer than 15
-  recovered screenshots explicitly. README now surfaces a 20-build visual grid
-  near the top.
+  gameplay/first-interactive quick historical view across every
+  screenshot-bearing build, keeps loading-screen evidence in the detailed
+  sections, caps each build section at 15 screenshots, recovers
+  dev6/dev19/dev20/dev21/dev24/dev42/dev44/dev47/dev79 frames from Vita logs,
+  and labels builds with fewer than 15 recovered screenshots explicitly. README
+  now surfaces a 20-build gameplay-first visual grid near the top.
 - Boundary: on user request, this newest frontend+Bink VPK was uploaded by
   VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a

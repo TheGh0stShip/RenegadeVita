@@ -12,7 +12,7 @@ Evidence policy:
 
 ## Quick Historical View
 
-This overview scans every build group with screenshot evidence currently available in the bash workspace or recovered from the Vita. It is not capped at five gameplay frames; the build sections below provide the fuller per-build galleries up to 15 images each.
+This overview scans every build group with screenshot evidence currently available in the bash workspace or recovered from the Vita. It prefers gameplay, first-interactive, or route-progress frames for the first impression, and keeps loading-screen captures mainly in the detailed build sections below. It is not capped at five gameplay frames; the build sections below provide the fuller per-build galleries up to 15 images each.
 
 <table>
 <tr>
@@ -32,16 +32,16 @@ This overview scans every build group with screenshot evidence currently availab
 <tr>
 <td width="20%"><img src="history/screenshots/a35-dev21-vita-first-interactive-player-frame-f1-t30678441.png" width="180" alt="Recovered diagnostic frame"><br><strong>A3.5-dev21</strong><br>Recovered diagnostic frame</td>
 <td width="20%"><img src="history/screenshots/a35-dev24-vita-first-interactive-player-frame-f1-t31590612.png" width="180" alt="Recovered diagnostic frame"><br><strong>A3.5-dev24</strong><br>Recovered diagnostic frame</td>
-<td width="20%"><img src="history/screenshots/a35-dev42-vita-original-loading-screen-level-ready-t28329716.png" width="180" alt="Loading plus interactive"><br><strong>A3.5-dev42</strong><br>Loading plus interactive</td>
-<td width="20%"><img src="history/screenshots/a35-dev43-loading-replay-annotated.png" width="180" alt="Route loading replay"><br><strong>A3.5-dev43</strong><br>Route loading replay</td>
-<td width="20%"><img src="history/screenshots/a35-dev44-vita-original-loading-screen-level-ready-t28260447.png" width="180" alt="Recovered loading frame"><br><strong>A3.5-dev44</strong><br>Recovered loading frame</td>
+<td width="20%"><img src="history/screenshots/a35-dev42-vita-first-interactive-player-frame-f1-t33048100.png" width="180" alt="Recovered gameplay frame"><br><strong>A3.5-dev42</strong><br>Recovered gameplay frame</td>
+<td width="20%"><img src="history/screenshots/a35-dev43-vita-first-interactive-player-frame-f1-t33124628.png" width="180" alt="Route replay gameplay frame"><br><strong>A3.5-dev43</strong><br>Route replay gameplay frame</td>
+<td width="20%"><img src="history/screenshots/a35-dev44-vita-first-interactive-player-frame-f1-t32936764.png" width="180" alt="Recovered gameplay frame"><br><strong>A3.5-dev44</strong><br>Recovered gameplay frame</td>
 </tr>
 <tr>
-<td width="20%"><img src="history/screenshots/a35-dev45-loading-replay-annotated.png" width="180" alt="Replay auto-exit point"><br><strong>A3.5-dev45</strong><br>Replay auto-exit point</td>
-<td width="20%"><img src="history/screenshots/a35-dev46-loading-replay-annotated.png" width="180" alt="No-dialogue diagnostic"><br><strong>A3.5-dev46</strong><br>No-dialogue diagnostic</td>
-<td width="20%"><img src="history/screenshots/a35-dev47-vita-original-loading-screen-level-ready-t27631919.png" width="180" alt="TranslateDB checkpoint"><br><strong>A3.5-dev47</strong><br>TranslateDB checkpoint</td>
-<td width="20%"><img src="history/screenshots/a35-dev78-loading-physical.png" width="180" alt="Late loading regression"><br><strong>A3.5-dev78</strong><br>Late loading regression</td>
-<td width="20%"><img src="history/screenshots/a35-dev79-vita-original-loading-screen-level-ready-t29494542.png" width="180" alt="Control/HUD/loading candidate"><br><strong>A3.5-dev79</strong><br>Control/HUD/loading candidate</td>
+<td width="20%"><img src="history/screenshots/a35-dev45-vita-first-interactive-player-frame-f1-t33067680.png" width="180" alt="Replay gameplay frame"><br><strong>A3.5-dev45</strong><br>Replay gameplay frame</td>
+<td width="20%"><img src="history/screenshots/a35-dev46-vita-first-interactive-player-frame-f1-t32916058.png" width="180" alt="No-dialogue gameplay frame"><br><strong>A3.5-dev46</strong><br>No-dialogue gameplay frame</td>
+<td width="20%"><img src="history/screenshots/a35-dev47-vita-first-interactive-player-frame-f1-t32303654.png" width="180" alt="TranslateDB gameplay frame"><br><strong>A3.5-dev47</strong><br>TranslateDB gameplay frame</td>
+<td width="20%"><img src="history/screenshots/a35-dev78-vita-first-interactive-player-frame-f1-t39358334.png" width="180" alt="Late physical gameplay frame"><br><strong>A3.5-dev78</strong><br>Late physical gameplay frame</td>
+<td width="20%"><img src="history/screenshots/a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png" width="180" alt="Control/HUD gameplay frame"><br><strong>A3.5-dev79</strong><br>Control/HUD gameplay frame</td>
 </tr>
 </table>
 

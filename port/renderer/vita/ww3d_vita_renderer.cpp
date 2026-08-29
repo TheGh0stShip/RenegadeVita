@@ -1553,8 +1553,8 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 	return true;
 }
 
-bool Set_Native_Presentation_Rect(uint32_t x, uint32_t y,
-	uint32_t width, uint32_t height)
+bool Set_Native_Presentation_Rect_Internal(uint32_t x, uint32_t y,
+	uint32_t width, uint32_t height, bool log_change)
 {
 	if (width == 0U || height == 0U || x > DISPLAY_WIDTH ||
 		y > DISPLAY_HEIGHT || width > DISPLAY_WIDTH - x ||
@@ -1573,16 +1573,36 @@ bool Set_Native_Presentation_Rect(uint32_t x, uint32_t y,
 	g_native_presentation_rect.height = height;
 #if defined(__vita__)
 	g_current_native_viewport_known = false;
-	Vita_Append_A22_Runtime_Breadcrumb("camera-state",
-		"native presentation rect: top_left=%u,%u size=%ux%u display=%ux%u",
-		x, y, width, height, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	if (log_change) {
+		Vita_Append_A22_Runtime_Breadcrumb("camera-state",
+			"native presentation rect: top_left=%u,%u size=%ux%u display=%ux%u",
+			x, y, width, height, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	}
 #endif
 	return true;
+}
+
+bool Set_Native_Presentation_Rect(uint32_t x, uint32_t y,
+	uint32_t width, uint32_t height)
+{
+	return Set_Native_Presentation_Rect_Internal(x, y, width, height, true);
+}
+
+bool Set_Native_Presentation_Rect_Quiet(uint32_t x, uint32_t y,
+	uint32_t width, uint32_t height)
+{
+	return Set_Native_Presentation_Rect_Internal(x, y, width, height, false);
 }
 
 void Reset_Native_Presentation_Rect()
 {
 	(void)Set_Native_Presentation_Rect(0U, 0U, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+}
+
+void Reset_Native_Presentation_Rect_Quiet()
+{
+	(void)Set_Native_Presentation_Rect_Quiet(0U, 0U, DISPLAY_WIDTH,
+		DISPLAY_HEIGHT);
 }
 
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,

@@ -536,12 +536,27 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn('#include "render2d.h"', gameplay)
         self.assertIn("kA31OriginalHUDLogicalWidth = 640.0f", gameplay)
         self.assertIn("kA31OriginalHUDLogicalHeight = 480.0f", gameplay)
+        self.assertIn("Build_A31_Original_HUD_Presentation_Rect", gameplay)
+        self.assertIn("Apply_A31_Original_HUD_Presentation_Rect", gameplay)
         gameplay_helper = gameplay[
             gameplay.index("class A31ScopedOriginalHUDRender2DResolution"):
             gameplay.index("AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics")
         ]
         self.assertIn("Render2DClass::Set_Screen_Resolution(RectClass(0, 0,", gameplay_helper)
+        self.assertIn("Apply_A31_Original_HUD_Presentation_Rect()", gameplay_helper)
+        self.assertIn("RenegadeVitaRenderer::Reset_Native_Presentation_Rect_Quiet();", gameplay_helper)
         self.assertNotIn("WW3D::Set_Device_Resolution", gameplay_helper)
+
+        renderer_header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text(
+            encoding="utf-8"
+        )
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("Set_Native_Presentation_Rect_Quiet", renderer_header)
+        self.assertIn("Reset_Native_Presentation_Rect_Quiet", renderer_header)
+        self.assertIn("Set_Native_Presentation_Rect_Internal", renderer)
+        self.assertIn("if (log_change)", renderer)
 
         hud_scope = "A31ScopedOriginalHUDRender2DResolution hud_render_resolution;"
         self.assertLess(gameplay.index(hud_scope), gameplay.index("CombatManager::Render();"))

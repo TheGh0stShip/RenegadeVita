@@ -1,6 +1,6 @@
 # Live engineering progress
 
-## 2026-08-29 — dev82 visible pre-cache loading-aspect HUD/texture-cache candidate
+## 2026-08-29 — dev82 HUD-presentation visible-precache candidate
 
 `[██████████] 12/12 canonical source/build gates complete`
 
@@ -18,45 +18,47 @@
   `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt` for the
   physical return.
 - Runtime visual fixes: original HUD/TextDisplay/radar/sniper/bounding-box
-  owners now run under the authored 640x480 Render2D coordinate space while
-  Vita presentation remains 960x544, and direct DX8/Bink GL texture uploads
-  invalidate the renderer texture-bind cache before original mesh draws resume.
-  The original loading screen now uses an aspect-preserved native presentation
-  rect (`117,0 725x544`) instead of stretching 640x480 content to the full
-  panel. This specifically targets the reported wrong HUD/loading placement and
-  stale character texture reuse such as face textures appearing on Havoc legs.
+  owners now run under the authored 640x480 Render2D coordinate space and a
+  centered aspect-preserved native presentation rect while the world remains
+  native 960x544. Direct DX8/Bink GL texture uploads invalidate the renderer
+  texture-bind cache before original mesh draws resume. The original loading
+  screen uses the same aspect-preserved native presentation rect (`117,0
+  725x544`) instead of stretching 640x480 content to the full panel. This
+  specifically targets the reported wrong HUD/loading placement and stale
+  character texture reuse such as face textures appearing on Havoc legs.
 - Validation: focused pre-cache/loading/skin/texture/frontend/input contracts
   passed 71/71, fast candidate `logs/a35-dev82-fast-20260829-042551-build.log`
   passed 86 focused tests, `git diff --check` passed, and canonical
   `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-042813-build.log` with 111 host unittest checks,
+  `logs/a35-dev82-20260829-050854-build.log` with 111 host unittest checks,
   deterministic 135-patch restaging, DDS/TGA alias 11/11, render-state 13/13,
   ARM link/package, identity, compressed VPK validation, diagnostics bundle,
   SHA manifest, and retail exclusion.
 - Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
-  `cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7`;
+  `2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b`;
   ELF SHA-256 is
-  `656082800a32ddc2b666c5c65f8ce49f21125eb2115afe0af05fb1244ea42cd2`;
+  `02b20a3074ed21f3638fc1051548c512d0fce957e7be43812c5fc2e016a7e069`;
   MAP SHA-256 is
-  `bf274d9bbcd78a6789fa22c70f57bc1e3c28da71bbe7e772cb32d6ebc66d50c6`;
+  `10a7f914e9b3d3da8c5e6c30f956f61e419b0cda79b54584dd7258687981f843`;
   diagnostics bundle SHA-256 is
-  `edab17056974c155c941c65f0f1e08027cbf83557a2719a596a23e5a2339765a`.
-- Boundary: this newest `cc19ce1a...` VPK has not yet been uploaded to Vita. The
+  `5e8b60c8719036b96255296804a9a9d225327d5d7458db119464dd4ee8565116`.
+- Boundary: this newest `2d05da8f...` VPK has not yet been uploaded to Vita. The
   earlier user-authorized `9e67b02c...` upload predates the visible startup
   pre-cache/HUD/texture-cache work and must not be treated as the current
   artifact. A 2026-08-29 upload probe at
-  `build/device-evidence/a35-dev82-upload-20260829-042813-cache-index-precompute/`
-  verified the current VPK hash, scanned known PS Vita/PSTV and ARP-visible
-  FTP endpoints, and found no open VitaShell FTP service; VDB read-only
-  `doctor/status` probes for the PS Vita and PSTV profiles both returned no
-  route to host, so no current VPK transfer occurred.
+  `build/device-evidence/a35-dev82-upload-probe-20260829-052650/` verified the
+  current VPK hash, scanned known PS Vita/PSTV and ARP-visible FTP endpoints,
+  and found no open VitaShell FTP service. VDB `doctor` passed locally, but
+  `status` and VitaCompanion/VitaShell port probes for `10.0.0.202` and
+  `10.0.0.186` were disconnected/no-route/closed, so no current VPK transfer
+  occurred.
   `tools/upload_dev82_current_vpk.sh --scan-arp` now provides a repeatable
   hash-checked upload/probe path for the next reachability window.
   Dev82 remains physically pending; return both `a35-dev82-runtime.log` and
   `a35-dev82-startup-precache.txt`, and check loading telemetry for
   `native_presentation_x=117`, `native_presentation_width=725`,
   `logical_to_native_fullscreen=false`, and `aspect_preserved=true`.
-- Vita3K pre-cache evidence: current-canonical installed-title run
+- Vita3K pre-cache evidence: previous 04:28 installed-title run
   `build/vita3k-evidence/a35-dev82-20260829-044413-canonical-cache-index-precompute/`
   imported the `cc19ce1a...` VPK payload, updated installed `eboot.bin` to
   SHA-256 `eb8585c88e9425e22d12bce8195a2cbc853c4906f882f24c23d82c075dd48f5b`,
@@ -66,8 +68,9 @@
   `visible_minimum_ms=5000`, and
   `before_frontend/before_movies/before_gameplay=1`. Runtime cache health then
   reported `M00_Tutorial.mix` valid with 84 cached entries and `M01.mix` valid
-  with 231 cached entries. This is emulator evidence only and does not
-  physically accept dev82.
+  with 231 cached entries. This is emulator evidence for the pre-cache
+  implementation inherited by the current build; it predates the 05:08 HUD
+  native-presentation adjustment and does not physically accept dev82.
 
 ## 2026-08-28 — dev82 M00 tutorial plus retail frontend/Bink candidate
 

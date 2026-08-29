@@ -13,9 +13,11 @@ lifecycle, interactive player/camera ownership, and clean exit.
 **A3.5-dev82** is the current hardware-test candidate. It has a successful
 canonical build with the retail frontend worker integrated, a visible startup
 pre-cache/pre-warm/pre-compute phase before frontend/M00 input, authored
-640x480 HUD Render2D coordinate scoping, an aspect-preserved original 640x480
-loading presentation at native `117,0 725x544`, stale texture-bind cache
-invalidation, and an original movie route with a compiled Vita FFmpeg Bink
+640x480 HUD Render2D coordinate scoping with aspect-preserved native
+presentation for HUD/TextDisplay/radar/sniper/bounding-box passes, an
+aspect-preserved original 640x480 loading presentation at native `117,0
+725x544`, stale texture-bind cache invalidation, and an original movie route
+with a compiled Vita FFmpeg Bink
 provider below the original movie owner. Realtime Bink playback is disabled in
 this physical-test candidate because the prior hardware return showed
 black-screen/audio-underrun behavior; the candidate resolves/logs the retail
@@ -34,7 +36,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7
+2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b
 ```
 
 Runtime log:
@@ -70,7 +72,8 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   subtitles, scope, loading, and bounding boxes, then restoring the previous
   DX8 viewport after fullscreen 2D passes. HUD/TextDisplay/radar/sniper/
   bounding-box owners now run under the original authored 640x480 Render2D
-  coordinate space while Vita presentation remains 960x544.
+  coordinate space and a centered aspect-preserved native presentation rect
+  while world gameplay remains 960x544.
 - Vita control mapping: Triangle action/use, Square reload, D-pad Left/Right
   weapon-only switching, D-pad Up/Down sniper zoom, no shoulder remap.
 - Reload animation by adding visible first-person weapon motion while the

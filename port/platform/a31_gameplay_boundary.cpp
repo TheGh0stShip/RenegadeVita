@@ -197,11 +197,54 @@ enum
 const float kA31OriginalHUDLogicalWidth = 640.0f;
 const float kA31OriginalHUDLogicalHeight = 480.0f;
 
+struct A31NativeHUDPresentationRect
+{
+	uint32_t x;
+	uint32_t y;
+	uint32_t width;
+	uint32_t height;
+};
+
+A31NativeHUDPresentationRect Build_A31_Original_HUD_Presentation_Rect()
+{
+	const uint32_t logical_width =
+		static_cast<uint32_t>(kA31OriginalHUDLogicalWidth);
+	const uint32_t logical_height =
+		static_cast<uint32_t>(kA31OriginalHUDLogicalHeight);
+	const uint32_t display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
+	const uint32_t display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
+	uint32_t width = display_width;
+	uint32_t height =
+		static_cast<uint32_t>((static_cast<uint64_t>(display_width) *
+			logical_height) / logical_width);
+	if (height > display_height) {
+		height = display_height;
+		width = static_cast<uint32_t>((static_cast<uint64_t>(display_height) *
+			logical_width) / logical_height);
+	}
+	const A31NativeHUDPresentationRect rect = {
+		(display_width - width) / 2U,
+		(display_height - height) / 2U,
+		width,
+		height
+	};
+	return rect;
+}
+
+bool Apply_A31_Original_HUD_Presentation_Rect()
+{
+	const A31NativeHUDPresentationRect rect =
+		Build_A31_Original_HUD_Presentation_Rect();
+	return RenegadeVitaRenderer::Set_Native_Presentation_Rect_Quiet(
+		rect.x, rect.y, rect.width, rect.height);
+}
+
 class A31ScopedOriginalHUDRender2DResolution
 {
 public:
 	A31ScopedOriginalHUDRender2DResolution() :
-		Previous(Render2DClass::Get_Screen_Resolution())
+		Previous(Render2DClass::Get_Screen_Resolution()),
+		PresentationRectApplied(Apply_A31_Original_HUD_Presentation_Rect())
 	{
 		Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
 			kA31OriginalHUDLogicalWidth, kA31OriginalHUDLogicalHeight));
@@ -210,6 +253,9 @@ public:
 	~A31ScopedOriginalHUDRender2DResolution()
 	{
 		Render2DClass::Set_Screen_Resolution(Previous);
+		if (PresentationRectApplied) {
+			RenegadeVitaRenderer::Reset_Native_Presentation_Rect_Quiet();
+		}
 	}
 
 	A31ScopedOriginalHUDRender2DResolution(
@@ -219,6 +265,7 @@ public:
 
 private:
 	RectClass Previous;
+	bool PresentationRectApplied;
 };
 
 AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics(

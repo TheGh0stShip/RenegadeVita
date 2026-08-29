@@ -33,7 +33,7 @@ has a full canonical build; acceptance still
 depends on returned Vita evidence.
 
 Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-29 in
-`logs/a35-dev82-20260829-042813-build.log` with 111 host unittest checks,
+`logs/a35-dev82-20260829-050854-build.log` with 111 host unittest checks,
 deterministic staging, source integration checks, DDS/TGA alias 11/11,
 lightweight render-state 13/13, ARM link/package, identity, compressed VPK
 validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
@@ -42,12 +42,13 @@ translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
 files, 52 compatibility headers, and 135 active deterministic staging patches.
 The VPK SHA-256 is
-`cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7`. The
+`2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b`. The
 earlier user-authorized FTP upload predates this visible-startup-precache/
 loading-aspect/HUD/texture-cache artifact and must not be treated as the
 current VPK. The latest upload probe
-`build/device-evidence/a35-dev82-upload-20260829-042813-cache-index-precompute/`
-verified the current hash but found no reachable VitaShell FTP endpoint.
+`build/device-evidence/a35-dev82-upload-probe-20260829-052650/`
+verified the current hash but found no reachable VitaShell FTP endpoint; VDB
+status and VitaCompanion/VitaShell port checks were also disconnected or closed.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

@@ -8,19 +8,21 @@
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
   M00 gameplay input, persistent M00/M01 MIX filename cache-index writes, plus
   original 640x480 HUD Render2D coordinate scoping and an aspect-preserved
-  original 640x480 loading presentation at native `117,0 725x544`, plus
-  renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
-- Last completed work: the 04:28 canonical `bash ./tools/build.sh` run passed
+  native presentation rect for HUD/TextDisplay/radar/sniper/bounding-box draws,
+  an aspect-preserved original 640x480 loading presentation at native `117,0
+  725x544`, plus renderer texture-bind cache invalidation after direct DX8/Bink
+  GL uploads.
+- Last completed work: the 05:08 canonical `bash ./tools/build.sh` run passed
   fresh host validation, 111 host unittests, deterministic 135-patch restaging,
   source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
   manifest, retail exclusion, and Bink/FFmpeg symbol retention.
 - Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
-  `cc19ce1a872afa0326a45d401e6182f156999a2f2a685c45a686749a62c6a0c7`;
+  `2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b`;
   diagnostics bundle
-  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-042813.zip` with SHA-256
-  `edab17056974c155c941c65f0f1e08027cbf83557a2719a596a23e5a2339765a`.
-- Vita3K checkpoint: current-canonical evidence in
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-050854.zip` with SHA-256
+  `5e8b60c8719036b96255296804a9a9d225327d5d7458db119464dd4ee8565116`.
+- Vita3K checkpoint: previous 04:28 evidence in
   `build/vita3k-evidence/a35-dev82-20260829-044413-canonical-cache-index-precompute/`
   imported the `cc19ce1a...` VPK payload and installed `RNEGA3101` `eboot.bin`
   SHA-256 `eb8585c88e9425e22d12bce8195a2cbc853c4906f882f24c23d82c075dd48f5b`.
@@ -36,8 +38,8 @@
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
-  `cc19ce1a...` startup-precache/loading-aspect/HUD/texture-cache build; dev82
-  has not been physically accepted.
+  `2d05da8f...` startup-precache/loading-aspect/HUD-presentation/texture-cache
+  build; dev82 has not been physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch,
   aspect-preserved loading, HUD/subtitle placement, texture/material
@@ -45,9 +47,9 @@
   ground rectangles, reload/sniper/control behavior, FPS, gate use, and
   freeze/crash state. The new source hypothesis is that restoring the previous
   DX8 viewport after fullscreen `Render2DClass::Render()` passes and scoping
-  original HUD owners to authored 640x480 Render2D coordinates prevents HUD,
-  scope, loading, and bounding-box placement corruption from leaking between
-  2D owners, while renderer texture-bind cache invalidation prevents direct
+  original HUD owners to authored 640x480 Render2D coordinates plus a centered
+  aspect-preserved native rect prevents HUD, scope, loading, and bounding-box
+  placement corruption from leaking between 2D owners, while renderer texture-bind cache invalidation prevents direct
   DX8/Bink GL uploads from leaving stale character textures bound for later
   original mesh draws. The loading-screen hypothesis is that preserving the
   original 640x480 authored layout as a centered 4:3 native rect avoids the
@@ -56,9 +58,10 @@
   `tools/upload_dev82_current_vpk.sh --scan-arp` from the active bash
   workspace or manually install/test the current VPK from VitaShell. The most
   recent scan at
-  `build/device-evidence/a35-dev82-upload-20260829-042813-cache-index-precompute/`
-  still found no reachable VitaShell FTP endpoint, so no current VPK transfer
-  occurred. After install, return physical Vita observations plus
+  `build/device-evidence/a35-dev82-upload-probe-20260829-052650/`
+  still found no reachable VitaShell FTP endpoint, and VDB/VitaCompanion checks
+  were disconnected or closed, so no current VPK transfer occurred. After
+  install, return physical Vita observations plus
   `ux0:data/renegade/user/logs/a35-dev82-runtime.log`,
   `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, captures,
   and any matching crash dump.

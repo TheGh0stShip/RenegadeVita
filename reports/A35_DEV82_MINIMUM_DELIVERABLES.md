@@ -28,7 +28,7 @@ matching `psp2core` dump.
 | ELF/map/symbols exist and match manifest | PASS | ELF `4bd3f9375e9176215dcc90385f89a5f11e0810773cc98b7c5b78c6fcb001f0f6`; map `f56321bc46805433a7826317d9953758dad4e3259c258ad34ad00b07e81b4ec9`; symbols `761f05ec8a0f33fa9cee8f635f3cd885ba8a043e4170deffbbc5425dfc11f33e` |
 | Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260828-194849.zip` SHA-256 `e157284da790e7df6492991ad78c4e9f78aaf39deac6ed9f7e5248f9fb92ddf7` |
 | Retail exclusion | PASS | `dist/RenegadeVita-A3.5-dev82.vpk-contents.txt` contains only `sce_sys/param.sfo` and `eboot.bin`; no retail assets, saves, credentials, dumps, or user files are packaged |
-| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; latest frontend/Bink/viewport candidate has not been uploaded |
+| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; later user-authorized VitaShell FTP uploaded only the current VPK to `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` and did not install, launch, or transfer retail data |
 
 ## Source and staging deliverables
 

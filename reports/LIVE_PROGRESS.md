@@ -65,15 +65,18 @@
 - Minimum deliverables audit: `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`
   records source/build/artifact requirements as PASS and keeps hardware-only
   observations explicitly PENDING.
-- Boundary: this newest frontend+Bink VPK has not been uploaded to Vita. The
-  previous user-authorized dev82 VitaShell FTP upload predates the
-  frontend/Bink integration. Dev82 is not physically accepted. The next run must
-  check intro movie playback/skip, original WWUI menu navigation, Tutorial
-  launch, loading screen coverage/text/progress, HUD/subtitle placement,
-  Logan/Sydney/Gunner text and audio, character/door/powerup/objective texture
-  orientation, bounding boxes, random ground rectangles, reload animation,
-  Triangle gate use, sniper scope/icon/zoom, FPS, freeze/crash behavior, clean
-  Start exit, and `ux0:data/renegade/user/logs/a35-dev82-runtime.log`.
+- Boundary: on user request, this newest frontend+Bink VPK was uploaded by
+  VitaShell FTP to
+  `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
+  follow-up FTP listing found the filename. No install, launch, retail-data
+  transfer, or other Vita filesystem mutation was attempted. Dev82 is not
+  physically accepted. The next run must check intro movie playback/skip,
+  original WWUI menu navigation, Tutorial launch, loading screen
+  coverage/text/progress, HUD/subtitle placement, Logan/Sydney/Gunner text and
+  audio, character/door/powerup/objective texture orientation, bounding boxes,
+  random ground rectangles, reload animation, Triangle gate use, sniper
+  scope/icon/zoom, FPS, freeze/crash behavior, clean Start exit, and
+  `ux0:data/renegade/user/logs/a35-dev82-runtime.log`.
 
 ## 2026-08-28 — dev79 M00 tutorial control/HUD/loading candidate
 

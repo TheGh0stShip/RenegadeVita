@@ -19,8 +19,11 @@
   `e157284da790e7df6492991ad78c4e9f78aaf39deac6ed9f7e5248f9fb92ddf7`.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
-  retained. The latest dev82 frontend/Bink/visual/input/reload/viewport/movie
-  packet-state candidate has not been uploaded or physically accepted.
+  retained. On user request, the latest dev82 frontend/Bink/visual/input/
+  reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
+  `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
+  follow-up FTP listing found the filename. It was not installed, launched, or
+  physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch, loading/HUD/
   subtitle placement, texture/material orientation, bounding boxes, random
@@ -30,8 +33,10 @@
   scope, loading, and bounding-box placement corruption from leaking between
   2D owners, while Bink packet retention prevents FFmpeg decode backpressure
   from dropping intro movie packets.
-- Exact next external action after commit/push/mirror: user-authorized manual
-  physical Vita installation/test evidence for the current VPK.
+- Exact next external action: user manual install/test from VitaShell for the
+  current VPK, then return physical Vita observations plus
+  `ux0:data/renegade/user/logs/a35-dev82-runtime.log`, captures, and any
+  matching crash dump.
 
 - Current handoff: the paired physical Vita is online for read-only inspection, but remains on restored dev46 (`bb42fa9fbbf80e6eb90add5d3ae1bed708f1a9847f61ddc3d3fa441b4a10b244`) with the stale pre-dialogue route still present (`5ef2ee8f2ed5d4f301ec20ef95c73fe7aea9956a32e9cc41aecf84999191e895`). No dev48 install, launch, or filesystem mutation has been performed. The next authorized action is dev48 installation followed by a fresh user-controlled route record; the stale route is rejected by the runner.
 

@@ -32,11 +32,12 @@ translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
 files, 52 compatibility headers, and 134 active deterministic staging patches.
 The VPK SHA-256 is
-`9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c`. This
-newest frontend+Bink plus Render2D viewport-restore and Bink packet-state
-candidate has not been uploaded to the Vita; an earlier pre-frontend/Bink
-dev82 VPK was uploaded on request and should not be treated as the latest
-artifact.
+`9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c`. On user
+request, this newest frontend+Bink plus Render2D viewport-restore and Bink
+packet-state candidate was uploaded by VitaShell FTP to
+`ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
+follow-up FTP listing found the filename. No install, launch, retail-data
+transfer, or unrelated Vita filesystem mutation was attempted.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

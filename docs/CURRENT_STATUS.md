@@ -12,8 +12,11 @@ lifecycle, interactive player/camera ownership, and clean exit.
 
 **A3.5-dev82** is the current hardware-test candidate. It has a successful
 canonical build with the retail frontend worker integrated and a real Vita
-FFmpeg Bink playback boundary wired below the original movie owner. It is not
-an accepted milestone until device observations and returned logs match.
+FFmpeg Bink playback boundary wired below the original movie owner. On user
+request, the current VPK was uploaded by VitaShell FTP to
+`ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` for manual install/test.
+It is not an accepted milestone until device observations and returned logs
+match.
 The source/build/artifact checklist is tracked in
 `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`.
 

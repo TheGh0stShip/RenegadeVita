@@ -11,8 +11,10 @@
   FileFactory/MIX owners, keeps input disabled during that phase, displays for
   at least five seconds, reports movie-file availability, and logs
   `startup-precache begin`, per-file `startup-precache touch`,
-  `startup-precache visible hold`, and `startup-precache complete`
-  breadcrumbs.
+  `startup-precache visible hold`, receipt-write, and `startup-precache
+  complete` breadcrumbs. It also writes
+  `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt` for the
+  physical return.
 - Runtime visual fixes: original HUD/TextDisplay/radar/sniper/bounding-box
   owners now run under the authored 640x480 Render2D coordinate space while
   Vita presentation remains 960x544, and direct DX8/Bink GL texture uploads
@@ -20,29 +22,30 @@
   This specifically targets the reported wrong HUD placement and stale
   character texture reuse such as face textures appearing on Havoc legs.
 - Validation: focused pre-cache/loading/skin/texture/frontend/input contracts
-  passed 63/63, fast candidate `logs/a35-dev82-fast-20260829-015835-build.log`
+  passed 67/67, fast candidate `logs/a35-dev82-fast-20260829-024401-build.log`
   passed 86 focused tests, `git diff --check` passed, and canonical
   `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-015948-build.log` with 111 host unittest checks,
+  `logs/a35-dev82-20260829-024605-build.log` with 111 host unittest checks,
   deterministic 135-patch restaging, DDS/TGA alias 11/11, render-state 13/13,
   ARM link/package, identity, compressed VPK validation, diagnostics bundle,
   SHA manifest, and retail exclusion.
 - Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
-  `e44963df636dba58687857af835489b0fb59204c25ff80169f59f77a79b062e4`;
+  `8decd4ce14e8199b024267266d3a73752237e77f5e70c1db1ed34e73d20da80e`;
   ELF SHA-256 is
-  `d846656b011d7a9c875675c76c55885eb76916cdf9f6b5ca7793c3ea212361f1`;
+  `f97d83e4d30271cb56f122ce0c9a9db03143b985ca2f966f69248cc55644d41e`;
   MAP SHA-256 is
-  `35e6ff841453eccb0db8dcde0a40bfcb8ab2f7b7f35dc38217fea87f48fb0e49`;
+  `5e923e966275ee2e384ca7fdcb822ac20d9eae4cd9a38b08bc233ef7752623a6`;
   diagnostics bundle SHA-256 is
-  `9e1ad963d736e1784e907c0484f040aa48e90bd335030a2a2ab8638ad5f7b543`.
-- Boundary: this newest `e44963df...` VPK has not yet been uploaded to Vita. The
+  `ce8dd846213512b0dfd001daa566802d67ea44b15396069fde9ecbd28087b2d4`.
+- Boundary: this newest `8decd4ce...` VPK has not yet been uploaded to Vita. The
   earlier user-authorized `9e67b02c...` upload predates the visible startup
   pre-cache/HUD/texture-cache work and must not be treated as the current
   artifact. 2026-08-29 VitaShell FTP/VDB probes found the known PS Vita/PSTV
   endpoints unreachable before this current VPK could be transferred.
   `tools/upload_dev82_current_vpk.sh --scan-arp` now provides a repeatable
   hash-checked upload/probe path for the next reachability window.
-  Dev82 remains physically pending.
+  Dev82 remains physically pending; return both
+  `a35-dev82-runtime.log` and `a35-dev82-startup-precache.txt`.
 
 ## 2026-08-28 — dev82 M00 tutorial plus retail frontend/Bink candidate
 

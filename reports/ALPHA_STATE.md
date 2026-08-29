@@ -8,23 +8,23 @@
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
   M00 gameplay input, plus original 640x480 HUD Render2D coordinate scoping and
   renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
-- Last completed work: the 01:59 canonical `bash ./tools/build.sh` run passed
+- Last completed work: the 02:46 canonical `bash ./tools/build.sh` run passed
   fresh host validation, 111 host unittests, deterministic 135-patch restaging,
   source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
   manifest, retail exclusion, and Bink/FFmpeg symbol retention.
 - Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
-  `e44963df636dba58687857af835489b0fb59204c25ff80169f59f77a79b062e4`;
+  `8decd4ce14e8199b024267266d3a73752237e77f5e70c1db1ed34e73d20da80e`;
   diagnostics bundle
-  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-015948.zip` with SHA-256
-  `9e1ad963d736e1784e907c0484f040aa48e90bd335030a2a2ab8638ad5f7b543`.
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-024605.zip` with SHA-256
+  `ce8dd846213512b0dfd001daa566802d67ea44b15396069fde9ecbd28087b2d4`.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
   retained. On user request, an earlier dev82 frontend/Bink/visual/input/
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
-  `e44963df...` startup-precache/HUD/texture-cache build; dev82 has not been
+  `8decd4ce...` startup-precache/HUD/texture-cache build; dev82 has not been
   physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch, loading/HUD/
@@ -41,8 +41,9 @@
   `tools/upload_dev82_current_vpk.sh --scan-arp` from the active bash
   workspace or manually install/test the current VPK from VitaShell, then
   return physical Vita observations plus
-  `ux0:data/renegade/user/logs/a35-dev82-runtime.log`, captures, and any
-  matching crash dump.
+  `ux0:data/renegade/user/logs/a35-dev82-runtime.log`,
+  `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, captures,
+  and any matching crash dump.
 
 - Current handoff: the paired physical Vita is online for read-only inspection, but remains on restored dev46 (`bb42fa9fbbf80e6eb90add5d3ae1bed708f1a9847f61ddc3d3fa441b4a10b244`) with the stale pre-dialogue route still present (`5ef2ee8f2ed5d4f301ec20ef95c73fe7aea9956a32e9cc41aecf84999191e895`). No dev48 install, launch, or filesystem mutation has been performed. The next authorized action is dev48 installation followed by a fresh user-controlled route record; the stale route is rejected by the runner.
 

@@ -69,6 +69,7 @@
 #include "wwsaveload.h"
 
 #include <psp2/ctrl.h>
+#include <psp2/io/fcntl.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 
@@ -101,6 +102,8 @@ const char *const kM00Archive = "Data\\M00_Tutorial.mix";
 const char *const kStringsDatabase = "STRINGS.TDB";
 const char *const kStyleManagerIni = "stylemgr.ini";
 const char *const kM01CacheIndex = "cache/m01-mix-index-v1.txt";
+const char *const kStartupPrecacheReceiptPath =
+	"ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt";
 const uint32_t kTimingWindowFrames = 120U;
 const uint32_t kCaptureWidth = RenegadeVitaRenderer::DISPLAY_WIDTH;
 const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
@@ -108,6 +111,9 @@ const uint32_t kCaptureBytes = kCaptureWidth * kCaptureHeight * 4U;
 const unsigned kAutomaticCaptureAttempts = 3U;
 const unsigned kStartupPrecacheVisibleSteps = 5U;
 const uint64_t kStartupPrecacheMinimumVisibleUs = 5000000ULL;
+const unsigned kStartupPrecacheRequiredReadBytes = 32768U;
+const unsigned kStartupPrecacheOptionalReadBytes = 8192U;
+const unsigned kStartupPrecacheMovieReadBytes = 65536U;
 const unsigned kLoadingPrewarmFrames = 8U;
 const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
@@ -124,9 +130,22 @@ struct A31StartupPrecacheResult
 	unsigned entries_indexed;
 	unsigned files_touched;
 	unsigned files_opened;
+	unsigned required_files_touched;
+	unsigned required_files_opened;
+	unsigned optional_files_touched;
+	unsigned optional_files_opened;
 	unsigned movie_files_touched;
 	unsigned movie_files_opened;
 	uint64_t bytes_read;
+	char first_missing_required[96];
+	char first_missing_optional[96];
+};
+
+struct A31StartupPrecacheFileSpec
+{
+	const char *name;
+	bool required;
+	unsigned read_limit;
 };
 
 /* Original Commando gives WWAudio a path-stripping factory over the active
@@ -202,15 +221,27 @@ void Draw_Startup_Precache_Screen(int startup_screen_result, const char *phase,
 	psvDebugScreenPrintf("Indexed entries:       %u\n", state.entries_indexed);
 	psvDebugScreenPrintf("Startup files:         %u/%u\n",
 		state.files_opened, state.files_touched);
+	psvDebugScreenPrintf("Required startup:      %u/%u\n",
+		state.required_files_opened, state.required_files_touched);
+	psvDebugScreenPrintf("Optional startup:      %u/%u\n",
+		state.optional_files_opened, state.optional_files_touched);
 	psvDebugScreenPrintf("Movie files:           %u/%u\n",
 		state.movie_files_opened, state.movie_files_touched);
 	psvDebugScreenPrintf("Bytes touched:         %llu\n",
 		static_cast<unsigned long long>(state.bytes_read));
+	if (state.first_missing_required[0] != 0) {
+		psvDebugScreenPrintf("Missing required:      %s\n",
+			state.first_missing_required);
+	} else if (state.first_missing_optional[0] != 0) {
+		psvDebugScreenPrintf("Missing optional:      %s\n",
+			state.first_missing_optional);
+	}
 	if (detail != NULL && detail[0] != 0) {
 		psvDebugScreenPrintf("Now:                   %s\n", detail);
 	}
 	psvDebugScreenPrintf("\nThis runs before intro movies, menus, and M00 input.\n");
 	psvDebugScreenPrintf("Log: %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);
+	psvDebugScreenPrintf("Receipt: %s\n", kStartupPrecacheReceiptPath);
 }
 
 bool Startup_Index_Mix_Archive(const char *name, MixFileFactoryClass &factory,
@@ -232,11 +263,23 @@ bool Startup_Index_Mix_Archive(const char *name, MixFileFactoryClass &factory,
 	return count != 0U;
 }
 
-void Startup_Touch_File(FileFactoryClass &factory, const char *name,
+bool Startup_Touch_File(FileFactoryClass &factory,
+	const A31StartupPrecacheFileSpec &spec,
 	A31StartupPrecacheResult &state)
 {
+	const char *name = spec.name;
 	++state.files_touched;
-	const bool movie_file = name != NULL && ::strstr(name, "MOVIES") != NULL;
+	if (spec.required) {
+		++state.required_files_touched;
+	} else {
+		++state.optional_files_touched;
+	}
+	const bool movie_file = name != NULL &&
+		(::strstr(name, "MOVIES") != NULL ||
+		 ::strstr(name, "Movies") != NULL ||
+		 ::strstr(name, "movies") != NULL ||
+		 ::strstr(name, ".BIK") != NULL ||
+		 ::strstr(name, ".bik") != NULL);
 	if (movie_file) {
 		++state.movie_files_touched;
 	}
@@ -245,8 +288,14 @@ void Startup_Touch_File(FileFactoryClass &factory, const char *name,
 	FileClass *file = factory.Get_File(name);
 	if (file != NULL && file->Open(FileClass::READ)) {
 		opened = true;
-		char buffer[512];
-		for (unsigned remaining = 2048U; remaining != 0U;) {
+		char buffer[2048];
+		unsigned remaining = spec.read_limit;
+		if (remaining == 0U) {
+			remaining = spec.required ?
+				kStartupPrecacheRequiredReadBytes :
+				kStartupPrecacheOptionalReadBytes;
+		}
+		for (; remaining != 0U;) {
 			const unsigned request = remaining < sizeof(buffer) ?
 				remaining : static_cast<unsigned>(sizeof(buffer));
 			const int received = file->Read(buffer, request);
@@ -262,13 +311,90 @@ void Startup_Touch_File(FileFactoryClass &factory, const char *name,
 	}
 	if (opened) {
 		++state.files_opened;
+		if (spec.required) {
+			++state.required_files_opened;
+		} else {
+			++state.optional_files_opened;
+		}
 		state.bytes_read += read_bytes;
 		if (movie_file) {
 			++state.movie_files_opened;
 		}
+	} else if (spec.required && state.first_missing_required[0] == 0) {
+		snprintf(state.first_missing_required,
+			sizeof(state.first_missing_required), "%s",
+			name != NULL ? name : "unknown");
+	} else if (!spec.required && state.first_missing_optional[0] == 0) {
+		snprintf(state.first_missing_optional,
+			sizeof(state.first_missing_optional), "%s",
+			name != NULL ? name : "unknown");
 	}
-	A30_Vita_Log("A3.5 prewarm: startup-precache touch name=%s opened=%d read_bytes=%u original_file_factory=1\n",
-		name != NULL ? name : "unknown", opened ? 1 : 0, read_bytes);
+	A30_Vita_Log("A3.5 prewarm: startup-precache touch kind=%s name=%s opened=%d read_bytes=%u limit=%u movie=%d original_file_factory=1\n",
+		spec.required ? "required" : "optional",
+		name != NULL ? name : "unknown", opened ? 1 : 0, read_bytes,
+		spec.read_limit, movie_file ? 1 : 0);
+	return opened;
+}
+
+void Write_Startup_Precache_Receipt(const A31StartupPrecacheResult &state,
+	uint64_t elapsed_us)
+{
+	const SceUID file = sceIoOpen(kStartupPrecacheReceiptPath,
+		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0666);
+	if (file < 0) {
+		A30_Vita_Log("A3.5 prewarm: startup-precache receipt write failed path=%s rc=%08X\n",
+			kStartupPrecacheReceiptPath, static_cast<unsigned>(file));
+		return;
+	}
+	char receipt[1024];
+	const int count = snprintf(receipt, sizeof(receipt),
+		"candidate=%s\n"
+		"phase=startup-precache\n"
+		"pass=%d\n"
+		"archives=%u/%u\n"
+		"entries=%u\n"
+		"files=%u/%u\n"
+		"required_files=%u/%u\n"
+		"optional_files=%u/%u\n"
+		"movie_files=%u/%u\n"
+		"bytes=%llu\n"
+		"elapsed_ms=%llu\n"
+		"visible_minimum_ms=%llu\n"
+		"before_frontend=1\n"
+		"before_movies=1\n"
+		"before_gameplay=1\n"
+		"first_missing_required=%s\n"
+		"first_missing_optional=%s\n",
+		RENEGADE_BUILD_CANDIDATE_LABEL, state.passed ? 1 : 0,
+		state.archives_valid, state.archives_total, state.entries_indexed,
+		state.files_opened, state.files_touched,
+		state.required_files_opened, state.required_files_touched,
+		state.optional_files_opened, state.optional_files_touched,
+		state.movie_files_opened, state.movie_files_touched,
+		static_cast<unsigned long long>(state.bytes_read),
+		static_cast<unsigned long long>(elapsed_us / 1000ULL),
+		static_cast<unsigned long long>(
+			kStartupPrecacheMinimumVisibleUs / 1000ULL),
+		state.first_missing_required[0] != 0 ?
+			state.first_missing_required : "none",
+		state.first_missing_optional[0] != 0 ?
+			state.first_missing_optional : "none");
+	unsigned written_total = 0U;
+	if (count > 0) {
+		const unsigned length = static_cast<unsigned>(
+			count < static_cast<int>(sizeof(receipt)) ? count :
+			static_cast<int>(sizeof(receipt) - 1));
+		while (written_total < length) {
+			const int written = sceIoWrite(file, receipt + written_total,
+				length - written_total);
+			if (written <= 0) break;
+			written_total += static_cast<unsigned>(written);
+		}
+	}
+	const int close_result = sceIoClose(file);
+	A30_Vita_Log("A3.5 prewarm: startup-precache receipt path=%s bytes=%u close=%08X\n",
+		kStartupPrecacheReceiptPath, written_total,
+		static_cast<unsigned>(close_result));
 }
 
 bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
@@ -303,37 +429,44 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	archives_ok = Startup_Index_Mix_Archive(kM00Archive, m00_factory, state) &&
 		archives_ok;
 
-	const char *const required_files[] = {
-		kStringsDatabase,
-		kStyleManagerIni,
-		"DEFAULT_INPUT.CFG",
-		"if_lvl94load.w3d",
-		"IF_BACK01.W3D",
-		"IF_RENLOGO.W3D",
-		"IF_EVAGIZMO.W3D",
-		"M00_Tutorial.lsd",
-		"M00_Tutorial.ldd",
-		"m00_tutorial.dep",
-		"DATA\\MOVIES\\EA_WW.BIK",
-		"DATA\\MOVIES\\R_INTRO.BIK"
+	const A31StartupPrecacheFileSpec startup_files[] = {
+		{ kAlways2Archive, true, kStartupPrecacheRequiredReadBytes },
+		{ kAlwaysDbsArchive, true, kStartupPrecacheRequiredReadBytes },
+		{ kAlwaysArchive, true, kStartupPrecacheRequiredReadBytes },
+		{ kM00Archive, true, kStartupPrecacheRequiredReadBytes },
+		{ kStringsDatabase, true, kStartupPrecacheRequiredReadBytes },
+		{ kStyleManagerIni, true, kStartupPrecacheRequiredReadBytes },
+		{ "DEFAULT_INPUT.CFG", true, kStartupPrecacheRequiredReadBytes },
+		{ "if_lvl94load.w3d", true, kStartupPrecacheRequiredReadBytes },
+		{ "IF_BACK01.W3D", true, kStartupPrecacheRequiredReadBytes },
+		{ "IF_RENLOGO.W3D", true, kStartupPrecacheRequiredReadBytes },
+		{ "IF_EVAGIZMO.W3D", true, kStartupPrecacheRequiredReadBytes },
+		{ "M00_Tutorial.lsd", true, kStartupPrecacheRequiredReadBytes },
+		{ "M00_Tutorial.ldd", true, kStartupPrecacheRequiredReadBytes },
+		{ "m00_tutorial.dep", true, kStartupPrecacheRequiredReadBytes },
+		{ "DATA\\MOVIES\\EA_WW.BIK", false, kStartupPrecacheMovieReadBytes },
+		{ "DATA\\MOVIES\\R_INTRO.BIK", false, kStartupPrecacheMovieReadBytes },
+		{ "Data\\Movies\\R_Intro.BIK", false, kStartupPrecacheMovieReadBytes },
+		{ "data\\subtitle.ini", false, kStartupPrecacheOptionalReadBytes },
+		{ "Data\\M01.mix", false, kStartupPrecacheOptionalReadBytes }
 	};
 	for (unsigned index = 0U;
-		index < sizeof(required_files) / sizeof(required_files[0]); ++index) {
-		Startup_Touch_File(factory, required_files[index], state);
+		index < sizeof(startup_files) / sizeof(startup_files[0]); ++index) {
+		Startup_Touch_File(factory, startup_files[index], state);
 		if ((index % 3U) == 2U || index + 1U ==
-			sizeof(required_files) / sizeof(required_files[0])) {
+			sizeof(startup_files) / sizeof(startup_files[0])) {
 			char detail[96];
-			snprintf(detail, sizeof(detail), "%s", required_files[index]);
+			snprintf(detail, sizeof(detail), "%s", startup_files[index].name);
 			Draw_Startup_Precache_Screen(startup_screen_result,
 				"Touching startup menu, movie, loading, and M00 files",
 				4U, 55U + ((index + 1U) * 35U) /
-					(sizeof(required_files) / sizeof(required_files[0])),
+					(sizeof(startup_files) / sizeof(startup_files[0])),
 				state, detail);
 			sceKernelDelayThread(180000);
 		}
 	}
 	state.passed = archives_ok && state.archives_valid == state.archives_total &&
-		state.files_opened >= 8U;
+		state.required_files_opened == state.required_files_touched;
 	Draw_Startup_Precache_Screen(startup_screen_result,
 		state.passed ? "Startup pre-cache complete" :
 			"Startup pre-cache incomplete", 5U, 100U, state,
@@ -352,15 +485,24 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	} else {
 		sceKernelDelayThread(450000);
 	}
-	A30_Vita_Log("A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u movie_files=%u/%u bytes=%llu elapsed_ms=%llu visible_minimum_ms=%llu before_frontend=1 before_movies=1 before_gameplay=1 original_mix_owner=1\n",
+	Write_Startup_Precache_Receipt(state,
+		sceKernelGetProcessTimeWide() - started_us);
+	A30_Vita_Log("A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u required_files=%u/%u optional_files=%u/%u movie_files=%u/%u bytes=%llu elapsed_ms=%llu visible_minimum_ms=%llu receipt=%s missing_required=%s missing_optional=%s before_frontend=1 before_movies=1 before_gameplay=1 original_mix_owner=1\n",
 		state.passed ? 1 : 0, state.archives_valid, state.archives_total,
 		state.entries_indexed, state.files_opened, state.files_touched,
+		state.required_files_opened, state.required_files_touched,
+		state.optional_files_opened, state.optional_files_touched,
 		state.movie_files_opened, state.movie_files_touched,
 		static_cast<unsigned long long>(state.bytes_read),
 		static_cast<unsigned long long>(
 			(sceKernelGetProcessTimeWide() - started_us) / 1000ULL),
 		static_cast<unsigned long long>(
-			kStartupPrecacheMinimumVisibleUs / 1000ULL));
+			kStartupPrecacheMinimumVisibleUs / 1000ULL),
+		kStartupPrecacheReceiptPath,
+		state.first_missing_required[0] != 0 ?
+			state.first_missing_required : "none",
+		state.first_missing_optional[0] != 0 ?
+			state.first_missing_optional : "none");
 	return state.passed;
 }
 

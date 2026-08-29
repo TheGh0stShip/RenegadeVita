@@ -413,6 +413,7 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 	echo "SHA-256: $rv_vpk_sha256"
 	echo "Retain user-owned data: ux0:data/renegade/retail/Data/ (do not transfer retail assets)."
 	echo "Runtime log: $rv_runtime_log (remove or rename an older file before launch)."
+	echo "Startup pre-cache receipt: ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt."
 	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
 	echo "Controls: frontend menu active: D-pad=WWUI focus navigation, Cross=confirm, Circle=back/cancel, Select=next focus, front touch=original mouse cursor/left click. M00 gameplay: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=original mouse cursor/left click for UI/terminals; rear touch=first/third-person camera toggle; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
 	echo "Test: in M00, verify fullscreen loading/HUD/scope placement, loading progress, normal texture orientation on characters/doors/powerups, Logan/Sydney/Gunner subtitles, Triangle action/use gates, Square reload animation, D-pad weapon cycling without camera drift, D-pad sniper zoom, and frame rate. Press Start and wait for LiveArea."
@@ -420,8 +421,9 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 } > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"
 {
 	echo "Runtime log: $rv_runtime_log"
-	echo "Expected $rv_candidate_label breadcrumbs: input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; original Combat mission-completion observation when achieved; 120-frame checkpoint or terminal transition; clean teardown."
-	echo "Physical test: retain this log and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and START exit."
+	echo "Startup pre-cache receipt: ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt"
+	echo "Expected $rv_candidate_label breadcrumbs: startup-precache begin/touch/visible-hold/receipt/complete before frontend, movies, menu, or gameplay input; input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; original Combat mission-completion observation when achieved; 120-frame checkpoint or terminal transition; clean teardown."
+	echo "Physical test: retain this log, the startup-precache receipt, and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and START exit."
 } > "$rv_dist/$rv_candidate_label-EXPECTED-RUNTIME-LOG.txt"
 bash "$rv_root/tools/collect_a35_diagnostics.sh" "$rv_dist" \
 	"$rv_dist/$rv_candidate_label-BUILD-DIAGNOSTICS-$rv_timestamp.zip" "$rv_candidate_label"

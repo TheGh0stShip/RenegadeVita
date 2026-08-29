@@ -30,7 +30,7 @@ has a full canonical build; acceptance still
 depends on returned Vita evidence.
 
 Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-29 in
-`logs/a35-dev82-20260829-015948-build.log` with 111 host unittest checks,
+`logs/a35-dev82-20260829-024605-build.log` with 111 host unittest checks,
 deterministic staging, source integration checks, DDS/TGA alias 11/11,
 lightweight render-state 13/13, ARM link/package, identity, compressed VPK
 validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
@@ -39,7 +39,7 @@ translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
 files, 52 compatibility headers, and 135 active deterministic staging patches.
 The VPK SHA-256 is
-`e44963df636dba58687857af835489b0fb59204c25ff80169f59f77a79b062e4`. The
+`8decd4ce14e8199b024267266d3a73752237e77f5e70c1db1ed34e73d20da80e`. The
 earlier user-authorized FTP upload predates this visible-startup-precache/HUD/
 texture-cache artifact and must not be treated as the current VPK.
 

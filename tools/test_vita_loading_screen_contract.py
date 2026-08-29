@@ -94,20 +94,44 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Run_Visible_Startup_Precache_Phase", runtime)
         self.assertIn("kStartupPrecacheVisibleSteps = 5U", runtime)
         self.assertIn("kStartupPrecacheMinimumVisibleUs = 5000000ULL", runtime)
+        self.assertIn("kStartupPrecacheRequiredReadBytes = 32768U", runtime)
+        self.assertIn("kStartupPrecacheMovieReadBytes = 65536U", runtime)
+        self.assertIn("kStartupPrecacheReceiptPath", runtime)
+        self.assertIn("a35-dev82-startup-precache.txt", runtime)
         self.assertIn("Pre-cache / pre-warm / pre-compute", runtime)
+        self.assertIn("Required startup:      %u/%u", runtime)
+        self.assertIn("Optional startup:      %u/%u", runtime)
         self.assertIn("Movie files:           %u/%u", runtime)
+        self.assertIn("Receipt: %s", runtime)
         self.assertIn("Startup_Index_Mix_Archive", runtime)
         self.assertIn("Build_Filename_List(names)", runtime)
-        self.assertIn("Startup_Touch_File(factory, required_files[index]", runtime)
+        self.assertIn("struct A31StartupPrecacheFileSpec", runtime)
+        self.assertIn("Startup_Touch_File(factory, startup_files[index]", runtime)
+        self.assertIn("state.required_files_opened", runtime)
+        self.assertIn("state.optional_files_opened", runtime)
         self.assertIn("state.movie_files_opened", runtime)
+        self.assertIn("{ kAlwaysArchive, true, kStartupPrecacheRequiredReadBytes }", runtime)
+        self.assertIn("{ kM00Archive, true, kStartupPrecacheRequiredReadBytes }", runtime)
         self.assertIn('"DATA\\\\MOVIES\\\\EA_WW.BIK"', runtime)
         self.assertIn('"DATA\\\\MOVIES\\\\R_INTRO.BIK"', runtime)
         self.assertIn('"IF_BACK01.W3D"', runtime)
         self.assertIn('"M00_Tutorial.lsd"', runtime)
         self.assertIn(
-            '"A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u movie_files=%u/%u',
+            '"A3.5 prewarm: startup-precache touch kind=%s name=%s opened=%d read_bytes=%u limit=%u movie=%d',
             runtime,
         )
+        self.assertIn(
+            '"A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u required_files=%u/%u optional_files=%u/%u movie_files=%u/%u',
+            runtime,
+        )
+        self.assertIn("state.required_files_opened == state.required_files_touched", runtime)
+        self.assertIn("Write_Startup_Precache_Receipt(state,", runtime)
+        self.assertLess(
+            runtime.index("startup-precache visible hold remaining_ms=%llu"),
+            runtime.index("Write_Startup_Precache_Receipt(state,"),
+        )
+        self.assertIn("first_missing_required=%s", runtime)
+        self.assertIn("first_missing_optional=%s", runtime)
         self.assertIn("startup-precache visible hold remaining_ms=%llu", runtime)
         self.assertIn("visible_minimum_ms=%llu", runtime)
         startup_precache_call = runtime.index(

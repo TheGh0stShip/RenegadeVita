@@ -2,6 +2,7 @@
 build/
 logs/
 dist/
+source-cache/
 .agents/
 .codex/
 *.tar.gz

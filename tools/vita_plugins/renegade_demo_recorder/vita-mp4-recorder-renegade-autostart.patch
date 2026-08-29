@@ -1,0 +1,37 @@
+diff --git a/user/main.c b/user/main.c
+index e17875a..95e4585 100644
+--- a/user/main.c
++++ b/user/main.c
+@@ -14,0 +15,3 @@
++#define RENEGADE_DEMO_TITLE_ID "RNEGA3101"
++#define RENEGADE_DEMO_AUTO_START 1
++
+@@ -27 +30 @@ static uint8_t status = NOT_TRIGGERED;
+-static uint8_t has_audio = 0;
++static uint8_t has_audio = 1;
+@@ -172,0 +176,3 @@ void checkInput(SceCtrlData *ctrl) {
++	} else if (is_recording && (ctrl->buttons & SCE_CTRL_START)
++		&& (!(old_buttons & SCE_CTRL_START))) {
++		alterRecordingState();
+@@ -464 +470 @@ int module_start(SceSize argc, const void *args) {
+-	sceAppMgrAppParamGetString(0, 12, titleid , 256);
++	sceAppMgrAppParamGetString(0, 12, titleid, sizeof(titleid));
+@@ -468,0 +475,2 @@ int module_start(SceSize argc, const void *args) {
++	} else if (strcmp(titleid, RENEGADE_DEMO_TITLE_ID) != 0) {
++		return SCE_KERNEL_START_NO_RESIDENT;
+@@ -583 +591 @@ noenc:
+-	if (record_thread_id >= 0)
++	if (record_thread_id >= 0) {
+@@ -584,0 +593,4 @@ noenc:
++		if (RENEGADE_DEMO_AUTO_START && !is_recording) {
++			alterRecordingState();
++		}
++	}
+@@ -601,0 +614,7 @@ int module_stop(SceSize argc, const void *args) {
++	if (is_recording) {
++		SceMp4RecTermParam params = {0};
++		params.size = sizeof(SceMp4RecTermParam);
++		params.discard = 0;
++		sceMp4RecTerm(&r, &params);
++		is_recording = 0;
++	}

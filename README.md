@@ -62,6 +62,8 @@ Start here:
 - [Current Status](docs/CURRENT_STATUS.md) for what works and what is still
   under test.
 - [Controls](docs/CONTROLS.md) for the current Vita input map.
+- [Demo Capture](docs/DEMO_CAPTURE.md) for the non-USB PSVITA/PSTV recording
+  workflow.
 - [Architecture](docs/ARCHITECTURE.md) for the source-port boundaries.
 - [Development](docs/DEVELOPMENT.md) for how to modify the port safely.
 - [Troubleshooting](docs/TROUBLESHOOTING.md) for common build/runtime failures.

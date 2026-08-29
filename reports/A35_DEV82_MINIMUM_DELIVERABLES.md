@@ -58,6 +58,17 @@ matching `psp2core` dump.
 | Movie blits restore GL texture state | PASS | `BINKMovie::Render()` saves/restores GL texture0 bind/enable state around the full-screen movie quad before restoring the previous active texture unit |
 | Missing/invalid movies fail closed | PASS | `port/platform/a4_binkmovie_boundary.cpp` logs failed movie open/decoder setup and marks playback complete so the original menu route can continue |
 
+## Demo capture deliverables
+
+| Deliverable | Status | Evidence |
+|---|---|---|
+| Non-USB PSVITA/PSTV recording path exists outside the Renegade VPK | PASS | `docs/DEMO_CAPTURE.md`, `tools/build_renegade_demo_recorder_plugin.sh`, and `tools/vita_plugins/renegade_demo_recorder/` define a title-scoped taiHEN plugin workflow |
+| Recorder starts before gameplay and stops on Start | PASS | Renegade patch scopes to `RNEGA3101`, auto-starts during plugin `module_start`, enables audio by default, and finalizes MP4 on the first Start press or `module_stop` fallback |
+| Recorder build is pinned and provenance-recorded | PASS | Build fetches `Rinnegatamante/Vita-MP4-Recorder@60c966a75356ea9a95f79479a3e647283586cf11`; `docs/DEMO_CAPTURE.md`, the plugin README, and `reports/LIVE_PROGRESS.md` record GPL-3.0 source plus VitaSDK `sceMp4Rec` API compatibility |
+| Local SDK without `psp2/mp4rec.h` still builds | PASS | The wrapper uses `tools/vita_plugins/renegade_demo_recorder/include/psp2/mp4rec.h` only when the selected VitaSDK has stubs/YAML but no header |
+| User and kernel plugins build | PASS | `dist/RenegadeDemoRecorder-A3.5-dev82.suprx` SHA-256 `8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d`; `dist/RenegadeDemoRecorder-A3.5-dev82.skprx` SHA-256 `e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5`; tai snippet SHA-256 `5dd4c84d4ce4ae6a727658eb27b058ab23e38a343a8f4cf808146720c2257fe0` |
+| Recorder install remains manual | PASS | Build script prints manual install guidance and does not call Vita FTP, package install, tai config mutation, or retail-data paths |
+
 ## M00 physical-test deliverables
 
 | Deliverable | Source/build status | Physical status |
@@ -85,6 +96,10 @@ matching `psp2core` dump.
   passed.
 - `bash ./tools/build.sh` passed in
   `logs/a35-dev82-20260828-194849-build.log`.
+- `python3 -m unittest tools.test_demo_recorder_workflow` passed 5/5, and
+  `bash ./tools/build_renegade_demo_recorder_plugin.sh` produced the optional
+  recorder `.suprx`, `.skprx`, tai config snippet, and SHA manifest without
+  touching the Vita filesystem.
 
 ## Not dev82 minimum deliverables
 

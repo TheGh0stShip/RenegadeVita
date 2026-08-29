@@ -73,6 +73,16 @@
   detail crops from dev13 and dev19. Diagnostic-only builds and black/logo,
   magenta, and loading frames remain in the complete manifest and inventory,
   with only one displayed loading-screen regression reference.
+- Demo capture workflow: the optional non-USB PSVITA/PSTV recorder builds from
+  pinned `Rinnegatamante/Vita-MP4-Recorder@60c966a75356ea9a95f79479a3e647283586cf11`
+  with a Renegade title-scoped patch and a local `sceMp4Rec` compatibility
+  header when the SDK header is absent. Built artifacts are
+  `dist/RenegadeDemoRecorder-A3.5-dev82.suprx`
+  SHA-256 `8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d`
+  and `dist/RenegadeDemoRecorder-A3.5-dev82.skprx`
+  SHA-256 `e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5`.
+  It is manual-install only; no tai config, plugin, retail data, or VPK content
+  was pushed by the build.
 - Boundary: on user request, this newest frontend+Bink VPK was uploaded by
   VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a

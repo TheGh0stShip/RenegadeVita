@@ -112,6 +112,8 @@ const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
 const float kOriginalLoadingLogicalWidth = 640.0f;
 const float kOriginalLoadingLogicalHeight = 480.0f;
+const float kOriginalHUDLogicalWidth = 640.0f;
+const float kOriginalHUDLogicalHeight = 480.0f;
 
 struct A31StartupPrecacheResult
 {
@@ -377,6 +379,37 @@ private:
 	int PreviousBits;
 	bool PreviousWindowed;
 	bool Applied;
+};
+
+class A31VitaScopedOriginalHUDRender2DResolution
+{
+public:
+	explicit A31VitaScopedOriginalHUDRender2DResolution(const char *reason) :
+		Previous(Render2DClass::Get_Screen_Resolution()),
+		Reason(reason != NULL ? reason : "unknown")
+	{
+		Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
+			kOriginalHUDLogicalWidth, kOriginalHUDLogicalHeight));
+		A30_Vita_Log("A3.5 HUD: original logical Render2D resolution %.0fx%.0f reason=%s previous=%.0fx%.0f\n",
+			kOriginalHUDLogicalWidth, kOriginalHUDLogicalHeight, Reason,
+			Previous.Width(), Previous.Height());
+	}
+
+	~A31VitaScopedOriginalHUDRender2DResolution()
+	{
+		Render2DClass::Set_Screen_Resolution(Previous);
+		A30_Vita_Log("A3.5 HUD: restored Render2D resolution %.0fx%.0f reason=%s\n",
+			Previous.Width(), Previous.Height(), Reason);
+	}
+
+	A31VitaScopedOriginalHUDRender2DResolution(
+		const A31VitaScopedOriginalHUDRender2DResolution &) = delete;
+	A31VitaScopedOriginalHUDRender2DResolution &operator=(
+		const A31VitaScopedOriginalHUDRender2DResolution &) = delete;
+
+private:
+	RectClass Previous;
+	const char *Reason;
 };
 
 void Copy_Renderer_Statistics(A31RendererTelemetry &telemetry)
@@ -1399,7 +1432,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						}
 					}
 #endif
-				text_display_mode.Init();
+				{
+					A31VitaScopedOriginalHUDRender2DResolution text_display_resolution(
+						"TextDisplayGameModeClass::Init");
+					text_display_mode.Init();
+				}
 				text_display_initialized =
 					TextDisplayGameModeClass::Get_Instance() == &text_display_mode;
 				if (text_display_initialized) {
@@ -1442,7 +1479,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			const bool render_hud = A31_Interactive_Render_HUD_Available();
 			A30_Vita_Log("A3.1 breadcrumb: CombatManager::Init entry render_hud=%d\n",
 				render_hud ? 1 : 0);
-			CombatManager::Init(render_hud);
+				{
+					A31VitaScopedOriginalHUDRender2DResolution hud_init_resolution(
+						"CombatManager::Init");
+					CombatManager::Init(render_hud);
+				}
 			combat_initialized = true;
 			A30_Vita_Log("A3.1 breadcrumb: Combat initialized render_hud=%d\n",
 				render_hud ? 1 : 0);
@@ -1535,8 +1576,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
 				loading_presenter.Render_Original_Progress("post_load_level");
 				CombatManager::Post_Load_Level();
-				CombatGameModeClass::Vita_Finalize_Loaded_Level(
-					loading_presenter.Peek_Screen(), true);
+				{
+					A31VitaScopedOriginalHUDRender2DResolution hud_finalize_resolution(
+						"CombatGameModeClass::Vita_Finalize_Loaded_Level");
+					CombatGameModeClass::Vita_Finalize_Loaded_Level(
+						loading_presenter.Peek_Screen(), true);
+				}
 				radar_initialized = true;
 				A30_Vita_Log("A3.5 CombatGameMode: original post-load finalization complete radar_initialized=1\n");
 				Warm_Original_M00_Presentation_Cache(loading_presenter);

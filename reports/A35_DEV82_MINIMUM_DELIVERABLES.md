@@ -11,9 +11,10 @@ this bash workspace after validation.
 
 All source/build/artifact minimum deliverables for the dev82 physical-test
 candidate are met by the compiled bash-workspace source state and the canonical
-build `logs/a35-dev82-20260829-004628-build.log`. The current artifact includes
+build `logs/a35-dev82-20260829-013330-build.log`. The current artifact includes
 the visible startup pre-cache/pre-warm/pre-compute phase that runs before intro
-movies, menus, and M00 input.
+movies, menus, and M00 input, original 640x480 HUD Render2D coordinate scoping,
+and renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
 
 This is not a physical acceptance claim. The Vita still must prove the movie,
 menu, M00, controls, HUD, texture, FPS, gate, freeze/crash, and clean-exit
@@ -24,12 +25,12 @@ matching `psp2core` dump.
 
 | Deliverable | Status | Evidence |
 |---|---|---|
-| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260829-004628-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
-| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d` |
-| ELF/map/symbols exist and match manifest | PASS | ELF `ca7b697564f2a84b62fcc83003be9b23ea0cddc104f2f4a3362437eb143c32bb`; map `c8a69ab902753c8c0c45319f05ffb72be2f000f40c7716de22e402fd3767ecae`; symbols `0984b6c6c425727b8d82e21d6369662a05ec908835659ce3f95183263f76f096` |
-| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-004628.zip` SHA-256 `38340595c48f63e8e1e363df8a146f75962274583c6e97e6c548b8026c83e479` |
+| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260829-013330-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
+| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb` |
+| ELF/map/symbols exist and match manifest | PASS | ELF `d63d785efeff42ef02f791d65a1c0d7efef9751bbbabe7cc7f2122b20dc9168d`; map `f1a620a4fc56a09bf928dc2d0a3872caf574b0bd1398dac30fc286abcfbaa92b`; symbols `08411a115993ed9243cb71ef7285a054a9c6991a5998652605063ae188cbe5cb` |
+| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-013330.zip` SHA-256 `2a0043ebf04b06f70078afeec28cfa7408e680167648cbec69c601456efe4937` |
 | Retail exclusion | PASS | `dist/RenegadeVita-A3.5-dev82.vpk-contents.txt` contains only `sce_sys/param.sfo` and `eboot.bin`; no retail assets, saves, credentials, dumps, or user files are packaged |
-| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `5ec35b28...` artifact and a 2026-08-29 FTP attempt for the current VPK timed out before data transfer |
+| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `df4fdf4c...` artifact and a 2026-08-29 FTP attempt for the previous current VPK timed out before data transfer |
 
 ## Source and staging deliverables
 
@@ -39,9 +40,10 @@ matching `psp2core` dump.
 | Original source ownership is preserved | PASS | source report records 506 original Westwood translation units plus 1 staged original-owner extraction and 26 Vita platform/renderer/validation/developer files |
 | Deterministic patch count is guarded | PASS | `tools/generate_integration_report.py` and `tools/build.sh` expect `patch_count=135`; `tools/stage_sources.sh` applies patches with zero fuzz |
 | Visible startup pre-cache/pre-warm/pre-compute phase is active | PASS | `A31_Vita_Run_Interactive_Runtime(int)` runs `Run_Visible_Startup_Precache_Phase()` before frontend movies, menus, and gameplay input; the ELF contains `Pre-cache / pre-warm / pre-compute`, `startup-precache begin`, `startup-precache touch`, and `startup-precache complete` |
+| Original HUD coordinate placement uses authored 640x480 Render2D space | PASS | `A31VitaScopedOriginalHUDRender2DResolution` and `A31ScopedOriginalHUDRender2DResolution` scope TextDisplay, CombatManager init/finalization, and per-frame HUD/subtitle/scope/bounding-box renders to the original 640x480 Render2D coordinate system without changing the native 960x544 device presentation |
 | Render2D viewport restore is durable | PASS | `port/patches/ww3d2-a35-render2d-viewport-restore.patch` and `staging/ww3d2/render2d.cpp` save the active DX8 viewport before the fullscreen 2D pass and restore it after drawing |
 | Render2D HUD/loading/scope vertex data is initialized | PASS | `port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch` initializes normal and UV1 data used by dynamic FVF 2D draws |
-| Texture orientation fixes are staged | PASS | texture-surface/provenance contracts cover top-down gameplay DDS uploads and passthrough texture-V correction after original DX8 texture transforms |
+| Texture orientation/cache fixes are staged | PASS | texture-surface/provenance contracts cover top-down gameplay DDS uploads, passthrough texture-V correction after original DX8 texture transforms, and renderer texture-bind cache invalidation after direct DX8/Bink GL texture uploads |
 | DX8 render-state bridge remains selected | PASS | canonical build retains `RenegadeVitaRenderer::Apply_DX8_Render_State` and render-state contract 13/13 passes |
 
 ## Frontend, intro, and menu deliverables
@@ -78,13 +80,13 @@ matching `psp2core` dump.
 | Original CombatGameMode post-load finalization, building/radar init, texture-loader update, and `On_Game_Begin` | PASS | PENDING |
 | Visible startup pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input | PASS | PENDING |
 | Loading screen coverage, text, progress, and loading/prewarm progress stream | PASS | PENDING |
-| HUD/TextDisplay/subtitle path and final StyleMgr/TextDisplay initialization order | PASS | PENDING |
+| HUD/TextDisplay/subtitle path, authored 640x480 placement, and final StyleMgr/TextDisplay initialization order | PASS | PENDING |
 | Audible dialogue boundary and streamed-audio diagnostics | PASS | PENDING |
 | Normal camera Y and gameplay input map | PASS | PENDING |
 | Triangle action/use, Square reload, D-pad weapon-only switching, D-pad sniper zoom, front-touch mouse/tap, rear-touch camera toggle | PASS | PENDING |
 | First-person reload animation fallback while original weapon state is reload | PASS | PENDING |
 | Sniper scope/icon placement and zoom behavior | PASS | PENDING |
-| NPC/Havoc/door/powerup/objective texture orientation and material correctness | PASS | PENDING |
+| NPC/Havoc/door/powerup/objective texture orientation, material correctness, and stale texture-bind cache prevention | PASS | PENDING |
 | Bounding-box placement and random rectangle/shadow behavior | PASS | PENDING |
 | FPS regression observation | instrumented/build-ready | PENDING |
 | Gate interaction and freeze/crash after pistol/gate interaction | instrumented/build-ready | PENDING |
@@ -92,13 +94,15 @@ matching `psp2core` dump.
 
 ## Validation run
 
-- `python3 -m unittest tools.test_vita_loading_screen_contract tools.test_vita_skin_submission_contract tools.test_vita_indexed_state_contract tools.test_vita_texture_surface_contract tools.test_a4_original_frontend_contract tools.test_mission_conversation_diagnostics_contract tools.test_vita_camera_input_contract tools.test_compare_capture_bundles tools.test_validate_vita_loading_capture`
-  passed 69/69.
+- `python3 -m unittest tools.test_vita_loading_screen_contract tools.test_vita_texture_surface_contract tools.test_a4_original_frontend_contract tools.test_vita_skin_submission_contract tools.test_mission_conversation_diagnostics_contract tools.test_vita_camera_input_contract tools.test_vita_indexed_state_contract`
+  passed 63/63 after the HUD/texture-cache/pre-cache visibility fixes.
 - `git diff --check` passed.
 - `jq empty reports/BUILD_STATE.json reports/SOURCE_INTEGRATION_REPORT.json`
   passed.
+- `bash ./tools/build_fast_candidate.sh` passed in
+  `logs/a35-dev82-fast-20260829-013237-build.log` with 86 focused tests.
 - `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-004628-build.log`.
+  `logs/a35-dev82-20260829-013330-build.log` with 111 host unittest checks.
 - `python3 -m unittest tools.test_demo_recorder_workflow` passed 5/5, and
   `bash ./tools/build_renegade_demo_recorder_plugin.sh` produced the optional
   recorder `.suprx`, `.skprx`, tai config snippet, and SHA manifest without

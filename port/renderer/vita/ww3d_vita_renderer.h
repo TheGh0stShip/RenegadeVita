@@ -183,6 +183,7 @@ void Record_Texture_Checkerboard_Fallback();
 void Record_Texture_Checkerboard_Bind();
 void Record_Texture_Upload(uint64_t resident_bytes);
 void Record_Texture_Release(uint64_t resident_bytes);
+void Invalidate_Texture_State_Cache();
 bool Bind_Texture(uint32_t native_texture, bool valid);
 bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid);
 void Disable_Texture_Stage(uint32_t stage);

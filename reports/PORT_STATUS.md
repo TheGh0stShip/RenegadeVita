@@ -15,7 +15,11 @@ retail DDS rows for gameplay textures, tightening HUD/subtitle/sniper
 presentation, adding visible reload motion, and applying the requested
 controls: Triangle action/use, Square reload, D-pad Left/Right weapon-only
 switching, D-pad Up/Down sniper zoom, no shoulder remap, and Render2D viewport
-restoration after fullscreen 2D passes. It also integrates
+restoration after fullscreen 2D passes. Current source/build also scopes
+original HUD/TextDisplay/radar/sniper/bounding-box owners to the authored
+640x480 Render2D coordinate space while Vita presents at 960x544, and
+invalidates the renderer texture-bind cache after direct DX8/Bink GL texture
+uploads to prevent stale texture reuse on character meshes. It also integrates
 the external `feature/a35-dev82-retail-frontend` worker and replaces that
 branch's fail-closed Bink stub with Vita FFmpeg Bink video/audio playback below
 the original movie owner, including pending-packet retention across FFmpeg
@@ -24,7 +28,7 @@ has a full canonical build; acceptance still
 depends on returned Vita evidence.
 
 Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-29 in
-`logs/a35-dev82-20260829-004628-build.log` with 109 host unittest checks,
+`logs/a35-dev82-20260829-013330-build.log` with 111 host unittest checks,
 deterministic staging, source integration checks, DDS/TGA alias 11/11,
 lightweight render-state 13/13, ARM link/package, identity, compressed VPK
 validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
@@ -33,10 +37,9 @@ translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
 files, 52 compatibility headers, and 135 active deterministic staging patches.
 The VPK SHA-256 is
-`5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d`. The
-earlier user-authorized FTP upload predates this visible-startup-precache
-artifact and must not be treated as the current VPK; a 2026-08-29 FTP attempt
-for the current VPK timed out before data transfer.
+`df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb`. The
+earlier user-authorized FTP upload predates this visible-startup-precache/HUD/
+texture-cache artifact and must not be treated as the current VPK.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

@@ -30,11 +30,14 @@ void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
 		Vita_Pass_Fail(status.always_dbs_found));
 	psvDebugScreenPrintf("Persistent log:  %s\n\n",
 		Vita_Pass_Fail(status.log_result >= 0));
-	psvDebugScreenPrintf("Booting original M00 tutorial directly.\n");
+	psvDebugScreenPrintf("Next: visible pre-cache/pre-warm/pre-compute.\n");
+	psvDebugScreenPrintf("Then original intro movies, menu, and M00 tutorial.\n");
 	psvDebugScreenPrintf("Controls pass through original Input/Combat:\n");
-	psvDebugScreenPrintf("  D-pad/left stick = movement mappings\n");
+	psvDebugScreenPrintf("  left stick = movement mappings\n");
 	psvDebugScreenPrintf("  right stick = look mappings\n");
-	psvDebugScreenPrintf("  CROSS/CIRCLE/L/R = original action mappings\n");
+	psvDebugScreenPrintf("  D-pad = weapons/sniper zoom in gameplay, WWUI focus in menu\n");
+	psvDebugScreenPrintf("  X/O/Triangle/Square/L/R = original action mappings\n");
+	psvDebugScreenPrintf("  touch = mouse cursor/click, rear touch = camera toggle\n");
 	psvDebugScreenPrintf("  START        = clean exit\n\n");
 	psvDebugScreenPrintf("START exits cleanly after the tutorial begins\n");
 	psvDebugScreenPrintf("Log: %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);

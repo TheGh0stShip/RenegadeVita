@@ -1,6 +1,6 @@
 # Live engineering progress
 
-## 2026-08-29 — dev82 visible startup pre-cache candidate
+## 2026-08-29 — dev82 visible pre-cache HUD/texture-cache candidate
 
 `[██████████] 12/12 canonical source/build gates complete`
 
@@ -11,25 +11,33 @@
   FileFactory/MIX owners, keeps input disabled during that phase, and logs
   `startup-precache begin`, per-file `startup-precache touch`, and
   `startup-precache complete` breadcrumbs.
-- Validation: focused pre-cache/loading/skin/texture/frontend/input/capture
-  contracts passed 69/69, `git diff --check` passed, and canonical
+- Runtime visual fixes: original HUD/TextDisplay/radar/sniper/bounding-box
+  owners now run under the authored 640x480 Render2D coordinate space while
+  Vita presentation remains 960x544, and direct DX8/Bink GL texture uploads
+  invalidate the renderer texture-bind cache before original mesh draws resume.
+  This specifically targets the reported wrong HUD placement and stale
+  character texture reuse such as face textures appearing on Havoc legs.
+- Validation: focused pre-cache/loading/skin/texture/frontend/input contracts
+  passed 63/63, fast candidate `logs/a35-dev82-fast-20260829-013237-build.log`
+  passed 86 focused tests, `git diff --check` passed, and canonical
   `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-004628-build.log` with 109 host unittest checks,
+  `logs/a35-dev82-20260829-013330-build.log` with 111 host unittest checks,
   deterministic 135-patch restaging, DDS/TGA alias 11/11, render-state 13/13,
   ARM link/package, identity, compressed VPK validation, diagnostics bundle,
   SHA manifest, and retail exclusion.
 - Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
-  `5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d`;
+  `df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb`;
   ELF SHA-256 is
-  `ca7b697564f2a84b62fcc83003be9b23ea0cddc104f2f4a3362437eb143c32bb`;
+  `d63d785efeff42ef02f791d65a1c0d7efef9751bbbabe7cc7f2122b20dc9168d`;
   MAP SHA-256 is
-  `c8a69ab902753c8c0c45319f05ffb72be2f000f40c7716de22e402fd3767ecae`;
+  `f1a620a4fc56a09bf928dc2d0a3872caf574b0bd1398dac30fc286abcfbaa92b`;
   diagnostics bundle SHA-256 is
-  `38340595c48f63e8e1e363df8a146f75962274583c6e97e6c548b8026c83e479`.
-- Boundary: this newest `5ec35b28...` VPK has not been uploaded to Vita. The
+  `2a0043ebf04b06f70078afeec28cfa7408e680167648cbec69c601456efe4937`.
+- Boundary: this newest `df4fdf4c...` VPK has not yet been uploaded to Vita. The
   earlier user-authorized `9e67b02c...` upload predates the visible startup
-  pre-cache work and must not be treated as the current artifact. A 2026-08-29
-  VitaShell FTP attempt to `10.0.0.202:1337` timed out before data transfer.
+  pre-cache/HUD/texture-cache work and must not be treated as the current
+  artifact. A 2026-08-29 VitaShell FTP attempt to `10.0.0.202:1337` timed out
+  before transferring the previous current VPK.
   Dev82 remains physically pending.
 
 ## 2026-08-28 — dev82 M00 tutorial plus retail frontend/Bink candidate

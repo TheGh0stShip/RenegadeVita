@@ -4,6 +4,7 @@
 #if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)
 
 #include "renegade_paths.h"
+#include "ww3d_vita_renderer.h"
 #include "vita/a30_vita_runtime.h"
 
 #include <algorithm>
@@ -538,6 +539,7 @@ bool Upload_Pending_Video()
 	const int intended_texture_height = g_texture_allocated ?
 		g_texture_height : Next_Power_Of_Two(g_video_height);
 	glBindTexture(GL_TEXTURE_2D, g_video_texture);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -571,6 +573,7 @@ bool Upload_Pending_Video()
 	const GLenum upload_error = glGetError();
 	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));
 	glActiveTexture(static_cast<GLenum>(previous_active_texture));
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	if (upload_error != GL_NO_ERROR) {
 		const int attempted_texture_width = g_texture_width;
 		const int attempted_texture_height = g_texture_height;
@@ -899,6 +902,7 @@ void BINKMovie::Render()
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &previous_texture);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, g_video_texture);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -924,6 +928,7 @@ void BINKMovie::Render()
 		glDisable(GL_TEXTURE_2D);
 	}
 	glActiveTexture(static_cast<GLenum>(previous_active_texture));
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glMatrixMode(static_cast<GLenum>(previous_matrix_mode));
 	if (depth_enabled) glEnable(GL_DEPTH_TEST);
 	if (cull_enabled) glEnable(GL_CULL_FACE);

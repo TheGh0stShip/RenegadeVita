@@ -37,6 +37,7 @@
 #include "renegade_vita_input_contract.h"
 #include "renegade_vita_input_telemetry.h"
 #include "pscene.h"
+#include "render2d.h"
 #include "soldier.h"
 #include "humanphys.h"
 #include "quat.h"
@@ -191,6 +192,33 @@ enum
 	A31_SPEECH_SOURCE_NONE = 0,
 	A31_SPEECH_SOURCE_ORATOR = 1,
 	A31_SPEECH_SOURCE_ACTIVE_CONVERSATION = 2
+};
+
+const float kA31OriginalHUDLogicalWidth = 640.0f;
+const float kA31OriginalHUDLogicalHeight = 480.0f;
+
+class A31ScopedOriginalHUDRender2DResolution
+{
+public:
+	A31ScopedOriginalHUDRender2DResolution() :
+		Previous(Render2DClass::Get_Screen_Resolution())
+	{
+		Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
+			kA31OriginalHUDLogicalWidth, kA31OriginalHUDLogicalHeight));
+	}
+
+	~A31ScopedOriginalHUDRender2DResolution()
+	{
+		Render2DClass::Set_Screen_Resolution(Previous);
+	}
+
+	A31ScopedOriginalHUDRender2DResolution(
+		const A31ScopedOriginalHUDRender2DResolution &) = delete;
+	A31ScopedOriginalHUDRender2DResolution &operator=(
+		const A31ScopedOriginalHUDRender2DResolution &) = delete;
+
+private:
+	RectClass Previous;
 };
 
 AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics(
@@ -683,6 +711,7 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 		WW3D::Begin_Render(true, true, BackgroundMgrClass::Get_Clear_Color()) ==
 		WW3D_ERROR_OK;
 	if (trace.begin_render_completed) {
+		A31ScopedOriginalHUDRender2DResolution hud_render_resolution;
 		CombatManager::Render();
 		trace.combat_render_called = true;
 		MessageWindowClass *message_window =

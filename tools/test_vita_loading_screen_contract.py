@@ -425,6 +425,51 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         )
         self.assertIn("ww3d2-a35-render2d-viewport-restore.patch", stage_sources)
 
+    def test_gameplay_hud_uses_original_640x480_render2d_coordinates(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text(
+            encoding="utf-8"
+        )
+        gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("kOriginalHUDLogicalWidth = 640.0f", runtime)
+        self.assertIn("kOriginalHUDLogicalHeight = 480.0f", runtime)
+        runtime_helper = runtime[
+            runtime.index("class A31VitaScopedOriginalHUDRender2DResolution"):
+            runtime.index("void Copy_Renderer_Statistics")
+        ]
+        self.assertIn("Render2DClass::Set_Screen_Resolution(RectClass(0, 0,", runtime_helper)
+        self.assertIn("kOriginalHUDLogicalWidth", runtime_helper)
+        self.assertIn("kOriginalHUDLogicalHeight", runtime_helper)
+        self.assertNotIn("WW3D::Set_Device_Resolution", runtime_helper)
+
+        for scope_name, call in (
+            ("hud_init_resolution", "CombatManager::Init(render_hud);"),
+            ("text_display_resolution", "text_display_mode.Init();"),
+            (
+                "hud_finalize_resolution",
+                "CombatGameModeClass::Vita_Finalize_Loaded_Level(",
+            ),
+        ):
+            self.assertLess(runtime.index(scope_name), runtime.index(call))
+
+        self.assertIn('#include "render2d.h"', gameplay)
+        self.assertIn("kA31OriginalHUDLogicalWidth = 640.0f", gameplay)
+        self.assertIn("kA31OriginalHUDLogicalHeight = 480.0f", gameplay)
+        gameplay_helper = gameplay[
+            gameplay.index("class A31ScopedOriginalHUDRender2DResolution"):
+            gameplay.index("AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics")
+        ]
+        self.assertIn("Render2DClass::Set_Screen_Resolution(RectClass(0, 0,", gameplay_helper)
+        self.assertNotIn("WW3D::Set_Device_Resolution", gameplay_helper)
+
+        hud_scope = "A31ScopedOriginalHUDRender2DResolution hud_render_resolution;"
+        self.assertLess(gameplay.index(hud_scope), gameplay.index("CombatManager::Render();"))
+        self.assertLess(gameplay.index(hud_scope), gameplay.index("message_window->Render();"))
+        self.assertLess(gameplay.index(hud_scope), gameplay.index("ObjectiveManager::Render_Viewer();"))
+        self.assertLess(gameplay.index(hud_scope), gameplay.index("text_display->Render();"))
+
     def test_host_loading_backdrop_probe_uses_original_asset_owner(self):
         host_cmake = (ROOT / "tools/host_a30_definitions/CMakeLists.txt").read_text(
             encoding="utf-8"

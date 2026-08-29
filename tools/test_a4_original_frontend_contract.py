@@ -252,6 +252,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "static_cast<GLfloat>(g_video_height) / static_cast<GLfloat>(g_texture_height)",
             "const GLfloat scale = std::min(960.0F / static_cast<GLfloat>(g_video_width)",
             "texture0_enabled = glIsEnabled(GL_TEXTURE_2D);",
+            "RenegadeVitaRenderer::Invalidate_Texture_State_Cache();",
             "movie open path logical=%s physical=%s url=%s",
         ):
             self.assertIn(token, bink)
@@ -327,6 +328,14 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertLess(
             bink.index("glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));", render),
             bink.index("glActiveTexture(static_cast<GLenum>(previous_active_texture));", render),
+        )
+        self.assertLess(
+            bink.index("glBindTexture(GL_TEXTURE_2D, g_video_texture);", render),
+            bink.index("RenegadeVitaRenderer::Invalidate_Texture_State_Cache();", render),
+        )
+        self.assertLess(
+            bink.index("glActiveTexture(static_cast<GLenum>(previous_active_texture));", render),
+            bink.rindex("RenegadeVitaRenderer::Invalidate_Texture_State_Cache();", render),
         )
         self.assertIn("decoder provider unavailable; original menu route continues", bink)
         self.assertIn("--enable-demuxer=bink", dependency_build)

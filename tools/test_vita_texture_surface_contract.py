@@ -188,6 +188,42 @@ class VitaTextureSurfaceContractTests(unittest.TestCase):
         self.assertIn("texture->SurfaceLevels[level] = surface;", method)
         self.assertIn("Destroy_Texture_Surface_Levels(texture);", method)
 
+    def test_direct_texture_uploads_invalidate_renderer_bind_cache(self):
+        header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text(
+            encoding="utf-8"
+        )
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text(
+            encoding="utf-8"
+        )
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("void Invalidate_Texture_State_Cache();", header)
+        invalidate_method = renderer[
+            renderer.index("void Invalidate_Texture_State_Cache()"):
+            renderer.index("bool Build_Indexed_Transform_Matrices")
+        ]
+        self.assertIn("memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));", invalidate_method)
+        self.assertIn("Invalidate_Original_Shader_State_Cache();", invalidate_method)
+
+        for function_name in (
+            "bool Upload_Texture_Level_From_Surface",
+            "IDirect3DTexture8 *Create_Texture_From_Surface",
+            "IDirect3DTexture8 *Create_Checkerboard_Fallback",
+            "IDirect3DTexture8 *Load_DDS_Texture",
+        ):
+            function = boundary[
+                boundary.index(function_name):
+                boundary.index("glTexParameteri", boundary.index(function_name))
+            ]
+            self.assertIn("glBindTexture(GL_TEXTURE_2D,", function)
+            self.assertIn("RenegadeVitaRenderer::Invalidate_Texture_State_Cache();", function)
+            self.assertLess(
+                function.index("glBindTexture(GL_TEXTURE_2D,"),
+                function.index("RenegadeVitaRenderer::Invalidate_Texture_State_Cache();"),
+            )
+
     def test_lock_state_supports_original_multi_level_texture_loader_pattern(self):
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
             encoding="utf-8"

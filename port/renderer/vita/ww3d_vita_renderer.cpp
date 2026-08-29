@@ -1446,6 +1446,14 @@ void Log_Indexed_Rejection(const char *reason, uint32_t vertex_format)
 
 } // namespace
 
+void Invalidate_Texture_State_Cache()
+{
+#if defined(__vita__)
+	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
+	Invalidate_Original_Shader_State_Cache();
+#endif
+}
+
 bool Build_Indexed_Transform_Matrices(const float *world_transform,
 	const float *view_transform, const float *projection_transform,
 	IndexedTransformMatrices &matrices)
@@ -2252,7 +2260,10 @@ void Record_Texture_Unsupported_Stage(uint32_t stage)
 void Release_Texture(uint32_t native_texture)
 {
 #if defined(__vita__)
-	if (native_texture != 0U) glDeleteTextures(1, &native_texture);
+	if (native_texture != 0U) {
+		glDeleteTextures(1, &native_texture);
+		Invalidate_Texture_State_Cache();
+	}
 #else
 	(void)native_texture;
 #endif

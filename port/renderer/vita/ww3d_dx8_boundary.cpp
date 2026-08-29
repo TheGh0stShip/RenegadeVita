@@ -741,6 +741,7 @@ bool Upload_Texture_Level_From_Surface(IDirect3DTexture8 *texture, UINT level)
 		texture->NativeTexture = native;
 	}
 	glBindTexture(GL_TEXTURE_2D, texture->NativeTexture);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 		texture->GetLevelCount() > 1U ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -852,6 +853,7 @@ IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 		return Create_Checkerboard_Fallback();
 	}
 	glBindTexture(GL_TEXTURE_2D, native);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -907,6 +909,7 @@ IDirect3DTexture8 *Create_Checkerboard_Fallback()
 	glGenTextures(1, &native);
 	if (native == 0U) { delete texture; return NULL; }
 	glBindTexture(GL_TEXTURE_2D, native);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -995,6 +998,7 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 		return Create_Checkerboard_Fallback();
 	}
 	glBindTexture(GL_TEXTURE_2D, native);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 		mip_count > 1U ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

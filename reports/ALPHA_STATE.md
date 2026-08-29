@@ -6,33 +6,37 @@
   `main`; this bash workspace is the source authority, not the E: mirror. The
   latest material source pass adds a visible startup
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
-  M00 gameplay input.
-- Last completed work: the 00:46 canonical `bash ./tools/build.sh` run passed
-  fresh host validation, 109 host unittests, deterministic 135-patch restaging,
+  M00 gameplay input, plus original 640x480 HUD Render2D coordinate scoping and
+  renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
+- Last completed work: the 01:33 canonical `bash ./tools/build.sh` run passed
+  fresh host validation, 111 host unittests, deterministic 135-patch restaging,
   source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
   manifest, retail exclusion, and Bink/FFmpeg symbol retention.
 - Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
-  `5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d`;
+  `df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb`;
   diagnostics bundle
-  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-004628.zip` with SHA-256
-  `38340595c48f63e8e1e363df8a146f75962274583c6e97e6c548b8026c83e479`.
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-013330.zip` with SHA-256
+  `2a0043ebf04b06f70078afeec28cfa7408e680167648cbec69c601456efe4937`.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
   retained. On user request, the latest dev82 frontend/Bink/visual/input/
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
-  `5ec35b28...` startup-precache build; dev82 has not been physically accepted.
+  `df4fdf4c...` startup-precache/HUD/texture-cache build; dev82 has not been
+  physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch, loading/HUD/
   subtitle placement, texture/material orientation, bounding boxes, random
   ground rectangles, reload/sniper/control behavior, FPS, gate use, and
   freeze/crash state. The new source hypothesis is that restoring the previous
-  DX8 viewport after fullscreen `Render2DClass::Render()` passes prevents HUD,
+  DX8 viewport after fullscreen `Render2DClass::Render()` passes and scoping
+  original HUD owners to authored 640x480 Render2D coordinates prevents HUD,
   scope, loading, and bounding-box placement corruption from leaking between
-  2D owners, while Bink packet retention prevents FFmpeg decode backpressure
-  from dropping intro movie packets.
+  2D owners, while renderer texture-bind cache invalidation prevents direct
+  DX8/Bink GL uploads from leaving stale character textures bound for later
+  original mesh draws.
 - Exact next external action: user manual install/test from VitaShell for the
   current VPK, then return physical Vita observations plus
   `ux0:data/renegade/user/logs/a35-dev82-runtime.log`, captures, and any

@@ -12,11 +12,11 @@ lifecycle, interactive player/camera ownership, and clean exit.
 
 **A3.5-dev82** is the current hardware-test candidate. It has a successful
 canonical build with the retail frontend worker integrated, a visible startup
-pre-cache/pre-warm/pre-compute phase before frontend/M00 input, and a real Vita
-FFmpeg Bink playback boundary wired below the original movie owner. The earlier
-user-authorized FTP upload predates this current VPK; a 2026-08-29 FTP attempt
-for the current VPK timed out before data transfer. It is not an accepted
-milestone until device observations and returned logs match.
+pre-cache/pre-warm/pre-compute phase before frontend/M00 input, authored
+640x480 HUD Render2D coordinate scoping, stale texture-bind cache invalidation,
+and a real Vita FFmpeg Bink playback boundary wired below the original movie
+owner. The earlier user-authorized FTP upload predates this current VPK; it is
+not an accepted milestone until device observations and returned logs match.
 The source/build/artifact checklist is tracked in
 `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`.
 
@@ -29,7 +29,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d
+df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb
 ```
 
 Runtime log:
@@ -57,7 +57,9 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   rendering and bounds, initializing TextDisplay after final StyleMgr
   reinitialization, and initializing Render2D dynamic FVF fields used by HUD,
   subtitles, scope, loading, and bounding boxes, then restoring the previous
-  DX8 viewport after fullscreen 2D passes.
+  DX8 viewport after fullscreen 2D passes. HUD/TextDisplay/radar/sniper/
+  bounding-box owners now run under the original authored 640x480 Render2D
+  coordinate space while Vita presentation remains 960x544.
 - Vita control mapping: Triangle action/use, Square reload, D-pad Left/Right
   weapon-only switching, D-pad Up/Down sniper zoom, no shoulder remap.
 - Reload animation by adding visible first-person weapon motion while the
@@ -65,7 +67,9 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   retail reload HAnim is absent, short, or delayed.
 - NPC/Havoc/door/powerup/objective texture orientation by preserving top-down
   retail DDS rows in gameplay uploads and applying passthrough texture-V
-  correction after the original DX8 texture transform.
+  correction after the original DX8 texture transform. Direct DX8/Bink GL
+  texture uploads now invalidate the renderer bind cache before original mesh
+  draws resume, preventing stale native texture reuse between owners.
 - FPS regression by caching repeated native viewport/texture/render-state
   changes and enabling a persistent vitaGL shader-cache path.
 - Gate/opening failures by adding original CombatGameMode finalization and

@@ -32,7 +32,7 @@ matching `psp2core` dump.
 | ELF/map/symbols exist and match manifest | PASS | ELF `d846656b011d7a9c875675c76c55885eb76916cdf9f6b5ca7793c3ea212361f1`; map `35e6ff841453eccb0db8dcde0a40bfcb8ab2f7b7f35dc38217fea87f48fb0e49`; symbols `151eb77d4cf925a279f54e63e51f8c0d7cdc0a31cfb22cd715a264a49cbe30ca` |
 | Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-015948.zip` SHA-256 `9e1ad963d736e1784e907c0484f040aa48e90bd335030a2a2ab8638ad5f7b543` |
 | Retail exclusion | PASS | `dist/RenegadeVita-A3.5-dev82.vpk-contents.txt` contains only `sce_sys/param.sfo` and `eboot.bin`; no retail assets, saves, credentials, dumps, or user files are packaged |
-| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `e44963df...` artifact and a 2026-08-29 FTP attempt for the previous current VPK timed out before data transfer |
+| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `e44963df...` artifact and 2026-08-29 FTP/VDB probes found the known PS Vita/PSTV endpoints unreachable before this current VPK could be transferred |
 
 ## Source and staging deliverables
 

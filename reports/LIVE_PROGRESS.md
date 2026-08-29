@@ -38,8 +38,8 @@
 - Boundary: this newest `e44963df...` VPK has not yet been uploaded to Vita. The
   earlier user-authorized `9e67b02c...` upload predates the visible startup
   pre-cache/HUD/texture-cache work and must not be treated as the current
-  artifact. A 2026-08-29 VitaShell FTP attempt to `10.0.0.202:1337` timed out
-  before transferring the previous current VPK.
+  artifact. 2026-08-29 VitaShell FTP/VDB probes found the known PS Vita/PSTV
+  endpoints unreachable before this current VPK could be transferred.
   Dev82 remains physically pending.
 
 ## 2026-08-28 — dev82 M00 tutorial plus retail frontend/Bink candidate

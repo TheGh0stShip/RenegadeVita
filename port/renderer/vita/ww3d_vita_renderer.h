@@ -163,6 +163,9 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 	uint32_t width, uint32_t height, float min_depth, float max_depth,
 	uint32_t logical_width, uint32_t logical_height, NativeViewport &viewport);
+bool Set_Native_Presentation_Rect(uint32_t x, uint32_t y,
+	uint32_t width, uint32_t height);
+void Reset_Native_Presentation_Rect();
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	uint32_t height, float min_depth, float max_depth);
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,

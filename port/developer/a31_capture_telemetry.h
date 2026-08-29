@@ -156,7 +156,12 @@ struct A31LoadingVisualGateTelemetry
 	uint32_t original_logical_height;
 	uint32_t native_display_width;
 	uint32_t native_display_height;
+	uint32_t native_presentation_x;
+	uint32_t native_presentation_y;
+	uint32_t native_presentation_width;
+	uint32_t native_presentation_height;
 	bool logical_to_native_fullscreen;
+	bool aspect_preserved;
 	bool original_loading_screen_owner;
 	bool direct_vitagl_overlay_disabled;
 	bool loading_texture_v_flip_enabled;

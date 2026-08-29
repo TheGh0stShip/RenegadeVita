@@ -13,12 +13,14 @@ lifecycle, interactive player/camera ownership, and clean exit.
 **A3.5-dev82** is the current hardware-test candidate. It has a successful
 canonical build with the retail frontend worker integrated, a visible startup
 pre-cache/pre-warm/pre-compute phase before frontend/M00 input, authored
-640x480 HUD Render2D coordinate scoping, stale texture-bind cache invalidation,
-and an original movie route with a compiled Vita FFmpeg Bink provider below the
-original movie owner. Realtime Bink playback is disabled in this physical-test
-candidate because the prior hardware return showed black-screen/audio-underrun
-behavior; the candidate resolves/logs the retail movie files and fails closed to
-the menu instead of stalling before M00. The earlier user-authorized FTP upload predates this current VPK; it is
+640x480 HUD Render2D coordinate scoping, an aspect-preserved original 640x480
+loading presentation at native `117,0 725x544`, stale texture-bind cache
+invalidation, and an original movie route with a compiled Vita FFmpeg Bink
+provider below the original movie owner. Realtime Bink playback is disabled in
+this physical-test candidate because the prior hardware return showed
+black-screen/audio-underrun behavior; the candidate resolves/logs the retail
+movie files and fails closed to the menu instead of stalling before M00. The
+earlier user-authorized FTP upload predates this current VPK; it is
 not an accepted milestone until device observations and returned logs match.
 The source/build/artifact checklist is tracked in
 `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`.
@@ -32,7 +34,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-8decd4ce14e8199b024267266d3a73752237e77f5e70c1db1ed34e73d20da80e
+8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560
 ```
 
 Runtime log:
@@ -52,7 +54,9 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   after black-screen/audio-underrun evidence. Missing or skipped movies continue
   into the original menu rather than hanging before M00.
 - Loading screen coverage, status text, and progress through the original
-  one-bar path, including renderer/cache prewarm.
+  one-bar path, including renderer/cache prewarm and aspect-preserved native
+  presentation of the original 640x480 authored loading layout at `117,0
+  725x544`.
 - Visible startup pre-cache/pre-warm/pre-compute before intro movies, menu
   navigation, or M00 gameplay input. It indexes original MIX filename tables,
   touches startup movie/menu/loading/M00 files through the original
@@ -87,8 +91,8 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   this candidate, and can later be realtime-decoded, synced, and skipped
   correctly on hardware.
 - Whether original WWUI menu navigation works and Tutorial launches M00.
-- Whether the loading screen is visually correct and fullscreen on the Vita
-  panel.
+- Whether the loading screen is visually correct, unstretched, and
+  aspect-preserved on the Vita panel.
 - Whether Logan, Sydney, and Gunner subtitles/text appear in the original path.
 - Whether NPC, Havoc, door, powerup, and objective textures/materials are
   correct rather than merely improved.
@@ -106,6 +110,8 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 ## Useful Evidence To Return
 
 - Runtime log from `ux0:data/renegade/user/logs/a35-dev82-runtime.log`.
+- Startup pre-cache receipt from
+  `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`.
 - Any screenshots showing intro/menu state, loading screen, Logan text,
   NPC/Havoc materials, HUD, gate state, and freeze point.
 - Any `psp2core-*.psp2dmp` if the app crashes or the system captures a dump.

@@ -10,8 +10,10 @@ physical defects by moving direct M00 load completion back through original
 `CombatGameModeClass` finalization, rendering loading-screen text/progress,
 using one progress stream for loading and prewarm, running a visible startup
 pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input with a
-five-second minimum display and separate movie-file availability reporting, setting a
-persistent Vita shader-cache path, synchronizing HUD/loading viewports, preserving top-down
+five-second minimum display and separate movie-file availability reporting,
+setting a persistent Vita shader-cache path, presenting the original 640x480
+loading layout as an aspect-preserved native `117,0 725x544` rect instead of
+stretching it, synchronizing HUD/loading viewports, preserving top-down
 retail DDS rows for gameplay textures, tightening HUD/subtitle/sniper
 presentation, adding visible reload motion, and applying the requested
 controls: Triangle action/use, Square reload, D-pad Left/Right weapon-only
@@ -30,7 +32,7 @@ has a full canonical build; acceptance still
 depends on returned Vita evidence.
 
 Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-29 in
-`logs/a35-dev82-20260829-024605-build.log` with 111 host unittest checks,
+`logs/a35-dev82-20260829-032344-build.log` with 111 host unittest checks,
 deterministic staging, source integration checks, DDS/TGA alias 11/11,
 lightweight render-state 13/13, ARM link/package, identity, compressed VPK
 validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
@@ -39,9 +41,10 @@ translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
 files, 52 compatibility headers, and 135 active deterministic staging patches.
 The VPK SHA-256 is
-`8decd4ce14e8199b024267266d3a73752237e77f5e70c1db1ed34e73d20da80e`. The
-earlier user-authorized FTP upload predates this visible-startup-precache/HUD/
-texture-cache artifact and must not be treated as the current VPK.
+`8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560`. The
+earlier user-authorized FTP upload predates this visible-startup-precache/
+loading-aspect/HUD/texture-cache artifact and must not be treated as the
+current VPK.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

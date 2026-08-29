@@ -7,28 +7,31 @@
   latest material source pass adds a visible startup
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
   M00 gameplay input, plus original 640x480 HUD Render2D coordinate scoping and
-  renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
-- Last completed work: the 02:46 canonical `bash ./tools/build.sh` run passed
+  an aspect-preserved original 640x480 loading presentation at native `117,0
+  725x544`, plus renderer texture-bind cache invalidation after direct DX8/Bink
+  GL uploads.
+- Last completed work: the 03:23 canonical `bash ./tools/build.sh` run passed
   fresh host validation, 111 host unittests, deterministic 135-patch restaging,
   source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
   manifest, retail exclusion, and Bink/FFmpeg symbol retention.
 - Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
-  `8decd4ce14e8199b024267266d3a73752237e77f5e70c1db1ed34e73d20da80e`;
+  `8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560`;
   diagnostics bundle
-  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-024605.zip` with SHA-256
-  `ce8dd846213512b0dfd001daa566802d67ea44b15396069fde9ecbd28087b2d4`.
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-032344.zip` with SHA-256
+  `aae3defeda7dbcd9eddd9b84b56af52635382d0b9e262633954d7d9f79bf222f`.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
   retained. On user request, an earlier dev82 frontend/Bink/visual/input/
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
-  `8decd4ce...` startup-precache/HUD/texture-cache build; dev82 has not been
-  physically accepted.
+  `8db53e2a...` startup-precache/loading-aspect/HUD/texture-cache build; dev82
+  has not been physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
-  playback/skip, original WWUI menu navigation, Tutorial launch, loading/HUD/
-  subtitle placement, texture/material orientation, bounding boxes, random
+  playback/skip, original WWUI menu navigation, Tutorial launch,
+  aspect-preserved loading, HUD/subtitle placement, texture/material
+  orientation, bounding boxes, random
   ground rectangles, reload/sniper/control behavior, FPS, gate use, and
   freeze/crash state. The new source hypothesis is that restoring the previous
   DX8 viewport after fullscreen `Render2DClass::Render()` passes and scoping
@@ -36,7 +39,9 @@
   scope, loading, and bounding-box placement corruption from leaking between
   2D owners, while renderer texture-bind cache invalidation prevents direct
   DX8/Bink GL uploads from leaving stale character textures bound for later
-  original mesh draws.
+  original mesh draws. The loading-screen hypothesis is that preserving the
+  original 640x480 authored layout as a centered 4:3 native rect avoids the
+  previous wide-screen stretch while keeping gameplay at native 960x544.
 - Exact next external action: when the Vita is reachable, run
   `tools/upload_dev82_current_vpk.sh --scan-arp` from the active bash
   workspace or manually install/test the current VPK from VitaShell, then

@@ -71,6 +71,17 @@ void Release_Deformed_Skin_Scratch()
 	g_deformed_skin_capacity = 0;
 }
 
+struct NativePresentationRect {
+	uint32_t x;
+	uint32_t y;
+	uint32_t width;
+	uint32_t height;
+};
+
+NativePresentationRect g_native_presentation_rect = {
+	0U, 0U, DISPLAY_WIDTH, DISPLAY_HEIGHT
+};
+
 #if defined(__vita__)
 bool g_logged_first_frame = false;
 bool g_logged_first_present = false;
@@ -1511,14 +1522,22 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 	}
 
 	const uint64_t left =
-		(static_cast<uint64_t>(d3d_x) * DISPLAY_WIDTH) / logical_width;
+		g_native_presentation_rect.x +
+		(static_cast<uint64_t>(d3d_x) *
+			g_native_presentation_rect.width) / logical_width;
 	const uint64_t right =
-		((static_cast<uint64_t>(d3d_x) + width) * DISPLAY_WIDTH +
+		g_native_presentation_rect.x +
+		((static_cast<uint64_t>(d3d_x) + width) *
+			g_native_presentation_rect.width +
 			logical_width - 1U) / logical_width;
 	const uint64_t top =
-		(static_cast<uint64_t>(d3d_y) * DISPLAY_HEIGHT) / logical_height;
+		g_native_presentation_rect.y +
+		(static_cast<uint64_t>(d3d_y) *
+			g_native_presentation_rect.height) / logical_height;
 	const uint64_t bottom =
-		((static_cast<uint64_t>(d3d_y) + height) * DISPLAY_HEIGHT +
+		g_native_presentation_rect.y +
+		((static_cast<uint64_t>(d3d_y) + height) *
+			g_native_presentation_rect.height +
 			logical_height - 1U) / logical_height;
 	if (right <= left || bottom <= top || right > DISPLAY_WIDTH ||
 		bottom > DISPLAY_HEIGHT) {
@@ -1532,6 +1551,38 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 	viewport.min_depth = min_depth;
 	viewport.max_depth = max_depth;
 	return true;
+}
+
+bool Set_Native_Presentation_Rect(uint32_t x, uint32_t y,
+	uint32_t width, uint32_t height)
+{
+	if (width == 0U || height == 0U || x > DISPLAY_WIDTH ||
+		y > DISPLAY_HEIGHT || width > DISPLAY_WIDTH - x ||
+		height > DISPLAY_HEIGHT - y) {
+		return false;
+	}
+	if (g_native_presentation_rect.x == x &&
+		g_native_presentation_rect.y == y &&
+		g_native_presentation_rect.width == width &&
+		g_native_presentation_rect.height == height) {
+		return true;
+	}
+	g_native_presentation_rect.x = x;
+	g_native_presentation_rect.y = y;
+	g_native_presentation_rect.width = width;
+	g_native_presentation_rect.height = height;
+#if defined(__vita__)
+	g_current_native_viewport_known = false;
+	Vita_Append_A22_Runtime_Breadcrumb("camera-state",
+		"native presentation rect: top_left=%u,%u size=%ux%u display=%ux%u",
+		x, y, width, height, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+#endif
+	return true;
+}
+
+void Reset_Native_Presentation_Rect()
+{
+	(void)Set_Native_Presentation_Rect(0U, 0U, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 }
 
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
@@ -1589,9 +1640,12 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	static bool logged_first_camera_viewport = false;
 	if (!logged_first_camera_viewport) {
 		Vita_Append_A22_Runtime_Breadcrumb("camera-state",
-			"original CameraClass viewport: d3d=%u,%u %ux%u native=%u,%u %ux%u depth=%.6f..%.6f prior_gl=%08X gl=%08X",
+			"original CameraClass viewport: d3d=%u,%u %ux%u native=%u,%u %ux%u presentation=%u,%u %ux%u depth=%.6f..%.6f prior_gl=%08X gl=%08X",
 			d3d_x, d3d_y, width, height, viewport.x, viewport.y,
-			viewport.width, viewport.height, viewport.min_depth,
+			viewport.width, viewport.height,
+			g_native_presentation_rect.x, g_native_presentation_rect.y,
+			g_native_presentation_rect.width,
+			g_native_presentation_rect.height, viewport.min_depth,
 			viewport.max_depth, static_cast<unsigned>(prior_error),
 			static_cast<unsigned>(operation_error));
 		logged_first_camera_viewport = true;

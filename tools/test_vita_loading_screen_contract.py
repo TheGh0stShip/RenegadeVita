@@ -63,6 +63,12 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("kOriginalLoadingLogicalHeight = 480.0f", runtime)
         self.assertIn("class A31VitaScopedLoadingRenderResolution", runtime)
         self.assertIn("WW3D::Get_Device_Resolution(PreviousWidth, PreviousHeight", runtime)
+        self.assertIn("Build_Original_Loading_Presentation_Rect()", runtime)
+        self.assertIn("Apply_Original_Loading_Presentation_Rect", runtime)
+        self.assertIn("RenegadeVitaRenderer::Set_Native_Presentation_Rect(", runtime)
+        self.assertIn("RenegadeVitaRenderer::Reset_Native_Presentation_Rect();", runtime)
+        self.assertIn('"A3.5 loading screen: original 640x480 presentation rect reason=%s', runtime)
+        self.assertIn("presentation=%u,%u %ux%u aspect_preserved=1", runtime)
         self.assertIn("WW3D::Set_Device_Resolution(", runtime)
         self.assertIn("static_cast<int>(kOriginalLoadingLogicalWidth)", runtime)
         self.assertIn("static_cast<int>(kOriginalLoadingLogicalHeight)", runtime)
@@ -77,6 +83,10 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Screen = Commando_Create_Original_Loading_Screen();", runtime)
         self.assertIn("Commando_Original_Loading_Screen_Has_Backdrop_Model(Screen)", runtime)
         self.assertIn("Commando_Render_Original_Loading_Screen(Screen, update_network);", runtime)
+        self.assertLess(
+            runtime.index('"loading_presenter_render"'),
+            runtime.index("Commando_Render_Original_Loading_Screen(Screen, update_network);"),
+        )
         self.assertIn("Commando_Destroy_Original_Loading_Screen(Screen);", runtime)
         self.assertNotIn("BackdropText.Set_Texture_Size_Hint(256)", runtime)
         self.assertNotIn("BackdropText2.Set_Texture_Size_Hint(256)", runtime)
@@ -170,7 +180,12 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("state.loading_visual_gate.original_logical_height", runtime)
         self.assertIn("state.loading_visual_gate.native_display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;", runtime)
         self.assertIn("state.loading_visual_gate.native_display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;", runtime)
-        self.assertIn("state.loading_visual_gate.logical_to_native_fullscreen", runtime)
+        self.assertIn("state.loading_visual_gate.native_presentation_x = rect.x;", runtime)
+        self.assertIn("state.loading_visual_gate.native_presentation_y = rect.y;", runtime)
+        self.assertIn("state.loading_visual_gate.native_presentation_width = rect.width;", runtime)
+        self.assertIn("state.loading_visual_gate.native_presentation_height = rect.height;", runtime)
+        self.assertIn("state.loading_visual_gate.logical_to_native_fullscreen =", runtime)
+        self.assertIn("state.loading_visual_gate.aspect_preserved = true;", runtime)
         self.assertIn("state.loading_visual_gate.original_loading_screen_owner = true;", runtime)
         self.assertIn("state.loading_visual_gate.direct_vitagl_overlay_disabled = true;", runtime)
         self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = true;", runtime)
@@ -359,11 +374,30 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         compare_source = (ROOT / "tools/compare_capture_bundles.py").read_text(
             encoding="utf-8"
         )
+        validator_source = (ROOT / "tools/validate_vita_loading_capture.py").read_text(
+            encoding="utf-8"
+        )
         self.assertIn("A31_CAPTURE_SCHEMA_VERSION = 4U", capture_header)
         self.assertIn("A31LoadingVisualGateTelemetry", capture_header)
+        self.assertIn("native_presentation_x", capture_header)
+        self.assertIn("native_presentation_width", capture_source)
+        self.assertIn("aspect_preserved", capture_source)
         self.assertIn("loading_visual_gate", capture_source)
         self.assertIn("Loading visual gate: active=%d logical=%ux%u", capture_source)
         self.assertIn('"loading_visual_gate.logical_to_native_fullscreen"', compare_source)
+        self.assertIn('"loading_visual_gate.native_presentation_width"', compare_source)
+        self.assertIn('"loading_visual_gate.aspect_preserved"', compare_source)
+        self.assertIn('"native_presentation_x": 117', validator_source)
+        self.assertIn('"native_presentation_width": 725', validator_source)
+        self.assertIn('"logical_to_native_fullscreen": False', validator_source)
+        self.assertIn('"aspect_preserved": True', validator_source)
+
+        self.assertIn("g_native_presentation_rect", renderer)
+        self.assertIn("Set_Native_Presentation_Rect", renderer_h)
+        self.assertIn("Reset_Native_Presentation_Rect", renderer_h)
+        self.assertIn("g_native_presentation_rect.width", renderer)
+        self.assertIn("g_native_presentation_rect.height", renderer)
+        self.assertIn("native presentation rect: top_left=%u,%u", renderer)
 
         cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
         self.assertIn('MATCHES "VGL_MEM_PHYCONT[ \\t\\r\\n]*,"', cmake)

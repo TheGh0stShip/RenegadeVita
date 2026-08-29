@@ -122,6 +122,14 @@ const float kOriginalLoadingLogicalHeight = 480.0f;
 const float kOriginalHUDLogicalWidth = 640.0f;
 const float kOriginalHUDLogicalHeight = 480.0f;
 
+struct A31NativePresentationRect
+{
+	uint32_t x;
+	uint32_t y;
+	uint32_t width;
+	uint32_t height;
+};
+
 struct A31StartupPrecacheResult
 {
 	bool passed;
@@ -147,6 +155,50 @@ struct A31StartupPrecacheFileSpec
 	bool required;
 	unsigned read_limit;
 };
+
+A31NativePresentationRect Build_Original_Loading_Presentation_Rect()
+{
+	const uint32_t logical_width =
+		static_cast<uint32_t>(kOriginalLoadingLogicalWidth);
+	const uint32_t logical_height =
+		static_cast<uint32_t>(kOriginalLoadingLogicalHeight);
+	const uint32_t display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
+	const uint32_t display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
+	uint32_t width = display_width;
+	uint32_t height =
+		static_cast<uint32_t>((static_cast<uint64_t>(display_width) *
+			logical_height) / logical_width);
+	if (height > display_height) {
+		height = display_height;
+		width = static_cast<uint32_t>((static_cast<uint64_t>(display_height) *
+			logical_width) / logical_height);
+	}
+	A31NativePresentationRect rect = {
+		(display_width - width) / 2U,
+		(display_height - height) / 2U,
+		width,
+		height
+	};
+	return rect;
+}
+
+bool Apply_Original_Loading_Presentation_Rect(const char *reason,
+	bool log_state)
+{
+	const A31NativePresentationRect rect =
+		Build_Original_Loading_Presentation_Rect();
+	const bool applied = RenegadeVitaRenderer::Set_Native_Presentation_Rect(
+		rect.x, rect.y, rect.width, rect.height);
+	if (log_state) {
+		A30_Vita_Log("A3.5 loading screen: original 640x480 presentation rect reason=%s native=%u,%u %ux%u display=%ux%u aspect_preserved=%d applied=%d\n",
+			reason != NULL ? reason : "unknown",
+			rect.x, rect.y, rect.width, rect.height,
+			RenegadeVitaRenderer::DISPLAY_WIDTH,
+			RenegadeVitaRenderer::DISPLAY_HEIGHT,
+			1, applied ? 1 : 0);
+	}
+	return applied;
+}
 
 /* Original Commando gives WWAudio a path-stripping factory over the active
 ** retail/MIX chain. Keep the same semantic boundary here so authoring paths
@@ -514,29 +566,40 @@ public:
 		PreviousHeight(0),
 		PreviousBits(0),
 		PreviousWindowed(false),
+		PresentationRectApplied(false),
 		Applied(false)
 	{
 		WW3D::Get_Device_Resolution(PreviousWidth, PreviousHeight,
 			PreviousBits, PreviousWindowed);
+		PresentationRectApplied =
+			Apply_Original_Loading_Presentation_Rect("loading_scope", true);
 		Applied = WW3D::Set_Device_Resolution(
 			static_cast<int>(kOriginalLoadingLogicalWidth),
 			static_cast<int>(kOriginalLoadingLogicalHeight), -1, -1,
 			false) == WW3D_ERROR_OK;
-		A30_Vita_Log("A3.5 loading screen: original logical WW3D/DX8/Render2D resolution %.0fx%.0f over Vita display %ux%u applied=%d previous=%dx%d\n",
+		const A31NativePresentationRect rect =
+			Build_Original_Loading_Presentation_Rect();
+		A30_Vita_Log("A3.5 loading screen: original logical WW3D/DX8/Render2D resolution %.0fx%.0f over Vita display %ux%u presentation=%u,%u %ux%u aspect_preserved=1 applied=%d rect_applied=%d previous=%dx%d\n",
 			kOriginalLoadingLogicalWidth, kOriginalLoadingLogicalHeight,
-			kCaptureWidth, kCaptureHeight, Applied ? 1 : 0,
-			PreviousWidth, PreviousHeight);
+			kCaptureWidth, kCaptureHeight, rect.x, rect.y, rect.width,
+			rect.height, Applied ? 1 : 0,
+			PresentationRectApplied ? 1 : 0, PreviousWidth,
+			PreviousHeight);
 	}
 
 	~A31VitaScopedLoadingRenderResolution()
 	{
+		if (PresentationRectApplied) {
+			RenegadeVitaRenderer::Reset_Native_Presentation_Rect();
+		}
 		if (Applied) {
 			const int previous_windowed = PreviousWindowed ? 1 : 0;
 			WW3D::Set_Device_Resolution(PreviousWidth, PreviousHeight,
 				PreviousBits, previous_windowed, false);
 		}
-		A30_Vita_Log("A3.5 loading screen: restored Vita WW3D/DX8/Render2D resolution %dx%d applied=%d\n",
-			PreviousWidth, PreviousHeight, Applied ? 1 : 0);
+		A30_Vita_Log("A3.5 loading screen: restored Vita WW3D/DX8/Render2D resolution %dx%d applied=%d rect_reset=%d\n",
+			PreviousWidth, PreviousHeight, Applied ? 1 : 0,
+			PresentationRectApplied ? 1 : 0);
 	}
 
 	A31VitaScopedLoadingRenderResolution(const A31VitaScopedLoadingRenderResolution &) = delete;
@@ -547,6 +610,7 @@ private:
 	int PreviousHeight;
 	int PreviousBits;
 	bool PreviousWindowed;
+	bool PresentationRectApplied;
 	bool Applied;
 };
 
@@ -683,6 +747,8 @@ public:
 		if (mirrored_progress > current_progress) {
 			CombatManager::Set_Load_Progress(mirrored_progress);
 		}
+		Apply_Original_Loading_Presentation_Rect(
+			"loading_presenter_render", false);
 		Commando_Render_Original_Loading_Screen(Screen, update_network);
 		if (LastMirroredLoadProgress != mirrored_progress ||
 			phase == NULL ||
@@ -786,7 +852,17 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 		static_cast<uint32_t>(kOriginalLoadingLogicalHeight);
 	state.loading_visual_gate.native_display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
 	state.loading_visual_gate.native_display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
-	state.loading_visual_gate.logical_to_native_fullscreen = true;
+	const A31NativePresentationRect rect =
+		Build_Original_Loading_Presentation_Rect();
+	state.loading_visual_gate.native_presentation_x = rect.x;
+	state.loading_visual_gate.native_presentation_y = rect.y;
+	state.loading_visual_gate.native_presentation_width = rect.width;
+	state.loading_visual_gate.native_presentation_height = rect.height;
+	state.loading_visual_gate.logical_to_native_fullscreen =
+		rect.x == 0U && rect.y == 0U &&
+		rect.width == RenegadeVitaRenderer::DISPLAY_WIDTH &&
+		rect.height == RenegadeVitaRenderer::DISPLAY_HEIGHT;
+	state.loading_visual_gate.aspect_preserved = true;
 	state.loading_visual_gate.original_loading_screen_owner = true;
 	state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
 	state.loading_visual_gate.loading_texture_v_flip_enabled = true;
@@ -799,6 +875,7 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 bool Apply_Original_Gameplay_Render_Resolution(const char *reason = "startup",
 	bool log_state = true)
 {
+	RenegadeVitaRenderer::Reset_Native_Presentation_Rect();
 	const bool applied = WW3D::Set_Device_Resolution(
 		static_cast<int>(RenegadeVitaRenderer::DISPLAY_WIDTH),
 		static_cast<int>(RenegadeVitaRenderer::DISPLAY_HEIGHT), -1, -1, false) == WW3D_ERROR_OK;
@@ -821,6 +898,8 @@ bool Apply_Original_Gameplay_Render_Resolution(const char *reason = "startup",
 bool Apply_Original_Loading_Render_Resolution_For_Prewarm(unsigned frame,
 	bool log_state)
 {
+	const bool rect_applied = Apply_Original_Loading_Presentation_Rect(
+		"prewarm_loading_overlay", log_state);
 	const bool applied = WW3D::Set_Device_Resolution(
 		static_cast<int>(kOriginalLoadingLogicalWidth),
 		static_cast<int>(kOriginalLoadingLogicalHeight), -1, -1, false) == WW3D_ERROR_OK;
@@ -830,13 +909,18 @@ bool Apply_Original_Loading_Render_Resolution_For_Prewarm(unsigned frame,
 	bool windowed = false;
 	WW3D::Get_Device_Resolution(width, height, bits, windowed);
 	if (log_state) {
-		A30_Vita_Log("A3.5 prewarm: loading presenter overlay resolution frame=%u requested=%.0fx%.0f current=%dx%d bits=%d windowed=%d native=%ux%u applied=%d\n",
+		const A31NativePresentationRect rect =
+			Build_Original_Loading_Presentation_Rect();
+		A30_Vita_Log("A3.5 prewarm: loading presenter overlay resolution frame=%u requested=%.0fx%.0f current=%dx%d bits=%d windowed=%d native=%ux%u presentation=%u,%u %ux%u aspect_preserved=1 applied=%d rect_applied=%d\n",
 			frame, kOriginalLoadingLogicalWidth,
 			kOriginalLoadingLogicalHeight, width, height, bits,
 			windowed ? 1 : 0, RenegadeVitaRenderer::DISPLAY_WIDTH,
-			RenegadeVitaRenderer::DISPLAY_HEIGHT, applied ? 1 : 0);
+			RenegadeVitaRenderer::DISPLAY_HEIGHT, rect.x, rect.y,
+			rect.width, rect.height, applied ? 1 : 0,
+			rect_applied ? 1 : 0);
 	}
-	return applied && width == static_cast<int>(kOriginalLoadingLogicalWidth) &&
+	return rect_applied && applied &&
+		width == static_cast<int>(kOriginalLoadingLogicalWidth) &&
 		height == static_cast<int>(kOriginalLoadingLogicalHeight);
 }
 

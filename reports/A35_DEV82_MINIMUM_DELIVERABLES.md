@@ -11,14 +11,16 @@ this bash workspace after validation.
 
 All source/build/artifact minimum deliverables for the dev82 physical-test
 candidate are met by the compiled bash-workspace source state and the canonical
-build `logs/a35-dev82-20260829-024605-build.log`. The current artifact includes
+build `logs/a35-dev82-20260829-032344-build.log`. The current artifact includes
 the visible startup pre-cache/pre-warm/pre-compute phase that runs before intro
 movies, menus, and M00 input, original 640x480 HUD Render2D coordinate scoping,
-and renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
-The pre-cache phase now has a five-second visible minimum and reports intro
-movie-file availability before the movie/menu route starts. It also writes
-`ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, so the next
-physical return can prove the phase even if the display capture misses it.
+an aspect-preserved original 640x480 loading presentation rect at native
+`117,0 725x544`, and renderer texture-bind cache invalidation after direct
+DX8/Bink GL uploads. The pre-cache phase now has a five-second visible minimum
+and reports intro movie-file availability before the movie/menu route starts.
+It also writes `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, so
+the next physical return can prove the phase even if the display capture misses
+it.
 
 This is not a physical acceptance claim. The Vita still must prove the movie,
 menu, M00, controls, HUD, texture, FPS, gate, freeze/crash, and clean-exit
@@ -29,12 +31,12 @@ matching `psp2core` dump.
 
 | Deliverable | Status | Evidence |
 |---|---|---|
-| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260829-024605-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
-| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `8decd4ce14e8199b024267266d3a73752237e77f5e70c1db1ed34e73d20da80e` |
-| ELF/map/symbols exist and match manifest | PASS | ELF `f97d83e4d30271cb56f122ce0c9a9db03143b985ca2f966f69248cc55644d41e`; map `5e923e966275ee2e384ca7fdcb822ac20d9eae4cd9a38b08bc233ef7752623a6`; symbols `2fd1f6e81ff5da0196bc6defe37f270b7ccbe9feb65a025f54bec6a2eab2ca67` |
-| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-024605.zip` SHA-256 `ce8dd846213512b0dfd001daa566802d67ea44b15396069fde9ecbd28087b2d4` |
+| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260829-032344-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
+| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `8db53e2a4c3f5d1c9f69850dc21c47b5c4827c7b01b12a75b734a17f52180560` |
+| ELF/map/symbols exist and match manifest | PASS | ELF `bcddd3e6527b5af1fc19415a62887cf1d543fdebe3c7c957742a2b789c2d1f91`; map `a889ac41691065d901b3674e653372d06ab2d346e229dddac138916319ac9f53`; symbols `cbb317220ad253b7dfa78a617e5a0c83d5cdb584a95f63d3898312a3a55a5ac3` |
+| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-032344.zip` SHA-256 `aae3defeda7dbcd9eddd9b84b56af52635382d0b9e262633954d7d9f79bf222f` |
 | Retail exclusion | PASS | `dist/RenegadeVita-A3.5-dev82.vpk-contents.txt` contains only `sce_sys/param.sfo` and `eboot.bin`; no retail assets, saves, credentials, dumps, or user files are packaged |
-| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `8decd4ce...` artifact and 2026-08-29 FTP/VDB probes found the known PS Vita/PSTV endpoints unreachable before this current VPK could be transferred |
+| No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; the earlier user-authorized VitaShell FTP upload predates this `8db53e2a...` artifact and 2026-08-29 FTP/VDB probes found the known PS Vita/PSTV endpoints unreachable before this current VPK could be transferred |
 
 ## Source and staging deliverables
 
@@ -44,6 +46,7 @@ matching `psp2core` dump.
 | Original source ownership is preserved | PASS | source report records 506 original Westwood translation units plus 1 staged original-owner extraction and 26 Vita platform/renderer/validation/developer files |
 | Deterministic patch count is guarded | PASS | `tools/generate_integration_report.py` and `tools/build.sh` expect `patch_count=135`; `tools/stage_sources.sh` applies patches with zero fuzz |
 | Visible startup pre-cache/pre-warm/pre-compute phase is active | PASS | `A31_Vita_Run_Interactive_Runtime(int)` runs `Run_Visible_Startup_Precache_Phase()` before frontend movies, menus, and gameplay input; the ELF contains `Pre-cache / pre-warm / pre-compute`, `startup-precache begin`, `startup-precache touch`, `startup-precache visible hold`, `startup-precache receipt`, `startup-precache complete`, `a35-dev82-startup-precache.txt`, and `visible_minimum_ms=5000` |
+| Loading screen preserves authored 4:3 presentation | PASS | `Build_Original_Loading_Presentation_Rect()` maps the original 640x480 loading layout to native `117,0 725x544`; capture telemetry records `native_presentation_x/y/width/height`, `logical_to_native_fullscreen=false`, and `aspect_preserved=true` |
 | Original HUD coordinate placement uses authored 640x480 Render2D space | PASS | `A31VitaScopedOriginalHUDRender2DResolution` and `A31ScopedOriginalHUDRender2DResolution` scope TextDisplay, CombatManager init/finalization, and per-frame HUD/subtitle/scope/bounding-box renders to the original 640x480 Render2D coordinate system without changing the native 960x544 device presentation |
 | Render2D viewport restore is durable | PASS | `port/patches/ww3d2-a35-render2d-viewport-restore.patch` and `staging/ww3d2/render2d.cpp` save the active DX8 viewport before the fullscreen 2D pass and restore it after drawing |
 | Render2D HUD/loading/scope vertex data is initialized | PASS | `port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch` initializes normal and UV1 data used by dynamic FVF 2D draws |
@@ -83,7 +86,7 @@ matching `psp2core` dump.
 |---|---|---|
 | Original CombatGameMode post-load finalization, building/radar init, texture-loader update, and `On_Game_Begin` | PASS | PENDING |
 | Visible startup pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input, with five-second visible minimum and movie-file availability counts | PASS | PENDING |
-| Loading screen coverage, text, progress, and loading/prewarm progress stream | PASS | PENDING |
+| Loading screen coverage, text, progress, loading/prewarm progress stream, and aspect-preserved `117,0 725x544` presentation | PASS | PENDING |
 | HUD/TextDisplay/subtitle path, authored 640x480 placement, and final StyleMgr/TextDisplay initialization order | PASS | PENDING |
 | Audible dialogue boundary and streamed-audio diagnostics | PASS | PENDING |
 | Normal camera Y and gameplay input map | PASS | PENDING |
@@ -99,16 +102,17 @@ matching `psp2core` dump.
 ## Validation run
 
 - `python3 -m unittest tools.test_vita_loading_screen_contract tools.test_vita_texture_surface_contract tools.test_a4_original_frontend_contract tools.test_vita_skin_submission_contract tools.test_mission_conversation_diagnostics_contract tools.test_vita_camera_input_contract tools.test_vita_indexed_state_contract`
-  passed 67/67 after the HUD/texture-cache/pre-cache visibility fixes.
+  passed 71/71 after the HUD/texture-cache/pre-cache visibility fixes.
 - `git diff --check` passed.
 - `jq empty reports/BUILD_STATE.json reports/SOURCE_INTEGRATION_REPORT.json`
   passed.
 - `bash ./tools/build_fast_candidate.sh` passed in
-  `logs/a35-dev82-fast-20260829-024401-build.log` with 86 focused tests.
+  `logs/a35-dev82-fast-20260829-031924-build.log` with 86 focused tests.
 - `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-024605-build.log` with 111 host unittest checks.
-  The ELF string check confirms the startup-precache receipt path and visible
-  pre-cache screen text are present in the packaged executable.
+  `logs/a35-dev82-20260829-032344-build.log` with 111 host unittest checks.
+  The ELF string check confirms the startup-precache receipt path, visible
+  pre-cache screen text, native presentation rect logging, and loading
+  `aspect_preserved` capture fields are present in the packaged executable.
 - `python3 -m unittest tools.test_demo_recorder_workflow` passed 5/5, and
   `bash ./tools/build_renegade_demo_recorder_plugin.sh` produced the optional
   recorder `.suprx`, `.skprx`, tai config snippet, and SHA manifest without

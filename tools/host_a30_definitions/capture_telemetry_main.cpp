@@ -140,7 +140,12 @@ int main()
 	input.state.loading_visual_gate.original_logical_height = 480U;
 	input.state.loading_visual_gate.native_display_width = 960U;
 	input.state.loading_visual_gate.native_display_height = 544U;
-	input.state.loading_visual_gate.logical_to_native_fullscreen = true;
+	input.state.loading_visual_gate.native_presentation_x = 117U;
+	input.state.loading_visual_gate.native_presentation_y = 0U;
+	input.state.loading_visual_gate.native_presentation_width = 725U;
+	input.state.loading_visual_gate.native_presentation_height = 544U;
+	input.state.loading_visual_gate.logical_to_native_fullscreen = false;
+	input.state.loading_visual_gate.aspect_preserved = true;
 	input.state.loading_visual_gate.original_loading_screen_owner = true;
 	input.state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
 	input.state.loading_visual_gate.loading_texture_v_flip_enabled = true;
@@ -172,10 +177,13 @@ int main()
 	Check(State_Contains(directory, "\"loading_visual_gate\"") &&
 		State_Contains(directory, "\"original_logical_width\":640") &&
 		State_Contains(directory, "\"native_display_width\":960") &&
-		State_Contains(directory, "\"logical_to_native_fullscreen\":true") &&
+		State_Contains(directory, "\"native_presentation_x\":117") &&
+		State_Contains(directory, "\"native_presentation_width\":725") &&
+		State_Contains(directory, "\"logical_to_native_fullscreen\":false") &&
+		State_Contains(directory, "\"aspect_preserved\":true") &&
 		State_Contains(directory, "\"direct_vitagl_overlay_disabled\":true") &&
 		State_Contains(directory, "\"loading_texture_v_flip_enabled\":true") &&
-		Summary_Contains(directory, "Loading visual gate: active=1 logical=640x480 native=960x544 framebuffer=960x544 fullscreen=1"),
+		Summary_Contains(directory, "Loading visual gate: active=1 logical=640x480 native=960x544 presentation=117,0 725x544 framebuffer=960x544 fullscreen=0 aspect=1"),
 		"loading visual gate state and summary", checks, failures);
 	Check(State_Contains(directory, "\"gameplay_texture_v_unchanged\":true"),
 		"gameplay texture V preserved state", checks, failures);

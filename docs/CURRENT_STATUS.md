@@ -14,6 +14,8 @@ lifecycle, interactive player/camera ownership, and clean exit.
 canonical build with the retail frontend worker integrated and a real Vita
 FFmpeg Bink playback boundary wired below the original movie owner. It is not
 an accepted milestone until device observations and returned logs match.
+The source/build/artifact checklist is tracked in
+`reports/A35_DEV82_MINIMUM_DELIVERABLES.md`.
 
 Candidate VPK:
 

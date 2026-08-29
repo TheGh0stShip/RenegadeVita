@@ -58,6 +58,9 @@
   `eab1dc1f66541f4b9e81c28947dd404face11b8e40666842af5488466551434b`;
   diagnostics bundle SHA-256 is
   `80ea9e3a3356c42a2a72bbb075594d538cb8f5f7642e773c7035d6bb36547f32`.
+- Minimum deliverables audit: `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`
+  records source/build/artifact requirements as PASS and keeps hardware-only
+  observations explicitly PENDING.
 - Boundary: this newest frontend+Bink VPK has not been uploaded to Vita. The
   previous user-authorized dev82 VitaShell FTP upload predates the
   frontend/Bink integration. Dev82 is not physically accepted. The next run must

@@ -18,6 +18,10 @@ prewarm, HUD/text display, dialogue subtitles, controls, reload/sniper
 behavior, character/door/powerup/objective texture orientation, original
 CombatGameMode finalization, transition diagnostics, and renderer state churn.
 
+Historical visual evidence is summarized in
+[docs/HISTORICAL_SCREENSHOT_TIMELINE.md](docs/HISTORICAL_SCREENSHOT_TIMELINE.md),
+with gameplay-first samples where local diagnostic screenshots exist.
+
 Dev82 also source-routes the original startup movie and retail main-menu owners.
 Its Vita movie boundary uses a reproducible, Bink-only FFmpeg software build to
 decode the user-owned `EA_WW.BIK` and `R_INTRO.BIK` files in place; neither

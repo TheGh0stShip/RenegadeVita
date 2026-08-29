@@ -9,20 +9,43 @@ filesystem behavior.
 This is not a PSP/Adrenaline build, a W3D viewer, an asset-conversion runtime,
 or a replacement Renegade engine.
 
-## Visual Progress
+## Historical Visual Progress
+
+The first project artifact a GitHub reader sees is the visual progression grid.
+The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md)
+includes up to 15 screenshots per build where local or Vita-pulled captures
+exist.
 
 <table>
 <tr>
 <td width="20%"><img src="docs/history/screenshots/a35-dev5-spawn-control.png" width="180" alt="A3.5-dev5 spawn/control gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev6-vita-first-interactive-player-frame-f1-t31158328.png" width="180" alt="A3.5-dev6 recovered Vita gameplay capture"></td>
 <td width="20%"><img src="docs/history/screenshots/a35-dev7-effects-131326.png" width="180" alt="A3.5-dev7 effects diagnostic gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev12-first-frame.png" width="180" alt="A3.5-dev12 first frame capture"></td>
 <td width="20%"><img src="docs/history/screenshots/a35-dev13-selected-frame.png" width="180" alt="A3.5-dev13 route-record gameplay frame"></td>
+</tr>
+<tr>
 <td width="20%"><img src="docs/history/screenshots/a35-dev16-selected-frame.png" width="180" alt="A3.5-dev16 route gameplay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev17-selected-frame.png" width="180" alt="A3.5-dev17 route replay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev18-capture1.png" width="180" alt="A3.5-dev18 replay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-first-interactive-player-frame-f1-t31156569.png" width="180" alt="A3.5-dev19 recovered Vita gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev20-vita-first-interactive-player-frame-f1-t30968807.png" width="180" alt="A3.5-dev20 recovered Vita gameplay capture"></td>
+</tr>
+<tr>
+<td width="20%"><img src="docs/history/screenshots/a35-dev21-vita-first-interactive-player-frame-f1-t30678441.png" width="180" alt="A3.5-dev21 recovered Vita gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev24-vita-first-interactive-player-frame-f1-t31590612.png" width="180" alt="A3.5-dev24 recovered Vita gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev42-vita-original-loading-screen-level-ready-t28329716.png" width="180" alt="A3.5-dev42 recovered loading screen capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev43-loading-replay-annotated.png" width="180" alt="A3.5-dev43 annotated loading replay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev44-vita-original-loading-screen-level-ready-t28260447.png" width="180" alt="A3.5-dev44 recovered loading screen capture"></td>
+</tr>
+<tr>
+<td width="20%"><img src="docs/history/screenshots/a35-dev45-loading-replay-annotated.png" width="180" alt="A3.5-dev45 annotated loading replay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev46-loading-replay-annotated.png" width="180" alt="A3.5-dev46 annotated loading replay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev47-vita-original-loading-screen-level-ready-t27631919.png" width="180" alt="A3.5-dev47 recovered loading screen capture"></td>
 <td width="20%"><img src="docs/history/screenshots/a35-dev78-loading-physical.png" width="180" alt="A3.5-dev78 loading screen physical capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev79-vita-original-loading-screen-level-ready-t29494542.png" width="180" alt="A3.5-dev79 recovered loading screen capture"></td>
 </tr>
 </table>
-
-See the [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md)
-for up to 15 diagnostic screenshots per build where local captures exist.
 
 ## Current State
 

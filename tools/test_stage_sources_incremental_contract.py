@@ -22,6 +22,7 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         self.assertIn("commando-a35-loading-status-render.patch", script)
         self.assertIn("wwtranslatedb-a35-empty-string-wide-abi.patch", script)
         self.assertIn("ww3d2-a35-render2d-dynamic-fvf-init.patch", script)
+        self.assertIn("ww3d2-a35-render2d-viewport-restore.patch", script)
         self.assertIn("combat-a35-weaponview-reload-visible-fallback.patch", script)
 
     def test_shared_loading_screen_patch_is_durable_staging_input(self):
@@ -39,6 +40,7 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         reload_visible = (ROOT / "port" / "patches" / "combat-a35-weaponview-reload-visible-fallback.patch").read_text(encoding="utf-8")
         combatgmode = (ROOT / "port" / "patches" / "commando-a35-combatgmode-vita-load-finalization.patch").read_text(encoding="utf-8")
         render2d_fvf = (ROOT / "port" / "patches" / "ww3d2-a35-render2d-dynamic-fvf-init.patch").read_text(encoding="utf-8")
+        render2d_viewport = (ROOT / "port" / "patches" / "ww3d2-a35-render2d-viewport-restore.patch").read_text(encoding="utf-8")
         translatedb_wide = (ROOT / "port" / "patches" / "wwtranslatedb-a35-empty-string-wide-abi.patch").read_text(encoding="utf-8")
         self.assertIn("TextRect.Bottom", patch)
         self.assertIn("display_text = true;", patch)
@@ -51,6 +53,9 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         self.assertNotIn("+\t\tTranslatedStrings.Add (WideStringClass (L\"\"));", translatedb_wide)
         self.assertIn("fi.Get_Normal_Offset()", render2d_fvf)
         self.assertIn("fi.Get_Tex_Offset(1)", render2d_fvf)
+        self.assertIn("previous_viewport", render2d_viewport)
+        self.assertIn("GetViewport(&previous_viewport)", render2d_viewport)
+        self.assertIn("DX8Wrapper::Set_Viewport(&previous_viewport);", render2d_viewport)
         self.assertIn("Vita_Begin_Level_Load", combatgmode)
         self.assertIn("Vita_Finalize_Loaded_Level", combatgmode)
         self.assertIn("GameObjManager::Init_Buildings();", combatgmode)

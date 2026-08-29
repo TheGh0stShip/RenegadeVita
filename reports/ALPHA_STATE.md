@@ -1,5 +1,36 @@
 # First-mission alpha state
 
+## Current dev82 resume state (2026-08-28)
+
+- Workspace: `/home/steve/projects/RenegadeVitaBuilder/workspace/active` on
+  `main`, with the latest committed base `758d9a1` plus the in-progress dev82
+  Render2D viewport-restore patch/report closeout.
+- Last completed work: the 18:29 canonical `bash ./tools/build.sh` run passed
+  fresh host validation, 106 host unittests, deterministic 134-patch restaging,
+  source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
+  link/package, identity, compressed VPK validation, diagnostics bundle, SHA
+  manifest, and retail exclusion.
+- Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
+  `3be156223c7ace92e10d42eabc0e39a1ca90a6920c1491678559be061f50c4ea`;
+  diagnostics bundle
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260828-182910.zip` with SHA-256
+  `80ea9e3a3356c42a2a72bbb075594d538cb8f5f7642e773c7035d6bb36547f32`.
+- Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
+  frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
+  retained. The latest dev82 frontend/Bink/visual/input/reload/viewport
+  candidate has not been uploaded or physically accepted.
+- Current blocker and hypothesis: physical Vita must validate intro movie
+  playback/skip, original WWUI menu navigation, Tutorial launch, loading/HUD/
+  subtitle placement, texture/material orientation, bounding boxes, random
+  ground rectangles, reload/sniper/control behavior, FPS, gate use, and
+  freeze/crash state. The new source hypothesis is that restoring the previous
+  DX8 viewport after fullscreen `Render2DClass::Render()` passes prevents HUD,
+  scope, loading, and bounding-box placement corruption from leaking between
+  2D owners.
+- Exact next automatic action: validate the dirty report state, commit and push
+  the viewport-restore candidate, mirror the source/artifacts to E:, and wait
+  for user-authorized manual physical Vita installation/test evidence.
+
 - Current handoff: the paired physical Vita is online for read-only inspection, but remains on restored dev46 (`bb42fa9fbbf80e6eb90add5d3ae1bed708f1a9847f61ddc3d3fa441b4a10b244`) with the stale pre-dialogue route still present (`5ef2ee8f2ed5d4f301ec20ef95c73fe7aea9956a32e9cc41aecf84999191e895`). No dev48 install, launch, or filesystem mutation has been performed. The next authorized action is dev48 installation followed by a fresh user-controlled route record; the stale route is rejected by the runner.
 
 - Authority: A3.1.4 remains the accepted physical baseline; A3.2-dev1 remains frozen failed evidence. A3.5-dev24 is failed/unaccepted physical evidence; A3.5-dev25 through A3.5-dev33 are superseded by A3.5-dev34, A3.5-dev34 is failed physical crash evidence, A3.5-dev35 through A3.5-dev40 are superseded source/build candidates, dev40/dev41 physical dumps are retained crash evidence for the `HTreeClass::Combo_Update` null-combo path, dev42 is clean physical gameplay evidence invalidated by the runner pulling the user out after an over-strict route-activation gate, dev43 is the retained clean route recording and replay-fidelity point, dev44 is failed route-complete/no-exit evidence, dev45 is accepted automated replay-exit evidence, dev46 is the physical no-dialogue diagnostic point, dev47 is failed physical evidence: it fixed TranslateDB object-row lookup but route fidelity broke and dialogue remained inaudible, and dev48 is a built source/package candidate only. The active work in the existing dirty `main` tree at `f0df43ef9ea487433a68480a32d3dcf3038ad79b` preserves dev45/dev46/dev47 physical evidence while continuing visual/audio/runtime fixes without claiming visual or audio acceptance from logs alone.

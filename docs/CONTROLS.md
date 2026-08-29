@@ -14,8 +14,8 @@ Current A3.5-dev82 mapping:
 | D-pad Right | Next weapon |
 | D-pad Up | Sniper zoom in |
 | D-pad Down | Sniper zoom out |
-| Left shoulder | Original joystick button 0, currently primary-fire path |
-| Right shoulder | Original joystick button 1, currently secondary-fire path |
+| Left shoulder | Original joystick button 0, currently secondary-fire/use-weapon path |
+| Right shoulder | Original joystick button 1, currently primary-fire path |
 | Start | Clean exit/menu escape path, sampled early for LiveArea return |
 | Select | Debug/capture path only |
 | Front touch | First-person / third-person camera toggle |

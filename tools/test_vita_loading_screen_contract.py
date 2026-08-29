@@ -310,6 +310,32 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             self.assertIn("fi.Get_Tex_Offset(1)", source)
         self.assertIn("ww3d2-a35-render2d-dynamic-fvf-init.patch", stage_sources)
 
+    def test_render2d_restores_previous_viewport_after_2d_pass(self):
+        render2d = (ROOT / "staging/ww3d2/render2d.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
+        patch = (
+            ROOT / "port/patches/ww3d2-a35-render2d-viewport-restore.patch"
+        ).read_text(encoding="utf-8")
+        stage_sources = (ROOT / "tools/stage_sources.sh").read_text(
+            encoding="utf-8"
+        )
+
+        for source in (render2d, patch):
+            self.assertIn("D3DVIEWPORT8 previous_viewport = { 0 };", source)
+            self.assertIn("GetViewport(&previous_viewport)", source)
+            self.assertIn("restore_viewport = true;", source)
+            self.assertIn("DX8Wrapper::Set_Viewport(&previous_viewport);", source)
+        self.assertLess(
+            render2d.index("GetViewport(&previous_viewport)"),
+            render2d.index("DX8Wrapper::Set_Viewport(&vp);"),
+        )
+        self.assertLess(
+            render2d.index("DX8Wrapper::Draw_Triangles("),
+            render2d.rindex("DX8Wrapper::Set_Viewport(&previous_viewport);"),
+        )
+        self.assertIn("ww3d2-a35-render2d-viewport-restore.patch", stage_sources)
+
     def test_host_loading_backdrop_probe_uses_original_asset_owner(self):
         host_cmake = (ROOT / "tools/host_a30_definitions/CMakeLists.txt").read_text(
             encoding="utf-8"

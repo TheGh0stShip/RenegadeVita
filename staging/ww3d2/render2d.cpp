@@ -546,9 +546,15 @@ void Render2DClass::Render(void)
 	// save the view and projection matrices since we're nuking them
 	Matrix4 view,proj;
 	Matrix4 identity(true);
+	D3DVIEWPORT8 previous_viewport = { 0 };
+	bool restore_viewport = false;
 
 	DX8Wrapper::Get_Transform(D3DTS_VIEW,view);
 	DX8Wrapper::Get_Transform(D3DTS_PROJECTION,proj);
+	if (DX8Wrapper::_Get_D3D_Device8() != NULL &&
+		DX8Wrapper::_Get_D3D_Device8()->GetViewport(&previous_viewport) == D3D_OK) {
+		restore_viewport = true;
+	}
 
 	//
 	//	Configure the viewport for entire screen
@@ -610,6 +616,9 @@ void Render2DClass::Render(void)
 
 	DX8Wrapper::Set_Transform(D3DTS_VIEW,view);
 	DX8Wrapper::Set_Transform(D3DTS_PROJECTION,proj);
+	if (restore_viewport) {
+		DX8Wrapper::Set_Viewport(&previous_viewport);
+	}
 }
 
 

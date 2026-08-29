@@ -612,7 +612,7 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 133,
+  "patch_count": 134,
   "mechanically_patched_upstream_files": 252,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
@@ -1547,6 +1547,13 @@
     },
     {
       "path": "port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-render2d-viewport-restore.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "render2d.cpp"

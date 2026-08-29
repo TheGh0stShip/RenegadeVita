@@ -24,7 +24,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-122746f972a61927460e7d4dd36700b4fc3a8f0ceab2287652d45f6fd13f58ab
+3be156223c7ace92e10d42eabc0e39a1ca90a6920c1491678559be061f50c4ea
 ```
 
 Runtime log:
@@ -45,7 +45,8 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 - HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
   rendering and bounds, initializing TextDisplay after final StyleMgr
   reinitialization, and initializing Render2D dynamic FVF fields used by HUD,
-  subtitles, scope, loading, and bounding boxes.
+  subtitles, scope, loading, and bounding boxes, then restoring the previous
+  DX8 viewport after fullscreen 2D passes.
 - Vita control mapping: Triangle action/use, Square reload, D-pad Left/Right
   weapon-only switching, D-pad Up/Down sniper zoom, no shoulder remap.
 - Reload animation by adding visible first-person weapon motion while the

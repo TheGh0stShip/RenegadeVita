@@ -142,6 +142,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-render2d-viewport-restore.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a4-freetype-fonts.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a315-dds-vita.patch"
@@ -443,6 +445,7 @@ echo "Applied: port/patches/ww3d2-a32-texture-apply-boundary.patch"
 echo "Applied: port/patches/ww3d2-a4-font3d-vita.patch"
 echo "Applied: port/patches/ww3d2-a4-render2d-runtime-init.patch"
 echo "Applied: port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch"
+echo "Applied: port/patches/ww3d2-a35-render2d-viewport-restore.patch"
 echo "Applied: port/patches/ww3d2-a4-freetype-fonts.patch"
 echo "Applied: port/patches/ww3d2-a315-dds-vita.patch"
 echo "Applied: port/patches/ww3d2-a30-gcc15.patch"

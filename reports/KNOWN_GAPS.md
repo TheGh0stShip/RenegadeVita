@@ -17,7 +17,8 @@ The latest dev82 candidate includes source/build fixes for the highest-risk
 visual/input/reload regressions: frontend/menu input is gated from gameplay,
 TextDisplay initializes after final StyleMgr reinitialization, Render2D dynamic
 FVF normal/UV1 fields are initialized for HUD/loading/subtitle/scope/bounding
-box draws, passthrough texture V is corrected after original DX8 texture
+box draws, Render2D restores the previous DX8 viewport after fullscreen 2D
+passes, passthrough texture V is corrected after original DX8 texture
 transforms, DX8 render-state ownership is centralized in the renderer boundary,
 and the first-person weapon view has a bounded visible reload fallback while
 the original weapon state is reload. These are build-verified only; physical

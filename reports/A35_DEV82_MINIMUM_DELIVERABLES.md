@@ -109,6 +109,11 @@ matching `psp2core` dump.
   `bash ./tools/build_renegade_demo_recorder_plugin.sh` produced the optional
   recorder `.suprx`, `.skprx`, tai config snippet, and SHA manifest without
   touching the Vita filesystem.
+- `python3 -m unittest tools.test_upload_dev82_current_vpk` passed 4/4. A
+  probe-only `tools/upload_dev82_current_vpk.sh --scan-arp` run verified the
+  current VPK hash, scanned the known PS Vita/PSTV addresses and Windows
+  ARP-visible Wi-Fi hosts for VitaShell FTP, and found no reachable
+  `1337` endpoint, so no upload was attempted.
 
 ## Not dev82 minimum deliverables
 

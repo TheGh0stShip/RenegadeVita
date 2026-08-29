@@ -8,7 +8,7 @@
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
   M00 gameplay input, plus original 640x480 HUD Render2D coordinate scoping and
   renderer texture-bind cache invalidation after direct DX8/Bink GL uploads.
-- Last completed work: the 01:33 canonical `bash ./tools/build.sh` run passed
+- Last completed work: the 01:59 canonical `bash ./tools/build.sh` run passed
   fresh host validation, 111 host unittests, deterministic 135-patch restaging,
   source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
@@ -20,7 +20,7 @@
   `9e1ad963d736e1784e907c0484f040aa48e90bd335030a2a2ab8638ad5f7b543`.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
-  retained. On user request, the latest dev82 frontend/Bink/visual/input/
+  retained. On user request, an earlier dev82 frontend/Bink/visual/input/
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
@@ -37,8 +37,10 @@
   2D owners, while renderer texture-bind cache invalidation prevents direct
   DX8/Bink GL uploads from leaving stale character textures bound for later
   original mesh draws.
-- Exact next external action: user manual install/test from VitaShell for the
-  current VPK, then return physical Vita observations plus
+- Exact next external action: when the Vita is reachable, run
+  `tools/upload_dev82_current_vpk.sh --scan-arp` from the active bash
+  workspace or manually install/test the current VPK from VitaShell, then
+  return physical Vita observations plus
   `ux0:data/renegade/user/logs/a35-dev82-runtime.log`, captures, and any
   matching crash dump.
 

@@ -14,8 +14,11 @@ lifecycle, interactive player/camera ownership, and clean exit.
 canonical build with the retail frontend worker integrated, a visible startup
 pre-cache/pre-warm/pre-compute phase before frontend/M00 input, authored
 640x480 HUD Render2D coordinate scoping, stale texture-bind cache invalidation,
-and a real Vita FFmpeg Bink playback boundary wired below the original movie
-owner. The earlier user-authorized FTP upload predates this current VPK; it is
+and an original movie route with a compiled Vita FFmpeg Bink provider below the
+original movie owner. Realtime Bink playback is disabled in this physical-test
+candidate because the prior hardware return showed black-screen/audio-underrun
+behavior; the candidate resolves/logs the retail movie files and fails closed to
+the menu instead of stalling before M00. The earlier user-authorized FTP upload predates this current VPK; it is
 not an accepted milestone until device observations and returned logs match.
 The source/build/artifact checklist is tracked in
 `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`.
@@ -29,7 +32,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb
+e44963df636dba58687857af835489b0fb59204c25ff80169f59f77a79b062e4
 ```
 
 Runtime log:
@@ -43,16 +46,18 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 - Original retail frontend path: startup movie owner, WWUI main menu, controller
   menu navigation, and Tutorial selection handoff into the existing direct M00
   route.
-- Retail intro movie playback: Vita FFmpeg Bink video/audio decode without RAD
-  code and without packaging retail movie assets in the VPK, with packet
-  retention across decoder backpressure and GL texture-state restoration after
-  movie blits.
+- Retail intro movie route: original `MovieGameModeClass` requests the
+  EA/Westwood intro files and the compiled Vita FFmpeg Bink provider remains
+  available for diagnosis, but realtime playback is disabled for this candidate
+  after black-screen/audio-underrun evidence. Missing or skipped movies continue
+  into the original menu rather than hanging before M00.
 - Loading screen coverage, status text, and progress through the original
   one-bar path, including renderer/cache prewarm.
 - Visible startup pre-cache/pre-warm/pre-compute before intro movies, menu
-  navigation, or M00 gameplay input. It indexes original MIX filename tables
-  and touches startup movie/menu/loading/M00 files through the original
-  FileFactory/MIX owners.
+  navigation, or M00 gameplay input. It indexes original MIX filename tables,
+  touches startup movie/menu/loading/M00 files through the original
+  FileFactory/MIX owners, displays for at least five seconds, and reports intro
+  movie-file availability before the movie/menu route starts.
 - HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
   rendering and bounds, initializing TextDisplay after final StyleMgr
   reinitialization, and initializing Render2D dynamic FVF fields used by HUD,
@@ -78,8 +83,9 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
 
 ## Still Open Until Physical Evidence Returns
 
-- Whether EA/Renegade/Westwood intro movies play, sync, and skip correctly on
-  hardware.
+- Whether EA/Renegade/Westwood intro movie files are present, skipped cleanly in
+  this candidate, and can later be realtime-decoded, synced, and skipped
+  correctly on hardware.
 - Whether original WWUI menu navigation works and Tutorial launches M00.
 - Whether the loading screen is visually correct and fullscreen on the Vita
   panel.

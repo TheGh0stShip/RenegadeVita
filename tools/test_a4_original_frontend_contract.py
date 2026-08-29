@@ -352,7 +352,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         ):
             self.assertIn(token, runtime)
         self.assertIn("frontend_movie_provider_fail_closed", host)
-        self.assertIn("Bink movie playback is implemented", known_gaps)
+        self.assertIn("Bink movie ownership is implemented", known_gaps)
+        self.assertIn("realtime movie playback is disabled", known_gaps)
+        self.assertIn("fails", known_gaps)
+        self.assertIn("closed into the original menu", known_gaps)
 
     def test_post_intro_main_menu_transition_is_guarded_and_logged(self):
         movie = (ROOT / "staging" / "commando" / "movie.cpp").read_text()

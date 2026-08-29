@@ -14,17 +14,17 @@
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
   manifest, retail exclusion, and Bink/FFmpeg symbol retention.
 - Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
-  `df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb`;
+  `e44963df636dba58687857af835489b0fb59204c25ff80169f59f77a79b062e4`;
   diagnostics bundle
-  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-013330.zip` with SHA-256
-  `2a0043ebf04b06f70078afeec28cfa7408e680167648cbec69c601456efe4937`.
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-015948.zip` with SHA-256
+  `9e1ad963d736e1784e907c0484f040aa48e90bd335030a2a2ab8638ad5f7b543`.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
   retained. On user request, the latest dev82 frontend/Bink/visual/input/
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
-  `df4fdf4c...` startup-precache/HUD/texture-cache build; dev82 has not been
+  `e44963df...` startup-precache/HUD/texture-cache build; dev82 has not been
   physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch, loading/HUD/

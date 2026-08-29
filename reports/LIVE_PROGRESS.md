@@ -8,9 +8,11 @@
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
   M00 gameplay input. It indexes the retained original MIX filename tables,
   touches critical startup movie/menu/loading/M00 files through the original
-  FileFactory/MIX owners, keeps input disabled during that phase, and logs
-  `startup-precache begin`, per-file `startup-precache touch`, and
-  `startup-precache complete` breadcrumbs.
+  FileFactory/MIX owners, keeps input disabled during that phase, displays for
+  at least five seconds, reports movie-file availability, and logs
+  `startup-precache begin`, per-file `startup-precache touch`,
+  `startup-precache visible hold`, and `startup-precache complete`
+  breadcrumbs.
 - Runtime visual fixes: original HUD/TextDisplay/radar/sniper/bounding-box
   owners now run under the authored 640x480 Render2D coordinate space while
   Vita presentation remains 960x544, and direct DX8/Bink GL texture uploads
@@ -18,22 +20,22 @@
   This specifically targets the reported wrong HUD placement and stale
   character texture reuse such as face textures appearing on Havoc legs.
 - Validation: focused pre-cache/loading/skin/texture/frontend/input contracts
-  passed 63/63, fast candidate `logs/a35-dev82-fast-20260829-013237-build.log`
+  passed 63/63, fast candidate `logs/a35-dev82-fast-20260829-015835-build.log`
   passed 86 focused tests, `git diff --check` passed, and canonical
   `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260829-013330-build.log` with 111 host unittest checks,
+  `logs/a35-dev82-20260829-015948-build.log` with 111 host unittest checks,
   deterministic 135-patch restaging, DDS/TGA alias 11/11, render-state 13/13,
   ARM link/package, identity, compressed VPK validation, diagnostics bundle,
   SHA manifest, and retail exclusion.
 - Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
-  `df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb`;
+  `e44963df636dba58687857af835489b0fb59204c25ff80169f59f77a79b062e4`;
   ELF SHA-256 is
-  `d63d785efeff42ef02f791d65a1c0d7efef9751bbbabe7cc7f2122b20dc9168d`;
+  `d846656b011d7a9c875675c76c55885eb76916cdf9f6b5ca7793c3ea212361f1`;
   MAP SHA-256 is
-  `f1a620a4fc56a09bf928dc2d0a3872caf574b0bd1398dac30fc286abcfbaa92b`;
+  `35e6ff841453eccb0db8dcde0a40bfcb8ab2f7b7f35dc38217fea87f48fb0e49`;
   diagnostics bundle SHA-256 is
-  `2a0043ebf04b06f70078afeec28cfa7408e680167648cbec69c601456efe4937`.
-- Boundary: this newest `df4fdf4c...` VPK has not yet been uploaded to Vita. The
+  `9e1ad963d736e1784e907c0484f040aa48e90bd335030a2a2ab8638ad5f7b543`.
+- Boundary: this newest `e44963df...` VPK has not yet been uploaded to Vita. The
   earlier user-authorized `9e67b02c...` upload predates the visible startup
   pre-cache/HUD/texture-cache work and must not be treated as the current
   artifact. A 2026-08-29 VitaShell FTP attempt to `10.0.0.202:1337` timed out
@@ -56,12 +58,15 @@
   menu dialogs, WWUI controls, and Tutorial launch latch into the existing M00
   path.
 - Movie boundary: active supersedes the worker's fail-closed Bink stub with a
-  Vita FFmpeg Bink provider. The canonical ELF retains `BINKMovie::Play`,
+  Vita FFmpeg Bink provider, but realtime playback is disabled in this physical
+  candidate after black-screen/audio-underrun evidence so the original menu/M00
+  route is not blocked by slow movie decode. The canonical ELF retains
+  `BINKMovie::Play`,
   `avformat_open_input`, `ff_bink_decoder`, `ff_binkaudio_dct_decoder`,
   `ff_binkaudio_rdft_decoder`, `swr_convert`, and `sws_scale`. The provider
-  now retains pending FFmpeg packets across decoder `EAGAIN` and restores
-  GL texture0 bind/enable state after movie blits; no proprietary RAD code and
-  no retail movie assets are packaged.
+  retains pending FFmpeg packets across decoder `EAGAIN` and restores GL
+  texture0 bind/enable state after movie blits for the later playback retry; no
+  proprietary RAD code and no retail movie assets are packaged.
 - Visual/UI fixes: gameplay DDS uploads now preserve retail top-down row order,
   passthrough texture-V correction now happens after the original DX8 texture
   transform, `Render2DClass` initializes the dynamic FVF normal and UV1 fields

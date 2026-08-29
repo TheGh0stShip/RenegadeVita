@@ -93,18 +93,23 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Warm_Original_M00_Presentation_Cache", runtime)
         self.assertIn("Run_Visible_Startup_Precache_Phase", runtime)
         self.assertIn("kStartupPrecacheVisibleSteps = 5U", runtime)
+        self.assertIn("kStartupPrecacheMinimumVisibleUs = 5000000ULL", runtime)
         self.assertIn("Pre-cache / pre-warm / pre-compute", runtime)
+        self.assertIn("Movie files:           %u/%u", runtime)
         self.assertIn("Startup_Index_Mix_Archive", runtime)
         self.assertIn("Build_Filename_List(names)", runtime)
         self.assertIn("Startup_Touch_File(factory, required_files[index]", runtime)
+        self.assertIn("state.movie_files_opened", runtime)
         self.assertIn('"DATA\\\\MOVIES\\\\EA_WW.BIK"', runtime)
         self.assertIn('"DATA\\\\MOVIES\\\\R_INTRO.BIK"', runtime)
         self.assertIn('"IF_BACK01.W3D"', runtime)
         self.assertIn('"M00_Tutorial.lsd"', runtime)
         self.assertIn(
-            '"A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u',
+            '"A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u movie_files=%u/%u',
             runtime,
         )
+        self.assertIn("startup-precache visible hold remaining_ms=%llu", runtime)
+        self.assertIn("visible_minimum_ms=%llu", runtime)
         startup_precache_call = runtime.index(
             "Run_Visible_Startup_Precache_Phase("
         )

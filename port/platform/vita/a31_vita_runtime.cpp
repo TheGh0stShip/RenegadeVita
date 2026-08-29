@@ -107,6 +107,7 @@ const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 const uint32_t kCaptureBytes = kCaptureWidth * kCaptureHeight * 4U;
 const unsigned kAutomaticCaptureAttempts = 3U;
 const unsigned kStartupPrecacheVisibleSteps = 5U;
+const uint64_t kStartupPrecacheMinimumVisibleUs = 5000000ULL;
 const unsigned kLoadingPrewarmFrames = 8U;
 const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
@@ -123,6 +124,8 @@ struct A31StartupPrecacheResult
 	unsigned entries_indexed;
 	unsigned files_touched;
 	unsigned files_opened;
+	unsigned movie_files_touched;
+	unsigned movie_files_opened;
 	uint64_t bytes_read;
 };
 
@@ -199,6 +202,8 @@ void Draw_Startup_Precache_Screen(int startup_screen_result, const char *phase,
 	psvDebugScreenPrintf("Indexed entries:       %u\n", state.entries_indexed);
 	psvDebugScreenPrintf("Startup files:         %u/%u\n",
 		state.files_opened, state.files_touched);
+	psvDebugScreenPrintf("Movie files:           %u/%u\n",
+		state.movie_files_opened, state.movie_files_touched);
 	psvDebugScreenPrintf("Bytes touched:         %llu\n",
 		static_cast<unsigned long long>(state.bytes_read));
 	if (detail != NULL && detail[0] != 0) {
@@ -231,6 +236,10 @@ void Startup_Touch_File(FileFactoryClass &factory, const char *name,
 	A31StartupPrecacheResult &state)
 {
 	++state.files_touched;
+	const bool movie_file = name != NULL && ::strstr(name, "MOVIES") != NULL;
+	if (movie_file) {
+		++state.movie_files_touched;
+	}
 	unsigned read_bytes = 0U;
 	bool opened = false;
 	FileClass *file = factory.Get_File(name);
@@ -254,6 +263,9 @@ void Startup_Touch_File(FileFactoryClass &factory, const char *name,
 	if (opened) {
 		++state.files_opened;
 		state.bytes_read += read_bytes;
+		if (movie_file) {
+			++state.movie_files_opened;
+		}
 	}
 	A30_Vita_Log("A3.5 prewarm: startup-precache touch name=%s opened=%d read_bytes=%u original_file_factory=1\n",
 		name != NULL ? name : "unknown", opened ? 1 : 0, read_bytes);
@@ -327,13 +339,28 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 			"Startup pre-cache incomplete", 5U, 100U, state,
 		state.passed ? "starting original intro/menu" :
 			"continuing only if required archives are present");
-	A30_Vita_Log("A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u bytes=%llu elapsed_ms=%llu before_frontend=1 before_movies=1 before_gameplay=1 original_mix_owner=1\n",
+	const uint64_t after_work_us = sceKernelGetProcessTimeWide();
+	if (startup_screen_result >= 0 &&
+		after_work_us - started_us < kStartupPrecacheMinimumVisibleUs) {
+		const uint64_t hold_us =
+			kStartupPrecacheMinimumVisibleUs - (after_work_us - started_us);
+		A30_Vita_Log("A3.5 prewarm: startup-precache visible hold remaining_ms=%llu minimum_ms=%llu\n",
+			static_cast<unsigned long long>(hold_us / 1000ULL),
+			static_cast<unsigned long long>(
+				kStartupPrecacheMinimumVisibleUs / 1000ULL));
+		sceKernelDelayThread(static_cast<unsigned int>(hold_us));
+	} else {
+		sceKernelDelayThread(450000);
+	}
+	A30_Vita_Log("A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u movie_files=%u/%u bytes=%llu elapsed_ms=%llu visible_minimum_ms=%llu before_frontend=1 before_movies=1 before_gameplay=1 original_mix_owner=1\n",
 		state.passed ? 1 : 0, state.archives_valid, state.archives_total,
 		state.entries_indexed, state.files_opened, state.files_touched,
+		state.movie_files_opened, state.movie_files_touched,
 		static_cast<unsigned long long>(state.bytes_read),
 		static_cast<unsigned long long>(
-			(sceKernelGetProcessTimeWide() - started_us) / 1000ULL));
-	sceKernelDelayThread(450000);
+			(sceKernelGetProcessTimeWide() - started_us) / 1000ULL),
+		static_cast<unsigned long long>(
+			kStartupPrecacheMinimumVisibleUs / 1000ULL));
 	return state.passed;
 }
 

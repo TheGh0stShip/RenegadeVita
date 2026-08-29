@@ -9,7 +9,8 @@ audio/dialogue/texture/material/render-state chain and targets the latest
 physical defects by moving direct M00 load completion back through original
 `CombatGameModeClass` finalization, rendering loading-screen text/progress,
 using one progress stream for loading and prewarm, running a visible startup
-pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input, setting a
+pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input with a
+five-second minimum display and separate movie-file availability reporting, setting a
 persistent Vita shader-cache path, synchronizing HUD/loading viewports, preserving top-down
 retail DDS rows for gameplay textures, tightening HUD/subtitle/sniper
 presentation, adding visible reload motion, and applying the requested
@@ -20,15 +21,16 @@ original HUD/TextDisplay/radar/sniper/bounding-box owners to the authored
 640x480 Render2D coordinate space while Vita presents at 960x544, and
 invalidates the renderer texture-bind cache after direct DX8/Bink GL texture
 uploads to prevent stale texture reuse on character meshes. It also integrates
-the external `feature/a35-dev82-retail-frontend` worker and replaces that
-branch's fail-closed Bink stub with Vita FFmpeg Bink video/audio playback below
-the original movie owner, including pending-packet retention across FFmpeg
-decoder backpressure and GL texture0 state restoration after movie blits. It
+the external `feature/a35-dev82-retail-frontend` worker and wires a Vita FFmpeg
+Bink provider below the original movie owner. Realtime movie playback is
+disabled in this physical-test candidate after black-screen/audio-underrun
+evidence; the provider resolves/logs the retail movie paths and fails closed
+into the original menu instead of stalling before M00. It
 has a full canonical build; acceptance still
 depends on returned Vita evidence.
 
 Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-29 in
-`logs/a35-dev82-20260829-013330-build.log` with 111 host unittest checks,
+`logs/a35-dev82-20260829-015948-build.log` with 111 host unittest checks,
 deterministic staging, source integration checks, DDS/TGA alias 11/11,
 lightweight render-state 13/13, ARM link/package, identity, compressed VPK
 validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
@@ -37,7 +39,7 @@ translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
 files, 52 compatibility headers, and 135 active deterministic staging patches.
 The VPK SHA-256 is
-`df4fdf4c7f5534b4b82d44ea323515c1a89204f1b6c3d601277c7d516da61dcb`. The
+`e44963df636dba58687857af835489b0fb59204c25ff80169f59f77a79b062e4`. The
 earlier user-authorized FTP upload predates this visible-startup-precache/HUD/
 texture-cache artifact and must not be treated as the current VPK.
 

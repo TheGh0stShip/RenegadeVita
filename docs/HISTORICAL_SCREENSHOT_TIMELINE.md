@@ -1,6 +1,6 @@
 # Historical Screenshot Timeline
 
-This page collects web-viewable copies of local diagnostic screenshots from
+This page collects a curated 15-image set of web-viewable local diagnostic screenshots from
 the Renegade Vita evidence tree. It is meant to show visual progression on
 GitHub without publishing retail data, raw dumps, saves, credentials, or a new
 runtime artifact.
@@ -35,43 +35,39 @@ GitHub view shows actual in-game progression where local evidence exists.
 
 ### A3.5-dev5 - Visible M00 and Movement Evidence
 
-Local evidence includes three gameplay or near-gameplay samples. These show the
-move from mostly dark early display evidence to a visible textured M00 subset
-with first-person weapon and control progression.
+Local evidence includes two selected gameplay samples. These show the move
+toward a visible textured M00 subset with first-person weapon and control
+progression.
 
 <table>
 <tr>
-<td width="33%"><img src="history/screenshots/a35-dev5-first-interactive.png" width="260" alt="A3.5-dev5 first interactive capture"><br>First interactive capture</td>
-<td width="33%"><img src="history/screenshots/a35-dev5-walk-manual.png" width="260" alt="A3.5-dev5 manual walk capture"><br>Manual walk capture</td>
-<td width="33%"><img src="history/screenshots/a35-dev5-spawn-control.png" width="260" alt="A3.5-dev5 spawn control capture"><br>Spawn/control capture</td>
+<td width="50%"><img src="history/screenshots/a35-dev5-walk-manual.png" width="320" alt="A3.5-dev5 manual walk capture"><br>Manual walk capture</td>
+<td width="50%"><img src="history/screenshots/a35-dev5-spawn-control.png" width="320" alt="A3.5-dev5 spawn control capture"><br>Spawn/control capture</td>
 </tr>
 </table>
 
 Source paths:
 
-- `build/device-evidence/a35-dev5-recursive-create-20260824/capture-first-interactive/frame.png`
 - `build/device-evidence/a35-dev5-recursive-create-20260824/interactive-walk-run/manual-capture/frame.png`
 - `build/device-evidence/a35-dev5-recursive-create-20260824/spawn-control-run/manual-capture/frame.png`
 
 ### A3.5-dev7 - Input, Effects, and Skinned-Body Defect Evidence
 
-Local evidence includes four gameplay diagnostic samples from separate
+Local evidence includes three selected gameplay diagnostic samples from separate
 physical observation runs. They are not polished gameplay screenshots, but they
 are useful because they show real in-game rendering while the input/effects
 path was being isolated.
 
 <table>
 <tr>
-<td width="25%"><img src="history/screenshots/a35-dev7-effects-130626.png" width="220" alt="A3.5-dev7 effects capture 130626"><br>Effects capture 130626</td>
-<td width="25%"><img src="history/screenshots/a35-dev7-effects-131326.png" width="220" alt="A3.5-dev7 effects capture 131326"><br>Effects capture 131326</td>
-<td width="25%"><img src="history/screenshots/a35-dev7-effects-131654.png" width="220" alt="A3.5-dev7 effects capture 131654"><br>Effects capture 131654</td>
-<td width="25%"><img src="history/screenshots/a35-dev7-effects-132016.png" width="220" alt="A3.5-dev7 effects capture 132016"><br>Effects capture 132016</td>
+<td width="33%"><img src="history/screenshots/a35-dev7-effects-131326.png" width="260" alt="A3.5-dev7 effects capture 131326"><br>Effects capture 131326</td>
+<td width="33%"><img src="history/screenshots/a35-dev7-effects-131654.png" width="260" alt="A3.5-dev7 effects capture 131654"><br>Effects capture 131654</td>
+<td width="33%"><img src="history/screenshots/a35-dev7-effects-132016.png" width="260" alt="A3.5-dev7 effects capture 132016"><br>Effects capture 132016</td>
 </tr>
 </table>
 
 Source paths:
 
-- `build/device-evidence/a3.5-dev7-effects-20260824-130626/selected-capture-frame.bmp`
 - `build/device-evidence/a3.5-dev7-effects-20260824-131326/selected-capture-frame.bmp`
 - `build/device-evidence/a3.5-dev7-effects-20260824-131654/selected-capture-frame.bmp`
 - `build/device-evidence/a3.5-dev7-effects-20260824-132016/selected-capture-frame.bmp`
@@ -148,14 +144,12 @@ separate gameplay PNG/BMP was found locally for this build.
 
 <table>
 <tr>
-<td width="50%"><img src="history/screenshots/a35-dev43-loading-record.png" width="320" alt="A3.5-dev43 loading screen record frame"><br>Route-record loading frame</td>
-<td width="50%"><img src="history/screenshots/a35-dev43-loading-replay-annotated.png" width="320" alt="A3.5-dev43 annotated loading screen replay frame"><br>Annotated replay loading frame</td>
+<td width="33%"><img src="history/screenshots/a35-dev43-loading-replay-annotated.png" width="260" alt="A3.5-dev43 annotated loading screen replay frame"><br>Annotated replay loading frame</td>
 </tr>
 </table>
 
 Source paths:
 
-- `build/device-evidence/a3.5-dev43-route-record-20260825-022835/loading-screen-frame.bmp`
 - `build/device-evidence/a3.5-dev43-route-replay-20260825-023903/loading-screen-frame-annotated.bmp`
 
 ### A3.5-dev45 - Replay Auto-Exit Evidence
@@ -226,10 +220,8 @@ from logs.
 
 | Gallery file | Dimensions | SHA-256 |
 | --- | --- | --- |
-| `a35-dev5-first-interactive.png` | 960x544 | `bc4731cd9b219d151442d0bec3dd8b58ffe3a93f02d26a710b73569a83a3bd70` |
 | `a35-dev5-walk-manual.png` | 960x544 | `8cc47f87c213d8d602063d5955c056ef916d48c6e5408a95143aaee7c6f1389b` |
 | `a35-dev5-spawn-control.png` | 960x544 | `c76234cacaa7fb8656a47688e9ba193aa49165c81126a398d9bf18f4a997dd89` |
-| `a35-dev7-effects-130626.png` | 960x544 | `dfabfc377599f75da9281ecc1abd3d4cbe726fa11e576d09773cffcc1aee46e7` |
 | `a35-dev7-effects-131326.png` | 960x544 | `78ebbfa5ead95477521d0790f32f32ddec6298c592ac612efeb2ffb7a83e911f` |
 | `a35-dev7-effects-131654.png` | 960x544 | `dadd65c3644e36ba338aa36d24e0f9a01707cb561c8ca9ddbe58ac6d2a93125a` |
 | `a35-dev7-effects-132016.png` | 960x544 | `9b2268a37f1df4b69fca2255af29b965eaf670fe01c743e17307909e03bd5ef3` |
@@ -238,7 +230,6 @@ from logs.
 | `a35-dev13-npc-crop.png` | 1000x1200 | `1fe44b496884acf19fed96550c7ccc133c9713b6319306ab1065e16fdc1a2c3a` |
 | `a35-dev16-selected-frame.png` | 960x544 | `75200229c5e252ee84b3483f1c74734abab751a3fbfc46e58e7475dc69128d19` |
 | `a35-dev17-selected-frame.png` | 960x544 | `4d96fec09a002efa18508b7985d313bab28115bf18306c4250c38d2c060dbb52` |
-| `a35-dev43-loading-record.png` | 960x544 | `a7802519ccef02e9557e1da6ff6f5bba598250c6706b9449edcc41610de49117` |
 | `a35-dev43-loading-replay-annotated.png` | 960x544 | `be3801d48c79e48264eae9fe96d0b4757967bd229dda6b8d97a8214edb2dc118` |
 | `a35-dev45-loading-replay-annotated.png` | 960x544 | `4a1e3b5059f72e2a6967e0656674b0474eb1452c27ff2eb48e82337db1d32f4e` |
 | `a35-dev46-loading-replay-annotated.png` | 960x544 | `6c691d71b741e09f5365c27784afc24e18c37474a7e9eda0c7d90d27bcfdbfaa` |

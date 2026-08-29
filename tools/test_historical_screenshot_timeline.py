@@ -13,7 +13,9 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         doc = TIMELINE.read_text(encoding="utf-8")
         screenshots = sorted(path.name for path in SCREENSHOT_DIR.glob("*.png"))
 
-        self.assertGreaterEqual(len(screenshots), 18)
+        self.assertGreaterEqual(len(screenshots), 10)
+        self.assertLessEqual(len(screenshots), 15)
+        self.assertEqual(len(screenshots), 15)
         self.assertFalse(list(SCREENSHOT_DIR.glob("*.bmp")))
         for name in screenshots:
             self.assertIn(f"history/screenshots/{name}", doc)
@@ -21,6 +23,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
     def test_timeline_is_gameplay_first(self):
         doc = TIMELINE.read_text(encoding="utf-8")
         self.assertIn("## Five Gameplay-First Samples", doc)
+        self.assertIn("curated 15-image set", doc)
         lead = doc.split("## Five Gameplay-First Samples", 1)[1].split(
             "## Timeline", 1
         )[0]

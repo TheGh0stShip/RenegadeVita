@@ -66,9 +66,10 @@
   records source/build/artifact requirements as PASS and keeps hardware-only
   observations explicitly PENDING.
 - Historical visual evidence: `docs/HISTORICAL_SCREENSHOT_TIMELINE.md`
-  publishes 15 curated local diagnostic screenshot PNGs from `build/device-evidence/`,
-  leads with five gameplay-first samples, caps each build section at available
-  representative captures, and labels loading-only builds explicitly.
+  publishes 18 local diagnostic screenshot PNGs from `build/device-evidence/`,
+  leads with five gameplay-first samples, caps each build section at 15
+  representative captures, and labels loading-only builds explicitly. README now
+  surfaces that gallery near the top.
 - Boundary: on user request, this newest frontend+Bink VPK was uploaded by
   VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a

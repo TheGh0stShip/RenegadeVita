@@ -9,6 +9,21 @@ filesystem behavior.
 This is not a PSP/Adrenaline build, a W3D viewer, an asset-conversion runtime,
 or a replacement Renegade engine.
 
+## Visual Progress
+
+<table>
+<tr>
+<td width="20%"><img src="docs/history/screenshots/a35-dev5-spawn-control.png" width="180" alt="A3.5-dev5 spawn/control gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev7-effects-131326.png" width="180" alt="A3.5-dev7 effects diagnostic gameplay capture"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev13-selected-frame.png" width="180" alt="A3.5-dev13 route-record gameplay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev16-selected-frame.png" width="180" alt="A3.5-dev16 route gameplay frame"></td>
+<td width="20%"><img src="docs/history/screenshots/a35-dev78-loading-physical.png" width="180" alt="A3.5-dev78 loading screen physical capture"></td>
+</tr>
+</table>
+
+See the [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md)
+for up to 15 diagnostic screenshots per build where local captures exist.
+
 ## Current State
 
 The current engineering candidate is **A3.5-dev82**. It builds, links, packages
@@ -17,10 +32,6 @@ the latest fixes to loading-screen coverage/text/progress, combined loading
 prewarm, HUD/text display, dialogue subtitles, controls, reload/sniper
 behavior, character/door/powerup/objective texture orientation, original
 CombatGameMode finalization, transition diagnostics, and renderer state churn.
-
-Historical visual evidence is summarized in
-[docs/HISTORICAL_SCREENSHOT_TIMELINE.md](docs/HISTORICAL_SCREENSHOT_TIMELINE.md),
-with gameplay-first samples where local diagnostic screenshots exist.
 
 Dev82 also source-routes the original startup movie and retail main-menu owners.
 Its Vita movie boundary uses a reproducible, Bink-only FFmpeg software build to

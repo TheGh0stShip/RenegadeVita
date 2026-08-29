@@ -1,6 +1,6 @@
 # Current Status
 
-Updated: 2026-08-28
+Updated: 2026-08-29
 
 ## Accepted Baseline
 
@@ -11,12 +11,12 @@ lifecycle, interactive player/camera ownership, and clean exit.
 ## Current Candidate
 
 **A3.5-dev82** is the current hardware-test candidate. It has a successful
-canonical build with the retail frontend worker integrated and a real Vita
-FFmpeg Bink playback boundary wired below the original movie owner. On user
-request, the current VPK was uploaded by VitaShell FTP to
-`ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` for manual install/test.
-It is not an accepted milestone until device observations and returned logs
-match.
+canonical build with the retail frontend worker integrated, a visible startup
+pre-cache/pre-warm/pre-compute phase before frontend/M00 input, and a real Vita
+FFmpeg Bink playback boundary wired below the original movie owner. The earlier
+user-authorized FTP upload predates this current VPK; a 2026-08-29 FTP attempt
+for the current VPK timed out before data transfer. It is not an accepted
+milestone until device observations and returned logs match.
 The source/build/artifact checklist is tracked in
 `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`.
 
@@ -29,7 +29,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c
+5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d
 ```
 
 Runtime log:
@@ -49,6 +49,10 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   movie blits.
 - Loading screen coverage, status text, and progress through the original
   one-bar path, including renderer/cache prewarm.
+- Visible startup pre-cache/pre-warm/pre-compute before intro movies, menu
+  navigation, or M00 gameplay input. It indexes original MIX filename tables
+  and touches startup movie/menu/loading/M00 files through the original
+  FileFactory/MIX owners.
 - HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
   rendering and bounds, initializing TextDisplay after final StyleMgr
   reinitialization, and initializing Render2D dynamic FVF fields used by HUD,

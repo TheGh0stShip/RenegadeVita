@@ -18,8 +18,8 @@ Current A3.5-dev82 mapping:
 | Right shoulder | Original joystick button 1, currently primary-fire path |
 | Start | Clean exit/menu escape path, sampled early for LiveArea return |
 | Select | Debug/capture path only |
-| Front touch | First-person / third-person camera toggle |
-| Rear touch pad | Unmapped |
+| Front touch | Original mouse cursor positioning plus left-click/tap |
+| Rear touch pad | First-person / third-person camera toggle |
 
 Notes:
 
@@ -30,3 +30,8 @@ Notes:
 - D-pad Left/Right must not emit gameplay camera turn while changing weapons.
 - D-pad Up/Down are reserved for sniper zoom so shoulder buttons remain
   available to the original weapon behaviors.
+- Front touch maps to original 640x480 UI cursor coordinates and left mouse
+  button state for WWUI menus, options, save/load screens, and in-game
+  terminals.
+- Rear touch owns the first-person / third-person camera toggle so front touch
+  remains available for mouse-driven UI.

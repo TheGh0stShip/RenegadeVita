@@ -68,6 +68,13 @@
 #include "gamespyadmin.h"
 #endif
 
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "vita/a30_vita_runtime.h"
+#define A4_MAINMENU_TRACE(...) A30_Vita_Log(__VA_ARGS__)
+#else
+#define A4_MAINMENU_TRACE(...) ((void)0)
+#endif
+
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -100,6 +107,11 @@ MainMenuDialogClass::MainMenuDialogClass (void)	:
 	if (reg.Get_Int("DisableMenuAnim", 0) != 0) {
 		Animated = false;
 	}
+
+	A4_MAINMENU_TRACE(
+		"A4 main menu: constructed this=%p logo=%p title=%p gizmo=%p animated=%d backdrop=%p\n",
+		this, LogoModel, TitleTransModel, GizmoModel, Animated ? 1 : 0,
+		Get_BackDrop ());
 
 
 	if (TitleTransModel != NULL && GizmoModel != NULL && Animated) {
@@ -156,6 +168,12 @@ MainMenuDialogClass::~MainMenuDialogClass (void)
 void
 MainMenuDialogClass::On_Menu_Activate (bool onoff)
 {
+	MenuBackDropClass *backdrop = Get_BackDrop ();
+	SimpleSceneClass *scene = backdrop != NULL ? backdrop->Peek_Scene () : NULL;
+	A4_MAINMENU_TRACE(
+		"A4 main menu: On_Menu_Activate this=%p onoff=%d title=%p logo=%p backdrop=%p scene=%p\n",
+		this, onoff ? 1 : 0, TitleTransModel, LogoModel, backdrop, scene);
+
 	if (TitleTransModel != NULL) {
 
 		//
@@ -165,7 +183,11 @@ MainMenuDialogClass::On_Menu_Activate (bool onoff)
 
 			// Put the logo pack into the scene when reactivated.
 			if (LogoModel && LogoModel->Peek_Scene() == NULL) {
-				Get_BackDrop()->Peek_Scene()->Add_Render_Object(LogoModel);
+				if (scene != NULL) {
+					scene->Add_Render_Object(LogoModel);
+				} else {
+					A4_MAINMENU_TRACE("A4 main menu: logo scene add skipped because backdrop scene is unavailable\n");
+				}
 			}
 
 			//
@@ -229,19 +251,37 @@ DialogTransitionClass *
 MainMenuDialogClass::Get_Transition_In (DialogBaseClass *prev_dlg)
 {
 	MainMenuTransitionClass *transition = NULL;
+	MenuBackDropClass *backdrop = Get_BackDrop ();
+	SimpleSceneClass *scene = backdrop != NULL ? backdrop->Peek_Scene () : NULL;
+	CameraClass *camera = backdrop != NULL ? backdrop->Peek_Camera () : NULL;
+	A4_MAINMENU_TRACE(
+		"A4 main menu: transition in this=%p prev=%p title=%p logo=%p backdrop=%p scene=%p camera=%p\n",
+		this, prev_dlg, TitleTransModel, LogoModel, backdrop, scene, camera);
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+	A4_MAINMENU_TRACE("A4 main menu: transition in bypassed on Vita for immediate dialog activation\n");
+	return NULL;
+#endif
 
 	//
 	//	Add the transition model to the scene
 	//
 	if (TitleTransModel != NULL && TitleTransModel->Peek_Scene () == NULL) {
-		Get_BackDrop ()->Peek_Scene ()->Add_Render_Object (TitleTransModel);
+		if (scene != NULL) {
+			scene->Add_Render_Object (TitleTransModel);
+		} else {
+			A4_MAINMENU_TRACE("A4 main menu: title transition scene add skipped because backdrop scene is unavailable\n");
+		}
 	}
 
 	//
 	//	Add the logo to the screen
 	//
 	if (LogoModel != NULL && LogoModel->Peek_Scene () == NULL) {
-		Get_BackDrop ()->Peek_Scene ()->Add_Render_Object (LogoModel);
+		if (scene != NULL) {
+			scene->Add_Render_Object (LogoModel);
+		} else {
+			A4_MAINMENU_TRACE("A4 main menu: logo transition scene add skipped because backdrop scene is unavailable\n");
+		}
 	}
 
 	//
@@ -254,17 +294,25 @@ MainMenuDialogClass::Get_Transition_In (DialogBaseClass *prev_dlg)
 #endif
 			))
 	{
-		transition = new MainMenuTransitionClass;
-		transition->Set_Model (TitleTransModel);
-		transition->Set_Camera (Get_BackDrop ()->Peek_Camera ());
-		transition->Set_Type (DialogTransitionClass::SCREEN_IN);
-		transition->Set_Dialogs (this, prev_dlg);
+		if (TitleTransModel != NULL && camera != NULL) {
+			transition = new MainMenuTransitionClass;
+			if (transition != NULL) {
+				transition->Set_Model (TitleTransModel);
+				transition->Set_Camera (camera);
+				transition->Set_Type (DialogTransitionClass::SCREEN_IN);
+				transition->Set_Dialogs (this, prev_dlg);
 
-		//
-		//	Don't do the transition if something is missing
-		//
-		if (transition->Is_Valid () == false) {
-			REF_PTR_RELEASE (transition);
+				//
+				//	Don't do the transition if something is missing
+				//
+				if (transition->Is_Valid () == false) {
+					A4_MAINMENU_TRACE("A4 main menu: transition in invalid; releasing\n");
+					REF_PTR_RELEASE (transition);
+				}
+			}
+		} else {
+			A4_MAINMENU_TRACE("A4 main menu: transition in disabled title=%p camera=%p\n",
+				TitleTransModel, camera);
 		}
 	}
 
@@ -281,6 +329,16 @@ DialogTransitionClass *
 MainMenuDialogClass::Get_Transition_Out (DialogBaseClass *next_dlg)
 {
 	MainMenuTransitionClass *transition = NULL;
+	MenuBackDropClass *backdrop = Get_BackDrop ();
+	CameraClass *camera = backdrop != NULL ? backdrop->Peek_Camera () : NULL;
+	A4_MAINMENU_TRACE(
+		"A4 main menu: transition out this=%p next=%p title=%p backdrop=%p camera=%p practice=%d\n",
+		this, next_dlg, TitleTransModel, backdrop, camera,
+		IsStartingPractice ? 1 : 0);
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+	A4_MAINMENU_TRACE("A4 main menu: transition out bypassed on Vita for immediate dialog activation\n");
+	return NULL;
+#endif
 
 	//
 	//	We only want to transition between menu dialogs
@@ -288,17 +346,25 @@ MainMenuDialogClass::Get_Transition_Out (DialogBaseClass *next_dlg)
 	if (	IsStartingPractice == false &&
 			(next_dlg == NULL || next_dlg->As_MenuDialogClass () != NULL))
 	{
-		transition = new MainMenuTransitionClass;
-		transition->Set_Model (TitleTransModel);
-		transition->Set_Camera (Get_BackDrop ()->Peek_Camera ());
-		transition->Set_Type (DialogTransitionClass::SCREEN_OUT);
-		transition->Set_Dialogs (this, next_dlg);
+		if (TitleTransModel != NULL && camera != NULL) {
+			transition = new MainMenuTransitionClass;
+			if (transition != NULL) {
+				transition->Set_Model (TitleTransModel);
+				transition->Set_Camera (camera);
+				transition->Set_Type (DialogTransitionClass::SCREEN_OUT);
+				transition->Set_Dialogs (this, next_dlg);
 
-		//
-		//	Don't do the transition if something is missing
-		//
-		if (transition->Is_Valid () == false) {
-			REF_PTR_RELEASE (transition);
+				//
+				//	Don't do the transition if something is missing
+				//
+				if (transition->Is_Valid () == false) {
+					A4_MAINMENU_TRACE("A4 main menu: transition out invalid; releasing\n");
+					REF_PTR_RELEASE (transition);
+				}
+			}
+		} else {
+			A4_MAINMENU_TRACE("A4 main menu: transition out disabled title=%p camera=%p\n",
+				TitleTransModel, camera);
 		}
 	}
 
@@ -445,6 +511,10 @@ MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 void
 MainMenuDialogClass::Display (void)
 {
+	A4_MAINMENU_TRACE("A4 main menu: Display entry instance=%p dialogs=%d active=%p backdrop=%p\n",
+		_TheInstance, DialogMgrClass::Get_Dialog_Count (),
+		DialogMgrClass::Get_Active_Dialog (), Get_BackDrop ());
+
 	//
 	//	Create the dialog if necessary, otherwise simply bring it to the front
 	//
@@ -454,35 +524,53 @@ MainMenuDialogClass::Display (void)
 		//	Create the dialog
 		//
 		MainMenuDialogClass *dialog = new MainMenuDialogClass;
+		if (dialog == NULL) {
+			A4_MAINMENU_TRACE("A4 main menu: dialog allocation failed\n");
+			return ;
+		}
 
 		//
 		//	Create the backdrop if necessary
 		//
 		if (Animated) {
+			MenuBackDropClass *backdrop = dialog->Get_BackDrop ();
+			A4_MAINMENU_TRACE("A4 main menu: animated backdrop setup dialog=%p backdrop=%p model=%p\n",
+				dialog, backdrop, backdrop != NULL ? backdrop->Peek_Model () : NULL);
 
-			if (dialog->Get_BackDrop ()->Peek_Model () == NULL) {
-				dialog->Get_BackDrop ()->Set_Model ("IF_BACK01");
-				dialog->Get_BackDrop ()->Set_Animation ("IF_BACK01.IF_BACK01");
+			if (backdrop != NULL && backdrop->Peek_Model () == NULL) {
+				backdrop->Set_Model ("IF_BACK01");
+				backdrop->Set_Animation ("IF_BACK01.IF_BACK01");
 
 				/*RenderObjClass *model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_RENLOGO");
 				if (model != NULL) {
 					dialog->Get_BackDrop ()->Peek_Scene ()->Add_Render_Object(model);
 				}*/
+			} else if (backdrop == NULL) {
+				A4_MAINMENU_TRACE("A4 main menu: animated backdrop unavailable; continuing without backdrop model\n");
 			}
 		}
 
 		//
 		//	Start the dialog
 		//
+		A4_MAINMENU_TRACE("A4 main menu: Start_Dialog entry dialog=%p\n", dialog);
 		dialog->Start_Dialog ();
+		A4_MAINMENU_TRACE("A4 main menu: Start_Dialog returned dialogs=%d active=%p\n",
+			DialogMgrClass::Get_Dialog_Count (),
+			DialogMgrClass::Get_Active_Dialog ());
 		REF_PTR_RELEASE (dialog);
 
 	} else {
 		if (_TheInstance->Is_Active_Menu () == false) {
+			A4_MAINMENU_TRACE("A4 main menu: rolling back existing instance=%p\n",
+				_TheInstance);
 			DialogMgrClass::Rollback (_TheInstance);
 		}
 	}
 
+	A4_MAINMENU_TRACE("A4 main menu: Display exit instance=%p dialogs=%d active=%p\n",
+		_TheInstance, DialogMgrClass::Get_Dialog_Count (),
+		DialogMgrClass::Get_Active_Dialog ());
 	return ;
 }
 

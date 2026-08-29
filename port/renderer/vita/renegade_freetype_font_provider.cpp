@@ -22,6 +22,8 @@ struct FontFace {
 
 FT_Library g_library = nullptr;
 std::vector<FontFace> g_faces;
+constexpr FT_Int32 kVitaFontGlyphLoadFlags =
+	FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT;
 
 bool Equal_No_Case(const char *left, const char *right)
 {
@@ -72,6 +74,11 @@ FontFace *Find_Face(const char *family)
 			static_cast<FT_Long>(entry.data.size()), 0, &entry.face) != 0) {
 		return nullptr;
 	}
+	if (FT_Select_Charmap(entry.face, FT_ENCODING_UNICODE) != 0 &&
+		entry.face->charmap == nullptr) {
+		FT_Done_Face(entry.face);
+		return nullptr;
+	}
 	std::strncpy(entry.family, family, sizeof(entry.family) - 1);
 	entry.family[sizeof(entry.family) - 1] = '\0';
 	g_faces.push_back(std::move(entry));
@@ -93,7 +100,8 @@ int Rounded_26_6(FT_Pos value)
 
 bool Load_Glyph(FontFace *font, uint16_t character, bool bold)
 {
-	if (font == nullptr || FT_Load_Char(font->face, character, FT_LOAD_DEFAULT) != 0) return false;
+	if (font == nullptr || font->face == nullptr ||
+		FT_Load_Char(font->face, character, kVitaFontGlyphLoadFlags) != 0) return false;
 	if (bold) FT_GlyphSlot_Embolden(font->face->glyph);
 	return FT_Render_Glyph(font->face->glyph, FT_RENDER_MODE_NORMAL) == 0;
 }

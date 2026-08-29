@@ -83,8 +83,9 @@ bool g_logged_first_material_lighting = false;
 bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
 bool g_logged_first_loading_texture_v_flip = false;
-bool g_logged_first_passthrough_texture_v_correction = false;
+bool g_logged_first_passthrough_texture_v_preserved = false;
 bool g_logged_first_skin_texture_color = false;
+bool g_logged_first_skin_passthrough_texture_v_preserved = false;
 bool g_logged_first_original_shader_state_skip = false;
 bool g_logged_first_viewport_state_skip = false;
 bool g_shader_compiler_available = false;
@@ -196,7 +197,8 @@ void Invalidate_Native_State_Cache()
 	memset(&g_current_native_viewport, 0, sizeof(g_current_native_viewport));
 	g_current_native_viewport_known = false;
 	g_logged_first_state_cache_skip = false;
-	g_logged_first_passthrough_texture_v_correction = false;
+	g_logged_first_passthrough_texture_v_preserved = false;
+	g_logged_first_skin_passthrough_texture_v_preserved = false;
 	g_logged_first_original_shader_state_skip = false;
 	g_logged_first_viewport_state_skip = false;
 }
@@ -485,8 +487,8 @@ bool Uses_Generated_Texture_Coordinates(
 bool Should_Flip_Submitted_Texture_V(const OriginalTextureCoordinateState &state,
 	const char *texture_name)
 {
-	(void)texture_name;
-	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;
+	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
+		Has_Loadscreen_Texture_Prefix(texture_name);
 }
 
 const Vector2 *Resolve_UV_Array_For_Texture_State(MeshModelClass *model,
@@ -628,13 +630,14 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 				"first loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
-		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
-			!g_logged_first_passthrough_texture_v_correction) {
-			Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
-				"first gameplay passthrough texture V correction: texture=%s stage=%u",
-				texture_name != NULL ? texture_name : "none", stage);
-			g_logged_first_passthrough_texture_v_correction = true;
 		}
+	} else if (mode == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name) &&
+		!g_logged_first_passthrough_texture_v_preserved) {
+		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+			"first gameplay passthrough texture V preserved: texture=%s stage=%u",
+			texture_name != NULL ? texture_name : "none", stage);
+		g_logged_first_passthrough_texture_v_preserved = true;
 	}
 	float s = 0.0f;
 	float t = 0.0f;
@@ -763,13 +766,14 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 				"first indexed loading texture V correction: texture=%s stage=%u",
 				texture_name != NULL ? texture_name : "none", stage);
 			g_logged_first_loading_texture_v_flip = true;
-		} else if (!Has_Loadscreen_Texture_Prefix(texture_name) &&
-			!g_logged_first_passthrough_texture_v_correction) {
-			Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
-				"first indexed gameplay passthrough texture V correction: texture=%s stage=%u",
-				texture_name != NULL ? texture_name : "none", stage);
-			g_logged_first_passthrough_texture_v_correction = true;
 		}
+	} else if (mode == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name) &&
+		!g_logged_first_passthrough_texture_v_preserved) {
+		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+			"first indexed gameplay passthrough texture V preserved: texture=%s stage=%u",
+			texture_name != NULL ? texture_name : "none", stage);
+		g_logged_first_passthrough_texture_v_preserved = true;
 	}
 
 	float s = 0.0f;
@@ -2467,6 +2471,26 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 						&current_texture_coordinates[stage]);
 					current_uvs[stage] = Resolve_UV_Array_For_Texture_State(model,
 						current_texture_coordinates[stage], uvs[stage]);
+				}
+				if (is_skin && bound_textures[0] != NULL &&
+					!g_logged_first_skin_passthrough_texture_v_preserved &&
+					Texture_Coordinate_Mode(current_texture_coordinates[0]) ==
+						D3DTSS_TCI_PASSTHRU &&
+					!Should_Flip_Submitted_Texture_V(
+						current_texture_coordinates[0],
+						bound_textures[0]->Get_Texture_Name().Peek_Buffer()) &&
+					!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
+					!Is_Loading_Screen_Diagnostic_Name(
+						bound_textures[0]->Get_Texture_Name().Peek_Buffer())) {
+					Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
+						"first skinned gameplay passthrough texture V preserved: mesh=%s pass=%d texture=%s uv_source=%u flags=%08X",
+						mesh.Get_Name(), pass,
+						bound_textures[0]->Get_Texture_Name().Peek_Buffer(),
+						static_cast<unsigned>(
+							current_texture_coordinates[0].texcoord_index & 0xffffU),
+						static_cast<unsigned>(
+							current_texture_coordinates[0].texture_transform_flags));
+					g_logged_first_skin_passthrough_texture_v_preserved = true;
 				}
 				Apply_Original_Texture_Stage_State(triangle_shader,
 					bound_textures[0] != NULL, current_detail_stage);

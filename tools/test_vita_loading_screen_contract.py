@@ -91,7 +91,40 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("SaveLoadStatus::Get_Status_Count();", runtime)
         self.assertIn("CombatManager::Set_Load_Progress(mirrored_progress);", runtime)
         self.assertIn("Warm_Original_M00_Presentation_Cache", runtime)
-        self.assertIn('"Prewarm renderer cache"', runtime)
+        self.assertIn("Run_Visible_Startup_Precache_Phase", runtime)
+        self.assertIn("kStartupPrecacheVisibleSteps = 5U", runtime)
+        self.assertIn("Pre-cache / pre-warm / pre-compute", runtime)
+        self.assertIn("Startup_Index_Mix_Archive", runtime)
+        self.assertIn("Build_Filename_List(names)", runtime)
+        self.assertIn("Startup_Touch_File(factory, required_files[index]", runtime)
+        self.assertIn('"DATA\\\\MOVIES\\\\EA_WW.BIK"', runtime)
+        self.assertIn('"DATA\\\\MOVIES\\\\R_INTRO.BIK"', runtime)
+        self.assertIn('"IF_BACK01.W3D"', runtime)
+        self.assertIn('"M00_Tutorial.lsd"', runtime)
+        self.assertIn(
+            '"A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u',
+            runtime,
+        )
+        startup_precache_call = runtime.index(
+            "Run_Visible_Startup_Precache_Phase("
+        )
+        frontend_menu_call = runtime.index(
+            "Run_Original_Frontend_Intro_And_Menu(frontend_menu_mode"
+        )
+        self.assertLess(startup_precache_call, frontend_menu_call)
+        self.assertLess(
+            startup_precache_call,
+            runtime.index("WWAudioClass application_audio(false);"),
+        )
+        self.assertIn("psvDebugScreenFinish();", runtime[startup_precache_call:])
+        self.assertIn(
+            "A3.5 prewarm: FAIL startup precache/precompute phase before frontend",
+            runtime,
+        )
+        self.assertIn("kLoadingPrewarmFrames = 8U", runtime)
+        self.assertIn("kM00ScenePrewarmFrames = 60U", runtime)
+        self.assertIn('"Prewarming loading cache"', runtime)
+        self.assertIn('"Prewarming M00 scene cache"', runtime)
         self.assertIn("TextureLoader::Suspend_Texture_Load();", runtime)
         self.assertIn("TextureLoader::Continue_Texture_Load();", runtime)
         self.assertIn("CombatGameModeClass::Vita_Begin_Level_Load(", runtime)
@@ -112,7 +145,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("state.loading_visual_gate.original_loading_screen_owner = true;", runtime)
         self.assertIn("state.loading_visual_gate.direct_vitagl_overlay_disabled = true;", runtime)
         self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = true;", runtime)
-        self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = false;", runtime)
+        self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = true;", runtime)
         self.assertNotIn("A31FrameHistory capture_history;", runtime)
         self.assertNotIn("A31FrameHistory loading_capture_history;", runtime)
         self.assertIn("new (std::nothrow) A31FrameHistory", runtime)
@@ -141,6 +174,49 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             runtime[prewarm_definition:prewarm_call],
         )
         self.assertLess(prewarm_call, level_ready_call)
+        scene_prewarm_definition = runtime.index(
+            "bool Warm_Original_M00_Interactive_Presentation_Cache"
+        )
+        scene_prewarm_call = runtime.index(
+            "if (!Warm_Original_M00_Interactive_Presentation_Cache(",
+        )
+        initialized_index = runtime.index("result.initialized = true;")
+        input_loop_index = runtime.index("while (true)", initialized_index)
+        self.assertIn(
+            "A31_Interactive_Run_Render_Frame();",
+            runtime[scene_prewarm_definition:scene_prewarm_call],
+        )
+        self.assertIn(
+            'loading_presenter.Render_Original_Progress("prewarm_m00_scene"',
+            runtime[scene_prewarm_definition:scene_prewarm_call],
+        )
+        self.assertIn(
+            '"A3.5 prewarm: m00-scene complete rendered=%d frames=%u',
+            runtime[scene_prewarm_definition:scene_prewarm_call],
+        )
+        self.assertLess(scene_prewarm_call, initialized_index)
+        self.assertLess(scene_prewarm_call, input_loop_index)
+        post_capture_restore = runtime.index(
+            'Apply_Original_Gameplay_Render_Resolution(\n\t\t\t\t\t"post-loading-capture"'
+        )
+        self.assertLess(capture_log_index, post_capture_restore)
+        self.assertLess(
+            post_capture_restore,
+            runtime.index("TextWindowClass::Initialize(CombatManager::Get_Background_Scene())"),
+        )
+        gameplay_resolution_definition = runtime.index(
+            "bool Apply_Original_Gameplay_Render_Resolution"
+        )
+        gameplay_resolution_body = runtime[
+            gameplay_resolution_definition:runtime.index(
+                "bool Apply_Original_Loading_Render_Resolution_For_Prewarm",
+                gameplay_resolution_definition,
+            )
+        ]
+        self.assertIn("RenegadeVitaRenderer::DISPLAY_WIDTH", gameplay_resolution_body)
+        self.assertIn("RenegadeVitaRenderer::DISPLAY_HEIGHT", gameplay_resolution_body)
+        self.assertNotIn("kOriginalLoadingLogicalWidth", gameplay_resolution_body)
+        self.assertNotIn("kOriginalLoadingLogicalHeight", gameplay_resolution_body)
         self.assertNotIn("Present_Fraction", runtime)
         self.assertNotIn("0.985f", runtime)
         self.assertNotIn("0.995f", runtime)
@@ -161,6 +237,18 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             runtime.index("CombatManager::Shutdown();"),
             runtime.index("StyleMgrClass::Shutdown();"),
         )
+
+        main = (ROOT / "port/platform/vita/a30_main.cpp").read_text(
+            encoding="utf-8"
+        )
+        header = (ROOT / "port/platform/vita/a31_vita_runtime.h").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(\n\tint startup_screen_result = -1);",
+            header,
+        )
+        self.assertIn("A31_Vita_Run_Interactive_Runtime(screen_result)", main)
 
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
             encoding="utf-8"
@@ -185,7 +273,8 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn('prefix[] = "loadscreen_"', renderer)
         self.assertIn("Has_Loadscreen_Texture_Prefix(texture_name)", renderer)
         self.assertIn("Should_Flip_Submitted_Texture_V(state, texture_name)", renderer)
-        self.assertIn("first gameplay passthrough texture V correction", renderer)
+        self.assertIn("first gameplay passthrough texture V preserved", renderer)
+        self.assertNotIn("(void)texture_name;", renderer)
         self.assertIn("first cached original ShaderClass state skip", renderer)
         self.assertIn("first cached original CameraClass viewport skip", renderer)
         self.assertIn("g_current_native_viewport_known", renderer)

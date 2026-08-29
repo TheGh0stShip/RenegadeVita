@@ -70,11 +70,13 @@ int main()
 	if (screen_result >= 0) {
 		Print_Startup(status, screen_result);
 		sceKernelDelayThread(250 * 1000);
-		psvDebugScreenFinish();
 	}
 	if (!mission_data_ready) {
 		A30_Vita_Log("[LIFECYCLE] END status=controlled-failure phase=retail-preflight candidate=%s\n",
 			RENEGADE_BUILD_CANDIDATE_LABEL);
+		if (screen_result >= 0) {
+			psvDebugScreenFinish();
+		}
 		sceKernelExitProcess(1);
 		return 1;
 	}
@@ -82,7 +84,8 @@ int main()
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 	/* The direct runtime owns the retail MIX chain and therefore constructs
 	** WWAudio there, after the chain exists but before engine/world setup. */
-	const A31VitaInteractiveResult interactive = A31_Vita_Run_Interactive_Runtime();
+	const A31VitaInteractiveResult interactive =
+		A31_Vita_Run_Interactive_Runtime(screen_result);
 	const bool audio_teardown_completed = WWAudioClass::Get_Instance() == NULL;
 	A30_Vita_Log("A3.1 breadcrumb: application audio teardown singleton=%p\n",
 		static_cast<void *>(WWAudioClass::Get_Instance()));

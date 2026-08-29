@@ -178,7 +178,7 @@ grep -q 'Machine:.*ARM' "$rv_elf_header"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime()
+A31_Vita_Run_Interactive_Runtime(int)
 CombatManager::Load_Level_Threaded(char const*, bool)
 CombatGameModeClass::Vita_Finalize_Loaded_Level(void*, bool)
 RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOCATION)

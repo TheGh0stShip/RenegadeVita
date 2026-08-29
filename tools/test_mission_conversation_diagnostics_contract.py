@@ -153,7 +153,11 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("const bool gameplay_input_active = !frontend_menu_navigation;", directinput)
         for token in (
             "gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0",
-            "gameplay_input_active && front_touch_down",
+            "gameplay_input_active && back_touch.down",
+            "Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF",
+            "front_touch.down",
+            "CursorPos.X = front_touch.x;",
+            "CursorPos.Y = front_touch.y;",
             "gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0",
             "gameplay_input_active && (buttons & SCE_CTRL_UP) != 0",
             "gameplay_input_active && (buttons & SCE_CTRL_DOWN) != 0",

@@ -67,16 +67,40 @@ float g_route_replay_elapsed_seconds = 0.0f;
 uint64_t g_route_replay_elapsed_us = 0U;
 uint64_t g_route_current_sample_elapsed_us = 0U;
 bool g_front_touch_sampling_initialized = false;
-bool g_logged_front_touch_camera_toggle = false;
+bool g_back_touch_sampling_initialized = false;
+bool g_logged_front_touch_mouse = false;
+bool g_logged_back_touch_camera_toggle = false;
 bool g_logged_action_hit = false;
 bool g_logged_reload_hit = false;
 bool g_logged_zoom_in_hit = false;
 bool g_logged_zoom_out_hit = false;
+bool g_logged_first_read_entry = false;
+bool g_logged_first_read_controller = false;
+bool g_logged_first_read_touch = false;
+bool g_logged_first_read_complete = false;
 const float kLegacyRouteV1SampleRate = 60.0f;
 const float kLegacyRouteV1FrameSeconds = 1.0f / kLegacyRouteV1SampleRate;
 const float kLegacyRouteV1MaximumFrameStep = 0.25f;
 const uint32_t kDefaultTimedRouteDeltaUs = 16667U;
 const uint32_t kMaximumRecordedRouteDeltaUs = 1000000U;
+const float kOriginalLogicalScreenWidth = 640.0f;
+const float kOriginalLogicalScreenHeight = 480.0f;
+const float kVitaTouchRawWidth = 1919.0f;
+const float kVitaTouchRawHeight = 1087.0f;
+
+struct VitaTouchSample
+{
+	bool down;
+	float x;
+	float y;
+};
+
+float Clamp_Float(float value, float low, float high)
+{
+	if (value < low) return low;
+	if (value > high) return high;
+	return value;
+}
 
 bool Is_Regular_File(const char *path)
 {
@@ -135,22 +159,27 @@ uint32_t Frame_Delta_Microseconds()
 	return delta_us != 0U ? delta_us : kDefaultTimedRouteDeltaUs;
 }
 
-bool Is_Front_Touch_Down()
+VitaTouchSample Sample_Touch_Port(int port, bool &sampling_initialized)
 {
-	if (!g_front_touch_sampling_initialized) {
-		sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT,
-			SCE_TOUCH_SAMPLING_STATE_START);
-		g_front_touch_sampling_initialized = true;
+	if (!sampling_initialized) {
+		sceTouchSetSamplingState(port, SCE_TOUCH_SAMPLING_STATE_START);
+		sampling_initialized = true;
 	}
 	SceTouchData touch = {};
-	const int samples = sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
-	const bool down = samples > 0 && touch.reportNum > 0U;
-	if (down && !g_logged_front_touch_camera_toggle) {
-		Vita_Append_A22_Runtime_Breadcrumb("input",
-			"front touch feeds original first/third-person toggle key");
-		g_logged_front_touch_camera_toggle = true;
+	VitaTouchSample result = {};
+	const int samples = sceTouchPeek(port, &touch, 1);
+	if (samples > 0 && touch.reportNum > 0U) {
+		result.down = true;
+		result.x = Clamp_Float(
+			static_cast<float>(touch.report[0].x) * kOriginalLogicalScreenWidth /
+				kVitaTouchRawWidth,
+			0.0f, kOriginalLogicalScreenWidth - 1.0f);
+		result.y = Clamp_Float(
+			static_cast<float>(touch.report[0].y) * kOriginalLogicalScreenHeight /
+				kVitaTouchRawHeight,
+			0.0f, kOriginalLogicalScreenHeight - 1.0f);
 	}
-	return down;
+	return result;
 }
 
 bool Load_Replay_Route()
@@ -489,6 +518,13 @@ void DirectInput::Flush(void)
 
 void DirectInput::Read(void)
 {
+#if !defined(RENEGADE_HOST_ABI_TEST)
+	if (!g_logged_first_read_entry) {
+		Vita_Append_A22_Runtime_Breadcrumb("input", "DirectInput::Read first entry captured=%d",
+			Captured ? 1 : 0);
+		g_logged_first_read_entry = true;
+	}
+#endif
 	Clear_Transitions(DIKeyboardButtons, NUM_KEYBOARD_BUTTONS);
 	Clear_Transitions(DIMouseButtons, NUM_MOUSE_BUTTONS);
 	Clear_Transitions(DIJoystickButtons, NUM_JOYSTICK_BUTTONS);
@@ -501,10 +537,35 @@ void DirectInput::Read(void)
 		Flush();
 		return;
 	}
-		Apply_Replay_Sample(controller);
-		Record_Sample(controller);
-		const unsigned int buttons = controller.buttons;
-		const bool front_touch_down = Is_Front_Touch_Down();
+	if (!g_logged_first_read_controller) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"DirectInput::Read first controller buttons=%08X lx/ly/rx/ry=%u/%u/%u/%u",
+			static_cast<unsigned>(controller.buttons), controller.lx,
+			controller.ly, controller.rx, controller.ry);
+		g_logged_first_read_controller = true;
+	}
+			Apply_Replay_Sample(controller);
+			Record_Sample(controller);
+			const unsigned int buttons = controller.buttons;
+			const VitaTouchSample front_touch = Sample_Touch_Port(
+				SCE_TOUCH_PORT_FRONT, g_front_touch_sampling_initialized);
+			const VitaTouchSample back_touch = Sample_Touch_Port(
+				SCE_TOUCH_PORT_BACK, g_back_touch_sampling_initialized);
+			if (!g_logged_first_read_touch) {
+				Vita_Append_A22_Runtime_Breadcrumb("input",
+					"DirectInput::Read first touch front/back=%d/%d",
+					front_touch.down ? 1 : 0, back_touch.down ? 1 : 0);
+				g_logged_first_read_touch = true;
+			}
+		if (front_touch.down) {
+			CursorPos.X = front_touch.x;
+			CursorPos.Y = front_touch.y;
+			if (!g_logged_front_touch_mouse) {
+				Vita_Append_A22_Runtime_Breadcrumb("input",
+					"front touch feeds original mouse cursor and left click");
+				g_logged_front_touch_mouse = true;
+			}
+		}
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 		const bool frontend_menu_navigation = A4_Frontend_Is_Menu_Loop_Active();
 #else
@@ -540,9 +601,22 @@ void DirectInput::Read(void)
 		gameplay_input_active && (buttons & SCE_CTRL_CIRCLE) != 0);
 	Set_Button(DIKeyboardButtons, DIK_E,
 		gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0);
-	Set_Button(DIKeyboardButtons, DIK_F, gameplay_input_active && front_touch_down);
+	Set_Button(DIKeyboardButtons, DIK_F, gameplay_input_active && back_touch.down);
 	Set_Button(DIKeyboardButtons, DIK_R,
 		gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0);
+	Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF,
+		front_touch.down);
+	if (!front_touch.down) {
+		EatMouseHeld = false;
+	}
+	if (EatMouseHeld) {
+		DIMouseButtons[DirectInput::BUTTON_MOUSE_LEFT & 0xFF] &=
+			~DirectInput::DI_BUTTON_HELD;
+		DIMouseButtons[DirectInput::BUTTON_MOUSE_LEFT & 0xFF] &=
+			~DirectInput::DI_BUTTON_HIT;
+		DIMouseButtons[DirectInput::BUTTON_MOUSE_LEFT & 0xFF] |=
+			DirectInput::DI_BUTTON_RELEASED;
+	}
 	/* START remains the native direct-route clean-exit control and is sampled
 	** before Input::Update. Triangle supplies the original Action key, so it
 	** must not also feed the menu-toggle escape key. */
@@ -574,6 +648,12 @@ void DirectInput::Read(void)
 		Vita_Append_A22_Runtime_Breadcrumb("input",
 			"D-pad Down delivered original sniper zoom-out key DIK_DOWN");
 		g_logged_zoom_out_hit = true;
+	}
+	if (!g_logged_back_touch_camera_toggle &&
+		(DIKeyboardButtons[DIK_F] & DirectInput::DI_BUTTON_HIT) != 0) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"rear touch delivered original first/third-person toggle key DIK_F");
+		g_logged_back_touch_camera_toggle = true;
 	}
 	// Keep the two physical sticks independent.  The old boundary reused the
 	// mouse array for joystick storage, so mapping the camera overwrote movement
@@ -635,7 +715,7 @@ void DirectInput::Read(void)
 		(buttons & SCE_CTRL_LTRIGGER) != 0 ? 1U : 0U;
 	g_vita_input_telemetry.right_shoulder_down =
 		(buttons & SCE_CTRL_RTRIGGER) != 0 ? 1U : 0U;
-	g_vita_input_telemetry.front_touch_down = front_touch_down ? 1U : 0U;
+	g_vita_input_telemetry.front_touch_down = front_touch.down ? 1U : 0U;
 	g_vita_input_telemetry.dpad_up_down =
 		(buttons & SCE_CTRL_UP) != 0 ? 1U : 0U;
 	g_vita_input_telemetry.dpad_down_down =
@@ -658,9 +738,13 @@ void DirectInput::Read(void)
 		static_cast<uint32_t>(DIKeyboardButtons[DIK_UP]);
 	g_vita_input_telemetry.zoom_out_key_state =
 		static_cast<uint32_t>(DIKeyboardButtons[DIK_DOWN]);
-	g_vita_input_telemetry.objectives_toggle_key_state = 0U;
-#endif
-}
+		g_vita_input_telemetry.objectives_toggle_key_state = 0U;
+		if (!g_logged_first_read_complete) {
+			Vita_Append_A22_Runtime_Breadcrumb("input", "DirectInput::Read first complete");
+			g_logged_first_read_complete = true;
+		}
+	#endif
+	}
 
 void DirectInput::Eat_Mouse_Held_States(void) { EatMouseHeld = true; }
 long DirectInput::Get_Joystick_Axis_State(JoystickAxis axis) { return g_vita_joystick_axis[(int)axis]; }

@@ -48,6 +48,13 @@
 #include "stylemgr.h"
 #include "render2dsentence.h"
 
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "vita/a30_vita_runtime.h"
+#define A4_MOVIE_TRACE(...) A30_Vita_Log(__VA_ARGS__)
+#else
+#define A4_MOVIE_TRACE(...) ((void)0)
+#endif
+
 enum {
 	STARTUP_MOVIE_OFF,
 	STARTUP_MOVIE_EA,
@@ -266,34 +273,56 @@ void	MovieGameModeClass::Startup_Movies( void )
 
 void	MovieGameModeClass::Movie_Done( void )
 {
+	A4_MOVIE_TRACE(
+		"A4 MovieGameMode: Movie_Done entry startup_mode=%d playing=%d pending=%d complete=%d\n",
+		MovieStartupMode, IsPlaying ? 1 : 0, IsPending ? 1 : 0,
+		BINKMovie::Is_Complete() ? 1 : 0);
+
 	if (IsPlaying) {
-		WWAudioClass::Get_Instance ()->Temp_Disable_Audio (false);
+		WWAudioClass *audio = WWAudioClass::Get_Instance ();
+		A4_MOVIE_TRACE("A4 MovieGameMode: stopping current movie audio=%p\n", audio);
+		if (audio != NULL) {
+			audio->Temp_Disable_Audio (false);
+		} else {
+			A4_MOVIE_TRACE("A4 MovieGameMode: audio singleton unavailable during movie stop\n");
+		}
 		BINKMovie::Stop ();
+		A4_MOVIE_TRACE("A4 MovieGameMode: BINKMovie::Stop returned\n");
 		IsPlaying = false;
 	}
 
 	if ( MovieStartupMode == STARTUP_MOVIE_EA ) {
 		MovieStartupMode = STARTUP_MOVIE_INTRO;
+		A4_MOVIE_TRACE("A4 MovieGameMode: starting Renegade intro movie\n");
 		Start_Movie( "DATA\\MOVIES\\R_INTRO.BIK" );		// Play Renegade intro movie
+		A4_MOVIE_TRACE("A4 MovieGameMode: Renegade intro Start_Movie returned\n");
 	} else if ( MovieStartupMode == STARTUP_MOVIE_INTRO ) {
 		MovieStartupMode = STARTUP_MOVIE_OFF;
 		// Goto main menu
 		
 #ifdef MULTIPLAYERDEMO
+		A4_MOVIE_TRACE("A4 MovieGameMode: routing to splash location\n");
 		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_SPLASH_IN);
 #else
+		A4_MOVIE_TRACE("A4 MovieGameMode: routing to main menu location\n");
 		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_MAIN_MENU);
 #endif //MULTIPLAYERDEMO
+		A4_MOVIE_TRACE("A4 MovieGameMode: dialog route returned\n");
 
 		IntroMovieSkipAllowed = true;
 
 		RegistryClass registry( APPLICATION_SUB_KEY_NAME_OPTIONS );
+		A4_MOVIE_TRACE("A4 MovieGameMode: registry valid=%d\n",
+			registry.Is_Valid() ? 1 : 0);
 		if ( registry.Is_Valid() ) {
 			registry.Set_Bool( "IntroMovieSkipAllowed", true );
 		}
 
+		A4_MOVIE_TRACE("A4 MovieGameMode: deactivating movie mode\n");
 		Deactivate();
+		A4_MOVIE_TRACE("A4 MovieGameMode: Movie_Done complete\n");
 	} else {
+		A4_MOVIE_TRACE("A4 MovieGameMode: continuing campaign after movie\n");
 		CampaignManager::Continue();
 	}
 }

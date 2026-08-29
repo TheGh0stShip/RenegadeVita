@@ -44,4 +44,5 @@ struct A31VitaInteractiveResult
 
 /* Runs the original M00 single-player session against the live Vita renderer.
 ** The function returns only after START or a durable diagnosed failure. */
-A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime();
+A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
+	int startup_screen_result = -1);

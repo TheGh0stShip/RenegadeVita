@@ -38,6 +38,7 @@
 #include "renegadedialogmgr.h"
 #include "dialogmgr.h"
 #include "dialogbase.h"
+#include "menudialog.h"
 #include "dialogtests.h"
 #include "dialogresource.h"
 #include "dlgloadspgame.h"
@@ -86,6 +87,13 @@
 #include "consolemode.h"
 #endif
 #include "specialbuilds.h"
+
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "vita/a30_vita_runtime.h"
+#define A4_DIALOG_TRACE(...) A30_Vita_Log(__VA_ARGS__)
+#else
+#define A4_DIALOG_TRACE(...) ((void)0)
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -262,9 +270,20 @@ RenegadeDialogMgrClass::Initialize (void)
 	//
 	//	Simple-pass thru to the WWUI dialog mgr system
 	//
-	if (!ConsoleBox.Is_Exclusive()) {
+	const bool console_exclusive = ConsoleBox.Is_Exclusive();
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+	const bool force_dialog_init = true;
+#else
+	const bool force_dialog_init = false;
+#endif
+	if (!console_exclusive || force_dialog_init) {
 		DialogBaseClass::Set_Default_Command_Handler (Default_On_Command);
 		DialogMgrClass::Initialize (STYLE_MGR_INI);
+		A4_DIALOG_TRACE("A4 dialog mgr: initialized dialog/menu systems console_exclusive=%d input=%p backdrop=%p\n",
+			console_exclusive ? 1 : 0, _TheWWUIInput, MenuDialogClass::Get_BackDrop ());
+	} else {
+		A4_DIALOG_TRACE("A4 dialog mgr: skipped dialog/menu initialization console_exclusive=%d input=%p\n",
+			console_exclusive ? 1 : 0, _TheWWUIInput);
 	}
 	DialogMgrClass::Install_Input (_TheWWUIInput);
 	return ;

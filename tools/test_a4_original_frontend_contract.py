@@ -58,6 +58,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         for patch_name in (
             "commando-a4-gameinitmgr-frontend-start-latch.patch",
             "commando-a4-movie-vita-provider-boundary.patch",
+            "a4-post-movie-mainmenu-hardening.patch",
         ):
             self.assertIn(patch_name, stage_sources)
             self.assertIn("--fuzz=0 --no-backup-if-mismatch", stage_sources)
@@ -95,6 +96,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);",
             "Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);",
             "Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);",
+            "CursorPos.X = front_touch.x;",
+            "CursorPos.Y = front_touch.y;",
+            "Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF",
+            "front touch feeds original mouse cursor and left click",
+            "gameplay_input_active && back_touch.down",
             "gameplay_input_active && (buttons & SCE_CTRL_UP) != 0",
             "gameplay_input_active && (buttons & SCE_CTRL_DOWN) != 0",
             "gameplay_input_active && (buttons & SCE_CTRL_LEFT) != 0",
@@ -107,6 +113,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "gameplay_input_active && (buttons & SCE_CTRL_RTRIGGER) != 0",
             "gameplay_input_active ? left.x.logical : 0",
             "gameplay_input_active ? left.y.logical : 0",
+            "DirectInput::Read first entry captured=%d",
+            "DirectInput::Read first controller buttons=%08X",
+            "DirectInput::Read first touch front/back=%d/%d",
+            "DirectInput::Read first complete",
         ):
             self.assertIn(token, directinput)
         self.assertIn("Set_Button(DIKeyboardButtons, DIK_ESCAPE, (buttons & SCE_CTRL_START) != 0);", directinput)
@@ -116,6 +126,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("WM_KEYDOWN", lifecycle)
         self.assertIn("WM_KEYUP", lifecycle)
         self.assertIn("D-pad navigates the original WWUI focus", controls_doc)
+        self.assertIn("Front touch", controls_doc)
+        self.assertIn("mouse cursor", controls_doc)
+        self.assertIn("Rear touch pad", controls_doc)
+        self.assertIn("First-person / third-person camera toggle", controls_doc)
 
     def test_main_menu_tutorial_handoff_reaches_existing_original_m00_route(self):
         dialogtests = (ROOT / "staging" / "commando" / "dialogtests.cpp").read_text()
@@ -128,7 +142,23 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         direct_route_index = runtime.index("GameInitMgrClass::Initialize_SP();", handoff_index)
         self.assertLess(handoff_index, direct_route_index)
         self.assertIn("Run_Original_Frontend_Intro_And_Menu", runtime)
+        self.assertLess(
+            runtime.index("A4_Frontend_Begin_Menu_Loop();"),
+            runtime.index("Input::Menu_Enable(true);"),
+        )
+        self.assertLess(
+            runtime.index("Input::Menu_Enable(true);"),
+            runtime.index("Input::Update();"),
+        )
+        self.assertLess(
+            runtime.index("Input::Update();"),
+            runtime.index("Input::Menu_Enable(false);"),
+        )
         self.assertIn("registered original CombatGameMode owner", runtime)
+        self.assertIn("frontend_menu_mode_registered_for_handoff", runtime)
+        self.assertIn("retained original Menu mode through Combat handoff", runtime)
+        self.assertIn("removed retained Menu mode after Combat handoff", runtime)
+        self.assertIn('GameModeManager::Find("Menu") == &frontend_menu_mode', runtime)
         self.assertIn("StyleMgrClass::Initialize_From_INI(kStyleManagerIni);", runtime[handoff_index:direct_route_index])
         final_style_index = runtime.index(
             "StyleMgrClass::Initialize_From_INI(kStyleManagerIni);",
@@ -140,6 +170,9 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         )
         self.assertLess(final_style_index, text_display_index)
         self.assertLess(text_display_index, direct_route_index)
+        combat_remove_index = runtime.index("GameModeManager::Remove(&frontend_combat_mode);")
+        menu_remove_index = runtime.rindex("GameModeManager::Remove(&frontend_menu_mode);")
+        self.assertLess(combat_remove_index, menu_remove_index)
         self.assertIn("A4_Frontend_Latch_Start_Game", gameinit)
         self.assertIn("Validate_Frontend_Tutorial_Start_Latch", host)
         self.assertIn("frontend_tutorial_start_latched", host)
@@ -165,7 +198,22 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("A4_Frontend_Record_Bink_Play(filename);", bink)
         self.assertIn("A4_Frontend_Record_Bink_Skip(filename);", bink)
         for token in (
+            "constexpr bool kRealtimeBinkPlaybackEnabled = false;",
+            "dev82 physical candidate disables slow software Bink playback after black-screen/audio-underrun evidence",
             "Renegade_Resolve_Path",
+            "Build_FFmpeg_File_URL",
+            "file:%s",
+            "#include <psp2/ctrl.h>",
+            "SCE_CTRL_START",
+            "SCE_CTRL_CROSS",
+            "SCE_CTRL_CIRCLE",
+            "SCE_CTRL_TRIANGLE",
+            "sceCtrlPeekBufferPositive",
+            "Prime_Skip_Button_Latch",
+            "Check_Skip_Request",
+            "A4 Bink: skip requested buttons=%08X",
+            "kUpdateBudgetUs",
+            "update budget yield",
             "avformat_open_input",
             "avcodec_find_decoder",
             "g_packet_pending",
@@ -175,10 +223,91 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "sws_scale",
             "swr_convert",
             "sceAudioOutOpenPort",
+            "SCE_AUDIO_OUT_PORT_TYPE_MAIN",
+            "SCE_AUDIO_OUT_PORT_TYPE_VOICE",
+            "SCE_AUDIO_OUT_PORT_TYPE_BGM",
+            "SCE_AUDIO_OUT_ERROR_PORT_FULL",
+            "all audio output ports unavailable",
+            "audio ring unavailable/full capacity=%u count=%u samples=%u movie=%s",
+            "const size_t available = capacity - g_audio_count;",
+            "capacity > 0U ? std::min(output.size(), g_audio_count) : 0U",
+            "A4 Bink: audio output thread entry port=%d ring_samples=%u",
+            "A4 Bink: audio output first buffer port=%d copied=%u drained=%d movie=%s",
+            "A4 Bink: update entry movie=%s audio=%d pending_packet=%d pending_video=%d texture=%d",
+            "A4 Bink: first av_read_frame entry movie=%s",
+            "A4 Bink: render entry movie=%s texture=%d pending_video=%d",
             "glTexSubImage2D",
+            "Next_Power_Of_Two",
+            "g_texture_width = Next_Power_Of_Two(g_video_width);",
+            "g_texture_height = Next_Power_Of_Two(g_video_height);",
+            "static_cast<size_t>(g_texture_width) * g_texture_height * 4U",
+            "const int intended_texture_width = g_texture_allocated ?",
+            "const GLenum setup_error = glGetError();",
+            "A4 Bink: texture setup failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d texture=%u movie=%s",
+            "A4 Bink: texture upload failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d movie=%s",
+            "A4 Bink: abandoned FFmpeg decoder state after Vita texture upload failure count=%u",
+            "g_movie_decode_disabled_after_upload_failure",
+            "movie decode disabled after prior Vita texture upload failure",
+            "static_cast<GLfloat>(g_video_width) / static_cast<GLfloat>(g_texture_width)",
+            "static_cast<GLfloat>(g_video_height) / static_cast<GLfloat>(g_texture_height)",
+            "const GLfloat scale = std::min(960.0F / static_cast<GLfloat>(g_video_width)",
             "texture0_enabled = glIsEnabled(GL_TEXTURE_2D);",
+            "movie open path logical=%s physical=%s url=%s",
         ):
             self.assertIn(token, bink)
+        self.assertLess(
+            bink.index("Build_FFmpeg_File_URL"),
+            bink.index("avformat_open_input"),
+        )
+        self.assertLess(
+            bink.index("Renegade_Resolve_Path"),
+            bink.index("if (!kRealtimeBinkPlaybackEnabled)"),
+        )
+        self.assertLess(
+            bink.index("if (!kRealtimeBinkPlaybackEnabled)"),
+            bink.index("avformat_open_input"),
+        )
+        self.assertLess(
+            bink.index("if (Check_Skip_Request()) return;"),
+            bink.index("const int64_t elapsed_us"),
+        )
+        self.assertLess(
+            bink.index("update_elapsed_us >= kUpdateBudgetUs"),
+            bink.index("av_read_frame"),
+        )
+        self.assertLess(
+            bink.index("if (capacity == 0U || g_audio_count >= capacity)"),
+            bink.index("const size_t available = capacity - g_audio_count;"),
+        )
+        upload = bink.index("bool Upload_Pending_Video()")
+        self.assertNotIn("GL_UNPACK_ALIGNMENT", bink)
+        self.assertNotIn("glPixelStorei", bink)
+        self.assertLess(
+            bink.index("glGetError();", upload),
+            bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
+        )
+        self.assertLess(
+            bink.index("const GLenum setup_error = glGetError();", upload),
+            bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
+        )
+        self.assertLess(
+            bink.index("const int intended_texture_width = g_texture_allocated ?", upload),
+            bink.index("const GLenum setup_error = glGetError();", upload),
+        )
+        self.assertLess(
+            bink.index("const GLenum upload_error = glGetError();", upload),
+            bink.index("g_texture_allocated = true;", upload),
+        )
+        self.assertLess(
+            bink.index("g_texture_width = Next_Power_Of_Two(g_video_width);", upload),
+            bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
+        )
+        self.assertLess(
+            bink.index("glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_video_width, g_video_height", upload),
+            bink.index("const GLenum upload_error = glGetError();", upload),
+        )
+        self.assertNotIn("capacity - g_audio_count);", bink)
+        self.assertIn("strchr(resolved.physical, ':')", bink)
         video_retry = bink.index("bool Submit_Video_Packet()")
         audio_retry = bink.index("bool Submit_Audio_Packet()")
         update = bink.index("void BINKMovie::Update()")
@@ -203,8 +332,107 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("--enable-demuxer=bink", dependency_build)
         self.assertIn("--enable-decoder=bink,binkaudio_dct,binkaudio_rdft", dependency_build)
         self.assertIn("MovieGameModeClass frontend_movie_mode", runtime)
+        for token in (
+            "A4 frontend: first menu loop frame entry",
+            "A4 frontend: first menu loop after TimeManager::Update",
+            "A4 frontend: first menu loop after Input::Update",
+            "A4 frontend: first menu loop after WWUI key pump",
+            "A4 frontend: first menu loop after GameModeManager::Think",
+            "A4 frontend: first menu loop after GameModeManager::Render",
+            "A4 frontend: first menu loop after WWAudio On_Frame_Update",
+        ):
+            self.assertIn(token, runtime)
         self.assertIn("frontend_movie_provider_fail_closed", host)
         self.assertIn("Bink movie playback is implemented", known_gaps)
+
+    def test_post_intro_main_menu_transition_is_guarded_and_logged(self):
+        movie = (ROOT / "staging" / "commando" / "movie.cpp").read_text()
+        dialogmgr = (ROOT / "staging" / "commando" / "renegadedialogmgr.cpp").read_text()
+        mainmenu = (ROOT / "staging" / "commando" / "dlgmainmenu.cpp").read_text()
+        menudialog = (ROOT / "staging" / "wwui" / "menudialog.cpp").read_text()
+        backdrop = (ROOT / "staging" / "wwui" / "menubackdrop.cpp").read_text()
+        patch = (
+            ROOT / "port" / "patches" / "a4-post-movie-mainmenu-hardening.patch"
+        ).read_text()
+
+        for source in (movie, patch):
+            self.assertIn("A4 MovieGameMode: Movie_Done entry", source)
+            self.assertIn("A4 MovieGameMode: stopping current movie audio=%p", source)
+            self.assertIn("audio singleton unavailable during movie stop", source)
+            self.assertIn("A4 MovieGameMode: routing to main menu location", source)
+            self.assertIn("A4 MovieGameMode: dialog route returned", source)
+            self.assertLess(
+                source.index("Movie_Done entry"),
+                source.index("routing to main menu location"),
+            )
+
+        for source in (dialogmgr, patch):
+            self.assertIn("const bool console_exclusive = ConsoleBox.Is_Exclusive();", source)
+            self.assertIn("const bool force_dialog_init = true;", source)
+            self.assertIn("if (!console_exclusive || force_dialog_init)", source)
+            self.assertIn("DialogMgrClass::Initialize (STYLE_MGR_INI);", source)
+            self.assertIn("initialized dialog/menu systems console_exclusive=%d", source)
+            self.assertIn("MenuDialogClass::Get_BackDrop ()", source)
+
+        for source in (mainmenu, patch):
+            self.assertIn("A4 main menu: Display entry", source)
+            self.assertIn("A4 main menu: constructed this=%p", source)
+            self.assertIn("A4 main menu: animated backdrop setup", source)
+            self.assertIn("A4 main menu: Start_Dialog returned", source)
+            self.assertIn("A4 main menu: transition in this=%p", source)
+            self.assertIn("A4 main menu: transition out this=%p", source)
+            self.assertIn("transition in bypassed on Vita for immediate dialog activation", source)
+            self.assertIn("transition out bypassed on Vita for immediate dialog activation", source)
+            self.assertLess(
+                source.index("transition in this=%p"),
+                source.index("transition in bypassed on Vita"),
+            )
+            self.assertIn("backdrop != NULL ? backdrop->Peek_Scene () : NULL", source)
+            self.assertIn("backdrop != NULL ? backdrop->Peek_Camera () : NULL", source)
+            self.assertIn("transition in disabled title=%p camera=%p", source)
+            self.assertIn("transition out disabled title=%p camera=%p", source)
+        self.assertNotIn("Get_BackDrop()->Peek_Scene()->Add_Render_Object", mainmenu)
+        self.assertNotIn("dialog->Get_BackDrop ()->Peek_Model ()", mainmenu)
+
+        for source in (menudialog, patch):
+            self.assertIn("A4 menu dialog: Initialize backdrop=%p", source)
+            self.assertIn("render skipped because backdrop is unavailable", source)
+            self.assertIn("if (BackDrop == NULL)", source)
+
+        for source in (backdrop, patch):
+            self.assertIn("A4 menu backdrop: constructed this=%p", source)
+            self.assertIn("SimpleScene allocation failed", source)
+            self.assertIn("Camera allocation failed", source)
+            self.assertIn("render skipped scene=%p camera=%p", source)
+            self.assertIn("Set_Model name=%s model=%p scene=%p camera=%p", source)
+            self.assertIn("if (Scene != NULL)", source)
+            self.assertIn("if (camera_bone_index > 0 && Camera != NULL)", source)
+
+    def test_vita_freetype_glyph_load_avoids_hinting_crash_path(self):
+        provider = (
+            ROOT / "port" / "renderer" / "vita" / "renegade_freetype_font_provider.cpp"
+        ).read_text()
+
+        for token in (
+            "kVitaFontGlyphLoadFlags",
+            "FT_LOAD_NO_HINTING",
+            "FT_LOAD_NO_AUTOHINT",
+            "FT_Select_Charmap(entry.face, FT_ENCODING_UNICODE)",
+            "font->face == nullptr",
+            "FT_Load_Char(font->face, character, kVitaFontGlyphLoadFlags)",
+        ):
+            self.assertIn(token, provider)
+
+        load_glyph = provider[provider.index("bool Load_Glyph"):]
+        self.assertNotIn("FT_LOAD_DEFAULT", load_glyph)
+        self.assertLess(
+            provider.index("FT_Select_Charmap(entry.face, FT_ENCODING_UNICODE)"),
+            provider.index("g_faces.push_back(std::move(entry));"),
+        )
+        self.assertLess(
+            provider.index("kVitaFontGlyphLoadFlags"),
+            provider.index("FT_Load_Char(font->face, character, kVitaFontGlyphLoadFlags)"),
+        )
 
 
 if __name__ == "__main__":

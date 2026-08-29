@@ -248,7 +248,7 @@ grep -Fq '"original_source_files_compiled": 506' "$rv_root/reports/SOURCE_INTEGR
 grep -Fq '"staged_original_owner_files": 1' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"a4_frontend_boundary_files": 6' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 134' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 135' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
@@ -287,7 +287,7 @@ grep -q 'Machine:.*ARM' "$rv_elf_header"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime()
+A31_Vita_Run_Interactive_Runtime(int)
 A31_Interactive_Begin_Mission_Completion_Observation()
 A31_Interactive_Get_Mission_Completion_State()
 A31_Interactive_End_Mission_Completion_Observation()
@@ -368,7 +368,7 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
 	echo "M00 dev82 finalization: original CombatGameMode post-load checks, building/radar initialization, texture-loader update, On_Game_Begin, DDS top-down uploads, viewport synchronization, shader cache path, and loading-screen prewarm are active"
 	echo "A4 frontend path: original MovieGameMode startup movie chain and original RenegadeDialogMgr/WWUI main menu are source/build routed; Vita FFmpeg decodes retail Bink video/audio without proprietary RAD code; tutorial selection reuses the existing direct M00 route."
-	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=134; pristine upstream=PASS"
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=135; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"
@@ -414,7 +414,7 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 	echo "Retain user-owned data: ux0:data/renegade/retail/Data/ (do not transfer retail assets)."
 	echo "Runtime log: $rv_runtime_log (remove or rename an older file before launch)."
 	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
-	echo "Controls: frontend menu active: D-pad=WWUI focus navigation, Cross=confirm, Circle=back/cancel, Select=next focus. M00 gameplay: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=first/third-person camera toggle; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
+	echo "Controls: frontend menu active: D-pad=WWUI focus navigation, Cross=confirm, Circle=back/cancel, Select=next focus, front touch=original mouse cursor/left click. M00 gameplay: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=original mouse cursor/left click for UI/terminals; rear touch=first/third-person camera toggle; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
 	echo "Test: in M00, verify fullscreen loading/HUD/scope placement, loading progress, normal texture orientation on characters/doors/powerups, Logan/Sydney/Gunner subtitles, Triangle action/use gates, Square reload animation, D-pad weapon cycling without camera drift, D-pad sniper zoom, and frame rate. Press Start and wait for LiveArea."
 	echo "Return: $rv_runtime_log, ux0:data/renegade/user/captures/, screenshots, and any psp2core-*.psp2dmp. Run tools/collect_a35_diagnostics.sh with this dist directory and returned files."
 } > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"

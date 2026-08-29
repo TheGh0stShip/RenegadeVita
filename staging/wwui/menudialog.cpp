@@ -42,6 +42,13 @@
 #include "childdialog.h"
 #include "dialogcontrol.h"
 
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "vita/a30_vita_runtime.h"
+#define A4_MENU_TRACE(...) A30_Vita_Log(__VA_ARGS__)
+#else
+#define A4_MENU_TRACE(...) ((void)0)
+#endif
+
 
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -99,6 +106,7 @@ void
 MenuDialogClass::Initialize (void)
 {	
 	BackDrop = new MenuBackDropClass;
+	A4_MENU_TRACE("A4 menu dialog: Initialize backdrop=%p\n", BackDrop);
 	return ;
 }
 
@@ -132,6 +140,11 @@ MenuDialogClass::Render (void)
 	//	Don't render if we aren't the active menu
 	//
 	if (ActiveMenu == this || DialogMgrClass::Peek_Transitioning_Dialog () == this) {
+		if (BackDrop == NULL) {
+			A4_MENU_TRACE("A4 menu dialog: render skipped because backdrop is unavailable this=%p active=%p transition=%p\n",
+				this, ActiveMenu, DialogMgrClass::Peek_Transitioning_Dialog ());
+			return ;
+		}
 
 		//
 		//	Render the background scene first

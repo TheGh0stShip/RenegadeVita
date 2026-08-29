@@ -72,6 +72,8 @@
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 
+#include <debugScreen.h>
+
 #include <new>
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,9 +106,23 @@ const uint32_t kCaptureWidth = RenegadeVitaRenderer::DISPLAY_WIDTH;
 const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 const uint32_t kCaptureBytes = kCaptureWidth * kCaptureHeight * 4U;
 const unsigned kAutomaticCaptureAttempts = 3U;
+const unsigned kStartupPrecacheVisibleSteps = 5U;
+const unsigned kLoadingPrewarmFrames = 8U;
+const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
 const float kOriginalLoadingLogicalWidth = 640.0f;
 const float kOriginalLoadingLogicalHeight = 480.0f;
+
+struct A31StartupPrecacheResult
+{
+	bool passed;
+	unsigned archives_valid;
+	unsigned archives_total;
+	unsigned entries_indexed;
+	unsigned files_touched;
+	unsigned files_opened;
+	uint64_t bytes_read;
+};
 
 /* Original Commando gives WWAudio a path-stripping factory over the active
 ** retail/MIX chain. Keep the same semantic boundary here so authoring paths
@@ -156,6 +172,167 @@ bool Load_Strings_Database_For_Loading_Screen()
 		loaded ? 1 : 0, kStringsDatabase,
 		static_cast<unsigned long>(TranslateDBClass::Get_Version_Number()));
 	return loaded;
+}
+
+void Draw_Startup_Precache_Screen(int startup_screen_result, const char *phase,
+	unsigned step, unsigned percent, const A31StartupPrecacheResult &state,
+	const char *detail)
+{
+	if (startup_screen_result < 0) return;
+	if (percent > 100U) percent = 100U;
+	psvDebugScreenClear(0x102030);
+	psvDebugScreenSetFgColor(0xFFFFFF);
+	psvDebugScreenPrintf("%s\n", RENEGADE_BUILD_DISPLAY_LABEL);
+	psvDebugScreenPrintf("Pre-cache / pre-warm / pre-compute\n\n");
+	psvDebugScreenPrintf("Phase %u/%u: %s\n", step,
+		kStartupPrecacheVisibleSteps, phase != NULL ? phase : "unknown");
+	psvDebugScreenPrintf("[");
+	const unsigned filled = percent / 5U;
+	for (unsigned index = 0U; index < 20U; ++index) {
+		psvDebugScreenPrintf(index < filled ? "#" : ".");
+	}
+	psvDebugScreenPrintf("] %u%%\n\n", percent);
+	psvDebugScreenPrintf("Original MIX archives: %u/%u\n",
+		state.archives_valid, state.archives_total);
+	psvDebugScreenPrintf("Indexed entries:       %u\n", state.entries_indexed);
+	psvDebugScreenPrintf("Startup files:         %u/%u\n",
+		state.files_opened, state.files_touched);
+	psvDebugScreenPrintf("Bytes touched:         %llu\n",
+		static_cast<unsigned long long>(state.bytes_read));
+	if (detail != NULL && detail[0] != 0) {
+		psvDebugScreenPrintf("Now:                   %s\n", detail);
+	}
+	psvDebugScreenPrintf("\nThis runs before intro movies, menus, and M00 input.\n");
+	psvDebugScreenPrintf("Log: %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);
+}
+
+bool Startup_Index_Mix_Archive(const char *name, MixFileFactoryClass &factory,
+	A31StartupPrecacheResult &state)
+{
+	++state.archives_total;
+	DynamicVectorClass<StringClass> names;
+	names.Set_Growth_Step(1000);
+	const bool listed = factory.Is_Valid() && factory.Build_Filename_List(names);
+	const unsigned count = listed && names.Count() > 0 ?
+		static_cast<unsigned>(names.Count()) : 0U;
+	if (count != 0U) {
+		++state.archives_valid;
+		state.entries_indexed += count;
+	}
+	A30_Vita_Log("A3.5 prewarm: startup-precache archive=%s valid=%d listed=%d entries=%u retained_factory=1 original_mix_owner=1\n",
+		name != NULL ? name : "unknown", factory.Is_Valid() ? 1 : 0,
+		listed ? 1 : 0, count);
+	return count != 0U;
+}
+
+void Startup_Touch_File(FileFactoryClass &factory, const char *name,
+	A31StartupPrecacheResult &state)
+{
+	++state.files_touched;
+	unsigned read_bytes = 0U;
+	bool opened = false;
+	FileClass *file = factory.Get_File(name);
+	if (file != NULL && file->Open(FileClass::READ)) {
+		opened = true;
+		char buffer[512];
+		for (unsigned remaining = 2048U; remaining != 0U;) {
+			const unsigned request = remaining < sizeof(buffer) ?
+				remaining : static_cast<unsigned>(sizeof(buffer));
+			const int received = file->Read(buffer, request);
+			if (received <= 0) break;
+			read_bytes += static_cast<unsigned>(received);
+			remaining -= static_cast<unsigned>(received);
+			if (static_cast<unsigned>(received) != request) break;
+		}
+		file->Close();
+	}
+	if (file != NULL) {
+		factory.Return_File(file);
+	}
+	if (opened) {
+		++state.files_opened;
+		state.bytes_read += read_bytes;
+	}
+	A30_Vita_Log("A3.5 prewarm: startup-precache touch name=%s opened=%d read_bytes=%u original_file_factory=1\n",
+		name != NULL ? name : "unknown", opened ? 1 : 0, read_bytes);
+}
+
+bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
+	FileFactoryClass &factory, MixFileFactoryClass &always2_factory,
+	MixFileFactoryClass &always_dbs_factory, MixFileFactoryClass &always_factory,
+	MixFileFactoryClass &m00_factory)
+{
+	A31StartupPrecacheResult state = {};
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+	A30_Vita_Log("A3.5 prewarm: startup-precache begin visible=%d before_frontend=1 before_movies=1 before_gameplay=1 input_enabled=0\n",
+		startup_screen_result >= 0 ? 1 : 0);
+	Draw_Startup_Precache_Screen(startup_screen_result,
+		"Indexing original retail MIX archives", 1U, 5U, state,
+		"Always/Always2/always.dbs/M00");
+	sceKernelDelayThread(300000);
+
+	bool archives_ok = true;
+	archives_ok = Startup_Index_Mix_Archive(kAlways2Archive, always2_factory,
+		state) && archives_ok;
+	Draw_Startup_Precache_Screen(startup_screen_result,
+		"Indexing original retail MIX archives", 2U, 25U, state,
+		kAlways2Archive);
+	sceKernelDelayThread(250000);
+	archives_ok = Startup_Index_Mix_Archive(kAlwaysDbsArchive,
+		always_dbs_factory, state) && archives_ok;
+	archives_ok = Startup_Index_Mix_Archive(kAlwaysArchive, always_factory,
+		state) && archives_ok;
+	Draw_Startup_Precache_Screen(startup_screen_result,
+		"Precomputing archive name tables", 3U, 50U, state,
+		kAlwaysArchive);
+	sceKernelDelayThread(250000);
+	archives_ok = Startup_Index_Mix_Archive(kM00Archive, m00_factory, state) &&
+		archives_ok;
+
+	const char *const required_files[] = {
+		kStringsDatabase,
+		kStyleManagerIni,
+		"DEFAULT_INPUT.CFG",
+		"if_lvl94load.w3d",
+		"IF_BACK01.W3D",
+		"IF_RENLOGO.W3D",
+		"IF_EVAGIZMO.W3D",
+		"M00_Tutorial.lsd",
+		"M00_Tutorial.ldd",
+		"m00_tutorial.dep",
+		"DATA\\MOVIES\\EA_WW.BIK",
+		"DATA\\MOVIES\\R_INTRO.BIK"
+	};
+	for (unsigned index = 0U;
+		index < sizeof(required_files) / sizeof(required_files[0]); ++index) {
+		Startup_Touch_File(factory, required_files[index], state);
+		if ((index % 3U) == 2U || index + 1U ==
+			sizeof(required_files) / sizeof(required_files[0])) {
+			char detail[96];
+			snprintf(detail, sizeof(detail), "%s", required_files[index]);
+			Draw_Startup_Precache_Screen(startup_screen_result,
+				"Touching startup menu, movie, loading, and M00 files",
+				4U, 55U + ((index + 1U) * 35U) /
+					(sizeof(required_files) / sizeof(required_files[0])),
+				state, detail);
+			sceKernelDelayThread(180000);
+		}
+	}
+	state.passed = archives_ok && state.archives_valid == state.archives_total &&
+		state.files_opened >= 8U;
+	Draw_Startup_Precache_Screen(startup_screen_result,
+		state.passed ? "Startup pre-cache complete" :
+			"Startup pre-cache incomplete", 5U, 100U, state,
+		state.passed ? "starting original intro/menu" :
+			"continuing only if required archives are present");
+	A30_Vita_Log("A3.5 prewarm: startup-precache complete pass=%d archives=%u/%u entries=%u files=%u/%u bytes=%llu elapsed_ms=%llu before_frontend=1 before_movies=1 before_gameplay=1 original_mix_owner=1\n",
+		state.passed ? 1 : 0, state.archives_valid, state.archives_total,
+		state.entries_indexed, state.files_opened, state.files_touched,
+		static_cast<unsigned long long>(state.bytes_read),
+		static_cast<unsigned long long>(
+			(sceKernelGetProcessTimeWide() - started_us) / 1000ULL));
+	sceKernelDelayThread(450000);
+	return state.passed;
 }
 
 class A31VitaScopedLoadingRenderResolution
@@ -411,13 +588,36 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 	state.loading_visual_gate.original_loading_screen_owner = true;
 	state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
 	state.loading_visual_gate.loading_texture_v_flip_enabled = true;
-	state.loading_visual_gate.gameplay_texture_v_unchanged = false;
+	state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	state.scripts_active = ScriptManager::Is_Provider_Active()
 		&& ScriptManager::Get_Active_Script_Count() > 0;
 	return state;
 }
 
-bool Apply_Original_Gameplay_Render_Resolution()
+bool Apply_Original_Gameplay_Render_Resolution(const char *reason = "startup",
+	bool log_state = true)
+{
+	const bool applied = WW3D::Set_Device_Resolution(
+		static_cast<int>(RenegadeVitaRenderer::DISPLAY_WIDTH),
+		static_cast<int>(RenegadeVitaRenderer::DISPLAY_HEIGHT), -1, -1, false) == WW3D_ERROR_OK;
+	int width = 0;
+	int height = 0;
+	int bits = 0;
+	bool windowed = false;
+	WW3D::Get_Device_Resolution(width, height, bits, windowed);
+	if (log_state) {
+		A30_Vita_Log("A3.5 HUD: native Vita gameplay/HUD render resolution reason=%s requested=%ux%u current=%dx%d bits=%d windowed=%d applied=%d\n",
+			reason != NULL ? reason : "unknown",
+			RenegadeVitaRenderer::DISPLAY_WIDTH,
+			RenegadeVitaRenderer::DISPLAY_HEIGHT, width, height, bits,
+			windowed ? 1 : 0, applied ? 1 : 0);
+	}
+	return applied && width == static_cast<int>(RenegadeVitaRenderer::DISPLAY_WIDTH) &&
+		height == static_cast<int>(RenegadeVitaRenderer::DISPLAY_HEIGHT);
+}
+
+bool Apply_Original_Loading_Render_Resolution_For_Prewarm(unsigned frame,
+	bool log_state)
 {
 	const bool applied = WW3D::Set_Device_Resolution(
 		static_cast<int>(kOriginalLoadingLogicalWidth),
@@ -427,20 +627,22 @@ bool Apply_Original_Gameplay_Render_Resolution()
 	int bits = 0;
 	bool windowed = false;
 	WW3D::Get_Device_Resolution(width, height, bits, windowed);
-	A30_Vita_Log("A3.5 HUD: original gameplay logical render resolution requested=%dx%d current=%dx%d bits=%d windowed=%d native=%ux%u applied=%d\n",
-		static_cast<int>(kOriginalLoadingLogicalWidth),
-		static_cast<int>(kOriginalLoadingLogicalHeight), width, height, bits,
-		windowed ? 1 : 0, RenegadeVitaRenderer::DISPLAY_WIDTH,
-		RenegadeVitaRenderer::DISPLAY_HEIGHT, applied ? 1 : 0);
+	if (log_state) {
+		A30_Vita_Log("A3.5 prewarm: loading presenter overlay resolution frame=%u requested=%.0fx%.0f current=%dx%d bits=%d windowed=%d native=%ux%u applied=%d\n",
+			frame, kOriginalLoadingLogicalWidth,
+			kOriginalLoadingLogicalHeight, width, height, bits,
+			windowed ? 1 : 0, RenegadeVitaRenderer::DISPLAY_WIDTH,
+			RenegadeVitaRenderer::DISPLAY_HEIGHT, applied ? 1 : 0);
+	}
 	return applied && width == static_cast<int>(kOriginalLoadingLogicalWidth) &&
 		height == static_cast<int>(kOriginalLoadingLogicalHeight);
 }
 
 void Warm_Original_M00_Presentation_Cache(A31VitaLoadingPresenter &loading_presenter)
 {
-	SaveLoadStatus::Set_Status_Text("Prewarm renderer cache", 0);
+	SaveLoadStatus::Set_Status_Text("Prewarming loading cache", 0);
 	CombatManager::Set_Load_Progress(7);
-	for (unsigned frame = 0U; frame < 4U; ++frame) {
+	for (unsigned frame = 0U; frame < kLoadingPrewarmFrames; ++frame) {
 		TextureLoader::Update(IS_SOLOPLAY ? NULL : &cNetwork::Update);
 		A31_Interactive_Apply_Render_Capabilities();
 		loading_presenter.Render_Original_Progress("prewarm_renderer_cache",
@@ -449,10 +651,82 @@ void Warm_Original_M00_Presentation_Cache(A31VitaLoadingPresenter &loading_prese
 	}
 	const RenegadeVitaRenderer::Statistics &statistics =
 		RenegadeVitaRenderer::Get_Statistics();
-	A30_Vita_Log("A3.5 prewarm: loading-screen-owned frames=4 textures=%u uploads=%u binds=%u shader_cache=ux0:data/renegade/cache/vitagl-shader-cache state_changes=%u backend_errors=%u\n",
+	A30_Vita_Log("A3.5 prewarm: loading-screen-owned frames=%u textures=%u uploads=%u binds=%u shader_cache=ux0:data/renegade/cache/vitagl-shader-cache state_changes=%u backend_errors=%u\n",
+		kLoadingPrewarmFrames,
 		statistics.texture_resident, statistics.texture_uploads,
 		statistics.texture_binds, statistics.state_changes,
 		statistics.backend_errors);
+}
+
+bool Warm_Original_M00_Interactive_Presentation_Cache(
+	A31VitaLoadingPresenter &loading_presenter, WWAudioClass *audio)
+{
+	SaveLoadStatus::Set_Status_Text("Prewarming M00 scene cache", 0);
+	CombatManager::Set_Load_Progress(7);
+	const uint64_t prewarm_started_us = sceKernelGetProcessTimeWide();
+	A30_Vita_Log("A3.5 prewarm: m00-scene start frames=%u input_enabled=0 simulation_frames=0 status=%s\n",
+		kM00ScenePrewarmFrames, "Prewarming M00 scene cache");
+
+	A31InteractiveRenderTrace last_trace = {};
+	bool rendered_scene = false;
+	for (unsigned frame = 0U; frame < kM00ScenePrewarmFrames; ++frame) {
+		TextureLoader::Update(IS_SOLOPLAY ? NULL : &cNetwork::Update);
+		if (!Apply_Original_Gameplay_Render_Resolution("prewarm_m00_scene",
+			frame == 0U)) {
+			A30_Vita_Log("A3.5 prewarm: FAIL native gameplay resolution before scene frame=%u\n",
+				frame);
+			return false;
+		}
+		WW3D::Sync(static_cast<uint32_t>(
+			(sceKernelGetProcessTimeWide() - prewarm_started_us) / 1000ULL));
+		A31_Interactive_Apply_Render_Capabilities();
+		last_trace = A31_Interactive_Run_Render_Frame();
+		rendered_scene = rendered_scene ||
+			(last_trace.begin_render_completed &&
+			 last_trace.combat_render_called &&
+			 last_trace.end_render_completed);
+		if (audio != NULL) audio->On_Frame_Update(0);
+		if (!Apply_Original_Loading_Render_Resolution_For_Prewarm(frame,
+			frame == 0U || frame + 1U == kM00ScenePrewarmFrames)) {
+			A30_Vita_Log("A3.5 prewarm: FAIL loading overlay resolution after scene frame=%u\n",
+				frame);
+			return false;
+		}
+		loading_presenter.Render_Original_Progress("prewarm_m00_scene",
+			true, 7);
+		if (frame == 0U || frame + 1U == kM00ScenePrewarmFrames ||
+			((frame + 1U) % 15U) == 0U) {
+			A30_Vita_Log("A3.5 prewarm: m00-scene frame=%u/%u scene=%d camera=%d star=%d begin/combat/end=%d/%d/%d meshes=%llu vertices=%llu triangles=%llu rejected=%llu unsupported=%llu\n",
+				frame + 1U, kM00ScenePrewarmFrames,
+				last_trace.scene_available ? 1 : 0,
+				last_trace.camera_available ? 1 : 0,
+				last_trace.star_available ? 1 : 0,
+				last_trace.begin_render_completed ? 1 : 0,
+				last_trace.combat_render_called ? 1 : 0,
+				last_trace.end_render_completed ? 1 : 0,
+				static_cast<unsigned long long>(last_trace.mesh_submissions),
+				static_cast<unsigned long long>(last_trace.vertex_submissions),
+				static_cast<unsigned long long>(last_trace.triangle_submissions),
+				static_cast<unsigned long long>(last_trace.rejected_submissions),
+				static_cast<unsigned long long>(last_trace.unsupported_submissions));
+		}
+		sceKernelDelayThread(16667);
+	}
+	if (!Apply_Original_Gameplay_Render_Resolution("prewarm_m00_scene_complete",
+		true)) {
+		A30_Vita_Log("A3.5 prewarm: FAIL native gameplay resolution after scene prewarm\n");
+		return false;
+	}
+	const RenegadeVitaRenderer::Statistics &statistics =
+		RenegadeVitaRenderer::Get_Statistics();
+	A30_Vita_Log("A3.5 prewarm: m00-scene complete rendered=%d frames=%u elapsed_ms=%llu textures=%u uploads=%u binds=%u state_changes=%u shader_cache=ux0:data/renegade/cache/vitagl-shader-cache backend_errors=%u\n",
+		rendered_scene ? 1 : 0, kM00ScenePrewarmFrames,
+		static_cast<unsigned long long>(
+			(sceKernelGetProcessTimeWide() - prewarm_started_us) / 1000ULL),
+		statistics.texture_resident, statistics.texture_uploads,
+		statistics.texture_binds, statistics.state_changes,
+		statistics.backend_errors);
+	return rendered_scene;
 }
 
 void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
@@ -853,6 +1127,7 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 {
 	A4_Frontend_Reset_Trace();
 	A4_Frontend_Begin_Menu_Loop();
+	Input::Menu_Enable(true);
 	RenegadeDialogMgrClass::Initialize();
 	GameModeManager::Add(&menu_mode);
 	GameModeManager::Add(&movie_mode);
@@ -860,20 +1135,33 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	movie_mode.Startup_Movies();
 	A30_Vita_Log("A4 frontend: original MovieGameMode startup sequence entered; Bink provider owns decode or per-movie fail-closed skip\n");
 
+	unsigned frontend_frame = 0U;
 	while (!A4_Frontend_Exit_Requested() &&
 		!A4_Frontend_Get_Trace().tutorial_start_latched) {
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop frame entry\n");
 		TimeManager::Update();
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after TimeManager::Update\n");
 		Input::Update();
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after Input::Update\n");
 		A4_Frontend_Pump_WWUI_Key_Transitions();
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after WWUI key pump\n");
 		GameModeManager::Think();
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after GameModeManager::Think\n");
 		GameInitMgrClass::Think();
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after GameInitMgrClass::Think\n");
 		DialogMgrClass::On_Frame_Update();
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after DialogMgrClass::On_Frame_Update\n");
 		GameModeManager::Render();
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after GameModeManager::Render\n");
 		if (audio != NULL) audio->On_Frame_Update(0);
+		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after WWAudio On_Frame_Update\n");
+		++frontend_frame;
 		sceKernelDelayThread(16667);
 	}
 
 	const A4FrontendTrace trace = A4_Frontend_Get_Trace();
+	const bool tutorial_selected = trace.tutorial_start_latched &&
+		stricmp(trace.tutorial_map, "M00_Tutorial.mix") == 0;
 	A30_Vita_Log("A4 frontend: menu loop exit latched=%d map=%s movie_play/skip=%u/%u last_movie=%s exit=%d code=%d\n",
 		trace.tutorial_start_latched ? 1 : 0,
 		trace.tutorial_map[0] != '\0' ? trace.tutorial_map : "none",
@@ -889,17 +1177,22 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	}
 	GameModeManager::Safely_Deactivate();
 	GameModeManager::Remove(&movie_mode);
-	GameModeManager::Remove(&menu_mode);
+	if (tutorial_selected) {
+		A30_Vita_Log("A4 frontend: retained original Menu mode through Combat handoff\n");
+	} else {
+		GameModeManager::Remove(&menu_mode);
+	}
 	RenegadeDialogMgrClass::Shutdown();
+	Input::Menu_Enable(false);
 	A4_Frontend_End_Menu_Loop();
-	return trace.tutorial_start_latched &&
-		stricmp(trace.tutorial_map, "M00_Tutorial.mix") == 0;
+	return tutorial_selected;
 }
 #endif
 
 } // namespace
 
-A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
+A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
+	int startup_screen_result)
 {
 	A31VitaInteractiveResult result = {};
 	result.attempted = true;
@@ -921,6 +1214,20 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 	FileFactoryClass *previous_write_factory = _TheWritingFileFactory;
 	_TheFileFactory = &factory_list;
 	_TheWritingFileFactory = &root_factory;
+	const bool startup_precache_ok = Run_Visible_Startup_Precache_Phase(
+		startup_screen_result, factory_list, always2_factory,
+		always_dbs_factory, always_factory, m00_factory);
+	if (startup_screen_result >= 0) {
+		psvDebugScreenFinish();
+	}
+	if (!startup_precache_ok) {
+		A30_Vita_Log("A3.5 prewarm: FAIL startup precache/precompute phase before frontend\n");
+		result.render_error = true;
+		Log_File_Factory_Statistics();
+		_TheFileFactory = previous_read_factory;
+		_TheWritingFileFactory = previous_write_factory;
+		return result;
+	}
 
 	bool math_initialized = false;
 	bool path_manager_initialized = false;
@@ -945,6 +1252,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 			CombatGameModeClass frontend_combat_mode;
 			bool frontend_combat_mode_registered = false;
+			MenuGameModeClass2 frontend_menu_mode;
+			MovieGameModeClass frontend_movie_mode;
+			bool frontend_menu_mode_registered_for_handoff = false;
 #endif
 
 	{
@@ -1020,7 +1330,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 				break;
 			}
 			if (!Apply_Original_Gameplay_Render_Resolution()) {
-				A30_Vita_Log("A3.5 HUD: FAIL original gameplay logical render resolution unavailable\n");
+				A30_Vita_Log("A3.5 HUD: FAIL native gameplay/HUD render resolution unavailable\n");
 				break;
 			}
 			A30_Vita_Log("A3.1 breadcrumb: WW3D asset manager ready\n");
@@ -1065,11 +1375,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 						A30_Vita_Log("A4 frontend: registered original CombatGameMode owner for menu/direct M00 route\n");
 					}
 					{
-						MenuGameModeClass2 frontend_menu_mode;
-						MovieGameModeClass frontend_movie_mode;
 						const bool frontend_tutorial_selected =
 							Run_Original_Frontend_Intro_And_Menu(frontend_menu_mode,
 								frontend_movie_mode, audio);
+						frontend_menu_mode_registered_for_handoff =
+							frontend_tutorial_selected &&
+							GameModeManager::Find("Menu") == &frontend_menu_mode;
 						stylemgr_initialized = false;
 						if (!frontend_tutorial_selected) {
 							result.clean_exit_requested = A4_Frontend_Exit_Requested();
@@ -1260,6 +1571,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 					loading_capture.summary_written ? 1 : 0,
 					loading_capture.first_error_code);
 				capture_history->Reset();
+				if (!Apply_Original_Gameplay_Render_Resolution(
+					"post-loading-capture", true)) {
+					result.render_error = true;
+					A30_Vita_Log("A3.5 HUD: FAIL native gameplay/HUD resolution after loading capture\n");
+					break;
+				}
 				A31_Interactive_Apply_Render_Capabilities();
 				if (render_hud && CombatManager::Get_Background_Scene() != NULL) {
 					TextWindowClass::Initialize(CombatManager::Get_Background_Scene());
@@ -1306,6 +1623,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 			CombatManager::Set_First_Person(true);
 			A30_Vita_Log("A3.5 camera: original first-person default restored for direct M00 route first_person=%d\n",
 				CombatManager::Is_First_Person() ? 1 : 0);
+			if (!Warm_Original_M00_Interactive_Presentation_Cache(
+				loading_presenter, audio)) {
+				result.render_error = true;
+				A30_Vita_Log("A3.5 prewarm: FAIL M00 interactive scene warmup before first input\n");
+				break;
+			}
 
 				result.initialized = true;
 				A30_Vita_Log("A3.1 breadcrumb: original player/session ready; original mission completion or START exits\n");
@@ -1619,6 +1942,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime()
 					}
 					GameModeManager::Remove(&frontend_combat_mode);
 					frontend_combat_mode_registered = false;
+				}
+				if (frontend_menu_mode_registered_for_handoff) {
+					if (!frontend_menu_mode.Is_Inactive()) {
+						frontend_menu_mode.Deactivate();
+					}
+					GameModeManager::Safely_Deactivate();
+					GameModeManager::Remove(&frontend_menu_mode);
+					frontend_menu_mode_registered_for_handoff = false;
+					A30_Vita_Log("A4 frontend: removed retained Menu mode after Combat handoff\n");
 				}
 #endif
 

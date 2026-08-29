@@ -11,10 +11,12 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <vector>
 
 #include <psp2/audioout.h>
+#include <psp2/ctrl.h>
 #include <psp2/kernel/processmgr.h>
 #include <vitaGL.h>
 
@@ -35,6 +37,10 @@ constexpr int kAudioChannels = 2;
 constexpr int kAudioFramesPerBuffer = 1024;
 constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
+constexpr int64_t kUpdateBudgetUs = 12000;
+constexpr bool kRealtimeBinkPlaybackEnabled = false;
+constexpr uint32_t kSkipButtonMask =
+	SCE_CTRL_START | SCE_CTRL_CROSS | SCE_CTRL_CIRCLE | SCE_CTRL_TRIANGLE;
 
 const RenegadePathRoots kVitaRoots = {
 	"ux0:data/renegade/retail",
@@ -70,6 +76,8 @@ uint64_t g_decoded_video_frames = 0U;
 
 GLuint g_video_texture = 0U;
 bool g_texture_allocated = false;
+int g_texture_width = 0;
+int g_texture_height = 0;
 bool g_pending_video = false;
 int64_t g_pending_video_pts_us = 0;
 std::vector<uint8_t> g_pending_rgba;
@@ -86,6 +94,26 @@ size_t g_audio_write = 0U;
 size_t g_audio_count = 0U;
 bool g_audio_enabled = false;
 bool g_audio_drop_logged = false;
+SceAudioOutPortType g_audio_port_type = SCE_AUDIO_OUT_PORT_TYPE_MAIN;
+uint32_t g_last_skip_buttons = 0U;
+bool g_update_budget_logged = false;
+bool g_update_entry_logged = false;
+bool g_render_entry_logged = false;
+bool g_demux_read_entry_logged = false;
+bool g_audio_thread_entry_logged = false;
+bool g_audio_first_output_logged = false;
+bool g_audio_first_frame_logged = false;
+bool g_video_first_frame_logged = false;
+bool g_video_first_upload_logged = false;
+bool g_movie_decode_disabled_after_upload_failure = false;
+unsigned g_abandoned_decoder_state_count = 0U;
+
+int Next_Power_Of_Two(int value)
+{
+	int result = 1;
+	while (result < value && result < 4096) result <<= 1;
+	return result;
+}
 
 void Log_FFmpeg_Error(const char *operation, int error)
 {
@@ -101,6 +129,54 @@ void Copy_Movie_Name(const char *filename)
 	if (filename == NULL) filename = "";
 	strncpy(g_movie_name, filename, sizeof(g_movie_name) - 1U);
 	g_movie_name[sizeof(g_movie_name) - 1U] = '\0';
+}
+
+const char *Audio_Port_Name(SceAudioOutPortType port_type)
+{
+	switch (port_type) {
+		case SCE_AUDIO_OUT_PORT_TYPE_MAIN: return "main";
+		case SCE_AUDIO_OUT_PORT_TYPE_BGM: return "bgm";
+		case SCE_AUDIO_OUT_PORT_TYPE_VOICE: return "voice";
+		default: return "unknown";
+	}
+}
+
+const char *Build_FFmpeg_File_URL(const RenegadeResolvedPath &resolved,
+	char *url, size_t capacity)
+{
+	if (strncmp(resolved.physical, "file:", 5) == 0) return resolved.physical;
+	if (strchr(resolved.physical, ':') == NULL) return resolved.physical;
+	if (snprintf(url, capacity, "file:%s", resolved.physical) <= 0) {
+		return resolved.physical;
+	}
+	url[capacity - 1U] = '\0';
+	return url;
+}
+
+uint32_t Read_Skip_Buttons()
+{
+	SceCtrlData controller = {};
+	if (sceCtrlPeekBufferPositive(0, &controller, 1) <= 0) return 0U;
+	return controller.buttons & kSkipButtonMask;
+}
+
+void Prime_Skip_Button_Latch()
+{
+	g_last_skip_buttons = Read_Skip_Buttons();
+}
+
+bool Check_Skip_Request()
+{
+	const uint32_t buttons = Read_Skip_Buttons();
+	const uint32_t newly_pressed = buttons & ~g_last_skip_buttons;
+	g_last_skip_buttons = buttons;
+	if (newly_pressed == 0U) return false;
+	A30_Vita_Log("A4 Bink: skip requested buttons=%08X movie=%s\n",
+		static_cast<unsigned>(newly_pressed),
+		g_movie_name[0] != '\0' ? g_movie_name : "none");
+	A4_Frontend_Record_Bink_Skip(g_movie_name);
+	g_complete = true;
+	return true;
 }
 
 void Reset_Audio_Ring()
@@ -120,7 +196,19 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 	if (!g_audio_enabled || samples == NULL || sample_count == 0U) return;
 	pthread_mutex_lock(&g_audio_mutex);
 	const size_t capacity = g_audio_ring.size();
-	const size_t accepted = std::min(sample_count, capacity - g_audio_count);
+	if (capacity == 0U || g_audio_count >= capacity) {
+		pthread_mutex_unlock(&g_audio_mutex);
+		if (!g_audio_drop_logged) {
+			A30_Vita_Log("A4 Bink: audio ring unavailable/full capacity=%u count=%u samples=%u movie=%s\n",
+				static_cast<unsigned>(capacity),
+				static_cast<unsigned>(g_audio_count),
+				static_cast<unsigned>(sample_count), g_movie_name);
+			g_audio_drop_logged = true;
+		}
+		return;
+	}
+	const size_t available = capacity - g_audio_count;
+	const size_t accepted = std::min(sample_count, available);
 	for (size_t index = 0U; index < accepted; ++index) {
 		g_audio_ring[g_audio_write] = samples[index];
 		g_audio_write = (g_audio_write + 1U) % capacity;
@@ -136,14 +224,20 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 
 void *Audio_Output_Thread(void *)
 {
+	if (!g_audio_thread_entry_logged) {
+		A30_Vita_Log("A4 Bink: audio output thread entry port=%d ring_samples=%u\n",
+			g_audio_port, static_cast<unsigned>(g_audio_ring.size()));
+		g_audio_thread_entry_logged = true;
+	}
 	std::vector<int16_t> output(kAudioFramesPerBuffer * kAudioChannels, 0);
 	while (!g_audio_stop.load(std::memory_order_acquire)) {
 		std::fill(output.begin(), output.end(), 0);
 		pthread_mutex_lock(&g_audio_mutex);
-		const size_t copied = std::min(output.size(), g_audio_count);
+		const size_t capacity = g_audio_ring.size();
+		const size_t copied = capacity > 0U ? std::min(output.size(), g_audio_count) : 0U;
 		for (size_t index = 0U; index < copied; ++index) {
 			output[index] = g_audio_ring[g_audio_read];
-			g_audio_read = (g_audio_read + 1U) % g_audio_ring.size();
+			g_audio_read = (g_audio_read + 1U) % capacity;
 		}
 		g_audio_count -= copied;
 		const bool drained = g_demux_eof.load(std::memory_order_acquire) &&
@@ -151,6 +245,12 @@ void *Audio_Output_Thread(void *)
 		pthread_mutex_unlock(&g_audio_mutex);
 		if (drained) g_audio_drained.store(true, std::memory_order_release);
 		if (g_audio_port >= 0) {
+			if (!g_audio_first_output_logged) {
+				A30_Vita_Log("A4 Bink: audio output first buffer port=%d copied=%u drained=%d movie=%s\n",
+					g_audio_port, static_cast<unsigned>(copied),
+					drained ? 1 : 0, g_movie_name);
+				g_audio_first_output_logged = true;
+			}
 			const int result = sceAudioOutOutput(g_audio_port, output.data());
 			if (result < 0) {
 				A30_Vita_Log("A4 Bink: sceAudioOutOutput failed code=%08X\n",
@@ -180,10 +280,30 @@ void Stop_Audio_Output()
 bool Start_Audio_Output()
 {
 	Reset_Audio_Ring();
-	g_audio_port = sceAudioOutOpenPort(SCE_AUDIO_OUT_PORT_TYPE_BGM,
-		kAudioFramesPerBuffer, kAudioRate, SCE_AUDIO_OUT_MODE_STEREO);
+	const SceAudioOutPortType port_types[] = {
+		SCE_AUDIO_OUT_PORT_TYPE_MAIN,
+		SCE_AUDIO_OUT_PORT_TYPE_VOICE,
+		SCE_AUDIO_OUT_PORT_TYPE_BGM
+	};
+	for (size_t index = 0U; index < sizeof(port_types) / sizeof(port_types[0]);
+		++index) {
+		g_audio_port_type = port_types[index];
+		g_audio_port = sceAudioOutOpenPort(g_audio_port_type,
+			kAudioFramesPerBuffer, kAudioRate, SCE_AUDIO_OUT_MODE_STEREO);
+		if (g_audio_port >= 0) {
+			A30_Vita_Log("A4 Bink: audio output port opened type=%s handle=%d\n",
+				Audio_Port_Name(g_audio_port_type), g_audio_port);
+			break;
+		}
+		A30_Vita_Log("A4 Bink: sceAudioOutOpenPort type=%s failed code=%08X%s\n",
+			Audio_Port_Name(g_audio_port_type),
+			static_cast<unsigned>(g_audio_port),
+			static_cast<unsigned>(g_audio_port) ==
+				static_cast<unsigned>(SCE_AUDIO_OUT_ERROR_PORT_FULL) ?
+				" port_full" : "");
+	}
 	if (g_audio_port < 0) {
-		A30_Vita_Log("A4 Bink: sceAudioOutOpenPort failed code=%08X; video continues\n",
+		A30_Vita_Log("A4 Bink: all audio output ports unavailable last_code=%08X; video continues\n",
 			static_cast<unsigned>(g_audio_port));
 		g_audio_drained.store(true, std::memory_order_release);
 		return false;
@@ -207,6 +327,8 @@ void Release_Decoder_State()
 	if (g_video_texture != 0U) glDeleteTextures(1, &g_video_texture);
 	g_video_texture = 0U;
 	g_texture_allocated = false;
+	g_texture_width = 0;
+	g_texture_height = 0;
 	g_pending_video = false;
 	g_pending_rgba.clear();
 	g_audio_ring.clear();
@@ -231,6 +353,51 @@ void Release_Decoder_State()
 	g_decoders_flushed = false;
 	g_first_video_pts_us = AV_NOPTS_VALUE;
 	g_decoded_video_frames = 0U;
+	g_last_skip_buttons = 0U;
+	g_update_budget_logged = false;
+	g_update_entry_logged = false;
+	g_render_entry_logged = false;
+	g_demux_read_entry_logged = false;
+	g_audio_thread_entry_logged = false;
+	g_audio_first_output_logged = false;
+	g_audio_first_frame_logged = false;
+	g_video_first_frame_logged = false;
+	g_video_first_upload_logged = false;
+}
+
+void Abandon_Decoder_State_After_Upload_Failure()
+{
+	Stop_Audio_Output();
+	if (g_video_texture != 0U) glDeleteTextures(1, &g_video_texture);
+	g_video_texture = 0U;
+	g_texture_allocated = false;
+	g_texture_width = 0;
+	g_texture_height = 0;
+	g_pending_video = false;
+	g_pending_rgba.clear();
+	g_audio_ring.clear();
+	g_resampler = NULL;
+	g_scaler = NULL;
+	g_video_frame = NULL;
+	g_audio_frame = NULL;
+	g_packet = NULL;
+	g_packet_pending = false;
+	g_video_decoder = NULL;
+	g_audio_decoder = NULL;
+	g_format = NULL;
+	g_video_stream = -1;
+	g_audio_stream = -1;
+	g_video_width = 0;
+	g_video_height = 0;
+	g_demux_eof.store(false, std::memory_order_release);
+	g_decoders_flushed = false;
+	g_first_video_pts_us = AV_NOPTS_VALUE;
+	g_decoded_video_frames = 0U;
+	g_last_skip_buttons = 0U;
+	++g_abandoned_decoder_state_count;
+	g_movie_decode_disabled_after_upload_failure = true;
+	A30_Vita_Log("A4 Bink: abandoned FFmpeg decoder state after Vita texture upload failure count=%u; remaining startup movies skip to menu\n",
+		g_abandoned_decoder_state_count);
 }
 
 bool Open_Decoder(AVCodecContext **context, AVStream *stream)
@@ -290,11 +457,16 @@ void Decode_Audio_Frames()
 		const int frames = swr_convert(g_resampler, output, output_frames,
 			reinterpret_cast<const uint8_t *const *>(g_audio_frame->extended_data),
 			g_audio_frame->nb_samples);
-		if (frames > 0) {
-			Queue_Audio(converted.data(), static_cast<size_t>(frames) * kAudioChannels);
+			if (frames > 0) {
+				if (!g_audio_first_frame_logged) {
+					A30_Vita_Log("A4 Bink: first decoded audio frame input_samples=%d output_frames=%d movie=%s\n",
+						g_audio_frame->nb_samples, frames, g_movie_name);
+					g_audio_first_frame_logged = true;
+				}
+				Queue_Audio(converted.data(), static_cast<size_t>(frames) * kAudioChannels);
+			}
+			av_frame_unref(g_audio_frame);
 		}
-		av_frame_unref(g_audio_frame);
-	}
 }
 
 bool Receive_Video_Frame()
@@ -335,6 +507,12 @@ bool Receive_Video_Frame()
 	g_pending_video_pts_us = pts_us;
 	g_pending_video = true;
 	++g_decoded_video_frames;
+	if (!g_video_first_frame_logged) {
+		A30_Vita_Log("A4 Bink: first decoded video frame source=%dx%d output=%dx%d pts_us=%lld movie=%s\n",
+			g_video_frame->width, g_video_frame->height, g_video_width,
+			g_video_height, static_cast<long long>(pts_us), g_movie_name);
+		g_video_first_frame_logged = true;
+	}
 	av_frame_unref(g_video_frame);
 	return true;
 }
@@ -344,34 +522,77 @@ bool Upload_Pending_Video()
 	if (!g_pending_video || g_pending_rgba.empty()) return false;
 	if (g_video_texture == 0U) glGenTextures(1, &g_video_texture);
 	if (g_video_texture == 0U) return false;
+	GLenum stale_error = GL_NO_ERROR;
+	for (unsigned index = 0U; index < 8U; ++index) {
+		const GLenum error = glGetError();
+		if (error == GL_NO_ERROR) break;
+		stale_error = error;
+	}
 	GLint previous_active_texture = GL_TEXTURE0;
 	GLint previous_texture = 0;
-	GLint previous_unpack_alignment = 4;
 	glGetIntegerv(GL_ACTIVE_TEXTURE, &previous_active_texture);
 	glActiveTexture(GL_TEXTURE0);
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &previous_texture);
-	glGetIntegerv(GL_UNPACK_ALIGNMENT, &previous_unpack_alignment);
+	const int intended_texture_width = g_texture_allocated ?
+		g_texture_width : Next_Power_Of_Two(g_video_width);
+	const int intended_texture_height = g_texture_allocated ?
+		g_texture_height : Next_Power_Of_Two(g_video_height);
 	glBindTexture(GL_TEXTURE_2D, g_video_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	const GLenum setup_error = glGetError();
+	if (setup_error != GL_NO_ERROR) {
+		glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));
+		glActiveTexture(static_cast<GLenum>(previous_active_texture));
+		A30_Vita_Log("A4 Bink: texture setup failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d texture=%u movie=%s\n",
+			static_cast<unsigned>(setup_error), static_cast<unsigned>(stale_error),
+			g_video_width, g_video_height, intended_texture_width, intended_texture_height,
+			static_cast<unsigned>(g_video_texture), g_movie_name);
+		return false;
+	}
 	if (!g_texture_allocated) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_video_width, g_video_height,
-			0, GL_RGBA, GL_UNSIGNED_BYTE, g_pending_rgba.data());
-		g_texture_allocated = true;
+		g_texture_width = Next_Power_Of_Two(g_video_width);
+		g_texture_height = Next_Power_Of_Two(g_video_height);
+		std::vector<uint8_t> padded(
+			static_cast<size_t>(g_texture_width) * g_texture_height * 4U, 0U);
+		for (int y = 0; y < g_video_height; ++y) {
+			memcpy(padded.data() + static_cast<size_t>(y) * g_texture_width * 4U,
+				g_pending_rgba.data() + static_cast<size_t>(y) * g_video_width * 4U,
+				static_cast<size_t>(g_video_width) * 4U);
+		}
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height,
+			0, GL_RGBA, GL_UNSIGNED_BYTE, padded.data());
 	} else {
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_video_width, g_video_height,
 			GL_RGBA, GL_UNSIGNED_BYTE, g_pending_rgba.data());
 	}
 	const GLenum upload_error = glGetError();
 	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));
-	glPixelStorei(GL_UNPACK_ALIGNMENT, previous_unpack_alignment);
 	glActiveTexture(static_cast<GLenum>(previous_active_texture));
 	if (upload_error != GL_NO_ERROR) {
-		A30_Vita_Log("A4 Bink: texture upload failed movie=%s\n", g_movie_name);
+		const int attempted_texture_width = g_texture_width;
+		const int attempted_texture_height = g_texture_height;
+		if (!g_texture_allocated && g_video_texture != 0U) {
+			glDeleteTextures(1, &g_video_texture);
+			g_video_texture = 0U;
+		}
+		g_texture_allocated = false;
+		g_texture_width = 0;
+		g_texture_height = 0;
+		A30_Vita_Log("A4 Bink: texture upload failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d movie=%s\n",
+			static_cast<unsigned>(upload_error), static_cast<unsigned>(stale_error),
+			g_video_width, g_video_height, attempted_texture_width, attempted_texture_height,
+			g_movie_name);
 		return false;
+	}
+	g_texture_allocated = true;
+	if (!g_video_first_upload_logged) {
+		A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u video=%dx%d storage=%dx%d movie=%s\n",
+			static_cast<unsigned>(g_video_texture), g_video_width, g_video_height,
+			g_texture_width, g_texture_height, g_movie_name);
+		g_video_first_upload_logged = true;
 	}
 	g_pending_video = false;
 	return true;
@@ -430,7 +651,11 @@ void Mark_Failed(const char *reason)
 	A30_Vita_Log("A4 Bink: playback skipped reason=%s movie=%s; original menu route continues\n",
 		reason, g_movie_name[0] != '\0' ? g_movie_name : "unnamed");
 	A4_Frontend_Record_Bink_Skip(g_movie_name);
-	Release_Decoder_State();
+	if (strcmp(reason, "video texture upload failed") == 0) {
+		Abandon_Decoder_State_After_Upload_Failure();
+	} else {
+		Release_Decoder_State();
+	}
 	g_active = false;
 	g_complete = true;
 }
@@ -457,6 +682,10 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 	Copy_Movie_Name(filename);
 	A4_Frontend_Record_Bink_Play(filename);
 	g_complete = false;
+	if (g_movie_decode_disabled_after_upload_failure) {
+		Mark_Failed("movie decode disabled after prior Vita texture upload failure");
+		return;
+	}
 	if (!g_initialized || filename == NULL) {
 		Mark_Failed("provider not initialized or filename missing");
 		return;
@@ -467,10 +696,24 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 		Mark_Failed("retail movie path unavailable");
 		return;
 	}
+	if (!kRealtimeBinkPlaybackEnabled) {
+		A30_Vita_Log("A4 Bink: playback skipped reason=dev82 physical candidate disables slow software Bink playback after black-screen/audio-underrun evidence movie=%s path=%s; original menu route continues\n",
+			g_movie_name, resolved.physical);
+		A4_Frontend_Record_Bink_Skip(g_movie_name);
+		Release_Decoder_State();
+		g_active = false;
+		g_complete = true;
+		return;
+	}
 
-	int result = avformat_open_input(&g_format, resolved.physical, NULL, NULL);
+	char ffmpeg_url[sizeof(resolved.physical) + 6U] = {};
+	const char *open_url = Build_FFmpeg_File_URL(resolved, ffmpeg_url,
+		sizeof(ffmpeg_url));
+	int result = avformat_open_input(&g_format, open_url, NULL, NULL);
 	if (result < 0) {
 		Log_FFmpeg_Error("avformat_open_input", result);
+		A30_Vita_Log("A4 Bink: movie open path logical=%s physical=%s url=%s\n",
+			resolved.normalized_logical, resolved.physical, open_url);
 		Mark_Failed("movie open failed");
 		return;
 	}
@@ -520,6 +763,7 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 		g_audio_drained.store(true, std::memory_order_release);
 	}
 	g_start_us = static_cast<int64_t>(sceKernelGetProcessTimeWide());
+	Prime_Skip_Button_Latch();
 	g_active = true;
 	g_complete = false;
 	A30_Vita_Log("A4 Bink: playback started movie=%s path=%s video=%dx%d frame_us=%lld audio=%d\n",
@@ -540,8 +784,31 @@ void BINKMovie::Stop()
 void BINKMovie::Update()
 {
 	if (!g_active || g_complete || g_format == NULL) return;
+	if (!g_update_entry_logged) {
+		A30_Vita_Log("A4 Bink: update entry movie=%s audio=%d pending_packet=%d pending_video=%d texture=%d\n",
+			g_movie_name, g_audio_enabled ? 1 : 0,
+			g_packet_pending ? 1 : 0, g_pending_video ? 1 : 0,
+			g_texture_allocated ? 1 : 0);
+		g_update_entry_logged = true;
+	}
+	if (Check_Skip_Request()) return;
 	const int64_t elapsed_us = static_cast<int64_t>(sceKernelGetProcessTimeWide()) - g_start_us;
-	for (unsigned iteration = 0U; iteration < 64U; ++iteration) {
+	const int64_t update_start_us = static_cast<int64_t>(sceKernelGetProcessTimeWide());
+	for (unsigned iteration = 0U; iteration < 16U; ++iteration) {
+		if (iteration != 0U) {
+			if (Check_Skip_Request()) return;
+			const int64_t update_elapsed_us =
+				static_cast<int64_t>(sceKernelGetProcessTimeWide()) - update_start_us;
+			if (update_elapsed_us >= kUpdateBudgetUs) {
+				if (!g_update_budget_logged) {
+					A30_Vita_Log("A4 Bink: update budget yield after %u iterations elapsed_us=%lld movie=%s\n",
+						iteration, static_cast<long long>(update_elapsed_us),
+						g_movie_name[0] != '\0' ? g_movie_name : "none");
+					g_update_budget_logged = true;
+				}
+				break;
+			}
+		}
 		if (g_pending_video) {
 			if (g_pending_video_pts_us > elapsed_us + kPresentationToleranceUs &&
 				g_texture_allocated) break;
@@ -564,11 +831,15 @@ void BINKMovie::Update()
 			break;
 		}
 
-		if (!g_packet_pending) {
-			const int read_result = av_read_frame(g_format, g_packet);
-			if (read_result < 0) {
-				g_demux_eof.store(true, std::memory_order_release);
-				continue;
+			if (!g_packet_pending) {
+				if (!g_demux_read_entry_logged) {
+					A30_Vita_Log("A4 Bink: first av_read_frame entry movie=%s\n", g_movie_name);
+					g_demux_read_entry_logged = true;
+				}
+				const int read_result = av_read_frame(g_format, g_packet);
+				if (read_result < 0) {
+					g_demux_eof.store(true, std::memory_order_release);
+					continue;
 			}
 			g_packet_pending = true;
 		}
@@ -589,7 +860,23 @@ void BINKMovie::Update()
 
 void BINKMovie::Render()
 {
+	if (g_active && !g_render_entry_logged) {
+		A30_Vita_Log("A4 Bink: render entry movie=%s texture=%d pending_video=%d\n",
+			g_movie_name, g_texture_allocated ? 1 : 0,
+			g_pending_video ? 1 : 0);
+		g_render_entry_logged = true;
+	}
 	if (!g_active || !g_texture_allocated || g_video_texture == 0U) return;
+	const GLfloat max_u = g_texture_width > 0 ?
+		static_cast<GLfloat>(g_video_width) / static_cast<GLfloat>(g_texture_width) : 1.0F;
+	const GLfloat max_v = g_texture_height > 0 ?
+		static_cast<GLfloat>(g_video_height) / static_cast<GLfloat>(g_texture_height) : 1.0F;
+	const GLfloat scale = std::min(960.0F / static_cast<GLfloat>(g_video_width),
+		544.0F / static_cast<GLfloat>(g_video_height));
+	const GLfloat draw_width = static_cast<GLfloat>(g_video_width) * scale;
+	const GLfloat draw_height = static_cast<GLfloat>(g_video_height) * scale;
+	const GLfloat draw_x = (960.0F - draw_width) * 0.5F;
+	const GLfloat draw_y = (544.0F - draw_height) * 0.5F;
 	GLint previous_viewport[4] = {};
 	GLint previous_matrix_mode = GL_MODELVIEW;
 	GLint previous_active_texture = GL_TEXTURE0;
@@ -621,10 +908,10 @@ void BINKMovie::Render()
 	glLoadIdentity();
 	glColor4ub(255, 255, 255, 255);
 	glBegin(GL_TRIANGLE_STRIP);
-	glTexCoord2f(0.0F, 0.0F); glVertex3f(0.0F, 0.0F, 0.0F);
-	glTexCoord2f(1.0F, 0.0F); glVertex3f(960.0F, 0.0F, 0.0F);
-	glTexCoord2f(0.0F, 1.0F); glVertex3f(0.0F, 544.0F, 0.0F);
-	glTexCoord2f(1.0F, 1.0F); glVertex3f(960.0F, 544.0F, 0.0F);
+	glTexCoord2f(0.0F, 0.0F); glVertex3f(draw_x, draw_y, 0.0F);
+	glTexCoord2f(max_u, 0.0F); glVertex3f(draw_x + draw_width, draw_y, 0.0F);
+	glTexCoord2f(0.0F, max_v); glVertex3f(draw_x, draw_y + draw_height, 0.0F);
+	glTexCoord2f(max_u, max_v); glVertex3f(draw_x + draw_width, draw_y + draw_height, 0.0F);
 	glEnd();
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);

@@ -46,6 +46,28 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         self.assertIn("final_color = Vector3(1.0f, 1.0f, 1.0f);", renderer)
         self.assertNotIn("0.35f + 0.35f * (normal.X + 1.0f)", renderer)
 
+    def test_skinned_gameplay_atlas_uvs_are_not_v_flipped(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text(
+            encoding="utf-8"
+        )
+        flip = renderer[
+            renderer.index("bool Should_Flip_Submitted_Texture_V"):
+            renderer.index("const Vector2 *Resolve_UV_Array_For_Texture_State")
+        ]
+        self.assertIn("Has_Loadscreen_Texture_Prefix(texture_name)", flip)
+        self.assertNotIn("(void)texture_name;", flip)
+        self.assertNotIn(
+            "return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;",
+            flip,
+        )
+        self.assertIn("first skinned gameplay passthrough texture V preserved", renderer)
+        self.assertIn(
+            "!Should_Flip_Submitted_Texture_V(\n"
+            "\t\t\t\t\t\tcurrent_texture_coordinates[0],",
+            renderer,
+        )
+        self.assertIn("g_logged_first_skin_passthrough_texture_v_preserved", renderer)
+
 
 if __name__ == "__main__":
     unittest.main()

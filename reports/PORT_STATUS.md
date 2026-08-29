@@ -1,6 +1,6 @@
 # Renegade Vita port status
 
-Updated: 2026-08-28. Engineering changes use source-driven review, bounded
+Updated: 2026-08-29. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
 Current candidate: **A3.5-dev82 M00 tutorial plus retail frontend/Bink
@@ -8,8 +8,9 @@ physical-test build**. It keeps the dev48-dev81
 audio/dialogue/texture/material/render-state chain and targets the latest
 physical defects by moving direct M00 load completion back through original
 `CombatGameModeClass` finalization, rendering loading-screen text/progress,
-using one progress stream for loading and prewarm, setting a persistent Vita
-shader-cache path, synchronizing HUD/loading viewports, preserving top-down
+using one progress stream for loading and prewarm, running a visible startup
+pre-cache/pre-warm/pre-compute phase before intro/menu/M00 input, setting a
+persistent Vita shader-cache path, synchronizing HUD/loading viewports, preserving top-down
 retail DDS rows for gameplay textures, tightening HUD/subtitle/sniper
 presentation, adding visible reload motion, and applying the requested
 controls: Triangle action/use, Square reload, D-pad Left/Right weapon-only
@@ -22,22 +23,20 @@ decoder backpressure and GL texture0 state restoration after movie blits. It
 has a full canonical build; acceptance still
 depends on returned Vita evidence.
 
-Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-28 in
-`logs/a35-dev82-20260828-194849-build.log` with 106 host unittest checks,
+Dev82 canonical evidence: `bash ./tools/build.sh` passed on 2026-08-29 in
+`logs/a35-dev82-20260829-004628-build.log` with 109 host unittest checks,
 deterministic staging, source integration checks, DDS/TGA alias 11/11,
 lightweight render-state 13/13, ARM link/package, identity, compressed VPK
 validation, diagnostics bundle, SHA manifest, retail exclusion, and retained
 Bink symbols/source contracts. The source report records 506 original Westwood
 translation units plus one staged original-owner extraction, 26 Vita
 platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
-files, 52 compatibility headers, and 134 active deterministic staging patches.
+files, 52 compatibility headers, and 135 active deterministic staging patches.
 The VPK SHA-256 is
-`9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c`. On user
-request, this newest frontend+Bink plus Render2D viewport-restore and Bink
-packet-state candidate was uploaded by VitaShell FTP to
-`ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
-follow-up FTP listing found the filename. No install, launch, retail-data
-transfer, or unrelated Vita filesystem mutation was attempted.
+`5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d`. The
+earlier user-authorized FTP upload predates this visible-startup-precache
+artifact and must not be treated as the current VPK; a 2026-08-29 FTP attempt
+for the current VPK timed out before data transfer.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

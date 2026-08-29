@@ -1,5 +1,37 @@
 # Live engineering progress
 
+## 2026-08-29 — dev82 visible startup pre-cache candidate
+
+`[██████████] 12/12 canonical source/build gates complete`
+
+- Runtime boundary: the current dev82 VPK now runs a visible
+  pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
+  M00 gameplay input. It indexes the retained original MIX filename tables,
+  touches critical startup movie/menu/loading/M00 files through the original
+  FileFactory/MIX owners, keeps input disabled during that phase, and logs
+  `startup-precache begin`, per-file `startup-precache touch`, and
+  `startup-precache complete` breadcrumbs.
+- Validation: focused pre-cache/loading/skin/texture/frontend/input/capture
+  contracts passed 69/69, `git diff --check` passed, and canonical
+  `bash ./tools/build.sh` passed in
+  `logs/a35-dev82-20260829-004628-build.log` with 109 host unittest checks,
+  deterministic 135-patch restaging, DDS/TGA alias 11/11, render-state 13/13,
+  ARM link/package, identity, compressed VPK validation, diagnostics bundle,
+  SHA manifest, and retail exclusion.
+- Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
+  `5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d`;
+  ELF SHA-256 is
+  `ca7b697564f2a84b62fcc83003be9b23ea0cddc104f2f4a3362437eb143c32bb`;
+  MAP SHA-256 is
+  `c8a69ab902753c8c0c45319f05ffb72be2f000f40c7716de22e402fd3767ecae`;
+  diagnostics bundle SHA-256 is
+  `38340595c48f63e8e1e363df8a146f75962274583c6e97e6c548b8026c83e479`.
+- Boundary: this newest `5ec35b28...` VPK has not been uploaded to Vita. The
+  earlier user-authorized `9e67b02c...` upload predates the visible startup
+  pre-cache work and must not be treated as the current artifact. A 2026-08-29
+  VitaShell FTP attempt to `10.0.0.202:1337` timed out before data transfer.
+  Dev82 remains physically pending.
+
 ## 2026-08-28 — dev82 M00 tutorial plus retail frontend/Bink candidate
 
 `[██████████] 12/12 canonical source/build gates complete`
@@ -38,8 +70,9 @@
   calls used by `MovieGameModeClass`.
 - Control map: Triangle is action/use/interact, Square is reload, D-pad
   Left/Right changes weapons without camera turn bindings, D-pad Up/Down zooms
-  sniper in/out, front touch toggles first/third-person camera, and shoulder
-  buttons are not remapped.
+  sniper in/out, front touch maps to the original 640x480 mouse cursor plus
+  left click for WWUI/terminal interaction, rear touch toggles first/third-
+  person camera, and shoulder buttons are not remapped.
 - Validation: focused loading-screen, texture-surface, staging, indexed-state,
   mission-conversation diagnostics, camera-input, and original-frontend
   contracts passed before packaging. The full canonical build passed fresh host
@@ -83,7 +116,7 @@
   SHA-256 `e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5`.
   It is manual-install only; no tai config, plugin, retail data, or VPK content
   was pushed by the build.
-- Boundary: on user request, this newest frontend+Bink VPK was uploaded by
+- Boundary: on user request, that earlier frontend+Bink VPK was uploaded by
   VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. No install, launch, retail-data

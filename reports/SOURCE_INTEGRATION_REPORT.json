@@ -612,8 +612,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 134,
-  "mechanically_patched_upstream_files": 252,
+  "patch_count": 135,
+  "mechanically_patched_upstream_files": 257,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -863,12 +863,28 @@
     "Code/wwui/treectrl.cpp",
     "Code/wwui/wwuiinput.cpp",
     "Code/wwui/wwuiinput.h",
+    "patch-target/a4-post-movie-mainmenu-hardening.patch/commando/dlgmainmenu.cpp",
+    "patch-target/a4-post-movie-mainmenu-hardening.patch/commando/movie.cpp",
+    "patch-target/a4-post-movie-mainmenu-hardening.patch/commando/renegadedialogmgr.cpp",
+    "patch-target/a4-post-movie-mainmenu-hardening.patch/wwui/menubackdrop.cpp",
+    "patch-target/a4-post-movie-mainmenu-hardening.patch/wwui/menudialog.cpp",
     "patch-target/commando-a35-loading-status-render.patch/loadingscreen.cpp",
     "patch-target/commando-a35-loading-status-text.patch/loadingscreen.cpp",
     "patch-target/commando-a35-loading-status-text.patch/loadingscreen.h",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp"
   ],
   "patches": [
+    {
+      "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "commando/dlgmainmenu.cpp",
+        "commando/movie.cpp",
+        "wwui/menubackdrop.cpp",
+        "wwui/menudialog.cpp",
+        "commando/renegadedialogmgr.cpp"
+      ]
+    },
     {
       "path": "port/patches/combat-a30-gcc15.patch",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",

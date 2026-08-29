@@ -1,29 +1,29 @@
 # First-mission alpha state
 
-## Current dev82 resume state (2026-08-28)
+## Current dev82 resume state (2026-08-29)
 
 - Workspace: `/home/steve/projects/RenegadeVitaBuilder/workspace/active` on
   `main`; this bash workspace is the source authority, not the E: mirror. The
-  latest material source pass hardens the Vita FFmpeg Bink boundary by retaining
-  pending packets across decoder `EAGAIN` and restoring GL texture0 state after
-  movie blits.
-- Last completed work: the 19:48 canonical `bash ./tools/build.sh` run passed
-  fresh host validation, 106 host unittests, deterministic 134-patch restaging,
+  latest material source pass adds a visible startup
+  pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
+  M00 gameplay input.
+- Last completed work: the 00:46 canonical `bash ./tools/build.sh` run passed
+  fresh host validation, 109 host unittests, deterministic 135-patch restaging,
   source integration checks, DDS/TGA alias 11/11, render-state 13/13, ARM
   link/package, identity, compressed VPK validation, diagnostics bundle, SHA
   manifest, retail exclusion, and Bink/FFmpeg symbol retention.
 - Latest artifact: `dist/RenegadeVita-A3.5-dev82.vpk` with SHA-256
-  `9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c`;
+  `5ec35b28bdc69ee728065e6a8a40ee4d69276f61c17171899e4f991adaeded1d`;
   diagnostics bundle
-  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260828-194849.zip` with SHA-256
-  `e157284da790e7df6492991ad78c4e9f78aaf39deac6ed9f7e5248f9fb92ddf7`.
+  `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-004628.zip` with SHA-256
+  `38340595c48f63e8e1e363df8a146f75962274583c6e97e6c548b8026c83e479`.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
   retained. On user request, the latest dev82 frontend/Bink/visual/input/
   reload/viewport/movie packet-state VPK was uploaded by VitaShell FTP to
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
-  follow-up FTP listing found the filename. It was not installed, launched, or
-  physically accepted.
+  follow-up FTP listing found the filename. That upload predates the current
+  `5ec35b28...` startup-precache build; dev82 has not been physically accepted.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch, loading/HUD/
   subtitle placement, texture/material orientation, bounding boxes, random

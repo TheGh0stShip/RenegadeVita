@@ -43,6 +43,13 @@
 #include "light.h"
 #include "hanim.h"
 
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "vita/a30_vita_runtime.h"
+#define A4_BACKDROP_TRACE(...) A30_Vita_Log(__VA_ARGS__)
+#else
+#define A4_BACKDROP_TRACE(...) ((void)0)
+#endif
+
 
 ////////////////////////////////////////////////////////////////
 //
@@ -60,13 +67,17 @@ MenuBackDropClass::MenuBackDropClass (void)	:
 	//	Create a scene to use for the background
 	//
 	Scene = new SimpleSceneClass;
-	Scene->Set_Ambient_Light (Vector3(1, 1, 1));
+	if (Scene != NULL) {
+		Scene->Set_Ambient_Light (Vector3(1, 1, 1));
+	} else {
+		A4_BACKDROP_TRACE("A4 menu backdrop: SimpleScene allocation failed this=%p\n", this);
+	}
 
 	//
 	// Create a single scene light
 	//
 	LightClass *light = new LightClass;
-	if (light != NULL) {
+	if (light != NULL && Scene != NULL) {
 
 		//
 		// Configure the light
@@ -85,26 +96,37 @@ MenuBackDropClass::MenuBackDropClass (void)	:
 		//
 		Scene->Add_Render_Object (light);
 		REF_PTR_RELEASE(light);
+	} else if (light != NULL) {
+		REF_PTR_RELEASE(light);
 	}
 
 	//
 	//	Create a camera to use in background-scene
 	//	
 	Camera = new CameraClass();
-	Camera->Set_Position (Vector3 (0, 0, 800));
+	if (Camera != NULL) {
+		Camera->Set_Position (Vector3 (0, 0, 800));
+	} else {
+		A4_BACKDROP_TRACE("A4 menu backdrop: Camera allocation failed this=%p scene=%p\n",
+			this, Scene);
+	}
 
 	//
 	//	Configure the view plane
 	//
-	const RectClass &screen_size = Render2DClass::Get_Screen_Resolution ();
-	float hfov = DEG_TO_RAD(45.0F);
-	float vfov = (screen_size.Height () / screen_size.Width ()) * hfov;
-	Camera->Set_View_Plane (hfov, vfov);
+	if (Camera != NULL) {
+		const RectClass &screen_size = Render2DClass::Get_Screen_Resolution ();
+		float hfov = DEG_TO_RAD(45.0F);
+		float vfov = (screen_size.Height () / screen_size.Width ()) * hfov;
+		Camera->Set_View_Plane (hfov, vfov);
 
-	//
-	//	Set the clip planes
-	//
-	Camera->Set_Clip_Planes (5.0F, 12000.0F);
+		//
+		//	Set the clip planes
+		//
+		Camera->Set_Clip_Planes (5.0F, 12000.0F);
+	}
+	A4_BACKDROP_TRACE("A4 menu backdrop: constructed this=%p scene=%p camera=%p\n",
+		this, Scene, Camera);
 	return ;
 }
 
@@ -131,6 +153,15 @@ MenuBackDropClass::~MenuBackDropClass (void)
 void
 MenuBackDropClass::Render (void)
 {
+	if (Scene == NULL || Camera == NULL) {
+		static bool logged_missing_render_state = false;
+		if (!logged_missing_render_state) {
+			A4_BACKDROP_TRACE("A4 menu backdrop: render skipped scene=%p camera=%p\n",
+				Scene, Camera);
+			logged_missing_render_state = true;
+		}
+		return ;
+	}
 	//
 	//	Simple render the scene
 	//
@@ -154,13 +185,15 @@ MenuBackDropClass::Set_Model (const char *name)
 	//	Load the new model
 	//
 	Model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj (name);
+	A4_BACKDROP_TRACE("A4 menu backdrop: Set_Model name=%s model=%p scene=%p camera=%p\n",
+		name != NULL ? name : "(null)", Model, Scene, Camera);
 	if (Model != NULL) {
 
 		//
 		//	Check to see if this model has a camera bone
 		//
 		int camera_bone_index = Model->Get_Bone_Index ("CAMERA");
-		if (camera_bone_index > 0) {
+		if (camera_bone_index > 0 && Camera != NULL) {
 			
 			//
 			// Convert the bone's transform into a camera transform
@@ -178,7 +211,12 @@ MenuBackDropClass::Set_Model (const char *name)
 		//
 		//	Add the model to the scene
 		//
-		Scene->Add_Render_Object (Model);
+		if (Scene != NULL) {
+			Scene->Add_Render_Object (Model);
+		} else {
+			A4_BACKDROP_TRACE("A4 menu backdrop: scene unavailable for model=%p\n",
+				Model);
+		}
 	}
 
 	//

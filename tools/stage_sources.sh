@@ -355,6 +355,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-treectrl-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-parameter-array-delete.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage" -p1 < "$rv_root/port/patches/a4-post-movie-mainmenu-hardening.patch"
 
 # Original source projects were authored on case-insensitive filesystems. The
 # staged copy is native ext4, so generate lower-case header aliases after all
@@ -544,3 +546,4 @@ echo "Applied: port/patches/wwui-a4-textmarquee-gcc15.patch"
 echo "Applied: port/patches/wwui-a4-multilinetext-gcc15.patch"
 echo "Applied: port/patches/wwui-a4-editctrl-gcc15.patch"
 echo "Applied: port/patches/wwui-a4-treectrl-gcc15.patch"
+echo "Applied: port/patches/a4-post-movie-mainmenu-hardening.patch"

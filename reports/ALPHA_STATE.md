@@ -20,6 +20,17 @@
   diagnostics bundle
   `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260829-032344.zip` with SHA-256
   `aae3defeda7dbcd9eddd9b84b56af52635382d0b9e262633954d7d9f79bf222f`.
+- Vita3K checkpoint: the current installed emulator `RNEGA3101` executable
+  matches the packaged dev82 VPK payload (`e88151d0...` packaged/installed
+  `eboot.bin`). The first Vita3K run failed before pre-cache because the
+  emulator retail tree was missing `always.dat` (`always/always2/dbs=0/1/1`).
+  After copying the unchanged local retail `always.dat` into the emulator-only
+  `ux0:data/renegade/retail/Data/` tree, the current dev82 run produced
+  `build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/a35-dev82-startup-precache.txt`
+  with `pass=1`, `archives=4/4`, `entries=15429`, `required_files=14/14`,
+  `movie_files=3/3`, `elapsed_ms=5001`, and
+  `before_frontend/before_movies/before_gameplay=1`. Vita3K remains
+  non-physical evidence only.
 - Physical checkpoint: A3.1.4 remains the accepted baseline; A3.2-dev1 remains
   frozen failed evidence; dev43/dev45/dev46/dev47 physical returns remain
   retained. On user request, an earlier dev82 frontend/Bink/visual/input/
@@ -44,8 +55,9 @@
   previous wide-screen stretch while keeping gameplay at native 960x544.
 - Exact next external action: when the Vita is reachable, run
   `tools/upload_dev82_current_vpk.sh --scan-arp` from the active bash
-  workspace or manually install/test the current VPK from VitaShell, then
-  return physical Vita observations plus
+  workspace or manually install/test the current VPK from VitaShell. The most
+  recent scan still found no reachable VitaShell FTP endpoint, so no current
+  VPK transfer occurred. After install, return physical Vita observations plus
   `ux0:data/renegade/user/logs/a35-dev82-runtime.log`,
   `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, captures,
   and any matching crash dump.

@@ -54,6 +54,16 @@
   `a35-dev82-startup-precache.txt`, and check loading telemetry for
   `native_presentation_x=117`, `native_presentation_width=725`,
   `logical_to_native_fullscreen=false`, and `aspect_preserved=true`.
+- Vita3K pre-cache evidence: installed-title run
+  `build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/`
+  used the current installed dev82 `eboot.bin` and produced
+  `a35-dev82-startup-precache.txt` with `pass=1`, `archives=4/4`,
+  `required_files=14/14`, `movie_files=3/3`, `elapsed_ms=5001`,
+  `visible_minimum_ms=5000`, and
+  `before_frontend/before_movies/before_gameplay=1`. The prior Vita3K attempt
+  failed before pre-cache because the emulator retail tree was missing
+  `always.dat`; copying the unchanged local retail file fixed emulator setup.
+  This is emulator evidence only and does not physically accept dev82.
 
 ## 2026-08-28 — dev82 M00 tutorial plus retail frontend/Bink candidate
 

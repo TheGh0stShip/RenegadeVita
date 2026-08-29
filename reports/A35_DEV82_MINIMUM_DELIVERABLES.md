@@ -27,6 +27,16 @@ menu, M00, controls, HUD, texture, FPS, gate, freeze/crash, and clean-exit
 behavior with returned `a35-dev82-runtime.log`, captures/screenshots, and any
 matching `psp2core` dump.
 
+Vita3K check: the current dev82 VPK payload is installed in the emulator data
+root, and after fixing the emulator-only retail tree by adding the unchanged
+local `always.dat`, the installed-title run
+`build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/`
+produced `a35-dev82-startup-precache.txt` with `pass=1`, `required_files=14/14`,
+`movie_files=3/3`, `elapsed_ms=5001`, `visible_minimum_ms=5000`, and
+`before_frontend/before_movies/before_gameplay=1`. The earlier emulator run
+failed before pre-cache with `always/always2/dbs=0/1/1`; this was emulator
+retail-data setup, not a source/runtime pre-cache failure.
+
 ## Canonical artifact set
 
 | Deliverable | Status | Evidence |
@@ -122,6 +132,12 @@ matching `psp2core` dump.
   current VPK hash, scanned the known PS Vita/PSTV addresses and Windows
   ARP-visible Wi-Fi hosts for VitaShell FTP, and found no reachable
   `1337` endpoint, so no upload was attempted.
+- Vita3K installed-title run
+  `build/vita3k-evidence/a35-dev82-20260829-041613-installed-title-precache-retail-complete/`
+  produced the current dev82 startup-precache receipt after adding missing
+  `always.dat` to the emulator data root. This proves the current artifact
+  executes the pre-cache phase in emulator but does not replace physical Vita
+  proof.
 
 ## Not dev82 minimum deliverables
 

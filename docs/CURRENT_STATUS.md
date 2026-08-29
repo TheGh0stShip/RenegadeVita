@@ -26,7 +26,7 @@ Candidate VPK:
 VPK SHA-256:
 
 ```text
-3be156223c7ace92e10d42eabc0e39a1ca90a6920c1491678559be061f50c4ea
+9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c
 ```
 
 Runtime log:
@@ -41,7 +41,9 @@ ux0:data/renegade/user/logs/a35-dev82-runtime.log
   menu navigation, and Tutorial selection handoff into the existing direct M00
   route.
 - Retail intro movie playback: Vita FFmpeg Bink video/audio decode without RAD
-  code and without packaging retail movie assets in the VPK.
+  code and without packaging retail movie assets in the VPK, with packet
+  retention across decoder backpressure and GL texture-state restoration after
+  movie blits.
 - Loading screen coverage, status text, and progress through the original
   one-bar path, including renderer/cache prewarm.
 - HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD

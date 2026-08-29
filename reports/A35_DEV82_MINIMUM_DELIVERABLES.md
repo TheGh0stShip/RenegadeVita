@@ -10,9 +10,9 @@ this bash workspace after validation.
 ## Gate conclusion
 
 All source/build/artifact minimum deliverables for the dev82 physical-test
-candidate are met by the compiled source state at commit `4bb767e` and the
-canonical build `logs/a35-dev82-20260828-182910-build.log`. Later audit/report
-commits are documentation-only unless they change code or rebuild artifacts.
+candidate are met by the compiled bash-workspace source state and the canonical
+build `logs/a35-dev82-20260828-194849-build.log`. Later audit/report commits
+are documentation-only unless they change code or rebuild artifacts.
 
 This is not a physical acceptance claim. The Vita still must prove the movie,
 menu, M00, controls, HUD, texture, FPS, gate, freeze/crash, and clean-exit
@@ -23,10 +23,10 @@ matching `psp2core` dump.
 
 | Deliverable | Status | Evidence |
 |---|---|---|
-| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260828-182910-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
-| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `3be156223c7ace92e10d42eabc0e39a1ca90a6920c1491678559be061f50c4ea` |
-| ELF/map/symbols exist and match manifest | PASS | ELF `cbc3fef1023a8d35b0507a12e7e4bb160232907ef1dacfe31c89cceaa7272851`; map `eab1dc1f66541f4b9e81c28947dd404face11b8e40666842af5488466551434b`; symbols `e177183e073ea03e588e9bf98c05e73e09178167e7a2df3ee1cc79b60fc1cb13` |
-| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260828-182910.zip` SHA-256 `80ea9e3a3356c42a2a72bbb075594d538cb8f5f7642e773c7035d6bb36547f32` |
+| Canonical release gate uses `tools/build.sh` | PASS | `logs/a35-dev82-20260828-194849-build.log` ends with `A3.5-dev82 BUILD SUCCESS` and `No Vita filesystem was accessed and no deployment was attempted.` |
+| VPK exists and is current | PASS | `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 `9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c` |
+| ELF/map/symbols exist and match manifest | PASS | ELF `4bd3f9375e9176215dcc90385f89a5f11e0810773cc98b7c5b78c6fcb001f0f6`; map `f56321bc46805433a7826317d9953758dad4e3259c258ad34ad00b07e81b4ec9`; symbols `761f05ec8a0f33fa9cee8f635f3cd885ba8a043e4170deffbbc5425dfc11f33e` |
+| Diagnostics bundle exists | PASS | `dist/A3.5-dev82-BUILD-DIAGNOSTICS-20260828-194849.zip` SHA-256 `e157284da790e7df6492991ad78c4e9f78aaf39deac6ed9f7e5248f9fb92ddf7` |
 | Retail exclusion | PASS | `dist/RenegadeVita-A3.5-dev82.vpk-contents.txt` contains only `sce_sys/param.sfo` and `eboot.bin`; no retail assets, saves, credentials, dumps, or user files are packaged |
 | No automatic device mutation | PASS | canonical log records no Vita filesystem access or deployment; latest frontend/Bink/viewport candidate has not been uploaded |
 
@@ -54,6 +54,8 @@ matching `psp2core` dump.
 | Retail intro movies are wired through the original movie owner | PASS | staged `movie.cpp` requests `DATA\\MOVIES\\EA_WW.BIK` and `DATA\\MOVIES\\R_INTRO.BIK` through `MovieGameModeClass`/`BINKMovie` |
 | Vita Bink provider is real, not a RAD/proprietary import | PASS | `tools/build_ffmpeg_bink_vita.sh` pins FFmpeg 9.0.1 with Bink demuxer, Bink video, Bink DCT/RDFT audio, swscale, and swresample only |
 | Vita ELF retains Bink decode symbols | PASS | `dist/RenegadeVita-A3.5-dev82.symbols.txt` contains `BINKMovie::Play`, `BINKMovie::Update`, `BINKMovie::Render`, `avformat_open_input`, `ff_bink_decoder`, `ff_binkaudio_dct_decoder`, `ff_binkaudio_rdft_decoder`, `swr_convert`, and `sws_scale` |
+| FFmpeg packet backpressure is bounded | PASS | `port/platform/a4_binkmovie_boundary.cpp` retains pending video/audio packets across decoder `EAGAIN` and retries after draining decoder output instead of silently dropping packets |
+| Movie blits restore GL texture state | PASS | `BINKMovie::Render()` saves/restores GL texture0 bind/enable state around the full-screen movie quad before restoring the previous active texture unit |
 | Missing/invalid movies fail closed | PASS | `port/platform/a4_binkmovie_boundary.cpp` logs failed movie open/decoder setup and marks playback complete so the original menu route can continue |
 
 ## M00 physical-test deliverables
@@ -82,7 +84,7 @@ matching `psp2core` dump.
 - `jq empty reports/BUILD_STATE.json reports/SOURCE_INTEGRATION_REPORT.json`
   passed.
 - `bash ./tools/build.sh` passed in
-  `logs/a35-dev82-20260828-182910-build.log`.
+  `logs/a35-dev82-20260828-194849-build.log`.
 
 ## Not dev82 minimum deliverables
 

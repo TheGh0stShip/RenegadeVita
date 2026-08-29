@@ -38,10 +38,12 @@ Bink movie playback is implemented in the dev82 frontend integration through a
 pinned, Bink-only Vita FFmpeg build. The original `MovieGameModeClass` owns the
 EA/Westwood intro route; the Vita boundary resolves the unchanged retail `.BIK`
 files, software-decodes Bink video and DCT/RDFT audio, presents full-screen RGBA,
-and streams stereo audio through `SceAudioOut`. Missing or invalid files still
-fail closed into the original menu. Physical Vita validation of decode speed,
-orientation, A/V synchronization, skip input, and both retail intro files is
-still required before movie playback can be accepted.
+streams stereo audio through `SceAudioOut`, retains pending packets across
+decoder `EAGAIN`, and restores GL texture0 bind/enable state after movie blits.
+Missing or invalid files still fail closed into the original menu. Physical
+Vita validation of decode speed, orientation, A/V synchronization, skip input,
+and both retail intro files is still required before movie playback can be
+accepted.
 
 ## Reconciled program status (2026-08-24)
 

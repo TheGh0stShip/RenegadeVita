@@ -168,12 +168,37 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "Renegade_Resolve_Path",
             "avformat_open_input",
             "avcodec_find_decoder",
+            "g_packet_pending",
+            "Submit_Video_Packet",
+            "Submit_Audio_Packet",
+            "result == AVERROR(EAGAIN)",
             "sws_scale",
             "swr_convert",
             "sceAudioOutOpenPort",
             "glTexSubImage2D",
+            "texture0_enabled = glIsEnabled(GL_TEXTURE_2D);",
         ):
             self.assertIn(token, bink)
+        video_retry = bink.index("bool Submit_Video_Packet()")
+        audio_retry = bink.index("bool Submit_Audio_Packet()")
+        update = bink.index("void BINKMovie::Update()")
+        render = bink.index("void BINKMovie::Render()")
+        self.assertLess(video_retry, update)
+        self.assertLess(audio_retry, update)
+        self.assertLess(bink.index("if (!g_packet_pending)", update), bink.index("g_packet_pending = true;", update))
+        self.assertLess(bink.index("if (!packet_consumed)", update), bink.index("av_packet_unref(g_packet);", update))
+        self.assertLess(
+            bink.index("glActiveTexture(GL_TEXTURE0);", render),
+            bink.index("texture0_enabled = glIsEnabled(GL_TEXTURE_2D);", render),
+        )
+        self.assertLess(
+            bink.index("texture0_enabled = glIsEnabled(GL_TEXTURE_2D);", render),
+            bink.index("glEnable(GL_TEXTURE_2D);", render),
+        )
+        self.assertLess(
+            bink.index("glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));", render),
+            bink.index("glActiveTexture(static_cast<GLenum>(previous_active_texture));", render),
+        )
         self.assertIn("decoder provider unavailable; original menu route continues", bink)
         self.assertIn("--enable-demuxer=bink", dependency_build)
         self.assertIn("--enable-decoder=bink,binkaudio_dct,binkaudio_rdft", dependency_build)

@@ -17,8 +17,11 @@
   path.
 - Movie boundary: active supersedes the worker's fail-closed Bink stub with a
   Vita FFmpeg Bink provider. The canonical ELF retains `BINKMovie::Play`,
-  `avformat_open_input`, `ff_bink_decoder`, `swr_convert`, and `sws_scale`;
-  no proprietary RAD code and no retail movie assets are packaged.
+  `avformat_open_input`, `ff_bink_decoder`, `ff_binkaudio_dct_decoder`,
+  `ff_binkaudio_rdft_decoder`, `swr_convert`, and `sws_scale`. The provider
+  now retains pending FFmpeg packets across decoder `EAGAIN` and restores
+  GL texture0 bind/enable state after movie blits; no proprietary RAD code and
+  no retail movie assets are packaged.
 - Visual/UI fixes: gameplay DDS uploads now preserve retail top-down row order,
   passthrough texture-V correction now happens after the original DX8 texture
   transform, `Render2DClass` initializes the dynamic FVF normal and UV1 fields
@@ -44,20 +47,21 @@
   integration reporting, ARM link/package, identity verification, compressed
   VPK validation, diagnostics bundle generation, SHA manifest verification,
   retail exclusion, and symbol/string retention for Bink, render-state,
-  reload, texture-V, TextDisplay diagnostics, and Render2D viewport restore.
+  reload, texture-V, TextDisplay diagnostics, Render2D viewport restore, and
+  Bink packet/texture-state hardening.
 - Source report: the canonical integration report records 506 original Westwood
   translation units plus one staged original-owner extraction, 26 Vita
   platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary
   files, 52 compatibility headers, 134 active deterministic patch files, and
   pristine upstream.
 - Artifact: `dist/RenegadeVita-A3.5-dev82.vpk` SHA-256 is
-  `3be156223c7ace92e10d42eabc0e39a1ca90a6920c1491678559be061f50c4ea`;
+  `9e67b02cae9ae8d26e146d9fbd72694c5848d057e7aeb17b87a65f088240132c`;
   ELF SHA-256 is
-  `cbc3fef1023a8d35b0507a12e7e4bb160232907ef1dacfe31c89cceaa7272851`;
+  `4bd3f9375e9176215dcc90385f89a5f11e0810773cc98b7c5b78c6fcb001f0f6`;
   MAP SHA-256 is
-  `eab1dc1f66541f4b9e81c28947dd404face11b8e40666842af5488466551434b`;
+  `f56321bc46805433a7826317d9953758dad4e3259c258ad34ad00b07e81b4ec9`;
   diagnostics bundle SHA-256 is
-  `80ea9e3a3356c42a2a72bbb075594d538cb8f5f7642e773c7035d6bb36547f32`.
+  `e157284da790e7df6492991ad78c4e9f78aaf39deac6ed9f7e5248f9fb92ddf7`.
 - Minimum deliverables audit: `reports/A35_DEV82_MINIMUM_DELIVERABLES.md`
   records source/build/artifact requirements as PASS and keeps hardware-only
   observations explicitly PENDING.

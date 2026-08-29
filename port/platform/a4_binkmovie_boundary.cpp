@@ -56,6 +56,7 @@ AVCodecContext *g_audio_decoder = NULL;
 AVFrame *g_video_frame = NULL;
 AVFrame *g_audio_frame = NULL;
 AVPacket *g_packet = NULL;
+bool g_packet_pending = false;
 SwsContext *g_scaler = NULL;
 SwrContext *g_resampler = NULL;
 int g_video_stream = -1;
@@ -214,7 +215,11 @@ void Release_Decoder_State()
 	g_scaler = NULL;
 	av_frame_free(&g_video_frame);
 	av_frame_free(&g_audio_frame);
+	if (g_packet != NULL) {
+		av_packet_unref(g_packet);
+	}
 	av_packet_free(&g_packet);
+	g_packet_pending = false;
 	avcodec_free_context(&g_video_decoder);
 	avcodec_free_context(&g_audio_decoder);
 	if (g_format != NULL) avformat_close_input(&g_format);
@@ -372,6 +377,43 @@ bool Upload_Pending_Video()
 	return true;
 }
 
+bool Submit_Video_Packet()
+{
+	if (g_video_decoder == NULL || g_packet == NULL) return true;
+	for (unsigned attempt = 0U; attempt < 2U; ++attempt) {
+		const int result = avcodec_send_packet(g_video_decoder, g_packet);
+		if (result == AVERROR(EAGAIN)) {
+			Receive_Video_Frame();
+			if (g_pending_video) return false;
+			continue;
+		}
+		if (result < 0) {
+			Log_FFmpeg_Error("video send", result);
+		}
+		Receive_Video_Frame();
+		return true;
+	}
+	return false;
+}
+
+bool Submit_Audio_Packet()
+{
+	if (g_audio_decoder == NULL || g_packet == NULL || !g_audio_enabled) return true;
+	for (unsigned attempt = 0U; attempt < 2U; ++attempt) {
+		const int result = avcodec_send_packet(g_audio_decoder, g_packet);
+		if (result == AVERROR(EAGAIN)) {
+			Decode_Audio_Frames();
+			continue;
+		}
+		if (result < 0) {
+			Log_FFmpeg_Error("audio send", result);
+		}
+		Decode_Audio_Frames();
+		return true;
+	}
+	return false;
+}
+
 void Flush_Decoders()
 {
 	if (g_decoders_flushed) return;
@@ -462,6 +504,7 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 	g_video_frame = av_frame_alloc();
 	g_audio_frame = av_frame_alloc();
 	g_packet = av_packet_alloc();
+	g_packet_pending = false;
 	if (g_video_frame == NULL || g_audio_frame == NULL || g_packet == NULL) {
 		Mark_Failed("decoder allocation failed");
 		return;
@@ -521,26 +564,26 @@ void BINKMovie::Update()
 			break;
 		}
 
-		const int read_result = av_read_frame(g_format, g_packet);
-		if (read_result < 0) {
-			g_demux_eof.store(true, std::memory_order_release);
-			continue;
-		}
-		if (g_packet->stream_index == g_video_stream) {
-			const int send_result = avcodec_send_packet(g_video_decoder, g_packet);
-			if (send_result < 0 && send_result != AVERROR(EAGAIN)) {
-				Log_FFmpeg_Error("video send", send_result);
+		if (!g_packet_pending) {
+			const int read_result = av_read_frame(g_format, g_packet);
+			if (read_result < 0) {
+				g_demux_eof.store(true, std::memory_order_release);
+				continue;
 			}
-			Receive_Video_Frame();
+			g_packet_pending = true;
+		}
+		bool packet_consumed = true;
+		if (g_packet->stream_index == g_video_stream) {
+			packet_consumed = Submit_Video_Packet();
 		} else if (g_packet->stream_index == g_audio_stream &&
 			g_audio_decoder != NULL && g_audio_enabled) {
-			const int send_result = avcodec_send_packet(g_audio_decoder, g_packet);
-			if (send_result < 0 && send_result != AVERROR(EAGAIN)) {
-				Log_FFmpeg_Error("audio send", send_result);
-			}
-			Decode_Audio_Frames();
+			packet_consumed = Submit_Audio_Packet();
+		}
+		if (!packet_consumed) {
+			break;
 		}
 		av_packet_unref(g_packet);
+		g_packet_pending = false;
 	}
 }
 
@@ -551,6 +594,7 @@ void BINKMovie::Render()
 	GLint previous_matrix_mode = GL_MODELVIEW;
 	GLint previous_active_texture = GL_TEXTURE0;
 	GLint previous_texture = 0;
+	GLboolean texture0_enabled = GL_FALSE;
 	GLfloat previous_color[4] = {1.0F, 1.0F, 1.0F, 1.0F};
 	glGetIntegerv(GL_VIEWPORT, previous_viewport);
 	glGetIntegerv(GL_MATRIX_MODE, &previous_matrix_mode);
@@ -559,14 +603,14 @@ void BINKMovie::Render()
 	const GLboolean depth_enabled = glIsEnabled(GL_DEPTH_TEST);
 	const GLboolean cull_enabled = glIsEnabled(GL_CULL_FACE);
 	const GLboolean blend_enabled = glIsEnabled(GL_BLEND);
-	const GLboolean texture_enabled = glIsEnabled(GL_TEXTURE_2D);
 	glViewport(0, 0, 960, 544);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
+	texture0_enabled = glIsEnabled(GL_TEXTURE_2D);
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &previous_texture);
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, g_video_texture);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -587,7 +631,11 @@ void BINKMovie::Render()
 	glPopMatrix();
 	glColor4f(previous_color[0], previous_color[1], previous_color[2], previous_color[3]);
 	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));
-	if (!texture_enabled) glDisable(GL_TEXTURE_2D);
+	if (texture0_enabled) {
+		glEnable(GL_TEXTURE_2D);
+	} else {
+		glDisable(GL_TEXTURE_2D);
+	}
 	glActiveTexture(static_cast<GLenum>(previous_active_texture));
 	glMatrixMode(static_cast<GLenum>(previous_matrix_mode));
 	if (depth_enabled) glEnable(GL_DEPTH_TEST);

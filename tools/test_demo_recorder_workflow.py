@@ -29,7 +29,7 @@ class DemoRecorderWorkflowTests(unittest.TestCase):
         self.assertNotIn("fs push", script)
         self.assertNotIn("package install", script)
 
-    def test_patch_is_title_scoped_autostart_and_start_stop(self):
+    def test_patch_is_title_scoped_autostart_and_null_framebuffer_safe(self):
         patch = (
             ROOT
             / "tools/vita_plugins/renegade_demo_recorder/vita-mp4-recorder-renegade-autostart.patch"
@@ -40,7 +40,9 @@ class DemoRecorderWorkflowTests(unittest.TestCase):
         self.assertIn("static uint8_t has_audio = 1;", patch)
         self.assertIn("sceAppMgrAppParamGetString(0, 12, titleid, sizeof(titleid));", patch)
         self.assertIn('strcmp(titleid, RENEGADE_DEMO_TITLE_ID) != 0', patch)
-        self.assertIn("is_recording && (ctrl->buttons & SCE_CTRL_START)", patch)
+        self.assertIn("if (!pParam || !pParam->base", patch)
+        self.assertIn("return TAI_CONTINUE(int, ref[0], pParam, sync);", patch)
+        self.assertNotIn("is_recording && (ctrl->buttons & SCE_CTRL_START)", patch)
         self.assertIn("alterRecordingState();", patch)
         self.assertIn("sceMp4RecTerm(&r, &params);", patch)
         self.assertIn("params.discard = 0;", patch)
@@ -69,8 +71,9 @@ class DemoRecorderWorkflowTests(unittest.TestCase):
         self.assertIn("VitaShell FTP", doc)
         self.assertNotIn("USB/FTP", doc)
         self.assertIn("starts recording when the Renegade process loads", doc)
-        self.assertIn("finalizes the", doc)
-        self.assertIn("MP4 on the first Start press", doc)
+        self.assertIn("finalize the MP4", doc)
+        self.assertIn("use L+Start to finalize the MP4", doc)
+        self.assertIn("Plain Start\nremains available to Renegade", doc)
         self.assertIn("not physical acceptance", doc)
         self.assertIn("audio availability/desync", doc)
         self.assertIn("30 FPS slowdown", doc)

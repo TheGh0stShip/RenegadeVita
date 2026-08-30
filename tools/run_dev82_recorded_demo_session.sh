@@ -16,7 +16,7 @@ usage() {
 		"Usage: tools/run_dev82_recorded_demo_session.sh" \
 		"" \
 		"Requires the Renegade demo recorder plugin to be installed manually first." \
-		"The plugin starts recording when RNEGA3101 loads and finalizes on Start." \
+		"The plugin starts recording when RNEGA3101 loads; plain Start stays with Renegade and L+Start finalizes." \
 		"This script only launches the title, waits for exit/crash, and pulls the runtime log."
 }
 
@@ -61,6 +61,6 @@ set -e
 printf 'wait_status=%s\n' "$rv_wait_status" | tee -a "$rv_evidence_root/summary.txt"
 printf 'runtime_log_pull_status=%s\n' "$rv_log_status" | tee -a "$rv_evidence_root/summary.txt"
 printf 'evidence_root=%s\n' "$rv_evidence_root" | tee -a "$rv_evidence_root/summary.txt"
-printf 'Stop condition: press Start in Renegade. The recorder plugin finalizes the MP4 before/while the app exits.\n' | tee -a "$rv_evidence_root/summary.txt"
+printf 'Stop condition: use L+Start to finalize the recording, or exit the title cleanly for module-stop finalization.\n' | tee -a "$rv_evidence_root/summary.txt"
 
 exit "$rv_wait_status"

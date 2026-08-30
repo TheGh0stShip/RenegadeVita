@@ -1,5 +1,22 @@
 # First-mission alpha state
 
+## 2026-08-30 dev84 recorder-confounded crash; physical work paused
+
+- A second returned core, SHA-256
+  `c42665a0a5a10f8e235b4096d4a1d4dbc2962ca68dcd5bafa8050d7f6cb683d8`,
+  reports data abort PC `0x814755fa`. Source-derived module records put that
+  PC in optional `VitaMP4Recorder` display-hook code, not in the matching
+  dev84 Renegade executable range. Thread registers are unavailable, so the
+  exact framebuffer argument cannot be proven from this core.
+- The recorder-only correction guards invalid framebuffer notifications and
+  preserves plain Start for Renegade. Its zero-fuzz external patch test,
+  focused workflow suite (5/5), and ARM helper build pass. It has not been
+  physically retested, does not prove the Start-exit fix, and produced no MP4.
+- All device launch and interaction are paused until the user explicitly says
+  `READY`. The published, sanitized evidence is
+  `reports/DEV84_RECORDER_CRASH.md`; raw dumps/logs/media are deliberately
+  excluded from Git.
+
 ## 2026-08-30 dev84 Start-exit lifecycle correction
 
 - The returned dev82 Start crash is retained at
@@ -43,8 +60,8 @@
   The prior dev82 eboot is backed up under
   `build/device-backups/a35-dev84-recorder-20260830T215406Z/`. A title-scoped
   recorder is installed under `ur0:/tai/` with a backed-up and hash-verified
-  tai config; dev84 is running without synthetic input and recording locally.
-  Do not pull the new log, captures, or MP4 until the user reports this run.
+  tai config. The returned recorder-enabled run has stopped on the separate
+  recorder-hook fault; its artifacts were pulled only after the user's report.
 
 ## 2026-08-30 dev83 renderer-correction fast candidate
 

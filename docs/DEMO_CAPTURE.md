@@ -33,14 +33,17 @@ for this helper only. Set `RENEGADE_VITASDK` if your default SDK is missing the
 `SceLibMp4Recorder` stubs.
 
 The generated plugin is scoped to title ID `RNEGA3101`. It enables audio by
-default, starts recording when the Renegade process loads, and finalizes the
-MP4 on the first Start press. If the process exits without that input, module
-stop finalizes any active recording as a fallback.
+default and starts recording when the Renegade process loads. Plain Start
+remains available to Renegade; use L+Start to finalize the MP4 deliberately.
+If the process exits without that input, module stop finalizes any active
+recording as a fallback. The recorder also passes null, empty, or malformed
+display-framebuffer notifications directly to the original display call rather
+than dereferencing them.
 
 Current active-workspace build evidence:
 
 ```text
-RenegadeDemoRecorder-A3.5-dev84.suprx       8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d
+RenegadeDemoRecorder-A3.5-dev84.suprx       111d2f4f8e9e467e72a1212587d9e882d0c24e67f46e82302b9be16c565ee9a2
 RenegadeDemoRecorder-A3.5-dev84.skprx       e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5
 RenegadeDemoRecorder-A3.5-dev84-tai-config.txt 75e6f69f9690fd89689cd90be32357113d989be69770ea587cfefc546637d9b5
 ```
@@ -69,12 +72,18 @@ bash ./tools/run_dev82_recorded_demo_session.sh
 ```
 
 The plugin starts recording as soon as Renegade loads. Play the demo normally.
-Press Start when done. The app exits, the plugin finalizes the MP4, and the
-script pulls the dev84 runtime log into `build/device-evidence/`.
+Plain Start remains a Renegade control. Use L+Start when done to finalize the
+MP4, or exit the title cleanly and let module stop finalize it. The script then
+pulls the dev84 runtime log into `build/device-evidence/`.
 
 The MP4 is written under `ux0:video` and imported into the Vita Video app by
 the recorder. Copy it off the Vita with VitaShell FTP or the device's normal
 media workflow after the run.
+
+The most recent recorder-enabled dev84 run faulted in the recorder display
+hook before a file finalized. Its raw dump is retained locally, no MP4 exists
+under title-scoped `ux0:/video`, and the corrected recorder remains
+host-validated only; see `reports/DEV84_RECORDER_CRASH.md`.
 
 ## Evidence Boundary
 

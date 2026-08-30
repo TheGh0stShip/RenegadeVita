@@ -90,7 +90,7 @@ HUD native-presentation adjustment; physical proof is still required for both.
 | Deliverable | Status | Evidence |
 |---|---|---|
 | Non-USB PSVITA/PSTV recording path exists outside the Renegade VPK | PASS | `docs/DEMO_CAPTURE.md`, `tools/build_renegade_demo_recorder_plugin.sh`, and `tools/vita_plugins/renegade_demo_recorder/` define a title-scoped taiHEN plugin workflow |
-| Recorder starts before gameplay and stops on Start | PASS | Renegade patch scopes to `RNEGA3101`, auto-starts during plugin `module_start`, enables audio by default, and finalizes MP4 on the first Start press or `module_stop` fallback |
+| Recorder starts before gameplay and preserves Start | PASS | Renegade patch scopes to `RNEGA3101`, auto-starts during plugin `module_start`, enables audio by default, preserves plain Start for Renegade, and finalizes MP4 on L+Start or `module_stop` fallback |
 | Recorder build is pinned and provenance-recorded | PASS | Build fetches `Rinnegatamante/Vita-MP4-Recorder@60c966a75356ea9a95f79479a3e647283586cf11`; `docs/DEMO_CAPTURE.md`, the plugin README, and `reports/LIVE_PROGRESS.md` record GPL-3.0 source plus VitaSDK `sceMp4Rec` API compatibility |
 | Local SDK without `psp2/mp4rec.h` still builds | PASS | The wrapper uses `tools/vita_plugins/renegade_demo_recorder/include/psp2/mp4rec.h` only when the selected VitaSDK has stubs/YAML but no header |
 | User and kernel plugins build | PASS | `dist/RenegadeDemoRecorder-A3.5-dev82.suprx` SHA-256 `8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d`; `dist/RenegadeDemoRecorder-A3.5-dev82.skprx` SHA-256 `e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5`; tai snippet SHA-256 `5dd4c84d4ce4ae6a727658eb27b058ab23e38a343a8f4cf808146720c2257fe0` |

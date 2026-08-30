@@ -3,6 +3,24 @@
 Updated: 2026-08-30. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-30 dev84 recorder-confounded crash; device launch paused
+
+The user-returned dev84 PSP2 core is retained at
+`build/device-evidence/a35-dev84-start-crash-20260830T215650Z/` with SHA-256
+`c42665a0a5a10f8e235b4096d4a1d4dbc2962ca68dcd5bafa8050d7f6cb683d8`.
+Source-derived core records place the data-abort PC in the temporary,
+title-scoped `VitaMP4Recorder` display-hook RX segment, not in the Renegade
+RX segment. The core lacks usable thread-register evidence, so this is not an
+engine-root-cause claim and does not validate the dev84 Start-exit correction.
+
+The recorder patch now guards null/empty/malformed display notifications and
+does not consume plain Start; its zero-fuzz patch application, 5/5 focused
+workflow suite, and ARM user-plugin rebuild pass. No MP4 was finalized under
+the title-scoped `ux0:/video` folders. Raw cores, runtime logs, and video
+captures remain out of Git; the sanitized analysis is
+`reports/DEV84_RECORDER_CRASH.md`. No new Vita launch or interaction may occur
+until the user explicitly supplies `READY`.
+
 ## 2026-08-30 dev84 Start-exit lifecycle correction
 
 The physical dev82 Start crash produced one new PSP2 dump, retained under
@@ -34,12 +52,12 @@ is hash-verified at `ux0:/app/RNEGA3101/eboot.bin`. The previous dev82 SELF is
 backed up in `build/device-backups/a35-dev84-recorder-20260830T215406Z/`.
 Title-scoped recorder modules were added only to the `*KERNEL` and
 `*RNEGA3101` tai entries with a backed-up config; both module and config hashes
-were rechecked after upload. The app is running with all synthetic inputs
-released. The recorder begins locally and will finalize the MP4 on Start.
+were rechecked after upload. The returned recorder-enabled run stopped on a
+recorder-hook data abort. It must not be counted as a Renegade Start-exit test.
 
 The returned inverted-loading and black/HUD-only dev82 frames are in the
 repository's diagnostic historical gallery and expressly remain failed visual
-evidence. There is no finalized title-scoped MP4 on the Vita to upload yet.
+evidence. There is no finalized title-scoped MP4 on the Vita to upload.
 
 ## 2026-08-30 dev83 visual-correction candidate
 

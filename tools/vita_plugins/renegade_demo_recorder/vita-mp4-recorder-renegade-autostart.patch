@@ -1,33 +1,48 @@
 diff --git a/user/main.c b/user/main.c
-index e17875a..95e4585 100644
+index e17875a..5d5c8f0 100644
 --- a/user/main.c
 +++ b/user/main.c
-@@ -14,0 +15,3 @@
+@@ -8,0 +8,3 @@
 +#define RENEGADE_DEMO_TITLE_ID "RNEGA3101"
 +#define RENEGADE_DEMO_AUTO_START 1
 +
 @@ -27 +30 @@ static uint8_t status = NOT_TRIGGERED;
 -static uint8_t has_audio = 0;
 +static uint8_t has_audio = 1;
-@@ -172,0 +176,3 @@ void checkInput(SceCtrlData *ctrl) {
-+	} else if (is_recording && (ctrl->buttons & SCE_CTRL_START)
-+		&& (!(old_buttons & SCE_CTRL_START))) {
-+		alterRecordingState();
-@@ -464 +470 @@ int module_start(SceSize argc, const void *args) {
+@@ -219,1 +222,5 @@
+-int sceDisplaySetFrameBuf_patched(const SceDisplayFrameBuf *pParam, int sync) {
++int sceDisplaySetFrameBuf_patched(const SceDisplayFrameBuf *pParam, int sync) {
++	if (!pParam || !pParam->base || pParam->width == 0 || pParam->height == 0 || pParam->pitch < pParam->width) {
++		return TAI_CONTINUE(int, ref[0], pParam, sync);
++	}
++
+@@ -464,6 +471,8 @@
 -	sceAppMgrAppParamGetString(0, 12, titleid , 256);
+-	if (strncmp(titleid, "NPXS", 4) == 0) { // System Apps
+-		return SCE_KERNEL_START_NO_RESIDENT;
+-	} else if (strlen(titleid) < 9) { // Livearea
+-		return SCE_KERNEL_START_NO_RESIDENT;
+-	}
 +	sceAppMgrAppParamGetString(0, 12, titleid, sizeof(titleid));
-@@ -468,0 +475,2 @@ int module_start(SceSize argc, const void *args) {
++	if (strncmp(titleid, "NPXS", 4) == 0) { // System Apps
++		return SCE_KERNEL_START_NO_RESIDENT;
++	} else if (strlen(titleid) < 9) { // Livearea
++		return SCE_KERNEL_START_NO_RESIDENT;
 +	} else if (strcmp(titleid, RENEGADE_DEMO_TITLE_ID) != 0) {
 +		return SCE_KERNEL_START_NO_RESIDENT;
-@@ -583 +591 @@ noenc:
++	}
+@@ -583,2 +590,6 @@ noenc:
 -	if (record_thread_id >= 0)
+-		sceKernelStartThread(record_thread_id, 0, NULL);
 +	if (record_thread_id >= 0) {
-@@ -584,0 +593,4 @@ noenc:
++		sceKernelStartThread(record_thread_id, 0, NULL);
 +		if (RENEGADE_DEMO_AUTO_START && !is_recording) {
 +			alterRecordingState();
 +		}
 +	}
-@@ -601,0 +614,7 @@ int module_stop(SceSize argc, const void *args) {
+@@ -601,1 +614,8 @@ int module_stop(SceSize argc, const void *args) {
+-int module_stop(SceSize argc, const void *args) {
++int module_stop(SceSize argc, const void *args) {
 +	if (is_recording) {
 +		SceMp4RecTermParam params = {0};
 +		params.size = sizeof(SceMp4RecTermParam);

@@ -1,5 +1,26 @@
 # Live engineering progress
 
+## 2026-08-30 — dev84 recorder crash classified; GitHub-first pause
+
+`[████░░░░░░] 4/10 current evidence gates complete; no physical launch until READY`
+
+- The user-returned dev84 PSP2 core is hash-retained locally as
+  `c42665a0a5a10f8e235b4096d4a1d4dbc2962ca68dcd5bafa8050d7f6cb683d8`.
+  Its source-derived fault PC lies in the optional title-scoped MP4 recorder
+  display hook, outside the matching Renegade RX segment. It is not evidence
+  that the dev84 Start-exit lifecycle repair regressed.
+- The recorder patch now passes invalid display notifications through before
+  dereference and leaves plain Start to Renegade; L+Start remains the recorder
+  finalize control. Zero-fuzz patch application, 5/5 workflow tests, and an
+  ARM user-plugin rebuild pass. No finalized MP4 exists under `ux0:/video`.
+- Sanitized crash metadata is published in `reports/DEV84_RECORDER_CRASH.md`.
+  Raw dumps, logs, VPKs, plugins, captures, video, retail data, saves, and
+  credentials remain excluded from Git. No new device launch or interaction
+  occurs before the user explicitly supplies `READY`.
+- Next: finish the private GitHub commit/push and wait for `READY`; then
+  replace only the title-scoped recorder helper and run the bounded physical
+  isolation check.
+
 ## 2026-08-30 — dev84 lifecycle correction; publication and physical gate active
 
 `[███████░░░] 7/10 current evidence gates complete; recorded physical gate active`

@@ -1,5 +1,24 @@
 # Live engineering progress
 
+## 2026-08-30 — capture-policy route blocked by stale optional recorder
+
+`[████░░░░░░] 4/10 current evidence gates complete; recorder-isolated startup check next`
+
+- User return: prolonged black screen, diagnostic pre-cache, then crash. The
+  exact capture-policy SELF remains installed and hash-verified
+  (`555f0c1f...0bbe`); the app is stopped and synthetic input is released.
+- The retained 14,139-byte log completes startup pre-cache in 5,023/5,027 ms
+  but ends before frontend/M00/capture-policy markers. Two new raw PSP2 cores
+  are local-only; their verified title-thread PCs share the previous recorder
+  display-hook `+0x15fa` offset, while registers are unavailable.
+- Device hash readback proves the active recorder user module is stale
+  `8a856e76...`, not the guarded `111d2f4f...` build. This is
+  recorder-confounded crash evidence, not a capture-policy or gameplay result.
+  `ux0:/video` contains no MP4 to retrieve.
+- Next: publish this evidence, make a candidate-scoped backup, replace only
+  the title-scoped recorder user helper, re-verify its hash, then run one
+  finite zero-input startup observation. Do not infer visual correctness.
+
 ## 2026-08-30 — explicit visible-gameplay capture candidate; READY received
 
 `[████░░░░░░] 4/10 current evidence gates complete; hash-matched physical route authorized`

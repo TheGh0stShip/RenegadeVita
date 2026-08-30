@@ -3,6 +3,32 @@
 Updated: 2026-08-30. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-30 dev84 capture-policy route: stale recorder crash, not M00 evidence
+
+The user reported a prolonged black screen, eventual diagnostic pre-cache, and
+crash. The title is stopped and all synthetic input was released. The installed
+SELF still hash-matches the capture-policy rebuild
+`555f0c1f83b46992b0e349b8c1d2c4500daaeb2d945311926d33f3d824590bbe`.
+The returned 14,139-byte runtime log completed the original-owner pre-cache in
+5,023/5,027 ms but has no subsequent frontend, M00, or capture-policy
+breadcrumb.
+
+Two newly returned PSP2 cores are retained locally only. Their verified title
+thread PCs are `0x8146d5fa` and `0x814255fa`; source-derived module/load-bias
+correlation places both at the same `+0x15fa` recorder display-hook offset as
+the earlier recorder fault. Their private register records are unavailable, so
+no framebuffer or full engine frame is claimed. Device readback proves the
+configured title-scoped recorder user module is still stale
+`8a856e76...`, whereas the guarded rebuild is `111d2f4f...`. This blocks
+interpretation of the crash as a Renegade or capture-policy failure. There is
+no finalized MP4 to upload. The detailed sanitized record is
+`reports/DEV84_CAPTURE_POLICY_RECORDER_CRASH.md`.
+
+Next is deliberately narrow: back up the stale title-scoped user recorder,
+replace only it with the hash-verified guarded module, then perform a no-input,
+finite startup check. The VPK/SELF and tai config are unchanged; no visual or
+mission outcome is claimed.
+
 ## 2026-08-30 dev84 capture-policy rebuild; user READY received
 
 The returned dev82 records prove that the former automatic

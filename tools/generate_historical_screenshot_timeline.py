@@ -225,7 +225,27 @@ DIAGNOSTIC_ONLY = [
     ("A3.5-dev47", "4 magenta/loading TranslateDB diagnostic frames recovered; no gameplay screenshot was found.", "a35-dev47-vita-first-interactive-player-frame-f1-t32303654.png"),
     ("A3.5-dev78", "8 physical loading-regression frames recovered; no gameplay screenshot was returned for dev78.", "a35-dev78-loading-physical.png"),
     ("A3.5-dev79", "4 physical loading/control-candidate frames recovered; no gameplay screenshot was returned for dev79.", "a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png"),
-    ("A3.5-dev82", "Returned physical evidence: the loading frame is vertically inverted and the first interactive capture is black except for a small HUD fragment; do not treat either as gameplay acceptance.", "a35-dev82-vita-original-loading-screen-t67280479.png"),
+    ("A3.5-dev82", "Four returned physical capture records are visibly preserved in the dedicated Dev82 diagnostic gallery: two distinct loading presentations are vertically inverted, the t64590857 first-interactive record is byte-identical to the full-frame loading image, and t88041059 is black except for a small HUD fragment. None establishes gameplay acceptance.", "a35-dev82-vita-original-loading-screen-t67280479.png"),
+]
+
+
+DEV82_RETURNED_DIAGNOSTICS = [
+    (
+        "a35-dev82-vita-original-loading-screen-t54494725.png",
+        "Original loading frame t54494725 — full-frame vertically inverted loading UI",
+    ),
+    (
+        "a35-dev82-vita-original-loading-screen-t67280479.png",
+        "Original loading frame t67280479 — letterboxed vertically inverted loading UI",
+    ),
+    (
+        "a35-dev82-vita-first-interactive-frame-t64590857.png",
+        "First interactive record t64590857 — byte-identical to full-frame inverted loading image",
+    ),
+    (
+        "a35-dev82-vita-first-interactive-frame-t88041059.png",
+        "First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD",
+    ),
 ]
 
 
@@ -348,6 +368,9 @@ def validate_files() -> None:
     for _, _, filename in DIAGNOSTIC_ONLY:
         if not (SCREENSHOT_DIR / filename).is_file():
             missing.append(filename)
+    for filename, _ in DEV82_RETURNED_DIAGNOSTICS:
+        if not (SCREENSHOT_DIR / filename).is_file():
+            missing.append(filename)
     if missing:
         raise SystemExit("missing gallery files:\n" + "\n".join(sorted(set(missing))))
 
@@ -375,7 +398,7 @@ def write_timeline() -> None:
         "- Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/`.",
         "- The gallery stores PNG copies under `docs/history/screenshots/` so GitHub can render them directly.",
         "- Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list every useful local or Vita-pulled gameplay sample found.",
-        "- One loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler.",
+        "- One historical loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler, except the four exact returned Dev82 diagnostic frames shown separately below.",
         "- Vita-pulled screenshots are mapped through each build's own `a35-devXX-runtime.log` capture paths before being included.",
         "- These images are historical evidence. They do not make dev82 physically accepted; dev82 still requires a returned Vita test with matching logs, screenshots/captures, and any crash dumps.",
         "",
@@ -413,6 +436,24 @@ def write_timeline() -> None:
             "The gallery keeps one displayed loading-screen reference because the late dev78/dev79 loading regression is part of the story dev82 targets. The rest of the displayed sample images above are gameplay/world captures.",
             "",
             image_table([("a35-dev78-loading-physical.png", "A3.5-dev78 physical loading regression frame")], columns=1),
+            "",
+            "## A3.5-dev82 — Returned Physical Diagnostic Evidence",
+            "",
+            "All four raw capture records returned for Dev82 are displayed here, rather than being reduced to a manifest link. There are three distinct rendered images: the two original-loading frames show different vertically inverted loading presentations (`loadscreen_vflip=1`); the `t64590857` first-interactive record is byte-identical to the full-frame loading image; and the `t88041059` first-interactive record is a black framebuffer with only a partial weapon/ammo HUD. The user subsequently reported reaching a live world after additional input, but these first-frame captures do not show that later state and must not be presented as gameplay proof.",
+            "",
+            image_table(DEV82_RETURNED_DIAGNOSTICS, columns=2),
+            "",
+            "Source evidence:",
+            "",
+            source_list(
+                [
+                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/original-loading-screen-t54494725/",
+                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/original-loading-screen-t67280479/",
+                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/first-interactive-frame-t64590857/",
+                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/first-interactive-frame-t88041059/",
+                    "build/device-evidence/a35-dev82-user-return-20260830-205700/a35-dev82-runtime.log",
+                ]
+            ),
             "",
             "## Diagnostic-Only Screenshot Inventory",
             "",
@@ -585,10 +626,16 @@ def write_readme() -> None:
         [
             "## Historical Visual Progress",
             "",
-            "The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames except inside the full inventory.",
-            "The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, plus a complete manifest of all GitHub-hosted evidence PNGs.",
+            "The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 block below is the sole exception, so the returned physical evidence is visible without being misrepresented as gameplay.",
+            "The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the four exact returned Dev82 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.",
             "",
             *rows,
+            "",
+            "### A3.5-dev82 — Returned Physical Diagnostic Frames",
+            "",
+            "These are the four raw physical-Vita capture records returned for Dev82. They document two inverted loading presentations, a byte-identical loading-image capture marked first-interactive, and a black initial interactive capture with a partial HUD; they are diagnostic evidence only, not gameplay acceptance.",
+            "",
+            image_table(DEV82_RETURNED_DIAGNOSTICS, columns=2).replace('src="history/screenshots/', 'src="docs/history/screenshots/'),
             "",
             "",
         ]

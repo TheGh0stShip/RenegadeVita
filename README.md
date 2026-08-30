@@ -11,8 +11,8 @@ or a replacement Renegade engine.
 
 ## Historical Visual Progress
 
-The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames except inside the full inventory.
-The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, plus a complete manifest of all GitHub-hosted evidence PNGs.
+The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 block below is the sole exception, so the returned physical evidence is visible without being misrepresented as gameplay.
+The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the four exact returned Dev82 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.
 
 <table>
 <tr>
@@ -35,6 +35,21 @@ The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md
 <td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-manual-select-interactive-f2570-t85917941.png" width="180" alt="Vita Manual Select Interactive F2570 T85917941"></td>
 <td width="20%"><img src="docs/history/screenshots/a35-dev19-npc-detail-crop.png" width="180" alt="Npc Detail Crop"></td>
 <td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-manual-select-interactive-f4146-t118405956.png" width="180" alt="Vita Manual Select Interactive F4146 T118405956"></td>
+</tr>
+</table>
+
+### A3.5-dev82 — Returned Physical Diagnostic Frames
+
+These are the four raw physical-Vita capture records returned for Dev82. They document two inverted loading presentations, a byte-identical loading-image capture marked first-interactive, and a black initial interactive capture with a partial HUD; they are diagnostic evidence only, not gameplay acceptance.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-original-loading-screen-t54494725.png" width="260" alt="Original loading frame t54494725 — full-frame vertically inverted loading UI"><br>Original loading frame t54494725 — full-frame vertically inverted loading UI</td>
+<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-original-loading-screen-t67280479.png" width="260" alt="Original loading frame t67280479 — letterboxed vertically inverted loading UI"><br>Original loading frame t67280479 — letterboxed vertically inverted loading UI</td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-first-interactive-frame-t64590857.png" width="260" alt="First interactive record t64590857 — byte-identical to full-frame inverted loading image"><br>First interactive record t64590857 — byte-identical to full-frame inverted loading image</td>
+<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-first-interactive-frame-t88041059.png" width="260" alt="First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD"><br>First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD</td>
 </tr>
 </table>
 

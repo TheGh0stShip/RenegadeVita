@@ -21,6 +21,29 @@
   replace only the title-scoped recorder helper and run the bounded physical
   isolation check.
 
+## 2026-08-30 — Dev82 returned-frame gallery correction; capture policy defect
+
+`[████░░░░░░] 4/10 current evidence gates complete; no physical launch until READY`
+
+- The initial Dev82 gallery publication was inadequate: it had only two PNG
+  copies and a diagnostic-inventory row. It did not visibly surface the
+  returned physical evidence in the README or historical timeline. The
+  correction now presents all four raw returned capture records, with source
+  directories and SHA-256 values, in an expressly diagnostic-only section.
+- Direct image/hash review shows three distinct rendered images across the
+  four records: two inverted loading presentations; a first-interactive record
+  (`t64590857`) that is byte-identical to the full-frame loading image; and a
+  black first-interactive frame (`t88041059`) with a partial HUD. No Dev82
+  image is presented as a gameplay pass.
+- The captured `first-interactive-player-frame` trigger fired at engine frame
+  1 (roughly six seconds in the returned summaries), which proves it is an
+  engine-ownership marker rather than a visual-stability marker. The next
+  source change must delay captures until post-transition world/HUD stability
+  and collect several intentionally later frames; do not launch to obtain
+  them before the user supplies `READY`.
+- Next: validate and push the gallery correction, then trace and repair the
+  capture trigger without device interaction.
+
 ## 2026-08-30 — dev84 lifecycle correction; publication and physical gate active
 
 `[███████░░░] 7/10 current evidence gates complete; recorded physical gate active`

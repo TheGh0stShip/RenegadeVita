@@ -55,9 +55,15 @@ Title-scoped recorder modules were added only to the `*KERNEL` and
 were rechecked after upload. The returned recorder-enabled run stopped on a
 recorder-hook data abort. It must not be counted as a Renegade Start-exit test.
 
-The returned inverted-loading and black/HUD-only dev82 frames are in the
-repository's diagnostic historical gallery and expressly remain failed visual
-evidence. There is no finalized title-scoped MP4 on the Vita to upload.
+The initial Dev82 gallery publication was insufficient: it left two copied
+frames in an inventory row without a visible Dev82 gallery section. The
+corrected README and historical timeline now display all four raw returned
+capture records, their source paths, and their hashes. Direct review confirms
+that `t54494725` and first-interactive `t64590857` are byte-identical inverted
+loading images, `t67280479` is the letterboxed inverted variant, and
+first-interactive `t88041059` is black with a partial HUD. These remain failed
+diagnostic evidence, not gameplay acceptance. There is no finalized
+title-scoped MP4 on the Vita to upload.
 
 ## 2026-08-30 dev83 visual-correction candidate
 

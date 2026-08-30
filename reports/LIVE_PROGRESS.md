@@ -1,5 +1,27 @@
 # Live engineering progress
 
+## 2026-08-30 — explicit visible-gameplay capture candidate; READY received
+
+`[████░░░░░░] 4/10 current evidence gates complete; hash-matched physical route authorized`
+
+- Dev82 proved that `first-interactive-player-frame` at engine frame 1 is not a
+  visual acceptance point. The source now disables that automatic screenshot;
+  a Select rising edge is honored only after original tutorial/player control,
+  scene/star/camera, all render phases, actual submitted geometry, and zero
+  rejected/unsupported submissions. The retained bundle reason is
+  `manual-select-visible-gameplay`.
+- Canonical `bash ./tools/build.sh` passed in
+  `logs/a35-dev84-20260830-182029-build.log`: retained host validation, 111
+  tests, 136-patch restaging, 549 ARM actions, required symbols, ELF/SELF/VPK
+  identity, compressed archive/SHA, diagnostics, and retail exclusion. New
+  VPK SHA-256: `99aa5d5c295da232c535489c5e50c0d6fcc55ef9fe7e1704d63ba3ef1fa3e392`;
+  packaged SELF SHA-256: `555f0c1f83b46992b0e349b8c1d2c4500daaeb2d945311926d33f3d824590bbe`.
+- The user supplied `READY`. Next: publish this exact source/report identity,
+  then replace only the title executable after device-side preflight and a
+  hash-bound backup; run the bounded route, press Select only at the visibly
+  settled gameplay checkpoint, and retain the returned capture/log/crash
+  evidence without claiming any other visible issue resolved.
+
 ## 2026-08-30 — dev84 recorder crash classified; GitHub-first pause
 
 `[████░░░░░░] 4/10 current evidence gates complete; no physical launch until READY`
@@ -15,9 +37,10 @@
   ARM user-plugin rebuild pass. No finalized MP4 exists under `ux0:/video`.
 - Sanitized crash metadata is published in `reports/DEV84_RECORDER_CRASH.md`.
   Raw dumps, logs, VPKs, plugins, captures, video, retail data, saves, and
-  credentials remain excluded from Git. No new device launch or interaction
-  occurs before the user explicitly supplies `READY`.
-- Next: finish the private GitHub commit/push and wait for `READY`; then
+  credentials remain excluded from Git. The prior pause was released only for
+  the current hash-matched capture-policy candidate after the user supplied
+  `READY`.
+- Next: finish the private GitHub commit/push, then
   replace only the title-scoped recorder helper and run the bounded physical
   isolation check.
 

@@ -1,5 +1,5 @@
 {
-  "active_milestone": "A3.5-dev84 Start-exit lifecycle candidate. Dev82 physical evidence is retained; Dev83 visual corrections completed canonical validation but are superseded for deployment by the Dev84 teardown-order correction. Dev84 preserves original Combat mode through player/session teardown and passed canonical ARM/VPK retention; only hash-matched physical verification remains.",
+  "active_milestone": "A3.5-dev84 capture-policy rebuild. Dev82 physical evidence is retained; the prior deployed dev84 Start-exit candidate is distinguished by hash. This rebuild disables the invalid automatic frame-one capture and passed canonical ARM/VPK retention; the user supplied READY, so only its hash-matched bounded physical verification remains.",
   "a3_5_dev82_package_admission_20260830": {
     "status": "CANONICAL_CONTENT_ID_CORRECTED_BUILD_PASS__INSTALLED_AND_RUNNING_15S__USER_FINDINGS_AND_PHYSICAL_ACCEPTANCE_PENDING",
     "prior_vpk_sha256": "2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b",
@@ -38,7 +38,7 @@
     "deferred": "Bink re-enable and precache/performance expansion require a fixed replay and measurements; current movie skip is intentional safety behavior."
   },
   "a3_5_dev84_start_exit_lifecycle_20260830": {
-    "status": "CANONICAL_ARM_VPK_PASS__DEPLOYED__RECORDER_DISPLAY_HOOK_FAULTED__PHYSICAL_ENGINE_GATE_PENDING__DEVICE_PAUSED_UNTIL_READY",
+    "status": "CANONICAL_ARM_VPK_PASS__PRIOR_HASH_DEPLOYED__RECORDER_DISPLAY_HOOK_FAULTED__SUPERSEDED_FOR_NEXT_TEST_BY_CAPTURE_POLICY_REBUILD",
     "crash_evidence": "build/device-evidence/a35-dev82-start-crash-20260830T211316Z/crash-dumps/psp2core-1788124345-0x000d5e37d9-eboot.bin.psp2dmp; SHA-256=981a48faa0b949df02b2126149c45fe379e2a208ea84ac48793ea10ab1f69651; VDB reports data abort PC=0x811d4ab2. VDB labels source mapping unverified; derived matching-ELF PC maps to cPlayer::On_Destroy() at staging/commando/player.cpp:346.",
     "root_cause": "Runtime removed original Combat mode before cPlayerManager::Remove_All(); original cPlayer::On_Destroy() then queried GameModeManager::Find(\"Combat\") and faulted.",
     "correction": "Keep inactive frontend_combat_mode registered through original player/session teardown, then remove it after cPlayerManager::Remove_All() and remaining session cleanup.",
@@ -61,9 +61,23 @@
     "deployment": "2026-08-30: canonical VPK pushed and VDB1 hash-verified at ux0:/data/renegade/user/RenegadeVita-A3.5-dev84.vpk; canonical packaged SELF pushed and VDB1 hash-verified at ux0:/app/RNEGA3101/eboot.bin. Previous dev82 eboot SHA-256=36235779e4fd94886e913a23b4ea203e728612cd90114dc5b2d8fad73145120a is backed up under build/device-backups/a35-dev84-recorder-20260830T215406Z/.",
     "recording": "The installed title-scoped recorder helper used .skprx=e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5 and .suprx=8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d. Active ur0:/tai/config.txt backup=6c1018cf68594c28f080a60ca64f219bbc977151e482775de10b1f5ba11f8d7d, updated hash=a5eb62c0a1aeddfd102f3faa897cd738fdf4712824be9e3009c7924c059147e4. The rebuilt, not-yet-deployed user helper is 111d2f4f8e9e467e72a1212587d9e882d0c24e67f46e82302b9be16c565ee9a2; it guards invalid framebuffer input and does not consume plain Start.",
     "recorder_return_20260830": "Physical psp2core SHA-256=c42665a0a5a10f8e235b4096d4a1d4dbc2962ca68dcd5bafa8050d7f6cb683d8. Source-derived core records place data-abort PC=0x814755fa in VitaMP4Recorder RX range 0x81474000..0x8147792c, outside RenegadeVitaA31 RX range 0x81033000..0x81414008. Thread register data is unavailable, so the display argument is not proven null versus otherwise invalid. The core is raw local evidence only; sanitized analysis=reports/DEV84_RECORDER_CRASH.md.",
-    "physical_gate": "PENDING: recorder-isolated Start exit, visual/stability confirmation, and matching log/capture/MP4/dump inventory. All device launch/interaction is paused until explicit user READY."
+    "physical_gate": "Historical prior-dev84 gate: recorder-isolated Start exit, visual/stability confirmation, and matching log/capture/MP4/dump inventory remain pending. The user later supplied READY only for the new hash-distinguished capture-policy rebuild."
   },
-  "active_objective": "Preserve accepted A3.1.4 and frozen failed A3.2-dev1 evidence; retain exact dev6/dev7/dev12/dev13/dev19/dev43/dev45/dev46/dev47 physical returns and the checksummed route evidence. The current physical work is manual dev82 testing for retail intro movie playback/skipping, original WWUI main-menu navigation, tutorial launch, visible pre-cache receipt, aspect-preserved loading layout/progress/text, HUD placement and Logan/Sydney/Gunner subtitles, audible dialogue, normal camera Y, reload animation, Triangle gate/action use, D-pad weapon switching without camera drift, D-pad sniper zoom, NPC/Havoc/door/powerup/objective texture orientation/material correctness, random rectangle shadows, bounding-box alignment, FPS regression, and freeze/crash behavior. Inspect a35-dev82 runtime breadcrumbs before changing ownership again.",
+  "a3_5_dev84_capture_policy_rebuild_20260830": {
+    "status": "CANONICAL_ARM_VPK_PASS__GITHUB_PUBLICATION_PENDING__USER_READY__HASH_MATCHED_PHYSICAL_ROUTE_PENDING",
+    "scope": "Disable automatic first-interactive screenshot. Honor Select capture only after original tutorial/player control, complete scene/star/camera/render readiness, nonzero submitted geometry, and zero rejected/unsupported submissions; label the retained bundle manual-select-visible-gameplay.",
+    "source_evidence": "Returned dev82 capture summaries: automatic first-interactive branch fired at engine frame 1; t64590857 is byte-identical to an inverted loading image and t88041059 is black with partial HUD. These are not gameplay acceptance evidence.",
+    "canonical_build_log": "logs/a35-dev84-20260830-182029-build.log",
+    "content_id": "EP9000-RNEGA3101_00-RENGADEVITADEV84",
+    "vpk_sha256": "99aa5d5c295da232c535489c5e50c0d6fcc55ef9fe7e1704d63ba3ef1fa3e392",
+    "self_sha256": "555f0c1f83b46992b0e349b8c1d2c4500daaeb2d945311926d33f3d824590bbe",
+    "elf_sha256": "15d2ecdd6fdb304f558a2f15d9ba37ef992813b5bf4fda3400284c4dff90430f",
+    "map_sha256": "f1d5d30f18100495c942ccb4fc8341570ad656fa57e24d8676b192c44e4ec13a",
+    "validation": "Retained canonical host validation; 111 tests; deterministic 136-patch staging; 549 ARM actions; required original-runtime symbols; ELF/SELF/VPK identity; compressed VPK; SHA manifest; diagnostics; retail exclusion: PASS.",
+    "vpk_contents": "eboot.bin and sce_sys/param.sfo only; no retail data, logs, captures, saves, credentials, or arbitrary user files.",
+    "physical_gate": "User READY received. Before mutation: VDB doctor/capability/status and device-side identity readback. Then make a candidate-scoped backup of the currently installed RNEGA3101 eboot by hash, replace only the title executable, verify exact SELF hash, launch one finite route, release inputs, and pull candidate-scoped artifacts. Press Select only after a visibly settled gameplay view; HUD/dialogue/texture/camera and Start-exit correctness remain separately pending."
+  },
+  "active_objective": "Preserve accepted A3.1.4 and frozen failed A3.2-dev1 evidence. Execute one hash-matched A3.5-dev84 capture-policy physical route: back up and replace only RNEGA3101, verify its exact SELF, reach visibly settled tutorial gameplay, press Select once for manual-select-visible-gameplay, release inputs, and retain candidate-scoped returned artifacts. Do not claim the outstanding HUD, dialogue, texture, camera, or Start-exit issues resolved unless matching physical evidence proves them.",
   "execution_policy": "CONTINUOUS_UNTIL_PHYSICAL_VITA_CANDIDATE: compiler/linker/stage/cache/host/Vita/package/report events are progress only; preserve build/ccache across clean builds; preserve original WWNet/cNetwork replication; LAN and direct-IP are required baselines; public discovery is an optional provider extension; do not hand off while safe engineering work remains.",
   "build_status": "A3_1_4_PHYSICAL_VISIBLE_INTERACTIVE_PASS_FROZEN__A3_2_DEV1_PHYSICAL_FAILURE_FROZEN__A3_5_DEV43_PHYSICAL_ROUTE_RECORD_PASS_AND_REPLAY_FIDELITY_PASS__A3_5_DEV45_REPLAY_AUTO_EXIT_PASS__A3_5_DEV46_PHYSICAL_NO_DIALOGUE_SFX_PASS__A3_5_DEV47_TRANSLATEDB_LOOKUP_PASS_BUT_PHYSICAL_ROUTE_AND_DIALOGUE_AUDIO_FAIL__A3_5_DEV48_THROUGH_DEV81_AUDIO_TEXTURE_MATERIAL_RENDER_STATE_FIX_CHAIN_CANONICAL_OR_FAST_BUILDS__A3_5_DEV82_FRONTEND_BINK_CANONICAL_BUILD_PHYSICAL_TEST_PENDING",
   "last_successful_stage": "2026-08-29: A3.5-dev82 full canonical source/build/package candidate passed fresh canonical host validation, deterministic restaging, 111 host unittest checks, source integration report checks, original DDSFileClass tga-to-dds executable contract 11/11, current lightweight render-state contract 13/13, ARM link/package, ELF/SELF/VPK identity, compressed VPK validation, diagnostics bundle generation, SHA manifest, and retail exclusion. The canonical integration report records 506 original Westwood translation units plus 1 staged original-owner extraction, 26 Vita platform/renderer/validation/developer files, 6 A4 frontend/Bink boundary files, 52 compatibility headers, and 135 active deterministic staging patches. VPK/ELF/MAP/symbols/diagnostics SHA-256 are 2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b, 02b20a3074ed21f3638fc1051548c512d0fce957e7be43812c5fc2e016a7e069, 10a7f914e9b3d3da8c5e6c30f956f61e419b0cda79b54584dd7258687981f843, b96f54de73ab70e8bd9ab1a0f68f4950f51242ab1b968ad1f5da64ca523866d8, and 5e8b60c8719036b96255296804a9a9d225327d5d7458db119464dd4ee8565116. This newest HUD-presentation candidate has not yet been uploaded to Vita; FTP/VDB/Windows probes on 2026-08-29 previously found the known PS Vita/PSTV endpoints unreachable.",
@@ -114,8 +128,8 @@
   "canonical_build_command": "bash ./tools/build.sh",
   "canonical_host_command": "bash tools/run_a30_host.sh",
   "latest_host_log": "dist/A3.5-dev82-HOST-VALIDATION.log",
-  "latest_arm_log": "logs/a35-dev84-20260830-163409-build.log",
-  "latest_canonical_build_log": "logs/a35-dev84-20260830-163409-build.log",
+  "latest_arm_log": "logs/a35-dev84-20260830-182029-build.log",
+  "latest_canonical_build_log": "logs/a35-dev84-20260830-182029-build.log",
   "canonical_workflow": "Bash/CMake/Ninja/VitaSDK",
   "automatic_vita_deployment": false,
   "a3_5_dev82_m00_tutorial_full_correction_candidate": {

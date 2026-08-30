@@ -3,6 +3,36 @@
 Updated: 2026-08-30. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-30 dev84 capture-policy rebuild; user READY received
+
+The returned dev82 records prove that the former automatic
+`first-interactive-player-frame` screenshot fired at engine frame 1. That is
+an engine-ownership signal, not proof that the physical panel had settled: the
+retained results include a duplicate loading image and a black/HUD-only image.
+The capture-policy rebuild removes that automatic branch rather than guessing a
+later frame delay. A capture now requires the original tutorial control handoff,
+player control, scene/star/camera, all render phases, nonzero mesh/vertex/
+triangle submissions, and no rejected or unsupported submissions; it is then
+requested by a Select rising edge and labelled `manual-select-visible-gameplay`.
+A recorded route may use that same Select edge at a fixed checkpoint.
+
+Canonical validation passed in `logs/a35-dev84-20260830-182029-build.log`:
+retained host validation, 111 tests, deterministic 136-patch staging, 549 ARM
+actions, required-symbol checks, ARM ELF/SELF/VPK identity, compressed VPK,
+SHA manifest, diagnostics, and retail exclusion. VPK/ELF/SELF SHA-256 are
+`99aa5d5c295da232c535489c5e50c0d6fcc55ef9fe7e1704d63ba3ef1fa3e392`,
+`15d2ecdd6fdb304f558a2f15d9ba37ef992813b5bf4fda3400284c4dff90430f`, and
+`555f0c1f83b46992b0e349b8c1d2c4500daaeb2d945311926d33f3d824590bbe`.
+The VPK inventory is exactly `eboot.bin` and `sce_sys/param.sfo`. It is a new
+hash-distinguished `A3.5-dev84` rebuild, not the prior deployed dev84 binary.
+
+The user supplied `READY` after the candidate completed. Before launch, the
+bounded physical route will read back device identity/capabilities, back up the
+currently installed title executable by hash, replace only `RNEGA3101` with
+this matching build, verify its device-side hash, and release all synthetic
+input after the fixed route. The visual/HUD/dialogue/texture/camera defects are
+not claimed fixed by this capture-policy-only rebuild.
+
 ## 2026-08-30 dev84 recorder-confounded crash; device launch paused
 
 The user-returned dev84 PSP2 core is retained at
@@ -19,7 +49,9 @@ workflow suite, and ARM user-plugin rebuild pass. No MP4 was finalized under
 the title-scoped `ux0:/video` folders. Raw cores, runtime logs, and video
 captures remain out of Git; the sanitized analysis is
 `reports/DEV84_RECORDER_CRASH.md`. No new Vita launch or interaction may occur
-until the user explicitly supplies `READY`.
+until the user explicitly supplies `READY`. That release was supplied for the
+current capture-policy candidate; this prior recorder evidence remains
+historical and does not validate the engine Start-exit repair.
 
 ## 2026-08-30 dev84 Start-exit lifecycle correction
 

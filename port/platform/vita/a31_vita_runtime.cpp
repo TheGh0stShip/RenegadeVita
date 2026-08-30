@@ -114,7 +114,6 @@ const uint32_t kTimingWindowFrames = 120U;
 const uint32_t kCaptureWidth = RenegadeVitaRenderer::DISPLAY_WIDTH;
 const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 const uint32_t kCaptureBytes = kCaptureWidth * kCaptureHeight * 4U;
-const unsigned kAutomaticCaptureAttempts = 3U;
 const unsigned kStartupPrecacheVisibleSteps = 6U;
 const uint64_t kStartupPrecacheMinimumVisibleUs = 5000000ULL;
 const unsigned kStartupPrecacheRequiredReadBytes = 32768U;
@@ -1698,10 +1697,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		RenegadeCheatMgrClass cheat_manager;
 		A31FrameHistory *capture_history = new (std::nothrow) A31FrameHistory;
 		uint8_t *capture_pixels = NULL;
-		bool first_interactive_capture_pending = true;
-		unsigned first_interactive_capture_attempts = 0U;
 		uint32_t current_pause_input_frames = 0U;
 		bool select_was_pressed = false;
+		bool capture_policy_armed_logged = false;
 		A31InteractiveRenderTrace last_render_trace = {};
 		A31MissionProgressState last_mission_progress = {};
 		bool mission_progress_recorded = false;
@@ -2234,40 +2232,39 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					Renegade_Vita_Last_Input_Telemetry();
 				capture_frame.input_action_count = input_telemetry.sample_count;
 				capture_history->Push(capture_frame);
-				if (first_interactive_capture_pending && render_trace.star_available &&
-					render_trace.camera_available &&
-					first_interactive_capture_attempts < kAutomaticCaptureAttempts) {
-					++first_interactive_capture_attempts;
-					const bool readback = capture_pixels != NULL &&
-						RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels, kCaptureBytes);
-					char label[96];
-					snprintf(label, sizeof(label), "first-interactive-player-frame-f%u-t%llu",
-						result.frames, static_cast<unsigned long long>(frame_end));
-					const A31StateSnapshot state = Make_Interactive_Capture_State(render_trace,
-						result.frames, frame_end, "first-interactive-player-frame");
-					const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
-						*capture_history, readback ? capture_pixels : NULL, label);
-					A30_Vita_Log("Capture: %s candidate=%s phase=interactive-player-owned reason=first-interactive-player-frame path=%s screenshot/state/csv/summary=%d/%d/%d/%d error_code=%d\n",
-						capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
-						capture.bundle_path, capture.screenshot_written ? 1 : 0,
-						capture.state_written ? 1 : 0, capture.history_written ? 1 : 0,
-						capture.summary_written ? 1 : 0, capture.first_error_code);
-					first_interactive_capture_pending = !capture.passed;
+				/* A player/camera at frame one is an engine-ownership signal, not
+				** proof that the physical panel has reached a settled gameplay
+				** presentation. Dev82 retained a stale loading image and a black/HUD
+				** image from that old automatic branch. Do not replace that error with
+				** another guessed frame delay: the human observer, or a recorded input
+				** route, must explicitly request the capture at the chosen checkpoint. */
+				const bool requested_capture_ready = tutorial_control_ready_observed &&
+					mission_progress.player_control_enabled && render_trace.scene_available &&
+					render_trace.star_available && render_trace.camera_available &&
+					render_trace.pre_render_completed && render_trace.begin_render_completed &&
+					render_trace.combat_render_called && render_trace.end_render_completed &&
+					render_trace.post_render_completed && render_trace.mesh_submissions != 0U &&
+					render_trace.vertex_submissions != 0U && render_trace.triangle_submissions != 0U &&
+					render_trace.rejected_submissions == 0U &&
+					render_trace.unsupported_submissions == 0U;
+				if (requested_capture_ready && !capture_policy_armed_logged) {
+					capture_policy_armed_logged = true;
+					A30_Vita_Log("A3.5 capture policy: automatic first-frame screenshot disabled; press SELECT only after the physical gameplay view is visibly settled, or encode that SELECT edge at the fixed checkpoint in a recorded input route frame=%u\n",
+						result.frames);
 				}
 				const bool select_pressed =
 					(input_telemetry.buttons & SCE_CTRL_SELECT) != 0U;
-				if (select_pressed && !select_was_pressed && render_trace.star_available &&
-					render_trace.camera_available) {
+				if (select_pressed && !select_was_pressed && requested_capture_ready) {
 					const bool readback = capture_pixels != NULL &&
 						RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels, kCaptureBytes);
 					char label[96];
-					snprintf(label, sizeof(label), "manual-select-interactive-f%u-t%llu",
+					snprintf(label, sizeof(label), "manual-select-visible-gameplay-f%u-t%llu",
 						result.frames, static_cast<unsigned long long>(frame_end));
 					const A31StateSnapshot state = Make_Interactive_Capture_State(render_trace,
-						result.frames, frame_end, "manual-select");
+						result.frames, frame_end, "manual-select-visible-gameplay");
 					const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
 						*capture_history, readback ? capture_pixels : NULL, label);
-					A30_Vita_Log("Capture: %s candidate=%s phase=interactive-player-owned reason=manual-select path=%s screenshot/state/csv/summary=%d/%d/%d/%d error_code=%d\n",
+					A30_Vita_Log("Capture: %s candidate=%s phase=interactive-player-owned reason=manual-select-visible-gameplay path=%s screenshot/state/csv/summary=%d/%d/%d/%d error_code=%d\n",
 						capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
 						capture.bundle_path, capture.screenshot_written ? 1 : 0,
 						capture.state_written ? 1 : 0, capture.history_written ? 1 : 0,

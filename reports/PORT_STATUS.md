@@ -29,6 +29,19 @@ replace only it with the hash-verified guarded module, then perform a no-input,
 finite startup check. The VPK/SELF and tai config are unchanged; no visual or
 mission outcome is claimed.
 
+The follow-up completed that narrow helper replacement. The stale helper is
+backed up locally by hash; device readback now verifies guarded user helper
+`111d2f4f...`, while the installed Renegade SELF remains `555f...0bbe`.
+The first cross-mount atomic request was rejected before replacement; the
+same-mount replacement succeeded but reports `atomic=false`, so the retained
+local backup is the rollback receipt. The guarded run surpassed the former
+crash point and reached original frontend, M00 finalization, original player
+control, Logan conversation/audio, and frame-480 checkpoints. Physical stick
+and touch samples appeared later in the log, but their actor is not inferred;
+the agent injected no gameplay input and released controls. Automatic capture
+remained disabled and no Select edge occurred, so this is not a screenshot or
+visual-correctness result. The process remains live for the user’s observation.
+
 ## 2026-08-30 dev84 capture-policy rebuild; user READY received
 
 The returned dev82 records prove that the former automatic

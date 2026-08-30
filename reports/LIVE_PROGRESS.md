@@ -19,6 +19,25 @@
   the title-scoped recorder user helper, re-verify its hash, then run one
   finite zero-input startup observation. Do not infer visual correctness.
 
+## 2026-08-30 — guarded recorder reaches interactive M00; panel evidence pending
+
+`[████░░░░░░] 4/10 current evidence gates complete; live physical observation active`
+
+- The stale recorder helper is locally backed up and the device now verifies
+  guarded `111d2f4f...`; the Renegade SELF remains exact `555f...0bbe`. A
+  rejected cross-mount replacement made no write; the completed same-mount
+  replacement was not reported atomic, so the local backup is retained.
+- The guarded run survived the former post-precache failure and reached
+  original frontend/menu, tutorial load/finalization, 60 M00 pre-warm frames,
+  original player control, Logan conversation/audio, and frame-480 checkpoints.
+  Later physical stick/touch samples are observed but not attributed.
+- No agent gameplay input was sent; controls were released. The automatic
+  screenshot remains disabled and Select was not pressed, so there is no new
+  gameplay screenshot, gallery item, or finalized MP4 to publish yet.
+- Next: retain the live user observation, collect only returned media/log/dump
+  evidence after the user reports it, and then use the measured frame-time/state
+  data to select one renderer or pre-warm performance blocker.
+
 ## 2026-08-30 — explicit visible-gameplay capture candidate; READY received
 
 `[████░░░░░░] 4/10 current evidence gates complete; hash-matched physical route authorized`

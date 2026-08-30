@@ -43,3 +43,26 @@ already matches and requires no replacement.
 No `.mp4` was present below `ux0:/video` after the failure, so there is no
 video to publish. Raw dumps, logs, and any future recordings remain excluded
 from Git.
+
+## Guarded-recorder follow-up
+
+The stale user helper was pulled into the candidate-scoped local backup
+`build/device-backups/a35-dev84-capture-policy-recorder-20260830T234415Z/`
+and the guarded helper was staged, read back, and installed at the configured
+title-scoped path with SHA-256
+`111d2f4f8e9e467e72a1212587d9e882d0c24e67f46e82302b9be16c565ee9a2`.
+The unchanged Renegade SELF read back as `555f...0bbe` after replacement.
+The first attempted cross-mount atomic replacement was rejected before a write;
+the successful same-mount replacement reports `atomic=false`, so the retained
+local hash-bound backup is the rollback receipt.
+
+With no synthetic gameplay input, the guarded run remained alive beyond the
+former crash point. Its retained 90-second log reaches original frontend/menu
+construction, original tutorial load/finalization, a 60-frame M00 scene
+pre-warm, original player-control handoff, the Logan conversation/audio path,
+and frame-480 checkpoints. Subsequent log samples contain physical stick/touch
+activity; their actor is not inferred. Agent controls remained released.
+This proves only that the optional recorder guard removes the observed immediate
+recorder abort on this run. It does not prove the panel is visually correct or
+that a user-requested gameplay capture was taken: the automatic capture remains
+disabled and the retained checkpoints report Select unpressed.

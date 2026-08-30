@@ -972,7 +972,7 @@ A31StateSnapshot Make_Loading_Capture_State(uint64_t monotonic_us, const char *r
 	state.loading_visual_gate.aspect_preserved = true;
 	state.loading_visual_gate.original_loading_screen_owner = true;
 	state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
-	state.loading_visual_gate.loading_texture_v_flip_enabled = true;
+	state.loading_visual_gate.loading_texture_v_flip_enabled = false;
 	state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	state.scripts_active = ScriptManager::Is_Provider_Active()
 		&& ScriptManager::Get_Active_Script_Count() > 0;
@@ -2354,8 +2354,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						radar_initialized = false;
 						A30_Vita_Log("A4 frontend: original CombatGameMode shutdown consumed level/radar teardown\n");
 					}
-					GameModeManager::Remove(&frontend_combat_mode);
-					frontend_combat_mode_registered = false;
+					/* Keep the inactive original owner registered until original player
+					 * destruction has completed. cPlayer::On_Destroy() looks up Combat
+					 * unconditionally, even when it is inactive. */
+					A30_Vita_Log("A4 frontend: retained inactive Combat mode through player/session teardown\n");
 				}
 				if (frontend_menu_mode_registered_for_handoff) {
 					if (!frontend_menu_mode.Is_Inactive()) {
@@ -2397,6 +2399,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			cGod::Reset();
 			A30_Vita_Log("A4 breadcrumb: original session teardown complete\n");
 		}
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+		if (frontend_combat_mode_registered) {
+			GameModeManager::Remove(&frontend_combat_mode);
+			frontend_combat_mode_registered = false;
+			A30_Vita_Log("A4 frontend: removed original Combat mode after player/session teardown\n");
+		}
+#endif
 			if (campaign_initialized) {
 				CampaignManager::Shutdown();
 				campaign_initialized = false;

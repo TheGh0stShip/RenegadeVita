@@ -1,9 +1,128 @@
 # First-mission alpha state
 
-## Current dev82 resume state (2026-08-29)
+## 2026-08-30 dev84 Start-exit lifecycle correction
+
+- The returned dev82 Start crash is retained at
+  `build/device-evidence/a35-dev82-start-crash-20260830T211316Z/`. The new
+  PSP2 dump is 169,712 bytes, SHA-256
+  `981a48faa0b949df02b2126149c45fe379e2a208ea84ac48793ea10ab1f69651`.
+  VDB reports a data abort at PC `0x811d4ab2`; the associated source location
+  is source-derived rather than VDB-verified. It maps to `cPlayer::On_Destroy`
+  in the matching ELF, whose original `GameModeManager::Find("Combat")`
+  access was reached after runtime teardown had already removed Combat mode.
+- Dev84 retains the inactive original Combat mode through
+  `cPlayerManager::Remove_All()` and removes it only after player/session
+  teardown. This repairs teardown order without replacing any original owner.
+  Focused frontend, teardown, loading, skin, and capture contracts passed
+  35/35.
+- `logs/a35-dev84-fast-20260830-162553-build.log` passed 86 focused contracts,
+  deterministic staging, ARM link/package, archive/SHA identity, and retail
+  exclusion. Fast artifacts are VPK
+  `86dea853d112c5eba9b088e0a107fd21b68a02bbfa9a029ee5b63aee1cf43bfd`, ELF
+  `c96fa9169b61c6f31b42cdc9b8ef6c5cac394f22b2cf11354481ece203d0dc4f`, and
+  SELF `6c61b6b656a3d2d74425a73885b6c8d78b11cbaa238e5079d800cdb1ef2ab332`.
+  The developer-only CONTENT_ID is `EP9000-RNEGA3101_00-RENGADEVITADEV84`.
+- The dev82 physical screenshots are now in the diagnostic historical gallery,
+  explicitly labelled failed visual evidence rather than gameplay acceptance.
+  The title-scoped video folders contain no finalized recording, so no video
+  artifact can be published before the next hardware run.
+- Canonical `bash ./tools/build.sh` passed in
+  `logs/a35-dev84-20260830-163409-build.log`: retained host validation, 111
+  current tests, deterministic 136-patch staging, 549 ARM actions, ELF/SELF/VPK
+  identity, compressed VPK, SHA manifest, diagnostics, and retail exclusion.
+  Artifacts are VPK `6352b0e23a51e6943f2992843c97b8a07b9311877bffb69eeed06518e33e8051`,
+  ELF `492501614f02c2477ecdfe253a54e853fdcc06a871c2b0ebf5985b72143a75f7`,
+  SELF `3c6304cc5fe13dbaf36ea27c6f32fc5fdac9a05c852e0416e519e42eb135d896`, and
+  diagnostics `f63523bfe56e43d86e8fb316a9a948a3f1660a3b7e3e715e0ba81b475ba88d36`.
+  Hash-matched physical validation remains required. Verify clean Start exit
+  first, then loading orientation/progress, world framing, HUD/text glyphs,
+  bounding boxes, dialogue text, and stability.
+
+## 2026-08-30 dev83 renderer-correction fast candidate
+
+- The returned hash-matched dev82 physical evidence is retained at
+  `build/device-evidence/a35-dev82-user-return-20260830-205700/`. It confirms
+  an upside-down loading presenter and an initial black/HUD-only interactive
+  capture, while the game remains live and no new matching PSP2 dump exists.
+  User-observed M00 progression, third-person control, corrected NPC skins,
+  upright doors, and objectives are real physical progress; they do not prove
+  the remaining visual/UI defects resolved.
+- Source ownership review found an extra post-transform V inversion for
+  `loadscreen_*` textures and a second defect: the 4:3 HUD presentation scope
+  wrapped all of `CombatManager::Render()`, including native 960x544 world
+  rendering. Dev83 removes the extra texture flip and moves the aspect scope
+  into the original `HUDClass::Render`/`ScreenFadeManager::Render` call site;
+  message, objective, and text draws remain scoped afterward at the platform
+  boundary. The upstream `combat.cpp` change is a new zero-fuzz deterministic
+  staging patch; upstream remains pristine.
+- `logs/a35-dev83-fast-20260830-160756-build.log` passed 86 focused contracts,
+  deterministic 136-patch staging, ARM link, ELF/SELF/VPK identity, compressed
+  VPK validation, SHA-manifest verification, and retail exclusion. Fast
+  artifacts are VPK `d2df8b456dbf706871b3ec18665684bf7987836951864b26c174ba97735429df`,
+  ELF `d2920426f5fd1103b8a3eff00b092ad6bb33c81b3d0cfc20477384eeef28c91c`,
+  and SELF `8dbe63c77cc20b039f3931b32b31c574a6bf7e92e0f0633f11bd68437c837378`.
+  Its VPK contains only `eboot.bin` and `sce_sys/param.sfo`, with developer
+  CONTENT_ID `EP9000-RNEGA3101_00-RENGADEVITADEV83`. Its canonical build
+  `logs/a35-dev83-20260830-161033-build.log` passed 111 tests and retention
+  gates with VPK `11c16e6e94bcc92afbc628bcbfcfabf6914b0b1626729617f65f20cbd76df61b`,
+  ELF `9ff87b538a13fcc5ab9d385107a8474b13deaf96cd7a72f7e3bb9a39578b2423`, and
+  SELF `6cf3c4a4d0bac5fb60fec2ce3ea6a69e3b26d55241f7d50bd7f4186ce10f619b`.
+- Dev83 is not physically accepted and must not replace dev82 evidence. Its
+  canonical evidence is retained, but deployment is superseded by Dev84 after
+  the returned Start crash. A later bounded hardware validation must verify
+  bounded hardware validation verify loading orientation/progress, world
+  framing and peripheral walls, HUD/text/powerup glyphs, bounding boxes,
+  dialogue text, and clean stability. Bink remains intentionally disabled by
+  the existing black-screen/audio-underrun safety gate; no performance change
+  is justified without a fixed replay measurement.
+
+## 2026-08-30 dev82 canonical CONTENT_ID-corrected package candidate
+
+- The previously current canonical package, SHA-256
+  `2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b`,
+  is retained at
+  `build/vita-a35-dev82-candidate-20260829-050854/`. Its VDB package-install
+  receipt is retained at
+  `build/device-evidence/a35-dev82-install-launch-20260830-202256/` and shows
+  `VPK_SFO_INVALID`: the generated `param.sfo` declared an empty
+  `CONTENT_ID`. The installer rejected it before replacing the Vita executable.
+- The narrow packaging correction sets the bounded developer-only content ID
+  `EP9000-RNEGA3101_00-RENGADEVITADEV82` through `vita-mksfoex`. The canonical
+  build at `logs/a35-dev82-20260830-153141-build.log` passes retained semantic
+  fingerprints, 111 project tests, deterministic 135-patch restaging, ARM
+  link/package, ELF/SELF/VPK identity, compressed VPK validation, SHA manifest,
+  diagnostics inventory, and retail exclusion. The canonical build now runs
+  the current capture, controller, and button-state contracts rather than
+  relying on their older retained-log outputs.
+- Current hash-matched physical candidate: VPK SHA-256
+  `d9a0cc027be2278eb26d4d056dfeec974aff52e4f11f95c5b66fe87e982d3fad`,
+  packaged SELF SHA-256
+  `36235779e4fd94886e913a23b4ea203e728612cd90114dc5b2d8fad73145120a`,
+  and ELF SHA-256
+  `241d5aa8f09917e526484922c2641068460b62f5d211fb12c7bc688ddf91a5d6`.
+  The VPK contains only `eboot.bin` and `sce_sys/param.sfo`; its SFO has title
+  ID `RNEGA3101`, app version `03.51`, and the bounded CONTENT_ID above.
+- The prior physical executable identity
+  `3e9d4ad5a7b90a2f4f4e1fed5177e096aa81851b1967fc86eb4517749e831a04` is saved
+  with its SHA receipt at
+  `build/device-backups/a35-dev82-install-launch-20260830-202256/`. The
+  current VPK was uploaded to the title user tree and VDB1 hash-verified. The
+  package command could not execute because the current Vita command surface
+  lacks `app.query.v1`; the authorized fallback staged the matching packaged
+  SELF in the title user tree, hash-verified it, and replaced only
+  `ux0:/app/RNEGA3101/eboot.bin`. VDB1 verifies installed SHA-256
+  `36235779e4fd94886e913a23b4ea203e728612cd90114dc5b2d8fad73145120a`.
+  `RNEGA3101` launch succeeded and app-status remained running after 15
+  seconds. This is not visual, loading, input, or mission acceptance. Do not
+  pull runtime logs, captures, recordings, or dumps until the user reports
+  findings; app/crash status polls are permitted.
+
+## 2026-08-29 prior dev82 resume state (superseded by the 2026-08-30 package candidate)
 
 - Workspace: `/home/steve/projects/RenegadeVitaBuilder/workspace/active` on
-  `main`; this bash workspace is the source authority, not the E: mirror. The
+  `main` at `1279b59953eb8c8791ec935fd6cc8d9c1602ffab`; this bash workspace is
+  the source authority, not the E: mirror. The source/artifact tree was clean
+  before this resume's report-only evidence update. The
   latest material source pass adds a visible startup
   pre-cache/pre-warm/pre-compute phase before intro movies, menu navigation, or
   M00 gameplay input, persistent M00/M01 MIX filename cache-index writes, plus
@@ -39,7 +158,13 @@
   `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk` on 2026-08-28; a
   follow-up FTP listing found the filename. That upload predates the current
   `2d05da8f...` startup-precache/loading-aspect/HUD-presentation/texture-cache
-  build; dev82 has not been physically accepted.
+  build; dev82 has not been physically accepted. Read-only readiness evidence
+  from 2026-08-30 is retained at
+  `build/device-evidence/a35-dev82-readiness-20260830-201630/`: the paired
+  Vita at `10.0.0.202` is reachable and idle, but its installed `eboot.bin`
+  is SHA-256 `3e9d4ad5a7b90a2f4f4e1fed5177e096aa81851b1967fc86eb4517749e831a04`,
+  not the current packaged dev82 SELF
+  `08a27d1c8b374171afeb1bc1f1bf1f7a1e0c914a56738a84f3ec3c2e784bf11b`.
 - Current blocker and hypothesis: physical Vita must validate intro movie
   playback/skip, original WWUI menu navigation, Tutorial launch,
   aspect-preserved loading, HUD/subtitle placement, texture/material
@@ -53,20 +178,27 @@
   DX8/Bink GL uploads from leaving stale character textures bound for later
   original mesh draws. The loading-screen hypothesis is that preserving the
   original 640x480 authored layout as a centered 4:3 native rect avoids the
-  previous wide-screen stretch while keeping gameplay at native 960x544.
-- Exact next external action: when the Vita is reachable, run
-  `tools/upload_dev82_current_vpk.sh --scan-arp` from the active bash
-  workspace or manually install/test the current VPK from VitaShell. The most
-  recent scan at
-  `build/device-evidence/a35-dev82-upload-probe-20260829-052650/`
-  still found no reachable VitaShell FTP endpoint, and VDB/VitaCompanion checks
-  were disconnected or closed, so no current VPK transfer occurred. After
-  install, return physical Vita observations plus
+  previous wide-screen stretch while keeping gameplay at native 960x544. The
+  pulled 222,309-byte device runtime log is an older append log (SHA-256
+  `9311414d...`) and lacks the current startup-precache receipt; its last
+  returned loading metadata predates the current aspect/texture-cache change.
+- Exact next external action: the reachability gate is now open. On explicit
+  current-candidate install/test direction, upload the hash-checked
+  `dist/RenegadeVita-A3.5-dev82.vpk`
+  (`2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b`)
+  to `ux0:/data/renegade/user/`, manually install it, then run the first
+  phase-labelled physical M00 gate. Return physical Vita observations plus
   `ux0:data/renegade/user/logs/a35-dev82-runtime.log`,
   `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`, captures,
   and any matching crash dump.
 
-- Current handoff: the paired physical Vita is online for read-only inspection, but remains on restored dev46 (`bb42fa9fbbf80e6eb90add5d3ae1bed708f1a9847f61ddc3d3fa441b4a10b244`) with the stale pre-dialogue route still present (`5ef2ee8f2ed5d4f301ec20ef95c73fe7aea9956a32e9cc41aecf84999191e895`). No dev48 install, launch, or filesystem mutation has been performed. The next authorized action is dev48 installation followed by a fresh user-controlled route record; the stale route is rejected by the runner.
+- Current handoff: the paired Vita is online for read-only inspection through
+  authenticated VDB1 at `10.0.0.202`; VDB exposes only read-only debugger
+  operations while the VitaCompanion network transport advertises the bounded
+  install/write capability. No device mutation occurred in this resume. The
+  app is stopped; current VPK installation is the next externally controlled
+  step. The retained pre-dialogue route remains stale and must not be replayed
+  against dev82.
 
 - Authority: A3.1.4 remains the accepted physical baseline; A3.2-dev1 remains frozen failed evidence. A3.5-dev24 is failed/unaccepted physical evidence; A3.5-dev25 through A3.5-dev33 are superseded by A3.5-dev34, A3.5-dev34 is failed physical crash evidence, A3.5-dev35 through A3.5-dev40 are superseded source/build candidates, dev40/dev41 physical dumps are retained crash evidence for the `HTreeClass::Combo_Update` null-combo path, dev42 is clean physical gameplay evidence invalidated by the runner pulling the user out after an over-strict route-activation gate, dev43 is the retained clean route recording and replay-fidelity point, dev44 is failed route-complete/no-exit evidence, dev45 is accepted automated replay-exit evidence, dev46 is the physical no-dialogue diagnostic point, dev47 is failed physical evidence: it fixed TranslateDB object-row lookup but route fidelity broke and dialogue remained inaudible, and dev48 is a built source/package candidate only. The active work in the existing dirty `main` tree at `f0df43ef9ea487433a68480a32d3dcf3038ad79b` preserves dev45/dev46/dev47 physical evidence while continuing visual/audio/runtime fixes without claiming visual or audio acceptance from logs alone.
 - Build: dev16 canonical closure passed 482 ARM/packaging actions and remains retained historical evidence. Dev48 fast package passed deterministic restage, 37 focused contracts, ELF/SELF/VPK identity, compressed-data, SHA-manifest, and retail-exclusion checks. Dev48 ELF/SELF/VPK SHA-256 are `a4416e16a4678c645e492c91f55c4fc0decae095fb4589d947d9559ee1dc63bd`, `0e61044df081b36b1a74da88c6157149cc27e818fca26f7bde537d00f710ec23`, and `7830e41ef8ea98f1ce914091a292a7cceacb2b4bb5b5f20381047af446e2e067`. The VPK contains only eboot and SFO; retail is excluded. Dev48 has not been deployed. Dev47 was deployed once for the approved failed replay and dev46 is now restored on device.

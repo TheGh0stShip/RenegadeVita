@@ -15,7 +15,7 @@ project(RenegadeVitaA31 VERSION 3.5.1 LANGUAGES C CXX)
 # This is provenance for a hardware candidate, not a public milestone claim.
 # Keep the artifact identity configurable so a newer candidate can never
 # overwrite the symbols and diagnostics that belong to an earlier one.
-set(RENEGADE_CANDIDATE_LABEL "A3.5-dev82" CACHE STRING
+set(RENEGADE_CANDIDATE_LABEL "A3.5-dev84" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
 if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
@@ -24,6 +24,19 @@ string(TOLOWER "${RENEGADE_CANDIDATE_LABEL}" RENEGADE_CANDIDATE_STEM)
 string(REPLACE "." "" RENEGADE_CANDIDATE_STEM "${RENEGADE_CANDIDATE_STEM}")
 set(RENEGADE_RUNTIME_LOG_PATH
   "ux0:data/renegade/user/logs/${RENEGADE_CANDIDATE_STEM}-runtime.log")
+
+# VitaDevBridge's package installer requires a bounded non-empty CONTENT_ID in
+# sce_sys/param.sfo. Keep this stable across dev83 rebuilds so the title remains
+# an update of RNEGA3101 rather than a new application; it identifies only this
+# developer package and is not an EA or retail entitlement.
+set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENGADEVITADEV84" CACHE STRING
+  "Developer Vita package content identifier")
+string(LENGTH "${RENEGADE_VITA_CONTENT_ID}" RENEGADE_VITA_CONTENT_ID_LENGTH)
+if(NOT RENEGADE_VITA_CONTENT_ID_LENGTH EQUAL 36 OR
+   NOT RENEGADE_VITA_CONTENT_ID MATCHES "^[A-Z0-9_-]+$")
+  message(FATAL_ERROR
+    "RENEGADE_VITA_CONTENT_ID must be a 36-character bounded Vita content identifier")
+endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/RenegadeCcache.cmake")
 
@@ -457,6 +470,9 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 vita_create_self(eboot.bin ${PROJECT_NAME})
+# vita_create_vpk otherwise emits an empty CONTENT_ID field. Set the narrow
+# VitaSDK packaging flag immediately before the macro so only param.sfo changes.
+set(VITA_MKSFOEX_FLAGS "-s CONTENT_ID=${RENEGADE_VITA_CONTENT_ID}")
 vita_create_vpk(RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.vpk RNEGA3101 eboot.bin
 	VERSION 03.51
 	NAME "Renegade Vita ${RENEGADE_CANDIDATE_LABEL}"

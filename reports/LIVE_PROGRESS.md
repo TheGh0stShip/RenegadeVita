@@ -1,5 +1,122 @@
 # Live engineering progress
 
+## 2026-08-30 — dev84 lifecycle correction; publication and physical gate active
+
+`[███████░░░] 7/10 current evidence gates complete; Git publication and physical gate active`
+
+- User-reported Start crash returned one new candidate-scoped PSP2 dump:
+  `981a48faa0b949df02b2126149c45fe379e2a208ea84ac48793ea10ab1f69651`.
+  VDB reports a data abort at `0x811d4ab2`; source-derived mapping identifies
+  original `cPlayer::On_Destroy()` after Combat mode was prematurely removed.
+- Dev84 delays only the Combat-mode removal until after original player/session
+  teardown. The focused suite passed 35/35; the fast ARM package passed 86
+  contracts in `logs/a35-dev84-fast-20260830-162553-build.log`, with content
+  ID `EP9000-RNEGA3101_00-RENGADEVITADEV84`.
+- Added the returned loading and first-interactive physical screenshots to the
+  generated diagnostic gallery. They are failed visual evidence, not an alpha
+  acceptance claim. Title-scoped `ux0:/video` has no finalized MP4 currently.
+- Canonical `bash ./tools/build.sh` passed in
+  `logs/a35-dev84-20260830-163409-build.log`: retained host validation, 111
+  tests, deterministic 136-patch restaging, 549 ARM actions, ARM/VPK identity,
+  compressed archive/SHA, diagnostics, and retail exclusion. VPK SHA-256 is
+  `6352b0e23a51e6943f2992843c97b8a07b9311877bffb69eeed06518e33e8051`; SELF
+  SHA-256 is `3c6304cc5fe13dbaf36ea27c6f32fc5fdac9a05c852e0416e519e42eb135d896`.
+- Next: commit and push source plus gallery evidence to the private GitHub
+  repository, then deploy only this hash-matched dev84 candidate for physical
+  confirmation.
+
+## 2026-08-30 — dev83 visual-correction candidate; canonical build active
+
+`[██████░░░░] 6/10 current evidence gates complete; canonical source/build gate active`
+
+- Preserved candidate-scoped dev82 runtime log, startup-precache receipt,
+  phase-labelled captures, app status, installed SELF receipt, and a
+  snapshot-only crash inventory after the user reported findings. The title
+  remained running with the expected dev82 SELF; no new matching dump was
+  pulled.
+- Physical/source correlation identified two bounded renderer corrections:
+  remove the additional `loadscreen_*` V flip after the original Targa/DX8
+  path, and scope the centered 640x480 presentation rect to the original 2D
+  owners rather than all of `CombatManager::Render()` (which includes world
+  rendering). The new Combat touch is a deterministic zero-fuzz staging patch;
+  no upstream source was changed.
+- `logs/a35-dev83-fast-20260830-160756-build.log` passed 86 focused contracts,
+  136-patch restaging, ARM link/package, package identity/content ID,
+  compressed archive/SHA checks, and retail exclusion. Dev83 is a distinct
+  fast candidate; dev82 physical evidence remains immutable.
+- Next: run the canonical build, retain full artifacts and diagnostics, then
+  perform the next bounded hardware test only with the resulting hash-matched
+  dev83 package. Bink re-enable and broader precaching remain deferred pending
+  a fixed replay and measurements.
+
+## 2026-08-30 — dev82 installed and running; awaiting user findings
+
+`[██████░░░░] 6/10 current evidence gates complete; hands-on physical gate active`
+
+- VDB package installation is unavailable on the current command surface
+  (`CAPABILITY_MISSING app.query.v1`), but no failed package attempt replaced
+  the executable. The exact VPK is uploaded and VDB1 hash-verified at
+  `ux0:/data/renegade/user/RenegadeVita-A3.5-dev82.vpk`.
+- Under the title-scoped authorization, the verified packaged SELF was staged
+  in the same user tree and used to replace only
+  `ux0:/app/RNEGA3101/eboot.bin`. The prior
+  `3e9d4ad5...` executable is locally backed up; VDB1 now reports installed
+  SELF `36235779e4fd94886e913a23b4ea203e728612cd90114dc5b2d8fad73145120a`.
+- `RNEGA3101` launched successfully and its app-status-only check remains
+  running after 15 seconds. No synthetic input was sent and no runtime logs,
+  captures, recordings, or dumps have been pulled.
+- Next: await the user's observed behavior. After findings are reported, pull
+  only the matching runtime artifacts and update the physical evidence gate.
+
+## 2026-08-30 — dev82 canonical CONTENT_ID package respin
+
+`[█████░░░░░] 5/10 current evidence gates complete; physical launch gate active`
+
+- The previous canonical VPK (`2d05da8f...`) is preserved and its VDB install
+  receipt confirms `VPK_SFO_INVALID` due to an empty SFO `CONTENT_ID`; no Vita
+  executable replacement occurred in that attempt.
+- A narrow CMake/package correction now sets
+  `EP9000-RNEGA3101_00-RENGADEVITADEV82` and checks it in both canonical and
+  fast VPK workflows. The canonical run
+  `logs/a35-dev82-20260830-153141-build.log` passed host fingerprints, 111
+  tests, deterministic staging, ARM link/package, identity, archive/SHA,
+  diagnostics, and retail exclusion.
+- The current physical candidate is VPK
+  `d9a0cc027be2278eb26d4d056dfeec974aff52e4f11f95c5b66fe87e982d3fad` and
+  packaged SELF
+  `36235779e4fd94886e913a23b4ea203e728612cd90114dc5b2d8fad73145120a`.
+  It has not yet been installed or launched. The current device executable is
+  backed up under
+  `build/device-backups/a35-dev82-install-launch-20260830-202256/`.
+- Next: re-admit the stopped device, install and verify only the exact current
+  candidate, then launch without synthetic input. After user findings arrive,
+  pull matching runtime artifacts; until then, poll only app/crash status.
+
+## 2026-08-30 — dev82 read-only physical-readiness reconciliation
+
+`[████████████] 12/12 canonical source/build gates complete; physical gate pending`
+
+- Read-only evidence at
+  `build/device-evidence/a35-dev82-readiness-20260830-201630/` proves the
+  paired physical Vita is reachable and `RNEGA3101` is stopped. The control
+  plane reports a read-only authenticated VDB1 debugger and the VitaCompanion
+  network transport; no upload, install, launch, input, or device-side write
+  was performed.
+- Device identity: `ux0:/app/RNEGA3101/eboot.bin` is SHA-256
+  `3e9d4ad5a7b90a2f4f4e1fed5177e096aa81851b1967fc86eb4517749e831a04`, which
+  does not match the current dev82 packaged SELF
+  `08a27d1c8b374171afeb1bc1f1bf1f7a1e0c914a56738a84f3ec3c2e784bf11b` or the
+  current VPK SHA-256
+  `2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b`.
+  The pulled runtime log is a 222,309-byte stale append log (SHA-256
+  `9311414d5ffb3b4c531bfcea19c8a2158bf30c3b589989113d35e7270824063d`), and
+  `a35-dev82-startup-precache.txt` is absent.
+- Consequence: existing physical dev82 observations do not validate the
+  current visible-precache/aspect-preservation/HUD-presentation/texture-cache
+  artifact. The first next physical gate is a hash-matched current-VPK manual
+  install followed by phase-labelled M00 observations and both runtime/receipt
+  returns; automatic deployment remains disabled.
+
 ## 2026-08-29 — dev82 HUD-presentation visible-precache candidate
 
 `[██████████] 12/12 canonical source/build gates complete`

@@ -16,9 +16,10 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev82}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev84}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
+rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV84
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
 case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
 rv_timestamp=$(date +%Y%m%d-%H%M%S)
@@ -28,6 +29,7 @@ rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
 rv_revision=3e00c3a1b97381bb28be89a35b856375e0629a08
 rv_log="$rv_logs/${rv_candidate_stem}-$rv_timestamp-build.log"
 rv_runtime_log="ux0:data/renegade/user/logs/${rv_candidate_stem}-runtime.log"
+rv_startup_precache_receipt="ux0:data/renegade/user/logs/${rv_candidate_stem}-startup-precache.txt"
 
 mkdir -p "$rv_logs" "$rv_dist" "$rv_root/build"
 exec > >(tee "$rv_log") 2>&1
@@ -172,9 +174,15 @@ cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_root/build/host-a30-defin
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DRENEGADE_USE_CCACHE=ON
 cmake --build "$rv_root/build/host-a30-definitions" \
-	--target a35_vita_render_state_contract_selftest \
+	--target a31_capture_telemetry_selftest \
+		a31_vita_input_contract_selftest \
+		a35_vita_button_state_contract_selftest \
+		a35_vita_render_state_contract_selftest \
 		a35_ddsfile_tga_alias_contract_selftest \
 	--parallel "$rv_build_jobs"
+"$rv_root/build/host-a30-definitions/a31_capture_telemetry_selftest" | tee -a "$rv_host_output"
+"$rv_root/build/host-a30-definitions/a31_vita_input_contract_selftest" | tee -a "$rv_host_output"
+"$rv_root/build/host-a30-definitions/a35_vita_button_state_contract_selftest" | tee -a "$rv_host_output"
 "$rv_root/build/host-a30-definitions/a35_vita_render_state_contract_selftest" | tee -a "$rv_host_output"
 "$rv_root/build/host-a30-definitions/a35_ddsfile_tga_alias_contract_selftest" | tee -a "$rv_host_output"
 require_host_line "A2.2 host asset integration PASS"
@@ -248,14 +256,15 @@ grep -Fq '"original_source_files_compiled": 506' "$rv_root/reports/SOURCE_INTEGR
 grep -Fq '"staged_original_owner_files": 1' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"a4_frontend_boundary_files": 6' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 135' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 136' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DCMAKE_TOOLCHAIN_FILE="$rv_vitasdk/share/vita.toolchain.cmake" \
 	-DRENEGADE_USE_CCACHE=ON \
-	-DRENEGADE_CANDIDATE_LABEL="$rv_candidate_label"
+	-DRENEGADE_CANDIDATE_LABEL="$rv_candidate_label" \
+	-DRENEGADE_VITA_CONTENT_ID="$rv_vpk_content_id"
 grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
 echo "Compiling, linking, and packaging Vita $rv_candidate_label target..."
 cmake --build "$rv_build" --parallel "$rv_build_jobs" --verbose
@@ -335,6 +344,7 @@ unzip -Z1 "$rv_vpk" > "$rv_vpk_contents"
 grep -Fxq 'eboot.bin' "$rv_vpk_contents"
 grep -Fxq 'sce_sys/param.sfo' "$rv_vpk_contents"
 test "$(wc -l < "$rv_vpk_contents")" -eq 2
+unzip -p "$rv_vpk" sce_sys/param.sfo | strings | grep -Fxq "$rv_vpk_content_id"
 if grep -Eiq '(^|/)(retail|data)(/|$)|(^|/)(always[^/]*\.(dat|dbs)|[^/]+\.(mix|w3d|rva))$' "$rv_vpk_contents"; then
 	echo "Retail or custom asset content was unexpectedly packaged in the VPK." >&2
 	exit 9
@@ -366,9 +376,9 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "M00 scripts: original ScriptCommands ABI plus EA/Westwood static Mission00 provider and direct cinematic/powerup dependencies"
 	echo "M00 completion: original CombatMiscHandler callback observed by a bounded Vita lifecycle latch; no objective or script state injection"
 	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
-	echo "M00 dev82 finalization: original CombatGameMode post-load checks, building/radar initialization, texture-loader update, On_Game_Begin, DDS top-down uploads, viewport synchronization, shader cache path, and loading-screen prewarm are active"
-	echo "A4 frontend path: original MovieGameMode startup movie chain and original RenegadeDialogMgr/WWUI main menu are source/build routed; Vita FFmpeg Bink provider is compiled without proprietary RAD code but realtime playback is disabled for this dev82 physical candidate after black-screen/audio-underrun evidence; tutorial selection reuses the existing direct M00 route."
-	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=135; pristine upstream=PASS"
+	echo "M00 finalization: original CombatGameMode post-load checks, building/radar initialization, texture-loader update, On_Game_Begin, DDS top-down uploads, viewport synchronization, shader cache path, and loading-screen prewarm are active"
+	echo "A4 frontend path: original MovieGameMode startup movie chain and original RenegadeDialogMgr/WWUI main menu are source/build routed; Vita FFmpeg Bink provider is compiled without proprietary RAD code but realtime playback remains disabled after matching black-screen/audio-underrun evidence; tutorial selection reuses the existing direct M00 route."
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=136; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"
@@ -413,7 +423,7 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 	echo "SHA-256: $rv_vpk_sha256"
 	echo "Retain user-owned data: ux0:data/renegade/retail/Data/ (do not transfer retail assets)."
 	echo "Runtime log: $rv_runtime_log (remove or rename an older file before launch)."
-	echo "Startup pre-cache receipt: ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt."
+	echo "Startup pre-cache receipt: $rv_startup_precache_receipt."
 	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
 	echo "Controls: frontend menu active: D-pad=WWUI focus navigation, Cross=confirm, Circle=back/cancel, Select=next focus, front touch=original mouse cursor/left click. M00 gameplay: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=original mouse cursor/left click for UI/terminals; rear touch=first/third-person camera toggle; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
 	echo "Test: in M00, verify visible startup pre-cache receipt, aspect-preserved loading presentation, HUD/scope placement, loading progress, normal texture orientation on characters/doors/powerups, Logan/Sydney/Gunner subtitles, Triangle action/use gates, Square reload animation, D-pad weapon cycling without camera drift, D-pad sniper zoom, and frame rate. Press Start and wait for LiveArea."
@@ -421,7 +431,7 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 } > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"
 {
 	echo "Runtime log: $rv_runtime_log"
-	echo "Startup pre-cache receipt: ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt"
+	echo "Startup pre-cache receipt: $rv_startup_precache_receipt"
 	echo "Expected $rv_candidate_label breadcrumbs: startup-precache begin/touch/visible-hold/receipt/complete before frontend, movies, menu, or gameplay input; input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; original Combat mission-completion observation when achieved; 120-frame checkpoint or terminal transition; clean teardown."
 	echo "Physical test: retain this log, the startup-precache receipt, and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and START exit."
 } > "$rv_dist/$rv_candidate_label-EXPECTED-RUNTIME-LOG.txt"

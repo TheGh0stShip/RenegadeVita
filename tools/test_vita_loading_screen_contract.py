@@ -204,7 +204,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("state.loading_visual_gate.aspect_preserved = true;", runtime)
         self.assertIn("state.loading_visual_gate.original_loading_screen_owner = true;", runtime)
         self.assertIn("state.loading_visual_gate.direct_vitagl_overlay_disabled = true;", runtime)
-        self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = true;", runtime)
+        self.assertIn("state.loading_visual_gate.loading_texture_v_flip_enabled = false;", runtime)
         self.assertIn("state.loading_visual_gate.gameplay_texture_v_unchanged = true;", runtime)
         self.assertNotIn("A31FrameHistory capture_history;", runtime)
         self.assertNotIn("A31FrameHistory loading_capture_history;", runtime)
@@ -332,7 +332,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("const char *texture_names[2];", renderer_h)
         self.assertIn('prefix[] = "loadscreen_"', renderer)
         self.assertIn("Has_Loadscreen_Texture_Prefix(texture_name)", renderer)
-        self.assertIn("Should_Flip_Submitted_Texture_V(state, texture_name)", renderer)
+        self.assertNotIn("Should_Flip_Submitted_Texture_V", renderer)
         self.assertIn("first gameplay passthrough texture V preserved", renderer)
         self.assertNotIn("(void)texture_name;", renderer)
         self.assertIn("first cached original ShaderClass state skip", renderer)
@@ -345,6 +345,33 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             renderer.index("vglSetShaderCachePath(shader_cache_path);"),
             renderer.index("const GLboolean resolution_fallback = vglInit"),
         )
+
+        gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+        hud_header = (
+            ROOT / "port/compatibility/include/a31_vita_hud_presentation.h"
+        ).read_text(encoding="utf-8")
+        combat_patch = (
+            ROOT / "port/patches/combat-a35-vita-hud-presentation-boundary.patch"
+        ).read_text(encoding="utf-8")
+        stage = (ROOT / "tools/stage_sources.sh").read_text(encoding="utf-8")
+        self.assertIn("A31_Vita_Begin_Original_HUD_Render", hud_header)
+        self.assertIn("A31_Vita_End_Original_HUD_Render", hud_header)
+        self.assertIn("A31OriginalHUDRenderPresentation", gameplay)
+        self.assertLess(
+            gameplay.index("CombatManager::Render();"),
+            gameplay.index("A31ScopedOriginalHUDRender2DResolution hud_render_resolution;"),
+        )
+        self.assertLess(
+            combat_patch.index("A31_Vita_Begin_Original_HUD_Render();"),
+            combat_patch.index("HUDClass::Render();"),
+        )
+        self.assertLess(
+            combat_patch.index("ScreenFadeManager::Render();"),
+            combat_patch.index("A31_Vita_End_Original_HUD_Render();"),
+        )
+        self.assertIn("combat-a35-vita-hud-presentation-boundary.patch", stage)
         shader_apply_start = renderer.index("void Apply_Original_Shader_State")
         shader_apply = renderer[
             shader_apply_start:
@@ -354,7 +381,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             shader_apply.index("Apply_Original_Fog_State(shader);"),
             shader_apply.index("g_original_shader_state_known"),
         )
-        self.assertIn("t = 1.0f - t;", renderer)
+        self.assertNotIn("t = 1.0f - t;", renderer)
         self.assertIn("submission.texture_names[stage]", boundary)
         self.assertIn("submission.texture_names[0]", renderer)
         self.assertIn("submission.texture_names[1]", renderer)
@@ -539,7 +566,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Build_A31_Original_HUD_Presentation_Rect", gameplay)
         self.assertIn("Apply_A31_Original_HUD_Presentation_Rect", gameplay)
         gameplay_helper = gameplay[
-            gameplay.index("class A31ScopedOriginalHUDRender2DResolution"):
+            gameplay.index("class A31OriginalHUDRenderPresentation"):
             gameplay.index("AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics")
         ]
         self.assertIn("Render2DClass::Set_Screen_Resolution(RectClass(0, 0,", gameplay_helper)
@@ -559,7 +586,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("if (log_change)", renderer)
 
         hud_scope = "A31ScopedOriginalHUDRender2DResolution hud_render_resolution;"
-        self.assertLess(gameplay.index(hud_scope), gameplay.index("CombatManager::Render();"))
+        self.assertLess(gameplay.index("CombatManager::Render();"), gameplay.index(hud_scope))
         self.assertLess(gameplay.index(hud_scope), gameplay.index("message_window->Render();"))
         self.assertLess(gameplay.index(hud_scope), gameplay.index("ObjectiveManager::Render_Viewer();"))
         self.assertLess(gameplay.index(hud_scope), gameplay.index("text_display->Render();"))

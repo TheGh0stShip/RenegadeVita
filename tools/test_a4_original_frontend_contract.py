@@ -170,9 +170,19 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         )
         self.assertLess(final_style_index, text_display_index)
         self.assertLess(text_display_index, direct_route_index)
+        combat_deactivate_index = runtime.index("frontend_combat_mode.Deactivate();")
+        player_remove_index = runtime.index("cPlayerManager::Remove_All();")
         combat_remove_index = runtime.index("GameModeManager::Remove(&frontend_combat_mode);")
         menu_remove_index = runtime.rindex("GameModeManager::Remove(&frontend_menu_mode);")
-        self.assertLess(combat_remove_index, menu_remove_index)
+        self.assertLess(combat_deactivate_index, menu_remove_index)
+        self.assertLess(menu_remove_index, player_remove_index)
+        self.assertLess(player_remove_index, combat_remove_index)
+        self.assertIn(
+            "retained inactive Combat mode through player/session teardown", runtime
+        )
+        self.assertIn(
+            "removed original Combat mode after player/session teardown", runtime
+        )
         self.assertIn("A4_Frontend_Latch_Start_Game", gameinit)
         self.assertIn("Validate_Frontend_Tutorial_Start_Latch", host)
         self.assertIn("frontend_tutorial_start_latched", host)

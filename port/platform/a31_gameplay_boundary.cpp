@@ -48,6 +48,7 @@
 #include "wwaudio.h"
 #include "ww3d.h"
 #include "ww3d_vita_renderer.h"
+#include "a31_vita_hud_presentation.h"
 
 // Replaces the Win32 message-loop focus global for the native Vita lifecycle.
 // The application starts foregrounded; original Input::Update retains its
@@ -239,33 +240,58 @@ bool Apply_A31_Original_HUD_Presentation_Rect()
 		rect.x, rect.y, rect.width, rect.height);
 }
 
-class A31ScopedOriginalHUDRender2DResolution
+class A31OriginalHUDRenderPresentation
 {
 public:
-	A31ScopedOriginalHUDRender2DResolution() :
-		Previous(Render2DClass::Get_Screen_Resolution()),
-		PresentationRectApplied(Apply_A31_Original_HUD_Presentation_Rect())
+	A31OriginalHUDRenderPresentation() :
+		Depth(0), Previous(0, 0, 0, 0), PresentationRectApplied(false)
 	{
+	}
+
+	void Begin()
+	{
+		if (Depth++ != 0U) return;
+		Previous = Render2DClass::Get_Screen_Resolution();
+		PresentationRectApplied = Apply_A31_Original_HUD_Presentation_Rect();
 		Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
 			kA31OriginalHUDLogicalWidth, kA31OriginalHUDLogicalHeight));
 	}
 
-	~A31ScopedOriginalHUDRender2DResolution()
+	void End()
 	{
+		if (Depth == 0U || --Depth != 0U) return;
 		Render2DClass::Set_Screen_Resolution(Previous);
 		if (PresentationRectApplied) {
 			RenegadeVitaRenderer::Reset_Native_Presentation_Rect_Quiet();
+			PresentationRectApplied = false;
 		}
+	}
+
+private:
+	unsigned Depth;
+	RectClass Previous;
+	bool PresentationRectApplied;
+};
+
+A31OriginalHUDRenderPresentation g_a31_original_hud_render_presentation;
+
+class A31ScopedOriginalHUDRender2DResolution
+{
+public:
+	A31ScopedOriginalHUDRender2DResolution()
+	{
+		A31_Vita_Begin_Original_HUD_Render();
+	}
+
+	~A31ScopedOriginalHUDRender2DResolution()
+	{
+		A31_Vita_End_Original_HUD_Render();
 	}
 
 	A31ScopedOriginalHUDRender2DResolution(
 		const A31ScopedOriginalHUDRender2DResolution &) = delete;
 	A31ScopedOriginalHUDRender2DResolution &operator=(
 		const A31ScopedOriginalHUDRender2DResolution &) = delete;
-
-private:
-	RectClass Previous;
-	bool PresentationRectApplied;
 };
 
 AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics(
@@ -758,9 +784,9 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 		WW3D::Begin_Render(true, true, BackgroundMgrClass::Get_Clear_Color()) ==
 		WW3D_ERROR_OK;
 	if (trace.begin_render_completed) {
-		A31ScopedOriginalHUDRender2DResolution hud_render_resolution;
 		CombatManager::Render();
 		trace.combat_render_called = true;
+		A31ScopedOriginalHUDRender2DResolution hud_render_resolution;
 		MessageWindowClass *message_window =
 			CombatManager::Get_Message_Window();
 		trace.message_window_available = message_window != NULL;
@@ -883,6 +909,16 @@ void Log_Audio_Lifecycle(const char *stage, WWAudioClass *audio,
 }
 
 } // namespace
+
+void A31_Vita_Begin_Original_HUD_Render()
+{
+	g_a31_original_hud_render_presentation.Begin();
+}
+
+void A31_Vita_End_Original_HUD_Render()
+{
+	g_a31_original_hud_render_presentation.End();
+}
 
 void A31_Audio_Lifecycle_Reset_Trace()
 {

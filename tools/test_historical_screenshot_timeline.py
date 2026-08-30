@@ -13,7 +13,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         doc = TIMELINE.read_text(encoding="utf-8")
         screenshots = sorted(path.name for path in SCREENSHOT_DIR.glob("*.png"))
 
-        self.assertGreaterEqual(len(screenshots), 171)
+        self.assertGreaterEqual(len(screenshots), 173)
         self.assertFalse(list(SCREENSHOT_DIR.glob("*.bmp")))
         for name in screenshots:
             self.assertIn(f"history/screenshots/{name}", doc)
@@ -49,6 +49,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             "a35-dev47-",
             "a35-dev78-",
             "a35-dev79-",
+            "a35-dev82-",
         )
         for image_ref in image_refs:
             for name in forbidden:
@@ -163,12 +164,12 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("GitHub gallery PNGs: 171", report)
+        self.assertIn("GitHub gallery PNGs: 173", report)
         self.assertIn("24 runtime logs, 89 capture directories", report)
         self.assertIn("All 89 live Vita capture directories", report)
         self.assertIn("/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder", report)
         self.assertIn("/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/", report)
-        self.assertIn('"gallery_png_count": 171', inventory)
+        self.assertIn('"gallery_png_count": 173', inventory)
         self.assertIn('"vita3k_user_appdata"', inventory)
         self.assertIn('"missing_c_local_builder_root"', inventory)
 

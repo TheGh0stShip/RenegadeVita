@@ -50,22 +50,10 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text(
             encoding="utf-8"
         )
-        flip = renderer[
-            renderer.index("bool Should_Flip_Submitted_Texture_V"):
-            renderer.index("const Vector2 *Resolve_UV_Array_For_Texture_State")
-        ]
-        self.assertIn("Has_Loadscreen_Texture_Prefix(texture_name)", flip)
-        self.assertNotIn("(void)texture_name;", flip)
-        self.assertNotIn(
-            "return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;",
-            flip,
-        )
+        self.assertNotIn("Should_Flip_Submitted_Texture_V", renderer)
+        self.assertNotIn("first loading texture V correction", renderer)
+        self.assertNotIn("t = 1.0f - t;", renderer)
         self.assertIn("first skinned gameplay passthrough texture V preserved", renderer)
-        self.assertIn(
-            "!Should_Flip_Submitted_Texture_V(\n"
-            "\t\t\t\t\t\tcurrent_texture_coordinates[0],",
-            renderer,
-        )
         self.assertIn("g_logged_first_skin_passthrough_texture_v_preserved", renderer)
 
 

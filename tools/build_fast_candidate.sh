@@ -9,9 +9,10 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev82}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev84}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
+rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV84
 rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-$(nproc)}
 case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
@@ -143,7 +144,8 @@ cmake -S "$rv_root" -B "$rv_build" -G Ninja \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DCMAKE_TOOLCHAIN_FILE="$rv_vitasdk/share/vita.toolchain.cmake" \
 	-DRENEGADE_USE_CCACHE=ON \
-	-DRENEGADE_CANDIDATE_LABEL="$rv_candidate_label"
+	-DRENEGADE_CANDIDATE_LABEL="$rv_candidate_label" \
+	-DRENEGADE_VITA_CONTENT_ID="$rv_vpk_content_id"
 grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
 
 if [[ "$rv_fast_scope" == "compile" ]]; then
@@ -245,6 +247,7 @@ unzip -Z1 "$rv_vpk" > "$rv_vpk_contents"
 grep -Fxq 'eboot.bin' "$rv_vpk_contents"
 grep -Fxq 'sce_sys/param.sfo' "$rv_vpk_contents"
 test "$(wc -l < "$rv_vpk_contents")" -eq 2
+unzip -p "$rv_vpk" sce_sys/param.sfo | strings | grep -Fxq "$rv_vpk_content_id"
 if grep -Eiq '(^|/)(retail|data)(/|$)|(^|/)(always[^/]*\.(dat|dbs)|[^/]+\.(mix|w3d|rva))$' "$rv_vpk_contents"; then
 	echo "Retail or custom asset content was unexpectedly packaged in the VPK." >&2
 	exit 9

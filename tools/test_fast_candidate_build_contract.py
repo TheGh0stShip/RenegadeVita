@@ -32,6 +32,30 @@ class FastCandidateBuildContractTests(unittest.TestCase):
         self.assertIn("Retail or custom asset content was unexpectedly packaged", script)
         self.assertIn("not canonical acceptance", script)
 
+    def test_vpk_packaging_requires_a_bounded_content_id(self):
+        cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
+        fast_build = (ROOT / "tools/build_fast_candidate.sh").read_text(encoding="utf-8")
+        canonical_build = (ROOT / "tools/build.sh").read_text(encoding="utf-8")
+        content_id = "EP9000-RNEGA3101_00-RENGADEVITADEV84"
+        self.assertIn(content_id, cmake)
+        self.assertIn("VITA_MKSFOEX_FLAGS", cmake)
+        self.assertIn(content_id, fast_build)
+        self.assertIn(content_id, canonical_build)
+        self.assertIn("sce_sys/param.sfo | strings", fast_build)
+        self.assertIn("sce_sys/param.sfo | strings", canonical_build)
+
+    def test_canonical_build_refreshes_lightweight_host_contracts(self):
+        script = (ROOT / "tools/build.sh").read_text(encoding="utf-8")
+        for target in (
+            "a31_capture_telemetry_selftest",
+            "a31_vita_input_contract_selftest",
+            "a35_vita_button_state_contract_selftest",
+        ):
+            self.assertIn(target, script)
+        self.assertIn('a31_capture_telemetry_selftest" | tee -a "$rv_host_output"', script)
+        self.assertIn('a31_vita_input_contract_selftest" | tee -a "$rv_host_output"', script)
+        self.assertIn('a35_vita_button_state_contract_selftest" | tee -a "$rv_host_output"', script)
+
     def test_fast_candidate_build_has_compile_scope_and_optional_tests(self):
         script = (ROOT / "tools/build_fast_candidate.sh").read_text(encoding="utf-8")
         self.assertIn("RENEGADE_FAST_SCOPE", script)

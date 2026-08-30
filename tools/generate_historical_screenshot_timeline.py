@@ -225,6 +225,7 @@ DIAGNOSTIC_ONLY = [
     ("A3.5-dev47", "4 magenta/loading TranslateDB diagnostic frames recovered; no gameplay screenshot was found.", "a35-dev47-vita-first-interactive-player-frame-f1-t32303654.png"),
     ("A3.5-dev78", "8 physical loading-regression frames recovered; no gameplay screenshot was returned for dev78.", "a35-dev78-loading-physical.png"),
     ("A3.5-dev79", "4 physical loading/control-candidate frames recovered; no gameplay screenshot was returned for dev79.", "a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png"),
+    ("A3.5-dev82", "Returned physical evidence: the loading frame is vertically inverted and the first interactive capture is black except for a small HUD fragment; do not treat either as gameplay acceptance.", "a35-dev82-vita-original-loading-screen-t67280479.png"),
 ]
 
 

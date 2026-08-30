@@ -213,7 +213,7 @@ def validate(candidate: str, frame: Path, state: Path) -> dict[str, object]:
         "aspect_preserved": True,
         "original_loading_screen_owner": True,
         "direct_vitagl_overlay_disabled": True,
-        "loading_texture_v_flip_enabled": True,
+        "loading_texture_v_flip_enabled": False,
         "gameplay_texture_v_unchanged": True,
     }
     if isinstance(visual, dict):

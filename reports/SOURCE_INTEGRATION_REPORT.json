@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev82",
+  "milestone": "A3.5-dev84",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -557,7 +557,7 @@
     "port/platform/a4_binkmovie_boundary.cpp"
   ],
   "sdk_framebuffer_helper_files": 1,
-  "compatibility_headers": 52,
+  "compatibility_headers": 53,
   "compatibility_header_paths": [
     "port/compatibility/include/DialogControl.h",
     "port/compatibility/include/GameMode.h",
@@ -584,6 +584,7 @@
     "port/compatibility/include/a31_slavemaster_stub.h",
     "port/compatibility/include/a31_svr_goodbye_dialog_boundary.h",
     "port/compatibility/include/a31_team_select_stub.h",
+    "port/compatibility/include/a31_vita_hud_presentation.h",
     "port/compatibility/include/a31_win_screen_stub.h",
     "port/compatibility/include/a31_wol_stub.h",
     "port/compatibility/include/a31_wolgmode_stub.h",
@@ -612,7 +613,7 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 135,
+  "patch_count": 136,
   "mechanically_patched_upstream_files": 257,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
@@ -1083,6 +1084,13 @@
       "upstream_targets": [
         "combat.cpp",
         "buildingaggregate.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-hud-presentation-boundary.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combat.cpp"
       ]
     },
     {

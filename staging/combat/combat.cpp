@@ -103,6 +103,9 @@
 #include "stylemgr.h"
 #include "translatedb.h"
 #include "string_ids.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "a31_vita_hud_presentation.h"
+#endif
 
 
 const int DEFAULT_MAX_SHADOWS = 4;
@@ -818,9 +821,15 @@ void CombatManager::Render()
 
 		DazzleRenderObjClass::Install_Dazzle_Visibility_Handler(NULL);
 
+#if defined(RENEGADE_VITA_PORT)
+		A31_Vita_Begin_Original_HUD_Render();
+#endif
 		HUDClass::Render();
 
 		ScreenFadeManager::Render();
+#if defined(RENEGADE_VITA_PORT)
+		A31_Vita_End_Original_HUD_Render();
+#endif
 	}
 }
 

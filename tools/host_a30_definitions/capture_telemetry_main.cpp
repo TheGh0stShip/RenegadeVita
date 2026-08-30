@@ -148,7 +148,7 @@ int main()
 	input.state.loading_visual_gate.aspect_preserved = true;
 	input.state.loading_visual_gate.original_loading_screen_owner = true;
 	input.state.loading_visual_gate.direct_vitagl_overlay_disabled = true;
-	input.state.loading_visual_gate.loading_texture_v_flip_enabled = true;
+	input.state.loading_visual_gate.loading_texture_v_flip_enabled = false;
 	input.state.loading_visual_gate.gameplay_texture_v_unchanged = true;
 	input.history = &history;
 	const A31CaptureBundleResult result = A31_Write_Capture_Bundle(input);
@@ -182,7 +182,7 @@ int main()
 		State_Contains(directory, "\"logical_to_native_fullscreen\":false") &&
 		State_Contains(directory, "\"aspect_preserved\":true") &&
 		State_Contains(directory, "\"direct_vitagl_overlay_disabled\":true") &&
-		State_Contains(directory, "\"loading_texture_v_flip_enabled\":true") &&
+		State_Contains(directory, "\"loading_texture_v_flip_enabled\":false") &&
 		Summary_Contains(directory, "Loading visual gate: active=1 logical=640x480 native=960x544 presentation=117,0 725x544 framebuffer=960x544 fullscreen=0 aspect=1"),
 		"loading visual gate state and summary", checks, failures);
 	Check(State_Contains(directory, "\"gameplay_texture_v_unchanged\":true"),

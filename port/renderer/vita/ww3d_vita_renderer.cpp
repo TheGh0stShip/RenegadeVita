@@ -93,7 +93,6 @@ bool g_logged_first_generated_texture_coordinate = false;
 bool g_logged_first_material_lighting = false;
 bool g_logged_first_user_lighting = false;
 bool g_logged_skin_failure = false;
-bool g_logged_first_loading_texture_v_flip = false;
 bool g_logged_first_passthrough_texture_v_preserved = false;
 bool g_logged_first_skin_texture_color = false;
 bool g_logged_first_skin_passthrough_texture_v_preserved = false;
@@ -495,13 +494,6 @@ bool Uses_Generated_Texture_Coordinates(
 		mode == D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR;
 }
 
-bool Should_Flip_Submitted_Texture_V(const OriginalTextureCoordinateState &state,
-	const char *texture_name)
-{
-	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
-		Has_Loadscreen_Texture_Prefix(texture_name);
-}
-
 const Vector2 *Resolve_UV_Array_For_Texture_State(MeshModelClass *model,
 	const OriginalTextureCoordinateState &state, const Vector2 *fallback)
 {
@@ -633,16 +625,7 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uvs[vertex_index].X;
 		source_t = uvs[vertex_index].Y;
 	}
-	const bool flip_texture_v = Should_Flip_Submitted_Texture_V(state, texture_name);
-	if (flip_texture_v) {
-		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
-			!g_logged_first_loading_texture_v_flip) {
-			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
-				"first loading texture V correction: texture=%s stage=%u",
-				texture_name != NULL ? texture_name : "none", stage);
-			g_logged_first_loading_texture_v_flip = true;
-		}
-	} else if (mode == D3DTSS_TCI_PASSTHRU &&
+	if (mode == D3DTSS_TCI_PASSTHRU &&
 		!Has_Loadscreen_Texture_Prefix(texture_name) &&
 		!g_logged_first_passthrough_texture_v_preserved) {
 		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
@@ -654,9 +637,6 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	float t = 0.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
 		&s, &t);
-	if (flip_texture_v) {
-		t = 1.0f - t;
-	}
 	glMultiTexCoord2f(texture_unit, s, t);
 	if (Uses_Generated_Texture_Coordinates(state) &&
 		!g_logged_first_generated_texture_coordinate) {
@@ -769,16 +749,7 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uv[0];
 		source_t = uv[1];
 	}
-	const bool flip_texture_v = Should_Flip_Submitted_Texture_V(state, texture_name);
-	if (flip_texture_v) {
-		if (Has_Loadscreen_Texture_Prefix(texture_name) &&
-			!g_logged_first_loading_texture_v_flip) {
-			Vita_Append_A22_Runtime_Breadcrumb("loading-screen",
-				"first indexed loading texture V correction: texture=%s stage=%u",
-				texture_name != NULL ? texture_name : "none", stage);
-			g_logged_first_loading_texture_v_flip = true;
-		}
-	} else if (mode == D3DTSS_TCI_PASSTHRU &&
+	if (mode == D3DTSS_TCI_PASSTHRU &&
 		!Has_Loadscreen_Texture_Prefix(texture_name) &&
 		!g_logged_first_passthrough_texture_v_preserved) {
 		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
@@ -791,9 +762,6 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	float t = 0.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
 		&s, &t);
-	if (flip_texture_v) {
-		t = 1.0f - t;
-	}
 	glMultiTexCoord2f(texture_unit, s, t);
 	if (Uses_Generated_Texture_Coordinates(state) &&
 		!g_logged_first_generated_texture_coordinate) {
@@ -2561,9 +2529,6 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 					!g_logged_first_skin_passthrough_texture_v_preserved &&
 					Texture_Coordinate_Mode(current_texture_coordinates[0]) ==
 						D3DTSS_TCI_PASSTHRU &&
-					!Should_Flip_Submitted_Texture_V(
-						current_texture_coordinates[0],
-						bound_textures[0]->Get_Texture_Name().Peek_Buffer()) &&
 					!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
 					!Is_Loading_Screen_Diagnostic_Name(
 						bound_textures[0]->Get_Texture_Name().Peek_Buffer())) {

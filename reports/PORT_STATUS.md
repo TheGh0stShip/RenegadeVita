@@ -1,7 +1,87 @@
 # Renegade Vita port status
 
-Updated: 2026-08-29. Engineering changes use source-driven review, bounded
+Updated: 2026-08-30. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
+
+## 2026-08-30 dev84 Start-exit lifecycle correction
+
+The physical dev82 Start crash produced one new PSP2 dump, retained under
+`build/device-evidence/a35-dev82-start-crash-20260830T211316Z/` (SHA-256
+`981a48faa0b949df02b2126149c45fe379e2a208ea84ac48793ea10ab1f69651`). VDB
+reports a data abort at `0x811d4ab2`. The matching source location is
+source-derived, not VDB verified: original `cPlayer::On_Destroy()` queried
+Combat mode after runtime teardown had removed it. Dev84 now delays that mode
+removal until after original player/session teardown; it introduces no
+replacement game loop or teardown owner.
+
+The fast dev84 package passed 35 focused source tests and 86 fast ARM/VPK
+contracts in `logs/a35-dev84-fast-20260830-162553-build.log`: VPK
+`86dea853d112c5eba9b088e0a107fd21b68a02bbfa9a029ee5b63aee1cf43bfd`, SELF
+`6c61b6b656a3d2d74425a73885b6c8d78b11cbaa238e5079d800cdb1ef2ab332`, and
+ELF `c96fa9169b61c6f31b42cdc9b8ef6c5cac394f22b2cf11354481ece203d0dc4f`.
+Canonical validation passed in `logs/a35-dev84-20260830-163409-build.log`:
+retained host validation, 111 tests, deterministic 136-patch staging, 549 ARM
+actions, ELF/SELF/VPK identity, compressed VPK/SHA, diagnostics, and retail
+exclusion. Its VPK/ELF/SELF SHA-256 values are
+`6352b0e23a51e6943f2992843c97b8a07b9311877bffb69eeed06518e33e8051`,
+`492501614f02c2477ecdfe253a54e853fdcc06a871c2b0ebf5985b72143a75f7`, and
+`3c6304cc5fe13dbaf36ea27c6f32fc5fdac9a05c852e0416e519e42eb135d896`.
+Hash-matched physical evidence is still pending.
+
+The returned inverted-loading and black/HUD-only dev82 frames are in the
+repository's diagnostic historical gallery and expressly remain failed visual
+evidence. There is no finalized title-scoped MP4 on the Vita to upload yet.
+
+## 2026-08-30 dev83 visual-correction candidate
+
+Dev82 physical return evidence is preserved, not overwritten. It shows that
+the original tutorial reaches interactive M00 with controls, objective start,
+corrected NPC skins, and upright doors, but loading is inverted and initial
+interactive capture is black with HUD-only content. The current log also
+proves retail dialogue data resolves and Bink playback is deliberately skipped
+by the existing slow-software safety gate; neither problem is a missing retail
+asset.
+
+Dev83 removes only the confirmed extra loading V flip and confines the 4:3
+presentation rect to original HUD/text ownership. In dev82, that rect enclosed
+the entire `CombatManager::Render()` call, unintentionally changing the
+world/camera viewport; dev83 keeps the world at 960x544 and applies 640x480
+only around original HUD, fade, message, objective, and text drawing. The
+fast ARM/VPK candidate passed 86 focused tests, zero-fuzz 136-patch staging,
+identity/archive/SHA checks, and retail exclusion. Its canonical build then
+passed 111 tests in `logs/a35-dev83-20260830-161033-build.log`; it is retained
+but superseded for deployment by the dev84 Start-exit correction. Do not claim
+the user-visible defects fixed yet.
+
+## 2026-08-30 dev82 package admission correction
+
+The prior dev82 canonical VPK (`2d05da8f...`) is retained with a VDB
+`VPK_SFO_INVALID` receipt: its generated SFO had an empty `CONTENT_ID`, and
+the Vita installer rejected it before it replaced `eboot.bin`. The narrow
+package-only correction supplies developer content ID
+`EP9000-RNEGA3101_00-RENGADEVITADEV82`. Canonical
+`logs/a35-dev82-20260830-153141-build.log` passed host fingerprints, 111
+tests, deterministic staging, ARM link/package, identity/archive/SHA checks,
+diagnostics, and retail exclusion. The new physical candidate VPK is
+`d9a0cc027be2278eb26d4d056dfeec974aff52e4f11f95c5b66fe87e982d3fad`; its
+packaged SELF is
+`36235779e4fd94886e913a23b4ea203e728612cd90114dc5b2d8fad73145120a`.
+It is host-validated only and remains physically unaccepted. The stopped
+device's prior SELF (`3e9d4ad5...`) is candidate-scoped backed up before the
+authorized install/launch handoff. Runtime artifact pulls remain deferred
+until the user reports findings.
+
+The device package command cannot run against the current VitaCompanion command
+surface because it lacks `app.query.v1`; its rejected call did not replace the
+title executable. The VPK was uploaded to the Renegade user tree and VDB1
+hash-verified. Under the title-scoped fallback authorization, the matching
+packaged SELF was staged, hash-verified, and used to replace only
+`ux0:/app/RNEGA3101/eboot.bin`; VDB1 confirms installed SHA-256
+`36235779e4fd94886e913a23b4ea203e728612cd90114dc5b2d8fad73145120a`.
+`RNEGA3101` launched and remained running at the 15-second app-status poll.
+No input or runtime artifact pull occurred. This proves neither visual nor
+mission correctness; user observations and matching returned diagnostics remain
+the next physical gate.
 
 Current candidate: **A3.5-dev82 M00 tutorial plus retail frontend/Bink
 physical-test build**. It keeps the dev48-dev81
@@ -45,10 +125,14 @@ The VPK SHA-256 is
 `2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b`. The
 earlier user-authorized FTP upload predates this visible-startup-precache/
 loading-aspect/HUD/texture-cache artifact and must not be treated as the
-current VPK. The latest upload probe
-`build/device-evidence/a35-dev82-upload-probe-20260829-052650/`
-verified the current hash but found no reachable VitaShell FTP endpoint; VDB
-status and VitaCompanion/VitaShell port checks were also disconnected or closed.
+current VPK. The 2026-08-29 upload probes verified the current hash but found
+no reachable VitaShell FTP endpoint. A newer read-only readiness check at
+`build/device-evidence/a35-dev82-readiness-20260830-201630/` finds the paired
+Vita reachable and idle at `10.0.0.202`; its installed `eboot.bin` is
+`3e9d4ad5a7b90a2f4f4e1fed5177e096aa81851b1967fc86eb4517749e831a04`, not the
+current dev82 packaged SELF `08a27d1c8b374171afeb1bc1f1bf1f7a1e0c914a56738a84f3ec3c2e784bf11b`.
+The pulled dev82 runtime log is stale and the current startup-precache receipt
+is absent, so no current-candidate physical acceptance is implied.
 
 Recent evidence chain through dev78: **post-dev77 original user-lighting color source and material
 lighting/color-source evaluation in direct Vita mesh submissions, original

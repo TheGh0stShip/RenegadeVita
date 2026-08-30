@@ -97,7 +97,7 @@ class CaptureComparisonTest(unittest.TestCase):
                     "aspect_preserved": True,
                     "original_loading_screen_owner": True,
                     "direct_vitagl_overlay_disabled": True,
-                    "loading_texture_v_flip_enabled": True,
+                    "loading_texture_v_flip_enabled": False,
                     "gameplay_texture_v_unchanged": True,
                 }
                 state_path.write_text(json.dumps(state), encoding="utf-8")
@@ -107,7 +107,7 @@ class CaptureComparisonTest(unittest.TestCase):
             after_state["player"]["velocity"] = [1.0, 0.0, 0.0]
             after_state["player"]["physics_registered"] = True
             after_state["player"]["grounded"] = True
-            after_state["loading_visual_gate"]["loading_texture_v_flip_enabled"] = False
+            after_state["loading_visual_gate"]["loading_texture_v_flip_enabled"] = True
             after_path.write_text(json.dumps(after_state), encoding="utf-8")
             result = compare(before, after)
             self.assertTrue(result["gameplay"]["player.position"]["changed"])

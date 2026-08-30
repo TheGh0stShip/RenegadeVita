@@ -1,4 +1,4 @@
-# Dev82 Demo Recording
+# Dev84 Demo Recording
 
 USB capture is not the default demo path for this project. It does not cover
 PSTV and it is a poor fit for handheld charging during long tests.
@@ -20,10 +20,10 @@ This fetches pinned Vita-MP4-Recorder source commit
 `tools/vita_plugins/renegade_demo_recorder/`, and writes:
 
 ```text
-dist/RenegadeDemoRecorder-A3.5-dev82.suprx
-dist/RenegadeDemoRecorder-A3.5-dev82.skprx
-dist/RenegadeDemoRecorder-A3.5-dev82-tai-config.txt
-dist/RenegadeDemoRecorder-A3.5-dev82-SHA256SUMS.txt
+dist/RenegadeDemoRecorder-A3.5-dev84.suprx
+dist/RenegadeDemoRecorder-A3.5-dev84.skprx
+dist/RenegadeDemoRecorder-A3.5-dev84-tai-config.txt
+dist/RenegadeDemoRecorder-A3.5-dev84-SHA256SUMS.txt
 ```
 
 The recorder requires the `SceLibMp4Recorder` stubs in VitaSDK. If the
@@ -40,21 +40,21 @@ stop finalizes any active recording as a fallback.
 Current active-workspace build evidence:
 
 ```text
-RenegadeDemoRecorder-A3.5-dev82.suprx       8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d
-RenegadeDemoRecorder-A3.5-dev82.skprx       e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5
-RenegadeDemoRecorder-A3.5-dev82-tai-config.txt 5dd4c84d4ce4ae6a727658eb27b058ab23e38a343a8f4cf808146720c2257fe0
+RenegadeDemoRecorder-A3.5-dev84.suprx       8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d
+RenegadeDemoRecorder-A3.5-dev84.skprx       e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5
+RenegadeDemoRecorder-A3.5-dev84-tai-config.txt 75e6f69f9690fd89689cd90be32357113d989be69770ea587cfefc546637d9b5
 ```
 
 ## Manual Install
 
-Copy the generated `.skprx` and `.suprx` to `ux0:tai/` and add the generated
+Copy the generated `.skprx` and `.suprx` to `ur0:tai/` and add the generated
 tai config snippet to the active tai config:
 
 ```text
 *KERNEL
-ux0:tai/RenegadeDemoRecorder-A3.5-dev82.skprx
+ur0:tai/RenegadeDemoRecorder-A3.5-dev84.skprx
 *RNEGA3101
-ux0:tai/RenegadeDemoRecorder-A3.5-dev82.suprx
+ur0:tai/RenegadeDemoRecorder-A3.5-dev84.suprx
 ```
 
 Reboot after changing tai config. Keep this title-scoped to `*RNEGA3101`; do
@@ -62,7 +62,7 @@ not install it under `*ALL`.
 
 ## Run A Recorded Session
 
-After the recorder plugin is installed and dev82 is installed from VitaShell:
+After the recorder plugin is installed and dev84 is installed from VitaShell:
 
 ```bash
 bash ./tools/run_dev82_recorded_demo_session.sh
@@ -70,7 +70,7 @@ bash ./tools/run_dev82_recorded_demo_session.sh
 
 The plugin starts recording as soon as Renegade loads. Play the demo normally.
 Press Start when done. The app exits, the plugin finalizes the MP4, and the
-script pulls the dev82 runtime log into `build/device-evidence/`.
+script pulls the dev84 runtime log into `build/device-evidence/`.
 
 The MP4 is written under `ux0:video` and imported into the Vita Video app by
 the recorder. Copy it off the Vita with VitaShell FTP or the device's normal
@@ -79,9 +79,9 @@ media workflow after the run.
 ## Evidence Boundary
 
 This is a demo-recording aid. It is not physical acceptance by itself. For
-dev82 acceptance, still return:
+dev84 acceptance, still return:
 
-- `ux0:data/renegade/user/logs/a35-dev82-runtime.log`
+- `ux0:data/renegade/user/logs/a35-dev84-runtime.log`
 - observations or screenshots for intro movies, main menu, loading, HUD,
   subtitles, textures, gate behavior, FPS, and freeze/crash state
 - any matching `psp2core-*.psp2dmp`

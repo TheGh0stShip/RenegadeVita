@@ -37,6 +37,14 @@
   Hash-matched physical validation remains required. Verify clean Start exit
   first, then loading orientation/progress, world framing, HUD/text glyphs,
   bounding boxes, dialogue text, and stability.
+- The exact canonical VPK is also hash-verified at
+  `ux0:/data/renegade/user/RenegadeVita-A3.5-dev84.vpk`; its packaged SELF is
+  installed at `ux0:/app/RNEGA3101/eboot.bin` with the same verified SELF hash.
+  The prior dev82 eboot is backed up under
+  `build/device-backups/a35-dev84-recorder-20260830T215406Z/`. A title-scoped
+  recorder is installed under `ur0:/tai/` with a backed-up and hash-verified
+  tai config; dev84 is running without synthetic input and recording locally.
+  Do not pull the new log, captures, or MP4 until the user reports this run.
 
 ## 2026-08-30 dev83 renderer-correction fast candidate
 

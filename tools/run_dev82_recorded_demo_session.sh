@@ -3,13 +3,13 @@ set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 rv_title_id=${RENEGADE_DEMO_TITLE_ID:-RNEGA3101}
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev82}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev84}
 rv_timeout=${RENEGADE_DEMO_TIMEOUT_SECONDS:-900}
 rv_launch_timeout=${RENEGADE_DEMO_LAUNCH_TIMEOUT_SECONDS:-45}
 rv_vdb=${RENEGADE_VDB:-"$rv_root/.agents/skills/vita-automated-runtime/scripts/vdb-ps-vita.sh"}
 rv_timestamp=$(date +%Y%m%d-%H%M%S)
 rv_evidence_root=${RENEGADE_DEMO_EVIDENCE_ROOT:-"$rv_root/build/device-evidence/${rv_candidate_label,,}-recorded-demo-$rv_timestamp"}
-rv_runtime_log_remote=${RENEGADE_RUNTIME_LOG_REMOTE:-ux0:/data/renegade/user/logs/a35-dev82-runtime.log}
+rv_runtime_log_remote=${RENEGADE_RUNTIME_LOG_REMOTE:-ux0:/data/renegade/user/logs/a35-dev84-runtime.log}
 
 usage() {
 	printf '%s\n' \

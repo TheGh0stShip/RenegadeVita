@@ -2,7 +2,7 @@
 
 ## 2026-08-30 — dev84 lifecycle correction; publication and physical gate active
 
-`[███████░░░] 7/10 current evidence gates complete; Git publication and physical gate active`
+`[███████░░░] 7/10 current evidence gates complete; recorded physical gate active`
 
 - User-reported Start crash returned one new candidate-scoped PSP2 dump:
   `981a48faa0b949df02b2126149c45fe379e2a208ea84ac48793ea10ab1f69651`.
@@ -24,6 +24,15 @@
 - Next: commit and push source plus gallery evidence to the private GitHub
   repository, then deploy only this hash-matched dev84 candidate for physical
   confirmation.
+- Deployed after the first publication: VPK
+  `6352b0e23a51e6943f2992843c97b8a07b9311877bffb69eeed06518e33e8051` is
+  hash-verified in the title user tree and SELF
+  `3c6304cc5fe13dbaf36ea27c6f32fc5fdac9a05c852e0416e519e42eb135d896` is
+  hash-verified at the installed eboot path. The prior dev82 executable and
+  tai config have candidate-scoped backups. A recorder was added only to
+  `ur0:/tai/` `*KERNEL` and `*RNEGA3101`, verified after reboot, and dev84 has
+  launched running with all synthetic input released. Await the user’s new
+  findings/Start exit before pulling logs, screenshots, or the finalized MP4.
 
 ## 2026-08-30 — dev83 visual-correction candidate; canonical build active
 

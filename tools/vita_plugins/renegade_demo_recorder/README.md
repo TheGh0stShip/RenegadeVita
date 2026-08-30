@@ -16,10 +16,10 @@ The script fetches the pinned source into the builder source cache, applies
 `vita-mp4-recorder-renegade-autostart.patch`, and writes these artifacts:
 
 ```text
-dist/RenegadeDemoRecorder-A3.5-dev82.suprx
-dist/RenegadeDemoRecorder-A3.5-dev82.skprx
-dist/RenegadeDemoRecorder-A3.5-dev82-tai-config.txt
-dist/RenegadeDemoRecorder-A3.5-dev82-SHA256SUMS.txt
+dist/RenegadeDemoRecorder-A3.5-dev84.suprx
+dist/RenegadeDemoRecorder-A3.5-dev84.skprx
+dist/RenegadeDemoRecorder-A3.5-dev84-tai-config.txt
+dist/RenegadeDemoRecorder-A3.5-dev84-SHA256SUMS.txt
 ```
 
 The selected VitaSDK must provide the `SceLibMp4Recorder` stubs. If the SDK
@@ -36,9 +36,9 @@ Renegade process loads, and finalizes the recording on the first Start press.
 The active workspace build produced these hashes:
 
 ```text
-RenegadeDemoRecorder-A3.5-dev82.suprx       8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d
-RenegadeDemoRecorder-A3.5-dev82.skprx       e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5
-RenegadeDemoRecorder-A3.5-dev82-tai-config.txt 5dd4c84d4ce4ae6a727658eb27b058ab23e38a343a8f4cf808146720c2257fe0
+RenegadeDemoRecorder-A3.5-dev84.suprx       8a856e76b99654b1d21fde65b8040c41cc29225da91076631b5ee76be564270d
+RenegadeDemoRecorder-A3.5-dev84.skprx       e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5
+RenegadeDemoRecorder-A3.5-dev84-tai-config.txt 75e6f69f9690fd89689cd90be32357113d989be69770ea587cfefc546637d9b5
 ```
 
 Install manually by copying the generated `.skprx` and `.suprx` to the path
@@ -62,5 +62,5 @@ Known limits inherited from the upstream recorder:
 - Free storage under `ux0:video` is required.
 
 This plugin is a demo-recording aid, not physical acceptance evidence by
-itself. The dev82 physical gate still needs the runtime log, screenshots or
+itself. The dev84 physical gate still needs the runtime log, screenshots or
 observations, and crash dumps when applicable.

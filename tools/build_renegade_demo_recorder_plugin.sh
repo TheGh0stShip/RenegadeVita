@@ -9,7 +9,7 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev82}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev84}
 rv_vitasdk=${RENEGADE_VITASDK:-${VITASDK:-/usr/local/vitasdk}}
 rv_jobs=${RENEGADE_BUILD_JOBS:-4}
 rv_repo=https://github.com/Rinnegatamante/Vita-MP4-Recorder.git
@@ -99,12 +99,12 @@ cp "$rv_build/user/VitaMP4Recorder.suprx" "$rv_dist/$rv_out_stem.suprx"
 cp "$rv_build/kernel/kVitaMP4Recorder.skprx" "$rv_dist/$rv_out_stem.skprx"
 
 cat > "$rv_dist/$rv_out_stem-tai-config.txt" <<EOF
-# Renegade demo recording plugin for title-scoped dev82 capture.
-# Copy the two generated files to ux0:tai/ first, then add this to tai config.
+# Renegade demo recording plugin for title-scoped $rv_candidate_label capture.
+# Copy the two generated files to ur0:tai/ first, then add this to tai config.
 *KERNEL
-ux0:tai/$rv_out_stem.skprx
+ur0:tai/$rv_out_stem.skprx
 *RNEGA3101
-ux0:tai/$rv_out_stem.suprx
+ur0:tai/$rv_out_stem.suprx
 EOF
 
 (

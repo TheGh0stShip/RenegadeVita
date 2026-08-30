@@ -28,6 +28,15 @@ exclusion. Its VPK/ELF/SELF SHA-256 values are
 `3c6304cc5fe13dbaf36ea27c6f32fc5fdac9a05c852e0416e519e42eb135d896`.
 Hash-matched physical evidence is still pending.
 
+The current exact dev84 VPK is hash-verified at
+`ux0:/data/renegade/user/RenegadeVita-A3.5-dev84.vpk`, and its packaged SELF
+is hash-verified at `ux0:/app/RNEGA3101/eboot.bin`. The previous dev82 SELF is
+backed up in `build/device-backups/a35-dev84-recorder-20260830T215406Z/`.
+Title-scoped recorder modules were added only to the `*KERNEL` and
+`*RNEGA3101` tai entries with a backed-up config; both module and config hashes
+were rechecked after upload. The app is running with all synthetic inputs
+released. The recorder begins locally and will finalize the MP4 on Start.
+
 The returned inverted-loading and black/HUD-only dev82 frames are in the
 repository's diagnostic historical gallery and expressly remain failed visual
 evidence. There is no finalized title-scoped MP4 on the Vita to upload yet.

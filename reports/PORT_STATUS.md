@@ -1,7 +1,42 @@
 # Renegade Vita port status
 
-Updated: 2026-08-30. Engineering changes use source-driven review, bounded
+Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
+
+## 2026-08-30 dev86 frontend evidence candidate — canonical package, not physical proof
+
+Dev85's exact physical return is retained as a failure: the EA movie was
+visible but extremely slow with buzzy/laggy audio, and Start reached a
+main-menu dialog whose items were missing. Its matching log proves that the
+original BINK and main-menu owners executed, and specifically records the
+Vita-only `MainMenuTransition` bypass.
+
+Dev86 makes three bounded corrections without replacing the original owners:
+
+- It removes only those Vita-only early returns so original
+  `MainMenuTransitionClass` can run its control-placement update again.
+- It prints native bootstrap progress immediately after debug-screen setup and
+  before user-tree/filesystem/retail pre-cache work, replacing the otherwise
+  opaque initial black period with progress information.
+- Its FFmpeg BINK boundary never submits a zero-filled startup/starvation
+  audio buffer. It waits for real decoded samples and emits bounded end-of-movie
+  timing/output statistics to measure the slow video/audio path.
+
+Focused contracts (18 tests) pass. Canonical `bash ./tools/build.sh` passed
+retained host validation (112 tests), deterministic 136-patch staging, 549
+ARM/package actions, original-runtime symbols, ELF/SELF/VPK identity,
+compressed VPK validation, diagnostics, and retail exclusion in
+`logs/a35-dev86-20260830-195426-build.log`. VPK/ELF/SELF SHA-256 values are
+`9a9f36c15f699b72e736f2b2a4b29d4e57537e59c3cfeb5b41f206884b85aa10`,
+`954be81d22f9c0ec527549b84b39ce9e87e5ed61eddcd130b74ac53021ec540d`, and
+`3b20079eca192cdf2d5869fbc3bfb485ec0528cfa2969f006a60f9567b44b4a8`.
+The VPK contains only `eboot.bin` and `sce_sys/param.sfo`.
+
+Dev86 is neither uploaded nor deployed, and no intro, menu, frame-rate, or
+audio claim is made. Its future physical gate requires matching device hashes,
+visible bootstrap/pre-cache, usable intro A/V plus timing receipt, Start skip,
+and visibly placed original WWUI controls. No dev86 screenshot or video has
+been returned, so no gallery or media publication is due.
 
 ## 2026-08-30 dev85 mandatory frontend correction gate — canonical package, not physical proof
 

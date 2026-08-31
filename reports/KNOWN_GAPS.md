@@ -1,23 +1,29 @@
 # Known gaps
 
-## Current dev85 mandatory frontend gate (2026-08-30)
+## Current dev86 mandatory frontend gate (2026-08-30)
 
 The dev84 physical return reported menu audio with a black panel and no intro
-movies. Dev85 source corrects the proven platform boundary: the original
+movies. Dev85 corrected the proven platform boundary: the original
 `GameModeManager` suppresses all rendering when `ConsoleBox` is exclusive, but
 Vita has no desktop console to own the framebuffer. It also re-enables the
 existing FFmpeg BINK provider and makes one movie upload failure local to that
 movie. These corrections have passed focused source validation and canonical
 ARM/package validation, not physical acceptance.
 
-The matching dev85 VPK is now deployed and its first physical return is a
-failure, not acceptance: EA_WW.BIK is visibly present but extremely slow with
+The matching dev85 VPK is deployed and its first physical return is a failure,
+not acceptance: EA_WW.BIK is visibly present but extremely slow with
 buzzy/laggy audio, and Start reaches an original main-menu dialog with missing
 items. The returned log proves the BINK path and main-menu owner execute; it
-also proves the Vita-only `MainMenuTransition` bypass. Restore that original
-control-placement route and establish measured BINK pacing before retesting.
-The separate HUD/text, shadow, START-exit, loading-flash/progress, and
-performance defects remain open.
+also proves the Vita-only `MainMenuTransition` bypass.
+
+Dev86 restores that original transition/control-placement path, presents a
+bootstrap status before retail filesystem/pre-cache work, and prevents BINK
+from submitting an empty startup/starvation audio buffer. It also records
+bounded audio/video decode and upload timing, audio waits, and ring high-water
+at movie end. Canonical ARM/package validation passes, but dev86 has not been
+deployed: no visual, pacing, or audio acceptance claim is valid until a
+hash-matched physical return. The separate HUD/text, shadow, START-exit,
+loading-flash/progress, and performance defects remain open.
 
 ## Current dev82 physical-test gaps (2026-08-28)
 
@@ -57,12 +63,12 @@ freeze repeats, collect and symbolicate only against the matching dev82
 ELF/map/symbol set.
 
 Bink movie ownership is implemented in the dev82 frontend integration through a
-pinned, Bink-only Vita FFmpeg build, but realtime movie playback is disabled in
-the current physical-test candidate after black-screen/audio-underrun evidence.
-The original `MovieGameModeClass` still owns the EA/Westwood intro route; the
-Vita boundary resolves the unchanged retail `.BIK` files, logs whether they are
-present, keeps the software decoder path compiled for diagnosis, and fails
-closed into the original menu instead of stalling before M00. Physical Vita
+pinned, Bink-only Vita FFmpeg build. The historical dev82 candidate disabled
+realtime playback after black-screen/audio-underrun evidence; dev85/dev86
+re-enable the provider below the unchanged original `MovieGameModeClass`.
+The Vita boundary resolves unchanged retail `.BIK` files and logs their path;
+dev86 fails only a failed movie and retains bounded pacing evidence rather than
+claiming realtime performance. Physical Vita
 validation of movie-file presence, skip behavior, decode speed, orientation,
 A/V synchronization, and a later re-enabled playback candidate is still
 required before intro playback can be accepted.

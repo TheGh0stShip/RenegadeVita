@@ -27,17 +27,31 @@ TOOL_VERSION = "1.0.0"
 
 KNOWN_METRICS = (
     "fps",
+    "frame_time_min",
     "frame_time_percentile_p50",
     "frame_time_percentile_p95",
     "frame_time_percentile_p99",
+    "frame_time_max",
     "slow_frame",
+    "slow_over_16_7ms",
+    "slow_over_20_0ms",
+    "slow_over_33_3ms",
+    "slow_over_50_0ms",
+    "sync",
     "simulation",
     "rendering",
     "mesh",
     "triangle",
     "indexed_submission",
     "texture_bind",
+    "texture_bind_skip",
+    "texture_sampler_update",
+    "texture_sampler_skip",
+    "texture_stage_enable_skip",
+    "texture_combiner_skip",
+    "texture_unsupported_stage",
     "state_change",
+    "render_state_skip",
     "memory",
     "instrumentation_overhead",
 )
@@ -46,6 +60,10 @@ IDENTITY_KEYS = ("content_id", "configuration_id", "camera_id")
 KEY_VALUE_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_-]*)\s*(?:=|:)\s*(\"[^\"]*\"|'[^']*'|[^,\s]+)")
 PERCENTILE_RE = re.compile(r"frame[-_ ]?time[-_ ]?percentile(?:[-_]?p?(\d{2}))?", re.IGNORECASE)
 TIME_PERCENTILE_RE = re.compile(r"frame[_-]?time[_-]?p(\d{2})", re.IGNORECASE)
+FRAME_US_SUMMARY_RE = re.compile(
+    r"\bframe_us\s+min/p50/p95(?:/p99)?/max=([0-9.]+)/([0-9.]+)/([0-9.]+)(?:/([0-9.]+))?/([0-9.]+)")
+P50_P95_WORST_US_RE = re.compile(r"\bp50/p95/worst_us=([0-9.]+)/([0-9.]+)/([0-9.]+)")
+STAGE_US_SUMMARY_RE = re.compile(r"\bstage_us\s+sync/sim/render=([0-9.]+)/([0-9.]+)/([0-9.]+)")
 
 
 def _canonical_key(raw: str) -> str:
@@ -76,13 +94,38 @@ def _coerce_int_or_float(value: float | int | None) -> str | int | float | None:
 
 def _metric_for_key(key: str) -> str | None:
     normalized = _canonical_key(key)
-    if normalized in {"fps", "frame_rate", "frame_rate_fps", "frames_per_second"}:
+    if normalized in {
+        "fps", "avg_fps", "average_fps", "perf_fps", "frame_rate",
+        "frame_rate_fps", "frames_per_second",
+    }:
         return "fps"
     if normalized in {"slow_frame", "slow_frame_ms"}:
         return "slow_frame"
-    if normalized in {"simulation", "simulation_ms", "simulation_us"}:
+    if normalized in {
+        "slow_over_16ms", "slow_over_16_7ms", "slow_over_16_7_ms",
+        "frames_over_16_7ms",
+    }:
+        return "slow_over_16_7ms"
+    if normalized in {
+        "slow_over_20ms", "slow_over_20_0ms", "slow_over_20_0_ms",
+        "frames_over_20ms", "frames_over_20_0ms",
+    }:
+        return "slow_over_20_0ms"
+    if normalized in {
+        "slow_over_33ms", "slow_over_33_3ms", "slow_over_33_3_ms",
+        "frames_over_33ms", "frames_over_33_3ms",
+    }:
+        return "slow_over_33_3ms"
+    if normalized in {
+        "slow_over_50ms", "slow_over_50_0ms", "slow_over_50_0_ms",
+        "frames_over_50ms", "frames_over_50_0ms",
+    }:
+        return "slow_over_50_0ms"
+    if normalized in {"sync", "sync_ms", "sync_us"}:
+        return "sync"
+    if normalized in {"simulation", "simulation_ms", "simulation_us", "sim_us"}:
         return "simulation"
-    if normalized in {"rendering", "rendering_ms", "rendering_us"}:
+    if normalized in {"rendering", "rendering_ms", "rendering_us", "render_us"}:
         return "rendering"
     if normalized in {"mesh", "meshes", "mesh_count"}:
         return "mesh"
@@ -90,14 +133,47 @@ def _metric_for_key(key: str) -> str | None:
         return "triangle"
     if normalized in {"indexed_submission", "indexed_submissions", "indexed_submission_count"}:
         return "indexed_submission"
-    if normalized in {"texture_bind", "texturebind", "texture_bind_count"}:
+    if normalized in {"texture_bind", "texture_binds", "texturebind", "texture_bind_count"}:
         return "texture_bind"
+    if normalized in {"texture_bind_skip", "texture_bind_skips", "texture_bind_skip_count"}:
+        return "texture_bind_skip"
+    if normalized in {
+        "texture_sampler_update", "texture_sampler_updates",
+        "texture_sampler_update_count",
+    }:
+        return "texture_sampler_update"
+    if normalized in {
+        "texture_sampler_skip", "texture_sampler_skips",
+        "texture_sampler_skip_count",
+    }:
+        return "texture_sampler_skip"
+    if normalized in {
+        "texture_stage_enable_skip", "texture_stage_enable_skips",
+        "texture_stage_enable_skip_count",
+    }:
+        return "texture_stage_enable_skip"
+    if normalized in {
+        "texture_combiner_skip", "texture_combiner_skips",
+        "texture_combiner_skip_count",
+    }:
+        return "texture_combiner_skip"
+    if normalized in {
+        "texture_unsupported_stage", "texture_unsupported_stages",
+        "texture_unsupported_stage_count",
+    }:
+        return "texture_unsupported_stage"
     if normalized in {"state_change", "state_change_count", "state_changes"}:
         return "state_change"
+    if normalized in {"render_state_skip", "render_state_skips", "render_state_skip_count"}:
+        return "render_state_skip"
     if normalized in {"memory", "memory_bytes", "memory_kib", "memory_mib"}:
         return "memory"
     if normalized in {"instrumentation_overhead", "instrumentation_overhead_ms", "instrumentation_overhead_pct"}:
         return "instrumentation_overhead"
+    if normalized in {"frame_time_min", "frame_time_min_us", "min_frame_us"}:
+        return "frame_time_min"
+    if normalized in {"frame_time_max", "frame_time_max_us", "worst_frame_us", "max_frame_us"}:
+        return "frame_time_max"
 
     match = TIME_PERCENTILE_RE.fullmatch(normalized)
     if match:
@@ -113,6 +189,26 @@ def _metric_for_key(key: str) -> str | None:
     if normalized in {"frame_time_percentile_99", "frame_time_percentile_p99"}:
         return "frame_time_percentile_p99"
     return None
+
+
+def _structured_runtime_key_values(text: str) -> list[tuple[str, str]]:
+    values: list[tuple[str, str]] = []
+    for match in FRAME_US_SUMMARY_RE.finditer(text):
+        values.append(("frame_time_min_us", match.group(1)))
+        values.append(("frame_time_p50", match.group(2)))
+        values.append(("frame_time_p95", match.group(3)))
+        if match.group(4):
+            values.append(("frame_time_p99", match.group(4)))
+        values.append(("frame_time_max_us", match.group(5)))
+    for match in P50_P95_WORST_US_RE.finditer(text):
+        values.append(("frame_time_p50", match.group(1)))
+        values.append(("frame_time_p95", match.group(2)))
+        values.append(("frame_time_max_us", match.group(3)))
+    for match in STAGE_US_SUMMARY_RE.finditer(text):
+        values.append(("sync_us", match.group(1)))
+        values.append(("simulation_us", match.group(2)))
+        values.append(("rendering_us", match.group(3)))
+    return values
 
 
 def _identity_key(raw: str) -> str | None:
@@ -185,6 +281,7 @@ def parse_log(path: Path) -> dict[str, Any]:
     lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
     for line_number, raw_line in enumerate(lines, 1):
         assignments = _parse_key_values(raw_line)
+        assignments.extend(_structured_runtime_key_values(raw_line))
         parsed_something = False
         for key, value in assignments:
             identity_field = _identity_key(key)

@@ -342,7 +342,8 @@ bool Write_State(const char *path, const A31StateSnapshot &state)
 		state.player.health, state.player.physics_registered ? "true" : "false",
 		state.player.grounded ? "true" : "false");
 	const A31RendererTelemetry &r = state.renderer;
-	fprintf(file, "\n  \"renderer\":{\"render_objects\":%llu,\"mesh_candidates\":%llu,\"lod_selections\":%llu,\"draw_calls\":%llu,\"mesh_submissions\":%llu,\"vertices\":%llu,\"triangles\":%llu,\"indexed_draw_calls\":%llu,\"indexed_vertex_references\":%llu,\"indexed_triangles\":%llu,\"material_passes\":%llu,\"textures_resident\":%llu,\"texture_bytes_resident\":%llu,\"texture_uploads\":%llu,\"texture_binds\":%llu,\"texture_requests\":%llu,\"texture_decodes\":%llu,\"texture_dds_loads\":%llu,\"texture_tga_loads\":%llu,\"texture_missing\":%llu,\"texture_source_missing\":%llu,\"texture_invalid_data\":%llu,\"texture_unsupported_formats\":%llu,\"texture_decode_failures\":%llu,\"texture_upload_failures\":%llu,\"texture_checkerboard_fallbacks\":%llu,\"texture_checkerboard_binds\":%llu,\"texture_invalid_binds\":%llu,\"state_changes\":%llu,\"rejected\":%llu,\"unsupported\":%llu,\"backend_errors\":%llu,\"geometry_checksum\":\"%08X\",\"indexed_checksum\":\"%08X\",\"visible_objects\":%u,\"visibility_sectors\":%u,\"mesh_candidates_not_submitted\":%u,\"culling_count_exact\":%s},",
+	fprintf(file,
+		"\n  \"renderer\":{\"render_objects\":%llu,\"mesh_candidates\":%llu,\"lod_selections\":%llu,\"draw_calls\":%llu,\"mesh_submissions\":%llu,\"vertices\":%llu,\"triangles\":%llu,\"indexed_draw_calls\":%llu,\"indexed_vertex_references\":%llu,\"indexed_triangles\":%llu,\"material_passes\":%llu,\"textures_resident\":%llu,\"texture_bytes_resident\":%llu,\"texture_uploads\":%llu,\"texture_binds\":%llu,\"texture_bind_skips\":%llu,\"texture_requests\":%llu,\"texture_decodes\":%llu,\"texture_dds_loads\":%llu,\"texture_tga_loads\":%llu,\"texture_missing\":%llu,\"texture_source_missing\":%llu,\"texture_invalid_data\":%llu,\"texture_unsupported_formats\":%llu,\"texture_decode_failures\":%llu,\"texture_upload_failures\":%llu,\"texture_checkerboard_fallbacks\":%llu,\"texture_checkerboard_binds\":%llu,\"texture_invalid_binds\":%llu,\"texture_sampler_updates\":%llu,\"texture_sampler_skips\":%llu,\"texture_stage_enable_skips\":%llu,\"texture_combiner_skips\":%llu,\"texture_unsupported_stages\":%llu,\"state_changes\":%llu,\"render_state_skips\":%llu,\"rejected\":%llu,\"unsupported\":%llu,\"backend_errors\":%llu,\"geometry_checksum\":\"%08X\",\"indexed_checksum\":\"%08X\",\"visible_objects\":%u,\"visibility_sectors\":%u,\"mesh_candidates_not_submitted\":%u,\"culling_count_exact\":%s},",
 		(unsigned long long)r.render_objects, (unsigned long long)r.mesh_candidates,
 		(unsigned long long)r.lod_selections, (unsigned long long)r.draw_calls,
 		(unsigned long long)r.mesh_submissions, (unsigned long long)r.vertices,
@@ -352,6 +353,7 @@ bool Write_State(const char *path, const A31StateSnapshot &state)
 		(unsigned long long)r.textures_resident,
 		(unsigned long long)r.texture_bytes_resident,
 		(unsigned long long)r.texture_uploads, (unsigned long long)r.texture_binds,
+		(unsigned long long)r.texture_bind_skips,
 		(unsigned long long)r.texture_requests, (unsigned long long)r.texture_decodes,
 		(unsigned long long)r.texture_dds_loads,
 		(unsigned long long)r.texture_tga_loads,
@@ -364,7 +366,14 @@ bool Write_State(const char *path, const A31StateSnapshot &state)
 		(unsigned long long)r.texture_checkerboard_fallbacks,
 		(unsigned long long)r.texture_checkerboard_binds,
 		(unsigned long long)r.texture_invalid_binds,
-		(unsigned long long)r.state_changes, (unsigned long long)r.rejected_submissions,
+		(unsigned long long)r.texture_sampler_updates,
+		(unsigned long long)r.texture_sampler_skips,
+		(unsigned long long)r.texture_stage_enable_skips,
+		(unsigned long long)r.texture_combiner_skips,
+		(unsigned long long)r.texture_unsupported_stages,
+		(unsigned long long)r.state_changes,
+		(unsigned long long)r.render_state_skips,
+		(unsigned long long)r.rejected_submissions,
 		(unsigned long long)r.unsupported_submissions,
 		(unsigned long long)r.backend_errors, r.geometry_checksum,
 		r.indexed_geometry_checksum, r.visible_object_count,
@@ -403,11 +412,11 @@ bool Write_History(const char *path, const A31FrameHistory &history)
 {
 	FILE *file = fopen(path, "wb");
 	if (file == NULL) return false;
-	fprintf(file, "frame,monotonic_us,frame_us,ordinary_frame_us,input_us,game_update_us,physics_us,camera_us,visibility_us,render_us,present_us,housekeeping_us,capture_readback_us,draw_calls,meshes,vertices,triangles,indexed_draws,indexed_triangles,material_passes,textures_resident,texture_bytes,texture_uploads,texture_binds,state_changes,rejected,unsupported,backend_errors,user_free,cdram_free,phycont_free,user_free_low_water,cdram_free_low_water,phycont_free_low_water,vitagl_ram_free_low_water,vitagl_vram_free_low_water,vitagl_slow_free_low_water,vitagl_all_free_low_water,memory_samples,benchmark_active,benchmark_point,game_updates,physics_updates,input_actions\n");
+	fprintf(file, "frame,monotonic_us,frame_us,ordinary_frame_us,input_us,game_update_us,physics_us,camera_us,visibility_us,render_us,present_us,housekeeping_us,capture_readback_us,draw_calls,meshes,vertices,triangles,indexed_draws,indexed_triangles,material_passes,textures_resident,texture_bytes,texture_uploads,texture_binds,texture_bind_skips,texture_sampler_updates,texture_sampler_skips,texture_stage_enable_skips,texture_combiner_skips,texture_unsupported_stages,state_changes,render_state_skips,rejected,unsupported,backend_errors,user_free,cdram_free,phycont_free,user_free_low_water,cdram_free_low_water,phycont_free_low_water,vitagl_ram_free_low_water,vitagl_vram_free_low_water,vitagl_slow_free_low_water,vitagl_all_free_low_water,memory_samples,benchmark_active,benchmark_point,game_updates,physics_updates,input_actions\n");
 	for (size_t index = 0; index < history.Count(); ++index) {
 		const A31FrameTelemetry &f = history.Oldest(index);
 		const A31RendererTelemetry &r = f.renderer;
-		fprintf(file, "%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%lld,%lld,%lld,%lld,%lld,%lld,%llu,%llu,%llu,%llu,%u,%d,%u,%llu,%llu,%llu\n",
+		fprintf(file, "%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%lld,%lld,%lld,%lld,%lld,%lld,%llu,%llu,%llu,%llu,%u,%d,%u,%llu,%llu,%llu\n",
 			(unsigned long long)f.frame_index, (unsigned long long)f.monotonic_us,
 			(unsigned long long)f.frame_time_us,
 			(unsigned long long)f.ordinary_frame_time_us,
@@ -428,7 +437,14 @@ bool Write_History(const char *path, const A31FrameHistory &history)
 			(unsigned long long)r.textures_resident,
 			(unsigned long long)r.texture_bytes_resident,
 			(unsigned long long)r.texture_uploads, (unsigned long long)r.texture_binds,
+			(unsigned long long)r.texture_bind_skips,
+			(unsigned long long)r.texture_sampler_updates,
+			(unsigned long long)r.texture_sampler_skips,
+			(unsigned long long)r.texture_stage_enable_skips,
+			(unsigned long long)r.texture_combiner_skips,
+			(unsigned long long)r.texture_unsupported_stages,
 			(unsigned long long)r.state_changes,
+			(unsigned long long)r.render_state_skips,
 			(unsigned long long)r.rejected_submissions,
 			(unsigned long long)r.unsupported_submissions,
 			(unsigned long long)r.backend_errors,
@@ -488,7 +504,7 @@ bool Write_Summary(const char *path, const A31StateSnapshot &state,
 		if (value > ordinary_max) ordinary_max = value;
 	}
 	fprintf(file,
-			"%s developer capture\nCandidate: %s\nRuntime log: %s\nPhase: %s\nReason: %s\nFrame: %llu\nHistory frames: %u\nOrdinary frame min/p50/p95/p99/mean/max: %.3f / %.3f / %.3f / %.3f / %.3f / %.3f ms\nCapture stall excluded: %.3f ms\nLoading visual gate: active=%d logical=%ux%u native=%ux%u presentation=%u,%u %ux%u framebuffer=%ux%u fullscreen=%d aspect=%d original_owner=%d overlay_disabled=%d loadscreen_vflip=%d gameplay_uv=%d\nWorld: %u static, %u dynamic, %u semantic meshes\nCamera: %s (%s)\nPlayer: %s id=%u type=%s\nRenderer: %llu draws, %llu vertices, %llu triangles, %llu material passes\nTextures: %llu resident, %llu bytes, %llu uploads, %llu binds\nBackend: %llu state changes, %llu errors, %llu rejected, %llu unsupported\nMemory samples: %u\nMemory user/cdram/phycont free: %lld / %lld / %lld\nMemory user/cdram/phycont sampled low-water: %lld / %lld / %lld\nMemory VitaGL RAM/VRAM/SLOW/ALL sampled low-water: %llu / %llu / %llu / %llu\nBenchmark: %s route=%s point=%u\n",
+			"%s developer capture\nCandidate: %s\nRuntime log: %s\nPhase: %s\nReason: %s\nFrame: %llu\nHistory frames: %u\nOrdinary frame min/p50/p95/p99/mean/max: %.3f / %.3f / %.3f / %.3f / %.3f / %.3f ms\nCapture stall excluded: %.3f ms\nLoading visual gate: active=%d logical=%ux%u native=%ux%u presentation=%u,%u %ux%u framebuffer=%ux%u fullscreen=%d aspect=%d original_owner=%d overlay_disabled=%d loadscreen_vflip=%d gameplay_uv=%d\nWorld: %u static, %u dynamic, %u semantic meshes\nCamera: %s (%s)\nPlayer: %s id=%u type=%s\nRenderer: %llu draws, %llu vertices, %llu triangles, %llu material passes\nTextures: %llu resident, %llu bytes, %llu uploads, %llu binds, %llu bind skips\nTexture state: %llu sampler updates, %llu sampler skips, %llu stage-enable skips, %llu combiner skips, %llu unsupported stages\nBackend: %llu state changes, %llu render-state skips, %llu errors, %llu rejected, %llu unsupported\nMemory samples: %u\nMemory user/cdram/phycont free: %lld / %lld / %lld\nMemory user/cdram/phycont sampled low-water: %lld / %lld / %lld\nMemory VitaGL RAM/VRAM/SLOW/ALL sampled low-water: %llu / %llu / %llu / %llu\nBenchmark: %s route=%s point=%u\n",
 		state.build_label, state.milestone, state.runtime_log_path, state.phase,
 		state.reason, (unsigned long long)state.capture_frame,
 		static_cast<unsigned>(history.Count()),
@@ -527,7 +543,14 @@ bool Write_Summary(const char *path, const A31StateSnapshot &state,
 		(unsigned long long)state.renderer.texture_bytes_resident,
 		(unsigned long long)state.renderer.texture_uploads,
 		(unsigned long long)state.renderer.texture_binds,
+		(unsigned long long)state.renderer.texture_bind_skips,
+		(unsigned long long)state.renderer.texture_sampler_updates,
+		(unsigned long long)state.renderer.texture_sampler_skips,
+		(unsigned long long)state.renderer.texture_stage_enable_skips,
+		(unsigned long long)state.renderer.texture_combiner_skips,
+		(unsigned long long)state.renderer.texture_unsupported_stages,
 		(unsigned long long)state.renderer.state_changes,
+		(unsigned long long)state.renderer.render_state_skips,
 		(unsigned long long)state.renderer.backend_errors,
 		(unsigned long long)state.renderer.rejected_submissions,
 		(unsigned long long)state.renderer.unsupported_submissions,

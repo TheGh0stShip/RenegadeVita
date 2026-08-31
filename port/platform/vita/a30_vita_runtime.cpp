@@ -222,6 +222,8 @@ A31RendererTelemetry Frame_Renderer_Telemetry(
 		before.texture_uploads);
 	output.texture_binds = Delta_U64(after.texture_binds,
 		before.texture_binds);
+	output.texture_bind_skips = Delta_U64(after.texture_bind_skips,
+		before.texture_bind_skips);
 	output.texture_requests = Delta_U64(after.texture_requests,
 		before.texture_requests);
 	output.texture_decodes = Delta_U64(after.texture_decodes,
@@ -243,8 +245,20 @@ A31RendererTelemetry Frame_Renderer_Telemetry(
 		before.texture_checkerboard_fallbacks);
 	output.texture_invalid_binds = Delta_U64(after.texture_invalid_binds,
 		before.texture_invalid_binds);
+	output.texture_sampler_updates = Delta_U64(after.texture_sampler_updates,
+		before.texture_sampler_updates);
+	output.texture_sampler_skips = Delta_U64(after.texture_sampler_skips,
+		before.texture_sampler_skips);
+	output.texture_stage_enable_skips = Delta_U64(after.texture_stage_enable_skips,
+		before.texture_stage_enable_skips);
+	output.texture_combiner_skips = Delta_U64(after.texture_combiner_skips,
+		before.texture_combiner_skips);
+	output.texture_unsupported_stages = Delta_U64(after.texture_unsupported_stages,
+		before.texture_unsupported_stages);
 	output.state_changes = Delta_U64(after.state_changes,
 		before.state_changes);
+	output.render_state_skips = Delta_U64(after.render_state_skips,
+		before.render_state_skips);
 	output.rejected_submissions = Delta_U32(after.rejected_indexed_submissions,
 		before.rejected_indexed_submissions);
 	output.unsupported_submissions = Delta_U32(after.unsupported_submissions,

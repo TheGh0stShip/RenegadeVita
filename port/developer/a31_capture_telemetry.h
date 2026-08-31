@@ -43,6 +43,7 @@ struct A31RendererTelemetry
 	uint64_t texture_bytes_resident;
 	uint64_t texture_uploads;
 	uint64_t texture_binds;
+	uint64_t texture_bind_skips;
 	uint64_t texture_requests;
 	uint64_t texture_decodes;
 	uint64_t texture_dds_loads;
@@ -56,7 +57,13 @@ struct A31RendererTelemetry
 	uint64_t texture_checkerboard_fallbacks;
 	uint64_t texture_checkerboard_binds;
 	uint64_t texture_invalid_binds;
+	uint64_t texture_sampler_updates;
+	uint64_t texture_sampler_skips;
+	uint64_t texture_stage_enable_skips;
+	uint64_t texture_combiner_skips;
+	uint64_t texture_unsupported_stages;
 	uint64_t state_changes;
+	uint64_t render_state_skips;
 	uint64_t rejected_submissions;
 	uint64_t unsupported_submissions;
 	uint64_t backend_errors;

@@ -226,6 +226,7 @@ bool Set_Texture_Stage_Enabled(uint32_t stage, bool enabled)
 	}
 	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
 	if (cache.enabled_known && cache.enabled == enabled) {
+		++g_statistics.texture_stage_enable_skips;
 		if (!g_logged_first_state_cache_skip) {
 			Vita_Append_A22_Runtime_Breadcrumb("render-state",
 				"first cached VitaGL texture-stage enable skip: stage=%u enabled=%d",
@@ -2030,6 +2031,7 @@ bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
 	Set_Texture_Stage_Enabled(stage, true);
 	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
 	if (cache.texture_known && cache.texture == native_texture) {
+		++g_statistics.texture_bind_skips;
 		return true;
 	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
@@ -2082,6 +2084,7 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 		cache.address_u == address_u && cache.address_v == address_v &&
 		cache.min_filter == min_filter && cache.mag_filter == mag_filter &&
 		cache.mip_filter == mip_filter) {
+		++g_statistics.texture_sampler_skips;
 		return true;
 	}
 	const GLenum wrap_u = address_u == 3U ? GL_CLAMP_TO_EDGE : GL_REPEAT;
@@ -2138,6 +2141,13 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	if (!texture_enabled) {
 		Set_Texture_Stage_Enabled(stage, false);
 		NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+		if (cache.combiner_known && !cache.combiner_texture_enabled &&
+			cache.color_op == color_op && cache.color_arg1 == color_arg1 &&
+			cache.color_arg2 == color_arg2 && cache.alpha_op == alpha_op &&
+			cache.alpha_arg1 == alpha_arg1 && cache.alpha_arg2 == alpha_arg2) {
+			++g_statistics.texture_combiner_skips;
+			return true;
+		}
 		cache.combiner_known = true;
 		cache.combiner_texture_enabled = false;
 		cache.color_op = color_op;
@@ -2154,6 +2164,7 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 		cache.color_op == color_op && cache.color_arg1 == color_arg1 &&
 		cache.color_arg2 == color_arg2 && cache.alpha_op == alpha_op &&
 		cache.alpha_arg1 == alpha_arg1 && cache.alpha_arg2 == alpha_arg2) {
+		++g_statistics.texture_combiner_skips;
 		return true;
 	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
@@ -2191,6 +2202,7 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 {
 #if defined(__vita__)
 	if (Render_State_Cache_Matches(state, value)) {
+		++g_statistics.render_state_skips;
 		return true;
 	}
 	if (Update_Fog_State_From_DX8_Render_State(state, value, g_fog_state)) {

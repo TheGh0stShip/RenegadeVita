@@ -1135,6 +1135,7 @@ void Copy_Renderer_Statistics(A31RendererTelemetry &telemetry)
 	telemetry.texture_bytes_resident = statistics.texture_bytes_resident;
 	telemetry.texture_uploads = statistics.texture_uploads;
 	telemetry.texture_binds = statistics.texture_binds;
+	telemetry.texture_bind_skips = statistics.texture_bind_skips;
 	telemetry.texture_requests = statistics.texture_requests;
 	telemetry.texture_decodes = statistics.texture_decodes;
 	telemetry.texture_dds_loads = statistics.texture_dds_loads;
@@ -1148,7 +1149,13 @@ void Copy_Renderer_Statistics(A31RendererTelemetry &telemetry)
 	telemetry.texture_checkerboard_fallbacks = statistics.texture_checkerboard_fallbacks;
 	telemetry.texture_checkerboard_binds = statistics.texture_checkerboard_binds;
 	telemetry.texture_invalid_binds = statistics.texture_invalid_binds;
+	telemetry.texture_sampler_updates = statistics.texture_sampler_updates;
+	telemetry.texture_sampler_skips = statistics.texture_sampler_skips;
+	telemetry.texture_stage_enable_skips = statistics.texture_stage_enable_skips;
+	telemetry.texture_combiner_skips = statistics.texture_combiner_skips;
+	telemetry.texture_unsupported_stages = statistics.texture_unsupported_stages;
 	telemetry.state_changes = statistics.state_changes;
+	telemetry.render_state_skips = statistics.render_state_skips;
 	telemetry.rejected_submissions = statistics.rejected_indexed_submissions;
 	telemetry.unsupported_submissions = statistics.unsupported_submissions;
 	telemetry.backend_errors = statistics.backend_errors;
@@ -1687,7 +1694,10 @@ struct InteractiveTiming
 	uint64_t total_render_us;
 	uint32_t total_frames;
 	uint32_t minimum_frame_us;
-	uint32_t slow_frame_count;
+	uint32_t slow_over_16_7ms_count;
+	uint32_t slow_over_20_0ms_count;
+	uint32_t slow_over_33_3ms_count;
+	uint32_t slow_over_50_0ms_count;
 	uint32_t worst_frame_us;
 
 	void Add(uint32_t sync_us, uint32_t simulation_us, uint32_t render_us,
@@ -1704,7 +1714,10 @@ struct InteractiveTiming
 		if (minimum_frame_us == 0U || frame_duration_us < minimum_frame_us) {
 			minimum_frame_us = frame_duration_us;
 		}
-		if (frame_duration_us > 33333U) ++slow_frame_count;
+		if (frame_duration_us > 16667U) ++slow_over_16_7ms_count;
+		if (frame_duration_us > 20000U) ++slow_over_20_0ms_count;
+		if (frame_duration_us > 33333U) ++slow_over_33_3ms_count;
+		if (frame_duration_us > 50000U) ++slow_over_50_0ms_count;
 		if (frame_duration_us > worst_frame_us) worst_frame_us = frame_duration_us;
 	}
 
@@ -1756,11 +1769,13 @@ void Log_Timing_Statistics(const InteractiveTiming &timing,
 	const RenegadeVitaRenderer::Statistics &renderer)
 {
 	if (timing.sample_count == 0U) return;
-	A30_Vita_Log("A3.5 perf: frames=%u rolling_samples=%u avg_fps=%.3f frame_us min/p50/p95/max=%u/%u/%u/%u slow_over_33ms=%u stage_us sync/sim/render=%u/%u/%u draws meshes=%u triangles=%u textures req/decode/upload/bind/missing=%llu/%llu/%llu/%llu/%llu loaded_dds/tga=%llu/%llu source/invalid/unsupported/decode/upload_fail/checker/checker_bind/invalid_bind=%llu/%llu/%llu/%llu/%llu/%llu/%llu/%llu state_changes=%llu backend_errors=%llu\n",
+	A30_Vita_Log("A3.5 perf: frames=%u rolling_samples=%u avg_fps=%.3f frame_us min/p50/p95/p99/max=%u/%u/%u/%u/%u slow_over_16_7ms=%u slow_over_20ms=%u slow_over_33ms=%u slow_over_50ms=%u stage_us sync/sim/render=%u/%u/%u draws meshes=%u triangles=%u textures req/decode/upload/bind/missing=%llu/%llu/%llu/%llu/%llu loaded_dds/tga=%llu/%llu source/invalid/unsupported/decode/upload_fail/checker/checker_bind/invalid_bind=%llu/%llu/%llu/%llu/%llu/%llu/%llu/%llu texture_sampler_updates=%llu texture_bind_skips=%llu texture_sampler_skips=%llu texture_stage_enable_skips=%llu texture_combiner_skips=%llu texture_unsupported_stages=%llu state_changes=%llu render_state_skips=%llu backend_errors=%llu\n",
 		timing.total_frames, timing.sample_count,
 		static_cast<double>(timing.Average_FPS_Milli()) / 1000.0,
 		timing.minimum_frame_us, timing.Percentile(50U), timing.Percentile(95U),
-		timing.worst_frame_us, timing.slow_frame_count,
+		timing.Percentile(99U), timing.worst_frame_us,
+		timing.slow_over_16_7ms_count, timing.slow_over_20_0ms_count,
+		timing.slow_over_33_3ms_count, timing.slow_over_50_0ms_count,
 		timing.Average(timing.total_sync_us), timing.Average(timing.total_simulation_us),
 		timing.Average(timing.total_render_us), renderer.mesh_submissions,
 		renderer.triangle_submissions,
@@ -1779,7 +1794,14 @@ void Log_Timing_Statistics(const InteractiveTiming &timing,
 		static_cast<unsigned long long>(renderer.texture_checkerboard_fallbacks),
 		static_cast<unsigned long long>(renderer.texture_checkerboard_binds),
 		static_cast<unsigned long long>(renderer.texture_invalid_binds),
+		static_cast<unsigned long long>(renderer.texture_sampler_updates),
+		static_cast<unsigned long long>(renderer.texture_bind_skips),
+		static_cast<unsigned long long>(renderer.texture_sampler_skips),
+		static_cast<unsigned long long>(renderer.texture_stage_enable_skips),
+		static_cast<unsigned long long>(renderer.texture_combiner_skips),
+		static_cast<unsigned long long>(renderer.texture_unsupported_stages),
 		static_cast<unsigned long long>(renderer.state_changes),
+		static_cast<unsigned long long>(renderer.render_state_skips),
 		static_cast<unsigned long long>(renderer.backend_errors));
 	A30_Vita_Log("A3.5 skin: submissions=%u deformed_vertices=%u deformation_failures=%u\n",
 		renderer.skinned_mesh_submissions, renderer.deformed_skin_vertices,

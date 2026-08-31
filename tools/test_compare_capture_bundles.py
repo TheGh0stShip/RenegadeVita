@@ -37,7 +37,13 @@ class CaptureComparisonTest(unittest.TestCase):
                          "indexed_draw_calls": 0, "indexed_triangles": 0,
                          "material_passes": 654, "textures_resident": 12,
                          "texture_bytes_resident": 1000, "texture_uploads": 0,
-                         "texture_binds": 0, "state_changes": 5,
+                         "texture_binds": 0, "texture_bind_skips": 2,
+                         "texture_sampler_updates": 3,
+                         "texture_sampler_skips": 4,
+                         "texture_stage_enable_skips": 5,
+                         "texture_combiner_skips": 6,
+                         "texture_unsupported_stages": 0,
+                         "state_changes": 5, "render_state_skips": 7,
                          "rejected": 0, "unsupported": 0,
                          "backend_errors": 0, "geometry_checksum": "0C3D50E4",
                          "indexed_checksum": "00000000"},
@@ -67,6 +73,10 @@ class CaptureComparisonTest(unittest.TestCase):
             self.assertEqual(result["performance"]["mean_ms"]["delta"], 2.0)
             self.assertEqual(result["performance"]["p99_ms"]["after"], 18.0)
             self.assertEqual(result["performance"]["slow_over_16_7ms"]["delta"], 1.0)
+            self.assertEqual(result["performance"]["slow_over_20_0ms"]["after"], 0.0)
+            self.assertEqual(result["performance"]["slow_over_50_0ms"]["after"], 0.0)
+            self.assertEqual(result["performance"]["pacing_tier"]["before"], "target-60fps")
+            self.assertEqual(result["performance"]["pacing_tier"]["after"], "preferred-50fps")
             self.assertEqual(result["stages"]["render_us.mean_ms"]["delta"], 1.0)
             self.assertEqual(result["memory"]["memory.system_user_free"]["delta"], -10)
             self.assertTrue(result["renderer"]["renderer.triangles"]["changed"])

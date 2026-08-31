@@ -58,6 +58,54 @@ class RuntimeLogFieldCompareTests(unittest.TestCase):
             self.assertEqual(metrics["memory"]["samples"], 1)
             self.assertEqual(metrics["mesh"]["samples"], 1)
 
+    def test_current_runtime_perf_summary_forms_are_parsed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            log = root / "runtime.log"
+            log.write_text(
+                "A3.5 perf: frames=2400 rolling_samples=240 avg_fps=39.418 "
+                "frame_us min/p50/p95/p99/max=18000/21874/24446/35000/50000 "
+                "slow_over_20ms=1200 slow_over_33ms=231 "
+                "stage_us sync/sim/render=200/6427/18938 draws meshes=249616 "
+                "triangles=14009711 texture_binds=216621 "
+                "texture_sampler_updates=100 texture_bind_skips=200 "
+                "texture_sampler_skips=300 texture_stage_enable_skips=400 "
+                "texture_combiner_skips=500 texture_unsupported_stages=2 "
+                "state_changes=16800 "
+                "render_state_skips=900\n"
+                "A3.1 interactive: complete perf_fps=41.250 "
+                "p50/p95/worst_us=20000/30000/60000\n",
+                encoding="utf-8",
+            )
+
+            out_dir = root / "out"
+            out_dir.mkdir()
+            run_tool([log], out_dir)
+            metrics = json.loads(
+                (out_dir / "report.json").read_text(encoding="utf-8")
+            )["runs"][0]["metrics"]
+            self.assertEqual(metrics["fps"]["samples"], 2)
+            self.assertEqual(metrics["fps"]["min"], 39.418)
+            self.assertEqual(metrics["frame_time_min"]["mean"], 18000)
+            self.assertEqual(metrics["frame_time_percentile_p50"]["samples"], 2)
+            self.assertEqual(metrics["frame_time_percentile_p95"]["max"], 30000)
+            self.assertEqual(metrics["frame_time_percentile_p99"]["mean"], 35000)
+            self.assertEqual(metrics["frame_time_max"]["max"], 60000)
+            self.assertEqual(metrics["slow_over_20_0ms"]["mean"], 1200)
+            self.assertEqual(metrics["slow_over_33_3ms"]["mean"], 231)
+            self.assertEqual(metrics["sync"]["mean"], 200)
+            self.assertEqual(metrics["simulation"]["mean"], 6427)
+            self.assertEqual(metrics["rendering"]["mean"], 18938)
+            self.assertEqual(metrics["texture_bind"]["mean"], 216621)
+            self.assertEqual(metrics["texture_sampler_update"]["mean"], 100)
+            self.assertEqual(metrics["texture_bind_skip"]["mean"], 200)
+            self.assertEqual(metrics["texture_sampler_skip"]["mean"], 300)
+            self.assertEqual(metrics["texture_stage_enable_skip"]["mean"], 400)
+            self.assertEqual(metrics["texture_combiner_skip"]["mean"], 500)
+            self.assertEqual(metrics["texture_unsupported_stage"]["mean"], 2)
+            self.assertEqual(metrics["state_change"]["mean"], 16800)
+            self.assertEqual(metrics["render_state_skip"]["mean"], 900)
+
     def test_duplicate_samples_preserved(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

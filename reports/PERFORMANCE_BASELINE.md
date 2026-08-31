@@ -11,11 +11,13 @@ frame. GPU time is never inferred from CPU timing.
 Returned capture bundles are compared with
 `python3 tools/compare_capture_bundles.py BEFORE AFTER`. The comparison reads
 the retained `frames.csv` rather than log text and reports ordinary-frame
-sample count, min/mean/median/p95/p99/max, mean FPS, 16.7/33.3 ms slow-frame
-counts, capture-readback stall, and mean/p95 for input, game update, physics,
-camera, visibility, render submission, present, and housekeeping. It also
-compares renderer/resource counters and memory snapshots. No device
-performance assertion is made until a returned A3.2-dev1 capture exists.
+sample count, min/mean/median/p95/p99/max, mean FPS, a pacing tier, 16.7/20.0/
+33.3/50.0 ms slow-frame counts and percentages, capture-readback stall, and
+mean/p95 for input, game update, physics, camera, visibility, render
+submission, present, and housekeeping. It also compares renderer/resource
+counters, renderer cache-skip counters, and memory snapshots. No device
+performance assertion is made until a returned matching physical capture
+exists.
 
 The A3.1.4 physical geometry evidence is retained as a pre-texture baseline:
 first interactive frame 205 meshes, 12,426 vertices, 8,661 triangles; total

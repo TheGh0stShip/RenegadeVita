@@ -1,5 +1,25 @@
 # Live engineering progress
 
+## 2026-08-31 — No-build performance/fidelity gate preparation
+
+`[░░░░░░░░░░] 0/10 performance acceptance gates complete; no build, deploy, launch, provider install, or device capture`
+
+- Source-only work continued in response to the performance/FPS scope. The
+  working target is now explicit: 60 FPS top-end, 50 FPS preferred floor,
+  30 FPS degraded floor, and 20 FPS critical floor. The new
+  `reports/PERFORMANCE_FIDELITY_PLAN.md` records the required fixed-route
+  evidence, optimization lanes, and next build/test gates.
+- No renderer draw ordering, mission logic, physics, scripts, original asset
+  ownership, or retail data changed. Diagnostic changes prepare the next
+  candidate to report p99 frame time and 16.7/20.0/33.3/50.0 ms slow-frame
+  bands, plus renderer cache-skip counters for texture binds, sampler state,
+  stage enables, texture combiners, and render states.
+- Tooling now compares capture bundles against the same FPS bands and parses
+  current compact runtime performance lines into the performance ledger.
+  Physical performance improvement remains unclaimed until a matching build,
+  fixed replay/camera/content run, VDB logical-framebuffer evidence, and
+  before/after comparison exist.
+
 ## 2026-08-31 — Dev99 canonical source/build candidate; VDB provider host-built; no physical action
 
 `[██████████] 10/10 current evidence gates complete; no Vita deploy, launch, install, or capture`

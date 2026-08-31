@@ -43,22 +43,54 @@ def percentile(values: list[float], fraction: float) -> float:
     return ordered[index]
 
 
-def performance(frames: list[dict[str, str]]) -> dict[str, float]:
+FRAME_BUDGETS_US = {
+    "slow_over_16_7ms": 16_667.0,
+    "slow_over_20_0ms": 20_000.0,
+    "slow_over_33_3ms": 33_333.0,
+    "slow_over_50_0ms": 50_000.0,
+}
+
+
+def percent(count: int, total: int) -> float:
+    return (float(count) * 100.0 / float(total)) if total else math.nan
+
+
+def frame_pacing_tier(mean_us: float, p95_us: float) -> str:
+    if math.isnan(mean_us) or math.isnan(p95_us) or mean_us <= 0.0:
+        return "no-samples"
+    mean_fps = 1_000_000.0 / mean_us
+    if mean_fps >= 60.0 and p95_us <= FRAME_BUDGETS_US["slow_over_16_7ms"]:
+        return "target-60fps"
+    if mean_fps >= 50.0 and p95_us <= FRAME_BUDGETS_US["slow_over_20_0ms"]:
+        return "preferred-50fps"
+    if mean_fps >= 30.0 and p95_us <= FRAME_BUDGETS_US["slow_over_33_3ms"]:
+        return "degraded-30fps"
+    if mean_fps >= 20.0 and p95_us <= FRAME_BUDGETS_US["slow_over_50_0ms"]:
+        return "critical-20fps-band"
+    return "unacceptable-under-20fps"
+
+
+def performance(frames: list[dict[str, str]]) -> dict[str, Any]:
     ordinary = numbers(frames, "ordinary_frame_us")
     mean_us = statistics.fmean(ordinary) if ordinary else math.nan
-    return {
+    p95_us = percentile(ordinary, 0.95)
+    result: dict[str, Any] = {
         "samples": float(len(ordinary)),
         "min_ms": min(ordinary) / 1000.0 if ordinary else math.nan,
         "mean_ms": mean_us / 1000.0,
         "median_ms": statistics.median(ordinary) / 1000.0 if ordinary else math.nan,
-        "p95_ms": percentile(ordinary, 0.95) / 1000.0,
+        "p95_ms": p95_us / 1000.0,
         "p99_ms": percentile(ordinary, 0.99) / 1000.0,
         "max_ms": max(ordinary) / 1000.0 if ordinary else math.nan,
         "mean_fps": 1_000_000.0 / mean_us if ordinary and mean_us else math.nan,
-        "slow_over_16_7ms": float(sum(value > 16_667.0 for value in ordinary)),
-        "slow_over_33_3ms": float(sum(value > 33_333.0 for value in ordinary)),
+        "pacing_tier": frame_pacing_tier(mean_us, p95_us),
         "capture_stall_ms": sum(numbers(frames, "capture_readback_us")) / 1000.0,
     }
+    for key, budget_us in FRAME_BUDGETS_US.items():
+        count = sum(value > budget_us for value in ordinary)
+        result[key] = float(count)
+        result[f"{key}_pct"] = percent(count, len(ordinary))
+    return result
 
 
 STAGES = (
@@ -93,12 +125,18 @@ PATHS = {
         "renderer.indexed_triangles", "renderer.material_passes",
         "renderer.textures_resident", "renderer.texture_bytes_resident",
         "renderer.texture_uploads", "renderer.texture_binds",
+        "renderer.texture_bind_skips", "renderer.texture_sampler_updates",
+        "renderer.texture_sampler_skips",
+        "renderer.texture_stage_enable_skips",
+        "renderer.texture_combiner_skips",
+        "renderer.texture_unsupported_stages",
         "renderer.texture_requests", "renderer.texture_decodes",
         "renderer.texture_dds_loads", "renderer.texture_tga_loads",
         "renderer.texture_missing", "renderer.texture_checkerboard_fallbacks",
         "renderer.texture_checkerboard_binds", "renderer.texture_invalid_binds",
-        "renderer.state_changes", "renderer.rejected", "renderer.unsupported",
-        "renderer.backend_errors", "renderer.geometry_checksum",
+        "renderer.state_changes", "renderer.render_state_skips",
+        "renderer.rejected", "renderer.unsupported", "renderer.backend_errors",
+        "renderer.geometry_checksum",
         "renderer.indexed_checksum",
     ],
     "gameplay": [

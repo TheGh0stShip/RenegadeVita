@@ -367,17 +367,18 @@
  	for (it.First(&RenderList); !it.Is_Done(); it.Next()) {
 --- a/texture.cpp
 +++ b/texture.cpp
-@@ -124,6 +124,9 @@
+@@ -124,6 +124,10 @@
  	default:
  		break;
  	}
 +#if defined(RENEGADE_VITA_PORT)
-+	(void)rendertarget;
++	D3DTexture = DX8Wrapper::_Create_DX8_Texture(width, height, format,
++		mip_level_count, pool, rendertarget);
 +#else
  	D3DPOOL d3dpool=(D3DPOOL) 0;
  	switch(pool)
  	{
-@@ -148,6 +151,7 @@
+@@ -148,6 +152,7 @@
  		this);
  		DX8TextureManagerClass::Add(track);
  	}

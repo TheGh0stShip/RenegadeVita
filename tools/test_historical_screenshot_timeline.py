@@ -135,7 +135,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
     def test_dev82_returned_diagnostics_are_visibly_displayed(self):
         doc = TIMELINE.read_text(encoding="utf-8")
         section = doc.split("## A3.5-dev82 — Returned Physical Diagnostic Evidence", 1)[1].split(
-            "## Diagnostic-Only Screenshot Inventory", 1
+            "## A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence", 1
         )[0]
         expected = (
             "a35-dev82-vita-original-loading-screen-t54494725.png",
@@ -158,13 +158,33 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         readme_section = readme.split("### A3.5-dev82 — Returned Physical Diagnostic Frames", 1)[1].split(
-            "## Current State", 1
+            "### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame", 1
         )[0]
         self.assertIn("diagnostic evidence only, not gameplay acceptance", readme_section)
         self.assertIn("byte-identical loading-image capture marked first-interactive", readme_section)
         self.assertEqual(len(re.findall(r'<img src="docs/history/screenshots/', readme_section)), 4)
         for name in expected:
             self.assertIn(f"docs/history/screenshots/{name}", readme_section)
+
+    def test_dev86_returned_frontend_diagnostic_is_visibly_displayed(self):
+        timeline = TIMELINE.read_text(encoding="utf-8")
+        filename = "a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png"
+        section = timeline.split(
+            "## A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence", 1
+        )[1].split("## Diagnostic-Only Screenshot Inventory", 1)[0]
+
+        self.assertIn("exact returned physical capture", section)
+        self.assertIn("original WWUI text regions are blank", section)
+        self.assertIn(f"history/screenshots/{filename}", section)
+        self.assertEqual(len(re.findall(r'<img src="history/screenshots/', section)), 1)
+
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        readme_section = readme.split(
+            "### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame", 1
+        )[1].split("## Current State", 1)[0]
+        self.assertIn("diagnostic only", readme_section)
+        self.assertIn(f"docs/history/screenshots/{filename}", readme_section)
+        self.assertEqual(len(re.findall(r'<img src="docs/history/screenshots/', readme_section)), 1)
 
     def test_readme_surfaces_gallery_before_current_state(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -198,12 +218,12 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("GitHub gallery PNGs: 175", report)
+        self.assertIn("GitHub gallery PNGs: 176", report)
         self.assertIn("24 runtime logs, 89 capture directories", report)
         self.assertIn("All 89 live Vita capture directories", report)
         self.assertIn("/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder", report)
         self.assertIn("/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/", report)
-        self.assertIn('"gallery_png_count": 175', inventory)
+        self.assertIn('"gallery_png_count": 176', inventory)
         self.assertIn('"vita3k_user_appdata"', inventory)
         self.assertIn('"missing_c_local_builder_root"', inventory)
 

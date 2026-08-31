@@ -3,7 +3,46 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-## 2026-08-30 dev86 frontend evidence candidate — canonical package, not physical proof
+## 2026-08-31 dev87 frontend repair candidate — canonical closure, physical test pending
+
+Dev86 is now retained physical failure evidence, not a pending observation. Its
+matching runtime log proves the original BINK, menu, loading-screen, and M00
+owners executed, but the user reports that the main-menu labels are still
+missing and the intro is still extremely slow with buzzy/laggy audio. The one
+returned capture is explicitly labelled an `original-loading-screen`/
+`level-ready` diagnostic; it is not a menu or gameplay acceptance frame.
+
+The concrete text lead is source-owned. Original `Render2DSentence` constructs
+a procedural A4R4G4B4 glyph texture and writes glyph data through its surface.
+The Vita-only branch had deliberately left that texture unallocated. Dev87
+restores the existing Vita DX8 texture allocation path for that original
+procedural texture, while retaining the unsupported desktop tracker solely in
+the non-Vita branch. This is a candidate fix for blank WWUI, HUD, loading, and
+dialogue glyphs, not a visual success claim.
+
+The matching dev86 BINK statistics identify video upload rather than retail
+asset conversion as the leading measured movie cost: EA_WW.BIK took
+13,476,510 us across 202 uploads (68,901 us worst) versus 1,561,800 us video
+decode and 671,221 us audio decode. Dev87 keeps the original movie owner and
+unchanged retail BIK files, but uses an in-memory RGB565 upload surface for the
+same 800x600 decoded frame, reducing the padded 1024x1024 upload from 4 MiB to
+2 MiB. Its visual/color and physical A/V result remain unmeasured.
+
+`tools/build_fast_candidate.sh` passed 89 focused contracts, deterministic
+staging, ARM link/SELF/VPK identity, compressed-archive integrity, and SHA
+validation in `logs/a35-dev87-fast-20260830-204232-build.log`. FastBuild is an
+iteration gate only; canonical `bash ./tools/build.sh` has now independently
+passed retained host/current contracts, deterministic 136-patch staging, 549
+ARM/package actions, original-runtime symbols, ELF/SELF/VPK identity,
+compressed VPK validation, diagnostics, and retail exclusion in
+`logs/a35-dev87-20260830-204706-build.log`. Canonical VPK/ELF/SELF SHA-256 are
+`bbb48f91c879c99e2944497b97a56cbf1e015c7af4a20ed75871bf02bb86e521`,
+`cd50c8a7c1c406bf324996d09fe74755e757230619ac003099bf103d9b829194`, and
+`d7bdadbff7296dad0d5460d0febfe70116502c9a80695bfa3577f6c629f9c596`.
+Publication and an explicit future READY are still required. No Vita action has
+been requested or performed for dev87.
+
+## 2026-08-30 dev86 frontend evidence candidate — canonical package, physical usability failure
 
 Dev85's exact physical return is retained as a failure: the EA movie was
 visible but extremely slow with buzzy/laggy audio, and Start reached a
@@ -42,10 +81,16 @@ with no synthetic input. The provider did not retain a remote replacement
 backup, but the local dev85 backup is verified; this is a launch receipt, not
 a visual or A/V acceptance result.
 
-The active physical gate requires user-visible bootstrap/pre-cache, usable
-intro A/V plus timing receipt, Start skip, and visibly placed original WWUI
-controls. No dev86 screenshot or video has been returned, so no gallery or
-media publication is due.
+The returned physical gate fails: the user reports a long initial black period,
+original EA intro that remains very slow with buzzy/laggy audio, and a main
+menu whose labels are missing. The matching returned runtime log is
+`a35-dev86-runtime-user-report.log`, SHA-256
+`2294297c434034fee78c0d92285346cb913265b501fb7793217b640c739cb9c4`; it shows
+both original movies, Start skip, original loading/progress ownership, and M00
+prewarm. The only returned capture was published to the historical gallery as
+an explicitly diagnostic original loading-screen frame. No finalized video was
+returned, so none is claimed or published. Detailed evidence and the dev87
+performance decision are in `reports/A35_DEV86_DEV87_FRONTEND_EVIDENCE.md`.
 
 ## 2026-08-30 dev85 mandatory frontend correction gate — canonical package, not physical proof
 

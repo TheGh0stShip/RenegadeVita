@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev86 mandatory frontend gate (2026-08-30)
+## Current dev87 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -16,16 +16,30 @@ buzzy/laggy audio, and Start reaches an original main-menu dialog with missing
 items. The returned log proves the BINK path and main-menu owner execute; it
 also proves the Vita-only `MainMenuTransition` bypass.
 
-Dev86 restores that original transition/control-placement path, presents a
-bootstrap status before retail filesystem/pre-cache work, and prevents BINK
-from submitting an empty startup/starvation audio buffer. It also records
-bounded audio/video decode and upload timing, audio waits, and ring high-water
-at movie end. Canonical ARM/package validation passes; after explicit READY,
-dev86's VPK and installed SELF are hash-matched and its zero-input launch is
-running. No visual, pacing, or audio acceptance claim is valid until the user
-returns a panel observation and matching candidate-scoped evidence. The
-separate HUD/text, shadow, START-exit, loading-flash/progress, and performance
-defects remain open.
+Dev86 restored that original transition/control-placement path, presented a
+bootstrap status before retail filesystem/pre-cache work, and prevented BINK
+from submitting an empty startup/starvation audio buffer. Its returned physical
+result remains a usability failure: intro A/V is slow/buzzy and the menu labels
+are absent. The returned log isolates two bounded dev87 leads: Vita procedural
+font textures had no native allocation, and EA video uploads consumed
+13.48 seconds across 202 frames (68.90 ms worst).
+
+Dev87 restores the existing Vita texture allocation for the original glyph
+atlas and changes only the BINK boundary's in-memory upload representation to
+RGB565 (the unchanged retail BIK files and original movie owner remain intact).
+Its FastBuild and canonical ARM/package closures pass, but it is not deployed
+or visually accepted. The user-required release gate remains: a visible original intro
+with usable A/V and a visibly labelled original menu before any further Vita
+candidate push. No visual, pacing, or audio acceptance claim is valid until a
+matching physical return. HUD/text, shadow, START-exit, loading-flash/progress,
+front-end readiness, and gameplay performance remain open.
+
+Current pre-cache is intentionally bounded: it indexes original archives and
+warms small readable slices before frontend, then performs one loading-screen
+frame and 60 M00 scene frames after loading. It does not construct and retain
+front-end glyph atlases or BINK upload resources. A future readiness phase must
+measure and retain only those real reusable resources; reading/decoding whole
+movies at startup would worsen the black period and is not adopted.
 
 ## Current dev82 physical-test gaps (2026-08-28)
 

@@ -6,6 +6,25 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class VitaTextureSurfaceContractTests(unittest.TestCase):
+    def test_procedural_textures_keep_the_original_vita_surface_allocation_path(self):
+        texture = (ROOT / "staging/ww3d2/texture.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
+        constructor_start = texture.index(
+            "TextureClass::TextureClass(unsigned width,"
+        )
+        constructor_end = texture.index(
+            "TextureClass::TextureClass(\n\tconst char *name", constructor_start
+        )
+        constructor = texture[constructor_start:constructor_end]
+
+        # Render2DSentence builds its glyph atlas through this original
+        # procedural TextureClass constructor.  Vita must retain the ordinary
+        # DX8-shaped allocation so CopyRects can upload those glyph surfaces.
+        self.assertIn("D3DTexture = DX8Wrapper::_Create_DX8_Texture", constructor)
+        self.assertIn("mip_level_count, pool, rendertarget);", constructor)
+        self.assertNotIn("(void)rendertarget;", constructor)
+
     def test_dx8_texture_handles_expose_lockable_surface_levels(self):
         header = (ROOT / "port/renderer/vita/d3d8.h").read_text(
             encoding="utf-8"

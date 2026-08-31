@@ -13,7 +13,8 @@
     "A3.5-dev47",
     "A3.5-dev78",
     "A3.5-dev79",
-    "A3.5-dev82"
+    "A3.5-dev82",
+    "A3.5-dev86"
   ],
   "gallery_by_build": {
     "A3.1": 4,
@@ -37,9 +38,10 @@
     "A3.5-dev7": 23,
     "A3.5-dev78": 8,
     "A3.5-dev79": 4,
-    "A3.5-dev82": 4
+    "A3.5-dev82": 4,
+    "A3.5-dev86": 1
   },
-  "gallery_png_count": 175,
+  "gallery_png_count": 176,
   "generated_from": "/home/steve/projects/RenegadeVitaBuilder/workspace/active",
   "missing_screenshot_builds": [
     "A3.5-dev1",
@@ -57,10 +59,10 @@
   "scanned_roots": [
     {
       "counts_by_type": {
-        "png": 175
+        "png": 176
       },
       "exists": true,
-      "file_count": 175,
+      "file_count": 176,
       "files": [
         {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/docs/history/screenshots/a31-vita-log-select-capture-f2278-annotated.png",
@@ -1111,6 +1113,12 @@
           "relative_path": "a35-dev82-vita-original-loading-screen-t67280479.png",
           "size": 518348,
           "type": "png"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/docs/history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png",
+          "relative_path": "a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png",
+          "size": 512162,
+          "type": "png"
         }
       ],
       "label": "github_gallery",
@@ -1118,15 +1126,15 @@
     },
     {
       "counts_by_type": {
-        "bmp": 159,
-        "csv": 49,
-        "json": 2799,
-        "log": 981,
+        "bmp": 161,
+        "csv": 51,
+        "json": 2821,
+        "log": 994,
         "png": 21,
-        "txt": 186
+        "txt": 191
       },
       "exists": true,
-      "file_count": 4195,
+      "file_count": 4239,
       "files": [
         {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/A3.5-dev18-manual-crash-20260825T021439Z/crash-collection-summary.json",
@@ -24085,6 +24093,144 @@
           "type": "json"
         },
         {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/black-screen-crash-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/black-screen-crash-runtime.log",
+          "size": 14139,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/crash-dumps/psp2core-1788133310-notes.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/crash-dumps/psp2core-1788133310-notes.json",
+          "size": 3918,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/crash-dumps/psp2core-1788133334-notes.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/crash-dumps/psp2core-1788133334-notes.json",
+          "size": 3910,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/crash-dumps/psp2core-1788133994-notes.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/crash-dumps/psp2core-1788133994-notes.json",
+          "size": 3513,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/guarded-recorder-no-input-30s-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/guarded-recorder-no-input-30s-runtime.log",
+          "size": 17775,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/guarded-recorder-no-input-60s-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/guarded-recorder-no-input-60s-runtime.log",
+          "size": 116957,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/guarded-recorder-no-input-90s-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/guarded-recorder-no-input-90s-runtime.log",
+          "size": 173665,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/launch-15s-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/launch-15s-runtime.log",
+          "size": 4713,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/launch-35s-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/launch-35s-runtime.log",
+          "size": 9426,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/pre-clean-exit-capture/frames.csv",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/pre-clean-exit-capture/frames.csv",
+          "size": 44825,
+          "type": "csv"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/pre-clean-exit-capture/state.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/pre-clean-exit-capture/state.json",
+          "size": 3439,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/pre-clean-exit-capture/summary.txt",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/pre-clean-exit-capture/summary.txt",
+          "size": 1092,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/prelaunch-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/prelaunch-runtime.log",
+          "size": 4713,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/start-crash-after-guard-runtime.log",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/start-crash-after-guard-runtime.log",
+          "size": 253806,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133310-symbolication.core-notes.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133310-symbolication.core-notes.json",
+          "size": 3918,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133310-symbolication.txt",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133310-symbolication.txt",
+          "size": 5278,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133334-symbolication.core-notes.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133334-symbolication.core-notes.json",
+          "size": 3910,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133334-symbolication.txt",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133334-symbolication.txt",
+          "size": 5278,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133994-symbolication.core-notes.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133994-symbolication.core-notes.json",
+          "size": 3513,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133994-symbolication.txt",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/symbolication/psp2core-1788133994-symbolication.txt",
+          "size": 5558,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/transfer-receipts/0a0b87b1ac2c96be.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/transfer-receipts/0a0b87b1ac2c96be.json",
+          "size": 736,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/transfer-receipts/3103fca1e44720dd.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/transfer-receipts/3103fca1e44720dd.json",
+          "size": 795,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-capture-policy-20260830T182029Z/transfer-receipts/fc87dbaa625225b3.json",
+          "relative_path": "a35-dev84-capture-policy-20260830T182029Z/transfer-receipts/fc87dbaa625225b3.json",
+          "size": 855,
+          "type": "json"
+        },
+        {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev84-recorder-20260830T215406Z/ur0-tai-config-after.txt",
           "relative_path": "a35-dev84-recorder-20260830T215406Z/ur0-tai-config-after.txt",
           "size": 1537,
@@ -24155,6 +24301,132 @@
           "relative_path": "a35-dev84-start-crash-20260830T215650Z/runtime/a35-dev84-runtime.log",
           "size": 4713,
           "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-110s.log",
+          "relative_path": "a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-110s.log",
+          "size": 18117,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-50s.log",
+          "relative_path": "a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-50s.log",
+          "size": 13301,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-80s.log",
+          "relative_path": "a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-80s.log",
+          "size": 13301,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-user-report.log",
+          "relative_path": "a35-dev85-frontend-20260831T002800Z/a35-dev85-runtime-user-report.log",
+          "size": 18117,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev85-frontend-20260831T002800Z/transfer-jobs/5ade9aa35b4d7ad0.json",
+          "relative_path": "a35-dev85-frontend-20260831T002800Z/transfer-jobs/5ade9aa35b4d7ad0.json",
+          "size": 990,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev85-frontend-20260831T002800Z/transfer-jobs/67691fb8d0698823.json",
+          "relative_path": "a35-dev85-frontend-20260831T002800Z/transfer-jobs/67691fb8d0698823.json",
+          "size": 930,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-install-launch-20260831T011245Z/deployment-receipt.json",
+          "relative_path": "a35-dev86-install-launch-20260831T011245Z/deployment-receipt.json",
+          "size": 1571,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-install-launch-20260831T011245Z/vdb-jobs/343dc2057f1e199e.json",
+          "relative_path": "a35-dev86-install-launch-20260831T011245Z/vdb-jobs/343dc2057f1e199e.json",
+          "size": 990,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-install-launch-20260831T011245Z/vdb-jobs/d8de0e1ae11bfa93.json",
+          "relative_path": "a35-dev86-install-launch-20260831T011245Z/vdb-jobs/d8de0e1ae11bfa93.json",
+          "size": 907,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-install-launch-20260831T011245Z/vdb-jobs/db1bf7caee09327c.json",
+          "relative_path": "a35-dev86-install-launch-20260831T011245Z/vdb-jobs/db1bf7caee09327c.json",
+          "size": 930,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/a35-dev86-runtime-user-report.log",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/a35-dev86-runtime-user-report.log",
+          "size": 127189,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frame-annotated.bmp",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frame-annotated.bmp",
+          "size": 1566774,
+          "type": "bmp"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frame.bmp",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frame.bmp",
+          "size": 1566774,
+          "type": "bmp"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frames.csv",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frames.csv",
+          "size": 792,
+          "type": "csv"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/state.json",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/state.json",
+          "size": 3290,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/summary.txt",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/summary.txt",
+          "size": 1058,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/vdb-jobs/57a1d8f770a7a947.json",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/vdb-jobs/57a1d8f770a7a947.json",
+          "size": 1021,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/vdb-jobs/a933c1dae910d767.json",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/vdb-jobs/a933c1dae910d767.json",
+          "size": 976,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/vdb-jobs/c70fd00163ae8ddf.json",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/vdb-jobs/c70fd00163ae8ddf.json",
+          "size": 979,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/vdb-jobs/e4cf18f439b2dc5d.json",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/vdb-jobs/e4cf18f439b2dc5d.json",
+          "size": 981,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/a35-dev86-user-return-20260831T011721Z/vdb-jobs/fe238b0ebb8c1f99.json",
+          "relative_path": "a35-dev86-user-return-20260831T011721Z/vdb-jobs/fe238b0ebb8c1f99.json",
+          "size": 973,
+          "type": "json"
         },
         {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence/nolockscreen-install-20260824/renegade-nolockscreen-after-aslr-fix.log",
@@ -26304,10 +26576,10 @@
     },
     {
       "counts_by_type": {
-        "log": 268
+        "log": 277
       },
       "exists": true,
-      "file_count": 268,
+      "file_count": 277,
       "files": [
         {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a22-20260815-231952-host-asset.log",
@@ -27912,9 +28184,63 @@
           "type": "log"
         },
         {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev84-20260830-180443-build.log",
+          "relative_path": "a35-dev84-20260830-180443-build.log",
+          "size": 3665947,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev84-20260830-182029-build.log",
+          "relative_path": "a35-dev84-20260830-182029-build.log",
+          "size": 3667839,
+          "type": "log"
+        },
+        {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev84-fast-20260830-162553-build.log",
           "relative_path": "a35-dev84-fast-20260830-162553-build.log",
           "size": 953880,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev85-20260830-191010-build.log",
+          "relative_path": "a35-dev85-20260830-191010-build.log",
+          "size": 3667840,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev86-20260830-194153-build.log",
+          "relative_path": "a35-dev86-20260830-194153-build.log",
+          "size": 3667840,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev86-20260830-195426-build.log",
+          "relative_path": "a35-dev86-20260830-195426-build.log",
+          "size": 3667840,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev86-fast-20260830-203632-build.log",
+          "relative_path": "a35-dev86-fast-20260830-203632-build.log",
+          "size": 1021300,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev86-fast-20260830-203902-build.log",
+          "relative_path": "a35-dev86-fast-20260830-203902-build.log",
+          "size": 953781,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev87-20260830-204706-build.log",
+          "relative_path": "a35-dev87-20260830-204706-build.log",
+          "size": 3667927,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs/a35-dev87-fast-20260830-204232-build.log",
+          "relative_path": "a35-dev87-fast-20260830-204232-build.log",
+          "size": 159026,
           "type": "log"
         }
       ],
@@ -27923,12 +28249,12 @@
     },
     {
       "counts_by_type": {
-        "json": 108,
-        "log": 36,
-        "txt": 490
+        "json": 116,
+        "log": 39,
+        "txt": 525
       },
       "exists": true,
-      "file_count": 634,
+      "file_count": 680,
       "files": [
         {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev48-FAST-BUILD-REPORT.txt",
@@ -31045,6 +31371,228 @@
           "type": "json"
         },
         {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-BUILD_REPORT.txt",
+          "relative_path": "A3.5-dev85-BUILD_REPORT.txt",
+          "size": 2947,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-COMPILER_LOG.txt",
+          "relative_path": "A3.5-dev85-COMPILER_LOG.txt",
+          "size": 3666656,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-CRASH-SYMBOLICATION.txt",
+          "relative_path": "A3.5-dev85-CRASH-SYMBOLICATION.txt",
+          "size": 381,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-EXPECTED-RUNTIME-LOG.txt",
+          "relative_path": "A3.5-dev85-EXPECTED-RUNTIME-LOG.txt",
+          "size": 658,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-HARDWARE-CANDIDATE.txt",
+          "relative_path": "A3.5-dev85-HARDWARE-CANDIDATE.txt",
+          "size": 1831,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-HOST-VALIDATION.log",
+          "relative_path": "A3.5-dev85-HOST-VALIDATION.log",
+          "size": 2790575,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-IDENTITY-VERIFICATION.json",
+          "relative_path": "A3.5-dev85-IDENTITY-VERIFICATION.json",
+          "size": 2181,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-SHA256SUMS.txt",
+          "relative_path": "A3.5-dev85-SHA256SUMS.txt",
+          "size": 1695,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev85-SOURCE_INTEGRATION_REPORT.json",
+          "relative_path": "A3.5-dev85-SOURCE_INTEGRATION_REPORT.json",
+          "size": 72902,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-BUILD_REPORT.txt",
+          "relative_path": "A3.5-dev86-BUILD_REPORT.txt",
+          "size": 2998,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-COMPILER_LOG.txt",
+          "relative_path": "A3.5-dev86-COMPILER_LOG.txt",
+          "size": 3666656,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-CRASH-SYMBOLICATION.txt",
+          "relative_path": "A3.5-dev86-CRASH-SYMBOLICATION.txt",
+          "size": 381,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-EXPECTED-RUNTIME-LOG.txt",
+          "relative_path": "A3.5-dev86-EXPECTED-RUNTIME-LOG.txt",
+          "size": 658,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-FAST-BUILD-REPORT.txt",
+          "relative_path": "A3.5-dev86-FAST-BUILD-REPORT.txt",
+          "size": 1070,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-FAST-COMPILER_LOG.txt",
+          "relative_path": "A3.5-dev86-FAST-COMPILER_LOG.txt",
+          "size": 953142,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-FAST-HARDWARE-CANDIDATE.txt",
+          "relative_path": "A3.5-dev86-FAST-HARDWARE-CANDIDATE.txt",
+          "size": 296,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-FAST-IDENTITY-VERIFICATION.json",
+          "relative_path": "A3.5-dev86-FAST-IDENTITY-VERIFICATION.json",
+          "size": 2181,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-FAST-SHA256SUMS.txt",
+          "relative_path": "A3.5-dev86-FAST-SHA256SUMS.txt",
+          "size": 1008,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-HARDWARE-CANDIDATE.txt",
+          "relative_path": "A3.5-dev86-HARDWARE-CANDIDATE.txt",
+          "size": 1831,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-HOST-VALIDATION.log",
+          "relative_path": "A3.5-dev86-HOST-VALIDATION.log",
+          "size": 2790575,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-IDENTITY-VERIFICATION.json",
+          "relative_path": "A3.5-dev86-IDENTITY-VERIFICATION.json",
+          "size": 2181,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-SHA256SUMS.txt",
+          "relative_path": "A3.5-dev86-SHA256SUMS.txt",
+          "size": 1695,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev86-SOURCE_INTEGRATION_REPORT.json",
+          "relative_path": "A3.5-dev86-SOURCE_INTEGRATION_REPORT.json",
+          "size": 72902,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-BUILD_REPORT.txt",
+          "relative_path": "A3.5-dev87-BUILD_REPORT.txt",
+          "size": 2998,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-COMPILER_LOG.txt",
+          "relative_path": "A3.5-dev87-COMPILER_LOG.txt",
+          "size": 3666743,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-CRASH-SYMBOLICATION.txt",
+          "relative_path": "A3.5-dev87-CRASH-SYMBOLICATION.txt",
+          "size": 381,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-EXPECTED-RUNTIME-LOG.txt",
+          "relative_path": "A3.5-dev87-EXPECTED-RUNTIME-LOG.txt",
+          "size": 658,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-FAST-BUILD-REPORT.txt",
+          "relative_path": "A3.5-dev87-FAST-BUILD-REPORT.txt",
+          "size": 1070,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-FAST-COMPILER_LOG.txt",
+          "relative_path": "A3.5-dev87-FAST-COMPILER_LOG.txt",
+          "size": 158387,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-FAST-HARDWARE-CANDIDATE.txt",
+          "relative_path": "A3.5-dev87-FAST-HARDWARE-CANDIDATE.txt",
+          "size": 296,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-FAST-IDENTITY-VERIFICATION.json",
+          "relative_path": "A3.5-dev87-FAST-IDENTITY-VERIFICATION.json",
+          "size": 2181,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-FAST-SHA256SUMS.txt",
+          "relative_path": "A3.5-dev87-FAST-SHA256SUMS.txt",
+          "size": 1008,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-HARDWARE-CANDIDATE.txt",
+          "relative_path": "A3.5-dev87-HARDWARE-CANDIDATE.txt",
+          "size": 1831,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-HOST-VALIDATION.log",
+          "relative_path": "A3.5-dev87-HOST-VALIDATION.log",
+          "size": 2790575,
+          "type": "log"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-IDENTITY-VERIFICATION.json",
+          "relative_path": "A3.5-dev87-IDENTITY-VERIFICATION.json",
+          "size": 2181,
+          "type": "json"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-SHA256SUMS.txt",
+          "relative_path": "A3.5-dev87-SHA256SUMS.txt",
+          "size": 1695,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/A3.5-dev87-SOURCE_INTEGRATION_REPORT.json",
+          "relative_path": "A3.5-dev87-SOURCE_INTEGRATION_REPORT.json",
+          "size": 72902,
+          "type": "json"
+        },
+        {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeDemoRecorder-A3.5-dev82-SHA256SUMS.txt",
           "relative_path": "RenegadeDemoRecorder-A3.5-dev82-SHA256SUMS.txt",
           "size": 321,
@@ -31725,12 +32273,66 @@
         {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev84.symbols.txt",
           "relative_path": "RenegadeVita-A3.5-dev84.symbols.txt",
-          "size": 1353041,
+          "size": 1353005,
           "type": "txt"
         },
         {
           "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev84.vpk-contents.txt",
           "relative_path": "RenegadeVita-A3.5-dev84.vpk-contents.txt",
+          "size": 28,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev85.elf-header.txt",
+          "relative_path": "RenegadeVita-A3.5-dev85.elf-header.txt",
+          "size": 976,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev85.symbols.txt",
+          "relative_path": "RenegadeVita-A3.5-dev85.symbols.txt",
+          "size": 1366225,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev85.vpk-contents.txt",
+          "relative_path": "RenegadeVita-A3.5-dev85.vpk-contents.txt",
+          "size": 28,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev86.elf-header.txt",
+          "relative_path": "RenegadeVita-A3.5-dev86.elf-header.txt",
+          "size": 976,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev86.symbols.txt",
+          "relative_path": "RenegadeVita-A3.5-dev86.symbols.txt",
+          "size": 1368622,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev86.vpk-contents.txt",
+          "relative_path": "RenegadeVita-A3.5-dev86.vpk-contents.txt",
+          "size": 28,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev87.elf-header.txt",
+          "relative_path": "RenegadeVita-A3.5-dev87.elf-header.txt",
+          "size": 976,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev87.symbols.txt",
+          "relative_path": "RenegadeVita-A3.5-dev87.symbols.txt",
+          "size": 1368622,
+          "type": "txt"
+        },
+        {
+          "path": "/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev87.vpk-contents.txt",
+          "relative_path": "RenegadeVita-A3.5-dev87.vpk-contents.txt",
           "size": 28,
           "type": "txt"
         }

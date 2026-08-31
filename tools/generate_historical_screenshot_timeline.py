@@ -226,6 +226,7 @@ DIAGNOSTIC_ONLY = [
     ("A3.5-dev78", "8 physical loading-regression frames recovered; no gameplay screenshot was returned for dev78.", "a35-dev78-loading-physical.png"),
     ("A3.5-dev79", "4 physical loading/control-candidate frames recovered; no gameplay screenshot was returned for dev79.", "a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png"),
     ("A3.5-dev82", "Four returned physical capture records are visibly preserved in the dedicated Dev82 diagnostic gallery: two distinct loading presentations are vertically inverted, the t64590857 first-interactive record is byte-identical to the full-frame loading image, and t88041059 is black except for a small HUD fragment. None establishes gameplay acceptance.", "a35-dev82-vita-original-loading-screen-t67280479.png"),
+    ("A3.5-dev86", "One returned physical original-loading-screen frame is visibly preserved in the dedicated Dev86 diagnostic gallery. It shows the original loading artwork and color panels but no legible original UI labels; it is not a main-menu or gameplay acceptance image.", "a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png"),
 ]
 
 
@@ -245,6 +246,14 @@ DEV82_RETURNED_DIAGNOSTICS = [
     (
         "a35-dev82-vita-first-interactive-frame-t88041059.png",
         "First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD",
+    ),
+]
+
+
+DEV86_RETURNED_DIAGNOSTICS = [
+    (
+        "a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png",
+        "Original loading screen at level-ready — returned physical capture; original loading panels render, but original UI labels are absent",
     ),
 ]
 
@@ -371,6 +380,9 @@ def validate_files() -> None:
     for filename, _ in DEV82_RETURNED_DIAGNOSTICS:
         if not (SCREENSHOT_DIR / filename).is_file():
             missing.append(filename)
+    for filename, _ in DEV86_RETURNED_DIAGNOSTICS:
+        if not (SCREENSHOT_DIR / filename).is_file():
+            missing.append(filename)
     if missing:
         raise SystemExit("missing gallery files:\n" + "\n".join(sorted(set(missing))))
 
@@ -452,6 +464,21 @@ def write_timeline() -> None:
                     "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/first-interactive-frame-t64590857/",
                     "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/first-interactive-frame-t88041059/",
                     "build/device-evidence/a35-dev82-user-return-20260830-205700/a35-dev82-runtime.log",
+                ]
+            ),
+            "",
+            "## A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence",
+            "",
+            "The exact returned physical capture is shown here as a diagnostic, not a pass. Its phase is `original-loading-screen` / `level-ready`: the original loading artwork and colored panels render, while the original WWUI text regions are blank. The user separately reported a textless main menu; no main-menu image was returned, so this image is not presented as one.",
+            "",
+            image_table(DEV86_RETURNED_DIAGNOSTICS, columns=1),
+            "",
+            "Source evidence:",
+            "",
+            source_list(
+                [
+                    "build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frame-annotated.bmp",
+                    "build/device-evidence/a35-dev86-user-return-20260831T011721Z/a35-dev86-runtime-user-report.log",
                 ]
             ),
             "",
@@ -626,8 +653,8 @@ def write_readme() -> None:
         [
             "## Historical Visual Progress",
             "",
-            "The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 block below is the sole exception, so the returned physical evidence is visible without being misrepresented as gameplay.",
-            "The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the four exact returned Dev82 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.",
+            "The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 and Dev86 blocks below are exceptions so returned physical evidence is visible without being misrepresented as gameplay.",
+            "The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the exact returned Dev82 and Dev86 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.",
             "",
             *rows,
             "",
@@ -636,6 +663,12 @@ def write_readme() -> None:
             "These are the four raw physical-Vita capture records returned for Dev82. They document two inverted loading presentations, a byte-identical loading-image capture marked first-interactive, and a black initial interactive capture with a partial HUD; they are diagnostic evidence only, not gameplay acceptance.",
             "",
             image_table(DEV82_RETURNED_DIAGNOSTICS, columns=2).replace('src="history/screenshots/', 'src="docs/history/screenshots/'),
+            "",
+            "### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame",
+            "",
+            "This returned original-loading-screen capture is diagnostic only. Original loading artwork and colored panels render, but the original UI text regions are blank; it is neither a main-menu frame nor gameplay acceptance.",
+            "",
+            image_table(DEV86_RETURNED_DIAGNOSTICS, columns=1).replace('src="history/screenshots/', 'src="docs/history/screenshots/'),
             "",
             "",
         ]

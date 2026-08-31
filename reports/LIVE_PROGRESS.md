@@ -1,5 +1,36 @@
 # Live engineering progress
 
+## 2026-08-31 — dev87 text/resource and BINK-upload candidate; canonical closure passed
+
+`[█████░░░░░] 5/10 current evidence gates complete; GitHub publication next, no device action`
+
+- Dev86 is returned physical failure evidence. Its matching runtime log proves
+  original BINK, menu, loading, and M00 paths execute; the user still reports
+  slow/buzzy intro A/V and missing menu labels. The returned loading-screen
+  image is now in the historical gallery with that diagnostic-only label; no
+  video was returned or published.
+- The original UI text path creates a procedural glyph texture and writes it
+  through a surface. The Vita branch was not allocating that texture. Dev87
+  restores its existing DX8/Vita allocation path. This is the concrete source
+  correction for blank labels, not visual acceptance.
+- Dev86's EA BINK timing makes upload the leading measured cost:
+  13,476,510 us/202 uploads (68,901 us worst), versus 1,561,800 us video decode
+  and 671,221 us audio decode. Dev87 changes only the decoded in-memory upload
+  format to RGB565; it neither converts nor modifies retail movie files.
+- `tools/build_fast_candidate.sh` passes 89 focused contracts, deterministic
+  staging, ARM link, identity, archive integrity, and SHA checks in
+  `logs/a35-dev87-fast-20260830-204232-build.log`. VPK SHA-256:
+  `7e108cffe2c5c858be66136ab0c0498c3c1ee1377aad6dbf513abf0bbbf60185`.
+- Canonical `bash ./tools/build.sh` has now independently passed retained
+  host/current contracts, deterministic 136-patch staging, 549 ARM/package
+  actions, original-runtime symbols, ELF/SELF/VPK identity, compressed archive,
+  SHA manifest, diagnostics, and retail exclusion in
+  `logs/a35-dev87-20260830-204706-build.log`. VPK SHA-256 is
+  `bbb48f91c879c99e2944497b97a56cbf1e015c7af4a20ed75871bf02bb86e521`; SELF is
+  `d7bdadbff7296dad0d5460d0febfe70116502c9a80695bfa3577f6c629f9c596`.
+- Next: final source/report/gallery validation and private GitHub publication.
+  The Vita remains untouched until a future explicit READY.
+
 ## 2026-08-30 — dev86 canonical frontend diagnostic candidate; publication/physical handoff pending
 
 `[████░░░░░░] 4/10 current evidence gates complete; hash-matched user observation active`

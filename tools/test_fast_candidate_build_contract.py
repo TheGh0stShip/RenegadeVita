@@ -36,7 +36,7 @@ class FastCandidateBuildContractTests(unittest.TestCase):
         cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
         fast_build = (ROOT / "tools/build_fast_candidate.sh").read_text(encoding="utf-8")
         canonical_build = (ROOT / "tools/build.sh").read_text(encoding="utf-8")
-        content_id = "EP9000-RNEGA3101_00-RENGADEVITADEV86"
+        content_id = "EP9000-RNEGA3101_00-RENGADEVITADEV87"
         self.assertIn(content_id, cmake)
         self.assertIn("VITA_MKSFOEX_FLAGS", cmake)
         self.assertIn(content_id, fast_build)

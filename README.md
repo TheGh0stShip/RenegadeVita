@@ -11,8 +11,8 @@ or a replacement Renegade engine.
 
 ## Historical Visual Progress
 
-The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 block below is the sole exception, so the returned physical evidence is visible without being misrepresented as gameplay.
-The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the four exact returned Dev82 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.
+The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 and Dev86 blocks below are exceptions so returned physical evidence is visible without being misrepresented as gameplay.
+The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the exact returned Dev82 and Dev86 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.
 
 <table>
 <tr>
@@ -50,6 +50,16 @@ These are the four raw physical-Vita capture records returned for Dev82. They do
 <tr>
 <td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-first-interactive-frame-t64590857.png" width="260" alt="First interactive record t64590857 — byte-identical to full-frame inverted loading image"><br>First interactive record t64590857 — byte-identical to full-frame inverted loading image</td>
 <td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-first-interactive-frame-t88041059.png" width="260" alt="First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD"><br>First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD</td>
+</tr>
+</table>
+
+### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame
+
+This returned original-loading-screen capture is diagnostic only. Original loading artwork and colored panels render, but the original UI text regions are blank; it is neither a main-menu frame nor gameplay acceptance.
+
+<table>
+<tr>
+<td width="100%"><img src="docs/history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png" width="260" alt="Original loading screen at level-ready — returned physical capture; original loading panels render, but original UI labels are absent"><br>Original loading screen at level-ready — returned physical capture; original loading panels render, but original UI labels are absent</td>
 </tr>
 </table>
 

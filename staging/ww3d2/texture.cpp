@@ -125,7 +125,8 @@ TextureClass::TextureClass(unsigned width, unsigned height, WW3DFormat format, M
 		break;
 	}
 #if defined(RENEGADE_VITA_PORT)
-	(void)rendertarget;
+	D3DTexture = DX8Wrapper::_Create_DX8_Texture(width, height, format,
+		mip_level_count, pool, rendertarget);
 #else
 	D3DPOOL d3dpool=(D3DPOOL) 0;
 	switch(pool)

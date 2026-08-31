@@ -28,6 +28,7 @@ extern "C" {
 #include <libavutil/channel_layout.h>
 #include <libavutil/error.h>
 #include <libavutil/mathematics.h>
+#include <libavutil/pixfmt.h>
 #include <libswresample/swresample.h>
 #include <libswscale/swscale.h>
 }
@@ -40,6 +41,8 @@ constexpr int kAudioFramesPerBuffer = 1024;
 constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
 constexpr int64_t kUpdateBudgetUs = 12000;
+constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_RGB565LE;
+constexpr size_t kVideoUploadBytesPerPixel = 2U;
 constexpr uint32_t kSkipButtonMask =
 	SCE_CTRL_START | SCE_CTRL_CROSS | SCE_CTRL_CIRCLE | SCE_CTRL_TRIANGLE;
 
@@ -81,7 +84,9 @@ int g_texture_width = 0;
 int g_texture_height = 0;
 bool g_pending_video = false;
 int64_t g_pending_video_pts_us = 0;
-std::vector<uint8_t> g_pending_rgba;
+/* Decoded frames are converted in memory to the active GPU upload format.
+** This is deliberately not a conversion or replacement of retail BINK data. */
+std::vector<uint8_t> g_pending_video_pixels;
 
 pthread_mutex_t g_audio_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_t g_audio_thread;
@@ -406,7 +411,7 @@ void Release_Decoder_State()
 	g_texture_width = 0;
 	g_texture_height = 0;
 	g_pending_video = false;
-	g_pending_rgba.clear();
+	g_pending_video_pixels.clear();
 	g_audio_ring.clear();
 	if (g_resampler != NULL) swr_free(&g_resampler);
 	if (g_scaler != NULL) sws_freeContext(g_scaler);
@@ -524,16 +529,19 @@ bool Receive_Video_Frame()
 
 	g_scaler = sws_getCachedContext(g_scaler, g_video_frame->width,
 		g_video_frame->height, static_cast<AVPixelFormat>(g_video_frame->format),
-		g_video_width, g_video_height, AV_PIX_FMT_RGBA, SWS_BILINEAR,
+		g_video_width, g_video_height, kVideoUploadPixelFormat, SWS_BILINEAR,
 		NULL, NULL, NULL);
 	if (g_scaler == NULL) {
 		A30_Vita_Log("A4 Bink: sws_getCachedContext failed\n");
 		av_frame_unref(g_video_frame);
 		return false;
 	}
-	g_pending_rgba.resize(static_cast<size_t>(g_video_width) * g_video_height * 4U);
-	uint8_t *destination[] = { g_pending_rgba.data() };
-	int destination_stride[] = { g_video_width * 4 };
+	g_pending_video_pixels.resize(static_cast<size_t>(g_video_width) * g_video_height *
+		kVideoUploadBytesPerPixel);
+	uint8_t *destination[] = { g_pending_video_pixels.data() };
+	int destination_stride[] = {
+		g_video_width * static_cast<int>(kVideoUploadBytesPerPixel)
+	};
 	sws_scale(g_scaler, g_video_frame->data, g_video_frame->linesize, 0,
 		g_video_frame->height, destination, destination_stride);
 
@@ -551,7 +559,7 @@ bool Receive_Video_Frame()
 	g_pending_video = true;
 	++g_decoded_video_frames;
 	if (!g_video_first_frame_logged) {
-		A30_Vita_Log("A4 Bink: first decoded video frame source=%dx%d output=%dx%d pts_us=%lld movie=%s\n",
+		A30_Vita_Log("A4 Bink: first decoded video frame source=%dx%d output=%dx%d format=rgb565 pts_us=%lld movie=%s\n",
 			g_video_frame->width, g_video_frame->height, g_video_width,
 			g_video_height, static_cast<long long>(pts_us), g_movie_name);
 		g_video_first_frame_logged = true;
@@ -563,7 +571,7 @@ bool Receive_Video_Frame()
 bool Upload_Pending_Video()
 {
 	BinkStageTimer timing(g_video_upload_timing);
-	if (!g_pending_video || g_pending_rgba.empty()) return false;
+	if (!g_pending_video || g_pending_video_pixels.empty()) return false;
 	if (g_video_texture == 0U) glGenTextures(1, &g_video_texture);
 	if (g_video_texture == 0U) return false;
 	GLenum stale_error = GL_NO_ERROR;
@@ -600,18 +608,19 @@ bool Upload_Pending_Video()
 	if (!g_texture_allocated) {
 		g_texture_width = Next_Power_Of_Two(g_video_width);
 		g_texture_height = Next_Power_Of_Two(g_video_height);
-		std::vector<uint8_t> padded(
-			static_cast<size_t>(g_texture_width) * g_texture_height * 4U, 0U);
+		std::vector<uint8_t> padded(static_cast<size_t>(g_texture_width) *
+			g_texture_height * kVideoUploadBytesPerPixel, 0U);
 		for (int y = 0; y < g_video_height; ++y) {
-			memcpy(padded.data() + static_cast<size_t>(y) * g_texture_width * 4U,
-				g_pending_rgba.data() + static_cast<size_t>(y) * g_video_width * 4U,
-				static_cast<size_t>(g_video_width) * 4U);
+			memcpy(padded.data() + static_cast<size_t>(y) * g_texture_width *
+				kVideoUploadBytesPerPixel, g_pending_video_pixels.data() +
+				static_cast<size_t>(y) * g_video_width * kVideoUploadBytesPerPixel,
+				static_cast<size_t>(g_video_width) * kVideoUploadBytesPerPixel);
 		}
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height,
-			0, GL_RGBA, GL_UNSIGNED_BYTE, padded.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height,
+			0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, padded.data());
 	} else {
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_video_width, g_video_height,
-			GL_RGBA, GL_UNSIGNED_BYTE, g_pending_rgba.data());
+			GL_RGB, GL_UNSIGNED_SHORT_5_6_5, g_pending_video_pixels.data());
 	}
 	const GLenum upload_error = glGetError();
 	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));
@@ -635,7 +644,7 @@ bool Upload_Pending_Video()
 	}
 	g_texture_allocated = true;
 	if (!g_video_first_upload_logged) {
-		A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u video=%dx%d storage=%dx%d movie=%s\n",
+		A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u video=%dx%d storage=%dx%d format=rgb565 movie=%s\n",
 			static_cast<unsigned>(g_video_texture), g_video_width, g_video_height,
 			g_texture_width, g_texture_height, g_movie_name);
 		g_video_first_upload_logged = true;
@@ -711,7 +720,7 @@ void Log_Playback_Statistics(const char *reason)
 	g_playback_statistics_logged = true;
 	const uint64_t wall_us = g_start_us > 0 ?
 		sceKernelGetProcessTimeWide() - static_cast<uint64_t>(g_start_us) : 0U;
-	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s wall_ms=%llu frames=%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
+	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 wall_ms=%llu frames=%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
 		reason != NULL ? reason : "unknown", g_movie_name,
 		static_cast<unsigned long long>(wall_us / 1000U),
 		static_cast<unsigned long long>(g_decoded_video_frames),

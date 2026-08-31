@@ -250,6 +250,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "Submit_Audio_Packet",
             "result == AVERROR(EAGAIN)",
             "sws_scale",
+			"AV_PIX_FMT_RGB565LE",
+			"kVideoUploadBytesPerPixel = 2U",
+			"GL_UNSIGNED_SHORT_5_6_5",
+			"upload_format=rgb565",
             "swr_convert",
             "sceAudioOutOpenPort",
             "SCE_AUDIO_OUT_PORT_TYPE_MAIN",
@@ -267,7 +271,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "g_audio_count >= output.size();",
             "g_audio_wait_count.fetch_add(1U, std::memory_order_relaxed);",
             "sceKernelDelayThread(1000U);",
-            "A4 Bink: playback stats reason=%s movie=%s wall_ms=%llu",
+			"A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 wall_ms=%llu",
             "audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu",
             "audio_decode_calls/total/worst_us=%llu/%llu/%llu",
             "video_decode_calls/total/worst_us=%llu/%llu/%llu",
@@ -279,7 +283,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "Next_Power_Of_Two",
             "g_texture_width = Next_Power_Of_Two(g_video_width);",
             "g_texture_height = Next_Power_Of_Two(g_video_height);",
-            "static_cast<size_t>(g_texture_width) * g_texture_height * 4U",
+			"static_cast<size_t>(g_texture_width) *",
+			"g_texture_height * kVideoUploadBytesPerPixel",
             "const int intended_texture_width = g_texture_allocated ?",
             "const GLenum setup_error = glGetError();",
             "A4 Bink: texture setup failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d texture=%u movie=%s",
@@ -330,11 +335,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertNotIn("glPixelStorei", bink)
         self.assertLess(
             bink.index("glGetError();", upload),
-            bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
+			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height", upload),
         )
         self.assertLess(
             bink.index("const GLenum setup_error = glGetError();", upload),
-            bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
+			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height", upload),
         )
         self.assertLess(
             bink.index("const int intended_texture_width = g_texture_allocated ?", upload),
@@ -346,7 +351,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         )
         self.assertLess(
             bink.index("g_texture_width = Next_Power_Of_Two(g_video_width);", upload),
-            bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
+			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height", upload),
         )
         self.assertLess(
             bink.index("glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_video_width, g_video_height", upload),
@@ -489,6 +494,22 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             provider.index("kVitaFontGlyphLoadFlags"),
             provider.index("FT_Load_Char(font->face, character, kVitaFontGlyphLoadFlags)"),
         )
+
+    def test_vita_fontchars_keeps_the_original_asset_manager_owner(self):
+        staged_asset_manager = (ROOT / "staging" / "ww3d2" / "assetmgr.cpp").read_text()
+        fontchars_start = staged_asset_manager.index(
+            "FontCharsClass *\tWW3DAssetManager::Get_FontChars"
+        )
+        fontchars_end = staged_asset_manager.index(
+            "/***********************************************************************************************",
+            fontchars_start + 1,
+        )
+        fontchars = staged_asset_manager[fontchars_start:fontchars_end]
+
+        self.assertNotIn("return NULL;", fontchars)
+        self.assertIn("FontCharsList[i]->Is_Font", fontchars)
+        self.assertIn("font->Initialize_GDI_Font( name, point_size, is_bold );", fontchars)
+        self.assertIn("FontCharsList.Add( font );", fontchars)
 
 
 if __name__ == "__main__":

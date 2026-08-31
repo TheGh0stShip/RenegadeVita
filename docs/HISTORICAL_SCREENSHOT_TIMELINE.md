@@ -263,6 +263,21 @@ Source evidence:
 - `build/device-evidence/a35-dev82-user-return-20260830-205700/captures/first-interactive-frame-t88041059/`
 - `build/device-evidence/a35-dev82-user-return-20260830-205700/a35-dev82-runtime.log`
 
+## A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence
+
+The exact returned physical capture is shown here as a diagnostic, not a pass. Its phase is `original-loading-screen` / `level-ready`: the original loading artwork and colored panels render, while the original WWUI text regions are blank. The user separately reported a textless main menu; no main-menu image was returned, so this image is not presented as one.
+
+<table>
+<tr>
+<td width="100%"><img src="history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png" width="260" alt="Original loading screen at level-ready — returned physical capture; original loading panels render, but original UI labels are absent"><br>Original loading screen at level-ready — returned physical capture; original loading panels render, but original UI labels are absent</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frame-annotated.bmp`
+- `build/device-evidence/a35-dev86-user-return-20260831T011721Z/a35-dev86-runtime-user-report.log`
+
 ## Diagnostic-Only Screenshot Inventory
 
 These builds have local or Vita-pulled screenshots, but the available images are loading, black/logo, magenta diagnostic, or otherwise not useful as gameplay samples. They stay in the GitHub manifest below, and the underlying logs remain inventoried in `reports/HISTORICAL_EVIDENCE_INVENTORY.md`.
@@ -283,6 +298,7 @@ These builds have local or Vita-pulled screenshots, but the available images are
 | A3.5-dev78 | 0 | 8 physical loading-regression frames recovered; no gameplay screenshot was returned for dev78. | [`a35-dev78-loading-physical.png`](history/screenshots/a35-dev78-loading-physical.png) |
 | A3.5-dev79 | 0 | 4 physical loading/control-candidate frames recovered; no gameplay screenshot was returned for dev79. | [`a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png`](history/screenshots/a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png) |
 | A3.5-dev82 | 0 | Four returned physical capture records are visibly preserved in the dedicated Dev82 diagnostic gallery: two distinct loading presentations are vertically inverted, the t64590857 first-interactive record is byte-identical to the full-frame loading image, and t88041059 is black except for a small HUD fragment. None establishes gameplay acceptance. | [`a35-dev82-vita-original-loading-screen-t67280479.png`](history/screenshots/a35-dev82-vita-original-loading-screen-t67280479.png) |
+| A3.5-dev86 | 0 | One returned physical original-loading-screen frame is visibly preserved in the dedicated Dev86 diagnostic gallery. It shows the original loading artwork and color panels but no legible original UI labels; it is not a main-menu or gameplay acceptance image. | [`a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png`](history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png) |
 
 ## Builds With No Local Or Vita-Pulled Screenshot File
 
@@ -294,7 +310,7 @@ Those builds should be added later only if matching diagnostic captures are retu
 
 ## Complete Gallery Manifest
 
-The GitHub gallery currently contains 175 PNG files. Every file below is stored under `docs/history/screenshots/`; not every file is displayed as a timeline thumbnail because black/loading/diagnostic frames would obscure the gameplay progression.
+The GitHub gallery currently contains 176 PNG files. Every file below is stored under `docs/history/screenshots/`; not every file is displayed as a timeline thumbnail because black/loading/diagnostic frames would obscure the gameplay progression.
 
 | Gallery file | Build | Dimensions | SHA-256 |
 | --- | --- | --- | --- |
@@ -473,3 +489,4 @@ The GitHub gallery currently contains 175 PNG files. Every file below is stored 
 | [`a35-dev82-vita-first-interactive-frame-t88041059.png`](history/screenshots/a35-dev82-vita-first-interactive-frame-t88041059.png) | A3.5-dev82 | 960x544 | `4f500125ea0ee67030672ef2f29b514b7c777b61f0d1877104a988d4b74f149f` |
 | [`a35-dev82-vita-original-loading-screen-t54494725.png`](history/screenshots/a35-dev82-vita-original-loading-screen-t54494725.png) | A3.5-dev82 | 960x544 | `cd242a79b12a4953d6436b272fe4c193c6029941640e115c8fe887fabc5ca09f` |
 | [`a35-dev82-vita-original-loading-screen-t67280479.png`](history/screenshots/a35-dev82-vita-original-loading-screen-t67280479.png) | A3.5-dev82 | 960x544 | `703eb82b91801d7bd7e7480953cea039cafc8b31fa5225328d29ef3b6f7ca0b0` |
+| [`a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png`](history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png) | A3.5-dev86 | 960x544 | `442d1b504d4123b7736df8451334f6053d544f0efcdf3b48bb18443e64194d79` |

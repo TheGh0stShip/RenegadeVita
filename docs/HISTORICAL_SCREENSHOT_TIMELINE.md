@@ -20,7 +20,7 @@ The gallery is a reviewed history, not a controlled same-camera comparison. Its 
 | A3.1.4 | Accepted physical interactive baseline; preserved historical M00 frames exist. |
 | A3.5-dev82 | Four returned physical diagnostic frames are retained below; none is gameplay acceptance. |
 | A3.5-dev86 | One returned loading diagnostic is retained; it is not a menu or gameplay frame. |
-| A3.5-dev87 | Dev87: no title-owned screenshot was recovered after the physical return. |
+| A3.5-dev87 | One user-finalized physical MP4 was recovered read-only; six selected, labelled M00 stills are derived from it. The raw recording remains local-only and Dev87 remains a frontend-usability failure. |
 | A3.5-dev88 | Local-only canonical candidate; no Vita capture exists. |
 
 The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, or unrelated images merely to fill a build row.
@@ -50,6 +50,11 @@ This overview deliberately shows actual gameplay/world frames, including NPC det
 <td width="20%"><img src="history/screenshots/a35-dev18-vita-manual-select-interactive-f2184-t75384736.png" width="220" alt="A3.5-dev18: Manual gameplay route frame"><br>A3.5-dev18: Manual gameplay route frame</td>
 <td width="20%"><img src="history/screenshots/a35-dev19-vita-manual-select-interactive-f2570-t85917941.png" width="220" alt="A3.5-dev19: NPC route capture"><br>A3.5-dev19: NPC route capture</td>
 <td width="20%"><img src="history/screenshots/a35-dev19-npc-detail-crop.png" width="220" alt="A3.5-dev19: NPC detail crop"><br>A3.5-dev19: NPC detail crop</td>
+</tr>
+<tr>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png" width="220" alt="A3.5-dev87: Recorder-derived exterior NPC view"><br>A3.5-dev87: Recorder-derived exterior NPC view</td>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png" width="220" alt="A3.5-dev87: Recorder-derived war-factory door"><br>A3.5-dev87: Recorder-derived war-factory door</td>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-interior-console-t0120s.png" width="220" alt="A3.5-dev87: Recorder-derived interior console"><br>A3.5-dev87: Recorder-derived interior console</td>
 </tr>
 </table>
 
@@ -244,6 +249,28 @@ Source evidence:
 - `build/device-evidence/vitashell-gallery-pull-20260828/captures/a35-dev19/`
 - `build/device-evidence/vitashell-gallery-pull-20260828/logs/a35-dev19-runtime.log`
 
+### A3.5-dev87 - Returned Physical M00 Recorder Evidence
+
+Six selected stills are derived from the user-finalized 200.917-second physical-Vita MP4. They show settled exterior, war-factory, and interior M00 gameplay; the opening black/HUD-only transition was reviewed and intentionally excluded. This establishes a returned gameplay recording, not acceptance of Dev87's failed original-menu, subtitle, or intro-A/V gates. I did not pad this section to 15 with loading screens or diagnostic-only frames.
+
+<table>
+<tr>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-exterior-t0020s.png" width="220" alt="Settled exterior M00 route"><br>Settled exterior M00 route</td>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png" width="220" alt="Exterior NPC encounter"><br>Exterior NPC encounter</td>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png" width="220" alt="War-factory door approach"><br>War-factory door approach</td>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-interior-console-t0120s.png" width="220" alt="Interior console/gameplay HUD"><br>Interior console/gameplay HUD</td>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-interior-npc-t0160s.png" width="220" alt="Interior NPC encounter"><br>Interior NPC encounter</td>
+</tr>
+<tr>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-interior-objective-t0190s.png" width="220" alt="Interior objective-area view"><br>Interior objective-area view</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `build/device-evidence/a35-dev87-video-return-20260831T060240Z/raw/2026-08-31_004224.mp4 (local-only raw recording)`
+- `build/device-evidence/a35-dev87-video-return-20260831T060240Z/README.md`
+
 ## One Loading-Screen Regression Reference
 
 The gallery keeps one displayed loading-screen reference because the late dev78/dev79 loading regression is part of the story dev82 targets. The rest of the displayed sample images above are gameplay/world captures.
@@ -324,7 +351,7 @@ Those builds should be added later only if matching diagnostic captures are retu
 
 ## Complete Gallery Manifest
 
-The GitHub gallery currently contains 176 PNG files. Every file below is stored under `docs/history/screenshots/`; not every file is displayed as a timeline thumbnail because black/loading/diagnostic frames would obscure the gameplay progression.
+The GitHub gallery currently contains 182 PNG files. Every file below is stored under `docs/history/screenshots/`; not every file is displayed as a timeline thumbnail because black/loading/diagnostic frames would obscure the gameplay progression.
 
 | Gallery file | Build | Dimensions | SHA-256 |
 | --- | --- | --- | --- |
@@ -504,3 +531,9 @@ The GitHub gallery currently contains 176 PNG files. Every file below is stored 
 | [`a35-dev82-vita-original-loading-screen-t54494725.png`](history/screenshots/a35-dev82-vita-original-loading-screen-t54494725.png) | A3.5-dev82 | 960x544 | `cd242a79b12a4953d6436b272fe4c193c6029941640e115c8fe887fabc5ca09f` |
 | [`a35-dev82-vita-original-loading-screen-t67280479.png`](history/screenshots/a35-dev82-vita-original-loading-screen-t67280479.png) | A3.5-dev82 | 960x544 | `703eb82b91801d7bd7e7480953cea039cafc8b31fa5225328d29ef3b6f7ca0b0` |
 | [`a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png`](history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png) | A3.5-dev86 | 960x544 | `442d1b504d4123b7736df8451334f6053d544f0efcdf3b48bb18443e64194d79` |
+| [`a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png`](history/screenshots/a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png) | A3.5-dev87 | 640x368 | `d6c9d6a1e34f6f3a98d53b8d0dea082ac149bc1699c6edfe490d6a2fd5ac59e3` |
+| [`a35-dev87-vita-recorder-m00-exterior-t0020s.png`](history/screenshots/a35-dev87-vita-recorder-m00-exterior-t0020s.png) | A3.5-dev87 | 640x368 | `021f509976c445668559209a1720baca3d1652e52b95a0a4d2d1b10d5dfee402` |
+| [`a35-dev87-vita-recorder-m00-interior-console-t0120s.png`](history/screenshots/a35-dev87-vita-recorder-m00-interior-console-t0120s.png) | A3.5-dev87 | 640x368 | `0f0e93a72b13d308fc4c1bfd6f7749bcc134ce9e2b61e31a9c316e7acafec7e2` |
+| [`a35-dev87-vita-recorder-m00-interior-npc-t0160s.png`](history/screenshots/a35-dev87-vita-recorder-m00-interior-npc-t0160s.png) | A3.5-dev87 | 640x368 | `d26658d3db81481113ab1a683dfb5d49f28806a51d5d3f1358a85a999c54dfc0` |
+| [`a35-dev87-vita-recorder-m00-interior-objective-t0190s.png`](history/screenshots/a35-dev87-vita-recorder-m00-interior-objective-t0190s.png) | A3.5-dev87 | 640x368 | `34b4f9567fcfddcd05e37adc0f6b3ae14afcff37945c2442fdf97ac91014d022` |
+| [`a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png`](history/screenshots/a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png) | A3.5-dev87 | 640x368 | `19090b2e78913559f9cb6c666763ac9c4e7356680eb784aba7cde5714835f418` |

@@ -1,5 +1,26 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev87 finalized recorder recovered; gallery evidence in publication
+
+`[████░░░░░░] 4/10 current evidence gates complete; no build or Vita mutation`
+
+- The user finalized the installed recorder with L+Start and opened VitaShell
+  FTP. Read-only enumeration found
+  `ux0:/video/eg/2026-08-31_004224.mp4`, 44,746,182 bytes. The MP4 was pulled
+  without changing the Vita and retained locally under
+  `build/device-evidence/a35-dev87-video-return-20260831T060240Z/`; local
+  SHA-256 is `e6f10ac1add71090bfa83246f4829b668d2d7629f25e5c0f3dfd1eb09ea44aaf`.
+- Inspection confirms a 200.917-second 640x368 physical-Vita H.264/AAC
+  recording with sustained M00 exterior, war-factory, and interior gameplay.
+  Six settled stills are selected for the gallery. The opening black/HUD-only
+  transition was reviewed and excluded rather than used as a screenshot.
+- Raw video, transfer scratch data, logs, and dumps remain local-only. The
+  Dev87 gallery is a record of actual gameplay evidence, not an acceptance
+  claim: missing original menu/dialogue text and poor intro A/V remain failed
+  physical gates.
+- Next: regenerate/validate the historical gallery, then commit and push this
+  evidence-only update. Dev88 remains held from every Vita action.
+
 ## 2026-08-31 — public documentation/GitHub reconciliation; historical capture campaign prepared
 
 `[████░░░░░░] 4/10 current evidence gates complete; no build or Vita action`
@@ -25,7 +46,7 @@
 - Next: publish the documentation/GitHub update, then await explicit READY for
   the hash-bound historical device-capture pass. Dev88 remains separately held.
 
-## 2026-08-31 — VDB screenshot route verified; no finalized Dev87 recorder video
+## 2026-08-31 — earlier VDB screenshot route verification; no finalized video at that check
 
 `[████░░░░░░] 4/10 current evidence gates complete; no game rebuild or device mutation`
 
@@ -40,9 +61,10 @@
 - The observed red `R` is the separately installed title-scoped
   `RenegadeDemoRecorder`, not VDB screenshot capture. It autostarts an MP4
   recording and finalizes with L+Start or clean module stop; a title crash can
-  prevent a usable MP4 from being committed. After the explicit retrieval
-  request, forced VDB1 search for `*.mp4` below `ux0:/video` returned no files;
-  the negative receipt is retained under the Dev87 evidence root.
+  prevent a usable MP4 from being committed. At this earlier retrieval check,
+  forced VDB1 search for `*.mp4` below `ux0:/video` returned no files; the
+  negative receipt is retained under the Dev87 evidence root. A later user
+  finalization and VitaShell FTP retrieval is recorded above.
 - Next: prepare the source-matched exact-title VDB agent/gateway route without
   changing the Vita. Before a future physical session, obtain explicit
   authorization for the new device-side capture provider, then collect and

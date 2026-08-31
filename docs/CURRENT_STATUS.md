@@ -9,7 +9,7 @@ Updated: 2026-08-31
 | Accepted physical baseline | **A3.1.4** | Native Vita boot, original data access, visible M00 world/session lifecycle, player/camera ownership, and clean exit. |
 | A3.5-dev87 physical return | **Failed frontend gate** | The exact executable was installed and run, but original menu text remained absent; intro movies were very slow with buzzy audio; and the original gameplay dialogue panel appeared without text. |
 | A3.5-dev88 canonical candidate | **Local-only** | 54 focused contracts and the canonical 115-contract ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
-| Screenshot/video evidence | **Incomplete** | No Dev87 title-owned screenshot or finalized MP4 was recoverable. The current device has no VDB framebuffer-capture capability. |
+| Screenshot/video evidence | **Dev87 recorder recovered** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. The raw MP4 remains local-only; the current device has no VDB framebuffer-capture capability. |
 
 Host validation, package identity, and logs are useful engineering evidence. They do not prove panel output, controls, audio quality, frame pacing, or lifecycle behavior on physical hardware.
 
@@ -38,7 +38,7 @@ The developer must not claim any of these from host tests or a runtime log.
 
 The current Vita command service advertises `screen.v1`, which is panel on/off—not a screenshot endpoint. The checked-in VDB client supports the separate authenticated `capture.screen.v1` protocol, but its target-local agent and gateway are not installed on this device. The on-screen red `R` is a separate MP4 recorder; it is not a screenshot service and a crash can prevent the MP4 from finalizing.
 
-The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. No Dev87 or Dev88 visual evidence is represented as complete.
+The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly labelled as recorder-derived and do not pass its failed frontend gate; no Dev88 physical visual evidence exists.
 
 ## Authoritative records
 

@@ -39,9 +39,10 @@
     "A3.5-dev78": 8,
     "A3.5-dev79": 4,
     "A3.5-dev82": 4,
-    "A3.5-dev86": 1
+    "A3.5-dev86": 1,
+    "A3.5-dev87": 6
   },
-  "gallery_png_count": 176,
+  "gallery_png_count": 182,
   "generated_from": "<workspace>",
   "missing_screenshot_builds": [
     "A3.5-dev1",
@@ -59,10 +60,10 @@
   "scanned_roots": [
     {
       "counts_by_type": {
-        "png": 176
+        "png": 182
       },
       "exists": true,
-      "file_count": 176,
+      "file_count": 182,
       "files": [
         {
           "path": "github_gallery/a31-vita-log-select-capture-f2278-annotated.png",
@@ -1119,6 +1120,42 @@
           "relative_path": "a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png",
           "size": 512162,
           "type": "png"
+        },
+        {
+          "path": "github_gallery/a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png",
+          "relative_path": "a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png",
+          "size": 265588,
+          "type": "png"
+        },
+        {
+          "path": "github_gallery/a35-dev87-vita-recorder-m00-exterior-t0020s.png",
+          "relative_path": "a35-dev87-vita-recorder-m00-exterior-t0020s.png",
+          "size": 224347,
+          "type": "png"
+        },
+        {
+          "path": "github_gallery/a35-dev87-vita-recorder-m00-interior-console-t0120s.png",
+          "relative_path": "a35-dev87-vita-recorder-m00-interior-console-t0120s.png",
+          "size": 182329,
+          "type": "png"
+        },
+        {
+          "path": "github_gallery/a35-dev87-vita-recorder-m00-interior-npc-t0160s.png",
+          "relative_path": "a35-dev87-vita-recorder-m00-interior-npc-t0160s.png",
+          "size": 150219,
+          "type": "png"
+        },
+        {
+          "path": "github_gallery/a35-dev87-vita-recorder-m00-interior-objective-t0190s.png",
+          "relative_path": "a35-dev87-vita-recorder-m00-interior-objective-t0190s.png",
+          "size": 176558,
+          "type": "png"
+        },
+        {
+          "path": "github_gallery/a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png",
+          "relative_path": "a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png",
+          "size": 270613,
+          "type": "png"
         }
       ],
       "label": "github_gallery",
@@ -1128,13 +1165,14 @@
       "counts_by_type": {
         "bmp": 161,
         "csv": 51,
-        "json": 2851,
+        "jpg": 1,
+        "json": 2857,
         "log": 995,
-        "png": 21,
+        "png": 27,
         "txt": 192
       },
       "exists": true,
-      "file_count": 4271,
+      "file_count": 4284,
       "files": [
         {
           "path": "active_device_evidence/A3.5-dev18-manual-crash-20260825T021439Z/crash-collection-summary.json",
@@ -24561,6 +24599,36 @@
           "type": "json"
         },
         {
+          "path": "active_device_evidence/a35-dev87-recorder-retrieval-20260831T053206Z/doctor.json",
+          "relative_path": "a35-dev87-recorder-retrieval-20260831T053206Z/doctor.json",
+          "size": 2765,
+          "type": "json"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-recorder-retrieval-20260831T053206Z/status.json",
+          "relative_path": "a35-dev87-recorder-retrieval-20260831T053206Z/status.json",
+          "size": 241,
+          "type": "json"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-recorder-retrieval-20260831T055019Z/status-attempt-1.json",
+          "relative_path": "a35-dev87-recorder-retrieval-20260831T055019Z/status-attempt-1.json",
+          "size": 241,
+          "type": "json"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-recorder-retrieval-20260831T055019Z/status-attempt-2.json",
+          "relative_path": "a35-dev87-recorder-retrieval-20260831T055019Z/status-attempt-2.json",
+          "size": 241,
+          "type": "json"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-recorder-retrieval-20260831T055019Z/status-attempt-3.json",
+          "relative_path": "a35-dev87-recorder-retrieval-20260831T055019Z/status-attempt-3.json",
+          "size": 241,
+          "type": "json"
+        },
+        {
           "path": "active_device_evidence/a35-dev87-user-return-20260831T022728Z/a35-dev87-runtime.log",
           "relative_path": "a35-dev87-user-return-20260831T022728Z/a35-dev87-runtime.log",
           "size": 19426,
@@ -24618,6 +24686,54 @@
           "path": "active_device_evidence/a35-dev87-user-return-20260831T022728Z/video-list.json",
           "relative_path": "a35-dev87-user-return-20260831T022728Z/video-list.json",
           "size": 273,
+          "type": "json"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/review/contact-sheet-10s.jpg",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/review/contact-sheet-10s.jpg",
+          "size": 120715,
+          "type": "jpg"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/review/frame-0020s.png",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/review/frame-0020s.png",
+          "size": 224347,
+          "type": "png"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/review/frame-0040s.png",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/review/frame-0040s.png",
+          "size": 265588,
+          "type": "png"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/review/frame-0080s.png",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/review/frame-0080s.png",
+          "size": 270613,
+          "type": "png"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/review/frame-0120s.png",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/review/frame-0120s.png",
+          "size": 182329,
+          "type": "png"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/review/frame-0160s.png",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/review/frame-0160s.png",
+          "size": 150219,
+          "type": "png"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/review/rejected-black-hud-t0010s.png",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/review/rejected-black-hud-t0010s.png",
+          "size": 14462,
+          "type": "png"
+        },
+        {
+          "path": "active_device_evidence/a35-dev87-video-return-20260831T060240Z/transfer-jobs/b11dfd19fdcb17c8.json",
+          "relative_path": "a35-dev87-video-return-20260831T060240Z/transfer-jobs/b11dfd19fdcb17c8.json",
+          "size": 572,
           "type": "json"
         },
         {

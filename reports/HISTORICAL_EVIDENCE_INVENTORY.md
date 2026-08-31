@@ -3,7 +3,7 @@
 This inventory records where previous Renegade Vita screenshots and logs were found for the GitHub historical gallery. It intentionally excludes retail data, saves, credentials, raw dumps, and VPK payloads.
 
 - Bash workspace scanned: `<workspace>`
-- GitHub gallery PNGs: 176
+- GitHub gallery PNGs: 182
 - VitaShell FTP was checked read-only at `10.0.0.202:1337` for `ux0:/data/renegade/user/logs/`, `captures/`, and `screenshots/`; the latest audit found 24 runtime logs, 89 capture directories, and no files in the top-level screenshots folder.
 - All 89 live Vita capture directories are now represented locally between `build/device-evidence/vitashell-gallery-pull-20260828/`, `build/device-evidence/vitashell-gallery-pull-secondpass-*`, and `build/device-evidence/vitashell-gallery-pull-listingpass-*`.
 - `<managed-builder-root>` was not present; targeted AppData evidence came from the Vita3K user data root instead.
@@ -36,13 +36,14 @@ This inventory records where previous Renegade Vita screenshots and logs were fo
 | A3.5-dev79 | 4 |
 | A3.5-dev82 | 4 |
 | A3.5-dev86 | 1 |
+| A3.5-dev87 | 6 |
 
 ## Scanned Roots
 
 | Label | Exists | Files | Type counts | Root |
 | --- | --- | ---: | --- | --- |
-| github_gallery | True | 176 | png:176 | `docs/history/screenshots` |
-| active_device_evidence | True | 4271 | bmp:161, csv:51, json:2851, log:995, png:21, txt:192 | `build/device-evidence` |
+| github_gallery | True | 182 | png:182 | `docs/history/screenshots` |
+| active_device_evidence | True | 4284 | bmp:161, csv:51, jpg:1, json:2857, log:995, png:27, txt:192 | `build/device-evidence` |
 | active_logs | True | 280 | log:280 | `logs` |
 | active_dist | True | 692 | json:118, log:40, txt:534 | `dist` |
 | vita3k_user_appdata | True | 7 | log:6, txt:1 | `<vita3k-data-root>/ux0/data/renegade/user` |

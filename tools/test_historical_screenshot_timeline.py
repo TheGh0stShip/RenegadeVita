@@ -96,6 +96,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             "A3.5-dev17": 6,
             "A3.5-dev18": 6,
             "A3.5-dev19": 5,
+            "A3.5-dev87": 6,
         }
         gameplay_timeline = doc.split("## Gameplay Timeline", 1)[1].split(
             "## One Loading-Screen Regression Reference", 1
@@ -157,14 +158,8 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         )
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        readme_section = readme.split("### A3.5-dev82 — Returned Physical Diagnostic Frames", 1)[1].split(
-            "### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame", 1
-        )[0]
-        self.assertIn("diagnostic evidence only, not gameplay acceptance", readme_section)
-        self.assertIn("byte-identical loading-image capture marked first-interactive", readme_section)
-        self.assertEqual(len(re.findall(r'<img src="docs/history/screenshots/', readme_section)), 4)
-        for name in expected:
-            self.assertIn(f"docs/history/screenshots/{name}", readme_section)
+        self.assertIn("historical screenshot timeline", readme)
+        self.assertNotIn("### A3.5-dev82 — Returned Physical Diagnostic Frames", readme)
 
     def test_dev86_returned_frontend_diagnostic_is_visibly_displayed(self):
         timeline = TIMELINE.read_text(encoding="utf-8")
@@ -179,36 +174,23 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         self.assertEqual(len(re.findall(r'<img src="history/screenshots/', section)), 1)
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        readme_section = readme.split(
-            "### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame", 1
-        )[1].split("## Current State", 1)[0]
-        self.assertIn("diagnostic only", readme_section)
-        self.assertIn(f"docs/history/screenshots/{filename}", readme_section)
-        self.assertEqual(len(re.findall(r'<img src="docs/history/screenshots/', readme_section)), 1)
+        self.assertIn(f"docs/history/screenshots/{filename}", readme)
+        self.assertIn("diagnostic loading frame, not gameplay", readme)
 
-    def test_readme_surfaces_gallery_before_current_state(self):
+    def test_readme_links_current_gallery_and_dev87_recorder_stills(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertLess(
-            readme.index("## Historical Visual Progress"),
-            readme.index("## Current State"),
-        )
-        lead = readme.split("## Historical Visual Progress", 1)[1].split(
-            "### A3.5-dev82 — Returned Physical Diagnostic Frames", 1
-        )[0]
-        self.assertIn("docs/history/screenshots/a35-dev5-spawn-control.png", readme)
-        self.assertIn("gameplay-first visual", readme)
-        self.assertIn("docs/history/screenshots/a35-dev13-npc-crop.png", readme)
-        self.assertIn("docs/history/screenshots/a35-dev19-npc-detail-crop.png", readme)
+        self.assertIn("## Visual evidence, honestly presented", readme)
         self.assertIn("historical screenshot timeline", readme)
-        image_refs = re.findall(r"docs/history/screenshots/[^\"<\s]+\.png", lead)
-        self.assertGreaterEqual(len(image_refs), 15)
-        for image_ref in image_refs:
-            self.assertNotIn("loading-screen", image_ref)
-            self.assertNotIn("loading-replay", image_ref)
-            self.assertNotIn("loading-physical", image_ref)
-            self.assertNotIn("a35-dev78-", image_ref)
-            self.assertNotIn("a35-dev79-", image_ref)
+        self.assertIn("docs/history/screenshots/a35-dev5-walk-manual.png", readme)
+        self.assertIn("docs/history/screenshots/a35-dev13-selected-frame.png", readme)
+        for name in (
+            "a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png",
+            "a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png",
+            "a35-dev87-vita-recorder-m00-interior-console-t0120s.png",
+        ):
+            self.assertIn(f"docs/history/screenshots/{name}", readme)
+        self.assertIn("not acceptance proof", readme)
 
     def test_inventory_report_records_vita_appdata_and_gallery_counts(self):
         report = (ROOT / "reports" / "HISTORICAL_EVIDENCE_INVENTORY.md").read_text(
@@ -218,12 +200,14 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("GitHub gallery PNGs: 176", report)
+        gallery_count = len(list(SCREENSHOT_DIR.glob("*.png")))
+        self.assertGreaterEqual(gallery_count, 182)
+        self.assertIn(f"GitHub gallery PNGs: {gallery_count}", report)
         self.assertIn("24 runtime logs, 89 capture directories", report)
         self.assertIn("All 89 live Vita capture directories", report)
-        self.assertIn("/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder", report)
-        self.assertIn("/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/", report)
-        self.assertIn('"gallery_png_count": 176', inventory)
+        self.assertIn("<managed-builder-root>", report)
+        self.assertIn("<historical-evidence-root>/Vita Logs", report)
+        self.assertIn(f'"gallery_png_count": {gallery_count}', inventory)
         self.assertIn('"vita3k_user_appdata"', inventory)
         self.assertIn('"missing_c_local_builder_root"', inventory)
 

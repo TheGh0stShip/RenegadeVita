@@ -39,6 +39,12 @@ valid until a matching physical return. HUD/text, shadow, START-exit,
 loading-flash/progress, front-end readiness, and gameplay performance remain
 open.
 
+The later user-finalized Dev87 recorder MP4 supplies six settled M00 gameplay
+stills in the historical gallery. It proves that this physical run reached
+exterior, war-factory, and interior gameplay, but it neither covers a readable
+original menu/subtitle state nor reverses the reported frontend, HUD,
+performance, freeze, or START-crash failures.
+
 Current pre-cache is intentionally bounded: it indexes original archives and
 warms small readable slices before frontend, then performs one loading-screen
 frame and 60 M00 scene frames after loading. It does not construct and retain

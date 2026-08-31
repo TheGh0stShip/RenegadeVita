@@ -43,6 +43,9 @@ QUICK_GAMEPLAY = [
     ("A3.5-dev18", "a35-dev18-vita-manual-select-interactive-f2184-t75384736.png", "Manual gameplay route frame"),
     ("A3.5-dev19", "a35-dev19-vita-manual-select-interactive-f2570-t85917941.png", "NPC route capture"),
     ("A3.5-dev19", "a35-dev19-npc-detail-crop.png", "NPC detail crop"),
+    ("A3.5-dev87", "a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png", "Recorder-derived exterior NPC view"),
+    ("A3.5-dev87", "a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png", "Recorder-derived war-factory door"),
+    ("A3.5-dev87", "a35-dev87-vita-recorder-m00-interior-console-t0120s.png", "Recorder-derived interior console"),
 ]
 
 
@@ -215,6 +218,28 @@ GAMEPLAY_SECTIONS = [
             "build/device-evidence/vitashell-gallery-pull-20260828/logs/a35-dev19-runtime.log",
         ],
     },
+    {
+        "title": "A3.5-dev87 - Returned Physical M00 Recorder Evidence",
+        "build": "A3.5-dev87",
+        "summary": (
+            "Six selected stills are derived from the user-finalized 200.917-second physical-Vita MP4. "
+            "They show settled exterior, war-factory, and interior M00 gameplay; the opening black/HUD-only "
+            "transition was reviewed and intentionally excluded. This establishes a returned gameplay recording, "
+            "not acceptance of Dev87's failed original-menu, subtitle, or intro-A/V gates."
+        ),
+        "images": [
+            ("a35-dev87-vita-recorder-m00-exterior-t0020s.png", "Settled exterior M00 route"),
+            ("a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png", "Exterior NPC encounter"),
+            ("a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png", "War-factory door approach"),
+            ("a35-dev87-vita-recorder-m00-interior-console-t0120s.png", "Interior console/gameplay HUD"),
+            ("a35-dev87-vita-recorder-m00-interior-npc-t0160s.png", "Interior NPC encounter"),
+            ("a35-dev87-vita-recorder-m00-interior-objective-t0190s.png", "Interior objective-area view"),
+        ],
+        "sources": [
+            "build/device-evidence/a35-dev87-video-return-20260831T060240Z/raw/2026-08-31_004224.mp4 (local-only raw recording)",
+            "build/device-evidence/a35-dev87-video-return-20260831T060240Z/README.md",
+        ],
+    },
 ]
 
 
@@ -294,7 +319,7 @@ CAPTURE_COMPLETENESS = [
     ),
     (
         "A3.5-dev87",
-        "Dev87: no title-owned screenshot was recovered after the physical return.",
+        "One user-finalized physical MP4 was recovered read-only; six selected, labelled M00 stills are derived from it. The raw recording remains local-only and Dev87 remains a frontend-usability failure.",
     ),
     (
         "A3.5-dev88",

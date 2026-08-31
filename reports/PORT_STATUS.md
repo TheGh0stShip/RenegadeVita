@@ -12,9 +12,8 @@ dialogue/subtitle box. The matching partial log,
 `build/device-evidence/a35-dev87-user-return-20260831T022728Z/a35-dev87-runtime.log`
 (SHA-256 `a01c0b54159fefa2fa4c4ebefdaf181f11330f23e0287f2b426e7cbb1eac911c`),
 ends at original main-menu activation; it does not prove gameplay subtitle
-data availability or visible glyph correctness. User-taken Dev87 screenshots
-remain pending title-scoped retrieval, visual review, accurate gallery/timeline
-labelling, and GitHub publication.
+data availability or visible glyph correctness. No separate title-owned Dev87
+screenshot was recovered at that point.
 
 Read-only device discovery later established the actual capture boundary. The
 checked-in VDB client can collect repeated, exact-title logical-framebuffer
@@ -29,7 +28,17 @@ retrieval request, forced VDB1 search `ux0:/video` for `*.mp4` returned zero
 matches; receipt:
 `build/device-evidence/a35-dev87-user-return-20260831T022728Z/video-find-after-user-request.json`.
 No game rebuild, retimed capture, Vita filesystem change, or capture-provider
-installation occurred during this discovery.
+installation occurred during this discovery. After the user finalized the
+recorder with L+Start and opened VitaShell FTP, a later read-only listing found
+`ux0:/video/eg/2026-08-31_004224.mp4` (44,746,182 bytes). The 200.917-second
+H.264/AAC recording was pulled into
+`build/device-evidence/a35-dev87-video-return-20260831T060240Z/`; its local
+SHA-256 is `e6f10ac1add71090bfa83246f4829b668d2d7629f25e5c0f3dfd1eb09ea44aaf`.
+It contains sustained M00 exterior, war-factory, and interior play. Six
+settled stills are accurately labelled as recorder-derived Dev87 gallery
+evidence; a reviewed black/HUD-only transitional frame is excluded. The raw
+recording remains local-only. This new visual evidence does not overturn the
+returned Dev87 frontend-usability failure.
 
 The original `MessageWindow` dialogue `TextWindowClass` and original menu
 `Render2DSentence` both use dynamic indexed glyph draws. Dev88 applies the
@@ -53,8 +62,9 @@ Dev88 source, focused contracts, canonical identity, and the explicit Dev87
 failure record are published at `origin/main`
 `0807c1733ea45993ac8fca9f49858a0daafc83f1` (`Fix Dev88 frontend text and BINK
 audio reserve`). No Dev87 image is present in the title-owned `screenshots` or
-Dev87-window `captures` entries. The gallery update is therefore pending the
-actual screenshot evidence, not represented as completed.
+Dev87-window `captures` entries, but the subsequently returned physical
+recorder MP4 yields accurately labelled M00 stills for the gallery. The raw
+video remains outside Git.
 
 ## 2026-08-31 dev87 frontend repair candidate — historical pre-return record
 

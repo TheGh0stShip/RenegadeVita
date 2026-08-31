@@ -45,6 +45,13 @@ exterior, war-factory, and interior gameplay, but it neither covers a readable
 original menu/subtitle state nor reverses the reported frontend, HUD,
 performance, freeze, or START-crash failures.
 
+The current Dev87 follow-up adds that the original menu text remains absent,
+ammo and health glyphs are mangled, the NPC targeting/bounding-box indicator
+has moved further right, and the pre-warm/pre-cache routine still begins after
+an opaque black period. Treat these as retained panel observations pending
+matching runtime evidence and source diagnosis; do not infer a single common
+cause from them.
+
 Current pre-cache is intentionally bounded: it indexes original archives and
 warms small readable slices before frontend, then performs one loading-screen
 frame and 60 M00 scene frames after loading. It does not construct and retain

@@ -7,7 +7,7 @@ Updated: 2026-08-31
 | Class | Status | What it establishes |
 | --- | --- | --- |
 | Accepted physical baseline | **A3.1.4** | Native Vita boot, original data access, visible M00 world/session lifecycle, player/camera ownership, and clean exit. |
-| A3.5-dev87 physical return | **Failed frontend gate** | The exact executable was installed and run, but original menu text remained absent; intro movies were very slow with buzzy audio; and the original gameplay dialogue panel appeared without text. |
+| A3.5-dev87 physical return | **Failed frontend/HUD gate** | The exact executable was installed and run, but original menu text remained absent; intro movies were very slow with buzzy audio; the gameplay dialogue panel appeared without text; ammo/health glyphs were mangled; NPC target bounds moved further right; and an opaque black period still preceded pre-warm/pre-cache. |
 | A3.5-dev88 canonical candidate | **Local-only** | 54 focused contracts and the canonical 115-contract ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | Screenshot/video evidence | **Dev87 recorder recovered** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. The raw MP4 remains local-only; the current device has no VDB framebuffer-capture capability. |
 

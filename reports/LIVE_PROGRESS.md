@@ -1,5 +1,25 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev87 follow-up retains frontend/HUD failure
+
+`[████░░░░░░] 4/10 current evidence gates complete; no build or Vita mutation`
+
+- User physical observation: original menu text is still absent; ammo and
+  health text are mangled; the NPC targeting/bounding-box indicator is further
+  right of the NPC; and an opaque black screen remains before the pre-warm/
+  pre-cache routine. These add to the retained slow/buzzy intro and empty
+  dialogue-box failures.
+- No source diagnosis, build, deployment, title launch, or Vita filesystem
+  modification is implied by this report. Dev88 remains local-only and held.
+- A full MP4 player cannot be embedded in GitHub Markdown: the authenticated
+  GitHub renderer strips a tested `<video>` element. This private repository
+  has no Pages site; GitHub documents that a Pages site is public by default
+  for a private repository. The raw recorder MP4 remains local-only pending an
+  explicit publishing/visibility decision.
+- Next: retain these observations, then either publish a player only with
+  explicit visibility approval or continue with the existing private
+  screenshot/gallery evidence path.
+
 ## 2026-08-31 — Dev87 finalized recorder recovered; gallery evidence in publication
 
 `[████░░░░░░] 4/10 current evidence gates complete; no build or Vita mutation`

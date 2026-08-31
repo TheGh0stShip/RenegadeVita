@@ -11,7 +11,7 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 | Evidence area | Current state |
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
-| Latest physical return | **A3.5-dev87 failed the frontend usability gate**: menu text remained absent, intro A/V was slow/buzzy, and the gameplay dialogue box was empty. It is retained failure evidence, not a regression-free build. |
+| Latest physical return | **A3.5-dev87 failed the frontend usability gate**: menu text remained absent, ammo/health glyphs were mangled, NPC target bounds drifted further right, and an opaque black period still preceded pre-warm/pre-cache. Intro A/V and the gameplay dialogue box also remain failed. |
 | Latest local candidate | **A3.5-dev88**: canonical ARM/VPK validation passed after original glyph texture-stage and BINK audio-reserve repairs. It has **not** been copied to, installed on, or launched on a Vita. |
 | Visual evidence | The gallery contains reviewed historical frames only. A user-finalized Dev87 recording supplied six labelled M00 stills; the raw MP4 remains local-only. No Dev88 physical frame exists. |
 | Capture path | The current Vita exposes panel power control through VitaCompanion, not VDB framebuffer capture. The exact-title VDB provider is being prepared separately; no game-frame timing workaround will be presented as panel evidence. |

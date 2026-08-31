@@ -15,6 +15,14 @@ ends at original main-menu activation; it does not prove gameplay subtitle
 data availability or visible glyph correctness. No separate title-owned Dev87
 screenshot was recovered at that point.
 
+The later user follow-up retains the frontend failure and expands its observed
+scope: original menu text is still absent; ammo and health text are mangled;
+the NPC targeting/bounding-box indicator is now further right of the NPC; and
+an opaque black screen still precedes the pre-warm/pre-cache routine. These
+are physical-Vita observations, not a diagnosis. They join the already
+reported slow/buzzy intro A/V and empty dialogue box; no code, build, Vita
+filesystem, or runtime action followed this report.
+
 Read-only device discovery later established the actual capture boundary. The
 checked-in VDB client can collect repeated, exact-title logical-framebuffer
 screens through `capture.screen.v1` (up to 16 labelled captures per evidence

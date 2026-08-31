@@ -21,7 +21,9 @@ The mapping below is the current source intent. Its complete physical behavior i
 
 Notes:
 
-- Front touch is reserved for original mouse-driven WWUI/terminal interaction.
+- Front touch is reserved for original mouse cursor and left-click WWUI/terminal interaction.
+- D-pad navigates the original WWUI focus in the frontend and remains weapon/zoom input in gameplay.
 - D-pad gameplay input must not leak into camera turning.
+- Rear touch pad remains the gameplay first-person / third-person camera toggle.
 - The MP4 recorder's L+Start finalize gesture is separate from normal game input and is unsafe as a capture workaround until Start lifecycle behavior is accepted.
 - Current capture work should use the future title-local VDB provider, not gameplay controls or arbitrary frame delays.

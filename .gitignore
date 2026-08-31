@@ -31,3 +31,9 @@ tools/*/run_packet.sh
 tools/*/run_s[0-9][0-9]_*.sh
 reports/a35-dev1/
 reports/crash/
+# Local OAuth clients and tokens; never commit authorization material.
+/.secrets/
+
+# Local gh-pages player working copy; the full MP4/player artifact lives on the
+# dedicated gh-pages branch, not on main.
+/docs/video-player/

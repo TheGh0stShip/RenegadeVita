@@ -323,7 +323,11 @@ CAPTURE_COMPLETENESS = [
     ),
     (
         "A3.5-dev88",
-        "Local-only canonical candidate; no Vita capture exists.",
+        "Superseded local-only canonical candidate; no Vita capture exists.",
+    ),
+    (
+        "A3.5-dev89",
+        "Current local-only canonical candidate; no Vita capture exists.",
     ),
 ]
 

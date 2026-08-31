@@ -30,11 +30,11 @@ DOCUMENTS = (
 )
 
 REQUIRED_TEXT = {
-    "README.md": ("A3.1.4", "A3.5-dev88", "not a public game release"),
-    "docs/CURRENT_STATUS.md": ("A3.5-dev87", "A3.5-dev88", "Local-only"),
+    "README.md": ("A3.1.4", "A3.5-dev89", "not a public game release"),
+    "docs/CURRENT_STATUS.md": ("A3.5-dev87", "A3.5-dev89", "Local-only"),
     "docs/EVIDENCE.md": ("capture.screen.v1", "physical Vita"),
     "docs/HISTORICAL_SCREENSHOT_TIMELINE.md": ("Dev87", "not a controlled same-camera comparison"),
-    "docs/HISTORICAL_CAPTURE_CAMPAIGN.md": ("dev1 through dev88", "post-render M00 PNG", "READY"),
+    "docs/HISTORICAL_CAPTURE_CAMPAIGN.md": ("dev1 through dev89", "post-render M00 PNG", "READY"),
 }
 
 LINK = re.compile(r"!?(?:\[[^\]]*\])\(([^)\s]+)(?:\s+[^)]*)?\)")

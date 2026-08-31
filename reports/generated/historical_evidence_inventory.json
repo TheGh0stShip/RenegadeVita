@@ -26884,10 +26884,10 @@
     },
     {
       "counts_by_type": {
-        "log": 280
+        "log": 285
       },
       "exists": true,
-      "file_count": 280,
+      "file_count": 285,
       "files": [
         {
           "path": "active_logs/a22-20260815-231952-host-asset.log",
@@ -28568,6 +28568,36 @@
           "relative_path": "a35-dev88-20260830-214253-build.log",
           "size": 3667904,
           "type": "log"
+        },
+        {
+          "path": "active_logs/a35-dev88-20260831-023746-build.log",
+          "relative_path": "a35-dev88-20260831-023746-build.log",
+          "size": 40802,
+          "type": "log"
+        },
+        {
+          "path": "active_logs/a35-dev88-20260831-023826-build.log",
+          "relative_path": "a35-dev88-20260831-023826-build.log",
+          "size": 3668076,
+          "type": "log"
+        },
+        {
+          "path": "active_logs/a35-dev88-fast-20260831-022632-build.log",
+          "relative_path": "a35-dev88-fast-20260831-022632-build.log",
+          "size": 953850,
+          "type": "log"
+        },
+        {
+          "path": "active_logs/a35-dev88-fast-20260831-023607-build.log",
+          "relative_path": "a35-dev88-fast-20260831-023607-build.log",
+          "size": 953748,
+          "type": "log"
+        },
+        {
+          "path": "active_logs/a35-dev89-20260831-024834-build.log",
+          "relative_path": "a35-dev89-20260831-024834-build.log",
+          "size": 3668076,
+          "type": "log"
         }
       ],
       "label": "active_logs",
@@ -28575,12 +28605,12 @@
     },
     {
       "counts_by_type": {
-        "json": 118,
-        "log": 40,
-        "txt": 534
+        "json": 121,
+        "log": 41,
+        "txt": 547
       },
       "exists": true,
-      "file_count": 692,
+      "file_count": 709,
       "files": [
         {
           "path": "active_dist/A3.5-dev48-FAST-BUILD-REPORT.txt",
@@ -31927,7 +31957,7 @@
         {
           "path": "active_dist/A3.5-dev88-COMPILER_LOG.txt",
           "relative_path": "A3.5-dev88-COMPILER_LOG.txt",
-          "size": 3666720,
+          "size": 3666892,
           "type": "txt"
         },
         {
@@ -31940,6 +31970,36 @@
           "path": "active_dist/A3.5-dev88-EXPECTED-RUNTIME-LOG.txt",
           "relative_path": "A3.5-dev88-EXPECTED-RUNTIME-LOG.txt",
           "size": 658,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev88-FAST-BUILD-REPORT.txt",
+          "relative_path": "A3.5-dev88-FAST-BUILD-REPORT.txt",
+          "size": 1070,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev88-FAST-COMPILER_LOG.txt",
+          "relative_path": "A3.5-dev88-FAST-COMPILER_LOG.txt",
+          "size": 953109,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev88-FAST-HARDWARE-CANDIDATE.txt",
+          "relative_path": "A3.5-dev88-FAST-HARDWARE-CANDIDATE.txt",
+          "size": 296,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev88-FAST-IDENTITY-VERIFICATION.json",
+          "relative_path": "A3.5-dev88-FAST-IDENTITY-VERIFICATION.json",
+          "size": 2181,
+          "type": "json"
+        },
+        {
+          "path": "active_dist/A3.5-dev88-FAST-SHA256SUMS.txt",
+          "relative_path": "A3.5-dev88-FAST-SHA256SUMS.txt",
+          "size": 1008,
           "type": "txt"
         },
         {
@@ -31969,7 +32029,61 @@
         {
           "path": "active_dist/A3.5-dev88-SOURCE_INTEGRATION_REPORT.json",
           "relative_path": "A3.5-dev88-SOURCE_INTEGRATION_REPORT.json",
-          "size": 72902,
+          "size": 73406,
+          "type": "json"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-BUILD_REPORT.txt",
+          "relative_path": "A3.5-dev89-BUILD_REPORT.txt",
+          "size": 2998,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-COMPILER_LOG.txt",
+          "relative_path": "A3.5-dev89-COMPILER_LOG.txt",
+          "size": 3666892,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-CRASH-SYMBOLICATION.txt",
+          "relative_path": "A3.5-dev89-CRASH-SYMBOLICATION.txt",
+          "size": 381,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-EXPECTED-RUNTIME-LOG.txt",
+          "relative_path": "A3.5-dev89-EXPECTED-RUNTIME-LOG.txt",
+          "size": 658,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-HARDWARE-CANDIDATE.txt",
+          "relative_path": "A3.5-dev89-HARDWARE-CANDIDATE.txt",
+          "size": 1831,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-HOST-VALIDATION.log",
+          "relative_path": "A3.5-dev89-HOST-VALIDATION.log",
+          "size": 2790575,
+          "type": "log"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-IDENTITY-VERIFICATION.json",
+          "relative_path": "A3.5-dev89-IDENTITY-VERIFICATION.json",
+          "size": 2181,
+          "type": "json"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-SHA256SUMS.txt",
+          "relative_path": "A3.5-dev89-SHA256SUMS.txt",
+          "size": 1695,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/A3.5-dev89-SOURCE_INTEGRATION_REPORT.json",
+          "relative_path": "A3.5-dev89-SOURCE_INTEGRATION_REPORT.json",
+          "size": 73406,
           "type": "json"
         },
         {
@@ -32725,12 +32839,30 @@
         {
           "path": "active_dist/RenegadeVita-A3.5-dev88.symbols.txt",
           "relative_path": "RenegadeVita-A3.5-dev88.symbols.txt",
-          "size": 1368870,
+          "size": 1369587,
           "type": "txt"
         },
         {
           "path": "active_dist/RenegadeVita-A3.5-dev88.vpk-contents.txt",
           "relative_path": "RenegadeVita-A3.5-dev88.vpk-contents.txt",
+          "size": 28,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/RenegadeVita-A3.5-dev89.elf-header.txt",
+          "relative_path": "RenegadeVita-A3.5-dev89.elf-header.txt",
+          "size": 976,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/RenegadeVita-A3.5-dev89.symbols.txt",
+          "relative_path": "RenegadeVita-A3.5-dev89.symbols.txt",
+          "size": 1369587,
+          "type": "txt"
+        },
+        {
+          "path": "active_dist/RenegadeVita-A3.5-dev89.vpk-contents.txt",
+          "relative_path": "RenegadeVita-A3.5-dev89.vpk-contents.txt",
           "size": 28,
           "type": "txt"
         }

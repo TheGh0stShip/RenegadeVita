@@ -2,6 +2,14 @@ diff --git a/render2d.cpp b/render2d.cpp
 index 07be244..56dac6c 100755
 --- a/render2d.cpp
 +++ b/render2d.cpp
+@@ -572,6 +572,7 @@ void Render2DClass::Render(void)
+ 
+ 	DX8Wrapper::Set_Shader(Shader);
+ 	DX8Wrapper::Set_Texture(0,Texture);
++	DX8Wrapper::Set_Texture(1,NULL);
+ 
+ 	VertexMaterialClass *vm=VertexMaterialClass::Get_Preset(VertexMaterialClass::PRELIT_DIFFUSE);
+ 	DX8Wrapper::Set_Material(vm);
 @@ -581,14 +581,17 @@ void Render2DClass::Render(void)
  		DynamicVBAccessClass::WriteLockClass Lock(&vb);
  		const FVFInfoClass &fi=vb.FVF_Info();

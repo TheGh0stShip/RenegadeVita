@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev88 mandatory frontend and readiness gate (2026-08-31)
+## Current dev89 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -28,14 +28,21 @@ Dev87 restored the existing Vita texture allocation for the original glyph
 atlas and changed only the BINK boundary's in-memory upload representation to
 RGB565 (the unchanged retail BIK files and original movie owner remain intact),
 but its returned physical gate still failed: original menu text was absent,
-intro A/V was slow/buzzy, and the original dialogue box was empty. Dev88 now
-applies the original indexed glyph texture-stage combiner immediately before
-those shared menu/dialogue draws and increases the real decoded BINK audio
-startup reserve from one to three output buffers. Its fast/canonical closure
-passes, but it is local only. The user-required release gate remains: a visible
-original intro with usable A/V and a visibly labelled original menu before any
-further Vita candidate push. No visual, pacing, or audio acceptance claim is
-valid until a matching physical return. HUD/text, shadow, START-exit,
+intro A/V was slow/buzzy, and the original dialogue box was empty. Dev88 then
+applied the original indexed glyph texture-stage combiner immediately before
+those shared menu/dialogue draws and increased the real decoded BINK audio
+startup reserve from one to three output buffers. Dev89 is the current
+local-only successor: it scopes the original frontend to its 800×600 logical
+layout, validates `StyleMgr` font glyph availability before menu input,
+tries multiple retail font filename variants, flushes the native bootstrap
+screen before filesystem/cache work, expands source-owned UI/HUD/M00 pre-cache
+touches, clears leaked Render2D texture-stage state, drops late BINK video
+frames after the first visible frame, and scopes camera-projected target boxes
+to native WW3D coordinates. Its focused/canonical closure passes, but it is
+local only. The user-required release gate remains: a visible original intro
+with usable A/V and a visibly labelled original menu before any further Vita
+candidate push. No visual, pacing, or audio acceptance claim is valid until a
+matching physical return. HUD/text, shadow, START-exit, HMVV freeze,
 loading-flash/progress, front-end readiness, and gameplay performance remain
 open.
 
@@ -53,10 +60,11 @@ matching runtime evidence and source diagnosis; do not infer a single common
 cause from them.
 
 Current pre-cache is intentionally bounded: it indexes original archives and
-warms small readable slices before frontend, then performs one loading-screen
-frame and 60 M00 scene frames after loading. It does not construct and retain
-front-end glyph atlases or BINK upload resources. A future readiness phase must
-measure and retain only those real reusable resources; reading/decoding whole
+warms small readable slices before frontend, including Dev89's explicit
+frontend/menu/HUD/subtitle/pickup/shadow/objective/M00 touch list, then
+performs one loading-screen frame and 60 M00 scene frames after loading. It does
+not construct and retain whole BINK upload resources. A future readiness phase
+must measure and retain only real reusable resources; reading/decoding whole
 movies at startup would worsen the black period and is not adopted.
 
 ## Current dev82 physical-test gaps (2026-08-28)

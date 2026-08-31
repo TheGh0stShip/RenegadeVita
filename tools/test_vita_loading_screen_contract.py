@@ -138,6 +138,13 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn('"DATA\\\\MOVIES\\\\R_INTRO.BIK"', runtime)
         self.assertIn('"IF_BACK01.W3D"', runtime)
         self.assertIn('"M00_Tutorial.lsd"', runtime)
+        self.assertIn('"54251___.TTF"', runtime)
+        self.assertIn('"ARI_____.TTF"', runtime)
+        self.assertIn('"FONT12x16.TGA"', runtime)
+        self.assertIn('"HUD_MAIN.TGA"', runtime)
+        self.assertIn('"hud_6x4_Messages.tga"', runtime)
+        self.assertIn('"POG_M00_1_01.tga"', runtime)
+        self.assertIn("Validate_StyleMgr_Font_Glyphs", runtime)
         self.assertIn(
             '"A3.5 prewarm: startup-precache touch kind=%s name=%s opened=%d read_bytes=%u limit=%u movie=%d',
             runtime,
@@ -355,6 +362,12 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text(
             encoding="utf-8"
         )
+        hud = (ROOT / "staging/combat/hud.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
+        stage_sources = (ROOT / "tools/stage_sources.sh").read_text(
+            encoding="utf-8"
+        )
         hud_header = (
             ROOT / "port/compatibility/include/a31_vita_hud_presentation.h"
         ).read_text(encoding="utf-8")
@@ -509,6 +522,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             self.assertIn("const Vector3 normal(0.0f,0.0f,1.0f);", source)
             self.assertIn("fi.Get_Normal_Offset()", source)
             self.assertIn("fi.Get_Tex_Offset(1)", source)
+            self.assertIn("DX8Wrapper::Set_Texture(1,NULL);", source)
         self.assertIn("ww3d2-a35-render2d-dynamic-fvf-init.patch", stage_sources)
 
     def test_render2d_restores_previous_viewport_after_2d_pass(self):
@@ -542,6 +556,12 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+        hud = (ROOT / "staging/combat/hud.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
+        stage_sources = (ROOT / "tools/stage_sources.sh").read_text(
             encoding="utf-8"
         )
 
@@ -581,6 +601,19 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Apply_A31_Original_HUD_Presentation_Rect()", gameplay_helper)
         self.assertIn("RenegadeVitaRenderer::Reset_Native_Presentation_Rect_Quiet();", gameplay_helper)
         self.assertNotIn("WW3D::Set_Device_Resolution", gameplay_helper)
+        self.assertIn("combat-a35-vita-target-overlay-ww3d-include.patch", stage_sources)
+        self.assertIn("combat-a35-vita-target-overlay-native-scope.patch", stage_sources)
+        self.assertIn("WW3D::Get_Device_Resolution(target_device_width", hud)
+        self.assertIn("TargetRenderer->Set_Coordinate_Range(target_screen);", hud)
+        self.assertIn("TargetBoxRenderer->Set_Coordinate_Range(target_screen);", hud)
+        self.assertLess(
+            hud.index("WW3D::Get_Device_Resolution(target_device_width"),
+            hud.index("box = Get_Target_Box( obj->As_PhysicalGameObj() );"),
+        )
+        self.assertLess(
+            hud.index("box = Get_Target_Box( obj->As_PhysicalGameObj() );"),
+            hud.index("Render2DClass::Set_Screen_Resolution(previous_target_screen);"),
+        )
 
         renderer_header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text(
             encoding="utf-8"

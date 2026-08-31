@@ -3,6 +3,51 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-31 Dev87 physical failure; Dev89 local candidate
+
+Dev89 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves the Dev88 indexed-glyph
+texture-stage and real BINK audio-reserve corrections, then adds bounded
+source fixes for the latest physical symptoms without replacing original
+engine owners:
+
+- the original frontend runs inside its original 800×600 logical render scope
+  and validates real `StyleMgr` font glyphs before menu input is admitted;
+- the Vita font provider tries the known retail Regatta/Arial filename
+  variants and fails closed on empty or invalid font data;
+- the native bootstrap/debug screen is flushed after startup progress prints
+  before filesystem/cache work, targeting the opaque black period before the
+  visible diagnostic loader;
+- source-owned pre-cache touches were expanded through the original
+  file-factory/MIX route for frontend/menu fonts, HUD icons/text windows,
+  pickup/medal assets, shadows, objective/POG images, and M00 level files;
+- Render2D clears texture stage 1 before 2D text/icon draws so world
+  multistage state cannot leak into menu, subtitle, ammo, health, or pickup
+  glyphs;
+- original BINK playback may drop late video frames after the first visible
+  frame to protect audio wall-time, while logging uploaded/dropped counts; and
+- camera-projected target boxes are emitted in native WW3D device coordinates
+  while static HUD elements keep their authored 640×480 coordinate owner.
+
+Focused validation passed 19/19 runtime, loading-screen, and original-frontend
+contracts plus `git diff --check`. Canonical `bash ./tools/build.sh` passed
+retained host/current validation, deterministic 138-patch staging, 549
+ARM/package actions, ELF/SELF/VPK identity, compressed VPK validation,
+diagnostics, SHA manifest, and retail exclusion in
+`logs/a35-dev89-20260831-024834-build.log`. VPK SHA-256 is
+`e2754588124910eeea526c056d004986f48f60491ab1a529f6a513248f0757a2`; ELF
+SHA-256 is
+`acd2a60edb65b7cf415000ee1a114a8cbfd96c999ddbed99685900437ca165f9`;
+diagnostics ZIP SHA-256 is
+`7bc5d18d1f1607cf10e0aee371f51ac4d73f1fe58f69cef60ab9ac86796b9038`.
+
+No Dev89 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. The next physical test must
+prove the user-required frontend gate first: visible original intro/menu text,
+usable intro A/V/skip behavior, readable gameplay dialogue/HUD/pickup/loading
+text, correct target-box placement, stable M00 progression including the HMVV
+approach, acceptable frame time, and safe Start/pause/exit without PSP2 crash.
+
 ## 2026-08-31 Dev87 physical failure; Dev88 local candidate
 
 Dev87 is retained physical frontend usability failure evidence. Despite a
@@ -45,8 +90,15 @@ SHA-256 is `e6f10ac1add71090bfa83246f4829b668d2d7629f25e5c0f3dfd1eb09ea44aaf`.
 It contains sustained M00 exterior, war-factory, and interior play. Six
 settled stills are accurately labelled as recorder-derived Dev87 gallery
 evidence; a reviewed black/HUD-only transitional frame is excluded. The raw
-recording remains local-only. This new visual evidence does not overturn the
-returned Dev87 frontend-usability failure.
+recording remains locally retained. The user authorized a public player, so a
+dedicated private `gh-pages` branch was prepared with only the exact MP4,
+player, and poster; GitHub rejected Pages creation with HTTP 422 because the
+private repository's current plan does not support Pages. The repository was
+not made public and no public player is live. The user has authorized an
+unlisted YouTube upload of this exact MP4 as the functional player path; no
+upload has occurred because an upload-capable account is not connected in this
+workspace. This new visual evidence does not overturn the returned Dev87
+frontend-usability failure.
 
 The derived PNGs, gallery/timeline, inventory, and public status update are
 published at `origin/main` commit

@@ -20,9 +20,15 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
 - A3.5-dev87: retained physical frontend-usability failure evidence. The user
   reports absent original menu text, slow/buzzy intro A/V, and an empty original
   gameplay dialogue box; the matching partial log ends at main-menu activation.
-- A3.5-dev88: current canonical local-only candidate. It restores the original
-  indexed glyph texture-stage combiner before menu/dialogue draws and raises the
-  real BINK audio-start reserve to three decoded output buffers. It is not
+- A3.5-dev88: published local-only follow-up to Dev87. It restored the original
+  indexed glyph texture-stage combiner before menu/dialogue draws and raised the
+  real BINK audio-start reserve to three decoded output buffers. It was not
+  installed, launched, or physically accepted.
+- A3.5-dev89: current canonical local-only candidate. It adds original
+  frontend 800×600 presentation scope, font fallback/glyph validation,
+  bootstrap display flushing before filesystem/cache work, expanded UI/HUD/M00
+  pre-cache touches, Render2D texture-state isolation, late BINK video-frame
+  dropping for A/V pacing, and native-coordinate target-box scoping. It is not
   installed, launched, or physically accepted.
 
 ## Milestone contracts

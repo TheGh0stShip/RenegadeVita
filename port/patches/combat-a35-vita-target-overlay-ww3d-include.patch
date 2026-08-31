@@ -1,0 +1,14 @@
+diff --git a/hud.cpp b/hud.cpp
+index 9cc3441..5ae80be 100755
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -60,6 +60,9 @@
+ #include "string_ids.h"
+ #include "gametype.h"
+ #include "stylemgr.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "ww3d.h"
++#endif
+ 
+ 
+ static const WCHAR HUD_DECIMAL_FORMAT[] = { '%', 'd', 0 };

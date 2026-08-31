@@ -1,5 +1,36 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev89 local source/build candidate; no physical action
+
+`[████░░░░░░] 4/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the no-physical-test boundary. Dev89 keeps
+  Dev88's shared indexed-glyph texture-stage fix and real BINK audio reserve,
+  then adds: original frontend 800×600 render/presentation scoping, real
+  `StyleMgr` font glyph validation before menu input, multiple retail
+  Regatta/Arial font filename fallbacks, native bootstrap display flushing
+  before filesystem/cache work, expanded UI/HUD/subtitle/pickup/shadow/POG/M00
+  pre-cache touches, Render2D texture-stage-1 clearing before text/icon draws,
+  late BINK video-frame dropping after the first visible frame, and
+  native-WW3D coordinate scoping for camera-projected target boxes.
+- Focused validation passed: 19/19 runtime/loading/original-frontend
+  contracts plus `git diff --check`. Canonical `bash ./tools/build.sh` passed
+  retained host/current validation, deterministic 138-patch staging, 549
+  ARM/package actions, ELF/SELF/VPK identity, compressed VPK validation,
+  diagnostics, SHA manifest, and retail exclusion in
+  `logs/a35-dev89-20260831-024834-build.log`.
+- Dev89 artifact custody: VPK SHA-256
+  `e2754588124910eeea526c056d004986f48f60491ab1a529f6a513248f0757a2`;
+  ELF SHA-256
+  `acd2a60edb65b7cf415000ee1a114a8cbfd96c999ddbed99685900437ca165f9`;
+  diagnostics ZIP SHA-256
+  `7bc5d18d1f1607cf10e0aee371f51ac4d73f1fe58f69cef60ab9ac86796b9038`.
+- Dev89 has not been copied to, installed on, launched on, or visually
+  accepted on a Vita. The next physical gate must verify readable intro/menu
+  text, paced intro A/V, loading progress, HUD/pickup/dialogue text,
+  target-box alignment, M00 stability including the HMVV approach, frame time,
+  and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev87 follow-up retains frontend/HUD failure
 
 `[████░░░░░░] 4/10 current evidence gates complete; no build or Vita mutation`
@@ -12,13 +43,18 @@
 - No source diagnosis, build, deployment, title launch, or Vita filesystem
   modification is implied by this report. Dev88 remains local-only and held.
 - A full MP4 player cannot be embedded in GitHub Markdown: the authenticated
-  GitHub renderer strips a tested `<video>` element. This private repository
-  has no Pages site; GitHub documents that a Pages site is public by default
-  for a private repository. The raw recorder MP4 remains local-only pending an
-  explicit publishing/visibility decision.
-- Next: retain these observations, then either publish a player only with
-  explicit visibility approval or continue with the existing private
-  screenshot/gallery evidence path.
+  GitHub renderer strips a tested `<video>` element. The user authorized the
+  public Pages route; a dedicated `gh-pages` branch with exactly the MP4,
+  player, and poster was pushed, but GitHub rejected Pages creation with HTTP
+  422 because this private repository's current plan does not support it. The
+  repository was not made public; no public player is live.
+- The user has authorized the exact recording for unlisted YouTube hosting,
+  which can supply the required functional embedded player without exposing the
+  repository. This workspace currently has no connected YouTube upload
+  capability; no upload has been attempted.
+- Next: connect the authorized upload account, publish the exact verified MP4
+  as unlisted with failure-context metadata, verify its player, and link it
+  from the gallery/evidence record.
 
 ## 2026-08-31 — Dev87 finalized recorder recovered; gallery evidence in publication
 

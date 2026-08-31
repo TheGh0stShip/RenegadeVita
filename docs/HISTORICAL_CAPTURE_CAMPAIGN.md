@@ -14,7 +14,7 @@ their candidate/hash provenance will be published.
 ## Retained candidates
 
 The local archive contains reusable VPKs for A3.1 through A3.1.4, A3.2-dev1,
-and every A3.5 candidate from dev1 through dev88. The archive therefore does
+and every A3.5 candidate from dev1 through dev89. The archive therefore does
 not require a rebuild for this campaign. A candidate is eligible for a device
 run only after the session-specific preflight verifies its VPK contents, VPK
 SHA-256, packaged `eboot.bin` SHA-256, and title identity against a retained
@@ -53,11 +53,12 @@ currently installed candidate for rollback:
 | Baseline | A3.1.4, dev5, dev7, dev13, dev16, dev17, dev18, dev19 | Establish the already-known M00 reference points with one consistently captured frame each. |
 | Existing diagnostic-only | dev6, dev12, dev20, dev21, dev24, dev42–dev47, dev78, dev79, dev82, dev86 | Replace old loading/black/magenta-only evidence with an actual M00 frame where the build can reach one. |
 | No-image historical groups | dev1–dev4, dev8–dev11, dev14–dev15, dev22–dev41, dev48–dev77, dev80–dev81, dev83–dev85, dev87 | Determine whether a genuine M00 frame can be retained; otherwise publish the verified outcome as no in-game frame. |
-| Current local candidate | dev88 | Remains excluded until its separate physical test is explicitly authorized. |
+| Current/unvalidated local candidates | dev88–dev89 | Remain excluded until their separate physical test is explicitly authorized. |
 
 The passes deliberately cover every retained historical A3.5 number from dev1
-through dev87 exactly once. The row for dev88 stays local-only so the campaign
-does not silently turn an unapproved current candidate into a hardware test.
+through dev87 exactly once. The row for dev88–dev89 stays local-only so the
+campaign does not silently turn an unapproved current candidate into a hardware
+test.
 
 ## Per-candidate procedure
 

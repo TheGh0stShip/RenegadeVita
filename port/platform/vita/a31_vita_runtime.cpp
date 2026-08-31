@@ -125,6 +125,8 @@ const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
 const float kOriginalLoadingLogicalWidth = 640.0f;
 const float kOriginalLoadingLogicalHeight = 480.0f;
+const float kOriginalFrontendLogicalWidth = 800.0f;
+const float kOriginalFrontendLogicalHeight = 600.0f;
 const float kOriginalHUDLogicalWidth = 640.0f;
 const float kOriginalHUDLogicalHeight = 480.0f;
 
@@ -166,12 +168,9 @@ struct A31StartupPrecacheFileSpec
 	unsigned read_limit;
 };
 
-A31NativePresentationRect Build_Original_Loading_Presentation_Rect()
+A31NativePresentationRect Build_Aspect_Preserved_Presentation_Rect(
+	uint32_t logical_width, uint32_t logical_height)
 {
-	const uint32_t logical_width =
-		static_cast<uint32_t>(kOriginalLoadingLogicalWidth);
-	const uint32_t logical_height =
-		static_cast<uint32_t>(kOriginalLoadingLogicalHeight);
 	const uint32_t display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
 	const uint32_t display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 	uint32_t width = display_width;
@@ -192,6 +191,20 @@ A31NativePresentationRect Build_Original_Loading_Presentation_Rect()
 	return rect;
 }
 
+A31NativePresentationRect Build_Original_Loading_Presentation_Rect()
+{
+	return Build_Aspect_Preserved_Presentation_Rect(
+		static_cast<uint32_t>(kOriginalLoadingLogicalWidth),
+		static_cast<uint32_t>(kOriginalLoadingLogicalHeight));
+}
+
+A31NativePresentationRect Build_Original_Frontend_Presentation_Rect()
+{
+	return Build_Aspect_Preserved_Presentation_Rect(
+		static_cast<uint32_t>(kOriginalFrontendLogicalWidth),
+		static_cast<uint32_t>(kOriginalFrontendLogicalHeight));
+}
+
 bool Apply_Original_Loading_Presentation_Rect(const char *reason,
 	bool log_state)
 {
@@ -201,6 +214,24 @@ bool Apply_Original_Loading_Presentation_Rect(const char *reason,
 		rect.x, rect.y, rect.width, rect.height);
 	if (log_state) {
 		A30_Vita_Log("A3.5 loading screen: original 640x480 presentation rect reason=%s native=%u,%u %ux%u display=%ux%u aspect_preserved=%d applied=%d\n",
+			reason != NULL ? reason : "unknown",
+			rect.x, rect.y, rect.width, rect.height,
+			RenegadeVitaRenderer::DISPLAY_WIDTH,
+			RenegadeVitaRenderer::DISPLAY_HEIGHT,
+			1, applied ? 1 : 0);
+	}
+	return applied;
+}
+
+bool Apply_Original_Frontend_Presentation_Rect(const char *reason,
+	bool log_state)
+{
+	const A31NativePresentationRect rect =
+		Build_Original_Frontend_Presentation_Rect();
+	const bool applied = RenegadeVitaRenderer::Set_Native_Presentation_Rect(
+		rect.x, rect.y, rect.width, rect.height);
+	if (log_state) {
+		A30_Vita_Log("A4 frontend: original 800x600 presentation rect reason=%s native=%u,%u %ux%u display=%ux%u aspect_preserved=%d applied=%d\n",
 			reason != NULL ? reason : "unknown",
 			rect.x, rect.y, rect.width, rect.height,
 			RenegadeVitaRenderer::DISPLAY_WIDTH,
@@ -258,6 +289,38 @@ bool Load_Strings_Database_For_Loading_Screen()
 		loaded ? 1 : 0, kStringsDatabase,
 		static_cast<unsigned long>(TranslateDBClass::Get_Version_Number()));
 	return loaded;
+}
+
+bool Validate_StyleMgr_Font_Glyphs(const char *scope)
+{
+	struct FontProbe {
+		StyleMgrClass::FONT_STYLE style;
+		const char *name;
+	};
+	const FontProbe probes[] = {
+		{ StyleMgrClass::FONT_MENU, "FONT_MENU" },
+		{ StyleMgrClass::FONT_SM_MENU, "FONT_SM_MENU" },
+		{ StyleMgrClass::FONT_INGAME_TXT, "FONT_INGAME_TXT" },
+		{ StyleMgrClass::FONT_INGAME_BIG_TXT, "FONT_INGAME_BIG_TXT" }
+	};
+	bool ok = true;
+	for (unsigned index = 0U; index < sizeof(probes) / sizeof(probes[0]);
+		++index) {
+		FontCharsClass *font = StyleMgrClass::Peek_Font(probes[index].style);
+		const int height = font != NULL ? font->Get_Char_Height() : 0;
+		const int spacing = font != NULL ?
+			font->Get_Char_Spacing(static_cast<WCHAR>('A')) : 0;
+		if (height <= 0 || spacing <= 0) ok = false;
+		A30_Vita_Log("A4 frontend/text: StyleMgr font probe scope=%s font=%s ptr=%p height=%d spacing_A=%d ok=%d\n",
+			scope != NULL ? scope : "unknown", probes[index].name,
+			static_cast<void *>(font), height, spacing,
+			height > 0 && spacing > 0 ? 1 : 0);
+	}
+	if (!ok) {
+		A30_Vita_Log("A4 frontend/text: FAIL StyleMgr font glyph probe scope=%s; refusing to enter visually blank text state\n",
+			scope != NULL ? scope : "unknown");
+	}
+	return ok;
 }
 
 void Draw_Startup_Precache_Screen(int startup_screen_result, const char *phase,
@@ -598,6 +661,29 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 		{ "M00_Tutorial.lsd", true, kStartupPrecacheRequiredReadBytes },
 		{ "M00_Tutorial.ldd", true, kStartupPrecacheRequiredReadBytes },
 		{ "m00_tutorial.dep", true, kStartupPrecacheRequiredReadBytes },
+		{ "54251___.TTF", false, kStartupPrecacheRequiredReadBytes },
+		{ "ARI_____.TTF", false, kStartupPrecacheRequiredReadBytes },
+		{ "FONT12x16.TGA", false, kStartupPrecacheOptionalReadBytes },
+		{ "FONT6x8.TGA", false, kStartupPrecacheOptionalReadBytes },
+		{ "FONT8x8.TGA", false, kStartupPrecacheOptionalReadBytes },
+		{ "HUD_MAIN.TGA", false, kStartupPrecacheOptionalReadBytes },
+		{ "HUD_CHATPBOX.TGA", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_6x4_Messages.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_armor1.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_armor2.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_armor3.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_health1.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_health2.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_health3.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_armedal.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "hud_hemedal.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "shadowblob.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "POG_M00_1_01.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "POG_M00_1_02.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "POG_M00_1_03.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "POG_M00_1_04.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "POG_M00_1_05.tga", false, kStartupPrecacheOptionalReadBytes },
+		{ "POG_M00_1_06.tga", false, kStartupPrecacheOptionalReadBytes },
 		{ "DATA\\MOVIES\\EA_WW.BIK", false, kStartupPrecacheMovieReadBytes },
 		{ "DATA\\MOVIES\\R_INTRO.BIK", false, kStartupPrecacheMovieReadBytes },
 		{ "Data\\Movies\\R_Intro.BIK", false, kStartupPrecacheMovieReadBytes },
@@ -711,6 +797,64 @@ public:
 
 	A31VitaScopedLoadingRenderResolution(const A31VitaScopedLoadingRenderResolution &) = delete;
 	A31VitaScopedLoadingRenderResolution &operator=(const A31VitaScopedLoadingRenderResolution &) = delete;
+
+private:
+	int PreviousWidth;
+	int PreviousHeight;
+	int PreviousBits;
+	bool PreviousWindowed;
+	bool PresentationRectApplied;
+	bool Applied;
+};
+
+class A31VitaScopedFrontendRenderResolution
+{
+public:
+	A31VitaScopedFrontendRenderResolution() :
+		PreviousWidth(0),
+		PreviousHeight(0),
+		PreviousBits(0),
+		PreviousWindowed(false),
+		PresentationRectApplied(false),
+		Applied(false)
+	{
+		WW3D::Get_Device_Resolution(PreviousWidth, PreviousHeight,
+			PreviousBits, PreviousWindowed);
+		PresentationRectApplied =
+			Apply_Original_Frontend_Presentation_Rect("frontend_scope", true);
+		Applied = WW3D::Set_Device_Resolution(
+			static_cast<int>(kOriginalFrontendLogicalWidth),
+			static_cast<int>(kOriginalFrontendLogicalHeight), -1, -1,
+			false) == WW3D_ERROR_OK;
+		const A31NativePresentationRect rect =
+			Build_Original_Frontend_Presentation_Rect();
+		A30_Vita_Log("A4 frontend: original logical WW3D/DX8/Render2D resolution %.0fx%.0f over Vita display %ux%u presentation=%u,%u %ux%u aspect_preserved=1 applied=%d rect_applied=%d previous=%dx%d\n",
+			kOriginalFrontendLogicalWidth, kOriginalFrontendLogicalHeight,
+			kCaptureWidth, kCaptureHeight, rect.x, rect.y, rect.width,
+			rect.height, Applied ? 1 : 0,
+			PresentationRectApplied ? 1 : 0, PreviousWidth,
+			PreviousHeight);
+	}
+
+	~A31VitaScopedFrontendRenderResolution()
+	{
+		if (PresentationRectApplied) {
+			RenegadeVitaRenderer::Reset_Native_Presentation_Rect();
+		}
+		if (Applied) {
+			const int previous_windowed = PreviousWindowed ? 1 : 0;
+			WW3D::Set_Device_Resolution(PreviousWidth, PreviousHeight,
+				PreviousBits, previous_windowed, false);
+		}
+		A30_Vita_Log("A4 frontend: restored Vita WW3D/DX8/Render2D resolution %dx%d applied=%d rect_reset=%d\n",
+			PreviousWidth, PreviousHeight, Applied ? 1 : 0,
+			PresentationRectApplied ? 1 : 0);
+	}
+
+	A31VitaScopedFrontendRenderResolution(
+		const A31VitaScopedFrontendRenderResolution &) = delete;
+	A31VitaScopedFrontendRenderResolution &operator=(
+		const A31VitaScopedFrontendRenderResolution &) = delete;
 
 private:
 	int PreviousWidth;
@@ -1509,10 +1653,19 @@ bool Is_Start_Pressed()
 bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	MovieGameModeClass &movie_mode, WWAudioClass *audio)
 {
+	A31VitaScopedFrontendRenderResolution frontend_render_resolution;
 	A4_Frontend_Reset_Trace();
 	A4_Frontend_Begin_Menu_Loop();
-	Input::Menu_Enable(true);
 	RenegadeDialogMgrClass::Initialize();
+	A30_Vita_Log("A4 frontend: original WWUI StyleMgr initialized under 800x600 frontend logical resolution menu_font=%p small_menu_font=%p\n",
+		static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_MENU)),
+		static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_SM_MENU)));
+	if (!Validate_StyleMgr_Font_Glyphs("frontend-menu-stylemgr")) {
+		RenegadeDialogMgrClass::Shutdown();
+		A4_Frontend_End_Menu_Loop();
+		return false;
+	}
+	Input::Menu_Enable(true);
 	GameModeManager::Add(&menu_mode);
 	GameModeManager::Add(&movie_mode);
 	movie_mode.Activate();
@@ -1756,6 +1909,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
 				break;
 			}
+			if (!Validate_StyleMgr_Font_Glyphs("initial-loading-stylemgr")) {
+				break;
+			}
 				A30_Vita_Log("A3.5 loading screen: original StyleMgr initialized ini=%s normal_font=%p big_font=%p\n",
 					kStyleManagerIni,
 					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT)),
@@ -1794,6 +1950,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							A30_Vita_Log("A4 frontend: FAIL StyleMgr fonts unavailable after menu handoff normal=%p big=%p\n",
 								static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT)),
 								static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
+							break;
+						}
+						if (!Validate_StyleMgr_Font_Glyphs("post-menu-stylemgr")) {
 							break;
 						}
 					}

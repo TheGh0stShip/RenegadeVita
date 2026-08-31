@@ -159,6 +159,17 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("retained original Menu mode through Combat handoff", runtime)
         self.assertIn("removed retained Menu mode after Combat handoff", runtime)
         self.assertIn('GameModeManager::Find("Menu") == &frontend_menu_mode', runtime)
+        self.assertIn("kOriginalFrontendLogicalWidth = 800.0f", runtime)
+        self.assertIn("kOriginalFrontendLogicalHeight = 600.0f", runtime)
+        self.assertIn("class A31VitaScopedFrontendRenderResolution", runtime)
+        self.assertIn("Build_Original_Frontend_Presentation_Rect", runtime)
+        self.assertIn("Apply_Original_Frontend_Presentation_Rect", runtime)
+        self.assertIn("A31VitaScopedFrontendRenderResolution frontend_render_resolution;", runtime)
+        self.assertIn('Validate_StyleMgr_Font_Glyphs("frontend-menu-stylemgr")', runtime)
+        self.assertLess(
+            runtime.index("A31VitaScopedFrontendRenderResolution frontend_render_resolution;"),
+            runtime.index("RenegadeDialogMgrClass::Initialize();"),
+        )
         self.assertIn("StyleMgrClass::Initialize_From_INI(kStyleManagerIni);", runtime[handoff_index:direct_route_index])
         final_style_index = runtime.index(
             "StyleMgrClass::Initialize_From_INI(kStyleManagerIni);",
@@ -279,6 +290,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "g_audio_wait_count.fetch_add(1U, std::memory_order_relaxed);",
             "sceKernelDelayThread(1000U);",
 			"A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 wall_ms=%llu",
+			"video_uploaded/dropped=%llu/%llu",
+			"kVideoDropLatenessUs",
+			"Drop_Pending_Video_If_Late",
+			"A4 Bink: dropped late video frame",
             "audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu",
             "audio_decode_calls/total/worst_us=%llu/%llu/%llu",
             "video_decode_calls/total/worst_us=%llu/%llu/%llu",
@@ -319,6 +334,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertLess(
             bink.index("if (Check_Skip_Request()) return;"),
             bink.index("const int64_t elapsed_us"),
+        )
+        self.assertLess(
+            bink.index("Drop_Pending_Video_If_Late(elapsed_us)"),
+            bink.index("if (!Upload_Pending_Video())"),
         )
         self.assertLess(
             bink.index("update_elapsed_us >= kUpdateBudgetUs"),

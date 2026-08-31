@@ -35,11 +35,18 @@ class RuntimeLogContractTest(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("Runtime identity: candidate=%s display=%s path=%s", main)
+        self.assertIn("#include <psp2/display.h>", main)
+        self.assertIn("void Flush_Bootstrap_Display(unsigned frames)", main)
+        self.assertIn("sceDisplayWaitVblankStart();", main)
         self.assertIn("void Print_Bootstrap_Progress(int screen_result)", main)
         self.assertIn("Starting native Vita runtime...", main)
         self.assertIn("visible bootstrap status precedes retail pre-cache", main)
         self.assertLess(
             main.index("Print_Bootstrap_Progress(screen_result);"),
+            main.index("Vita_Initialize_Filesystem();"),
+        )
+        self.assertLess(
+            main.index("Flush_Bootstrap_Display(1U);"),
             main.index("Vita_Initialize_Filesystem();"),
         )
         self.assertIn("Stage: loaded-world callback entry", world)

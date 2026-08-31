@@ -5,6 +5,7 @@
 #include "wwaudio.h"
 
 #include <psp2/ctrl.h>
+#include <psp2/display.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 
@@ -13,6 +14,13 @@
 #include <stdint.h>
 
 namespace {
+
+void Flush_Bootstrap_Display(unsigned frames)
+{
+	for (unsigned index = 0; index < frames; ++index) {
+		sceDisplayWaitVblankStart();
+	}
+}
 
 void Print_Bootstrap_Progress(int screen_result)
 {
@@ -26,6 +34,7 @@ void Print_Bootstrap_Progress(int screen_result)
 	psvDebugScreenPrintf("Then: checking the user-supplied retail Data files\n");
 	psvDebugScreenPrintf("Next: visible pre-cache / pre-warm / pre-compute\n\n");
 	psvDebugScreenPrintf("This status remains visible while startup work begins.\n");
+	Flush_Bootstrap_Display(2U);
 }
 
 void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
@@ -57,6 +66,7 @@ void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
 	psvDebugScreenPrintf("  START        = clean exit\n\n");
 	psvDebugScreenPrintf("START exits cleanly after the tutorial begins\n");
 	psvDebugScreenPrintf("Log: %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);
+	Flush_Bootstrap_Display(2U);
 }
 
 } // namespace
@@ -66,6 +76,7 @@ int main()
 	const uint64_t startup_started_us = sceKernelGetProcessTimeWide();
 	const int screen_result = psvDebugScreenInit();
 	Print_Bootstrap_Progress(screen_result);
+	Flush_Bootstrap_Display(1U);
 	const uint64_t filesystem_started_us = sceKernelGetProcessTimeWide();
 	VitaBootstrapStatus status = Vita_Initialize_Filesystem();
 	const uint64_t filesystem_completed_us = sceKernelGetProcessTimeWide();
@@ -96,6 +107,7 @@ int main()
 
 	if (screen_result >= 0) {
 		Print_Startup(status, screen_result);
+		Flush_Bootstrap_Display(2U);
 		sceKernelDelayThread(250 * 1000);
 	}
 	if (!mission_data_ready) {

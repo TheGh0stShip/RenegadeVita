@@ -20,6 +20,11 @@ struct FontFace {
 	FT_Face face = nullptr;
 };
 
+struct FontCandidateList {
+	const char *files[8];
+	size_t count;
+};
+
 FT_Library g_library = nullptr;
 std::vector<FontFace> g_faces;
 constexpr FT_Int32 kVitaFontGlyphLoadFlags =
@@ -35,11 +40,45 @@ bool Equal_No_Case(const char *left, const char *right)
 	return *left == *right;
 }
 
-const char *Retail_Font_File(const char *family)
+FontCandidateList Retail_Font_Files(const char *family)
 {
-	if (Equal_No_Case(family, "Regatta Condensed LET")) return "54251___.TTF";
-	if (Equal_No_Case(family, "Arial MT")) return "ARI_____.TTF";
-	return nullptr;
+	FontCandidateList result = {};
+	if (Equal_No_Case(family, "Regatta Condensed LET") ||
+		Equal_No_Case(family, "Regatta Condensed") ||
+		Equal_No_Case(family, "Regatta") ||
+		Equal_No_Case(family, "54251___")) {
+		const char *files[] = {
+			"54251___.TTF",
+			"Data\\54251___.TTF",
+			"DATA\\54251___.TTF",
+			"Fonts\\54251___.TTF",
+			"FONTS\\54251___.TTF"
+		};
+		result.count = sizeof(files) / sizeof(files[0]);
+		for (size_t index = 0; index < result.count; ++index) {
+			result.files[index] = files[index];
+		}
+		return result;
+	}
+	if (Equal_No_Case(family, "Arial MT") ||
+		Equal_No_Case(family, "Arial") ||
+		Equal_No_Case(family, "ArialMT") ||
+		Equal_No_Case(family, "ARI_____")) {
+		const char *files[] = {
+			"ARI_____.TTF",
+			"Data\\ARI_____.TTF",
+			"DATA\\ARI_____.TTF",
+			"Fonts\\ARI_____.TTF",
+			"FONTS\\ARI_____.TTF",
+			"ARIAL.TTF"
+		};
+		result.count = sizeof(files) / sizeof(files[0]);
+		for (size_t index = 0; index < result.count; ++index) {
+			result.files[index] = files[index];
+		}
+		return result;
+	}
+	return result;
 }
 
 bool Read_Retail_Font(const char *filename, std::vector<unsigned char> *data)
@@ -47,12 +86,13 @@ bool Read_Retail_Font(const char *filename, std::vector<unsigned char> *data)
 	if (filename == nullptr || data == nullptr || _TheFileFactory == nullptr) return false;
 	FileClass *file = _TheFileFactory->Get_File(filename);
 	if (file == nullptr) return false;
-	const int size = file->Size();
-	const bool available = file->Is_Available() && size > 0;
 	bool read = false;
-	if (available && file->Open(FileClass::READ)) {
-		data->resize(static_cast<size_t>(size));
-		read = file->Read(data->data(), size) == size;
+	if (file->Is_Available() && file->Open(FileClass::READ)) {
+		const int size = file->Size();
+		if (size > 0) {
+			data->resize(static_cast<size_t>(size));
+			read = file->Read(data->data(), size) == size;
+		}
 		file->Close();
 	}
 	_TheFileFactory->Return_File(file);
@@ -62,16 +102,28 @@ bool Read_Retail_Font(const char *filename, std::vector<unsigned char> *data)
 
 FontFace *Find_Face(const char *family)
 {
-	const char *filename = Retail_Font_File(family);
-	if (filename == nullptr) return nullptr;
+	const FontCandidateList candidates = Retail_Font_Files(family);
+	if (candidates.count == 0U) return nullptr;
 	for (FontFace &entry : g_faces) {
 		if (Equal_No_Case(entry.family, family)) return &entry;
 	}
 	if (g_library == nullptr && FT_Init_FreeType(&g_library) != 0) return nullptr;
 	FontFace entry;
-	if (!Read_Retail_Font(filename, &entry.data) ||
-		FT_New_Memory_Face(g_library, entry.data.data(),
-			static_cast<FT_Long>(entry.data.size()), 0, &entry.face) != 0) {
+	bool loaded = false;
+	for (size_t index = 0; index < candidates.count; ++index) {
+		entry.data.clear();
+		if (Read_Retail_Font(candidates.files[index], &entry.data) &&
+			FT_New_Memory_Face(g_library, entry.data.data(),
+				static_cast<FT_Long>(entry.data.size()), 0, &entry.face) == 0) {
+			loaded = true;
+			break;
+		}
+		if (entry.face != nullptr) {
+			FT_Done_Face(entry.face);
+			entry.face = nullptr;
+		}
+	}
+	if (!loaded) {
 		return nullptr;
 	}
 	if (FT_Select_Charmap(entry.face, FT_ENCODING_UNICODE) != 0 &&

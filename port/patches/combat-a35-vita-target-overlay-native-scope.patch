@@ -1,0 +1,52 @@
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -1427,12 +1427,31 @@
+ 
+ static RectClass Get_Target_Box( PhysicalGameObj * obj );
+ static void	Target_Box_Edge( const Vector2 & a, const Vector2 & b, unsigned int color );
+ 
+ static	void	Target_Update( void )
+ {
++#if defined(RENEGADE_VITA_PORT)
++	RectClass previous_target_screen = Render2DClass::Get_Screen_Resolution();
++	int target_device_width = 0;
++	int target_device_height = 0;
++	int target_device_bits = 0;
++	bool target_device_windowed = false;
++	WW3D::Get_Device_Resolution(target_device_width, target_device_height,
++		target_device_bits, target_device_windowed);
++	const bool target_native_screen =
++		target_device_width > 0 && target_device_height > 0;
++	if (target_native_screen) {
++		RectClass target_screen(0, 0,
++			static_cast<float>(target_device_width),
++			static_cast<float>(target_device_height));
++		Render2DClass::Set_Screen_Resolution(target_screen);
++		TargetRenderer->Set_Coordinate_Range(target_screen);
++		TargetBoxRenderer->Set_Coordinate_Range(target_screen);
++	}
++#endif
+ 	TargetRenderer->Reset();
+ 	TargetBoxRenderer->Reset();
+ //	TargetNameRenderer->Reset();
+ 	InfoDebugRenderer->Reset();
+ 
+ 	HUDInfo::Update_Info_Object();
+@@ -1729,12 +1748,17 @@
+ 		TargetNameString="";
+ 		TargetNameLocation = Vector2(0.0f,0.0f);
+ 
+ 		box_zoom_size = 0;
+ 		HUDInfo::Clear_Info_Object();
+ 	}
++#if defined(RENEGADE_VITA_PORT)
++	if (target_native_screen) {
++		Render2DClass::Set_Screen_Resolution(previous_target_screen);
++	}
++#endif
+ }
+ 
+ static	void	Target_Render( void )
+ {
+ 	TargetRenderer->Render();
+ 	TargetBoxRenderer->Render();

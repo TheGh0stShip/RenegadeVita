@@ -9,7 +9,7 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev85}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev86}
 rv_vitasdk=${RENEGADE_VITASDK:-${VITASDK:-/usr/local/vitasdk}}
 rv_jobs=${RENEGADE_BUILD_JOBS:-4}
 rv_repo=https://github.com/Rinnegatamante/Vita-MP4-Recorder.git

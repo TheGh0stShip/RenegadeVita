@@ -56,7 +56,7 @@ class DemoRecorderWorkflowTests(unittest.TestCase):
         self.assertIn("app wait", script)
         self.assertIn("--exit-or-crash", script)
         self.assertIn("logs --vdb1 pull", script)
-        self.assertIn("a35-dev85-runtime.log", script)
+        self.assertIn("a35-dev86-runtime.log", script)
         self.assertIn("video_output=ux0:video", script)
         self.assertNotIn("fs push", script)
         self.assertNotIn("package install", script)

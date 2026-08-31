@@ -257,10 +257,6 @@ MainMenuDialogClass::Get_Transition_In (DialogBaseClass *prev_dlg)
 	A4_MAINMENU_TRACE(
 		"A4 main menu: transition in this=%p prev=%p title=%p logo=%p backdrop=%p scene=%p camera=%p\n",
 		this, prev_dlg, TitleTransModel, LogoModel, backdrop, scene, camera);
-#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
-	A4_MAINMENU_TRACE("A4 main menu: transition in bypassed on Vita for immediate dialog activation\n");
-	return NULL;
-#endif
 
 	//
 	//	Add the transition model to the scene
@@ -335,10 +331,6 @@ MainMenuDialogClass::Get_Transition_Out (DialogBaseClass *next_dlg)
 		"A4 main menu: transition out this=%p next=%p title=%p backdrop=%p camera=%p practice=%d\n",
 		this, next_dlg, TitleTransModel, backdrop, camera,
 		IsStartingPractice ? 1 : 0);
-#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
-	A4_MAINMENU_TRACE("A4 main menu: transition out bypassed on Vita for immediate dialog activation\n");
-	return NULL;
-#endif
 
 	//
 	//	We only want to transition between menu dialogs

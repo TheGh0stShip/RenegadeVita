@@ -35,6 +35,13 @@ class RuntimeLogContractTest(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("Runtime identity: candidate=%s display=%s path=%s", main)
+        self.assertIn("void Print_Bootstrap_Progress(int screen_result)", main)
+        self.assertIn("Starting native Vita runtime...", main)
+        self.assertIn("visible bootstrap status precedes retail pre-cache", main)
+        self.assertLess(
+            main.index("Print_Bootstrap_Progress(screen_result);"),
+            main.index("Vita_Initialize_Filesystem();"),
+        )
         self.assertIn("Stage: loaded-world callback entry", world)
         self.assertIn("first original Combat update", interactive)
         self.assertNotIn("first-interactive-player-frame", interactive)

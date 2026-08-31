@@ -30,10 +30,20 @@ SHA-256 values are respectively
 `299c5f79bd7657a4b9598f300688d4620abc9ece483d23542172ede34d033b58` and
 `d26321f2702b467eb8cd2ecfe8379af081715558a3d0b6b90659616db78f62f1`.
 
-This is still local build evidence only: no dev85 package has been uploaded,
-deployed, or launched, and there is no claim that intro frames or the menu are
-physically visible. A later hash-matched hardware test must prove both
-mandatory gates with returned physical media and logs.
+Before the current physical test this was local build evidence only. It has now
+been deployed as the hash-matched dev85 candidate, but there remains no
+acceptance claim for intro frames or menu visibility: the returned physical
+result must satisfy both mandatory gates with matching media and logs.
+
+That physical test is now returned and fails the mandatory usability gate. The
+exact VPK and SELF were VDB1 hash-verified before launch. The user observed
+the EA intro but reports it is extremely slow with buzzy/laggy audio; Start
+skips to a main menu with missing items. The matching dev85 runtime log records
+EA_WW.BIK completion, R_INTRO.BIK decode/upload, the physical Start skip, and
+original menu construction/activation. It also records that the Vita-only
+`MainMenuTransition` bypass was taken. Therefore video playback and menu
+visibility are not accepted: the next source work restores original transition
+control placement and measures the BINK audio/video pacing fault.
 
 The corresponding source, tests, and durable reports are published at
 `origin/main` commit `4f9dacacdc157636058bb8626e02b4310b7f2ba9` (`Fix dev85

@@ -10,7 +10,23 @@
 
 #include <debugScreen.h>
 
+#include <stdint.h>
+
 namespace {
+
+void Print_Bootstrap_Progress(int screen_result)
+{
+	if (screen_result < 0) return;
+	psvDebugScreenClear(0x102030);
+	psvDebugScreenSetFgColor(0xFFFFFF);
+	psvDebugScreenPrintf("%s\nFirst-mission alpha development build\n\n",
+		RENEGADE_BUILD_DISPLAY_LABEL);
+	psvDebugScreenPrintf("Starting native Vita runtime...\n");
+	psvDebugScreenPrintf("Now: initializing the writable user tree\n");
+	psvDebugScreenPrintf("Then: checking the user-supplied retail Data files\n");
+	psvDebugScreenPrintf("Next: visible pre-cache / pre-warm / pre-compute\n\n");
+	psvDebugScreenPrintf("This status remains visible while startup work begins.\n");
+}
 
 void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
 {
@@ -47,13 +63,21 @@ void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
 
 int main()
 {
+	const uint64_t startup_started_us = sceKernelGetProcessTimeWide();
 	const int screen_result = psvDebugScreenInit();
+	Print_Bootstrap_Progress(screen_result);
+	const uint64_t filesystem_started_us = sceKernelGetProcessTimeWide();
 	VitaBootstrapStatus status = Vita_Initialize_Filesystem();
+	const uint64_t filesystem_completed_us = sceKernelGetProcessTimeWide();
 	const int log_reset_result = A30_Vita_Log_Reset();
 	status.log_result = log_reset_result;
 	A30_Vita_Log("Runtime identity: candidate=%s display=%s path=%s\n",
 		RENEGADE_BUILD_CANDIDATE_LABEL, RENEGADE_BUILD_DISPLAY_LABEL,
 		RENEGADE_BUILD_RUNTIME_LOG_PATH);
+	A30_Vita_Log("A3.5 startup: bootstrap display=%d startup_ms=%llu filesystem_ms=%llu; visible bootstrap status precedes retail pre-cache\n",
+		screen_result >= 0 ? 1 : 0,
+		static_cast<unsigned long long>((filesystem_completed_us - startup_started_us) / 1000U),
+		static_cast<unsigned long long>((filesystem_completed_us - filesystem_started_us) / 1000U));
 	const bool mission_data_ready = status.user_tree_ready && status.retail_root_found &&
 		status.data_directory_found && status.always_dat_found &&
 		status.always2_dat_found && status.always_dbs_found &&

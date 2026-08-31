@@ -10,13 +10,14 @@ existing FFmpeg BINK provider and makes one movie upload failure local to that
 movie. These corrections have passed focused source validation and canonical
 ARM/package validation, not physical acceptance.
 
-Do not call either behavior fixed until the matching dev85 candidate shows
-EA/Westwood and Renegade intro frames plus a visible, navigable original WWUI
-menu on Vita. Verify orientation, A/V behavior, skip input, and menu-to-tutorial
-handoff from physical media/logs. The local VPK is
-`299c5f79bd7657a4b9598f300688d4620abc9ece483d23542172ede34d033b58`; it has
-not been uploaded or deployed. The separate HUD/text, shadow, START-exit,
-loading-flash/progress, and performance defects remain open.
+The matching dev85 VPK is now deployed and its first physical return is a
+failure, not acceptance: EA_WW.BIK is visibly present but extremely slow with
+buzzy/laggy audio, and Start reaches an original main-menu dialog with missing
+items. The returned log proves the BINK path and main-menu owner execute; it
+also proves the Vita-only `MainMenuTransition` bypass. Restore that original
+control-placement route and establish measured BINK pacing before retesting.
+The separate HUD/text, shadow, START-exit, loading-flash/progress, and
+performance defects remain open.
 
 ## Current dev82 physical-test gaps (2026-08-28)
 

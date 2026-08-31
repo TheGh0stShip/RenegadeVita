@@ -19,6 +19,7 @@
 #include <psp2/audioout.h>
 #include <psp2/ctrl.h>
 #include <psp2/kernel/processmgr.h>
+#include <psp2/kernel/threadmgr.h>
 #include <vitaGL.h>
 
 extern "C" {
@@ -105,6 +106,49 @@ bool g_audio_first_output_logged = false;
 bool g_audio_first_frame_logged = false;
 bool g_video_first_frame_logged = false;
 bool g_video_first_upload_logged = false;
+bool g_playback_statistics_logged = false;
+
+struct BinkStageTiming
+{
+	uint64_t calls;
+	uint64_t total_us;
+	uint64_t worst_us;
+};
+
+BinkStageTiming g_audio_decode_timing = {};
+BinkStageTiming g_video_decode_timing = {};
+BinkStageTiming g_video_upload_timing = {};
+std::atomic<uint64_t> g_audio_wait_count(0U);
+std::atomic<uint64_t> g_audio_output_buffers(0U);
+std::atomic<uint64_t> g_audio_output_samples(0U);
+std::atomic<uint64_t> g_audio_partial_output_buffers(0U);
+std::atomic<uint64_t> g_audio_high_water_samples(0U);
+
+void Record_Bink_Stage(BinkStageTiming &timing, uint64_t elapsed_us)
+{
+	++timing.calls;
+	timing.total_us += elapsed_us;
+	if (elapsed_us > timing.worst_us) timing.worst_us = elapsed_us;
+}
+
+class BinkStageTimer
+{
+public:
+	explicit BinkStageTimer(BinkStageTiming &timing) :
+		Timing(timing), StartedUs(sceKernelGetProcessTimeWide())
+	{
+	}
+
+	~BinkStageTimer()
+	{
+		Record_Bink_Stage(Timing,
+			sceKernelGetProcessTimeWide() - StartedUs);
+	}
+
+private:
+	BinkStageTiming &Timing;
+	uint64_t StartedUs;
+};
 
 int Next_Power_Of_Two(int value)
 {
@@ -212,6 +256,11 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 		g_audio_write = (g_audio_write + 1U) % capacity;
 	}
 	g_audio_count += accepted;
+	uint64_t high_water = g_audio_high_water_samples.load(std::memory_order_relaxed);
+	while (g_audio_count > high_water &&
+		!g_audio_high_water_samples.compare_exchange_weak(high_water,
+			g_audio_count, std::memory_order_relaxed)) {
+	}
 	pthread_mutex_unlock(&g_audio_mutex);
 	if (accepted != sample_count && !g_audio_drop_logged) {
 		A30_Vita_Log("A4 Bink: audio ring full; dropped=%u samples movie=%s\n",
@@ -232,6 +281,26 @@ void *Audio_Output_Thread(void *)
 		std::fill(output.begin(), output.end(), 0);
 		pthread_mutex_lock(&g_audio_mutex);
 		const size_t capacity = g_audio_ring.size();
+		const bool drained_before_output = g_demux_eof.load(std::memory_order_acquire) &&
+			g_audio_count == 0U;
+		const bool full_output_ready = capacity > 0U &&
+			g_audio_count >= output.size();
+		if (drained_before_output) {
+			pthread_mutex_unlock(&g_audio_mutex);
+			g_audio_drained.store(true, std::memory_order_release);
+			break;
+		}
+		/* Never submit a zero-filled startup/starvation buffer.  A BINK decode
+		** may occupy the frontend thread for longer than one hardware buffer;
+		** wait for real samples and record the wait instead of turning that
+		** decoder latency into audible buzz. */
+		if (!full_output_ready &&
+			!g_demux_eof.load(std::memory_order_acquire)) {
+			pthread_mutex_unlock(&g_audio_mutex);
+			g_audio_wait_count.fetch_add(1U, std::memory_order_relaxed);
+			sceKernelDelayThread(1000U);
+			continue;
+		}
 		const size_t copied = capacity > 0U ? std::min(output.size(), g_audio_count) : 0U;
 		for (size_t index = 0U; index < copied; ++index) {
 			output[index] = g_audio_ring[g_audio_read];
@@ -244,9 +313,11 @@ void *Audio_Output_Thread(void *)
 		if (drained) g_audio_drained.store(true, std::memory_order_release);
 		if (g_audio_port >= 0) {
 			if (!g_audio_first_output_logged) {
-				A30_Vita_Log("A4 Bink: audio output first buffer port=%d copied=%u drained=%d movie=%s\n",
+				A30_Vita_Log("A4 Bink: audio output first buffer port=%d copied=%u drained=%d waits=%llu movie=%s\n",
 					g_audio_port, static_cast<unsigned>(copied),
-					drained ? 1 : 0, g_movie_name);
+					drained ? 1 : 0,
+					static_cast<unsigned long long>(g_audio_wait_count.load(
+						std::memory_order_relaxed)), g_movie_name);
 				g_audio_first_output_logged = true;
 			}
 			const int result = sceAudioOutOutput(g_audio_port, output.data());
@@ -255,8 +326,15 @@ void *Audio_Output_Thread(void *)
 					static_cast<unsigned>(result));
 				break;
 			}
+			g_audio_output_buffers.fetch_add(1U, std::memory_order_relaxed);
+			g_audio_output_samples.fetch_add(copied, std::memory_order_relaxed);
+			if (copied != output.size()) {
+				g_audio_partial_output_buffers.fetch_add(1U,
+					std::memory_order_relaxed);
+			}
 		}
 	}
+	g_audio_drained.store(true, std::memory_order_release);
 	return NULL;
 }
 
@@ -402,6 +480,7 @@ bool Configure_Audio()
 
 void Decode_Audio_Frames()
 {
+	BinkStageTimer timing(g_audio_decode_timing);
 	if (g_audio_decoder == NULL || g_audio_frame == NULL || g_resampler == NULL) return;
 	for (;;) {
 		const int result = avcodec_receive_frame(g_audio_decoder, g_audio_frame);
@@ -434,6 +513,7 @@ void Decode_Audio_Frames()
 
 bool Receive_Video_Frame()
 {
+	BinkStageTimer timing(g_video_decode_timing);
 	if (g_video_decoder == NULL || g_video_frame == NULL || g_pending_video) return false;
 	const int result = avcodec_receive_frame(g_video_decoder, g_video_frame);
 	if (result == AVERROR(EAGAIN) || result == AVERROR_EOF) return false;
@@ -482,6 +562,7 @@ bool Receive_Video_Frame()
 
 bool Upload_Pending_Video()
 {
+	BinkStageTimer timing(g_video_upload_timing);
 	if (!g_pending_video || g_pending_rgba.empty()) return false;
 	if (g_video_texture == 0U) glGenTextures(1, &g_video_texture);
 	if (g_video_texture == 0U) return false;
@@ -611,8 +692,48 @@ void Flush_Decoders()
 	}
 }
 
+void Reset_Playback_Statistics()
+{
+	g_audio_decode_timing = {};
+	g_video_decode_timing = {};
+	g_video_upload_timing = {};
+	g_audio_wait_count.store(0U, std::memory_order_relaxed);
+	g_audio_output_buffers.store(0U, std::memory_order_relaxed);
+	g_audio_output_samples.store(0U, std::memory_order_relaxed);
+	g_audio_partial_output_buffers.store(0U, std::memory_order_relaxed);
+	g_audio_high_water_samples.store(0U, std::memory_order_relaxed);
+	g_playback_statistics_logged = false;
+}
+
+void Log_Playback_Statistics(const char *reason)
+{
+	if (g_playback_statistics_logged) return;
+	g_playback_statistics_logged = true;
+	const uint64_t wall_us = g_start_us > 0 ?
+		sceKernelGetProcessTimeWide() - static_cast<uint64_t>(g_start_us) : 0U;
+	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s wall_ms=%llu frames=%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
+		reason != NULL ? reason : "unknown", g_movie_name,
+		static_cast<unsigned long long>(wall_us / 1000U),
+		static_cast<unsigned long long>(g_decoded_video_frames),
+		static_cast<unsigned long long>(g_audio_wait_count.load(std::memory_order_relaxed)),
+		static_cast<unsigned long long>(g_audio_output_buffers.load(std::memory_order_relaxed)),
+		static_cast<unsigned long long>(g_audio_output_samples.load(std::memory_order_relaxed)),
+		static_cast<unsigned long long>(g_audio_partial_output_buffers.load(std::memory_order_relaxed)),
+		static_cast<unsigned long long>(g_audio_high_water_samples.load(std::memory_order_relaxed)),
+		static_cast<unsigned long long>(g_audio_decode_timing.calls),
+		static_cast<unsigned long long>(g_audio_decode_timing.total_us),
+		static_cast<unsigned long long>(g_audio_decode_timing.worst_us),
+		static_cast<unsigned long long>(g_video_decode_timing.calls),
+		static_cast<unsigned long long>(g_video_decode_timing.total_us),
+		static_cast<unsigned long long>(g_video_decode_timing.worst_us),
+		static_cast<unsigned long long>(g_video_upload_timing.calls),
+		static_cast<unsigned long long>(g_video_upload_timing.total_us),
+		static_cast<unsigned long long>(g_video_upload_timing.worst_us));
+}
+
 void Mark_Failed(const char *reason)
 {
+	Log_Playback_Statistics(reason);
 	A30_Vita_Log("A4 Bink: playback skipped reason=%s movie=%s; original menu route continues\n",
 		reason, g_movie_name[0] != '\0' ? g_movie_name : "unnamed");
 	A4_Frontend_Record_Bink_Skip(g_movie_name);
@@ -644,6 +765,7 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 {
 	Stop();
 	Copy_Movie_Name(filename);
+	Reset_Playback_Statistics();
 	A4_Frontend_Record_Bink_Play(filename);
 	g_complete = false;
 	if (!g_initialized || filename == NULL) {
@@ -725,6 +847,7 @@ void BINKMovie::Stop()
 {
 	const bool skipped = g_active && !g_complete;
 	if (skipped) A4_Frontend_Record_Bink_Skip(g_movie_name);
+	if (g_active) Log_Playback_Statistics(skipped ? "skip-or-stop" : "complete");
 	Release_Decoder_State();
 	g_active = false;
 	g_complete = true;

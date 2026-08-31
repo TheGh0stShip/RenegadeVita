@@ -1,29 +1,25 @@
 # Live engineering progress
 
-## 2026-08-30 — dev85 frontend correction package passed locally; no Vita action
+## 2026-08-31 — dev85 physical frontend return: BINK path reached, usability gate failed
 
-`[█████░░░░░] 5/10 current evidence gates complete; physical evidence gate next`
+`[█████░░░░░] 5/10 current evidence gates complete; transition/pacing repair next`
 
-- The user requires a real original intro-movie path and a visibly rendered
-  original menu before another candidate may be pushed. Dev85 removes the
-  Vita-only exclusive-console render suppression in front of the original
-  GameModeManager frontend loop, and removes the old deliberate BINK playback
-  disable branch.
-- Focused source validation passes: whitespace, Python syntax, and 27
-  frontend/loading/candidate/recorder workflow tests. The canonical
-  `bash ./tools/build.sh` then passed retained host validation (112 tests),
-  deterministic staging, 549 ARM actions, original-runtime symbol checks,
-  ELF/SELF/VPK identity, archive integrity, SHA manifest, diagnostics, and
-  retail exclusion in `logs/a35-dev85-20260830-191010-build.log`.
-- Local VPK SHA-256 is `299c5f79bd7657a4b9598f300688d4620abc9ece483d23542172ede34d033b58`;
-  packaged SELF SHA-256 is
-  `d26321f2702b467eb8cd2ecfe8379af081715558a3d0b6b90659616db78f62f1`.
-  Nothing has been uploaded, deployed, launched, or captured on Vita.
-- Source/tests/reports are published to `origin/main` at
-  `4f9dacacdc157636058bb8626e02b4310b7f2ba9`. No binary, dump, capture, video,
-  retail asset, save, or credential was committed.
-- Next: a later hash-matched hardware test must visibly prove original intro
-  movies and the original WWUI menu before either is called fixed.
+- The exact VPK (`299c5f79…33b58`) and SELF (`d26321f2…f62f1`) are VDB1
+  hash-verified at the Renegade user-tree and installed-title paths. The prior
+  dev84 executable is backed up by matching hash. No unrelated Vita file was
+  changed and synthetic input is released.
+- User physical observation: long initial black screen; pre-cache/VitaGL
+  appeared; the EA intro appeared but was extremely slow with buzzy/laggy
+  audio; Start skipped it to a main menu whose items are missing. This fails
+  frontend usability.
+- The matching `a35-dev85-runtime-user-report.log` SHA-256 is
+  `409e30186303fb4cf8e3eef688f2b9104e6aaa3a229dc3c472581bd0efcf2596`.
+  It proves EA_WW.BIK completion, R_INTRO.BIK decode/upload, the physical
+  Start skip, and original main-menu creation/activation. It also records the
+  Vita-only original-main-menu transition bypass, the concrete menu-item lead.
+- Next: restore the original transition/control-placement owner, then measure
+  and repair BINK pacing/audio. No physical visual claim or media publication
+  will be made without returned image/video evidence.
 
 ## 2026-08-30 — capture-policy route blocked by stale optional recorder
 

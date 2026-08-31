@@ -261,7 +261,17 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "const size_t available = capacity - g_audio_count;",
             "capacity > 0U ? std::min(output.size(), g_audio_count) : 0U",
             "A4 Bink: audio output thread entry port=%d ring_samples=%u",
-            "A4 Bink: audio output first buffer port=%d copied=%u drained=%d movie=%s",
+            "A4 Bink: audio output first buffer port=%d copied=%u drained=%d waits=%llu movie=%s",
+            "Never submit a zero-filled startup/starvation buffer.",
+            "const bool full_output_ready = capacity > 0U &&",
+            "g_audio_count >= output.size();",
+            "g_audio_wait_count.fetch_add(1U, std::memory_order_relaxed);",
+            "sceKernelDelayThread(1000U);",
+            "A4 Bink: playback stats reason=%s movie=%s wall_ms=%llu",
+            "audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu",
+            "audio_decode_calls/total/worst_us=%llu/%llu/%llu",
+            "video_decode_calls/total/worst_us=%llu/%llu/%llu",
+            "video_upload_calls/total/worst_us=%llu/%llu/%llu",
             "A4 Bink: update entry movie=%s audio=%d pending_packet=%d pending_video=%d texture=%d",
             "A4 Bink: first av_read_frame entry movie=%s",
             "A4 Bink: render entry movie=%s texture=%d pending_video=%d",
@@ -305,6 +315,15 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertLess(
             bink.index("if (capacity == 0U || g_audio_count >= capacity)"),
             bink.index("const size_t available = capacity - g_audio_count;"),
+        )
+        audio_output = bink.index("void *Audio_Output_Thread(void *)")
+        self.assertLess(
+            bink.index("const bool full_output_ready = capacity > 0U &&", audio_output),
+            bink.index("const int result = sceAudioOutOutput", audio_output),
+        )
+        self.assertLess(
+            bink.index("g_audio_wait_count.fetch_add(1U", audio_output),
+            bink.index("const int result = sceAudioOutOutput", audio_output),
         )
         upload = bink.index("bool Upload_Pending_Video()")
         self.assertNotIn("GL_UNPACK_ALIGNMENT", bink)
@@ -419,16 +438,14 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             self.assertIn("A4 main menu: Start_Dialog returned", source)
             self.assertIn("A4 main menu: transition in this=%p", source)
             self.assertIn("A4 main menu: transition out this=%p", source)
-            self.assertIn("transition in bypassed on Vita for immediate dialog activation", source)
-            self.assertIn("transition out bypassed on Vita for immediate dialog activation", source)
-            self.assertLess(
-                source.index("transition in this=%p"),
-                source.index("transition in bypassed on Vita"),
-            )
+            self.assertNotIn("transition in bypassed on Vita", source)
+            self.assertNotIn("transition out bypassed on Vita", source)
             self.assertIn("backdrop != NULL ? backdrop->Peek_Scene () : NULL", source)
             self.assertIn("backdrop != NULL ? backdrop->Peek_Camera () : NULL", source)
             self.assertIn("transition in disabled title=%p camera=%p", source)
             self.assertIn("transition out disabled title=%p camera=%p", source)
+            self.assertIn("transition->Set_Type (DialogTransitionClass::SCREEN_IN);", source)
+            self.assertIn("transition->Set_Type (DialogTransitionClass::SCREEN_OUT);", source)
         self.assertNotIn("Get_BackDrop()->Peek_Scene()->Add_Render_Object", mainmenu)
         self.assertNotIn("dialog->Get_BackDrop ()->Peek_Model ()", mainmenu)
 

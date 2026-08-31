@@ -39,8 +39,12 @@ compressed VPK validation, diagnostics, and retail exclusion in
 `bbb48f91c879c99e2944497b97a56cbf1e015c7af4a20ed75871bf02bb86e521`,
 `cd50c8a7c1c406bf324996d09fe74755e757230619ac003099bf103d9b829194`, and
 `d7bdadbff7296dad0d5460d0febfe70116502c9a80695bfa3577f6c629f9c596`.
-Publication and an explicit future READY are still required. No Vita action has
-been requested or performed for dev87.
+Source, tests, reports, and the explicitly diagnostic gallery item are now
+published to `origin/main` at `015c83bde9653fc9bfc58f1a731eb2492e351558`
+(`Fix dev87 frontend glyphs and BINK upload`). VPK/ELF/SELF, logs, raw capture,
+video, diagnostics ZIP, dumps, retail data, saves, and credentials are excluded.
+An explicit future READY is still required. No Vita action has been requested or
+performed for dev87.
 
 ## 2026-08-30 dev86 frontend evidence candidate — canonical package, physical usability failure
 

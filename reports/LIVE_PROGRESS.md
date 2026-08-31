@@ -2,7 +2,7 @@
 
 ## 2026-08-31 — dev87 text/resource and BINK-upload candidate; canonical closure passed
 
-`[█████░░░░░] 5/10 current evidence gates complete; GitHub publication next, no device action`
+`[█████░░░░░] 5/10 current evidence gates complete; await explicit physical handoff, no device action`
 
 - Dev86 is returned physical failure evidence. Its matching runtime log proves
   original BINK, menu, loading, and M00 paths execute; the user still reports
@@ -28,8 +28,11 @@
   `logs/a35-dev87-20260830-204706-build.log`. VPK SHA-256 is
   `bbb48f91c879c99e2944497b97a56cbf1e015c7af4a20ed75871bf02bb86e521`; SELF is
   `d7bdadbff7296dad0d5460d0febfe70116502c9a80695bfa3577f6c629f9c596`.
-- Next: final source/report/gallery validation and private GitHub publication.
-  The Vita remains untouched until a future explicit READY.
+- Source, tests, reports, and the explicitly diagnostic gallery item are
+  published to `origin/main` at `015c83bde9653fc9bfc58f1a731eb2492e351558`.
+  VPK/ELF/SELF, logs, raw capture, video, diagnostics, dumps, retail data,
+  saves, and credentials remain excluded.
+- Next: await a future explicit READY. The Vita remains untouched until then.
 
 ## 2026-08-30 — dev86 canonical frontend diagnostic candidate; publication/physical handoff pending
 

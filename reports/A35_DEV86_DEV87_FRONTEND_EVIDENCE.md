@@ -78,5 +78,9 @@ VPK/ELF/SELF SHA-256 values are respectively
 `bbb48f91c879c99e2944497b97a56cbf1e015c7af4a20ed75871bf02bb86e521`,
 `cd50c8a7c1c406bf324996d09fe74755e757230619ac003099bf103d9b829194`, and
 `d7bdadbff7296dad0d5460d0febfe70116502c9a80695bfa3577f6c629f9c596`.
-Source/report publication and future explicitly authorized physical validation
-are still pending.
+Source/report publication is complete at `origin/main` commit
+`015c83bde9653fc9bfc58f1a731eb2492e351558` (`Fix dev87 frontend glyphs and
+BINK upload`). The commit contains source, focused tests, sanitized reports,
+and the explicitly diagnostic gallery PNG; VPK/ELF/SELF, logs, raw captures,
+video, dumps, retail data, saves, and credentials remain excluded. Future
+explicitly authorized physical validation is still pending.

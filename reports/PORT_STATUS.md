@@ -3,9 +3,56 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-31 Dev87 physical failure; Dev90 local candidate
+
+Dev90 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves the Dev88 indexed-glyph
+texture-stage and real BINK audio-reserve corrections plus Dev89's frontend
+scope, font fallback, bootstrap, expanded pre-cache, and Render2D state work.
+It then adds bounded source fixes for the latest physical symptoms without
+replacing original engine owners:
+
+- the native debug/status screen remains visible through original audio,
+  cache, math/path, asset-manager, and renderer-handoff setup, then releases
+  only when VitaGL/WW3D owns display output;
+- unchanged 800×600 retail BINK frames are uploaded at an aspect-preserved
+  640×480 maximum, with source and upload dimensions logged;
+- synchronous Vita M00 level loading emits deterministic milestones back to
+  the active original loading presenter, so the loading screen can advance
+  during the non-threaded load path;
+- retail font files are opened before size/read checks, all selected
+  frontend/HUD/subtitle `StyleMgr` font slots are probed, FreeType glyph
+  bitmaps are clipped safely, and glyph atlas memory is cleared before
+  rasterization;
+- gameplay Start no longer maps into original `DIK_ESCAPE`; the runtime
+  clean-exit poll remains the only Start owner during M00 gameplay; and
+- the Dev89 target-box native-coordinate override is removed after physical
+  evidence showed it overcorrected the older left-shift into a far-right shift.
+
+Focused validation passed 23/23 runtime, loading-screen, original-frontend,
+and input contracts. Canonical `bash ./tools/build.sh` passed retained
+host/current validation, deterministic 138-patch staging, 549 ARM/package
+actions, ELF/SELF/VPK identity, compressed VPK validation, diagnostics, SHA
+manifest, and retail exclusion in
+`logs/a35-dev90-20260831-032019-build.log`. VPK SHA-256 is
+`76766b787869693887428272914f646f92cae50d5009eaab1bb72f8071cc3568`; packaged
+SELF SHA-256 is
+`35dcbff8cef5d8aa06c291364f22592e2f17c81d16019a79ae95e2a434f2f2d2`; ELF
+SHA-256 is
+`c48286ebdc2595584c4c2b8d68940cd739c2bd6071ca686e77479faff5d4a698`;
+diagnostics ZIP SHA-256 is
+`1819fb1575c27063e2cdeec07650e65b1bd889049e12227df1101ec43c0a1772`.
+
+No Dev90 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. The next physical test must
+prove the user-required frontend gate first: visible original intro/menu text,
+usable intro A/V/skip behavior, readable gameplay dialogue/HUD/pickup/loading
+text, correct target-box placement, stable M00 progression including the HMVV
+approach, acceptable frame time, and safe Start/pause/exit without PSP2 crash.
+
 ## 2026-08-31 Dev87 physical failure; Dev89 local candidate
 
-Dev89 is the current local-only source/build candidate produced under the
+Dev89 is a superseded local-only source/build candidate produced under the
 user's no-physical-test window. It preserves the Dev88 indexed-glyph
 texture-stage and real BINK audio-reserve corrections, then adds bounded
 source fixes for the latest physical symptoms without replacing original

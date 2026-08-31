@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev89 mandatory frontend and readiness gate (2026-08-31)
+## Current dev90 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -31,16 +31,24 @@ but its returned physical gate still failed: original menu text was absent,
 intro A/V was slow/buzzy, and the original dialogue box was empty. Dev88 then
 applied the original indexed glyph texture-stage combiner immediately before
 those shared menu/dialogue draws and increased the real decoded BINK audio
-startup reserve from one to three output buffers. Dev89 is the current
-local-only successor: it scopes the original frontend to its 800×600 logical
-layout, validates `StyleMgr` font glyph availability before menu input,
-tries multiple retail font filename variants, flushes the native bootstrap
-screen before filesystem/cache work, expands source-owned UI/HUD/M00 pre-cache
-touches, clears leaked Render2D texture-stage state, drops late BINK video
-frames after the first visible frame, and scopes camera-projected target boxes
-to native WW3D coordinates. Its focused/canonical closure passes, but it is
-local only. The user-required release gate remains: a visible original intro
-with usable A/V and a visibly labelled original menu before any further Vita
+startup reserve from one to three output buffers. Dev89 then scoped the
+original frontend to its 800×600 logical layout, validated `StyleMgr` font
+glyph availability before menu input, tried multiple retail font filename
+variants, flushed the native bootstrap screen before filesystem/cache work,
+expanded source-owned UI/HUD/M00 pre-cache touches, cleared leaked Render2D
+texture-stage state, dropped late BINK video frames after the first visible
+frame, and scoped camera-projected target boxes to native WW3D coordinates.
+
+Dev90 is the current local-only successor. It keeps the debug/status screen
+alive through original engine setup until VitaGL owns display output, clamps
+800×600 retail BINK uploads to an aspect-preserved 640×480 maximum, feeds
+synchronous M00 level-load milestones into the loading presenter, hardens font
+file reads and FreeType glyph clipping/atlas clearing, prevents gameplay Start
+from entering the observed ESC/pause crash path, and returns target boxes to
+their original HUD logical-space owner after Dev89's native coordinate override
+overcorrected physically. Its focused/canonical closure passes, but it is local
+only. The user-required release gate remains: a visible original intro with
+usable A/V and a visibly labelled original menu before any further Vita
 candidate push. No visual, pacing, or audio acceptance claim is valid until a
 matching physical return. HUD/text, shadow, START-exit, HMVV freeze,
 loading-flash/progress, front-end readiness, and gameplay performance remain
@@ -60,7 +68,7 @@ matching runtime evidence and source diagnosis; do not infer a single common
 cause from them.
 
 Current pre-cache is intentionally bounded: it indexes original archives and
-warms small readable slices before frontend, including Dev89's explicit
+warms small readable slices before frontend, including Dev90's inherited
 frontend/menu/HUD/subtitle/pickup/shadow/objective/M00 touch list, then
 performs one loading-screen frame and 60 M00 scene frames after loading. It does
 not construct and retain whole BINK upload resources. A future readiness phase

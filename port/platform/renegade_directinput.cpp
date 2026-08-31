@@ -78,6 +78,7 @@ bool g_logged_first_read_entry = false;
 bool g_logged_first_read_controller = false;
 bool g_logged_first_read_touch = false;
 bool g_logged_first_read_complete = false;
+bool g_logged_gameplay_start_esc_suppressed = false;
 const float kLegacyRouteV1SampleRate = 60.0f;
 const float kLegacyRouteV1FrameSeconds = 1.0f / kLegacyRouteV1SampleRate;
 const float kLegacyRouteV1MaximumFrameStep = 0.25f;
@@ -618,9 +619,23 @@ void DirectInput::Read(void)
 			DirectInput::DI_BUTTON_RELEASED;
 	}
 	/* START remains the native direct-route clean-exit control and is sampled
-	** before Input::Update. Triangle supplies the original Action key, so it
-	** must not also feed the menu-toggle escape key. */
-	Set_Button(DIKeyboardButtons, DIK_ESCAPE, (buttons & SCE_CTRL_START) != 0);
+	** before Input::Update. It feeds the original menu-toggle escape key only
+	** during frontend/movie ownership, where the original code uses it to skip
+	** intro movies and back out of menus. During gameplay, routing START into
+	** the original pause/menu path is not yet a physically accepted Vita route
+	** and has produced PSP2 dumps, so suppress the DIK_ESCAPE edge here while
+	** the outer runtime loop still observes START as clean-exit. */
+	const bool start_pressed = (buttons & SCE_CTRL_START) != 0;
+	Set_Button(DIKeyboardButtons, DIK_ESCAPE,
+		frontend_menu_navigation && start_pressed);
+#if !defined(RENEGADE_HOST_ABI_TEST)
+	if (start_pressed && !frontend_menu_navigation &&
+		!g_logged_gameplay_start_esc_suppressed) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"START suppressed from gameplay DIK_ESCAPE; runtime clean-exit poll owns START");
+		g_logged_gameplay_start_esc_suppressed = true;
+	}
+#endif
 	Set_Button(DIJoystickButtons, 0,
 		gameplay_input_active && (buttons & SCE_CTRL_LTRIGGER) != 0);
 	Set_Button(DIJoystickButtons, 1,

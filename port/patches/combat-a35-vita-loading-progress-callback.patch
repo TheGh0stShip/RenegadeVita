@@ -1,0 +1,94 @@
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -95,9 +95,13 @@
+ #include "animatedsoundmgr.h"
+ #if defined(__vita__)
+ #include "a30_vita_runtime.h"
++void A31_Vita_Render_Original_Loading_Callback(const char *phase, int minimum_progress);
+ #define VITA_LEVEL_LOAD_TRACE(...) A30_Vita_Log(__VA_ARGS__)
++#define VITA_LEVEL_LOAD_PRESENT(phase, minimum_progress) \
++	A31_Vita_Render_Original_Loading_Callback(phase, minimum_progress)
+ #else
+ #define VITA_LEVEL_LOAD_TRACE(...) ((void)0)
++#define VITA_LEVEL_LOAD_PRESENT(phase, minimum_progress) ((void)0)
+ #endif
+ #include "render2dsentence.h"
+ #include "stylemgr.h"
+@@ -371,6 +375,7 @@
+ 			static_cast<const char *>(_load_map_name));
+ 
+ 		CombatManager::Set_Load_Progress( 0 );
++		VITA_LEVEL_LOAD_PRESENT("thread-entry", 0);
+ 
+ 		WWMEMLOG(MEM_GAMEDATA);
+ 
+@@ -382,26 +387,31 @@
+ 		#endif // PARAM_EDITING_ON
+ 
+ 		CombatManager::Inc_Load_Progress();
++		VITA_LEVEL_LOAD_PRESENT("datasafe-ready", 1);
+ 
+ 		//	Reload the definition databases (to support level-specific temp ddb's)
+ 		INIT_STATUS("Free definition databases");
+ 		DefinitionMgrClass::Free_Definitions();
+ 		WWLOG_INTERMEDIATE("Free definitions");
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=free-definitions-return\n");
++		VITA_LEVEL_LOAD_PRESENT("free-definitions-return", 1);
+ 
+ 		INIT_STATUS("Load definition databases");
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-entry\n");
++		VITA_LEVEL_LOAD_PRESENT("load-definitions-entry", 1);
+ 		SaveGameManager::Load_Definitions();
+ 		WWLOG_INTERMEDIATE("Load definitions");
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-return\n");
+ 
+ 		CombatManager::Inc_Load_Progress();
++		VITA_LEVEL_LOAD_PRESENT("load-definitions-return", 2);
+ 		//
+ 		//	Make sure the animated-sound system is setup.  This needs
+ 		// to be done after the definition databases are loaded...
+ 		//
+ 		AnimatedSoundMgrClass::Initialize ();
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=animated-sound-return\n");
++		VITA_LEVEL_LOAD_PRESENT("animated-sound-return", 2);
+ 
+ 		StringClass filename_to_load( _load_map_name, true );
+ 		StringClass lsd_filename( _load_map_name,true );
+@@ -417,6 +427,7 @@
+ 			static_cast<const char *>(filename_to_load));
+ 
+ 		CombatManager::Inc_Load_Progress();
++		VITA_LEVEL_LOAD_PRESENT("pre-load-game-return", 3);
+ 
+ 		//
+ 		//	Preload the assets
+@@ -427,24 +438,29 @@
+ 			WWLOG_INTERMEDIATE("Preload always assets");
+ 
+ 			CombatManager::Inc_Load_Progress();
++			VITA_LEVEL_LOAD_PRESENT("preload-always-assets-return", 4);
+ 
+ 			AssetDependencyManager::Load_Level_Assets( lsd_filename );
+ 			WWLOG_INTERMEDIATE("Preload level assets");
+ 		} else {
+ 			CombatManager::Inc_Load_Progress();
++			VITA_LEVEL_LOAD_PRESENT("preload-assets-skipped", 4);
+ 		}
+ 
+ 		CombatManager::Inc_Load_Progress();
++		VITA_LEVEL_LOAD_PRESENT("pre-load-level-data", 5);
+ 
+ 		// Now load the level
+ 		INIT_STATUS("Load level");
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-game-entry file=%s\n",
+ 			static_cast<const char *>(filename_to_load));
++		VITA_LEVEL_LOAD_PRESENT("load-game-entry", 5);
+ 		SaveGameManager::Load_Game( filename_to_load );
+ 		WWLOG_INTERMEDIATE("Load game");
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-game-return\n");
+ 
+ 		CombatManager::Inc_Load_Progress();
++		VITA_LEVEL_LOAD_PRESENT("load-game-return", 6);
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=thread-return\n");
+ 
+ 	}

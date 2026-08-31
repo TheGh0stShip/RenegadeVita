@@ -132,6 +132,24 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("state.movie_files_opened", runtime)
         self.assertIn("state.cache_indexes_written", runtime)
         self.assertIn("state.cache_entries_written", runtime)
+        self.assertIn("Draw_Engine_Setup_Screen", runtime)
+        self.assertIn("Original engine setup / frontend handoff", runtime)
+        self.assertIn("This screen stays active until vitaGL owns display.", runtime)
+        self.assertIn("Starting vitaGL renderer", runtime)
+        self.assertLess(
+            runtime.index(
+                '"Starting original audio provider"'
+            ),
+            runtime.index("WWAudioClass application_audio(false);"),
+        )
+        self.assertLess(
+            runtime.index('"Starting vitaGL renderer"'),
+            runtime.index("psvDebugScreenFinish();"),
+        )
+        self.assertLess(
+            runtime.index("psvDebugScreenFinish();"),
+            runtime.index("ww3d_initialized = WW3D::Init(NULL, NULL, true)"),
+        )
         self.assertIn("{ kAlwaysArchive, true, kStartupPrecacheRequiredReadBytes }", runtime)
         self.assertIn("{ kM00Archive, true, kStartupPrecacheRequiredReadBytes }", runtime)
         self.assertIn('"DATA\\\\MOVIES\\\\EA_WW.BIK"', runtime)
@@ -191,6 +209,32 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("TextureLoader::Continue_Texture_Load();", runtime)
         self.assertIn("CombatGameModeClass::Vita_Begin_Level_Load(", runtime)
         self.assertIn("CombatGameModeClass::Vita_Finalize_Loaded_Level(", runtime)
+        self.assertIn("A31VitaScopedLoadingPresenterCallback", runtime)
+        self.assertIn("g_active_loading_presenter", runtime)
+        self.assertIn("A31_Vita_Render_Original_Loading_Callback", runtime)
+        self.assertIn("synchronous-load callback armed", runtime)
+        self.assertIn("synchronous-load callback disarmed", runtime)
+        self.assertIn("synchronous-load callback ignored", runtime)
+        self.assertIn(
+            "A31VitaScopedLoadingPresenterCallback loading_callback(",
+            runtime,
+        )
+        self.assertIn(
+            "port/patches/combat-a35-vita-loading-progress-callback.patch",
+            (ROOT / "tools/stage_sources.sh").read_text(encoding="utf-8"),
+        )
+        self.assertIn(
+            "VITA_LEVEL_LOAD_PRESENT(\"thread-entry\", 0);",
+            (ROOT / "staging/combat/combat.cpp").read_text(
+                encoding="utf-8", errors="replace"
+            ),
+        )
+        self.assertIn(
+            "VITA_LEVEL_LOAD_PRESENT(\"load-game-return\", 6);",
+            (ROOT / "staging/combat/combat.cpp").read_text(
+                encoding="utf-8", errors="replace"
+            ),
+        )
         self.assertIn('loading_presenter.Render_Original_Progress("post_load_processing");', runtime)
         self.assertIn('loading_presenter.Render_Original_Progress("post_load_level");', runtime)
         self.assertIn('loading_presenter.Render_Original_Progress("level_ready", true, 7);', runtime)
@@ -601,19 +645,13 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Apply_A31_Original_HUD_Presentation_Rect()", gameplay_helper)
         self.assertIn("RenegadeVitaRenderer::Reset_Native_Presentation_Rect_Quiet();", gameplay_helper)
         self.assertNotIn("WW3D::Set_Device_Resolution", gameplay_helper)
-        self.assertIn("combat-a35-vita-target-overlay-ww3d-include.patch", stage_sources)
-        self.assertIn("combat-a35-vita-target-overlay-native-scope.patch", stage_sources)
-        self.assertIn("WW3D::Get_Device_Resolution(target_device_width", hud)
-        self.assertIn("TargetRenderer->Set_Coordinate_Range(target_screen);", hud)
-        self.assertIn("TargetBoxRenderer->Set_Coordinate_Range(target_screen);", hud)
-        self.assertLess(
-            hud.index("WW3D::Get_Device_Resolution(target_device_width"),
-            hud.index("box = Get_Target_Box( obj->As_PhysicalGameObj() );"),
-        )
-        self.assertLess(
-            hud.index("box = Get_Target_Box( obj->As_PhysicalGameObj() );"),
-            hud.index("Render2DClass::Set_Screen_Resolution(previous_target_screen);"),
-        )
+        self.assertNotIn("combat-a35-vita-target-overlay-ww3d-include.patch", stage_sources)
+        self.assertNotIn("combat-a35-vita-target-overlay-native-scope.patch", stage_sources)
+        self.assertNotIn("WW3D::Get_Device_Resolution(target_device_width", hud)
+        self.assertNotIn("target_native_screen", hud)
+        self.assertNotIn("TargetRenderer->Set_Coordinate_Range(target_screen);", hud)
+        self.assertIn("box = Get_Target_Box( obj->As_PhysicalGameObj() );", hud)
+        self.assertIn("RectClass\tscreen = Render2DClass::Get_Screen_Resolution();", hud)
 
         renderer_header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text(
             encoding="utf-8"

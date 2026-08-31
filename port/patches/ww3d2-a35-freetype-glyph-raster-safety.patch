@@ -1,0 +1,20 @@
+--- a/render2dsentence.cpp
++++ b/render2dsentence.cpp
+@@ -1185,10 +1185,16 @@
+ 	}
+ 	Update_Current_Buffer(char_width);
+ 	uint16 *curr_buffer = BufferList[BufferList.Count() - 1] + CurrPixelOffset;
++	bool rasterized = false;
+ 	if (char_width > 0) {
+-		RenegadeVita_Font_Rasterize_Glyph(GDIFontName, PointSize, IsBold, ch,
++		::memset(curr_buffer, 0, static_cast<size_t>(char_width) *
++			static_cast<size_t>(CharHeight) * sizeof(*curr_buffer));
++		rasterized = RenegadeVita_Font_Rasterize_Glyph(GDIFontName, PointSize, IsBold, ch,
+ 			curr_buffer, char_width, CharHeight);
++		if (!rasterized) {
++			char_width = 0;
++		}
+ 	}
+ 	CharDataStruct *char_data = new CharDataStruct;
+ 	char_data->Value = ch;
+ 	char_data->Width = char_width;

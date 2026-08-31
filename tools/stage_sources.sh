@@ -146,6 +146,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a4-freetype-fonts.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-freetype-glyph-raster-safety.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a315-dds-vita.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a30-gcc15.patch"
@@ -210,6 +212,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-durable-loader-trace.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-loading-progress-callback.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-teardown-lifecycle.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-conversation-diagnostics.patch"
@@ -223,10 +227,6 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-m00-ui-hud-subtitles.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-hud-presentation-boundary.patch"
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-target-overlay-ww3d-include.patch"
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-target-overlay-native-scope.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-motion.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -455,6 +455,7 @@ echo "Applied: port/patches/ww3d2-a4-render2d-runtime-init.patch"
 echo "Applied: port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch"
 echo "Applied: port/patches/ww3d2-a35-render2d-viewport-restore.patch"
 echo "Applied: port/patches/ww3d2-a4-freetype-fonts.patch"
+echo "Applied: port/patches/ww3d2-a35-freetype-glyph-raster-safety.patch"
 echo "Applied: port/patches/ww3d2-a315-dds-vita.patch"
 echo "Applied: port/patches/ww3d2-a30-gcc15.patch"
 echo "Applied: port/patches/ww3d2-a30-vita-buffers.patch"
@@ -485,6 +486,7 @@ echo "Applied: port/patches/combat-a35-humanstate-weapon-style-table.patch"
 echo "Applied: port/patches/combat-a35-observer-load-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-vita-main-thread-level-load.patch"
 echo "Applied: port/patches/combat-a35-vita-durable-loader-trace.patch"
+echo "Applied: port/patches/combat-a35-vita-loading-progress-callback.patch"
 echo "Applied: port/patches/combat-a35-teardown-lifecycle.patch"
 echo "Applied: port/patches/combat-a35-conversation-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-conversation-reentrant-think.patch"

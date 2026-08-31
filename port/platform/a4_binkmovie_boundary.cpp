@@ -46,6 +46,8 @@ constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
 constexpr int64_t kUpdateBudgetUs = 12000;
 constexpr int64_t kVideoDropLatenessUs = 50000;
+constexpr int kMaxMovieUploadWidth = 640;
+constexpr int kMaxMovieUploadHeight = 480;
 constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_RGB565LE;
 constexpr size_t kVideoUploadBytesPerPixel = 2U;
 constexpr uint32_t kSkipButtonMask =
@@ -76,6 +78,8 @@ SwsContext *g_scaler = NULL;
 SwrContext *g_resampler = NULL;
 int g_video_stream = -1;
 int g_audio_stream = -1;
+int g_source_video_width = 0;
+int g_source_video_height = 0;
 int g_video_width = 0;
 int g_video_height = 0;
 int64_t g_start_us = 0;
@@ -168,6 +172,29 @@ int Next_Power_Of_Two(int value)
 	int result = 1;
 	while (result < value && result < 4096) result <<= 1;
 	return result;
+}
+
+void Configure_Video_Upload_Dimensions(int source_width, int source_height)
+{
+	g_source_video_width = source_width;
+	g_source_video_height = source_height;
+	g_video_width = source_width;
+	g_video_height = source_height;
+	if (source_width <= 0 || source_height <= 0) return;
+	if (source_width <= kMaxMovieUploadWidth &&
+		source_height <= kMaxMovieUploadHeight) {
+		return;
+	}
+	int upload_width = kMaxMovieUploadWidth;
+	int upload_height =
+		(source_height * upload_width + source_width / 2) / source_width;
+	if (upload_height > kMaxMovieUploadHeight) {
+		upload_height = kMaxMovieUploadHeight;
+		upload_width =
+			(source_width * upload_height + source_height / 2) / source_height;
+	}
+	g_video_width = std::max(1, upload_width);
+	g_video_height = std::max(1, upload_height);
 }
 
 void Log_FFmpeg_Error(const char *operation, int error)
@@ -477,6 +504,8 @@ void Release_Decoder_State()
 	if (g_format != NULL) avformat_close_input(&g_format);
 	g_video_stream = -1;
 	g_audio_stream = -1;
+	g_source_video_width = 0;
+	g_source_video_height = 0;
 	g_video_width = 0;
 	g_video_height = 0;
 	g_demux_eof.store(false, std::memory_order_release);
@@ -611,9 +640,9 @@ bool Receive_Video_Frame()
 	g_pending_video = true;
 	++g_decoded_video_frames;
 	if (!g_video_first_frame_logged) {
-		A30_Vita_Log("A4 Bink: first decoded video frame source=%dx%d output=%dx%d format=rgb565 pts_us=%lld movie=%s\n",
-			g_video_frame->width, g_video_frame->height, g_video_width,
-			g_video_height, static_cast<long long>(pts_us), g_movie_name);
+			A30_Vita_Log("A4 Bink: first decoded video frame source=%dx%d upload=%dx%d format=rgb565 pts_us=%lld movie=%s\n",
+				g_video_frame->width, g_video_frame->height, g_video_width,
+				g_video_height, static_cast<long long>(pts_us), g_movie_name);
 		g_video_first_frame_logged = true;
 	}
 	av_frame_unref(g_video_frame);
@@ -696,9 +725,10 @@ bool Upload_Pending_Video()
 	}
 	g_texture_allocated = true;
 	if (!g_video_first_upload_logged) {
-		A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u video=%dx%d storage=%dx%d format=rgb565 movie=%s\n",
-			static_cast<unsigned>(g_video_texture), g_video_width, g_video_height,
-			g_texture_width, g_texture_height, g_movie_name);
+			A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u source=%dx%d upload=%dx%d storage=%dx%d format=rgb565 movie=%s\n",
+				static_cast<unsigned>(g_video_texture), g_source_video_width,
+				g_source_video_height, g_video_width, g_video_height,
+				g_texture_width, g_texture_height, g_movie_name);
 		g_video_first_upload_logged = true;
 	}
 	++g_uploaded_video_frames;
@@ -799,9 +829,11 @@ void Log_Playback_Statistics(const char *reason)
 	g_playback_statistics_logged = true;
 	const uint64_t wall_us = g_start_us > 0 ?
 		sceKernelGetProcessTimeWide() - static_cast<uint64_t>(g_start_us) : 0U;
-	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 wall_ms=%llu frames=%llu video_uploaded/dropped=%llu/%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
-		reason != NULL ? reason : "unknown", g_movie_name,
-		static_cast<unsigned long long>(wall_us / 1000U),
+	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu frames=%llu video_uploaded/dropped=%llu/%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
+			reason != NULL ? reason : "unknown", g_movie_name,
+			g_source_video_width, g_source_video_height,
+			g_video_width, g_video_height, g_texture_width, g_texture_height,
+			static_cast<unsigned long long>(wall_us / 1000U),
 		static_cast<unsigned long long>(g_decoded_video_frames),
 		static_cast<unsigned long long>(g_uploaded_video_frames),
 		static_cast<unsigned long long>(g_dropped_video_frames),
@@ -894,9 +926,10 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 		Mark_Failed("Bink video decoder unavailable");
 		return;
 	}
-	g_video_width = g_video_decoder->width;
-	g_video_height = g_video_decoder->height;
-	if (g_video_width <= 0 || g_video_height <= 0) {
+	Configure_Video_Upload_Dimensions(g_video_decoder->width,
+		g_video_decoder->height);
+	if (g_source_video_width <= 0 || g_source_video_height <= 0 ||
+		g_video_width <= 0 || g_video_height <= 0) {
 		Mark_Failed("invalid movie dimensions");
 		return;
 	}
@@ -928,8 +961,10 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 	Prime_Skip_Button_Latch();
 	g_active = true;
 	g_complete = false;
-	A30_Vita_Log("A4 Bink: playback started movie=%s path=%s video=%dx%d frame_us=%lld audio=%d\n",
-		g_movie_name, resolved.physical, g_video_width, g_video_height,
+	A30_Vita_Log("A4 Bink: playback started movie=%s path=%s source=%dx%d upload=%dx%d max_upload=%dx%d frame_us=%lld audio=%d\n",
+		g_movie_name, resolved.physical, g_source_video_width,
+		g_source_video_height, g_video_width, g_video_height,
+		kMaxMovieUploadWidth, kMaxMovieUploadHeight,
 		static_cast<long long>(g_frame_duration_us), audio_ready ? 1 : 0);
 }
 

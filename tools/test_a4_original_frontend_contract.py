@@ -74,6 +74,59 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("RENEGADE_A4_ORIGINAL_FRONTEND", staged_movie)
         self.assertIn("Play_Movie( filename );", staged_movie)
 
+    def test_vita_freetype_text_pipeline_covers_all_frontend_and_hud_styles(self):
+        provider = (
+            ROOT / "port" / "renderer" / "vita" / "renegade_freetype_font_provider.cpp"
+        ).read_text()
+        runtime = (ROOT / "port" / "platform" / "vita" / "a31_vita_runtime.cpp").read_text()
+        stage_sources = (ROOT / "tools" / "stage_sources.sh").read_text()
+        glyph_patch = (
+            ROOT / "port" / "patches" / "ww3d2-a35-freetype-glyph-raster-safety.patch"
+        ).read_text()
+        staged_sentence = (ROOT / "staging" / "ww3d2" / "render2dsentence.cpp").read_text()
+
+        self.assertIn("if (file->Open(FileClass::READ))", provider)
+        self.assertNotIn("file->Is_Available() && file->Open(FileClass::READ)", provider)
+        self.assertIn("bitmap.pixel_mode != FT_PIXEL_MODE_GRAY", provider)
+        self.assertIn("source_row_start", provider)
+        self.assertIn("source_column_start", provider)
+        self.assertIn("bitmap.pitch < 0", provider)
+        self.assertIn("physical_row", provider)
+
+        for style in (
+            "FONT_TITLE",
+            "FONT_LG_CONTROLS",
+            "FONT_CONTROLS",
+            "FONT_LISTS",
+            "FONT_TOOLTIPS",
+            "FONT_MENU",
+            "FONT_SM_MENU",
+            "FONT_HEADER",
+            "FONT_BIG_HEADER",
+            "FONT_CREDITS",
+            "FONT_CREDITS_BOLD",
+            "FONT_INGAME_TXT",
+            "FONT_INGAME_BIG_TXT",
+            "FONT_INGAME_SUBTITLE_TXT",
+            "FONT_INGAME_HEADER_TXT",
+        ):
+            self.assertIn(f'StyleMgrClass::{style}', runtime)
+            self.assertIn(f'"{style}"', runtime)
+
+        self.assertIn("spacing_0", runtime)
+        self.assertIn(
+            "height > 0 && (spacing_a > 0 || spacing_0 > 0) ? 1 : 0",
+            runtime,
+        )
+        self.assertIn("ww3d2-a35-freetype-glyph-raster-safety.patch", stage_sources)
+        self.assertIn("bool rasterized = false;", glyph_patch)
+        self.assertIn("::memset(curr_buffer, 0", glyph_patch)
+        self.assertIn("if (!rasterized)", glyph_patch)
+        self.assertIn("char_width = 0;", glyph_patch)
+        self.assertIn("bool rasterized = false;", staged_sentence)
+        self.assertIn("::memset(curr_buffer, 0", staged_sentence)
+        self.assertIn("if (!rasterized)", staged_sentence)
+
     def test_controller_navigation_maps_to_wwui_without_breaking_gameplay_keys(self):
         directinput = (ROOT / "port" / "platform" / "renegade_directinput.cpp").read_text()
         lifecycle = (ROOT / "port" / "platform" / "a4_frontend_lifecycle_boundary.cpp").read_text()
@@ -119,7 +172,15 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "DirectInput::Read first complete",
         ):
             self.assertIn(token, directinput)
-        self.assertIn("Set_Button(DIKeyboardButtons, DIK_ESCAPE, (buttons & SCE_CTRL_START) != 0);", directinput)
+        self.assertIn("const bool start_pressed = (buttons & SCE_CTRL_START) != 0;", directinput)
+        self.assertIn(
+            "frontend_menu_navigation && start_pressed",
+            directinput,
+        )
+        self.assertIn(
+            "START suppressed from gameplay DIK_ESCAPE; runtime clean-exit poll owns START",
+            directinput,
+        )
 
         self.assertIn("A4_Frontend_Pump_WWUI_Key_Transitions", header)
         self.assertIn("g_frontend_key_dispatcher.ProcessMessage(NULL, message", lifecycle)
@@ -254,6 +315,12 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "A4 Bink: skip requested buttons=%08X",
             "kUpdateBudgetUs",
             "update budget yield",
+            "kMaxMovieUploadWidth = 640",
+            "kMaxMovieUploadHeight = 480",
+            "Configure_Video_Upload_Dimensions",
+            "g_source_video_width",
+            "g_source_video_height",
+            "source=%dx%d upload=%dx%d max_upload=%dx%d",
             "avformat_open_input",
             "avcodec_find_decoder",
             "g_packet_pending",
@@ -289,10 +356,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "g_audio_count >= output.size();",
             "g_audio_wait_count.fetch_add(1U, std::memory_order_relaxed);",
             "sceKernelDelayThread(1000U);",
-			"A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 wall_ms=%llu",
-			"video_uploaded/dropped=%llu/%llu",
-			"kVideoDropLatenessUs",
-			"Drop_Pending_Video_If_Late",
+				"A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu",
+				"video_uploaded/dropped=%llu/%llu",
+				"kVideoDropLatenessUs",
+				"Drop_Pending_Video_If_Late",
 			"A4 Bink: dropped late video frame",
             "audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu",
             "audio_decode_calls/total/worst_us=%llu/%llu/%llu",
@@ -311,6 +378,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "const GLenum setup_error = glGetError();",
             "A4 Bink: texture setup failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d texture=%u movie=%s",
             "A4 Bink: texture upload failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d movie=%s",
+            "first decoded video frame source=%dx%d upload=%dx%d",
+            "first video texture upload complete texture=%u source=%dx%d upload=%dx%d storage=%dx%d",
             "A failure belongs to this movie.",
             "static_cast<GLfloat>(g_video_width) / static_cast<GLfloat>(g_texture_width)",
             "static_cast<GLfloat>(g_video_height) / static_cast<GLfloat>(g_texture_height)",

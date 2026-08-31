@@ -70,6 +70,7 @@
 #include "wwsaveload.h"
 
 #include <psp2/ctrl.h>
+#include <psp2/display.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
 #include <psp2/kernel/processmgr.h>
@@ -298,29 +299,67 @@ bool Validate_StyleMgr_Font_Glyphs(const char *scope)
 		const char *name;
 	};
 	const FontProbe probes[] = {
+		{ StyleMgrClass::FONT_TITLE, "FONT_TITLE" },
+		{ StyleMgrClass::FONT_LG_CONTROLS, "FONT_LG_CONTROLS" },
+		{ StyleMgrClass::FONT_CONTROLS, "FONT_CONTROLS" },
+		{ StyleMgrClass::FONT_LISTS, "FONT_LISTS" },
+		{ StyleMgrClass::FONT_TOOLTIPS, "FONT_TOOLTIPS" },
 		{ StyleMgrClass::FONT_MENU, "FONT_MENU" },
 		{ StyleMgrClass::FONT_SM_MENU, "FONT_SM_MENU" },
+		{ StyleMgrClass::FONT_HEADER, "FONT_HEADER" },
+		{ StyleMgrClass::FONT_BIG_HEADER, "FONT_BIG_HEADER" },
+		{ StyleMgrClass::FONT_CREDITS, "FONT_CREDITS" },
+		{ StyleMgrClass::FONT_CREDITS_BOLD, "FONT_CREDITS_BOLD" },
 		{ StyleMgrClass::FONT_INGAME_TXT, "FONT_INGAME_TXT" },
-		{ StyleMgrClass::FONT_INGAME_BIG_TXT, "FONT_INGAME_BIG_TXT" }
+		{ StyleMgrClass::FONT_INGAME_BIG_TXT, "FONT_INGAME_BIG_TXT" },
+		{ StyleMgrClass::FONT_INGAME_SUBTITLE_TXT, "FONT_INGAME_SUBTITLE_TXT" },
+		{ StyleMgrClass::FONT_INGAME_HEADER_TXT, "FONT_INGAME_HEADER_TXT" }
 	};
 	bool ok = true;
 	for (unsigned index = 0U; index < sizeof(probes) / sizeof(probes[0]);
 		++index) {
 		FontCharsClass *font = StyleMgrClass::Peek_Font(probes[index].style);
 		const int height = font != NULL ? font->Get_Char_Height() : 0;
-		const int spacing = font != NULL ?
+		const int spacing_a = font != NULL ?
 			font->Get_Char_Spacing(static_cast<WCHAR>('A')) : 0;
-		if (height <= 0 || spacing <= 0) ok = false;
-		A30_Vita_Log("A4 frontend/text: StyleMgr font probe scope=%s font=%s ptr=%p height=%d spacing_A=%d ok=%d\n",
+		const int spacing_0 = font != NULL ?
+			font->Get_Char_Spacing(static_cast<WCHAR>('0')) : 0;
+		if (height <= 0 || (spacing_a <= 0 && spacing_0 <= 0)) ok = false;
+		A30_Vita_Log("A4 frontend/text: StyleMgr font probe scope=%s font=%s ptr=%p height=%d spacing_A=%d spacing_0=%d ok=%d\n",
 			scope != NULL ? scope : "unknown", probes[index].name,
-			static_cast<void *>(font), height, spacing,
-			height > 0 && spacing > 0 ? 1 : 0);
+			static_cast<void *>(font), height, spacing_a, spacing_0,
+			height > 0 && (spacing_a > 0 || spacing_0 > 0) ? 1 : 0);
 	}
 	if (!ok) {
 		A30_Vita_Log("A4 frontend/text: FAIL StyleMgr font glyph probe scope=%s; refusing to enter visually blank text state\n",
 			scope != NULL ? scope : "unknown");
 	}
 	return ok;
+}
+
+void Flush_Debug_Status(unsigned frames)
+{
+	for (unsigned index = 0U; index < frames; ++index) {
+		sceDisplayWaitVblankStart();
+	}
+}
+
+void Draw_Engine_Setup_Screen(int startup_screen_result, const char *phase,
+	const char *detail)
+{
+	if (startup_screen_result < 0) return;
+	psvDebugScreenClear(0x102030);
+	psvDebugScreenSetFgColor(0xFFFFFF);
+	psvDebugScreenPrintf("%s\n", RENEGADE_BUILD_DISPLAY_LABEL);
+	psvDebugScreenPrintf("Original engine setup / frontend handoff\n\n");
+	psvDebugScreenPrintf("Now:  %s\n", phase != NULL ? phase : "unknown");
+	if (detail != NULL && detail[0] != 0) {
+		psvDebugScreenPrintf("Info: %s\n", detail);
+	}
+	psvDebugScreenPrintf("\nThis screen stays active until vitaGL owns display.\n");
+	psvDebugScreenPrintf("Next: original intro movies, menu, then M00 tutorial.\n");
+	psvDebugScreenPrintf("Log:  %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);
+	Flush_Debug_Status(1U);
 }
 
 void Draw_Startup_Precache_Screen(int startup_screen_result, const char *phase,
@@ -1021,9 +1060,35 @@ private:
 	int LastMirroredLoadProgress;
 };
 
-	A31StateSnapshot Make_Interactive_Capture_State(const A31InteractiveRenderTrace &trace,
-		uint64_t frame, uint64_t monotonic_us, const char *reason)
+	A31VitaLoadingPresenter *g_active_loading_presenter = NULL;
+
+	class A31VitaScopedLoadingPresenterCallback
 	{
+	public:
+		explicit A31VitaScopedLoadingPresenterCallback(
+			A31VitaLoadingPresenter &presenter) :
+			Previous(g_active_loading_presenter)
+		{
+			g_active_loading_presenter = &presenter;
+			A30_Vita_Log("A3.5 loading screen: Vita synchronous-load callback armed presenter=%p previous=%p\n",
+				static_cast<void *>(&presenter), static_cast<void *>(Previous));
+		}
+
+		~A31VitaScopedLoadingPresenterCallback()
+		{
+			A30_Vita_Log("A3.5 loading screen: Vita synchronous-load callback disarmed presenter=%p restore=%p\n",
+				static_cast<void *>(g_active_loading_presenter),
+				static_cast<void *>(Previous));
+			g_active_loading_presenter = Previous;
+		}
+
+	private:
+		A31VitaLoadingPresenter *Previous;
+	};
+
+		A31StateSnapshot Make_Interactive_Capture_State(const A31InteractiveRenderTrace &trace,
+			uint64_t frame, uint64_t monotonic_us, const char *reason)
+		{
 	A31StateSnapshot state = {};
 	state.schema_version = A31_CAPTURE_SCHEMA_VERSION;
 	snprintf(state.milestone, sizeof(state.milestone), "%s", RENEGADE_BUILD_CANDIDATE_LABEL);
@@ -1728,6 +1793,18 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 
 } // namespace
 
+void A31_Vita_Render_Original_Loading_Callback(const char *phase,
+	int minimum_progress)
+{
+	if (g_active_loading_presenter == NULL) {
+		A30_Vita_Log("A3.5 loading screen: synchronous-load callback ignored phase=%s minimum=%d active=0\n",
+			phase != NULL ? phase : "unknown", minimum_progress);
+		return;
+	}
+	g_active_loading_presenter->Render_Original_Progress(phase, true,
+		minimum_progress);
+}
+
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	int startup_screen_result)
 {
@@ -1755,10 +1832,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	const bool startup_precache_ok = Run_Visible_Startup_Precache_Phase(
 		startup_screen_result, factory_list, always2_factory,
 		always_dbs_factory, always_factory, m00_factory, m01_factory);
-	if (startup_screen_result >= 0) {
-		psvDebugScreenFinish();
-	}
 	if (!startup_precache_ok) {
+		Draw_Engine_Setup_Screen(startup_screen_result,
+			"Startup pre-cache/pre-compute failed",
+			"required retail archives or cache receipts were not ready");
 		A30_Vita_Log("A3.5 prewarm: FAIL startup precache/precompute phase before frontend\n");
 		result.render_error = true;
 		Log_File_Factory_Statistics();
@@ -1807,6 +1884,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		** retail/MIX chain and must be destroyed after the Combat session but
 		** before asset, renderer, physics, and factory teardown. */
 		A31AudioFileFactoryClass audio_file_factory(&factory_list);
+		Draw_Engine_Setup_Screen(startup_screen_result,
+			"Starting original audio provider",
+			"WWAudio sees the installed retail/MIX file factory");
 		A30_Vita_Log("A3.1 breadcrumb: application audio construction entry singleton=%p\n",
 			static_cast<void *>(WWAudioClass::Get_Instance()));
 		Renegade_Miles_Reset_Runtime_Stats();
@@ -1845,6 +1925,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		A30_Vita_Log("A3.1 breadcrumb: audio/session construction singleton=%p sound_scene=%p\n",
 			static_cast<void *>(audio), static_cast<void *>(audio->Get_Sound_Scene()));
 		Log_Audio_Runtime_Statistics("post-initialize", 0U);
+		Draw_Engine_Setup_Screen(startup_screen_result,
+			"Checking startup cache health",
+			"M00/M01 index receipts and original archive route");
 		{
 		RenegadeCheatMgrClass cheat_manager;
 		A31FrameHistory *capture_history = new (std::nothrow) A31FrameHistory;
@@ -1867,16 +1950,28 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				break;
 			}
 
-			WWMath::Init();
-			math_initialized = true;
-			/* Preserve original Commando ordering: the process-wide path-solver
-			 * pool begins after WWMath and is destroyed after the asset manager. */
-			PathMgrClass::Initialize();
-			path_manager_initialized = true;
-			asset_manager = new WW3DAssetManager;
-			asset_manager->Set_WW3D_Load_On_Demand(true);
-			asset_manager->Set_Activate_Fog_On_Load(true);
-			ww3d_initialized = WW3D::Init(NULL, NULL, true) == WW3D_ERROR_OK;
+				Draw_Engine_Setup_Screen(startup_screen_result,
+					"Initializing original math/path systems",
+					"WWMath and PathMgr before original asset manager");
+				WWMath::Init();
+				math_initialized = true;
+				/* Preserve original Commando ordering: the process-wide path-solver
+				 * pool begins after WWMath and is destroyed after the asset manager. */
+				PathMgrClass::Initialize();
+				path_manager_initialized = true;
+				Draw_Engine_Setup_Screen(startup_screen_result,
+					"Constructing original WW3D asset manager",
+					"load-on-demand and fog activation remain original-owned");
+				asset_manager = new WW3DAssetManager;
+				asset_manager->Set_WW3D_Load_On_Demand(true);
+				asset_manager->Set_Activate_Fog_On_Load(true);
+				Draw_Engine_Setup_Screen(startup_screen_result,
+					"Starting vitaGL renderer",
+					"debugScreen handoff occurs now; renderer clears/presents next");
+				if (startup_screen_result >= 0) {
+					psvDebugScreenFinish();
+				}
+				ww3d_initialized = WW3D::Init(NULL, NULL, true) == WW3D_ERROR_OK;
 			if (!ww3d_initialized) {
 				A30_Vita_Log("A3.1 interactive: WW3D init FAIL\n");
 				break;
@@ -2033,12 +2128,14 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				CombatManager::Set_Load_Progress(0);
 				A31VitaScopedLoadingRenderResolution loading_render_resolution;
 				A31VitaLoadingPresenter loading_presenter;
-			if (!loading_presenter.Initialize()) {
-				result.render_error = true;
-				A30_Vita_Log("A3.5 loading screen: FAIL original MenuBackDrop model unavailable\n");
-				break;
-			}
-			loading_presenter.Render_Original_Progress("before_pre_load");
+				if (!loading_presenter.Initialize()) {
+					result.render_error = true;
+					A30_Vita_Log("A3.5 loading screen: FAIL original MenuBackDrop model unavailable\n");
+					break;
+				}
+				A31VitaScopedLoadingPresenterCallback loading_callback(
+					loading_presenter);
+				loading_presenter.Render_Original_Progress("before_pre_load");
 			CombatGameModeClass::Vita_Begin_Level_Load(
 				loading_presenter.Peek_Screen(), true);
 			loading_presenter.Render_Original_Progress("after_combatgmode_begin_load");

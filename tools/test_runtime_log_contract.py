@@ -50,6 +50,24 @@ class RuntimeLogContractTest(unittest.TestCase):
             main.index("Vita_Initialize_Filesystem();"),
         )
         self.assertIn("Stage: loaded-world callback entry", world)
+        self.assertIn("#include <psp2/display.h>", interactive)
+        self.assertIn("void Flush_Debug_Status(unsigned frames)", interactive)
+        self.assertIn("sceDisplayWaitVblankStart();", interactive)
+        self.assertIn("void Draw_Engine_Setup_Screen", interactive)
+        self.assertIn("Original engine setup / frontend handoff", interactive)
+        self.assertIn("This screen stays active until vitaGL owns display.", interactive)
+        self.assertLess(
+            interactive.index("Run_Visible_Startup_Precache_Phase("),
+            interactive.index('"Starting original audio provider"'),
+        )
+        self.assertLess(
+            interactive.index('"Starting vitaGL renderer"'),
+            interactive.index("psvDebugScreenFinish();"),
+        )
+        self.assertLess(
+            interactive.index("psvDebugScreenFinish();"),
+            interactive.index("ww3d_initialized = WW3D::Init(NULL, NULL, true)"),
+        )
         self.assertIn("first original Combat update", interactive)
         self.assertNotIn("first-interactive-player-frame", interactive)
         self.assertNotIn("first_interactive_capture_pending", interactive)

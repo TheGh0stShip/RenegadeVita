@@ -1184,9 +1184,15 @@ FontCharsClass::Store_GDI_Char (WCHAR ch)
 	}
 	Update_Current_Buffer(char_width);
 	uint16 *curr_buffer = BufferList[BufferList.Count() - 1] + CurrPixelOffset;
+	bool rasterized = false;
 	if (char_width > 0) {
-		RenegadeVita_Font_Rasterize_Glyph(GDIFontName, PointSize, IsBold, ch,
+		::memset(curr_buffer, 0, static_cast<size_t>(char_width) *
+			static_cast<size_t>(CharHeight) * sizeof(*curr_buffer));
+		rasterized = RenegadeVita_Font_Rasterize_Glyph(GDIFontName, PointSize, IsBold, ch,
 			curr_buffer, char_width, CharHeight);
+		if (!rasterized) {
+			char_width = 0;
+		}
 	}
 	CharDataStruct *char_data = new CharDataStruct;
 	char_data->Value = ch;

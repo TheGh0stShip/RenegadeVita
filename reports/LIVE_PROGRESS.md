@@ -1,5 +1,37 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev90 local source/build candidate; no physical action
+
+`[████░░░░░░] 4/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the user's no-physical-test window. Dev90
+  keeps Dev88/Dev89's shared indexed-glyph, BINK-audio reserve, frontend-scope,
+  bootstrap, pre-cache, and Render2D texture-state work, then adds: a persistent
+  debug/status screen through original engine setup before VitaGL handoff,
+  aspect-preserved 640×480 maximum BINK uploads for the unchanged 800×600 retail
+  movies, synchronous M00 loading-progress callbacks, hardened retail font
+  reads and FreeType glyph atlas clipping/clearing, gameplay Start-to-ESC
+  suppression, and rollback of Dev89's target-box native-coordinate override to
+  original HUD logical-space ownership.
+- Focused validation passed: 23/23 runtime/loading/original-frontend/input
+  contracts. Canonical `bash ./tools/build.sh` passed retained host/current
+  validation, deterministic 138-patch staging, 549 ARM/package actions,
+  ELF/SELF/VPK identity, compressed VPK validation, diagnostics, SHA manifest,
+  and retail exclusion in `logs/a35-dev90-20260831-032019-build.log`.
+- Dev90 artifact custody: VPK SHA-256
+  `76766b787869693887428272914f646f92cae50d5009eaab1bb72f8071cc3568`;
+  packaged SELF SHA-256
+  `35dcbff8cef5d8aa06c291364f22592e2f17c81d16019a79ae95e2a434f2f2d2`;
+  ELF SHA-256
+  `c48286ebdc2595584c4c2b8d68940cd739c2bd6071ca686e77479faff5d4a698`;
+  diagnostics ZIP SHA-256
+  `1819fb1575c27063e2cdeec07650e65b1bd889049e12227df1101ec43c0a1772`.
+- Dev90 has not been copied to, installed on, launched on, or visually
+  accepted on a Vita. No Dev90 screenshot/video exists. The next physical gate
+  must verify readable intro/menu text, paced intro A/V, loading progress,
+  HUD/pickup/dialogue text, target-box alignment, M00 stability including the
+  HMVV approach, frame time, and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev89 local source/build candidate; no physical action
 
 `[████░░░░░░] 4/10 current evidence gates complete; no Vita deploy or launch`

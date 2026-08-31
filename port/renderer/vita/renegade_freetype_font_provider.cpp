@@ -87,7 +87,7 @@ bool Read_Retail_Font(const char *filename, std::vector<unsigned char> *data)
 	FileClass *file = _TheFileFactory->Get_File(filename);
 	if (file == nullptr) return false;
 	bool read = false;
-	if (file->Is_Available() && file->Open(FileClass::READ)) {
+	if (file->Open(FileClass::READ)) {
 		const int size = file->Size();
 		if (size > 0) {
 			data->resize(static_cast<size_t>(size));
@@ -191,14 +191,33 @@ bool RenegadeVita_Font_Rasterize_Glyph(const char *family, int point_size,
 	std::memset(pixels, 0, static_cast<size_t>(width) * static_cast<size_t>(height) * sizeof(*pixels));
 	FT_GlyphSlot glyph = font->face->glyph;
 	const FT_Bitmap &bitmap = glyph->bitmap;
+	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY) return false;
 	const int baseline = Rounded_26_6(font->face->size->metrics.ascender);
-	const int top = std::max(0, baseline - glyph->bitmap_top);
-	const int left = std::max(0, glyph->bitmap_left);
-	for (unsigned int row = 0; row < bitmap.rows && top + static_cast<int>(row) < height; ++row) {
-		const unsigned char *source = bitmap.buffer + static_cast<size_t>(row) * bitmap.pitch;
-		for (unsigned int column = 0; column < bitmap.width && left + static_cast<int>(column) < width; ++column) {
+	const int unclipped_top = baseline - glyph->bitmap_top;
+	const int unclipped_left = glyph->bitmap_left;
+	const int top = std::max(0, unclipped_top);
+	const int left = std::max(0, unclipped_left);
+	const unsigned int source_row_start = unclipped_top < 0 ?
+		static_cast<unsigned int>(-unclipped_top) : 0U;
+	const unsigned int source_column_start = unclipped_left < 0 ?
+		static_cast<unsigned int>(-unclipped_left) : 0U;
+	const int pitch = bitmap.pitch < 0 ? -bitmap.pitch : bitmap.pitch;
+	if (pitch <= 0 && bitmap.rows > 0U) return false;
+	for (unsigned int row = source_row_start;
+		row < bitmap.rows && top + static_cast<int>(row - source_row_start) < height;
+		++row) {
+		const unsigned int physical_row =
+			bitmap.pitch < 0 ? bitmap.rows - 1U - row : row;
+		const unsigned char *source = bitmap.buffer +
+			static_cast<size_t>(physical_row) * static_cast<size_t>(pitch);
+		for (unsigned int column = source_column_start;
+			column < bitmap.width &&
+				left + static_cast<int>(column - source_column_start) < width;
+			++column) {
 			const uint16_t alpha = static_cast<uint16_t>(source[column] >> 4);
-			pixels[(top + static_cast<int>(row)) * width + left + static_cast<int>(column)] =
+			const int target_y = top + static_cast<int>(row - source_row_start);
+			const int target_x = left + static_cast<int>(column - source_column_start);
+			pixels[target_y * width + target_x] =
 				alpha == 0 ? 0 : static_cast<uint16_t>(0x0FFF | (alpha << 12));
 		}
 	}

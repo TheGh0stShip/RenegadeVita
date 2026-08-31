@@ -24,11 +24,18 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   indexed glyph texture-stage combiner before menu/dialogue draws and raised the
   real BINK audio-start reserve to three decoded output buffers. It was not
   installed, launched, or physically accepted.
-- A3.5-dev89: current canonical local-only candidate. It adds original
+- A3.5-dev89: superseded canonical local-only candidate. It added original
   frontend 800×600 presentation scope, font fallback/glyph validation,
   bootstrap display flushing before filesystem/cache work, expanded UI/HUD/M00
   pre-cache touches, Render2D texture-state isolation, late BINK video-frame
   dropping for A/V pacing, and native-coordinate target-box scoping. It is not
+  installed, launched, or physically accepted.
+- A3.5-dev90: current canonical local-only candidate. It keeps the debug/status
+  display through original engine setup, clamps retail BINK uploads to an
+  aspect-preserved 640×480 maximum, feeds synchronous M00 load milestones into
+  the original loading presenter, hardens FreeType/font/glyph atlas paths,
+  prevents gameplay Start from entering the crashing ESC/pause path, and rolls
+  back the overcorrected target-box native-coordinate override. It is not
   installed, launched, or physically accepted.
 
 ## Milestone contracts

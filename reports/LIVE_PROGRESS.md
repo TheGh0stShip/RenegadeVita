@@ -1,5 +1,50 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev99 canonical source/build candidate; VDB provider host-built; no physical action
+
+`[██████████] 10/10 current evidence gates complete; no Vita deploy, launch, install, or capture`
+
+- Source-only work continued without touching the Vita filesystem. Dev99
+  advances identity to `A3.5-dev99`, preserves Dev98's startup/loading/
+  deferred Render2D/HUD/BINK/message-window/short-wchar/UTF-16 formatter/
+  WWUI/HUD presentation work, and adds one narrow startup visibility fix:
+  a native debug-screen repaint worker redraws the current startup status every
+  250 ms while original root and MIX file factories are constructed, then stops
+  before the existing visible startup pre-cache phase.
+- Focused validation passed
+  `tools/test_runtime_log_contract.py`,
+  `tools/test_vita_loading_screen_contract.py`,
+  `tools/test_a4_original_frontend_contract.py`, and
+  `tools/test_vita_indexed_state_contract.py` 39/39. Fast candidate closure
+  passed 93 focused contracts and package checks in
+  `logs/a35-dev99-fast-20260831-090948-build.log`. Canonical
+  `bash ./tools/build.sh` passed retained host/current validation,
+  deterministic 145-patch staging, 549 ARM/package actions, ELF/SELF/VPK
+  identity, compressed VPK validation, diagnostics, SHA manifest, and retail
+  exclusion in `logs/a35-dev99-20260831-091109-build.log`.
+- Final repo validation passed full `python3 -m unittest discover tools`
+  222/222, JSON syntax, `git diff --check`, public-document guardrails,
+  repository hygiene, and no `.rej`/`.orig` debris.
+- Artifact custody: VPK SHA-256
+  `be9939594d7c25f4039f4aefbf77af631ccd6cb1200ed1a50b175cb6534b6c86`;
+  packaged SELF SHA-256
+  `020f210a129beaaf4d0953c6c56efc82267a52949d6883c5db313e87b0790d6d`;
+  ELF SHA-256
+  `fdce12071b368326c4b863547a87b58a9fb69fe7290d9425e9895371e4e9888e`;
+  diagnostics ZIP SHA-256
+  `f13a8f28309821a3c4d408000fccc681e955ba467d267bccab72c21b71302c68`.
+- VDB `master` remains the required screenshot-provider source at
+  `bc5df9e53dfca9b29c38cbd7635317bbb2aa0770`. The Dev99-matching
+  exact-title provider bundle is host-built at
+  `<VitaDevBridge>/build/exact-title-provider-rnega3101-020f210a-dev99-r26`.
+  It targets live `capture.screen.v1`, `RNEGA3101`, and the Dev99 eboot hash
+  above. It is not installed and no logical-framebuffer PNG/raw/metadata
+  evidence exists yet.
+- Dev99 has not been copied to, installed on, launched on, or visually accepted
+  on a Vita. It does not claim menu text, gameplay subtitles, HUD numbers,
+  target-box placement, intro A/V, loading-bar behavior, M00 stability, or
+  Start/pause/exit correctness.
+
 ## 2026-08-31 — Dev98 canonical source/build candidate; VDB provider host-built; no physical action
 
 `[██████████] 10/10 current evidence gates complete; no Vita deploy, launch, install, or capture`

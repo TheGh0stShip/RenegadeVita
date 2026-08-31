@@ -80,6 +80,7 @@
 
 #include <new>
 #include <algorithm>
+#include <atomic>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -122,6 +123,7 @@ const unsigned kLoadingProgressCatchupFrames = 3U;
 const unsigned kStartupPrecacheRequiredReadBytes = 32768U;
 const unsigned kStartupPrecacheOptionalReadBytes = 8192U;
 const unsigned kStartupPrecacheMovieReadBytes = 65536U;
+const unsigned kStartupStatusRepaintIntervalUs = 250000U;
 const unsigned kLoadingPrewarmFrames = 1U;
 const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
@@ -170,6 +172,32 @@ struct A31StartupPrecacheFileSpec
 	const char *name;
 	bool required;
 	unsigned read_limit;
+};
+
+std::atomic<int> g_debug_status_draw_lock(0);
+std::atomic<int> g_startup_status_repaint_active(0);
+std::atomic<const char *> g_startup_status_phase(NULL);
+std::atomic<const char *> g_startup_status_detail(NULL);
+int g_startup_status_screen_result = -1;
+
+class A31ScopedDebugStatusDraw
+{
+public:
+	A31ScopedDebugStatusDraw() : Locked(false)
+	{
+		int expected = 0;
+		Locked = g_debug_status_draw_lock.compare_exchange_strong(expected, 1,
+			std::memory_order_acq_rel, std::memory_order_acquire);
+	}
+	~A31ScopedDebugStatusDraw()
+	{
+		if (Locked) {
+			g_debug_status_draw_lock.store(0, std::memory_order_release);
+		}
+	}
+	bool Acquired() const { return Locked; }
+private:
+	bool Locked;
 };
 
 A31NativePresentationRect Build_Aspect_Preserved_Presentation_Rect(
@@ -412,10 +440,21 @@ void Flush_Debug_Status(unsigned frames)
 	}
 }
 
+void Set_Startup_Status_Repaint_Phase(const char *phase, const char *detail)
+{
+	g_startup_status_phase.store(phase != NULL ? phase : "unknown",
+		std::memory_order_release);
+	g_startup_status_detail.store(detail != NULL ? detail : "",
+		std::memory_order_release);
+}
+
 void Draw_Engine_Setup_Screen(int startup_screen_result, const char *phase,
 	const char *detail)
 {
 	if (startup_screen_result < 0) return;
+	Set_Startup_Status_Repaint_Phase(phase, detail);
+	A31ScopedDebugStatusDraw draw_lock;
+	if (!draw_lock.Acquired()) return;
 	psvDebugScreenClear(0x102030);
 	psvDebugScreenSetFgColor(0xFFFFFF);
 	psvDebugScreenPrintf("%s\n", RENEGADE_BUILD_DISPLAY_LABEL);
@@ -430,12 +469,88 @@ void Draw_Engine_Setup_Screen(int startup_screen_result, const char *phase,
 	Flush_Debug_Status(1U);
 }
 
+int Startup_Status_Repaint_Thread(SceSize, void *)
+{
+	unsigned tick = 0U;
+	while (g_startup_status_repaint_active.load(std::memory_order_acquire) != 0) {
+		const char *phase =
+			g_startup_status_phase.load(std::memory_order_acquire);
+		const char *detail =
+			g_startup_status_detail.load(std::memory_order_acquire);
+		Draw_Engine_Setup_Screen(g_startup_status_screen_result, phase, detail);
+		if ((tick % 4U) == 0U) {
+			A30_Vita_Log("A3.5 startup: verbose status repaint active tick=%u phase=%s before_vitagl=1\n",
+				tick, phase != NULL ? phase : "unknown");
+		}
+		++tick;
+		sceKernelDelayThread(kStartupStatusRepaintIntervalUs);
+	}
+	return 0;
+}
+
+class A31ScopedStartupStatusRepaint
+{
+public:
+	explicit A31ScopedStartupStatusRepaint(int startup_screen_result) :
+		Thread(-1)
+	{
+		if (startup_screen_result < 0) return;
+		g_startup_status_screen_result = startup_screen_result;
+		Set_Startup_Status_Repaint_Phase(
+			"Opening original retail data factories",
+			"verbose status repaints until visible pre-cache starts");
+		g_startup_status_repaint_active.store(1, std::memory_order_release);
+		Thread = sceKernelCreateThread("RenegadeStartupStatus",
+			Startup_Status_Repaint_Thread, 0x10000100, 0x4000, 0, 0, NULL);
+		if (Thread >= 0) {
+			const int start_result = sceKernelStartThread(Thread, 0, NULL);
+			if (start_result < 0) {
+				g_startup_status_repaint_active.store(0,
+					std::memory_order_release);
+				A30_Vita_Log("A3.5 startup: verbose status repaint start failed rc=%08X\n",
+					static_cast<unsigned>(start_result));
+				(void)sceKernelDeleteThread(Thread);
+				Thread = -1;
+			} else {
+				A30_Vita_Log("A3.5 startup: verbose status repaint started before_vitagl=1 interval_us=%u\n",
+					kStartupStatusRepaintIntervalUs);
+			}
+		} else {
+			g_startup_status_repaint_active.store(0, std::memory_order_release);
+			A30_Vita_Log("A3.5 startup: verbose status repaint create failed rc=%08X\n",
+				static_cast<unsigned>(Thread));
+		}
+	}
+
+	~A31ScopedStartupStatusRepaint()
+	{
+		Stop("scope-exit");
+	}
+
+	void Stop(const char *reason)
+	{
+		if (Thread < 0) return;
+		g_startup_status_repaint_active.store(0, std::memory_order_release);
+		int exit_status = 0;
+		(void)sceKernelWaitThreadEnd(Thread, &exit_status, NULL);
+		(void)sceKernelDeleteThread(Thread);
+		A30_Vita_Log("A3.5 startup: verbose status repaint stopped reason=%s status=%d before_vitagl=1\n",
+			reason != NULL ? reason : "unknown", exit_status);
+		Thread = -1;
+	}
+
+private:
+	SceUID Thread;
+};
+
 void Draw_Startup_Precache_Screen(int startup_screen_result, const char *phase,
 	unsigned step, unsigned percent, const A31StartupPrecacheResult &state,
 	const char *detail)
 {
 	if (startup_screen_result < 0) return;
 	if (percent > 100U) percent = 100U;
+	A31ScopedDebugStatusDraw draw_lock;
+	if (!draw_lock.Acquired()) return;
 	psvDebugScreenClear(0x102030);
 	psvDebugScreenSetFgColor(0xFFFFFF);
 	psvDebugScreenPrintf("%s\n", RENEGADE_BUILD_DISPLAY_LABEL);
@@ -1891,6 +2006,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	A31VitaInteractiveResult result = {};
 	result.attempted = true;
 	Renegade_File_Factory_Reset_Statistics();
+	A31ScopedStartupStatusRepaint startup_status_repaint(startup_screen_result);
 
 	Draw_Engine_Setup_Screen(startup_screen_result,
 		"Opening original retail data factories",
@@ -1932,6 +2048,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	FileFactoryClass *previous_write_factory = _TheWritingFileFactory;
 	_TheFileFactory = &factory_list;
 	_TheWritingFileFactory = &root_factory;
+	startup_status_repaint.Stop("visible-startup-precache-begin");
 	const bool startup_precache_ok = Run_Visible_Startup_Precache_Phase(
 		startup_screen_result, factory_list, always2_factory,
 		always_dbs_factory, always_factory, m00_factory, m01_factory);

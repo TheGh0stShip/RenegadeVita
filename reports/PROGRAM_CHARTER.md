@@ -75,11 +75,16 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   formatted strings, plus candidate-scoped startup-precache receipt/status
   output before original retail root/MIX file factory construction. It is not
   installed, launched, or physically accepted.
-- A3.5-dev98: current canonical local-only candidate. It preserves Dev97 and
+- A3.5-dev98: superseded canonical local-only candidate. It preserves Dev97 and
   adds BINK presentation-clock arming at audio/video presentation, bounded
   Vita WWUI dialog-template translation copying, and HUD initialization
   presentation scoping so persistent Render2D HUD elements are born in native
   Vita HUD space. It is not installed, launched, or physically accepted.
+- A3.5-dev99: current canonical local-only candidate. It preserves Dev98 and
+  adds a native startup-status repaint worker so verbose debug status is
+  redrawn during the long original root/MIX factory construction phase before
+  visible pre-cache. It is not installed, launched, captured, or physically
+  accepted.
 
 ## Milestone contracts
 

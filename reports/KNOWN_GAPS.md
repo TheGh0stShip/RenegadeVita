@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev98 mandatory frontend and readiness gate (2026-08-31)
+## Current dev99 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -85,8 +85,14 @@ timing only at audio/video presentation, bounds Vita WWUI dialog-template
 translation copies into the remaining original text buffer, and scopes
 `HUDClass::Init()` through native Vita HUD presentation so persistent Render2D
 HUD elements are initialized in the same coordinate range used for per-frame
-rebuilds. Its focused/fast/canonical closure passes, but it is also local only.
-The
+rebuilds. Dev99 is the current local-only successor: it preserves Dev98 and
+adds a native startup-status repaint worker that redraws verbose debug status
+every 250 ms during original root/MIX file factory construction before the
+visible startup pre-cache phase. This targets only the long opaque pre-cache
+black interval; it does not claim a new fix for menu text, subtitles, HUD
+glyphs, target boxes, intro A/V, HMVV freeze, Start crash, shadows, wall
+loss, or FPS. Its focused/fast/canonical closure passes, but it is also local
+only. The
 user-required release gate remains: a visible original intro with usable A/V
 and a visibly labelled original menu before any further Vita candidate push.
 No visual, pacing, or audio acceptance claim is valid until a matching physical

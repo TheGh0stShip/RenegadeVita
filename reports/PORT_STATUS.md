@@ -3,85 +3,47 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-## 2026-08-31 Dev87 physical failure; Dev98 local candidate
+## 2026-08-31 Dev87 physical failure; Dev99 local candidate
 
-Dev98 is the current local-only source/build candidate produced under the
-user's no-physical-test window. It preserves Dev88 through Dev96's
+Dev99 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves Dev88 through Dev98's
 indexed-glyph texture-stage, real BINK audio-reserve, frontend-scope, font
 fallback, bootstrap, expanded pre-cache, Render2D state, synchronous loading,
 Start-route, target-box rollback, BINK reductions, vehicle/HMVV diagnostics,
 text-atlas, gameplay HUD/TextDisplay native-presentation work, startup
 framebuffer retention, loading callbacks, deferred indexed Render2D state,
-HUD `Think()` presentation scope, BINK audio-pressure frame dropping, host
-main-menu translation validation, update-time MessageWindow presentation-scope
-guard, UTF-16-safe short-wchar libc wrappers, bounded UTF-16 formatted output,
-and candidate-scoped startup-precache receipts. It then adds bounded source
-fixes for the latest physical symptoms without replacing original engine
-owners:
+HUD `Think()`/`Init()` presentation scope, BINK audio-pressure frame dropping,
+host main-menu translation validation, update-time MessageWindow presentation
+scope, UTF-16-safe short-wchar libc wrappers, bounded UTF-16 formatted output,
+candidate-scoped startup-precache receipts, BINK presentation-clock arming,
+and bounded WWUI dialog-template translation copies.
 
-- the startup path no longer drops the debug-screen framebuffer before WW3D
-  owns the panel, targeting the long opaque black interval before diagnostics;
-- synchronous original saveload status and count changes now call the active
-  Vita original-loading presenter, targeting the stuck loading progress bar;
-- the Vita DX8 boundary applies deferred original shader, texture-stage, and
-  world/view state before indexed Render2D draws, targeting missing menu
-  labels, empty dialogue subtitles, and mangled HUD/pickup glyphs;
-- gameplay HUD `Think()` builds target boxes, ammo/health, pickup, and related
-  dynamic HUD geometry inside the native gameplay presentation scope; and
-- unchanged retail BINK playback can drop late video frames when queued audio is
-  under pressure, with bounded queued-audio diagnostics.
-- `MessageWindowClass::On_Frame_Update()` and
-  `MessageWindowClass::Update_Window_Rectangle()` now run update-time
-  dialogue/message text layout through the Vita gameplay-HUD presentation
-  scope, preventing cached message-window glyph geometry from being generated
-  outside the render presentation.
-- Vita short-`wchar_t` builds retain UTF-16-safe wrappers for `wcsncmp`,
-  `wcsncpy`, `wcschr`, and `wcsstr`, with host ABI probes and source contracts
-  covering original frontend/dialogue/HUD call sites. Dev98 retains bounded
-  UTF-16 formatted-output support for the compatibility `vswprintf`/
-  `vsnwprintf` path, covering original menu, dialogue, HUD, pickup, and ammo/
-  health formatted text before Render2D receives it.
-- Startup pre-cache receipts now use the candidate-scoped
-  `A3.5-dev98` path, and the runtime draws/logs visible status before root and
-  MIX file factory construction. This specifically targets the reported
-  black-screen interval before the diagnostic loader if the stall is inside
-  original retail-data factory setup.
-- BINK movie presentation timing now starts only when output is actually
-  presentable: either audio output is armed or the first video upload is
-  submitted. This targets the very slow/buzzy intro symptom without modifying
-  retail BIK files or forcing a repackaged movie path.
-- Vita WWUI dialog-template translation copying is now bounded to the remaining
-  fixed original text buffer and logs source/copy/truncation lengths. This
-  targets missing menu labels and empty gameplay dialogue/subtitle text while
-  retaining original `STRINGS.TDB` ownership.
-- `HUDClass::Init()` now uses the same native Vita gameplay-HUD presentation
-  scope as `HUDClass::Think()`, so persistent Render2D target-box,
-  ammo/health, pickup, and related HUD renderers are initialized in the same
-  coordinate range used for per-frame geometry rebuilds.
+The new Dev99 fix is narrow: a native startup-status repaint worker redraws the
+current verbose debug/status screen every 250 ms during original root and MIX
+file factory construction, then stops before the existing visible startup
+pre-cache phase. This targets the long opaque black interval before
+diagnostics while preserving the original loading/movie/menu/HUD/world owners.
 
-Focused validation passed the BINK frontend-clock contract, the combined
-frontend/loading/runtime/indexed-state/identity contract set, deterministic
-staging with no `.rej`/`.orig` debris, and the pristine WWUI staging patch
-apply proof. Fast candidate and canonical `bash ./tools/build.sh` both passed.
-Final repo validation passed full `python3 -m unittest discover tools` 222/222,
-JSON syntax, `git diff --check`, hygiene, and no `.rej`/`.orig` debris.
-Canonical closure passed retained
-host/current validation, deterministic 145-patch staging, 549 ARM/package
-actions, ELF/SELF/VPK identity, compressed VPK validation, diagnostics, SHA
-manifest, and retail exclusion in `logs/a35-dev98-20260831-081728-build.log`.
-VPK SHA-256 is
-`bb2e02eae8b28531735080214949463bcea3022859a8bf35affe33a01be2e870`;
+Focused validation passed the combined frontend/loading/runtime/indexed-state
+contract set 39/39. Fast candidate and canonical `bash ./tools/build.sh` both
+passed. Final repo validation passed full `python3 -m unittest discover tools`
+222/222, JSON syntax, `git diff --check`, public-document guardrails,
+repository hygiene, and no `.rej`/`.orig` debris. Canonical closure passed retained host/current validation,
+deterministic 145-patch staging, 549 ARM/package actions, ELF/SELF/VPK
+identity, compressed VPK validation, diagnostics, SHA manifest, and retail
+exclusion in `logs/a35-dev99-20260831-091109-build.log`. VPK SHA-256 is
+`be9939594d7c25f4039f4aefbf77af631ccd6cb1200ed1a50b175cb6534b6c86`;
 packaged SELF SHA-256 is
-`bbd96fe416f834b82054cf63a8680c9124d4c6b20e467bb98210e7241b815e35`; ELF
+`020f210a129beaaf4d0953c6c56efc82267a52949d6883c5db313e87b0790d6d`; ELF
 SHA-256 is
-`dc5be03038085387bdf92225ba6a809995cc738a331e1756c320f80f76098dba`;
+`fdce12071b368326c4b863547a87b58a9fb69fe7290d9425e9895371e4e9888e`;
 diagnostics ZIP SHA-256 is
-`a2a079302212ef249cf58a399607a0ac48c027151dc85d4e208743dd7da088b2`.
+`f13a8f28309821a3c4d408000fccc681e955ba467d267bccab72c21b71302c68`.
 
-No Dev98 file has been copied to, installed on, or launched on the Vita. It is
-not a visual/audio/lifecycle acceptance claim. No Dev94, Dev95, Dev96, or
-Dev97 or Dev98 screenshot or video exists. The next physical test must prove the
-user-required frontend gate first: fast visible bootstrap, visible original
+No Dev99 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. No Dev94, Dev95, Dev96, Dev97,
+Dev98, or Dev99 screenshot or video exists. The next physical test must prove
+the user-required frontend gate first: fast visible bootstrap, visible original
 intro/menu text, usable intro A/V/skip behavior, readable gameplay
 dialogue/HUD/pickup/loading text, correct target-box placement, stable M00
 progression including the HMVV approach, acceptable frame time, and safe
@@ -89,10 +51,22 @@ Start/pause/exit without PSP2 crash.
 
 The future screenshot route is VDB logical framebuffer capture through live
 `capture.screen.v1`, not VitaCompanion `screen.v1`, FTP screenshots, camera,
-HDMI, or MP4 recorder output. The host-built Dev98 exact-title provider bundle
-is `<VitaDevBridge>/build/exact-title-provider-rnega3101-bbd96fe4-dev98-r26`
+HDMI, or MP4 recorder output. The host-built Dev99 exact-title provider bundle
+is `<VitaDevBridge>/build/exact-title-provider-rnega3101-020f210a-dev99-r26`
 and targets `RNEGA3101` plus packaged eboot SHA-256
-`bbd96fe416f834b82054cf63a8680c9124d4c6b20e467bb98210e7241b815e35`.
+`020f210a129beaaf4d0953c6c56efc82267a52949d6883c5db313e87b0790d6d`.
+Provider hashes: agent
+`f358ccccfb6ed748106d45ef0b9764a63f524e5063fcafe92bce3cb77b16ea5b`,
+gateway
+`71c156dcbe11c3d569fb2288a60a8b4a516c54aee369b4104ea6cd243655be6b`,
+KVDB
+`79e1b00983735afec9cf7052c5ba36af4db290e118091af96c7a3479ae4f82dc`,
+probe gateway
+`dc0e6532b95272411cfa11dca8c5795fea4a51b2ec3bdbd7b5d183482def02eb`,
+manifest
+`87c2cc16d559bc4b2e53a3c97986fbf3561ad5ad54398f6a10b97cefcc7af002`,
+and package
+`75900f43dc1a6138d48afe5d833ece3ba5d12559349c9d32b0a078d11d8403f5`.
 It is not installed and has not produced Vita PNG/raw/metadata evidence.
 
 ## 2026-08-31 Dev87 physical failure; Dev93 superseded local candidate

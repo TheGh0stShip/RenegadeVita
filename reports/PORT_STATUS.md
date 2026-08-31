@@ -3,20 +3,20 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-## 2026-08-31 Dev87 physical failure; Dev96 local candidate
+## 2026-08-31 Dev87 physical failure; Dev97 local candidate
 
-Dev96 is the current local-only source/build candidate produced under the
-user's no-physical-test window. It preserves Dev88 through Dev94's
+Dev97 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves Dev88 through Dev96's
 indexed-glyph texture-stage, real BINK audio-reserve, frontend-scope, font
 fallback, bootstrap, expanded pre-cache, Render2D state, synchronous loading,
 Start-route, target-box rollback, BINK reductions, vehicle/HMVV diagnostics,
 text-atlas, gameplay HUD/TextDisplay native-presentation work, startup
 framebuffer retention, loading callbacks, deferred indexed Render2D state,
-HUD `Think()` presentation scope, BINK audio-pressure frame dropping, and host
-main-menu translation validation, plus Dev95's update-time MessageWindow
-presentation-scope guard. It then adds
-bounded source fixes for the latest physical symptoms without replacing
-original engine owners:
+HUD `Think()` presentation scope, BINK audio-pressure frame dropping, host
+main-menu translation validation, update-time MessageWindow presentation-scope
+guard, and UTF-16-safe short-wchar libc wrappers. It then adds bounded source
+fixes for the latest physical symptoms without replacing original engine
+owners:
 
 - the startup path no longer drops the debug-screen framebuffer before WW3D
   owns the panel, targeting the long opaque black interval before diagnostics;
@@ -34,37 +34,48 @@ original engine owners:
   dialogue/message text layout through the Vita gameplay-HUD presentation
   scope, preventing cached message-window glyph geometry from being generated
   outside the render presentation.
-- Vita short-`wchar_t` builds now provide UTF-16-safe wrappers for `wcsncmp`,
+- Vita short-`wchar_t` builds retain UTF-16-safe wrappers for `wcsncmp`,
   `wcsncpy`, `wcschr`, and `wcsstr`, with host ABI probes and source contracts
-  covering original frontend/dialogue/HUD call sites. This targets code paths
-  that can pass 16-bit Windows `WCHAR` text into libc functions that expect a
-  different native `wchar_t` ABI.
+  covering original frontend/dialogue/HUD call sites. Dev97 adds bounded
+  UTF-16 formatted-output support for the compatibility `vswprintf`/
+  `vsnwprintf` path, covering original menu, dialogue, HUD, pickup, and ammo/
+  health formatted text before Render2D receives it.
+- Startup pre-cache receipts now use the candidate-scoped
+  `A3.5-dev97` path, and the runtime draws/logs visible status before root and
+  MIX file factory construction. This specifically targets the reported
+  black-screen interval before the diagnostic loader if the stall is inside
+  original retail-data factory setup.
 
-Focused validation passed 54/54 identity, staging, original-frontend/BINK,
-loading-screen, runtime, indexed-state, fast-build, and short-wchar contracts.
-The UTF-16 host selftest passes 16/16 checks. The host interactive M00/menu
-route passed two cycles and proved `STRINGS.TDB` loads with six original
-main-menu labels valid and renderable. Fast candidate and canonical
-`bash ./tools/build.sh` both passed. Canonical closure passed retained
+Focused validation passed 41/41 post-formatter short-wchar, loading,
+original-frontend, runtime, and indexed-state contracts; 19/19 candidate
+identity/loading/runtime contracts; and a wider 63/63 source contract set. The
+UTF-16 host selftest now passes 19/19 checks including formatted text, numeric
+padding, wide/narrow string routing, and float output. The host interactive
+M00/menu route passed two cycles and proved `STRINGS.TDB` loads with six
+original main-menu labels valid and renderable. Final repo validation passed
+full `python3 -m unittest discover tools` 222/222, JSON syntax,
+`git diff --check`, hygiene, and no `.rej`/`.orig` debris. Fast candidate and
+canonical `bash ./tools/build.sh` both passed. Canonical closure passed retained
 host/current validation, deterministic 145-patch staging, 549 ARM/package
 actions, ELF/SELF/VPK identity, compressed VPK validation, diagnostics, SHA
-manifest, and retail exclusion in `logs/a35-dev96-20260831-065932-build.log`.
+manifest, and retail exclusion in `logs/a35-dev97-20260831-073921-build.log`.
 VPK SHA-256 is
-`226767912ca4e6be9d582811c814155bb37a2a110dcb09c76eeaacd73202ad03`;
+`1b7407f87b26f745deea4bf9047d1594cf14301a65c814fd53852520634ae06f`;
 packaged SELF SHA-256 is
-`05699ebac1ce5f19270f32dc9069e7c5e5400524f774c71135b2b69a4e821613`; ELF
+`b838cce455fc440b45c4cea4187d5f0589cb1ab97418d26f00d31c6da9b16804`; ELF
 SHA-256 is
-`2b1498b0081c77738bf4a0450a0a938580e04af240b32fddd26d977179e2a768`;
+`8cf74768588f49aaa905c80bc5cbcb86216f4505c9d9c694d89025715475e814`;
 diagnostics ZIP SHA-256 is
-`6cf3885d8c52b17010230d003f98728b3602c45d0cb379d383ed21da2fbf7cea`.
+`d59e240e68b16418f30f8a12a3feaf8e9154794659add5f6321a7d01a103d1a5`.
 
-No Dev96 file has been copied to, installed on, or launched on the Vita. It is
-not a visual/audio/lifecycle acceptance claim. No Dev94, Dev95, or Dev96
-screenshot or video exists. The next physical test must prove the user-required frontend gate
-first: fast visible bootstrap, visible original intro/menu text, usable intro
-A/V/skip behavior, readable gameplay dialogue/HUD/pickup/loading text, correct
-target-box placement, stable M00 progression including the HMVV approach,
-acceptable frame time, and safe Start/pause/exit without PSP2 crash.
+No Dev97 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. No Dev94, Dev95, Dev96, or
+Dev97 screenshot or video exists. The next physical test must prove the
+user-required frontend gate first: fast visible bootstrap, visible original
+intro/menu text, usable intro A/V/skip behavior, readable gameplay
+dialogue/HUD/pickup/loading text, correct target-box placement, stable M00
+progression including the HMVV approach, acceptable frame time, and safe
+Start/pause/exit without PSP2 crash.
 
 ## 2026-08-31 Dev87 physical failure; Dev93 superseded local candidate
 

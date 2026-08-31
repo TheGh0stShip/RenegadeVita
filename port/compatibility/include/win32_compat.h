@@ -927,22 +927,454 @@ static inline WCHAR *rv_utf16_trim(WCHAR *text)
 	return text;
 }
 
-// VC6's wide formatter operated on 16-bit WCHAR. A complete UTF-16 formatter
-// is supplied before UI integration; the current asset path only requires the
-// original storage/conversion behavior and never calls this function.
+static inline bool rv_utf16_format_append_char(WCHAR *destination, size_t count,
+	size_t *written, WCHAR character)
+{
+	if (written == NULL) {
+		return false;
+	}
+	if (destination != NULL && count > 0 && *written + 1U < count) {
+		destination[*written] = character;
+	}
+	++(*written);
+	if (destination != NULL && count > 0) {
+		const size_t terminator = *written < count ? *written : count - 1U;
+		destination[terminator] = 0;
+	}
+	return true;
+}
+
+static inline void rv_utf16_format_append_ascii(WCHAR *destination, size_t count,
+	size_t *written, const char *text)
+{
+	if (text == NULL) {
+		text = "(null)";
+	}
+	while (*text != '\0') {
+		rv_utf16_format_append_char(destination, count, written,
+			static_cast<WCHAR>(static_cast<unsigned char>(*text)));
+		++text;
+	}
+}
+
+static inline size_t rv_utf16_format_limited_length(const WCHAR *text,
+	int precision)
+{
+	if (text == NULL) {
+		return 6U;
+	}
+	size_t length = 0U;
+	while (text[length] != 0 &&
+		(precision < 0 || length < static_cast<size_t>(precision))) {
+		++length;
+	}
+	return length;
+}
+
+static inline size_t rv_utf16_format_limited_ascii_length(const char *text,
+	int precision)
+{
+	if (text == NULL) {
+		text = "(null)";
+	}
+	size_t length = 0U;
+	while (text[length] != '\0' &&
+		(precision < 0 || length < static_cast<size_t>(precision))) {
+		++length;
+	}
+	return length;
+}
+
+static inline void rv_utf16_format_append_wide_string(WCHAR *destination,
+	size_t count, size_t *written, const WCHAR *text, int width, int precision,
+	bool left_justify)
+{
+	static const WCHAR null_text[] = {
+		'(', 'n', 'u', 'l', 'l', ')', 0
+	};
+	if (text == NULL) {
+		text = null_text;
+	}
+	const size_t length = rv_utf16_format_limited_length(text, precision);
+	const int padding = width > static_cast<int>(length) ?
+		width - static_cast<int>(length) : 0;
+	if (!left_justify) {
+		for (int index = 0; index < padding; ++index) {
+			rv_utf16_format_append_char(destination, count, written, ' ');
+		}
+	}
+	for (size_t index = 0; index < length; ++index) {
+		rv_utf16_format_append_char(destination, count, written, text[index]);
+	}
+	if (left_justify) {
+		for (int index = 0; index < padding; ++index) {
+			rv_utf16_format_append_char(destination, count, written, ' ');
+		}
+	}
+}
+
+static inline void rv_utf16_format_append_narrow_string(WCHAR *destination,
+	size_t count, size_t *written, const char *text, int width, int precision,
+	bool left_justify)
+{
+	if (text == NULL) {
+		text = "(null)";
+	}
+	const size_t length = rv_utf16_format_limited_ascii_length(text, precision);
+	const int padding = width > static_cast<int>(length) ?
+		width - static_cast<int>(length) : 0;
+	if (!left_justify) {
+		for (int index = 0; index < padding; ++index) {
+			rv_utf16_format_append_char(destination, count, written, ' ');
+		}
+	}
+	for (size_t index = 0; index < length; ++index) {
+		rv_utf16_format_append_char(destination, count, written,
+			static_cast<WCHAR>(static_cast<unsigned char>(text[index])));
+	}
+	if (left_justify) {
+		for (int index = 0; index < padding; ++index) {
+			rv_utf16_format_append_char(destination, count, written, ' ');
+		}
+	}
+}
+
+static inline char *rv_utf16_format_append_number(char *cursor, char *end,
+	unsigned value)
+{
+	char temp[16];
+	unsigned digits = 0U;
+	do {
+		temp[digits++] = static_cast<char>('0' + (value % 10U));
+		value /= 10U;
+	} while (value != 0U && digits < sizeof(temp));
+	while (digits > 0U && cursor + 1 < end) {
+		*cursor++ = temp[--digits];
+	}
+	*cursor = '\0';
+	return cursor;
+}
+
+enum rv_utf16_format_length_type {
+	RV_UTF16_FORMAT_LENGTH_NONE,
+	RV_UTF16_FORMAT_LENGTH_HH,
+	RV_UTF16_FORMAT_LENGTH_H,
+	RV_UTF16_FORMAT_LENGTH_L,
+	RV_UTF16_FORMAT_LENGTH_LL,
+	RV_UTF16_FORMAT_LENGTH_L_CAP,
+	RV_UTF16_FORMAT_LENGTH_Z,
+	RV_UTF16_FORMAT_LENGTH_T,
+	RV_UTF16_FORMAT_LENGTH_J,
+	RV_UTF16_FORMAT_LENGTH_I64
+};
+
+static inline int rv_utf16_format_render_numeric(char *buffer, size_t size,
+	const char *flags, unsigned flag_count, int width, bool have_precision,
+	int precision, rv_utf16_format_length_type length, char spec, va_list &args)
+{
+	char fmt[48];
+	char *cursor = fmt;
+	char *const end = fmt + sizeof(fmt);
+	*cursor++ = '%';
+	for (unsigned index = 0U; index < flag_count && cursor + 1 < end; ++index) {
+		*cursor++ = flags[index];
+	}
+	if (width > 0) {
+		cursor = rv_utf16_format_append_number(cursor, end, static_cast<unsigned>(width));
+	}
+	if (have_precision && cursor + 2 < end) {
+		*cursor++ = '.';
+		cursor = rv_utf16_format_append_number(cursor, end,
+			precision < 0 ? 0U : static_cast<unsigned>(precision));
+	}
+	switch (length) {
+	case RV_UTF16_FORMAT_LENGTH_HH:
+		if (cursor + 3 < end) { *cursor++ = 'h'; *cursor++ = 'h'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_H:
+		if (cursor + 2 < end) { *cursor++ = 'h'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_L:
+		if (cursor + 2 < end) { *cursor++ = 'l'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_LL:
+		if (cursor + 3 < end) { *cursor++ = 'l'; *cursor++ = 'l'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_L_CAP:
+		if (cursor + 2 < end) { *cursor++ = 'L'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_Z:
+		if (cursor + 2 < end) { *cursor++ = 'z'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_T:
+		if (cursor + 2 < end) { *cursor++ = 't'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_J:
+		if (cursor + 2 < end) { *cursor++ = 'j'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_I64:
+		if (cursor + 4 < end) { *cursor++ = 'l'; *cursor++ = 'l'; }
+		break;
+	case RV_UTF16_FORMAT_LENGTH_NONE:
+	default:
+		break;
+	}
+	*cursor++ = spec;
+	*cursor = '\0';
+
+	switch (spec) {
+	case 'd':
+	case 'i':
+		switch (length) {
+		case RV_UTF16_FORMAT_LENGTH_HH:
+		case RV_UTF16_FORMAT_LENGTH_H:
+		case RV_UTF16_FORMAT_LENGTH_NONE:
+			return snprintf(buffer, size, fmt, va_arg(args, int));
+		case RV_UTF16_FORMAT_LENGTH_L:
+			return snprintf(buffer, size, fmt, va_arg(args, long));
+		case RV_UTF16_FORMAT_LENGTH_LL:
+		case RV_UTF16_FORMAT_LENGTH_I64:
+			return snprintf(buffer, size, fmt, va_arg(args, long long));
+		case RV_UTF16_FORMAT_LENGTH_Z:
+			return snprintf(buffer, size, fmt, va_arg(args, ptrdiff_t));
+		case RV_UTF16_FORMAT_LENGTH_T:
+			return snprintf(buffer, size, fmt, va_arg(args, ptrdiff_t));
+		case RV_UTF16_FORMAT_LENGTH_J:
+			return snprintf(buffer, size, fmt, va_arg(args, intmax_t));
+		default:
+			return snprintf(buffer, size, fmt, va_arg(args, int));
+		}
+	case 'u':
+	case 'o':
+	case 'x':
+	case 'X':
+		switch (length) {
+		case RV_UTF16_FORMAT_LENGTH_HH:
+		case RV_UTF16_FORMAT_LENGTH_H:
+		case RV_UTF16_FORMAT_LENGTH_NONE:
+			return snprintf(buffer, size, fmt, va_arg(args, unsigned int));
+		case RV_UTF16_FORMAT_LENGTH_L:
+			return snprintf(buffer, size, fmt, va_arg(args, unsigned long));
+		case RV_UTF16_FORMAT_LENGTH_LL:
+		case RV_UTF16_FORMAT_LENGTH_I64:
+			return snprintf(buffer, size, fmt, va_arg(args, unsigned long long));
+		case RV_UTF16_FORMAT_LENGTH_Z:
+			return snprintf(buffer, size, fmt, va_arg(args, size_t));
+		case RV_UTF16_FORMAT_LENGTH_T:
+			return snprintf(buffer, size, fmt,
+				static_cast<size_t>(va_arg(args, ptrdiff_t)));
+		case RV_UTF16_FORMAT_LENGTH_J:
+			return snprintf(buffer, size, fmt, va_arg(args, uintmax_t));
+		default:
+			return snprintf(buffer, size, fmt, va_arg(args, unsigned int));
+		}
+	case 'f':
+	case 'F':
+	case 'e':
+	case 'E':
+	case 'g':
+	case 'G':
+		if (length == RV_UTF16_FORMAT_LENGTH_L_CAP) {
+			return snprintf(buffer, size, fmt, va_arg(args, long double));
+		}
+		return snprintf(buffer, size, fmt, va_arg(args, double));
+	case 'p':
+		return snprintf(buffer, size, fmt, va_arg(args, void *));
+	default:
+		if (buffer != NULL && size > 0) {
+			buffer[0] = '\0';
+		}
+		return 0;
+	}
+}
+
+// VC6's wide formatter operated on 16-bit WCHAR.  This bounded formatter keeps
+// original WideStringClass text, HUD counters, pickup messages, menu labels,
+// and dialogue strings out of host/Vita libc's incompatible wchar_t routines.
 static inline int rv_utf16_vsnprintf(WCHAR *destination, size_t count,
-	const WCHAR *format, const va_list &)
+	const WCHAR *format, const va_list &arg_list)
 {
 	if (destination == NULL || count == 0 || format == NULL) {
 		return -1;
 	}
-	size_t index = 0;
-	while (index + 1U < count && format[index] != 0 && format[index] != '%') {
-		destination[index] = format[index];
-		++index;
+	destination[0] = 0;
+	va_list args;
+	va_copy(args, const_cast<va_list &>(arg_list));
+	size_t written = 0U;
+	for (size_t index = 0U; format[index] != 0; ++index) {
+		if (format[index] != '%') {
+			rv_utf16_format_append_char(destination, count, &written, format[index]);
+			continue;
+		}
+
+		const size_t percent_index = index++;
+		if (format[index] == '%') {
+			rv_utf16_format_append_char(destination, count, &written, '%');
+			continue;
+		}
+
+		char flags[8];
+		unsigned flag_count = 0U;
+		bool left_justify = false;
+		for (;;) {
+			const WCHAR flag = format[index];
+			if (flag != '-' && flag != '+' && flag != ' ' &&
+				flag != '#' && flag != '0') {
+				break;
+			}
+			if (flag == '-') {
+				left_justify = true;
+			}
+			if (flag_count < sizeof(flags)) {
+				flags[flag_count++] = static_cast<char>(flag);
+			}
+			++index;
+		}
+
+		int width = 0;
+		if (format[index] == '*') {
+			width = va_arg(args, int);
+			if (width < 0) {
+				left_justify = true;
+				width = -width;
+			}
+			++index;
+		} else {
+			while (format[index] >= '0' && format[index] <= '9') {
+				width = (width * 10) + static_cast<int>(format[index] - '0');
+				++index;
+			}
+		}
+
+		bool have_precision = false;
+		int precision = -1;
+		if (format[index] == '.') {
+			have_precision = true;
+			precision = 0;
+			++index;
+			if (format[index] == '*') {
+				precision = va_arg(args, int);
+				if (precision < 0) {
+					have_precision = false;
+					precision = -1;
+				}
+				++index;
+			} else {
+				while (format[index] >= '0' && format[index] <= '9') {
+					precision = (precision * 10) +
+						static_cast<int>(format[index] - '0');
+					++index;
+				}
+			}
+		}
+
+		rv_utf16_format_length_type length = RV_UTF16_FORMAT_LENGTH_NONE;
+		if (format[index] == 'h') {
+			if (format[index + 1U] == 'h') {
+				length = RV_UTF16_FORMAT_LENGTH_HH;
+				index += 2U;
+			} else {
+				length = RV_UTF16_FORMAT_LENGTH_H;
+				++index;
+			}
+		} else if (format[index] == 'l') {
+			if (format[index + 1U] == 'l') {
+				length = RV_UTF16_FORMAT_LENGTH_LL;
+				index += 2U;
+			} else {
+				length = RV_UTF16_FORMAT_LENGTH_L;
+				++index;
+			}
+		} else if (format[index] == 'L') {
+			length = RV_UTF16_FORMAT_LENGTH_L_CAP;
+			++index;
+		} else if (format[index] == 'z') {
+			length = RV_UTF16_FORMAT_LENGTH_Z;
+			++index;
+		} else if (format[index] == 't') {
+			length = RV_UTF16_FORMAT_LENGTH_T;
+			++index;
+		} else if (format[index] == 'j') {
+			length = RV_UTF16_FORMAT_LENGTH_J;
+			++index;
+		} else if (format[index] == 'I' && format[index + 1U] == '6' &&
+			format[index + 2U] == '4') {
+			length = RV_UTF16_FORMAT_LENGTH_I64;
+			index += 3U;
+		}
+
+		const char spec = static_cast<char>(format[index]);
+		switch (spec) {
+		case 's':
+			if (length == RV_UTF16_FORMAT_LENGTH_H) {
+				rv_utf16_format_append_narrow_string(destination, count, &written,
+					va_arg(args, const char *), width, precision, left_justify);
+			} else {
+				rv_utf16_format_append_wide_string(destination, count, &written,
+					va_arg(args, const WCHAR *), width, precision, left_justify);
+			}
+			break;
+		case 'S':
+			rv_utf16_format_append_narrow_string(destination, count, &written,
+				va_arg(args, const char *), width, precision, left_justify);
+			break;
+		case 'c':
+			rv_utf16_format_append_char(destination, count, &written,
+				static_cast<WCHAR>(va_arg(args, int)));
+			break;
+		case 'C':
+			rv_utf16_format_append_char(destination, count, &written,
+				static_cast<WCHAR>(static_cast<unsigned char>(va_arg(args, int))));
+			break;
+		case 'd':
+		case 'i':
+		case 'u':
+		case 'o':
+		case 'x':
+		case 'X':
+		case 'f':
+		case 'F':
+		case 'e':
+		case 'E':
+		case 'g':
+		case 'G':
+		case 'p': {
+			char number_buffer[160];
+			const int rendered = rv_utf16_format_render_numeric(number_buffer,
+				sizeof(number_buffer), flags, flag_count, width, have_precision,
+				precision, length, spec, args);
+			if (rendered < 0) {
+				va_end(args);
+				return -1;
+			}
+			rv_utf16_format_append_ascii(destination, count, &written, number_buffer);
+			break;
+		}
+		case 'n': {
+			int *out = va_arg(args, int *);
+			if (out != NULL) {
+				*out = static_cast<int>(written);
+			}
+			break;
+		}
+		default:
+			rv_utf16_format_append_char(destination, count, &written, '%');
+			for (size_t literal = percent_index + 1U; literal <= index; ++literal) {
+				if (format[literal] == 0) {
+					break;
+				}
+				rv_utf16_format_append_char(destination, count, &written,
+					format[literal]);
+			}
+			break;
+		}
 	}
-	destination[index] = 0;
-	return format[index] == 0 ? (int)index : -1;
+	va_end(args);
+	if (destination != NULL && count > 0) {
+		const size_t terminator = written < count ? written : count - 1U;
+		destination[terminator] = 0;
+	}
+	return static_cast<int>(written);
 }
 
 #ifndef _wcsicmp

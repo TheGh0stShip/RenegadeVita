@@ -114,11 +114,13 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("kStartupPrecacheRequiredReadBytes = 32768U", runtime)
         self.assertIn("kStartupPrecacheMovieReadBytes = 65536U", runtime)
         self.assertIn("kStartupPrecacheReceiptPath", runtime)
+        self.assertIn("RENEGADE_BUILD_STARTUP_PRECACHE_RECEIPT_PATH", runtime)
+        self.assertIn("RENEGADE_BUILD_STARTUP_PRECACHE_RECEIPT_PATH", (ROOT / "port/platform/vita/build_identity.h.in").read_text(encoding="utf-8"))
         self.assertIn("kM00CacheIndex", runtime)
         self.assertIn("kM01CacheIndex", runtime)
         self.assertIn("cache/m00-tutorial-mix-index-v1.txt", runtime)
         self.assertIn("cache/m01-mix-index-v1.txt", runtime)
-        self.assertIn("a35-dev82-startup-precache.txt", runtime)
+        self.assertNotIn("a35-dev82-startup-precache.txt", runtime)
         self.assertIn("Pre-cache / pre-warm / pre-compute", runtime)
         self.assertIn("Required startup:      %u/%u", runtime)
         self.assertIn("Optional startup:      %u/%u", runtime)
@@ -142,6 +144,25 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Draw_Engine_Setup_Screen", runtime)
         self.assertIn("Original engine setup / frontend handoff", runtime)
         self.assertIn("This screen stays active until vitaGL owns display.", runtime)
+        self.assertIn("Opening original retail data factories", runtime)
+        self.assertIn("pre-cache visibility before MIX factory construction", runtime)
+        self.assertIn("Opening original Always2.dat archive", runtime)
+        self.assertIn("Opening original always.dbs archive", runtime)
+        self.assertIn("Opening original Always.dat archive", runtime)
+        self.assertIn("Opening original M00_Tutorial.mix archive", runtime)
+        self.assertIn("Preparing original FileFactoryList route", runtime)
+        self.assertLess(
+            runtime.index('"Opening original Always2.dat archive"'),
+            runtime.index("MixFileFactoryClass always2_factory"),
+        )
+        self.assertLess(
+            runtime.index('"Opening original M00_Tutorial.mix archive"'),
+            runtime.index("MixFileFactoryClass m00_factory"),
+        )
+        self.assertLess(
+            runtime.index('"Preparing original FileFactoryList route"'),
+            runtime.index("FileFactoryListClass factory_list;"),
+        )
         self.assertIn("visible status remains until vitaGL replaces the framebuffer", runtime)
         self.assertIn("retaining bootstrap framebuffer through WW3D::Init", runtime)
         self.assertIn("Starting vitaGL renderer", runtime)

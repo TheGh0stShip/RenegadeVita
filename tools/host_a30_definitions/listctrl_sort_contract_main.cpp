@@ -15,6 +15,15 @@ void Check(bool condition, const char *name, unsigned &checks, unsigned &failure
 	}
 }
 
+int Format_UTF16(WCHAR *destination, size_t count, const WCHAR *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	const int result = rv_utf16_vsnprintf(destination, count, format, args);
+	va_end(args);
+	return result;
+}
+
 } // namespace
 
 int main()
@@ -52,6 +61,38 @@ int main()
 	Check(rv_utf16_strstr(markup, tag_name) == NULL, "utf16 case-sensitive substring miss", checks, failures);
 	const WCHAR color[] = { 'c', 'o', 'l', 'o', 'r', 0 };
 	Check(rv_utf16_strstr(markup, color) == markup + 1, "utf16 substring search", checks, failures);
+	WCHAR format_buffer[96] = {};
+	const WCHAR format_health[] = {
+		'H', 'P', ' ', '%', 'd', ' ', 'A', 'R', ' ', '%', '0', '2', 'u', 0
+	};
+	const WCHAR expected_health[] = {
+		'H', 'P', ' ', '1', '0', '0', ' ', 'A', 'R', ' ', '0', '7', 0
+	};
+	Check(Format_UTF16(format_buffer, sizeof(format_buffer) / sizeof(format_buffer[0]),
+		format_health, 100, 7U) == (int)rv_utf16_length(expected_health) &&
+		rv_utf16_compare(format_buffer, expected_health) == 0,
+		"utf16 formatted hud counters", checks, failures);
+	const WCHAR format_label[] = {
+		'M', 'e', 'n', 'u', ':', ' ', '%', 's', ' ', '%', 'S', 0
+	};
+	const WCHAR expected_label[] = {
+		'M', 'e', 'n', 'u', ':', ' ', 'A', 'l', 'p', 'h', 'a', ' ',
+		'n', 'a', 'r', 'r', 'o', 'w', 0
+	};
+	Check(Format_UTF16(format_buffer, sizeof(format_buffer) / sizeof(format_buffer[0]),
+		format_label, alpha, "narrow") == (int)rv_utf16_length(expected_label) &&
+		rv_utf16_compare(format_buffer, expected_label) == 0,
+		"utf16 formatted wide and narrow strings", checks, failures);
+	const WCHAR format_float[] = {
+		'F', 'P', 'S', ' ', '%', '2', '.', '1', 'f', 0
+	};
+	const WCHAR expected_float[] = {
+		'F', 'P', 'S', ' ', '6', '0', '.', '5', 0
+	};
+	Check(Format_UTF16(format_buffer, sizeof(format_buffer) / sizeof(format_buffer[0]),
+		format_float, 60.5) == (int)rv_utf16_length(expected_float) &&
+		rv_utf16_compare(format_buffer, expected_float) == 0,
+		"utf16 formatted float", checks, failures);
 	RenegadeVitaWWUIKeyState[VK_CONTROL] = 0x80U;
 	Check(GetAsyncKeyState(VK_CONTROL) < 0, "WWUI modifier high-bit query", checks, failures);
 	RenegadeVitaWWUIKeyState[VK_CONTROL] = 0U;

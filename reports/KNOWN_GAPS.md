@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev96 mandatory frontend and readiness gate (2026-08-31)
+## Current dev97 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -67,17 +67,20 @@ presenter, applies deferred DX8 shader/texture/transform state before indexed
 Render2D text/HUD draws, scopes HUD `Think()` geometry through native gameplay
 presentation, drops late BINK video frames when queued audio is under pressure,
 and host-validates six original main-menu translations from `STRINGS.TDB`.
-Dev95 is now superseded local-only history: it preserves Dev94 and forces
+Dev95 is superseded local-only history: it preserves Dev94 and forces
 `MessageWindowClass::On_Frame_Update()` and `Update_Window_Rectangle()` through
 the gameplay-HUD presentation scope so update-time dialogue/message layout does
 not cache geometry outside the render presentation. Its focused/fast/canonical
-closure passes, but it is local only. Dev96 is the current local-only
-successor: it preserves Dev95 and adds UTF-16-safe wrappers for `wcsncmp`,
-`wcsncpy`, `wcschr`, and `wcsstr` at the Vita short-`wchar_t` boundary, with
-host probes and contracts for original frontend/dialogue/HUD call sites. This
-targets remaining text paths that can use Windows 16-bit `WCHAR` data against
-libc wide routines with a different native ABI. Its focused/fast/canonical
-closure passes, but it is also local only. The
+closure passes, but it is local only. Dev96 is superseded local-only history:
+it preserves Dev95 and adds UTF-16-safe wrappers for `wcsncmp`, `wcsncpy`,
+`wcschr`, and `wcsstr` at the Vita short-`wchar_t` boundary, with host probes
+and contracts for original frontend/dialogue/HUD call sites. This targets text
+paths that can use Windows 16-bit `WCHAR` data against libc wide routines with
+a different native ABI. Dev97 is the current local-only successor: it preserves
+Dev96, adds a bounded UTF-16 formatter for original formatted menu/dialogue/
+HUD/pickup/ammo/health text, and records candidate-scoped startup-precache
+status before original retail root/MIX file factory construction. Its focused/
+fast/canonical closure passes, but it is also local only. The
 user-required release gate remains: a visible original intro with usable A/V
 and a visibly labelled original menu before any further Vita candidate push.
 No visual, pacing, or audio acceptance claim is valid until a matching physical

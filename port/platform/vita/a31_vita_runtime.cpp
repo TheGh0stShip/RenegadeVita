@@ -111,7 +111,7 @@ const char *const kStyleManagerIni = "stylemgr.ini";
 const char *const kM00CacheIndex = "cache/m00-tutorial-mix-index-v1.txt";
 const char *const kM01CacheIndex = "cache/m01-mix-index-v1.txt";
 const char *const kStartupPrecacheReceiptPath =
-	"ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt";
+	RENEGADE_BUILD_STARTUP_PRECACHE_RECEIPT_PATH;
 const uint32_t kTimingWindowFrames = 120U;
 const uint32_t kCaptureWidth = RenegadeVitaRenderer::DISPLAY_WIDTH;
 const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
@@ -1892,12 +1892,35 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	result.attempted = true;
 	Renegade_File_Factory_Reset_Statistics();
 
+	Draw_Engine_Setup_Screen(startup_screen_result,
+		"Opening original retail data factories",
+		"pre-cache screen follows after MIX constructors are available");
+	A30_Vita_Log("A3.5 startup: pre-cache visibility before MIX factory construction display=%d\n",
+		startup_screen_result >= 0 ? 1 : 0);
 	RenegadeRootedFileFactoryClass root_factory(kVitaRoots);
+	Draw_Engine_Setup_Screen(startup_screen_result,
+		"Opening original Always2.dat archive",
+		"large MIX constructor work is visible before pre-cache");
 	MixFileFactoryClass always2_factory(kAlways2Archive, &root_factory);
+	Draw_Engine_Setup_Screen(startup_screen_result,
+		"Opening original always.dbs archive",
+		"large MIX constructor work is visible before pre-cache");
 	MixFileFactoryClass always_dbs_factory(kAlwaysDbsArchive, &root_factory);
+	Draw_Engine_Setup_Screen(startup_screen_result,
+		"Opening original Always.dat archive",
+		"large MIX constructor work is visible before pre-cache");
 	MixFileFactoryClass always_factory(kAlwaysArchive, &root_factory);
+	Draw_Engine_Setup_Screen(startup_screen_result,
+		"Opening original M00_Tutorial.mix archive",
+		"large MIX constructor work is visible before pre-cache");
 	MixFileFactoryClass m00_factory(kM00Archive, &root_factory);
+	Draw_Engine_Setup_Screen(startup_screen_result,
+		"Opening optional original M01.mix archive",
+		"cache-index comparison only; M00 remains current route");
 	MixFileFactoryClass m01_factory(kM01Archive, &root_factory);
+	Draw_Engine_Setup_Screen(startup_screen_result,
+		"Preparing original FileFactoryList route",
+		"visible pre-cache/pre-warm/pre-compute starts next");
 	FileFactoryListClass factory_list;
 	factory_list.Add_FileFactory(&root_factory, "");
 	factory_list.Add_FileFactory(&always2_factory, "Always2.dat");

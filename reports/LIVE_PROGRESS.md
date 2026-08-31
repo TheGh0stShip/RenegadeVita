@@ -1,5 +1,45 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev97 canonical source/build candidate; no physical action
+
+`[██████████] 10/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the user's no-physical-test window. Dev97
+  advances identity to `A3.5-dev97` and targets the retained Dev87 frontend,
+  dialogue, HUD, pickup, loading, intro-A/V, startup-black, HMVV, and Start
+  failure set without touching the Vita filesystem. It preserves Dev96 and
+  adds a bounded UTF-16 formatted-output implementation for original
+  menu/dialogue/HUD/pickup/ammo/health formatted strings, replacing the prior
+  placeholder formatter. It also makes the startup-precache receipt
+  candidate-scoped and emits visible status before original root/MIX file
+  factory construction.
+- Validation passed: short-wchar/loading/frontend/runtime/indexed-state source
+  contracts 41/41; candidate identity/loading/runtime contracts 19/19; wider
+  focused source contracts 63/63; UTF-16 formatter host selftest 19/19; host
+  interactive M00/menu route two-cycle PASS with `STRINGS.TDB` loaded and six
+  main-menu translations valid/renderable; fast Dev97 candidate closure; and
+  canonical `bash ./tools/build.sh` closure in
+  `logs/a35-dev97-20260831-073921-build.log`. Final repo validation passed
+  full `python3 -m unittest discover tools` 222/222, JSON syntax,
+  `git diff --check`, hygiene, and no `.rej`/`.orig` debris.
+- Canonical closure passed retained host/current validation, deterministic
+  145-patch staging, 549 ARM/package actions, ELF/SELF/VPK identity,
+  compressed VPK validation, diagnostics, SHA manifest, and retail exclusion.
+  Artifact custody: VPK SHA-256
+  `1b7407f87b26f745deea4bf9047d1594cf14301a65c814fd53852520634ae06f`;
+  packaged SELF SHA-256
+  `b838cce455fc440b45c4cea4187d5f0589cb1ab97418d26f00d31c6da9b16804`;
+  ELF SHA-256
+  `8cf74768588f49aaa905c80bc5cbcb86216f4505c9d9c694d89025715475e814`;
+  diagnostics ZIP SHA-256
+  `d59e240e68b16418f30f8a12a3feaf8e9154794659add5f6321a7d01a103d1a5`.
+- Dev97 has not been copied to, installed on, launched on, or visually
+  accepted on a Vita. No Dev97 screenshot/video exists. The next physical gate
+  must verify fast visible bootstrap, readable intro/menu text, paced intro
+  A/V, loading progress during M00 load, readable gameplay dialogue/HUD/pickup
+  text, target-box alignment, M00 stability including the HMVV approach, frame
+  time, and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev96 canonical source/build candidate; no physical action
 
 `[██████████] 10/10 current evidence gates complete; no Vita deploy or launch`

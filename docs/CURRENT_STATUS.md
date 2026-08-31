@@ -16,14 +16,15 @@ Updated: 2026-08-31
 | A3.5-dev93 published local candidate | **Superseded local-only** | 48 focused frontend/loading/runtime/texture/conversation contracts, full 219-tool unittest discovery, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev94 published local candidate | **Superseded local-only** | 52 focused identity/staging/frontend/loading/runtime/indexed-state/fast-build contracts, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev95 published local candidate | **Superseded local-only** | 52 focused identity/staging/frontend/loading/runtime/indexed-state/fast-build contracts, 43 implementation contracts, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
-| A3.5-dev96 current candidate | **Local-only** | 54 focused identity/staging/frontend/loading/runtime/indexed-state/short-wchar contracts, UTF-16 boundary selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
+| A3.5-dev96 published local candidate | **Superseded local-only** | 54 focused identity/staging/frontend/loading/runtime/indexed-state/short-wchar contracts, UTF-16 boundary selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
+| A3.5-dev97 current candidate | **Local-only** | 41 post-formatter focused frontend/loading/runtime/indexed-state/short-wchar contracts, 19 candidate identity/loading/runtime contracts, 63 wider source contracts, UTF-16 formatter selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | Screenshot/video evidence | **Dev87 recorder recovered** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. A private `gh-pages` player branch is prepared, but GitHub rejected Pages for this account plan; the user has authorized unlisted YouTube hosting pending account connection. The current device has no VDB framebuffer-capture capability. |
 
 Host validation, package identity, and logs are useful engineering evidence. They do not prove panel output, controls, audio quality, frame pacing, or lifecycle behavior on physical hardware.
 
-## Dev96: what changed, and what it has not proved
+## Dev97: what changed, and what it has not proved
 
-Dev96 preserves Dev88 through Dev95's shared glyph-state, BINK-audio reserve,
+Dev97 preserves Dev88 through Dev96's shared glyph-state, BINK-audio reserve,
 frontend-scope, bootstrap, pre-cache, Render2D, loading-callback, Start-route,
 target-box rollback, BINK reductions, and vehicle/HMVV diagnostics, then adds
 the next source-only fixes and diagnostics for the latest returned physical
@@ -50,22 +51,28 @@ failures:
   gameplay-HUD presentation scope used for rendering, targeting dialogue and
   pickup/message text geometry that can be rebuilt during update before the
   render scope is active.
-- It implements UTF-16-safe Vita boundary wrappers for `wcsncmp`, `wcsncpy`,
-  `wcschr`, and `wcsstr`, and matching host ABI probes. This targets original
-  frontend/dialogue/HUD/pickup code that can pass 16-bit Windows `WCHAR` text
-  into libc routines that expect a different `wchar_t` ABI on Vita.
+- It keeps Dev96's UTF-16-safe Vita boundary wrappers for `wcsncmp`,
+  `wcsncpy`, `wcschr`, and `wcsstr`, and adds a bounded UTF-16 implementation
+  for the compatibility `vswprintf`/`vsnwprintf` path. This targets original
+  frontend/dialogue/HUD/pickup/menu code that formats Windows 16-bit `WCHAR`
+  text and numbers before Render2D sees them.
+- It writes the startup pre-cache receipt to an `A3.5-dev97` candidate-scoped
+  path and prints/logs visible status before root and MIX file factory
+  construction. This targets the reported opaque black interval before the
+  diagnostic pre-cache screen, if the stall is inside original retail-data
+  factory setup.
 
-Dev96 has not physically demonstrated a short visible bootstrap, readable menu text, paced intro A/V,
+Dev97 has not physically demonstrated a short visible bootstrap, readable menu text, paced intro A/V,
 readable gameplay subtitles, corrected HUD text, target-box placement,
 wall/shadow behavior, gameplay performance, loading-bar progression, HMVV
 stability, or Start lifecycle behavior. Its canonical VPK SHA-256 is
-`226767912ca4e6be9d582811c814155bb37a2a110dcb09c76eeaacd73202ad03`;
+`1b7407f87b26f745deea4bf9047d1594cf14301a65c814fd53852520634ae06f`;
 packaged SELF SHA-256 is
-`05699ebac1ce5f19270f32dc9069e7c5e5400524f774c71135b2b69a4e821613`;
+`b838cce455fc440b45c4cea4187d5f0589cb1ab97418d26f00d31c6da9b16804`;
 ELF SHA-256 is
-`2b1498b0081c77738bf4a0450a0a938580e04af240b32fddd26d977179e2a768`;
+`8cf74768588f49aaa905c80bc5cbcb86216f4505c9d9c694d89025715475e814`;
 diagnostics ZIP SHA-256 is
-`6cf3885d8c52b17010230d003f98728b3602c45d0cb379d383ed21da2fbf7cea`.
+`d59e240e68b16418f30f8a12a3feaf8e9154794659add5f6321a7d01a103d1a5`.
 
 ## Current physical blockers
 
@@ -83,7 +90,7 @@ The developer must not claim any of these from host tests or a runtime log.
 
 The current Vita command service advertises `screen.v1`, which is panel on/off—not a screenshot endpoint. The checked-in VDB client supports the separate authenticated `capture.screen.v1` protocol, but its target-local agent and gateway are not installed on this device. The on-screen red `R` is a separate MP4 recorder; it is not a screenshot service and a crash can prevent the MP4 from finalizing.
 
-The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly labelled as recorder-derived and do not pass its failed frontend gate; no Dev88, Dev89, Dev90, Dev91, Dev92, Dev93, Dev94, Dev95, or Dev96 physical visual evidence exists.
+The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly labelled as recorder-derived and do not pass its failed frontend gate; no Dev88, Dev89, Dev90, Dev91, Dev92, Dev93, Dev94, Dev95, Dev96, or Dev97 physical visual evidence exists.
 
 ## Authoritative records
 

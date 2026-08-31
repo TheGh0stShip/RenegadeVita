@@ -35,6 +35,11 @@ deployed, or launched, and there is no claim that intro frames or the menu are
 physically visible. A later hash-matched hardware test must prove both
 mandatory gates with returned physical media and logs.
 
+The corresponding source, tests, and durable reports are published at
+`origin/main` commit `4f9dacacdc157636058bb8626e02b4310b7f2ba9` (`Fix dev85
+original frontend presentation`). Build artifacts, PSP2 dumps, captures, video,
+and retail data are intentionally excluded from Git.
+
 ## 2026-08-30 dev84 capture-policy route: stale recorder crash, not M00 evidence
 
 The user reported a prolonged black screen, eventual diagnostic pre-cache, and

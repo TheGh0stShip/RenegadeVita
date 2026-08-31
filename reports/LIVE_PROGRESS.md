@@ -2,7 +2,7 @@
 
 ## 2026-08-30 — dev85 frontend correction package passed locally; no Vita action
 
-`[█████░░░░░] 5/10 current evidence gates complete; GitHub publication next`
+`[█████░░░░░] 5/10 current evidence gates complete; physical evidence gate next`
 
 - The user requires a real original intro-movie path and a visibly rendered
   original menu before another candidate may be pushed. Dev85 removes the
@@ -19,9 +19,11 @@
   packaged SELF SHA-256 is
   `d26321f2702b467eb8cd2ecfe8379af081715558a3d0b6b90659616db78f62f1`.
   Nothing has been uploaded, deployed, launched, or captured on Vita.
-- Next: publish the verifiable source/report change to GitHub. A later
-  hash-matched hardware test must visibly prove original intro movies and the
-  original WWUI menu before either is called fixed.
+- Source/tests/reports are published to `origin/main` at
+  `4f9dacacdc157636058bb8626e02b4310b7f2ba9`. No binary, dump, capture, video,
+  retail asset, save, or credential was committed.
+- Next: a later hash-matched hardware test must visibly prove original intro
+  movies and the original WWUI menu before either is called fixed.
 
 ## 2026-08-30 — capture-policy route blocked by stale optional recorder
 

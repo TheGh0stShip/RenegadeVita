@@ -1,4 +1,5 @@
 import pathlib
+import re
 import unittest
 
 
@@ -36,7 +37,13 @@ class FastCandidateBuildContractTests(unittest.TestCase):
         cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
         fast_build = (ROOT / "tools/build_fast_candidate.sh").read_text(encoding="utf-8")
         canonical_build = (ROOT / "tools/build.sh").read_text(encoding="utf-8")
-        content_id = "EP9000-RNEGA3101_00-RENGADEVITADEV87"
+        content_id_match = re.search(
+            r'set\(RENEGADE_VITA_CONTENT_ID "([^"]+)"', cmake
+        )
+        self.assertIsNotNone(content_id_match)
+        content_id = content_id_match.group(1)
+        self.assertEqual(36, len(content_id))
+        self.assertRegex(content_id, r"^[A-Z0-9_-]+$")
         self.assertIn(content_id, cmake)
         self.assertIn("VITA_MKSFOEX_FLAGS", cmake)
         self.assertIn(content_id, fast_build)

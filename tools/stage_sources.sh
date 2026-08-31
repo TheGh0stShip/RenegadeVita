@@ -148,6 +148,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-freetype-glyph-raster-safety.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-render2d-text-atlas-vita-diagnostics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-render2d-text-atlas-uv.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a315-dds-vita.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a30-gcc15.patch"
@@ -348,6 +352,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-dialogparser-lp64-alignment.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-dialog-template-vita-diagnostics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-listctrl-modern-scope.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-dialogbase-modern-scope.patch"
@@ -460,6 +466,8 @@ echo "Applied: port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch"
 echo "Applied: port/patches/ww3d2-a35-render2d-viewport-restore.patch"
 echo "Applied: port/patches/ww3d2-a4-freetype-fonts.patch"
 echo "Applied: port/patches/ww3d2-a35-freetype-glyph-raster-safety.patch"
+echo "Applied: port/patches/ww3d2-a35-render2d-text-atlas-vita-diagnostics.patch"
+echo "Applied: port/patches/ww3d2-a35-render2d-text-atlas-uv.patch"
 echo "Applied: port/patches/ww3d2-a315-dds-vita.patch"
 echo "Applied: port/patches/ww3d2-a30-gcc15.patch"
 echo "Applied: port/patches/ww3d2-a30-vita-buffers.patch"
@@ -552,6 +560,7 @@ echo "Applied: port/patches/wwui-a4-stylemgr-font-provider.patch"
 echo "Applied: port/patches/wwui-a4-ime-vita-boundary.patch"
 echo "Applied: port/patches/wwui-a4-ime-include-case.patch"
 echo "Applied: port/patches/wwui-a4-dialogparser-lp64-alignment.patch"
+echo "Applied: port/patches/wwui-a35-dialog-template-vita-diagnostics.patch"
 echo "Applied: port/patches/wwui-a4-listctrl-modern-scope.patch"
 echo "Applied: port/patches/wwui-a4-dialogbase-modern-scope.patch"
 echo "Applied: port/patches/wwui-a4-buttonctrl-modern-scope.patch"

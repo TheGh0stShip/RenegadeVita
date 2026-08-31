@@ -22,6 +22,12 @@ void Flush_Bootstrap_Display(unsigned frames)
 	}
 }
 
+void Hold_Bootstrap_Display(unsigned milliseconds)
+{
+	const unsigned frames = (milliseconds * 60U + 999U) / 1000U;
+	Flush_Bootstrap_Display(frames > 0U ? frames : 1U);
+}
+
 void Print_Bootstrap_Progress(int screen_result)
 {
 	if (screen_result < 0) return;
@@ -34,7 +40,7 @@ void Print_Bootstrap_Progress(int screen_result)
 	psvDebugScreenPrintf("Then: checking the user-supplied retail Data files\n");
 	psvDebugScreenPrintf("Next: visible pre-cache / pre-warm / pre-compute\n\n");
 	psvDebugScreenPrintf("This status remains visible while startup work begins.\n");
-	Flush_Bootstrap_Display(2U);
+	Hold_Bootstrap_Display(750U);
 }
 
 void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
@@ -66,7 +72,7 @@ void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
 	psvDebugScreenPrintf("  START        = runtime exit poll only\n\n");
 	psvDebugScreenPrintf("Avoid START during gameplay unless exit evidence is requested\n");
 	psvDebugScreenPrintf("Log: %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);
-	Flush_Bootstrap_Display(2U);
+	Hold_Bootstrap_Display(750U);
 }
 
 } // namespace
@@ -76,7 +82,7 @@ int main()
 	const uint64_t startup_started_us = sceKernelGetProcessTimeWide();
 	const int screen_result = psvDebugScreenInit();
 	Print_Bootstrap_Progress(screen_result);
-	Flush_Bootstrap_Display(1U);
+	Hold_Bootstrap_Display(250U);
 	const uint64_t filesystem_started_us = sceKernelGetProcessTimeWide();
 	VitaBootstrapStatus status = Vita_Initialize_Filesystem();
 	const uint64_t filesystem_completed_us = sceKernelGetProcessTimeWide();

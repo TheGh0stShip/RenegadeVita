@@ -16,7 +16,14 @@ Do not describe a panel wake command, an early engine capture, or a recorder ove
 
 ## Optional MP4 recorder
 
-The recorder helper is built from the pinned GPL-3.0 Vita-MP4-Recorder source and is scoped only to `RNEGA3101`. It starts with the title, writes under `ux0:/video`, and remains outside the Renegade VPK.
+The recorder helper is built from the pinned GPL-3.0 Vita-MP4-Recorder source and is scoped only to `RNEGA3101`. It starts with the title, writes under `ux0:/video` (`ux0:video` in VitaDevBridge-style path output), and remains outside the Renegade VPK.
+
+USB capture is not the default. PSTV capture may be useful for an external operator, but project evidence should prefer exact-title VDB framebuffer capture when that provider exists, or a title-scoped MP4 recorder when a finalized file is available. VitaShell FTP is only a read-only transfer route for finalized recordings or screenshots that already exist on the device.
+
+The recorder starts recording when the Renegade process loads. To finalize the MP4, use L+Start to finalize the MP4; Plain Start
+remains available to Renegade and must not be stolen by the recorder. A recorder output is supporting media, not physical acceptance. Known limitations include audio availability/desync, 30 FPS slowdown, and failure to finalize if the game crashes first.
+
+Source provenance: https://github.com/Rinnegatamante/Vita-MP4-Recorder
 
 ```bash
 bash ./tools/build_renegade_demo_recorder_plugin.sh

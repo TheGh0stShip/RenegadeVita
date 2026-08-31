@@ -44,6 +44,9 @@
 #if defined(RENEGADE_VITA_PORT)
 #include "renegade_freetype_font_provider.h"
 #endif
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
+#include "a30_vita_runtime.h"
+#endif
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +54,10 @@
 ////////////////////////////////////////////////////////////////////////////////////
 const int CHAR_TEXTURE_SIZE	= 256;
 const int CHAR_BUFFER_LEN		= 32768;
+
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
+static unsigned g_vita_render2d_text_atlas_logs = 0U;
+#endif
 
 
 // Macros.
@@ -549,7 +556,50 @@ Render2DSentenceClass::Build_Textures (void)
 		//
 		//	Create the new texture
 		//
-		TextureClass *new_texture = new TextureClass (desc.Width, desc.Width, WW3D_FORMAT_A4R4G4B4, TextureClass::MIP_LEVELS_1);
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
+		if (g_vita_render2d_text_atlas_logs < 64U) {
+			int diagnostic_stride = 0;
+			uint16 *diagnostic_pixels = static_cast<uint16 *>(curr_surface->Lock (&diagnostic_stride));
+			const bool diagnostic_locked = diagnostic_pixels != NULL;
+			unsigned long long alpha_pixels = 0ULL;
+			unsigned long long alpha_sum = 0ULL;
+			unsigned alpha_rows = 0U;
+			unsigned alpha_columns = 0U;
+			if (diagnostic_locked && diagnostic_stride >= static_cast<int>(sizeof(uint16))) {
+				const int pixel_stride = diagnostic_stride / static_cast<int>(sizeof(uint16));
+				for (unsigned y = 0U; y < desc.Height; ++y) {
+					bool row_has_alpha = false;
+					for (unsigned x = 0U; x < desc.Width; ++x) {
+						const unsigned alpha =
+							(static_cast<unsigned>(diagnostic_pixels[y * pixel_stride + x]) >> 12) & 0x0FU;
+						if (alpha != 0U) {
+							++alpha_pixels;
+							alpha_sum += alpha;
+							row_has_alpha = true;
+						}
+					}
+					if (row_has_alpha) ++alpha_rows;
+				}
+				for (unsigned x = 0U; x < desc.Width; ++x) {
+					for (unsigned y = 0U; y < desc.Height; ++y) {
+						const unsigned alpha =
+							(static_cast<unsigned>(diagnostic_pixels[y * pixel_stride + x]) >> 12) & 0x0FU;
+						if (alpha != 0U) {
+							++alpha_columns;
+							break;
+						}
+					}
+				}
+			}
+			if (diagnostic_locked) curr_surface->Unlock ();
+			++g_vita_render2d_text_atlas_logs;
+			A30_Vita_Log("A3.5 Render2D text atlas: surface=%ux%u format=%d sentence_chunks=%d renderers=%d alpha_pixels=%llu alpha_rows=%u alpha_columns=%u alpha_sum=%llu stride=%d log=%u/64\n",
+				desc.Width, desc.Height, static_cast<int>(desc.Format), SentenceData.Count(),
+				surface_info.Renderers.Count(), alpha_pixels, alpha_rows, alpha_columns,
+				alpha_sum, diagnostic_stride, g_vita_render2d_text_atlas_logs);
+		}
+#endif
+		TextureClass *new_texture = new TextureClass (desc.Width, desc.Height, WW3D_FORMAT_A4R4G4B4, TextureClass::MIP_LEVELS_1);
 		SurfaceClass *texture_surface = new_texture->Get_Surface_Level ();
 
 		//
@@ -717,7 +767,12 @@ Render2DSentenceClass::Draw_Sentence (uint32 color)
 		}
 
 		if (add_quad) {
-			uv_rect *=  1.0F / ((float)desc.Width);
+			const float u_scale =
+				desc.Width != 0 ? 1.0F / static_cast<float>(desc.Width) : 0.0F;
+			const float v_scale =
+				desc.Height != 0 ? 1.0F / static_cast<float>(desc.Height) : 0.0F;
+			uv_rect.Left *= u_scale; uv_rect.Right *= u_scale;
+			uv_rect.Top *= v_scale; uv_rect.Bottom *= v_scale;
 			curr_renderer->Add_Quad (screen_rect, uv_rect, color);
 
 			//
@@ -1331,6 +1386,7 @@ FontCharsClass::Update_Current_Buffer (int char_width)
 	//
 	if (needs_new_buffer) {
 		uint16 *new_buffer = new uint16[CHAR_BUFFER_LEN];
+		::memset(new_buffer, 0, static_cast<size_t>(CHAR_BUFFER_LEN) * sizeof(*new_buffer));
 		BufferList.Add( new_buffer );
 		CurrPixelOffset = 0;
 	}

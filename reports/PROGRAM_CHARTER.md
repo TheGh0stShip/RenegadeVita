@@ -43,12 +43,17 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   loading-progress catch-up renders, strengthens visible glyph probes, and adds
   bounded M00 vehicle/HMVV proximity diagnostics. It is not installed, launched,
   or physically accepted.
-- A3.5-dev92: current canonical local-only candidate. It measures FreeType
+- A3.5-dev92: superseded canonical local-only candidate. It measures FreeType
   glyph cells from advance plus bitmap bearings to avoid clipped text strips,
   strengthens visible glyph-column probes, lowers BINK upload/update work to a
   320×240 cap with explicit decoder audio-layout fallback, and adds bounded
   target-box projection diagnostics. It is not installed, launched, or
   physically accepted.
+- A3.5-dev93: current canonical local-only candidate. It holds/repaints early
+  native bootstrap status, fixes Render2D text-atlas height allocation and
+  independent UV scaling, adds bounded text/dialog diagnostics, and scopes
+  gameplay HUD/TextDisplay presentation to native 960×544. It is not
+  installed, launched, or physically accepted.
 
 ## Milestone contracts
 

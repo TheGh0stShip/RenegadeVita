@@ -195,8 +195,10 @@ enum
 	A31_SPEECH_SOURCE_ACTIVE_CONVERSATION = 2
 };
 
-const float kA31OriginalHUDLogicalWidth = 640.0f;
-const float kA31OriginalHUDLogicalHeight = 480.0f;
+const float kA31GameplayHUDLogicalWidth =
+	static_cast<float>(RenegadeVitaRenderer::DISPLAY_WIDTH);
+const float kA31GameplayHUDLogicalHeight =
+	static_cast<float>(RenegadeVitaRenderer::DISPLAY_HEIGHT);
 
 struct A31NativeHUDPresentationRect
 {
@@ -206,14 +208,14 @@ struct A31NativeHUDPresentationRect
 	uint32_t height;
 };
 
-A31NativeHUDPresentationRect Build_A31_Original_HUD_Presentation_Rect()
+A31NativeHUDPresentationRect Build_A31_Gameplay_HUD_Presentation_Rect()
 {
-	/* Original HUD/text authors retain their 640x480 logical coordinates, but
-	** world-projected overlays (notably target bounding boxes) are generated in
-	** the native camera space.  Mapping every original 2D owner through the
-	** old centred 4:3 rectangle treated those native X values as 640-wide and
-	** visibly displaced them.  Keep the original owner and logical coordinate
-	** system while presenting its viewport over the whole native display. */
+	/* Gameplay HUD/text and world-projected overlays must share one coordinate
+	** space on Vita.  The Dev86/Dev87 physical returns showed target boxes and
+	** HUD text drifting because initialization and render scopes forced 640x480
+	** while the active Combat camera/projected coordinates were native Vita
+	** display space.  Keep original Combat/HUD ownership, but present gameplay
+	** overlays through the full native display coordinate range. */
 	const A31NativeHUDPresentationRect rect = {
 		0U,
 		0U,
@@ -223,18 +225,18 @@ A31NativeHUDPresentationRect Build_A31_Original_HUD_Presentation_Rect()
 	return rect;
 }
 
-bool Apply_A31_Original_HUD_Presentation_Rect()
+bool Apply_A31_Gameplay_HUD_Presentation_Rect()
 {
 	const A31NativeHUDPresentationRect rect =
-		Build_A31_Original_HUD_Presentation_Rect();
+		Build_A31_Gameplay_HUD_Presentation_Rect();
 	return RenegadeVitaRenderer::Set_Native_Presentation_Rect_Quiet(
 		rect.x, rect.y, rect.width, rect.height);
 }
 
-class A31OriginalHUDRenderPresentation
+class A31GameplayHUDRenderPresentation
 {
 public:
-	A31OriginalHUDRenderPresentation() :
+	A31GameplayHUDRenderPresentation() :
 		Depth(0), Previous(0, 0, 0, 0), PresentationRectApplied(false)
 	{
 	}
@@ -243,9 +245,9 @@ public:
 	{
 		if (Depth++ != 0U) return;
 		Previous = Render2DClass::Get_Screen_Resolution();
-		PresentationRectApplied = Apply_A31_Original_HUD_Presentation_Rect();
+		PresentationRectApplied = Apply_A31_Gameplay_HUD_Presentation_Rect();
 		Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
-			kA31OriginalHUDLogicalWidth, kA31OriginalHUDLogicalHeight));
+			kA31GameplayHUDLogicalWidth, kA31GameplayHUDLogicalHeight));
 	}
 
 	void End()
@@ -264,25 +266,25 @@ private:
 	bool PresentationRectApplied;
 };
 
-A31OriginalHUDRenderPresentation g_a31_original_hud_render_presentation;
+A31GameplayHUDRenderPresentation g_a31_gameplay_hud_render_presentation;
 
-class A31ScopedOriginalHUDRender2DResolution
+class A31ScopedGameplayHUDRender2DResolution
 {
 public:
-	A31ScopedOriginalHUDRender2DResolution()
+	A31ScopedGameplayHUDRender2DResolution()
 	{
 		A31_Vita_Begin_Original_HUD_Render();
 	}
 
-	~A31ScopedOriginalHUDRender2DResolution()
+	~A31ScopedGameplayHUDRender2DResolution()
 	{
 		A31_Vita_End_Original_HUD_Render();
 	}
 
-	A31ScopedOriginalHUDRender2DResolution(
-		const A31ScopedOriginalHUDRender2DResolution &) = delete;
-	A31ScopedOriginalHUDRender2DResolution &operator=(
-		const A31ScopedOriginalHUDRender2DResolution &) = delete;
+	A31ScopedGameplayHUDRender2DResolution(
+		const A31ScopedGameplayHUDRender2DResolution &) = delete;
+	A31ScopedGameplayHUDRender2DResolution &operator=(
+		const A31ScopedGameplayHUDRender2DResolution &) = delete;
 };
 
 AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics(
@@ -777,7 +779,7 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 	if (trace.begin_render_completed) {
 		CombatManager::Render();
 		trace.combat_render_called = true;
-		A31ScopedOriginalHUDRender2DResolution hud_render_resolution;
+		A31ScopedGameplayHUDRender2DResolution hud_render_resolution;
 		MessageWindowClass *message_window =
 			CombatManager::Get_Message_Window();
 		trace.message_window_available = message_window != NULL;
@@ -903,12 +905,12 @@ void Log_Audio_Lifecycle(const char *stage, WWAudioClass *audio,
 
 void A31_Vita_Begin_Original_HUD_Render()
 {
-	g_a31_original_hud_render_presentation.Begin();
+	g_a31_gameplay_hud_render_presentation.Begin();
 }
 
 void A31_Vita_End_Original_HUD_Render()
 {
-	g_a31_original_hud_render_presentation.End();
+	g_a31_gameplay_hud_render_presentation.End();
 }
 
 void A31_Audio_Lifecycle_Reset_Trace()

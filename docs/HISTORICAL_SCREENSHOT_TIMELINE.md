@@ -25,7 +25,8 @@ The gallery is a reviewed history, not a controlled same-camera comparison. Its 
 | A3.5-dev89 | Superseded local-only canonical candidate; no Vita capture exists. |
 | A3.5-dev90 | Superseded local-only canonical candidate; no Vita capture exists. |
 | A3.5-dev91 | Superseded local-only canonical candidate; no Vita capture exists. |
-| A3.5-dev92 | Current local-only canonical candidate; no Vita capture exists. |
+| A3.5-dev92 | Superseded local-only canonical candidate; no Vita capture exists. |
+| A3.5-dev93 | Current local-only canonical candidate; no Vita capture exists. |
 
 The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, or unrelated images merely to fill a build row.
 

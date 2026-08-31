@@ -3,9 +3,54 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-31 Dev87 physical failure; Dev93 local candidate
+
+Dev93 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves Dev88 through Dev92's indexed-glyph
+texture-stage, real BINK audio-reserve, frontend-scope, font fallback,
+bootstrap, expanded pre-cache, Render2D state, synchronous loading, Start-route,
+target-box rollback, BINK reductions, and vehicle/HMVV diagnostics work. It
+then adds bounded source fixes and diagnostics for the latest physical symptoms
+without replacing original engine owners:
+
+- native bootstrap/status output is held and repainted before filesystem and
+  pre-cache work, targeting the reported black period before diagnostics;
+- original Render2DSentence text atlas allocation now uses actual width by
+  height, clears new glyph buffers, and scales U/V coordinates independently;
+- bounded text-atlas diagnostics record Vita surface dimensions, alpha
+  coverage, populated rows/columns, chunk count, and renderer count;
+- original WWUI dialog-template diagnostics log main-menu title/control
+  translations and rectangles without substituting a custom menu; and
+- gameplay HUD/TextDisplay Render2D presentation scopes to native 960×544,
+  targeting HUD placement and target-box coordinate evidence.
+
+Focused validation passed 48/48 original-frontend, loading-screen, runtime,
+texture-surface, and conversation-diagnostics contracts. Full tool discovery
+validation passed 219/219 before canonical build. Fast candidate and canonical
+`bash ./tools/build.sh` both passed. Canonical closure passed retained
+host/current validation, deterministic 143-patch staging, 549 ARM/package
+actions, ELF/SELF/VPK identity, compressed VPK validation, diagnostics, SHA
+manifest, and retail exclusion in `logs/a35-dev93-20260831-050614-build.log`.
+VPK SHA-256 is
+`a2af15eb6432922b4982387ccdee8261b3535e109d84714f8f47c3fadae373ac`;
+packaged SELF SHA-256 is
+`5244370a462065296b26fc784cbb3b5d2ce83395df7dfbab850ffd10652f2c78`; ELF
+SHA-256 is
+`5dc42428484c7342db229e21cea99761ecc39708b554937b289a49df25beaf61`;
+diagnostics ZIP SHA-256 is
+`beddfbbf4f11b63e37ed7fa8b73916a7aa99c1c456c9629efd0938d03d6c000c`.
+
+No Dev93 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. No Dev93 screenshot or video
+exists. The next physical test must prove the user-required frontend gate
+first: fast visible bootstrap, visible original intro/menu text, usable intro
+A/V/skip behavior, readable gameplay dialogue/HUD/pickup/loading text, correct
+target-box placement, stable M00 progression including the HMVV approach,
+acceptable frame time, and safe Start/pause/exit without PSP2 crash.
+
 ## 2026-08-31 Dev87 physical failure; Dev92 local candidate
 
-Dev92 is the current local-only source/build candidate produced under the
+Dev92 is a superseded local-only source/build candidate produced under the
 user's no-physical-test window. It preserves Dev88 through Dev91's indexed-glyph
 texture-stage, real BINK audio-reserve, frontend-scope, font fallback,
 bootstrap, expanded pre-cache, Render2D state, synchronous loading, Start-route,
@@ -41,7 +86,7 @@ diagnostics ZIP SHA-256 is
 
 No Dev92 file has been copied to, installed on, or launched on the Vita. It is
 not a visual/audio/lifecycle acceptance claim. No Dev92 screenshot or video
-exists. The next physical test must prove the user-required frontend gate
+exists. The next physical test of the current candidate must prove the user-required frontend gate
 first: visible original intro/menu text, usable intro A/V/skip behavior,
 readable gameplay dialogue/HUD/pickup/loading text, correct target-box
 placement, stable M00 progression including the HMVV approach, acceptable frame

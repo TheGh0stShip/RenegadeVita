@@ -430,10 +430,10 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         stage = (ROOT / "tools/stage_sources.sh").read_text(encoding="utf-8")
         self.assertIn("A31_Vita_Begin_Original_HUD_Render", hud_header)
         self.assertIn("A31_Vita_End_Original_HUD_Render", hud_header)
-        self.assertIn("A31OriginalHUDRenderPresentation", gameplay)
+        self.assertIn("A31GameplayHUDRenderPresentation", gameplay)
         self.assertLess(
             gameplay.index("CombatManager::Render();"),
-            gameplay.index("A31ScopedOriginalHUDRender2DResolution hud_render_resolution;"),
+            gameplay.index("A31ScopedGameplayHUDRender2DResolution hud_render_resolution;"),
         )
         self.assertLess(
             combat_patch.index("A31_Vita_Begin_Original_HUD_Render();"),
@@ -604,7 +604,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         )
         self.assertIn("ww3d2-a35-render2d-viewport-restore.patch", stage_sources)
 
-    def test_gameplay_hud_uses_original_640x480_render2d_coordinates(self):
+    def test_gameplay_hud_uses_native_render2d_coordinates(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text(
             encoding="utf-8"
         )
@@ -618,15 +618,18 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("kOriginalHUDLogicalWidth = 640.0f", runtime)
-        self.assertIn("kOriginalHUDLogicalHeight = 480.0f", runtime)
+        self.assertIn("kGameplayHUDLogicalWidth =", runtime)
+        self.assertIn("kGameplayHUDLogicalHeight =", runtime)
+        self.assertIn("RenegadeVitaRenderer::DISPLAY_WIDTH", runtime)
+        self.assertIn("RenegadeVitaRenderer::DISPLAY_HEIGHT", runtime)
         runtime_helper = runtime[
-            runtime.index("class A31VitaScopedOriginalHUDRender2DResolution"):
+            runtime.index("class A31VitaScopedGameplayHUDRender2DResolution"):
             runtime.index("void Copy_Renderer_Statistics")
         ]
         self.assertIn("Render2DClass::Set_Screen_Resolution(RectClass(0, 0,", runtime_helper)
-        self.assertIn("kOriginalHUDLogicalWidth", runtime_helper)
-        self.assertIn("kOriginalHUDLogicalHeight", runtime_helper)
+        self.assertIn("kGameplayHUDLogicalWidth", runtime_helper)
+        self.assertIn("kGameplayHUDLogicalHeight", runtime_helper)
+        self.assertIn("native gameplay Render2D resolution", runtime_helper)
         self.assertNotIn("WW3D::Set_Device_Resolution", runtime_helper)
 
         for scope_name, call in (
@@ -640,18 +643,19 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             self.assertLess(runtime.index(scope_name), runtime.index(call))
 
         self.assertIn('#include "render2d.h"', gameplay)
-        self.assertIn("kA31OriginalHUDLogicalWidth = 640.0f", gameplay)
-        self.assertIn("kA31OriginalHUDLogicalHeight = 480.0f", gameplay)
-        self.assertIn("Build_A31_Original_HUD_Presentation_Rect", gameplay)
-        self.assertIn("Apply_A31_Original_HUD_Presentation_Rect", gameplay)
+        self.assertIn("kA31GameplayHUDLogicalWidth =", gameplay)
+        self.assertIn("kA31GameplayHUDLogicalHeight =", gameplay)
+        self.assertIn("Build_A31_Gameplay_HUD_Presentation_Rect", gameplay)
+        self.assertIn("Apply_A31_Gameplay_HUD_Presentation_Rect", gameplay)
+        self.assertIn("Dev86/Dev87 physical returns showed target boxes", gameplay)
         self.assertIn("RenegadeVitaRenderer::DISPLAY_WIDTH", gameplay)
         self.assertIn("RenegadeVitaRenderer::DISPLAY_HEIGHT", gameplay)
         gameplay_helper = gameplay[
-            gameplay.index("class A31OriginalHUDRenderPresentation"):
+            gameplay.index("class A31GameplayHUDRenderPresentation"):
             gameplay.index("AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics")
         ]
         self.assertIn("Render2DClass::Set_Screen_Resolution(RectClass(0, 0,", gameplay_helper)
-        self.assertIn("Apply_A31_Original_HUD_Presentation_Rect()", gameplay_helper)
+        self.assertIn("Apply_A31_Gameplay_HUD_Presentation_Rect()", gameplay_helper)
         self.assertIn("RenegadeVitaRenderer::Reset_Native_Presentation_Rect_Quiet();", gameplay_helper)
         self.assertNotIn("WW3D::Set_Device_Resolution", gameplay_helper)
         self.assertNotIn("combat-a35-vita-target-overlay-ww3d-include.patch", stage_sources)
@@ -677,7 +681,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Set_Native_Presentation_Rect_Internal", renderer)
         self.assertIn("if (log_change)", renderer)
 
-        hud_scope = "A31ScopedOriginalHUDRender2DResolution hud_render_resolution;"
+        hud_scope = "A31ScopedGameplayHUDRender2DResolution hud_render_resolution;"
         self.assertLess(gameplay.index("CombatManager::Render();"), gameplay.index(hud_scope))
         self.assertLess(gameplay.index(hud_scope), gameplay.index("message_window->Render();"))
         self.assertLess(gameplay.index(hud_scope), gameplay.index("ObjectiveManager::Render_Viewer();"))

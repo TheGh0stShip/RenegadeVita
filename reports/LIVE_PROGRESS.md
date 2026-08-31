@@ -1,5 +1,43 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev93 canonical source/build candidate; no physical action
+
+`[████████░░] 8/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the user's six-hour no-physical-test window.
+  Dev93 advances identity to `A3.5-dev93` and targets the retained Dev87
+  frontend/HUD/startup failures without touching the Vita filesystem: native
+  bootstrap/status output is held and repainted before filesystem/pre-cache
+  work, original Render2DSentence text atlas allocation now uses width by
+  height instead of width by width, glyph buffers are cleared before use, text
+  atlas U/V coordinates scale independently, bounded text-atlas/dialog-template
+  diagnostics are emitted for missing menu/dialogue/HUD glyphs, and gameplay
+  HUD/TextDisplay Render2D presentation now scopes to native 960×544.
+- Validation passed: deterministic 143-patch staging; focused original
+  frontend/loading/runtime/texture/conversation diagnostics contracts 48/48;
+  full `python3 -m unittest discover tools` 219/219 before canonical build;
+  `verify_public_docs`, `verify_repo_hygiene`, JSON syntax, and
+  `git diff --check` before report refresh.
+- Fast candidate and canonical `bash ./tools/build.sh` both passed. Canonical
+  closure passed retained host/current validation, deterministic 143-patch
+  staging, 549 ARM/package actions, ELF/SELF/VPK identity, compressed VPK
+  validation, diagnostics, SHA manifest, and retail exclusion in
+  `logs/a35-dev93-20260831-050614-build.log`.
+- Dev93 artifact custody: VPK SHA-256
+  `a2af15eb6432922b4982387ccdee8261b3535e109d84714f8f47c3fadae373ac`;
+  packaged SELF SHA-256
+  `5244370a462065296b26fc784cbb3b5d2ce83395df7dfbab850ffd10652f2c78`;
+  ELF SHA-256
+  `5dc42428484c7342db229e21cea99761ecc39708b554937b289a49df25beaf61`;
+  diagnostics ZIP SHA-256
+  `beddfbbf4f11b63e37ed7fa8b73916a7aa99c1c456c9629efd0938d03d6c000c`.
+- Dev93 has not been copied to, installed on, launched on, or visually accepted
+  on a Vita. No Dev93 screenshot/video exists. The next physical gate must
+  verify fast visible bootstrap, readable intro/menu text, paced intro A/V,
+  loading progress, HUD/pickup/dialogue text, target-box alignment, M00
+  stability including the HMVV approach, frame time, and Start/pause/exit
+  behavior.
+
 ## 2026-08-31 — Dev92 canonical source/build candidate; no physical action
 
 `[████████░░] 8/10 current evidence gates complete; no Vita deploy or launch`

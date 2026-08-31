@@ -83,7 +83,17 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         glyph_patch = (
             ROOT / "port" / "patches" / "ww3d2-a35-freetype-glyph-raster-safety.patch"
         ).read_text()
+        atlas_patch = (
+            ROOT / "port" / "patches" / "ww3d2-a35-render2d-text-atlas-vita-diagnostics.patch"
+        ).read_text()
+        uv_patch = (
+            ROOT / "port" / "patches" / "ww3d2-a35-render2d-text-atlas-uv.patch"
+        ).read_text()
+        dialog_patch = (
+            ROOT / "port" / "patches" / "wwui-a35-dialog-template-vita-diagnostics.patch"
+        ).read_text()
         staged_sentence = (ROOT / "staging" / "ww3d2" / "render2dsentence.cpp").read_text()
+        staged_dialog_parser = (ROOT / "staging" / "wwui" / "dialogparser.cpp").read_text()
 
         self.assertIn("if (file->Open(FileClass::READ))", provider)
         self.assertNotIn("file->Is_Available() && file->Open(FileClass::READ)", provider)
@@ -131,13 +141,26 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             runtime,
         )
         self.assertIn("ww3d2-a35-freetype-glyph-raster-safety.patch", stage_sources)
+        self.assertIn("ww3d2-a35-render2d-text-atlas-vita-diagnostics.patch", stage_sources)
+        self.assertIn("ww3d2-a35-render2d-text-atlas-uv.patch", stage_sources)
+        self.assertIn("wwui-a35-dialog-template-vita-diagnostics.patch", stage_sources)
         self.assertIn("bool rasterized = false;", glyph_patch)
         self.assertIn("::memset(curr_buffer, 0", glyph_patch)
         self.assertIn("if (!rasterized)", glyph_patch)
         self.assertIn("char_width = 0;", glyph_patch)
+        self.assertIn("A3.5 Render2D text atlas", atlas_patch)
+        self.assertIn("alpha_pixels", atlas_patch)
+        self.assertIn("TextureClass (desc.Width, desc.Height", atlas_patch)
+        self.assertIn("uv_rect.Top *= v_scale", uv_patch)
+        self.assertIn("A3.5 WWUI dialog template", dialog_patch)
+        self.assertIn("Vita_Dialog_Text_Length", dialog_patch)
         self.assertIn("bool rasterized = false;", staged_sentence)
         self.assertIn("::memset(curr_buffer, 0", staged_sentence)
         self.assertIn("if (!rasterized)", staged_sentence)
+        self.assertIn("A3.5 Render2D text atlas", staged_sentence)
+        self.assertIn("TextureClass (desc.Width, desc.Height", staged_sentence)
+        self.assertIn("uv_rect.Top *= v_scale", staged_sentence)
+        self.assertIn("A3.5 WWUI dialog template", staged_dialog_parser)
 
     def test_controller_navigation_maps_to_wwui_without_breaking_gameplay_keys(self):
         directinput = (ROOT / "port" / "platform" / "renegade_directinput.cpp").read_text()

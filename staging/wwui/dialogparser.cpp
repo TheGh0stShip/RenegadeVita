@@ -39,6 +39,9 @@
 #include "win.h"
 #include "translatedb.h"
 #include <commctrl.h>
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 //////////////////////////////////////////////////////////////////////////////
 //	Macros
@@ -51,6 +54,19 @@
 //	Local prototypes
 //////////////////////////////////////////////////////////////////////////////
 WORD *Skip_Dlg_Field (WORD *src, WCHAR *buffer = NULL, int buffer_len = 0, WORD *ctrl_type = NULL);
+#if defined(__vita__)
+static unsigned g_vita_dialog_template_logs = 0U;
+
+static unsigned Vita_Dialog_Text_Length(const WCHAR *text)
+{
+	unsigned length = 0U;
+	if (text == NULL) return 0U;
+	while (text[length] != 0 && length < 255U) {
+		++length;
+	}
+	return length;
+}
+#endif
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -193,10 +209,23 @@ DialogParserClass::Parse_Template
 
 		WCHAR *string_id = ::wcsstr (dlg_title->Peek_Buffer (), L"IDS_");
 		if (string_id != NULL) {
+#if defined(__vita__)
+			WideStringClass untranslated_title = dlg_title->Peek_Buffer ();
+#endif
 			WideStringClass wide_string_id = string_id;				
 			StringClass ascii_string_id;
 			wide_string_id.Convert_To (ascii_string_id);
 			(*dlg_title) = TRANSLATE_BY_DESC(ascii_string_id);
+#if defined(__vita__)
+			if (g_vita_dialog_template_logs < 96U) {
+				++g_vita_dialog_template_logs;
+				A30_Vita_Log("A3.5 WWUI dialog template: res=%d title_desc=%s untranslated_len=%u translated_len=%u log=%u/96\n",
+					res_id, static_cast<const char *>(ascii_string_id),
+					Vita_Dialog_Text_Length(untranslated_title),
+					Vita_Dialog_Text_Length(dlg_title->Peek_Buffer ()),
+					g_vita_dialog_template_logs);
+			}
+#endif
 		}
 
 
@@ -262,13 +291,34 @@ DialogParserClass::Parse_Template
 			buffer = Skip_Dlg_Field (buffer, text_buffer, 256);
 
 			WCHAR *string_id = ::wcsstr (text_buffer, L"IDS_");
+#if defined(__vita__)
+			const bool vita_had_string_id = string_id != NULL;
+			WideStringClass vita_untranslated_text = text_buffer;
+			StringClass vita_ascii_string_id;
+#endif
 			if (string_id != NULL) {
 				WideStringClass wide_string_id = string_id;				
 				StringClass ascii_string_id;
 				wide_string_id.Convert_To (ascii_string_id);
+#if defined(__vita__)
+				vita_ascii_string_id = ascii_string_id;
+#endif
 				WideStringClass translation = TRANSLATE_BY_DESC(ascii_string_id);
 				::wcscpy (string_id, translation);
 			}
+#if defined(__vita__)
+			if (g_vita_dialog_template_logs < 96U && (res_id == 128 || res_id == 130 || res_id == 131 || vita_had_string_id)) {
+				++g_vita_dialog_template_logs;
+				A30_Vita_Log("A3.5 WWUI dialog template: res=%d control=%d type=%u style=%08X rect=%d,%d %dx%d had_ids=%d desc=%s untranslated_len=%u final_len=%u log=%u/96\n",
+					res_id, static_cast<int>(dlg_item_template->id), static_cast<unsigned>(ctrl_type),
+					static_cast<unsigned>(dlg_item_template->style), static_cast<int>(dlg_item_template->x),
+					static_cast<int>(dlg_item_template->y), static_cast<int>(dlg_item_template->cx),
+					static_cast<int>(dlg_item_template->cy), vita_had_string_id ? 1 : 0,
+					vita_had_string_id ? static_cast<const char *>(vita_ascii_string_id) : "literal",
+					Vita_Dialog_Text_Length(vita_untranslated_text),
+					Vita_Dialog_Text_Length(text_buffer), g_vita_dialog_template_logs);
+			}
+#endif
 
 			//
 			//	Add this control definition to the list

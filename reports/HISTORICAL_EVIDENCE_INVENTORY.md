@@ -44,8 +44,8 @@ This inventory records where previous Renegade Vita screenshots and logs were fo
 | --- | --- | ---: | --- | --- |
 | github_gallery | True | 182 | png:182 | `docs/history/screenshots` |
 | active_device_evidence | True | 4284 | bmp:161, csv:51, jpg:1, json:2857, log:995, png:27, txt:192 | `build/device-evidence` |
-| active_logs | True | 285 | log:285 | `logs` |
-| active_dist | True | 709 | json:121, log:41, txt:547 | `dist` |
+| active_logs | True | 293 | log:293 | `logs` |
+| active_dist | True | 762 | json:130, log:45, txt:587 | `dist` |
 | vita3k_user_appdata | True | 7 | log:6, txt:1 | `<vita3k-data-root>/ux0/data/renegade/user` |
 | missing_c_local_builder_root | False | 0 | - | `<managed-builder-root>` |
 | e_vita_logs | True | 39 | bmp:4, csv:9, json:9, log:9, txt:8 | `<historical-evidence-root>/Vita Logs` |

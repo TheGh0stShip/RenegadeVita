@@ -129,8 +129,10 @@ const float kOriginalLoadingLogicalWidth = 640.0f;
 const float kOriginalLoadingLogicalHeight = 480.0f;
 const float kOriginalFrontendLogicalWidth = 800.0f;
 const float kOriginalFrontendLogicalHeight = 600.0f;
-const float kOriginalHUDLogicalWidth = 640.0f;
-const float kOriginalHUDLogicalHeight = 480.0f;
+const float kGameplayHUDLogicalWidth =
+	static_cast<float>(RenegadeVitaRenderer::DISPLAY_WIDTH);
+const float kGameplayHUDLogicalHeight =
+	static_cast<float>(RenegadeVitaRenderer::DISPLAY_HEIGHT);
 
 struct A31NativePresentationRect
 {
@@ -970,31 +972,31 @@ private:
 	bool Applied;
 };
 
-class A31VitaScopedOriginalHUDRender2DResolution
+class A31VitaScopedGameplayHUDRender2DResolution
 {
 public:
-	explicit A31VitaScopedOriginalHUDRender2DResolution(const char *reason) :
+	explicit A31VitaScopedGameplayHUDRender2DResolution(const char *reason) :
 		Previous(Render2DClass::Get_Screen_Resolution()),
 		Reason(reason != NULL ? reason : "unknown")
 	{
 		Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
-			kOriginalHUDLogicalWidth, kOriginalHUDLogicalHeight));
-		A30_Vita_Log("A3.5 HUD: original logical Render2D resolution %.0fx%.0f reason=%s previous=%.0fx%.0f\n",
-			kOriginalHUDLogicalWidth, kOriginalHUDLogicalHeight, Reason,
+			kGameplayHUDLogicalWidth, kGameplayHUDLogicalHeight));
+		A30_Vita_Log("A3.5 HUD: native gameplay Render2D resolution %.0fx%.0f reason=%s previous=%.0fx%.0f\n",
+			kGameplayHUDLogicalWidth, kGameplayHUDLogicalHeight, Reason,
 			Previous.Width(), Previous.Height());
 	}
 
-	~A31VitaScopedOriginalHUDRender2DResolution()
+	~A31VitaScopedGameplayHUDRender2DResolution()
 	{
 		Render2DClass::Set_Screen_Resolution(Previous);
 		A30_Vita_Log("A3.5 HUD: restored Render2D resolution %.0fx%.0f reason=%s\n",
 			Previous.Width(), Previous.Height(), Reason);
 	}
 
-	A31VitaScopedOriginalHUDRender2DResolution(
-		const A31VitaScopedOriginalHUDRender2DResolution &) = delete;
-	A31VitaScopedOriginalHUDRender2DResolution &operator=(
-		const A31VitaScopedOriginalHUDRender2DResolution &) = delete;
+	A31VitaScopedGameplayHUDRender2DResolution(
+		const A31VitaScopedGameplayHUDRender2DResolution &) = delete;
+	A31VitaScopedGameplayHUDRender2DResolution &operator=(
+		const A31VitaScopedGameplayHUDRender2DResolution &) = delete;
 
 private:
 	RectClass Previous;
@@ -2131,7 +2133,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					}
 #endif
 				{
-					A31VitaScopedOriginalHUDRender2DResolution text_display_resolution(
+					A31VitaScopedGameplayHUDRender2DResolution text_display_resolution(
 						"TextDisplayGameModeClass::Init");
 					text_display_mode.Init();
 				}
@@ -2178,7 +2180,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			A30_Vita_Log("A3.1 breadcrumb: CombatManager::Init entry render_hud=%d\n",
 				render_hud ? 1 : 0);
 				{
-					A31VitaScopedOriginalHUDRender2DResolution hud_init_resolution(
+					A31VitaScopedGameplayHUDRender2DResolution hud_init_resolution(
 						"CombatManager::Init");
 					CombatManager::Init(render_hud);
 				}
@@ -2277,7 +2279,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				loading_presenter.Render_Original_Progress("post_load_level");
 				CombatManager::Post_Load_Level();
 				{
-					A31VitaScopedOriginalHUDRender2DResolution hud_finalize_resolution(
+					A31VitaScopedGameplayHUDRender2DResolution hud_finalize_resolution(
 						"CombatGameModeClass::Vita_Finalize_Loaded_Level");
 					CombatGameModeClass::Vita_Finalize_Loaded_Level(
 						loading_presenter.Peek_Screen(), true);

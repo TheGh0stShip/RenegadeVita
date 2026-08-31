@@ -23,7 +23,8 @@ The gallery is a reviewed history, not a controlled same-camera comparison. Its 
 | A3.5-dev87 | One user-finalized physical MP4 was recovered read-only; six selected, labelled M00 stills are derived from it. The raw recording remains local-only and Dev87 remains a frontend-usability failure. |
 | A3.5-dev88 | Superseded local-only canonical candidate; no Vita capture exists. |
 | A3.5-dev89 | Superseded local-only canonical candidate; no Vita capture exists. |
-| A3.5-dev90 | Current local-only canonical candidate; no Vita capture exists. |
+| A3.5-dev90 | Superseded local-only canonical candidate; no Vita capture exists. |
+| A3.5-dev91 | Current local-only canonical candidate; no Vita capture exists. |
 
 The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, or unrelated images merely to fill a build row.
 

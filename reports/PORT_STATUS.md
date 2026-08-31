@@ -3,52 +3,66 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-## 2026-08-31 Dev87 physical failure; Dev90 local candidate
+## 2026-08-31 Dev87 physical failure; Dev91 local candidate
 
-Dev90 is the current local-only source/build candidate produced under the
-user's no-physical-test window. It preserves the Dev88 indexed-glyph
-texture-stage and real BINK audio-reserve corrections plus Dev89's frontend
-scope, font fallback, bootstrap, expanded pre-cache, and Render2D state work.
-It then adds bounded source fixes for the latest physical symptoms without
-replacing original engine owners:
+Dev91 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves Dev88 through Dev90's indexed-glyph
+texture-stage, real BINK audio-reserve, frontend-scope, font fallback,
+bootstrap, expanded pre-cache, Render2D state, synchronous loading, Start-route,
+and target-box rollback work. It then adds bounded source fixes and diagnostics
+for the latest physical symptoms without replacing original engine owners:
 
-- the native debug/status screen remains visible through original audio,
-  cache, math/path, asset-manager, and renderer-handoff setup, then releases
-  only when VitaGL/WW3D owns display output;
-- unchanged 800×600 retail BINK frames are uploaded at an aspect-preserved
-  640×480 maximum, with source and upload dimensions logged;
-- synchronous Vita M00 level loading emits deterministic milestones back to
-  the active original loading presenter, so the loading screen can advance
-  during the non-threaded load path;
-- retail font files are opened before size/read checks, all selected
-  frontend/HUD/subtitle `StyleMgr` font slots are probed, FreeType glyph
-  bitmaps are clipped safely, and glyph atlas memory is cleared before
-  rasterization;
-- gameplay Start no longer maps into original `DIK_ESCAPE`; the runtime
-  clean-exit poll remains the only Start owner during M00 gameplay; and
-- the Dev89 target-box native-coordinate override is removed after physical
-  evidence showed it overcorrected the older left-shift into a far-right shift.
+- startup pre-cache artificial holds are reduced to a one-second visible delay,
+  and status text is flushed instead of sleeping through handoff phases;
+- unchanged 800×600 retail BINK frames are uploaded at a 480×360 maximum using
+  a faster scaling path, a six-buffer audio startup reserve, and earlier
+  post-visible late-frame dropping;
+- synchronous Vita M00 level loading still emits deterministic milestones back
+  to the active original loading presenter, now with bounded catch-up frames
+  when phase progress changes;
+- FreeType empty bitmaps remain valid spacing glyphs, while `StyleMgr`
+  readiness now requires visible pixels from real menu/HUD glyph probes;
+- gameplay Start remains outside original `DIK_ESCAPE`, with diagnostic text
+  making the runtime-exit-poll ownership explicit; and
+- bounded original `VehicleGameObj` creation/init/update/proximity diagnostics
+  are added for the reported M00 war-factory/HMVV freeze.
 
-Focused validation passed 23/23 runtime, loading-screen, original-frontend,
-and input contracts. Canonical `bash ./tools/build.sh` passed retained
-host/current validation, deterministic 138-patch staging, 549 ARM/package
+Focused validation passed 40/40 runtime, loading-screen, original-frontend,
+conversation, and input contracts. Canonical `bash ./tools/build.sh` passed
+retained host/current validation, deterministic 139-patch staging, 549 ARM/package
 actions, ELF/SELF/VPK identity, compressed VPK validation, diagnostics, SHA
 manifest, and retail exclusion in
-`logs/a35-dev90-20260831-032019-build.log`. VPK SHA-256 is
-`76766b787869693887428272914f646f92cae50d5009eaab1bb72f8071cc3568`; packaged
+`logs/a35-dev91-20260831-035521-build.log`. VPK SHA-256 is
+`20f561ebcdf534ea71da6e421ab47811c99a9bdce14dac84dd7f99481f4c8768`; packaged
 SELF SHA-256 is
-`35dcbff8cef5d8aa06c291364f22592e2f17c81d16019a79ae95e2a434f2f2d2`; ELF
+`42e85952ce85975e05e1385414f9d43ed35e4330a2a91325737c0f412de6c219`; ELF
 SHA-256 is
-`c48286ebdc2595584c4c2b8d68940cd739c2bd6071ca686e77479faff5d4a698`;
+`47cdcc15c57b1efc8bc2da8995e902b4d0e580143091e70b6818198c1a51169e`;
 diagnostics ZIP SHA-256 is
-`1819fb1575c27063e2cdeec07650e65b1bd889049e12227df1101ec43c0a1772`.
+`2ac5fc16970e4b1689a91a92e90dd2e6260cd70313136a7e952b4979d6efe767`.
 
-No Dev90 file has been copied to, installed on, or launched on the Vita. It is
+No Dev91 file has been copied to, installed on, or launched on the Vita. It is
 not a visual/audio/lifecycle acceptance claim. The next physical test must
 prove the user-required frontend gate first: visible original intro/menu text,
 usable intro A/V/skip behavior, readable gameplay dialogue/HUD/pickup/loading
 text, correct target-box placement, stable M00 progression including the HMVV
 approach, acceptable frame time, and safe Start/pause/exit without PSP2 crash.
+
+## 2026-08-31 Dev87 physical failure; Dev90 local candidate
+
+Dev90 is a superseded local-only source/build candidate produced under the
+user's no-physical-test window. It preserved the Dev88 indexed-glyph
+texture-stage and real BINK audio-reserve corrections plus Dev89's frontend
+scope, font fallback, bootstrap, expanded pre-cache, and Render2D state work.
+It then kept startup diagnostics visible through original engine setup,
+clamped unchanged retail BINK uploads to 640×480, routed synchronous M00 load
+milestones into the loading presenter, hardened font reads and glyph
+rasterization, kept gameplay Start out of original `DIK_ESCAPE`, and removed
+Dev89's target-box native-coordinate override. Focused validation passed 23/23
+and canonical package closure passed in
+`logs/a35-dev90-20260831-032019-build.log`; VPK SHA-256
+`76766b787869693887428272914f646f92cae50d5009eaab1bb72f8071cc3568`. It was
+not copied to, installed on, launched on, or visually accepted on a Vita.
 
 ## 2026-08-31 Dev87 physical failure; Dev89 local candidate
 

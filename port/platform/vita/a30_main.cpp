@@ -63,8 +63,8 @@ void Print_Startup(const VitaBootstrapStatus &status, int screen_result)
 	psvDebugScreenPrintf("  D-pad = weapons/sniper zoom in gameplay, WWUI focus in menu\n");
 	psvDebugScreenPrintf("  X/O/Triangle/Square/L/R = original action mappings\n");
 	psvDebugScreenPrintf("  touch = mouse cursor/click, rear touch = camera toggle\n");
-	psvDebugScreenPrintf("  START        = clean exit\n\n");
-	psvDebugScreenPrintf("START exits cleanly after the tutorial begins\n");
+	psvDebugScreenPrintf("  START        = runtime exit poll only\n\n");
+	psvDebugScreenPrintf("Avoid START during gameplay unless exit evidence is requested\n");
 	psvDebugScreenPrintf("Log: %s\n", RENEGADE_BUILD_RUNTIME_LOG_PATH);
 	Flush_Bootstrap_Display(2U);
 }

@@ -191,6 +191,9 @@ bool RenegadeVita_Font_Rasterize_Glyph(const char *family, int point_size,
 	std::memset(pixels, 0, static_cast<size_t>(width) * static_cast<size_t>(height) * sizeof(*pixels));
 	FT_GlyphSlot glyph = font->face->glyph;
 	const FT_Bitmap &bitmap = glyph->bitmap;
+	if (bitmap.width == 0U || bitmap.rows == 0U || bitmap.buffer == nullptr) {
+		return true;
+	}
 	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY) return false;
 	const int baseline = Rounded_26_6(font->face->size->metrics.ascender);
 	const int unclipped_top = baseline - glyph->bitmap_top;

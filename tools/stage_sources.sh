@@ -222,6 +222,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-transition-action-diagnostics.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vehicle-proximity-diagnostics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-latch.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-m00-ui-hud-subtitles.patch"
@@ -491,6 +493,7 @@ echo "Applied: port/patches/combat-a35-teardown-lifecycle.patch"
 echo "Applied: port/patches/combat-a35-conversation-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-conversation-reentrant-think.patch"
 echo "Applied: port/patches/combat-a35-transition-action-diagnostics.patch"
+echo "Applied: port/patches/combat-a35-vehicle-proximity-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-latch.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-motion.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-visible-fallback.patch"

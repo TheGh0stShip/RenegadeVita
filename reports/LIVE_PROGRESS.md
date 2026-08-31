@@ -1,5 +1,40 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev91 canonical source/build candidate; no physical action
+
+`[██████░░░░] 6/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the user's six-hour no-physical-test window.
+  Dev91 advances identity to `A3.5-dev91` and targets the returned frontend/M00
+  failures without touching the Vita filesystem: FreeType empty-bitmap glyphs
+  now remain valid spacing glyphs, `StyleMgr` probes require visible pixels,
+  startup pre-cache artificial holds are reduced to a one-second visible delay,
+  unchanged retail BIK uploads are downscaled to 480×360 with a six-buffer audio
+  startup reserve and faster late-frame dropping, original loading progress gets
+  bounded catch-up renders when phase progress changes, and M00 vehicle
+  transition/update/proximity diagnostics are added for the reported HMVV
+  freeze.
+- Pre-build validation passed: focused runtime/loading/original-frontend/
+  conversation/input contracts 40/40, identity precheck for `DEV91`, and
+  `git diff --check`.
+- Canonical `bash ./tools/build.sh` passed retained host/current validation,
+  deterministic 139-patch staging, 549 ARM/package actions, ELF/SELF/VPK
+  identity, compressed VPK validation, diagnostics, SHA manifest, and retail
+  exclusion in `logs/a35-dev91-20260831-035521-build.log`.
+- Dev91 artifact custody: VPK SHA-256
+  `20f561ebcdf534ea71da6e421ab47811c99a9bdce14dac84dd7f99481f4c8768`;
+  packaged SELF SHA-256
+  `42e85952ce85975e05e1385414f9d43ed35e4330a2a91325737c0f412de6c219`;
+  ELF SHA-256
+  `47cdcc15c57b1efc8bc2da8995e902b4d0e580143091e70b6818198c1a51169e`;
+  diagnostics ZIP SHA-256
+  `2ac5fc16970e4b1689a91a92e90dd2e6260cd70313136a7e952b4979d6efe767`.
+- Dev91 has not been copied to, installed on, launched on, or visually accepted
+  on a Vita. No Dev91 screenshot/video exists. The next physical gate must
+  verify readable intro/menu text, paced intro A/V, loading progress,
+  HUD/pickup/dialogue text, target-box alignment, M00 stability including the
+  HMVV approach, frame time, and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev90 local source/build candidate; no physical action
 
 `[████░░░░░░] 4/10 current evidence gates complete; no Vita deploy or launch`

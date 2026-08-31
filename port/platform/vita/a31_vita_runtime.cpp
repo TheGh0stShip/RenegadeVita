@@ -117,7 +117,8 @@ const uint32_t kCaptureWidth = RenegadeVitaRenderer::DISPLAY_WIDTH;
 const uint32_t kCaptureHeight = RenegadeVitaRenderer::DISPLAY_HEIGHT;
 const uint32_t kCaptureBytes = kCaptureWidth * kCaptureHeight * 4U;
 const unsigned kStartupPrecacheVisibleSteps = 6U;
-const uint64_t kStartupPrecacheMinimumVisibleUs = 5000000ULL;
+const uint64_t kStartupPrecacheMinimumVisibleUs = 1000000ULL;
+const unsigned kLoadingProgressCatchupFrames = 3U;
 const unsigned kStartupPrecacheRequiredReadBytes = 32768U;
 const unsigned kStartupPrecacheOptionalReadBytes = 8192U;
 const unsigned kStartupPrecacheMovieReadBytes = 65536U;
@@ -324,11 +325,41 @@ bool Validate_StyleMgr_Font_Glyphs(const char *scope)
 			font->Get_Char_Spacing(static_cast<WCHAR>('A')) : 0;
 		const int spacing_0 = font != NULL ?
 			font->Get_Char_Spacing(static_cast<WCHAR>('0')) : 0;
-		if (height <= 0 || (spacing_a <= 0 && spacing_0 <= 0)) ok = false;
-		A30_Vita_Log("A4 frontend/text: StyleMgr font probe scope=%s font=%s ptr=%p height=%d spacing_A=%d spacing_0=%d ok=%d\n",
+		const int width_a = font != NULL ?
+			font->Get_Char_Width(static_cast<WCHAR>('A')) : 0;
+		const int width_0 = font != NULL ?
+			font->Get_Char_Width(static_cast<WCHAR>('0')) : 0;
+		unsigned visible_pixels_a = 0U;
+		unsigned visible_pixels_0 = 0U;
+		if (font != NULL && height > 0 && width_a > 0) {
+			std::vector<uint16> pixels(static_cast<size_t>(width_a) *
+				static_cast<size_t>(height), 0);
+			font->Blit_Char(static_cast<WCHAR>('A'), pixels.data(),
+				width_a * static_cast<int>(sizeof(uint16)), 0, 0);
+			for (size_t pixel_index = 0U; pixel_index < pixels.size();
+				++pixel_index) {
+				if (pixels[pixel_index] != 0U) ++visible_pixels_a;
+			}
+		}
+		if (font != NULL && height > 0 && width_0 > 0) {
+			std::vector<uint16> pixels(static_cast<size_t>(width_0) *
+				static_cast<size_t>(height), 0);
+			font->Blit_Char(static_cast<WCHAR>('0'), pixels.data(),
+				width_0 * static_cast<int>(sizeof(uint16)), 0, 0);
+			for (size_t pixel_index = 0U; pixel_index < pixels.size();
+				++pixel_index) {
+				if (pixels[pixel_index] != 0U) ++visible_pixels_0;
+			}
+		}
+		const bool font_ok = height > 0 &&
+			(spacing_a > 0 || spacing_0 > 0) &&
+			(visible_pixels_a > 0U || visible_pixels_0 > 0U);
+		if (!font_ok) ok = false;
+		A30_Vita_Log("A4 frontend/text: StyleMgr font probe scope=%s font=%s ptr=%p height=%d spacing_A=%d spacing_0=%d width_A=%d width_0=%d visible_A=%u visible_0=%u ok=%d\n",
 			scope != NULL ? scope : "unknown", probes[index].name,
 			static_cast<void *>(font), height, spacing_a, spacing_0,
-			height > 0 && (spacing_a > 0 || spacing_0 > 0) ? 1 : 0);
+			width_a, width_0, visible_pixels_a, visible_pixels_0,
+			font_ok ? 1 : 0);
 	}
 	if (!ok) {
 		A30_Vita_Log("A4 frontend/text: FAIL StyleMgr font glyph probe scope=%s; refusing to enter visually blank text state\n",
@@ -654,7 +685,7 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	Draw_Startup_Precache_Screen(startup_screen_result,
 		"Indexing original retail MIX archives", 1U, 5U, state,
 		"Always/Always2/always.dbs/M00");
-	sceKernelDelayThread(300000);
+	Flush_Debug_Status(1U);
 
 	bool archives_ok = true;
 	archives_ok = Startup_Index_Mix_Archive(kAlways2Archive, always2_factory,
@@ -662,7 +693,7 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	Draw_Startup_Precache_Screen(startup_screen_result,
 		"Indexing original retail MIX archives", 2U, 25U, state,
 		kAlways2Archive);
-	sceKernelDelayThread(250000);
+	Flush_Debug_Status(1U);
 	archives_ok = Startup_Index_Mix_Archive(kAlwaysDbsArchive,
 		always_dbs_factory, state) && archives_ok;
 	archives_ok = Startup_Index_Mix_Archive(kAlwaysArchive, always_factory,
@@ -670,7 +701,7 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	Draw_Startup_Precache_Screen(startup_screen_result,
 		"Precomputing archive name tables", 3U, 50U, state,
 		kAlwaysArchive);
-	sceKernelDelayThread(250000);
+	Flush_Debug_Status(1U);
 	archives_ok = Startup_Index_Mix_Archive(kM00Archive, m00_factory, state) &&
 		archives_ok;
 	Draw_Startup_Precache_Screen(startup_screen_result,
@@ -683,7 +714,7 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 	Draw_Startup_Precache_Screen(startup_screen_result,
 		"Persistent cache indexes ready", 4U, 60U, state,
 		m00_cache_ok ? "M00 cache written" : "M00 cache unavailable");
-	sceKernelDelayThread(250000);
+	Flush_Debug_Status(1U);
 
 	const A31StartupPrecacheFileSpec startup_files[] = {
 		{ kAlways2Archive, true, kStartupPrecacheRequiredReadBytes },
@@ -741,7 +772,7 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 				5U, 62U + ((index + 1U) * 30U) /
 					(sizeof(startup_files) / sizeof(startup_files[0])),
 				state, detail);
-			sceKernelDelayThread(180000);
+			Flush_Debug_Status(1U);
 		}
 	}
 	state.passed = archives_ok && state.archives_valid == state.archives_total &&
@@ -763,7 +794,7 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 				kStartupPrecacheMinimumVisibleUs / 1000ULL));
 		sceKernelDelayThread(static_cast<unsigned int>(hold_us));
 	} else {
-		sceKernelDelayThread(450000);
+		Flush_Debug_Status(3U);
 	}
 	Write_Startup_Precache_Receipt(state,
 		sceKernelGetProcessTimeWide() - started_us);
@@ -1037,19 +1068,31 @@ public:
 		if (mirrored_progress > current_progress) {
 			CombatManager::Set_Load_Progress(mirrored_progress);
 		}
+		const bool progress_changed =
+			LastMirroredLoadProgress != mirrored_progress;
 		Apply_Original_Loading_Presentation_Rect(
 			"loading_presenter_render", false);
 		Commando_Render_Original_Loading_Screen(Screen, update_network);
-		if (LastMirroredLoadProgress != mirrored_progress ||
+		unsigned catchup_frames = 0U;
+		if (progress_changed) {
+			for (unsigned frame = 0U;
+				frame < kLoadingProgressCatchupFrames; ++frame) {
+				sceDisplayWaitVblankStart();
+				Commando_Render_Original_Loading_Screen(Screen, false);
+				++catchup_frames;
+			}
+		}
+		if (progress_changed ||
 			phase == NULL ||
 			::strstr(phase, "complete") != NULL ||
 			::strstr(phase, "ready") != NULL ||
 			::strstr(phase, "prewarm") != NULL) {
 			LastMirroredLoadProgress = mirrored_progress;
 		}
-		A30_Vita_Log("A3.5 loading screen: phase=%s original_class=1 original_backdrop=%d progress=%d status_count=%d status=%s sub_status=%s\n",
+		A30_Vita_Log("A3.5 loading screen: phase=%s original_class=1 original_backdrop=%d progress=%d status_count=%d changed=%d catchup_frames=%u status=%s sub_status=%s\n",
 			phase != NULL ? phase : "unknown", BackdropReady ? 1 : 0,
 			CombatManager::Get_Load_Progress(), status_count,
+			progress_changed ? 1 : 0, catchup_frames,
 			static_cast<const char *>(load_status),
 			static_cast<const char *>(load_sub_status));
 	}

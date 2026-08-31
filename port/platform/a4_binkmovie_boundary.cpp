@@ -38,16 +38,16 @@ namespace {
 constexpr int kAudioRate = 48000;
 constexpr int kAudioChannels = 2;
 constexpr int kAudioFramesPerBuffer = 1024;
-constexpr size_t kAudioStartupBufferCount = 3U;
+constexpr size_t kAudioStartupBufferCount = 6U;
 constexpr size_t kAudioStartupSamples =
 	kAudioStartupBufferCount * static_cast<size_t>(kAudioFramesPerBuffer) *
 	kAudioChannels;
 constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
 constexpr int64_t kUpdateBudgetUs = 12000;
-constexpr int64_t kVideoDropLatenessUs = 50000;
-constexpr int kMaxMovieUploadWidth = 640;
-constexpr int kMaxMovieUploadHeight = 480;
+constexpr int64_t kVideoDropLatenessUs = 25000;
+constexpr int kMaxMovieUploadWidth = 480;
+constexpr int kMaxMovieUploadHeight = 360;
 constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_RGB565LE;
 constexpr size_t kVideoUploadBytesPerPixel = 2U;
 constexpr uint32_t kSkipButtonMask =
@@ -610,7 +610,7 @@ bool Receive_Video_Frame()
 
 	g_scaler = sws_getCachedContext(g_scaler, g_video_frame->width,
 		g_video_frame->height, static_cast<AVPixelFormat>(g_video_frame->format),
-		g_video_width, g_video_height, kVideoUploadPixelFormat, SWS_BILINEAR,
+		g_video_width, g_video_height, kVideoUploadPixelFormat, SWS_FAST_BILINEAR,
 		NULL, NULL, NULL);
 	if (g_scaler == NULL) {
 		A30_Vita_Log("A4 Bink: sws_getCachedContext failed\n");
@@ -741,7 +741,7 @@ bool Drop_Pending_Video_If_Late(int64_t elapsed_us)
 	if (!g_pending_video) return false;
 	if (!g_texture_allocated && g_uploaded_video_frames == 0U) return false;
 	const int64_t late_us = elapsed_us - g_pending_video_pts_us;
-	const int64_t threshold_us = std::max(g_frame_duration_us * 2,
+	const int64_t threshold_us = std::max(g_frame_duration_us,
 		kVideoDropLatenessUs);
 	if (late_us <= threshold_us) return false;
 	g_pending_video = false;

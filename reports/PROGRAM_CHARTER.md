@@ -30,13 +30,19 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   pre-cache touches, Render2D texture-state isolation, late BINK video-frame
   dropping for A/V pacing, and native-coordinate target-box scoping. It is not
   installed, launched, or physically accepted.
-- A3.5-dev90: current canonical local-only candidate. It keeps the debug/status
-  display through original engine setup, clamps retail BINK uploads to an
-  aspect-preserved 640×480 maximum, feeds synchronous M00 load milestones into
-  the original loading presenter, hardens FreeType/font/glyph atlas paths,
-  prevents gameplay Start from entering the crashing ESC/pause path, and rolls
-  back the overcorrected target-box native-coordinate override. It is not
-  installed, launched, or physically accepted.
+- A3.5-dev90: superseded canonical local-only candidate. It kept the
+  debug/status display through original engine setup, clamped retail BINK
+  uploads to an aspect-preserved 640×480 maximum, fed synchronous M00 load
+  milestones into the original loading presenter, hardened FreeType/font/glyph
+  atlas paths, prevented gameplay Start from entering the crashing ESC/pause
+  path, and rolled back the overcorrected target-box native-coordinate
+  override. It was not installed, launched, or physically accepted.
+- A3.5-dev91: current canonical local-only candidate. It reduces startup
+  artificial holds, downscales unchanged retail BINK uploads to 480×360 with a
+  larger audio reserve and earlier late-frame dropping, adds bounded
+  loading-progress catch-up renders, strengthens visible glyph probes, and adds
+  bounded M00 vehicle/HMVV proximity diagnostics. It is not installed, launched,
+  or physically accepted.
 
 ## Milestone contracts
 

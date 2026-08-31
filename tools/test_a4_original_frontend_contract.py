@@ -88,6 +88,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("if (file->Open(FileClass::READ))", provider)
         self.assertNotIn("file->Is_Available() && file->Open(FileClass::READ)", provider)
         self.assertIn("bitmap.pixel_mode != FT_PIXEL_MODE_GRAY", provider)
+        self.assertIn("bitmap.width == 0U || bitmap.rows == 0U || bitmap.buffer == nullptr", provider)
         self.assertIn("source_row_start", provider)
         self.assertIn("source_column_start", provider)
         self.assertIn("bitmap.pitch < 0", provider)
@@ -114,8 +115,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             self.assertIn(f'"{style}"', runtime)
 
         self.assertIn("spacing_0", runtime)
+        self.assertIn("visible_pixels_a", runtime)
+        self.assertIn("font->Blit_Char(static_cast<WCHAR>('A')", runtime)
+        self.assertIn("font->Blit_Char(static_cast<WCHAR>('0')", runtime)
         self.assertIn(
-            "height > 0 && (spacing_a > 0 || spacing_0 > 0) ? 1 : 0",
+            "(visible_pixels_a > 0U || visible_pixels_0 > 0U)",
             runtime,
         )
         self.assertIn("ww3d2-a35-freetype-glyph-raster-safety.patch", stage_sources)
@@ -315,8 +319,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "A4 Bink: skip requested buttons=%08X",
             "kUpdateBudgetUs",
             "update budget yield",
-            "kMaxMovieUploadWidth = 640",
-            "kMaxMovieUploadHeight = 480",
+            "kMaxMovieUploadWidth = 480",
+            "kMaxMovieUploadHeight = 360",
             "Configure_Video_Upload_Dimensions",
             "g_source_video_width",
             "g_source_video_height",
@@ -344,7 +348,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "capacity > 0U ? std::min(output.size(), g_audio_count) : 0U",
             "A4 Bink: audio output thread entry port=%d ring_samples=%u",
             "A4 Bink: audio output first buffer port=%d copied=%u drained=%d waits=%llu movie=%s",
-			"kAudioStartupBufferCount = 3U",
+			"kAudioStartupBufferCount = 6U",
 			"kAudioStartupSamples",
 			"A4 Bink: audio output armed; waiting for decoded startup samples=%u movie=%s",
 			"A4 Bink: audio output worker armed after decoded startup samples=%u movie=%s",
@@ -360,6 +364,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 				"video_uploaded/dropped=%llu/%llu",
 				"kVideoDropLatenessUs",
 				"Drop_Pending_Video_If_Late",
+				"std::max(g_frame_duration_us,",
+				"SWS_FAST_BILINEAR",
 			"A4 Bink: dropped late video frame",
             "audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu",
             "audio_decode_calls/total/worst_us=%llu/%llu/%llu",

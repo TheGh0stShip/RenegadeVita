@@ -16,10 +16,10 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev90}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev91}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
-rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV90
+rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV91
 # The fast candidate path already safely uses all host CPUs.  Match that
 # bounded default for canonical builds too; callers can still lower it with
 # RENEGADE_BUILD_JOBS on a constrained host.
@@ -259,7 +259,7 @@ grep -Fq '"original_source_files_compiled": 506' "$rv_root/reports/SOURCE_INTEGR
 grep -Fq '"staged_original_owner_files": 1' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 grep -Fq '"a4_frontend_boundary_files": 6' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 138' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+grep -Fq '"patch_count": 139' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
@@ -381,7 +381,7 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
 	echo "M00 finalization: original CombatGameMode post-load checks, building/radar initialization, texture-loader update, On_Game_Begin, DDS top-down uploads, viewport synchronization, shader cache path, and loading-screen prewarm are active"
 	echo "A4 frontend path: original MovieGameMode startup movie chain and original RenegadeDialogMgr/WWUI main menu are source/build routed; Vita FFmpeg Bink provider is enabled without proprietary RAD code. Dev86 prevents empty startup audio submissions and records bounded decode/upload pacing statistics; physical A/V usability remains unaccepted. Tutorial selection reuses the existing direct M00 route."
-	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=138; pristine upstream=PASS"
+	echo "Patch set: deterministic zero-fuzz staging patches; patch_count=139; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"

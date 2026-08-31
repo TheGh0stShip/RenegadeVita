@@ -401,6 +401,22 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
             self.assertIn("Do not delete a newly chained conversation by using a stale index.", source)
         self.assertIn("combat-a35-conversation-reentrant-think.patch", stage_sources)
 
+    def test_vehicle_proximity_diagnostics_are_bounded_and_staged(self):
+        patch = (ROOT / "port/patches/combat-a35-vehicle-proximity-diagnostics.patch").read_text()
+        staged = (ROOT / "staging" / "combat" / "vehicle.cpp").read_text()
+        stage_sources = (ROOT / "tools" / "stage_sources.sh").read_text()
+
+        self.assertIn("combat-a35-vehicle-proximity-diagnostics.patch", stage_sources)
+        for source in (patch, staged):
+            self.assertIn("g_vita_vehicle_init_logs < 64U", source)
+            self.assertIn("g_vita_vehicle_transition_create_logs < 96U", source)
+            self.assertIn("g_vita_vehicle_transition_update_logs < 160U", source)
+            self.assertIn("Vita_Distance_To_Star", source)
+            self.assertIn("A3.5 vehicle: init", source)
+            self.assertIn("A3.5 vehicle: create transitions", source)
+            self.assertIn("A3.5 vehicle: update transitions", source)
+            self.assertIn("update_elapsed_us >= 3000U", source)
+
 
 if __name__ == "__main__":
     unittest.main()

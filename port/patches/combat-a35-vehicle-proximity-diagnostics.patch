@@ -1,0 +1,139 @@
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -79,12 +79,39 @@
+ #include "basecontroller.h"
+ #include "string_ids.h"
+ #include "specialbuilds.h"
++#if defined(__vita__)
++#include "a30_vita_runtime.h"
++#include <psp2/kernel/processmgr.h>
++#endif
+ 
+ /*
+ ** Local prototypes
+ */
+ static void	Set_Subobject_Visibility (RenderObjClass *model, int bone_index, bool show);
++
++#if defined(__vita__)
++namespace {
++
++unsigned g_vita_vehicle_init_logs = 0U;
++unsigned g_vita_vehicle_transition_create_logs = 0U;
++unsigned g_vita_vehicle_transition_update_logs = 0U;
++
++float Vita_Distance_To_Star(VehicleGameObj *vehicle)
++{
++	if (vehicle == NULL || COMBAT_STAR == NULL) return -1.0f;
++	Vector3 vehicle_position;
++	Vector3 star_position;
++	vehicle->Get_Position(&vehicle_position);
++	COMBAT_STAR->Get_Position(&star_position);
++	return (vehicle_position - star_position).Length();
++}
++
++#define VITA_VEHICLE_TYPE_NAME(definition) \
++	((definition).TypeName[0] != '\0' ? (definition).TypeName : "unnamed")
++
++} // namespace
++#endif
+ 
+ /*
+ ** Defines
+ */
+@@ -510,6 +539,24 @@
+ 	Init_Wheel_Effects();
+ 	Create_And_Destroy_Transitions();
+ 	Update_Damage_Meshes();
++#if defined(__vita__)
++	if (g_vita_vehicle_init_logs < 64U) {
++		++g_vita_vehicle_init_logs;
++		Vector3 position;
++		Get_Position(&position);
++		A30_Vita_Log("A3.5 vehicle: init obj=%p type=%d/%s seats=%d occupied=%d transitions_enabled=%d instances=%d trans_defs=%d pos=(%.3f,%.3f,%.3f) star_dist=%.3f phys=%p vehphys=%p model=%p fake=%d\n",
++			static_cast<void *>(this), static_cast<int>(Get_Definition().Type),
++			VITA_VEHICLE_TYPE_NAME(Get_Definition()), Get_Definition().NumSeats,
++			OccupiedSeats, TransitionsEnabled ? 1 : 0, TransitionInstances.Count(),
++			Get_Definition().Get_Transition_List().Count(),
++			position.X, position.Y, position.Z, Vita_Distance_To_Star(this),
++			static_cast<void *>(Peek_Physical_Object()),
++			static_cast<void *>(Peek_Vehicle_Phys()),
++			static_cast<void *>(Peek_Model()),
++			Peek_Vehicle_Phys() != NULL &&
++				Peek_Vehicle_Phys()->Get_VehiclePhysDef()->Is_Fake() ? 1 : 0);
++	}
++#endif
+ 
+ 	//
+ 	// Refine the app packet type if this is a turret
+@@ -2024,6 +2071,7 @@
+ void	VehicleGameObj::Create_New_Transitions( TransitionDataClass::StyleType transition_type )
+ {
+ 	const TRANSITION_DATA_LIST & trans_data_list = Get_Definition().Get_Transition_List();
++	int created = 0;
+ 
+ 	for ( int i = 0; i < trans_data_list.Count(); i++ ) {
+ 		if ( trans_data_list[i]->Get_Type() == transition_type ) {
+@@ -2035,18 +2083,63 @@
+ 			TransitionInstances.Add( trans );
+ 			// add to master list
+ 			TransitionManager::Add( trans );
++			created++;
+ 		}
+ 	}
++#if defined(__vita__)
++	if (g_vita_vehicle_transition_create_logs < 96U &&
++		(created > 0 || Vita_Distance_To_Star(this) >= 0.0f)) {
++		++g_vita_vehicle_transition_create_logs;
++		Vector3 position;
++		Get_Position(&position);
++		const int type_value = static_cast<int>(transition_type);
++		A30_Vita_Log("A3.5 vehicle: create transitions obj=%p type=%d/%s request=%d/%s defs=%d created=%d instances=%d seats=%d occupied=%d enabled=%d pos=(%.3f,%.3f,%.3f) star_dist=%.3f\n",
++			static_cast<void *>(this), static_cast<int>(Get_Definition().Type),
++			VITA_VEHICLE_TYPE_NAME(Get_Definition()), type_value,
++			type_value >= 0 && type_value < TransitionDataClass::Get_Num_Types() ?
++				TransitionDataClass::Get_Type_Name(transition_type) : "unknown",
++			trans_data_list.Count(), created, TransitionInstances.Count(),
++			Get_Definition().NumSeats, OccupiedSeats, TransitionsEnabled ? 1 : 0,
++			position.X, position.Y, position.Z, Vita_Distance_To_Star(this));
++	}
++#endif
+ }
+ 
+ void	VehicleGameObj::Update_Transitions( void )
+ {
++#if defined(__vita__)
++	const uint64_t update_start_us = sceKernelGetProcessTimeWide();
++#endif
+ 	Matrix3D tm = Get_Transform();
+ 
+ 	// Update all transitions
+ 	for ( int i = 0; i < TransitionInstances.Count(); i++ ) {
+ 		TransitionInstances[i]->Set_Parent_Transform( tm );
+ 	}
++#if defined(__vita__)
++	const uint64_t update_elapsed_us =
++		sceKernelGetProcessTimeWide() - update_start_us;
++	const float star_distance = Vita_Distance_To_Star(this);
++	const bool slow_update = update_elapsed_us >= 3000U;
++	const bool near_star = star_distance >= 0.0f && star_distance <= 18.0f &&
++		TransitionInstances.Count() > 0;
++	if (g_vita_vehicle_transition_update_logs < 160U &&
++		(slow_update || near_star)) {
++		++g_vita_vehicle_transition_update_logs;
++		Vector3 position;
++		Get_Position(&position);
++		A30_Vita_Log("A3.5 vehicle: update transitions obj=%p type=%d/%s instances=%d seats=%d occupied=%d enabled=%d elapsed_us=%llu slow=%d near_star=%d pos=(%.3f,%.3f,%.3f) star_dist=%.3f phys=%p vehphys=%p model=%p\n",
++			static_cast<void *>(this), static_cast<int>(Get_Definition().Type),
++			VITA_VEHICLE_TYPE_NAME(Get_Definition()), TransitionInstances.Count(),
++			Get_Definition().NumSeats, OccupiedSeats, TransitionsEnabled ? 1 : 0,
++			static_cast<unsigned long long>(update_elapsed_us),
++			slow_update ? 1 : 0, near_star ? 1 : 0,
++			position.X, position.Y, position.Z, star_distance,
++			static_cast<void *>(Peek_Physical_Object()),
++			static_cast<void *>(Peek_Vehicle_Phys()),
++			static_cast<void *>(Peek_Model()));
++	}
++#endif
+ }
+ 
+ 

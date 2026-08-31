@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev90",
+  "milestone": "A3.5-dev91",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -613,8 +613,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 138,
-  "mechanically_patched_upstream_files": 257,
+  "patch_count": 139,
+  "mechanically_patched_upstream_files": 258,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -665,6 +665,7 @@
     "Code/Combat/textwindow.cpp",
     "Code/Combat/textwindow.h",
     "Code/Combat/transition.cpp",
+    "Code/Combat/vehicle.cpp",
     "Code/Combat/weaponbag.cpp",
     "Code/Combat/weaponmanager.h",
     "Code/Combat/weapons.cpp",
@@ -1076,6 +1077,13 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "transition.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vehicle-proximity-diagnostics.patch",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "vehicle.cpp"
       ]
     },
     {

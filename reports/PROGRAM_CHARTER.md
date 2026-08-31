@@ -61,10 +61,15 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   through native gameplay presentation, and drops late BINK video frames when
   audio is under pressure. It is not installed, launched, or physically
   accepted.
-- A3.5-dev95: current canonical local-only candidate. It preserves Dev94 and
+- A3.5-dev95: superseded canonical local-only candidate. It preserves Dev94 and
   adds a `MessageWindowClass` presentation-scope guard for update-time
   dialogue/message text layout and cached glyph geometry. It is not installed,
   launched, or physically accepted.
+- A3.5-dev96: current canonical local-only candidate. It preserves Dev95 and
+  adds UTF-16-safe Vita wrappers for `wcsncmp`, `wcsncpy`, `wcschr`, and
+  `wcsstr` so original Windows `WCHAR` frontend/dialogue/HUD text does not
+  cross into the wrong libc `wchar_t` ABI. It is not installed, launched, or
+  physically accepted.
 
 ## Milestone contracts
 

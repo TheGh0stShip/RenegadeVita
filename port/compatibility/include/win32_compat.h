@@ -642,6 +642,20 @@ static inline int rv_utf16_compare(const WCHAR *left, const WCHAR *right)
 	return *left < *right ? -1 : (*left > *right ? 1 : 0);
 }
 
+static inline int rv_utf16_n_compare(const WCHAR *left, const WCHAR *right,
+	size_t count)
+{
+	for (size_t index = 0; index < count; ++index) {
+		if (left[index] != right[index]) {
+			return left[index] < right[index] ? -1 : 1;
+		}
+		if (left[index] == 0) {
+			return 0;
+		}
+	}
+	return 0;
+}
+
 static inline WCHAR *rv_utf16_copy(WCHAR *destination, const WCHAR *source)
 {
 	WCHAR *result = destination;
@@ -649,6 +663,45 @@ static inline WCHAR *rv_utf16_copy(WCHAR *destination, const WCHAR *source)
 		*destination++ = *source;
 	} while (*source++ != 0);
 	return result;
+}
+
+static inline WCHAR *rv_utf16_n_copy(WCHAR *destination, const WCHAR *source,
+	size_t count)
+{
+	size_t index = 0;
+	for (; index < count && source[index] != 0; ++index) {
+		destination[index] = source[index];
+	}
+	for (; index < count; ++index) {
+		destination[index] = 0;
+	}
+	return destination;
+}
+
+static inline WCHAR *rv_utf16_chr(WCHAR *text, WCHAR character)
+{
+	for (;;) {
+		if (*text == character) {
+			return text;
+		}
+		if (*text == 0) {
+			return NULL;
+		}
+		++text;
+	}
+}
+
+static inline const WCHAR *rv_utf16_chr(const WCHAR *text, WCHAR character)
+{
+	for (;;) {
+		if (*text == character) {
+			return text;
+		}
+		if (*text == 0) {
+			return NULL;
+		}
+		++text;
+	}
 }
 
 static inline WCHAR *rv_utf16_rchr(WCHAR *text, WCHAR character)
@@ -673,6 +726,26 @@ static inline const WCHAR *rv_utf16_rchr(const WCHAR *text, WCHAR character)
 	return character == 0 ? text : match;
 }
 
+static inline const WCHAR *rv_utf16_strstr(const WCHAR *text,
+	const WCHAR *pattern)
+{
+	if (*pattern == 0) {
+		return text;
+	}
+	for (const WCHAR *cursor = text; *cursor != 0; ++cursor) {
+		const WCHAR *haystack = cursor;
+		const WCHAR *needle = pattern;
+		while (*needle != 0 && *haystack == *needle) {
+			++haystack;
+			++needle;
+		}
+		if (*needle == 0) {
+			return cursor;
+		}
+	}
+	return NULL;
+}
+
 /* Host ABI probes retain the host compiler's four-byte wchar_t while the
 ** source's Windows WCHAR remains uint16.  Supply overloads only in that
 ** configuration; Vita uses wchar_t itself as the UTF-16 element and links to
@@ -688,6 +761,11 @@ static inline int wcscmp(const WCHAR *left, const WCHAR *right)
 	return rv_utf16_compare(left, right);
 }
 
+static inline int wcsncmp(const WCHAR *left, const WCHAR *right, size_t count)
+{
+	return rv_utf16_n_compare(left, right, count);
+}
+
 static inline WCHAR *wcsrchr(WCHAR *text, WCHAR character)
 {
 	return rv_utf16_rchr(text, character);
@@ -701,6 +779,32 @@ static inline const WCHAR *wcsrchr(const WCHAR *text, WCHAR character)
 static inline WCHAR *wcscpy(WCHAR *destination, const WCHAR *source)
 {
 	return rv_utf16_copy(destination, source);
+}
+
+static inline WCHAR *wcsncpy(WCHAR *destination, const WCHAR *source,
+	size_t count)
+{
+	return rv_utf16_n_copy(destination, source, count);
+}
+
+static inline WCHAR *wcschr(WCHAR *text, WCHAR character)
+{
+	return rv_utf16_chr(text, character);
+}
+
+static inline const WCHAR *wcschr(const WCHAR *text, WCHAR character)
+{
+	return rv_utf16_chr(text, character);
+}
+
+static inline WCHAR *wcsstr(WCHAR *text, const WCHAR *pattern)
+{
+	return const_cast<WCHAR *>(rv_utf16_strstr(text, pattern));
+}
+
+static inline const WCHAR *wcsstr(const WCHAR *text, const WCHAR *pattern)
+{
+	return rv_utf16_strstr(text, pattern);
 }
 #endif
 

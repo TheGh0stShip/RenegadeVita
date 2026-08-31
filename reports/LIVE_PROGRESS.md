@@ -1,5 +1,42 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev96 canonical source/build candidate; no physical action
+
+`[██████████] 10/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the user's no-physical-test window. Dev96
+  advances identity to `A3.5-dev96` and targets the retained Dev87 frontend,
+  dialogue, HUD, pickup, loading, intro-A/V, startup-black, HMVV, and Start
+  failure set without touching the Vita filesystem. It preserves Dev95 and
+  adds UTF-16-safe Vita wrappers for `wcsncmp`, `wcsncpy`, `wcschr`, and
+  `wcsstr` so original Windows 16-bit `WCHAR` text does not pass into libc
+  functions that expect a different `wchar_t` ABI.
+- Validation passed: short-wchar/loading/frontend/runtime/indexed-state source
+  contracts 41/41; candidate identity/staging/frontend/loading/runtime/
+  indexed-state/short-wchar contracts 54/54; UTF-16 host helper selftest 16/16;
+  host interactive M00/menu route two-cycle PASS with `STRINGS.TDB` loaded and
+  six main-menu translations valid/renderable; fast Dev96 candidate closure;
+  deterministic 145-patch staging; and canonical
+  `bash ./tools/build.sh` closure in
+  `logs/a35-dev96-20260831-065932-build.log`.
+- Canonical closure passed retained host/current validation, deterministic
+  staging, 549 ARM/package actions, ELF/SELF/VPK identity, compressed VPK
+  validation, diagnostics, SHA manifest, and retail exclusion. Artifact
+  custody: VPK SHA-256
+  `226767912ca4e6be9d582811c814155bb37a2a110dcb09c76eeaacd73202ad03`;
+  packaged SELF SHA-256
+  `05699ebac1ce5f19270f32dc9069e7c5e5400524f774c71135b2b69a4e821613`;
+  ELF SHA-256
+  `2b1498b0081c77738bf4a0450a0a938580e04af240b32fddd26d977179e2a768`;
+  diagnostics ZIP SHA-256
+  `6cf3885d8c52b17010230d003f98728b3602c45d0cb379d383ed21da2fbf7cea`.
+- Dev96 has not been copied to, installed on, launched on, or visually
+  accepted on a Vita. No Dev96 screenshot/video exists. The next physical gate
+  must verify fast visible bootstrap, readable intro/menu text, paced intro
+  A/V, loading progress during M00 load, readable gameplay dialogue/HUD/pickup
+  text, target-box alignment, M00 stability including the HMVV approach, frame
+  time, and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev95 canonical source/build candidate; no physical action
 
 `[█████████░] 9/10 current evidence gates complete; no Vita deploy or launch`

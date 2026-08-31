@@ -20,14 +20,35 @@ extern "C" int wcscmp(const wchar_t *left, const wchar_t *right)
 	return rv_utf16_compare(left, right);
 }
 
+extern "C" int wcsncmp(const wchar_t *left, const wchar_t *right, size_t count)
+{
+	return rv_utf16_n_compare(left, right, count);
+}
+
 extern "C" wchar_t *wcscpy(wchar_t *destination, const wchar_t *source)
 {
 	return rv_utf16_copy(destination, source);
 }
 
+extern "C" wchar_t *wcsncpy(wchar_t *destination, const wchar_t *source,
+	size_t count)
+{
+	return rv_utf16_n_copy(destination, source, count);
+}
+
+extern "C" wchar_t *wcschr(const wchar_t *text, wchar_t character)
+{
+	return const_cast<wchar_t *>(rv_utf16_chr(text, character));
+}
+
 extern "C" wchar_t *wcsrchr(const wchar_t *text, wchar_t character)
 {
 	return const_cast<wchar_t *>(rv_utf16_rchr(text, character));
+}
+
+extern "C" wchar_t *wcsstr(const wchar_t *text, const wchar_t *pattern)
+{
+	return const_cast<wchar_t *>(rv_utf16_strstr(text, pattern));
 }
 #endif
 

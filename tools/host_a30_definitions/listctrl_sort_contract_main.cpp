@@ -29,6 +29,8 @@ int main()
 	const WCHAR saturated[] = { '9', '9', '9', '9', '9', '9', '9', '9', '9', '9', 0 };
 	const WCHAR tag[] = { 'B', 'o', 'L', 'd', '>', 0 };
 	const WCHAR tag_name[] = { 'b', 'O', 'l', 'D', 0 };
+	const WCHAR markup[] = { '<', 'c', 'o', 'l', 'o', 'r', '=', '1', ',', '2', ',', '3', '>', 'H', 'i', 0 };
+	WCHAR copy_buffer[8] = {};
 	Check(CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE, alpha, -1,
 		alpha_case, -1) == 2, "case-insensitive equality", checks, failures);
 	Check(CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE, alpha, -1,
@@ -42,6 +44,14 @@ int main()
 	Check(_wtoi(number) == -42, "utf16 signed integer", checks, failures);
 	Check(_wtoi(saturated) == INT_MAX, "utf16 integer saturation", checks, failures);
 	Check(_wcsnicmp(tag, tag_name, 4U) == 0, "utf16 bounded tag comparison", checks, failures);
+	Check(rv_utf16_n_compare(alpha, prefix, 5U) == 0, "utf16 bounded equality", checks, failures);
+	Check(rv_utf16_n_compare(alpha, prefix, 6U) < 0, "utf16 bounded order", checks, failures);
+	Check(rv_utf16_n_copy(copy_buffer, alpha, 8U) == copy_buffer &&
+		rv_utf16_compare(copy_buffer, alpha) == 0, "utf16 bounded copy", checks, failures);
+	Check(rv_utf16_chr(markup, ',') == markup + 8, "utf16 character search", checks, failures);
+	Check(rv_utf16_strstr(markup, tag_name) == NULL, "utf16 case-sensitive substring miss", checks, failures);
+	const WCHAR color[] = { 'c', 'o', 'l', 'o', 'r', 0 };
+	Check(rv_utf16_strstr(markup, color) == markup + 1, "utf16 substring search", checks, failures);
 	RenegadeVitaWWUIKeyState[VK_CONTROL] = 0x80U;
 	Check(GetAsyncKeyState(VK_CONTROL) < 0, "WWUI modifier high-bit query", checks, failures);
 	RenegadeVitaWWUIKeyState[VK_CONTROL] = 0U;

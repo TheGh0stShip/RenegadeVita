@@ -129,3 +129,10 @@ diagnostics, and retail-exclusion checks. VPK SHA-256 is
 `be78097b98a3c0a0e9e9cd1fbdb0d5cdb9d7d630145bec8736d7ebad0cf07138`; packaged
 SELF is `cd5726251dbdd33c2d19a97aa83ccc95d992ad6800c945497ec473fe40228fce`.
 No Dev88 artifact has been copied to, installed on, or launched on the Vita.
+Source, focused tests, canonical identity, and this Dev87 failure record are
+published at `origin/main` commit
+`0807c1733ea45993ac8fca9f49858a0daafc83f1` (`Fix Dev88 frontend text and BINK
+audio reserve`). The Dev87 gallery remains pending: the title-owned screenshot
+directory is empty and the title-owned capture inventory has no Dev87-window
+entry; raw logs, captures, videos, dumps, retail data, and personal media are
+not committed.

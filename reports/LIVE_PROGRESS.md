@@ -29,6 +29,12 @@
   after Dev87 ends, retrieve every title-scoped returned screenshot/capture,
   inspect and label it accurately, regenerate the gallery/timeline, publish
   the GitHub update, then wait for explicit direction for a new physical test.
+- Dev88 source, focused contracts, canonical identity, and the Dev87 physical
+  failure record are published at `origin/main` commit
+  `0807c1733ea45993ac8fca9f49858a0daafc83f1` (`Fix Dev88 frontend text and
+  BINK audio reserve`). No Dev87 image was present in the title-owned
+  `screenshots`/Dev87-window `captures` paths, so the gallery is explicitly
+  still pending actual returned image evidence rather than being fabricated.
 
 ## 2026-08-31 — dev87 text/resource and BINK-upload candidate; physical observation active
 

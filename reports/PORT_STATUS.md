@@ -34,6 +34,13 @@ SELF SHA-256 is `cd5726251dbdd33c2d19a97aa83ccc95d992ad6800c945497ec473fe40228fc
 It is local only: no Dev88 file has been copied to, installed on, or launched
 on the Vita.
 
+Dev88 source, focused contracts, canonical identity, and the explicit Dev87
+failure record are published at `origin/main`
+`0807c1733ea45993ac8fca9f49858a0daafc83f1` (`Fix Dev88 frontend text and BINK
+audio reserve`). No Dev87 image is present in the title-owned `screenshots` or
+Dev87-window `captures` entries. The gallery update is therefore pending the
+actual screenshot evidence, not represented as completed.
+
 ## 2026-08-31 dev87 frontend repair candidate — historical pre-return record
 
 Dev86 is now retained physical failure evidence, not a pending observation. Its

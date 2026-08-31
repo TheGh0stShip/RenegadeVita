@@ -40,6 +40,12 @@ evidence; a reviewed black/HUD-only transitional frame is excluded. The raw
 recording remains local-only. This new visual evidence does not overturn the
 returned Dev87 frontend-usability failure.
 
+The derived PNGs, gallery/timeline, inventory, and public status update are
+published at `origin/main` commit
+`efb9adeeb9d326dae04c76893680968aee0c1fb0` (`Publish Dev87 recorder gameplay
+evidence`). The raw recording, runtime logs, transfer scratch data, dumps,
+retail data, and saves remain outside Git.
+
 The original `MessageWindow` dialogue `TextWindowClass` and original menu
 `Render2DSentence` both use dynamic indexed glyph draws. Dev88 applies the
 original `ShaderClass` texture-stage combiner state immediately before those

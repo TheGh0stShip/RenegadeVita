@@ -18,8 +18,10 @@
   Dev87 gallery is a record of actual gameplay evidence, not an acceptance
   claim: missing original menu/dialogue text and poor intro A/V remain failed
   physical gates.
-- Next: regenerate/validate the historical gallery, then commit and push this
-  evidence-only update. Dev88 remains held from every Vita action.
+- Publication complete: `origin/main` commit
+  `efb9adeeb9d326dae04c76893680968aee0c1fb0` contains the six derived PNGs,
+  gallery, inventory, and status update. Next: retain the failed Dev87 gates
+  and await explicit direction; Dev88 remains held from every Vita action.
 
 ## 2026-08-31 — public documentation/GitHub reconciliation; historical capture campaign prepared
 

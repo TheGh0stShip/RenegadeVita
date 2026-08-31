@@ -1,5 +1,28 @@
 # Live engineering progress
 
+## 2026-08-30 — dev85 frontend correction package passed locally; no Vita action
+
+`[█████░░░░░] 5/10 current evidence gates complete; GitHub publication next`
+
+- The user requires a real original intro-movie path and a visibly rendered
+  original menu before another candidate may be pushed. Dev85 removes the
+  Vita-only exclusive-console render suppression in front of the original
+  GameModeManager frontend loop, and removes the old deliberate BINK playback
+  disable branch.
+- Focused source validation passes: whitespace, Python syntax, and 27
+  frontend/loading/candidate/recorder workflow tests. The canonical
+  `bash ./tools/build.sh` then passed retained host validation (112 tests),
+  deterministic staging, 549 ARM actions, original-runtime symbol checks,
+  ELF/SELF/VPK identity, archive integrity, SHA manifest, diagnostics, and
+  retail exclusion in `logs/a35-dev85-20260830-191010-build.log`.
+- Local VPK SHA-256 is `299c5f79bd7657a4b9598f300688d4620abc9ece483d23542172ede34d033b58`;
+  packaged SELF SHA-256 is
+  `d26321f2702b467eb8cd2ecfe8379af081715558a3d0b6b90659616db78f62f1`.
+  Nothing has been uploaded, deployed, launched, or captured on Vita.
+- Next: publish the verifiable source/report change to GitHub. A later
+  hash-matched hardware test must visibly prove original intro movies and the
+  original WWUI menu before either is called fixed.
+
 ## 2026-08-30 — capture-policy route blocked by stale optional recorder
 
 `[████░░░░░░] 4/10 current evidence gates complete; recorder-isolated startup check next`

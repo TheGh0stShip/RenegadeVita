@@ -176,7 +176,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             "A3.5 prewarm: FAIL startup precache/precompute phase before frontend",
             runtime,
         )
-        self.assertIn("kLoadingPrewarmFrames = 8U", runtime)
+        self.assertIn("kLoadingPrewarmFrames = 1U", runtime)
         self.assertIn("kM00ScenePrewarmFrames = 60U", runtime)
         self.assertIn('"Prewarming loading cache"', runtime)
         self.assertIn('"Prewarming M00 scene cache"', runtime)
@@ -246,9 +246,15 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             "A31_Interactive_Run_Render_Frame();",
             runtime[scene_prewarm_definition:scene_prewarm_call],
         )
+        scene_prewarm = runtime[scene_prewarm_definition:scene_prewarm_call]
         self.assertIn(
+            'Apply_Original_Gameplay_Render_Resolution("prewarm_m00_scene"',
+            scene_prewarm,
+        )
+        self.assertIn("loading_overlay_frames=0", scene_prewarm)
+        self.assertNotIn(
             'loading_presenter.Render_Original_Progress("prewarm_m00_scene"',
-            runtime[scene_prewarm_definition:scene_prewarm_call],
+            scene_prewarm,
         )
         self.assertIn(
             '"A3.5 prewarm: m00-scene complete rendered=%d frames=%u',
@@ -565,6 +571,8 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("kA31OriginalHUDLogicalHeight = 480.0f", gameplay)
         self.assertIn("Build_A31_Original_HUD_Presentation_Rect", gameplay)
         self.assertIn("Apply_A31_Original_HUD_Presentation_Rect", gameplay)
+        self.assertIn("RenegadeVitaRenderer::DISPLAY_WIDTH", gameplay)
+        self.assertIn("RenegadeVitaRenderer::DISPLAY_HEIGHT", gameplay)
         gameplay_helper = gameplay[
             gameplay.index("class A31OriginalHUDRenderPresentation"):
             gameplay.index("AudibleSoundClass *Find_Conversation_Speech_For_Diagnostics")

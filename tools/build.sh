@@ -16,10 +16,10 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev84}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev85}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
-rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV84
+rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV85
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-4}
 case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
 rv_timestamp=$(date +%Y%m%d-%H%M%S)

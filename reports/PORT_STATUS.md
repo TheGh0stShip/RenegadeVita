@@ -3,6 +3,38 @@
 Updated: 2026-08-30. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-30 dev85 mandatory frontend correction gate — canonical package, not physical proof
+
+The user prohibited another Vita candidate push unless the original intro
+movies and original menu black-screen fault are addressed. Dev85 therefore
+keeps the original `GameModeManager`, `MovieGameModeClass`, `MenuGameModeClass2`
+and BINK owner paths, while correcting two Vita-only boundary conditions:
+
+- `ConsoleModeClass` is non-exclusive on Vita and the runtime explicitly clears
+  `ConsoleBox` before the original frontend loop. The original
+  `GameModeManager::Render()` otherwise deliberately suppresses WWUI and BINK
+  rendering while a desktop console is exclusive; this explains menu audio with
+  a black panel without substituting a menu renderer.
+- The Vita FFmpeg BINK provider no longer contains dev82's deliberate
+  playback-disable branch. Provider failure now releases only the failed movie,
+  rather than disabling every later startup movie after one texture upload
+  failure.
+
+`git diff --check`, Python syntax checks, and 27 focused frontend/loading,
+candidate, and recorder workflow tests pass. Canonical `bash ./tools/build.sh`
+also passed retained host validation (112 tests), deterministic staging, 549
+ARM actions, original-runtime symbol checks, ELF/SELF/VPK identity, compressed
+VPK validation, diagnostics, and retail exclusion in
+`logs/a35-dev85-20260830-191010-build.log`. The retained VPK and packaged SELF
+SHA-256 values are respectively
+`299c5f79bd7657a4b9598f300688d4620abc9ece483d23542172ede34d033b58` and
+`d26321f2702b467eb8cd2ecfe8379af081715558a3d0b6b90659616db78f62f1`.
+
+This is still local build evidence only: no dev85 package has been uploaded,
+deployed, or launched, and there is no claim that intro frames or the menu are
+physically visible. A later hash-matched hardware test must prove both
+mandatory gates with returned physical media and logs.
+
 ## 2026-08-30 dev84 capture-policy route: stale recorder crash, not M00 evidence
 
 The user reported a prolonged black screen, eventual diagnostic pre-cache, and

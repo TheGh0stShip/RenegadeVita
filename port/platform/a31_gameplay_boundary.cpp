@@ -208,26 +208,17 @@ struct A31NativeHUDPresentationRect
 
 A31NativeHUDPresentationRect Build_A31_Original_HUD_Presentation_Rect()
 {
-	const uint32_t logical_width =
-		static_cast<uint32_t>(kA31OriginalHUDLogicalWidth);
-	const uint32_t logical_height =
-		static_cast<uint32_t>(kA31OriginalHUDLogicalHeight);
-	const uint32_t display_width = RenegadeVitaRenderer::DISPLAY_WIDTH;
-	const uint32_t display_height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
-	uint32_t width = display_width;
-	uint32_t height =
-		static_cast<uint32_t>((static_cast<uint64_t>(display_width) *
-			logical_height) / logical_width);
-	if (height > display_height) {
-		height = display_height;
-		width = static_cast<uint32_t>((static_cast<uint64_t>(display_height) *
-			logical_width) / logical_height);
-	}
+	/* Original HUD/text authors retain their 640x480 logical coordinates, but
+	** world-projected overlays (notably target bounding boxes) are generated in
+	** the native camera space.  Mapping every original 2D owner through the
+	** old centred 4:3 rectangle treated those native X values as 640-wide and
+	** visibly displaced them.  Keep the original owner and logical coordinate
+	** system while presenting its viewport over the whole native display. */
 	const A31NativeHUDPresentationRect rect = {
-		(display_width - width) / 2U,
-		(display_height - height) / 2U,
-		width,
-		height
+		0U,
+		0U,
+		RenegadeVitaRenderer::DISPLAY_WIDTH,
+		RenegadeVitaRenderer::DISPLAY_HEIGHT
 	};
 	return rect;
 }

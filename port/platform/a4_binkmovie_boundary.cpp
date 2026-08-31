@@ -39,7 +39,6 @@ constexpr int kAudioFramesPerBuffer = 1024;
 constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
 constexpr int64_t kUpdateBudgetUs = 12000;
-constexpr bool kRealtimeBinkPlaybackEnabled = false;
 constexpr uint32_t kSkipButtonMask =
 	SCE_CTRL_START | SCE_CTRL_CROSS | SCE_CTRL_CIRCLE | SCE_CTRL_TRIANGLE;
 
@@ -106,8 +105,6 @@ bool g_audio_first_output_logged = false;
 bool g_audio_first_frame_logged = false;
 bool g_video_first_frame_logged = false;
 bool g_video_first_upload_logged = false;
-bool g_movie_decode_disabled_after_upload_failure = false;
-unsigned g_abandoned_decoder_state_count = 0U;
 
 int Next_Power_Of_Two(int value)
 {
@@ -366,41 +363,6 @@ void Release_Decoder_State()
 	g_video_first_upload_logged = false;
 }
 
-void Abandon_Decoder_State_After_Upload_Failure()
-{
-	Stop_Audio_Output();
-	if (g_video_texture != 0U) glDeleteTextures(1, &g_video_texture);
-	g_video_texture = 0U;
-	g_texture_allocated = false;
-	g_texture_width = 0;
-	g_texture_height = 0;
-	g_pending_video = false;
-	g_pending_rgba.clear();
-	g_audio_ring.clear();
-	g_resampler = NULL;
-	g_scaler = NULL;
-	g_video_frame = NULL;
-	g_audio_frame = NULL;
-	g_packet = NULL;
-	g_packet_pending = false;
-	g_video_decoder = NULL;
-	g_audio_decoder = NULL;
-	g_format = NULL;
-	g_video_stream = -1;
-	g_audio_stream = -1;
-	g_video_width = 0;
-	g_video_height = 0;
-	g_demux_eof.store(false, std::memory_order_release);
-	g_decoders_flushed = false;
-	g_first_video_pts_us = AV_NOPTS_VALUE;
-	g_decoded_video_frames = 0U;
-	g_last_skip_buttons = 0U;
-	++g_abandoned_decoder_state_count;
-	g_movie_decode_disabled_after_upload_failure = true;
-	A30_Vita_Log("A4 Bink: abandoned FFmpeg decoder state after Vita texture upload failure count=%u; remaining startup movies skip to menu\n",
-		g_abandoned_decoder_state_count);
-}
-
 bool Open_Decoder(AVCodecContext **context, AVStream *stream)
 {
 	const AVCodec *codec = avcodec_find_decoder(stream->codecpar->codec_id);
@@ -654,11 +616,10 @@ void Mark_Failed(const char *reason)
 	A30_Vita_Log("A4 Bink: playback skipped reason=%s movie=%s; original menu route continues\n",
 		reason, g_movie_name[0] != '\0' ? g_movie_name : "unnamed");
 	A4_Frontend_Record_Bink_Skip(g_movie_name);
-	if (strcmp(reason, "video texture upload failed") == 0) {
-		Abandon_Decoder_State_After_Upload_Failure();
-	} else {
-		Release_Decoder_State();
-	}
+	/* A failure belongs to this movie.  Closing the original provider boundary
+	** safely permits the next startup movie to run; it must not silently turn
+	** a failed EA movie upload into a forced skip of the Renegade intro. */
+	Release_Decoder_State();
 	g_active = false;
 	g_complete = true;
 }
@@ -685,10 +646,6 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 	Copy_Movie_Name(filename);
 	A4_Frontend_Record_Bink_Play(filename);
 	g_complete = false;
-	if (g_movie_decode_disabled_after_upload_failure) {
-		Mark_Failed("movie decode disabled after prior Vita texture upload failure");
-		return;
-	}
 	if (!g_initialized || filename == NULL) {
 		Mark_Failed("provider not initialized or filename missing");
 		return;
@@ -699,16 +656,6 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 		Mark_Failed("retail movie path unavailable");
 		return;
 	}
-	if (!kRealtimeBinkPlaybackEnabled) {
-		A30_Vita_Log("A4 Bink: playback skipped reason=dev82 physical candidate disables slow software Bink playback after black-screen/audio-underrun evidence movie=%s path=%s; original menu route continues\n",
-			g_movie_name, resolved.physical);
-		A4_Frontend_Record_Bink_Skip(g_movie_name);
-		Release_Decoder_State();
-		g_active = false;
-		g_complete = true;
-		return;
-	}
-
 	char ffmpeg_url[sizeof(resolved.physical) + 6U] = {};
 	const char *open_url = Build_FFmpeg_File_URL(resolved, ffmpeg_url,
 		sizeof(ffmpeg_url));

@@ -1,5 +1,23 @@
 # Known gaps
 
+## Current dev85 mandatory frontend gate (2026-08-30)
+
+The dev84 physical return reported menu audio with a black panel and no intro
+movies. Dev85 source corrects the proven platform boundary: the original
+`GameModeManager` suppresses all rendering when `ConsoleBox` is exclusive, but
+Vita has no desktop console to own the framebuffer. It also re-enables the
+existing FFmpeg BINK provider and makes one movie upload failure local to that
+movie. These corrections have passed focused source validation and canonical
+ARM/package validation, not physical acceptance.
+
+Do not call either behavior fixed until the matching dev85 candidate shows
+EA/Westwood and Renegade intro frames plus a visible, navigable original WWUI
+menu on Vita. Verify orientation, A/V behavior, skip input, and menu-to-tutorial
+handoff from physical media/logs. The local VPK is
+`299c5f79bd7657a4b9598f300688d4620abc9ece483d23542172ede34d033b58`; it has
+not been uploaded or deployed. The separate HUD/text, shadow, START-exit,
+loading-flash/progress, and performance defects remain open.
+
 ## Current dev82 physical-test gaps (2026-08-28)
 
 A3.5-dev82 is built for manual physical testing, but not accepted. It

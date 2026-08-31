@@ -188,6 +188,27 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("frontend_tutorial_start_latched", host)
         self.assertIn("frontend_tutorial_latched_map", host)
 
+    def test_native_console_never_suppresses_original_menu_or_movie_rendering(self):
+        console_stub = (ROOT / "port" / "compatibility" / "include" / "a31_console_stub.h").read_text()
+        game_mode = (ROOT / "staging" / "commando" / "gamemode.cpp").read_text()
+        runtime = (ROOT / "port" / "platform" / "vita" / "a31_vita_runtime.cpp").read_text()
+
+        # The original manager intentionally does not call any game-mode Render
+        # while the desktop console owns the presentation surface.  Vita has no
+        # such surface, so its boundary must release that original gate before
+        # it enters the original intro/menu loop.
+        self.assertIn("ConsoleModeClass(void) : Exclusive(false)", console_stub)
+        self.assertIn("if (!ConsoleBox.Is_Exclusive())", game_mode)
+        self.assertIn("ConsoleBox.Set_Exclusive(false);", runtime)
+        self.assertIn(
+            "native presentation console_exclusive=%d; original WWUI and Bink rendering enabled",
+            runtime,
+        )
+        self.assertLess(
+            runtime.index("ConsoleBox.Set_Exclusive(false);"),
+            runtime.rindex("Run_Original_Frontend_Intro_And_Menu("),
+        )
+
     def test_intro_movie_provider_uses_original_owner_and_vita_ffmpeg(self):
         movie = (ROOT / "staging" / "commando" / "movie.cpp").read_text()
         bink = (ROOT / "port" / "platform" / "a4_binkmovie_boundary.cpp").read_text()
@@ -208,8 +229,6 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("A4_Frontend_Record_Bink_Play(filename);", bink)
         self.assertIn("A4_Frontend_Record_Bink_Skip(filename);", bink)
         for token in (
-            "constexpr bool kRealtimeBinkPlaybackEnabled = false;",
-            "dev82 physical candidate disables slow software Bink playback after black-screen/audio-underrun evidence",
             "Renegade_Resolve_Path",
             "Build_FFmpeg_File_URL",
             "file:%s",
@@ -255,9 +274,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "const GLenum setup_error = glGetError();",
             "A4 Bink: texture setup failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d texture=%u movie=%s",
             "A4 Bink: texture upload failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d movie=%s",
-            "A4 Bink: abandoned FFmpeg decoder state after Vita texture upload failure count=%u",
-            "g_movie_decode_disabled_after_upload_failure",
-            "movie decode disabled after prior Vita texture upload failure",
+            "A failure belongs to this movie.",
             "static_cast<GLfloat>(g_video_width) / static_cast<GLfloat>(g_texture_width)",
             "static_cast<GLfloat>(g_video_height) / static_cast<GLfloat>(g_texture_height)",
             "const GLfloat scale = std::min(960.0F / static_cast<GLfloat>(g_video_width)",
@@ -272,12 +289,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         )
         self.assertLess(
             bink.index("Renegade_Resolve_Path"),
-            bink.index("if (!kRealtimeBinkPlaybackEnabled)"),
-        )
-        self.assertLess(
-            bink.index("if (!kRealtimeBinkPlaybackEnabled)"),
             bink.index("avformat_open_input"),
         )
+        self.assertNotIn("kRealtimeBinkPlaybackEnabled", bink)
+        self.assertNotIn("disables slow software Bink playback", bink)
+        self.assertNotIn("g_movie_decode_disabled_after_upload_failure", bink)
         self.assertLess(
             bink.index("if (Check_Skip_Request()) return;"),
             bink.index("const int64_t elapsed_us"),

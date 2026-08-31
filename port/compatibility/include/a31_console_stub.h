@@ -8,7 +8,10 @@ class WideStringClass;
 class Vector3;
 class ConsoleModeClass {
 public:
-	ConsoleModeClass(void) : Exclusive(true) {}
+	/* A native Vita application has no separate desktop console window.  An
+	** exclusive console would make the original GameModeManager intentionally
+	** skip its rendering path, including WWUI menus and BINKMovie::Render(). */
+	ConsoleModeClass(void) : Exclusive(false) {}
 	bool Is_Exclusive(void) const { return Exclusive; }
 	void Set_Exclusive(bool set) { Exclusive = set; }
 	void Print(char const *, ...) {}

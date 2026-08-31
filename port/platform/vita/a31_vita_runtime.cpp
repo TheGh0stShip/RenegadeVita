@@ -19,6 +19,7 @@
 #include "chunkio.h"
 #include "combat.h"
 #include "combatgmode.h"
+#include "consolemode.h"
 #include "cnetwork.h"
 #include "d3d8.h"
 #include "datasafe.h"
@@ -119,7 +120,7 @@ const uint64_t kStartupPrecacheMinimumVisibleUs = 5000000ULL;
 const unsigned kStartupPrecacheRequiredReadBytes = 32768U;
 const unsigned kStartupPrecacheOptionalReadBytes = 8192U;
 const unsigned kStartupPrecacheMovieReadBytes = 65536U;
-const unsigned kLoadingPrewarmFrames = 8U;
+const unsigned kLoadingPrewarmFrames = 1U;
 const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
 const float kOriginalLoadingLogicalWidth = 640.0f;
@@ -1050,13 +1051,12 @@ void Warm_Original_M00_Presentation_Cache(A31VitaLoadingPresenter &loading_prese
 		statistics.backend_errors);
 }
 
-bool Warm_Original_M00_Interactive_Presentation_Cache(
-	A31VitaLoadingPresenter &loading_presenter, WWAudioClass *audio)
+bool Warm_Original_M00_Interactive_Presentation_Cache(WWAudioClass *audio)
 {
 	SaveLoadStatus::Set_Status_Text("Prewarming M00 scene cache", 0);
 	CombatManager::Set_Load_Progress(7);
 	const uint64_t prewarm_started_us = sceKernelGetProcessTimeWide();
-	A30_Vita_Log("A3.5 prewarm: m00-scene start frames=%u input_enabled=0 simulation_frames=0 status=%s\n",
+	A30_Vita_Log("A3.5 prewarm: m00-scene start frames=%u input_enabled=0 simulation_frames=0 loading_overlay_frames=0 status=%s\n",
 		kM00ScenePrewarmFrames, "Prewarming M00 scene cache");
 
 	A31InteractiveRenderTrace last_trace = {};
@@ -1078,14 +1078,6 @@ bool Warm_Original_M00_Interactive_Presentation_Cache(
 			 last_trace.combat_render_called &&
 			 last_trace.end_render_completed);
 		if (audio != NULL) audio->On_Frame_Update(0);
-		if (!Apply_Original_Loading_Render_Resolution_For_Prewarm(frame,
-			frame == 0U || frame + 1U == kM00ScenePrewarmFrames)) {
-			A30_Vita_Log("A3.5 prewarm: FAIL loading overlay resolution after scene frame=%u\n",
-				frame);
-			return false;
-		}
-		loading_presenter.Render_Original_Progress("prewarm_m00_scene",
-			true, 7);
 		if (frame == 0U || frame + 1U == kM00ScenePrewarmFrames ||
 			((frame + 1U) % 15U) == 0U) {
 			A30_Vita_Log("A3.5 prewarm: m00-scene frame=%u/%u scene=%d camera=%d star=%d begin/combat/end=%d/%d/%d meshes=%llu vertices=%llu triangles=%llu rejected=%llu unsupported=%llu\n",
@@ -1111,7 +1103,7 @@ bool Warm_Original_M00_Interactive_Presentation_Cache(
 	}
 	const RenegadeVitaRenderer::Statistics &statistics =
 		RenegadeVitaRenderer::Get_Statistics();
-	A30_Vita_Log("A3.5 prewarm: m00-scene complete rendered=%d frames=%u elapsed_ms=%llu textures=%u uploads=%u binds=%u state_changes=%u shader_cache=ux0:data/renegade/cache/vitagl-shader-cache backend_errors=%u\n",
+	A30_Vita_Log("A3.5 prewarm: m00-scene complete rendered=%d frames=%u elapsed_ms=%llu textures=%u uploads=%u binds=%u state_changes=%u shader_cache=ux0:data/renegade/cache/vitagl-shader-cache backend_errors=%u loading_overlay_frames=0\n",
 		rendered_scene ? 1 : 0, kM00ScenePrewarmFrames,
 		static_cast<unsigned long long>(
 			(sceKernelGetProcessTimeWide() - prewarm_started_us) / 1000ULL),
@@ -1621,6 +1613,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		_TheWritingFileFactory = previous_write_factory;
 		return result;
 	}
+	/* The Vita boundary has no Win32 console to own the screen.  The original
+	** GameModeManager deliberately omits all presentation while that console is
+	** exclusive, which otherwise leaves both the original WWUI main menu and
+	** BINKMovie::Render() black despite their input/update owners running. */
+	ConsoleBox.Set_Exclusive(false);
+	A30_Vita_Log("A4 frontend: native presentation console_exclusive=%d; original WWUI and Bink rendering enabled\n",
+		ConsoleBox.Is_Exclusive() ? 1 : 0);
 
 	bool math_initialized = false;
 	bool path_manager_initialized = false;
@@ -2035,8 +2034,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			CombatManager::Set_First_Person(true);
 			A30_Vita_Log("A3.5 camera: original first-person default restored for direct M00 route first_person=%d\n",
 				CombatManager::Is_First_Person() ? 1 : 0);
-			if (!Warm_Original_M00_Interactive_Presentation_Cache(
-				loading_presenter, audio)) {
+			if (!Warm_Original_M00_Interactive_Presentation_Cache(audio)) {
 				result.render_error = true;
 				A30_Vita_Log("A3.5 prewarm: FAIL M00 interactive scene warmup before first input\n");
 				break;
@@ -2300,11 +2298,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						static_cast<unsigned long long>(exit_us));
 					const A31StateSnapshot state = Make_Interactive_Capture_State(last_render_trace,
 						result.frames, exit_us, "pre-clean-exit");
+					const bool readback = capture_pixels != NULL &&
+						RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels,
+							kCaptureBytes);
 					const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
-						*capture_history, NULL, label);
-					A30_Vita_Log("Capture flush: %s candidate=%s phase=interactive-player-owned reason=pre-clean-exit path=%s state/csv/summary=%d/%d/%d error_code=%d\n",
+						*capture_history, readback ? capture_pixels : NULL, label);
+					A30_Vita_Log("Capture flush: %s candidate=%s phase=interactive-player-owned reason=pre-clean-exit path=%s screenshot/state/csv/summary=%d/%d/%d/%d error_code=%d\n",
 						capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
-						capture.bundle_path, capture.state_written ? 1 : 0,
+						capture.bundle_path, capture.screenshot_written ? 1 : 0,
+						capture.state_written ? 1 : 0,
 						capture.history_written ? 1 : 0, capture.summary_written ? 1 : 0,
 						capture.first_error_code);
 				} else if (result.render_error && capture_history->Count() != 0U) {

@@ -1,155 +1,71 @@
 # Renegade Vita
 
-Renegade Vita is a native PlayStation Vita port of *Command & Conquer:
-Renegade*. The project uses EA/Westwood's released source as the gameplay and
-engine owner, reads unchanged retail Renegade data, and replaces only platform
-boundaries such as Win32, DirectInput, DirectX 8, Miles, Bink, and desktop
-filesystem behavior.
+An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: Renegade*. The original EA/Westwood engine remains the owner of game logic, MIX/archive access, W3D/WW3D rendering ownership, Combat, Commando, mission scripts, HUD, and networking. This project replaces only the platform boundaries needed to run that original code on Vita.
 
-This is not a PSP/Adrenaline build, a W3D viewer, an asset-conversion runtime,
-or a replacement Renegade engine.
+It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-## Historical Visual Progress
+> **Development status — not a public game release.** No retail data is in this repository or its VPKs. Use only your own legally obtained retail data.
 
-The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 and Dev86 blocks below are exceptions so returned physical evidence is visible without being misrepresented as gameplay.
-The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the exact returned Dev82 and Dev86 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.
+## Where the port stands
 
-<table>
-<tr>
-<td width="20%"><img src="docs/history/screenshots/a31-vita-log-select-capture-f2278.png" width="180" alt="Select Capture F2278"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev5-spawn-control.png" width="180" alt="Spawn Control"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev5-walk-manual.png" width="180" alt="Walk Manual"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev5-vita-manual-select-interactive-f355-t39869172.png" width="180" alt="Vita Manual Select Interactive F355 T39869172"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev7-effects-131326.png" width="180" alt="Effects 131326"></td>
-</tr>
-<tr>
-<td width="20%"><img src="docs/history/screenshots/a35-dev7-vita-manual-select-interactive-f1527-t61897982.png" width="180" alt="Vita Manual Select Interactive F1527 T61897982"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev13-selected-frame.png" width="180" alt="Selected Frame"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev13-npc-crop.png" width="180" alt="Npc Crop"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev16-selected-frame.png" width="180" alt="Selected Frame"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev17-selected-frame.png" width="180" alt="Selected Frame"></td>
-</tr>
-<tr>
-<td width="20%"><img src="docs/history/screenshots/a35-dev18-capture2.png" width="180" alt="Capture2"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev18-vita-manual-select-interactive-f2184-t75384736.png" width="180" alt="Vita Manual Select Interactive F2184 T75384736"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-manual-select-interactive-f2570-t85917941.png" width="180" alt="Vita Manual Select Interactive F2570 T85917941"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev19-npc-detail-crop.png" width="180" alt="Npc Detail Crop"></td>
-<td width="20%"><img src="docs/history/screenshots/a35-dev19-vita-manual-select-interactive-f4146-t118405956.png" width="180" alt="Vita Manual Select Interactive F4146 T118405956"></td>
-</tr>
-</table>
+| Evidence area | Current state |
+| --- | --- |
+| Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
+| Latest physical return | **A3.5-dev87 failed the frontend usability gate**: menu text remained absent, intro A/V was slow/buzzy, and the gameplay dialogue box was empty. It is retained failure evidence, not a regression-free build. |
+| Latest local candidate | **A3.5-dev88**: canonical ARM/VPK validation passed after original glyph texture-stage and BINK audio-reserve repairs. It has **not** been copied to, installed on, or launched on a Vita. |
+| Visual evidence | The gallery contains reviewed historical frames only. No Dev87 screenshot was recovered; no Dev88 physical frame exists. |
+| Capture path | The current Vita exposes panel power control through VitaCompanion, not VDB framebuffer capture. The exact-title VDB provider is being prepared separately; no game-frame timing workaround will be presented as panel evidence. |
 
-### A3.5-dev82 — Returned Physical Diagnostic Frames
+Read the concise [current status](docs/CURRENT_STATUS.md) before treating any candidate as playable. The durable engineering record is in [reports/PORT_STATUS.md](reports/PORT_STATUS.md); it distinguishes host, Vita3K, and physical-Vita evidence.
 
-These are the four raw physical-Vita capture records returned for Dev82. They document two inverted loading presentations, a byte-identical loading-image capture marked first-interactive, and a black initial interactive capture with a partial HUD; they are diagnostic evidence only, not gameplay acceptance.
+## Visual evidence, honestly presented
+
+The [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) contains the reviewed GitHub-hosted frames, their labels, hashes, and diagnostic inventory. It intentionally does not fill later builds with black, loading, or early-frame captures just to create a visual sequence.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-original-loading-screen-t54494725.png" width="260" alt="Original loading frame t54494725 — full-frame vertically inverted loading UI"><br>Original loading frame t54494725 — full-frame vertically inverted loading UI</td>
-<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-original-loading-screen-t67280479.png" width="260" alt="Original loading frame t67280479 — letterboxed vertically inverted loading UI"><br>Original loading frame t67280479 — letterboxed vertically inverted loading UI</td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-first-interactive-frame-t64590857.png" width="260" alt="First interactive record t64590857 — byte-identical to full-frame inverted loading image"><br>First interactive record t64590857 — byte-identical to full-frame inverted loading image</td>
-<td width="50%"><img src="docs/history/screenshots/a35-dev82-vita-first-interactive-frame-t88041059.png" width="260" alt="First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD"><br>First interactive frame t88041059 — black framebuffer with partial weapon/ammo HUD</td>
+<td width="25%"><img src="docs/history/screenshots/a31-vita-log-select-capture-f2278.png" width="210" alt="A3.1 early visible M00 world"><br>A3.1 — early visible M00 world</td>
+<td width="25%"><img src="docs/history/screenshots/a35-dev5-walk-manual.png" width="210" alt="A3.5-dev5 manual M00 movement"><br>Dev5 — manual M00 movement</td>
+<td width="25%"><img src="docs/history/screenshots/a35-dev13-selected-frame.png" width="210" alt="A3.5-dev13 material-defect route frame"><br>Dev13 — material-defect route frame</td>
+<td width="25%"><img src="docs/history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png" width="210" alt="A3.5-dev86 diagnostic loading frame with absent UI labels"><br>Dev86 — diagnostic loading frame, not gameplay</td>
 </tr>
 </table>
 
-### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame
+Those images are historical, not a same-camera benchmark. A verified post-render VDB capture sequence will replace ad-hoc engine-timed capture for future comparison frames.
 
-This returned original-loading-screen capture is diagnostic only. Original loading artwork and colored panels render, but the original UI text regions are blank; it is neither a main-menu frame nor gameplay acceptance.
+## Start here
 
-<table>
-<tr>
-<td width="100%"><img src="docs/history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png" width="260" alt="Original loading screen at level-ready — returned physical capture; original loading panels render, but original UI labels are absent"><br>Original loading screen at level-ready — returned physical capture; original loading panels render, but original UI labels are absent</td>
-</tr>
-</table>
+- [Quickstart](docs/QUICKSTART.md) — clone and produce a local canonical or fast candidate build.
+- [Installing on Vita](docs/INSTALLING.md) — retail-data boundaries and manual installation safeguards.
+- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, Dev87 result, Dev88 limits, and next physical evidence gate.
+- [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
+- [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
+- [Historical capture campaign](docs/HISTORICAL_CAPTURE_CAMPAIGN.md) — the no-rebuild plan for comparable in-game frames, held until a physical session is explicitly authorized.
+- [Controls](docs/CONTROLS.md) — current mapping and known lifecycle caveat.
+- [Building](docs/BUILDING.md), [development](docs/DEVELOPMENT.md), and [troubleshooting](docs/TROUBLESHOOTING.md) — contributor workflow.
 
-## Current State
+## Build locally
 
-The current engineering candidate is **A3.5-dev82**. It builds, links, packages
-as a native Vita VPK, and is waiting on physical M00 tutorial validation for
-the latest fixes to loading-screen coverage/text/progress, combined loading
-prewarm, HUD/text display, dialogue subtitles, controls, reload/sniper
-behavior, character/door/powerup/objective texture orientation, original
-CombatGameMode finalization, transition diagnostics, and renderer state churn.
-
-Dev82 also source-routes the original startup movie and retail main-menu owners.
-Its Vita movie boundary uses a reproducible, Bink-only FFmpeg software build to
-decode the user-owned `EA_WW.BIK` and `R_INTRO.BIK` files in place; neither
-retail movies nor proprietary RAD code are included in the repository or VPK.
-
-The latest accepted physical baseline is **A3.1.4**, which proves visible
-interactive M00 lifecycle. Later A3.5 builds are internal candidates until the
-matching VPK, logs, and physical Vita observations pass their gates.
-
-Start here:
-
-- [Quickstart](docs/QUICKSTART.md) for cloning, building, and installing.
-- [Current Status](docs/CURRENT_STATUS.md) for what works and what is still
-  under test.
-- [Controls](docs/CONTROLS.md) for the current Vita input map.
-- [Demo Capture](docs/DEMO_CAPTURE.md) for the non-USB PSVITA/PSTV recording
-  workflow.
-- [Architecture](docs/ARCHITECTURE.md) for the source-port boundaries.
-- [Development](docs/DEVELOPMENT.md) for how to modify the port safely.
-- [Troubleshooting](docs/TROUBLESHOOTING.md) for common build/runtime failures.
-
-## Repository Layout
-
-- `upstream/CnC_Renegade/` is the pinned official EA source submodule.
-- `port/` contains Vita platform, renderer, audio, filesystem, compatibility,
-  validation, and patch material.
-- `port/patches/` contains deterministic patches applied to staged copies of
-  upstream source.
-- `staging/` is generated by `tools/stage_sources.sh`; do not treat it as the
-  source of record.
-- `tools/` contains the canonical build, staging, validation, packaging,
-  diagnostics, and optional device-helper scripts.
-- `reports/` contains durable engineering evidence, status records, milestone
-  records, and generated integration reports.
-- `dist/`, `build/`, and `logs/` are generated local outputs and are ignored.
-
-## Build
-
-WSL2 Ubuntu plus VitaSDK is the supported development environment. From the
-repo root:
+WSL2 Ubuntu or Linux with VitaSDK is the supported host environment.
 
 ```bash
+git clone --recurse-submodules https://github.com/TheGh0stShip/RenegadeVita.git
+cd RenegadeVita
 git submodule update --init --recursive
 bash ./tools/build.sh
 ```
 
-The build writes a VPK, ELF, map, logs, source-integration report, identity
-report, and diagnostics bundle to `dist/` under the managed builder root when
-available, otherwise under the checkout.
+`tools/build.sh` is the canonical candidate path. It preserves validation, deterministic staging, ARM package identity, diagnostics, and retail-exclusion checks. A fast build is useful for iteration only; it never substitutes for a canonical candidate or physical proof.
 
-The optional Windows wrapper only launches the same Bash script:
+## Project boundaries
 
-```powershell
-.\RenegadeVita_BUILD.ps1
-```
+- `upstream/CnC_Renegade/` is the pinned official released source and stays pristine.
+- `port/` holds Vita boundaries, compatibility work, renderer/audio providers, validation, and deterministic staging patches.
+- `staging/` is generated; do not edit it as the source of record.
+- `reports/` holds durable evidence and status. Generated build outputs, logs, raw captures/videos, dumps, retail data, saves, and credentials are excluded from Git.
 
-## Install
+## License and retail data
 
-The VPK contains only `eboot.bin` and `sce_sys/param.sfo`. It does not contain
-retail Renegade assets.
+The released Renegade source carries GPLv3 plus EA's additional terms; see the upstream notice after initializing the submodule. You must supply your own retail data at `ux0:data/renegade/retail/Data/`. The application writes only to `ux0:data/renegade/user/`.
 
-The Vita must already have user-owned retail data at:
-
-```text
-ux0:data/renegade/retail/Data/
-```
-
-Writable runtime files go under:
-
-```text
-ux0:data/renegade/user/
-```
-
-See [Installing](docs/INSTALLING.md) for manual VitaShell and FTP workflows.
-
-## License And Retail Data
-
-EA's released Renegade source is GPLv3 with additional terms. The upstream
-notice is available in `upstream/CnC_Renegade/LICENSE.md` after submodule
-initialization. You must own the retail game to use its data; no retail assets
-are included in this repository.
+See [LICENSE.md](LICENSE.md), [CONTRIBUTING.md](CONTRIBUTING.md), and [SECURITY.md](SECURITY.md) before contributing or sharing diagnostics.

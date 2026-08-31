@@ -1,86 +1,40 @@
 # Development
 
-The productive loop is inspect, change the narrowest owner, run focused
-validation, then run the canonical build before handing a candidate to hardware
-testing.
+Use an evidence-led loop: inspect the original owner, make the smallest coherent Vita-boundary correction, run focused validation, then canonically build before a hardware handoff.
 
-## Working Rules
+## Rules
 
-- Preserve original EA/Westwood ownership above platform boundaries.
-- Keep the upstream submodule pristine.
-- Make portability edits through `port/patches/` and `tools/stage_sources.sh`.
-- Put Vita-specific code under `port/`.
-- Keep generated artifacts out of Git.
-- Do not claim physical correctness from host logs.
+- Preserve EA/Westwood ownership above platform boundaries.
+- Keep the upstream submodule pristine and stage every upstream change through a deterministic zero-fuzz patch.
+- Keep retail data, saves, raw captures/videos, dumps, credentials, and generated build output out of Git.
+- Do not claim panel correctness, controls, audio quality, pacing, or lifecycle success from host logs.
+- Update the concise public status and durable reports when a change affects evidence, controls, capture, or hardware instructions.
 
-## Common Workflows
-
-Stage deterministic upstream copies:
+## Typical workflow
 
 ```bash
+git status --short
+git -C upstream/CnC_Renegade status --short
 bash ./tools/stage_sources.sh
-```
-
-Run focused Python contracts:
-
-```bash
-python3 -m unittest tools.test_vita_camera_input_contract
-python3 -m unittest tools.test_vita_loading_screen_contract
-python3 -m unittest tools.test_vita_skin_submission_contract
-```
-
-Run a fast compile/link iteration:
-
-```bash
+python3 -m unittest tools.test_vita_indexed_state_contract
 RENEGADE_FAST_SCOPE=compile bash ./tools/build_fast_candidate.sh
-```
-
-Run a package-producing fast build:
-
-```bash
-RENEGADE_FAST_SCOPE=package bash ./tools/build_fast_candidate.sh
-```
-
-Run the full candidate build:
-
-```bash
 bash ./tools/build.sh
-```
-
-Check source-control hygiene:
-
-```bash
 python3 tools/verify_repo_hygiene.py --root .
 ```
 
-## Updating Candidate Labels
+Choose a focused contract that matches the changed boundary; do not use the example test above as a universal gate.
 
-The default candidate label lives in:
+## Upstream changes
 
-- `CMakeLists.txt`
-- `tools/build.sh`
-- `tools/build_fast_candidate.sh`
+1. Decide whether the portability issue belongs in a compatibility header, Vita boundary, or staging patch.
+2. Add a minimal patch under `port/patches/` when upstream code must change.
+3. Register it in `tools/stage_sources.sh`.
+4. Confirm deterministic application with no `.orig` or `.rej` files.
+5. Run focused tests and a proportional build.
+6. Preserve the candidate identity and update evidence records.
 
-The integration report and build checks may also pin expected source and patch
-counts. Update those together when adding/removing selected source files or
-patches.
+## Physical evidence
 
-## Adding A Portability Patch
+A hardware candidate needs matching VPK, ELF, map, symbols, source/patch identity, build logs, SHA manifest, runtime log, and any returned capture or dump. Test only the declared scope and release synthetic controls on completion.
 
-1. Inspect the upstream source and decide whether the issue belongs in a
-   compatibility header, a Vita boundary, or a deterministic patch.
-2. Add a small patch under `port/patches/`.
-3. Register the patch in `tools/stage_sources.sh`.
-4. Run staging and confirm no `.orig` or `.rej` files appear.
-5. Run focused tests and the relevant build.
-6. Update reports if status, evidence, or behavior changed.
-
-## Hardware Evidence
-
-A hardware candidate needs the matching VPK, ELF, map, symbols, source
-integration report, compiler log, identity report, SHA manifest, runtime log,
-and any returned captures or dumps.
-
-Do not overwrite retail data on the Vita. Do not treat an old route recording
-as acceptance when dialogue timing, mission state, input mapping, or lifecycle
-behavior changed.
+Read [Evidence and capture policy](EVIDENCE.md), [Current status](CURRENT_STATUS.md), and [Contributing](../CONTRIBUTING.md) before changing the active path.

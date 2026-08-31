@@ -1,85 +1,46 @@
 # Building
 
-`tools/build.sh` is the canonical build. It is the only build path that should
-be used for a hardware-test candidate or a milestone candidate.
+`tools/build.sh` is the canonical build path. Use it for every candidate that may be handed to physical hardware.
 
-## Canonical Build
+## Canonical build
 
 ```bash
 bash ./tools/build.sh
 ```
 
-The script checks:
+The canonical path checks host prerequisites, the pinned clean upstream source, retained host contracts, deterministic zero-fuzz staging, ARM ELF/SELF/VPK identity, VPK contents, SHA-256 manifests, diagnostics, and retail exclusion.
 
-- required host tools and VitaSDK files;
-- pinned upstream submodule revision and clean upstream state;
-- retained host semantic fingerprints;
-- focused host contracts;
-- deterministic zero-fuzz staging;
-- source-integration report fields;
-- Vita ARM ELF, SELF, and VPK identity;
-- VPK contents, confirming no retail assets are packaged;
-- candidate diagnostics and SHA-256 manifests.
+It produces a candidate-scoped VPK plus matching ELF, map, symbols, build report, compiler/host logs, source integration report, identity report, diagnostics bundle, and SHA-256 manifest. These generated artifacts remain outside Git.
 
-The first build also downloads the pinned FFmpeg source archive and builds a
-small Vita static dependency containing only the Bink demuxer, Bink video and
-Bink audio decoders, scaling, and resampling support. The archive checksum and
-configure flags are fixed in `tools/build_ffmpeg_bink_vita.sh`; later builds
-reuse the stamped local installation under `build/deps/ffmpeg-bink-vita/`.
-No RAD Game Tools code or retail movie is downloaded or packaged.
+The BINK dependency build is reproducible and limited to the FFmpeg pieces needed for Bink demux/video/audio decode, scaling, and resampling. It neither downloads RAD code nor packages a retail movie.
 
-## Fast Iteration
-
-Use the fast builder only for local iteration:
+## Fast iteration
 
 ```bash
 RENEGADE_FAST_SCOPE=compile bash ./tools/build_fast_candidate.sh
 RENEGADE_FAST_SCOPE=package bash ./tools/build_fast_candidate.sh
 ```
 
-Fast builds do not replace canonical evidence. Run `tools/build.sh` before
-handing a VPK to a physical tester.
+Fast builds reduce iteration work but are not canonical evidence. Before a physical handoff, run the canonical build for the exact candidate.
 
-## Environment Variables
+## Configuration
 
-- `RENEGADE_VITASDK`: VitaSDK root. Defaults to `/usr/local/vitasdk`.
-- `RENEGADE_BUILDER_ROOT`: managed output root. Defaults to the checkout when
-  no writable managed root exists.
-- `RENEGADE_DIST_ROOT`: override artifact lookup/output for helper scripts.
-- `RENEGADE_BUILD_JOBS`: parallel build jobs. Canonical default is conservative.
-- `RENEGADE_CANDIDATE_LABEL`: candidate label such as `A3.5-dev82`.
-- `RENEGADE_RETAIL_ROOT`: host retail Renegade root used by host validation.
-- `RENEGADE_REUSE_HOST_VALIDATION_LOG`: explicit retained host-validation log
-  when host retail data is unavailable.
-- `RENEGADE_SOURCE_CACHE`: optional directory for the pinned FFmpeg source
-  archive. It defaults to the managed builder source cache.
+| Variable | Purpose |
+| --- | --- |
+| `RENEGADE_VITASDK` | VitaSDK root; defaults to `/usr/local/vitasdk`. |
+| `RENEGADE_BUILDER_ROOT` | Managed output root when writable. |
+| `RENEGADE_DIST_ROOT` | Explicit artifact lookup/output override. |
+| `RENEGADE_BUILD_JOBS` | Parallel build jobs. |
+| `RENEGADE_CANDIDATE_LABEL` | Internal candidate identity such as `A3.5-devNN`. |
+| `RENEGADE_RETAIL_ROOT` | Host retail root used only for validation. |
+| `RENEGADE_SOURCE_CACHE` | Optional cache for pinned source dependencies. |
 
-## Outputs
+The PowerShell wrapper only invokes the same Bash builder through WSL. Prefer the Bash command for reproducible diagnostics.
 
-Successful canonical builds publish:
+## Before handoff
 
-- `RenegadeVita-<candidate>.vpk`
-- `RenegadeVita-<candidate>.elf`
-- `RenegadeVita-<candidate>.map`
-- `RenegadeVita-<candidate>.symbols.txt`
-- `<candidate>-BUILD_REPORT.txt`
-- `<candidate>-COMPILER_LOG.txt`
-- `<candidate>-HOST-VALIDATION.log`
-- `<candidate>-SOURCE_INTEGRATION_REPORT.json`
-- `<candidate>-IDENTITY-VERIFICATION.json`
-- `<candidate>-BUILD-DIAGNOSTICS-<timestamp>.zip`
-- `<candidate>-SHA256SUMS.txt`
-
-Generated artifacts stay out of Git.
-
-## Windows Wrapper
-
-`RenegadeVita_BUILD.ps1` is optional. It calls the Bash script through WSL and
-does not contain an embedded payload:
-
-```powershell
-.\RenegadeVita_BUILD.ps1
-.\RenegadeVita_BUILD.ps1 -CandidateLabel A3.5-dev82 -BuildJobs 8
+```bash
+python3 tools/verify_repo_hygiene.py --root .
 ```
 
-When in doubt, run the Bash script directly from WSL.
+Retain matching artifacts and read [Current status](CURRENT_STATUS.md). A successful build is not proof of physical gameplay.

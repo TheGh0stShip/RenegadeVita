@@ -1,8 +1,8 @@
 # Controls
 
-Current A3.5-dev82 mapping:
+The mapping below is the current source intent. Its complete physical behavior is still an A3.5 gate; do not infer acceptance from this table.
 
-| Vita input | Current function |
+| Vita input | Intended function |
 | --- | --- |
 | Left stick | Original movement sliders: forward/back and strafe |
 | Right stick | Original camera/look sliders |
@@ -10,28 +10,18 @@ Current A3.5-dev82 mapping:
 | Circle | Crouch / back in UI contexts |
 | Square | Reload |
 | Triangle | Action/use/interact |
-| D-pad Left | Previous weapon |
-| D-pad Right | Next weapon |
-| D-pad Up | Sniper zoom in |
-| D-pad Down | Sniper zoom out |
-| Left shoulder | Original joystick button 0, currently secondary-fire/use-weapon path |
-| Right shoulder | Original joystick button 1, currently primary-fire path |
-| Start | Clean exit/menu escape path, sampled early for LiveArea return |
-| Select | Debug/capture path only |
-| Front touch | Original mouse cursor positioning plus left-click/tap |
-| Rear touch pad | First-person / third-person camera toggle |
+| D-pad Left / Right | Previous / next weapon in gameplay; WWUI focus navigation in frontend |
+| D-pad Up / Down | Sniper zoom in / out in gameplay |
+| Left shoulder | Original joystick button 0 / secondary-fire path |
+| Right shoulder | Original joystick button 1 / primary-fire path |
+| Front touch | Original 640×480 UI cursor plus left-click/tap |
+| Rear touch | First-person / third-person camera toggle |
+| Select | Diagnostic input only; it is not a system screenshot control |
+| Start | Original pause/exit request; **not physically accepted** because the Dev87 return reported a crash after Start |
 
 Notes:
 
-- D-pad navigates the original WWUI focus while the frontend menu loop is
-  active; during gameplay it remains bound to weapon switching and sniper zoom.
-- Square and Circle are no longer both reload. Circle is crouch/back; Square
-  is reload.
-- D-pad Left/Right must not emit gameplay camera turn while changing weapons.
-- D-pad Up/Down are reserved for sniper zoom so shoulder buttons remain
-  available to the original weapon behaviors.
-- Front touch maps to original 640x480 UI cursor coordinates and left mouse
-  button state for WWUI menus, options, save/load screens, and in-game
-  terminals.
-- Rear touch owns the first-person / third-person camera toggle so front touch
-  remains available for mouse-driven UI.
+- Front touch is reserved for original mouse-driven WWUI/terminal interaction.
+- D-pad gameplay input must not leak into camera turning.
+- The MP4 recorder's L+Start finalize gesture is separate from normal game input and is unsafe as a capture workaround until Start lifecycle behavior is accepted.
+- Current capture work should use the future title-local VDB provider, not gameplay controls or arbitrary frame delays.

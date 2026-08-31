@@ -4,12 +4,26 @@ This page collects web-viewable diagnostic screenshots from the Renegade Vita ev
 
 Evidence policy:
 
-- Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/`.
+- Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `<vita3k-data-root>/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `<historical-evidence-root>/Vita Logs/`.
 - The gallery stores PNG copies under `docs/history/screenshots/` so GitHub can render them directly.
 - Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list every useful local or Vita-pulled gameplay sample found.
 - One historical loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler, except the four exact returned Dev82 diagnostic frames shown separately below.
 - Vita-pulled screenshots are mapped through each build's own `a35-devXX-runtime.log` capture paths before being included.
 - These images are historical evidence. They do not make dev82 physically accepted; dev82 still requires a returned Vita test with matching logs, screenshots/captures, and any crash dumps.
+
+## Current Capture Completeness
+
+The gallery is a reviewed history, not a controlled same-camera comparison. Its early A3.1/A3.5 gameplay frames are useful visual context, but later engine-timed captures were often loading, black, or diagnostic buffers. They must not be used to imply an unobserved regression or improvement.
+
+| Candidate | GitHub-hosted visual state |
+| --- | --- |
+| A3.1.4 | Accepted physical interactive baseline; preserved historical M00 frames exist. |
+| A3.5-dev82 | Four returned physical diagnostic frames are retained below; none is gameplay acceptance. |
+| A3.5-dev86 | One returned loading diagnostic is retained; it is not a menu or gameplay frame. |
+| A3.5-dev87 | Dev87: no title-owned screenshot was recovered after the physical return. |
+| A3.5-dev88 | Local-only canonical candidate; no Vita capture exists. |
+
+The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, or unrelated images merely to fill a build row.
 
 ## Quick Gameplay View
 
@@ -56,11 +70,11 @@ This overview deliberately shows actual gameplay/world frames, including NPC det
 
 Source evidence:
 
-- `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/select-capture-p0-f2278-t76344972/`
-- `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/select-capture-p0-f3232-t108422940/`
-- `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/a31-runtime.log`
-- `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/a31.1-runtime.log`
-- `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/a31.4-runtime.log`
+- `<historical-evidence-root>/Vita Logs/select-capture-p0-f2278-t76344972/`
+- `<historical-evidence-root>/Vita Logs/select-capture-p0-f3232-t108422940/`
+- `<historical-evidence-root>/Vita Logs/a31-runtime.log`
+- `<historical-evidence-root>/Vita Logs/a31.1-runtime.log`
+- `<historical-evidence-root>/Vita Logs/a31.4-runtime.log`
 
 ### A3.5-dev5 - Visible M00 and Movement Evidence
 

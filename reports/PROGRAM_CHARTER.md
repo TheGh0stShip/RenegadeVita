@@ -17,16 +17,13 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
 - A3.1.4: accepted physical interactive M00 baseline.
 - A3.2-dev1: frozen failed physical checkpoint: held input, inverted axes,
   perspective warp, muzzle alpha defect, and animation crash/unclean exit.
-- A3.5-dev45: active automated replay-exit evidence point. It retains the
-  accepted A3.1.4 baseline, later physical partial returns, the original
-  loading-screen owner/capture gate, the dev35 stack-frame crash fix, the dev36
-  right-stick Y boundary correction, the dev37 release-build DataSafe
-  invalid-handle guard, dev38 schema-v4 returned loading-screen visual-gate
-  metadata, dev39/dev40 original retail loading W3D TGA handling, dev43 clean
-  route recording through gate/ladder/pistol/fire, and now automatic replay
-  return to LiveArea after route exhaustion. It is not physically accepted until
-  visual/audio correctness and longer first-mission stability return matching
-  Vita evidence.
+- A3.5-dev87: retained physical frontend-usability failure evidence. The user
+  reports absent original menu text, slow/buzzy intro A/V, and an empty original
+  gameplay dialogue box; the matching partial log ends at main-menu activation.
+- A3.5-dev88: current canonical local-only candidate. It restores the original
+  indexed glyph texture-stage combiner before menu/dialogue draws and raises the
+  real BINK audio-start reserve to three decoded output buffers. It is not
+  installed, launched, or physically accepted.
 
 ## Milestone contracts
 

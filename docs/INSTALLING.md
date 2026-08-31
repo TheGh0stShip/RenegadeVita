@@ -1,64 +1,62 @@
-# Installing
+# Installing on Vita
 
-The VPK is intentionally small. It does not include retail data, saves,
-configuration, screenshots, logs, or crash dumps.
+The VPK deliberately contains only the executable and package metadata. It never includes retail data, saves, configuration, logs, screenshots, videos, or crash dumps.
 
-## Vita Filesystem Contract
+## Filesystem boundary
 
-Retail files must already exist here:
+Retail files must already be present on the Vita:
 
 ```text
 ux0:data/renegade/retail/Data/
 ```
 
-The game writes only under:
+The port writes only below:
 
 ```text
 ux0:data/renegade/user/
 ```
 
-Do not place generated caches, logs, or saves under `retail/`.
+Do not copy generated caches, logs, saves, or modified data into `retail/`.
 
-## Manual VitaShell Install
+## Before installation
 
-1. Build the VPK with `bash ./tools/build.sh`.
-2. Copy `RenegadeVita-<candidate>.vpk` to any convenient VitaShell-visible
-   folder, such as `ux0:data/renegade/user/`.
-3. On the Vita, open VitaShell and install the VPK.
-4. Confirm `ur0:/data/libshacccg.suprx` exists before launching.
-5. Launch the bubble and preserve the runtime log after testing.
+1. Build the exact candidate with `bash ./tools/build.sh`.
+2. Retain its VPK, packaged SELF, map, symbols, SHA-256 manifest, and build log together.
+3. Verify the VPK contains no retail data.
+4. Review [Current status](CURRENT_STATUS.md) and use a bounded physical test plan.
+5. Keep a hash-verified backup of the currently installed title executable before replacing it.
 
-## VitaShell FTP Upload
+A local build or upload receipt is not visual or gameplay acceptance.
 
-Start VitaShell FTP on the Vita, then run:
+## Manual VitaShell installation
+
+1. Copy the selected `RenegadeVita-<candidate>.vpk` to a VitaShell-visible location, for example `ux0:data/renegade/user/`.
+2. Install it in VitaShell.
+3. Confirm `ur0:/data/libshacccg.suprx` is available before launch.
+4. Verify the installed executable hash against the candidate's packaged SELF.
+5. Launch only under the approved test plan. Preserve the matching runtime log and any returned diagnostics after the run.
+
+## Optional FTP upload
+
+The helper uploads only the VPK you name; it does not install, launch, alter retail data, or collect personal media.
 
 ```bash
-bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev82.vpk
+bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-<candidate>.vpk
 ```
 
-Default upload target:
+The default destination is:
 
 ```text
 ux0:/data/renegade/user/<vpk-file-name>
 ```
 
-You can choose a different remote directory:
+## Evidence after a test
 
-```bash
-bash ./tools/upload_vpk_ftp.sh <vita-ip> dist/RenegadeVita-A3.5-dev82.vpk ux0:/VPK
-```
+Keep each item bound to the exact candidate hash:
 
-The helper only uploads the selected VPK. It does not install it, launch it,
-or copy retail data.
+- runtime log under `ux0:data/renegade/user/logs/`;
+- title-owned captures under `ux0:data/renegade/user/captures/`;
+- a PSP2 dump if a crash occurred; and
+- a finalized recorder MP4 only when its own file/hash can be established.
 
-## After A Physical Test
-
-Return these if available:
-
-- `ux0:data/renegade/user/logs/a35-dev82-runtime.log`
-- any files under `ux0:data/renegade/user/captures/`
-- screenshots made by VitaShell or the system
-- any `psp2core-*.psp2dmp`
-
-Match every returned log or dump to the VPK hash from
-`dist/<candidate>-SHA256SUMS.txt`.
+Never commit retail data, raw dumps, arbitrary personal media, pairing material, or private device configuration. See [Evidence and capture policy](EVIDENCE.md).

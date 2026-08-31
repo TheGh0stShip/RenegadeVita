@@ -17,7 +17,14 @@ SCREENSHOT_DIR = ROOT / "docs" / "history" / "screenshots"
 TIMELINE_PATH = ROOT / "docs" / "HISTORICAL_SCREENSHOT_TIMELINE.md"
 INVENTORY_JSON = ROOT / "reports" / "generated" / "historical_evidence_inventory.json"
 INVENTORY_MD = ROOT / "reports" / "HISTORICAL_EVIDENCE_INVENTORY.md"
-README_PATH = ROOT / "README.md"
+
+# These labels intentionally describe evidence provenance without publishing
+# workstation-specific mount points in GitHub-facing reports.
+WORKSPACE_LABEL = "<workspace>"
+VITA3K_USER_LABEL = "<vita3k-data-root>/ux0/data/renegade/user"
+MANAGED_BUILDER_LABEL = "<managed-builder-root>"
+HISTORICAL_VITA_LOGS_LABEL = "<historical-evidence-root>/Vita Logs"
+HISTORICAL_PROJECT_LABEL = "<historical-evidence-root>/workspace/active"
 
 
 QUICK_GAMEPLAY = [
@@ -54,11 +61,11 @@ GAMEPLAY_SECTIONS = [
             ("a31-vita-log-select-capture-f3232-annotated.png", "Annotated select capture frame 3232"),
         ],
         "sources": [
-            "/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/select-capture-p0-f2278-t76344972/",
-            "/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/select-capture-p0-f3232-t108422940/",
-            "/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/a31-runtime.log",
-            "/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/a31.1-runtime.log",
-            "/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/a31.4-runtime.log",
+            "<historical-evidence-root>/Vita Logs/select-capture-p0-f2278-t76344972/",
+            "<historical-evidence-root>/Vita Logs/select-capture-p0-f3232-t108422940/",
+            "<historical-evidence-root>/Vita Logs/a31-runtime.log",
+            "<historical-evidence-root>/Vita Logs/a31.1-runtime.log",
+            "<historical-evidence-root>/Vita Logs/a31.4-runtime.log",
         ],
     },
     {
@@ -258,25 +265,6 @@ DEV86_RETURNED_DIAGNOSTICS = [
 ]
 
 
-README_IMAGES = [
-    "a31-vita-log-select-capture-f2278.png",
-    "a35-dev5-spawn-control.png",
-    "a35-dev5-walk-manual.png",
-    "a35-dev5-vita-manual-select-interactive-f355-t39869172.png",
-    "a35-dev7-effects-131326.png",
-    "a35-dev7-vita-manual-select-interactive-f1527-t61897982.png",
-    "a35-dev13-selected-frame.png",
-    "a35-dev13-npc-crop.png",
-    "a35-dev16-selected-frame.png",
-    "a35-dev17-selected-frame.png",
-    "a35-dev18-capture2.png",
-    "a35-dev18-vita-manual-select-interactive-f2184-t75384736.png",
-    "a35-dev19-vita-manual-select-interactive-f2570-t85917941.png",
-    "a35-dev19-npc-detail-crop.png",
-    "a35-dev19-vita-manual-select-interactive-f4146-t118405956.png",
-]
-
-
 MISSING_SCREENSHOT_BUILDS = [
     "A3.5-dev1",
     "A3.5-dev14",
@@ -288,6 +276,30 @@ MISSING_SCREENSHOT_BUILDS = [
     "A3.5-dev38",
     "A3.5-dev40",
     "A3.5-dev41",
+]
+
+
+CAPTURE_COMPLETENESS = [
+    (
+        "A3.1.4",
+        "Accepted physical interactive baseline; preserved historical M00 frames exist.",
+    ),
+    (
+        "A3.5-dev82",
+        "Four returned physical diagnostic frames are retained below; none is gameplay acceptance.",
+    ),
+    (
+        "A3.5-dev86",
+        "One returned loading diagnostic is retained; it is not a menu or gameplay frame.",
+    ),
+    (
+        "A3.5-dev87",
+        "Dev87: no title-owned screenshot was recovered after the physical return.",
+    ),
+    (
+        "A3.5-dev88",
+        "Local-only canonical candidate; no Vita capture exists.",
+    ),
 ]
 
 
@@ -305,15 +317,6 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
-
-
-def label_from_filename(name: str) -> str:
-    stem = Path(name).stem
-    stem = re.sub(r"^a31-vita-log-", "", stem)
-    stem = re.sub(r"^a35-dev\d+-", "", stem)
-    stem = stem.replace("t", "t")
-    words = stem.replace("-", " ").replace("_", " ").split()
-    return " ".join(word.upper() if word in {"bmp", "png"} else word.capitalize() for word in words)
 
 
 def rel_img(name: str) -> str:
@@ -407,12 +410,22 @@ def write_timeline() -> None:
         "",
         "Evidence policy:",
         "",
-        "- Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/`.",
+        "- Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `<vita3k-data-root>/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `<historical-evidence-root>/Vita Logs/`.",
         "- The gallery stores PNG copies under `docs/history/screenshots/` so GitHub can render them directly.",
         "- Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list every useful local or Vita-pulled gameplay sample found.",
         "- One historical loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler, except the four exact returned Dev82 diagnostic frames shown separately below.",
         "- Vita-pulled screenshots are mapped through each build's own `a35-devXX-runtime.log` capture paths before being included.",
         "- These images are historical evidence. They do not make dev82 physically accepted; dev82 still requires a returned Vita test with matching logs, screenshots/captures, and any crash dumps.",
+        "",
+        "## Current Capture Completeness",
+        "",
+        "The gallery is a reviewed history, not a controlled same-camera comparison. Its early A3.1/A3.5 gameplay frames are useful visual context, but later engine-timed captures were often loading, black, or diagnostic buffers. They must not be used to imply an unobserved regression or improvement.",
+        "",
+        "| Candidate | GitHub-hosted visual state |",
+        "| --- | --- |",
+        *[f"| {build} | {state} |" for build, state in CAPTURE_COMPLETENESS],
+        "",
+        "The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, or unrelated images merely to fill a build row.",
         "",
         "## Quick Gameplay View",
         "",
@@ -515,17 +528,18 @@ def write_timeline() -> None:
     TIMELINE_PATH.write_text("\n".join(doc), encoding="utf-8")
 
 
-def file_entry(path: Path, root: Path) -> dict[str, object]:
+def file_entry(path: Path, root: Path, source_label: str) -> dict[str, object]:
     stat = path.stat()
+    relative_path = str(path.relative_to(root)) if path.is_relative_to(root) else path.name
     return {
-        "path": str(path),
-        "relative_path": str(path.relative_to(root)) if path.is_relative_to(root) else str(path),
+        "path": f"{source_label}/{relative_path}",
+        "relative_path": relative_path,
         "size": stat.st_size,
         "type": path.suffix.lower().lstrip("."),
     }
 
 
-def scan_root(label: str, path: Path) -> dict[str, object]:
+def scan_root(label: str, path: Path, public_root: str) -> dict[str, object]:
     extensions = {".png", ".bmp", ".jpg", ".jpeg", ".log", ".txt", ".json", ".csv"}
     files = []
     if path.exists():
@@ -534,13 +548,13 @@ def scan_root(label: str, path: Path) -> dict[str, object]:
             if "/retail/" in text or "/retail-pc/" in text:
                 continue
             if item.is_file() and item.suffix.lower() in extensions:
-                files.append(file_entry(item, path))
+                files.append(file_entry(item, path, label))
     counts = defaultdict(int)
     for item in files:
         counts[str(item["type"])] += 1
     return {
         "label": label,
-        "root": str(path),
+        "root": public_root,
         "exists": path.exists(),
         "file_count": len(files),
         "counts_by_type": dict(sorted(counts.items())),
@@ -550,24 +564,24 @@ def scan_root(label: str, path: Path) -> dict[str, object]:
 
 def write_inventory() -> None:
     roots = [
-        ("github_gallery", SCREENSHOT_DIR),
-        ("active_device_evidence", ROOT / "build" / "device-evidence"),
-        ("active_logs", ROOT / "logs"),
-        ("active_dist", ROOT / "dist"),
-        ("vita3k_user_appdata", Path("/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/data/renegade/user")),
-        ("missing_c_local_builder_root", Path("/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder")),
-        ("e_vita_logs", Path("/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs")),
-        ("e_project_logs", Path("/mnt/e/Projects/RenegadeVitaBuilder/workspace/active/logs")),
-        ("e_project_dist", Path("/mnt/e/Projects/RenegadeVitaBuilder/dist")),
+        ("github_gallery", SCREENSHOT_DIR, "docs/history/screenshots"),
+        ("active_device_evidence", ROOT / "build" / "device-evidence", "build/device-evidence"),
+        ("active_logs", ROOT / "logs", "logs"),
+        ("active_dist", ROOT / "dist", "dist"),
+        ("vita3k_user_appdata", Path("/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/data/renegade/user"), VITA3K_USER_LABEL),
+        ("missing_c_local_builder_root", Path("/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder"), MANAGED_BUILDER_LABEL),
+        ("e_vita_logs", Path("/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs"), HISTORICAL_VITA_LOGS_LABEL),
+        ("e_project_logs", Path("/mnt/e/Projects/RenegadeVitaBuilder/workspace/active/logs"), f"{HISTORICAL_PROJECT_LABEL}/logs"),
+        ("e_project_dist", Path("/mnt/e/Projects/RenegadeVitaBuilder/dist"), "<historical-evidence-root>/dist"),
     ]
-    scans = [scan_root(label, path) for label, path in roots]
+    scans = [scan_root(label, path, public_root) for label, path, public_root in roots]
     manifest = gallery_manifest()
     gallery_by_build = defaultdict(int)
     for item in manifest:
         gallery_by_build[build_ref(str(item["file"]))] += 1
 
     inventory = {
-        "generated_from": str(ROOT),
+        "generated_from": WORKSPACE_LABEL,
         "policy": "No retail data, saves, credentials, raw dumps, or VPK payloads are committed by this inventory.",
         "gallery_png_count": len(manifest),
         "gallery_by_build": dict(sorted(gallery_by_build.items())),
@@ -583,12 +597,12 @@ def write_inventory() -> None:
         "",
         "This inventory records where previous Renegade Vita screenshots and logs were found for the GitHub historical gallery. It intentionally excludes retail data, saves, credentials, raw dumps, and VPK payloads.",
         "",
-        f"- Bash workspace scanned: `{ROOT}`",
+        f"- Bash workspace scanned: `{WORKSPACE_LABEL}`",
         f"- GitHub gallery PNGs: {len(manifest)}",
         "- VitaShell FTP was checked read-only at `10.0.0.202:1337` for `ux0:/data/renegade/user/logs/`, `captures/`, and `screenshots/`; the latest audit found 24 runtime logs, 89 capture directories, and no files in the top-level screenshots folder.",
         "- All 89 live Vita capture directories are now represented locally between `build/device-evidence/vitashell-gallery-pull-20260828/`, `build/device-evidence/vitashell-gallery-pull-secondpass-*`, and `build/device-evidence/vitashell-gallery-pull-listingpass-*`.",
-        "- `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder` was not present; targeted AppData evidence came from the Vita3K user data root instead.",
-        "- `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/` supplied the older A3.1 captures and logs.",
+        "- `<managed-builder-root>` was not present; targeted AppData evidence came from the Vita3K user data root instead.",
+        "- `<historical-evidence-root>/Vita Logs/` supplied the older A3.1 captures and logs.",
         "",
         "## Gallery By Build",
         "",
@@ -633,53 +647,9 @@ def write_inventory() -> None:
     INVENTORY_MD.write_text("\n".join(lines), encoding="utf-8")
 
 
-def write_readme() -> None:
-    readme = README_PATH.read_text(encoding="utf-8")
-    start = readme.index("## Historical Visual Progress")
-    end = readme.index("## Current State")
-    cells = []
-    for filename in README_IMAGES:
-        caption = label_from_filename(filename)
-        cells.append(
-            f'<td width="20%"><img src="docs/history/screenshots/{filename}" width="180" alt="{html.escape(caption, quote=True)}"></td>'
-        )
-    rows = ["<table>"]
-    for index in range(0, len(cells), 5):
-        rows.append("<tr>")
-        rows.extend(cells[index : index + 5])
-        rows.append("</tr>")
-    rows.append("</table>")
-    replacement = "\n".join(
-        [
-            "## Historical Visual Progress",
-            "",
-            "The first project artifact a GitHub reader sees is a gameplay-first visual progression grid. It deliberately excludes black/logo, magenta diagnostic, and loading-only frames; the clearly labelled Dev82 and Dev86 blocks below are exceptions so returned physical evidence is visible without being misrepresented as gameplay.",
-            "The full [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) includes every useful gameplay screenshot found per build, the exact returned Dev82 and Dev86 diagnostic frames, and a complete manifest of all GitHub-hosted evidence PNGs.",
-            "",
-            *rows,
-            "",
-            "### A3.5-dev82 — Returned Physical Diagnostic Frames",
-            "",
-            "These are the four raw physical-Vita capture records returned for Dev82. They document two inverted loading presentations, a byte-identical loading-image capture marked first-interactive, and a black initial interactive capture with a partial HUD; they are diagnostic evidence only, not gameplay acceptance.",
-            "",
-            image_table(DEV82_RETURNED_DIAGNOSTICS, columns=2).replace('src="history/screenshots/', 'src="docs/history/screenshots/'),
-            "",
-            "### A3.5-dev86 — Returned Physical Frontend Diagnostic Frame",
-            "",
-            "This returned original-loading-screen capture is diagnostic only. Original loading artwork and colored panels render, but the original UI text regions are blank; it is neither a main-menu frame nor gameplay acceptance.",
-            "",
-            image_table(DEV86_RETURNED_DIAGNOSTICS, columns=1).replace('src="history/screenshots/', 'src="docs/history/screenshots/'),
-            "",
-            "",
-        ]
-    )
-    README_PATH.write_text(readme[:start] + replacement + readme[end:], encoding="utf-8")
-
-
 def main() -> int:
     write_timeline()
     write_inventory()
-    write_readme()
     return 0
 
 

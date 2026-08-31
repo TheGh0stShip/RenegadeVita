@@ -1,0 +1,24 @@
+name: Repository hygiene
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-docs-and-hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate public documentation
+        run: python3 tools/verify_public_docs.py --root .
+      - name: Verify repository hygiene
+        run: python3 tools/verify_repo_hygiene.py --root .

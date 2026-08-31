@@ -2,12 +2,12 @@
 
 This inventory records where previous Renegade Vita screenshots and logs were found for the GitHub historical gallery. It intentionally excludes retail data, saves, credentials, raw dumps, and VPK payloads.
 
-- Bash workspace scanned: `/home/steve/projects/RenegadeVitaBuilder/workspace/active`
+- Bash workspace scanned: `<workspace>`
 - GitHub gallery PNGs: 176
 - VitaShell FTP was checked read-only at `10.0.0.202:1337` for `ux0:/data/renegade/user/logs/`, `captures/`, and `screenshots/`; the latest audit found 24 runtime logs, 89 capture directories, and no files in the top-level screenshots folder.
 - All 89 live Vita capture directories are now represented locally between `build/device-evidence/vitashell-gallery-pull-20260828/`, `build/device-evidence/vitashell-gallery-pull-secondpass-*`, and `build/device-evidence/vitashell-gallery-pull-listingpass-*`.
-- `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder` was not present; targeted AppData evidence came from the Vita3K user data root instead.
-- `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs/` supplied the older A3.1 captures and logs.
+- `<managed-builder-root>` was not present; targeted AppData evidence came from the Vita3K user data root instead.
+- `<historical-evidence-root>/Vita Logs/` supplied the older A3.1 captures and logs.
 
 ## Gallery By Build
 
@@ -41,15 +41,15 @@ This inventory records where previous Renegade Vita screenshots and logs were fo
 
 | Label | Exists | Files | Type counts | Root |
 | --- | --- | ---: | --- | --- |
-| github_gallery | True | 176 | png:176 | `/home/steve/projects/RenegadeVitaBuilder/workspace/active/docs/history/screenshots` |
-| active_device_evidence | True | 4239 | bmp:161, csv:51, json:2821, log:994, png:21, txt:191 | `/home/steve/projects/RenegadeVitaBuilder/workspace/active/build/device-evidence` |
-| active_logs | True | 277 | log:277 | `/home/steve/projects/RenegadeVitaBuilder/workspace/active/logs` |
-| active_dist | True | 680 | json:116, log:39, txt:525 | `/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist` |
-| vita3k_user_appdata | True | 7 | log:6, txt:1 | `/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/data/renegade/user` |
-| missing_c_local_builder_root | False | 0 | - | `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder` |
-| e_vita_logs | True | 39 | bmp:4, csv:9, json:9, log:9, txt:8 | `/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs` |
-| e_project_logs | False | 0 | - | `/mnt/e/Projects/RenegadeVitaBuilder/workspace/active/logs` |
-| e_project_dist | True | 734 | csv:5, json:102, log:41, txt:586 | `/mnt/e/Projects/RenegadeVitaBuilder/dist` |
+| github_gallery | True | 176 | png:176 | `docs/history/screenshots` |
+| active_device_evidence | True | 4271 | bmp:161, csv:51, json:2851, log:995, png:21, txt:192 | `build/device-evidence` |
+| active_logs | True | 280 | log:280 | `logs` |
+| active_dist | True | 692 | json:118, log:40, txt:534 | `dist` |
+| vita3k_user_appdata | True | 7 | log:6, txt:1 | `<vita3k-data-root>/ux0/data/renegade/user` |
+| missing_c_local_builder_root | False | 0 | - | `<managed-builder-root>` |
+| e_vita_logs | True | 39 | bmp:4, csv:9, json:9, log:9, txt:8 | `<historical-evidence-root>/Vita Logs` |
+| e_project_logs | False | 0 | - | `<historical-evidence-root>/workspace/active/logs` |
+| e_project_dist | True | 734 | csv:5, json:102, log:41, txt:586 | `<historical-evidence-root>/dist` |
 
 ## Diagnostic-Only Or Loading-Only Screenshot Groups
 

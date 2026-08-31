@@ -4,7 +4,7 @@
 |---|---|---|
 | A3.1.4 | Visible original interactive M00 lifecycle | physically validated; frozen |
 | A3.2 | Frozen failed physical evidence: input, animation, projection, material, and exit defects | `A3.2-dev1` immutable; never promote from it |
-| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | `A3.5-dev86` is retained physical frontend failure evidence: original movies/loading/M00 run, but the user reports laggy/buzzy intro A/V and missing menu labels. `A3.5-dev87` restores the Vita procedural glyph-texture allocation path and changes only BINK's in-memory upload to RGB565 after measured upload cost; fast and canonical ARM/package closure pass, physical acceptance is pending. Intro/menu/A-V and loading/HUD/text/shadow/START-exit/FPS defects remain open. |
+| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | `A3.5-dev87` is retained physical frontend-usability failure evidence: menu text remained absent, intro A/V was slow/buzzy, and the original dialogue box was empty. `A3.5-dev88` is the local-only canonical follow-up: it restores the original glyph texture-stage combiner before indexed menu/dialogue draws and raises BINK's real audio-start reserve from one to three buffers. Intro/menu/A-V, loading/HUD/text/shadow, START-exit, and FPS defects remain physically open. |
 | v3.6 | Resource, memory, deterministic cache/index, tutorial plus second scene and map smoke | pending v3.5 physical gate |
 | v3.7 | Perspective-correct efficient renderer and measured Balanced frame pacing | pending v3.6 infrastructure |
 | v3.8 | Original frontend, HUD, essential audio, intro path/fallback | host/ARM closure exists; physical integration pending |

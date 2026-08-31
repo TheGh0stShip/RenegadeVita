@@ -1,57 +1,28 @@
 # Changelog
 
-All notable port changes are recorded here from the local Git bootstrap on
-2026-08-16 onward. Earlier engineering and physical-baseline history is
-preserved in [`reports/milestones/`](reports/milestones/) and the living
-records in [`reports/`](reports/); it has not been retroactively fabricated as
-Git commits.
+This changelog records public-facing source, process, and evidence changes. It does not turn a build into a physical acceptance claim.
 
 ## Unreleased
 
-### Added
+### Documentation and repository
 
-- Human-facing documentation for quickstart, building, installing, architecture,
-  development workflow, controls, troubleshooting, and current A3.5-dev79
-  status.
-- GitHub issue and pull-request templates for physical test reports, build
-  bugs, evidence, and validation.
-- `tools/upload_vpk_ftp.sh`, a manual VitaShell FTP upload helper for VPKs.
-- Local Git history with the EA source registered as a pinned submodule at
-  `3e00c3a1b97381bb28be89a35b856375e0629a08`.
-- Deterministic A3.5 observer-loader breadcrumbs and the focused host contract
-  recorded in the initial repository history.
-- Root contributor, versioning, publication, and license-notice documentation.
+- Rebuilt the public README and documentation navigation around the accepted A3.1.4 baseline, Dev87 physical frontend failure, and Dev88 local-only candidate.
+- Added an explicit evidence/capture policy, security policy, contributor conduct policy, GitHub issue forms, and repository-hygiene documentation checks.
+- Clarified that the historical gallery contains reviewed evidence rather than a synchronized same-camera benchmark; Dev87 has no recovered image and Dev88 has no physical capture.
+- Clarified the difference between VitaCompanion panel power control, the optional MP4 recorder, and the not-yet-installed VDB framebuffer provider.
 
-### Fixed
+### A3.5-dev85 through dev88
 
-- Helper scripts no longer hardcode a specific Windows profile path for `dist/`;
-  they honor `RENEGADE_BUILDER_ROOT` or `RENEGADE_DIST_ROOT`.
-- `.gitignore` now excludes generated `dist/` artifacts, local automation
-  state, VPK/ELF/SELF packages, ZIP diagnostics, and Vita crash dumps.
-- `PersistentGameObjObserverManager::Load` now handles failure to open its
-  required observer root and a wrong root chunk ID without dereferencing
-  unavailable root metadata. It preserves chunk balance when a wrong root was
-  opened and reports bounded diagnostics.
-
-### Verification
-
-- Repository hygiene, shell syntax, and JSON syntax are expected to pass after
-  the documentation overhaul.
-- The observer diagnostic patch applies from pristine upstream with
-  `--fuzz=0` and its staged result matches.
-- The focused loader contract passes 27 checks; the patched Combat translation
-  unit compiles in the A3.1 gameplay-seed host target.
-- This is not a physical-crash root-cause finding or a hardware release.
+- Dev85 restored the original frontend path after a Vita-only console-exclusivity suppression; its physical return still failed with very slow/buzzy intro A/V and missing menu items.
+- Dev86 restored original menu-transition placement and added bounded startup/BINK diagnostics; its physical return still failed the same frontend usability gate.
+- Dev87 restored the Vita allocation path for original procedural glyph textures and reduced BINK upload bandwidth through unchanged retail movie data; its physical return still had missing menu/dialogue text and slow/buzzy intro A/V.
+- Dev88 applies original texture-stage state to dynamic menu/dialogue glyph draws and reserves three real BINK audio buffers before output. Canonical source/ARM/package validation passed; no Dev88 physical test has occurred.
 
 ## Accepted physical baselines
 
-- **A2.0** — native bootstrap; see
-  [`reports/milestones/A2.0-HARDWARE-VALIDATION.md`](reports/milestones/A2.0-HARDWARE-VALIDATION.md).
-- **A2.1** — original filesystem/MIX path; see
-  [`reports/milestones/A2.1-HARDWARE-VALIDATION.md`](reports/milestones/A2.1-HARDWARE-VALIDATION.md).
-- **A2.2** — original visual pipeline; see
-  [`reports/milestones/A2.2-HARDWARE-VISUAL-VALIDATION.md`](reports/milestones/A2.2-HARDWARE-VISUAL-VALIDATION.md).
-- **A3.0** — original M00 world runtime; see
-  [`reports/milestones/A3.0-HARDWARE-M00-WORLD-VALIDATION.md`](reports/milestones/A3.0-HARDWARE-M00-WORLD-VALIDATION.md).
-- **A3.1.3** — interactive lifecycle evidence; see
-  [`reports/milestones/A3.1.3-HARDWARE-INTERACTIVE-LIFECYCLE-VALIDATION.md`](reports/milestones/A3.1.3-HARDWARE-INTERACTIVE-LIFECYCLE-VALIDATION.md).
+- **A2.0** — native bootstrap; see [milestone record](reports/milestones/A2.0-HARDWARE-VALIDATION.md).
+- **A2.1** — original filesystem/MIX path; see [milestone record](reports/milestones/A2.1-HARDWARE-VALIDATION.md).
+- **A2.2** — original visual pipeline; see [milestone record](reports/milestones/A2.2-HARDWARE-VISUAL-VALIDATION.md).
+- **A3.0** — original M00 world runtime; see [milestone record](reports/milestones/A3.0-HARDWARE-M00-WORLD-VALIDATION.md).
+- **A3.1.3** — interactive lifecycle evidence; see [milestone record](reports/milestones/A3.1.3-HARDWARE-INTERACTIVE-LIFECYCLE-VALIDATION.md).
+- **A3.1.4** — current accepted physical interactive baseline; see [program charter](reports/PROGRAM_CHARTER.md).

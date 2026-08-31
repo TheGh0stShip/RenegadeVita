@@ -1,117 +1,46 @@
-# Dev84 Demo Recording
+# Evidence capture
 
-USB capture is not the default demo path for this project. It does not cover
-PSTV and it is a poor fit for handheld charging during long tests.
+This project separates three different capture mechanisms. They are not interchangeable.
 
-The supported non-USB workflow is a title-scoped Vita recorder plugin that
-captures locally to `ux0:video`. The Renegade VPK remains unchanged, and retail
-data is not packaged or copied.
+| Mechanism | Current status | What it captures |
+| --- | --- | --- |
+| Game-owned diagnostic capture | Present in historical candidates | An engine-frame diagnostic; it can be too early to represent the visible panel. |
+| Title-scoped MP4 recorder | Installed optional helper | A local video recording when it finalizes successfully. The red `R` means recording has started, not that an MP4 is recoverable. |
+| VDB framebuffer capture | **Not installed on the current Vita** | The intended exact-title post-render logical framebuffer route, independent of game capture timing. |
 
-## Build The Recorder
+## Current capture limitation
 
-Run this from the bash workspace:
+The paired Vita advertises VitaCompanion `screen.v1`, which controls panel power with `screen on|off`. It is not VDB screenshot capture. The VDB client supports `capture.screen.v1`, but that requires its separately authenticated exact-title gateway and target-local agent; neither is active on this device.
+
+Do not describe a panel wake command, an early engine capture, or a recorder overlay as a verified VDB screenshot.
+
+## Optional MP4 recorder
+
+The recorder helper is built from the pinned GPL-3.0 Vita-MP4-Recorder source and is scoped only to `RNEGA3101`. It starts with the title, writes under `ux0:/video`, and remains outside the Renegade VPK.
 
 ```bash
 bash ./tools/build_renegade_demo_recorder_plugin.sh
 ```
 
-This fetches pinned Vita-MP4-Recorder source commit
-`60c966a75356ea9a95f79479a3e647283586cf11`, applies the Renegade patch under
-`tools/vita_plugins/renegade_demo_recorder/`, and writes:
-
-```text
-dist/RenegadeDemoRecorder-A3.5-dev84.suprx
-dist/RenegadeDemoRecorder-A3.5-dev84.skprx
-dist/RenegadeDemoRecorder-A3.5-dev84-tai-config.txt
-dist/RenegadeDemoRecorder-A3.5-dev84-SHA256SUMS.txt
-```
-
-The recorder requires the `SceLibMp4Recorder` stubs in VitaSDK. If the
-installed SDK does not ship `psp2/mp4rec.h`, the build uses the narrow
-compatibility header under `tools/vita_plugins/renegade_demo_recorder/include/`
-for this helper only. Set `RENEGADE_VITASDK` if your default SDK is missing the
-`SceLibMp4Recorder` stubs.
-
-The generated plugin is scoped to title ID `RNEGA3101`. It enables audio by
-default and starts recording when the Renegade process loads. Plain Start
-remains available to Renegade; use L+Start to finalize the MP4 deliberately.
-If the process exits without that input, module stop finalizes any active
-recording as a fallback. The recorder also passes null, empty, or malformed
-display-framebuffer notifications directly to the original display call rather
-than dereferencing them.
-
-Current active-workspace build evidence:
-
-```text
-RenegadeDemoRecorder-A3.5-dev84.suprx       111d2f4f8e9e467e72a1212587d9e882d0c24e67f46e82302b9be16c565ee9a2
-RenegadeDemoRecorder-A3.5-dev84.skprx       e8a695c08fe348ab8cb1b16f2264fe67d593c3e82a7e61629f61f04d9e88eba5
-RenegadeDemoRecorder-A3.5-dev84-tai-config.txt 75e6f69f9690fd89689cd90be32357113d989be69770ea587cfefc546637d9b5
-```
-
-## Manual Install
-
-Copy the generated `.skprx` and `.suprx` to `ur0:tai/` and add the generated
-tai config snippet to the active tai config:
+Install only the generated title-scoped configuration:
 
 ```text
 *KERNEL
-ur0:tai/RenegadeDemoRecorder-A3.5-dev84.skprx
+ur0:tai/RenegadeDemoRecorder-<candidate>.skprx
 *RNEGA3101
-ur0:tai/RenegadeDemoRecorder-A3.5-dev84.suprx
+ur0:tai/RenegadeDemoRecorder-<candidate>.suprx
 ```
 
-Reboot after changing tai config. Keep this title-scoped to `*RNEGA3101`; do
-not install it under `*ALL`.
+Never place it under `*ALL`.
 
-## Run A Recorded Session
+The intended explicit finalize control is L+Start; module stop is a fallback. A crash can interrupt either path, leaving no usable MP4. In particular, do not use the recorder as a workaround for a candidate with an unresolved Start crash without a safe, approved route.
 
-After the recorder plugin is installed and dev84 is installed from VitaShell:
+After the Dev87 return, forced VDB1 search of `ux0:/video` found no finalized MP4. No video is claimed or published.
 
-```bash
-bash ./tools/run_dev82_recorded_demo_session.sh
-```
+## Future VDB capture route
 
-The plugin starts recording as soon as Renegade loads. Play the demo normally.
-Plain Start remains a Renegade control. Use L+Start when done to finalize the
-MP4, or exit the title cleanly and let module stop finalize it. The script then
-pulls the dev84 runtime log into `build/device-evidence/`.
+The VDB provider must be built and validated separately, first against its disposable probe target, then as an exact `RNEGA3101` agent bound to the current executable SHA-256. It must capture through `sceDisplayGetFrameBuf` in the target process, authenticated mailbox IPC, bounded buffers, and exact title/PID/build verification. It must not use `*ALL`, SceShell/private framebuffer hooks, FTP fallback, or game-source timing changes.
 
-The MP4 is written under `ux0:video` and imported into the Vita Video app by
-the recorder. Copy it off the Vita with VitaShell FTP or the device's normal
-media workflow after the run.
+When available, use it for labelled post-render comparison frames; retain its metadata and hashes with the candidate. The raw frame remains local evidence. Only reviewed, non-retail PNG derivatives belong in the GitHub gallery.
 
-The most recent recorder-enabled dev84 run faulted in the recorder display
-hook before a file finalized. Its raw dump is retained locally, no MP4 exists
-under title-scoped `ux0:/video`, and the corrected recorder remains
-host-validated only; see `reports/DEV84_RECORDER_CRASH.md`.
-
-## Evidence Boundary
-
-This is a demo-recording aid. It is not physical acceptance by itself. For
-dev84 acceptance, still return:
-
-- `ux0:data/renegade/user/logs/a35-dev84-runtime.log`
-- observations or screenshots for intro movies, main menu, loading, HUD,
-  subtitles, textures, gate behavior, FPS, and freeze/crash state
-- any matching `psp2core-*.psp2dmp`
-
-## External Source Notes
-
-The recorder build is based on Vita-MP4-Recorder, which describes PSVITA/PSTV
-MP4 recording through `sceMp4Rec`, H.264 video, AAC audio, local output under
-`ux0:video`, the title-scoped plugin install pattern, and known limitations
-around audio availability/desync and 30 FPS slowdown:
-
-```text
-https://github.com/Rinnegatamante/Vita-MP4-Recorder
-```
-
-Vita-Recorder remains useful as a study reference for local MJPEG capture, but
-it does not solve the requested audio path:
-
-```text
-https://github.com/Rinnegatamante/Vita-Recorder
-```
-
-The local `mp4rec.h` fallback follows the public VitaSDK `SceLibMp4Recorder`
-API documentation and is only compiled into the optional recorder plugin.
+See [Evidence and capture policy](EVIDENCE.md) and the [historical screenshot timeline](HISTORICAL_SCREENSHOT_TIMELINE.md).

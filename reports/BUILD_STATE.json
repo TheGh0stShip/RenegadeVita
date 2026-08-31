@@ -134,11 +134,11 @@
       "model_request": "Codex 5.5 Xtra High",
       "target_branch": "feature/a35-dev82-retail-frontend",
       "full_prompt": "reports/PARALLEL_WORKERS.md",
-      "workspace_policy": "Do not write directly into /home/steve/projects/RenegadeVitaBuilder/workspace/active concurrently with dev82. Use an isolated git worktree or branch and deliver a branch or deterministic patch series for integration.",
+      "workspace_policy": "Do not write directly into <workspace> concurrently with dev82. Use an isolated git worktree or branch and deliver a branch or deterministic patch series for integration.",
       "objective": "Build the original retail-style Commando frontend path for Vita, including EA/Renegade/Westwood intro movie flow below the original movie/Bink boundary and a 1:1 retail main menu for single-player entry, controller navigation, menu hierarchy, tutorial launch, load/options/quit/back behavior, and clean handoff into the existing dev82 M00 loader.",
       "worker_branch": "origin/feature/a35-dev82-retail-frontend",
       "worker_commit": "e7a7fa82fa90981e160035a81ff029169f3412cc",
-      "worker_worktree": "/home/steve/projects/RenegadeVitaBuilder/workspace/retail-frontend-a35-dev82",
+      "worker_worktree": "<historical-worker-worktree>",
       "latest_worker_report": "The external worker completed and pushed feature/a35-dev82-retail-frontend at e7a7fa82fa90981e160035a81ff029169f3412cc. Active integrated the original Commando frontend route, lifecycle/input gates, GameInitMgr tutorial-start latch, WWUI/main-menu source routing, and focused original-frontend contracts. Active intentionally supersedes the worker's fail-closed BINKMovie boundary with a real Vita FFmpeg Bink provider, so the active tree should be treated as the frontend+Bink successor rather than a simple branch fast-forward.",
       "must_preserve": [
         "original EA/Westwood ownership above platform boundaries",

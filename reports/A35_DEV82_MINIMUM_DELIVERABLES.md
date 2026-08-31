@@ -3,7 +3,7 @@
 Updated: 2026-08-29.
 
 Authoritative workspace:
-`/home/steve/projects/RenegadeVitaBuilder/workspace/active`.
+`<workspace>`.
 Do not use the E: mirror as source authority; it is only a copied backup of
 this bash workspace after validation.
 

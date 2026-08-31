@@ -1,0 +1,48 @@
+name: Visual or capture regression
+description: Report an observed Vita visual, HUD, text, movie, or capture issue.
+title: "[Visual] "
+labels:
+  - visual
+  - evidence
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report only what was actually observed. A runtime log alone is not visual proof. Do not attach retail data, credentials, raw dumps, or unrelated personal media.
+  - type: input
+    id: candidate
+    attributes:
+      label: Candidate label and VPK SHA-256
+      placeholder: A3.5-devNN — SHA-256
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - Startup / pre-cache
+        - Intro movie / audio
+        - Main menu / WWUI text
+        - Loading screen / progress
+        - Dialogue / subtitles
+        - HUD / pickup feedback
+        - World / NPC / texture
+        - Capture or recorder
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Exact visible behavior
+      description: State where it appeared and what action preceded it.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Matching evidence
+      description: Link or describe the candidate log, reviewed screenshot/VDB frame, finalized video, or PSP2 dump. Omit sensitive/raw data.
+    validations:
+      required: true

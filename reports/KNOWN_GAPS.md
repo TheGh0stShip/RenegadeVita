@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev87 mandatory frontend and readiness gate (2026-08-31)
+## Current dev88 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -24,15 +24,20 @@ are absent. The returned log isolates two bounded dev87 leads: Vita procedural
 font textures had no native allocation, and EA video uploads consumed
 13.48 seconds across 202 frames (68.90 ms worst).
 
-Dev87 restores the existing Vita texture allocation for the original glyph
-atlas and changes only the BINK boundary's in-memory upload representation to
-RGB565 (the unchanged retail BIK files and original movie owner remain intact).
-Its FastBuild and canonical ARM/package closures pass, but it is not deployed
-or visually accepted. The user-required release gate remains: a visible original intro
-with usable A/V and a visibly labelled original menu before any further Vita
-candidate push. No visual, pacing, or audio acceptance claim is valid until a
-matching physical return. HUD/text, shadow, START-exit, loading-flash/progress,
-front-end readiness, and gameplay performance remain open.
+Dev87 restored the existing Vita texture allocation for the original glyph
+atlas and changed only the BINK boundary's in-memory upload representation to
+RGB565 (the unchanged retail BIK files and original movie owner remain intact),
+but its returned physical gate still failed: original menu text was absent,
+intro A/V was slow/buzzy, and the original dialogue box was empty. Dev88 now
+applies the original indexed glyph texture-stage combiner immediately before
+those shared menu/dialogue draws and increases the real decoded BINK audio
+startup reserve from one to three output buffers. Its fast/canonical closure
+passes, but it is local only. The user-required release gate remains: a visible
+original intro with usable A/V and a visibly labelled original menu before any
+further Vita candidate push. No visual, pacing, or audio acceptance claim is
+valid until a matching physical return. HUD/text, shadow, START-exit,
+loading-flash/progress, front-end readiness, and gameplay performance remain
+open.
 
 Current pre-cache is intentionally bounded: it indexes original archives and
 warms small readable slices before frontend, then performs one loading-screen

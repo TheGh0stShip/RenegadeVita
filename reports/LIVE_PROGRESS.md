@@ -1,5 +1,30 @@
 # Live engineering progress
 
+## 2026-08-31 — public documentation/GitHub reconciliation; historical capture campaign prepared
+
+`[████░░░░░░] 4/10 current evidence gates complete; no build or Vita action`
+
+- Public-facing status, build, install, control, evidence, capture, contributor,
+  security, conduct, issue-template, and repository-hygiene documentation has
+  been reconciled to the returned Dev87 failure and local-only Dev88 candidate.
+  It explicitly distinguishes physical Vita evidence from host/package closure
+  and does not claim a fabricated gallery update.
+- The historical gallery generator now preserves the current capture-completeness
+  disclosure and strips workstation-specific paths from regenerated public
+  inventory/timeline output. The managed README is no longer overwritten by
+  gallery generation.
+- Read-only local inventory finds reusable VPKs for every A3.5 dev number from
+  dev1 through dev88, plus the A3.1.x and frozen A3.2 checkpoint. The planned
+  capture campaign is documented in `docs/HISTORICAL_CAPTURE_CAMPAIGN.md` and
+  requires no rebuild. It captures only visibly settled, post-render M00 frames;
+  old loading/black frame triggers remain diagnostic evidence, not substitutes.
+- Validation: timeline/inventory regeneration, Python syntax, public-document
+  link/status validation, repository-hygiene validation, and `git diff --check`
+  pass. No device file, retail file, capture provider, executable, or running
+  process was changed.
+- Next: publish the documentation/GitHub update, then await explicit READY for
+  the hash-bound historical device-capture pass. Dev88 remains separately held.
+
 ## 2026-08-31 — VDB screenshot route verified; no finalized Dev87 recorder video
 
 `[████░░░░░░] 4/10 current evidence gates complete; no game rebuild or device mutation`

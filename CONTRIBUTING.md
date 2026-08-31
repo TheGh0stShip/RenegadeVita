@@ -1,76 +1,42 @@
 # Contributing
 
-This repository is an active source port, not a clean-room reimplementation.
-Changes should preserve original EA/Westwood ownership above the Vita platform
-boundary and should be small enough to review against evidence.
+Renegade Vita is an active source port, not a clean-room reimplementation. Keep original EA/Westwood ownership above the Vita boundary and make each change small enough to review against evidence.
 
-## Before Changing Code
+## Before changing code
 
-1. Initialize the upstream source submodule.
+1. Initialize the pinned source and verify both trees:
 
    ```bash
    git submodule update --init --recursive
-   ```
-
-2. Check both working trees.
-
-   ```bash
    git status --short
    git -C upstream/CnC_Renegade status --short
    ```
 
-3. Read the current context:
-   `AGENTS.md`, `docs/CURRENT_STATUS.md`, `reports/BUILD_STATE.json`, and
-   `reports/LIVE_PROGRESS.md`.
+2. Read [AGENTS.md](AGENTS.md), [Current status](docs/CURRENT_STATUS.md), [Evidence policy](docs/EVIDENCE.md), and the current durable reports.
+3. Keep `upstream/CnC_Renegade/` pristine. Use a compatibility header, Vita-boundary source, or a deterministic zero-fuzz patch under `port/patches/`.
 
-The upstream submodule is canonical and should remain pristine. If upstream
-source needs portability changes, add or update a deterministic patch under
-`port/patches/`, register it in `tools/stage_sources.sh`, and regenerate
-`staging/`:
+## Validation and evidence
+
+Run the smallest relevant contract first, then build in proportion to the change:
 
 ```bash
-bash ./tools/stage_sources.sh
-```
-
-Every staging patch must apply with zero fuzz. Do not leave `.orig` or `.rej`
-files in `staging/`.
-
-## Validation
-
-Use the smallest relevant test first, then expand based on risk:
-
-```bash
-python3 -m unittest tools.test_vita_camera_input_contract
+python3 -m unittest tools.test_vita_indexed_state_contract
 RENEGADE_FAST_SCOPE=compile bash ./tools/build_fast_candidate.sh
 bash ./tools/build.sh
-```
-
-Host tests, Vita3K, and physical Vita runs are separate evidence classes. Host
-validation never proves physical visual correctness, controls, audio output,
-or frame pacing.
-
-Before a review or commit, run:
-
-```bash
 python3 tools/verify_repo_hygiene.py --root .
+python3 tools/verify_public_docs.py --root .
 ```
 
-Do not commit retail data, generated build products, logs, screenshots, crash
-dumps, credentials, local `.agents/` automation, or unreviewed submodule
-changes.
+Host, Vita3K, and physical Vita are separate evidence classes. A canonical build does not prove visible output, controller behavior, audio quality, frame pacing, or lifecycle behavior.
 
-## Commit Expectations
+## What not to commit
 
-Use imperative, scoped commit messages:
+Do not commit retail data, saves, generated build products, raw logs, raw captures/videos, PSP2 dumps, credentials, pairing material, private device configuration, or unrelated personal media.
 
-```text
-Document Vita installation workflow
-Fix M00 action button mapping
-Add transition diagnostics contract
-```
+A reviewed, non-retail PNG derivative may be added to the historical gallery only with a candidate label, source/provenance record, hash, and honest diagnostic/gameplay classification.
 
-Update durable docs or reports when a change affects runtime status, evidence,
-controls, build workflow, or hardware-test instructions. Do not mark a dev
-candidate as a milestone until matching physical evidence exists.
+## Pull requests
 
-See [Development](docs/DEVELOPMENT.md) for the full modification workflow.
+Use an imperative, scoped subject. State the original owner preserved, the changed boundary, focused validation, canonical build status, and whether any physical result is actually returned. Never mark a developer candidate accepted without matching physical evidence.
+
+See [Development](docs/DEVELOPMENT.md), [Versioning](VERSIONING.md), and [Security](SECURITY.md).

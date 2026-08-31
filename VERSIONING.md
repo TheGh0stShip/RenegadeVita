@@ -1,26 +1,24 @@
 # Versioning and evidence policy
 
-`A<major>.<minor>` identifies an engineering milestone. `-devN` identifies an
-internal candidate within that stream. A developer label is not a release,
-baseline, or public capability claim.
+`A<major>.<minor>` identifies an engineering milestone. `-devN` identifies an internal candidate. A candidate label, source test, or successful package is not a release or a physical capability claim.
 
-An accepted physical baseline requires, at minimum:
+## Physical acceptance
 
-1. a successful canonical host and ARM build;
-2. preserved ELF, map, symbols, VPK inventory, hashes, source/patch identity,
-   build log, and telemetry-only archive;
-3. manual physical Vita installation and the relevant hardware-test evidence;
-4. updates to the living reports and an immutable milestone record.
+A physical baseline requires:
 
-The authoritative records are:
+1. canonical host and ARM/package closure;
+2. matching VPK, ELF, map, symbols, source/patch identity, hashes, and diagnostics;
+3. observed physical Vita behavior for the declared gate; and
+4. durable status and immutable milestone records.
 
-- `reports/PORT_STATUS.md` — current program state;
-- `reports/LIVE_PROGRESS.md` — current work and open evidence;
-- `reports/HARDWARE_TEST_MATRIX.md` — physical gates;
-- `reports/CRASH_SYMBOLICATION_INDEX.md` — dump/symbol identity;
-- `reports/milestones/` — accepted or frozen historical evidence.
+Tag only a documented, physically accepted baseline. Never move or reuse a published tag.
 
-Tag only commits that correspond to a documented, physically accepted baseline.
-Do not move or reuse a tag after publication. Internal candidates should retain
-their `-devN` name and must not be promoted merely because host validation
-passes.
+## Evidence labels
+
+- **Source/build validated**: owner, code, or artifact closure only.
+- **Vita3K observed**: emulator-only signal.
+- **Physical return**: matching hardware observation, not necessarily acceptance.
+- **Accepted physical baseline**: matching evidence passes the declared gate.
+- **Failed/superseded**: retained evidence that must not be relabelled as success.
+
+Authoritative records are [PORT_STATUS](reports/PORT_STATUS.md), [LIVE_PROGRESS](reports/LIVE_PROGRESS.md), [HARDWARE_TEST_MATRIX](reports/HARDWARE_TEST_MATRIX.md), [CRASH_SYMBOLICATION_INDEX](reports/CRASH_SYMBOLICATION_INDEX.md), and [milestones](reports/milestones/).

@@ -1,125 +1,49 @@
-# Current Status
+# Current status
 
-Updated: 2026-08-29
+Updated: 2026-08-31
 
-## Accepted Baseline
+## Evidence snapshot
 
-**A3.1.4** is the latest accepted physical baseline. It proves native Vita
-startup, original file/archive access, visible original M00 world/session
-lifecycle, interactive player/camera ownership, and clean exit.
+| Class | Status | What it establishes |
+| --- | --- | --- |
+| Accepted physical baseline | **A3.1.4** | Native Vita boot, original data access, visible M00 world/session lifecycle, player/camera ownership, and clean exit. |
+| A3.5-dev87 physical return | **Failed frontend gate** | The exact executable was installed and run, but original menu text remained absent; intro movies were very slow with buzzy audio; and the original gameplay dialogue panel appeared without text. |
+| A3.5-dev88 canonical candidate | **Local-only** | 54 focused contracts and the canonical 115-contract ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
+| Screenshot/video evidence | **Incomplete** | No Dev87 title-owned screenshot or finalized MP4 was recoverable. The current device has no VDB framebuffer-capture capability. |
 
-## Current Candidate
+Host validation, package identity, and logs are useful engineering evidence. They do not prove panel output, controls, audio quality, frame pacing, or lifecycle behavior on physical hardware.
 
-**A3.5-dev82** is the current hardware-test candidate. It has a successful
-canonical build with the retail frontend worker integrated, a visible startup
-pre-cache/pre-warm/pre-compute phase before frontend/M00 input, authored
-640x480 HUD Render2D coordinate scoping with aspect-preserved native
-presentation for HUD/TextDisplay/radar/sniper/bounding-box passes, an
-aspect-preserved original 640x480 loading presentation at native `117,0
-725x544`, stale texture-bind cache invalidation, and an original movie route
-with a compiled Vita FFmpeg Bink
-provider below the original movie owner. Realtime Bink playback is disabled in
-this physical-test candidate because the prior hardware return showed
-black-screen/audio-underrun behavior; the candidate resolves/logs the retail
-movie files and fails closed to the menu instead of stalling before M00. The
-earlier user-authorized FTP upload predates this current VPK; it is
-not an accepted milestone until device observations and returned logs match.
-The source/build/artifact checklist is tracked in
-`reports/A35_DEV82_MINIMUM_DELIVERABLES.md`.
+## Dev88: what changed, and what it has not proved
 
-Candidate VPK:
+Dev88 makes two narrow boundary corrections:
 
-```text
-/home/steve/projects/RenegadeVitaBuilder/workspace/active/dist/RenegadeVita-A3.5-dev82.vpk
-```
+- It restores the original texture-stage combiner immediately before dynamic indexed glyph draws used by `Render2DSentence` menu text and `MessageWindow` dialogue text. It does not substitute text, add an overlay, or change retail assets.
+- It starts the original BINK audio worker only after three real output buffers are queued, rather than one, to provide roughly 64 ms of reserve against observed decode/upload stalls. Retail BIK files remain unchanged.
 
-VPK SHA-256:
+Dev88 has not repaired or physically demonstrated Start lifecycle behavior, the current HUD placement defects, gameplay performance, loading flashes, or the missing VDB capture provider. Its canonical VPK SHA-256 is `be78097b98a3c0a0e9e9cd1fbdb0d5cdb9d7d630145bec8736d7ebad0cf07138`.
 
-```text
-2d05da8f4868cbaa6a6818c8eecf18026ac655f52ca1ca5b788953dd67d5089b
-```
+## Current physical blockers
 
-Runtime log:
+The next physical gate must establish, with matching candidate identity:
 
-```text
-ux0:data/renegade/user/logs/a35-dev82-runtime.log
-```
+1. visible and readable original intro/menu text;
+2. paced intro video/audio and clean skip behavior;
+3. readable original gameplay dialogue text, HUD, pickup feedback, and loading progress;
+4. stable M00 gameplay, camera, interaction, and frame pacing; and
+5. safe Start/pause/exit behavior without a PSP2 crash.
 
-## What Dev82 Targets
+The developer must not claim any of these from host tests or a runtime log.
 
-- Original retail frontend path: startup movie owner, WWUI main menu, controller
-  menu navigation, and Tutorial selection handoff into the existing direct M00
-  route.
-- Retail intro movie route: original `MovieGameModeClass` requests the
-  EA/Westwood intro files and the compiled Vita FFmpeg Bink provider remains
-  available for diagnosis, but realtime playback is disabled for this candidate
-  after black-screen/audio-underrun evidence. Missing or skipped movies continue
-  into the original menu rather than hanging before M00.
-- Loading screen coverage, status text, and progress through the original
-  one-bar path, including renderer/cache prewarm and aspect-preserved native
-  presentation of the original 640x480 authored loading layout at `117,0
-  725x544`.
-- Visible startup pre-cache/pre-warm/pre-compute before intro movies, menu
-  navigation, or M00 gameplay input. It indexes original MIX filename tables,
-  writes persistent M00/M01 cache-index files under
-  `ux0:data/renegade/cache/`, touches startup movie/menu/loading/M00 files
-  through the original FileFactory/MIX owners, displays for at least five
-  seconds, and reports intro movie-file availability before the movie/menu
-  route starts.
-- HUD/subtitle/dialogue text path by tightening original TextDisplay/HUD
-  rendering and bounds, initializing TextDisplay after final StyleMgr
-  reinitialization, and initializing Render2D dynamic FVF fields used by HUD,
-  subtitles, scope, loading, and bounding boxes, then restoring the previous
-  DX8 viewport after fullscreen 2D passes. HUD/TextDisplay/radar/sniper/
-  bounding-box owners now run under the original authored 640x480 Render2D
-  coordinate space and a centered aspect-preserved native presentation rect
-  while world gameplay remains 960x544.
-- Vita control mapping: Triangle action/use, Square reload, D-pad Left/Right
-  weapon-only switching, D-pad Up/Down sniper zoom, no shoulder remap.
-- Reload animation by adding visible first-person weapon motion while the
-  original weapon state is reload, with a bounded 0.8-second fallback when the
-  retail reload HAnim is absent, short, or delayed.
-- NPC/Havoc/door/powerup/objective texture orientation by preserving top-down
-  retail DDS rows in gameplay uploads and applying passthrough texture-V
-  correction after the original DX8 texture transform. Direct DX8/Bink GL
-  texture uploads now invalidate the renderer bind cache before original mesh
-  draws resume, preventing stale native texture reuse between owners.
-- FPS regression by caching repeated native viewport/texture/render-state
-  changes and enabling a persistent vitaGL shader-cache path.
-- Gate/opening failures by adding original CombatGameMode finalization and
-  preserving transition/action diagnostics.
-- Sniper scope/icon placement and zoom behavior.
+## Capture and gallery state
 
-## Still Open Until Physical Evidence Returns
+The current Vita command service advertises `screen.v1`, which is panel on/off—not a screenshot endpoint. The checked-in VDB client supports the separate authenticated `capture.screen.v1` protocol, but its target-local agent and gateway are not installed on this device. The on-screen red `R` is a separate MP4 recorder; it is not a screenshot service and a crash can prevent the MP4 from finalizing.
 
-- Whether EA/Renegade/Westwood intro movie files are present, skipped cleanly in
-  this candidate, and can later be realtime-decoded, synced, and skipped
-  correctly on hardware.
-- Whether original WWUI menu navigation works and Tutorial launches M00.
-- Whether the loading screen is visually correct, unstretched, and
-  aspect-preserved on the Vita panel.
-- Whether Logan, Sydney, and Gunner subtitles/text appear in the original path.
-- Whether NPC, Havoc, door, powerup, and objective textures/materials are
-  correct rather than merely improved.
-- Whether reload animation appears with the restored first-person weapon view.
-- Whether the gate opens with Triangle or records the owning transition miss.
-- Whether D-pad Left/Right weapon switching no longer turns the camera.
-- Whether D-pad Up/Down zooms the sniper scope correctly.
-- Whether sniper scope/icon placement is correct.
-- Whether random ground rectangles and floating bounding boxes are fixed.
-- Whether the freeze after pistol/gate interaction is fixed or symbolicates to
-  a remaining owner.
-- Whether the renderer state cache recovers the observed FPS drop without new
-  visual regressions.
+The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. No Dev87 or Dev88 visual evidence is represented as complete.
 
-## Useful Evidence To Return
+## Authoritative records
 
-- Runtime log from `ux0:data/renegade/user/logs/a35-dev82-runtime.log`.
-- Startup pre-cache receipt from
-  `ux0:data/renegade/user/logs/a35-dev82-startup-precache.txt`.
-- Any screenshots showing intro/menu state, loading screen, Logan text,
-  NPC/Havoc materials, HUD, gate state, and freeze point.
-- Any `psp2core-*.psp2dmp` if the app crashes or the system captures a dump.
-- Whether D-pad Left/Right switch weapons without camera drift, D-pad Up/Down
-  zoom the sniper scope, Square reloads with animation, and Triangle interacts
-  with the gate.
+- [Program charter](../reports/PROGRAM_CHARTER.md)
+- [Current engineering status](../reports/PORT_STATUS.md)
+- [Live progress](../reports/LIVE_PROGRESS.md)
+- [Known gaps](../reports/KNOWN_GAPS.md)
+- [Hardware test matrix](../reports/HARDWARE_TEST_MATRIX.md)

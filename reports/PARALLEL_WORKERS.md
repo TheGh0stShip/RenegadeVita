@@ -8,7 +8,7 @@ guessing at scope.
 
 Status update from the worker, 2026-08-28: the worker selected the relevant
 project skills in its session, read the repo contract/status files, observed
-that `/home/steve/projects/RenegadeVitaBuilder/workspace/active` contains
+that `<workspace>` contains
 substantial uncommitted dev82-era work, and correctly decided to create or use
 an isolated branch/worktree rather than writing into active. It reported that
 the current reports still name dev79 while active/handoff name dev82 in
@@ -18,7 +18,7 @@ targets before creating the isolated workspace.
 ```text
 You are working on the native PS Vita port of Command & Conquer: Renegade in:
 
-/home/steve/projects/RenegadeVitaBuilder/workspace/active
+<workspace>
 
 Do not write directly into that active dev82 tree concurrently with the core M00
 work. Create an isolated git worktree or branch, for example:

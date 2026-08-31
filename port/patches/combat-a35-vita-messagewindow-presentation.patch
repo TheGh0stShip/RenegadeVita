@@ -1,0 +1,58 @@
+--- a/messagewindow.cpp
++++ b/messagewindow.cpp
+@@ -54,6 +54,9 @@
+ #include "scene.h"
+ #include "ww3d.h"
+ #include "wwmemlog.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "a31_vita_hud_presentation.h"
++#endif
+ 
+ ////////////////////////////////////////////////////////////////
+ //	Constants
+@@ -61,6 +64,25 @@
+ static const char *FONT_NAME						= "FONT6X8.TGA";
+ static const char *HEADER_FONT_NAME				= "FONT8X8.TGA";
+ 
++#if defined(RENEGADE_VITA_PORT)
++class A31ScopedVitaMessageWindowPresentation
++{
++public:
++	A31ScopedVitaMessageWindowPresentation()
++	{
++		/* MessageWindow can rebuild TextWindow/Render2DSentence geometry during
++		** CombatManager::Think, before the render pass installs the Vita
++		** gameplay HUD presentation scope.  Keep cached dialogue/message text
++		** generation in the same platform-owned 2D space used for rendering. */
++		A31_Vita_Begin_Original_HUD_Render();
++	}
++	~A31ScopedVitaMessageWindowPresentation()
++	{
++		A31_Vita_End_Original_HUD_Render();
++	}
++};
++#endif
++
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+@@ -247,6 +269,9 @@ void
+ MessageWindowClass::On_Frame_Update (void)
+ {
+ 	WWMEMLOG(MEM_GAMEDATA);
++#if defined(RENEGADE_VITA_PORT)
++	A31ScopedVitaMessageWindowPresentation vita_message_window_presentation;
++#endif
+ 	if (TextWindow == NULL || TextWindow->Is_Displayed () == false) {
+ 		return ;
+ 	}
+@@ -408,6 +433,9 @@ MessageWindowClass::Add_Message
+ void
+ MessageWindowClass::Update_Window_Rectangle (void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	A31ScopedVitaMessageWindowPresentation vita_message_window_presentation;
++#endif
+ 	//
+ 	//	Get the dimensions of the text window
+ 	//

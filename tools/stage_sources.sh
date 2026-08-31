@@ -238,6 +238,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 		-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-hud-think-presentation.patch"
 	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+		-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-messagewindow-presentation.patch"
+	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 		-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-motion.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-visible-fallback.patch"
@@ -509,6 +511,7 @@ echo "Applied: port/patches/combat-a35-vehicle-proximity-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-latch.patch"
 echo "Applied: port/patches/combat-a35-target-box-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-vita-hud-think-presentation.patch"
+echo "Applied: port/patches/combat-a35-vita-messagewindow-presentation.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-motion.patch"
 echo "Applied: port/patches/combat-a35-weaponview-reload-visible-fallback.patch"
 echo "Applied: port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"

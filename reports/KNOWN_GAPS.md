@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev94 mandatory frontend and readiness gate (2026-08-31)
+## Current dev95 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -60,14 +60,18 @@ rewrite. Dev93 then held/repainted early
 native bootstrap status before filesystem/pre-cache work, fixes Render2D text
 atlas height allocation and independent UV scaling, clears new glyph buffers,
 adds bounded text-atlas/dialog-template diagnostics, and scopes gameplay
-HUD/TextDisplay presentation to native 960×544. Dev94 is the current local-only
-successor: it keeps the bootstrap framebuffer alive until WW3D initialization,
+HUD/TextDisplay presentation to native 960×544. Dev94 then kept the bootstrap
+framebuffer alive until WW3D initialization,
 routes original saveload status/count changes into the active loading
 presenter, applies deferred DX8 shader/texture/transform state before indexed
 Render2D text/HUD draws, scopes HUD `Think()` geometry through native gameplay
 presentation, drops late BINK video frames when queued audio is under pressure,
-and host-validates six original main-menu translations from `STRINGS.TDB`. Its
-focused/fast/canonical closure passes, but it is local only. The
+and host-validates six original main-menu translations from `STRINGS.TDB`.
+Dev95 is the current local-only successor: it preserves Dev94 and forces
+`MessageWindowClass::On_Frame_Update()` and `Update_Window_Rectangle()` through
+the gameplay-HUD presentation scope so update-time dialogue/message layout does
+not cache geometry outside the render presentation. Its focused/fast/canonical
+closure passes, but it is local only. The
 user-required release gate remains: a visible original intro with usable A/V
 and a visibly labelled original menu before any further Vita candidate push.
 No visual, pacing, or audio acceptance claim is valid until a matching physical

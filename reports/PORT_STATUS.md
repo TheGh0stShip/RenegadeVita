@@ -3,14 +3,17 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-## 2026-08-31 Dev87 physical failure; Dev94 local candidate
+## 2026-08-31 Dev87 physical failure; Dev95 local candidate
 
-Dev94 is the current local-only source/build candidate produced under the
-user's no-physical-test window. It preserves Dev88 through Dev93's
+Dev95 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves Dev88 through Dev94's
 indexed-glyph texture-stage, real BINK audio-reserve, frontend-scope, font
 fallback, bootstrap, expanded pre-cache, Render2D state, synchronous loading,
 Start-route, target-box rollback, BINK reductions, vehicle/HMVV diagnostics,
-text-atlas, and gameplay HUD/TextDisplay native-presentation work. It then adds
+text-atlas, gameplay HUD/TextDisplay native-presentation work, startup
+framebuffer retention, loading callbacks, deferred indexed Render2D state,
+HUD `Think()` presentation scope, BINK audio-pressure frame dropping, and host
+main-menu translation validation. It then adds
 bounded source fixes for the latest physical symptoms without replacing
 original engine owners:
 
@@ -25,27 +28,33 @@ original engine owners:
   dynamic HUD geometry inside the native gameplay presentation scope; and
 - unchanged retail BINK playback can drop late video frames when queued audio is
   under pressure, with bounded queued-audio diagnostics.
+- `MessageWindowClass::On_Frame_Update()` and
+  `MessageWindowClass::Update_Window_Rectangle()` now run update-time
+  dialogue/message text layout through the Vita gameplay-HUD presentation
+  scope, preventing cached message-window glyph geometry from being generated
+  outside the render presentation.
 
 Focused validation passed 52/52 identity, staging, original-frontend/BINK,
-loading-screen, runtime, indexed-state, and fast-build contracts. The host
+loading-screen, runtime, indexed-state, and fast-build contracts plus 43/43
+implementation contracts. The host
 interactive M00/menu route passed two cycles and proved `STRINGS.TDB` loads
 with six original main-menu labels valid and renderable. Fast candidate and
 canonical `bash ./tools/build.sh` both passed. Canonical closure passed
-retained host/current validation, deterministic 144-patch staging, 549
+retained host/current validation, deterministic 145-patch staging, 549
 ARM/package actions, ELF/SELF/VPK identity, compressed VPK validation,
 diagnostics, SHA manifest, and retail exclusion in
-`logs/a35-dev94-20260831-060003-build.log`. VPK SHA-256 is
-`8b857cc4141ed9450a4f796f1c612bfbb72c163d5cb4f484bc5e16f70364ab73`;
+`logs/a35-dev95-20260831-062728-build.log`. VPK SHA-256 is
+`2c4185a62fe298184c0c0de6a83c261863f590ddeeea2732005a5b077cb5df24`;
 packaged SELF SHA-256 is
-`84d1c643b8da03350aa2769a88a9cd3dde7c9385900196bb07941fdc5ec02737`; ELF
+`36329de9a2dc008ae199b7dee5aaba0297988e7fc74e0159b4d69830afba3cfe`; ELF
 SHA-256 is
-`9ad4881aa257018e40ecaedb70d3b78519462ed9649875e67d8262e4714d2373`;
+`a046df7f4820907e7468cc03c4db92aed07808f601415d234b3746d6deefa5d2`;
 diagnostics ZIP SHA-256 is
-`0d193857eca20b33dbfef2f02a434e6ff02c0ed77d4a0293c4c1ab4e2dd2c152`.
+`32167907c047ce977f023f1a272e8f2dfe65347d61e86aae172a03ed12b55e0e`.
 
-No Dev94 file has been copied to, installed on, or launched on the Vita. It is
-not a visual/audio/lifecycle acceptance claim. No Dev94 screenshot or video
-exists. The next physical test must prove the user-required frontend gate
+No Dev95 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. No Dev94 or Dev95 screenshot or
+video exists. The next physical test must prove the user-required frontend gate
 first: fast visible bootstrap, visible original intro/menu text, usable intro
 A/V/skip behavior, readable gameplay dialogue/HUD/pickup/loading text, correct
 target-box placement, stable M00 progression including the HMVV approach,

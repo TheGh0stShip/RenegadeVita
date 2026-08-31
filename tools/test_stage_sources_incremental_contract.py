@@ -24,6 +24,7 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         self.assertIn("ww3d2-a35-render2d-dynamic-fvf-init.patch", script)
         self.assertIn("ww3d2-a35-render2d-viewport-restore.patch", script)
         self.assertIn("combat-a35-vita-hud-think-presentation.patch", script)
+        self.assertIn("combat-a35-vita-messagewindow-presentation.patch", script)
         self.assertIn("combat-a35-weaponview-reload-visible-fallback.patch", script)
 
     def test_shared_loading_screen_patch_is_durable_staging_input(self):
@@ -41,6 +42,7 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         reload_visible = (ROOT / "port" / "patches" / "combat-a35-weaponview-reload-visible-fallback.patch").read_text(encoding="utf-8")
         combatgmode = (ROOT / "port" / "patches" / "commando-a35-combatgmode-vita-load-finalization.patch").read_text(encoding="utf-8")
         hud_think = (ROOT / "port" / "patches" / "combat-a35-vita-hud-think-presentation.patch").read_text(encoding="utf-8")
+        message_window = (ROOT / "port" / "patches" / "combat-a35-vita-messagewindow-presentation.patch").read_text(encoding="utf-8")
         render2d_fvf = (ROOT / "port" / "patches" / "ww3d2-a35-render2d-dynamic-fvf-init.patch").read_text(encoding="utf-8")
         render2d_viewport = (ROOT / "port" / "patches" / "ww3d2-a35-render2d-viewport-restore.patch").read_text(encoding="utf-8")
         translatedb_wide = (ROOT / "port" / "patches" / "wwtranslatedb-a35-empty-string-wide-abi.patch").read_text(encoding="utf-8")
@@ -66,6 +68,11 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         self.assertIn("HUDClass::Think", hud_think)
         self.assertIn("A31_Vita_Begin_Original_HUD_Render();", hud_think)
         self.assertIn("A31_Vita_End_Original_HUD_Render();", hud_think)
+        self.assertIn("A31ScopedVitaMessageWindowPresentation", message_window)
+        self.assertIn("MessageWindowClass::On_Frame_Update", message_window)
+        self.assertIn("MessageWindowClass::Update_Window_Rectangle", message_window)
+        self.assertIn("A31_Vita_Begin_Original_HUD_Render();", message_window)
+        self.assertIn("A31_Vita_End_Original_HUD_Render();", message_window)
 
     def test_fast_candidate_restages_incrementally_by_default(self):
         script = (ROOT / "tools" / "build_fast_candidate.sh").read_text(encoding="utf-8")

@@ -714,6 +714,26 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertLess(gameplay.index(hud_scope), gameplay.index("ObjectiveManager::Render_Viewer();"))
         self.assertLess(gameplay.index(hud_scope), gameplay.index("text_display->Render();"))
 
+        message_window = (ROOT / "staging/combat/messagewindow.cpp").read_text(
+            encoding="utf-8"
+        )
+        message_scope = "A31ScopedVitaMessageWindowPresentation"
+        self.assertIn('#include "a31_vita_hud_presentation.h"', message_window)
+        self.assertIn(message_scope, message_window)
+        self.assertIn("MessageWindow can rebuild TextWindow/Render2DSentence geometry", message_window)
+        on_frame_update = message_window[
+            message_window.index("MessageWindowClass::On_Frame_Update"):
+            message_window.index("MessageWindowClass::Add_Message")
+        ]
+        update_rect = message_window[
+            message_window.index("MessageWindowClass::Update_Window_Rectangle"):
+            message_window.index("MessageWindowClass::Clear")
+        ]
+        self.assertIn("vita_message_window_presentation", on_frame_update)
+        self.assertLess(on_frame_update.index(message_scope), on_frame_update.index("Get_Display_Count"))
+        self.assertIn("vita_message_window_presentation", update_rect)
+        self.assertLess(update_rect.index(message_scope), update_rect.index("Get_Total_Display_Height"))
+
     def test_host_loading_backdrop_probe_uses_original_asset_owner(self):
         host_cmake = (ROOT / "tools/host_a30_definitions/CMakeLists.txt").read_text(
             encoding="utf-8"

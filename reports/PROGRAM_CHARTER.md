@@ -54,13 +54,17 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   independent UV scaling, adds bounded text/dialog diagnostics, and scopes
   gameplay HUD/TextDisplay presentation to native 960×544. It is not
   installed, launched, or physically accepted.
-- A3.5-dev94: current canonical local-only candidate. It keeps the startup
+- A3.5-dev94: superseded canonical local-only candidate. It keeps the startup
   framebuffer visible through WW3D initialization, routes synchronous saveload
   status/count changes into the loading presenter, applies deferred DX8 render
   state before indexed Render2D text/HUD draws, scopes HUD `Think()` geometry
   through native gameplay presentation, and drops late BINK video frames when
   audio is under pressure. It is not installed, launched, or physically
   accepted.
+- A3.5-dev95: current canonical local-only candidate. It preserves Dev94 and
+  adds a `MessageWindowClass` presentation-scope guard for update-time
+  dialogue/message text layout and cached glyph geometry. It is not installed,
+  launched, or physically accepted.
 
 ## Milestone contracts
 

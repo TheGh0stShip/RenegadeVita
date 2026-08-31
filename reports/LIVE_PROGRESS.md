@@ -2,7 +2,7 @@
 
 ## 2026-08-30 — dev86 canonical frontend diagnostic candidate; publication/physical handoff pending
 
-`[████░░░░░░] 4/10 current evidence gates complete; source/package closure only`
+`[████░░░░░░] 4/10 current evidence gates complete; hash-matched user observation active`
 
 - The retained dev85 user return remains a frontend usability failure: very long
   black start, slow/buzzy EA movie, and an original main-menu dialog without
@@ -20,11 +20,14 @@
   diagnostics, and retail exclusion. VPK SHA-256 is
   `9a9f36c15f699b72e736f2b2a4b29d4e57537e59c3cfeb5b41f206884b85aa10`; SELF
   SHA-256 is `3b20079eca192cdf2d5869fbc3bfb485ec0528cfa2969f006a60f9567b44b4a8`.
-- GitHub source/evidence checkpoint `0c5c543` is already published. Dev86
-  closure publishes source/reports only; no binary, PSP2 dump, capture, video,
-  retail asset, save, or credential is added. The Vita has not been contacted.
-- Next: publish this exact closure, then wait for explicit handoff before a
-  title-only replacement. A hash-matched physical return must visibly verify
+- GitHub source/evidence checkpoint `0c5c543` and canonical closure `a05478a`
+  are published. After explicit READY, doctor/capability preflight passed; the
+  VPK and staged SELF were VDB1 hash-verified under the Renegade user tree,
+  the prior dev85 executable was pulled to a hash-verified local backup, and
+  only `ux0:/app/RNEGA3101/eboot.bin` was replaced. Installed SELF readback is
+  `3b20079e…7b44b4a8`; title status remained running after 15 seconds.
+- No synthetic input was sent and no runtime log, dump, screenshot, or video
+  has been pulled. The current user observation must visibly verify
   bootstrap/pre-cache, paced intro A/V, Start skip, and placed WWUI controls.
 
 ## 2026-08-31 — dev85 physical frontend return: BINK path reached, usability gate failed

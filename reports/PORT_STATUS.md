@@ -32,11 +32,20 @@ compressed VPK validation, diagnostics, and retail exclusion in
 `3b20079eca192cdf2d5869fbc3bfb485ec0528cfa2969f006a60f9567b44b4a8`.
 The VPK contains only `eboot.bin` and `sce_sys/param.sfo`.
 
-Dev86 is neither uploaded nor deployed, and no intro, menu, frame-rate, or
-audio claim is made. Its future physical gate requires matching device hashes,
-visible bootstrap/pre-cache, usable intro A/V plus timing receipt, Start skip,
-and visibly placed original WWUI controls. No dev86 screenshot or video has
-been returned, so no gallery or media publication is due.
+After explicit READY, doctor/capability preflight passed. The VPK and staged
+SELF are VDB1 hash-verified in the allowed Renegade user tree; the prior dev85
+SELF is retained locally by hash. Only `ux0:/app/RNEGA3101/eboot.bin` was
+replaced, and installed readback matches dev86 SELF
+`3b20079eca192cdf2d5869fbc3bfb485ec0528cfa2969f006a60f9567b44b4a8`.
+The launch request was accepted and title status was running after 15 seconds,
+with no synthetic input. The provider did not retain a remote replacement
+backup, but the local dev85 backup is verified; this is a launch receipt, not
+a visual or A/V acceptance result.
+
+The active physical gate requires user-visible bootstrap/pre-cache, usable
+intro A/V plus timing receipt, Start skip, and visibly placed original WWUI
+controls. No dev86 screenshot or video has been returned, so no gallery or
+media publication is due.
 
 ## 2026-08-30 dev85 mandatory frontend correction gate — canonical package, not physical proof
 

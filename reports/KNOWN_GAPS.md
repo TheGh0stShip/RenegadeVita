@@ -20,10 +20,12 @@ Dev86 restores that original transition/control-placement path, presents a
 bootstrap status before retail filesystem/pre-cache work, and prevents BINK
 from submitting an empty startup/starvation audio buffer. It also records
 bounded audio/video decode and upload timing, audio waits, and ring high-water
-at movie end. Canonical ARM/package validation passes, but dev86 has not been
-deployed: no visual, pacing, or audio acceptance claim is valid until a
-hash-matched physical return. The separate HUD/text, shadow, START-exit,
-loading-flash/progress, and performance defects remain open.
+at movie end. Canonical ARM/package validation passes; after explicit READY,
+dev86's VPK and installed SELF are hash-matched and its zero-input launch is
+running. No visual, pacing, or audio acceptance claim is valid until the user
+returns a panel observation and matching candidate-scoped evidence. The
+separate HUD/text, shadow, START-exit, loading-flash/progress, and performance
+defects remain open.
 
 ## Current dev82 physical-test gaps (2026-08-28)
 

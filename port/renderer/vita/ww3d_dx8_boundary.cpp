@@ -1195,15 +1195,20 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 		submission.texture_names[stage] = state.Textures[stage] != NULL ?
 			state.Textures[stage]->Get_Texture_Name().Peek_Buffer() : NULL;
 	}
-	/* DynamicVB users such as the original Haze/Starfield/CloudLayer/SkyObject
-	** paths retain shader and texture changes in DX8Wrapper::render_state until
-	** Draw_Triangles.  The native boundary must consume those same owners before
-	** emitting their indexed geometry; otherwise a valid sky draw inherits stale
-	** mesh state and commonly renders black. */
-	RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader);
+	/* DynamicVB users such as original Render2D, Haze, Starfield, CloudLayer,
+	** and SkyObject retain shader and texture changes in DX8Wrapper::render_state
+	** until Draw_Triangles.  The native boundary must consume the complete
+	** original shader contract, including each texture combiner, before emitting
+	** indexed geometry.  Without that, a glyph atlas can inherit the preceding
+	** mesh's texture-alpha rule and render transparent despite valid pixels. */
+	const bool indexed_texturing =
+		state.shader.Get_Texturing() != ShaderClass::TEXTURING_DISABLE;
+	const bool stage0_texture = indexed_texturing && state.Textures[0] != NULL;
+	const bool stage1_texture = indexed_texturing && state.Textures[1] != NULL;
+	RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader,
+		stage0_texture, stage1_texture);
 	for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage) {
-		if (state.shader.Get_Texturing() != ShaderClass::TEXTURING_DISABLE &&
-			state.Textures[stage] != NULL) {
+		if (indexed_texturing && state.Textures[stage] != NULL) {
 			state.Textures[stage]->Apply_For_Platform_Boundary(stage);
 		} else if (stage == 0U) {
 			RenegadeVitaRenderer::Bind_Texture(0U, false);

@@ -1,8 +1,38 @@
 # Live engineering progress
 
-## 2026-08-31 — dev87 text/resource and BINK-upload candidate; canonical closure passed
+## 2026-08-31 — Dev87 return fails frontend gate; Dev88 canonical local-only
 
-`[█████░░░░░] 5/10 current evidence gates complete; await explicit physical handoff, no device action`
+`[████░░░░░░] 4/10 current evidence gates complete; no Dev88 device action`
+
+- The Dev87 physical frontend gate fails. The user reports original menu text
+  is still missing; original intro movies remain very laggy with buzzy audio;
+  and the original grey gameplay dialogue/subtitle box is empty. The returned
+  partial log is
+  `build/device-evidence/a35-dev87-user-return-20260831T022728Z/a35-dev87-runtime.log`
+  (SHA-256 `a01c0b54159fefa2fa4c4ebefdaf181f11330f23e0287f2b426e7cbb1eac911c`)
+  and ends at original main-menu activation, so it cannot prove dialogue data
+  presence or rendered glyph visibility in M00.
+- Dev88 corrects the shared original dynamic indexed-draw state path used by
+  `Render2DSentence` menu glyphs and `MessageWindow` subtitle glyphs. It now
+  applies the original per-stage texture combiner before emission; no overlay,
+  string substitution, or replacement UI is introduced. It also delays BINK's
+  audio worker until three real decoded output buffers are queued, rather than
+  one, to reduce starvation under observed frame stalls. Retail movies are
+  unchanged.
+- 54 focused contracts and `git diff --check` passed. Canonical Dev88 passed
+  retained host validation, 115 current contracts, deterministic 136-patch
+  staging, 549 ARM/package actions, identity/archive checks, diagnostics, and
+  retail exclusion in `logs/a35-dev88-20260830-214253-build.log`. VPK SHA-256:
+  `be78097b98a3c0a0e9e9cd1fbdb0d5cdb9d7d630145bec8736d7ebad0cf07138`; SELF:
+  `cd5726251dbdd33c2d19a97aa83ccc95d992ad6800c945497ec473fe40228fce`.
+- Dev88 has not been copied to, installed on, or launched on the Vita. Next:
+  after Dev87 ends, retrieve every title-scoped returned screenshot/capture,
+  inspect and label it accurately, regenerate the gallery/timeline, publish
+  the GitHub update, then wait for explicit direction for a new physical test.
+
+## 2026-08-31 — dev87 text/resource and BINK-upload candidate; physical observation active
+
+`[█████░░░░░] 5/10 current evidence gates complete; hash-matched user observation active`
 
 - Dev86 is returned physical failure evidence. Its matching runtime log proves
   original BINK, menu, loading, and M00 paths execute; the user still reports
@@ -32,7 +62,20 @@
   published to `origin/main` at `015c83bde9653fc9bfc58f1a731eb2492e351558`.
   VPK/ELF/SELF, logs, raw capture, video, diagnostics, dumps, retail data,
   saves, and credentials remain excluded.
-- Next: await a future explicit READY. The Vita remains untouched until then.
+- Explicit READY received: dev86 was stopped, backed up locally by matching
+  SHA-256, and only `ux0:/app/RNEGA3101/eboot.bin` was replaced. Dev87 VPK and
+  staged SELF each hash-match their canonical artifacts in the title-scoped
+  user area; installed SELF readback is
+  `d7bdadbff7296dad0d5460d0febfe70116502c9a80695bfa3577f6c629f9c596`.
+  Zero-input launch is accepted and the app remains running. The provider
+  reported non-atomic replacement and no remote backup; the verified local
+  dev86 backup is retained at
+  `build/device-backups/a35-dev87-install-launch-20260831T022343Z/`.
+- No runtime log, capture, recording, dump, plugin, retail-data, or synthetic
+  input action has followed launch. The user reports screenshots were taken.
+  Next: after the user ends the manual run and returns findings, inventory and
+  pull every dev87 screenshot/capture, publish only accurately scoped gallery
+  entries, regenerate the timeline, then commit and push the complete update.
 
 ## 2026-08-30 — dev86 canonical frontend diagnostic candidate; publication/physical handoff pending
 

@@ -151,7 +151,12 @@ void Shutdown();
 void Begin_Frame(float red, float green, float blue);
 void End_Frame(bool present);
 void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info);
-void Apply_Indexed_Shader_State(const ShaderClass &shader);
+// Dynamic DX8 submissions (including original Render2D glyph quads) retain
+// ShaderClass as the owner of both blend/depth state and the per-stage texture
+// combiner contract.  The texture-presence arguments make that complete state
+// explicit before the native indexed emitter submits the geometry.
+void Apply_Indexed_Shader_State(const ShaderClass &shader,
+	bool stage0_texture, bool stage1_texture);
 IndexedSubmissionResult Submit_Indexed_Triangles(
 	const IndexedTriangleSubmission &submission);
 bool Build_Indexed_Transform_Matrices(const float *world_transform,

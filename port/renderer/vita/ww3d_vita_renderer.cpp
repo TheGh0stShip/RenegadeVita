@@ -1665,13 +1665,23 @@ extern "C" int __wrap_shark_init(const char *path)
 }
 #endif
 
-void Apply_Indexed_Shader_State(const ShaderClass &shader)
+void Apply_Indexed_Shader_State(const ShaderClass &shader,
+	bool stage0_texture, bool stage1_texture)
 {
 	++g_statistics.indexed_state_applications;
 #if defined(__vita__)
 	Apply_Original_Shader_State(shader);
+	/* The original dynamic DX8 path normally reaches ShaderClass::Apply before
+	** DrawIndexedPrimitive.  Native indexed submission bypasses that desktop
+	** device call, so translate its per-stage contract here instead of allowing
+	** a Render2D glyph atlas to inherit a preceding mesh's combiner.  In
+	** particular, Render2DSentence requires texture alpha modulated by its
+	** vertex color for the procedural A4R4G4B4 atlas to remain visible. */
+	Apply_Original_Texture_Stage_State(shader, stage0_texture, stage1_texture);
 #else
 	(void)shader;
+	(void)stage0_texture;
+	(void)stage1_texture;
 #endif
 }
 

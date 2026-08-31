@@ -3,7 +3,38 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-## 2026-08-31 dev87 frontend repair candidate — canonical closure, physical test pending
+## 2026-08-31 Dev87 physical failure; Dev88 local candidate
+
+Dev87 is retained physical frontend usability failure evidence. Despite a
+hash-matched installed executable, the user reports absent original menu text,
+very laggy/buzzy intro movies, and an empty original grey gameplay
+dialogue/subtitle box. The matching partial log,
+`build/device-evidence/a35-dev87-user-return-20260831T022728Z/a35-dev87-runtime.log`
+(SHA-256 `a01c0b54159fefa2fa4c4ebefdaf181f11330f23e0287f2b426e7cbb1eac911c`),
+ends at original main-menu activation; it does not prove gameplay subtitle
+data availability or visible glyph correctness. User-taken Dev87 screenshots
+remain pending title-scoped retrieval, visual review, accurate gallery/timeline
+labelling, and GitHub publication.
+
+The original `MessageWindow` dialogue `TextWindowClass` and original menu
+`Render2DSentence` both use dynamic indexed glyph draws. Dev88 applies the
+original `ShaderClass` texture-stage combiner state immediately before those
+draws, preventing the A4R4G4B4 atlas from inheriting an incompatible alpha
+rule from a previous mesh. It changes no game owner, text database, or retail
+asset. Dev88 also raises the BINK audio start reserve to three real output
+buffers (about 64 ms) to tolerate a frame upload/decode stall without instant
+audio starvation; no BIK is repackaged or modified.
+
+Focused tests (54) and `git diff --check` pass. Canonical Dev88 passed 115
+current contracts, deterministic staging, 549 ARM/package actions, identity,
+archive, diagnostics, and retail-exclusion checks in
+`logs/a35-dev88-20260830-214253-build.log`. VPK SHA-256 is
+`be78097b98a3c0a0e9e9cd1fbdb0d5cdb9d7d630145bec8736d7ebad0cf07138`; packaged
+SELF SHA-256 is `cd5726251dbdd33c2d19a97aa83ccc95d992ad6800c945497ec473fe40228fce`.
+It is local only: no Dev88 file has been copied to, installed on, or launched
+on the Vita.
+
+## 2026-08-31 dev87 frontend repair candidate — historical pre-return record
 
 Dev86 is now retained physical failure evidence, not a pending observation. Its
 matching runtime log proves the original BINK, menu, loading-screen, and M00
@@ -43,8 +74,21 @@ Source, tests, reports, and the explicitly diagnostic gallery item are now
 published to `origin/main` at `015c83bde9653fc9bfc58f1a731eb2492e351558`
 (`Fix dev87 frontend glyphs and BINK upload`). VPK/ELF/SELF, logs, raw capture,
 video, diagnostics ZIP, dumps, retail data, saves, and credentials are excluded.
-An explicit future READY is still required. No Vita action has been requested or
-performed for dev87.
+
+After explicit READY, dev86 was stopped and backed up locally under
+`build/device-backups/a35-dev87-install-launch-20260831T022343Z/`; its hash
+matched `3b20079eca192cdf2d5869fbc3bfb485ec0528cfa2969f006a60f9567b44b4a8`.
+The exact dev87 VPK and staged SELF were hash-verified in the title-scoped user
+area, and only `ux0:/app/RNEGA3101/eboot.bin` was replaced. The provider reports
+`atomic=false` and no remote backup, while the verified local backup is retained.
+Installed readback is the canonical dev87 SELF
+`d7bdadbff7296dad0d5460d0febfe70116502c9a80695bfa3577f6c629f9c596`; the
+zero-input launch was accepted and `RNEGA3101` remained running. This is a
+handoff fact only, not physical frontend acceptance. Runtime logs, captures,
+recordings, and dumps have not been pulled. The user has reported screenshots
+were taken; after the manual run ends, every returned dev87 image must be
+inventoried, accurately labelled, added to the gallery/timeline, and published
+with the matching evidence receipt.
 
 ## 2026-08-30 dev86 frontend evidence candidate — canonical package, physical usability failure
 

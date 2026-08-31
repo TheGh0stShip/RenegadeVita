@@ -10,7 +10,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
         function = boundary[boundary.index("void Submit_Bound_Triangles"):]
         shader = function.index(
-            "RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader)")
+            "RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader,")
         loop = function.index("for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage)")
         texture = function.index(
             "state.Textures[stage]->Apply_For_Platform_Boundary(stage)")
@@ -26,6 +26,9 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertLess(stage1_disable, submit)
         self.assertLess(texture, material)
         self.assertLess(material, submit)
+        self.assertIn("const bool indexed_texturing =", function)
+        self.assertIn("const bool stage0_texture = indexed_texturing", function)
+        self.assertIn("const bool stage1_texture = indexed_texturing", function)
         self.assertIn("mapper->Apply(uv_source);", boundary)
         self.assertIn("D3DTSS_TEXCOORDINDEX", boundary)
         self.assertIn("D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE", boundary)
@@ -34,7 +37,27 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text()
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         self.assertIn("uint64_t indexed_state_applications;", header)
+        self.assertIn("bool stage0_texture, bool stage1_texture", header)
         self.assertIn("++g_statistics.indexed_state_applications;", renderer)
+        self.assertIn(
+            "Apply_Original_Texture_Stage_State(shader, stage0_texture, stage1_texture);",
+            renderer,
+        )
+
+    def test_sentence_atlas_combiner_covers_original_menu_and_subtitle_paths(self):
+        sentence = (ROOT / "staging/ww3d2/render2dsentence.cpp").read_text()
+        render2d = (ROOT / "staging/ww3d2/render2d.cpp").read_text()
+        menu_entry = (ROOT / "staging/wwui/menuentryctrl.cpp").read_text()
+        message_window = (ROOT / "staging/combat/messagewindow.cpp").read_text()
+
+        # The missing menu labels and the text in the original message window
+        # both arrive at the native indexed submission through the same
+        # Render2DSentence atlas and Render2D dynamic-DX8 draw path.
+        self.assertIn("Renderers[i].Renderer->Render ();", sentence)
+        self.assertIn("DX8Wrapper::Draw_Triangles(0,Indices.Count()/3,0,Vertices.Count());", render2d)
+        self.assertIn("TextRenderer.Build_Sentence (Title);", menu_entry)
+        self.assertIn("TextWindow->Set_Text_Font (FONT_NAME);", message_window)
+        self.assertIn("TextWindow->Render ();", message_window)
 
     def test_gradient_disable_uses_texture_replace_not_black_diffuse_modulation(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()

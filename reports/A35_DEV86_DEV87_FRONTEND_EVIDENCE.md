@@ -84,3 +84,48 @@ BINK upload`). The commit contains source, focused tests, sanitized reports,
 and the explicitly diagnostic gallery PNG; VPK/ELF/SELF, logs, raw captures,
 video, dumps, retail data, saves, and credentials remain excluded. Future
 explicitly authorized physical validation is still pending.
+
+## Dev87 returned frontend failure and Dev88 correction
+
+Dev87 is no longer a pending physical observation. The user reports that its
+main-menu text is still missing, intro playback remains very laggy with buzzy
+audio, and the original grey gameplay dialogue box is present but its subtitle
+text is empty. The retained partial runtime log is
+`build/device-evidence/a35-dev87-user-return-20260831T022728Z/a35-dev87-runtime.log`
+with SHA-256
+`a01c0b54159fefa2fa4c4ebefdaf181f11330f23e0287f2b426e7cbb1eac911c`.
+It reaches original main-menu activation and contains partial BINK timing, but
+ends before M00 dialogue breadcrumbs. Thus it does not establish whether a
+translated dialogue string was available; it does establish that the reported
+blank subtitle cannot be called fixed. User-taken screenshots are expected and
+must be pulled from title-scoped locations, reviewed, accurately labelled, and
+added to the generated gallery/timeline before publication.
+
+The shared concrete renderer lead is now fixed locally in Dev88. Original menu
+entries use `Render2DSentence`; original `MessageWindow` owns a
+`TextWindowClass` for the gameplay dialogue box. Both render glyph quads through
+the same original `Render2DClass::Render` dynamic indexed submission. The Vita
+boundary previously applied blend/depth state there but not the original
+per-stage texture combiner state. A glyph atlas could therefore inherit a
+preceding mesh's incompatible alpha rule even when it had valid pixels. Dev88
+supplies the stage-0/stage-1 texture-presence contract to
+`Apply_Indexed_Shader_State` and applies the original texture-stage state
+before the draw. This retains original UI, dialogue, translation, and renderer
+owners; it does not add a replacement subtitle path.
+
+The Dev87 partial BINK telemetry showed 33–59 ms worst upload/decode work while
+the previous one-buffer audio startup reserve represented only about 21 ms.
+Dev88 raises the reserve to three real 1024-frame stereo buffers, about 64 ms
+at 48 kHz, before starting the Vita audio output worker. This is an inference-
+driven buffering correction for starvation/buzz, not an artificial-silence
+workaround and not retail movie conversion. Dev87's RGB565 in-memory upload
+change remains otherwise intact; retail BIK files remain unchanged.
+
+Dev88 focused contracts passed 54/54 and `git diff --check` passed. Its
+canonical local-only closure in `logs/a35-dev88-20260830-214253-build.log`
+passed retained host validation, 115 current contracts, deterministic 136-patch
+staging, 549 ARM/package actions, original-runtime symbol, identity, archive,
+diagnostics, and retail-exclusion checks. VPK SHA-256 is
+`be78097b98a3c0a0e9e9cd1fbdb0d5cdb9d7d630145bec8736d7ebad0cf07138`; packaged
+SELF is `cd5726251dbdd33c2d19a97aa83ccc95d992ad6800c945497ec473fe40228fce`.
+No Dev88 artifact has been copied to, installed on, or launched on the Vita.

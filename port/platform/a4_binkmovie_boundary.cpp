@@ -38,6 +38,10 @@ namespace {
 constexpr int kAudioRate = 48000;
 constexpr int kAudioChannels = 2;
 constexpr int kAudioFramesPerBuffer = 1024;
+constexpr size_t kAudioStartupBufferCount = 3U;
+constexpr size_t kAudioStartupSamples =
+	kAudioStartupBufferCount * static_cast<size_t>(kAudioFramesPerBuffer) *
+	kAudioChannels;
 constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
 constexpr int64_t kUpdateBudgetUs = 12000;
@@ -238,6 +242,8 @@ void Reset_Audio_Ring()
 	g_audio_drop_logged = false;
 }
 
+bool Start_Audio_Output_Thread();
+
 void Queue_Audio(const int16_t *samples, size_t sample_count)
 {
 	if (!g_audio_enabled || samples == NULL || sample_count == 0U) return;
@@ -261,12 +267,24 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 		g_audio_write = (g_audio_write + 1U) % capacity;
 	}
 	g_audio_count += accepted;
+	const bool start_output = !g_audio_thread_running &&
+		g_audio_count >= kAudioStartupSamples;
 	uint64_t high_water = g_audio_high_water_samples.load(std::memory_order_relaxed);
 	while (g_audio_count > high_water &&
 		!g_audio_high_water_samples.compare_exchange_weak(high_water,
 			g_audio_count, std::memory_order_relaxed)) {
 	}
 	pthread_mutex_unlock(&g_audio_mutex);
+	/* Do not create a polling audio worker until three decoded hardware buffers
+	** exist.  One 21 ms buffer is shorter than the returned BINK upload/decode
+	** stalls, which immediately starves the device and produces the reported
+	** buzzy audio.  This keeps a bounded 64 ms cushion of original decoded
+	** samples; it never inserts synthetic silence. */
+	if (start_output && !Start_Audio_Output_Thread()) {
+		A30_Vita_Log("A4 Bink: audio output worker start failed; video continues\\n");
+		g_audio_enabled = false;
+		g_audio_drained.store(true, std::memory_order_release);
+	}
 	if (accepted != sample_count && !g_audio_drop_logged) {
 		A30_Vita_Log("A4 Bink: audio ring full; dropped=%u samples movie=%s\n",
 			static_cast<unsigned>(sample_count - accepted), g_movie_name);
@@ -343,6 +361,39 @@ void *Audio_Output_Thread(void *)
 	return NULL;
 }
 
+bool Start_Audio_Output_Thread()
+{
+	if (g_audio_thread_running) return true;
+	if (g_audio_port < 0) return false;
+	if (pthread_create(&g_audio_thread, NULL, Audio_Output_Thread, NULL) != 0) {
+		return false;
+	}
+	g_audio_thread_running = true;
+	A30_Vita_Log("A4 Bink: audio output worker armed after decoded startup samples=%u movie=%s\\n",
+		static_cast<unsigned>(kAudioStartupSamples), g_movie_name);
+	return true;
+}
+
+void Drain_Deferred_Audio_Output()
+{
+	if (!g_audio_enabled || g_audio_thread_running) return;
+	pthread_mutex_lock(&g_audio_mutex);
+	const bool has_queued_samples = g_audio_count != 0U;
+	pthread_mutex_unlock(&g_audio_mutex);
+	if (!has_queued_samples) {
+		g_audio_drained.store(true, std::memory_order_release);
+		return;
+	}
+	/* The final decoded packet can be shorter than the normal startup target.
+	** At EOF it is still real movie audio, so drain it as a recorded partial
+	** final buffer rather than leaving the original MovieGameMode waiting. */
+	if (!Start_Audio_Output_Thread()) {
+		A30_Vita_Log("A4 Bink: final audio drain worker start failed; video continues\\n");
+		g_audio_enabled = false;
+		g_audio_drained.store(true, std::memory_order_release);
+	}
+}
+
 void Stop_Audio_Output()
 {
 	if (g_audio_thread_running) {
@@ -390,15 +441,9 @@ bool Start_Audio_Output()
 		return false;
 	}
 	g_audio_stop.store(false, std::memory_order_release);
-	if (pthread_create(&g_audio_thread, NULL, Audio_Output_Thread, NULL) != 0) {
-		A30_Vita_Log("A4 Bink: audio output thread creation failed; video continues\n");
-		sceAudioOutReleasePort(g_audio_port);
-		g_audio_port = -1;
-		g_audio_drained.store(true, std::memory_order_release);
-		return false;
-	}
-	g_audio_thread_running = true;
 	g_audio_enabled = true;
+	A30_Vita_Log("A4 Bink: audio output armed; waiting for decoded startup samples=%u movie=%s\n",
+		static_cast<unsigned>(kAudioStartupSamples), g_movie_name);
 	return true;
 }
 
@@ -903,6 +948,7 @@ void BINKMovie::Update()
 		if (g_demux_eof.load(std::memory_order_acquire)) {
 			Flush_Decoders();
 			if (Receive_Video_Frame()) continue;
+			Drain_Deferred_Audio_Output();
 			const bool audio_done = !g_audio_enabled ||
 				g_audio_drained.load(std::memory_order_acquire);
 			if (audio_done) {

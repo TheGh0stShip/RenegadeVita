@@ -19,6 +19,9 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         loading_header = (ROOT / "staging/commando/loadingscreen.h").read_text(
             encoding="utf-8", errors="replace"
         )
+        status_source = (ROOT / "staging/wwsaveload/saveloadstatus.cpp").read_text(
+            encoding="utf-8", errors="replace"
+        )
 
         self.assertIn("class LoadingScreenClass", original)
         self.assertIn("#include \"loadingscreen.h\"", original)
@@ -139,6 +142,8 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Draw_Engine_Setup_Screen", runtime)
         self.assertIn("Original engine setup / frontend handoff", runtime)
         self.assertIn("This screen stays active until vitaGL owns display.", runtime)
+        self.assertIn("visible status remains until vitaGL replaces the framebuffer", runtime)
+        self.assertIn("retaining bootstrap framebuffer through WW3D::Init", runtime)
         self.assertIn("Starting vitaGL renderer", runtime)
         self.assertLess(
             runtime.index(
@@ -148,12 +153,9 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         )
         self.assertLess(
             runtime.index('"Starting vitaGL renderer"'),
-            runtime.index("psvDebugScreenFinish();"),
-        )
-        self.assertLess(
-            runtime.index("psvDebugScreenFinish();"),
             runtime.index("ww3d_initialized = WW3D::Init(NULL, NULL, true)"),
         )
+        self.assertNotIn("psvDebugScreenFinish();", runtime)
         self.assertIn("{ kAlwaysArchive, true, kStartupPrecacheRequiredReadBytes }", runtime)
         self.assertIn("{ kM00Archive, true, kStartupPrecacheRequiredReadBytes }", runtime)
         self.assertIn('"DATA\\\\MOVIES\\\\EA_WW.BIK"', runtime)
@@ -205,7 +207,6 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             startup_precache_call,
             runtime.index("WWAudioClass application_audio(false);"),
         )
-        self.assertIn("psvDebugScreenFinish();", runtime[startup_precache_call:])
         self.assertIn(
             "A3.5 prewarm: FAIL startup precache/precompute phase before frontend",
             runtime,
@@ -221,6 +222,17 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("A31VitaScopedLoadingPresenterCallback", runtime)
         self.assertIn("g_active_loading_presenter", runtime)
         self.assertIn("A31_Vita_Render_Original_Loading_Callback", runtime)
+        self.assertIn("A31_Vita_Render_Original_Loading_Callback", status_source)
+        self.assertIn("Vita_Notify_Loading_Status_Change", status_source)
+        self.assertIn("g_vita_loading_status_callback_active", status_source)
+        self.assertIn(
+            "Vita_Notify_Loading_Status_Change(text, status_count);",
+            status_source,
+        )
+        self.assertIn(
+            'Vita_Notify_Loading_Status_Change("saveload-status-count", status_count);',
+            status_source,
+        )
         self.assertIn("synchronous-load callback armed", runtime)
         self.assertIn("synchronous-load callback disarmed", runtime)
         self.assertIn("synchronous-load callback ignored", runtime)
@@ -669,6 +681,21 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("A3.5 HUD target-box", hud)
         self.assertIn("WW3D::Get_Device_Resolution(device_width", hud)
         self.assertIn("COMBAT_CAMERA->Get_Aspect_Ratio()", hud)
+        hud_think = hud[
+            hud.index("void \tHUDClass::Think()"):
+            hud.index("void\tHUDClass::Toggle_Hide_Points")
+        ]
+        self.assertIn("A31ScopedVitaHUDThinkPresentation", hud_think)
+        self.assertIn("HUDClass::Think", hud_think)
+        self.assertIn("~A31ScopedVitaHUDThinkPresentation()", hud_think)
+        self.assertLess(
+            hud_think.index("A31_Vita_Begin_Original_HUD_Render();"),
+            hud_think.index("Info_Update();"),
+        )
+        self.assertLess(
+            hud_think.index("A31_Vita_Begin_Original_HUD_Render();"),
+            hud_think.index("Target_Update();"),
+        )
 
         renderer_header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text(
             encoding="utf-8"

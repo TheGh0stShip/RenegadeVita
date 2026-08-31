@@ -33,6 +33,36 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("D3DTSS_TEXCOORDINDEX", boundary)
         self.assertIn("D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE", boundary)
 
+    def test_vita_draw_drains_original_dx8wrapper_deferred_state(self):
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
+        apply_state = boundary[
+            boundary.index("void DX8Wrapper::Apply_Render_State_Changes"):
+            boundary.index("void DX8Wrapper::Set_Vertex_Buffer(const VertexBufferClass")
+        ]
+        typed_draw = boundary[
+            boundary.index("void DX8Wrapper::Draw_Triangles(unsigned buffer_type,"):
+            boundary.index("void DX8Wrapper::Draw_Triangles(unsigned short start_index,")
+        ]
+        short_draw = boundary[
+            boundary.index("void DX8Wrapper::Draw_Triangles(unsigned short start_index,"):
+        ]
+
+        self.assertIn("render_state.shader.Apply();", apply_state)
+        self.assertIn("render_state.Textures[stage]->Apply(stage);", apply_state)
+        self.assertIn("TextureClass::Apply_Null(stage);", apply_state)
+        self.assertIn("_Set_DX8_Transform(D3DTS_WORLD, render_state.world);", apply_state)
+        self.assertIn("_Set_DX8_Transform(D3DTS_VIEW, render_state.view);", apply_state)
+        self.assertIn("render_state_changed &= ((unsigned)WORLD_IDENTITY | (unsigned)VIEW_IDENTITY);", apply_state)
+        self.assertIn("DX8Wrapper deferred render state apply", apply_state)
+        self.assertLess(
+            typed_draw.index("Apply_Render_State_Changes();"),
+            typed_draw.index("Submit_Bound_Triangles(render_state"),
+        )
+        self.assertLess(
+            short_draw.index("Apply_Render_State_Changes();"),
+            short_draw.index("Submit_Bound_Triangles(render_state"),
+        )
+
     def test_indexed_state_application_is_observable(self):
         header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text()
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()

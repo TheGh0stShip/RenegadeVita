@@ -9,6 +9,7 @@
 
 #include "assetmgr.h"
 #include "campaign.h"
+#include "chunkio.h"
 #include "combat.h"
 #include "cnetwork.h"
 #include "definitionfactorymgr.h"
@@ -49,10 +50,12 @@
 #include "wwmath.h"
 #include "wwphys.h"
 #include "saveload.h"
+#include "translatedb.h"
 #include "wwsaveload.h"
 
 #include "a31_console_stub.h"
 #include "dialogmgr.h"
+#include "dialogcontrol.h"
 #include "dialogtests.h"
 #include "dialogresource.h"
 #include "dlgmainmenu.h"
@@ -136,8 +139,141 @@ unsigned Count_Definitions(uint32 class_id)
 		fflush(stdout);
 	}
 
-void Stage(const char *name)
-{
+	unsigned Wide_Text_Length(const WCHAR *text)
+	{
+		return text != NULL ? static_cast<unsigned>(::wcslen(text)) : 0U;
+	}
+
+	bool Is_Valid_Translated_Text(const WCHAR *text)
+	{
+		return text != NULL &&
+			Wide_Text_Length(text) > 0U &&
+			::wcscmp(text, STRING_NOT_FOUND) != 0 &&
+			::wcsstr(text, L"IDS_") == NULL;
+	}
+
+	bool Text_Has_Renderable_Glyphs(FontCharsClass *font, const WCHAR *text,
+		unsigned *covered_glyphs_out, unsigned *advance_out)
+	{
+		if (covered_glyphs_out != NULL) *covered_glyphs_out = 0U;
+		if (advance_out != NULL) *advance_out = 0U;
+		if (font == NULL || text == NULL) return false;
+		unsigned covered_glyphs = 0U;
+		unsigned advance = 0U;
+		for (const WCHAR *cursor = text; *cursor != 0; ++cursor) {
+			if (*cursor <= L' ') continue;
+			const int width = font->Get_Char_Width(*cursor);
+			const int spacing = font->Get_Char_Spacing(*cursor);
+			if (width > 0) ++covered_glyphs;
+			if (spacing > 0) advance += static_cast<unsigned>(spacing);
+		}
+		if (covered_glyphs_out != NULL) *covered_glyphs_out = covered_glyphs;
+		if (advance_out != NULL) *advance_out = advance;
+		return covered_glyphs > 0U && advance > 0U;
+	}
+
+	bool Load_Original_Strings_Database(FileFactoryClass &factory,
+		unsigned *object_count_out, unsigned *version_out)
+	{
+		if (object_count_out != NULL) *object_count_out = 0U;
+		if (version_out != NULL) *version_out = 0U;
+		TranslateDBClass::Initialize();
+		FileClass *file = factory.Get_File("STRINGS.TDB");
+		if (file == NULL) return false;
+
+		bool loaded = false;
+		if (file->Open(FileClass::READ)) {
+			if (file->Is_Available()) {
+				ChunkLoadClass cload(file);
+				loaded = SaveLoadSystemClass::Load(cload);
+			}
+			file->Close();
+		}
+		factory.Return_File(file);
+		if (object_count_out != NULL) {
+			*object_count_out = static_cast<unsigned>(TranslateDBClass::Get_Object_Count());
+		}
+		if (version_out != NULL) {
+			*version_out = static_cast<unsigned>(TranslateDBClass::Get_Version_Number());
+		}
+		return loaded && TranslateDBClass::Is_Loaded();
+	}
+
+	struct MainMenuTextProbe {
+		int control_id;
+		const char *desc;
+	};
+
+	const MainMenuTextProbe kMainMenuTextProbes[] = {
+		{ IDC_MENU_START_SP_GAME_BUTTON, "IDS_MENU_TEXT073" },
+		{ IDC_MENU_MP_INTERNET_GAME_BUTTON, "IDS_MENU_TEXT276" },
+		{ IDC_MENU_MP_LAN_GAME_BUTTON, "IDS_MENU_TEXT277" },
+		{ IDC_MENU_START_PRACTICE_GAME_BUTTON, "IDS_MENU_TEXT513" },
+		{ IDC_MENU_OPTIONS_BUTTON, "IDS_MENU_TEXT076" },
+		{ IDC_MENU_QUIT_BUTTON, "IDS_MENU_TEXT077" },
+	};
+
+	bool Validate_Main_Menu_Translation_Table(unsigned *valid_count_out)
+	{
+		if (valid_count_out != NULL) *valid_count_out = 0U;
+		unsigned valid_count = 0U;
+		for (unsigned index = 0U;
+			index < sizeof(kMainMenuTextProbes) / sizeof(kMainMenuTextProbes[0]);
+			++index) {
+			const MainMenuTextProbe &probe = kMainMenuTextProbes[index];
+			TDBObjClass *object = TranslateDBClass::Find_Object(probe.desc);
+			const WCHAR *text = TranslateDBClass::Get_String(probe.desc);
+			const bool valid = object != NULL && Is_Valid_Translated_Text(text);
+			printf("a31.frontend_mainmenu_translation_%s=%s,len=%u\n",
+				probe.desc, valid ? "valid" : "invalid", Wide_Text_Length(text));
+			fflush(stdout);
+			if (valid) ++valid_count;
+		}
+		if (valid_count_out != NULL) *valid_count_out = valid_count;
+		return valid_count ==
+			sizeof(kMainMenuTextProbes) / sizeof(kMainMenuTextProbes[0]);
+	}
+
+	bool Validate_Main_Menu_Control_Text(MainMenuDialogClass *menu,
+		unsigned *valid_count_out, unsigned *renderable_count_out)
+	{
+		if (valid_count_out != NULL) *valid_count_out = 0U;
+		if (renderable_count_out != NULL) *renderable_count_out = 0U;
+		if (menu == NULL) return false;
+		FontCharsClass *font = StyleMgrClass::Get_Font(StyleMgrClass::FONT_MENU);
+		if (font == NULL) return false;
+
+		unsigned valid_count = 0U;
+		unsigned renderable_count = 0U;
+		for (unsigned index = 0U;
+			index < sizeof(kMainMenuTextProbes) / sizeof(kMainMenuTextProbes[0]);
+			++index) {
+			const MainMenuTextProbe &probe = kMainMenuTextProbes[index];
+			DialogControlClass *control = menu->Get_Dlg_Item(probe.control_id);
+			const WCHAR *text = control != NULL ? control->Get_Text() : NULL;
+			unsigned covered_glyphs = 0U;
+			unsigned advance = 0U;
+			const bool valid = Is_Valid_Translated_Text(text);
+			const bool renderable = Text_Has_Renderable_Glyphs(font, text,
+				&covered_glyphs, &advance);
+			printf("a31.frontend_mainmenu_control_%s=%s,renderable=%s,len=%u,glyphs=%u,advance=%u\n",
+				probe.desc, valid ? "valid" : "invalid",
+				renderable ? "true" : "false", Wide_Text_Length(text),
+				covered_glyphs, advance);
+			fflush(stdout);
+			if (valid) ++valid_count;
+			if (renderable) ++renderable_count;
+		}
+		REF_PTR_RELEASE(font);
+		if (valid_count_out != NULL) *valid_count_out = valid_count;
+		if (renderable_count_out != NULL) *renderable_count_out = renderable_count;
+		const unsigned expected =
+			sizeof(kMainMenuTextProbes) / sizeof(kMainMenuTextProbes[0]);
+		return valid_count == expected && renderable_count == expected;
+	}
+
+	void Stage(const char *name)
+	{
 	fprintf(stderr, "a31.stage=%s\n", name);
 	fflush(stderr);
 }
@@ -228,12 +364,15 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 ** than a locally constructed presenter, and restores the former console
 ** state before gameplay setup continues.
 */
-	bool Validate_Authentic_Main_Menu_Lifecycle(unsigned *control_count_out,
-		unsigned *render_frames_out, bool *mode_lifecycle_out)
-{
-	if (control_count_out != NULL) *control_count_out = 0;
-	if (render_frames_out != NULL) *render_frames_out = 0;
-	if (mode_lifecycle_out != NULL) *mode_lifecycle_out = false;
+		bool Validate_Authentic_Main_Menu_Lifecycle(unsigned *control_count_out,
+			unsigned *render_frames_out, bool *mode_lifecycle_out,
+			unsigned *valid_label_count_out, unsigned *renderable_label_count_out)
+	{
+		if (control_count_out != NULL) *control_count_out = 0;
+		if (render_frames_out != NULL) *render_frames_out = 0;
+		if (mode_lifecycle_out != NULL) *mode_lifecycle_out = false;
+		if (valid_label_count_out != NULL) *valid_label_count_out = 0U;
+		if (renderable_label_count_out != NULL) *renderable_label_count_out = 0U;
 
 	ConsoleBox.Set_Exclusive(false);
 	RenegadeDialogMgrClass::Initialize();
@@ -248,11 +387,15 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 	 * ordering here: direct Activate would conceal a missing manager owner. */
 	RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_MAIN_MENU);
 
-	MainMenuDialogClass *const menu = MainMenuDialogClass::Get_Instance();
-	const unsigned controls = menu != NULL && menu->Get_Control_Count() > 0
-		? static_cast<unsigned>(menu->Get_Control_Count()) : 0U;
-	const unsigned initial_dialog_count =
-		static_cast<unsigned>(DialogMgrClass::Get_Dialog_Count());
+		MainMenuDialogClass *const menu = MainMenuDialogClass::Get_Instance();
+		const unsigned controls = menu != NULL && menu->Get_Control_Count() > 0
+			? static_cast<unsigned>(menu->Get_Control_Count()) : 0U;
+		unsigned valid_label_count = 0U;
+		unsigned renderable_label_count = 0U;
+		const bool menu_labels_valid = Validate_Main_Menu_Control_Text(menu,
+			&valid_label_count, &renderable_label_count);
+		const unsigned initial_dialog_count =
+			static_cast<unsigned>(DialogMgrClass::Get_Dialog_Count());
 	unsigned rendered_frames = 0;
 	for (unsigned frame = 0; menu != NULL && frame < 3U; ++frame) {
 		GameModeManager::Think();
@@ -266,18 +409,21 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 	menu_mode.Deactivate();
 	GameModeManager::Safely_Deactivate();
 	const bool mode_shutdown = menu_mode.Is_Inactive();
-	GameModeManager::Remove(&menu_mode);
-	const bool valid = menu != NULL && controls > 0U &&
-		initial_dialog_count > 0U && rendered_frames == 3U &&
-		mode_active && mode_shutdown;
-	RenegadeDialogMgrClass::Shutdown();
-	ConsoleBox.Set_Exclusive(true);
+		GameModeManager::Remove(&menu_mode);
+		const bool valid = menu != NULL && controls > 0U &&
+			initial_dialog_count > 0U && rendered_frames == 3U &&
+			mode_active && mode_shutdown && menu_labels_valid;
+		RenegadeDialogMgrClass::Shutdown();
+		ConsoleBox.Set_Exclusive(true);
 
-	if (control_count_out != NULL) *control_count_out = controls;
-	if (render_frames_out != NULL) *render_frames_out = rendered_frames;
-		if (mode_lifecycle_out != NULL) *mode_lifecycle_out =
-			mode_active && mode_shutdown;
-		return valid;
+		if (control_count_out != NULL) *control_count_out = controls;
+		if (render_frames_out != NULL) *render_frames_out = rendered_frames;
+		if (valid_label_count_out != NULL) *valid_label_count_out = valid_label_count;
+		if (renderable_label_count_out != NULL) *renderable_label_count_out =
+			renderable_label_count;
+			if (mode_lifecycle_out != NULL) *mode_lifecycle_out =
+				mode_active && mode_shutdown;
+			return valid;
 	}
 
 	bool Validate_Frontend_Controller_Navigation(unsigned *control_count_out)
@@ -473,8 +619,9 @@ int main(int argc, char **argv)
 	bool input_initialized = false;
 	bool combat_initialized = false;
 	bool radar_initialized = false;
-	bool stylemgr_initialized = false;
-	bool campaign_initialized = false;
+		bool stylemgr_initialized = false;
+		bool translatedb_initialized = false;
+		bool campaign_initialized = false;
 	bool session_initialized = false;
 	bool single_player_transport_initialized = false;
 	bool level_loaded = false;
@@ -504,10 +651,28 @@ int main(int argc, char **argv)
 			Stage("wwphys_init");
 			WWPhys::Init();
 			wwphys_initialized = true;
-			WWSaveLoad::Init();
-			wwsaveload_initialized = true;
+				WWSaveLoad::Init();
+				wwsaveload_initialized = true;
+				Stage("strings_database_load");
+				unsigned translatedb_objects = 0U;
+				unsigned translatedb_version = 0U;
+				const bool translatedb_loaded = Load_Original_Strings_Database(
+					factory_list, &translatedb_objects, &translatedb_version);
+				Print("strings_database_loaded", translatedb_loaded);
+				Print_Number("strings_database_objects", translatedb_objects);
+				Print_Number("strings_database_version", translatedb_version);
+				if (!translatedb_loaded) { passed = false; break; }
+				translatedb_initialized = true;
+				unsigned main_menu_translation_count = 0U;
+				const bool main_menu_translations =
+					Validate_Main_Menu_Translation_Table(&main_menu_translation_count);
+				Print("frontend_mainmenu_translations_resolved",
+					main_menu_translations);
+				Print_Number("frontend_mainmenu_translation_labels",
+					main_menu_translation_count);
+				if (!main_menu_translations) { passed = false; break; }
 
-			Stage("input_init");
+				Stage("input_init");
 			Input::Init(true);
 			A31_Interactive_Configure_Vita_Controls();
 			const bool vita_control_bindings =
@@ -567,17 +732,23 @@ int main(int argc, char **argv)
 			if (!campaign_initialized) { passed = false; break; }
 			Stage("frontend_mainmenu_lifecycle");
 			Register_A4_Host_Harness_Combat_Mode();
-			unsigned main_menu_control_count = 0;
-			unsigned main_menu_render_frames = 0;
-			bool original_menu_mode_lifecycle = false;
-			const bool authentic_main_menu_lifecycle =
-				Validate_Authentic_Main_Menu_Lifecycle(&main_menu_control_count,
-					&main_menu_render_frames, &original_menu_mode_lifecycle);
-				Print("frontend_dialog_manager_initialized", authentic_main_menu_lifecycle);
-				Print("frontend_original_menu_mode_lifecycle", original_menu_mode_lifecycle);
-				Print_Number("frontend_mainmenu_original_controls", main_menu_control_count);
-				Print_Number("frontend_mainmenu_original_render_frames", main_menu_render_frames);
-				if (!authentic_main_menu_lifecycle) { passed = false; break; }
+				unsigned main_menu_control_count = 0;
+				unsigned main_menu_render_frames = 0;
+				unsigned main_menu_valid_labels = 0U;
+				unsigned main_menu_renderable_labels = 0U;
+				bool original_menu_mode_lifecycle = false;
+				const bool authentic_main_menu_lifecycle =
+					Validate_Authentic_Main_Menu_Lifecycle(&main_menu_control_count,
+						&main_menu_render_frames, &original_menu_mode_lifecycle,
+						&main_menu_valid_labels, &main_menu_renderable_labels);
+					Print("frontend_dialog_manager_initialized", authentic_main_menu_lifecycle);
+					Print("frontend_original_menu_mode_lifecycle", original_menu_mode_lifecycle);
+					Print_Number("frontend_mainmenu_original_controls", main_menu_control_count);
+					Print_Number("frontend_mainmenu_original_render_frames", main_menu_render_frames);
+					Print_Number("frontend_mainmenu_valid_labels", main_menu_valid_labels);
+					Print_Number("frontend_mainmenu_renderable_labels",
+						main_menu_renderable_labels);
+					if (!authentic_main_menu_lifecycle) { passed = false; break; }
 				Stage("frontend_controller_navigation");
 				unsigned frontend_navigation_controls = 0;
 				const bool frontend_controller_navigation =
@@ -885,11 +1056,15 @@ int main(int argc, char **argv)
 			}
 			if (combat_initialized) CombatManager::Shutdown();
 			if (stylemgr_initialized) StyleMgrClass::Shutdown();
-			if (campaign_initialized) {
-				CampaignManager::Shutdown();
-				Print("campaign_catalog_shutdown",
-					CampaignFlowDescriptions.Count() == 0);
-			}
+				if (campaign_initialized) {
+					CampaignManager::Shutdown();
+					Print("campaign_catalog_shutdown",
+						CampaignFlowDescriptions.Count() == 0);
+				}
+				if (translatedb_initialized) {
+					TranslateDBClass::Shutdown();
+					translatedb_initialized = false;
+				}
 		if (session_initialized) {
 			/* GameInitMgr owns the matching SP data/transport shutdown.  Network
 			 * one-time shutdown remains at the outer application lifecycle, as in

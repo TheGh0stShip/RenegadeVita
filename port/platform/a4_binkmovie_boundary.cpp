@@ -236,6 +236,29 @@ const char *Build_FFmpeg_File_URL(const RenegadeResolvedPath &resolved,
 	return url;
 }
 
+int64_t Current_Movie_Elapsed_Us()
+{
+	return static_cast<int64_t>(sceKernelGetProcessTimeWide()) - g_start_us;
+}
+
+size_t Queued_Audio_Samples()
+{
+	if (!g_audio_enabled) return 0U;
+	pthread_mutex_lock(&g_audio_mutex);
+	const size_t queued = g_audio_count;
+	pthread_mutex_unlock(&g_audio_mutex);
+	return queued;
+}
+
+bool Audio_Output_Under_Pressure()
+{
+	if (!g_audio_enabled || !g_audio_thread_running) return false;
+	const size_t queued = Queued_Audio_Samples();
+	const size_t pressure_threshold =
+		static_cast<size_t>(kAudioFramesPerBuffer) * kAudioChannels * 3U;
+	return queued < pressure_threshold;
+}
+
 uint32_t Read_Skip_Buttons()
 {
 	SceCtrlData controller = {};
@@ -763,17 +786,20 @@ bool Drop_Pending_Video_If_Late(int64_t elapsed_us)
 	const int64_t late_us = elapsed_us - g_pending_video_pts_us;
 	const int64_t threshold_us = std::max(g_frame_duration_us,
 		kVideoDropLatenessUs);
-	if (late_us <= threshold_us) return false;
+	const bool audio_pressure = Audio_Output_Under_Pressure();
+	const size_t queued_audio = Queued_Audio_Samples();
+	if (late_us <= threshold_us && !audio_pressure) return false;
 	g_pending_video = false;
 	g_pending_video_pixels.clear();
 	++g_dropped_video_frames;
 	if (!g_video_drop_logged || (g_dropped_video_frames % 30U) == 0U) {
-		A30_Vita_Log("A4 Bink: dropped late video frame decoded=%llu uploaded=%llu dropped=%llu late_us=%lld threshold_us=%lld movie=%s\n",
+		A30_Vita_Log("A4 Bink: dropped late video frame decoded=%llu uploaded=%llu dropped=%llu late_us=%lld threshold_us=%lld audio_pressure=%d queued_audio_samples=%u movie=%s\n",
 			static_cast<unsigned long long>(g_decoded_video_frames),
 			static_cast<unsigned long long>(g_uploaded_video_frames),
 			static_cast<unsigned long long>(g_dropped_video_frames),
 			static_cast<long long>(late_us),
-			static_cast<long long>(threshold_us), g_movie_name);
+			static_cast<long long>(threshold_us), audio_pressure ? 1 : 0,
+			static_cast<unsigned>(queued_audio), g_movie_name);
 		g_video_drop_logged = true;
 	}
 	return true;
@@ -849,22 +875,24 @@ void Log_Playback_Statistics(const char *reason)
 	g_playback_statistics_logged = true;
 	const uint64_t wall_us = g_start_us > 0 ?
 		sceKernelGetProcessTimeWide() - static_cast<uint64_t>(g_start_us) : 0U;
-	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu frames=%llu video_uploaded/dropped=%llu/%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
-			reason != NULL ? reason : "unknown", g_movie_name,
-			g_source_video_width, g_source_video_height,
-			g_video_width, g_video_height, g_texture_width, g_texture_height,
-			static_cast<unsigned long long>(wall_us / 1000U),
-		static_cast<unsigned long long>(g_decoded_video_frames),
+	const size_t queued_audio = Queued_Audio_Samples();
+	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu frames=%llu video_uploaded/dropped=%llu/%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_queued_samples=%u audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
+				reason != NULL ? reason : "unknown", g_movie_name,
+				g_source_video_width, g_source_video_height,
+				g_video_width, g_video_height, g_texture_width, g_texture_height,
+				static_cast<unsigned long long>(wall_us / 1000U),
+			static_cast<unsigned long long>(g_decoded_video_frames),
 		static_cast<unsigned long long>(g_uploaded_video_frames),
 		static_cast<unsigned long long>(g_dropped_video_frames),
 		static_cast<unsigned long long>(g_audio_wait_count.load(std::memory_order_relaxed)),
-		static_cast<unsigned long long>(g_audio_output_buffers.load(std::memory_order_relaxed)),
-		static_cast<unsigned long long>(g_audio_output_samples.load(std::memory_order_relaxed)),
-		static_cast<unsigned long long>(g_audio_partial_output_buffers.load(std::memory_order_relaxed)),
-		static_cast<unsigned long long>(g_audio_high_water_samples.load(std::memory_order_relaxed)),
-		static_cast<unsigned long long>(g_audio_decode_timing.calls),
-		static_cast<unsigned long long>(g_audio_decode_timing.total_us),
-		static_cast<unsigned long long>(g_audio_decode_timing.worst_us),
+			static_cast<unsigned long long>(g_audio_output_buffers.load(std::memory_order_relaxed)),
+			static_cast<unsigned long long>(g_audio_output_samples.load(std::memory_order_relaxed)),
+			static_cast<unsigned long long>(g_audio_partial_output_buffers.load(std::memory_order_relaxed)),
+			static_cast<unsigned long long>(g_audio_high_water_samples.load(std::memory_order_relaxed)),
+			static_cast<unsigned>(queued_audio),
+			static_cast<unsigned long long>(g_audio_decode_timing.calls),
+			static_cast<unsigned long long>(g_audio_decode_timing.total_us),
+			static_cast<unsigned long long>(g_audio_decode_timing.worst_us),
 		static_cast<unsigned long long>(g_video_decode_timing.calls),
 		static_cast<unsigned long long>(g_video_decode_timing.total_us),
 		static_cast<unsigned long long>(g_video_decode_timing.worst_us),
@@ -1008,12 +1036,11 @@ void BINKMovie::Update()
 			g_packet_pending ? 1 : 0, g_pending_video ? 1 : 0,
 			g_texture_allocated ? 1 : 0);
 		g_update_entry_logged = true;
-	}
-	if (Check_Skip_Request()) return;
-	const int64_t elapsed_us = static_cast<int64_t>(sceKernelGetProcessTimeWide()) - g_start_us;
-	const int64_t update_start_us = static_cast<int64_t>(sceKernelGetProcessTimeWide());
-	for (unsigned iteration = 0U; iteration < kMaxBinkUpdateIterations;
-		++iteration) {
+		}
+		if (Check_Skip_Request()) return;
+		const int64_t update_start_us = static_cast<int64_t>(sceKernelGetProcessTimeWide());
+		for (unsigned iteration = 0U; iteration < kMaxBinkUpdateIterations;
+			++iteration) {
 		if (iteration != 0U) {
 			if (Check_Skip_Request()) return;
 			const int64_t update_elapsed_us =
@@ -1025,13 +1052,14 @@ void BINKMovie::Update()
 						g_movie_name[0] != '\0' ? g_movie_name : "none");
 					g_update_budget_logged = true;
 				}
-				break;
+					break;
+				}
 			}
-		}
-		if (g_pending_video) {
-			if (Drop_Pending_Video_If_Late(elapsed_us)) continue;
-			if (g_pending_video_pts_us > elapsed_us + kPresentationToleranceUs &&
-				g_texture_allocated) break;
+			const int64_t elapsed_us = Current_Movie_Elapsed_Us();
+			if (g_pending_video) {
+				if (Drop_Pending_Video_If_Late(elapsed_us)) continue;
+				if (g_pending_video_pts_us > elapsed_us + kPresentationToleranceUs &&
+					g_texture_allocated) break;
 			if (!Upload_Pending_Video()) {
 				Mark_Failed("video texture upload failed");
 				return;

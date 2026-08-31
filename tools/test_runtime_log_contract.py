@@ -57,18 +57,17 @@ class RuntimeLogContractTest(unittest.TestCase):
         self.assertIn("void Draw_Engine_Setup_Screen", interactive)
         self.assertIn("Original engine setup / frontend handoff", interactive)
         self.assertIn("This screen stays active until vitaGL owns display.", interactive)
+        self.assertIn("visible status remains until vitaGL replaces the framebuffer", interactive)
+        self.assertIn("retaining bootstrap framebuffer through WW3D::Init", interactive)
         self.assertLess(
             interactive.index("Run_Visible_Startup_Precache_Phase("),
             interactive.index('"Starting original audio provider"'),
         )
         self.assertLess(
             interactive.index('"Starting vitaGL renderer"'),
-            interactive.index("psvDebugScreenFinish();"),
-        )
-        self.assertLess(
-            interactive.index("psvDebugScreenFinish();"),
             interactive.index("ww3d_initialized = WW3D::Init(NULL, NULL, true)"),
         )
+        self.assertNotIn("psvDebugScreenFinish();", interactive)
         self.assertIn("first original Combat update", interactive)
         self.assertNotIn("first-interactive-player-frame", interactive)
         self.assertNotIn("first_interactive_capture_pending", interactive)

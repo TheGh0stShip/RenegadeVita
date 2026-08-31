@@ -3,9 +3,57 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
-## 2026-08-31 Dev87 physical failure; Dev93 local candidate
+## 2026-08-31 Dev87 physical failure; Dev94 local candidate
 
-Dev93 is the current local-only source/build candidate produced under the
+Dev94 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves Dev88 through Dev93's
+indexed-glyph texture-stage, real BINK audio-reserve, frontend-scope, font
+fallback, bootstrap, expanded pre-cache, Render2D state, synchronous loading,
+Start-route, target-box rollback, BINK reductions, vehicle/HMVV diagnostics,
+text-atlas, and gameplay HUD/TextDisplay native-presentation work. It then adds
+bounded source fixes for the latest physical symptoms without replacing
+original engine owners:
+
+- the startup path no longer drops the debug-screen framebuffer before WW3D
+  owns the panel, targeting the long opaque black interval before diagnostics;
+- synchronous original saveload status and count changes now call the active
+  Vita original-loading presenter, targeting the stuck loading progress bar;
+- the Vita DX8 boundary applies deferred original shader, texture-stage, and
+  world/view state before indexed Render2D draws, targeting missing menu
+  labels, empty dialogue subtitles, and mangled HUD/pickup glyphs;
+- gameplay HUD `Think()` builds target boxes, ammo/health, pickup, and related
+  dynamic HUD geometry inside the native gameplay presentation scope; and
+- unchanged retail BINK playback can drop late video frames when queued audio is
+  under pressure, with bounded queued-audio diagnostics.
+
+Focused validation passed 52/52 identity, staging, original-frontend/BINK,
+loading-screen, runtime, indexed-state, and fast-build contracts. The host
+interactive M00/menu route passed two cycles and proved `STRINGS.TDB` loads
+with six original main-menu labels valid and renderable. Fast candidate and
+canonical `bash ./tools/build.sh` both passed. Canonical closure passed
+retained host/current validation, deterministic 144-patch staging, 549
+ARM/package actions, ELF/SELF/VPK identity, compressed VPK validation,
+diagnostics, SHA manifest, and retail exclusion in
+`logs/a35-dev94-20260831-060003-build.log`. VPK SHA-256 is
+`8b857cc4141ed9450a4f796f1c612bfbb72c163d5cb4f484bc5e16f70364ab73`;
+packaged SELF SHA-256 is
+`84d1c643b8da03350aa2769a88a9cd3dde7c9385900196bb07941fdc5ec02737`; ELF
+SHA-256 is
+`9ad4881aa257018e40ecaedb70d3b78519462ed9649875e67d8262e4714d2373`;
+diagnostics ZIP SHA-256 is
+`0d193857eca20b33dbfef2f02a434e6ff02c0ed77d4a0293c4c1ab4e2dd2c152`.
+
+No Dev94 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. No Dev94 screenshot or video
+exists. The next physical test must prove the user-required frontend gate
+first: fast visible bootstrap, visible original intro/menu text, usable intro
+A/V/skip behavior, readable gameplay dialogue/HUD/pickup/loading text, correct
+target-box placement, stable M00 progression including the HMVV approach,
+acceptable frame time, and safe Start/pause/exit without PSP2 crash.
+
+## 2026-08-31 Dev87 physical failure; Dev93 superseded local candidate
+
+Dev93 is a superseded local-only source/build candidate produced under the
 user's no-physical-test window. It preserves Dev88 through Dev92's indexed-glyph
 texture-stage, real BINK audio-reserve, frontend-scope, font fallback,
 bootstrap, expanded pre-cache, Render2D state, synchronous loading, Start-route,

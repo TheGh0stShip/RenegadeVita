@@ -1,5 +1,46 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev94 canonical source/build candidate; no physical action
+
+`[█████████░] 9/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the user's no-physical-test window. Dev94
+  advances identity to `A3.5-dev94` and targets the retained Dev87 frontend,
+  loading, HUD/text, intro-A/V, and startup-black failures without touching
+  the Vita filesystem: the Vita startup keeps the bootstrap/debug framebuffer
+  visible through WW3D initialization; synchronous original saveload status and
+  count changes now call the active Vita original-loading presenter; the Vita
+  DX8 boundary now drains deferred original render state before indexed
+  Render2D submissions; HUD `Think()` now builds dynamic HUD/target/pickup
+  geometry inside the native gameplay presentation scope; the BINK boundary may
+  drop late video frames when queued audio is under pressure; and the host M00
+  route now proves six original main-menu labels resolve and are renderable
+  from `STRINGS.TDB`.
+- Validation passed: deterministic 144-patch staging; focused identity,
+  staging, loading, runtime, original-frontend/BINK, indexed-state, and
+  fast-build contracts 52/52; host interactive M00/menu route two-cycle PASS
+  with `STRINGS.TDB` loaded and six main-menu translations valid/renderable;
+  fast Dev94 candidate closure with 93 focused tests; and canonical
+  `bash ./tools/build.sh` closure in
+  `logs/a35-dev94-20260831-060003-build.log`.
+- Canonical closure passed retained host/current validation, deterministic
+  staging, 549 ARM/package actions, ELF/SELF/VPK identity, compressed VPK
+  validation, diagnostics, SHA manifest, and retail exclusion. Artifact
+  custody: VPK SHA-256
+  `8b857cc4141ed9450a4f796f1c612bfbb72c163d5cb4f484bc5e16f70364ab73`;
+  packaged SELF SHA-256
+  `84d1c643b8da03350aa2769a88a9cd3dde7c9385900196bb07941fdc5ec02737`;
+  ELF SHA-256
+  `9ad4881aa257018e40ecaedb70d3b78519462ed9649875e67d8262e4714d2373`;
+  diagnostics ZIP SHA-256
+  `0d193857eca20b33dbfef2f02a434e6ff02c0ed77d4a0293c4c1ab4e2dd2c152`.
+- Dev94 has not been copied to, installed on, launched on, or visually
+  accepted on a Vita. No Dev94 screenshot/video exists. The next physical gate
+  must verify fast visible bootstrap, readable intro/menu text, paced intro
+  A/V, loading progress during M00 load, readable gameplay dialogue/HUD/pickup
+  text, target-box alignment, M00 stability including the HMVV approach, frame
+  time, and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev93 canonical source/build candidate; no physical action
 
 `[████████░░] 8/10 current evidence gates complete; no Vita deploy or launch`

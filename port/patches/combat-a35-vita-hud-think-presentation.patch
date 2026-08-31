@@ -1,0 +1,47 @@
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -70,6 +70,9 @@
+ #if defined(__vita__)
+ #include "a30_vita_runtime.h"
+ #endif
++#if defined(RENEGADE_VITA_PORT)
++#include "a31_vita_hud_presentation.h"
++#endif
+ 
+ 
+ static const WCHAR HUD_DECIMAL_FORMAT[] = { '%', 'd', 0 };
+@@ -2976,11 +2979,34 @@ void 	HUDClass::Think()
+ 		return;
+ 	}
+ 
++#if defined(RENEGADE_VITA_PORT)
++	class A31ScopedVitaHUDThinkPresentation
++	{
++	public:
++		A31ScopedVitaHUDThinkPresentation()
++		{
++			/* Vita changes the original engine's logical 2D spaces while moving
++			** from frontend/loading into native gameplay.  HUDClass::Think
++			** builds the actual Render2D geometry; HUDClass::Render only
++			** submits it.  Keep both phases under the same platform-owned
++			** presentation scope so target boxes, ammo/health digits, pickup
++			** toasts, and objective widgets are generated in the same coordinate
++			** range they are rendered with. */
++			A31_Vita_Begin_Original_HUD_Render();
++		}
++		~A31ScopedVitaHUDThinkPresentation()
++		{
++			A31_Vita_End_Original_HUD_Render();
++		}
++	};
++	A31ScopedVitaHUDThinkPresentation vita_hud_think_presentation;
++#endif
++
+ #ifndef ATI_DEMO_HACK
+ 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Draw_Sniper() ) {
+ 		SniperHUDClass::Update();
+ 	}
+ 
+ 	if ( !Is_HUD_Displayed() ) {
+ 		return;
+ 	}

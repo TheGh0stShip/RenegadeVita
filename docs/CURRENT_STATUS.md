@@ -13,44 +13,48 @@ Updated: 2026-08-31
 | A3.5-dev90 published local candidate | **Superseded local-only** | 23 focused frontend/loading/runtime/input contracts and the canonical 116-contract ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev91 published local candidate | **Superseded local-only** | 40 focused frontend/loading/runtime/input/conversation contracts and the canonical 117-contract ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev92 published local candidate | **Superseded local-only** | 60 focused frontend/loading/runtime/input/conversation/gallery/texture contracts and the canonical 117-contract ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
-| A3.5-dev93 current candidate | **Local-only** | 48 focused frontend/loading/runtime/texture/conversation contracts, full 219-tool unittest discovery, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
+| A3.5-dev93 published local candidate | **Superseded local-only** | 48 focused frontend/loading/runtime/texture/conversation contracts, full 219-tool unittest discovery, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
+| A3.5-dev94 current candidate | **Local-only** | 52 focused identity/staging/frontend/loading/runtime/indexed-state/fast-build contracts, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | Screenshot/video evidence | **Dev87 recorder recovered** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. A private `gh-pages` player branch is prepared, but GitHub rejected Pages for this account plan; the user has authorized unlisted YouTube hosting pending account connection. The current device has no VDB framebuffer-capture capability. |
 
 Host validation, package identity, and logs are useful engineering evidence. They do not prove panel output, controls, audio quality, frame pacing, or lifecycle behavior on physical hardware.
 
-## Dev93: what changed, and what it has not proved
+## Dev94: what changed, and what it has not proved
 
-Dev93 preserves Dev88 through Dev92's shared glyph-state, BINK-audio reserve,
+Dev94 preserves Dev88 through Dev93's shared glyph-state, BINK-audio reserve,
 frontend-scope, bootstrap, pre-cache, Render2D, loading-callback, Start-route,
 target-box rollback, BINK reductions, and vehicle/HMVV diagnostics, then adds
 the next source-only fixes and diagnostics for the latest returned physical
 failures:
 
-- It holds and repaints a native bootstrap/status frame before filesystem and
-  pre-cache work, targeting the reported opaque black period before the
-  diagnostic loader.
-- It fixes original Render2D text atlas allocation from width-by-width to
-  width-by-height, clears new glyph buffers, and scales U/V texture coordinates
-  independently, targeting missing menu/dialogue labels and mangled HUD text.
-- It adds bounded Vita text-atlas diagnostics for surface dimensions, alpha
-  coverage, populated rows/columns, chunk count, and renderer count.
-- It adds original WWUI dialog-template diagnostics for main-menu title/control
-  translations and control rectangles without replacing the original UI.
-- It scopes gameplay TextDisplay/HUD Render2D presentation to native 960×544
-  instead of the old 640×480 gameplay window, targeting HUD placement and
-  target-box coordinate evidence.
+- It retains the debug/bootstrap framebuffer until WW3D takes over, targeting
+  the long black interval before visible diagnostics.
+- It routes original saveload status and progress-count changes into the active
+  Vita loading presenter during synchronous M00 loading, targeting the stuck
+  loading bar.
+- It applies deferred original DX8 shader, texture-stage, world, and view state
+  before indexed Render2D text/HUD submissions, targeting absent menu labels,
+  empty dialogue/subtitle text, and mangled HUD/pickup glyphs.
+- It builds dynamic HUD/target/pickup geometry from `HUDClass::Think()` inside
+  the native gameplay presentation scope, targeting HUD and target-box
+  placement.
+- It lets unchanged retail BINK playback drop late video frames when queued
+  audio is under pressure, targeting buzzy/laggy intro A/V without repackaging
+  retail movies.
+- It host-validates that `STRINGS.TDB` loads and six original main-menu labels
+  resolve to valid/renderable text.
 
-Dev93 has not physically demonstrated a short visible bootstrap, readable menu text, paced intro A/V,
+Dev94 has not physically demonstrated a short visible bootstrap, readable menu text, paced intro A/V,
 readable gameplay subtitles, corrected HUD text, target-box placement,
 wall/shadow behavior, gameplay performance, loading-bar progression, HMVV
 stability, or Start lifecycle behavior. Its canonical VPK SHA-256 is
-`a2af15eb6432922b4982387ccdee8261b3535e109d84714f8f47c3fadae373ac`;
+`8b857cc4141ed9450a4f796f1c612bfbb72c163d5cb4f484bc5e16f70364ab73`;
 packaged SELF SHA-256 is
-`5244370a462065296b26fc784cbb3b5d2ce83395df7dfbab850ffd10652f2c78`;
+`84d1c643b8da03350aa2769a88a9cd3dde7c9385900196bb07941fdc5ec02737`;
 ELF SHA-256 is
-`5dc42428484c7342db229e21cea99761ecc39708b554937b289a49df25beaf61`;
+`9ad4881aa257018e40ecaedb70d3b78519462ed9649875e67d8262e4714d2373`;
 diagnostics ZIP SHA-256 is
-`beddfbbf4f11b63e37ed7fa8b73916a7aa99c1c456c9629efd0938d03d6c000c`.
+`0d193857eca20b33dbfef2f02a434e6ff02c0ed77d4a0293c4c1ab4e2dd2c152`.
 
 ## Current physical blockers
 
@@ -68,7 +72,7 @@ The developer must not claim any of these from host tests or a runtime log.
 
 The current Vita command service advertises `screen.v1`, which is panel on/off—not a screenshot endpoint. The checked-in VDB client supports the separate authenticated `capture.screen.v1` protocol, but its target-local agent and gateway are not installed on this device. The on-screen red `R` is a separate MP4 recorder; it is not a screenshot service and a crash can prevent the MP4 from finalizing.
 
-The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly labelled as recorder-derived and do not pass its failed frontend gate; no Dev88, Dev89, Dev90, Dev91, Dev92, or Dev93 physical visual evidence exists.
+The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly labelled as recorder-derived and do not pass its failed frontend gate; no Dev88, Dev89, Dev90, Dev91, Dev92, Dev93, or Dev94 physical visual evidence exists.
 
 ## Authoritative records
 

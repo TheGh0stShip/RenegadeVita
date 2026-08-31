@@ -2047,15 +2047,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				asset_manager->Set_Activate_Fog_On_Load(true);
 				Draw_Engine_Setup_Screen(startup_screen_result,
 					"Starting vitaGL renderer",
-					"debugScreen handoff occurs now; renderer clears/presents next");
-				if (startup_screen_result >= 0) {
-					psvDebugScreenFinish();
-				}
+					"visible status remains until vitaGL replaces the framebuffer");
+				A30_Vita_Log("A3.5 startup: retaining bootstrap framebuffer through WW3D::Init to avoid black display handoff\n");
 				ww3d_initialized = WW3D::Init(NULL, NULL, true) == WW3D_ERROR_OK;
-			if (!ww3d_initialized) {
-				A30_Vita_Log("A3.1 interactive: WW3D init FAIL\n");
-				break;
-			}
+				if (!ww3d_initialized) {
+					A30_Vita_Log("A3.1 interactive: WW3D init FAIL\n");
+					break;
+				}
 			if (!Apply_Original_Gameplay_Render_Resolution()) {
 				A30_Vita_Log("A3.5 HUD: FAIL native gameplay/HUD render resolution unavailable\n");
 				break;

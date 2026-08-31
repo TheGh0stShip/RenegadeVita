@@ -2159,6 +2159,65 @@ void DX8Wrapper::Set_Viewport(const D3DVIEWPORT8 *viewport)
 	DX8CALL(SetViewport(viewport));
 }
 
+void DX8Wrapper::Apply_Render_State_Changes()
+{
+	if (!render_state_changed) return;
+
+	const unsigned changed = render_state_changed;
+#if defined(__vita__)
+	static bool logged_first_deferred_apply = false;
+	if (!logged_first_deferred_apply) {
+		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+			"DX8Wrapper deferred render state apply: mask=%08X shader=%d textures=%d material=%d lights=%d world=%d view=%d vb=%d ib=%d",
+			changed,
+			(changed & SHADER_CHANGED) != 0U ? 1 : 0,
+			(changed & TEXTURES_CHANGED) != 0U ? 1 : 0,
+			(changed & MATERIAL_CHANGED) != 0U ? 1 : 0,
+			(changed & LIGHTS_CHANGED) != 0U ? 1 : 0,
+			(changed & WORLD_CHANGED) != 0U ? 1 : 0,
+			(changed & VIEW_CHANGED) != 0U ? 1 : 0,
+			(changed & VERTEX_BUFFER_CHANGED) != 0U ? 1 : 0,
+			(changed & INDEX_BUFFER_CHANGED) != 0U ? 1 : 0);
+		logged_first_deferred_apply = true;
+	}
+#endif
+
+	if (changed & SHADER_CHANGED) {
+		render_state.shader.Apply();
+	}
+
+	unsigned texture_mask = TEXTURE0_CHANGED;
+	for (unsigned stage = 0U; stage < MAX_TEXTURE_STAGES; ++stage, texture_mask <<= 1U) {
+		if ((changed & texture_mask) == 0U) continue;
+		if (render_state.Textures[stage] != NULL) {
+			render_state.Textures[stage]->Apply(stage);
+		} else {
+			TextureClass::Apply_Null(stage);
+		}
+	}
+
+	if (changed & WORLD_CHANGED) {
+		_Set_DX8_Transform(D3DTS_WORLD, render_state.world);
+	}
+	if (changed & VIEW_CHANGED) {
+		_Set_DX8_Transform(D3DTS_VIEW, render_state.view);
+	}
+
+	/*
+	** The Vita indexed submit path evaluates VertexMaterial ownership in
+	** RenegadeVitaRenderer and reads the CPU-backed vertex/index buffers directly.
+	** There is no native stream-source object to bind here.  Consuming the flags
+	** still restores the original DX8Wrapper draw-time state lifetime, while
+	** Submit_Bound_Triangles remains the single bridge for buffer emission.
+	*/
+	(void)(changed & MATERIAL_CHANGED);
+	(void)(changed & LIGHTS_CHANGED);
+	(void)(changed & VERTEX_BUFFER_CHANGED);
+	(void)(changed & INDEX_BUFFER_CHANGED);
+
+	render_state_changed &= ((unsigned)WORLD_IDENTITY | (unsigned)VIEW_IDENTITY);
+}
+
 void DX8Wrapper::Set_Vertex_Buffer(const VertexBufferClass *vertex_buffer)
 {
 	render_state.vba_offset = 0;
@@ -2245,6 +2304,7 @@ void DX8Wrapper::Draw_Triangles(unsigned buffer_type,
 			"invalid requested buffer type", 0U);
 		return;
 	}
+	Apply_Render_State_Changes();
 	Submit_Bound_Triangles(render_state, start_index, polygon_count,
 		min_vertex_index, vertex_count);
 }
@@ -2253,6 +2313,7 @@ void DX8Wrapper::Draw_Triangles(unsigned short start_index,
 	unsigned short polygon_count, unsigned short min_vertex_index,
 	unsigned short vertex_count)
 {
+	Apply_Render_State_Changes();
 	Submit_Bound_Triangles(render_state, start_index, polygon_count,
 		min_vertex_index, vertex_count);
 }

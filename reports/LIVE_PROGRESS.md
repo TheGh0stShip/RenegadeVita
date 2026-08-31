@@ -1,5 +1,29 @@
 # Live engineering progress
 
+## 2026-08-31 — VDB screenshot route verified; no finalized Dev87 recorder video
+
+`[████░░░░░░] 4/10 current evidence gates complete; no game rebuild or device mutation`
+
+- The checked-in VDB screenshot client can collect repeated post-render,
+  exact-title logical-framebuffer evidence through `capture.screen.v1` (up to
+  16 labelled captures per bundle). This is the correct replacement for
+  game-timed screenshot retuning.
+- The paired Vita currently reports VitaCompanion `1.06+vdbftp1` and advertises
+  `screen.v1` only. Its `screen on|off` service controls panel power; it does
+  not expose `capture.screen.v1` or `capture.screen.cycle.v1`, so no VDB
+  screenshot request can succeed on the current device service.
+- The observed red `R` is the separately installed title-scoped
+  `RenegadeDemoRecorder`, not VDB screenshot capture. It autostarts an MP4
+  recording and finalizes with L+Start or clean module stop; a title crash can
+  prevent a usable MP4 from being committed. After the explicit retrieval
+  request, forced VDB1 search for `*.mp4` below `ux0:/video` returned no files;
+  the negative receipt is retained under the Dev87 evidence root.
+- Next: prepare the source-matched exact-title VDB agent/gateway route without
+  changing the Vita. Before a future physical session, obtain explicit
+  authorization for the new device-side capture provider, then collect and
+  publish actual post-render frames and any finalized recorder output. Dev88
+  remains local-only until explicit physical-test direction.
+
 ## 2026-08-31 — Dev87 return fails frontend gate; Dev88 canonical local-only
 
 `[████░░░░░░] 4/10 current evidence gates complete; no Dev88 device action`

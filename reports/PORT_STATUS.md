@@ -16,6 +16,21 @@ data availability or visible glyph correctness. User-taken Dev87 screenshots
 remain pending title-scoped retrieval, visual review, accurate gallery/timeline
 labelling, and GitHub publication.
 
+Read-only device discovery later established the actual capture boundary. The
+checked-in VDB client can collect repeated, exact-title logical-framebuffer
+screens through `capture.screen.v1` (up to 16 labelled captures per evidence
+bundle), but this Vita currently runs VitaCompanion and advertises only
+`screen.v1`; its `screen on|off` route controls panel power, not capture. The
+separate VDB target-local agent and authenticated gateway are not installed.
+The top-left red `R` is instead the installed title-scoped MP4 recorder: it
+autostarts with `RNEGA3101` but finalizes only on L+Start or clean module stop,
+so a crash need not leave a recoverable file. After the user's explicit video
+retrieval request, forced VDB1 search `ux0:/video` for `*.mp4` returned zero
+matches; receipt:
+`build/device-evidence/a35-dev87-user-return-20260831T022728Z/video-find-after-user-request.json`.
+No game rebuild, retimed capture, Vita filesystem change, or capture-provider
+installation occurred during this discovery.
+
 The original `MessageWindow` dialogue `TextWindowClass` and original menu
 `Render2DSentence` both use dynamic indexed glyph draws. Dev88 applies the
 original `ShaderClass` texture-stage combiner state immediately before those

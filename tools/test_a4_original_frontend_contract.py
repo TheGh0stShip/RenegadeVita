@@ -93,6 +93,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("source_column_start", provider)
         self.assertIn("bitmap.pitch < 0", provider)
         self.assertIn("physical_row", provider)
+        self.assertIn("int Glyph_Cell_Width(FT_GlyphSlot glyph)", provider)
+        self.assertIn("glyph->bitmap_left", provider)
+        self.assertIn("bitmap_left + bitmap_width", provider)
+        self.assertIn("std::min(0, bitmap_left)", provider)
+        self.assertIn("int Glyph_Bitmap_Target_Left(FT_GlyphSlot glyph)", provider)
 
         for style in (
             "FONT_TITLE",
@@ -116,10 +121,13 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 
         self.assertIn("spacing_0", runtime)
         self.assertIn("visible_pixels_a", runtime)
+        self.assertIn("visible_columns_a", runtime)
+        self.assertIn("Count_Visible_Glyph_Columns", runtime)
+        self.assertIn("Minimum_Visible_Glyph_Columns", runtime)
         self.assertIn("font->Blit_Char(static_cast<WCHAR>('A')", runtime)
         self.assertIn("font->Blit_Char(static_cast<WCHAR>('0')", runtime)
         self.assertIn(
-            "(visible_pixels_a > 0U || visible_pixels_0 > 0U)",
+            "(glyph_a_ok || glyph_0_ok)",
             runtime,
         )
         self.assertIn("ww3d2-a35-freetype-glyph-raster-safety.patch", stage_sources)
@@ -318,9 +326,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "Check_Skip_Request",
             "A4 Bink: skip requested buttons=%08X",
             "kUpdateBudgetUs",
+            "kMaxBinkUpdateIterations",
             "update budget yield",
-            "kMaxMovieUploadWidth = 480",
-            "kMaxMovieUploadHeight = 360",
+            "kMaxMovieUploadWidth = 320",
+            "kMaxMovieUploadHeight = 240",
             "Configure_Video_Upload_Dimensions",
             "g_source_video_width",
             "g_source_video_height",
@@ -337,6 +346,9 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 			"GL_UNSIGNED_SHORT_5_6_5",
 			"upload_format=rgb565",
             "swr_convert",
+            "av_channel_layout_copy(&input_layout",
+            "av_channel_layout_default(&input_layout, input_channels)",
+            "audio resampler configured input_rate=%d input_channels=%d",
             "sceAudioOutOpenPort",
             "SCE_AUDIO_OUT_PORT_TYPE_MAIN",
             "SCE_AUDIO_OUT_PORT_TYPE_VOICE",

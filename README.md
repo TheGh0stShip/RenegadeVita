@@ -12,8 +12,8 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
 | Latest physical return | **A3.5-dev87 failed the frontend usability gate**: menu text remained absent, ammo/health glyphs were mangled, NPC target bounds drifted further right, and an opaque black period still preceded pre-warm/pre-cache. Intro A/V and the gameplay dialogue box also remain failed. |
-| Latest local candidate | **A3.5-dev91**: canonical ARM/VPK validation passed after source-only corrections for startup visible-delay reduction, BINK upload/audio pacing, loading-progress catch-up frames, stricter visible-glyph probing, and M00 vehicle/HMVV proximity diagnostics. It has **not** been copied to, installed on, or launched on a Vita. |
-| Visual evidence | The gallery contains reviewed historical frames only. A user-finalized Dev87 recording supplied six labelled M00 stills. Its full MP4/player is prepared on a private `gh-pages` branch; GitHub rejected public Pages for this account plan. The user has authorized unlisted YouTube hosting, pending connection of the upload-capable account. No Dev88, Dev89, Dev90, or Dev91 physical frame exists. |
+| Latest local candidate | **A3.5-dev92**: canonical ARM/VPK validation passed after source-only corrections for FreeType glyph cell/bearing placement, visible glyph-column probes, lower-cost BINK frame uploads, explicit movie audio input layout fallback, and bounded target-box projection diagnostics. It has **not** been copied to, installed on, or launched on a Vita. |
+| Visual evidence | The gallery contains reviewed historical frames only. A user-finalized Dev87 recording supplied six labelled M00 stills. Its full MP4/player is prepared on a private `gh-pages` branch; GitHub rejected public Pages for this account plan. The user has authorized unlisted YouTube hosting, pending connection of the upload-capable account. No Dev88, Dev89, Dev90, Dev91, or Dev92 physical frame exists. |
 | Capture path | The current Vita exposes panel power control through VitaCompanion, not VDB framebuffer capture. The exact-title VDB provider is being prepared separately; no game-frame timing workaround will be presented as panel evidence. |
 
 Read the concise [current status](docs/CURRENT_STATUS.md) before treating any candidate as playable. The durable engineering record is in [reports/PORT_STATUS.md](reports/PORT_STATUS.md); it distinguishes host, Vita3K, and physical-Vita evidence.
@@ -45,7 +45,7 @@ Those images are historical, not a same-camera benchmark. A verified post-render
 
 - [Quickstart](docs/QUICKSTART.md) — clone and produce a local canonical or fast candidate build.
 - [Installing on Vita](docs/INSTALLING.md) — retail-data boundaries and manual installation safeguards.
-- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, Dev87 result, Dev91 limits, and next physical evidence gate.
+- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, Dev87 result, Dev92 limits, and next physical evidence gate.
 - [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
 - [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
 - [Historical capture campaign](docs/HISTORICAL_CAPTURE_CAMPAIGN.md) — the no-rebuild plan for comparable in-game frames, held until a physical session is explicitly authorized.

@@ -37,12 +37,18 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   atlas paths, prevented gameplay Start from entering the crashing ESC/pause
   path, and rolled back the overcorrected target-box native-coordinate
   override. It was not installed, launched, or physically accepted.
-- A3.5-dev91: current canonical local-only candidate. It reduces startup
+- A3.5-dev91: superseded canonical local-only candidate. It reduces startup
   artificial holds, downscales unchanged retail BINK uploads to 480×360 with a
   larger audio reserve and earlier late-frame dropping, adds bounded
   loading-progress catch-up renders, strengthens visible glyph probes, and adds
   bounded M00 vehicle/HMVV proximity diagnostics. It is not installed, launched,
   or physically accepted.
+- A3.5-dev92: current canonical local-only candidate. It measures FreeType
+  glyph cells from advance plus bitmap bearings to avoid clipped text strips,
+  strengthens visible glyph-column probes, lowers BINK upload/update work to a
+  320×240 cap with explicit decoder audio-layout fallback, and adds bounded
+  target-box projection diagnostics. It is not installed, launched, or
+  physically accepted.
 
 ## Milestone contracts
 

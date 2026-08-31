@@ -3,9 +3,53 @@
 Updated: 2026-08-31. Engineering changes use source-driven review, bounded
 ownership, deterministic staging, and independent validation.
 
+## 2026-08-31 Dev87 physical failure; Dev92 local candidate
+
+Dev92 is the current local-only source/build candidate produced under the
+user's no-physical-test window. It preserves Dev88 through Dev91's indexed-glyph
+texture-stage, real BINK audio-reserve, frontend-scope, font fallback,
+bootstrap, expanded pre-cache, Render2D state, synchronous loading, Start-route,
+target-box rollback, and vehicle/HMVV diagnostics work. It then adds bounded
+source fixes and diagnostics for the latest physical symptoms without
+replacing original engine owners:
+
+- FreeType glyph measurement now includes advance, bitmap width, and bitmap
+  left/right bearings before rasterization, targeting the reported menu/HUD/
+  pickup glyphs that appeared as smushed text or vertical lines;
+- `StyleMgr` readiness probes now require visible glyph columns from real menu/
+  HUD probes instead of accepting any nonzero pixel;
+- unchanged retail BINK frame uploads are capped at 320×240, the movie update
+  budget and iteration count are bounded more tightly, and the audio resampler
+  uses the decoder channel layout with a default fallback;
+- bounded target-box diagnostics now record projected normalized coordinates,
+  the active `Render2D` logical resolution, WW3D device resolution, and camera
+  aspect before another coordinate correction is attempted.
+
+Focused validation passed 60/60 runtime, loading-screen, original-frontend,
+conversation, input, historical-gallery, and texture-surface contracts.
+Canonical `bash ./tools/build.sh` passed retained host/current validation,
+deterministic 140-patch staging, 549 ARM/package actions, ELF/SELF/VPK
+identity, compressed VPK validation, diagnostics, SHA manifest, and retail
+exclusion in `logs/a35-dev92-20260831-042733-build.log`. VPK SHA-256 is
+`16aa490ecbe733f6053212d8d0f9aa0dc2e3ea5e9d7a701d545c2c20b779adf3`;
+packaged SELF SHA-256 is
+`08e89f0788652746a7c7d7590ee1bdbfaafccfd0e8c58a33266b0f37a305dae1`; ELF
+SHA-256 is
+`fe945697e1bdf6165ef2afc8e23014f7a2b5cda6be3a8c4811acfd147ad3f411`;
+diagnostics ZIP SHA-256 is
+`5b24fbc953037ecfab48ab87a38e489ad5702c8d8d52ead15f0903ece1f324be`.
+
+No Dev92 file has been copied to, installed on, or launched on the Vita. It is
+not a visual/audio/lifecycle acceptance claim. No Dev92 screenshot or video
+exists. The next physical test must prove the user-required frontend gate
+first: visible original intro/menu text, usable intro A/V/skip behavior,
+readable gameplay dialogue/HUD/pickup/loading text, correct target-box
+placement, stable M00 progression including the HMVV approach, acceptable frame
+time, and safe Start/pause/exit without PSP2 crash.
+
 ## 2026-08-31 Dev87 physical failure; Dev91 local candidate
 
-Dev91 is the current local-only source/build candidate produced under the
+Dev91 is a superseded local-only source/build candidate produced under the
 user's no-physical-test window. It preserves Dev88 through Dev90's indexed-glyph
 texture-stage, real BINK audio-reserve, frontend-scope, font fallback,
 bootstrap, expanded pre-cache, Render2D state, synchronous loading, Start-route,

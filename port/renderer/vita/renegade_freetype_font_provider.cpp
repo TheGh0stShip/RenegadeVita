@@ -150,6 +150,24 @@ int Rounded_26_6(FT_Pos value)
 	return static_cast<int>((value + 32) >> 6);
 }
 
+int Glyph_Cell_Width(FT_GlyphSlot glyph)
+{
+	if (glyph == nullptr) return 0;
+	const int advance = Rounded_26_6(glyph->advance.x);
+	const int bitmap_left = glyph->bitmap_left;
+	const int bitmap_width = static_cast<int>(glyph->bitmap.width);
+	const int bitmap_right = bitmap_left + bitmap_width;
+	const int min_x = std::min(0, bitmap_left);
+	const int max_x = std::max(advance, bitmap_right);
+	return std::max(max_x - min_x, 0);
+}
+
+int Glyph_Bitmap_Target_Left(FT_GlyphSlot glyph)
+{
+	if (glyph == nullptr) return 0;
+	return glyph->bitmap_left - std::min(0, glyph->bitmap_left);
+}
+
 bool Load_Glyph(FontFace *font, uint16_t character, bool bold)
 {
 	if (font == nullptr || font->face == nullptr ||
@@ -176,8 +194,7 @@ bool RenegadeVita_Font_Measure_Glyph(const char *family, int point_size,
 	*height = 0;
 	FontFace *font = Find_Face(family);
 	if (!Select_Size(font, point_size) || !Load_Glyph(font, character, bold)) return false;
-	*width = std::max(Rounded_26_6(font->face->glyph->advance.x),
-		static_cast<int>(font->face->glyph->bitmap.width));
+	*width = Glyph_Cell_Width(font->face->glyph);
 	*height = RenegadeVita_Font_Height(family, point_size, bold);
 	return *height > 0;
 }
@@ -197,7 +214,7 @@ bool RenegadeVita_Font_Rasterize_Glyph(const char *family, int point_size,
 	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY) return false;
 	const int baseline = Rounded_26_6(font->face->size->metrics.ascender);
 	const int unclipped_top = baseline - glyph->bitmap_top;
-	const int unclipped_left = glyph->bitmap_left;
+	const int unclipped_left = Glyph_Bitmap_Target_Left(glyph);
 	const int top = std::max(0, unclipped_top);
 	const int left = std::max(0, unclipped_left);
 	const unsigned int source_row_start = unclipped_top < 0 ?

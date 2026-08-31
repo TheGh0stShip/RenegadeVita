@@ -10,12 +10,12 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(RenegadeVitaA31 VERSION 3.5.3 LANGUAGES C CXX)
+project(RenegadeVitaA31 VERSION 3.5.4 LANGUAGES C CXX)
 
 # This is provenance for a hardware candidate, not a public milestone claim.
 # Keep the artifact identity configurable so a newer candidate can never
 # overwrite the symbols and diagnostics that belong to an earlier one.
-set(RENEGADE_CANDIDATE_LABEL "A3.5-dev91" CACHE STRING
+set(RENEGADE_CANDIDATE_LABEL "A3.5-dev92" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
 if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
@@ -29,7 +29,7 @@ set(RENEGADE_RUNTIME_LOG_PATH
 # sce_sys/param.sfo. Keep this stable across dev83 rebuilds so the title remains
 # an update of RNEGA3101 rather than a new application; it identifies only this
 # developer package and is not an EA or retail entitlement.
-set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENGADEVITADEV91" CACHE STRING
+set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENGADEVITADEV92" CACHE STRING
   "Developer Vita package content identifier")
 string(LENGTH "${RENEGADE_VITA_CONTENT_ID}" RENEGADE_VITA_CONTENT_ID_LENGTH)
 if(NOT RENEGADE_VITA_CONTENT_ID_LENGTH EQUAL 36 OR
@@ -474,6 +474,6 @@ vita_create_self(eboot.bin ${PROJECT_NAME})
 # VitaSDK packaging flag immediately before the macro so only param.sfo changes.
 set(VITA_MKSFOEX_FLAGS "-s CONTENT_ID=${RENEGADE_VITA_CONTENT_ID}")
 vita_create_vpk(RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.vpk RNEGA3101 eboot.bin
-	VERSION 03.54
+	VERSION 03.55
 	NAME "Renegade Vita ${RENEGADE_CANDIDATE_LABEL}"
 )

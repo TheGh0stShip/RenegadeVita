@@ -1,5 +1,39 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev92 canonical source/build candidate; no physical action
+
+`[████████░░] 8/10 current evidence gates complete; no Vita deploy or launch`
+
+- Source-only work continued under the user's six-hour no-physical-test window.
+  Dev92 advances identity to `A3.5-dev92` and targets the retained Dev87
+  frontend/HUD failure without touching the Vita filesystem: FreeType glyph
+  measurement now includes advance plus bitmap bearings before rasterization,
+  `StyleMgr` readiness probes require visible glyph columns, unchanged retail
+  BINK uploads are capped at 320×240 with a lower per-update budget and bounded
+  update iterations, movie audio resampling uses the decoder channel layout
+  with a fallback, and target-box diagnostics now log projected clip-space,
+  logical render resolution, device resolution, and camera aspect.
+- Pre-build validation passed: deterministic staging, focused runtime/loading/
+  original-frontend/conversation/input/gallery/texture contracts 60/60, and
+  `git diff --check`.
+- Canonical `bash ./tools/build.sh` passed retained host/current validation,
+  deterministic 140-patch staging, 549 ARM/package actions, ELF/SELF/VPK
+  identity, compressed VPK validation, diagnostics, SHA manifest, and retail
+  exclusion in `logs/a35-dev92-20260831-042733-build.log`.
+- Dev92 artifact custody: VPK SHA-256
+  `16aa490ecbe733f6053212d8d0f9aa0dc2e3ea5e9d7a701d545c2c20b779adf3`;
+  packaged SELF SHA-256
+  `08e89f0788652746a7c7d7590ee1bdbfaafccfd0e8c58a33266b0f37a305dae1`;
+  ELF SHA-256
+  `fe945697e1bdf6165ef2afc8e23014f7a2b5cda6be3a8c4811acfd147ad3f411`;
+  diagnostics ZIP SHA-256
+  `5b24fbc953037ecfab48ab87a38e489ad5702c8d8d52ead15f0903ece1f324be`.
+- Dev92 has not been copied to, installed on, launched on, or visually accepted
+  on a Vita. No Dev92 screenshot/video exists. The next physical gate must
+  verify readable intro/menu text, paced intro A/V, loading progress,
+  HUD/pickup/dialogue text, target-box alignment, M00 stability including the
+  HMVV approach, frame time, and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev91 canonical source/build candidate; no physical action
 
 `[██████░░░░] 6/10 current evidence gates complete; no Vita deploy or launch`

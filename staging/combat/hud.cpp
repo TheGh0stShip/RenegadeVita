@@ -67,6 +67,11 @@
 #include "stylemgr.h"
 
 
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
+
+
 static const WCHAR HUD_DECIMAL_FORMAT[] = { '%', 'd', 0 };
 static const WCHAR HUD_EMPTY_TEXT[] = { 0 };
 
@@ -1425,6 +1430,39 @@ static	void	Target_Shutdown( void )
 static RectClass Get_Target_Box( PhysicalGameObj * obj );
 static void	Target_Box_Edge( const Vector2 & a, const Vector2 & b, unsigned int color );
 
+#if defined(__vita__)
+static unsigned g_vita_target_box_diagnostic_logs = 0U;
+
+static void Log_Vita_Target_Box_Diagnostics(
+	PhysicalGameObj *obj,
+	PhysClass *physical_object,
+	const Vector2 &projected_top,
+	const Vector2 &projected_bottom,
+	const RectClass &screen,
+	const RectClass &box)
+{
+	if (g_vita_target_box_diagnostic_logs >= 64U) {
+		return;
+	}
+	++g_vita_target_box_diagnostic_logs;
+	int device_width = 0;
+	int device_height = 0;
+	int device_bits = 0;
+	bool device_windowed = false;
+	WW3D::Get_Device_Resolution(device_width, device_height, device_bits,
+		device_windowed);
+	const float camera_aspect =
+		COMBAT_CAMERA != NULL ? COMBAT_CAMERA->Get_Aspect_Ratio() : 0.0f;
+	A30_Vita_Log("A3.5 HUD target-box: obj=%p phys=%p clip_top=(%.3f,%.3f) clip_bottom=(%.3f,%.3f) screen=(%.1f,%.1f,%.1f,%.1f) box=(%.1f,%.1f,%.1f,%.1f) device=%dx%d bits=%d windowed=%d camera_aspect=%.3f log=%u/64\n",
+		static_cast<void *>(obj), static_cast<void *>(physical_object),
+		projected_top.X, projected_top.Y, projected_bottom.X,
+		projected_bottom.Y, screen.Left, screen.Top, screen.Right,
+		screen.Bottom, box.Left, box.Top, box.Right, box.Bottom,
+		device_width, device_height, device_bits, device_windowed ? 1 : 0,
+		camera_aspect, g_vita_target_box_diagnostic_logs);
+}
+#endif
+
 static	void	Target_Update( void )
 {
 	TargetRenderer->Reset();
@@ -1784,6 +1822,11 @@ static RectClass Get_Target_Box( PhysicalGameObj * obj )
 		bottom.Y = temp.Y;
 	}
 
+#if defined(__vita__)
+	const Vector2 projected_top = top;
+	const Vector2 projected_bottom = bottom;
+#endif
+
 	// Get Box in proper convention
 	RectClass	screen = Render2DClass::Get_Screen_Resolution();
 	top.X = top.X * 0.5f + 0.5f;
@@ -1796,6 +1839,10 @@ static RectClass Get_Target_Box( PhysicalGameObj * obj )
 	static RectClass info_box;
 	info_box.Set( top.X * screen.Right, top.Y * screen.Bottom, bottom.X * screen.Right, bottom.Y * screen.Bottom );			// convention 0,0 - 1,1
 
+#if defined(__vita__)
+	Log_Vita_Target_Box_Diagnostics(obj, po, projected_top, projected_bottom,
+		screen, info_box);
+#endif
 	return info_box;
 }
 

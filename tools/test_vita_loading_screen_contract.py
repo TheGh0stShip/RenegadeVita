@@ -656,11 +656,15 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertNotIn("WW3D::Set_Device_Resolution", gameplay_helper)
         self.assertNotIn("combat-a35-vita-target-overlay-ww3d-include.patch", stage_sources)
         self.assertNotIn("combat-a35-vita-target-overlay-native-scope.patch", stage_sources)
+        self.assertIn("combat-a35-target-box-diagnostics.patch", stage_sources)
         self.assertNotIn("WW3D::Get_Device_Resolution(target_device_width", hud)
         self.assertNotIn("target_native_screen", hud)
         self.assertNotIn("TargetRenderer->Set_Coordinate_Range(target_screen);", hud)
         self.assertIn("box = Get_Target_Box( obj->As_PhysicalGameObj() );", hud)
         self.assertIn("RectClass\tscreen = Render2DClass::Get_Screen_Resolution();", hud)
+        self.assertIn("A3.5 HUD target-box", hud)
+        self.assertIn("WW3D::Get_Device_Resolution(device_width", hud)
+        self.assertIn("COMBAT_CAMERA->Get_Aspect_Ratio()", hud)
 
         renderer_header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text(
             encoding="utf-8"

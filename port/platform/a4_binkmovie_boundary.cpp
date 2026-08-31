@@ -44,10 +44,11 @@ constexpr size_t kAudioStartupSamples =
 	kAudioChannels;
 constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
-constexpr int64_t kUpdateBudgetUs = 12000;
+constexpr int64_t kUpdateBudgetUs = 6000;
+constexpr unsigned kMaxBinkUpdateIterations = 4U;
 constexpr int64_t kVideoDropLatenessUs = 25000;
-constexpr int kMaxMovieUploadWidth = 480;
-constexpr int kMaxMovieUploadHeight = 360;
+constexpr int kMaxMovieUploadWidth = 320;
+constexpr int kMaxMovieUploadHeight = 240;
 constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_RGB565LE;
 constexpr size_t kVideoUploadBytesPerPixel = 2U;
 constexpr uint32_t kSkipButtonMask =
@@ -552,15 +553,34 @@ bool Configure_Audio()
 	if (g_audio_stream < 0 || g_audio_decoder == NULL) return false;
 	AVChannelLayout output_layout;
 	av_channel_layout_default(&output_layout, kAudioChannels);
+	AVChannelLayout input_layout;
+	memset(&input_layout, 0, sizeof(input_layout));
+	const int input_channels =
+		g_audio_decoder->ch_layout.nb_channels > 0 ?
+			g_audio_decoder->ch_layout.nb_channels : kAudioChannels;
+	if (g_audio_decoder->ch_layout.nb_channels > 0 &&
+		av_channel_layout_copy(&input_layout,
+			&g_audio_decoder->ch_layout) < 0) {
+		memset(&input_layout, 0, sizeof(input_layout));
+	}
+	if (input_layout.nb_channels <= 0) {
+		av_channel_layout_default(&input_layout, input_channels);
+	}
+	const int input_rate =
+		g_audio_decoder->sample_rate > 0 ? g_audio_decoder->sample_rate :
+		kAudioRate;
 	const int result = swr_alloc_set_opts2(&g_resampler, &output_layout,
-		AV_SAMPLE_FMT_S16, kAudioRate, &g_audio_decoder->ch_layout,
-		g_audio_decoder->sample_fmt, g_audio_decoder->sample_rate, 0, NULL);
+		AV_SAMPLE_FMT_S16, kAudioRate, &input_layout,
+		g_audio_decoder->sample_fmt, input_rate, 0, NULL);
 	av_channel_layout_uninit(&output_layout);
+	av_channel_layout_uninit(&input_layout);
 	if (result < 0 || g_resampler == NULL || swr_init(g_resampler) < 0) {
 		A30_Vita_Log("A4 Bink: audio resampler unavailable; video continues\n");
 		if (g_resampler != NULL) swr_free(&g_resampler);
 		return false;
 	}
+	A30_Vita_Log("A4 Bink: audio resampler configured input_rate=%d input_channels=%d output_rate=%d output_channels=%d movie=%s\n",
+		input_rate, input_channels, kAudioRate, kAudioChannels, g_movie_name);
 	return Start_Audio_Output();
 }
 
@@ -992,7 +1012,8 @@ void BINKMovie::Update()
 	if (Check_Skip_Request()) return;
 	const int64_t elapsed_us = static_cast<int64_t>(sceKernelGetProcessTimeWide()) - g_start_us;
 	const int64_t update_start_us = static_cast<int64_t>(sceKernelGetProcessTimeWide());
-	for (unsigned iteration = 0U; iteration < 16U; ++iteration) {
+	for (unsigned iteration = 0U; iteration < kMaxBinkUpdateIterations;
+		++iteration) {
 		if (iteration != 0U) {
 			if (Check_Skip_Request()) return;
 			const int64_t update_elapsed_us =

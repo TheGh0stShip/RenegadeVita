@@ -1,6 +1,6 @@
 # Known gaps
 
-## Current dev91 mandatory frontend and readiness gate (2026-08-31)
+## Current dev92 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro
 movies. Dev85 corrected the proven platform boundary: the original
@@ -45,18 +45,23 @@ fed synchronous M00 level-load milestones into the loading presenter, hardened
 font-file reads and FreeType glyph clipping/atlas clearing, prevented gameplay
 Start from entering the observed ESC/pause crash path, and returned target
 boxes to their original HUD logical-space owner after Dev89's native coordinate
-override overcorrected physically. Dev91 is the current local-only successor:
-it reduces startup artificial holds, downscales unchanged retail BINK uploads
-to 480×360 with a larger audio startup reserve and earlier late-frame dropping,
-adds loading-progress catch-up renders, treats empty FreeType bitmaps as valid
-spacing glyphs while requiring visible StyleMgr probe pixels, and adds bounded
-vehicle/HMVV proximity diagnostics. Its focused/canonical closure passes, but
-it is local only. The user-required release gate remains: a visible original
-intro with usable A/V and a visibly labelled original menu before any further
-Vita candidate push. No visual, pacing, or audio acceptance claim is valid
-until a matching physical return. HUD/text, shadow, START-exit, HMVV freeze,
-loading-flash/progress, front-end readiness, and gameplay performance remain
-open.
+override overcorrected physically. Dev91 then reduced startup artificial holds,
+downscaled unchanged retail BINK uploads to 480×360 with a larger audio startup
+reserve and earlier late-frame dropping, added loading-progress catch-up
+renders, treated empty FreeType bitmaps as valid spacing glyphs while requiring
+visible StyleMgr probe pixels, and added bounded vehicle/HMVV proximity
+diagnostics. Dev92 is the current local-only successor: it measures FreeType
+glyph cells from advance plus bitmap bearings before rasterization, requires
+visible glyph columns in readiness probes, lowers unchanged retail BINK upload
+work to a 320×240 cap with a smaller per-update budget and bounded update
+iterations, uses explicit decoder audio-layout fallback for movie resampling,
+and adds bounded target-box projection diagnostics before another coordinate
+rewrite. Its focused/canonical closure passes, but it is local only. The
+user-required release gate remains: a visible original intro with usable A/V
+and a visibly labelled original menu before any further Vita candidate push.
+No visual, pacing, or audio acceptance claim is valid until a matching physical
+return. HUD/text, shadow, START-exit, HMVV freeze, loading-flash/progress,
+front-end readiness, and gameplay performance remain open.
 
 The later user-finalized Dev87 recorder MP4 supplies six settled M00 gameplay
 stills in the historical gallery. It proves that this physical run reached

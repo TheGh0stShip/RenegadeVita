@@ -293,6 +293,31 @@ bool Load_Strings_Database_For_Loading_Screen()
 	return loaded;
 }
 
+unsigned Count_Visible_Glyph_Columns(const std::vector<uint16> &pixels,
+	int width, int height)
+{
+	if (width <= 0 || height <= 0) return 0U;
+	unsigned visible_columns = 0U;
+	for (int x = 0; x < width; ++x) {
+		bool column_visible = false;
+		for (int y = 0; y < height; ++y) {
+			const size_t index = static_cast<size_t>(y) *
+				static_cast<size_t>(width) + static_cast<size_t>(x);
+			if (pixels[index] != 0U) {
+				column_visible = true;
+				break;
+			}
+		}
+		if (column_visible) ++visible_columns;
+	}
+	return visible_columns;
+}
+
+unsigned Minimum_Visible_Glyph_Columns(int width)
+{
+	return width >= 4 ? 2U : 1U;
+}
+
 bool Validate_StyleMgr_Font_Glyphs(const char *scope)
 {
 	struct FontProbe {
@@ -331,6 +356,8 @@ bool Validate_StyleMgr_Font_Glyphs(const char *scope)
 			font->Get_Char_Width(static_cast<WCHAR>('0')) : 0;
 		unsigned visible_pixels_a = 0U;
 		unsigned visible_pixels_0 = 0U;
+		unsigned visible_columns_a = 0U;
+		unsigned visible_columns_0 = 0U;
 		if (font != NULL && height > 0 && width_a > 0) {
 			std::vector<uint16> pixels(static_cast<size_t>(width_a) *
 				static_cast<size_t>(height), 0);
@@ -340,6 +367,8 @@ bool Validate_StyleMgr_Font_Glyphs(const char *scope)
 				++pixel_index) {
 				if (pixels[pixel_index] != 0U) ++visible_pixels_a;
 			}
+			visible_columns_a =
+				Count_Visible_Glyph_Columns(pixels, width_a, height);
 		}
 		if (font != NULL && height > 0 && width_0 > 0) {
 			std::vector<uint16> pixels(static_cast<size_t>(width_0) *
@@ -350,16 +379,22 @@ bool Validate_StyleMgr_Font_Glyphs(const char *scope)
 				++pixel_index) {
 				if (pixels[pixel_index] != 0U) ++visible_pixels_0;
 			}
+			visible_columns_0 =
+				Count_Visible_Glyph_Columns(pixels, width_0, height);
 		}
+		const bool glyph_a_ok = visible_pixels_a > 0U &&
+			visible_columns_a >= Minimum_Visible_Glyph_Columns(width_a);
+		const bool glyph_0_ok = visible_pixels_0 > 0U &&
+			visible_columns_0 >= Minimum_Visible_Glyph_Columns(width_0);
 		const bool font_ok = height > 0 &&
 			(spacing_a > 0 || spacing_0 > 0) &&
-			(visible_pixels_a > 0U || visible_pixels_0 > 0U);
+			(glyph_a_ok || glyph_0_ok);
 		if (!font_ok) ok = false;
-		A30_Vita_Log("A4 frontend/text: StyleMgr font probe scope=%s font=%s ptr=%p height=%d spacing_A=%d spacing_0=%d width_A=%d width_0=%d visible_A=%u visible_0=%u ok=%d\n",
+		A30_Vita_Log("A4 frontend/text: StyleMgr font probe scope=%s font=%s ptr=%p height=%d spacing_A=%d spacing_0=%d width_A=%d width_0=%d visible_A=%u columns_A=%u visible_0=%u columns_0=%u ok=%d\n",
 			scope != NULL ? scope : "unknown", probes[index].name,
 			static_cast<void *>(font), height, spacing_a, spacing_0,
-			width_a, width_0, visible_pixels_a, visible_pixels_0,
-			font_ok ? 1 : 0);
+			width_a, width_0, visible_pixels_a, visible_columns_a,
+			visible_pixels_0, visible_columns_0, font_ok ? 1 : 0);
 	}
 	if (!ok) {
 		A30_Vita_Log("A4 frontend/text: FAIL StyleMgr font glyph probe scope=%s; refusing to enter visually blank text state\n",

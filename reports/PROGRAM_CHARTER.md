@@ -70,11 +70,16 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   `wcsstr` so original Windows `WCHAR` frontend/dialogue/HUD text does not
   cross into the wrong libc `wchar_t` ABI. It is not installed, launched, or
   physically accepted.
-- A3.5-dev97: current canonical local-only candidate. It preserves Dev96 and
+- A3.5-dev97: superseded canonical local-only candidate. It preserves Dev96 and
   adds bounded UTF-16 formatted-output support for original menu/dialogue/HUD
   formatted strings, plus candidate-scoped startup-precache receipt/status
   output before original retail root/MIX file factory construction. It is not
   installed, launched, or physically accepted.
+- A3.5-dev98: current canonical local-only candidate. It preserves Dev97 and
+  adds BINK presentation-clock arming at audio/video presentation, bounded
+  Vita WWUI dialog-template translation copying, and HUD initialization
+  presentation scoping so persistent Render2D HUD elements are born in native
+  Vita HUD space. It is not installed, launched, or physically accepted.
 
 ## Milestone contracts
 

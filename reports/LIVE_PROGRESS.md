@@ -1,5 +1,51 @@
 # Live engineering progress
 
+## 2026-08-31 — Dev98 canonical source/build candidate; VDB provider host-built; no physical action
+
+`[██████████] 10/10 current evidence gates complete; no Vita deploy, launch, install, or capture`
+
+- Source-only work continued under the user's no-physical-test window. Dev98
+  advances identity to `A3.5-dev98` and targets the retained Dev87 frontend,
+  dialogue, HUD, pickup, loading, intro-A/V, startup-black, target-box, HMVV,
+  FPS, and Start failure set without touching the Vita filesystem. It preserves
+  Dev97 and adds three focused corrections: BINK presentation timing starts
+  only when audio output is armed or the first video upload is submitted; Vita
+  WWUI dialog-template translation copies are bounded to the remaining original
+  text buffer; and `HUDClass::Init()` runs inside the same native Vita HUD
+  presentation scope used by `HUDClass::Think()`.
+- Validation passed: focused BINK presentation-clock contract 10/10; combined
+  frontend/loading/runtime/indexed-state/identity/source contract set 48/48;
+  deterministic 145-patch staging with no `.rej`/`.orig` debris; pristine
+  WWUI dialog-template patch apply proof; fast Dev98 candidate closure; and
+  canonical `bash ./tools/build.sh` closure in
+  `logs/a35-dev98-20260831-081728-build.log`. Final repo validation passed
+  full `python3 -m unittest discover tools` 222/222, JSON syntax,
+  `git diff --check`, hygiene, and no `.rej`/`.orig` debris.
+- Canonical closure passed retained host/current validation, deterministic
+  145-patch staging, 549 ARM/package actions, ELF/SELF/VPK identity,
+  compressed VPK validation, diagnostics, SHA manifest, and retail exclusion.
+  Artifact custody: VPK SHA-256
+  `bb2e02eae8b28531735080214949463bcea3022859a8bf35affe33a01be2e870`;
+  packaged SELF SHA-256
+  `bbd96fe416f834b82054cf63a8680c9124d4c6b20e467bb98210e7241b815e35`;
+  ELF SHA-256
+  `dc5be03038085387bdf92225ba6a809995cc738a331e1756c320f80f76098dba`;
+  diagnostics ZIP SHA-256
+  `a2a079302212ef249cf58a399607a0ac48c027151dc85d4e208743dd7da088b2`.
+- VDB `master` was synced to
+  `bc5df9e53dfca9b29c38cbd7635317bbb2aa0770`, the exact-title framebuffer
+  provider docs were read, and a Dev98-matching host-side provider bundle was
+  built at `<VitaDevBridge>/build/exact-title-provider-rnega3101-bbd96fe4-dev98-r26`.
+  It targets `capture.screen.v1`, `RNEGA3101`, and the Dev98 eboot hash above.
+  It is not installed and no logical-framebuffer PNG/raw/metadata evidence
+  exists yet.
+- Dev98 has not been copied to, installed on, launched on, or visually accepted
+  on a Vita. No Dev98 screenshot/video exists. The next physical gate must
+  verify fast visible bootstrap, readable intro/menu text, paced intro A/V,
+  loading progress during M00 load, readable gameplay dialogue/HUD/pickup
+  text, target-box alignment, M00 stability including the HMVV approach, frame
+  time, and Start/pause/exit behavior.
+
 ## 2026-08-31 — Dev97 canonical source/build candidate; no physical action
 
 `[██████████] 10/10 current evidence gates complete; no Vita deploy or launch`

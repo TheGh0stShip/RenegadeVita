@@ -83,7 +83,7 @@ int g_source_video_width = 0;
 int g_source_video_height = 0;
 int g_video_width = 0;
 int g_video_height = 0;
-int64_t g_start_us = 0;
+std::atomic<int64_t> g_presentation_start_us(0);
 int64_t g_first_video_pts_us = AV_NOPTS_VALUE;
 int64_t g_frame_duration_us = 33333;
 uint64_t g_decoded_video_frames = 0U;
@@ -236,9 +236,28 @@ const char *Build_FFmpeg_File_URL(const RenegadeResolvedPath &resolved,
 	return url;
 }
 
+bool Start_Presentation_Clock(const char *reason)
+{
+	int64_t expected = 0;
+	const int64_t now = static_cast<int64_t>(sceKernelGetProcessTimeWide());
+	if (!g_presentation_start_us.compare_exchange_strong(expected, now,
+			std::memory_order_acq_rel, std::memory_order_acquire)) {
+		return false;
+	}
+	A30_Vita_Log("A4 Bink: presentation clock started reason=%s movie=%s\n",
+		reason != NULL ? reason : "unknown",
+		g_movie_name[0] != '\0' ? g_movie_name : "none");
+	return true;
+}
+
 int64_t Current_Movie_Elapsed_Us()
 {
-	return static_cast<int64_t>(sceKernelGetProcessTimeWide()) - g_start_us;
+	const int64_t start_us =
+		g_presentation_start_us.load(std::memory_order_acquire);
+	if (start_us <= 0) {
+		return 0;
+	}
+	return static_cast<int64_t>(sceKernelGetProcessTimeWide()) - start_us;
 }
 
 size_t Queued_Audio_Samples()
@@ -424,6 +443,7 @@ bool Start_Audio_Output_Thread()
 		return false;
 	}
 	g_audio_thread_running = true;
+	Start_Presentation_Clock("audio-output-armed");
 	A30_Vita_Log("A4 Bink: audio output worker armed after decoded startup samples=%u movie=%s\\n",
 		static_cast<unsigned>(kAudioStartupSamples), g_movie_name);
 	return true;
@@ -539,6 +559,7 @@ void Release_Decoder_State()
 	g_uploaded_video_frames = 0U;
 	g_dropped_video_frames = 0U;
 	g_last_skip_buttons = 0U;
+	g_presentation_start_us.store(0, std::memory_order_release);
 	g_update_budget_logged = false;
 	g_update_entry_logged = false;
 	g_render_entry_logged = false;
@@ -775,6 +796,7 @@ bool Upload_Pending_Video()
 		g_video_first_upload_logged = true;
 	}
 	++g_uploaded_video_frames;
+	Start_Presentation_Clock("first-video-upload");
 	g_pending_video = false;
 	return true;
 }
@@ -873,8 +895,10 @@ void Log_Playback_Statistics(const char *reason)
 {
 	if (g_playback_statistics_logged) return;
 	g_playback_statistics_logged = true;
-	const uint64_t wall_us = g_start_us > 0 ?
-		sceKernelGetProcessTimeWide() - static_cast<uint64_t>(g_start_us) : 0U;
+	const int64_t start_us =
+		g_presentation_start_us.load(std::memory_order_acquire);
+	const uint64_t wall_us = start_us > 0 ?
+		sceKernelGetProcessTimeWide() - static_cast<uint64_t>(start_us) : 0U;
 	const size_t queued_audio = Queued_Audio_Samples();
 	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu frames=%llu video_uploaded/dropped=%llu/%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_queued_samples=%u audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
 				reason != NULL ? reason : "unknown", g_movie_name,
@@ -1005,7 +1029,6 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 		g_audio_enabled = false;
 		g_audio_drained.store(true, std::memory_order_release);
 	}
-	g_start_us = static_cast<int64_t>(sceKernelGetProcessTimeWide());
 	Prime_Skip_Button_Latch();
 	g_active = true;
 	g_complete = false;

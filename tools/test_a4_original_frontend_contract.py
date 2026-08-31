@@ -154,6 +154,9 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("uv_rect.Top *= v_scale", uv_patch)
         self.assertIn("A3.5 WWUI dialog template", dialog_patch)
         self.assertIn("Vita_Dialog_Text_Length", dialog_patch)
+        self.assertIn("Vita_Dialog_Buffer_Remaining", dialog_patch)
+        self.assertIn("Vita_Dialog_Copy_Translation", dialog_patch)
+        self.assertIn("translated_len=%u copied_len=%u final_len=%u truncated=%d", dialog_patch)
         self.assertIn("bool rasterized = false;", staged_sentence)
         self.assertIn("::memset(curr_buffer, 0", staged_sentence)
         self.assertIn("if (!rasterized)", staged_sentence)
@@ -161,6 +164,9 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("TextureClass (desc.Width, desc.Height", staged_sentence)
         self.assertIn("uv_rect.Top *= v_scale", staged_sentence)
         self.assertIn("A3.5 WWUI dialog template", staged_dialog_parser)
+        self.assertIn("Vita_Dialog_Buffer_Remaining", staged_dialog_parser)
+        self.assertIn("Vita_Dialog_Copy_Translation", staged_dialog_parser)
+        self.assertIn("translated_len=%u copied_len=%u final_len=%u truncated=%d", staged_dialog_parser)
 
     def test_controller_navigation_maps_to_wwui_without_breaking_gameplay_keys(self):
         directinput = (ROOT / "port" / "platform" / "renegade_directinput.cpp").read_text()
@@ -335,6 +341,16 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("BINKMovie::Play", bink)
         self.assertIn("A4_Frontend_Record_Bink_Play(filename);", bink)
         self.assertIn("A4_Frontend_Record_Bink_Skip(filename);", bink)
+        self.assertIn("std::atomic<int64_t> g_presentation_start_us(0);", bink)
+        self.assertIn("bool Start_Presentation_Clock(const char *reason)", bink)
+        self.assertIn("g_presentation_start_us.compare_exchange_strong", bink)
+        self.assertIn("presentation clock started reason=%s movie=%s", bink)
+        self.assertIn("g_presentation_start_us.load(std::memory_order_acquire)", bink)
+        self.assertIn("if (start_us <= 0) {\n\t\treturn 0;", bink)
+        self.assertIn('Start_Presentation_Clock("audio-output-armed");', bink)
+        self.assertIn('Start_Presentation_Clock("first-video-upload");', bink)
+        self.assertIn("g_presentation_start_us.store(0, std::memory_order_release);", bink)
+        self.assertNotIn("g_start_us", bink)
         for token in (
             "Renegade_Resolve_Path",
             "Build_FFmpeg_File_URL",
@@ -451,6 +467,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             bink.index("if (Check_Skip_Request()) return;"),
             bink.index("const int64_t elapsed_us"),
         )
+        play = bink[
+            bink.index("void BINKMovie::Play") :
+            bink.index("void BINKMovie::Stop", bink.index("void BINKMovie::Play"))
+        ]
+        self.assertNotIn("Start_Presentation_Clock", play)
         self.assertLess(
             bink.index("Drop_Pending_Video_If_Late(elapsed_us)"),
             bink.index("if (!Upload_Pending_Video())"),

@@ -451,6 +451,9 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         hud = (ROOT / "staging/combat/hud.cpp").read_text(
             encoding="utf-8", errors="replace"
         )
+        hud_patch = (
+            ROOT / "port/patches/combat-a35-vita-hud-think-presentation.patch"
+        ).read_text(encoding="utf-8")
         stage_sources = (ROOT / "tools/stage_sources.sh").read_text(
             encoding="utf-8"
         )
@@ -647,6 +650,9 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         hud = (ROOT / "staging/combat/hud.cpp").read_text(
             encoding="utf-8", errors="replace"
         )
+        hud_patch = (
+            ROOT / "port/patches/combat-a35-vita-hud-think-presentation.patch"
+        ).read_text(encoding="utf-8")
         stage_sources = (ROOT / "tools/stage_sources.sh").read_text(
             encoding="utf-8"
         )
@@ -694,6 +700,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertNotIn("combat-a35-vita-target-overlay-ww3d-include.patch", stage_sources)
         self.assertNotIn("combat-a35-vita-target-overlay-native-scope.patch", stage_sources)
         self.assertIn("combat-a35-target-box-diagnostics.patch", stage_sources)
+        self.assertIn("combat-a35-vita-hud-think-presentation.patch", stage_sources)
         self.assertNotIn("WW3D::Get_Device_Resolution(target_device_width", hud)
         self.assertNotIn("target_native_screen", hud)
         self.assertNotIn("TargetRenderer->Set_Coordinate_Range(target_screen);", hud)
@@ -702,6 +709,26 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("A3.5 HUD target-box", hud)
         self.assertIn("WW3D::Get_Device_Resolution(device_width", hud)
         self.assertIn("COMBAT_CAMERA->Get_Aspect_Ratio()", hud)
+        self.assertIn("A31ScopedVitaHUDInitPresentation", hud_patch)
+        self.assertIn("Scope HUD initialization too", hud_patch)
+        hud_init = hud[
+            hud.index("void \tHUDClass::Init(bool render_available)"):
+            hud.index("void \tHUDClass::Shutdown()")
+        ]
+        self.assertIn("A31ScopedVitaHUDInitPresentation", hud_init)
+        self.assertIn("Scope HUD initialization too", hud_init)
+        self.assertLess(
+            hud_init.index("A31_Vita_Begin_Original_HUD_Render();"),
+            hud_init.index("RenderImages[RETICLE] = new Render2DClass();"),
+        )
+        self.assertLess(
+            hud_init.index("A31_Vita_Begin_Original_HUD_Render();"),
+            hud_init.index("Info_Init();"),
+        )
+        self.assertLess(
+            hud_init.index("A31_Vita_Begin_Original_HUD_Render();"),
+            hud_init.index("Target_Init();"),
+        )
         hud_think = hud[
             hud.index("void \tHUDClass::Think()"):
             hud.index("void\tHUDClass::Toggle_Hide_Points")

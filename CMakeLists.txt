@@ -15,7 +15,7 @@ project(RenegadeVitaA31 VERSION 3.5.4 LANGUAGES C CXX)
 # This is provenance for a hardware candidate, not a public milestone claim.
 # Keep the artifact identity configurable so a newer candidate can never
 # overwrite the symbols and diagnostics that belong to an earlier one.
-set(RENEGADE_CANDIDATE_LABEL "A3.5-dev97" CACHE STRING
+set(RENEGADE_CANDIDATE_LABEL "A3.5-dev98" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
 if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
@@ -31,7 +31,7 @@ set(RENEGADE_STARTUP_PRECACHE_RECEIPT_PATH
 # sce_sys/param.sfo. Keep it under the same RNEGA3101 title so the package
 # remains an update of the native Vita port; it identifies only this developer
 # package and is not an EA or retail entitlement.
-set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENGADEVITADEV97" CACHE STRING
+set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENGADEVITADEV98" CACHE STRING
   "Developer Vita package content identifier")
 string(LENGTH "${RENEGADE_VITA_CONTENT_ID}" RENEGADE_VITA_CONTENT_ID_LENGTH)
 if(NOT RENEGADE_VITA_CONTENT_ID_LENGTH EQUAL 36 OR

@@ -16,10 +16,10 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev97}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev98}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
-rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV97
+rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV98
 # The fast candidate path already safely uses all host CPUs.  Match that
 # bounded default for canonical builds too; callers can still lower it with
 # RENEGADE_BUILD_JOBS on a constrained host.

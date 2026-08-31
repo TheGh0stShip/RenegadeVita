@@ -30,9 +30,10 @@ The gallery is a reviewed history, not a controlled same-camera comparison. Its 
 | A3.5-dev94 | Superseded local-only canonical candidate; no Vita capture exists. |
 | A3.5-dev95 | Superseded local-only canonical candidate; no Vita capture exists. |
 | A3.5-dev96 | Superseded local-only canonical candidate; no Vita capture exists. |
-| A3.5-dev97 | Current local-only canonical candidate; no Vita capture exists. |
+| A3.5-dev97 | Superseded local-only canonical candidate; no Vita capture exists. |
+| A3.5-dev98 | Current local-only canonical candidate; no Vita capture exists. A Dev98-matching exact-title VDB `capture.screen.v1` provider exists host-side, but it has not been installed or used. |
 
-The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, or unrelated images merely to fill a build row.
+The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It must use live `capture.screen.v1` with lower-case unique labels and retained PNG/raw/metadata artifacts. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, MP4-derived, FTP, VitaCompanion, or unrelated images merely to fill a build row.
 
 ## Quick Gameplay View
 

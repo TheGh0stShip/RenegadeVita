@@ -66,6 +66,36 @@ static unsigned Vita_Dialog_Text_Length(const WCHAR *text)
 	}
 	return length;
 }
+
+static unsigned Vita_Dialog_Buffer_Remaining(const WCHAR *buffer,
+	const WCHAR *cursor, unsigned capacity)
+{
+	if (buffer == NULL || cursor == NULL || capacity == 0U) return 0U;
+	for (unsigned offset = 0U; offset < capacity; ++offset) {
+		if (buffer + offset == cursor) return capacity - offset;
+	}
+	return 0U;
+}
+
+static bool Vita_Dialog_Copy_Translation(WCHAR *destination,
+	unsigned capacity, const WCHAR *translation, unsigned *source_length,
+	unsigned *copied_length)
+{
+	const unsigned source = Vita_Dialog_Text_Length(translation);
+	if (source_length != NULL) *source_length = source;
+	if (copied_length != NULL) *copied_length = 0U;
+	if (destination == NULL || capacity == 0U) return source == 0U;
+
+	unsigned copied = 0U;
+	while (translation != NULL && translation[copied] != 0 &&
+		copied + 1U < capacity) {
+		destination[copied] = translation[copied];
+		++copied;
+	}
+	destination[copied] = 0;
+	if (copied_length != NULL) *copied_length = copied;
+	return translation == NULL || translation[copied] == 0;
+}
 #endif
 
 
@@ -295,6 +325,9 @@ DialogParserClass::Parse_Template
 			const bool vita_had_string_id = string_id != NULL;
 			WideStringClass vita_untranslated_text = text_buffer;
 			StringClass vita_ascii_string_id;
+			unsigned vita_translation_len = 0U;
+			unsigned vita_copied_len = 0U;
+			bool vita_translation_complete = true;
 #endif
 			if (string_id != NULL) {
 				WideStringClass wide_string_id = string_id;				
@@ -304,19 +337,27 @@ DialogParserClass::Parse_Template
 				vita_ascii_string_id = ascii_string_id;
 #endif
 				WideStringClass translation = TRANSLATE_BY_DESC(ascii_string_id);
+#if defined(__vita__)
+				vita_translation_complete = Vita_Dialog_Copy_Translation(
+					string_id,
+					Vita_Dialog_Buffer_Remaining(text_buffer, string_id, 256U),
+					translation, &vita_translation_len, &vita_copied_len);
+#else
 				::wcscpy (string_id, translation);
+#endif
 			}
 #if defined(__vita__)
 			if (g_vita_dialog_template_logs < 96U && (res_id == 128 || res_id == 130 || res_id == 131 || vita_had_string_id)) {
 				++g_vita_dialog_template_logs;
-				A30_Vita_Log("A3.5 WWUI dialog template: res=%d control=%d type=%u style=%08X rect=%d,%d %dx%d had_ids=%d desc=%s untranslated_len=%u final_len=%u log=%u/96\n",
+				A30_Vita_Log("A3.5 WWUI dialog template: res=%d control=%d type=%u style=%08X rect=%d,%d %dx%d had_ids=%d desc=%s untranslated_len=%u translated_len=%u copied_len=%u final_len=%u truncated=%d log=%u/96\n",
 					res_id, static_cast<int>(dlg_item_template->id), static_cast<unsigned>(ctrl_type),
 					static_cast<unsigned>(dlg_item_template->style), static_cast<int>(dlg_item_template->x),
 					static_cast<int>(dlg_item_template->y), static_cast<int>(dlg_item_template->cx),
 					static_cast<int>(dlg_item_template->cy), vita_had_string_id ? 1 : 0,
 					vita_had_string_id ? static_cast<const char *>(vita_ascii_string_id) : "literal",
-					Vita_Dialog_Text_Length(vita_untranslated_text),
-					Vita_Dialog_Text_Length(text_buffer), g_vita_dialog_template_logs);
+					Vita_Dialog_Text_Length(vita_untranslated_text), vita_translation_len,
+					vita_copied_len, Vita_Dialog_Text_Length(text_buffer),
+					vita_translation_complete ? 0 : 1, g_vita_dialog_template_logs);
 			}
 #endif
 

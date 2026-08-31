@@ -2824,6 +2824,27 @@ void 	HUDClass::Init(bool render_available)
 		RenderImages[i] = NULL;
 	}
 
+#if defined(RENEGADE_VITA_PORT)
+	class A31ScopedVitaHUDInitPresentation
+	{
+	public:
+		A31ScopedVitaHUDInitPresentation()
+		{
+			/* Render2D instances cache their coordinate conversion when
+			** Set_Coordinate_Range is called.  Scope HUD initialization too,
+			** not only HUDClass::Think(), so persistent renderers, InfoBase,
+			** target boxes, ammo/health digits, and pickup toasts are born in
+			** the same native Vita HUD space used for per-frame rebuilds. */
+			A31_Vita_Begin_Original_HUD_Render();
+		}
+		~A31ScopedVitaHUDInitPresentation()
+		{
+			A31_Vita_End_Original_HUD_Render();
+		}
+	};
+	A31ScopedVitaHUDInitPresentation vita_hud_init_presentation;
+#endif
+
 	// Reticles
 #ifndef ATI_DEMO_HACK
 	RenderImages[RETICLE] = new Render2DClass();

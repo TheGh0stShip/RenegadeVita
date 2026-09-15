@@ -841,9 +841,9 @@ the matching title in Vita3K, and collect bounded emulator evidence. Blocking
 release conditions remain full-route/visual/performance evidence and the
 user's physical-test hold. Do not wait idly for builds or weaken these gates.
 
-Older entries below are historical; Dev99 remains the last closed package
-until a Dev100 closure entry is added. The earlier 50 FPS preferred-floor
-language does not replace the user's 60 FPS+ goal.
+Older entries below are historical. At the time of this entry, Dev99 remained
+the last closed package until a Dev100 closure entry was added. The earlier
+50 FPS preferred-floor language does not replace the user's 60 FPS+ goal.
 
 ## 2026-08-31 — No-build performance/fidelity gate preparation
 

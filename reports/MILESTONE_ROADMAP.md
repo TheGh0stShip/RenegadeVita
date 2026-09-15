@@ -22,17 +22,18 @@ through the supported provider boundaries. Do not invent a public release
 number or claim these gates have passed. Preserve original owners and retail
 formats throughout. Both PS Vita and PSTV final validation remain required.
 
-Current Dev100 work supplies shared movie/text/loading/cache correctness fixes
-plus an interim M00 ending. Keep that ending and launch restriction selectable
-as a demo build profile so full-port development remains unrestricted. Current
-canonical compilation is frozen to its source snapshot; profile separation is
-the next source unit, not a mid-build mutation. See `DEV100_PRIOR_WORK_AUDIT.md`.
+Dev100 established the interim demo/full-port profile split and is now
+historical. Current work is Dev134: canonical host/sanitizer/ARM/package
+closure and matching Vita3K visual evidence passed, and the exact package was
+deployed/readback-verified on physical Vita. Physical runtime logs, visuals,
+audio and frame-time evidence are pending manual LiveArea launch. See
+`DEV134_PHYSICAL_MILESTONE.md`.
 
 | Milestone | Capability contract | Status |
 |---|---|---|
 | A3.1.4 | Visible original interactive M00 lifecycle | physically validated; frozen |
 | A3.2 | Frozen failed physical evidence: input, animation, projection, material, and exit defects | `A3.2-dev1` immutable; never promote from it |
-| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | `A3.5-dev87` is retained physical frontend-usability failure evidence: menu text remained absent, intro A/V was slow/buzzy, and the original dialogue box was empty. `A3.5-dev88` through `A3.5-dev98` are local-only history. `A3.5-dev99` is the current local-only canonical follow-up: it keeps Dev98's startup/loading/deferred Render2D/HUD/BINK/message-window/short-wchar/UTF-16 formatter/WWUI/HUD-presentation fixes and adds a native startup-status repaint worker for the long pre-cache black interval. Intro/menu A/V/text, loading/HUD/dialogue/pickup text, shadows/walls, START-exit, HMVV freeze, and FPS defects remain physically open. |
+| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | `A3.5-dev87` is retained physical frontend-usability failure evidence. `A3.5-dev88` through `A3.5-dev123` are superseded source/build/Vita3K history, with Dev123 also retaining a failed physical launch/recovery. Dev124 and Dev126 returned physical failure/debug evidence. `A3.5-dev134` is the current checkpoint: canonical/package and matching Vita3K visual milestone passed, and physical deployment/readback is verified. Intro/menu A/V/text, loading/HUD/dialogue/pickup text, shadows/walls, START-exit, Logan/HMVV/Mobius stability, and native FPS remain physically open until the Dev134 runtime return is collected. |
 | v3.6 | Resource, memory, deterministic cache/index, tutorial plus second scene and map smoke | pending v3.5 physical gate |
 | v3.7 | Perspective-correct efficient renderer and measured Balanced frame pacing | pending v3.6 infrastructure |
 | v3.8 | Original frontend, HUD, essential audio, intro path/fallback | host/ARM closure exists; physical integration pending |

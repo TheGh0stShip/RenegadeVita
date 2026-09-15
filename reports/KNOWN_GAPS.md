@@ -219,7 +219,7 @@ timing only at audio/video presentation, bounds Vita WWUI dialog-template
 translation copies into the remaining original text buffer, and scopes
 `HUDClass::Init()` through native Vita HUD presentation so persistent Render2D
 HUD elements are initialized in the same coordinate range used for per-frame
-rebuilds. Dev99 is the current local-only successor: it preserves Dev98 and
+rebuilds. Dev99 was the next local-only successor: it preserves Dev98 and
 adds a native startup-status repaint worker that redraws verbose debug status
 every 250 ms during original root/MIX file factory construction before the
 visible startup pre-cache phase. This targets only the long opaque pre-cache

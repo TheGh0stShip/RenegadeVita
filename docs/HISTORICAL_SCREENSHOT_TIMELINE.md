@@ -9,7 +9,10 @@ Evidence policy:
 - Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list every useful local or Vita-pulled gameplay sample found.
 - One historical loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler, except the four exact returned Dev82 diagnostic frames shown separately below.
 - Vita-pulled screenshots are mapped through each build's own `a35-devXX-runtime.log` capture paths before being included.
-- These images are historical evidence. They do not make dev82 physically accepted; dev82 still requires a returned Vita test with matching logs, screenshots/captures, and any crash dumps.
+- These images are historical evidence. They do not make any later candidate
+  physically accepted. Dev134 is the current deployment/readback checkpoint,
+  but its physical runtime visual evidence is still pending manual LiveArea
+  launch and returned logs/captures.
 
 ## Current Capture Completeness
 
@@ -32,9 +35,16 @@ The gallery is a reviewed history, not a controlled same-camera comparison. Its 
 | A3.5-dev96 | Superseded local-only canonical candidate; no Vita capture exists. |
 | A3.5-dev97 | Superseded local-only canonical candidate; no Vita capture exists. |
 | A3.5-dev98 | Superseded local-only canonical candidate; no Vita capture exists. |
-| A3.5-dev99 | Current local-only canonical candidate; no Vita capture exists. A Dev99-matching exact-title VDB `capture.screen.v1` provider exists host-side, but it has not been installed or used. |
+| A3.5-dev99 | Superseded local-only canonical candidate; no Vita capture exists. |
+| A3.5-dev100-Dev123 | Superseded source, host, Vita3K, and selected physical-test history. Detailed evidence lives in the linked per-dev reports rather than this physical screenshot gallery. |
+| A3.5-dev124-Dev126 | Physical failure/debug evidence exists for movie starvation, Logan/control stall, Mobius/START crash, low FPS, and missing EVA datalinks; no acceptance gallery is promoted from those returns. |
+| A3.5-dev127-Dev134 | Current post-Dev99 engineering line. Dev134 has canonical/package and matching Vita3K visual evidence plus physical deployment/readback verification; physical runtime screenshots/captures are pending manual launch. |
 
-The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It must use live `capture.screen.v1` with lower-case unique labels and retained PNG/raw/metadata artifacts. The Dev99-matching provider is host-built only and is not installed on the active device yet. Until then, this page will not add guessed, retimed, MP4-derived, FTP, VitaCompanion, or unrelated images merely to fill a build row.
+The future physical comparison route is an authenticated, exact-title
+post-render framebuffer capture provider when available, with lower-case unique
+labels and retained PNG/raw/metadata artifacts. Until then, this page will not
+add guessed, retimed, MP4-derived, FTP, VitaCompanion, emulator, or unrelated
+images merely to fill a build row.
 
 ## Quick Gameplay View
 

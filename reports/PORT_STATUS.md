@@ -215,10 +215,11 @@ selectable profile. User delegated routine decisions; the remaining M01 cache
 reference is now removed, fast build closure passed, and canonical compilation
 is running. Earlier compile-blocker wording below records the superseded attempt.
 
-This entry supersedes the current-candidate wording in older entries below.
-Dev100 is the active source candidate; Dev99 remains the last closed canonical
-package until Dev100 closure is recorded. A3.1.4 remains the accepted physical
-baseline, and Dev87's physical frontend/HUD failure evidence is unchanged.
+This historical entry superseded the current-candidate wording in older entries
+below when it was written. At that point, Dev100 was the active source
+candidate and Dev99 remained the last closed canonical package until Dev100
+closure was recorded. A3.1.4 remained the accepted physical baseline, and
+Dev87's physical frontend/HUD failure evidence was unchanged.
 
 The user's scope is the entirety of authentic M00, followed on original
 mission success by a slow fade, the exact thank-you message, text credits,
@@ -244,8 +245,8 @@ ownership, deterministic staging, and independent validation.
 
 ## 2026-08-31 Dev87 physical failure; Dev99 local candidate
 
-Dev99 is the current local-only source/build candidate produced under the
-user's no-physical-test window. It preserves Dev88 through Dev98's
+Dev99 was the local-only source/build candidate produced under the user's
+no-physical-test window. It preserves Dev88 through Dev98's
 indexed-glyph texture-stage, real BINK audio-reserve, frontend-scope, font
 fallback, bootstrap, expanded pre-cache, Render2D state, synchronous loading,
 Start-route, target-box rollback, BINK reductions, vehicle/HMVV diagnostics,

@@ -21,6 +21,21 @@ The historical entries below are retained for provenance.
 Older candidate rows are Local-only engineering records unless they carry
 matching physical-Vita evidence.
 
+## Post-Dev99 checkpoint history
+
+The GitHub-visible status is current through Dev134. The table below is a
+compact index of the builds after Dev99; the linked reports retain the detailed
+evidence, hashes, and caveats.
+
+| Candidate | Public status | Evidence |
+| --- | --- | --- |
+| Dev100-Dev105 | Demo profile, presentation, retail-data and first-frame repair work. Dev102 restored menu labels in Vita3K; Dev105 produced usable emulator M00 runtime evidence, not physical acceptance. | [Dev100 audit](../reports/DEV100_PRIOR_WORK_AUDIT.md), [Dev102 return](../reports/DEV102_VITA3K_PRESENTATION_RETURN.md), [Dev105 retail return](../reports/DEV105_RETAIL_DATA_RETURN.md) |
+| Dev106-Dev113 | Filesystem probe, UTF-16, checkpoint input, local input, HUD/loading, culling, frontend, and buffered-rewind fixes. These are source/host/Vita3K milestones. | [Dev106](../reports/DEV106_READONLY_PROBE_COST.md), [Dev108](../reports/DEV108_DIALOG_UTF16_AND_CHECKPOINT_INPUT.md), [Dev113](../reports/DEV113_OVERNIGHT_RETURN.md) |
+| Dev114-Dev120 | Original checkpoint reload, HUD/font fixes, weapon/EVA visual corrections, tutorial finale work, original loading/menu-audio work, and capture/render comparison. Dev118 reached the original finale in Vita3K; Dev120 remained visual/capture engineering. | [Dev114](../reports/DEV114_CHECKPOINT_CANDIDATE_RETURN.md), [Dev117](../reports/DEV117_WEAPON_EVA_CORRECTIONS.md), [Dev120](../reports/DEV120_ORIGINAL_LOADING_AND_MENU_AUDIO.md) |
+| Dev121-Dev123 | Presented-frame capture recovery and Hotwire gameplay checks. Dev123 fast package passed emulator recovery evidence, then physical launch failed and the predecessor was restored. | [Dev121/122](../reports/DEV121_CAPTURE_SOURCE.md), [Dev123](../reports/DEV123_CAPTURE_REGRESSION_RECOVERY.md) |
+| Dev124-Dev126 | Physical testing returned real hardware failures: movie starvation, Logan/control stall, Mobius/START crash, low gameplay FPS, and missing EVA datalinks. Dev126 deployed diagnostics but was not accepted. | [Dev124](../reports/DEV124_NATIVE_BOOT_DIAGNOSIS.md), [Dev125](../reports/DEV125_PHYSICAL_MOVIE_PROGRESS.md), [Dev126](../reports/DEV126_LOGAN_PHYSICAL_STALL.md) |
+| Dev127-Dev134 | Renderer/FPS audit, EVA/DDS, complete pause-menu audit, save/load/delete/settings, native save text entry, repeated Load lifecycle, Cycle Objectives, discarded textured-skin RGB work, and Dev134 canonical milestone. Dev134 has matching Vita3K visual evidence and physical deployment/readback verification; runtime return is pending manual launch. | [Dev127](../reports/DEV127_FIX_AND_OPTIMIZATION_PLAN.md), [Dev129/130](../reports/DEV129_PAUSE_MENU_AUDIT.md), [Dev132](../reports/DEV132_NATIVE_TEXT_ENTRY.md), [Dev133](../reports/DEV133_REPEATED_LOAD_AND_OBJECTIVES.md), [Dev134](../reports/DEV134_PHYSICAL_MILESTONE.md) |
+
 ## Evidence snapshot
 
 | Class | Status | What it establishes |
@@ -39,11 +54,11 @@ matching physical-Vita evidence.
 | A3.5-dev97 published local candidate | **Superseded local-only** | 41 post-formatter focused frontend/loading/runtime/indexed-state/short-wchar contracts, 19 candidate identity/loading/runtime contracts, 63 wider source contracts, UTF-16 formatter selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev98 published local candidate | **Superseded local-only** | Focused frontend/loading/runtime/indexed-state/identity contracts, full 222-tool unittest discovery, hygiene, fast candidate closure, and canonical ARM/package closure passed after Dev98's BINK presentation-clock, WWUI dialog-template copy, and HUD initialization presentation-scope fixes. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev99 historical candidate | **Superseded local-only** | Retained for provenance. Dev134 is the current candidate and has separate canonical, Vita3K, and physical deployment evidence. |
-| Screenshot/video evidence | **Dev87 recorder recovered; Dev99 capture provider host-built** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. A private `gh-pages` player branch is prepared, but GitHub rejected Pages for this account plan; the user has authorized unlisted YouTube hosting pending account connection. A Dev99-matching exact-title VDB `capture.screen.v1` provider was built host-side, but it is not installed and no Dev99 VDB logical-framebuffer evidence exists. |
+| Screenshot/video evidence | **Historical gallery plus later emulator/physical diagnostics** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. Later Dev100-Dev134 reports retain Vita3K visual/capture returns and physical failure/deployment receipts where applicable. Physical Dev134 runtime visual evidence is still pending manual LiveArea launch. |
 
 Host validation, package identity, and logs are useful engineering evidence. They do not prove panel output, controls, audio quality, frame pacing, or lifecycle behavior on physical hardware.
 
-## Dev99: what changed, and what it has not proved
+## Dev99 historical boundary
 
 Dev99 preserves Dev88 through Dev98's shared glyph-state, BINK-audio reserve,
 frontend-scope, bootstrap, pre-cache, Render2D, loading-callback, Start-route,
@@ -92,9 +107,17 @@ The developer must not claim any of these from host tests or a runtime log.
 
 ## Capture and gallery state
 
-The future screenshot route is VDB's authenticated exact-title `capture.screen.v1` provider. The Dev99-matching host-side bundle is `<VitaDevBridge>/build/exact-title-provider-rnega3101-020f210a-dev99-r26`; it targets `RNEGA3101` plus Dev99 eboot SHA-256 `020f210a129beaaf4d0953c6c56efc82267a52949d6883c5db313e87b0790d6d`. It is not installed. The old VitaCompanion `screen.v1` path is panel control, not a screenshot endpoint, and the on-screen red `R` remains MP4 recorder evidence, not VDB logical-framebuffer evidence.
+The future physical screenshot route remains an authenticated, exact-title
+post-render capture provider when available. The old VitaCompanion `screen.v1`
+path is panel control, not a screenshot endpoint, and the on-screen red `R`
+remains MP4 recorder evidence, not VDB logical-framebuffer evidence.
 
-The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md) explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly labelled as recorder-derived and do not pass its failed frontend gate; no Dev88, Dev89, Dev90, Dev91, Dev92, Dev93, Dev94, Dev95, Dev96, Dev97, Dev98, or Dev99 physical visual evidence exists.
+The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md)
+explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly
+labelled as recorder-derived and do not pass its failed frontend gate. Later
+Dev100-Dev134 screenshots/captures remain classified by evidence class in their
+reports; Vita3K visuals are not physical acceptance, and Dev134 physical
+runtime visual evidence has not returned yet.
 
 ## Authoritative records
 

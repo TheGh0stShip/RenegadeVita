@@ -24,9 +24,9 @@ and complete-demo acceptance remain separate open gates. See
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
 | Latest physical return | **A3.5-dev134 deployment/readback verified**: the exact ARM executable and VPK were installed title-scoped after matching Vita3K checks. Manual LiveArea launch and hardware runtime evidence remain pending because remote launch services were unavailable. |
-| Retained historical local candidate | **A3.5-dev93**: superseded source/build milestone for startup status repaint, text-atlas, and native gameplay HUD presentation diagnostics; it remains useful history only, not physical acceptance. |
+| Retained historical local candidates | **A3.5-dev88 through A3.5-dev123**, including **A3.5-dev93**: superseded source/build and emulator milestones retained for provenance. Dev124 and Dev126 returned physical failure evidence; Dev134 is the current verified deployment checkpoint. |
 | Latest local candidate | **A3.5-dev134**: canonical host/sanitizer/ARM/package closure and matching Vita3K refinery visual, pause/resume, and clean-exit checks passed. The discarded textured-skin RGB work is measured and correctness-tested; native hardware FPS remains unaccepted. |
-| Visual evidence | The gallery contains reviewed historical frames only. A user-finalized Dev87 recording supplied six labelled M00 stills. Its full MP4/player is prepared on a private `gh-pages` branch; GitHub rejected public Pages for this account plan. The user authorized unlisted YouTube hosting, pending connection of the upload-capable account. No Dev88, Dev89, Dev90, Dev91, Dev92, Dev93, Dev94, Dev95, Dev96, Dev97, Dev98, or Dev99 physical frame exists. |
+| Visual evidence | The gallery contains reviewed historical frames only. A user-finalized Dev87 recording supplied six labelled M00 stills. Later Vita3K screenshots are emulator evidence and are not promoted as physical acceptance. Physical Dev124/Dev126 evidence is retained as failure/debug context; Dev134 physical visual return is pending manual launch. |
 | Capture path | Physical Dev134 log/capture return is pending manual LiveArea launch. Vita3K images are explicitly emulator evidence; no VDB logical-framebuffer capture or physical visual acceptance is claimed. |
 
 Read the concise [current status](docs/CURRENT_STATUS.md) before treating any candidate as playable. The durable engineering record is in [reports/PORT_STATUS.md](reports/PORT_STATUS.md); it distinguishes host, Vita3K, and physical-Vita evidence.
@@ -58,7 +58,7 @@ Those images are historical, not a same-camera benchmark. A verified post-render
 
 - [Quickstart](docs/QUICKSTART.md) — clone and produce a local canonical or fast candidate build.
 - [Installing on Vita](docs/INSTALLING.md) — retail-data boundaries and manual installation safeguards.
-- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, Dev87 result, Dev99 limits, and next physical evidence gate.
+- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, post-Dev99 build history, Dev134 checkpoint, and next physical evidence gate.
 - [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
 - [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
 - [Historical capture campaign](docs/HISTORICAL_CAPTURE_CAMPAIGN.md) — the no-rebuild plan for comparable in-game frames, held until a physical session is explicitly authorized.

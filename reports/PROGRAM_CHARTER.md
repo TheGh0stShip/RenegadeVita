@@ -95,11 +95,23 @@ planning records. Build/host/Vita3K/physical results must remain distinct.
   Vita WWUI dialog-template translation copying, and HUD initialization
   presentation scoping so persistent Render2D HUD elements are born in native
   Vita HUD space. It is not installed, launched, or physically accepted.
-- A3.5-dev99: current canonical local-only candidate. It preserves Dev98 and
-  adds a native startup-status repaint worker so verbose debug status is
-  redrawn during the long original root/MIX factory construction phase before
-  visible pre-cache. It is not installed, launched, captured, or physically
-  accepted.
+- A3.5-dev99: superseded canonical local-only candidate. It preserved Dev98 and
+  added a native startup-status repaint worker for the long original root/MIX
+  factory construction phase before visible pre-cache. It was not installed,
+  launched, captured, or physically accepted.
+- A3.5-dev100 through A3.5-dev123: superseded post-Dev99 source/build/Vita3K
+  history covering demo-profile separation, frontend presentation, retail-data
+  repair, checkpoint/save/pause/HUD/loading/render/capture work, and a failed
+  Dev123 physical launch/recovery. Detailed evidence is retained in the
+  matching `reports/DEV*.md` files and `BUILD_STATE.json`.
+- A3.5-dev124 through A3.5-dev126: retained physical failure/debug evidence for
+  movie starvation, Logan/control stall, Mobius/START crash, low gameplay FPS,
+  and missing EVA datalinks. These are not accepted physical milestones.
+- A3.5-dev127 through A3.5-dev134: current post-Dev99 line. Dev134 is the
+  canonical checkpoint: host/sanitizer/ARM/package closure and matching Vita3K
+  refinery visual, pause/resume and clean-exit evidence passed; physical
+  deployment/readback is verified. Manual LiveArea launch and returned runtime
+  evidence are still required before any physical acceptance or FPS claim.
 
 ## Milestone contracts
 

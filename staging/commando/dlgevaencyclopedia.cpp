@@ -46,7 +46,9 @@
 #include "dlgevabuildingstab.h"
 #include "cnetwork.h"
 #include "gamemode.h"
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 #include "wolgmode.h"
+#endif
 #include "dialogmgr.h"
 #include "gameinitmgr.h"
 #include "gametype.h"
@@ -55,8 +57,12 @@
 #include "cstextobj.h"
 #include "wwaudio.h"
 #include "dlghelpscreen.h"
+#include "dlgsavegame.h"
+#include "dlgtechoptions.h"
 #include "crandom.h"
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 #include "slavemaster.h"
+#endif
 #include "string_ids.h"
 #include "translatedb.h"
 
@@ -101,6 +107,14 @@ EVAEncyclopediaMenuClass::~EVAEncyclopediaMenuClass (void)
 void
 EVAEncyclopediaMenuClass::On_Init_Dialog (void)
 {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+#if RENEGADE_VITA_M00_DEMO
+	Set_Dlg_Item_Text (IDC_MENU_MAIN_MENU_BUTTON, L"Exit Demo");
+#else
+	Set_Dlg_Item_Text (IDC_MENU_MAIN_MENU_BUTTON, L"Exit Game");
+#endif
+#endif
+
 	TabCtrlClass *tab_ctrl = (TabCtrlClass *)Get_Dlg_Item (IDC_GENERIC_TABCTRL);
 	if (tab_ctrl != NULL) {
 
@@ -214,6 +228,18 @@ EVAEncyclopediaMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			START_DIALOG (HelpScreenDialogClass);
 			break;
 
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		case IDC_MENU_OPTIONS_BUTTON:
+			START_DIALOG (TechOptionsMenuClass);
+			allow_default_processing = false;
+			break;
+
+		case IDC_MENU_SAVE_SP_GAME_BUTTON:
+			START_DIALOG (SaveGameMenuClass);
+			allow_default_processing = false;
+			break;
+#endif
+
 		case IDC_MENU_MAIN_MENU_BUTTON:
 			Prompt_User ();
 			allow_default_processing = false;
@@ -303,12 +329,26 @@ EVAEncyclopediaMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 void
 EVAEncyclopediaMenuClass::Exit_Game (void)
 {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	// The outer native owner tears down dialogs before releasing the world.
+	// Never unload Combat while an EVA callback still has world references.
+	extern void Stop_Main_Loop (int exit_code);
+	Stop_Main_Loop (0);
+	return;
+#endif
 	bool stop = false;
-	if (GameModeManager::Find("WOL")->Is_Active() || GameModeManager::Find("LAN")->Is_Active()) {
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	// Native single-player mode graphs need not register online providers.
+	// Keep the original dedicated-server decision when either provider exists.
+	GameModeClass *wol_mode = GameModeManager::Find("WOL");
+	GameModeClass *lan_mode = GameModeManager::Find("LAN");
+	if ((wol_mode != NULL && wol_mode->Is_Active()) ||
+		(lan_mode != NULL && lan_mode->Is_Active())) {
 		if (cNetwork::I_Am_Server() && The_Game() && The_Game()->IsDedicated.Is_True() && SlaveMaster.Am_I_Slave()) {
 			stop = true;
 		}
 	}
+#endif
 
 	//
 	//	Close the dialog

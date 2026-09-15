@@ -27,6 +27,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#if defined(__vita__)
+#include <psp2/kernel/processmgr.h>
+#endif
 
 LoadingScreenClass::LoadingScreenClass()
 {
@@ -42,6 +45,11 @@ LoadingScreenClass::LoadingScreenClass()
 	LoadPercentage = 0;
 	LoadPercentageDrawn = 0;
 	LoadPercentageRate = 0;
+	PresentationProgress = -1.0f;
+	LastPresentationUs = 0;
+	LoadPercentageClamp = 0;
+	LastLoadProgress = -1;
+	LastConsolePercent = -1;
 	StatusTextBuffer[0] = '\0';
 
 	FontCharsClass *font	= StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_TXT );
@@ -160,7 +168,7 @@ LoadingScreenClass::LoadingScreenClass()
 
 			backdrop.Set_Model(desc);
 			StringClass anim_name;
-			anim_name.Format( "%s.%s", desc, desc );
+			anim_name.Format( "%s.%s", static_cast<const char *>(desc), static_cast<const char *>(desc) );
 			backdrop.Set_Animation( anim_name );
 			backdrop.Set_Animation_Percentage( 0 );
 		}
@@ -238,13 +246,26 @@ void LoadingScreenClass::Update_Status_Text(void)
 	statusText.Draw_Sentence(0xFFFFFFFF);
 }
 
+void LoadingScreenClass::Set_Presentation_Progress(float progress)
+{
+	PresentationProgress = WWMath::Clamp(progress, 0.0f, 1.0f);
+}
+
 void LoadingScreenClass::Render(bool update_network)
 {
 	TimeManager::Update_Frame_Time();
-	LoadTime += TimeManager::Get_Frame_Seconds();
+	float presentation_seconds = TimeManager::Get_Frame_Seconds();
+#if defined(__vita__)
+	// Loading presentation must not stop when Combat's simulation clock pauses.
+	const unsigned long long now = sceKernelGetProcessTimeWide();
+	presentation_seconds = LastPresentationUs != 0 && now >= LastPresentationUs ?
+		WWMath::Clamp(float(now - LastPresentationUs) / 1000000.0f, 0.0f, 0.25f) : 0.0f;
+	LastPresentationUs = now;
+#endif
+	LoadTime += presentation_seconds;
 
-	static int last_count = -1;
-	static int _last_percent_drawn = -1;
+	int &last_count = LastLoadProgress;
+	int &_last_percent_drawn = LastConsolePercent;
 	if ( last_count != CombatManager::Get_Load_Progress() ) {
 		last_count = CombatManager::Get_Load_Progress();
 		Debug_Say(( " ****** Status Count %d at %f\n", last_count, LoadTime ));
@@ -253,15 +274,24 @@ void LoadingScreenClass::Render(bool update_network)
 		LoadPercentageClamp = Get_Predicted_Percentage( last_count+1 );
 	}
 
-	LoadPercentage += LoadPercentageRate * TimeManager::Get_Frame_Seconds();
+	LoadPercentage += LoadPercentageRate * presentation_seconds;
 	LoadPercentage = WWMath::Clamp( LoadPercentage, 0, LoadPercentageClamp );
 	if ( LoadPercentage > LoadPercentageDrawn ) {
 		LoadPercentageDrawn = LoadPercentage;
 	} else {
 		LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
 	}
+#if defined(__vita__)
+	// Native post-load texture and scene preparation owns the final ten percent.
+	const float predicted = LoadPercentageDrawn;
+	LoadPercentageDrawn = PresentationProgress >= 0.0f ?
+		PresentationProgress : predicted * 0.90f;
+#endif
 	backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
 	Update_Status_Text();
+#if defined(__vita__)
+	LoadPercentageDrawn = predicted;
+#endif
 	if (ConsoleBox.Is_Exclusive() && _last_percent_drawn != LoadPercentageDrawn) {
 		_last_percent_drawn = LoadPercentageDrawn;
 		ConsoleBox.Print("Load %d%% complete\r", (int)(LoadPercentageDrawn * 100.0f));
@@ -298,6 +328,13 @@ bool Commando_Original_Loading_Screen_Has_Backdrop_Model( void * screen )
 {
 	return screen != NULL &&
 		((LoadingScreenClass *)screen)->Has_Backdrop_Model();
+}
+
+void Commando_Set_Original_Loading_Progress(void *screen, float progress)
+{
+	if (screen != NULL) {
+		((LoadingScreenClass *)screen)->Set_Presentation_Progress(progress);
+	}
 }
 
 void Commando_Destroy_Original_Loading_Screen( void * screen )

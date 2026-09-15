@@ -238,6 +238,9 @@ MenuEntryCtrlClass::On_Mouse_Wheel (int direction)
 void
 MenuEntryCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 {
+#if RENEGADE_VITA_M00_DEMO
+	if (!Is_Enabled()) return;
+#endif
 	Set_Capture ();
 
 	//
@@ -293,6 +296,9 @@ MenuEntryCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 void
 MenuEntryCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 {
+#if RENEGADE_VITA_M00_DEMO
+	if (!Is_Enabled()) return;
+#endif
 	//
 	//	Force focus onto the control
 	//
@@ -314,6 +320,9 @@ MenuEntryCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 void
 MenuEntryCtrlClass::Set_State (int new_state)
 {
+#if RENEGADE_VITA_M00_DEMO
+	if (!Is_Enabled() && new_state != UP) return;
+#endif
 	if (new_state != CurrState) {
 		
 		//
@@ -587,7 +596,7 @@ MenuEntryCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	//
 	//	Change the mouse cursor if necessary
 	//
-	if (Rect.Contains (mouse_pos)) {
+	if (Is_Enabled() && Rect.Contains (mouse_pos)) {
 		MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ACTION);
 	} else {
 		MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ARROW);
@@ -680,6 +689,9 @@ MenuEntryCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 bool
 MenuEntryCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 {
+#if RENEGADE_VITA_M00_DEMO
+	if (!Is_Enabled()) return true;
+#endif
 	bool handled = true;
 
 	switch (key_id)
@@ -696,6 +708,12 @@ MenuEntryCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 			//	Set the focus to the previous control in our group
 			//
 			DialogControlClass *control = Parent->Find_Next_Group_Control (this, -1);
+#if RENEGADE_VITA_M00_DEMO
+			while (control != NULL && control != this &&
+				(!control->Is_Enabled() || !control->Is_Visible())) {
+				control = Parent->Find_Next_Group_Control(control, -1);
+			}
+#endif
 			if (control != NULL) {
 				control->Set_Focus ();
 			}
@@ -709,6 +727,12 @@ MenuEntryCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 			//	Set the focus to the next control in our group
 			//
 			DialogControlClass *control = Parent->Find_Next_Group_Control (this, 1);
+#if RENEGADE_VITA_M00_DEMO
+			while (control != NULL && control != this &&
+				(!control->Is_Enabled() || !control->Is_Visible())) {
+				control = Parent->Find_Next_Group_Control(control, 1);
+			}
+#endif
 			if (control != NULL) {
 				control->Set_Focus ();
 			}
@@ -745,6 +769,9 @@ MenuEntryCtrlClass::On_Key_Up (uint32 key_id)
 void
 MenuEntryCtrlClass::On_Pushed (void)
 {
+#if RENEGADE_VITA_M00_DEMO
+	if (!Is_Enabled()) return;
+#endif
 	Parent->On_Command (ID, BN_CLICKED, 0);
 	return ;
 }

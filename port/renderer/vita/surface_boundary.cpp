@@ -189,7 +189,10 @@ void SurfaceClass::Copy(unsigned int dstx, unsigned int dsty, unsigned int srcx,
 	SurfaceDescription source = {};
 	Get_Description(destination);
 	const_cast<SurfaceClass *>(other)->Get_Description(source);
-	if (destination.Format != source.Format || dstx >= destination.Width ||
+	const bool convert_argb = destination.Format == WW3D_FORMAT_A4R4G4B4 &&
+		(source.Format == WW3D_FORMAT_A8R8G8B8 || source.Format == WW3D_FORMAT_X8R8G8B8);
+	if ((destination.Format != source.Format && !convert_argb) ||
+		dstx >= destination.Width ||
 		dsty >= destination.Height || srcx >= source.Width || srcy >= source.Height) return;
 	width = (width < destination.Width - dstx) ? width : destination.Width - dstx;
 	width = (width < source.Width - srcx) ? width : source.Width - srcx;
@@ -207,6 +210,20 @@ void SurfaceClass::Copy(unsigned int dstx, unsigned int dsty, unsigned int srcx,
 		return;
 	}
 	for (unsigned y = 0U; y < height; ++y) {
+		if (convert_argb) {
+			const unsigned char *src = source_pixels +
+				static_cast<size_t>(srcy + y) * source_pitch + static_cast<size_t>(srcx) * 4U;
+			unsigned char *dst = destination_pixels +
+				static_cast<size_t>(dsty + y) * destination_pitch + static_cast<size_t>(dstx) * 2U;
+			for (unsigned x = 0U; x < width; ++x) {
+				const unsigned char alpha = source.Format == WW3D_FORMAT_X8R8G8B8 ? 255U : src[3];
+				dst[0] = static_cast<unsigned char>((src[0] >> 4U) | (src[1] & 0xf0U));
+				dst[1] = static_cast<unsigned char>((src[2] >> 4U) | (alpha & 0xf0U));
+				src += 4U;
+				dst += 2U;
+			}
+			continue;
+		}
 		memmove(destination_pixels + static_cast<size_t>(dsty + y) * destination_pitch +
 			static_cast<size_t>(dstx) * bytes_per_pixel,
 			source_pixels + static_cast<size_t>(srcy + y) * source_pitch +

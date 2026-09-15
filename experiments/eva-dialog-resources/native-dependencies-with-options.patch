@@ -1,0 +1,160 @@
+--- a/dlgevaencyclopedia.h
++++ b/dlgevaencyclopedia.h
+@@ -43,7 +43,7 @@
+ 
+ #include "menudialog.h"
+ #include "resource.h"
+-#include "dlgmessagebox.h"
++#include "DlgMessageBox.h"
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+--- a/dlgevaencyclopedia.cpp
++++ b/dlgevaencyclopedia.cpp
+@@ -46,7 +46,9 @@
+ #include "dlgevabuildingstab.h"
+ #include "cnetwork.h"
+ #include "gamemode.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "wolgmode.h"
++#endif
+ #include "dialogmgr.h"
+ #include "gameinitmgr.h"
+ #include "gametype.h"
+@@ -54,9 +56,13 @@
+ #include "changeteamevent.h"
+ #include "cstextobj.h"
+ #include "wwaudio.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlghelpscreen.h"
++#endif
+ #include "crandom.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "slavemaster.h"
++#endif
+ #include "string_ids.h"
+ #include "translatedb.h"
+ 
+@@ -101,6 +107,21 @@
+ void
+ EVAEncyclopediaMenuClass::On_Init_Dialog (void)
+ {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	// Keep the unavailable desktop help entry visible but noninteractive.
++	if (Get_Dlg_Item (IDC_HELP_BUTTON) != NULL) Get_Dlg_Item (IDC_HELP_BUTTON)->Enable (false);
++	// Loading another world from this callback is not a native pause operation.
++	if (Get_Dlg_Item (IDC_MENU_LOAD_SP_GAME_BUTTON) != NULL) Get_Dlg_Item (IDC_MENU_LOAD_SP_GAME_BUTTON)->Enable (false);
++	if (Get_Dlg_Item (IDC_MENU_SAVE_SP_GAME_BUTTON) != NULL) Get_Dlg_Item (IDC_MENU_SAVE_SP_GAME_BUTTON)->Enable (false);
++#if RENEGADE_VITA_M00_DEMO
++	// Keep unsupported demo options visible without opening an absent dialog.
++	if (Get_Dlg_Item (IDC_MENU_OPTIONS_BUTTON) != NULL) Get_Dlg_Item (IDC_MENU_OPTIONS_BUTTON)->Enable (false);
++	Set_Dlg_Item_Text (IDC_MENU_MAIN_MENU_BUTTON, L"Exit Demo");
++#else
++	Set_Dlg_Item_Text (IDC_MENU_MAIN_MENU_BUTTON, L"Exit Game");
++#endif
++#endif
++
+ 	TabCtrlClass *tab_ctrl = (TabCtrlClass *)Get_Dlg_Item (IDC_GENERIC_TABCTRL);
+ 	if (tab_ctrl != NULL) {
+ 
+@@ -207,11 +228,21 @@
+ EVAEncyclopediaMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
+ {
+ 	bool allow_default_processing = true;
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	// This source selection does not provide the desktop help presenter.
++	if (ctrl_id == IDC_HELP_BUTTON) return;
++#if RENEGADE_VITA_M00_DEMO
++	if (ctrl_id == IDC_MENU_OPTIONS_BUTTON) return;
++#endif
++	if (ctrl_id == IDC_MENU_LOAD_SP_GAME_BUTTON || ctrl_id == IDC_MENU_SAVE_SP_GAME_BUTTON) return;
++#endif
+ 
+ 	switch (ctrl_id)
+ 	{
+ 		case IDC_HELP_BUTTON:
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 			START_DIALOG (HelpScreenDialogClass);
++#endif
+ 			break;
+ 
+ 		case IDC_MENU_MAIN_MENU_BUTTON:
+@@ -303,7 +334,15 @@
+ void
+ EVAEncyclopediaMenuClass::Exit_Game (void)
+ {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	// The outer native owner tears down dialogs before releasing the world.
++	// Never unload Combat while an EVA callback still has world references.
++	extern void Stop_Main_Loop (int exit_code);
++	Stop_Main_Loop (0);
++	return;
++#endif
+ 	bool stop = false;
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 	// Native single-player mode graphs need not register online providers.
+ 	// Keep the original dedicated-server decision when either provider exists.
+ 	GameModeClass *wol_mode = GameModeManager::Find("WOL");
+@@ -314,6 +353,7 @@
+ 			stop = true;
+ 		}
+ 	}
++#endif
+ 
+ 	//
+ 	//	Close the dialog
+--- a/dlgevamaptab.cpp
++++ b/dlgevamaptab.cpp
+@@ -231,6 +231,11 @@
+ 	const Vector3 &	position
+ )
+ {
++#if RENEGADE_VITA_M00_DEMO
++	// Public demo navigation must not bypass original tutorial triggers.
++	return;
++#endif
++
+ 	float start_z	= 1000;
+ 	float end_z		= -1000;
+ 
+--- a/dlgevaviewertab.cpp
++++ b/dlgevaviewertab.cpp
+@@ -107,7 +107,9 @@
+ 			//
+ 			int item_index = ListCtrl->Insert_Entry (index, object.Get_Name ());
+ 			if (item_index >= 0) {
+-				ListCtrl->Set_Entry_Data (item_index, 0, (uint32)&object);
++				// Entry data is 32-bit on both hosts and Vita. Original vector
++				// indices survive list sorting without truncating a host pointer.
++				ListCtrl->Set_Entry_Data (item_index, 0, (uint32)index);
+ 
+ 				//
+ 				//	Colorize the entry
+@@ -294,7 +296,9 @@
+ 		//
+ 		//	Load the data for this selection
+ 		//
+-		EvaViewerObjectClass *object = (EvaViewerObjectClass *)ListCtrl->Get_Entry_Data (entry_index, 0);
++		const uint32 object_index = ListCtrl->Get_Entry_Data (entry_index, 0);
++		if (object_index >= (uint32)ObjectList.Count()) return;
++		EvaViewerObjectClass *object = &ObjectList[(int)object_index];
+ 		name			= object->Get_Name ();
+ 		description	= object->Get_Description ();
+ 		affiliation = object->Get_Affiliation ();
+@@ -457,8 +461,14 @@
+ 	//
+ 	//	Lookup the data associated with these entries
+ 	//
+-	EvaViewerObjectClass *object1 = (EvaViewerObjectClass *)list_ctrl->Get_Entry_Data (item_index1, 0);
+-	EvaViewerObjectClass *object2 = (EvaViewerObjectClass *)list_ctrl->Get_Entry_Data (item_index2, 0);
++	// Sorting is static; obtain the original tab owner through its control.
++	EvaViewerTabClass *owner = (EvaViewerTabClass *)list_ctrl->Peek_Parent();
++	const uint32 index1 = list_ctrl->Get_Entry_Data(item_index1, 0);
++	const uint32 index2 = list_ctrl->Get_Entry_Data(item_index2, 0);
++	if (owner == NULL || index1 >= (uint32)owner->ObjectList.Count() ||
++		index2 >= (uint32)owner->ObjectList.Count()) return 0;
++	EvaViewerObjectClass *object1 = &owner->ObjectList[(int)index1];
++	EvaViewerObjectClass *object2 = &owner->ObjectList[(int)index2];
+ 
+ 	int player_type1 = object1->Get_Player_Type ();
+ 	int player_type2 = object2->Get_Player_Type ();

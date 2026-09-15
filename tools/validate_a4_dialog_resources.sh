@@ -19,6 +19,7 @@ cmake --build "$rv_host_build" --target a4_dialog_resource_contract_selftest --p
 python3 "$rv_root/tools/generate_wwui_dialog_templates.py" \
 	--rc "$rv_root/upstream/CnC_Renegade/Code/Commando/chat.rc" \
 	--resource-h "$rv_root/upstream/CnC_Renegade/Code/Commando/resource.h" \
+	--dialog-resource-h "$rv_root/upstream/CnC_Renegade/Code/Commando/dialogresource.h" \
 	--out "$rv_generated"
 
 /usr/local/vitasdk/bin/arm-vita-eabi-g++ -std=gnu++17 -fshort-wchar \

@@ -54,7 +54,7 @@ void SaveLoadStatus::Set_Status_Text(const char* text,int id)
 		if (id==0) status_text[1]="";
 	}
 #if defined(__vita__)
-	Vita_Notify_Loading_Status_Change(text, status_count);
+	Vita_Notify_Loading_Status_Change(text, -1);
 #endif
 }
 
@@ -74,7 +74,7 @@ void	SaveLoadStatus::Inc_Status_Count( void )
 {
 	status_count++;
 #if defined(__vita__)
-	Vita_Notify_Loading_Status_Change("saveload-status-count", status_count);
+	Vita_Notify_Loading_Status_Change("saveload-status-count", -1);
 #endif
 }
 

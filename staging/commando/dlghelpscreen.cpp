@@ -54,6 +54,7 @@
 #include "menubackdrop.h"
 #include "gameinitmgr.h"
 #include "input.h"
+#include "renegade_vita_control_labels.h"
 
 ////////////////////////////////////////////////////////////////
 //
@@ -113,7 +114,11 @@ HelpScreenDialogClass::On_Init_Dialog (void)
 	for ( int i = 0; i < KEY_TABLE_SIZE; i++ ) {
 		int key = Input::Get_Primary_Key_For_Function( key_table[i][1] );
 		WideStringClass wstr(0,true);
+		#if defined(RENEGADE_VITA_PORT)
+		wstr = Renegade_Vita_Control_Label(key_table[i][1]);
+#else
 		Input::Get_Translated_Key_Name( key, wstr );
+#endif
 		Set_Dlg_Item_Text( key_table[i][0], wstr );
 	}
 
@@ -133,7 +138,9 @@ HelpScreenDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	{
 		case IDOK:
 		case IDCANCEL:
+#if !defined(RENEGADE_VITA_PORT)
 			GameInitMgrClass::Continue_Game ();
+#endif
 			break;
 	}
 
@@ -230,7 +237,11 @@ HelpScreenDialogClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	{
 		case VK_RETURN:
 		case VK_F1:
+#if !defined(RENEGADE_VITA_PORT)
 			GameInitMgrClass::Continue_Game ();
+#else
+			retval = MenuDialogClass::On_Key_Down (key_id, key_data);
+#endif
 			break;
 
 		default:

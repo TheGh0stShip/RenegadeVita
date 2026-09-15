@@ -36,7 +36,7 @@ struct A30VitaWorldRenderResult
 ** a crash or power-cycle on physical hardware.
 */
 int A30_Vita_Log_Reset();
-int A30_Vita_Log(const char *format, ...);
+int A30_Vita_Log(const char *format, ...) __attribute__((format(printf, 1, 2)));
 
 /*
 ** Bounded, candidate-only flight recorder for the original static-object

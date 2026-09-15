@@ -1,0 +1,23 @@
+--- a/tools/generate_wwui_dialog_templates.py
++++ b/tools/generate_wwui_dialog_templates.py
+@@ -5,3 +5,4 @@
+-IDS = {128,130,131,255,256}
++# Original EVA shell and all seven child tabs must travel together.
++IDS = {128,130,131,255,256} | set(range(146,154))
+ FLAGS = {'DS_MODALFRAME':0x80,'DS_SETFONT':0x40,'WS_POPUP':0x80000000,'WS_CAPTION':0x00C00000,'WS_GROUP':0x20000,'WS_TABSTOP':0x10000,
+  'BS_PUSHBUTTON':0,'BS_DEFPUSHBUTTON':1,'BS_CHECKBOX':2,'BS_AUTOCHECKBOX':3,'BS_OWNERDRAW':0xB,'BS_LEFT':0x100,'BS_CENTER':0x300,'BS_FLAT':0x8000,
+@@ -8,2 +9,6 @@
+  'SS_LEFT':0,'SS_CENTER':1,'SS_RIGHT':2,'SS_BITMAP':0xE,'ES_MULTILINE':4,'ES_AUTOVSCROLL':0x40,'LBS_NOTIFY':1}
++FLAGS.update({'WS_SYSMENU':0x80000,'WS_BORDER':0x800000,
++ 'SS_CENTERIMAGE':0x200,'SS_LEFTNOWORDWRAP':0xC,
++ 'ES_AUTOHSCROLL':0x80,'LVS_REPORT':1,'LVS_NOCOLUMNHEADER':0x4000})
++CAPTIONLESS = {'EDITTEXT','LISTBOX','COMBOBOX','SCROLLBAR'}
+ CLASS = {'PUSHBUTTON':0x80,'DEFPUSHBUTTON':0x80,'CHECKBOX':0x80,'AUTOCHECKBOX':0x80,'LTEXT':0x82,'CTEXT':0x82,'RTEXT':0x82,'GROUPBOX':0x82,'EDITTEXT':0x81,'LISTBOX':0x83,'COMBOBOX':0x85,'SCROLLBAR':0x84}
+@@ -51,2 +56,7 @@
+   cls={'BUTTON':0x80,'STATIC':0x82,'EDIT':0x81,'COMBOBOX':0x85}.get(cname.upper()); cfield=ordinal(cls) if cls else field(cname)
++ elif kind in CAPTIONLESS:
++  ident=val(parts[1],d)
++  coords=[val(x,d) for x in parts[2:6]]
++  style=val(','.join(parts[6:]),d) if len(parts)>6 else 0
++  cfield=ordinal(cls)
+  else:

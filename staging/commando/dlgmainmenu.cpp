@@ -221,6 +221,16 @@ void
 MainMenuDialogClass::On_Init_Dialog (void)
 {
 	Update_Version_Number ();
+#if RENEGADE_VITA_M00_DEMO
+	const int unavailable[] = {
+		IDC_MENU_MP_INTERNET_GAME_BUTTON, IDC_MENU_MP_LAN_GAME_BUTTON,
+		IDC_MENU_START_PRACTICE_GAME_BUTTON, IDC_MENU_OPTIONS_BUTTON
+	};
+	for (unsigned i = 0; i < sizeof(unavailable) / sizeof(unavailable[0]); ++i) {
+		DialogControlClass *control = Get_Dlg_Item(unavailable[i]);
+		if (control != NULL) control->Enable(false);
+	}
+#endif
 
 #if defined(BETACLIENT) || defined(FREEDEDICATEDSERVER) || defined(MULTIPLAYERDEMO)
 	Get_Dlg_Item(IDC_MENU_START_SP_GAME_BUTTON)->Enable(false);
@@ -431,6 +441,13 @@ void
 MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 {
 	bool allow_default = true;
+#if RENEGADE_VITA_M00_DEMO
+	// Also reject direct commands; disabling presentation alone is not a gate.
+	if (ctrl_id == IDC_MENU_MP_INTERNET_GAME_BUTTON ||
+		ctrl_id == IDC_MENU_MP_LAN_GAME_BUTTON ||
+		ctrl_id == IDC_MENU_START_PRACTICE_GAME_BUTTON ||
+		ctrl_id == IDC_MENU_OPTIONS_BUTTON) return;
+#endif
 
 	switch (ctrl_id)
 	{

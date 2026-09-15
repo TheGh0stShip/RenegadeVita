@@ -3,17 +3,18 @@
 ## Goal
 
 Make the native Renegade Vita port scale from the current M00 tutorial path to
-larger campaign scenes without turning into a 20-30 FPS title. The target is
-60 FPS when the scene is light enough, a preferred floor of 50 FPS, a degraded
-but still playable 30-49 FPS band, and a critical failure band below 30 FPS.
+larger campaign scenes without turning into a 20-30 FPS title. The user's
+target is 60 FPS or better throughout the representative playable route.
+50/30/20 FPS bands are diagnostic severity bands, not alternate acceptance
+targets. Prewarm and synthetic call-count improvements do not establish FPS.
 
 Frame-time gates:
 
 | Band | Frame budget | Interpretation |
 | --- | ---: | --- |
-| 60 FPS target | 16.667 ms | Top-end target for stable light/medium scenes |
-| 50 FPS preferred floor | 20.000 ms | Below this the run is already regressing |
-| 30 FPS degraded floor | 33.333 ms | Playable only as a degraded fallback |
+| 60 FPS target | 16.667 ms | User's target for the representative route |
+| 50 FPS diagnostic band | 20.000 ms | Below target; investigate frame-time cost |
+| 30 FPS diagnostic band | 33.333 ms | Severely below target; not acceptance |
 | 20 FPS critical floor | 50.000 ms | Treat as unacceptable for gameplay |
 
 No performance gain is accepted without a fixed content hash, replay/camera

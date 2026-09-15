@@ -1,0 +1,12 @@
+--- a/texture.cpp
++++ b/texture.cpp
+@@ -354,3 +354,6 @@
+-	DX8_ErrorCode(surface->GetDesc(&d3d_desc));
+-	Width=d3d_desc.Width;
+-	Height=d3d_desc.Height;
++	DX8_ErrorCode(surface->GetDesc(&d3d_desc));
++	// GetSurfaceLevel returns a temporary owned reference. D3DTexture already
++	// has its own reference above; retain only that long-lived texture owner.
++	surface->Release();
++	Width=d3d_desc.Width;
++	Height=d3d_desc.Height;

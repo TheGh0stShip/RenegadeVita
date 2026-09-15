@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <initializer_list>
 
 namespace {
 
@@ -51,6 +52,14 @@ int main()
 
 	const RenegadePathRoots roots = {root, root, root, root};
 	Renegade_Set_Find_Roots(roots);
+	uint64_t available = 0;
+	Check(Renegade_Get_User_Free_Space(available) && available > 0,
+		"save volume reports actual free bytes", checks, failures);
+	Renegade_Set_Find_Roots({root, "/path/that/does/not/exist", root, root});
+	available = UINT64_MAX;
+	Check(!Renegade_Get_User_Free_Space(available) && available == 0,
+		"missing save volume fails closed", checks, failures);
+	Renegade_Set_Find_Roots(roots);
 	WIN32_FIND_DATA entry = {};
 	HANDLE handle = FindFirstFile("data\\skirmish*.mix", &entry);
 	Check(handle != INVALID_HANDLE_VALUE && strcmp(entry.cFileName, "SKIRMISH01.MIX") == 0,
@@ -68,6 +77,27 @@ int main()
 		"no-match rejection", checks, failures);
 	Check(FindFirstFile("Data\\..\\*.mix", &entry) == INVALID_HANDLE_VALUE,
 		"traversal rejection", checks, failures);
+	char save_dir[512], save_file[512];
+	snprintf(save_dir, sizeof(save_dir), "%s/save", root);
+	snprintf(save_file, sizeof(save_file), "%s/save/SLOT01.SAV", root);
+	Check(mkdir(save_dir, 0700) == 0 && Write_File(save_file),
+		"original save fixture", checks, failures);
+	handle = FindFirstFile("data\\save\\*.sav", &entry);
+	Check(handle != INVALID_HANDLE_VALUE && strcmp(entry.cFileName, "SLOT01.SAV") == 0,
+		"original save menu enumeration resolves user volume", checks, failures);
+	Check(FindClose(handle) != 0, "close save enumeration", checks, failures);
+	for (const char *name : {"slot01.sav", "save/slot01.sav", "Data\\Save\\slot01.sav"}) {
+		const RenegadeResolvedPath resolved = Renegade_Resolve_Path(roots, name, RENEGADE_PATH_READ);
+		Check(resolved.success && resolved.writable_namespace && strcmp(resolved.physical, save_file) == 0,
+			"original save description and reload resolve the same user file", checks, failures);
+	}
+	Check(!Renegade_Delete_User_Save("data/SKIRMISH01.MIX"),
+		"save deletion cannot remove retail content", checks, failures);
+	Check(!Renegade_Delete_User_Save("save/../Data/SKIRMISH01.MIX"),
+		"save deletion rejects traversal", checks, failures);
+	Check(Renegade_Delete_User_Save("Data\\Save\\slot01.sav") && access(save_file, F_OK) != 0,
+		"original save deletion uses the enumerated user file", checks, failures);
+	rmdir(save_dir);
 
 	remove(skirmish);
 	remove(city);

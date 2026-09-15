@@ -1,0 +1,25 @@
+--- a/mixfile.cpp
++++ b/mixfile.cpp
+@@ -149,3 +149,4 @@
+-	} else {
+-		WWDEBUG_SAY(( "MixFileFactory( %s ) FAILED\n", mix_filename ));
+-	}
++	} else {
++		WWDEBUG_SAY(( "MixFileFactory( %s ) FAILED\n", mix_filename ));
++		if (file != NULL) factory->Return_File(file);
++	}
+@@ -222,7 +223,7 @@
+-		//
+-		//	Close the file
+-		//
+-		Factory->Return_File( file );
+-	}
+-
+-	return retval;
++	}
++
++	// Balance Get_File even when the archive could not be opened. The original
++	// factory owns close/destruction for both successful and failed opens.
++	if (file != NULL) Factory->Return_File(file);
++
++	return retval;

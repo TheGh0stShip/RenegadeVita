@@ -1,0 +1,60 @@
+--- a/dialogbase.cpp
++++ b/dialogbase.cpp
+@@ -1013,13 +1013,23 @@
+ 	if (key_id == VK_ESCAPE) {
+ 		On_Command (IDCANCEL, 0, 0);
+ 		handled = true;
+-	} else if (key_id == VK_TAB) {
++	} else if (key_id == VK_TAB
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		|| (input_capture == NULL && input != NULL && input->As_ButtonCtrlClass() != NULL &&
++			(key_id == VK_UP || key_id == VK_DOWN || key_id == VK_LEFT || key_id == VK_RIGHT))
++#endif
++	) {
+ 
+ 		//
+ 		//	Determine whether to go forward or backward through the controls
+ 		//
+ 		int inc = 1;
+-		if ((DialogMgrClass::Get_VKey_State (VK_SHIFT) & VKEY_PRESSED) == VKEY_PRESSED) {
++		if ((key_id == VK_TAB &&
++			(DialogMgrClass::Get_VKey_State (VK_SHIFT) & VKEY_PRESSED) == VKEY_PRESSED)
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++			|| key_id == VK_UP || key_id == VK_LEFT
++#endif
++		) {
+ 			inc = -1;
+ 		}
+ 
+@@ -1129,6 +1139,25 @@
+ 	int						direction
+ )
+ {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	// Retain the original control order and focus owner. Walk it once even
++	// across the end, and never focus a disabled, hidden or static control.
++	CONTROL_LIST control_list;
++	Build_Control_List(control_list);
++	const int count = control_list.Count();
++	const int inc = direction < 0 ? -1 : 1;
++	int index = control_list.ID(control);
++	if (index < 0) index = inc > 0 ? -1 : 0;
++	for (int visited = 0; visited < count; ++visited) {
++		index += inc;
++		if (index >= count) index = 0;
++		if (index < 0) index = count - 1;
++		DialogControlClass *candidate = control_list[index];
++		if (candidate->Wants_Focus() && candidate->Is_Enabled() && candidate->Is_Visible())
++			return candidate;
++	}
++	return NULL;
++#else
+ 	DialogControlClass *retval = NULL;
+ 
+ 	//
+@@ -1176,6 +1205,7 @@
+ 	}
+ 
+ 	return retval;
++#endif
+ }

@@ -1,0 +1,33 @@
+--- a/mixfile.cpp
++++ b/mixfile.cpp
+@@ -114,3 +114,10 @@
+-		if ( IsValid ) {
+-			IsValid = (::memcmp( header.signature, "MIX1", sizeof ( header.signature ) ) == 0);
+-		}
++		const int archive_size = file->Size();
++		if ( IsValid ) {
++			IsValid = (::memcmp( header.signature, "MIX1", sizeof ( header.signature ) ) == 0);
++			// Validate signed offsets before seeks or count-derived allocation.
++			IsValid = IsValid && archive_size >= static_cast<int>(sizeof(header)) &&
++				header.header_offset >= static_cast<int>(sizeof(header)) &&
++				header.header_offset <= archive_size - static_cast<int>(sizeof(FileCount)) &&
++				header.names_offset >= static_cast<int>(sizeof(header)) &&
++				header.names_offset <= archive_size - static_cast<int>(sizeof(int));
++		}
+@@ -132,5 +139,11 @@
+-		if ( IsValid ) {
+-			FileInfo.Resize( FileCount );
+-			int size = FileCount * sizeof( FileInfoStruct );
+-			IsValid = ( file->Read( &FileInfo[0], size ) == size );
+-		}
++		if ( IsValid ) {
++			const int available = archive_size - header.header_offset -
++				static_cast<int>(sizeof(FileCount));
++			IsValid = FileCount >= 0 &&
++				FileCount <= available / static_cast<int>(sizeof(FileInfoStruct));
++			if (IsValid && FileCount != 0) {
++				FileInfo.Resize( FileCount );
++				const int size = FileCount * static_cast<int>(sizeof(FileInfoStruct));
++				IsValid = ( file->Read( &FileInfo[0], size ) == size );
++			}
++		}

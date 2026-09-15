@@ -1,0 +1,17 @@
+--- a/dlgevaviewertab.cpp
++++ b/dlgevaviewertab.cpp
+@@ -127,6 +127,14 @@
+ 		}
+ 	}
+ 
++#if defined(__vita__)
++	// Bounded per-dialog evidence: distinguish missing INI content from
++	// correctly hidden entries in an older save's discovery state.
++	extern int A30_Vita_Log(const char *format, ...);
++	A30_Vita_Log("A3.5 EVA viewer: ini=%s type=%d objects=%d revealed=%d\n",
++		INIFilename.Peek_Buffer(), (int)EncyclopediaType, ObjectList.Count(), total_obj_count);
++#endif
++
+ 	//
+ 	//	Now, sort the players by rank
+ 	//

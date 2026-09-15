@@ -1,0 +1,20 @@
+--- a/tools/host_a30_definitions/dialog_resource_provider_main.cpp
++++ b/tools/host_a30_definitions/dialog_resource_provider_main.cpp
+@@ -77,6 +77,17 @@
+ 		if (!Need(U16(dialog + 14) == 400 && U16(dialog + 16) == 300,
+ 			"canonical frontend dialog 400x300")) return 1;
+ 	}
++	for (uint16_t id = 146; id <= 153; ++id) {
++		size_t template_bytes = 0;
++		const unsigned char *dialog = RenegadeDialogResources::Find_Dialog(id, &template_bytes);
++		if (!Need(dialog != NULL, "original EVA shell/child resource") ||
++			!Need(Template(dialog, template_bytes), "original EVA template walk") ||
++			!Need(SourceFont(dialog, template_bytes), "original EVA font") ||
++			!Need(U16(dialog + 8) > 0, "original EVA controls present") ||
++			!Need(U16(dialog + 14) == (id == 153 ? 400 : 265) &&
++				U16(dialog + 16) == (id == 153 ? 300 : 205), "original EVA dimensions")) return 1;
++		if (id == 153 && !Need(U16(dialog + 8) == 10, "original EVA shell control count")) return 1;
++	}
+ 	const unsigned char *splash = RenegadeDialogResources::Find_Dialog(255, &bytes);
+ 	HRSRC handle = FindResource(NULL, MAKEINTRESOURCE(128), RT_DIALOG);
+ 	if (!Need(splash != NULL, "splash source record") ||

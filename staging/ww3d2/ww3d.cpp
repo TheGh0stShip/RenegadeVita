@@ -270,6 +270,8 @@ WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 	Lite = lite;
 
 #if defined(RENEGADE_VITA_PORT)
+	// CPU surfaces and font atlases still require the original format table.
+	Init_D3D_To_WW3_Conversion();
 	(void)defaultpal;
 	DefaultStaticSortLists = new RefRenderObjListClass[MAX_SORT_LEVEL + 1];
 	Reset_Current_Static_Sort_Lists_To_Default();

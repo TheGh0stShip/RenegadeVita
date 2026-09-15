@@ -123,13 +123,17 @@ inline float DlgConfigVideoTabClass::Gamma_Scale (int level)
 
 inline void	DlgConfigVideoTabClass::Update_Gamma()
 {
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	DX8Wrapper::Set_Gamma (Gamma_Scale (GammaLevel), Gamma_Scale (BrightnessLevel), Gamma_Scale (ContrastLevel), true, false);
+#endif
 }
 
 
 inline void	DlgConfigVideoTabClass::Update_Gamma (int g, int b, int c)
 {
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	DX8Wrapper::Set_Gamma (Gamma_Scale (g), Gamma_Scale (b), Gamma_Scale (c), true, false);
+#endif
 }
 
 

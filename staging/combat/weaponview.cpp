@@ -113,7 +113,6 @@ static	void		Release_Weapon_Assets( void );
 
 #if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
 static int g_vita_last_logged_weapon_view_state = -2;
-static const float kVitaReloadViewSeconds = 0.80f;
 
 static const char *Vita_Weapon_View_State_Name(int state)
 {
@@ -392,12 +391,6 @@ void 	WeaponViewClass::Think()
 				ReloadAnimationPending && ReloadAnimationWeapon == star_weapon;
 			if ( star_weapon->Is_Reloading() || reload_pending ) {
 				new_weapon_state = WEAPON_STATE_RELOAD;
-#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
-				if ( reload_pending ) {
-					is_current_complete = true;
-					ForceFireLoop = false;
-				}
-#endif
 			} else if ( star_weapon->Is_Firing() ) {
 				if ( WeaponState == WEAPON_STATE_FIRE ) {
 					ForceFireLoop = true;
@@ -435,8 +428,8 @@ void 	WeaponViewClass::Think()
 	}
 
 #if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
-	if (new_weapon_state != g_vita_last_logged_weapon_view_state ||
-		new_weapon_state == WEAPON_STATE_RELOAD) {
+	// Log state transitions once, including reload entry and exit.
+	if (new_weapon_state != g_vita_last_logged_weapon_view_state) {
 		A30_Vita_Log("A3.5 weapon view: state candidate current=%s new=%s weapon=%s model=%s first_person=%d reload=%d firing=%d complete=%d enabled=%d\n",
 			Vita_Weapon_View_State_Name(WeaponState),
 			Vita_Weapon_View_State_Name(new_weapon_state),
@@ -581,16 +574,8 @@ void 	WeaponViewClass::Think()
 				}
 #endif
 				if (WeaponState == WEAPON_STATE_RELOAD) {
-#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
-					if (!ReloadAnimationPending || ReloadAnimationWeapon != weapon) {
-						ReloadAnimationPending = true;
-						ReloadAnimationWeapon = weapon;
-						ReloadAnimationViewTimer = 0.0f;
-					}
-#else
 					ReloadAnimationPending = false;
 					ReloadAnimationWeapon = NULL;
-#endif
 				}
 
 //				if ( HandsAnims[ WeaponState ] != NULL ) {
@@ -633,31 +618,6 @@ void 	WeaponViewClass::Think()
 		tm.Rotate_Y( DEG_TO_RADF(90.0) );
 
 		Vector3	fp_offset = HandsOffset + COMBAT_CAMERA->Get_First_Person_Offset_Tweak();
-#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
-		if (WeaponState == WEAPON_STATE_RELOAD) {
-			const float phase = WWMath::Clamp(ReloadAnimationViewTimer / kVitaReloadViewSeconds, 0.0f, 1.0f);
-			const float curve = WWMath::Sin(phase * WWMATH_PI);
-			fp_offset += Vector3(-0.14f * curve, -0.05f * curve, -0.14f * curve);
-			tm.Rotate_Z(DEG_TO_RADF(-18.0f * curve));
-			tm.Rotate_X(DEG_TO_RADF(7.0f * curve));
-		}
-#endif
-		if (WeaponState == WEAPON_STATE_RELOAD) {
-			ReloadAnimationViewTimer += TimeManager::Get_Frame_Seconds();
-#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
-			if (ReloadAnimationPending &&
-				ReloadAnimationWeapon == weapon &&
-				ReloadAnimationViewTimer >= kVitaReloadViewSeconds &&
-				(weapon == NULL || !weapon->Is_Reloading())) {
-				A30_Vita_Log("A3.5 weapon view: visible reload fallback complete weapon=%s timer=%.3f\n",
-					Vita_Safe_Weapon_Name(weapon),
-					static_cast<double>(ReloadAnimationViewTimer));
-				ReloadAnimationPending = false;
-				ReloadAnimationWeapon = NULL;
-				ReloadAnimationViewTimer = 0.0f;
-			}
-#endif
-		}
 		tm.Translate( fp_offset );
 
 		//WWASSERT(COMBAT_STAR != NULL);//TSS
@@ -835,7 +795,9 @@ static void	Aquire_Weapon_Assets( const WeaponClass * weapon )
 
 			// Get Weapon Anims, use the idle anim for enter and exit
 			int state = ( i >= WEAPON_STATE_ENTER ) ? WEAPON_STATE_IDLE : i;
-			anim_name.Format( "%s.F_GA_%s_%s", weapon_htree_name, weapon_name, WeaponActionNames[state] );
+			// Non-trivial StringClass objects cannot cross the ARM varargs ABI.
+			anim_name.Format( "%s.F_GA_%s_%s", (const char *)weapon_htree_name,
+				(const char *)weapon_name, WeaponActionNames[state] );
 //			Debug_Say(( "Loading Weapon Anim %s\n", anim_name ));
 			WeaponAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( anim_name );
 			if ( WeaponAnims[i] == NULL ) {
@@ -850,7 +812,8 @@ static void	Aquire_Weapon_Assets( const WeaponClass * weapon )
 			}
 
 			// Get Hands Anims
-			anim_name.Format( "F_SKELETON.F_HA_%s_%s", weapon_name, WeaponActionNames[i] );
+			anim_name.Format( "F_SKELETON.F_HA_%s_%s", (const char *)weapon_name,
+				WeaponActionNames[i] );
 //			Debug_Say(( "Loading Hands Anim %s\n", anim_name ));
 			HandsAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( anim_name );
 			if ( HandsAnims[i] == NULL ) {

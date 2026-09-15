@@ -118,6 +118,15 @@ void	Render2DClass::Reset(void)
 
 void Render2DClass::Set_Texture(TextureClass* tex)
 {
+#if defined(RENEGADE_VITA_PORT)
+	// Original 2D callers immediately use texture dimensions to normalize
+	// pixel-space atlas rectangles. The native lazy loader does not populate
+	// those dimensions until Init; waiting until Render caches invalid UVs.
+	// Keep the original TextureClass/file-factory owner and its idempotent Init.
+	if (tex != NULL) {
+		tex->Init();
+	}
+#endif
 	REF_PTR_SET(Texture,tex);	
 }
 

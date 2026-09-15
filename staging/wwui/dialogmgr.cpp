@@ -880,6 +880,9 @@ DialogMgrClass::Was_Button_Down (int vk_mouse_button_id)
 void
 DialogMgrClass::Set_Focus (DialogControlClass *control)
 {
+#if RENEGADE_VITA_M00_DEMO
+	if (control != NULL && (!control->Is_Enabled() || !control->Is_Visible())) return;
+#endif
 	if (FocusControl == control) {
 		return ;
 	}

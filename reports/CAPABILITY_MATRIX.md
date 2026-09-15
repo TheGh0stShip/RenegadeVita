@@ -1,5 +1,10 @@
 # Capability matrix
 
+2026-09-15 current candidate: Dev134 canonical/package/matching Vita3K visual
+milestone PASS, physical deployment/readback verified. No current physical FPS
+or full-demo acceptance. See DEV134_PHYSICAL_MILESTONE.md for current evidence
+and remaining gates; older candidate numbers below are historical capabilities.
+
 | Capability | Status | Evidence / boundary |
 |---|---|---|
 | Native bootstrap, retail root, clean exit | physically validated | A2.0 |

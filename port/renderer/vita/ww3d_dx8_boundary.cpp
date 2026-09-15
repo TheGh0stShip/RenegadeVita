@@ -26,9 +26,29 @@
 #if defined(__vita__)
 #include "vita_runtime_log.h"
 #include <vitaGL.h>
+extern "C" GLboolean vglRenegadeUploadDXTChain(GLuint id, GLenum format,
+	GLsizei width, GLsizei height, GLsizei levels,
+	const void *const *pixels, const GLsizei *sizes);
 #endif
 
 bool DX8Wrapper::_EnableTriangleDraw = true;
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
+bool DX8Wrapper::Is_Native_Device_Ready()
+{
+	// Original lite initialization intentionally never creates a desktop D3D
+	// device. Sentence rendering must follow the native backend's lifecycle,
+	// not the desktop-only IsInitted flag that remains false in that mode.
+	const bool ready = RenegadeVitaRenderer::Get_Statistics().initialized;
+	static bool logged_ready = false;
+	if (ready && !logged_ready) {
+		Vita_Append_A22_Runtime_Breadcrumb("text-lifecycle",
+			"native DX8 readiness: ready=1 desktop_initialized=%d device_lost=%d original_sentence_owner=1",
+			IsInitted ? 1 : 0, IsDeviceLost ? 1 : 0);
+		logged_ready = true;
+	}
+	return ready;
+}
+#endif
 unsigned DX8Wrapper::RenderStates[256] = {};
 unsigned DX8Wrapper::render_state_changes = 0;
 bool SortingRendererClass::_EnableTriangleDraw = true;
@@ -227,16 +247,29 @@ void Log_Texture_Load(const char *source, const char *filename,
 {
 #if defined(__vita__)
 	static unsigned logged_count = 0U;
+	static bool logged_reticle = false;
+	const bool reticle = filename != NULL &&
+		(stricmp(filename, "hd_reticle.tga") == 0 ||
+		 stricmp(filename, "hd_reticle.dds") == 0);
+	if (reticle && !logged_reticle && texture != NULL) {
+		Vita_Append_A22_Runtime_Breadcrumb("asset-proof",
+			"reticle decoded: source=%s name=%s size=%ux%u fallback=%u native=%u",
+			source != NULL ? source : "unknown", filename,
+			texture->Width, texture->Height,
+			texture->DiagnosticFallback ? 1U : 0U, texture->NativeTexture);
+		logged_reticle = true;
+	}
 	if (logged_count >= 24U || texture == NULL) return;
 	Vita_Append_A22_Runtime_Breadcrumb("texture-load",
-		"texture loaded: source=%s name=%s size=%ux%u mips=%u fmt=%08X bytes=%llu checksum=%08X alpha=%u fallback=%u native=%u",
+		"texture loaded: source=%s name=%s size=%ux%u mips=%u fmt=%08X bytes=%llu checksum=%08X alpha=%u fallback=%u native=%u compressed=%u",
 		source != NULL ? source : "unknown",
 		filename != NULL ? filename : "(null)",
 		texture->Width, texture->Height, texture->MipLevels,
 		texture->SourceFormat,
 		static_cast<unsigned long long>(texture->ResidentBytes),
 		texture->PixelChecksum, texture->HasAlpha ? 1U : 0U,
-		texture->DiagnosticFallback ? 1U : 0U, texture->NativeTexture);
+		texture->DiagnosticFallback ? 1U : 0U, texture->NativeTexture,
+		texture->NativeCompressed ? 1U : 0U);
 	++logged_count;
 #else
 	(void)source;
@@ -717,12 +750,80 @@ bool Convert_Surface_To_RGBA(IDirect3DSurface8 *surface,
 	return true;
 }
 
+#if defined(__vita__)
+// Upload into a fresh object before retiring the old compressed image. The
+// original CPU surfaces, including other mips and any caller's references,
+// remain intact. No GPU object can contain mixed compressed/RGBA levels.
+bool Upload_Retained_DDS_Chain(IDirect3DTexture8 *texture, bool replace,
+	UINT changed_level)
+{
+	if (texture == NULL || texture->SurfaceLevels == NULL ||
+		texture->MipLevels == 0U || texture->MipLevels > 10U) return false;
+	const void *pixels[10] = {};
+	GLsizei sizes[10] = {};
+	uint64_t bytes = 0U;
+	for (UINT level = 0; level < texture->MipLevels; ++level) {
+		IDirect3DSurface8 *surface = texture->SurfaceLevels[level];
+		D3DSURFACE_DESC description = {};
+		const UINT width = texture->Width >> level, height = texture->Height >> level;
+		if (surface == NULL || surface->Get_Data() == NULL ||
+			surface->GetDesc(&description) != D3D_OK ||
+			description.Format != D3DFMT_A8R8G8B8 || width < 4U || height < 4U ||
+			width > 2048U || height > 2048U || description.Width != width ||
+			description.Height != height || surface->Get_Pitch() != width * 4U) return false;
+		pixels[level] = surface->Get_Data();
+		sizes[level] = static_cast<GLsizei>(width * height * 4U);
+		bytes += static_cast<uint64_t>(width < 8U ? 8U : width) * height * 4U;
+	}
+	GLuint native = replace ? 0U : texture->NativeTexture;
+	if (replace) glGenTextures(1, &native);
+	if (native == 0U) return false;
+	glBindTexture(GL_TEXTURE_2D, native);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		texture->MipLevels > 1U ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	if (!vglRenegadeUploadDXTChain(native, GL_BGRA, texture->Width,
+		texture->Height, texture->MipLevels, pixels, sizes) || glGetError() != GL_NO_ERROR) {
+		if (replace) RenegadeVitaRenderer::Release_Texture(native);
+		return false;
+	}
+	if (replace) {
+		RenegadeVitaRenderer::Release_Texture(texture->NativeTexture);
+		RenegadeVitaRenderer::Record_Texture_Release(texture->ResidentBytes);
+		RenegadeVitaRenderer::Record_Texture_Upload(bytes);
+		if (changed_level == 0U) {
+			uint32_t checksum = 2166136261U;
+			const unsigned char *source = static_cast<const unsigned char *>(pixels[0]);
+			for (GLsizei offset = 0; offset < sizes[0]; offset += 4) {
+				const uint32_t rgba = source[offset + 2] |
+					(static_cast<uint32_t>(source[offset + 1]) << 8U) |
+					(static_cast<uint32_t>(source[offset]) << 16U) |
+					(static_cast<uint32_t>(source[offset + 3]) << 24U);
+				checksum = Mix_Texture_Checksum(checksum, rgba);
+			}
+			texture->PixelChecksum = checksum;
+		}
+	}
+	texture->NativeTexture = native;
+	texture->ResidentBytes = bytes;
+	texture->NativeCompressed = false;
+	texture->Uploaded = true;
+	return true;
+}
+#endif
+
 bool Upload_Texture_Level_From_Surface(IDirect3DTexture8 *texture, UINT level)
 {
 	if (texture == NULL || texture->SurfaceLevels == NULL ||
 		level >= texture->GetLevelCount() || texture->SurfaceLevels[level] == NULL) {
 		return false;
 	}
+#if defined(__vita__)
+	if (texture->NativeCompressed) return Upload_Retained_DDS_Chain(texture, true, level);
+#endif
 	D3DSURFACE_DESC description = {};
 	if (texture->SurfaceLevels[level]->GetDesc(&description) != D3D_OK) {
 		return false;
@@ -987,6 +1088,26 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	uint32_t checksum = 2166136261U;
 	uint64_t bytes = 0U;
 #if defined(__vita__)
+	const void *native_pixels[10] = {};
+	GLsizei native_sizes[10] = {};
+	const GLenum native_format = dds.Get_Format() == WW3D_FORMAT_DXT1 ?
+		GL_COMPRESSED_RGBA_S3TC_DXT1_EXT : GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+	bool native_dxt = RenegadeVitaRenderer::Use_Native_DDS_Upload() && mip_count <= 10U &&
+		(dds.Get_Format() == WW3D_FORMAT_DXT1 || dds.Get_Format() == WW3D_FORMAT_DXT5) &&
+		texture->Width <= 2048U && texture->Height <= 2048U &&
+		(texture->Width & (texture->Width - 1U)) == 0U &&
+		(texture->Height & (texture->Height - 1U)) == 0U;
+	uint64_t compressed_bytes = 0U;
+	for (unsigned level = 0; native_dxt && level < mip_count; ++level) {
+		const unsigned width = texture->Width >> level, height = texture->Height >> level;
+		const unsigned count = (width / 4U) * (height / 4U) *
+			(dds.Get_Format() == WW3D_FORMAT_DXT1 ? 8U : 16U);
+		native_dxt = width >= 4U && height >= 4U && dds.Get_Width(level) == width &&
+			dds.Get_Height(level) == height && dds.Get_Level_Size(level) >= count;
+		native_pixels[level] = dds.Get_Memory_Pointer(level);
+		native_sizes[level] = static_cast<GLsizei>(count);
+		compressed_bytes += count;
+	}
 	(void)glGetError();
 	GLuint native = 0U;
 	glGenTextures(1, &native);
@@ -997,6 +1118,7 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
 		return Create_Checkerboard_Fallback();
 	}
+	texture->NativeTexture = native;
 	glBindTexture(GL_TEXTURE_2D, native);
 	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -1023,33 +1145,71 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 			RenegadeVitaRenderer::Record_Texture_Upload_Failure();
 			return Create_Checkerboard_Fallback();
 		}
+		const unsigned surface_bpp = Surface_Bytes_Per_Pixel(D3DFMT_A8R8G8B8);
+		const bool use_block_decode = surface_bpp == sizeof(uint32_t) &&
+			(dds.Get_Format() == WW3D_FORMAT_DXT1 || dds.Get_Format() == WW3D_FORMAT_DXT5) &&
+			(width & 3U) == 0U && (height & 3U) == 0U;
 		for (unsigned y = 0U; y < height; ++y) {
+			unsigned char *surface_row = surface->Get_Data() +
+				static_cast<size_t>(y) * surface->Get_Pitch();
+			const size_t rgba_row_offset = static_cast<size_t>(y) * width * 4U;
+			if (use_block_decode && (y & 3U) == 0U) {
+				// Original DDS block decode shares endpoint/alpha work across
+				// sixteen pixels. The retained CPU surface is also our row cache;
+				// no separate scratch image or per-block allocation is needed.
+				for (unsigned block_x = 0U; block_x < width; block_x += 4U) {
+					// Return value reports alpha presence, not decode success.
+					(void)dds.Get_4x4_Block(surface_row +
+						static_cast<size_t>(block_x) * surface_bpp,
+						surface->Get_Pitch(), WW3D_FORMAT_A8R8G8B8,
+						level, block_x, y);
+				}
+			}
 			for (unsigned x = 0U; x < width; ++x) {
-				const uint32_t argb = dds.Get_Pixel(level, x, y);
+				uint32_t argb;
+				if (use_block_decode) {
+					memcpy(&argb, surface_row + static_cast<size_t>(x) * surface_bpp,
+						sizeof(argb));
+				} else {
+					argb = dds.Get_Pixel(level, x, y);
+				}
 				RenegadeVitaTextureUpload::Store_RGBA_From_ARGB_At(argb,
 					x, y, width, rgba.data());
 				checksum = Mix_Texture_Checksum(checksum, argb);
-			}
-		}
-		for (unsigned y = 0U; y < height; ++y) {
-			for (unsigned x = 0U; x < width; ++x) {
-				Write_RGBA_To_Surface_Pixel(D3DFMT_A8R8G8B8,
-					rgba.data() + (static_cast<size_t>(y) * width + x) * 4U,
-					surface->Get_Data() + static_cast<size_t>(y) *
-					surface->Get_Pitch() + static_cast<size_t>(x) *
-					Surface_Bytes_Per_Pixel(D3DFMT_A8R8G8B8));
+				// Populate the retained CPU surface while this decoded pixel is
+				// hot, rather than traversing the whole RGBA image a second time.
+				if (!use_block_decode) {
+					Write_RGBA_To_Surface_Pixel(D3DFMT_A8R8G8B8,
+						rgba.data() + rgba_row_offset + static_cast<size_t>(x) * 4U,
+						surface_row + static_cast<size_t>(x) * surface_bpp);
+				}
 			}
 		}
 		surface->Set_Texture_Owner(texture, level);
 		texture->SurfaceLevels[level] = surface;
 		bytes += rgba.size();
 #if defined(__vita__)
-		glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
+		if (!native_dxt) {
+			glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0,
+				GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
+		}
 #endif
 	}
 #if defined(__vita__)
-	if (glGetError() != GL_NO_ERROR) {
+	bool native_upload_ok = true;
+	if (native_dxt) {
+		if (vglRenegadeUploadDXTChain(native, native_format, texture->Width,
+			texture->Height, mip_count, native_pixels, native_sizes)) {
+			texture->NativeCompressed = true;
+			bytes = compressed_bytes;
+		} else {
+			// Allocation/eligibility failure retains all original CPU surfaces.
+			// Attempt one complete RGBA chain in the still-fresh GL object.
+			native_upload_ok = Upload_Retained_DDS_Chain(texture, false, 0U);
+			if (native_upload_ok) bytes = texture->ResidentBytes;
+		}
+	}
+	if (!native_upload_ok || glGetError() != GL_NO_ERROR) {
 		RenegadeVitaRenderer::Release_Texture(native);
 		Destroy_Texture_Surface_Levels(texture);
 		delete texture;
@@ -1205,8 +1365,6 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 		state.shader.Get_Texturing() != ShaderClass::TEXTURING_DISABLE;
 	const bool stage0_texture = indexed_texturing && state.Textures[0] != NULL;
 	const bool stage1_texture = indexed_texturing && state.Textures[1] != NULL;
-	RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader,
-		stage0_texture, stage1_texture);
 	for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage) {
 		if (indexed_texturing && state.Textures[stage] != NULL) {
 			state.Textures[stage]->Apply_For_Platform_Boundary(stage);
@@ -1216,6 +1374,11 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 			RenegadeVitaRenderer::Disable_Texture_Stage(stage);
 		}
 	}
+	// TextureClass::Apply replays the device's stage combiner as well as its
+	// binding/sampler. Apply the draw's original ShaderClass after those calls
+	// so a previous mesh or movie cannot overwrite the glyph alpha contract.
+	RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader,
+		stage0_texture, stage1_texture);
 	Apply_Indexed_Texture_Coordinate_State(state.material);
 	RenegadeVitaRenderer::Submit_Indexed_Triangles(submission);
 }
@@ -2140,16 +2303,25 @@ bool DX8Wrapper::Set_Device_Resolution(int width, int height, int bits,
 TextureClass *DX8Wrapper::Create_Render_Target(int width, int height,
 	WW3DFormat format)
 {
-	// Original projector setup first asks DX8Caps whether a render-to-texture
-	// format is supported. The native capability contract truthfully advertises
-	// none, so an unexpected creation attempt must remain a failed allocation,
-	// not a fabricated offscreen texture. Record the unsupported platform edge
-	// for the A3 runtime diagnostics and preserve the caller's NULL fallback.
+	// Original Create_Projector_Render_Target tries UNKNOWN even when no
+	// explicit format is supported. Its callers handle NULL without submitting
+	// an offscreen draw. This allocation probe is not a rejected indexed draw:
+	// counting it as one incorrectly aborts the first ordinary gameplay frame.
+	// Keep capabilities false and the original NULL fallback. Actual attempts
+	// to bind non-default render targets still fail their submission checks.
+#if defined(__vita__)
+	static bool logged_unavailable = false;
+	if (!logged_unavailable) {
+		Vita_Append_A22_Runtime_Breadcrumb("render-capability",
+			"render-to-texture creation is unsupported: size=%dx%d format=%u result=NULL original_projector_fallback=1 draw_submitted=0",
+			width, height, static_cast<unsigned>(format));
+		logged_unavailable = true;
+	}
+#else
 	(void)width;
 	(void)height;
 	(void)format;
-	RenegadeVitaRenderer::Reject_Indexed_Submission(
-		"render-to-texture creation is unsupported", 0U);
+#endif
 	return NULL;
 }
 

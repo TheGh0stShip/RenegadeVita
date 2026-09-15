@@ -96,6 +96,7 @@ protected:
 	//	Protected member data
 	///////////////////////////////////////////////////////////////////
 	DynamicVectorClass<DialogControlClass *>	ExpertWindowList;
+	DynamicVectorClass<int> InitialSettings;
 };
 
 

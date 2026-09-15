@@ -1,0 +1,10 @@
+patching file tools/generate_wwui_dialog_templates.py
+dialog=146 controls=3 template_bytes=196
+dialog=147 controls=4 template_bytes=260
+dialog=148 controls=49 template_bytes=2756
+dialog=149 controls=4 template_bytes=276
+dialog=150 controls=3 template_bytes=216
+dialog=151 controls=4 template_bytes=276
+dialog=152 controls=3 template_bytes=216
+dialog=153 controls=10 template_bytes=656
+PASS: zero-fuzz application; all templates decoded; EVA shell and five captionless edit controls match original resources

@@ -3,6 +3,7 @@
 #include "renegade_miles_runtime_stats.h"
 #include "renegade_miles_test.h"
 #include "renegade_wave_decoder.h"
+#include "renegade_audio_output_buffers.h"
 
 #include <algorithm>
 #include <atomic>
@@ -24,6 +25,7 @@ using RenegadeVitaAudio::WaveInfo;
 
 struct RenegadeMilesSample {
 	DecodedWave wave;
+	std::unique_ptr<RenegadeVitaAudio::MpegPlayback> mpeg;
 	U32 encoded_data_bytes = 0;
 	double cursor = 0.0;
 	S32 playback_rate = 0;
@@ -132,17 +134,29 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 	DecodedWave decoded;
 	WaveInfo info;
 	const char *error = nullptr;
-	if (!RenegadeVitaAudio::Inspect_Wave(
-		static_cast<const uint8_t *>(data), bytes, &info, &error)) {
-		Set_Error(error);
-		return false;
+	if (RenegadeVitaAudio::Is_Mpeg_Media(static_cast<const uint8_t *>(data), bytes)) {
+		auto playback = RenegadeVitaAudio::Open_Mpeg_Playback(
+			static_cast<const uint8_t *>(data), bytes, &error);
+		if (!playback) { Set_Error(error); return false; }
+		sample->wave = {};
+		sample->wave.channels = playback->Channels();
+		sample->wave.sample_rate = playback->Sample_Rate();
+		sample->wave.estimated_sample_frames = sample->wave.untrimmed_sample_frames =
+			static_cast<uint32_t>(playback->Frame_Count());
+		sample->mpeg = std::move(playback);
+		sample->encoded_data_bytes = static_cast<U32>(bytes);
+		sample->cursor = 0.0;
+		sample->playback_rate = static_cast<S32>(sample->wave.sample_rate);
+		sample->playing = sample->paused = false;
+		return true;
 	}
-	if (!RenegadeVitaAudio::Decode_Wave(
-		static_cast<const uint8_t *>(data), bytes, &decoded, &error)) {
+	if (!RenegadeVitaAudio::Decode_Wave_With_Info(
+		static_cast<const uint8_t *>(data), bytes, &decoded, &info, &error)) {
 		Set_Error(error);
 		return false;
 	}
 	sample->wave = std::move(decoded);
+	sample->mpeg.reset();
 	sample->encoded_data_bytes = info.data_bytes;
 	sample->cursor = 0.0;
 	sample->playback_rate = static_cast<S32>(sample->wave.sample_rate);
@@ -154,6 +168,7 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 void Reset_Sample(RenegadeMilesSample *sample)
 {
 	if (sample == nullptr) return;
+	sample->mpeg.reset();
 	sample->wave = {};
 	sample->encoded_data_bytes = 0;
 	sample->cursor = 0.0;
@@ -172,14 +187,20 @@ void Reset_Sample(RenegadeMilesSample *sample)
 	sample->paused = false;
 }
 
+size_t Sample_Frame_Count(const RenegadeMilesSample *sample)
+{
+	return sample->mpeg ? sample->mpeg->Frame_Count() : sample->wave.Frame_Count();
+}
+
 int16_t Source_Sample(const RenegadeMilesSample *sample, size_t frame,
 	uint16_t output_channel)
 {
-	const size_t frames = sample->wave.Frame_Count();
+	const size_t frames = Sample_Frame_Count(sample);
 	if (frames == 0) return 0;
 	frame = std::min(frame, frames - 1U);
 	const uint16_t source_channel = sample->wave.channels == 1
 		? 0 : std::min<uint16_t>(output_channel, sample->wave.channels - 1U);
+	if (sample->mpeg) return sample->mpeg->Sample(frame, source_channel);
 	return sample->wave.samples[frame * sample->wave.channels + source_channel];
 }
 
@@ -202,8 +223,8 @@ bool Advance_Loop(RenegadeMilesSample *sample)
 
 bool Start_Sample_Locked(RenegadeMilesSample *sample)
 {
-	if (sample == nullptr || sample->wave.Frame_Count() == 0) return false;
-	const size_t frames = sample->wave.Frame_Count();
+	if (sample == nullptr || Sample_Frame_Count(sample) == 0) return false;
+	const size_t frames = Sample_Frame_Count(sample);
 	if (sample->cursor >= static_cast<double>(frames)) sample->cursor = 0.0;
 	sample->playing = true;
 	sample->paused = false;
@@ -222,7 +243,7 @@ void Capture_Last_Stream_Locked(const RenegadeMilesSample *sample)
 {
 	if (sample == nullptr) return;
 	g_stats.last_stream_frames = static_cast<uint32_t>(
-		std::min<size_t>(sample->wave.Frame_Count(),
+		std::min<size_t>(Sample_Frame_Count(sample),
 			std::numeric_limits<uint32_t>::max()));
 	g_stats.last_stream_fact_frames = sample->wave.fact_sample_frames;
 	g_stats.last_stream_estimated_frames = sample->wave.estimated_sample_frames;
@@ -259,7 +280,7 @@ void Capture_Active_Stream_Locked(RenegadeMilesRuntimeStats *stats,
 	const RenegadeMilesSample *sample)
 {
 	if (stats == nullptr || sample == nullptr) return;
-	const size_t total_frames = sample->wave.Frame_Count();
+	const size_t total_frames = Sample_Frame_Count(sample);
 	const double cursor = std::max(0.0,
 		std::min(sample->cursor, static_cast<double>(total_frames)));
 	const uint32_t rate = static_cast<uint32_t>(
@@ -308,7 +329,7 @@ void Mix_Locked(int16_t *output, size_t frames,
 	uint32_t stream_mix_peak_abs = 0U;
 	for (RenegadeMilesSample *sample : g_samples) {
 		if (sample == nullptr || !sample->playing || sample->paused ||
-			sample->wave.Frame_Count() == 0) continue;
+			Sample_Frame_Count(sample) == 0) continue;
 		const bool is_stream = sample->streaming;
 		if (is_stream) stream_mix_attempted = true;
 		const double step = static_cast<double>(
@@ -339,7 +360,7 @@ void Mix_Locked(int16_t *output, size_t frames,
 			volume * distance_gain * right_pan_gain
 		};
 		for (size_t output_frame = 0; output_frame < frames; ++output_frame) {
-			const size_t source_frames = sample->wave.Frame_Count();
+			const size_t source_frames = Sample_Frame_Count(sample);
 			while (sample->cursor >= source_frames) {
 				if (!Advance_Loop(sample)) break;
 			}
@@ -418,7 +439,7 @@ void Mix_Locked(int16_t *output, size_t frames,
 #if !defined(RENEGADE_MILES_MANUAL_MIX)
 void *Output_Thread(void *)
 {
-	std::vector<int16_t> output(kOutputFrames * 2U, 0);
+	RenegadeAudioOutputBuffers<kOutputFrames * 2U> buffers;
 	for (;;) {
 		RenegadeMilesMixSummary mix_summary;
 		if (g_output_stop.load(std::memory_order_acquire)) break;
@@ -427,6 +448,7 @@ void *Output_Thread(void *)
 			nanosleep(&retry, nullptr);
 			continue;
 		}
+		auto &output = buffers.Next();
 		Mix_Locked(output.data(), kOutputFrames, &mix_summary);
 		pthread_mutex_unlock(&g_mutex);
 #if defined(__vita__)
@@ -448,6 +470,10 @@ void *Output_Thread(void *)
 		nanosleep(&duration, nullptr);
 #endif
 	}
+	// The final native pointer must remain valid until playback has drained.
+#if defined(__vita__)
+	if (g_audio_port >= 0) sceAudioOutOutput(g_audio_port, nullptr);
+#endif
 	return nullptr;
 }
 #endif
@@ -670,7 +696,7 @@ void AIL_stop_sample(HSAMPLE sample)
 void AIL_resume_sample(HSAMPLE sample)
 {
 	AIL_lock();
-	if (sample != nullptr && sample->wave.Frame_Count() != 0) {
+	if (sample != nullptr && Sample_Frame_Count(sample) != 0) {
 		sample->playing = true;
 		sample->paused = false;
 	}
@@ -740,7 +766,7 @@ void AIL_set_sample_ms_position(HSAMPLE sample, U32 milliseconds)
 {
 	AIL_lock();
 	if (sample != nullptr && sample->wave.sample_rate != 0) {
-		sample->cursor = std::min<double>(sample->wave.Frame_Count(),
+		sample->cursor = std::min<double>(Sample_Frame_Count(sample),
 			static_cast<double>(milliseconds) * sample->wave.sample_rate / 1000.0);
 	}
 	AIL_unlock();
@@ -750,8 +776,10 @@ void AIL_sample_ms_position(HSAMPLE sample, S32 *length, S32 *position)
 {
 	AIL_lock();
 	if (sample != nullptr && sample->wave.sample_rate != 0) {
-		if (length != nullptr) *length = static_cast<S32>(
-			sample->wave.Frame_Count() * 1000U / sample->wave.sample_rate);
+		if (length != nullptr) *length = static_cast<S32>(std::min<uint64_t>(
+			std::numeric_limits<S32>::max(),
+			static_cast<uint64_t>(Sample_Frame_Count(sample)) * 1000U /
+				sample->wave.sample_rate));
 		if (position != nullptr) *position = static_cast<S32>(
 			sample->cursor * 1000.0 / sample->wave.sample_rate);
 	} else {
@@ -863,7 +891,7 @@ void AIL_set_3D_sample_offset(H3DSAMPLE sample, U32 bytes)
 	if (sample != nullptr && sample->encoded_data_bytes != 0U) {
 		const double fraction = std::min<double>(1.0,
 			static_cast<double>(bytes) / sample->encoded_data_bytes);
-		sample->cursor = fraction * sample->wave.Frame_Count();
+		sample->cursor = fraction * Sample_Frame_Count(sample);
 	}
 	AIL_unlock();
 }
@@ -871,9 +899,9 @@ void AIL_set_3D_sample_offset(H3DSAMPLE sample, U32 bytes)
 U32 AIL_3D_sample_offset(H3DSAMPLE sample)
 {
 	AIL_lock();
-	const U32 value = sample != nullptr && sample->wave.Frame_Count() != 0U
+	const U32 value = sample != nullptr && Sample_Frame_Count(sample) != 0U
 		? static_cast<U32>(std::min<double>(sample->encoded_data_bytes,
-			sample->cursor * sample->encoded_data_bytes / sample->wave.Frame_Count()))
+			sample->cursor * sample->encoded_data_bytes / Sample_Frame_Count(sample)))
 		: 0U;
 	AIL_unlock();
 	return value;
@@ -937,7 +965,7 @@ HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 		if (stream != nullptr) {
 			stream->sample = sample;
 			sample->streaming = true;
-			g_stats.stream_decoded_frames += sample->wave.Frame_Count();
+			g_stats.stream_decoded_frames += Sample_Frame_Count(sample);
 			Capture_Last_Stream_Locked(sample);
 		}
 	}

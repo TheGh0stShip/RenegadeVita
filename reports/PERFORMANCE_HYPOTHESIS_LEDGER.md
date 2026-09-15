@@ -1,5 +1,19 @@
 # Performance hypothesis ledger
 
+Current continuation: Dev127 implemented measured CPU-work reductions and
+Dev128 integrated native DDS chains; their reports supersede older pending
+implementation entries below. Physical performance adoption remains open.
+Dev134 is in canonical validation, with no physical test requested or performed.
+
+| Current route | Evidence and candidate action | Remaining acceptance |
+| --- | --- | --- |
+| Discarded textured-character RGB | Production path calculated lighting then submitted white RGB. Dev134 retains diffuse alpha and first diagnostics while skipping the discarded calculation. 192000 full-color, 96000 submitted-skin and 15360 alpha cases pass; production draw ordering/state and sanitizers pass. Fixed host median/p95/p99/worst 164.5/221.1/317.0/317.0 -> 19.6/21.8/29.9/29.9 us; same scratch high-water. | Candidate implementation; ARM/canonical closure active. Matching native visual and physical fixed-route frame-time/memory results pending. See DEV134_SKIN_RGB_WORK.md. |
+| Native YUV movie sampling | Actual Bink inputs are 800x600 limited-range YUV420; pinned VitaGL/GXM supports planar CSC textures. At unchanged 320x240, packed payload is 115200 rather than 307200 bytes. | Prototype pending transactional GPU replacement, plane/stride tests, color comparison and native timing. See DEV134_NEXT_RENDER_ROUTES.md. |
+| Persistent geometry and render handoff | Original mesh/UV/color/user-lighting arrays expose mutable pointers without generations; direct mesh submissions bypass DX8 buffers. | Requires original mutation/lifetime tracking or a validated immutable snapshot and GPU retirement. Pointer-only caching is not safe; route remains open. |
+
+Earlier ledger entries follow as historical hypotheses, not current implementation
+status. Host gains never establish hardware FPS.
+
 This ledger accepts changes only with a fixed content hash, camera/input replay,
 settings, build mode, p50/p95/p99/worst frame timing, CPU-stage timing, memory
 high-water, and visual/correctness comparison. The frozen A3.2-dev1 data is a

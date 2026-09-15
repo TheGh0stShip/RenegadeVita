@@ -19,7 +19,8 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         material = function.index("Apply_Indexed_Texture_Coordinate_State(state.material)")
         submit = function.index(
             "RenegadeVitaRenderer::Submit_Indexed_Triangles(submission)")
-        self.assertLess(shader, loop)
+        self.assertLess(texture, shader)
+        self.assertLess(shader, material)
         self.assertLess(loop, texture)
         self.assertLess(texture, submit)
         self.assertLess(fallback, submit)
@@ -281,8 +282,12 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("model->Get_Color_Array(0, false);", function)
         self.assertIn("first original user lighting color source", function)
         self.assertIn("const unsigned *color2 = model->Get_Color_Array(1, false);", function)
-        self.assertIn("Evaluate_Original_Material_Vertex_Color(material, color1,", function)
-        self.assertIn("render_info);", function)
+        self.assertRegex(function, r"Evaluate_Material_Vertex_Color\(\s*cache_material_colors, material, color1,")
+        self.assertRegex(renderer, r"Evaluate_Original_Material_Vertex_Color\(material,\s*color1,")
+        self.assertIn("original_world_transform, render_info,", function)
+        helper = renderer[renderer.index("MaterialVertexColor Evaluate_Material_Vertex_Color("):
+                          renderer.index("void Log_System_Memory(")]
+        self.assertIn("cache_material_colors ? &light_directions : NULL", helper)
         self.assertNotIn("if (diffuse_colors != NULL) {\n\t\t\t\t\tconst unsigned diffuse", function)
 
     def test_direct_mesh_color1_prefers_original_user_lighting_for_rigid_meshes(self):

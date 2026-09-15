@@ -28,6 +28,9 @@ struct A31VitaInteractiveResult
 	bool teardown_completed;
 	bool pause_observed;
 	bool resume_observed;
+	bool return_to_menu_requested;
+	bool frontend_exit_requested;
+	char reload_source[96];
 	uint32_t frames;
 	uint32_t paused_input_frames;
 	uint32_t mesh_submissions;
@@ -42,7 +45,8 @@ struct A31VitaInteractiveResult
 	uint32_t average_sync_us;
 };
 
-/* Runs the original M00 single-player session against the live Vita renderer.
-** The function returns only after START or a durable diagnosed failure. */
+/* Runs an original frontend/session lifecycle against the live Vita renderer.
+** Credits request frontend reentry only after complete owned teardown. */
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
-	int startup_screen_result = -1);
+	int startup_screen_result = -1, bool start_at_main_menu = false,
+	const char *reload_source = nullptr);

@@ -35,6 +35,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "scriptcommands.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "renegade_vita_tutorial_help.h"
+#endif
 #include "debug.h"
 #include "combat.h"
 #include "smartgameobj.h"
@@ -3257,7 +3260,19 @@ void	Set_HUD_Help_Text( int string_id, const Vector3 &color )
 		//
 		//	Set the help text
 		//
+#if defined(RENEGADE_VITA_PORT)
+		WideStringClass native_help;
+		const WCHAR *help_text = TRANSLATE( string_id );
+		const char *replacement = Renegade_Vita_Tutorial_Help(
+			string_id, TranslateDBClass::Get_Current_Language());
+		if (replacement != NULL) {
+			native_help.Convert_From(replacement);
+			help_text = native_help;
+		}
+		HUDInfo::Set_HUD_Help_Text(help_text, color);
+#else
 		HUDInfo::Set_HUD_Help_Text( TRANSLATE( string_id ), color );
+#endif
 
 		//
 		//	Lookup the sound to play

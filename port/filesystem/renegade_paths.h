@@ -21,6 +21,10 @@ struct RenegadeResolvedPath
 	bool success;
 	bool existing_case_matched;
 	bool writable_namespace;
+	// True only after a successful directory scan proves a component absent,
+	// or the directory itself reports ENOENT/ENOTDIR. Other I/O errors are not
+	// negative-cache evidence.
+	bool confirmed_missing;
 	char physical[1024];
 	char normalized_logical[768];
 	char error[128];
@@ -32,4 +36,3 @@ struct RenegadeResolvedPath
 // absolute host paths, and drive/device paths are rejected.
 RenegadeResolvedPath Renegade_Resolve_Path(const RenegadePathRoots &roots,
 	const char *logical_path, RenegadePathAccess access);
-

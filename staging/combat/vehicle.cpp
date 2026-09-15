@@ -107,7 +107,7 @@ float Vita_Distance_To_Star(VehicleGameObj *vehicle)
 }
 
 #define VITA_VEHICLE_TYPE_NAME(definition) \
-	((definition).TypeName[0] != '\0' ? (definition).TypeName : "unnamed")
+	((definition).TypeName[0] != '\0' ? (definition).TypeName.Peek_Buffer() : "unnamed")
 
 } // namespace
 #endif
@@ -2145,7 +2145,7 @@ void	VehicleGameObj::Passenger_Entering( void )
 {
 	// Play the passenger entering animation
 	char string[80];
-	sprintf( string, "V_%sL1.M_%sCL", Get_Definition().TypeName, Get_Definition().TypeName );
+	snprintf( string, sizeof(string), "V_%sL1.M_%sCL", Get_Definition().TypeName.Peek_Buffer(), Get_Definition().TypeName.Peek_Buffer() );
 	Set_Animation( string );
 	Get_Anim_Control()->Set_Mode( ANIM_MODE_ONCE );
 	//Debug_Say(("VehicleGameObj::Passenger_Entering\n"));
@@ -2155,7 +2155,7 @@ void	VehicleGameObj::Passenger_Exiting( void )
 {
 	// Play the passenger leaving animation
 	char string[80];
-	sprintf( string, "V_%sL1.M_%sOP", Get_Definition().TypeName, Get_Definition().TypeName );
+	snprintf( string, sizeof(string), "V_%sL1.M_%sOP", Get_Definition().TypeName.Peek_Buffer(), Get_Definition().TypeName.Peek_Buffer() );
 	Set_Animation( string );
 	Get_Anim_Control()->Set_Mode( ANIM_MODE_ONCE );
 	Control.Clear_Control();

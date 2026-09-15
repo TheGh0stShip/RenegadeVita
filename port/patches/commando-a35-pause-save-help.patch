@@ -1,0 +1,174 @@
+--- a/dlgsavegame.cpp
++++ b/dlgsavegame.cpp
+@@ -36,6 +36,8 @@
+ 
+ 
+ #include "dlgsavegame.h"
++#include "renegade_ui_pointer_tokens.h"
++#include "renegade_find_files.h"
+ #include "listctrl.h"
+ #include "dialogresource.h"
+ #include "gamedata.h"
+@@ -52,13 +54,13 @@
+ ////////////////////////////////////////////////////////////////
+ //	Local constants
+ ////////////////////////////////////////////////////////////////
+-static enum
++enum
+ {
+ 	MBEVENT_OVERWRITE_PROMPT	= 1,
+ 	MBEVENT_DELETE_PROMPT,
+ };
+ 
+-static enum
++enum
+ {
+ 	COL_DATE	= 0,
+ 	COL_TIME,
+@@ -167,8 +169,8 @@
+ 		//
+ 		//	Remove the data we associated with this entry
+ 		//
+-		FILETIME *file_time		= (FILETIME *)list_ctrl->Get_Entry_Data (item_index, 0);
+-		StringClass *filename	= (StringClass *)list_ctrl->Get_Entry_Data (item_index, 2);
++		FILETIME *file_time		= static_cast<FILETIME *>(Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 0)));
++		StringClass *filename	= static_cast<StringClass *>(Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 2)));
+ 		list_ctrl->Set_Entry_Data (item_index, 0, 0);
+ 		list_ctrl->Set_Entry_Data (item_index, 2, 0);
+ 		if (file_time != NULL) {
+@@ -210,8 +212,8 @@
+ 			//
+ 			//	Sort by time
+ 			//
+-			FILETIME *file_time1 = (FILETIME *)list_ctrl->Get_Entry_Data (item_index1, 0);
+-			FILETIME *file_time2 = (FILETIME *)list_ctrl->Get_Entry_Data (item_index2, 0);
++			FILETIME *file_time1 = static_cast<FILETIME *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index1, 0)));
++			FILETIME *file_time2 = static_cast<FILETIME *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index2, 0)));
+ 			retval = ::CompareFileTime (file_time1, file_time2);
+ 
+ 		} else {
+@@ -298,7 +300,7 @@
+ 		if (list_ctrl->Get_Entry_Data (item_index, 0) == NULL) {
+ 			Get_Unique_Save_Filename (full_path);
+ 		} else {
+-			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 2))->Peek_Buffer ();
++			StringClass filename = (static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2))))->Peek_Buffer ();
+ 
+ 			//
+ 			//	Build a full filename
+@@ -470,7 +472,7 @@
+ 		//	Determine what filename this entry refers to
+ 		//		
+ 		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
+-			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 2))->Peek_Buffer ();
++			StringClass filename = (static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2))))->Peek_Buffer ();
+ 
+ 			if (prompt) {
+ 
+@@ -583,8 +585,8 @@
+ 			list_ctrl->Set_Entry_Text (item_index, 1, date_string);
+ 			list_ctrl->Set_Entry_Text (item_index, 2, description);
+ 			
+-			list_ctrl->Set_Entry_Data (item_index, 0, (uint32)new FILETIME(local_time));
+-			list_ctrl->Set_Entry_Data (item_index, 2, (uint32)new StringClass(find_info.cFileName));
++			list_ctrl->Set_Entry_Data (item_index, 0, Renegade_Ui_Pointer_To_Token(new FILETIME(local_time)));
++			list_ctrl->Set_Entry_Data (item_index, 2, Renegade_Ui_Pointer_To_Token(new StringClass(find_info.cFileName)));
+ 
+ 			//
+ 			//	Select this entry if its the default
+@@ -708,37 +710,9 @@
+ {
+ 	bool retval = true;
+ 
+-	ULARGE_INTEGER freebytecount;		// Free bytes on disk available to caller (caller may not have access to entire disk).
+-	ULARGE_INTEGER totalbytecount;	// Total bytes on disk.
+-	StringClass		kernelpathname;
+-	__int64			diskspace;
+-
+-	int (__stdcall *getfreediskspaceex) (LPCTSTR, PULARGE_INTEGER, PULARGE_INTEGER, PULARGE_INTEGER);
+-
+-	//	Get the free disk space on the drive.
+-	// NOTE IML: For Win'95, must query for support for GetDiskFreeSpaceEx before using it - otherwise use GetDiskFreeSpace().
+-	GetSystemDirectory (kernelpathname.Get_Buffer (_MAX_PATH), _MAX_PATH);
+-	kernelpathname += "\\";
+-	kernelpathname += "Kernel32.dll";
+-	getfreediskspaceex = (int (_stdcall*) (LPCTSTR, PULARGE_INTEGER, PULARGE_INTEGER, PULARGE_INTEGER)) GetProcAddress (GetModuleHandle (kernelpathname.Peek_Buffer()), "GetDiskFreeSpaceExA");
+-	if (getfreediskspaceex != NULL) {
+-
+-		if (!getfreediskspaceex (NULL, &freebytecount, &totalbytecount, NULL)) return (false);
+-	
+-		// Convert to a 64-bit integer.
+-		diskspace = freebytecount.QuadPart;
+-	
+-	} else {
+-
+-		DWORD sectorspercluster, bytespersector, freeclustercount, totalclustercount;
+-		
+-		// The Ex version is not available. Use the Win'95 version.
+-		// QUESTION: SDK docs say that values returned by this function are erroneous if partition > 2Gb.
+-		//				 Does that mean that the partition is guaranteed to be <= 2Gb if Ex is not available?
+-		if (!GetDiskFreeSpace (NULL, &sectorspercluster, &bytespersector, &freeclustercount, &totalclustercount)) return (false); 
+-		diskspace = sectorspercluster * bytespersector * freeclustercount;
+-	}
+-	
++	uint64_t diskspace = 0;
++	if (!Renegade_Get_User_Free_Space(diskspace)) return false;
++
+ 	//
+ 	//	Is there at least 2 megs of disk space available?
+ 	//
+--- a/dlgsavegame.h
++++ b/dlgsavegame.h
+@@ -44,7 +44,7 @@
+ 
+ #include "menudialog.h"
+ #include "resource.h"
+-#include "dlgmessagebox.h"
++#include "DlgMessageBox.h"
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+--- a/dlghelpscreen.cpp
++++ b/dlghelpscreen.cpp
+@@ -54,6 +54,7 @@
+ #include "menubackdrop.h"
+ #include "gameinitmgr.h"
+ #include "input.h"
++#include "renegade_vita_control_labels.h"
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -113,7 +114,11 @@
+ 	for ( int i = 0; i < KEY_TABLE_SIZE; i++ ) {
+ 		int key = Input::Get_Primary_Key_For_Function( key_table[i][1] );
+ 		WideStringClass wstr(0,true);
++		#if defined(RENEGADE_VITA_PORT)
++		wstr = Renegade_Vita_Control_Label(key_table[i][1]);
++#else
+ 		Input::Get_Translated_Key_Name( key, wstr );
++#endif
+ 		Set_Dlg_Item_Text( key_table[i][0], wstr );
+ 	}
+ 
+@@ -133,7 +138,9 @@
+ 	{
+ 		case IDOK:
+ 		case IDCANCEL:
++#if !defined(RENEGADE_VITA_PORT)
+ 			GameInitMgrClass::Continue_Game ();
++#endif
+ 			break;
+ 	}
+ 
+@@ -230,7 +237,11 @@
+ 	{
+ 		case VK_RETURN:
+ 		case VK_F1:
++#if !defined(RENEGADE_VITA_PORT)
+ 			GameInitMgrClass::Continue_Game ();
++#else
++			retval = MenuDialogClass::On_Key_Down (key_id, key_data);
++#endif
+ 			break;
+ 
+ 		default:

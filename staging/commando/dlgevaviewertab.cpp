@@ -107,7 +107,9 @@ EvaViewerTabClass::On_Init_Dialog (void)
 			//
 			int item_index = ListCtrl->Insert_Entry (index, object.Get_Name ());
 			if (item_index >= 0) {
-				ListCtrl->Set_Entry_Data (item_index, 0, (uint32)&object);
+				// Entry data is 32-bit on both hosts and Vita. Original vector
+				// indices survive list sorting without truncating a host pointer.
+				ListCtrl->Set_Entry_Data (item_index, 0, (uint32)index);
 
 				//
 				//	Colorize the entry
@@ -124,6 +126,14 @@ EvaViewerTabClass::On_Init_Dialog (void)
 			}
 		}
 	}
+
+#if defined(__vita__)
+	// Bounded per-dialog evidence: distinguish missing INI content from
+	// correctly hidden entries in an older save's discovery state.
+	extern int A30_Vita_Log(const char *format, ...);
+	A30_Vita_Log("A3.5 EVA viewer: ini=%s type=%d objects=%d revealed=%d\n",
+		INIFilename.Peek_Buffer(), (int)EncyclopediaType, ObjectList.Count(), total_obj_count);
+#endif
 
 	//
 	//	Now, sort the players by rank
@@ -294,7 +304,9 @@ EvaViewerTabClass::View_Entry (int entry_index)
 		//
 		//	Load the data for this selection
 		//
-		EvaViewerObjectClass *object = (EvaViewerObjectClass *)ListCtrl->Get_Entry_Data (entry_index, 0);
+		const uint32 object_index = ListCtrl->Get_Entry_Data (entry_index, 0);
+		if (object_index >= (uint32)ObjectList.Count()) return;
+		EvaViewerObjectClass *object = &ObjectList[(int)object_index];
 		name			= object->Get_Name ();
 		description	= object->Get_Description ();
 		affiliation = object->Get_Affiliation ();
@@ -457,8 +469,14 @@ EvaViewerTabClass::ListSortCallback
 	//
 	//	Lookup the data associated with these entries
 	//
-	EvaViewerObjectClass *object1 = (EvaViewerObjectClass *)list_ctrl->Get_Entry_Data (item_index1, 0);
-	EvaViewerObjectClass *object2 = (EvaViewerObjectClass *)list_ctrl->Get_Entry_Data (item_index2, 0);
+	// Sorting is static; obtain the original tab owner through its control.
+	EvaViewerTabClass *owner = (EvaViewerTabClass *)list_ctrl->Peek_Parent();
+	const uint32 index1 = list_ctrl->Get_Entry_Data(item_index1, 0);
+	const uint32 index2 = list_ctrl->Get_Entry_Data(item_index2, 0);
+	if (owner == NULL || index1 >= (uint32)owner->ObjectList.Count() ||
+		index2 >= (uint32)owner->ObjectList.Count()) return 0;
+	EvaViewerObjectClass *object1 = &owner->ObjectList[(int)index1];
+	EvaViewerObjectClass *object2 = &owner->ObjectList[(int)index2];
 
 	int player_type1 = object1->Get_Player_Type ();
 	int player_type2 = object2->Get_Player_Type ();

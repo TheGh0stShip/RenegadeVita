@@ -10,6 +10,29 @@
 // contract here; device values must never leak directly into gameplay code.
 namespace RenegadeVitaInput {
 
+// Select is a gameplay tap as well as a modifier. Emit its action on release
+// only when no chord consumed the press, and require release after focus loss.
+class SelectTap
+{
+public:
+	SelectTap() : state(Blocked) {}
+	void Reset() { state = Blocked; }
+	bool Sample(bool select, bool chord, bool enabled)
+	{
+		if (!enabled) { Reset(); return false; }
+		if (!select) {
+			const bool action = state == Pressed && !chord;
+			state = Ready;
+			return action;
+		}
+		if (state == Ready) state = Pressed;
+		if (chord && state == Pressed) state = Consumed;
+		return false;
+	}
+private:
+	enum State { Blocked, Ready, Pressed, Consumed } state;
+};
+
 enum : int32_t {
 	DIRECTINPUT_AXIS_MIN = -1000,
 	DIRECTINPUT_AXIS_MAX = 1000,

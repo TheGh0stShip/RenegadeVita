@@ -135,21 +135,23 @@ private:
 
 static std::vector<unsigned char> Make_DXT1_DDS()
 {
-	std::vector<unsigned char> bytes;
-	const char header[4] = {'D', 'D', 'S', ' '};
-	bytes.insert(bytes.end(), header, header + sizeof(header));
-
-	LegacyDDSURFACEDESC2 desc;
-	std::memset(&desc, 0, sizeof(desc));
-	desc.Size = sizeof(desc);
-	desc.Height = 4;
-	desc.Width = 4;
-	desc.MipMapCount = 1;
-	desc.PixelFormat.Size = sizeof(desc.PixelFormat);
-	desc.PixelFormat.FourCC = D3DFMT_DXT1;
-
-	const unsigned char *desc_bytes = reinterpret_cast<const unsigned char *>(&desc);
-	bytes.insert(bytes.end(), desc_bytes, desc_bytes + sizeof(desc));
+	// Encode the on-disk format independently of the production structure.
+	// A fixture using sizeof(desc) concealed its pointer-width ABI defect.
+	std::vector<unsigned char> bytes(128, 0);
+	auto word = [&bytes](size_t offset, unsigned value) {
+		for (unsigned i = 0; i < 4; ++i) bytes[offset + i] = (value >> (i * 8)) & 255;
+	};
+	std::memcpy(bytes.data(), "DDS ", 4);
+	word(4, 124);
+	word(8, 0x00081007); // caps, dimensions, pixel format, linear size
+	word(12, 4);
+	word(16, 4);
+	word(20, 8);
+	word(28, 1);
+	word(76, 32);
+	word(80, 4); // DDPF_FOURCC
+	std::memcpy(bytes.data() + 84, "DXT1", 4);
+	word(108, 0x1000); // DDSCAPS_TEXTURE
 
 	const unsigned char block[8] = {0x00, 0xf8, 0xe0, 0x07, 0x44, 0x44, 0x44, 0x44};
 	bytes.insert(bytes.end(), block, block + sizeof(block));

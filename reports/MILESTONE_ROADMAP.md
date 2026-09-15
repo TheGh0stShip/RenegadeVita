@@ -1,5 +1,33 @@
 # Capability roadmap
 
+2026-09-15 checkpoint: Dev134 canonical/package/matching Vita3K visual milestone
+PASS; physical deployment/readback verified under the user's post-milestone test
+authorization. Manual LiveArea launch is required (remote command1338 refused).
+This engineering checkpoint does not close any physical release gate or prove
+60 FPS. Current execution: DEV134_PHYSICAL_MILESTONE.md. Older candidate labels
+in the roadmap table below describe historical evidence.
+
+## Durable destination and interim demo
+
+The end-goal is the complete native Renegade Vita port. The M00-only community
+demo is an interim showcase that identifies the Renegade Vita project's porting
+work; it is not a replacement for the game or the completion criterion for
+this roadmap. Likewise, v4.0's representative campaign release is an
+intermediate capability milestone, not full-game completion.
+
+After the representative campaign milestones, expand evidence to every
+campaign mission and its original dependencies, complete remaining original
+presentation/gameplay/lifecycle systems, and validate original networking
+through the supported provider boundaries. Do not invent a public release
+number or claim these gates have passed. Preserve original owners and retail
+formats throughout. Both PS Vita and PSTV final validation remain required.
+
+Current Dev100 work supplies shared movie/text/loading/cache correctness fixes
+plus an interim M00 ending. Keep that ending and launch restriction selectable
+as a demo build profile so full-port development remains unrestricted. Current
+canonical compilation is frozen to its source snapshot; profile separation is
+the next source unit, not a mid-build mutation. See `DEV100_PRIOR_WORK_AUDIT.md`.
+
 | Milestone | Capability contract | Status |
 |---|---|---|
 | A3.1.4 | Visible original interactive M00 lifecycle | physically validated; frozen |

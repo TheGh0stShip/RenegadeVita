@@ -22,8 +22,8 @@ from pathlib import Path
 from typing import Any
 import re
 
-SCHEMA_VERSION = 1
-TOOL_VERSION = "1.0.0"
+SCHEMA_VERSION = 2
+TOOL_VERSION = "2.0.0"
 
 KNOWN_METRICS = (
     "fps",
@@ -79,7 +79,8 @@ def _to_number(text: str) -> float | int | None:
             return int(value, 16)
         if re.fullmatch(r"[-+]?\d+", value):
             return int(value)
-        return float(value)
+        number = float(value)
+        return number if math.isfinite(number) else None
     except ValueError:
         return None
 
@@ -94,6 +95,8 @@ def _coerce_int_or_float(value: float | int | None) -> str | int | float | None:
 
 def _metric_for_key(key: str) -> str | None:
     normalized = _canonical_key(key)
+    if normalized.endswith(("_us", "_ms")) and normalized.startswith("frame_time_"):
+        normalized = normalized[:-3]
     if normalized in {
         "fps", "avg_fps", "average_fps", "perf_fps", "frame_rate",
         "frame_rate_fps", "frames_per_second",
@@ -195,14 +198,14 @@ def _structured_runtime_key_values(text: str) -> list[tuple[str, str]]:
     values: list[tuple[str, str]] = []
     for match in FRAME_US_SUMMARY_RE.finditer(text):
         values.append(("frame_time_min_us", match.group(1)))
-        values.append(("frame_time_p50", match.group(2)))
-        values.append(("frame_time_p95", match.group(3)))
+        values.append(("frame_time_p50_us", match.group(2)))
+        values.append(("frame_time_p95_us", match.group(3)))
         if match.group(4):
-            values.append(("frame_time_p99", match.group(4)))
+            values.append(("frame_time_p99_us", match.group(4)))
         values.append(("frame_time_max_us", match.group(5)))
     for match in P50_P95_WORST_US_RE.finditer(text):
-        values.append(("frame_time_p50", match.group(1)))
-        values.append(("frame_time_p95", match.group(2)))
+        values.append(("frame_time_p50_us", match.group(1)))
+        values.append(("frame_time_p95_us", match.group(2)))
         values.append(("frame_time_max_us", match.group(3)))
     for match in STAGE_US_SUMMARY_RE.finditer(text):
         values.append(("sync_us", match.group(1)))
@@ -231,20 +234,44 @@ def _parse_key_values(text: str) -> list[tuple[str, str]]:
     return values
 
 
+def _metric_unit(key: str, metric: str) -> tuple[str, int]:
+    key = _canonical_key(key)
+    if metric.startswith("frame_time_") or metric in {"sync", "simulation", "rendering", "slow_frame", "instrumentation_overhead"}:
+        if key.endswith("_us"):
+            return "us", 1
+        if key.endswith("_ms"):
+            return "us", 1000
+        if key.endswith("_pct"):
+            return "percent", 1
+        return "unspecified", 1
+    if metric == "memory":
+        for suffix, multiplier in (("_bytes", 1), ("_kib", 1024), ("_mib", 1048576)):
+            if key.endswith(suffix):
+                return "bytes", multiplier
+        return "unspecified", 1
+    return ("fps" if metric == "fps" else "count"), 1
+
+
 def _aggregate_metric_values(samples: list[dict[str, Any]]) -> dict[str, Any]:
     values = [sample["value"] for sample in samples if isinstance(sample["value"], (int, float))]
+    units = sorted({sample["unit"] for sample in samples})
+    if len(units) > 1:
+        return {"samples": len(values), "min": None, "max": None, "mean": None,
+                "unit": None, "units": units, "ineligible_reason": "mixed or unspecified metric units"}
     if not values:
         return {
             "samples": 0,
             "min": None,
             "max": None,
             "mean": None,
+            "unit": None,
         }
     return {
         "samples": len(values),
         "min": min(values),
         "max": max(values),
         "mean": statistics.fmean(values),
+        "unit": units[0],
     }
 
 
@@ -269,6 +296,7 @@ def parse_log(path: Path) -> dict[str, Any]:
         "label": path.name,
         "identity": {key: None for key in IDENTITY_KEYS},
         "identity_lines": {},
+        "identity_conflicts": [],
         "samples": [],
         "metrics": {},
         "unknown_lines": [],
@@ -287,6 +315,12 @@ def parse_log(path: Path) -> dict[str, Any]:
             identity_field = _identity_key(key)
             metric_field = _metric_for_key(key)
             if identity_field:
+                previous = run["identity"][identity_field]
+                if previous is not None and previous != value:
+                    run["identity_conflicts"].append({
+                        "field": identity_field, "before": previous, "after": value,
+                        "file": str(path), "line": line_number,
+                    })
                 run["identity"][identity_field] = value
                 run["identity_lines"].setdefault(identity_field, []).append({
                     "file": str(path),
@@ -320,6 +354,13 @@ def parse_log(path: Path) -> dict[str, Any]:
                 parsed_something = True
                 continue
             parsed_something = True
+            unit, multiplier = _metric_unit(key, metric_field)
+            raw_numeric = numeric
+            numeric *= multiplier
+            if isinstance(numeric, float) and not math.isfinite(numeric):
+                run["unknown_lines"].append({"file": str(path), "line": line_number,
+                    "raw": raw_line, "reason": f"non-finite converted value for '{key}'"})
+                continue
             run["samples"].append({
                 "metric": metric_field,
                 "value": _coerce_int_or_float(numeric),
@@ -327,12 +368,15 @@ def parse_log(path: Path) -> dict[str, Any]:
                 "source_line": line_number,
                 "raw_line": raw_line.strip(),
                 "raw_key": key,
+                "raw_value": raw_numeric,
+                "unit": unit,
             })
             run["metrics"][metric_field].append({
                 "value": _coerce_int_or_float(numeric),
                 "source_file": str(path),
                 "source_line": line_number,
                 "raw_key": key,
+                "unit": unit,
             })
 
         if not assignments and raw_line.strip():
@@ -388,11 +432,24 @@ def compare_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
             comparisons.append(comparison)
             continue
 
+        if before["identity_conflicts"] or after["identity_conflicts"]:
+            comparison["ineligible_reason"] = "conflicting state identifiers within a log"
+            comparisons.append(comparison)
+            continue
+
         comparison["state_comparison_eligible"] = True
         for metric in KNOWN_METRICS:
             b_stat = before["metrics"].get(metric, {})
             a_stat = after["metrics"].get(metric, {})
-            comparison["deltas"][metric] = _numeric_delta(b_stat.get("mean"), a_stat.get("mean"))
+            compatible_units = (b_stat.get("unit") == a_stat.get("unit") and
+                                not b_stat.get("ineligible_reason") and
+                                not a_stat.get("ineligible_reason"))
+            delta = _numeric_delta(b_stat.get("mean"), a_stat.get("mean"))
+            delta["unit"] = b_stat.get("unit") if compatible_units else None
+            if not compatible_units:
+                delta.update(delta=None, delta_percent=None,
+                             ineligible_reason="metric units are incompatible or mixed")
+            comparison["deltas"][metric] = delta
         comparisons.append(comparison)
     return comparisons
 
@@ -411,7 +468,7 @@ def make_report(logs: list[Path]) -> dict[str, Any]:
 
 def write_json(report: dict[str, Any], output: Path) -> None:
     output.write_text(
-        json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False, allow_nan=False) + "\n",
         encoding="utf-8",
     )
 
@@ -437,6 +494,7 @@ def write_csv(report: dict[str, Any], output: Path) -> None:
                 "source_line": sample["source_line"],
                 "raw_key": sample["raw_key"],
                 "raw_line": sample["raw_line"],
+                "unit": sample["unit"],
             })
 
     for pair_index, comparison in enumerate(report["comparisons"]):
@@ -473,12 +531,15 @@ def write_csv(report: dict[str, Any], output: Path) -> None:
                     "source_line": "",
                     "raw_key": "",
                     "raw_line": "",
+                    "unit": delta.get("unit", ""),
+                    "ineligible_reason": delta.get("ineligible_reason", ""),
                 })
 
     fieldnames = [
         "record_type", "pair_index", "run_index", "run_path", "metric",
         "value_before", "value_after", "delta", "delta_percent",
         "source_file", "source_line", "raw_key", "raw_line",
+        "unit", "ineligible_reason",
     ]
     with output.open("w", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=fieldnames)
@@ -521,6 +582,7 @@ def write_markdown(report: dict[str, Any], output: Path) -> None:
             metric_data = run["metrics"].get(metric, {})
             lines.append(
                 f"- {metric}: samples={metric_data.get('samples', 0)} "
+                f"unit={metric_data.get('unit')} "
                 f"min={metric_data.get('min','n/a')} "
                 f"mean={metric_data.get('mean','n/a')} "
                 f"max={metric_data.get('max','n/a')}"
@@ -558,8 +620,10 @@ def write_markdown(report: dict[str, Any], output: Path) -> None:
                         delta_percent = f"{value:.3f}"
                     lines.append(
                         f"- {metric}: "
+                        f"unit={delta.get('unit')} "
                         f"{delta.get('before', 'n/a')} -> {delta.get('after', 'n/a')} "
-                        f"(Δ={delta.get('delta', 'n/a')}, Δ%= {delta_percent})"
+                        f"(Δ={delta.get('delta', 'n/a')}, Δ%= {delta_percent}) "
+                        f"{delta.get('ineligible_reason', '')}"
                     )
             lines.append("")
 

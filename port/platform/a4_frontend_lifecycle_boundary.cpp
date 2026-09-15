@@ -5,6 +5,7 @@
 // controls do not pull a second desktop message loop into the port.
 
 #include "a4_frontend_lifecycle_boundary.h"
+#include "a31_demo_ending.h"
 
 #include "IMEManager.h"
 #include "dx8renderer.h"
@@ -16,6 +17,7 @@
 #include "init.h"
 #include "movie.h"
 #include "scorescreen.h"
+#include "savegame.h"
 #include "systemsettings.h"
 #include "textureloader.h"
 #include "wwuiinput.h"
@@ -204,6 +206,8 @@ void A4_Frontend_Reset_Trace(void)
 void A4_Frontend_Begin_Menu_Loop(void)
 {
 	g_frontend_trace.menu_loop_active = true;
+	g_frontend_trace.pause_loop_active = false;
+	g_frontend_trace.reload_requested = false;
 	g_frontend_trace.exit_requested = false;
 	g_frontend_trace.exit_code = 0;
 	g_frontend_trace.tutorial_start_latched = false;
@@ -216,7 +220,24 @@ void A4_Frontend_Begin_Menu_Loop(void)
 void A4_Frontend_End_Menu_Loop(void)
 {
 	g_frontend_trace.menu_loop_active = false;
+	g_frontend_trace.pause_loop_active = false;
 	::memset(g_frontend_previous_keys, 0, sizeof(g_frontend_previous_keys));
+}
+
+void A4_Frontend_Begin_Pause_Loop(void)
+{
+	// Preserve the original launch identity and any pending exit request.
+	g_frontend_trace.menu_loop_active = true;
+	g_frontend_trace.pause_loop_active = true;
+	g_frontend_trace.reload_requested = false;
+}
+
+void A4_Frontend_Prime_WWUI_Key_Transitions(void)
+{
+	// Call after Input::Update in menu mode: held Start must not dismiss EVA.
+	for (int key = 0; key < 256; ++key) {
+		g_frontend_previous_keys[key] = Is_Pressed_Key(key);
+	}
 }
 
 bool A4_Frontend_Is_Menu_Loop_Active(void)
@@ -234,15 +255,46 @@ int A4_Frontend_Exit_Code(void)
 	return g_frontend_trace.exit_code;
 }
 
+bool A4_Frontend_Is_Tutorial_Source(const char *map_name)
+{
+	if (A31Demo::IsTutorialMap(map_name)) return true;
+	if (map_name == NULL) return false;
+	const size_t length = strlen(map_name);
+	if (length < 10U || length >= sizeof(g_frontend_trace.tutorial_map) ||
+		strnicmp(map_name, "save", 4) != 0 ||
+		(map_name[4] != '/' && map_name[4] != '\\') ||
+		stricmp(map_name + length - 4U, ".sav") != 0 ||
+		strstr(map_name, "..") != NULL || strchr(map_name, ':') != NULL) return false;
+	StringClass saved_map;
+	if (!SaveGameManager::Peek_Map_Name(map_name, saved_map)) return false;
+	return stricmp(saved_map.Peek_Buffer(), "M00_Tutorial.lsd") == 0 ||
+		A31Demo::IsTutorialMap(saved_map.Peek_Buffer());
+}
+
 bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice,
 	unsigned long clanID)
 {
+	StringClass source(map_name != NULL ? map_name : "");
+	const size_t source_length = strlen(source.Peek_Buffer());
+	// Original LoadSPGameMenu passes a basename; preserve its save directory.
+	if (source_length > 4U && stricmp(source.Peek_Buffer() + source_length - 4U, ".sav") == 0 &&
+		strchr(source.Peek_Buffer(), '/') == NULL && strchr(source.Peek_Buffer(), '\\') == NULL) {
+		source = "save\\";
+		source += map_name;
+	}
+#if defined(__vita__) && RENEGADE_VITA_M00_DEMO
+	// Consume rejected launches as well: false would fall through to the
+	// desktop GameInitMgr path and allow campaign/other-map transitions.
+	if (!g_frontend_trace.menu_loop_active || !A4_Frontend_Is_Tutorial_Source(source.Peek_Buffer())) return true;
+#endif
 	if (!g_frontend_trace.menu_loop_active || map_name == NULL) return false;
+	if (strlen(source.Peek_Buffer()) >= sizeof(g_frontend_trace.tutorial_map)) return true;
 	g_frontend_trace.tutorial_start_latched = true;
 	Copy_Text(g_frontend_trace.tutorial_map,
-		sizeof(g_frontend_trace.tutorial_map), map_name);
+		sizeof(g_frontend_trace.tutorial_map), source.Peek_Buffer());
 	g_frontend_trace.tutorial_team_choice = teamChoice;
 	g_frontend_trace.tutorial_clan_id = clanID;
+	g_frontend_trace.reload_requested = g_frontend_trace.pause_loop_active;
 	return true;
 }
 

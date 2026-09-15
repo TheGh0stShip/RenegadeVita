@@ -104,7 +104,8 @@ class MissionCompletionContractTests(unittest.TestCase):
         main = (ROOT / "port/platform/vita/a30_main.cpp").read_text(
             encoding="utf-8"
         )
-        self.assertIn("const bool runtime_ok = interactive.attempted", main)
+        self.assertIn("const bool gameplay_ok = interactive.attempted", main)
+        self.assertIn("runtime_ok = gameplay_ok || (interactive.frontend_exit_requested", main)
         self.assertIn("interactive.clean_exit_requested", main)
         self.assertIn("interactive.teardown_completed", main)
         self.assertIn("const int exit_code = runtime_ok ? 0 : 1", main)

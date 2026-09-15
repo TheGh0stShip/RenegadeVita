@@ -35,6 +35,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "dlgconfigperformancetab.h"
+#include "renegade_vita_options.h"
 #include "resource.h"
 #include "registry.h"
 #include "comboboxctrl.h"
@@ -169,6 +170,8 @@ DlgConfigPerformanceTabClass::On_Init_Dialog (void)
 	Setup_Controls ();
 	Load_Values ();
 	Determine_Performance_Setting ();
+	InitialSettings.Delete_All();
+	Get_Settings(InitialSettings);
 
 	//
 	//	Set the visibility of the expert windows controls
@@ -320,6 +323,23 @@ DlgConfigPerformanceTabClass::Load_Values (void)
 		int texture_red		= registry.Get_Int (VALUE_NAME_TEXTURE_RES, 0);
 		int particle_detail	= registry.Get_Int (VALUE_NAME_PARTICLE_DETAIL, 1);
 		int npatches			= registry.Get_Int (VALUE_NAME_NPATCHES, 0);
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		static_shadows = COMBAT_SCENE->Are_Static_Projectors_Enabled();
+		shadow_mode = COMBAT_SCENE->Get_Shadow_Mode();
+		texture_red = WW3D::Get_Texture_Reduction();
+		npatches = 0;
+		// Original particle-detail registry value is consumed only by the
+		// desktop initializer; no live native setter exists for this control.
+		Enable_Dlg_Item(IDC_PARTICLE_DETAIL_SLIDER, false);
+		Enable_Dlg_Item(IDC_CHAR_SHADOWS_SLIDER, false);
+		Enable_Dlg_Item(IDC_TERRAIN_SHADOW_CHECK, false);
+		Enable_Dlg_Item(IDC_NPATCH_CHECK, false);
+	for (int i = 0; i < Get_Control_Count(); ++i) {
+		if (WideStringClass(Get_Control(i)->Get_Text()) == TRANSLATE(IDS_READ_ONLY))
+			Get_Control(i)->Set_Text(L"Lighting, texture filtering and unavailable effects use fixed settings in this Vita build.");
+	}
+
+#endif
 
 		//
 		//	Get the surface effect mode
@@ -402,7 +422,7 @@ DlgConfigPerformanceTabClass::Determine_Performance_Setting (void)
 	//
 	float level_sum = 0;
 	for (int index = 0; index < MAX_EXPERT_OPTIONS; index ++) {
-		level_sum += (option_levels[index] / count_per_option[index]);
+		if (count_per_option[index] != 0) level_sum += (option_levels[index] / count_per_option[index]);
 	}
 
 	//
@@ -509,6 +529,9 @@ DlgConfigPerformanceTabClass::Update_Expert_Controls (int level)
 		//	Determine which control we are updating
 		//
 		int ctrl_id = _PerformanceLevels[level][index].ctrl_id;
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		if (!Is_Dlg_Item_Enabled(ctrl_id)) continue;
+#endif
 		switch (ctrl_id) {
 
 			//
@@ -568,6 +591,14 @@ DlgConfigPerformanceTabClass::On_SliderCtrl_Pos_Changed
 bool
 DlgConfigPerformanceTabClass::On_Apply (void)
 {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	DynamicVectorClass<int> current;
+	Get_Settings(current);
+	if (InitialSettings.Count() != MAX_EXPERT_OPTIONS) return false;
+	bool changed = false;
+	for (int i = 0; i < MAX_EXPERT_OPTIONS; ++i) changed |= current[i] != InitialSettings[i];
+	if (!changed) return true;
+#endif
 	SliderCtrlClass *geometry_slider			= (SliderCtrlClass *)Get_Dlg_Item (IDC_GEOMETRY_DETAIL_SLIDER);
 	SliderCtrlClass *char_shadows_slider	= (SliderCtrlClass *)Get_Dlg_Item (IDC_CHAR_SHADOWS_SLIDER);
 	SliderCtrlClass *texture_slider			= (SliderCtrlClass *)Get_Dlg_Item (IDC_TEXTURE_DETAIL_SLIDER);
@@ -606,8 +637,16 @@ DlgConfigPerformanceTabClass::On_Apply (void)
 		//
 		//	Store the values in the registry
 		//
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		int static_budget = 0, dynamic_budget = 0;
+		COMBAT_SCENE->Get_Polygon_Budgets(&static_budget, &dynamic_budget);
+		if (current[4] != InitialSettings[4]) static_budget = dynamic_budget = lod_budget;
+		registry.Set_Int (VALUE_NAME_DYN_LOD, dynamic_budget);
+		registry.Set_Int (VALUE_NAME_STATIC_LOD, static_budget);
+#else
 		registry.Set_Int (VALUE_NAME_DYN_LOD, lod_budget);
 		registry.Set_Int (VALUE_NAME_STATIC_LOD, lod_budget);
+#endif
 
 		registry.Set_Int (VALUE_NAME_DYN_SHADOWS, (shadow_mode != PhysicsSceneClass::SHADOW_MODE_NONE));
 		registry.Set_Int (VALUE_NAME_STATIC_SHADOWS, static_shadows);
@@ -623,6 +662,10 @@ DlgConfigPerformanceTabClass::On_Apply (void)
 		//
 		//	Pass the values onto the game
 		//
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		// The coarse slider must not round an unchanged custom scene budget.
+		if (current[4] != InitialSettings[4])
+#endif
 		COMBAT_SCENE->Set_Polygon_Budgets (lod_budget, lod_budget);
 		COMBAT_SCENE->Enable_Dynamic_Projectors ((shadow_mode != PhysicsSceneClass::SHADOW_MODE_NONE));
 		COMBAT_SCENE->Enable_Static_Projectors ((static_shadows != 0));
@@ -636,6 +679,9 @@ DlgConfigPerformanceTabClass::On_Apply (void)
 		}
 		WW3D::Set_Texture_Reduction (max (2 - texture_red, 0));
 		SurfaceEffectsManager::Set_Mode ((SurfaceEffectsManager::MODE)surface_effect);
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		return RenegadeVitaOptions::Save_Performance(*COMBAT_SCENE);
+#endif
 	}
 
 	return true;

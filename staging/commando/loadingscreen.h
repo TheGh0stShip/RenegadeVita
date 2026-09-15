@@ -25,7 +25,11 @@ class LoadingScreenClass
 	float	LoadPercentageDrawn;
 	float	LoadPercentageClamp;
 	float	LoadPercentageRate;
+	float PresentationProgress;
+	unsigned long long LastPresentationUs;
 	char	StatusTextBuffer[128];
+	int LastLoadProgress;
+	int LastConsolePercent;
 
 	void Update_Status_Text(void);
 
@@ -36,11 +40,13 @@ public:
 	bool Has_Backdrop_Model( void ) const;
 	float	Get_Predicted_Percentage( int state );
 	void Render(bool update_network = false);
+	void Set_Presentation_Progress(float progress);
 };
 
 void * Commando_Create_Original_Loading_Screen( void );
 void Commando_Render_Original_Loading_Screen( void * screen, bool update_network );
 bool Commando_Original_Loading_Screen_Has_Backdrop_Model( void * screen );
 void Commando_Destroy_Original_Loading_Screen( void * screen );
+void Commando_Set_Original_Loading_Progress(void *screen, float progress);
 
 #endif // LOADINGSCREEN_H

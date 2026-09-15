@@ -1,0 +1,88 @@
+--- a/editctrl.h
++++ b/editctrl.h
+@@ -83,6 +83,9 @@
+ 	virtual void		Set_Text (const WCHAR *title);
+ 
+ 	int					Get_Text_Length (void) const;
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	bool Begin_Native_Text_Entry (void);
++#endif
+ 
+ 	void					Set_Text_Limit (int numChars);
+ 	int					Get_Text_Limit (void) const;
+--- a/editctrl.cpp
++++ b/editctrl.cpp
+@@ -44,6 +44,9 @@
+ #include "dialogmgr.h"
+ #include "stylemgr.h"
+ #include "dialogbase.h"
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#include "renegade_vita_text_entry.h"
++#endif
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+@@ -89,6 +92,9 @@
+ ////////////////////////////////////////////////////////////////
+ EditCtrlClass::~EditCtrlClass (void)
+ {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	RenegadeVitaTextEntry::Cancel(this);
++#endif
+ 	if (mIME) {
+ 		mIME->Release_Ref();
+ 	}
+@@ -281,6 +287,14 @@
+ void
+ EditCtrlClass::Render (void)
+ {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	wchar_t native_text[2049];
++	if (RenegadeVitaTextEntry::Take_Result(this, native_text, 2049)) {
++		Set_Text(native_text);
++		Set_Caret_Pos(Get_Text_Length());
++		ADVISE_NOTIFY(On_EditCtrl_Change(this, Get_ID()));
++	}
++#endif
+ 	//
+ 	//	Recreate the renderers (if necessary)
+ 	//
+@@ -417,10 +431,20 @@
+ 	//
+ 	//	Reset our flags
+ 	//
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	if (WasButtonPressedOnMe && ClientRect.Contains(mouse_pos)) Begin_Native_Text_Entry();
++#endif
+ 	WasButtonPressedOnMe	= false;
+ 	return ;
+ }
+ 
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++bool EditCtrlClass::Begin_Native_Text_Entry(void)
++{
++	return Is_Enabled() && (Get_Style() & ES_READONLY) == 0 &&
++		RenegadeVitaTextEntry::Begin(this, Get_Text(), Get_Text_Limit());
++}
++#endif
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+--- a/dialogbase.cpp
++++ b/dialogbase.cpp
+@@ -1047,6 +1047,15 @@
+ 		}
+ 
+ 	} else if (input != NULL) {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
++		// Cross on an edit field opens the system keyboard. Even an IME
++		// initialization failure must not fall through and activate Save.
++		if (key_id == VK_RETURN && input->As_EditCtrlClass() != NULL) {
++			input->As_EditCtrlClass()->Begin_Native_Text_Entry();
++			Release_Ref();
++			return true;
++		}
++#endif
+ 
+ 		//
+ 		//	Send out the standard On_OK notification if the user

@@ -99,8 +99,15 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 		//
 		//	Validate the file header
 		//
+		const int archive_size = file->Size();
 		if ( IsValid ) {
 			IsValid = (::memcmp( header.signature, "MIX1", sizeof ( header.signature ) ) == 0);
+			// Validate signed offsets before seeks or count-derived allocation.
+			IsValid = IsValid && archive_size >= static_cast<int>(sizeof(header)) &&
+				header.header_offset >= static_cast<int>(sizeof(header)) &&
+				header.header_offset <= archive_size - static_cast<int>(sizeof(FileCount)) &&
+				header.names_offset >= static_cast<int>(sizeof(header)) &&
+				header.names_offset <= archive_size - static_cast<int>(sizeof(int));
 		}
 
 		//
@@ -116,9 +123,15 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 		//	Read the array of data headers
 		//
 		if ( IsValid ) {
-			FileInfo.Resize( FileCount );
-			int size = FileCount * sizeof( FileInfoStruct );
-			IsValid = ( file->Read( &FileInfo[0], size ) == size );
+			const int available = archive_size - header.header_offset -
+				static_cast<int>(sizeof(FileCount));
+			IsValid = FileCount >= 0 &&
+				FileCount <= available / static_cast<int>(sizeof(FileInfoStruct));
+			if (IsValid && FileCount != 0) {
+				FileInfo.Resize( FileCount );
+				const int size = FileCount * static_cast<int>(sizeof(FileInfoStruct));
+				IsValid = ( file->Read( &FileInfo[0], size ) == size );
+			}
 		}
 
 		//
@@ -136,6 +149,7 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 
 	} else {
 		WWDEBUG_SAY(( "MixFileFactory( %s ) FAILED\n", mix_filename ));
+		if (file != NULL) factory->Return_File(file);
 	}
 }
 
@@ -199,11 +213,11 @@ bool	MixFileFactoryClass::Build_Filename_List (DynamicVectorClass<StringClass> &
 			}
 		}
 
-		//
-		//	Close the file
-		//
-		Factory->Return_File( file );
 	}
+
+	// Balance Get_File even when the archive could not be opened. The original
+	// factory owns close/destruction for both successful and failed opens.
+	if (file != NULL) Factory->Return_File(file);
 
 	return retval;
 }

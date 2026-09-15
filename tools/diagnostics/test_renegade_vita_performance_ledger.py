@@ -34,6 +34,54 @@ def sha256(path: Path) -> str:
 
 
 class RuntimeLogFieldCompareTests(unittest.TestCase):
+    def parse_pair(self, before_text, after_text):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            before, after = root / "before.log", root / "after.log"
+            identity = "content_id=retail-hash configuration_id=balanced camera_id=fixed-route\n"
+            before.write_text(identity + before_text)
+            after.write_text(identity + after_text)
+            run_tool([before, after], root)
+            return json.loads((root / "report.json").read_text())
+
+    def test_identity_change_cannot_be_hidden_by_final_matching_identity(self):
+        report = self.parse_pair(
+            "camera_id=other fps=20\ncamera_id=fixed-route fps=60\n", "fps=60\n")
+        comparison = report["comparisons"][0]
+        self.assertFalse(comparison["state_comparison_eligible"])
+        self.assertIn("conflicting", comparison["ineligible_reason"])
+        self.assertEqual(len(report["runs"][0]["identity_conflicts"]), 2)
+
+    def test_explicit_time_and_memory_units_normalize_before_comparison(self):
+        report = self.parse_pair(
+            "rendering_ms=12.5 memory_mib=2 frame_time_p95_ms=20\n",
+            "rendering_us=10000 memory_kib=2048 frame_time_p95_us=18000\n")
+        deltas = report["comparisons"][0]["deltas"]
+        self.assertEqual(deltas["rendering"]["delta"], -2500)
+        self.assertEqual(deltas["rendering"]["unit"], "us")
+        self.assertEqual(deltas["memory"]["delta"], 0)
+        self.assertEqual(deltas["memory"]["unit"], "bytes")
+        self.assertEqual(deltas["frame_time_percentile_p95"]["delta"], -2000)
+
+    def test_unspecified_units_do_not_compare_to_explicit_units(self):
+        report = self.parse_pair("rendering=12\n", "rendering_us=12000\n")
+        delta = report["comparisons"][0]["deltas"]["rendering"]
+        self.assertIsNone(delta["delta"])
+        self.assertIn("units", delta["ineligible_reason"])
+
+    def test_mixed_units_in_one_log_preserve_samples_without_averaging(self):
+        report = self.parse_pair("rendering=12 rendering_us=12000\n", "rendering_us=12000\n")
+        metric = report["runs"][0]["metrics"]["rendering"]
+        self.assertEqual(metric["samples"], 2)
+        self.assertIsNone(metric["mean"])
+        self.assertEqual(metric["units"], ["unspecified", "us"])
+
+    def test_nonfinite_values_are_retained_as_unparsed_evidence(self):
+        report = self.parse_pair("fps=NaN fps=Inf fps=-Inf fps=1e999 rendering_ms=1e308\n", "fps=60\n")
+        run = report["runs"][0]
+        self.assertEqual(run["samples"], [])
+        self.assertEqual(run["unknown_count"], 5)
+
     def test_mixed_ordering_and_recognized_labels(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

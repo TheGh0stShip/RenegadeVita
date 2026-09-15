@@ -1,0 +1,55 @@
+--- a/dlgevaencyclopedia.cpp
++++ b/dlgevaencyclopedia.cpp
+@@ -56,9 +56,8 @@
+ #include "changeteamevent.h"
+ #include "cstextobj.h"
+ #include "wwaudio.h"
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlghelpscreen.h"
+-#endif
++#include "dlgsavegame.h"
+ #include "crandom.h"
+ #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "slavemaster.h"
+@@ -108,11 +107,8 @@
+ EVAEncyclopediaMenuClass::On_Init_Dialog (void)
+ {
+ #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+-	// Keep the unavailable desktop help entry visible but noninteractive.
+-	if (Get_Dlg_Item (IDC_HELP_BUTTON) != NULL) Get_Dlg_Item (IDC_HELP_BUTTON)->Enable (false);
+ 	// Loading another world from this callback is not a native pause operation.
+ 	if (Get_Dlg_Item (IDC_MENU_LOAD_SP_GAME_BUTTON) != NULL) Get_Dlg_Item (IDC_MENU_LOAD_SP_GAME_BUTTON)->Enable (false);
+-	if (Get_Dlg_Item (IDC_MENU_SAVE_SP_GAME_BUTTON) != NULL) Get_Dlg_Item (IDC_MENU_SAVE_SP_GAME_BUTTON)->Enable (false);
+ #if RENEGADE_VITA_M00_DEMO
+ 	// Keep unsupported demo options visible without opening an absent dialog.
+ 	if (Get_Dlg_Item (IDC_MENU_OPTIONS_BUTTON) != NULL) Get_Dlg_Item (IDC_MENU_OPTIONS_BUTTON)->Enable (false);
+@@ -229,21 +225,24 @@
+ {
+ 	bool allow_default_processing = true;
+ #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+-	// This source selection does not provide the desktop help presenter.
+-	if (ctrl_id == IDC_HELP_BUTTON) return;
+ #if RENEGADE_VITA_M00_DEMO
+ 	if (ctrl_id == IDC_MENU_OPTIONS_BUTTON) return;
+ #endif
+-	if (ctrl_id == IDC_MENU_LOAD_SP_GAME_BUTTON || ctrl_id == IDC_MENU_SAVE_SP_GAME_BUTTON) return;
++	if (ctrl_id == IDC_MENU_LOAD_SP_GAME_BUTTON) return;
+ #endif
+ 
+ 	switch (ctrl_id)
+ 	{
+ 		case IDC_HELP_BUTTON:
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 			START_DIALOG (HelpScreenDialogClass);
+-#endif
+ 			break;
++
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		case IDC_MENU_SAVE_SP_GAME_BUTTON:
++			START_DIALOG (SaveGameMenuClass);
++			allow_default_processing = false;
++			break;
++#endif
+ 
+ 		case IDC_MENU_MAIN_MENU_BUTTON:
+ 			Prompt_User ();

@@ -1,0 +1,77 @@
+--- a/source/ffp.c
++++ b/source/ffp.c
+@@ -1956,7 +1956,7 @@
+ 		} else {
+ 			vgl_fast_memcpy(legacy_pool_ptr + 7, &current_vtx.clr.x, sizeof(float) * 4);
+ 		}
+-		legacy_pool_ptr += LEGACY_MT_VERTEX_STRIDE;
++		legacy_pool_ptr += lighting_state ? LEGACY_MT_VERTEX_STRIDE : LEGACY_MT_VERTEX_STRIDE - 15;
+ 	} else if (texture_units[0].state) { // Texturing enabled
+ 		if (lighting_state) {
+ 			vgl_fast_memcpy(legacy_pool_ptr + 3, &current_vtx.uv.x, sizeof(float) * 2);
+@@ -1964,14 +1964,14 @@
+ 		} else {
+ 			vgl_fast_memcpy(legacy_pool_ptr + 3, &current_vtx.uv.x, sizeof(float) * 6);
+ 		}
+-		legacy_pool_ptr += LEGACY_VERTEX_STRIDE;
++		legacy_pool_ptr += lighting_state ? LEGACY_VERTEX_STRIDE : LEGACY_VERTEX_STRIDE - 15;
+ 	} else { // Texturing disabled
+ 		if (lighting_state) {
+ 			vgl_fast_memcpy(legacy_pool_ptr + 3, &current_vtx.amb.x, sizeof(float) * 19);
+ 		} else {
+ 			vgl_fast_memcpy(legacy_pool_ptr + 3, &current_vtx.clr.x, sizeof(float) * 4);
+ 		}
+-		legacy_pool_ptr += LEGACY_NT_VERTEX_STRIDE;
++		legacy_pool_ptr += lighting_state ? LEGACY_NT_VERTEX_STRIDE : LEGACY_NT_VERTEX_STRIDE - 15;
+ 	}
+ 
+ 	// Increasing vertex counter
+@@ -2504,6 +2504,10 @@
+ 	ffp_dirty_vert = GL_TRUE;
+ 	if (texture_units[1].state) { // Multitexture usage
+ 		ffp_vertex_attrib_state = FFP_ATTRIB_MASK_ALL;
++		// Unlit vertices contain RGBA in place of the 19 lighting floats.
++		for (int i = 0; i < FFP_VERTEX_ATTRIBS_NUM; ++i)
++			legacy_mt_vertex_stream_config[i].stride = sizeof(float) *
++				(lighting_state ? LEGACY_MT_VERTEX_STRIDE : LEGACY_MT_VERTEX_STRIDE - 15);
+ 		reload_ffp_shaders(legacy_mt_vertex_attrib_config, legacy_mt_vertex_stream_config, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
+ 		for (int i = 0; i < 2; i++) {
+ 			texture *tex = &texture_slots[texture_units[i].tex_id[texture_units[i].state > 1 ? 0 : 1]];
+@@ -2533,6 +2537,10 @@
+ 		}
+ 	} else if (texture_units[0].state) { // Texturing usage
+ 		ffp_vertex_attrib_state = (1 << FFP_ATTRIB_POSITION) | (1 << FFP_ATTRIB_TEX0) | (1 << FFP_ATTRIB_COLOR);
++		// Unlit vertices contain RGBA in place of the 19 lighting floats.
++		for (int i = 0; i < FFP_VERTEX_ATTRIBS_NUM - 1; ++i)
++			legacy_vertex_stream_config[i].stride = sizeof(float) *
++				(lighting_state ? LEGACY_VERTEX_STRIDE : LEGACY_VERTEX_STRIDE - 15);
+ 		reload_ffp_shaders(legacy_vertex_attrib_config, legacy_vertex_stream_config, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
+ 		texture *tex = &texture_slots[texture_units[0].tex_id[texture_units[0].state > 1 ? 0 : 1]];
+ #ifdef HAVE_TEX_CACHE
+@@ -2560,6 +2568,10 @@
+ 		sceGxmSetFragmentTexture(gxm_context, 0, &tex->gxm_tex);
+ 	} else { // No texturing usage
+ 		ffp_vertex_attrib_state = (1 << FFP_ATTRIB_POSITION) | (1 << FFP_ATTRIB_COLOR);
++		// Unlit vertices contain RGBA in place of the 19 lighting floats.
++		for (int i = 0; i < FFP_VERTEX_ATTRIBS_NUM - 2; ++i)
++			legacy_nt_vertex_stream_config[i].stride = sizeof(float) *
++				(lighting_state ? LEGACY_NT_VERTEX_STRIDE : LEGACY_NT_VERTEX_STRIDE - 15);
+ 		reload_ffp_shaders(legacy_nt_vertex_attrib_config, legacy_nt_vertex_stream_config, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
+ 	}
+ 
+@@ -2600,13 +2612,8 @@
+ 
+ 	sceGxmDraw(gxm_context, prim, SCE_GXM_INDEX_FORMAT_U16, ptr, index_count);
+ 
+-	// Moving legacy pool address offset
+-	if (texture_units[1].state)
+-		legacy_pool += vertex_count * LEGACY_MT_VERTEX_STRIDE;
+-	else if (texture_units[0].state)
+-		legacy_pool += vertex_count * LEGACY_VERTEX_STRIDE;
+-	else
+-		legacy_pool += vertex_count * LEGACY_NT_VERTEX_STRIDE;
++	// Advance by the exact emitted stride, preserving the lit layout.
++	legacy_pool = legacy_pool_ptr;
+ 
+ #ifndef SKIP_ERROR_HANDLING
+ 	// Checking for out of bounds of the immediate mode vertex pool

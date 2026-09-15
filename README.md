@@ -4,9 +4,19 @@ An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: 
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Development status — not a public game release.** No retail data is in this repository or its VPKs. Use only your own legally obtained retail data.
+> **Development status — private source repository.** The current Dev134
+> package is available with the tutorial-only setup guide at
+> [Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
+> No retail data is in this repository or its VPKs. Use only your own legally
+> obtained retail data.
 
 ## Where the port stands
+
+The current candidate is **A3.5-dev134**. Its canonical ARM/package closure
+and matching Vita3K tutorial checkpoint passed. The exact physical deployment
+was readback-verified on title `RNEGA3101`; physical runtime FPS, movie audio,
+and complete-demo acceptance remain separate open gates. See
+[reports/DEV134_PHYSICAL_MILESTONE.md](reports/DEV134_PHYSICAL_MILESTONE.md).
 
 | Evidence area | Current state |
 | --- | --- |

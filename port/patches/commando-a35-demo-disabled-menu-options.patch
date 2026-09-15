@@ -1,0 +1,25 @@
+--- a/dlgmainmenu.cpp
++++ b/dlgmainmenu.cpp
+@@ -225,1 +225,11 @@
+-	Update_Version_Number ();
++	Update_Version_Number ();
++#if RENEGADE_VITA_M00_DEMO
++	const int unavailable[] = {
++		IDC_MENU_MP_INTERNET_GAME_BUTTON, IDC_MENU_MP_LAN_GAME_BUTTON,
++		IDC_MENU_START_PRACTICE_GAME_BUTTON, IDC_MENU_OPTIONS_BUTTON
++	};
++	for (unsigned i = 0; i < sizeof(unavailable) / sizeof(unavailable[0]); ++i) {
++		DialogControlClass *control = Get_Dlg_Item(unavailable[i]);
++		if (control != NULL) control->Enable(false);
++	}
++#endif
+@@ -505,1 +515,8 @@
+-	bool allow_default = true;
++	bool allow_default = true;
++#if RENEGADE_VITA_M00_DEMO
++	// Also reject direct commands; disabling presentation alone is not a gate.
++	if (ctrl_id == IDC_MENU_MP_INTERNET_GAME_BUTTON ||
++		ctrl_id == IDC_MENU_MP_LAN_GAME_BUTTON ||
++		ctrl_id == IDC_MENU_START_PRACTICE_GAME_BUTTON ||
++		ctrl_id == IDC_MENU_OPTIONS_BUTTON) return;
++#endif

@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev99",
+  "milestone": "A3.5-dev134",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 506,
+  "original_source_files_compiled": 522,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -131,8 +131,23 @@
     "Code/Commando/datasafe.cpp",
     "Code/Commando/devoptions.cpp",
     "Code/Commando/dialogtests.cpp",
+    "Code/Commando/dlgconfigaudiotab.cpp",
+    "Code/Commando/dlgconfigperformancetab.cpp",
+    "Code/Commando/dlgconfigvideotab.cpp",
+    "Code/Commando/dlgevabuildingstab.cpp",
+    "Code/Commando/dlgevacharacterstab.cpp",
+    "Code/Commando/dlgevadatatab.cpp",
+    "Code/Commando/dlgevaencyclopedia.cpp",
+    "Code/Commando/dlgevamaptab.cpp",
+    "Code/Commando/dlgevaobjectivestab.cpp",
+    "Code/Commando/dlgevavehiclestab.cpp",
+    "Code/Commando/dlgevaviewertab.cpp",
+    "Code/Commando/dlgevaweaponstab.cpp",
+    "Code/Commando/dlghelpscreen.cpp",
     "Code/Commando/dlgloadspgame.cpp",
     "Code/Commando/dlgmainmenu.cpp",
+    "Code/Commando/dlgsavegame.cpp",
+    "Code/Commando/dlgtechoptions.cpp",
     "Code/Commando/evictionevent.cpp",
     "Code/Commando/gamedata.cpp",
     "Code/Commando/gamedataupdateevent.cpp",
@@ -314,6 +329,7 @@
     "Code/wwbitpack/encodertypeentry.cpp",
     "Code/wwdebug/wwprofile.cpp",
     "Code/wwlib/FastAllocator.cpp",
+    "Code/wwlib/TARGA.CPP",
     "Code/wwlib/b64pipe.cpp",
     "Code/wwlib/b64straw.cpp",
     "Code/wwlib/base64.cpp",
@@ -518,7 +534,7 @@
   "staged_original_owner_paths": [
     "staging/commando/loadingscreen.cpp"
   ],
-  "vita_platform_renderer_validation_files": 26,
+  "vita_platform_renderer_validation_files": 27,
   "vita_translation_units": [
     "port/developer/a31_capture_telemetry.cpp",
     "port/audio/vita/renegade_miles_provider.cpp",
@@ -539,13 +555,14 @@
     "port/validation/a22_w3d_selftest.cpp",
     "port/validation/a30_world_runtime.cpp",
     "port/platform/vita/vita_platform.cpp",
+    "port/platform/vita/renegade_vita_text_entry.cpp",
     "port/platform/vita/a30_vita_runtime.cpp",
+    "port/platform/vita/a31_vita_runtime.cpp",
     "port/platform/a31_gameplay_boundary.cpp",
     "port/platform/a31_miscutil_boundary.cpp",
     "port/platform/a31_network_options_boundary.cpp",
     "port/platform/renegade_script_static_provider.cpp",
-    "port/platform/vita/a30_main.cpp",
-    "port/platform/vita/a31_vita_runtime.cpp"
+    "port/platform/vita/a30_main.cpp"
   ],
   "a4_frontend_boundary_files": 6,
   "a4_frontend_boundary_paths": [
@@ -613,11 +630,12 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 145,
-  "mechanically_patched_upstream_files": 259,
+  "patch_count": 182,
+  "mechanically_patched_upstream_files": 285,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
+    "Code/Combat/action.cpp",
     "Code/Combat/activeconversation.cpp",
     "Code/Combat/activeconversation.h",
     "Code/Combat/assetdep.cpp",
@@ -646,6 +664,7 @@
     "Code/Combat/input.cpp",
     "Code/Combat/mapmgr.cpp",
     "Code/Combat/messagewindow.cpp",
+    "Code/Combat/objectives.cpp",
     "Code/Combat/objectivesviewer.cpp",
     "Code/Combat/persistentgameobjobserver.cpp",
     "Code/Combat/playerdata.h",
@@ -689,8 +708,20 @@
     "Code/Commando/demosupport.h",
     "Code/Commando/dialogtests.cpp",
     "Code/Commando/dialogtests.h",
+    "Code/Commando/dlgconfigaudiotab.cpp",
+    "Code/Commando/dlgconfigperformancetab.cpp",
+    "Code/Commando/dlgconfigperformancetab.h",
+    "Code/Commando/dlgconfigvideotab.cpp",
+    "Code/Commando/dlgconfigvideotab.h",
+    "Code/Commando/dlgevaencyclopedia.cpp",
+    "Code/Commando/dlgevaencyclopedia.h",
+    "Code/Commando/dlgevamaptab.cpp",
+    "Code/Commando/dlgevaviewertab.cpp",
+    "Code/Commando/dlghelpscreen.cpp",
     "Code/Commando/dlgloadspgame.cpp",
     "Code/Commando/dlgmainmenu.cpp",
+    "Code/Commando/dlgsavegame.cpp",
+    "Code/Commando/dlgsavegame.h",
     "Code/Commando/evictionevent.cpp",
     "Code/Commando/gamedata.cpp",
     "Code/Commando/gamedata.h",
@@ -742,6 +773,7 @@
     "Code/ww3d2/collect.h",
     "Code/ww3d2/dazzle.cpp",
     "Code/ww3d2/ddsfile.cpp",
+    "Code/ww3d2/ddsfile.h",
     "Code/ww3d2/decalmsh.cpp",
     "Code/ww3d2/distlod.cpp",
     "Code/ww3d2/dllist.h",
@@ -787,8 +819,10 @@
     "Code/wwlib/FastAllocator.cpp",
     "Code/wwlib/FastAllocator.h",
     "Code/wwlib/Notify.h",
+    "Code/wwlib/TARGA.H",
     "Code/wwlib/binheap.h",
     "Code/wwlib/buff.cpp",
+    "Code/wwlib/bufffile.cpp",
     "Code/wwlib/chunkio.cpp",
     "Code/wwlib/chunkio.h",
     "Code/wwlib/hashtemplate.h",
@@ -855,12 +889,17 @@
     "Code/wwui/buttonctrl.cpp",
     "Code/wwui/comboboxctrl.h",
     "Code/wwui/dialogbase.cpp",
+    "Code/wwui/dialogmgr.cpp",
     "Code/wwui/dialogparser.cpp",
     "Code/wwui/editctrl.cpp",
     "Code/wwui/editctrl.h",
     "Code/wwui/imagectrl.cpp",
     "Code/wwui/listctrl.cpp",
+    "Code/wwui/mapctrl.cpp",
+    "Code/wwui/menubackdrop.cpp",
+    "Code/wwui/menuentryctrl.cpp",
     "Code/wwui/multilinetextctrl.cpp",
+    "Code/wwui/screencursor.cpp",
     "Code/wwui/stylemgr.cpp",
     "Code/wwui/textmarqueectrl.cpp",
     "Code/wwui/treectrl.cpp",
@@ -871,618 +910,235 @@
     "patch-target/a4-post-movie-mainmenu-hardening.patch/commando/renegadedialogmgr.cpp",
     "patch-target/a4-post-movie-mainmenu-hardening.patch/wwui/menubackdrop.cpp",
     "patch-target/a4-post-movie-mainmenu-hardening.patch/wwui/menudialog.cpp",
+    "patch-target/commando-a35-loading-animation-varargs.patch/commando/loadingscreen.cpp",
+    "patch-target/commando-a35-loading-presentation-clock.patch/loadingscreen.cpp",
+    "patch-target/commando-a35-loading-presentation-clock.patch/loadingscreen.h",
     "patch-target/commando-a35-loading-status-render.patch/loadingscreen.cpp",
+    "patch-target/commando-a35-loading-status-render.patch/loadingscreen.h",
     "patch-target/commando-a35-loading-status-text.patch/loadingscreen.cpp",
     "patch-target/commando-a35-loading-status-text.patch/loadingscreen.h",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp"
   ],
   "patches": [
     {
-      "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
+      "path": "port/patches/wwbitpack-gcc15.patch",
+      "stage_directory": "wwbitpack",
+      "sha256": "42346a359e6101a9d4e3037ed2b2588e9f949e1b11566ed801d89e3fe497c9cb",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "commando/dlgmainmenu.cpp",
-        "commando/movie.cpp",
-        "wwui/menubackdrop.cpp",
-        "wwui/menudialog.cpp",
-        "commando/renegadedialogmgr.cpp"
+        "BitPacker.cpp",
+        "bitstream.h",
+        "encodertypeentry.h"
       ]
     },
     {
-      "path": "port/patches/combat-a30-gcc15.patch",
+      "path": "port/patches/wwbitpack-a31-utf16-get.patch",
+      "stage_directory": "wwbitpack",
+      "sha256": "a40caed19d483ba3ed3d6546a1f56aa5fa8f4af811a1ff2f9151189537bca39e",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "damage.h",
-        "playerdata.h",
-        "weaponmanager.h",
-        "soldier.h",
-        "damage.cpp",
-        "scriptablegameobj.h",
-        "doors.cpp",
-        "elevator.cpp",
-        "buildingaggregate.cpp",
-        "savegame.cpp",
-        "WeatherMgr.h",
-        "backgroundmgr.h"
+        "bitstream.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a30-pointer-tokens.patch",
+      "path": "port/patches/wwlib-a21-posix.patch",
+      "stage_directory": "wwlib",
+      "sha256": "48e64787d8a004cfa62ade49e00e62d444ccc1f89f9f418dc1ab13faee284e01",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "reflist.cpp",
-        "reflist.h",
-        "scriptablegameobj.cpp"
+        "vector.h",
+        "simplevec.h",
+        "wwstring.h",
+        "wwstring.cpp",
+        "rawfile.cpp",
+        "mixfile.h",
+        "mixfile.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-assetdep-gcc15.patch",
+      "path": "port/patches/wwlib-a22-gcc15.patch",
+      "stage_directory": "wwlib",
+      "sha256": "8a30bb4910312f8a5a534e0dcf1862e3ec18180f648b26b8369af44bbd121883",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "assetdep.cpp"
+        "index.h",
+        "ini.cpp",
+        "ini.h",
+        "mempool.h",
+        "multilist.h",
+        "point.h",
+        "random.cpp",
+        "refcount.cpp",
+        "refcount.h"
       ]
     },
     {
-      "path": "port/patches/combat-a31-backgroundmgr-gcc15.patch",
+      "path": "port/patches/wwlib-a30-gcc15.patch",
+      "stage_directory": "wwlib",
+      "sha256": "5a0a08cdd95588a379b70e7700155fba25445df591be950ed45c989b6f42f868",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "backgroundmgr.cpp"
+        "binheap.h"
       ]
     },
     {
-      "path": "port/patches/combat-a31-ccamera-silent-listener.patch",
+      "path": "port/patches/wwlib-a31-gcc15.patch",
+      "stage_directory": "wwlib",
+      "sha256": "1d27a484a892a8e35cf9dcff9455a411c6486cc6cfcd67c657b6a204fba4955a",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "ccamera.cpp"
+        "FastAllocator.h",
+        "FastAllocator.cpp",
+        "thread.cpp",
+        "hashtemplate.h"
       ]
     },
     {
-      "path": "port/patches/combat-a31-combatsound-gcc15.patch",
+      "path": "port/patches/wwlib-a31-thread-posix.patch",
+      "stage_directory": "wwlib",
+      "sha256": "b5096e495088489840761f73ade66391ddd590418c3ab0b8703e0d9f6e97f178",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "combatsound.cpp"
+        "thread.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-conversation-loop-scope.patch",
+      "path": "port/patches/wwlib-a31-notify-typename.patch",
+      "stage_directory": "wwlib",
+      "sha256": "19b35516cf8b5710397681bbdc3170887c9b6e20845fe52978ae7cbe5379f1aa",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "conversationmgr.cpp",
-        "conversation.cpp",
-        "activeconversation.cpp"
+        "Notify.h"
       ]
     },
     {
-      "path": "port/patches/combat-a31-encyclopedia-zero-read.patch",
+      "path": "port/patches/wwlib-a31-wide-abi.patch",
+      "stage_directory": "wwlib",
+      "sha256": "20c8f4aaf950aab6aaf35e3ce0656f68c0d55b8be849e78762b7fd9715c7214f",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "encyclopediamgr.cpp"
+        "ini.h",
+        "ini.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-gcc15.patch",
+      "path": "port/patches/wwlib-a31-short-wchar-host.patch",
+      "stage_directory": "wwlib",
+      "sha256": "e5d8d8f331aefd20732bbaf7fa6187ecd7a2f8d5c272989b9cf05abefa93f25d",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "dialogue.cpp",
-        "beacongameobj.cpp",
-        "textwindow.h",
-        "combat.cpp",
-        "scriptzone.cpp",
-        "soldier.cpp",
-        "building.cpp",
-        "control.h",
-        "weapons.cpp",
-        "weaponbag.cpp",
-        "input.cpp",
-        "objectivesviewer.cpp",
-        "messagewindow.cpp",
-        "textwindow.cpp"
+        "widestring.h",
+        "widestring.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-hud-gcc15.patch",
+      "path": "port/patches/wwlib-a31-trim-overlap.patch",
+      "stage_directory": "wwlib",
+      "sha256": "804fdec5c02e7130ef15db9f0427d4f2ef22eaffe1612ca8be21930807934dd4",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "hud.h",
-        "hud.cpp"
+        "trim.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-mapmgr-const.patch",
+      "path": "port/patches/wwlib-a31-buffer-array-delete.patch",
+      "stage_directory": "wwlib",
+      "sha256": "aaf61e349198ad0595f1ef443fdba39c0f4a22b42cc142dcc64ff870fbaba7a8",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "mapmgr.cpp"
+        "buff.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-script-dll-boundary.patch",
+      "path": "port/patches/wwlib-a31-host-pointer-token-read.patch",
+      "stage_directory": "wwlib",
+      "sha256": "9ee08d76db868ed528268a1dd8b19af6ddb8d5d2236c6e3b11a68f344980d5e5",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "scripts.cpp",
-        "scripts.h"
+        "chunkio.h"
       ]
     },
     {
-      "path": "port/patches/combat-a31-scriptcommands-utf16.patch",
+      "path": "port/patches/wwlib-a35-chunkio-open-chunk-breadcrumbs.patch",
+      "stage_directory": "wwlib",
+      "sha256": "862fde6404d5e2a89c4c404c33adae260f5760b8d0f4f6148e2f675436e4ac59",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "scriptcommands.cpp"
+        "chunkio.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-spawn-loop-scope.patch",
+      "path": "port/patches/wwlib-a35-buffered-relative-seek.patch",
+      "stage_directory": "wwlib",
+      "sha256": "e794d244e9d7e554b221ec5ca9cff89cc664a6ae6dc779c2350aff781472669c",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "spawn.cpp"
+        "bufffile.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a31-weather-gcc15.patch",
+      "path": "port/patches/wwmath-a22-gcc15.patch",
+      "stage_directory": "wwmath",
+      "sha256": "a4b79de5f1e10afc5906370d25b8878e4d1fd24f2de8a5c5edaf916bd0dc42fe",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "WeatherMgr.h",
-        "WeatherMgr.cpp"
+        "wwmath.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a35-conversation-diagnostics.patch",
+      "path": "port/patches/wwmath-a30-gcc15.patch",
+      "stage_directory": "wwmath",
+      "sha256": "7e868f26297ef3dc0d6b7d2ade1ff7ebefefa36919cd571fc076367086bd922c",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "activeconversation.h",
-        "conversationmgr.h",
-        "soldier.h"
+        "v3_rnd.h",
+        "gridcull.h",
+        "aabox.h",
+        "gridcull.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a35-conversation-reentrant-think.patch",
+      "path": "port/patches/wwmath-a4-fastcall-vita.patch",
+      "stage_directory": "wwmath",
+      "sha256": "0d27ac0f7f1772782102386371a6cc60edfb283d6c9f311359003598384b2a4c",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "conversationmgr.cpp"
+        "wwmath.h"
       ]
     },
     {
-      "path": "port/patches/combat-a35-humanstate-weapon-style-table.patch",
+      "path": "port/patches/wwsaveload-a30-abi.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "57c307185730e89a8e38c2e5bbc8d477ed7d31c5c45a95c745d67fba13485e97",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "humanstate.cpp"
+        "persistfactory.h",
+        "definitionmgr.cpp",
+        "saveloadstatus.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a35-m00-ui-hud-subtitles.patch",
+      "path": "port/patches/wwtranslatedb-a31-gcc15.patch",
+      "stage_directory": "wwtranslatedb",
+      "sha256": "23c47d382c80a4cb3b2bd50c7a4cbf7097e067e2d77928a38b14b6b6044c4080",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "textwindow.cpp",
-        "soldier.cpp",
-        "sniper.cpp",
-        "hud.cpp",
-        "weaponview.cpp"
+        "translatedb.cpp"
       ]
     },
     {
-      "path": "port/patches/combat-a35-observer-load-diagnostics.patch",
+      "path": "port/patches/wwtranslatedb-a35-empty-string-wide-abi.patch",
+      "stage_directory": "wwtranslatedb",
+      "sha256": "a8b8b9085cb70f90d42beac791c7c26ed397fd63b453e205955770c4465df663",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "persistentgameobjobserver.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-target-box-diagnostics.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "hud.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-teardown-lifecycle.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gameobjmanager.cpp",
-        "hud.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-transition-action-diagnostics.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "transition.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-vehicle-proximity-diagnostics.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "vehicle.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-vita-durable-loader-trace.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combat.cpp",
-        "buildingaggregate.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-vita-hud-presentation-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combat.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-vita-hud-think-presentation.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "hud.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-vita-loading-progress-callback.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combat.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-vita-main-thread-level-load.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combat.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-vita-messagewindow-presentation.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "messagewindow.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-weaponview-reload-latch.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "weapons.cpp",
-        "weaponview.cpp",
-        "weaponview.h"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-weaponview-reload-motion.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "weaponview.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-weaponview-reload-visible-fallback.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "weaponview.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a30-datasafe-definitions-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "datasafe.h"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a30-datasafe-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "datasafe.h",
-        "DlgMPTeamSelect.h",
-        "player.h"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a30-datasafe-ilp32.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "datasafe.h",
-        "datasafe.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a30-optional-services.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "datasafe.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a31-gamedata-headless-ui.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gamedata.h"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a31-gdcnc-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gdcnc.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a31-messages-headless-ui.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "messages.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a31-session-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gamedata.h",
-        "player.cpp",
-        "playermanager.cpp",
-        "god.cpp",
-        "gamedata.cpp",
-        "team.cpp",
-        "teammanager.cpp",
-        "netinterface.cpp",
-        "cnetwork.cpp",
-        "sctextobj.cpp",
-        "gamedataupdateevent.cpp",
-        "comnetrcvinst.cpp",
-        "gameoptionsevent.cpp",
-        "evictionevent.cpp",
-        "regbool.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a31-winevent-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "winevent.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a35-combatgmode-vita-load-finalization.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combatgmode.cpp",
-        "combatgmode.h"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a35-consolemode-add-message-return.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "ConsoleMode.h",
-        "ConsoleMode.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a35-datasafe-invalid-handle-guard.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "datasafe.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a35-loading-status-render.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "loadingscreen.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a35-loading-status-text.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "loadingscreen.h",
-        "loadingscreen.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a35-shared-loadingscreen-owner.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combatgmode.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-announceevent-include-case.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "AnnounceEvent.h"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-campaign-catalog-lifetime.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "campaign.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-cnetwork-crc-file-lifetime.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "cnetwork.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-combatgmode-include-case.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combatgmode.cpp",
-        "demosupport.h"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-combatgmode-singleplayer-runtime.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combatgmode.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-combatgmode-wol-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "combatgmode.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-dialogtests-singleplayer-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "dialogtests.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-event-gamespy-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "bioevent.cpp",
-        "svrgoodbyeevent.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-event-portability.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "svrgoodbyeevent.cpp",
-        "modpackage.h"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-frontend-console-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "renegadedialogmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-frontend-include-case.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "DlgWOLWait.h",
-        "dialogtests.h",
-        "DlgMessageBox.h",
-        "DlgMessageBox.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gameinitmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gameinitmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-gameinitmgr-online-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gameinitmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-gameinitmgr-skirmish-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gameinitmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-gameinitmgr-wol-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gameinitmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-gamemenu-wol-include-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gamemenu.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-gamemode-console-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "gamemode.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-loadsp-vita-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "dlgloadspgame.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-mainmenu-instance-lifecycle.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "dlgmainmenu.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-mainmenu-singleplayer-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "dlgmainmenu.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-mainmenu-version-abi.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "dlgmainmenu.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-movie-vita-provider-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "movie.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-singleplayer-frontend-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "renegadedialogmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-singleplayer-frontend-routes.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "renegadedialogmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/commando-a4-textdisplay-vector-include.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "textdisplay.h",
-        "textdisplay.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/scripts-a35-parameter-array-delete.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "scripts.cpp"
+        "translateobj.cpp"
       ]
     },
     {
       "path": "port/patches/ww3d2-a22-gcc15.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "961e7b6a09649ffc465969f6fa1ab8bae0f6d8c4cdc321202ad8c3426c6431b0",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "rendobj.h",
@@ -1514,6 +1170,8 @@
     },
     {
       "path": "port/patches/ww3d2-a22-vita-boundaries.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "524a088677405ca879efdac19738e7ab5a1c1cabca054f6287fab9f133dc4bf5",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "animobj.cpp",
@@ -1528,14 +1186,110 @@
       ]
     },
     {
-      "path": "port/patches/ww3d2-a30-camera-apply.patch",
+      "path": "port/patches/ww3d2-a315-texture-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "490e4fa924233c7e35ca3e5a42dbf9bd257e13143536f6c8fe2559efaea4d559",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "texture.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a32-texture-apply-boundary.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "6e956fb13becc1498d4f35d5e563594b23b6f6f0d7912ac8efdd5759daa137e2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "texture.h"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a4-font3d-vita.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "a134848c2eea616de8704479070084479dbb61b3abbf35359f600a03acf9e2de",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "assetmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a4-render2d-runtime-init.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "56e9bd76efb2df9e139dc6f7eeab19a4ef9827b54deff302f90467709d0b0a53",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "ww3d.cpp"
       ]
     },
     {
+      "path": "port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "47948c1de62d78df95cf1f987dc18af9ce98d5f38bd2e47e5ac398e37ade26e4",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-render2d-viewport-restore.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "656a68a3a7fae939e4e389991d3100bb10fc1991290f20f607dad16e16813cee",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a4-freetype-fonts.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "7111549a10b6778ed1d85cbd435fb38ed60b5f889e972bb7f28669844db67180",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "assetmgr.cpp",
+        "render2dsentence.cpp",
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-freetype-glyph-raster-safety.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "596ef83377b5a3d2fe295ed06e75fe742fb064f9aa03d26e27e9855abd0c0aea",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2dsentence.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-render2d-text-atlas-vita-diagnostics.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "3c94a6419718a440ee78048e78da2d5fa06b9092425c8e1c9b3d7ee2594be827",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2dsentence.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-render2d-text-atlas-uv.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "4cee28677d4f7d8a47d86ae2338f2904635d008487d88d0684ca2335938fee0f",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2dsentence.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a315-dds-vita.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "9cbc478d3af4e21d80c4bf790157677c24eb26cc0fd7100df505b458c89744a8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ddsfile.cpp"
+      ]
+    },
+    {
       "path": "port/patches/ww3d2-a30-gcc15.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "b31854a884e84a748abcfa18249c90d6ec3da4205be8a91194a365cc53f857ac",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "lightenvironment.cpp",
@@ -1547,57 +1301,19 @@
       ]
     },
     {
-      "path": "port/patches/ww3d2-a30-vita-buffers.patch",
+      "path": "port/patches/ww3d2-a35-particle-size-keyframe-guard.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "166faf1dcf2a053a9362bd85ccbe190d86255ea011b2530eb9a367a40665e2d3",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "dx8vertexbuffer.cpp",
-        "dx8indexbuffer.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "meshmdl.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a31-wide-abi.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "render2dsentence.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a315-dds-vita.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "ddsfile.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a315-texture-lifecycle.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "texture.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a32-texture-apply-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "texture.h"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a35-freetype-glyph-raster-safety.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "render2dsentence.cpp"
+        "part_buf.cpp",
+        "part_emt.h"
       ]
     },
     {
       "path": "port/patches/ww3d2-a35-hanim-combo-null-motion-guard.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "e288fa7f81668729a35dad51f483a1b9ad57af72f4b105fc3fbedc8bf07b2a18",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "hanim.cpp",
@@ -1606,51 +1322,28 @@
       ]
     },
     {
-      "path": "port/patches/ww3d2-a35-particle-size-keyframe-guard.patch",
+      "path": "port/patches/ww3d2-a30-vita-buffers.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "da2ef44090177ce7a7b4c760cb8e0823516e20f37de5c20da2ca8311b50a6688",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "part_buf.cpp",
-        "part_emt.h"
+        "dx8vertexbuffer.cpp",
+        "dx8indexbuffer.cpp"
       ]
     },
     {
-      "path": "port/patches/ww3d2-a35-render2d-dynamic-fvf-init.patch",
+      "path": "port/patches/ww3d2-a30-camera-apply.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "db7bbfd546921314883ecf08872ae0c45d8f346308420fdcda75795d1f9be5b8",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "render2d.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a35-render2d-text-atlas-uv.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "render2dsentence.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a35-render2d-text-atlas-vita-diagnostics.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "render2dsentence.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a35-render2d-viewport-restore.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "render2d.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a35-vita-renderobj-load-trace.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "rendobj.cpp",
-        "assetmgr.cpp"
+        "ww3d.cpp"
       ]
     },
     {
       "path": "port/patches/ww3d2-a35-vita-scene-state.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "13468f74a6a2a5665f9a19f2d59f5f7a524d413362cce8620b578b46fdadd161",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "scene.cpp",
@@ -1658,238 +1351,9 @@
       ]
     },
     {
-      "path": "port/patches/ww3d2-a4-font3d-vita.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "assetmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a4-freetype-fonts.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "assetmgr.cpp",
-        "render2dsentence.cpp",
-        "ww3d.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/ww3d2-a4-render2d-runtime-init.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "ww3d.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwaudio-a30-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "AudioEvents.h",
-        "WWAudio.h",
-        "AudibleSound.h",
-        "SoundBuffer.h",
-        "SoundSceneObj.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwaudio-a31-audio-lifecycle-breadcrumb.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "AudioSaveLoad.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwaudio-a31-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "PriorityVector.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwaudio-a35-original-runtime-correctness.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "WWAudio.h",
-        "SoundBuffer.h",
-        "SoundBuffer.cpp",
-        "soundstreamhandle.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwaudio-a35-posix-runtime.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "SoundScene.h",
-        "WWAudio.cpp",
-        "Threads.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwbitpack-a31-utf16-get.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "bitstream.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwbitpack-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "BitPacker.cpp",
-        "bitstream.h",
-        "encodertypeentry.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a21-posix.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "vector.h",
-        "simplevec.h",
-        "wwstring.h",
-        "wwstring.cpp",
-        "rawfile.cpp",
-        "mixfile.h",
-        "mixfile.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a22-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "index.h",
-        "ini.cpp",
-        "ini.h",
-        "mempool.h",
-        "multilist.h",
-        "point.h",
-        "random.cpp",
-        "refcount.cpp",
-        "refcount.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a30-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "binheap.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-buffer-array-delete.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "buff.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "FastAllocator.h",
-        "FastAllocator.cpp",
-        "thread.cpp",
-        "hashtemplate.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-host-pointer-token-read.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "chunkio.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-notify-typename.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "Notify.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-short-wchar-host.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "widestring.h",
-        "widestring.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-thread-posix.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "thread.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-trim-overlap.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "trim.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a31-wide-abi.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "ini.h",
-        "ini.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwlib-a35-chunkio-open-chunk-breadcrumbs.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "chunkio.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwmath-a22-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "wwmath.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwmath-a30-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "v3_rnd.h",
-        "gridcull.h",
-        "aabox.h",
-        "gridcull.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwmath-a4-fastcall-vita.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "wwmath.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwnet-a30-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "networkobject.h"
-      ]
-    },
-    {
-      "path": "port/patches/wwnet-a31-packetmgr-gcc15.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "packetmgr.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwnet-a31-transport-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "connect.cpp"
-      ]
-    },
-    {
       "path": "port/patches/wwphys-a30-gcc15.patch",
+      "stage_directory": "wwphys",
+      "sha256": "9e4a720955978017d532ca7d0172f27aae193fe6c19fe255da0c804d433a0974",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "camerashakesystem.h",
@@ -1912,7 +1376,27 @@
       ]
     },
     {
+      "path": "port/patches/wwphys-a31-vita-material-effect-boundary.patch",
+      "stage_directory": "wwphys",
+      "sha256": "e6eaa70cae2927d1adb04722a5c18b5f21a42af8e0bcc01e0d44f0be9b374f99",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "transitioneffect.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a31-vita-material-effect-close.patch",
+      "stage_directory": "wwphys",
+      "sha256": "b6c4335580848f3fab9a40d9d5aceb4ffb59328bb95c4130160b0fd91cf272f7",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "transitioneffect.cpp"
+      ]
+    },
+    {
       "path": "port/patches/wwphys-a30-pointer-tokens.patch",
+      "stage_directory": "wwphys",
+      "sha256": "e7ff7b79d1240e2cb2b615625084d74fbeef83fcd1ff551e76ebc45062ccf990",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "Path.cpp",
@@ -1926,21 +1410,9 @@
       ]
     },
     {
-      "path": "port/patches/wwphys-a31-vita-material-effect-boundary.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "transitioneffect.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/wwphys-a31-vita-material-effect-close.patch",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "transitioneffect.cpp"
-      ]
-    },
-    {
       "path": "port/patches/wwphys-a35-static-object-load-diagnostics.patch",
+      "stage_directory": "wwphys",
+      "sha256": "786effc9def02a405b082ca69309af857c1257d9697adc87fc6349b8432252c3",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "pscene_saveload.cpp"
@@ -1948,6 +1420,8 @@
     },
     {
       "path": "port/patches/wwphys-a35-vita-durable-static-trace.patch",
+      "stage_directory": "wwphys",
+      "sha256": "17c3bb6c09b1bbe86767d11bffdd81453d637ce20090c1b96900f1af5404db95",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "pscene_saveload.cpp",
@@ -1957,72 +1431,917 @@
       ]
     },
     {
-      "path": "port/patches/wwsaveload-a30-abi.patch",
+      "path": "port/patches/combat-a30-pointer-tokens.patch",
+      "stage_directory": "combat",
+      "sha256": "f61eaa87675bbd3bf9fa231243d29b62a30bbcd4d67e19a1c4aac908a2aa32e6",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "persistfactory.h",
-        "definitionmgr.cpp",
-        "saveloadstatus.cpp"
+        "reflist.cpp",
+        "reflist.h",
+        "scriptablegameobj.cpp"
       ]
     },
     {
-      "path": "port/patches/wwtranslatedb-a31-gcc15.patch",
+      "path": "port/patches/combat-a30-gcc15.patch",
+      "stage_directory": "combat",
+      "sha256": "cfcc2ab5bc6d0de1967d4a971da959c13b0abd675e812d57533dcfc06367a4ac",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "translatedb.cpp"
+        "damage.h",
+        "playerdata.h",
+        "weaponmanager.h",
+        "soldier.h",
+        "damage.cpp",
+        "scriptablegameobj.h",
+        "doors.cpp",
+        "elevator.cpp",
+        "buildingaggregate.cpp",
+        "savegame.cpp",
+        "WeatherMgr.h",
+        "backgroundmgr.h"
       ]
     },
     {
-      "path": "port/patches/wwtranslatedb-a35-empty-string-wide-abi.patch",
+      "path": "port/patches/combat-a31-gcc15.patch",
+      "stage_directory": "combat",
+      "sha256": "2a5cd8b03bc2299e87a98d944b2da5c7e7a53af142e4205031dd798f541893b7",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "translateobj.cpp"
+        "dialogue.cpp",
+        "beacongameobj.cpp",
+        "textwindow.h",
+        "combat.cpp",
+        "scriptzone.cpp",
+        "soldier.cpp",
+        "building.cpp",
+        "control.h",
+        "weapons.cpp",
+        "weaponbag.cpp",
+        "input.cpp",
+        "objectivesviewer.cpp",
+        "messagewindow.cpp",
+        "textwindow.cpp"
       ]
     },
     {
-      "path": "port/patches/wwui-a35-dialog-template-vita-diagnostics.patch",
+      "path": "port/patches/combat-a31-assetdep-gcc15.patch",
+      "stage_directory": "combat",
+      "sha256": "1b78a02d050240f61263775105de3a6fe339bf0bff250d4b66c7f818061d5fb9",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "dialogparser.cpp"
+        "assetdep.cpp"
       ]
     },
     {
-      "path": "port/patches/wwui-a4-buttonctrl-modern-scope.patch",
+      "path": "port/patches/combat-a31-script-dll-boundary.patch",
+      "stage_directory": "combat",
+      "sha256": "ce68cd5aeec34846a25846c2ceb8b5916189449f631651323c1e883fe88d906d",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "buttonctrl.cpp"
+        "scripts.cpp",
+        "scripts.h"
       ]
     },
     {
-      "path": "port/patches/wwui-a4-dialogbase-modern-scope.patch",
+      "path": "port/patches/combat-a31-spawn-loop-scope.patch",
+      "stage_directory": "combat",
+      "sha256": "e9256bd5a254fb3a0951ddd37eea2f0055094d1a8c126d1a6b967414f5dbff40",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "dialogbase.cpp"
+        "spawn.cpp"
       ]
     },
     {
-      "path": "port/patches/wwui-a4-dialogparser-lp64-alignment.patch",
+      "path": "port/patches/combat-a31-weather-gcc15.patch",
+      "stage_directory": "combat",
+      "sha256": "8b610d6ff03148f0171d9c0404ccaa22669447583360b455c1c13f0cddcfcb17",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "dialogparser.cpp"
+        "WeatherMgr.h",
+        "WeatherMgr.cpp"
       ]
     },
     {
-      "path": "port/patches/wwui-a4-editctrl-gcc15.patch",
+      "path": "port/patches/combat-a31-backgroundmgr-gcc15.patch",
+      "stage_directory": "combat",
+      "sha256": "660d88c54f57a2a65f6ddfa9344794a9582c46d78fd6fe9ded289dd9a37dbe65",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "editctrl.cpp"
+        "backgroundmgr.cpp"
       ]
     },
     {
-      "path": "port/patches/wwui-a4-imagectrl-border-precedence.patch",
+      "path": "port/patches/combat-a31-hud-gcc15.patch",
+      "stage_directory": "combat",
+      "sha256": "ad25bba5c53f94006003d67709c2a21b6a55cd784d4395e4e66df52bb997ebbe",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "imagectrl.cpp"
+        "hud.h",
+        "hud.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-conversation-loop-scope.patch",
+      "stage_directory": "combat",
+      "sha256": "7527892c1891162b7430766e5cf7f8933e7df02900e19370ccf803d03163b472",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "conversationmgr.cpp",
+        "conversation.cpp",
+        "activeconversation.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-mapmgr-const.patch",
+      "stage_directory": "combat",
+      "sha256": "662e2f60a2e751aa886ba8b3fa220f6a73d4184cf758d64a02e93197056c5c3b",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "mapmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-combatsound-gcc15.patch",
+      "stage_directory": "combat",
+      "sha256": "9da5a6345011281fc9d8acbee1beedfebc2c3ae91d304fff7b5229aa8da30ca8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatsound.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-scriptcommands-utf16.patch",
+      "stage_directory": "combat",
+      "sha256": "f89e53c8d2cb720023f4bdecdc3735dc89e3ef8dfa3c9ca6a4d00a4a5129c31f",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scriptcommands.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-tutorial-help.patch",
+      "stage_directory": "combat",
+      "sha256": "a2007664a9fb13eecd2f9814256882796cd31f07fbd0f69c7b39a53bccc863fb",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scriptcommands.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-objective-message-varargs.patch",
+      "stage_directory": "combat",
+      "sha256": "c2a288fa5a619be454ffc2fd2dd5116d35a7d9870bbd9cc0e259d7e4c1fe27aa",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "objectives.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-ccamera-silent-listener.patch",
+      "stage_directory": "combat",
+      "sha256": "a3e681023fc79cf41eea2b21aecd9d1216dce3149eeb07631d5e70a8e44f0621",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ccamera.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a31-encyclopedia-zero-read.patch",
+      "stage_directory": "combat",
+      "sha256": "e0b4c7d6cec454ab8e3cb9cd0006ab546e20c02ce75beab3c2f8a41bbc31d76f",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "encyclopediamgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-humanstate-weapon-style-table.patch",
+      "stage_directory": "combat",
+      "sha256": "e76be82ddaf212146890574ca8a3a46e4fb46782c3c023fecf1ff6239d94bf4c",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "humanstate.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-observer-load-diagnostics.patch",
+      "stage_directory": "combat",
+      "sha256": "8f0c85bc887abc6ad74cec223474d8c847d8bb195696cac2955d0b7b1ce43c30",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "persistentgameobjobserver.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-main-thread-level-load.patch",
+      "stage_directory": "combat",
+      "sha256": "847f043198106059a8b8f2c01981bb68cbba97de34fad8adc642c3f692fbbb60",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combat.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-durable-loader-trace.patch",
+      "stage_directory": "combat",
+      "sha256": "284a1871b90fa9dcd7a34b784d3f88b218789f655a6fcd95c683fc05e062d123",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combat.cpp",
+        "buildingaggregate.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-loading-progress-callback.patch",
+      "stage_directory": "combat",
+      "sha256": "9bec7998e7e906c0aea9fdc0a506e8df2ca1483062a7ea73f02270a47f6c8376",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combat.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-teardown-lifecycle.patch",
+      "stage_directory": "combat",
+      "sha256": "00e4bad395660449304a8dd8bfb4b7d83a2e25b6052df3ae9c4d13374bf6c6ea",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameobjmanager.cpp",
+        "hud.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-conversation-diagnostics.patch",
+      "stage_directory": "combat",
+      "sha256": "26232a7b5a876fdb1ab9be6ff3fe64f2f3a8cd8dd14aff2aa6a3dfc0044097f6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "activeconversation.h",
+        "conversationmgr.h",
+        "soldier.h"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-conversation-reentrant-think.patch",
+      "stage_directory": "combat",
+      "sha256": "676e3f56b88a87843704a876346f9ad6dcc347f5c8a1d25619e5fda348e85aa9",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "conversationmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-transition-action-diagnostics.patch",
+      "stage_directory": "combat",
+      "sha256": "5fcb2ce6b32dc401ccd8acf5756dd6448d905215cf911637ca189ace26560748",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "transition.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-logan-path-diagnostics.patch",
+      "stage_directory": "combat",
+      "sha256": "7ec82b52ebd92643306f7ebb896d48ae59f8f2ccb0be67162514ca7de428cd4c",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "action.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vehicle-proximity-diagnostics.patch",
+      "stage_directory": "combat",
+      "sha256": "e7ec1a9b6c95db0fe4423a6456570e0fc576e8ba8a4239c724bcb71b022292f2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "vehicle.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-weaponview-reload-latch.patch",
+      "stage_directory": "combat",
+      "sha256": "6fc1683af671d10c7c8f3fd7b95491bcbbab4780069b22c176f60a841add10cf",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "weapons.cpp",
+        "weaponview.cpp",
+        "weaponview.h"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-m00-ui-hud-subtitles.patch",
+      "stage_directory": "combat",
+      "sha256": "2c579197f02c024e178a1e4c40f2e81df951d2782e6a198a384c48f509720907",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "textwindow.cpp",
+        "soldier.cpp",
+        "sniper.cpp",
+        "hud.cpp",
+        "weaponview.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-hud-presentation-boundary.patch",
+      "stage_directory": "combat",
+      "sha256": "2c07c18a3205cb128400b74f3883318323a33eea24af8bd7ccf2970516274c61",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combat.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-target-box-diagnostics.patch",
+      "stage_directory": "combat",
+      "sha256": "f9f22ce6ace78469ba4c7da2f112c7107416c6847cf57641e7fa9a4c3826c0cf",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "hud.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-hud-think-presentation.patch",
+      "stage_directory": "combat",
+      "sha256": "37e699efacc161285f3f475f512a2a35dfba394dace061bfa05da3644577b621",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "hud.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vita-messagewindow-presentation.patch",
+      "stage_directory": "combat",
+      "sha256": "ab13eeb57547353051f545ff62655543ab35c45da227a6efe10edd9a3fa120ef",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "messagewindow.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-weaponview-animation-varargs.patch",
+      "stage_directory": "combat",
+      "sha256": "9f1ba0e80516ce02dd4357359430498a190afd5c30e1786ec405c23db872ab3d",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "weaponview.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-menu-clear-color.patch",
+      "stage_directory": "commando",
+      "sha256": "4b26f4fc654320def461f6982694b9ce05506506465afa75c062e5751cbbf364",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamemode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "c10d8bd55eac284ced12e955b8cf441e379d7bdd4c90cb1539d9e0bee7b84cc5",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "meshmdl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a31-wide-abi.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "eccbd683c0c60de95b2807b9d90d0ae8d2f20f2b0ac3dc36d39228a4201b8576",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2dsentence.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-vita-renderobj-load-trace.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "f2f67e5c2c6c351bcddcd1d6ebf7ae94d558e427ccf1ea7853110320e924fbc2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "rendobj.cpp",
+        "assetmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-gcc15.patch",
+      "stage_directory": "commando",
+      "sha256": "d82ed1bbc1406363314c14178059868eaf116fffd1f2ad60993eda45f254e99b",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.h",
+        "DlgMPTeamSelect.h",
+        "player.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-optional-services.patch",
+      "stage_directory": "commando",
+      "sha256": "49edeebfe193523ae60f2f8df339e8100ac99a0be9ed1023aa10b445e523edf6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-definitions-gcc15.patch",
+      "stage_directory": "commando",
+      "sha256": "13d47b30e4468a6453171c7e26a77da2efc85f0479036deb03984e84ab77bf7d",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a30-datasafe-ilp32.patch",
+      "stage_directory": "commando",
+      "sha256": "90390a04ca0b216fb56e2ee46b7a74f4ad32f8bf37fff410b1bd4aa40692f1ef",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.h",
+        "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-datasafe-invalid-handle-guard.patch",
+      "stage_directory": "commando",
+      "sha256": "491d201df09124b861b25ad4f0a578edc254b6177b1cb8715421d2bb641de87e",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "datasafe.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-gamedata-headless-ui.patch",
+      "stage_directory": "commando",
+      "sha256": "8b3b0c41848cf938d13124ea9b1dafc270b1b227dc12a6b0c52937a90c387386",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamedata.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-session-gcc15.patch",
+      "stage_directory": "commando",
+      "sha256": "e75388a0d518fae94ff40ec3404f137b616f2f746ec5e741a3e3dbb18405e4e6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamedata.h",
+        "player.cpp",
+        "playermanager.cpp",
+        "god.cpp",
+        "gamedata.cpp",
+        "team.cpp",
+        "teammanager.cpp",
+        "netinterface.cpp",
+        "cnetwork.cpp",
+        "sctextobj.cpp",
+        "gamedataupdateevent.cpp",
+        "comnetrcvinst.cpp",
+        "gameoptionsevent.cpp",
+        "evictionevent.cpp",
+        "regbool.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-gdcnc-gcc15.patch",
+      "stage_directory": "commando",
+      "sha256": "dca882f5eacf40f83583a6ede01970220a0660f3ca575a9ec0823f6b6caad746",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gdcnc.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-winevent-gcc15.patch",
+      "stage_directory": "commando",
+      "sha256": "1599aa76c3d9a8bedc60cf38fa889fbce91ca913fcb56f2d95444da25534554f",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "winevent.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a31-messages-headless-ui.patch",
+      "stage_directory": "commando",
+      "sha256": "8ac876949e62cf00a7fef11adeaf8ebecc9bf9c63effde3ebb4bc8208c9bf183",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "messages.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-frontend-include-case.patch",
+      "stage_directory": "commando",
+      "sha256": "a2e1ae92bb61258a14507a212694d18142be2de7b7bbfaaf1f4481a27be1b718",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "DlgWOLWait.h",
+        "dialogtests.h",
+        "DlgMessageBox.h",
+        "DlgMessageBox.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-singleplayer-frontend-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "f11396e409e4a6703ad902acef51f83297cbf91278dd2a515c981cf673ee03d5",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-singleplayer-frontend-routes.patch",
+      "stage_directory": "commando",
+      "sha256": "bf9aa91cfce21d99a4344823b9172d3fe13aad9181ca458e4d99e02316ffa4c6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-dialog-factory-reentry.patch",
+      "stage_directory": "commando",
+      "sha256": "f4d0b5489fc4d657fca047e51185481fed47decf86ace5b2a8a3546eb86b7079",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-frontend-console-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "e894600cd4dceb1c26543b03d3c9be6b82e88a88715e774f5adebc03de6b7450",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-mainmenu-singleplayer-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "2274cc525f7304a54b774020f70991181861861630362628acc4f2790bb1fae0",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-mainmenu-version-abi.patch",
+      "stage_directory": "commando",
+      "sha256": "bfba84d3fa6cebe391caa08d6c388439592002fab4bc6711dc19894b99ab0564",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-mainmenu-instance-lifecycle.patch",
+      "stage_directory": "commando",
+      "sha256": "f5d7992883aa33496bd06697f925d7552a464d2eff322468f564dd30ce602e67",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-cnetwork-crc-file-lifetime.patch",
+      "stage_directory": "commando",
+      "sha256": "9c8848c1f435756b0090dfbe4387501a9b579d3e006b5e24616cf61325273c68",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "cnetwork.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-campaign-catalog-lifetime.patch",
+      "stage_directory": "commando",
+      "sha256": "1f6085e88fe0991ae93553f6b8114cea7ed38719c5dfa4561fd1f2f52721be09",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "campaign.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-dialogtests-singleplayer-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "ce8eb3b1f5ae072287da0516f36135f79bd1e02e6ad0d33edb0c289b497c485d",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogtests.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-loadsp-vita-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "9d15f7f6e4e4c117afbacfd2885c6cc6b1531cdf9f363f9326b6e0892850befb",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgloadspgame.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-textdisplay-vector-include.patch",
+      "stage_directory": "commando",
+      "sha256": "172227c6a7262c2a43c8c4ad8f5aaefd5e8ae226fdee937789d012f51811ca07",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "textdisplay.h",
+        "textdisplay.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-consolemode-add-message-return.patch",
+      "stage_directory": "commando",
+      "sha256": "341b1b5676158191cf705c06ce9191d78e4595a29d8b1406ff6ad62e1d38b7b2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ConsoleMode.h",
+        "ConsoleMode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gamemode-console-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "790486b74cb2cd34cee8eb8ed8cb7bd578552a3141156be96f61d116c860d901",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamemode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gamemenu-wol-include-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "43892aed4d08670a09c43d0511086a3eeae88d29112df013f0fe542a234453bd",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gamemenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-wol-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "6972d414ecc882c1bc62a6c8d4b9e5fa2e1cd589d4d2b6147e97a8e2c364e248",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-online-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "7b6f107c3f80d5cf82cc76a230208a7986a33ca8de03e00194b280d123b83c02",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-skirmish-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "43af44e06394c0636bf54bb025dd2cb4dffc6b6f4a74e9491f0913ecb3cbc17d",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "eaa2185c42a5000f260f1cd000b1813e2f9baba56c8d5d2f8cc5ca01957c749b",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch",
+      "stage_directory": "commando",
+      "sha256": "bd33e230c58a3926de0ba0327bbff7b981f2df17020d63a46cc58176d7d2e01b",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "gameinitmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-movie-vita-provider-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "5b087963d4a2a9a6630645ee674b3073db598bca296e0034c1a36a45607e74b3",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "movie.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-combatgmode-wol-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "1d0a8735143e4d3bfbae11985fbd0322a1a814bd3d33949ed49e7927f21563b2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-announceevent-include-case.patch",
+      "stage_directory": "commando",
+      "sha256": "77bfbb70a0daae9f7fa8094b3559eb4eb4fa09cfb979a5207dc782058be93cf3",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AnnounceEvent.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-combatgmode-include-case.patch",
+      "stage_directory": "commando",
+      "sha256": "ca04e75a8576f9f4b330d0842db70f5d9ec4e1c374474feae7894d91c3462c10",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp",
+        "demosupport.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-event-gamespy-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "1900845c914f4884d76579170332fc4b1f2a3afed6fb76a695616a8b7112b41a",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "bioevent.cpp",
+        "svrgoodbyeevent.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-event-portability.patch",
+      "stage_directory": "commando",
+      "sha256": "04958ade5245f57b9c8bb05091017181523130d3c322750aff93d50cd11d76d4",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "svrgoodbyeevent.cpp",
+        "modpackage.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-shared-loadingscreen-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "8039b00a230ad6726f1e3ec852f16e470bf2940936ecbbf45fbbd3e88b2e9a81",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-combatgmode-vita-load-finalization.patch",
+      "stage_directory": "commando",
+      "sha256": "1fe8abf115e90587e8a3c62d761d54f26be3d9e536b5394efce553b6aba0928c",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp",
+        "combatgmode.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a4-combatgmode-singleplayer-runtime.patch",
+      "stage_directory": "commando",
+      "sha256": "3f5c68d01c4af98963af322329ae8eafd80ab60a7a2b0e9d27ffce1ab0b91a79",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "combatgmode.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-status-text.patch",
+      "stage_directory": "commando",
+      "sha256": "75593207e4c1066a15ccc90b2b96440ac1f6d615ec6f8b0669e56100f1021ab6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "loadingscreen.h",
+        "loadingscreen.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-status-render.patch",
+      "stage_directory": "commando",
+      "sha256": "d97ae9e7f0cc1eff28f09753e4628f0f319710144d54ad1d93d89f9f803664d6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "loadingscreen.cpp",
+        "loadingscreen.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a30-gcc15.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "530abde5944c7f6c11b65a76b5cdc92a5ac675b7da30d47ada24340758721820",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AudioEvents.h",
+        "WWAudio.h",
+        "AudibleSound.h",
+        "SoundBuffer.h",
+        "SoundSceneObj.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a31-gcc15.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "eb831605e387160671129cc27df478dd224413ac90d3be5cee16d8e1c367c233",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "PriorityVector.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a31-audio-lifecycle-breadcrumb.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "880f20c22913c4cec28b0f78a02febd351684a7d22f28ea59711a6baaa8e0aef",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AudioSaveLoad.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-posix-runtime.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "53c98d4fe18a4b8c91ae4989fc264aae84b741c8b26a476734d97584ea52e113",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "SoundScene.h",
+        "WWAudio.cpp",
+        "Threads.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-original-runtime-correctness.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "b51d08ca29a567ded9d8e7d57f41cb4839cc6760d8b4039e010442d0587a37c2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "WWAudio.h",
+        "SoundBuffer.h",
+        "SoundBuffer.cpp",
+        "soundstreamhandle.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwnet-a30-gcc15.patch",
+      "stage_directory": "wwnet",
+      "sha256": "f413890b7a2d8dab753ec8ad37352753cd04ba5a42d7fa5d62dbe16abe69d338",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "networkobject.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwnet-a31-transport-boundary.patch",
+      "stage_directory": "wwnet",
+      "sha256": "14d9ac067323e30043023d36708eac9a2bec87e7bd23f7d7e192b43e5a5d19e2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "connect.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwnet-a31-packetmgr-gcc15.patch",
+      "stage_directory": "wwnet",
+      "sha256": "259c7ac1602d22841a812c38bfa39b9de19c4609180060a1ad439d7a022bdce3",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "packetmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-stylemgr-font-provider.patch",
+      "stage_directory": "wwui",
+      "sha256": "6588bda06edb39831c8812f2a9877c33f7216c703b4080a9e85e0fc8aa4a8479",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "stylemgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-vita-cursor-clamp.patch",
+      "stage_directory": "wwui",
+      "sha256": "ebe030ac417260d986699bd8ad2b3f1b4ccc49c7f0ac1ca8fa23d302e8d57ce4",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "screencursor.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-ime-vita-boundary.patch",
+      "stage_directory": "wwui",
+      "sha256": "bc4f1eeeae844c765e3d14018abe6ecb471b83d062d79f6983026b2b740b3205",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "wwuiinput.h",
+        "wwuiinput.cpp"
       ]
     },
     {
       "path": "port/patches/wwui-a4-ime-include-case.patch",
+      "stage_directory": "wwui",
+      "sha256": "39918bd3e1fcf8bf6b12f72d050f504eeaa3f6a21ee37b9914bd75d8fcd5578f",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "IMECandidateCtrl.h",
@@ -2036,46 +2355,413 @@
       ]
     },
     {
-      "path": "port/patches/wwui-a4-ime-vita-boundary.patch",
+      "path": "port/patches/wwui-a4-dialogparser-lp64-alignment.patch",
+      "stage_directory": "wwui",
+      "sha256": "1827e336c7723eddbaa78eba9ed5973c15f08f864b7e9eb3f5610a40100b434f",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "wwuiinput.h",
-        "wwuiinput.cpp"
+        "dialogparser.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-dialog-template-vita-diagnostics.patch",
+      "stage_directory": "wwui",
+      "sha256": "acaf622989414c17c75aeb41e0bf106388d8af27f0285db73ab9bff98f2ebe55",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogparser.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-dialogparser-utf16.patch",
+      "stage_directory": "wwui",
+      "sha256": "59538db6f76aa662fabc3cb1224ef31421c97ea58580bdf3a827d5ac2ba07461",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogparser.cpp"
       ]
     },
     {
       "path": "port/patches/wwui-a4-listctrl-modern-scope.patch",
+      "stage_directory": "wwui",
+      "sha256": "9b69753af440fbfe3870283711d0e3885d89ab27409a84e6e2fcd7b33ee0f563",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "listctrl.cpp"
       ]
     },
     {
-      "path": "port/patches/wwui-a4-multilinetext-gcc15.patch",
+      "path": "port/patches/wwui-a4-dialogbase-modern-scope.patch",
+      "stage_directory": "wwui",
+      "sha256": "c81140ff8e406c3a672e0db0ee08204592a4fb442fcd65b220de0c66e8c7fe45",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "multilinetextctrl.cpp"
+        "dialogbase.cpp"
       ]
     },
     {
-      "path": "port/patches/wwui-a4-stylemgr-font-provider.patch",
+      "path": "port/patches/wwui-a4-buttonctrl-modern-scope.patch",
+      "stage_directory": "wwui",
+      "sha256": "9c64defd5137cb52e5a9a9effd31ef2ed545e09b4f98aae3229bb234a704c586",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
-        "stylemgr.cpp"
+        "buttonctrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-imagectrl-border-precedence.patch",
+      "stage_directory": "wwui",
+      "sha256": "91d866a48d0c35d13aec61250193e6ad947cc5b52d692d18ead3c4d5b57cf72e",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "imagectrl.cpp"
       ]
     },
     {
       "path": "port/patches/wwui-a4-textmarquee-gcc15.patch",
+      "stage_directory": "wwui",
+      "sha256": "2f93ee23209d0f41321f350070e59dadb3da8aaa5603f772f61c871cfc5338f7",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "textmarqueectrl.cpp"
       ]
     },
     {
+      "path": "port/patches/wwui-a4-multilinetext-gcc15.patch",
+      "stage_directory": "wwui",
+      "sha256": "004d61d61df3cee4924abfd99a2444bd0a602c2100a47983a9eed1fc07cb230a",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "multilinetextctrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a4-editctrl-gcc15.patch",
+      "stage_directory": "wwui",
+      "sha256": "58b911c5977366b61a106e4c6d37711c465000e94642c799a21dcc980a175cfe",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "editctrl.cpp"
+      ]
+    },
+    {
       "path": "port/patches/wwui-a4-treectrl-gcc15.patch",
+      "stage_directory": "wwui",
+      "sha256": "32ee46ab5d430968e7dcd46641b8365a101f6570a28812835de2d625c0577a86",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "treectrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-parameter-array-delete.patch",
+      "stage_directory": "scripts",
+      "sha256": "49c60a18249dc3d708f9fc87f1856272978ba19160cd412e7d2b36d44f1f12de",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scripts.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
+      "stage_directory": "",
+      "sha256": "4595ae7a3fbb7df8ba7e53ebac74e1267d97491b09443def46fc8093cef4970a",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "commando/dlgmainmenu.cpp",
+        "commando/movie.cpp",
+        "wwui/menubackdrop.cpp",
+        "wwui/menudialog.cpp",
+        "commando/renegadedialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-render2d-texture-readiness.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "a9142bdf51e75f03e58ed1fdd8531f40bed8eb44115ad52e31a4052e0545c2c8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-map-texture-readiness.patch",
+      "stage_directory": "combat",
+      "sha256": "04f89154eb40b822862d3210c2f5dee61bc25621de24ad521fd86cde6b7019c1",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "mapmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-map-texture-readiness.patch",
+      "stage_directory": "wwui",
+      "sha256": "ab6ac5da45cced43aa50d1c05451b3fce50a700daf2902f26de92324a03aadcb",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "mapctrl.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-unavailable-text-row.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "3282002952a4e6369370ba64c96cc5389fd9728c9bc344e1b28c553229822859",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2dsentence.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-dds-disk-width.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "eeda3931f849000ebb3599ebccea1492cf4627845aac8165a3bd294520efa3a2",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ddsfile.h"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-pause-save-help.patch",
+      "stage_directory": "commando",
+      "sha256": "7a6652afabbf1f1a4b5e3a0187d33a408fde254de66f284cac676076fa99ea56",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgsavegame.cpp",
+        "dlgsavegame.h",
+        "dlghelpscreen.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-loading-animation-evidence.patch",
+      "stage_directory": "wwui",
+      "sha256": "15d679ccc6a1afd59336a1e84388955a15a1f513ce04fde5a5b97504d8e23776",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "menubackdrop.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-demo-disabled-menu-options.patch",
+      "stage_directory": "commando",
+      "sha256": "c1b41a9e7bec8c9f237da929f24ae6209b82ebe747ce44da1517a6bfaca7239b",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgmainmenu.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-disabled-menu-navigation.patch",
+      "stage_directory": "wwui",
+      "sha256": "1811d0b6eb3a4f5920c8348bcc9b6421f8cde5743dc6dfc064e2e770521dda7f",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "menuentryctrl.cpp",
+        "dialogmgr.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-presentation-clock.patch",
+      "stage_directory": "commando",
+      "sha256": "69e3717c1710d75de2bd698e0dce4f2e2856739505dca9187944eeab55eec604",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "loadingscreen.h",
+        "loadingscreen.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-demo-singleplayer-options.patch",
+      "stage_directory": "commando",
+      "sha256": "a0458d6eb3b0004e25468ea912442fad8cdb2797bcd96fe802de712a2e7d6d03",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogtests.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-eva-optional-network-modes.patch",
+      "stage_directory": "commando",
+      "sha256": "1a92925f8b122845dceb0c9d06dad1e817947f5bcd64bd7f8ab3d5928e839b52",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgevaencyclopedia.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-eva-native-dependencies.patch",
+      "stage_directory": "commando",
+      "sha256": "2b08a696793702a1ed75971ab875464e5f5a82b88a14aeea6e93c6cd5e6fecd3",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgevaencyclopedia.h",
+        "dlgevaencyclopedia.cpp",
+        "dlgevamaptab.cpp",
+        "dlgevaviewertab.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-pause-save-help-entry.patch",
+      "stage_directory": "commando",
+      "sha256": "9017ccbeb37dd1044065e985f4df028021d86b2246feddb2a130ffe59fede544",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgevaencyclopedia.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-pause-deferred-load.patch",
+      "stage_directory": "commando",
+      "sha256": "c1895190565a3d9cc146b789b7221e7be4b50d5ad9aa41be07b141052b7344eb",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgloadspgame.cpp",
+        "dlgevaencyclopedia.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-eva-viewer-audit.patch",
+      "stage_directory": "commando",
+      "sha256": "a30e36e1036cae11d6ba6ffeb7cb3f76aa16f057c3f78592767542fbd2badf5e",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgevaviewertab.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-pause-native-options.patch",
+      "stage_directory": "commando",
+      "sha256": "68a3e7a69a5f2ed354fee1ac6d3e08fb31cbb100c594cd51367b7db31896ed80",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgevaencyclopedia.cpp",
+        "dlgconfigaudiotab.cpp",
+        "dlgconfigvideotab.cpp",
+        "dlgconfigvideotab.h",
+        "dlgconfigperformancetab.h",
+        "dlgconfigperformancetab.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-pause-save-controller.patch",
+      "stage_directory": "commando",
+      "sha256": "a940b372838c5343273f4ea9cba4c870cce57023cd9da10349479bbf9f5256a7",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgsavegame.cpp",
+        "dlgloadspgame.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-pause-options-persistence.patch",
+      "stage_directory": "commando",
+      "sha256": "f17af9572eab55342cb0965aeab69a12dea88a48ade4f3351b755cc6a231faa9",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dlgconfigaudiotab.cpp",
+        "dlgconfigvideotab.cpp",
+        "dlgconfigperformancetab.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-controller-button-focus.patch",
+      "stage_directory": "wwui",
+      "sha256": "9f6767df6d04bf5e91b0700e859e1122f6a74be5c63cef5616b318f705284d69",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogbase.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwui-a35-native-text-entry.patch",
+      "stage_directory": "wwui",
+      "sha256": "043369fc32b39fd891c24cff8714a703cb295d35333d9de7244393fa2e757e5d",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "editctrl.h",
+        "editctrl.cpp",
+        "dialogbase.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-render2d-direct-atlas-upload.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "7863507908dd3897de72fe4241302264f3447c79ca0de2a4618f765b78a0b674",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "render2dsentence.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a35-mix-index-allocation-bounds.patch",
+      "stage_directory": "wwlib",
+      "sha256": "9ca04f2c2b1851432b63009e707f4a5a5943eeba71226916764c21830f77ec18",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "mixfile.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-dds-block-palette-precompute.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "ff4e77d00b38d330d11ca16473155ccb36fe277ddf85c296f313161d86d16e8c",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ddsfile.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-dynamic-buffer-growth.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "a84434277d0fe08226f54b716df49ec677eab24f89dd4dfeaa85d90bf9a69ea3",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dx8indexbuffer.cpp",
+        "dx8vertexbuffer.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-texture-wrapper-surface-release.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "c189927a339a4a8e5858fc7709c2bbe33f2d547a5c7c006ea729b6f66e399b11",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "texture.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a35-mix-failure-file-release.patch",
+      "stage_directory": "wwlib",
+      "sha256": "bef3321f9e07f6cb8aedc2d97428420283fac4bd3311e531860bea7bcf14be3a",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "mixfile.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a35-targa-fixed-width.patch",
+      "stage_directory": "wwlib",
+      "sha256": "a91f96743f83cdf9324006eb416480e5606e5f10c919c985f1120454919202d7",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "TARGA.H"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-format-table-init.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "42dab9fe7a22408c6e51e4a8510b641252d6804e0c41d00f2bf7a97eec9c64ee",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-loading-animation-varargs.patch",
+      "stage_directory": "",
+      "sha256": "615b35556398f2e2b34940f922a1ce7f5eb071885bac3e7be837fc5f576b2155",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "commando/loadingscreen.cpp"
       ]
     }
   ],
@@ -2108,7 +2794,7 @@
     },
     "wwlib": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 37,
+      "compiled": 38,
       "total": 105
     },
     "wwsaveload": {
@@ -2143,7 +2829,7 @@
     },
     "Commando": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 59,
+      "compiled": 74,
       "total": 213
     },
     "Scripts": {

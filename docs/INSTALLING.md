@@ -1,5 +1,9 @@
 # Installing on Vita
 
+For the short end-user path, use the public
+[Renegade Vita Demo quick setup](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
+This document remains the private engineering and evidence-custody procedure.
+
 The VPK deliberately contains only the executable and package metadata. It never includes retail data, saves, configuration, logs, screenshots, videos, or crash dumps.
 
 ## Filesystem boundary
@@ -8,6 +12,13 @@ Retail files must already be present on the Vita:
 
 ```text
 ux0:data/renegade/retail/Data/
+```
+
+The tutorial also needs the loose retail fonts at the retail root:
+
+```text
+ux0:data/renegade/retail/54251___.TTF
+ux0:data/renegade/retail/ARI_____.TTF
 ```
 
 The port writes only below:

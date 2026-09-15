@@ -231,6 +231,11 @@ EvaMapTabClass::On_MapCtrl_Pos_Clicked
 	const Vector3 &	position
 )
 {
+#if RENEGADE_VITA_M00_DEMO
+	// Public demo navigation must not bypass original tutorial triggers.
+	return;
+#endif
+
 	float start_z	= 1000;
 	float end_z		= -1000;
 

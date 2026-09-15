@@ -219,6 +219,16 @@ int BufferedFileClass::Write(void const * buffer, int size)
  *=============================================================================================*/
 int BufferedFileClass::Seek(int pos, int dir)
 {
+	// The base cursor includes read-ahead that the logical cursor has not used.
+	// Restore it before discarding the buffer for a backward relative seek.
+	// Separate seeks also avoid overflowing pos when it is near INT_MIN.
+	if (dir == SEEK_CUR && pos < 0 && BufferAvailable > 0) {
+		int position = BASECLASS::Seek(-BufferAvailable, SEEK_CUR);
+		if (position < 0) {
+			return position;
+		}
+	}
+
 	if ( (dir != SEEK_CUR) || (pos < 0) ) {
 		Reset_Buffer();
 	}

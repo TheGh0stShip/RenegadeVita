@@ -1,0 +1,13 @@
+--- a/render2dsentence.cpp
++++ b/render2dsentence.cpp
+@@ -308,7 +308,9 @@
+ 	}
+ 
+ 	if (!DX8Wrapper::Is_Initted()) {
+-		return text;
++		// There is no subsequent row without an initialized renderer.
++		// Returning this row again makes the original WWUI wrapper loop forever.
++		return NULL;
+ 	}
+ 
+ 	const WCHAR *retval = NULL;

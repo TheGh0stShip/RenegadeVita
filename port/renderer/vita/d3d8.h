@@ -199,6 +199,9 @@ struct IDirect3DBaseTexture8 {
 	// distinct from a successfully decoded retail texture in both ownership
 	// and telemetry; callers must not infer asset success from Uploaded alone.
 	bool DiagnosticFallback;
+	// Original DDS blocks are resident on the GPU. CPU SurfaceLevels remain
+	// authoritative for locks/copies; the first write expands the whole chain.
+	bool NativeCompressed;
 	ULONG AddRef();
 	ULONG Release();
 };

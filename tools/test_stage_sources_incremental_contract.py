@@ -25,7 +25,8 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         self.assertIn("ww3d2-a35-render2d-viewport-restore.patch", script)
         self.assertIn("combat-a35-vita-hud-think-presentation.patch", script)
         self.assertIn("combat-a35-vita-messagewindow-presentation.patch", script)
-        self.assertIn("combat-a35-weaponview-reload-visible-fallback.patch", script)
+        self.assertIn("combat-a35-weaponview-animation-varargs.patch", script)
+        self.assertNotIn("combat-a35-weaponview-reload-visible-fallback.patch", script)
 
     def test_shared_loading_screen_patch_is_durable_staging_input(self):
         patch = (ROOT / "port" / "patches" / "commando-a35-shared-loadingscreen-owner.patch").read_text(encoding="utf-8")

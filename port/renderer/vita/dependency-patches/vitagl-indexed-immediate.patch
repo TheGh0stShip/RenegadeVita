@@ -1,0 +1,70 @@
+--- a/source/ffp.c
++++ b/source/ffp.c
+@@ -2476,6 +2476,9 @@
+ 	vertex_count = 0;
+ }
+ 
++static const uint16_t *renegade_immediate_indices = NULL;
++static GLsizei renegade_immediate_index_count = 0;
++
+ void glEnd(void) {
+ 	THREAD_SAFE()
+ 
+@@ -2495,7 +2498,11 @@
+ #endif
+ 
+ 	// Translating primitive to sceGxm one
+-	gl_primitive_to_gxm(ffp_mode, prim, vertex_count);
++	if (renegade_immediate_indices) {
++		gl_primitive_to_gxm(ffp_mode, prim, renegade_immediate_index_count);
++	} else {
++		gl_primitive_to_gxm(ffp_mode, prim, vertex_count);
++	}
+ 
+ 	// Invalidating current attributes state settings
+ 	uint16_t orig_state = ffp_vertex_attrib_state;
+@@ -2586,8 +2593,14 @@
+ 	uint16_t *ptr;
+ 	uint32_t index_count;
+ 
+-	// Get the index source
+-	switch (ffp_mode) {
++	// The indexed extension retains the same immediate attributes/shaders.
++	// Copy caller indices into the GPU-owned transient pool before returning.
++	if (renegade_immediate_indices) {
++		index_count = renegade_immediate_index_count;
++		ptr = gpu_alloc_mapped_temp(index_count * sizeof(uint16_t));
++		if (ptr) vgl_fast_memcpy(ptr, renegade_immediate_indices, index_count * sizeof(uint16_t));
++		else vgl_error = GL_OUT_OF_MEMORY;
++	} else switch (ffp_mode) {
+ 	case GL_QUADS:
+ 		ptr = default_quads_idx_ptr;
+ 		index_count = (vertex_count / 2) * 3;
+@@ -2610,7 +2623,7 @@
+ 		break;
+ 	}
+ 
+-	sceGxmDraw(gxm_context, prim, SCE_GXM_INDEX_FORMAT_U16, ptr, index_count);
++	if (ptr) sceGxmDraw(gxm_context, prim, SCE_GXM_INDEX_FORMAT_U16, ptr, index_count);
+ 
+ 	// Advance by the exact emitted stride, preserving the lit layout.
+ 	legacy_pool = legacy_pool_ptr;
+@@ -2624,6 +2637,18 @@
+ 
+ 	// Restore polygon mode if a GL_LINES/GL_POINTS has been rendered
+ 	restore_polygon_mode(prim);
++}
++
++
++// Renegade platform extension: caller emits each referenced vertex once within
++// an unchanged GL_TRIANGLES batch. Indices are validated by that boundary.
++// No client-array state, alternative shader path or persistent caller pointers.
++void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices) {
++	renegade_immediate_indices = indices;
++	renegade_immediate_index_count = count;
++	glEnd();
++	renegade_immediate_indices = NULL;
++	renegade_immediate_index_count = 0;
+ }
+ 
+ void glTexEnvfv(GLenum target, GLenum pname, GLfloat *param) {

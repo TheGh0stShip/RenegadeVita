@@ -16,10 +16,14 @@ fi
 rv_logs="$rv_builder_root/logs"
 rv_dist="$rv_builder_root/dist"
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev99}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev110}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
-rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV99
+rv_vpk_content_id=EP9000-RNEGA3101_00-RENEGADEVITA0110
+rv_m00_demo=${RENEGADE_M00_DEMO:-1}
+case "$rv_m00_demo" in 0|1) ;; *) echo "Invalid RENEGADE_M00_DEMO: $rv_m00_demo (expected 0 or 1)" >&2; exit 2 ;; esac
+rv_development_checkpoint=${RENEGADE_DEVELOPMENT_CHECKPOINT:-0}
+case "$rv_development_checkpoint" in 0|1) ;; *) echo "Invalid RENEGADE_DEVELOPMENT_CHECKPOINT: $rv_development_checkpoint (expected 0 or 1)" >&2; exit 2 ;; esac
 # The fast candidate path already safely uses all host CPUs.  Match that
 # bounded default for canonical builds too; callers can still lower it with
 # RENEGADE_BUILD_JOBS on a constrained host.
@@ -27,6 +31,19 @@ rv_build_jobs=${RENEGADE_BUILD_JOBS:-$(nproc)}
 case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
 rv_timestamp=$(date +%Y%m%d-%H%M%S)
 rv_build="$rv_root/build/vita-${rv_candidate_stem}-candidate-${rv_timestamp}"
+if [[ -n "${RENEGADE_CANONICAL_RETRY_DIR:-}" ]]; then
+	rv_retry_build=$(realpath -e -- "$RENEGADE_CANONICAL_RETRY_DIR")
+	if [[ "$(dirname "$rv_retry_build")" != "$rv_root/build" ||
+		"$(basename "$rv_retry_build")" != "vita-${rv_candidate_stem}-candidate-"* ]] ||
+		! grep -Fxq "CMAKE_HOME_DIRECTORY:INTERNAL=$rv_root" "$rv_retry_build/CMakeCache.txt" ||
+		! grep -Fxq "RENEGADE_CANDIDATE_LABEL:STRING=$rv_candidate_label" "$rv_retry_build/CMakeCache.txt"; then
+		echo "Canonical retry directory must belong to this workspace and candidate." >&2
+		exit 2
+	fi
+	# Reconfigure and build normally. Only the working directory is reused;
+	# no compile, link, package, identity or source-inventory gate is skipped.
+	rv_build=$rv_retry_build
+fi
 rv_host_output="$rv_root/build/${rv_candidate_label}-HOST-VALIDATION.log"
 rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
 rv_revision=3e00c3a1b97381bb28be89a35b856375e0629a08
@@ -75,10 +92,14 @@ require_linked_symbol() {
 echo "Renegade Vita $rv_candidate_label correctness, diagnostics, and interactive hardware candidate build"
 echo "Workspace: $rv_root"
 echo "Log: $rv_log"
+echo "Native working directory: $rv_build"
+echo "Development checkpoint launch enabled: $rv_development_checkpoint (public packages require 0)"
 
 for rv_command in cmake ninja python3 git patch unzip zip sha256sum grep find tee wc ccache curl tar make; do
 	require_command "$rv_command"
 done
+rv_patch_count=$(python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --count)
+echo "Patch inventory preflight: $rv_patch_count registered zero-fuzz patches"
 for rv_sdk_path in \
 	"$rv_vitasdk/bin/arm-vita-eabi-g++" \
 	"$rv_vitasdk/bin/arm-vita-eabi-readelf" \
@@ -110,6 +131,7 @@ export CCACHE_BASEDIR="$rv_root"
 
 echo "Verifying the pinned Bink-enabled Vita FFmpeg dependency..."
 bash "$rv_root/tools/build_ffmpeg_bink_vita.sh"
+bash "$rv_root/tools/build_vitagl_demo.sh"
 ccache --zero-stats
 echo "ccache statistics reset; native-ext4 CMake launchers are required."
 
@@ -225,6 +247,17 @@ require_host_line "world.render.unsupported_submissions=0"
 require_host_line "A3.0 original M00 world runtime: PASS"
 echo "Host semantic fingerprints: PASS"
 python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_identity \
+	tools.test_integration_source_inventory \
+	tools.test_vita_sampler_cache tools.diagnostics.test_renegade_vita_performance_ledger \
+	tools.test_vita_material_cache tools.test_vita_index_preparation \
+	tools.test_vita_mp3_decode tools.test_vita_bink_audio_output \
+	tools.test_vita_tutorial_help \
+	tools.test_vitagl_compact_vertices \
+	tools.test_vita_mesh_batch \
+	tools.test_vitagl_full_upload \
+	tools.test_vitagl_dds_chain \
+	tools.test_vita_bink_scheduler \
+	tools.test_compare_capture_bundles \
 	tools.test_script_provider_contract tools.test_mission_completion_contract \
 	tools.test_mission_teardown_contract \
 	tools.test_input_route_contract tools.test_vita_skin_submission_contract \
@@ -240,6 +273,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 
 echo "Clean-restaging original source pools with the deterministic patch set..."
 bash "$rv_root/tools/stage_sources.sh"
+python3 -m unittest tools.test_vita_text_readiness tools.test_vita_demo_ending tools.test_wwui_resource_styles tools.test_vita_touch_presentation tools.test_vita_user_settings tools.test_vita_text_entry tools.test_vita_select_tap
 if find "$rv_root/staging" -type f \
 	\( -name '*.orig' -o -name '*.rej' \) -print -quit | grep -q .; then
 	echo "Staging contains patch backup/reject debris." >&2
@@ -254,12 +288,13 @@ python3 "$rv_root/tools/generate_integration_report.py" \
 	--root "$rv_root" \
 	--output "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" \
 	--milestone "$rv_candidate_label"
-grep -Fq "\"milestone\": \"$rv_candidate_label\"" "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"original_source_files_compiled": 506' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"staged_original_owner_files": 1' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"vita_platform_renderer_validation_files": 26' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"a4_frontend_boundary_files": 6' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
-grep -Fq '"patch_count": 145' "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
+rv_source_counts=$(python3 "$rv_root/tools/verify_source_inventory.py" \
+	--root "$rv_root" --report "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json" \
+	--milestone "$rv_candidate_label")
+read -r rv_original_count rv_owner_count rv_native_count rv_frontend_count <<< "$rv_source_counts"
+echo "Source identity inventory PASS: original=$rv_original_count owner=$rv_owner_count native=$rv_native_count frontend=$rv_frontend_count"
+python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" \
+	--report "$rv_root/reports/SOURCE_INTEGRATION_REPORT.json"
 
 echo "Configuring Vita $rv_candidate_label target..."
 cmake -S "$rv_root" -B "$rv_build" -G Ninja \
@@ -267,6 +302,8 @@ cmake -S "$rv_root" -B "$rv_build" -G Ninja \
 	-DCMAKE_TOOLCHAIN_FILE="$rv_vitasdk/share/vita.toolchain.cmake" \
 	-DRENEGADE_USE_CCACHE=ON \
 	-DRENEGADE_CANDIDATE_LABEL="$rv_candidate_label" \
+	-DRENEGADE_VITA_M00_DEMO="$rv_m00_demo" \
+	-DRENEGADE_VITA_DEVELOPMENT_CHECKPOINT="$rv_development_checkpoint" \
 	-DRENEGADE_VITA_CONTENT_ID="$rv_vpk_content_id"
 grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
 echo "Compiling, linking, and packaging Vita $rv_candidate_label target..."
@@ -299,7 +336,11 @@ grep -q 'Machine:.*ARM' "$rv_elf_header"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime(int)
+A31_Vita_Run_Interactive_Runtime(int, bool, char const*)
+EncyclopediaMgrClass::Initialize()
+EncyclopediaMgrClass::Shutdown()
+RenegadeVitaAudio::Open_Mpeg_Playback
+scePowerSetArmClockFrequency
 A31_Interactive_Begin_Mission_Completion_Observation()
 A31_Interactive_Get_Mission_Completion_State()
 A31_Interactive_End_Mission_Completion_Observation()
@@ -325,7 +366,9 @@ MeshClass::Render(RenderInfoClass&)
 DX8Wrapper::Create_Render_Target(int, int, WW3DFormat)
 RenegadeVitaRenderer::Submit_Mesh(MeshClass&, RenderInfoClass&)
 A31_Write_Capture_Bundle(A31CaptureBundleInput const&)
-RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(unsigned char*, unsigned int)
+RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(unsigned char*, unsigned int, bool)
+vglRenegadeEndIndexed
+vglRenegadeUploadDXTChain
 Get_Script_Commands()
 ScriptManager::Create_Script(char const*)
 ScriptRegistrar::CreateScript(char const*)
@@ -338,7 +381,7 @@ WWAudioClass::WWAudioClass(bool)
 WWAudioClass::Create_Sound(char const*, RefCountClass*, unsigned int, int)
 AIL_startup()
 AIL_start_3D_sample(RenegadeMilesSample*)
-RenegadeVitaAudio::Decode_Wave(unsigned char const*, unsigned int, RenegadeVitaAudio::DecodedWave*, char const**)
+RenegadeVitaAudio::Decode_Wave_With_Info(unsigned char const*, unsigned int, RenegadeVitaAudio::DecodedWave*, RenegadeVitaAudio::WaveInfo*, char const**)
 SurfaceClass::Lock(int*)
 A31_Audio_Save_Load_Breadcrumb(char const*)
 EOF
@@ -373,15 +416,15 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 	echo "A3.5 crash repair: deterministic HumanState weapon-style table patch; bounds fallback; matching A3.2 dump parser evidence preserved"
 	echo "A3.5 projection repair: ordinary mesh positions retain homogeneous W through GPU projection; physical visual validation pending"
 	echo "A3.5 audio boundary: provider codecs/mixing are host/sanitizer validated; after installing the rooted retail/MIX chain, the direct Vita runtime constructs a path-stripping factory and non-lite original WWAudio, initializes its Vita-native SceAudio provider, services it per frame, and tears it down before renderer/factory shutdown; the complete path is ARM-linked while physical audio and conversation causality remain pending"
-	echo "Original Westwood translation units: 506 plus 1 staged original-owner extraction"
-	echo "Vita platform/renderer/validation/developer translation units: 26"
-	echo "A4 frontend boundary translation units: 6"
+	echo "Original Westwood translation units: $rv_original_count plus $rv_owner_count staged original-owner extraction"
+	echo "Vita platform/renderer/validation/developer translation units: $rv_native_count"
+	echo "A4 frontend boundary translation units: $rv_frontend_count"
 	echo "M00 scripts: original ScriptCommands ABI plus EA/Westwood static Mission00 provider and direct cinematic/powerup dependencies"
 	echo "M00 completion: original CombatMiscHandler callback observed by a bounded Vita lifecycle latch; no objective or script state injection"
 	echo "M00 progress diagnostics: read-only original Star control, ObjectiveManager 1..6 status, and active-conversation transitions; automation waits for the original objective-1 control handoff"
 	echo "M00 finalization: original CombatGameMode post-load checks, building/radar initialization, texture-loader update, On_Game_Begin, DDS top-down uploads, viewport synchronization, shader cache path, and loading-screen prewarm are active"
 	echo "A4 frontend path: original MovieGameMode startup movie chain and original RenegadeDialogMgr/WWUI main menu are source/build routed; Vita FFmpeg Bink provider is enabled without proprietary RAD code. Dev86 prevents empty startup audio submissions and records bounded decode/upload pacing statistics; physical A/V usability remains unaccepted. Tutorial selection reuses the existing direct M00 route."
-		echo "Patch set: deterministic zero-fuzz staging patches; patch_count=145; pristine upstream=PASS"
+		echo "Patch set: deterministic zero-fuzz staging patches; patch_count=$rv_patch_count; pristine upstream=PASS"
 	echo "Renderer path: original PhysicsScene/WW3D/Scene/RenderObj/Mesh -> Vita backend"
 	echo "Retail data packaged: none"
 	echo "Automatic Vita deployment: disabled"
@@ -428,15 +471,15 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 	echo "Runtime log: $rv_runtime_log (remove or rename an older file before launch)."
 	echo "Startup pre-cache receipt: $rv_startup_precache_receipt."
 	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
-	echo "Controls: frontend menu active: D-pad=WWUI focus navigation, Cross=confirm, Circle=back/cancel, Select=next focus, front touch=original mouse cursor/left click. M00 gameplay: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=original mouse cursor/left click for UI/terminals; rear touch=first/third-person camera toggle; Select=capture; Select+L+R=fixed-camera benchmark; Start=clean exit."
-	echo "Test: in M00, verify visible startup pre-cache receipt, aspect-preserved loading presentation, HUD/scope placement, loading progress, normal texture orientation on characters/doors/powerups, Logan/Sydney/Gunner subtitles, Triangle action/use gates, Square reload animation, D-pad weapon cycling without camera drift, D-pad sniper zoom, and frame rate. Press Start and wait for LiveArea."
+	echo "Controls: frontend menu active: D-pad=WWUI focus navigation, Cross=confirm, Circle=back/cancel, Select=next focus, front touch=original mouse cursor/left click. M00 gameplay: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=original mouse cursor/left click for UI/terminals; rear touch=first/third-person camera toggle; Select tap=cycle objectives; Select+Square=quicksave; Start=original EVA pause menu; Circle=back/resume; Exit Demo=orderly teardown. SELECT screenshots require input-capture-select.flag."
+	echo "Test: in M00, verify visible startup pre-cache receipt, aspect-preserved loading presentation, HUD/scope placement, loading progress, normal texture orientation on characters/doors/powerups, Logan/Sydney/Gunner subtitles, Triangle action/use gates, Square reload animation, D-pad weapon cycling without camera drift, D-pad sniper zoom, and frame rate. Check Start opens EVA and Circle resumes; Exit Demo performs orderly teardown."
 	echo "Return: $rv_runtime_log, ux0:data/renegade/user/captures/, screenshots, and any psp2core-*.psp2dmp. Run tools/collect_a35_diagnostics.sh with this dist directory and returned files."
 } > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"
 {
 	echo "Runtime log: $rv_runtime_log"
 	echo "Startup pre-cache receipt: $rv_startup_precache_receipt"
 	echo "Expected $rv_candidate_label breadcrumbs: startup-precache begin/touch/visible-hold/receipt/complete before frontend, movies, menu, or gameplay input; input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; original Combat mission-completion observation when achieved; 120-frame checkpoint or terminal transition; clean teardown."
-	echo "Physical test: retain this log, the startup-precache receipt, and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and START exit."
+	echo "Physical test: retain this log, the startup-precache receipt, and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and Exit Demo teardown."
 } > "$rv_dist/$rv_candidate_label-EXPECTED-RUNTIME-LOG.txt"
 bash "$rv_root/tools/collect_a35_diagnostics.sh" "$rv_dist" \
 	"$rv_dist/$rv_candidate_label-BUILD-DIAGNOSTICS-$rv_timestamp.zip" "$rv_candidate_label"

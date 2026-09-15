@@ -1,0 +1,16 @@
+--- a/screencursor.cpp
++++ b/screencursor.cpp
+@@ -87,6 +87,13 @@
+ //		Width	= surface_desc.Width;
+ //		Height	= surface_desc.Height;
+ 		Texture->Init();
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
++		// Full-range cursor UVs must not wrap the opposite edge into the
++		// transparent border when the native backend filters the texture.
++		// Keep the authored cursor size, hotspot, pixels and UVs unchanged.
++		Texture->Set_U_Addr_Mode (TextureClass::TEXTURE_ADDRESS_CLAMP);
++		Texture->Set_V_Addr_Mode (TextureClass::TEXTURE_ADDRESS_CLAMP);
++#endif
+ 		Width = Texture->Get_Width();
+ 		Height = Texture->Get_Height();
+ 	}

@@ -1,0 +1,31 @@
+--- a/menubackdrop.cpp
++++ b/menubackdrop.cpp
+@@ -269,4 +269,24 @@
+-	if ( Model != NULL && Anim != NULL ) {
+-		float frame = (float)(Anim->Get_Num_Frames()-1) * WWMath::Clamp( percent, 0, 1 );
+-		Model->Set_Animation (Anim, frame, RenderObjClass::ANIM_MODE_MANUAL);
+-	}
++	if ( Model != NULL && Anim != NULL ) {
++		float frame = (float)(Anim->Get_Num_Frames()-1) * WWMath::Clamp( percent, 0, 1 );
++		Model->Set_Animation (Anim, frame, RenderObjClass::ANIM_MODE_MANUAL);
++#if defined(__vita__)
++		static unsigned progress_logs = 0U;
++		static int last_bucket = -1;
++		const int bucket = static_cast<int>(WWMath::Clamp(percent, 0, 1) * 10.0f);
++		if (progress_logs < 16U && bucket != last_bucket) {
++			last_bucket = bucket;
++			++progress_logs;
++			A4_BACKDROP_TRACE("A4 backdrop progress: animation=%s frames=%d requested_fraction=%.3f requested_frame=%.3f manual=1 visual_unassessed=1\n",
++				static_cast<const char *>(AnimationName), Anim->Get_Num_Frames(), percent, frame);
++		}
++#endif
++	} else {
++#if defined(__vita__)
++		static bool missing_logged = false;
++		if (!missing_logged) {
++			missing_logged = true;
++			A4_BACKDROP_TRACE("A4 backdrop progress: missing binding animation=%s model=%p anim=%p\n",
++				static_cast<const char *>(AnimationName), Model, Anim);
++		}
++#endif
++	}

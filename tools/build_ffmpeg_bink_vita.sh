@@ -12,7 +12,7 @@ rv_source="$rv_source_cache/ffmpeg-$rv_version"
 rv_prefix="$rv_root/build/deps/ffmpeg-bink-vita"
 rv_build="$rv_root/build/deps/ffmpeg-bink-vita-build"
 rv_vitasdk="${VITASDK:-/usr/local/vitasdk}"
-rv_config_id="ffmpeg-$rv_version-vita-bink-video-audio-v2"
+rv_config_id="ffmpeg-$rv_version-vita-bink-video-audio-v3-speed"
 rv_stamp="$rv_prefix/.renegade-bink-build"
 
 mkdir -p "$rv_source_cache" "$rv_root/build/deps"
@@ -68,7 +68,8 @@ cd "$rv_build"
 	--enable-decoder=bink,binkaudio_dct,binkaudio_rdft \
 	--enable-protocol=file \
 	--enable-pthreads \
-	--enable-small \
+	--disable-small \
+	--optflags=-O3 \
 	--disable-debug \
 	--disable-bzlib \
 	--disable-iconv \

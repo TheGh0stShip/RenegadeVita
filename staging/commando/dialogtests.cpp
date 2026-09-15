@@ -1002,6 +1002,14 @@ Add_Folders (const char *path, TreeCtrlClass *tree_ctrl, TreeItemClass *parent_i
 void
 StartSPGameDialogClass::On_Init_Dialog (void)
 {
+#if RENEGADE_VITA_M00_DEMO
+	const int unavailable[] = { IDC_MENU_START_CAMPAIGN_BUTTON, IDC_MENU_LOAD_SP_GAME_BUTTON };
+	for (unsigned i = 0; i < sizeof(unavailable) / sizeof(unavailable[0]); ++i) {
+		DialogControlClass *control = Get_Dlg_Item(unavailable[i]);
+		if (control != NULL) control->Enable(false);
+	}
+#endif
+
 	//TreeCtrlClass *tree_ctrl = (TreeCtrlClass *)Get_Dlg_Item (IDC_TREE_CTRL);
 
 	//_level = 0;
@@ -1055,6 +1063,11 @@ StartSPGameDialogClass::On_TreeCtrl_Needs_Children (TreeCtrlClass *tree_ctrl, in
 void
 StartSPGameDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 {	
+#if RENEGADE_VITA_M00_DEMO
+	if (ctrl_id == IDC_MENU_START_CAMPAIGN_BUTTON ||
+		ctrl_id == IDC_MENU_LOAD_SP_GAME_BUTTON) return;
+#endif
+
 
 	//
 	//	Does the user wish to start the tutorial?

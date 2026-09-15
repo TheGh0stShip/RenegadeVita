@@ -1,6 +1,22 @@
 # Current status
 
-Updated: 2026-08-31
+Updated: 2026-09-15
+
+## Current Dev134 checkpoint
+
+Dev134 is the current native ARM/GXM candidate. Canonical host/sanitizer/ARM
+and package identity checks passed, followed by matching Vita3K refinery visuals,
+pause Map/statistics/Help checks, resume, and clean native exit. The VPK was
+deployed to the physical Vita with executable and package readback verification;
+manual LiveArea launch is required because remote control services were
+unavailable. Hardware FPS, movie audio, and complete tutorial acceptance remain
+open. The tutorial-only public download guide is
+[Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
+
+Exact evidence is retained in [DEV134_PHYSICAL_MILESTONE.md](../reports/DEV134_PHYSICAL_MILESTONE.md)
+and [DEV134_SKIN_RGB_WORK.md](../reports/DEV134_SKIN_RGB_WORK.md).
+
+The historical entries below are retained for provenance.
 
 ## Evidence snapshot
 

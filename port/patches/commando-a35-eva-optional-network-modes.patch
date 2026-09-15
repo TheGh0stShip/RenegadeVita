@@ -1,0 +1,12 @@
+--- a/dlgevaencyclopedia.cpp
++++ b/dlgevaencyclopedia.cpp
+@@ -306,2 +306,7 @@
+-	bool stop = false;
+-	if (GameModeManager::Find("WOL")->Is_Active() || GameModeManager::Find("LAN")->Is_Active()) {
++	bool stop = false;
++	// Native single-player mode graphs need not register online providers.
++	// Keep the original dedicated-server decision when either provider exists.
++	GameModeClass *wol_mode = GameModeManager::Find("WOL");
++	GameModeClass *lan_mode = GameModeManager::Find("LAN");
++	if ((wol_mode != NULL && wol_mode->Is_Active()) ||
++		(lan_mode != NULL && lan_mode->Is_Active())) {

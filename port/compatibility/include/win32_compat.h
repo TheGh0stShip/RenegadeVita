@@ -15,6 +15,9 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
+#if defined(__vita__)
+#include <psp2/rtc.h>
+#endif
 
 // ABI-facing Win32 scalar types. The native Vita target is ILP32, matching the
 // widths assumed by Renegade. Keep UINT and ULONG as distinct C++ types because
@@ -194,6 +197,7 @@ extern HINSTANCE ProgramInstance;
 #define ES_CENTER 0x00000001UL
 #define ES_MULTILINE 0x00000004UL
 #define ES_PASSWORD 0x00000020UL
+#define ES_READONLY 0x00000800UL
 #define ES_AUTOVSCROLL 0x00000040UL
 #define ES_OEMCONVERT 0x00000400UL
 #define ES_NUMBER 0x00002000UL
@@ -220,6 +224,7 @@ extern HINSTANCE ProgramInstance;
 #define VK_RETURN 0x0D
 #define VK_SHIFT 0x10
 #define VK_ESCAPE 0x1B
+#define VK_F1 0x70
 #define VK_SPACE 0x20
 #define VK_CONTROL 0x11
 #define VK_DELETE 0x2E
@@ -340,9 +345,22 @@ static inline uint64_t Renegade_FileTime_Value(const FILETIME *file_time)
 static inline BOOL FileTimeToLocalFileTime(const FILETIME *source, LPFILETIME destination)
 {
 	if (source == NULL || destination == NULL) return 0;
+#if defined(__vita__)
+	SceDateTime calendar = {};
+	SceRtcTick utc = {}, local = {};
+	SceUInt64 value = 0;
+	if (sceRtcSetWin32FileTime(&calendar, Renegade_FileTime_Value(source)) < 0 ||
+		sceRtcGetTick(&calendar, &utc) < 0 ||
+		sceRtcConvertUtcToLocalTime(&utc, &local) < 0 ||
+		sceRtcSetTick(&calendar, &local) < 0 ||
+		sceRtcGetWin32FileTime(&calendar, &value) < 0) return 0;
+	destination->dwLowDateTime = static_cast<DWORD>(value);
+	destination->dwHighDateTime = static_cast<DWORD>(value >> 32U);
+#else
 	// The Vita runtime presents local calendar fields below; retaining the UTC
 	// stamp here keeps ordering stable and avoids inventing a mutable timezone.
 	*destination = *source;
+#endif
 	return 1;
 }
 
@@ -350,6 +368,19 @@ static inline BOOL FileTimeToSystemTime(const FILETIME *file_time, LPSYSTEMTIME 
 {
 	if (file_time == NULL || system_time == NULL) return 0;
 	const uint64_t stamp = Renegade_FileTime_Value(file_time);
+#if defined(__vita__)
+	SceDateTime calendar = {};
+	memset(system_time, 0, sizeof(*system_time));
+	if (sceRtcSetWin32FileTime(&calendar, stamp) < 0) return 0;
+	system_time->wYear = calendar.year;
+	system_time->wMonth = calendar.month;
+	system_time->wDay = calendar.day;
+	system_time->wDayOfWeek = static_cast<WORD>(sceRtcGetDayOfWeek(calendar.year, calendar.month, calendar.day));
+	system_time->wHour = calendar.hour;
+	system_time->wMinute = calendar.minute;
+	system_time->wSecond = calendar.second;
+	system_time->wMilliseconds = static_cast<WORD>(calendar.microsecond / 1000U);
+#else
 	const uint64_t windows_epoch_ticks = 116444736000000000ULL;
 	if (stamp < windows_epoch_ticks) {
 		memset(system_time, 0, sizeof(*system_time));
@@ -369,6 +400,7 @@ static inline BOOL FileTimeToSystemTime(const FILETIME *file_time, LPSYSTEMTIME 
 	system_time->wMinute = static_cast<WORD>(calendar.tm_min);
 	system_time->wSecond = static_cast<WORD>(calendar.tm_sec);
 	system_time->wMilliseconds = static_cast<WORD>((stamp / 10000ULL) % 1000ULL);
+#endif
 	return 1;
 }
 

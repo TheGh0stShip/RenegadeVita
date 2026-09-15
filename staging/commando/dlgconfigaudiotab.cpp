@@ -35,6 +35,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "dlgconfigaudiotab.h"
+#include "renegade_vita_options.h"
 #include "resource.h"
 #include "sliderctrl.h"
 #include "wwaudio.h"
@@ -202,6 +203,15 @@ DlgConfigAudioTabClass::On_Init_Dialog (void)
 	Configure_Rate_Combobox ();
 	Configure_Speaker_Combobox ();
 	Configure_Driver_List ();
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	// Vita has one fixed output provider. Volume/category controls retain
+	// their original WWAudio owners; desktop device reconfiguration is absent.
+	Enable_Dlg_Item(IDC_DRIVER_LIST, false);
+	Enable_Dlg_Item(IDC_QUALITY_COMBO, false);
+	Enable_Dlg_Item(IDC_RATE_COMBO, false);
+	Enable_Dlg_Item(IDC_SPEAKER_SETUP_COMBO, false);
+	Enable_Dlg_Item(IDC_STEREO_CHECK, false);
+#endif
 	
 	//
 	//	Update the enabled state of the volume sliders
@@ -444,7 +454,7 @@ DlgConfigAudioTabClass::Configure_Driver_List (void)
 			//
 			int item_index = list_ctrl->Insert_Entry (index, wide_driver_name);
 			if (item_index >= 0) {
-				list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)driver_info->driver);
+				list_ctrl->Set_Entry_Data (item_index, 0, static_cast<DWORD>(index));
 
 				//
 				//	Select this entry if its the default
@@ -560,6 +570,13 @@ DlgConfigAudioTabClass::On_Apply (void)
 	//
 	combo_box = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_SPEAKER_SETUP_COMBO);
 	speaker_type = combo_box->Get_Curr_Sel ();
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	bits = InitialBits;
+	hertz = InitialHertz;
+	is_stereo = InitialIsStereo;
+	device_index = InitialDeviceIndex;
+	speaker_type = WWAudioClass::Get_Instance()->Get_Speaker_Type();
+#endif
 
 	//
 	//	Store these settings in the registry
@@ -589,7 +606,11 @@ DlgConfigAudioTabClass::On_Apply (void)
 	WWAudioClass::Get_Instance ()->Allow_Dialog (dialog_on);
 	WWAudioClass::Get_Instance ()->Allow_Cinematic_Sound (cinematic_on);
 	WWAudioClass::Get_Instance ()->Set_Speaker_Type (speaker_type);
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	return RenegadeVitaOptions::Save_Audio(*WWAudioClass::Get_Instance());
+#else
 	return true;
+#endif
 }
 
 

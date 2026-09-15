@@ -44,6 +44,9 @@
 #include "dialogmgr.h"
 #include "stylemgr.h"
 #include "dialogbase.h"
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+#include "renegade_vita_text_entry.h"
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -89,6 +92,9 @@ EditCtrlClass::EditCtrlClass (void)	:
 ////////////////////////////////////////////////////////////////
 EditCtrlClass::~EditCtrlClass (void)
 {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	RenegadeVitaTextEntry::Cancel(this);
+#endif
 	if (mIME) {
 		mIME->Release_Ref();
 	}
@@ -281,6 +287,14 @@ EditCtrlClass::Update_Client_Rect (void)
 void
 EditCtrlClass::Render (void)
 {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	wchar_t native_text[2049];
+	if (RenegadeVitaTextEntry::Take_Result(this, native_text, 2049)) {
+		Set_Text(native_text);
+		Set_Caret_Pos(Get_Text_Length());
+		ADVISE_NOTIFY(On_EditCtrl_Change(this, Get_ID()));
+	}
+#endif
 	//
 	//	Recreate the renderers (if necessary)
 	//
@@ -417,10 +431,20 @@ EditCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	//
 	//	Reset our flags
 	//
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	if (WasButtonPressedOnMe && ClientRect.Contains(mouse_pos)) Begin_Native_Text_Entry();
+#endif
 	WasButtonPressedOnMe	= false;
 	return ;
 }
 
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+bool EditCtrlClass::Begin_Native_Text_Entry(void)
+{
+	return Is_Enabled() && (Get_Style() & ES_READONLY) == 0 &&
+		RenegadeVitaTextEntry::Begin(this, Get_Text(), Get_Text_Limit());
+}
+#endif
 
 ////////////////////////////////////////////////////////////////
 //

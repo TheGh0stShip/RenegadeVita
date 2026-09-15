@@ -3,7 +3,15 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
+#if defined(__vita__)
+#include <psp2/io/devctl.h>
+#include <psp2/io/stat.h>
+#include <psp2/rtc.h>
+#else
+#include <sys/statvfs.h>
+#endif
 
 namespace {
 
@@ -24,10 +32,18 @@ void Set_Last_Write_Time(const FindContext *context, const char *name,
 	const int length = snprintf(physical_name, sizeof(physical_name), "%s/%s",
 		context->physical_directory, name);
 	if (length < 0 || static_cast<size_t>(length) >= sizeof(physical_name)) return;
+#if defined(__vita__)
+	SceIoStat info = {};
+	SceUInt64 ticks = 0;
+	if (sceIoGetstat(physical_name, &info) < 0 ||
+		sceRtcGetWin32FileTime(&info.st_mtime, &ticks) < 0) return;
+	if (SCE_S_ISDIR(info.st_mode)) result->dwFileAttributes |= FILE_ATTRIBUTE_DIRECTORY;
+#else
 	struct stat info;
 	if (stat(physical_name, &info) != 0 || info.st_mtime < 0) return;
 	if (S_ISDIR(info.st_mode)) result->dwFileAttributes |= FILE_ATTRIBUTE_DIRECTORY;
 	const uint64_t ticks = (static_cast<uint64_t>(info.st_mtime) + 11644473600ULL) * 10000000ULL;
+#endif
 	result->ftLastWriteTime.dwLowDateTime = static_cast<DWORD>(ticks & 0xffffffffULL);
 	result->ftLastWriteTime.dwHighDateTime = static_cast<DWORD>(ticks >> 32U);
 }
@@ -103,6 +119,35 @@ BOOL Next_Match(FindContext *context, WIN32_FIND_DATA *result)
 }
 
 } // namespace
+
+bool Renegade_Get_User_Free_Space(uint64_t &bytes)
+{
+	bytes = 0;
+	if (Roots.user == NULL || Roots.user[0] == '\0') return false;
+#if defined(__vita__)
+	// Writable game state is restricted to the user's ux0 volume.
+	if (strncmp(Roots.user, "ux0:", 4) != 0) return false;
+	SceIoDevInfo info = {};
+	if (sceIoDevctl("ux0:", 0x3001, NULL, 0, &info, sizeof(info)) < 0 ||
+		info.free_size < 0) return false;
+	bytes = static_cast<uint64_t>(info.free_size);
+#else
+	struct statvfs info = {};
+	if (statvfs(Roots.user, &info) != 0 || info.f_frsize == 0 ||
+		static_cast<uint64_t>(info.f_bavail) > UINT64_MAX / info.f_frsize) return false;
+	bytes = static_cast<uint64_t>(info.f_bavail) * info.f_frsize;
+#endif
+	return true;
+}
+
+bool Renegade_Delete_User_Save(const char *logical_path)
+{
+	const RenegadeResolvedPath resolved = Renegade_Resolve_Path(Roots,
+		logical_path, RENEGADE_PATH_READ);
+	return resolved.success && resolved.writable_namespace &&
+		strncasecmp(resolved.normalized_logical, "save/", 5) == 0 &&
+		remove(resolved.physical) == 0;
+}
 
 void Renegade_Set_Find_Roots(const RenegadePathRoots &roots)
 {

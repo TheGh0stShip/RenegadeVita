@@ -9,10 +9,14 @@ else
 	rv_builder_root=$rv_root
 fi
 
-rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev99}
+rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev110}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
-rv_vpk_content_id=EP9000-RNEGA3101_00-RENGADEVITADEV99
+rv_vpk_content_id=EP9000-RNEGA3101_00-RENEGADEVITA0110
+rv_m00_demo=${RENEGADE_M00_DEMO:-1}
+case "$rv_m00_demo" in 0|1) ;; *) echo "Invalid RENEGADE_M00_DEMO: $rv_m00_demo (expected 0 or 1)" >&2; exit 2 ;; esac
+rv_development_checkpoint=${RENEGADE_DEVELOPMENT_CHECKPOINT:-0}
+case "$rv_development_checkpoint" in 0|1) ;; *) echo "Invalid RENEGADE_DEVELOPMENT_CHECKPOINT: $rv_development_checkpoint (expected 0 or 1)" >&2; exit 2 ;; esac
 rv_vitasdk=${RENEGADE_VITASDK:-/usr/local/vitasdk}
 rv_build_jobs=${RENEGADE_BUILD_JOBS:-$(nproc)}
 case "$rv_build_jobs" in ''|*[!0-9]*|0) echo "Invalid RENEGADE_BUILD_JOBS: $rv_build_jobs" >&2; exit 2 ;; esac
@@ -65,11 +69,13 @@ echo "Build dir: $rv_build"
 echo "Log: $rv_log"
 echo "Fast scope: $rv_fast_scope"
 echo "Fast tests: $rv_fast_tests"
+echo "Development checkpoint launch enabled: $rv_development_checkpoint (public packages require 0)"
 echo "Scope: hardware-testable iteration only; this does not replace tools/build.sh canonical acceptance."
 
 for rv_command in cmake ninja python3 git unzip sha256sum grep find tee wc ccache curl tar make; do
 	require_command "$rv_command"
 done
+python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --count
 for rv_sdk_path in \
 	"$rv_vitasdk/bin/arm-vita-eabi-readelf" \
 	"$rv_vitasdk/bin/arm-vita-eabi-nm" \
@@ -89,6 +95,7 @@ export CCACHE_BASEDIR="$rv_root"
 
 echo "Verifying the pinned Bink-enabled Vita FFmpeg dependency..."
 bash "$rv_root/tools/build_ffmpeg_bink_vita.sh"
+bash "$rv_root/tools/build_vitagl_demo.sh"
 
 rv_upstream="$rv_root/upstream/CnC_Renegade"
 test -d "$rv_upstream/.git"
@@ -100,12 +107,14 @@ fi
 rv_revision_actual=$(git -C "$rv_upstream" rev-parse HEAD)
 echo "Upstream revision: $rv_revision_actual"
 
-if [[ "${RENEGADE_FAST_RESTAGE:-0}" == "1" ]] || [[ ! -f "$rv_root/staging/wwlib/mixfile.cpp" ]]; then
-	echo "Fast restage requested or staging missing: running deterministic staging."
+if [[ "${RENEGADE_FAST_RESTAGE:-0}" == "1" ]] || [[ ! -f "$rv_root/staging/wwlib/mixfile.cpp" ]] || \
+	! python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --check-staging > /dev/null 2>&1; then
+	echo "Fast restage requested, missing, or patch identity changed: running deterministic staging."
 	RENEGADE_INCREMENTAL_STAGE="${RENEGADE_INCREMENTAL_STAGE:-1}" bash "$rv_root/tools/stage_sources.sh"
 else
 	echo "Fast restage skipped: reusing current staged source pool."
 fi
+python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --check-staging
 if find "$rv_root/staging" -type f \( -name '*.orig' -o -name '*.rej' \) -print -quit | grep -q .; then
 	echo "Staging contains patch backup/reject debris." >&2
 	exit 5
@@ -114,6 +123,30 @@ fi
 if [[ "$rv_fast_tests" == "focused" ]]; then
 	echo "Running focused fast contracts..."
 	python3 -m unittest \
+		tools.test_vita_text_readiness \
+		tools.test_wwui_resource_styles \
+		tools.test_vita_user_settings \
+		tools.test_vita_text_entry \
+		tools.test_vita_select_tap \
+		tools.test_objective_message_abi \
+		tools.test_npc_path_frame \
+		tools.test_vita_demo_ending \
+		tools.test_demo_menu_return \
+		tools.test_loading_animation_abi \
+		tools.test_frame_capture_source \
+		tools.test_vita_mp3_decode \
+		tools.test_vita_sampler_cache \
+		tools.test_vita_material_cache \
+		tools.test_vita_index_preparation \
+		tools.test_vita_bink_audio_output \
+		tools.test_vita_tutorial_help \
+		tools.test_vitagl_compact_vertices \
+		tools.test_vita_mesh_batch \
+		tools.test_vitagl_full_upload \
+		tools.test_vitagl_dds_chain \
+		tools.test_vita_bink_scheduler \
+		tools.diagnostics.test_renegade_vita_performance_ledger \
+		tools.test_compare_capture_bundles \
 		tools.test_vita_loading_screen_contract \
 		tools.test_vita_indexed_state_contract \
 		tools.test_vita_skin_submission_contract \
@@ -123,6 +156,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_vita_texture_surface_contract \
 		tools.test_a4_original_frontend_contract \
 		tools.test_vita_camera_input_contract \
+		tools.test_vita_touch_presentation \
 		tools.test_input_route_contract \
 		tools.test_validate_vita_input_route \
 		tools.test_stage_sources_incremental_contract \
@@ -145,6 +179,8 @@ cmake -S "$rv_root" -B "$rv_build" -G Ninja \
 	-DCMAKE_TOOLCHAIN_FILE="$rv_vitasdk/share/vita.toolchain.cmake" \
 	-DRENEGADE_USE_CCACHE=ON \
 	-DRENEGADE_CANDIDATE_LABEL="$rv_candidate_label" \
+	-DRENEGADE_VITA_M00_DEMO="$rv_m00_demo" \
+	-DRENEGADE_VITA_DEVELOPMENT_CHECKPOINT="$rv_development_checkpoint" \
 	-DRENEGADE_VITA_CONTENT_ID="$rv_vpk_content_id"
 grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
 
@@ -180,7 +216,11 @@ grep -q 'Machine:.*ARM' "$rv_elf_header"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime(int)
+A31_Vita_Run_Interactive_Runtime(int, bool, char const*)
+EncyclopediaMgrClass::Initialize()
+EncyclopediaMgrClass::Shutdown()
+RenegadeVitaAudio::Open_Mpeg_Playback
+scePowerSetArmClockFrequency
 CombatManager::Load_Level_Threaded(char const*, bool)
 CombatGameModeClass::Vita_Finalize_Loaded_Level(void*, bool)
 RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOCATION)
@@ -188,6 +228,8 @@ MainMenuDialogClass::Display()
 StartSPGameDialogClass::On_Command(int, int, unsigned long)
 MenuGameModeClass2::Init()
 MovieGameModeClass::Startup_Movies()
+vglRenegadeEndIndexed
+vglRenegadeUploadDXTChain
 MovieGameModeClass::Start_Movie(char const*)
 BINKMovie::Play(char const*, char const*, FontCharsClass*)
 A4_Frontend_Latch_Start_Game(char const*, int, unsigned long)
@@ -200,7 +242,7 @@ CampaignManager::Select_Backdrop_Number(int)
 Render2DClass::Render()
 WWAudioClass::WWAudioClass(bool)
 AIL_startup()
-RenegadeVitaAudio::Decode_Wave(unsigned char const*, unsigned int, RenegadeVitaAudio::DecodedWave*, char const**)
+RenegadeVitaAudio::Decode_Wave_With_Info(unsigned char const*, unsigned int, RenegadeVitaAudio::DecodedWave*, RenegadeVitaAudio::WaveInfo*, char const**)
 EOF
 if [[ "$rv_fast_scope" == "compile" ]]; then
 	{

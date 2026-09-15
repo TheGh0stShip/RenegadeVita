@@ -573,6 +573,12 @@ set(RV_A4_FRONTEND_RUNTIME_LINK_SOURCES
   ${RV_STAGE}/commando/DlgMessageBox.cpp
   ${RV_STAGE}/commando/dialogtests.cpp
   ${RV_STAGE}/commando/dlgloadspgame.cpp
+  ${RV_STAGE}/commando/dlgsavegame.cpp
+  ${RV_STAGE}/commando/dlghelpscreen.cpp
+  ${RV_STAGE}/commando/dlgtechoptions.cpp
+  ${RV_STAGE}/commando/dlgconfigaudiotab.cpp
+  ${RV_STAGE}/commando/dlgconfigvideotab.cpp
+  ${RV_STAGE}/commando/dlgconfigperformancetab.cpp
   ${RV_STAGE}/commando/mainmenutransition.cpp
   ${RV_STAGE}/commando/gamemode.cpp
   ${RV_STAGE}/commando/movie.cpp
@@ -937,6 +943,12 @@ add_library(a4_wwui_frontend_probe OBJECT
   ${RV_STAGE}/commando/dlgmainmenu.cpp
   ${RV_STAGE}/commando/dialogtests.cpp
   ${RV_STAGE}/commando/dlgloadspgame.cpp
+  ${RV_STAGE}/commando/dlgsavegame.cpp
+  ${RV_STAGE}/commando/dlghelpscreen.cpp
+  ${RV_STAGE}/commando/dlgtechoptions.cpp
+  ${RV_STAGE}/commando/dlgconfigaudiotab.cpp
+  ${RV_STAGE}/commando/dlgconfigvideotab.cpp
+  ${RV_STAGE}/commando/dlgconfigperformancetab.cpp
   ${RV_STAGE}/commando/mainmenutransition.cpp
   ${RV_STAGE}/commando/buildnum.cpp
   # Original MainMenu/Start-SP lifecycle owners. Their existing platform

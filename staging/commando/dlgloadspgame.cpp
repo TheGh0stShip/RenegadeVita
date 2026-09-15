@@ -43,6 +43,7 @@
 #include "gamemode.h"
 #include "gameinitmgr.h"
 #include "savegame.h"
+#include "renegade_find_files.h"
 #include "devoptions.h"
 #include "translatedb.h"
 #include "string_ids.h"
@@ -544,6 +545,13 @@ LoadSPGameMenuClass::Load_Game (void)
 		//
 		StringClass *filename	= static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2)) );
 		StringClass save_name(filename->Peek_Buffer(),true);
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		// Start_Game records the request. The native outer owner tears down
+		// this dialog and the suspended session before loading another world.
+		GameInitMgrClass::Start_Game(save_name, -1, 0);
+		cGod::Reset_Inventory();
+		return;
+#endif
 
 		StringClass map_name(0,true);
 		int mission = 0;
@@ -724,7 +732,7 @@ LoadSPGameMenuClass::Delete_Game (bool prompt)
 					//
 					//	Delete the file and remove its entry from the list
 					//
-					if (::DeleteFile (filename) != 0) {
+					if (Renegade_Delete_User_Save (filename) != 0) {
 						list_ctrl->Delete_Entry (item_index);
 					}
 				}

@@ -1,0 +1,21 @@
+--- a/gamemode.cpp
++++ b/gamemode.cpp
+@@ -243,7 +243,18 @@
+ 		{
+ 			WWPROFILE( "Begin_Render" );
+ 
++#if defined(RENEGADE_VITA_PORT)
++			// Original 4:3 menu artwork leaves margins on the Vita display.
++			// A suspended world's sky color must not fill those menu margins.
++			GameModeClass *menu = Find("Menu");
++			GameModeClass *combat = Find("Combat");
++			const bool menu_only = menu != NULL && menu->Is_Active() &&
++				(combat == NULL || !combat->Is_Active());
++			WW3D::Begin_Render (clear, clear, menu_only ? Vector3(0, 0, 0) :
++				BackgroundMgrClass::Get_Clear_Color());
++#else
+ 			WW3D::Begin_Render (clear, clear, BackgroundMgrClass::Get_Clear_Color());
++#endif
+ 		}
+ 
+ 		if (GameInFocus) {

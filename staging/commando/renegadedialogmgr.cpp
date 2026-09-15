@@ -262,6 +262,22 @@ void
 RenegadeDialogMgrClass::Initialize (void)
 {
 	WWMEMLOG(MEM_GAMEDATA);
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	// Native save loading re-enters the original dialog manager after Shutdown
+	// releases its factories. Restore every linked factory for the new session.
+	if (FactoryArray[IDC_MENU_START_SP_GAME_BUTTON - DIALOG_LINK_FIRST] == NULL)
+		FactoryArray[IDC_MENU_START_SP_GAME_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<StartSPGameDialogClass>;
+	if (FactoryArray[IDC_MENU_OPTIONS_BUTTON - DIALOG_LINK_FIRST] == NULL)
+		FactoryArray[IDC_MENU_OPTIONS_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<OptionsMenuClass>;
+	if (FactoryArray[IDC_MENU_START_CAMPAIGN_BUTTON - DIALOG_LINK_FIRST] == NULL)
+		FactoryArray[IDC_MENU_START_CAMPAIGN_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<DifficultyMenuClass>;
+	if (FactoryArray[IDC_MENU_LOAD_SP_GAME_BUTTON - DIALOG_LINK_FIRST] == NULL)
+		FactoryArray[IDC_MENU_LOAD_SP_GAME_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<LoadSPGameMenuClass>;
+	if (FactoryArray[IDC_MENU_QUIT_BUTTON - DIALOG_LINK_FIRST] == NULL)
+		FactoryArray[IDC_MENU_QUIT_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<QuitVerificationDialogClass>;
+	if (FactoryArray[IDC_MENU_MAIN_MENU_BUTTON - DIALOG_LINK_FIRST] == NULL)
+		FactoryArray[IDC_MENU_MAIN_MENU_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<MainMenuDialogClass>;
+#endif
 	const char *	STYLE_MGR_INI	= "stylemgr.ini";
 
 	_TheWWUIInput = new RenegadeUIInputClass;

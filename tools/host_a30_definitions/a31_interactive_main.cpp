@@ -4,18 +4,23 @@
 // required below CombatManager's existing network-handler seam.
 
 #include "renegade_file_factory.h"
+#include "renegade_find_files.h"
+#include "renegade_vita_options.h"
 #include "a31_interactive_runtime_policy.h"
 #include "a4_frontend_lifecycle_boundary.h"
 
 #include "assetmgr.h"
 #include "campaign.h"
+#include "encyclopediamgr.h"
 #include "chunkio.h"
 #include "combat.h"
+#include "pscene.h"
 #include "cnetwork.h"
 #include "definitionfactorymgr.h"
 #include "definitionmgr.h"
 #include "definition.h"
 #include "directinput.h"
+#include "hud_bitmap_atlas_probe.h"
 #include "dinput.h"
 #include "networkobjectmgr.h"
 #include "ffactory.h"
@@ -30,6 +35,8 @@
 #include "hud.h"
 #include "input.h"
 #include "mixfile.h"
+#include "mapmgr.h"
+#include "texture.h"
 #include "netinterface.h"
 #include "pathmgr.h"
 #include "playermanager.h"
@@ -59,10 +66,19 @@
 #include "dialogtests.h"
 #include "dialogresource.h"
 #include "dlgmainmenu.h"
+#include "dlgtechoptions.h"
+#include "dlgmessagebox.h"
+#include "dlgconfigaudiotab.h"
+#include "dlgconfigperformancetab.h"
+#include "childdialog.h"
+#include "sliderctrl.h"
+#include "listctrl.h"
+#include "tabctrl.h"
 #include "gamemenu.h"
 #include "movie.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <vector>
 
@@ -83,6 +99,144 @@ const char *const kAlways2Archive = "Data\\Always2.dat";
 const char *const kAlwaysDbsArchive = "Data\\always.dbs";
 const char *const kAlwaysArchive = "Data\\Always.dat";
 const char *const kM00Archive = "Data\\M00_Tutorial.mix";
+
+class SettingsDialogProbe : public TechOptionsMenuClass
+{
+public:
+	ChildDialogClass *Find_Tab(int id)
+	{
+		for (int i = 0; i < ChildDialogList.Count(); ++i)
+			if (ChildDialogList[i]->Get_Dlg_ID() == id) return ChildDialogList[i];
+		return NULL;
+	}
+};
+
+class ConfirmationChoiceProbe : public Observer<DlgMsgBoxEvent>
+{
+public:
+	DlgMsgBoxEvent::EventID choice = DlgMsgBoxEvent::None;
+	void HandleNotification(DlgMsgBoxEvent &event)
+	{
+		if (event.Event() == DlgMsgBoxEvent::Yes || event.Event() == DlgMsgBoxEvent::No)
+			choice = event.Event();
+	}
+};
+
+bool Validate_Original_Confirmation_Controller()
+{
+	ConfirmationChoiceProbe observer;
+	if (!DlgMsgBox::DoDialog(L"Controller test", L"Select No", DlgMsgBox::YesNo, &observer)) return false;
+	DialogBaseClass *dialog = DialogMgrClass::Get_Active_Dialog();
+	if (dialog == NULL) return false;
+	dialog->Add_Ref();
+	DialogControlClass *yes = dialog->Get_Dlg_Item(IDYES);
+	DialogControlClass *no = dialog->Get_Dlg_Item(IDNO);
+	bool valid = yes && no;
+	auto press = [](int key) {
+		A4_Frontend_Set_Test_WWUI_Key_State(key, true);
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+		A4_Frontend_Set_Test_WWUI_Key_State(key, false);
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+	};
+	if (valid) {
+		DialogMgrClass::Set_Focus(yes);
+		press(VK_RIGHT); valid = (DialogMgrClass::Get_Focus() == no) && valid;
+		press(VK_RIGHT); valid = (DialogMgrClass::Get_Focus() == yes) && valid;
+		press(VK_LEFT); valid = (DialogMgrClass::Get_Focus() == no) && valid;
+		press(VK_UP); valid = (DialogMgrClass::Get_Focus() == yes) && valid;
+		press(VK_DOWN); valid = (DialogMgrClass::Get_Focus() == no) && valid;
+		yes->Enable(false);
+		valid = (dialog->Find_Next_Control(no) == no) && valid;
+		yes->Enable(true); no->Show(false);
+		valid = (dialog->Find_Next_Control(yes) == yes) && valid;
+		no->Show(true); yes->Enable(false); no->Enable(false);
+		valid = (dialog->Find_Next_Control(no) == NULL) && valid;
+		yes->Enable(true); no->Enable(true);
+		DialogMgrClass::Set_Focus(yes);
+		press(VK_RIGHT); press(VK_RETURN);
+		valid = observer.choice == DlgMsgBoxEvent::No && valid;
+	}
+	dialog->End_Dialog();
+	REF_PTR_RELEASE(dialog);
+	return valid;
+}
+
+bool Validate_Original_Native_Settings()
+{
+	char scratch[] = "/tmp/renegade-options-ui-XXXXXX";
+	if (mkdtemp(scratch) == NULL) return false;
+	char settings_path[256];
+	snprintf(settings_path, sizeof(settings_path), "%s/options.cfg", scratch);
+	if (!RenegadeVitaUserSettings::Configure(settings_path)) return false;
+	ConsoleBox.Set_Exclusive(false);
+	A4_Frontend_Begin_Pause_Loop();
+	RenegadeDialogMgrClass::Initialize();
+	MenuGameModeClass2 menu_mode;
+	GameModeManager::Add(&menu_mode);
+	int old_static = 0, old_dynamic = 0;
+	const bool confirmation_valid = Validate_Original_Confirmation_Controller();
+	COMBAT_SCENE->Get_Polygon_Budgets(&old_static, &old_dynamic);
+	// A non-preset budget exposes unwanted rounding when merely closing Options.
+	COMBAT_SCENE->Set_Polygon_Budgets(12345, 6789);
+	const int texture_reduction = WW3D::Get_Texture_Reduction();
+	const SurfaceEffectsManager::MODE old_surface = SurfaceEffectsManager::Get_Mode();
+	const float old_volume = WWAudioClass::Get_Instance()->Get_Sound_Effects_Volume();
+	SettingsDialogProbe *dialog = new SettingsDialogProbe;
+	dialog->Start_Dialog();
+	TabCtrlClass *tabs = static_cast<TabCtrlClass *>(dialog->Get_Dlg_Item(IDC_TABCTRL));
+	DlgConfigAudioTabClass *audio = static_cast<DlgConfigAudioTabClass *>(dialog->Find_Tab(IDD_CONFIG_AUDIO));
+	DlgConfigPerformanceTabClass *performance = static_cast<DlgConfigPerformanceTabClass *>(dialog->Find_Tab(IDD_CONFIG_PERFORMANCE));
+	ChildDialogClass *video = dialog->Find_Tab(IDD_CONFIG_VIDEO);
+	bool valid = confirmation_valid && tabs && tabs->Get_Tab_Count() == 3 && audio && performance && video;
+	if (valid) {
+		valid = !audio->Is_Dlg_Item_Enabled(IDC_RATE_COMBO) &&
+			!video->Is_Dlg_Item_Enabled(IDC_GAMMA_SLIDER) &&
+			!performance->Is_Dlg_Item_Enabled(IDC_CHAR_SHADOWS_SLIDER) &&
+			!performance->Is_Dlg_Item_Enabled(IDC_TERRAIN_SHADOW_CHECK) && performance->On_Apply();
+		SliderCtrlClass *volume = static_cast<SliderCtrlClass *>(audio->Get_Dlg_Item(IDC_SOUND_EFFECTS_SLIDER));
+		valid = valid && volume != NULL;
+		if (volume) {
+			volume->Set_Pos(37);
+			valid = valid && audio->On_Apply() &&
+				WWMath::Fabs(WWAudioClass::Get_Instance()->Get_Sound_Effects_Volume() - 0.37F) < 0.001F;
+		}
+		for (int i = 0; i < 3; ++i) tabs->Set_Curr_Tab(i);
+		SliderCtrlClass *surface = static_cast<SliderCtrlClass *>(performance->Get_Dlg_Item(IDC_SURFACE_DETAIL_SLIDER));
+		if (surface) {
+			surface->Set_Pos(old_surface == SurfaceEffectsManager::MODE_FULL ? 1 : 2);
+			valid = performance->On_Apply() && valid;
+		} else valid = false;
+	}
+	dialog->End_Dialog();
+	REF_PTR_RELEASE(dialog);
+	int after_static = 0, after_dynamic = 0;
+	COMBAT_SCENE->Get_Polygon_Budgets(&after_static, &after_dynamic);
+	valid = valid && after_static == 12345 && after_dynamic == 6789 &&
+		WW3D::Get_Texture_Reduction() == texture_reduction;
+	// Discard all process-local preference state and mutate the live owners,
+	// then restore through the same boundary used by a native session reload.
+	valid = RenegadeVitaUserSettings::Configure(settings_path) && valid;
+	COMBAT_SCENE->Set_Polygon_Budgets(111, 222);
+	WWAudioClass::Get_Instance()->Set_Sound_Effects_Volume(1.0F);
+	RenegadeVitaOptions::Apply_Audio(*WWAudioClass::Get_Instance());
+	RenegadeVitaOptions::Apply_Performance(*COMBAT_SCENE);
+	COMBAT_SCENE->Get_Polygon_Budgets(&after_static, &after_dynamic);
+	valid = valid && after_static == 12345 && after_dynamic == 6789 &&
+		WWMath::Fabs(WWAudioClass::Get_Instance()->Get_Sound_Effects_Volume() - 0.37F) < 0.001F;
+	COMBAT_SCENE->Set_Polygon_Budgets(old_static, old_dynamic);
+	SurfaceEffectsManager::Set_Mode(old_surface);
+	WWAudioClass::Get_Instance()->Set_Sound_Effects_Volume(old_volume);
+	RenegadeVitaUserSettings::Configure(NULL);
+	remove(settings_path);
+	rmdir(scratch);
+	menu_mode.Deactivate();
+	GameModeManager::Safely_Deactivate();
+	GameModeManager::Remove(&menu_mode);
+	RenegadeDialogMgrClass::Shutdown();
+	A4_Frontend_End_Menu_Loop();
+	ConsoleBox.Set_Exclusive(true);
+	return valid;
+}
 
 // The direct M00 host harness owns the original CombatManager lifecycle below
 // GameModeManager. This inert registry entry preserves cGameData's existing
@@ -141,15 +295,17 @@ unsigned Count_Definitions(uint32 class_id)
 
 	unsigned Wide_Text_Length(const WCHAR *text)
 	{
-		return text != NULL ? static_cast<unsigned>(::wcslen(text)) : 0U;
+		// This harness uses -fshort-wchar, but host libc/ASan wide-string
+		// interceptors use four-byte wchar_t. Keep the engine's UTF-16 ABI.
+		return text != NULL ? static_cast<unsigned>(rv_utf16_length(text)) : 0U;
 	}
 
 	bool Is_Valid_Translated_Text(const WCHAR *text)
 	{
 		return text != NULL &&
 			Wide_Text_Length(text) > 0U &&
-			::wcscmp(text, STRING_NOT_FOUND) != 0 &&
-			::wcsstr(text, L"IDS_") == NULL;
+			rv_utf16_compare(text, STRING_NOT_FOUND) != 0 &&
+			rv_utf16_strstr(text, L"IDS_") == NULL;
 	}
 
 	bool Text_Has_Renderable_Glyphs(FontCharsClass *font, const WCHAR *text,
@@ -406,13 +562,61 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 
 	const bool mode_active = menu_mode.Is_Active() &&
 		GameModeManager::Find("Menu") == &menu_mode;
+	// Exercise the original auto-link command after every manager re-entry.
+	// Directly constructing Load would conceal factories deleted at shutdown.
+	const int dialogs_before_load = DialogMgrClass::Get_Dialog_Count();
+	if (menu != NULL) menu->On_Command(IDC_MENU_LOAD_SP_GAME_BUTTON, BN_CLICKED, 0);
+	const bool load_factory_created_dialog =
+		DialogMgrClass::Get_Dialog_Count() == dialogs_before_load + 1;
+	Print("frontend_load_factory_after_reinitialize", load_factory_created_dialog);
+	bool load_focus_valid = true;
+	if (::getenv("RENEGADE_HOST_LOAD_FOCUS_FIXTURE") != NULL) {
+		// Optional private original-save fixture; never required by public builds.
+		for (unsigned frame = 0; frame < 180U; ++frame) {
+			WW3D::Sync(WW3D::Get_Sync_Time() + 16U);
+			DialogMgrClass::On_Frame_Update();
+			DialogMgrClass::Render();
+		}
+		DialogBaseClass *load = DialogMgrClass::Get_Active_Dialog();
+		load_focus_valid = load != NULL && load->Get_Dlg_ID() == IDD_MENU_LOAD_SP_GAME;
+		if (load_focus_valid) {
+			ListCtrlClass *list = static_cast<ListCtrlClass *>(load->Get_Dlg_Item(IDC_LOAD_GAME_LIST_CTRL));
+			DialogControlClass *remove = load->Get_Dlg_Item(IDC_DELETE_GAME_BUTTON);
+			load_focus_valid = list != NULL && remove != NULL;
+			if (load_focus_valid) {
+				for (int row = 0; row < list->Get_Entry_Count(); ++row) {
+					list->Set_Curr_Sel(row);
+					if (remove->Is_Enabled()) break;
+				}
+				load_focus_valid = remove->Is_Enabled() && remove->Is_Visible();
+				A4_Frontend_Reset_Trace();
+				A4_Frontend_Begin_Menu_Loop();
+				DialogMgrClass::Set_Focus(list);
+				bool reached_delete = false;
+				for (unsigned step = 0; step < 4U; ++step) {
+					A4_Frontend_Set_Test_WWUI_Key_State(VK_TAB, true);
+					A4_Frontend_Pump_WWUI_Key_Transitions();
+					A4_Frontend_Set_Test_WWUI_Key_State(VK_TAB, false);
+					A4_Frontend_Pump_WWUI_Key_Transitions();
+					DialogControlClass *focus = DialogMgrClass::Get_Focus();
+					printf("a31.load_focus_step=%u id=%d delete=%d\n", step + 1,
+						focus != NULL ? focus->Get_ID() : -1, IDC_DELETE_GAME_BUTTON);
+					reached_delete = reached_delete || focus == remove;
+					DialogMgrClass::On_Frame_Update();
+				}
+				A4_Frontend_End_Menu_Loop();
+				load_focus_valid = load_focus_valid && reached_delete;
+			}
+		}
+		Print("frontend_load_list_to_delete_controller_focus", load_focus_valid);
+	}
 	menu_mode.Deactivate();
 	GameModeManager::Safely_Deactivate();
 	const bool mode_shutdown = menu_mode.Is_Inactive();
 		GameModeManager::Remove(&menu_mode);
 		const bool valid = menu != NULL && controls > 0U &&
 			initial_dialog_count > 0U && rendered_frames == 3U &&
-			mode_active && mode_shutdown && menu_labels_valid;
+			mode_active && mode_shutdown && menu_labels_valid && load_factory_created_dialog && load_focus_valid;
 		RenegadeDialogMgrClass::Shutdown();
 		ConsoleBox.Set_Exclusive(true);
 
@@ -558,7 +762,18 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 		const bool valid = trace.tutorial_start_latched &&
 			::strcmp(trace.tutorial_map, "M00_Tutorial.mix") == 0 &&
 			trace.tutorial_team_choice == -1 &&
-			GameModeManager::Find("Combat") != NULL;
+			GameModeManager::Find("Combat") != NULL && !trace.reload_requested;
+		// A load from pause remains a request until the outer session owner
+		// has destroyed menu references and completed the original teardown.
+		A4_Frontend_Begin_Pause_Loop();
+		GameInitMgrClass::Start_Game("M00_Tutorial.mix", -1, 0);
+		const A4FrontendTrace reload = A4_Frontend_Get_Trace();
+		A4_Frontend_End_Menu_Loop();
+		const bool deferred_reload = reload.reload_requested &&
+			A4_Frontend_Get_Trace().reload_requested &&
+			::strcmp(reload.tutorial_map, "M00_Tutorial.mix") == 0;
+		A4_Frontend_Begin_Menu_Loop();
+		const bool fresh_menu_clears_request = !A4_Frontend_Get_Trace().reload_requested;
 
 		menu_mode.Deactivate();
 		GameModeManager::Safely_Deactivate();
@@ -567,7 +782,7 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 		GameInitMgrClass::Shutdown();
 		A4_Frontend_End_Menu_Loop();
 		ConsoleBox.Set_Exclusive(true);
-		return valid;
+		return valid && deferred_reload && fresh_menu_clears_request;
 	}
 
 
@@ -592,6 +807,7 @@ int main(int argc, char **argv)
 	Print_Number("hardware_equivalent_cycle", cycle);
 
 	const RenegadePathRoots roots = { argv[1], argv[2], argv[3], argv[4] };
+	Renegade_Set_Find_Roots(roots);
 	RenegadeRootedFileFactoryClass root_factory(roots);
 	MixFileFactoryClass always2_factory(kAlways2Archive, &root_factory);
 	MixFileFactoryClass always_dbs_factory(kAlwaysDbsArchive, &root_factory);
@@ -701,6 +917,8 @@ int main(int argc, char **argv)
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_RIGHT) == 0 &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_VEHICLE_TURN_RIGHT) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_ACTION) == DIK_E &&
+					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_CYCLE_POG) == DIK_BACK &&
+					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_CYCLE_POG) == 0 &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_ACTION) == 0 &&
 					Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON) == DIK_R &&
 					Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_RELOAD_WEAPON) == 0 &&
@@ -725,6 +943,7 @@ int main(int argc, char **argv)
 			input_initialized = true;
 			Stage("campaign_catalog_init");
 			CampaignManager::Init();
+			EncyclopediaMgrClass::Initialize();
 			campaign_initialized = CampaignFlowDescriptions.Count() > 0;
 			Print_Number("campaign_flow_entries",
 				static_cast<unsigned>(CampaignFlowDescriptions.Count()));
@@ -828,8 +1047,13 @@ int main(int argc, char **argv)
 			Print("font3d_large_available", large_font != NULL);
 			Print("font3d_small_available", small_font != NULL);
 			if (large_font == NULL || small_font == NULL) { passed = false; break; }
+			const bool large_digits = Probe_Original_HUD_Digit_Atlas(large_font, "FONT12x16.TGA");
+			const bool small_digits = Probe_Original_HUD_Digit_Atlas(small_font, "FONT6x8.TGA");
+			Print("font3d_large_digits_match_source", large_digits);
+			Print("font3d_small_digits_match_source", small_digits);
 			REF_PTR_RELEASE(large_font);
 			REF_PTR_RELEASE(small_font);
+			if (!large_digits || !small_digits) { passed = false; break; }
 			/* These are the original main-menu backdrop/logo/gizmo render-object
 			 * names owned by MenuGameModeClass2/MainMenuDialogClass.  Probe the
 			 * actual retail factory path without substituting a menu presenter. */
@@ -927,6 +1151,19 @@ int main(int argc, char **argv)
 			NetworkObjectMgrClass::Set_Is_Level_Loading(false);
 			Stage("combat_postload");
 			CombatManager::Post_Load_Level();
+			if (strcmp(level_mix, "M00_Tutorial.mix") == 0) {
+				StringClass map_name;
+				MapMgrClass::Get_Map_Texture_Filename(map_name);
+				TextureClass *map = asset_manager->Get_Texture(map_name, TextureClass::MIP_LEVELS_1);
+				// Do not initialize here: the original map owner must already
+				// have dimensions before Combat starts revealing explored cells.
+				// The retail M00 map is 512x512. A positive-size check also
+				// accepted the 2x2 diagnostic fallback after failed DDS parsing.
+				const bool map_ready = map != NULL && map->Get_Width() == 512 && map->Get_Height() == 512;
+				Print("eva_map_dimensions_ready_before_first_frame", map_ready);
+				REF_PTR_RELEASE(map);
+				if (!map_ready) { passed = false; break; }
+			}
 			level_loaded = CombatManager::Get_Scene() != NULL;
 			A31_Interactive_Apply_Render_Capabilities();
 			/* CombatGameModeClass owns radar creation after the original level
@@ -958,9 +1195,19 @@ int main(int argc, char **argv)
 				local_player_name, -1, 0);
 			Print("original_session_player_created", local_player != NULL);
 			Print("original_session_player_registered", cPlayerManager::Count() == 1);
+			const bool eva_player_ready = local_player != NULL &&
+				cNetwork::Get_My_Player_Object() == local_player;
+			Print("eva_statistics_original_player_available", eva_player_ready);
+			if (!eva_player_ready) { passed = false; break; }
 			Stage("god_think");
 			cGod::Think();
 			Print("original_god_created_commando", CombatManager::Get_The_Star() != NULL);
+			const bool starting_weapon_revealed = EncyclopediaMgrClass::Is_Object_Revealed(
+				EncyclopediaMgrClass::TYPE_WEAPON, 14);
+			Print("fresh_m00_original_script_weapon_discovery", starting_weapon_revealed);
+			if (strcmp(level_mix, "M00_Tutorial.mix") == 0 && !starting_weapon_revealed) {
+				passed = false; break;
+			}
 
 			Stage("hardware_equivalent_120_frame_loop");
 			/* Make each cycle's first-frame geometry a per-cycle measurement,
@@ -1030,6 +1277,14 @@ int main(int argc, char **argv)
 		Print("original_star_restored", CombatManager::Get_The_Star() != NULL);
 		Print("one_original_control_think_frame", passed);
 
+			if (passed && combat_initialized) {
+				Stage("original_native_settings");
+				if (stylemgr_initialized) StyleMgrClass::Shutdown();
+				stylemgr_initialized = false;
+				const bool settings_valid = Validate_Original_Native_Settings();
+				Print("original_settings_volume_and_unchanged_budgets", settings_valid);
+				passed = passed && settings_valid;
+			}
 			Stage("teardown");
 			/* Preserve the original Core_Shutdown dependency order for the direct
 			 * M00 route: stop player respawn, free level-owned objects/assets, then
@@ -1058,6 +1313,7 @@ int main(int argc, char **argv)
 			if (stylemgr_initialized) StyleMgrClass::Shutdown();
 				if (campaign_initialized) {
 					CampaignManager::Shutdown();
+					EncyclopediaMgrClass::Shutdown();
 					Print("campaign_catalog_shutdown",
 						CampaignFlowDescriptions.Count() == 0);
 				}

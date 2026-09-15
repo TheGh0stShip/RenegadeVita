@@ -356,6 +356,9 @@ TextureClass::TextureClass(IDirect3DTexture8* d3d_texture)
 	D3DSURFACE_DESC d3d_desc;
 	::ZeroMemory(&d3d_desc, sizeof(D3DSURFACE_DESC));
 	DX8_ErrorCode(surface->GetDesc(&d3d_desc));
+	// GetSurfaceLevel returns a temporary owned reference. D3DTexture already
+	// has its own reference above; retain only that long-lived texture owner.
+	surface->Release();
 	Width=d3d_desc.Width;
 	Height=d3d_desc.Height;
 	TextureFormat=D3DFormat_To_WW3DFormat(d3d_desc.Format);

@@ -78,7 +78,9 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         message = render.index("message_window->Render();", combat)
         objective = render.index("ObjectiveManager::Render_Viewer();", message)
         text_display = render.index("text_display->Render();", objective)
-        end = render.index("WW3D::End_Render(true)", text_display)
+        end = render.index("WW3D::End_Render(present)", text_display)
+        header = (ROOT / "port/platform/a31_interactive_runtime_policy.h").read_text()
+        self.assertIn("A31_Interactive_Run_Render_Frame(bool present = true)", header)
         self.assertLess(combat, message)
         self.assertLess(message, objective)
         self.assertLess(objective, text_display)
@@ -102,15 +104,19 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("CombatManager::Init(render_hud);", runtime)
         self.assertIn("CombatManager::Pre_Load_Level(true);", runtime)
         self.assertNotIn("CombatManager::Pre_Load_Level(false);", runtime)
-        final_style_index = runtime.index(
-            "StyleMgrClass::Initialize_From_INI(kStyleManagerIni);",
-            runtime.index("const bool frontend_tutorial_selected"),
+        handoff_index = runtime.index("const bool frontend_tutorial_selected")
+        retained_style_index = runtime.index(
+            "stylemgr_initialized = frontend_tutorial_selected;",
+            handoff_index,
         )
+        self.assertIn("frontend_dialog_manager_retained = frontend_tutorial_selected;", runtime)
+        self.assertIn("if (!tutorial_selected) RenegadeDialogMgrClass::Shutdown();", runtime)
         text_display_index = runtime.index(
             "original TextDisplayGameMode init after final StyleMgr",
-            final_style_index,
+            retained_style_index,
         )
-        self.assertLess(final_style_index, text_display_index)
+        self.assertNotIn("StyleMgrClass::Initialize_From_INI(kStyleManagerIni);", runtime[handoff_index:text_display_index])
+        self.assertLess(retained_style_index, text_display_index)
         self.assertLess(
             text_display_index,
             runtime.index("GameInitMgrClass::Initialize_SP();", text_display_index),
@@ -213,14 +219,12 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
 
     def test_reload_animation_path_has_bounded_vita_diagnostics(self):
         patch = (ROOT / "port/patches/combat-a35-weaponview-reload-latch.patch").read_text()
-        reload_motion = (ROOT / "port/patches/combat-a35-weaponview-reload-motion.patch").read_text()
-        reload_visible = (ROOT / "port/patches/combat-a35-weaponview-reload-visible-fallback.patch").read_text()
         stage_sources = (ROOT / "tools/stage_sources.sh").read_text()
         weaponview = (ROOT / "staging/combat/weaponview.cpp").read_text()
         weaponview_header = (ROOT / "staging/combat/weaponview.h").read_text()
         weapons = (ROOT / "staging/combat/weapons.cpp").read_text()
         self.assertIn("combat-a35-weaponview-reload-latch.patch", stage_sources)
-        self.assertIn("combat-a35-weaponview-reload-visible-fallback.patch", stage_sources)
+        self.assertIn("combat-a35-weaponview-animation-varargs.patch", stage_sources)
         self.assertIn("combat-a35-m00-ui-hud-subtitles.patch", stage_sources)
         for source in (patch, weaponview_header, weapons, weaponview):
             self.assertIn("Notify_Reload_Started", source)
@@ -232,13 +236,11 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
             self.assertIn("missing first-person hands reload anim", source)
         for source in (patch, weapons):
             self.assertIn("WeaponViewClass::Notify_Reload_Started(this);", source)
-        for source in (reload_motion, reload_visible, weaponview):
-            self.assertIn("ReloadAnimationViewTimer", source)
-            self.assertIn("WWMath::Sin(phase * WWMATH_PI)", source)
-        for source in (reload_visible, weaponview):
-            self.assertIn("kVitaReloadViewSeconds", source)
-            self.assertIn("is_current_complete = true;", source)
-            self.assertIn("visible reload fallback complete", source)
+        # Genuine weapon/hand animations own reload; the old synthetic bob
+        # masked malformed animation names and repeatedly restarted reload.
+        self.assertNotIn("WWMath::Sin(phase * WWMATH_PI)", weaponview)
+        self.assertNotIn("kVitaReloadViewSeconds", weaponview)
+        self.assertIn("ReloadAnimationPending = false;", weaponview)
 
     def test_deferred_dazzle_layer_does_not_reject_original_sky_scene(self):
         patch = (ROOT / "port/patches/ww3d2-a22-vita-boundaries.patch").read_text()

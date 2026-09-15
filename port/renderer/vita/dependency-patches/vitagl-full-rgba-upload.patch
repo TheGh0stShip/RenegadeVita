@@ -1,0 +1,20 @@
+--- a/source/textures.c
++++ b/source/textures.c
+@@ -1000,7 +1000,16 @@
+ 			size = orig_h * VGL_ALIGN(orig_w, 8) * bpp;
+ 		}
+ 		void *texture_data = gpu_alloc_mapped_for_gpu(size);
+-		vgl_fast_memcpy(texture_data, tex->data, size);
++		if (!texture_data) {
++			SET_GL_ERROR(GL_OUT_OF_MEMORY)
++		}
++		// Full aligned RGBA replacement overwrites every stored byte. Keep the
++		// new GPU allocation and deferred retirement, but omit copying old pixels.
++		const GLboolean replaces_all = level == 0 && tex->mip_count == 1 &&
++			xoffset == 0 && yoffset == 0 && width == orig_w && height == orig_h &&
++			(orig_w & 7U) == 0 && format == GL_RGBA && type == GL_UNSIGNED_BYTE &&
++			tex_format == SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR;
++		if (!replaces_all) vgl_fast_memcpy(texture_data, tex->data, size);
+ 		gpu_free_texture_data(tex);
+ 		sceGxmTextureSetData(&tex->gxm_tex, texture_data);
+ 		tex->data = texture_data;

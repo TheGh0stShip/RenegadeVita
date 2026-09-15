@@ -120,5 +120,36 @@ int main()
 		statistics.resolution_failures, statistics.resolution_cache_hits,
 		statistics.open_attempts, statistics.open_failures, statistics.read_calls,
 		statistics.read_bytes, statistics.write_calls, statistics.write_bytes);
+	FileClass *missing = factory.Get_File("Data/no-such-directory/absent.bin");
+	contract.Expect(missing != NULL && !missing->Is_Available() &&
+		!missing->Open(FileClass::READ), "confirmed absent retail probes preserve failure");
+	factory.Return_File(missing);
+	const RenegadeFileFactoryStatistics miss_statistics = Renegade_File_Factory_Get_Statistics();
+	contract.Expect(miss_statistics.readonly_availability_skips >= 1U &&
+		miss_statistics.readonly_open_skips >= 1U, "confirmed retail misses avoid native file probes");
+
+	char late_path[768] = {};
+	snprintf(late_path, sizeof(late_path), "%s/late.bin", data);
+	FileClass *late = factory.Get_File("Data/late.bin");
+	contract.Expect(late != NULL && !late->Is_Available(), "late retail file initially absent");
+	contract.Expect(Write_File(late_path, "RV"), "create host-only late-file fixture");
+	contract.Expect(late != NULL && late->Is_Available(true), "forced probe bypasses confirmed-miss shortcut");
+	contract.Expect(late != NULL && late->Is_Available() && late->Open(FileClass::READ),
+		"successful forced probe clears the negative observation");
+	if (late != NULL) late->Close();
+	factory.Return_File(late);
+
+	char state_path[768] = {};
+	snprintf(state_path, sizeof(state_path), "%s/late-state.tmp", user);
+	FileClass *state = factory.Get_File("user/late-state.tmp");
+	contract.Expect(state != NULL && !state->Is_Available(), "writable namespace initially absent");
+	contract.Expect(Write_File(state_path, "RV"), "create host-only writable-state fixture");
+	contract.Expect(state != NULL && state->Open(FileClass::READ),
+		"writable namespace observes files created after initial lookup");
+	if (state != NULL) state->Close();
+	factory.Return_File(state);
+	printf("A3.6 readonly miss-probe extension: total=%u failures=%u avoided availability/open=%u/%u\n",
+		contract.checks, contract.failures, miss_statistics.readonly_availability_skips,
+		miss_statistics.readonly_open_skips);
 	return contract.failures == 0U ? 0 : 1;
 }

@@ -54,3 +54,5 @@ struct RenegadeVitaInputTelemetry
 const RenegadeVitaInputTelemetry &Renegade_Vita_Last_Input_Telemetry();
 void Renegade_Vita_Input_Route_Set_Gameplay_Active(bool active, uint32_t frame_index);
 bool Renegade_Vita_Input_Route_Replay_Exit_Requested();
+// Explicit diagnostic marker read at input initialization, never per frame.
+bool Renegade_Vita_Select_Capture_Enabled();

@@ -48,6 +48,7 @@
 #if defined(RENEGADE_VITA_PORT)
 #include <new>
 #include <stdlib.h>
+#include "dynamic_buffer_growth.h"
 #endif
 
 #define DEFAULT_VB_SIZE 5000
@@ -773,8 +774,13 @@ void DynamicVBAccessClass::Allocate_DX8_Dynamic_Buffer()
 	// and adjust the size to the new count.
 	if (VertexCount>_DynamicDX8VertexBufferSize) {
 		REF_PTR_RELEASE(_DynamicDX8VertexBuffer);
+#if defined(RENEGADE_VITA_PORT)
+		_DynamicDX8VertexBufferSize=RenegadeVitaBufferGrowth::Capacity(
+			_DynamicDX8VertexBufferSize, VertexCount, DEFAULT_VB_SIZE);
+#else
 		_DynamicDX8VertexBufferSize=VertexCount;
 		if (_DynamicDX8VertexBufferSize<DEFAULT_VB_SIZE) _DynamicDX8VertexBufferSize=DEFAULT_VB_SIZE;
+#endif
 	}
 
 	// Create a new vb if one doesn't exist currently
@@ -812,8 +818,13 @@ void DynamicVBAccessClass::Allocate_Sorting_Dynamic_Buffer()
 	WWASSERT(new_vertex_count<65536);
 	if (new_vertex_count>_DynamicSortingVertexArraySize) {
 		REF_PTR_RELEASE(_DynamicSortingVertexArray);
+#if defined(RENEGADE_VITA_PORT)
+		_DynamicSortingVertexArraySize=RenegadeVitaBufferGrowth::Capacity(
+			_DynamicSortingVertexArraySize, new_vertex_count, DEFAULT_VB_SIZE);
+#else
 		_DynamicSortingVertexArraySize=new_vertex_count;
 		if (_DynamicSortingVertexArraySize<DEFAULT_VB_SIZE) _DynamicSortingVertexArraySize=DEFAULT_VB_SIZE;
+#endif
 	}
 
 	if (!_DynamicSortingVertexArray) {

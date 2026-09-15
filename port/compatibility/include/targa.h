@@ -1,5 +1,6 @@
 #pragma once
 
-// Canonical upstream stores this header as TARGA.H; retain original includes
-// while making the case-insensitive Windows assumption explicit.
-#include "TARGA.H"
+// All translation units must use the patched disk layout, irrespective of
+// include search order or a cached dependency on the pristine upstream header.
+// Keep this an explicit forwarding boundary, like audiosaveload.h.
+#include "../../../staging/wwlib/TARGA.H"

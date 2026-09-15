@@ -523,17 +523,17 @@ bool DDSFileClass::Get_4x4_Block(
 			// Even if we don't support alpha, decompression is different if source has alpha
 			unsigned dest_pixel=0;
 			if (col0>col1) {
+				const unsigned palette[4] = {
+					col0|0xff000000, col1|0xff000000,
+					Combine_Colors(col1,col0,85)|0xff000000,
+					Combine_Colors(col0,col1,85)|0xff000000
+				};
 				for (int y=0;y<4;++y) {
 					unsigned char* tmp_dest_ptr=dest_ptr;
 					dest_ptr+=dest_pitch;
 					unsigned char line=block_memory[4+y];
 					for (int x=0;x<4;++x) {
-						switch (line&3) {
-						case 0: dest_pixel=col0|0xff000000; break;
-						case 1: dest_pixel=col1|0xff000000; break;
-						case 2: dest_pixel=Combine_Colors(col1,col0,85)|0xff000000; break;
-						case 3: dest_pixel=Combine_Colors(col0,col1,85)|0xff000000; break;
-						}
+						dest_pixel=palette[line&3];
 						line>>=2;
 
 						BitmapHandlerClass::Write_B8G8R8A8(tmp_dest_ptr,dest_format,dest_pixel);
@@ -544,17 +544,18 @@ bool DDSFileClass::Get_4x4_Block(
 			}
 			else {
 				bool contains_alpha=false;
+				const unsigned palette[4] = {
+					col0|0xff000000, col1|0xff000000,
+					Combine_Colors(col1,col0,128)|0xff000000, 0x00000000
+				};
 				for (int y=0;y<4;++y) {
 					unsigned char* tmp_dest_ptr=dest_ptr;
 					dest_ptr+=dest_pitch;
 					unsigned char line=block_memory[4+y];
 					for (int x=0;x<4;++x) {
-						switch (line&3) {
-						case 0: dest_pixel=col0|0xff000000; break;
-						case 1: dest_pixel=col1|0xff000000; break;
-						case 2: dest_pixel=Combine_Colors(col1,col0,128)|0xff000000; break;
-						case 3: dest_pixel=0x00000000; contains_alpha=true; break;
-						}
+						const unsigned color_index=line&3;
+						dest_pixel=palette[color_index];
+						if (color_index==3) contains_alpha=true;
 						line>>=2;
 
 						BitmapHandlerClass::Write_B8G8R8A8(tmp_dest_ptr,dest_format,dest_pixel);
@@ -622,6 +623,9 @@ bool DDSFileClass::Get_4x4_Block(
 				alpha_block+=3;
 			}
 
+			const unsigned palette[4] = {
+				col0, col1, Combine_Colors(col1,col0,85), Combine_Colors(col0,col1,85)
+			};
 			unsigned aii=0;
 			for (int y=0;y<4;++y) {
 				unsigned char* tmp_dest_ptr=dest_ptr;
@@ -632,14 +636,8 @@ bool DDSFileClass::Get_4x4_Block(
 					contains_alpha&=alpha_value;
 					alpha_value<<=24;
 
-					// Extract color
-
-					switch (line&3) {
-					case 0: dest_pixel=col0|alpha_value; break;
-					case 1: dest_pixel=col1|alpha_value; break;
-					case 2: dest_pixel=Combine_Colors(col1,col0,85)|alpha_value; break;
-					case 3: dest_pixel=Combine_Colors(col0,col1,85)|alpha_value; break;
-					}
+					// Block-local palette retains original interpolation rounding.
+					dest_pixel=palette[line&3]|alpha_value;
 					line>>=2;
 
 					BitmapHandlerClass::Write_B8G8R8A8(tmp_dest_ptr,dest_format,dest_pixel);

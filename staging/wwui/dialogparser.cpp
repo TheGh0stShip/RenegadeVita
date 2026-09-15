@@ -237,7 +237,7 @@ DialogParserClass::Parse_Template
 		//
 		buffer = Skip_Dlg_Field (buffer, dlg_title->Get_Buffer (96), 96);
 
-		WCHAR *string_id = ::wcsstr (dlg_title->Peek_Buffer (), L"IDS_");
+		WCHAR *string_id = const_cast<WCHAR *>(rv_utf16_strstr (dlg_title->Peek_Buffer (), L"IDS_"));
 		if (string_id != NULL) {
 #if defined(__vita__)
 			WideStringClass untranslated_title = dlg_title->Peek_Buffer ();
@@ -290,27 +290,27 @@ DialogParserClass::Parse_Template
 			//
 			if (ctrl_type == 0) {
 				::_wcsupr (text_buffer);
-				if (::wcsstr (text_buffer, L"TRACKBAR") != 0) {
+				if (rv_utf16_strstr (text_buffer, L"TRACKBAR") != 0) {
 					ctrl_type = SLIDER;
-				} else if (::wcsstr (text_buffer, L"TABCONTROL") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"TABCONTROL") != 0) {
 					ctrl_type = TAB;
-				} else if (::wcsstr (text_buffer, L"LISTVIEW") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"LISTVIEW") != 0) {
 					ctrl_type = LIST_CTRL;
-				} else if (::wcsstr (text_buffer, L"MAP") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"MAP") != 0) {
 					ctrl_type = MAP;
-				} else if (::wcsstr (text_buffer, L"VIEWER") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"VIEWER") != 0) {
 					ctrl_type = VIEWER;
-				} else if (::wcsstr (text_buffer, L"HOTKEY") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"HOTKEY") != 0) {
 					ctrl_type = HOTKEY;
-				} else if (::wcsstr (text_buffer, L"SHORTCUTBAR") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"SHORTCUTBAR") != 0) {
 					ctrl_type = SHORTCUT_BAR;
-				} else if (::wcsstr (text_buffer, L"MERCHANDISE") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"MERCHANDISE") != 0) {
 					ctrl_type = MERCHANDISE_CTRL;
-				} else if (::wcsstr (text_buffer, L"TREEVIEW") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"TREEVIEW") != 0) {
 					ctrl_type = TREE_CTRL;
 				} else if (::wcsicmp(text_buffer, PROGRESS_CLASSW) == 0) {
 					ctrl_type = PROGRESS_BAR;
-				} else if (::wcsstr (text_buffer, L"HEALTHBAR") != 0) {
+				} else if (rv_utf16_strstr (text_buffer, L"HEALTHBAR") != 0) {
 					ctrl_type = HEALTH_BAR;
 				}						
 			}
@@ -320,7 +320,7 @@ DialogParserClass::Parse_Template
 			//			
 			buffer = Skip_Dlg_Field (buffer, text_buffer, 256);
 
-			WCHAR *string_id = ::wcsstr (text_buffer, L"IDS_");
+			WCHAR *string_id = const_cast<WCHAR *>(rv_utf16_strstr (text_buffer, L"IDS_"));
 #if defined(__vita__)
 			const bool vita_had_string_id = string_id != NULL;
 			WideStringClass vita_untranslated_text = text_buffer;
@@ -343,7 +343,7 @@ DialogParserClass::Parse_Template
 					Vita_Dialog_Buffer_Remaining(text_buffer, string_id, 256U),
 					translation, &vita_translation_len, &vita_copied_len);
 #else
-				::wcscpy (string_id, translation);
+				rv_utf16_copy (string_id, translation);
 #endif
 			}
 #if defined(__vita__)

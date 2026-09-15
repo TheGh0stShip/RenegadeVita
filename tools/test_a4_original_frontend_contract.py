@@ -215,11 +215,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             self.assertIn(token, directinput)
         self.assertIn("const bool start_pressed = (buttons & SCE_CTRL_START) != 0;", directinput)
         self.assertIn(
-            "frontend_menu_navigation && start_pressed",
+            "(frontend_menu_navigation || gameplay_input_active) && start_pressed",
             directinput,
         )
         self.assertIn(
-            "START suppressed from gameplay DIK_ESCAPE; runtime clean-exit poll owns START",
+            "START routed through original menu-toggle input; native EVA presenter owns pause",
             directinput,
         )
 
@@ -244,17 +244,19 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         direct_route_index = runtime.index("GameInitMgrClass::Initialize_SP();", handoff_index)
         self.assertLess(handoff_index, direct_route_index)
         self.assertIn("Run_Original_Frontend_Intro_And_Menu", runtime)
+        startup_start = runtime.index("bool Run_Original_Frontend_Intro_And_Menu(")
+        startup = runtime[startup_start:runtime.index("} // namespace", startup_start)]
         self.assertLess(
-            runtime.index("A4_Frontend_Begin_Menu_Loop();"),
-            runtime.index("Input::Menu_Enable(true);"),
+            startup.index("A4_Frontend_Begin_Menu_Loop();"),
+            startup.index("Input::Menu_Enable(true);"),
         )
         self.assertLess(
-            runtime.index("Input::Menu_Enable(true);"),
-            runtime.index("Input::Update();"),
+            startup.index("Input::Menu_Enable(true);"),
+            startup.index("Input::Update();"),
         )
         self.assertLess(
-            runtime.index("Input::Update();"),
-            runtime.index("Input::Menu_Enable(false);"),
+            startup.index("Input::Update();"),
+            startup.index("Input::Menu_Enable(false);"),
         )
         self.assertIn("registered original CombatGameMode owner", runtime)
         self.assertIn("frontend_menu_mode_registered_for_handoff", runtime)
@@ -269,19 +271,21 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("A31VitaScopedFrontendRenderResolution frontend_render_resolution;", runtime)
         self.assertIn('Validate_StyleMgr_Font_Glyphs("frontend-menu-stylemgr")', runtime)
         self.assertLess(
-            runtime.index("A31VitaScopedFrontendRenderResolution frontend_render_resolution;"),
-            runtime.index("RenegadeDialogMgrClass::Initialize();"),
+            startup.index("A31VitaScopedFrontendRenderResolution frontend_render_resolution;"),
+            startup.index("RenegadeDialogMgrClass::Initialize();"),
         )
-        self.assertIn("StyleMgrClass::Initialize_From_INI(kStyleManagerIni);", runtime[handoff_index:direct_route_index])
-        final_style_index = runtime.index(
-            "StyleMgrClass::Initialize_From_INI(kStyleManagerIni);",
+        self.assertIn("if (!tutorial_selected) RenegadeDialogMgrClass::Shutdown();", startup)
+        self.assertNotIn("StyleMgrClass::Initialize_From_INI(kStyleManagerIni);", runtime[handoff_index:direct_route_index])
+        retained_style_index = runtime.index(
+            "stylemgr_initialized = frontend_tutorial_selected;",
             handoff_index,
         )
+        self.assertIn("frontend_dialog_manager_retained = frontend_tutorial_selected;", runtime[handoff_index:direct_route_index])
         text_display_index = runtime.index(
             "original TextDisplayGameMode init after final StyleMgr",
             handoff_index,
         )
-        self.assertLess(final_style_index, text_display_index)
+        self.assertLess(retained_style_index, text_display_index)
         self.assertLess(text_display_index, direct_route_index)
         combat_deactivate_index = runtime.index("frontend_combat_mode.Deactivate();")
         player_remove_index = runtime.index("cPlayerManager::Remove_All();")
@@ -300,6 +304,60 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("Validate_Frontend_Tutorial_Start_Latch", host)
         self.assertIn("frontend_tutorial_start_latched", host)
         self.assertIn("frontend_tutorial_latched_map", host)
+
+    def test_pause_retains_original_owners_and_tears_down_dialogs_before_world(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
+        lifecycle = (ROOT / "port/platform/a4_frontend_lifecycle_boundary.cpp").read_text()
+        patch = (ROOT / "port/patches/commando-a35-eva-native-dependencies.patch").read_text()
+        pause = runtime[runtime.index("bool Run_Original_Gameplay_Pause_Menu("):
+                        runtime.index("bool Try_Latch_Development_M00_Checkpoint()")]
+        for token in (
+            "combat_mode->Suspend();", "A4_Frontend_Begin_Pause_Loop();",
+            "A31VitaScopedFrontendRenderResolution frontend_render_resolution;",
+            "A4_Frontend_Prime_WWUI_Key_Transitions();",
+            "EVAEncyclopediaMenuClass::Display();", "cNetwork::Update();",
+            "menu_mode.Think();", "A4_Frontend_Pump_WWUI_Key_Transitions();",
+            "GameInitMgrClass::Continue_Game();", "A4_Frontend_End_Menu_Loop();",
+        ):
+            self.assertIn(token, pause)
+        self.assertNotIn("GameModeManager::Think();", pause)
+        self.assertNotIn("DialogMgrClass::Reset_Inputs();", pause)
+        self.assertNotIn("RenegadeDialogMgrClass::Shutdown();", pause)
+        self.assertLess(pause.index("Input::Update();"), pause.index("A4_Frontend_Prime_WWUI_Key_Transitions();"))
+        self.assertLess(pause.index("A4_Frontend_Prime_WWUI_Key_Transitions();"), pause.index("EVAEncyclopediaMenuClass::Display();"))
+        self.assertLess(pause.index("A4_Frontend_End_Menu_Loop();"), pause.rindex("Input::Update();"))
+        self.assertIn("if (combat_mode->Is_Active()) A31_Vita_Request_Gameplay_Pause();", gameplay)
+        pause_latch = lifecycle[lifecycle.index("void A4_Frontend_Begin_Pause_Loop(void)"):
+                                lifecycle.index("void A4_Frontend_Prime_WWUI_Key_Transitions(void)")]
+        self.assertIn("menu_loop_active = true", pause_latch)
+        self.assertNotIn("tutorial_start_latched = false", pause_latch)
+        self.assertNotIn("exit_requested = false", pause_latch)
+        self.assertLess(runtime.index("if (frontend_dialog_manager_retained) DialogMgrClass::Flush_Dialogs();"),
+                        runtime.index("frontend_combat_mode.Deactivate();"))
+        self.assertLess(runtime.index("TextDisplayGameModeClass::Get_Instance()->Shutdown();"),
+                        runtime.rindex("RenegadeDialogMgrClass::Shutdown();"))
+        for control in ("IDC_HELP_BUTTON", "IDC_MENU_LOAD_SP_GAME_BUTTON", "IDC_MENU_SAVE_SP_GAME_BUTTON"):
+            self.assertIn(f"Get_Dlg_Item ({control})->Enable (false);", patch)
+        self.assertIn('L"Exit Demo"', patch)
+        self.assertIn("Stop_Main_Loop (0);", patch)
+
+    def test_checkpoint_launch_is_opt_in_and_preserves_original_save_ownership(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        cmake = (ROOT / "CMakeLists.txt").read_text()
+        build = (ROOT / "tools/build.sh").read_text()
+        checkpoint = runtime[runtime.index("bool Try_Latch_Development_M00_Checkpoint()"):
+                             runtime.index("bool Run_Original_Frontend_Intro_And_Menu(")]
+        self.assertIn('"Enable one-shot original M00 save launch requests; keep OFF for public packages" OFF)', cmake)
+        self.assertIn("rv_development_checkpoint=${RENEGADE_DEVELOPMENT_CHECKPOINT:-0}", build)
+        self.assertIn("#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT", checkpoint)
+        self.assertIn("A31DevelopmentCheckpoint::Parse", checkpoint)
+        self.assertIn("A4_Frontend_Is_Tutorial_Source(source)", checkpoint)
+        self.assertIn("A4_Frontend_Latch_Start_Game(source, 0, 0UL);", checkpoint)
+        self.assertLess(checkpoint.index("A4_Frontend_Is_Tutorial_Source(source)"),
+                        checkpoint.index("remove(request_path)"))
+        self.assertNotIn("remove(source)", checkpoint)
+        self.assertNotIn("CombatManager::Load", checkpoint)
 
     def test_native_console_never_suppresses_original_menu_or_movie_rendering(self):
         console_stub = (ROOT / "port" / "compatibility" / "include" / "a31_console_stub.h").read_text()
@@ -347,8 +405,14 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("presentation clock started reason=%s movie=%s", bink)
         self.assertIn("g_presentation_start_us.load(std::memory_order_acquire)", bink)
         self.assertIn("if (start_us <= 0) {\n\t\treturn 0;", bink)
-        self.assertIn('Start_Presentation_Clock("audio-output-armed");', bink)
-        self.assertIn('Start_Presentation_Clock("first-video-upload");', bink)
+        self.assertNotIn('Start_Presentation_Clock("audio-output-armed");', bink)
+        self.assertNotIn('Start_Presentation_Clock("first-video-upload");', bink)
+        render_start = bink.index("void BINKMovie::Render()")
+        self.assertLess(bink.index("glEnd();", render_start),
+                        bink.index('Start_Presentation_Clock("first-video-draw");', render_start))
+        audio_start = bink.index("void *Audio_Output_Thread(void *)")
+        self.assertLess(bink.index("g_presentation_start_us.load(std::memory_order_acquire) <= 0", audio_start),
+                        bink.index("g_audio_count -= copied;", audio_start))
         self.assertIn("g_presentation_start_us.store(0, std::memory_order_release);", bink)
         self.assertNotIn("g_start_us", bink)
         for token in (
@@ -380,10 +444,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "Submit_Audio_Packet",
             "result == AVERROR(EAGAIN)",
             "sws_scale",
-			"AV_PIX_FMT_RGB565LE",
-			"kVideoUploadBytesPerPixel = 2U",
-			"GL_UNSIGNED_SHORT_5_6_5",
-			"upload_format=rgb565",
+			"AV_PIX_FMT_RGBA",
+			"kVideoUploadBytesPerPixel = 4U",
+			"GL_UNSIGNED_BYTE",
+			"upload_format=rgba8888",
             "swr_convert",
             "av_channel_layout_copy(&input_layout",
             "av_channel_layout_default(&input_layout, input_channels)",
@@ -408,10 +472,10 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 			"A4 Bink: final audio drain worker start failed; video continues",
             "Never submit a zero-filled startup/starvation buffer.",
             "const bool full_output_ready = capacity > 0U &&",
-            "g_audio_count >= output.size();",
+            "g_audio_count >= kAudioFramesPerBuffer * kAudioChannels;",
             "g_audio_wait_count.fetch_add(1U, std::memory_order_relaxed);",
             "sceKernelDelayThread(1000U);",
-				"A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu",
+				"A4 Bink: playback stats reason=%s movie=%s upload_format=rgba8888 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu",
 					"video_uploaded/dropped=%llu/%llu",
 					"kVideoDropLatenessUs",
 					"Drop_Pending_Video_If_Late",
@@ -432,11 +496,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "A4 Bink: first av_read_frame entry movie=%s",
             "A4 Bink: render entry movie=%s texture=%d pending_video=%d",
             "glTexSubImage2D",
-            "Next_Power_Of_Two",
-            "g_texture_width = Next_Power_Of_Two(g_video_width);",
-            "g_texture_height = Next_Power_Of_Two(g_video_height);",
-			"static_cast<size_t>(g_texture_width) *",
-			"g_texture_height * kVideoUploadBytesPerPixel",
+            "g_texture_width = g_video_width;",
+            "g_texture_height = g_video_height;",
             "const int intended_texture_width = g_texture_allocated ?",
             "const GLenum setup_error = glGetError();",
             "A4 Bink: texture setup failed error=%08X stale_error=%08X video=%dx%d storage=%dx%d texture=%u movie=%s",
@@ -476,9 +537,14 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             bink.index("Drop_Pending_Video_If_Late(elapsed_us)"),
             bink.index("if (!Upload_Pending_Video())"),
         )
+        update = bink[bink.index("void BINKMovie::Update()") :]
         self.assertLess(
-            bink.index("update_elapsed_us >= kUpdateBudgetUs"),
-            bink.index("av_read_frame"),
+            update.index("update_elapsed_us >= kUpdateBudgetUs"),
+            update.index("av_read_frame"),
+        )
+        self.assertLess(
+            update.index("update_elapsed_us >= kUpdateBudgetUs"),
+            update.index("Prefetch_Audio_For_Pending_Video()"),
         )
         self.assertLess(
             bink.index("if (capacity == 0U || g_audio_count >= capacity)"),
@@ -498,11 +564,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertNotIn("glPixelStorei", bink)
         self.assertLess(
             bink.index("glGetError();", upload),
-			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height", upload),
+			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
         )
         self.assertLess(
             bink.index("const GLenum setup_error = glGetError();", upload),
-			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height", upload),
+			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
         )
         self.assertLess(
             bink.index("const int intended_texture_width = g_texture_allocated ?", upload),
@@ -513,8 +579,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             bink.index("g_texture_allocated = true;", upload),
         )
         self.assertLess(
-            bink.index("g_texture_width = Next_Power_Of_Two(g_video_width);", upload),
-			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height", upload),
+            bink.index("g_texture_width = g_video_width;", upload),
+			bink.index("glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height", upload),
         )
         self.assertLess(
             bink.index("glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_video_width, g_video_height", upload),
@@ -528,7 +594,9 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         render = bink.index("void BINKMovie::Render()")
         self.assertLess(video_retry, update)
         self.assertLess(audio_retry, update)
-        self.assertLess(bink.index("if (!g_packet_pending)", update), bink.index("g_packet_pending = true;", update))
+        demux = bink.index("if (!g_packet_pending)", update)
+        self.assertLess(demux, bink.index("g_packet_pending = true;", demux))
+        self.assertLess(bink.index("av_packet_move_ref(g_packet, saved)", update), demux)
         self.assertLess(bink.index("if (!packet_consumed)", update), bink.index("av_packet_unref(g_packet);", update))
         self.assertLess(
             bink.index("glActiveTexture(GL_TEXTURE0);", render),

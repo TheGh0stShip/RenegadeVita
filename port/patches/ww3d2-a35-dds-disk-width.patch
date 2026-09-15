@@ -1,0 +1,23 @@
+--- a/ddsfile.h
++++ b/ddsfile.h
+@@ -135,7 +135,9 @@
+ 	};
+ 	unsigned AlphaBitDepth;
+ 	unsigned Reserved;
+-	void* Surface;
++	// Serialized DX7 field, never a live pointer. Preserve the original
++	// 32-bit disk layout on both Vita and retained 64-bit validation hosts.
++	unsigned Surface;
+ 	union
+ 	{
+ 		LegacyDDCOLORKEY CKDestOverlay;
+@@ -153,6 +155,9 @@
+ 	unsigned TextureStage;
+ };
+ 
++static_assert(sizeof(LegacyDDSURFACEDESC2) == 124,
++	"DDS surface descriptor must retain its original 124-byte disk layout");
++
+ // ----------------------------------------------------------------------------
+ //
+ // Utility class for loading DDS files. Simply create an instance of the class

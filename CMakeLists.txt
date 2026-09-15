@@ -15,13 +15,26 @@ project(RenegadeVitaA31 VERSION 3.5.4 LANGUAGES C CXX)
 # This is provenance for a hardware candidate, not a public milestone claim.
 # Keep the artifact identity configurable so a newer candidate can never
 # overwrite the symbols and diagnostics that belong to an earlier one.
-set(RENEGADE_CANDIDATE_LABEL "A3.5-dev99" CACHE STRING
+set(RENEGADE_CANDIDATE_LABEL "A3.5-dev102" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
 if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
 endif()
 string(TOLOWER "${RENEGADE_CANDIDATE_LABEL}" RENEGADE_CANDIDATE_STEM)
 string(REPLACE "." "" RENEGADE_CANDIDATE_STEM "${RENEGADE_CANDIDATE_STEM}")
+option(RENEGADE_VITA_M00_DEMO "Interim M00 community showcase; not the full-port completion target" ON)
+option(RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+  "Enable one-shot original M00 save launch requests; keep OFF for public packages" OFF)
+# Only the native launch boundary consumes this option. A directory-wide
+# definition needlessly invalidates every engine object when it changes.
+set_property(SOURCE port/platform/vita/a31_vita_runtime.cpp APPEND PROPERTY
+  COMPILE_DEFINITIONS
+  RENEGADE_VITA_DEVELOPMENT_CHECKPOINT=$<BOOL:${RENEGADE_VITA_DEVELOPMENT_CHECKPOINT}>)
+if(RENEGADE_VITA_M00_DEMO)
+  set(RENEGADE_BUILD_PROFILE "M00-DEMO")
+else()
+  set(RENEGADE_BUILD_PROFILE "FULL-PORT-DEVELOPMENT")
+endif()
 set(RENEGADE_RUNTIME_LOG_PATH
   "ux0:data/renegade/user/logs/${RENEGADE_CANDIDATE_STEM}-runtime.log")
 set(RENEGADE_STARTUP_PRECACHE_RECEIPT_PATH
@@ -31,7 +44,7 @@ set(RENEGADE_STARTUP_PRECACHE_RECEIPT_PATH
 # sce_sys/param.sfo. Keep it under the same RNEGA3101 title so the package
 # remains an update of the native Vita port; it identifies only this developer
 # package and is not an EA or retail entitlement.
-set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENGADEVITADEV99" CACHE STRING
+set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENEGADEVITA0102" CACHE STRING
   "Developer Vita package content identifier")
 string(LENGTH "${RENEGADE_VITA_CONTENT_ID}" RENEGADE_VITA_CONTENT_ID_LENGTH)
 if(NOT RENEGADE_VITA_CONTENT_ID_LENGTH EQUAL 36 OR
@@ -167,6 +180,21 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
     ${RENEGADE_STAGE}/commando/DlgMessageBox.cpp
     ${RENEGADE_STAGE}/commando/dialogtests.cpp
     ${RENEGADE_STAGE}/commando/dlgloadspgame.cpp
+    ${RENEGADE_STAGE}/commando/dlgsavegame.cpp
+    ${RENEGADE_STAGE}/commando/dlghelpscreen.cpp
+    ${RENEGADE_STAGE}/commando/dlgtechoptions.cpp
+    ${RENEGADE_STAGE}/commando/dlgconfigaudiotab.cpp
+    ${RENEGADE_STAGE}/commando/dlgconfigvideotab.cpp
+    ${RENEGADE_STAGE}/commando/dlgconfigperformancetab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevaencyclopedia.cpp
+    ${RENEGADE_STAGE}/commando/dlgevaobjectivestab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevamaptab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevadatatab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevacharacterstab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevaweaponstab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevavehiclestab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevabuildingstab.cpp
+    ${RENEGADE_STAGE}/commando/dlgevaviewertab.cpp
     ${RENEGADE_STAGE}/commando/mainmenutransition.cpp
     ${RENEGADE_STAGE}/commando/gamemode.cpp
     ${RENEGADE_STAGE}/commando/gamemenu.cpp
@@ -232,7 +260,12 @@ foreach(required_library
   endif()
 endforeach()
 
-set(RENEGADE_VITAGL_HEADER "${VITASDK}/arm-vita-eabi/include/vitaGL.h")
+set(RENEGADE_VITAGL_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/build/deps/vitagl-demo/libvitaGL.a"
+  CACHE FILEPATH "Pinned no-splash, shader-cache-enabled demo vitaGL archive")
+if(NOT EXISTS "${RENEGADE_VITAGL_LIBRARY}")
+  message(FATAL_ERROR "Build the pinned demo graphics dependency with tools/build_vitagl_demo.sh first")
+endif()
+set(RENEGADE_VITAGL_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/build/deps/vitagl-demo/source/source/vitaGL.h")
 file(READ "${RENEGADE_VITAGL_HEADER}" RENEGADE_VITAGL_HEADER_TEXT)
 if(RENEGADE_VITAGL_HEADER_TEXT MATCHES "VGL_MEM_PHYCONT[ \t\r\n]*,")
   set(RENEGADE_VITAGL_PHYCONT_MEM "VGL_MEM_PHYCONT")
@@ -287,6 +320,7 @@ set(RENEGADE_A30_PORT_SOURCES
   ${RENEGADE_ROOT}/port/validation/a22_w3d_selftest.cpp
   ${RENEGADE_ROOT}/port/validation/a30_world_runtime.cpp
   ${RENEGADE_ROOT}/port/platform/vita/vita_platform.cpp
+  ${RENEGADE_ROOT}/port/platform/vita/renegade_vita_text_entry.cpp
   ${RENEGADE_ROOT}/port/platform/vita/a30_vita_runtime.cpp
 	${RENEGADE_ROOT}/port/platform/vita/a31_vita_runtime.cpp
   ${RENEGADE_ROOT}/port/platform/a31_gameplay_boundary.cpp
@@ -296,10 +330,14 @@ set(RENEGADE_A30_PORT_SOURCES
 	${RENEGADE_ROOT}/port/platform/vita/a30_main.cpp
 )
 list(LENGTH RENEGADE_A30_PORT_SOURCES RENEGADE_A30_PORT_SOURCE_COUNT)
-if(NOT RENEGADE_A30_PORT_SOURCE_COUNT EQUAL 26)
-  message(FATAL_ERROR
-    "A3.1 Vita boundary source closure changed: ${RENEGADE_A30_PORT_SOURCE_COUNT}")
+if(NOT RENEGADE_A30_PORT_SOURCES)
+  message(FATAL_ERROR "Native source manifest must not be empty")
 endif()
+foreach(native_source IN LISTS RENEGADE_A30_PORT_SOURCES RENEGADE_A4_FRONTEND_PORT_SOURCES)
+  if(NOT EXISTS "${native_source}")
+    message(FATAL_ERROR "Native source manifest references missing file: ${native_source}")
+  endif()
+endforeach()
 
 add_executable(${PROJECT_NAME}
   ${RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES}
@@ -396,6 +434,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -ffunction-sections
   -fdata-sections
   -Wno-unknown-pragmas
+  -Wformat
   $<$<COMPILE_LANGUAGE:CXX>:-include${RENEGADE_COMPAT}/msvc_compat.h>
 )
 # ScriptCommands is an ABI-fixed MSVC callback table. Its default values on
@@ -431,13 +470,18 @@ target_link_options(${PROJECT_NAME} PRIVATE
   -Wl,--wrap=shark_init
 	"-Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.map"
 )
+target_include_directories(${PROJECT_NAME} BEFORE PRIVATE
+  "${CMAKE_CURRENT_SOURCE_DIR}/build/deps/vitagl-demo/source/source")
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+  RENEGADE_VITA_M00_DEMO=$<BOOL:${RENEGADE_VITA_M00_DEMO}>)
 target_link_libraries(${PROJECT_NAME}
+  mpg123
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libavformat.a>
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libavcodec.a>
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libswscale.a>
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libswresample.a>
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libavutil.a>
-  vitaGL
+  "${RENEGADE_VITAGL_LIBRARY}"
   stdc++
   SceLibKernel_stub
   SceAppMgr_stub
@@ -445,9 +489,11 @@ target_link_libraries(${PROJECT_NAME}
   mathneon
   c
   SceCommonDialog_stub
+  SceIme_stub
   m
   SceGxm_stub
   SceDisplay_stub
+  ScePower_stub
   SceSysmem_stub
   SceSysmodule_stub
   zip

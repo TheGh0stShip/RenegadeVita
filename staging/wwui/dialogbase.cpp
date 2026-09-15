@@ -1013,13 +1013,23 @@ DialogBaseClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	if (key_id == VK_ESCAPE) {
 		On_Command (IDCANCEL, 0, 0);
 		handled = true;
-	} else if (key_id == VK_TAB) {
+	} else if (key_id == VK_TAB
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+		|| (input_capture == NULL && input != NULL && input->As_ButtonCtrlClass() != NULL &&
+			(key_id == VK_UP || key_id == VK_DOWN || key_id == VK_LEFT || key_id == VK_RIGHT))
+#endif
+	) {
 
 		//
 		//	Determine whether to go forward or backward through the controls
 		//
 		int inc = 1;
-		if ((DialogMgrClass::Get_VKey_State (VK_SHIFT) & VKEY_PRESSED) == VKEY_PRESSED) {
+		if ((key_id == VK_TAB &&
+			(DialogMgrClass::Get_VKey_State (VK_SHIFT) & VKEY_PRESSED) == VKEY_PRESSED)
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+			|| key_id == VK_UP || key_id == VK_LEFT
+#endif
+		) {
 			inc = -1;
 		}
 
@@ -1037,6 +1047,15 @@ DialogBaseClass::On_Key_Down (uint32 key_id, uint32 key_data)
 		}
 
 	} else if (input != NULL) {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
+		// Cross on an edit field opens the system keyboard. Even an IME
+		// initialization failure must not fall through and activate Save.
+		if (key_id == VK_RETURN && input->As_EditCtrlClass() != NULL) {
+			input->As_EditCtrlClass()->Begin_Native_Text_Entry();
+			Release_Ref();
+			return true;
+		}
+#endif
 
 		//
 		//	Send out the standard On_OK notification if the user
@@ -1129,6 +1148,25 @@ DialogBaseClass::Find_Next_Control
 	int						direction
 )
 {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	// Retain the original control order and focus owner. Walk it once even
+	// across the end, and never focus a disabled, hidden or static control.
+	CONTROL_LIST control_list;
+	Build_Control_List(control_list);
+	const int count = control_list.Count();
+	const int inc = direction < 0 ? -1 : 1;
+	int index = control_list.ID(control);
+	if (index < 0) index = inc > 0 ? -1 : 0;
+	for (int visited = 0; visited < count; ++visited) {
+		index += inc;
+		if (index >= count) index = 0;
+		if (index < 0) index = count - 1;
+		DialogControlClass *candidate = control_list[index];
+		if (candidate->Wants_Focus() && candidate->Is_Enabled() && candidate->Is_Visible())
+			return candidate;
+	}
+	return NULL;
+#else
 	DialogControlClass *retval = NULL;
 
 	//
@@ -1176,6 +1214,7 @@ DialogBaseClass::Find_Next_Control
 	}
 
 	return retval;
+#endif
 }
 
 

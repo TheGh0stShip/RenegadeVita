@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <deque>
 #include <errno.h>
 #include <pthread.h>
 #include <stdint.h>
@@ -17,6 +18,7 @@
 #include <vector>
 
 #include <psp2/audioout.h>
+#include "../audio/vita/renegade_audio_output_buffers.h"
 #include <psp2/ctrl.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
@@ -46,11 +48,13 @@ constexpr size_t kAudioRingFrames = 2U * kAudioRate;
 constexpr int64_t kPresentationToleranceUs = 2000;
 constexpr int64_t kUpdateBudgetUs = 6000;
 constexpr unsigned kMaxBinkUpdateIterations = 4U;
+constexpr size_t kMaxPrefetchedVideoPackets = 16U;
+constexpr size_t kMaxPrefetchedVideoBytes = 8U * 1024U * 1024U;
 constexpr int64_t kVideoDropLatenessUs = 25000;
 constexpr int kMaxMovieUploadWidth = 320;
 constexpr int kMaxMovieUploadHeight = 240;
-constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_RGB565LE;
-constexpr size_t kVideoUploadBytesPerPixel = 2U;
+constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_RGBA;
+constexpr size_t kVideoUploadBytesPerPixel = 4U;
 constexpr uint32_t kSkipButtonMask =
 	SCE_CTRL_START | SCE_CTRL_CROSS | SCE_CTRL_CIRCLE | SCE_CTRL_TRIANGLE;
 
@@ -65,6 +69,7 @@ bool g_initialized = false;
 bool g_active = false;
 bool g_complete = true;
 std::atomic<bool> g_demux_eof(false);
+std::atomic<bool> g_audio_decode_eof(false);
 bool g_decoders_flushed = false;
 char g_movie_name[160] = {};
 
@@ -75,6 +80,10 @@ AVFrame *g_video_frame = NULL;
 AVFrame *g_audio_frame = NULL;
 AVPacket *g_packet = NULL;
 bool g_packet_pending = false;
+std::deque<AVPacket *> g_prefetched_video_packets;
+size_t g_prefetched_video_bytes = 0U;
+size_t g_prefetched_video_high_water = 0U;
+bool g_video_prefetch_failed = false;
 SwsContext *g_scaler = NULL;
 SwrContext *g_resampler = NULL;
 int g_video_stream = -1;
@@ -89,6 +98,7 @@ int64_t g_frame_duration_us = 33333;
 uint64_t g_decoded_video_frames = 0U;
 uint64_t g_uploaded_video_frames = 0U;
 uint64_t g_dropped_video_frames = 0U;
+int64_t g_last_video_upload_elapsed_us = 0;
 
 GLuint g_video_texture = 0U;
 bool g_texture_allocated = false;
@@ -107,6 +117,7 @@ int g_audio_port = -1;
 std::atomic<bool> g_audio_stop(false);
 std::atomic<bool> g_audio_drained(true);
 std::vector<int16_t> g_audio_ring;
+std::vector<int16_t> g_audio_conversion;
 size_t g_audio_read = 0U;
 size_t g_audio_write = 0U;
 size_t g_audio_count = 0U;
@@ -136,11 +147,17 @@ struct BinkStageTiming
 BinkStageTiming g_audio_decode_timing = {};
 BinkStageTiming g_video_decode_timing = {};
 BinkStageTiming g_video_upload_timing = {};
+BinkStageTiming g_video_send_timing = {};
+BinkStageTiming g_audio_send_timing = {};
+BinkStageTiming g_video_render_timing = {};
+BinkStageTiming g_video_conversion_timing = {};
 std::atomic<uint64_t> g_audio_wait_count(0U);
 std::atomic<uint64_t> g_audio_output_buffers(0U);
 std::atomic<uint64_t> g_audio_output_samples(0U);
 std::atomic<uint64_t> g_audio_partial_output_buffers(0U);
 std::atomic<uint64_t> g_audio_high_water_samples(0U);
+std::atomic<uint64_t> g_audio_nonzero_samples(0U);
+std::atomic<unsigned> g_audio_peak(0U);
 
 void Record_Bink_Stage(BinkStageTiming &timing, uint64_t elapsed_us)
 {
@@ -168,12 +185,7 @@ private:
 	uint64_t StartedUs;
 };
 
-int Next_Power_Of_Two(int value)
-{
-	int result = 1;
-	while (result < value && result < 4096) result <<= 1;
-	return result;
-}
+
 
 void Configure_Video_Upload_Dimensions(int source_width, int source_height)
 {
@@ -336,10 +348,10 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 	}
 	const size_t available = capacity - g_audio_count;
 	const size_t accepted = std::min(sample_count, available);
-	for (size_t index = 0U; index < accepted; ++index) {
-		g_audio_ring[g_audio_write] = samples[index];
-		g_audio_write = (g_audio_write + 1U) % capacity;
-	}
+	const size_t first = std::min(accepted, capacity - g_audio_write);
+	std::copy_n(samples, first, g_audio_ring.data() + g_audio_write);
+	std::copy_n(samples + first, accepted - first, g_audio_ring.data());
+	g_audio_write = (g_audio_write + accepted) % capacity;
 	g_audio_count += accepted;
 	const bool start_output = !g_audio_thread_running &&
 		g_audio_count >= kAudioStartupSamples;
@@ -349,10 +361,10 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 			g_audio_count, std::memory_order_relaxed)) {
 	}
 	pthread_mutex_unlock(&g_audio_mutex);
-	/* Do not create a polling audio worker until three decoded hardware buffers
+	/* Do not create a polling audio worker until six decoded hardware buffers
 	** exist.  One 21 ms buffer is shorter than the returned BINK upload/decode
 	** stalls, which immediately starves the device and produces the reported
-	** buzzy audio.  This keeps a bounded 64 ms cushion of original decoded
+	** buzzy audio.  This keeps a bounded 128 ms cushion of original decoded
 	** samples; it never inserts synthetic silence. */
 	if (start_output && !Start_Audio_Output_Thread()) {
 		A30_Vita_Log("A4 Bink: audio output worker start failed; video continues\\n");
@@ -373,15 +385,21 @@ void *Audio_Output_Thread(void *)
 			g_audio_port, static_cast<unsigned>(g_audio_ring.size()));
 		g_audio_thread_entry_logged = true;
 	}
-	std::vector<int16_t> output(kAudioFramesPerBuffer * kAudioChannels, 0);
+	RenegadeAudioOutputBuffers<kAudioFramesPerBuffer * kAudioChannels> buffers;
 	while (!g_audio_stop.load(std::memory_order_acquire)) {
-		std::fill(output.begin(), output.end(), 0);
+		// Queue startup audio, but do not consume it while the first movie
+		// draw compiles its lazy native shader. Otherwise that cold cost puts
+		// every video PTS behind the clock before a visible frame can appear.
+		if (g_presentation_start_us.load(std::memory_order_acquire) <= 0) {
+			sceKernelDelayThread(1000U);
+			continue;
+		}
 		pthread_mutex_lock(&g_audio_mutex);
 		const size_t capacity = g_audio_ring.size();
-		const bool drained_before_output = g_demux_eof.load(std::memory_order_acquire) &&
+		const bool drained_before_output = g_audio_decode_eof.load(std::memory_order_acquire) &&
 			g_audio_count == 0U;
 		const bool full_output_ready = capacity > 0U &&
-			g_audio_count >= output.size();
+			g_audio_count >= kAudioFramesPerBuffer * kAudioChannels;
 		if (drained_before_output) {
 			pthread_mutex_unlock(&g_audio_mutex);
 			g_audio_drained.store(true, std::memory_order_release);
@@ -392,23 +410,34 @@ void *Audio_Output_Thread(void *)
 		** wait for real samples and record the wait instead of turning that
 		** decoder latency into audible buzz. */
 		if (!full_output_ready &&
-			!g_demux_eof.load(std::memory_order_acquire)) {
+			!g_audio_decode_eof.load(std::memory_order_acquire)) {
 			pthread_mutex_unlock(&g_audio_mutex);
 			g_audio_wait_count.fetch_add(1U, std::memory_order_relaxed);
 			sceKernelDelayThread(1000U);
 			continue;
 		}
+		auto &output = buffers.Next();
 		const size_t copied = capacity > 0U ? std::min(output.size(), g_audio_count) : 0U;
-		for (size_t index = 0U; index < copied; ++index) {
-			output[index] = g_audio_ring[g_audio_read];
-			g_audio_read = (g_audio_read + 1U) % capacity;
+		if (capacity > 0U) {
+			const size_t first = std::min(copied, capacity - g_audio_read);
+			std::copy_n(g_audio_ring.data() + g_audio_read, first, output.data());
+			std::copy_n(g_audio_ring.data(), copied - first, output.data() + first);
+			g_audio_read = (g_audio_read + copied) % capacity;
 		}
+		std::fill(output.begin() + copied, output.end(), 0);
 		g_audio_count -= copied;
-		const bool drained = g_demux_eof.load(std::memory_order_acquire) &&
+		const bool drained = g_audio_decode_eof.load(std::memory_order_acquire) &&
 			g_audio_count == 0U;
 		pthread_mutex_unlock(&g_audio_mutex);
 		if (drained) g_audio_drained.store(true, std::memory_order_release);
 		if (g_audio_port >= 0) {
+			unsigned peak = 0U;
+			uint64_t nonzero = 0U;
+			for (size_t index = 0; index < copied; ++index) {
+				const int value = output[index];
+				if (value != 0) ++nonzero;
+				peak = std::max(peak, static_cast<unsigned>(value < 0 ? -value : value));
+			}
 			if (!g_audio_first_output_logged) {
 				A30_Vita_Log("A4 Bink: audio output first buffer port=%d copied=%u drained=%d waits=%llu movie=%s\n",
 					g_audio_port, static_cast<unsigned>(copied),
@@ -424,6 +453,9 @@ void *Audio_Output_Thread(void *)
 				break;
 			}
 			g_audio_output_buffers.fetch_add(1U, std::memory_order_relaxed);
+			g_audio_nonzero_samples.fetch_add(nonzero, std::memory_order_relaxed);
+			if (peak > g_audio_peak.load(std::memory_order_relaxed))
+				g_audio_peak.store(peak, std::memory_order_relaxed);
 			g_audio_output_samples.fetch_add(copied, std::memory_order_relaxed);
 			if (copied != output.size()) {
 				g_audio_partial_output_buffers.fetch_add(1U,
@@ -431,6 +463,8 @@ void *Audio_Output_Thread(void *)
 			}
 		}
 	}
+	// Drain while both aligned blocks still exist, including the final partial.
+	if (g_audio_port >= 0) sceAudioOutOutput(g_audio_port, NULL);
 	g_audio_drained.store(true, std::memory_order_release);
 	return NULL;
 }
@@ -443,7 +477,6 @@ bool Start_Audio_Output_Thread()
 		return false;
 	}
 	g_audio_thread_running = true;
-	Start_Presentation_Clock("audio-output-armed");
 	A30_Vita_Log("A4 Bink: audio output worker armed after decoded startup samples=%u movie=%s\\n",
 		static_cast<unsigned>(kAudioStartupSamples), g_movie_name);
 	return true;
@@ -525,6 +558,11 @@ bool Start_Audio_Output()
 void Release_Decoder_State()
 {
 	Stop_Audio_Output();
+	for (AVPacket *packet : g_prefetched_video_packets) av_packet_free(&packet);
+	g_prefetched_video_packets.clear();
+	g_prefetched_video_bytes = 0U;
+	g_prefetched_video_high_water = 0U;
+	g_video_prefetch_failed = false;
 	if (g_video_texture != 0U) glDeleteTextures(1, &g_video_texture);
 	g_video_texture = 0U;
 	g_texture_allocated = false;
@@ -533,6 +571,7 @@ void Release_Decoder_State()
 	g_pending_video = false;
 	g_pending_video_pixels.clear();
 	g_audio_ring.clear();
+	g_audio_conversion.clear();
 	if (g_resampler != NULL) swr_free(&g_resampler);
 	if (g_scaler != NULL) sws_freeContext(g_scaler);
 	g_scaler = NULL;
@@ -553,6 +592,7 @@ void Release_Decoder_State()
 	g_video_width = 0;
 	g_video_height = 0;
 	g_demux_eof.store(false, std::memory_order_release);
+	g_audio_decode_eof.store(false, std::memory_order_release);
 	g_decoders_flushed = false;
 	g_first_video_pts_us = AV_NOPTS_VALUE;
 	g_decoded_video_frames = 0U;
@@ -643,9 +683,8 @@ void Decode_Audio_Frames()
 		const int output_frames = static_cast<int>(av_rescale_rnd(
 			swr_get_delay(g_resampler, input_rate) + g_audio_frame->nb_samples,
 			kAudioRate, input_rate, AV_ROUND_UP));
-		std::vector<int16_t> converted(
-			static_cast<size_t>(output_frames) * kAudioChannels);
-		uint8_t *output[] = { reinterpret_cast<uint8_t *>(converted.data()) };
+		g_audio_conversion.resize(static_cast<size_t>(output_frames) * kAudioChannels);
+		uint8_t *output[] = { reinterpret_cast<uint8_t *>(g_audio_conversion.data()) };
 		const int frames = swr_convert(g_resampler, output, output_frames,
 			reinterpret_cast<const uint8_t *const *>(g_audio_frame->extended_data),
 			g_audio_frame->nb_samples);
@@ -655,7 +694,7 @@ void Decode_Audio_Frames()
 						g_audio_frame->nb_samples, frames, g_movie_name);
 					g_audio_first_frame_logged = true;
 				}
-				Queue_Audio(converted.data(), static_cast<size_t>(frames) * kAudioChannels);
+				Queue_Audio(g_audio_conversion.data(), static_cast<size_t>(frames) * kAudioChannels);
 			}
 			av_frame_unref(g_audio_frame);
 		}
@@ -672,23 +711,6 @@ bool Receive_Video_Frame()
 		return false;
 	}
 
-	g_scaler = sws_getCachedContext(g_scaler, g_video_frame->width,
-		g_video_frame->height, static_cast<AVPixelFormat>(g_video_frame->format),
-		g_video_width, g_video_height, kVideoUploadPixelFormat, SWS_FAST_BILINEAR,
-		NULL, NULL, NULL);
-	if (g_scaler == NULL) {
-		A30_Vita_Log("A4 Bink: sws_getCachedContext failed\n");
-		av_frame_unref(g_video_frame);
-		return false;
-	}
-	g_pending_video_pixels.resize(static_cast<size_t>(g_video_width) * g_video_height *
-		kVideoUploadBytesPerPixel);
-	uint8_t *destination[] = { g_pending_video_pixels.data() };
-	int destination_stride[] = {
-		g_video_width * static_cast<int>(kVideoUploadBytesPerPixel)
-	};
-	sws_scale(g_scaler, g_video_frame->data, g_video_frame->linesize, 0,
-		g_video_frame->height, destination, destination_stride);
 
 	int64_t pts_us = AV_NOPTS_VALUE;
 	if (g_video_frame->best_effort_timestamp != AV_NOPTS_VALUE) {
@@ -704,19 +726,48 @@ bool Receive_Video_Frame()
 	g_pending_video = true;
 	++g_decoded_video_frames;
 	if (!g_video_first_frame_logged) {
-			A30_Vita_Log("A4 Bink: first decoded video frame source=%dx%d upload=%dx%d format=rgb565 pts_us=%lld movie=%s\n",
+			A30_Vita_Log("A4 Bink: first decoded video frame source=%dx%d upload=%dx%d format=rgba8888 pts_us=%lld movie=%s\n",
 				g_video_frame->width, g_video_frame->height, g_video_width,
 				g_video_height, static_cast<long long>(pts_us), g_movie_name);
 		g_video_first_frame_logged = true;
 	}
-	av_frame_unref(g_video_frame);
+	// Retain the native frame until presentation or an explicit late-frame drop.
+	return true;
+}
+
+bool Convert_Pending_Video()
+{
+	BinkStageTimer timing(g_video_conversion_timing);
+	if (!g_pending_video || g_video_frame == NULL) return false;
+	g_scaler = sws_getCachedContext(g_scaler, g_video_frame->width,
+		g_video_frame->height, static_cast<AVPixelFormat>(g_video_frame->format),
+		g_video_width, g_video_height, kVideoUploadPixelFormat, SWS_FAST_BILINEAR,
+		NULL, NULL, NULL);
+	if (g_scaler == NULL) {
+		A30_Vita_Log("A4 Bink: sws_getCachedContext failed\n");
+		av_frame_unref(g_video_frame);
+		return false;
+	}
+	g_pending_video_pixels.resize(static_cast<size_t>(g_video_width) * g_video_height *
+		kVideoUploadBytesPerPixel);
+	uint8_t *destination[] = { g_pending_video_pixels.data() };
+	int destination_stride[] = {
+		g_video_width * static_cast<int>(kVideoUploadBytesPerPixel)
+	};
+	const int rows = sws_scale(g_scaler, g_video_frame->data, g_video_frame->linesize, 0,
+		g_video_frame->height, destination, destination_stride);
+	if (rows != g_video_height) {
+		A30_Vita_Log("A4 Bink: video conversion failed rows=%d expected=%d\n", rows, g_video_height);
+		return false;
+	}
+
 	return true;
 }
 
 bool Upload_Pending_Video()
 {
+	if (!Convert_Pending_Video()) return false;
 	BinkStageTimer timing(g_video_upload_timing);
-	if (!g_pending_video || g_pending_video_pixels.empty()) return false;
 	if (g_video_texture == 0U) glGenTextures(1, &g_video_texture);
 	if (g_video_texture == 0U) return false;
 	GLenum stale_error = GL_NO_ERROR;
@@ -731,15 +782,17 @@ bool Upload_Pending_Video()
 	glActiveTexture(GL_TEXTURE0);
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &previous_texture);
 	const int intended_texture_width = g_texture_allocated ?
-		g_texture_width : Next_Power_Of_Two(g_video_width);
+		g_texture_width : g_video_width;
 	const int intended_texture_height = g_texture_allocated ?
-		g_texture_height : Next_Power_Of_Two(g_video_height);
+		g_texture_height : g_video_height;
 	glBindTexture(GL_TEXTURE_2D, g_video_texture);
 	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	if (!g_texture_allocated) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
 	const GLenum setup_error = glGetError();
 	if (setup_error != GL_NO_ERROR) {
 		glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));
@@ -751,21 +804,15 @@ bool Upload_Pending_Video()
 		return false;
 	}
 	if (!g_texture_allocated) {
-		g_texture_width = Next_Power_Of_Two(g_video_width);
-		g_texture_height = Next_Power_Of_Two(g_video_height);
-		std::vector<uint8_t> padded(static_cast<size_t>(g_texture_width) *
-			g_texture_height * kVideoUploadBytesPerPixel, 0U);
-		for (int y = 0; y < g_video_height; ++y) {
-			memcpy(padded.data() + static_cast<size_t>(y) * g_texture_width *
-				kVideoUploadBytesPerPixel, g_pending_video_pixels.data() +
-				static_cast<size_t>(y) * g_video_width * kVideoUploadBytesPerPixel,
-				static_cast<size_t>(g_video_width) * kVideoUploadBytesPerPixel);
-		}
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, g_texture_width, g_texture_height,
-			0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, padded.data());
+		// Pinned vitaGL uses native linear textures with an 8-pixel row stride.
+		// It accepts these NPOT dimensions; no power-of-two padding is required.
+		g_texture_width = g_video_width;
+		g_texture_height = g_video_height;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_texture_width, g_texture_height,
+			0, GL_RGBA, GL_UNSIGNED_BYTE, g_pending_video_pixels.data());
 	} else {
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_video_width, g_video_height,
-			GL_RGB, GL_UNSIGNED_SHORT_5_6_5, g_pending_video_pixels.data());
+			GL_RGBA, GL_UNSIGNED_BYTE, g_pending_video_pixels.data());
 	}
 	const GLenum upload_error = glGetError();
 	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previous_texture));
@@ -789,14 +836,15 @@ bool Upload_Pending_Video()
 	}
 	g_texture_allocated = true;
 	if (!g_video_first_upload_logged) {
-			A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u source=%dx%d upload=%dx%d storage=%dx%d format=rgb565 movie=%s\n",
+			A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u source=%dx%d upload=%dx%d storage=%dx%d format=rgba8888 movie=%s\n",
 				static_cast<unsigned>(g_video_texture), g_source_video_width,
 				g_source_video_height, g_video_width, g_video_height,
 				g_texture_width, g_texture_height, g_movie_name);
 		g_video_first_upload_logged = true;
 	}
+	av_frame_unref(g_video_frame);
 	++g_uploaded_video_frames;
-	Start_Presentation_Clock("first-video-upload");
+	g_last_video_upload_elapsed_us = Current_Movie_Elapsed_Us();
 	g_pending_video = false;
 	return true;
 }
@@ -806,13 +854,22 @@ bool Drop_Pending_Video_If_Late(int64_t elapsed_us)
 	if (!g_pending_video) return false;
 	if (!g_texture_allocated && g_uploaded_video_frames == 0U) return false;
 	const int64_t late_us = elapsed_us - g_pending_video_pts_us;
+	// Audio pressure is not permission to discard a frame before its PTS.
+	if (late_us < 0) return false;
+	// Catch-up must not freeze the screen when decoding cannot overtake the
+	// wall clock. Once two source-frame intervals pass without an upload,
+	// present this due frame. This is a progress guard, not a target FPS cap.
+	if (elapsed_us - g_last_video_upload_elapsed_us >=
+		std::max<int64_t>(1, g_frame_duration_us) * 2) return false;
 	const int64_t threshold_us = std::max(g_frame_duration_us,
 		kVideoDropLatenessUs);
 	const bool audio_pressure = Audio_Output_Under_Pressure();
 	const size_t queued_audio = Queued_Audio_Samples();
 	if (late_us <= threshold_us && !audio_pressure) return false;
 	g_pending_video = false;
-	g_pending_video_pixels.clear();
+	// This frame was never converted. Retain the staging buffer's size so the
+	// next presentation does not zero-fill it before sws_scale overwrites it.
+	av_frame_unref(g_video_frame);
 	++g_dropped_video_frames;
 	if (!g_video_drop_logged || (g_dropped_video_frames % 30U) == 0U) {
 		A30_Vita_Log("A4 Bink: dropped late video frame decoded=%llu uploaded=%llu dropped=%llu late_us=%lld threshold_us=%lld audio_pressure=%d queued_audio_samples=%u movie=%s\n",
@@ -831,7 +888,12 @@ bool Submit_Video_Packet()
 {
 	if (g_video_decoder == NULL || g_packet == NULL) return true;
 	for (unsigned attempt = 0U; attempt < 2U; ++attempt) {
-		const int result = avcodec_send_packet(g_video_decoder, g_packet);
+		int result;
+		{
+			// FFmpeg may decode synchronously in send_packet, before receive.
+			BinkStageTimer timing(g_video_send_timing);
+			result = avcodec_send_packet(g_video_decoder, g_packet);
+		}
 		if (result == AVERROR(EAGAIN)) {
 			Receive_Video_Frame();
 			if (g_pending_video) return false;
@@ -850,7 +912,11 @@ bool Submit_Audio_Packet()
 {
 	if (g_audio_decoder == NULL || g_packet == NULL || !g_audio_enabled) return true;
 	for (unsigned attempt = 0U; attempt < 2U; ++attempt) {
-		const int result = avcodec_send_packet(g_audio_decoder, g_packet);
+		int result;
+		{
+			BinkStageTimer timing(g_audio_send_timing);
+			result = avcodec_send_packet(g_audio_decoder, g_packet);
+		}
 		if (result == AVERROR(EAGAIN)) {
 			Decode_Audio_Frames();
 			continue;
@@ -864,6 +930,45 @@ bool Submit_Audio_Packet()
 	return false;
 }
 
+bool Prefetch_Audio_For_Pending_Video()
+{
+	// A future video frame must not prevent demuxing the audio packets behind
+	// it. Keep compressed video packets in original order, bounded in both
+	// count and bytes; decoding and all VitaGL work stay on the frontend thread.
+	if (!g_audio_enabled || g_packet_pending ||
+		g_demux_eof.load(std::memory_order_acquire) ||
+		Queued_Audio_Samples() >= kAudioStartupSamples ||
+		g_prefetched_video_packets.size() >= kMaxPrefetchedVideoPackets ||
+		g_prefetched_video_bytes >= kMaxPrefetchedVideoBytes) return false;
+	const int result = av_read_frame(g_format, g_packet);
+	if (result < 0) {
+		g_demux_eof.store(true, std::memory_order_release);
+		return false;
+	}
+	g_packet_pending = true;
+	if (g_packet->stream_index == g_video_stream) {
+		if (g_packet->size < 0 || static_cast<size_t>(g_packet->size) >
+			kMaxPrefetchedVideoBytes - g_prefetched_video_bytes) {
+			g_video_prefetch_failed = true;
+			return false;
+		}
+		AVPacket *saved = av_packet_clone(g_packet);
+		if (saved == NULL) {
+			g_video_prefetch_failed = true;
+			return false;
+		}
+		g_prefetched_video_packets.push_back(saved);
+		g_prefetched_video_bytes += static_cast<size_t>(saved->size);
+		g_prefetched_video_high_water = std::max(g_prefetched_video_high_water,
+			g_prefetched_video_bytes);
+	} else if (g_packet->stream_index == g_audio_stream) {
+		if (!Submit_Audio_Packet()) return false;
+	}
+	av_packet_unref(g_packet);
+	g_packet_pending = false;
+	return true;
+}
+
 void Flush_Decoders()
 {
 	if (g_decoders_flushed) return;
@@ -873,6 +978,9 @@ void Flush_Decoders()
 		avcodec_send_packet(g_audio_decoder, NULL);
 		Decode_Audio_Frames();
 	}
+	// Demux EOF can precede decoder drain. The output worker must wait for
+	// the final decoded audio before deciding that its queue is terminal.
+	g_audio_decode_eof.store(true, std::memory_order_release);
 }
 
 void Reset_Playback_Statistics()
@@ -880,13 +988,20 @@ void Reset_Playback_Statistics()
 	g_audio_decode_timing = {};
 	g_video_decode_timing = {};
 	g_video_upload_timing = {};
+	g_video_send_timing = {};
+	g_audio_send_timing = {};
+	g_video_render_timing = {};
+	g_video_conversion_timing = {};
 	g_uploaded_video_frames = 0U;
 	g_dropped_video_frames = 0U;
+	g_last_video_upload_elapsed_us = 0;
 	g_audio_wait_count.store(0U, std::memory_order_relaxed);
 	g_audio_output_buffers.store(0U, std::memory_order_relaxed);
 	g_audio_output_samples.store(0U, std::memory_order_relaxed);
 	g_audio_partial_output_buffers.store(0U, std::memory_order_relaxed);
 	g_audio_high_water_samples.store(0U, std::memory_order_relaxed);
+	g_audio_nonzero_samples.store(0U, std::memory_order_relaxed);
+	g_audio_peak.store(0U, std::memory_order_relaxed);
 	g_video_drop_logged = false;
 	g_playback_statistics_logged = false;
 }
@@ -900,7 +1015,32 @@ void Log_Playback_Statistics(const char *reason)
 	const uint64_t wall_us = start_us > 0 ?
 		sceKernelGetProcessTimeWide() - static_cast<uint64_t>(start_us) : 0U;
 	const size_t queued_audio = Queued_Audio_Samples();
-	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgb565 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu frames=%llu video_uploaded/dropped=%llu/%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_queued_samples=%u audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
+	A30_Vita_Log("A4 Bink: presentation conversion calls/total/worst_us=%llu/%llu/%llu movie=%s\n",
+		static_cast<unsigned long long>(g_video_conversion_timing.calls),
+		static_cast<unsigned long long>(g_video_conversion_timing.total_us),
+		static_cast<unsigned long long>(g_video_conversion_timing.worst_us), g_movie_name);
+	A30_Vita_Log("A4 Bink: submitted PCM nonzero=%llu peak=%u adopt=%d aligned_buffers=2 movie=%s\n",
+		static_cast<unsigned long long>(g_audio_nonzero_samples.load(std::memory_order_relaxed)),
+		g_audio_peak.load(std::memory_order_relaxed),
+		sceAudioOutGetAdopt(g_audio_port_type), g_movie_name);
+	A30_Vita_Log("A4 Bink: native pipeline movie=%s video_send_calls/total/worst_us=%llu/%llu/%llu audio_send_calls/total/worst_us=%llu/%llu/%llu draw_calls/total/worst_us=%llu/%llu/%llu receive_video_includes_scale=0\n",
+		g_movie_name,
+		static_cast<unsigned long long>(g_video_send_timing.calls),
+		static_cast<unsigned long long>(g_video_send_timing.total_us),
+		static_cast<unsigned long long>(g_video_send_timing.worst_us),
+		static_cast<unsigned long long>(g_audio_send_timing.calls),
+		static_cast<unsigned long long>(g_audio_send_timing.total_us),
+		static_cast<unsigned long long>(g_audio_send_timing.worst_us),
+		static_cast<unsigned long long>(g_video_render_timing.calls),
+		static_cast<unsigned long long>(g_video_render_timing.total_us),
+		static_cast<unsigned long long>(g_video_render_timing.worst_us));
+	A30_Vita_Log("A4 Bink: bounded read-ahead video_packets=%u video_bytes=%u high_water_bytes=%u max_packets=%u max_bytes=%u movie=%s\n",
+		static_cast<unsigned>(g_prefetched_video_packets.size()),
+		static_cast<unsigned>(g_prefetched_video_bytes),
+		static_cast<unsigned>(g_prefetched_video_high_water),
+		static_cast<unsigned>(kMaxPrefetchedVideoPackets),
+		static_cast<unsigned>(kMaxPrefetchedVideoBytes), g_movie_name);
+	A30_Vita_Log("A4 Bink: playback stats reason=%s movie=%s upload_format=rgba8888 source=%dx%d upload=%dx%d storage=%dx%d wall_ms=%llu frames=%llu video_uploaded/dropped=%llu/%llu audio_waits=%llu output_buffers/samples/partial=%llu/%llu/%llu audio_high_water_samples=%llu audio_queued_samples=%u audio_decode_calls/total/worst_us=%llu/%llu/%llu video_decode_calls/total/worst_us=%llu/%llu/%llu video_upload_calls/total/worst_us=%llu/%llu/%llu\n",
 				reason != NULL ? reason : "unknown", g_movie_name,
 				g_source_video_width, g_source_video_height,
 				g_video_width, g_video_height, g_texture_width, g_texture_height,
@@ -1080,6 +1220,11 @@ void BINKMovie::Update()
 			}
 			const int64_t elapsed_us = Current_Movie_Elapsed_Us();
 			if (g_pending_video) {
+				if (Prefetch_Audio_For_Pending_Video()) continue;
+				if (g_video_prefetch_failed) {
+					Mark_Failed("bounded video read-ahead allocation/size limit");
+					return;
+				}
 				if (Drop_Pending_Video_If_Late(elapsed_us)) continue;
 				if (g_pending_video_pts_us > elapsed_us + kPresentationToleranceUs &&
 					g_texture_allocated) break;
@@ -1089,9 +1234,21 @@ void BINKMovie::Update()
 			}
 			continue;
 		}
-		if (g_demux_eof.load(std::memory_order_acquire)) {
+		if (!g_packet_pending && !g_prefetched_video_packets.empty()) {
+			AVPacket *saved = g_prefetched_video_packets.front();
+			g_prefetched_video_packets.pop_front();
+			g_prefetched_video_bytes -= static_cast<size_t>(saved->size);
+			av_packet_move_ref(g_packet, saved);
+			av_packet_free(&saved);
+			g_packet_pending = true;
+		}
+		if (!g_packet_pending && g_demux_eof.load(std::memory_order_acquire)) {
 			Flush_Decoders();
 			if (Receive_Video_Frame()) continue;
+			if (g_uploaded_video_frames == 0U) {
+				Mark_Failed("movie ended before first video frame");
+				return;
+			}
 			Drain_Deferred_Audio_Output();
 			const bool audio_done = !g_audio_enabled ||
 				g_audio_drained.load(std::memory_order_acquire);
@@ -1132,6 +1289,7 @@ void BINKMovie::Update()
 
 void BINKMovie::Render()
 {
+	BinkStageTimer render_timing(g_video_render_timing);
 	if (g_active && !g_render_entry_logged) {
 		A30_Vita_Log("A4 Bink: render entry movie=%s texture=%d pending_video=%d\n",
 			g_movie_name, g_texture_allocated ? 1 : 0,
@@ -1186,6 +1344,9 @@ void BINKMovie::Render()
 	glTexCoord2f(0.0F, max_v); glVertex3f(draw_x, draw_y + draw_height, 0.0F);
 	glTexCoord2f(max_u, max_v); glVertex3f(draw_x + draw_width, draw_y + draw_height, 0.0F);
 	glEnd();
+	// glEnd performs the first lazy shader compilation synchronously. Share
+	// one epoch with the waiting audio worker only after that cold draw.
+	Start_Presentation_Clock("first-video-draw");
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

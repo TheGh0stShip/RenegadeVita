@@ -4,19 +4,19 @@ import collections
 import json
 import pathlib
 import re
+import shlex
 import subprocess
 
+if __package__:
+    from .renegade_patch_inventory import load_inventory, require_staging_receipt
+else:
+    from renegade_patch_inventory import load_inventory, require_staging_receipt
 
 MODULES = [
     "WWMath", "wwbitpack", "wwdebug", "wwlib", "wwsaveload",
     "wwtranslatedb", "wwutil", "wwphys", "ww3d2", "Combat",
     "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi",
 ]
-
-EXPECTED_ORIGINAL_SOURCE_COUNT = 506
-EXPECTED_VITA_PORT_SOURCE_COUNT = 26
-EXPECTED_A4_FRONTEND_PORT_SOURCE_COUNT = 6
-EXPECTED_PATCH_COUNT = 145
 
 STAGED_ORIGINAL_OWNER_SOURCES = {
     "Code/Commando/loadingscreen.cpp": "staging/commando/loadingscreen.cpp",
@@ -29,43 +29,29 @@ STAGED_TO_UPSTREAM_MODULE = {
     "wwmath": "WWMath",
 }
 
-VITA_PORT_SOURCES = [
-    "port/developer/a31_capture_telemetry.cpp",
-	"port/audio/vita/renegade_miles_provider.cpp",
-	"port/audio/vita/renegade_wave_decoder.cpp",
-	"port/filesystem/renegade_cache_health.cpp",
-    "port/filesystem/renegade_paths.cpp",
-    "port/filesystem/renegade_file_factory.cpp",
-    "port/filesystem/renegade_registry.cpp",
-    "port/platform/renegade_directinput.cpp",
-    "port/platform/renegade_optional_services.cpp",
-	"port/platform/renegade_network_provider.cpp",
-    "port/renderer/vita/ww3d_vita_renderer.cpp",
-    "port/renderer/vita/ww3d_dx8_boundary.cpp",
-    "port/renderer/vita/surface_boundary.cpp",
-	"port/renderer/vita/renegade_freetype_font_provider.cpp",
-    "port/validation/wwbitpack_selftest.cpp",
-    "port/validation/a21_filesystem_selftest.cpp",
-    "port/validation/a22_w3d_selftest.cpp",
-    "port/validation/a30_world_runtime.cpp",
-    "port/platform/vita/vita_platform.cpp",
-    "port/platform/vita/a30_vita_runtime.cpp",
-    "port/platform/a31_gameplay_boundary.cpp",
-	"port/platform/a31_miscutil_boundary.cpp",
-	"port/platform/a31_network_options_boundary.cpp",
-	"port/platform/renegade_script_static_provider.cpp",
-    "port/platform/vita/a30_main.cpp",
-	"port/platform/vita/a31_vita_runtime.cpp",
-]
-
-A4_FRONTEND_PORT_SOURCES = [
-    "port/filesystem/renegade_find_files.cpp",
-    "port/platform/renegade_vita_ime_boundary.cpp",
-    "port/platform/renegade_ui_pointer_tokens.cpp",
-    "port/platform/renegade_dialog_resource_provider.cpp",
-    "port/platform/a4_frontend_lifecycle_boundary.cpp",
-    "port/platform/a4_binkmovie_boundary.cpp",
-]
+def read_native_source_sets(root: pathlib.Path) -> dict[str, list[str]]:
+    """Read the literal native source sets, not a second maintained inventory."""
+    text = re.sub(r"(?m)#.*$", "", (root / "CMakeLists.txt").read_text(encoding="utf-8"))
+    result = {}
+    for name in ("RENEGADE_A30_PORT_SOURCES", "RENEGADE_A4_FRONTEND_PORT_SOURCES"):
+        definitions = [body for body in re.findall(
+            r"\bset\s*\(\s*" + name + r"\b([^)]*)\)", text, re.IGNORECASE
+        ) if body.strip()]
+        if len(definitions) != 1:
+            raise RuntimeError(f"Expected one nonempty literal CMake definition for {name}")
+        sources = []
+        for token in shlex.split(definitions[0], comments=True):
+            match = re.fullmatch(r"\$\{RENEGADE_ROOT\}/(port/[A-Za-z0-9_./-]+\.(?:c|cpp))", token, re.IGNORECASE)
+            if match is None or ".." in pathlib.PurePosixPath(match[1]).parts:
+                raise RuntimeError(f"Unsupported native source token in {name}: {token}")
+            source = match[1]
+            if source in sources:
+                raise RuntimeError(f"Duplicate native source in {name}: {source}")
+            sources.append(source)
+        if not sources:
+            raise RuntimeError(f"Empty native source inventory: {name}")
+        result[name] = sources
+    return result
 
 
 def source_count(directory: pathlib.Path) -> int:
@@ -85,48 +71,35 @@ def read_world_manifest(root: pathlib.Path) -> list[str]:
         root / "CMakeLists.txt",
     ]
     pattern = re.compile(
-        r"\$\{RENEGADE_STAGE\}/([A-Za-z0-9_]+)/([^\s)#]+\.cpp)"
+        r"\$\{RENEGADE_STAGE\}/([A-Za-z0-9_]+)/([^\s)\"#]+\.cpp)", re.IGNORECASE
     )
     entries: list[str] = []
     for manifest in manifests:
+        text = re.sub(r"(?m)#.*$", "", manifest.read_text(encoding="utf-8"))
         for staged_module, filename in pattern.findall(
-                manifest.read_text(encoding="utf-8")):
+                text):
             upstream_module = STAGED_TO_UPSTREAM_MODULE.get(
                 staged_module, staged_module
             )
             entries.append(f"Code/{upstream_module}/{filename}")
         for filename in re.findall(
-                r"\$\{RENEGADE_SCRIPT_SOURCE\}/([^\s\)#]+\.cpp)",
-                manifest.read_text(encoding="utf-8")):
+                r"\$\{RENEGADE_SCRIPT_SOURCE\}/([^\s\)\"#]+\.cpp)",
+                text, re.IGNORECASE):
             entries.append(f"Code/Scripts/{filename}")
     entries = sorted(set(entries) - set(STAGED_ORIGINAL_OWNER_SOURCES))
-    if len(entries) != EXPECTED_ORIGINAL_SOURCE_COUNT:
-        raise RuntimeError(
-            "A3.1 gameplay seed source manifests contain "
-            f"{len(entries)} unique entries; expected "
-            f"{EXPECTED_ORIGINAL_SOURCE_COUNT}"
-        )
+    if not entries:
+        raise RuntimeError("Original source manifests contain no translation units")
     return entries
 
 
 def read_patched_sources(root: pathlib.Path, upstream: pathlib.Path):
-    # This historical NAT-traversal experiment is retained as evidence but is
-    # deliberately not in deterministic staging: A3.2 preserves the accepted
-    # local transport and does not reopen public-service/network work.
-    retired_patches = {"wwnet-a31-network-posix.patch"}
-    patches = sorted(
-        patch for patch in (root / "port" / "patches").glob("*.patch")
-        if patch.name not in retired_patches
-    )
-    if len(patches) != EXPECTED_PATCH_COUNT:
-        raise RuntimeError(
-            f"A3.1 patch set has {len(patches)} entries; expected "
-            f"{EXPECTED_PATCH_COUNT}"
-        )
+    inventory = load_inventory(root)
+    require_staging_receipt(root, inventory)
+    patches = [root / entry["path"] for entry in inventory["patches"]]
 
     patched_sources: set[str] = set()
     patch_report = []
-    for patch in patches:
+    for patch, identity in zip(patches, inventory["patches"]):
         targets = []
         for line in patch.read_text(encoding="utf-8").splitlines():
             if not line.startswith("--- a/"):
@@ -136,6 +109,8 @@ def read_patched_sources(root: pathlib.Path, upstream: pathlib.Path):
                 targets.append(relative)
         patch_report.append({
             "path": patch.relative_to(root).as_posix(),
+            "stage_directory": identity["stage_directory"],
+            "sha256": identity["sha256"],
             "application": (
                 "generated staging only; patch --batch --forward --fuzz=0 "
                 "--no-backup-if-mismatch"
@@ -180,16 +155,15 @@ def main() -> None:
             raise RuntimeError(
                 f"Manifest references missing upstream source: {relative_path}"
             )
-    if len(VITA_PORT_SOURCES) != EXPECTED_VITA_PORT_SOURCE_COUNT:
-        raise RuntimeError("Internal A3.1 native port source count is inconsistent")
-    for relative_path in VITA_PORT_SOURCES:
+    native_sets = read_native_source_sets(root)
+    vita_port_sources = native_sets["RENEGADE_A30_PORT_SOURCES"]
+    frontend_port_sources = native_sets["RENEGADE_A4_FRONTEND_PORT_SOURCES"]
+    for relative_path in vita_port_sources:
         if not (root / relative_path).is_file():
             raise RuntimeError(
                 f"Native A3.1 manifest references missing file: {relative_path}"
             )
-    if len(A4_FRONTEND_PORT_SOURCES) != EXPECTED_A4_FRONTEND_PORT_SOURCE_COUNT:
-        raise RuntimeError("Internal A4 frontend boundary source count is inconsistent")
-    for relative_path in A4_FRONTEND_PORT_SOURCES:
+    for relative_path in frontend_port_sources:
         if not (root / relative_path).is_file():
             raise RuntimeError(
                 f"Native A4 frontend manifest references missing file: {relative_path}"
@@ -245,10 +219,10 @@ def main() -> None:
         "original_translation_units": original_translation_units,
         "staged_original_owner_files": len(staged_original_owner_sources),
         "staged_original_owner_paths": sorted(staged_original_owner_sources),
-        "vita_platform_renderer_validation_files": len(VITA_PORT_SOURCES),
-        "vita_translation_units": VITA_PORT_SOURCES,
-        "a4_frontend_boundary_files": len(A4_FRONTEND_PORT_SOURCES),
-        "a4_frontend_boundary_paths": A4_FRONTEND_PORT_SOURCES,
+        "vita_platform_renderer_validation_files": len(vita_port_sources),
+        "vita_translation_units": vita_port_sources,
+        "a4_frontend_boundary_files": len(frontend_port_sources),
+        "a4_frontend_boundary_paths": frontend_port_sources,
         "sdk_framebuffer_helper_files": 1,
         "compatibility_headers": len(compatibility_headers),
         "compatibility_header_paths": compatibility_headers,

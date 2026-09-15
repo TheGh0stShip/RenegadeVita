@@ -47,6 +47,13 @@ struct Statistics {
 	uint64_t texture_invalid_binds;
 	uint64_t texture_sampler_updates;
 	uint64_t texture_sampler_skips;
+	uint64_t texture_sampler_parameter_writes;
+	uint64_t material_color_evaluations;
+	uint64_t material_light_normalizations;
+	uint64_t material_color_cache_hits;
+	uint64_t material_color_cache_fallback_passes;
+	uint64_t material_color_cache_bytes;
+	uint64_t direct_text_atlas_requests;
 	uint64_t texture_stage_enable_skips;
 	uint64_t texture_combiner_skips;
 	uint64_t texture_unsupported_stages;
@@ -179,6 +186,10 @@ bool Set_Native_Presentation_Rect_Quiet(uint32_t x, uint32_t y,
 	uint32_t width, uint32_t height);
 void Reset_Native_Presentation_Rect();
 void Reset_Native_Presentation_Rect_Quiet();
+// Inverse of the current native presentation rectangle for physical touch.
+// A touch in pillarbox/letterbox space is not a click on the original UI.
+bool Map_Native_Pixel_To_Logical(float x, float y, float logical_width,
+	float logical_height, float &logical_x, float &logical_y);
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	uint32_t height, float min_depth, float max_depth);
 bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
@@ -200,6 +211,8 @@ void Record_Texture_Checkerboard_Bind();
 void Record_Texture_Upload(uint64_t resident_bytes);
 void Record_Texture_Release(uint64_t resident_bytes);
 void Invalidate_Texture_State_Cache();
+bool Use_Direct_Text_Atlas_Upload();
+bool Use_Native_DDS_Upload();
 bool Bind_Texture(uint32_t native_texture, bool valid);
 bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid);
 void Disable_Texture_Stage(uint32_t stage);
@@ -217,7 +230,10 @@ void Record_Texture_Unsupported_Stage(uint32_t stage);
 void Release_Texture(uint32_t native_texture);
 void Submit_Unsupported(RenderObjClass *object);
 void Submit_Decals_Unsupported();
-bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes);
+// Select the just-presented front buffer after End_Render(true); the default
+// retains the current back buffer for callers capturing before presentation.
+bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes,
+	bool presented_frame = false);
 bool Query_Backend_Memory(BackendMemoryStatistics &memory);
 void Reset_Statistics();
 const Statistics &Get_Statistics();

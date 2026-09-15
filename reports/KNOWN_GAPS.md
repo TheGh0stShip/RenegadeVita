@@ -1,5 +1,139 @@
 # Known gaps
 
+Current: Dev134 canonical and matching visual milestone PASS; physical
+deployment/readback PASS under the user's post-milestone authorization. Manual
+LiveArea launch required because remote command1338 refuses. Native FPS, full demo,
+populated Vehicle/Building pages and physical save dates remain unaccepted.
+Two prewarm log sites incorrectly format uint64_t counters with %u in Dev134;
+source follow-up fixes them and passes ARM format checking and eight loading
+contracts. Correctly typed gameplay counters and final render_error are zero
+in the matching emulator run. Earlier current entries below are historical.
+
+Current: Dev133 native Load list-to-Delete traversal passes SELECT/SELECT/Cross;
+controller No preserves all saves. Populated Vehicle/Building pages, visible
+objective cycling, physical save dates, prior intermittent resume hang and native
+60 FPS remain open. Dev134 character RGB work reduction passes production host
+checks; canonical closure is active. Native YUV/persistent geometry routes remain
+under investigation. See DEV134_SKIN_RGB_WORK.md. Physical testing held; older
+current entries below are historical.
+
+Current: Dev133 corrects repeat Load; four full native reloads now pass in Vita3K.
+Native save-description entry and Save/Load/overwrite/Delete are exercised with
+existing saves preserved. SELECT feeds original Cycle Objectives and Help labels
+it; visible cycling is unproven because the tested checkpoint has no displayed
+active objective. Load list-to-Delete controller focus, populated Vehicle/Building
+pages, physical save dates, intermittent resume hang cause and native 60 FPS
+remain open. See DEV133_REPEATED_LOAD_AND_OBJECTIVES.md. Physical testing held.
+Earlier current entries below are historical.
+
+Current: Dev131 controller confirmation navigation correction passes host,
+UBSan, ARM and Vita3K No/Yes Save/Delete/Exit checks. Dev130 settings reload,
+map zoom, statistics and naturally populated Weapons/Characters have retained
+Vita3K functional evidence. Vehicle/building populated models and native save
+description entry remain open. Vita3K lacks sceRtcSetWin32FileTime, so it cannot
+validate native save dates. Prior resume hang did not reproduce in the long
+Mobius run; cause unresolved. Physical testing held; full demo and 60 FPS open.
+See DEV130_PAUSE_MENU_VALIDATION.md. Older current entries below are historical.
+
+Current: Dev129 all-pause audit, physical testing held pending correctness and
+further native optimization. Map/statistics have matching Dev128 emulator
+visuals. Old checkpoint discovery chunks are empty; fresh discovery/model/text
+checks remain. Help/Save/Load/Options source is ahead of the ARM candidate.
+Controller renaming and settings persistence across process restart are open.
+No complete pause-menu, full-demo, native 60 FPS or physical acceptance.
+See DEV129_PAUSE_MENU_AUDIT.md; older authorization/status entries are history.
+
+## Physical full-demo test — 2026-09-14
+
+User has authorized the complete demo test on physical Vita 10.0.0.202:1337,
+superseding the full-playthrough and PS Vita holds below. Dev123 remains an
+unaccepted hardware candidate. Font prerequisite is being copied from the
+user's verified original Arial MT file to user/fonts; retail archives unchanged.
+FTP is available, command port 1338 is not. Manual LiveArea launch is required.
+All actual visual/audio/gameplay/lifecycle/performance gates require returned
+physical evidence. PSTV remains outside this test.
+
+## Current Dev122 gaps
+
+Final user playthrough remains held for known wall/sky/elevator artifacts,
+credits layout cutoff and repeat lifecycle checks. Native framebuffer capture
+was black even after Dev121 front-buffer selection; Dev122 uses synchronized
+GPU transfer into temporary mapped RAM and awaits runtime evidence. Actual
+Vulkan F12 screenshots now work. Nearby intact walls do not clear the user's
+different camera view. Original loading-bar animation is visibly fixed; menu
+MP3 decode and native output pass, isolated audible proof remains open.
+Old Gunner save has WF hidden: Logan's PREPARE_INFANTRY remark completed and
+does not itself activate WF; original Gunner ending owns that transition.
+Full tutorial/startup/menu acceptance, sustained 60 FPS and PS Vita/PSTV gates
+remain open. Physical tests remain held. Earlier current gaps are historical.
+
+## Current Dev112 gaps
+
+Canonical closure and matching emulator proof remain pending. Original EVA
+pause/resume and safe exit are implemented and compile, not runtime accepted.
+Four original tutorial saves exist; post-Sydney reload is queued but unproven.
+HUD bitmap digits, NPC target boundaries, elevator black intrusions, loading
+progress animation and fully hidden scene readiness still need matching visual
+evidence. Culling inversion was corrected in source, not proven as the elevator
+root cause. Full original M00 completion, thank-you/credits, and sustained 60 FPS
+remain unproven. Data archive coverage does not include loose root-level fonts;
+the original Arial MT user-font fallback has been staged with hash evidence.
+Dev111's emulator run ended at timeout. Older running/current claims below are
+historical. Physical Vita/PSTV access remains held.
+
+## Latest Dev105 retail return
+
+Current Steam source coverage and archive structural checks are now closed
+locally, with successful original-engine config/reticle reads in Vita3K.
+See DEV105_RETAIL_DATA_RETURN.md. Missing standalone files are not by themselves
+proof of missing archived assets. Conversely, inventory/reads do not prove
+visual output or all gameplay dependencies. One malformed W3D-name request
+remains unexplained; no fabricated retail replacement was added. Full M00,
+saved-game round trip, HUD alignment, 60 FPS+, and physical acceptance remain
+open. User-updated Vita3K is running the same Dev105 package for comparison.
+
+## 2026-09-08: Dev102 current gaps
+
+Older candidate/build-running descriptions below are historical. Dev101
+canonical closure passed, but its emulator movies/menu remain visually failed.
+Dev102 native sentence readiness and first-draw/RGBA movie fixes require a
+restaged build and new emulator evidence. Font availability alone did not fix
+text. Full retail completeness is not established, but shared MIX resources,
+translations, and both movies are demonstrably available.
+
+Entire M00, HMVV progression, HUD/target boxes, loading progress, final fade/
+credits/teardown, and sustained 60 FPS+ remain acceptance gaps. PS Vita and
+PSTV tests remain held. The unsupported days estimate is withdrawn; user wants
+a usable alpha this working session, not 48 hours. Optional polish is deferred.
+
+## 2026-09-08: Dev100 unresolved demo release gates
+
+The demo is interim. Full-port completion still requires all campaign missions
+and remaining original gameplay, presentation, lifecycle, resource, and
+networking capabilities with matching evidence. Completing M00 or a demo build
+must never close the full-port objective. A separate demo build profile is the
+next source unit after the current canonical snapshot finishes compiling.
+
+Current source work is Dev100, not the historical Dev99 entries below.
+New sampler, indexed-text state, BINK scheduler and loading-progress fixes
+address demonstrated code defects, not proven resolution of every visual
+symptom. No new NPC offset is adopted without matching target/camera captures.
+
+The entire authentic M00 route, HMVV freeze risk, intro A/V pacing, menu and
+HUD glyphs, loading animation, targeting boxes, mission-success ending, and
+safe lifecycle still need matching runtime evidence. Long synchronous load
+operations without callbacks can still pause the progress animation.
+
+The new no-splash VitaGL dependency builds with persistent shader caching;
+actual disk-cache reuse and sustained FPS improvement are unmeasured. The
+600-frame sampler replay halves redundant native binds but is not an FPS
+benchmark. TextureLoader::Update does not perform asynchronous decoding in
+this boundary; file touches must not be described as compiled-resource warmup.
+
+Vita3K and existing emulator retail files are available. Application/package
+closure and a candidate-owned bounded emulator launch are pending. Both PS
+Vita and PSTV final acceptance remain blocked by the physical-test hold.
+
 ## Current dev99 mandatory frontend and readiness gate (2026-08-31)
 
 The dev84 physical return reported menu audio with a black panel and no intro

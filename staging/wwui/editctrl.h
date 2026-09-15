@@ -83,6 +83,9 @@ public:
 	virtual void		Set_Text (const WCHAR *title);
 
 	int					Get_Text_Length (void) const;
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	bool Begin_Native_Text_Entry (void);
+#endif
 
 	void					Set_Text_Limit (int numChars);
 	int					Get_Text_Limit (void) const;

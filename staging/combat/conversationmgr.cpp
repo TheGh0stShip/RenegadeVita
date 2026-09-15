@@ -269,7 +269,9 @@ ConversationMgrClass::Save (ChunkSaveClass &csave)
 		//
 		//	Save the category ID
 		//
-		csave.Write (&SaveCategoryID, sizeof (SaveCategoryID));
+		// The retail field is 32 bits; ARM's enum representation can be one byte.
+		const uint32 saved_category_id = static_cast<uint32> (SaveCategoryID);
+		csave.Write (&saved_category_id, sizeof (saved_category_id));
 		
 		//
 		//	Save each conversation in this category
@@ -349,6 +351,38 @@ ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id
 //	Load
 //
 ////////////////////////////////////////////////////////////////
+static bool Read_Conversation_Category (ChunkLoadClass &cload, int &category_id)
+{
+	const uint32 length = cload.Cur_Chunk_Length ();
+	uint8 category = 0;
+	if (length < 1 || cload.Read (&category, 1) != 1 ||
+		category >= ConversationMgrClass::CATEGORY_MAX) {
+		return false;
+	}
+	category_id = category;
+
+#if defined(RENEGADE_VITA_PORT)
+	// Early native checkpoints wrote a byte-sized enum. Accept only an empty
+	// category or an immediately following, bounded original conversation chunk.
+	if (length == 1) {
+		return true;
+	}
+	if (length >= 9) {
+		uint32 next_id = 0;
+		uint32 next_size = 0;
+		if (cload.Peek_Next_Chunk (&next_id, &next_size) &&
+			next_id == CHUNKID_CONVERSATION && next_size <= length - 9) {
+			return true;
+		}
+	}
+#endif
+
+	// Standard retail/native saves contain a little-endian 32-bit category.
+	uint8 padding[3] = { 0, 0, 0 };
+	return length >= 4 && cload.Read (padding, sizeof (padding)) == sizeof (padding) &&
+		padding[0] == 0 && padding[1] == 0 && padding[2] == 0;
+}
+
 bool
 ConversationMgrClass::Load (ChunkLoadClass &cload)
 {
@@ -380,7 +414,10 @@ ConversationMgrClass::Load (ChunkLoadClass &cload)
 			case CHUNKID_CONVERSATION_CATEGORY:
 			{
 				int category_id = 0;
-				cload.Read (&category_id, sizeof (category_id));
+				if (!Read_Conversation_Category (cload, category_id)) {
+					cload.Close_Chunk ();
+					return false;
+				}
 
 				//
 				//	Remove all conversations in this category

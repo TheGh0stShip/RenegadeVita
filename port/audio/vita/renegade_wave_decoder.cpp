@@ -3,6 +3,13 @@
 #include <algorithm>
 #include <limits>
 #include <utility>
+#include <cstring>
+#include <cstdio>
+#include <new>
+#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
+#include <mpg123.h>
+#include <memory>
+#endif
 
 namespace RenegadeVitaAudio {
 namespace {
@@ -96,17 +103,43 @@ constexpr int kImaStep[89] = {
 	27086, 29794, 32767
 };
 
+struct ImaTransitions {
+	// Differences can exceed int16_t before predictor clamping. Keep the
+	// original integer width; only the next step index is restricted to 0..88.
+	int32_t differences[89][16];
+	uint8_t next_indices[89][16];
+
+	ImaTransitions()
+	{
+		for (int index = 0; index < 89; ++index) {
+			const int step = kImaStep[index];
+			for (unsigned nibble = 0; nibble < 16U; ++nibble) {
+				// Preserve individual shifts: a multiply followed by one shift
+				// would round differently for odd step values.
+				int difference = step >> 3;
+				if ((nibble & 1U) != 0U) difference += step >> 2;
+				if ((nibble & 2U) != 0U) difference += step >> 1;
+				if ((nibble & 4U) != 0U) difference += step;
+				if ((nibble & 8U) != 0U) difference = -difference;
+				differences[index][nibble] = difference;
+				next_indices[index][nibble] = static_cast<uint8_t>(
+					std::max(0, std::min(88, index + kImaIndexAdjust[nibble])));
+			}
+		}
+	}
+};
+
+// Prepared once before playback threads start, with no heap allocation or
+// asset-specific state. Reused by every mono/stereo IMA block thereafter.
+const ImaTransitions kImaTransitions;
+
 int16_t Decode_Ima_Nibble(uint8_t nibble, int *predictor, int *step_index)
 {
-	const int step = kImaStep[*step_index];
-	int difference = step >> 3;
-	if ((nibble & 1U) != 0U) difference += step >> 2;
-	if ((nibble & 2U) != 0U) difference += step >> 1;
-	if ((nibble & 4U) != 0U) difference += step;
-	if ((nibble & 8U) != 0U) difference = -difference;
+	const unsigned code = nibble & 0x0fU;
+	const int index = *step_index;
+	const int difference = kImaTransitions.differences[index][code];
 	*predictor = std::max(-32768, std::min(32767, *predictor + difference));
-	*step_index = std::max(0, std::min(88,
-		*step_index + kImaIndexAdjust[nibble & 0x0fU]));
+	*step_index = kImaTransitions.next_indices[index][code];
 	return static_cast<int16_t>(*predictor);
 }
 
@@ -316,6 +349,81 @@ uint32_t Estimate_Frame_Count(const WaveInfo &info)
 	return Saturating_U64_To_U32(frames);
 }
 
+#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
+bool Is_Mpeg_Image(const uint8_t *data, size_t bytes)
+{
+	return data != nullptr && bytes >= 12U &&
+		((data[0] == 'I' && data[1] == 'D' && data[2] == '3') ||
+		 (data[0] == 0xff && (data[1] & 0xe0) == 0xe0));
+}
+
+// The original WWAudio owner supplies encoded memory and owns playback.
+// Feeder mode performs no filesystem access and keeps decode storage bounded.
+bool Decode_Mpeg(const uint8_t *data, size_t bytes, DecodedWave *decoded,
+	WaveInfo *info, const char **error)
+{
+	if (bytes > 32U * 1024U * 1024U) return Fail("MPEG source ceiling exceeded", error);
+	static const int initialized = mpg123_init();
+	if (initialized != MPG123_OK) return Fail("MPEG decoder initialization failed", error);
+	int status = MPG123_OK;
+	std::unique_ptr<mpg123_handle, decltype(&mpg123_delete)> handle(
+		mpg123_new(nullptr, &status), mpg123_delete);
+	if (!handle) return Fail("MPEG decoder allocation failed", error);
+	mpg123_param(handle.get(), MPG123_ADD_FLAGS, MPG123_QUIET, 0.0);
+	mpg123_format_none(handle.get());
+	const long *rates = nullptr;
+	size_t rate_count = 0;
+	mpg123_rates(&rates, &rate_count);
+	for (size_t i = 0; i < rate_count; ++i)
+		mpg123_format(handle.get(), rates[i], MPG123_MONO | MPG123_STEREO, MPG123_ENC_SIGNED_16);
+	if (mpg123_open_feed(handle.get()) != MPG123_OK ||
+		mpg123_feed(handle.get(), data, bytes) != MPG123_OK)
+		return Fail("MPEG feeder rejected image", error);
+	DecodedWave output;
+	size_t sample_count = 0;
+	for (;;) {
+		int16_t pcm[4096];
+		size_t written = 0;
+		status = mpg123_read(handle.get(), pcm, sizeof(pcm), &written);
+		if (status == MPG123_NEW_FORMAT) {
+			long rate = 0;
+			int channels = 0, encoding = 0;
+			if (mpg123_getformat(handle.get(), &rate, &channels, &encoding) != MPG123_OK ||
+				rate <= 0 || rate > 48000 || (channels != 1 && channels != 2) ||
+				encoding != MPG123_ENC_SIGNED_16 ||
+				(output.channels != 0 && (output.channels != channels || output.sample_rate != unsigned(rate))))
+				return Fail("unsupported MPEG format change", error);
+			output.channels = channels;
+			output.sample_rate = rate;
+		}
+		if (written % sizeof(int16_t) != 0 || written / sizeof(int16_t) > kMaximumDecodedSamples - sample_count)
+			return Fail("MPEG decoded sample ceiling exceeded", error);
+		sample_count += written / sizeof(int16_t);
+		if (decoded != nullptr) output.samples.insert(output.samples.end(), pcm, pcm + written / sizeof(int16_t));
+		if (status == MPG123_DONE || status == MPG123_NEED_MORE) break;
+		if (status != MPG123_OK && status != MPG123_NEW_FORMAT)
+			return Fail("invalid MPEG stream", error);
+		if (status == MPG123_OK && written == 0) return Fail("MPEG decoder made no progress", error);
+	}
+	if (output.channels == 0 || sample_count == 0 || sample_count % output.channels != 0)
+		return Fail("empty or incomplete MPEG audio", error);
+	output.untrimmed_sample_frames = output.estimated_sample_frames = sample_count / output.channels;
+	if (info != nullptr) {
+		*info = {};
+		info->encoding = WaveEncoding::MpegLayer3;
+		info->channels = output.channels;
+		info->bits_per_sample = 16;
+		info->block_align = output.channels * 2;
+		info->sample_rate = output.sample_rate;
+		info->sample_frames = info->estimated_sample_frames = output.untrimmed_sample_frames;
+		info->data_bytes = bytes;
+	}
+	if (decoded != nullptr) *decoded = std::move(output);
+	if (error != nullptr) *error = nullptr;
+	return true;
+}
+#endif
+
 } // namespace
 
 bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
@@ -325,6 +433,25 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 	if (data == nullptr || info == nullptr || bytes < 12U) {
 		return Fail("truncated RIFF header", error);
 	}
+#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
+	if (Is_Mpeg_Image(data, bytes)) {
+		// WWAudio asks for duration before creating playback. Scanning encoded
+		// headers supplies that metadata without decoding the whole track again
+		// on the game thread while entering EVA.
+		auto playback = Open_Mpeg_Playback(data, bytes, error);
+		if (!playback) return false;
+		*info = {};
+		info->encoding = WaveEncoding::MpegLayer3;
+		info->channels = playback->Channels();
+		info->bits_per_sample = 16;
+		info->block_align = info->channels * 2;
+		info->sample_rate = playback->Sample_Rate();
+		info->sample_frames = info->estimated_sample_frames =
+			Saturating_U64_To_U32(playback->Frame_Count());
+		info->data_bytes = bytes;
+		return true;
+	}
+#endif
 	if (Read_U32(data) != UINT32_C(0x46464952) ||
 		Read_U32(data + 8U) != UINT32_C(0x45564157)) {
 		return Fail("not a RIFF/WAVE image", error);
@@ -424,7 +551,16 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 	const char **error)
 {
+	return Decode_Wave_With_Info(data, bytes, decoded, nullptr, error);
+}
+
+bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
+	DecodedWave *decoded, WaveInfo *parsed_info, const char **error)
+{
 	if (decoded == nullptr) return Fail("decoded output is null", error);
+#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
+	if (Is_Mpeg_Image(data, bytes)) return Decode_Mpeg(data, bytes, decoded, parsed_info, error);
+#endif
 	WaveInfo info;
 	if (!Inspect_Wave(data, bytes, &info, error)) return false;
 	DecodedWave output;
@@ -432,6 +568,19 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 	output.sample_rate = info.sample_rate;
 	output.fact_sample_frames = info.fact_sample_frames;
 	output.estimated_sample_frames = info.estimated_sample_frames;
+	if (info.encoding != WaveEncoding::Pcm) {
+		// Avoid repeatedly reallocating/copying the growing PCM vector for each
+		// ADPCM block. This is a capacity hint, not a replacement for per-frame
+		// ceilings or decoder checks. Ignore untrusted fact counts for sizing;
+		// cap estimates by both physical nibble capacity and the existing limit.
+		const uint64_t estimated_samples =
+			static_cast<uint64_t>(info.estimated_sample_frames) * info.channels;
+		const uint64_t physical_sample_bound =
+			static_cast<uint64_t>(info.data_bytes) * 2U;
+		const size_t reserve_samples = static_cast<size_t>(std::min<uint64_t>(
+			kMaximumDecodedSamples, std::min(estimated_samples, physical_sample_bound)));
+		output.samples.reserve(reserve_samples);
+	}
 	bool success = false;
 	switch (info.encoding) {
 		case WaveEncoding::Pcm:
@@ -443,6 +592,8 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 		case WaveEncoding::MicrosoftAdpcm:
 			success = Decode_Microsoft_Adpcm(data, info, &output, error);
 			break;
+		case WaveEncoding::MpegLayer3:
+			return Fail("MPEG decoder unavailable", error);
 	}
 	if (!success || output.samples.empty()) {
 		return success ? Fail("decoded WAVE is empty", error) : false;
@@ -456,7 +607,141 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 			static_cast<size_t>(output.channels));
 	}
 	*decoded = std::move(output);
+	if (parsed_info != nullptr) *parsed_info = std::move(info);
 	return true;
+}
+
+bool Is_Mpeg_Media(const uint8_t *data, size_t bytes)
+{
+	return data != nullptr && bytes >= 12U &&
+		((data[0] == 'I' && data[1] == 'D' && data[2] == '3') ||
+		(data[0] == 0xff && (data[1] & 0xe0) == 0xe0));
+}
+
+#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
+namespace {
+class MemoryMpegPlayback final : public MpegPlayback {
+	std::unique_ptr<uint8_t[]> encoded;
+	size_t encoded_bytes = 0;
+	std::unique_ptr<mpg123_handle, decltype(&mpg123_delete)> decoder{nullptr, mpg123_delete};
+	size_t input_offset = 0, frame_count = 0, cache_start = 0, cache_frames = 0;
+	uint32_t rate = 0;
+	uint16_t channels = 0;
+	int16_t pcm[8192] = {};
+	int16_t previous[2] = {};
+	bool previous_valid = false;
+
+	static mpg123_ssize_t Read(void *opaque, void *destination, size_t count)
+	{
+		auto &self = *static_cast<MemoryMpegPlayback *>(opaque);
+		count = std::min(count, self.encoded_bytes - self.input_offset);
+		std::memcpy(destination, self.encoded.get() + self.input_offset, count);
+		self.input_offset += count;
+		return static_cast<mpg123_ssize_t>(count);
+	}
+	static off_t Seek(void *opaque, off_t offset, int origin)
+	{
+		auto &self = *static_cast<MemoryMpegPlayback *>(opaque);
+		const int64_t base = origin == SEEK_SET ? 0 : origin == SEEK_CUR ?
+			static_cast<int64_t>(self.input_offset) : origin == SEEK_END ?
+			static_cast<int64_t>(self.encoded_bytes) : -1;
+		if (base < 0 || offset < -base ||
+			offset > static_cast<int64_t>(self.encoded_bytes) - base) return -1;
+		self.input_offset = static_cast<size_t>(base + offset);
+		return static_cast<off_t>(self.input_offset);
+	}
+public:
+	bool Open(const uint8_t *data, size_t bytes)
+	{
+		static const int initialized = mpg123_init();
+		if (initialized != MPG123_OK) return false;
+		encoded.reset(new (std::nothrow) uint8_t[bytes]);
+		if (!encoded) return false;
+		std::memcpy(encoded.get(), data, bytes);
+		encoded_bytes = bytes;
+		int status = 0;
+		decoder.reset(mpg123_new(nullptr, &status));
+		if (!decoder) return false;
+		mpg123_param(decoder.get(), MPG123_ADD_FLAGS, MPG123_QUIET, 0.0);
+		// MPEG-2 mono frames can need more reservoir history than the default
+		// seek pre-roll. Retain bounded pre-roll so arbitrary Miles seeks match
+		// continuous decoding instead of producing a transient at the new cursor.
+		if (mpg123_param(decoder.get(), MPG123_PREFRAMES, 16, 0.0) != MPG123_OK)
+			return false;
+		mpg123_format_none(decoder.get());
+		const long *rates = nullptr;
+		size_t count = 0;
+		mpg123_rates(&rates, &count);
+		for (size_t i = 0; i < count; ++i)
+			mpg123_format(decoder.get(), rates[i], MPG123_MONO | MPG123_STEREO, MPG123_ENC_SIGNED_16);
+		if (mpg123_replace_reader_handle(decoder.get(), Read, Seek, nullptr) != MPG123_OK ||
+			mpg123_open_handle(decoder.get(), this) != MPG123_OK) return false;
+		long sample_rate = 0;
+		int channel_count = 0, encoding = 0;
+		if (mpg123_getformat(decoder.get(), &sample_rate, &channel_count, &encoding) != MPG123_OK ||
+			sample_rate <= 0 || sample_rate > 48000 ||
+			(channel_count != 1 && channel_count != 2) || encoding != MPG123_ENC_SIGNED_16)
+			return false;
+		// Scan compressed frame headers for exact length and seeking. PCM is
+		// decoded only into the fixed window when the original mixer needs it.
+		if (mpg123_scan(decoder.get()) != MPG123_OK) return false;
+		const off_t length = mpg123_length(decoder.get());
+		if (length <= 0 || mpg123_seek(decoder.get(), 0, SEEK_SET) != 0) return false;
+		rate = static_cast<uint32_t>(sample_rate);
+		channels = static_cast<uint16_t>(channel_count);
+		frame_count = static_cast<size_t>(length);
+		return true;
+	}
+	size_t Frame_Count() const override { return frame_count; }
+	uint32_t Sample_Rate() const override { return rate; }
+	uint16_t Channels() const override { return channels; }
+	size_t PCM_Storage_Bytes() const override { return sizeof(pcm) + sizeof(previous); }
+	int16_t Sample(size_t frame, uint16_t channel) override
+	{
+		if (frame >= frame_count || channel >= channels) return 0;
+		if (previous_valid && cache_start > 0 && frame == cache_start - 1)
+			return previous[channel];
+		if (frame < cache_start || frame >= cache_start + cache_frames) {
+			const bool sequential = cache_frames != 0 && frame == cache_start + cache_frames;
+			previous_valid = sequential;
+			if (sequential) {
+				for (unsigned c = 0; c < channels; ++c)
+					previous[c] = pcm[(cache_frames - 1) * channels + c];
+			} else if (mpg123_seek(decoder.get(), static_cast<off_t>(frame), SEEK_SET) !=
+				static_cast<off_t>(frame)) return 0;
+			cache_start = frame;
+			cache_frames = 0;
+			size_t written = 0;
+			const int status = mpg123_read(decoder.get(), pcm, sizeof(pcm), &written);
+			if ((status != MPG123_OK && status != MPG123_DONE) ||
+				written % (sizeof(int16_t) * channels) != 0) return 0;
+			cache_frames = written / (sizeof(int16_t) * channels);
+			if (cache_frames == 0) return 0;
+		}
+		return pcm[(frame - cache_start) * channels + channel];
+	}
+};
+}
+#endif
+
+std::unique_ptr<MpegPlayback> Open_Mpeg_Playback(const uint8_t *data,
+	size_t bytes, const char **error)
+{
+	if (!Is_Mpeg_Media(data, bytes) || bytes > 32U * 1024U * 1024U) {
+		Fail("invalid or oversized MPEG image", error);
+		return nullptr;
+	}
+#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
+	{
+		std::unique_ptr<MemoryMpegPlayback> playback(new (std::nothrow) MemoryMpegPlayback);
+		if (playback && playback->Open(data, bytes)) {
+			if (error != nullptr) *error = nullptr;
+			return playback;
+		}
+	}
+#endif
+	Fail("MPEG playback initialization failed", error);
+	return nullptr;
 }
 
 } // namespace RenegadeVitaAudio

@@ -125,6 +125,12 @@ MapMgrClass::Set_Map_Texture (const char *filename)
 	TextureClass *texture = WW3DAssetManager::Get_Instance ()->Get_Texture (filename_only, TextureClass::MIP_LEVELS_1);
 	if (texture != NULL) {
 
+#if defined(RENEGADE_VITA_PORT)
+		// The native texture provider is lazy. MapSize must be established
+		// before original Combat clears explored cloud cells on this map.
+		texture->Init();
+#endif
+
 		//
 		//	Get the dimensions of the texture
 		//

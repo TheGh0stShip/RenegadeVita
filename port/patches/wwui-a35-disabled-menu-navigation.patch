@@ -1,0 +1,73 @@
+--- a/menuentryctrl.cpp
++++ b/menuentryctrl.cpp
+@@ -239,2 +239,5 @@
+-MenuEntryCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
+-{
++MenuEntryCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
++{
++#if RENEGADE_VITA_M00_DEMO
++	if (!Is_Enabled()) return;
++#endif
+@@ -294,2 +297,5 @@
+-MenuEntryCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
+-{
++MenuEntryCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
++{
++#if RENEGADE_VITA_M00_DEMO
++	if (!Is_Enabled()) return;
++#endif
+@@ -314,2 +320,5 @@
+-MenuEntryCtrlClass::Set_State (int new_state)
+-{
++MenuEntryCtrlClass::Set_State (int new_state)
++{
++#if RENEGADE_VITA_M00_DEMO
++	if (!Is_Enabled() && new_state != UP) return;
++#endif
+@@ -575,1 +584,1 @@
+-	if (Rect.Contains (mouse_pos)) {
++	if (Is_Enabled() && Rect.Contains (mouse_pos)) {
+@@ -650,2 +659,5 @@
+-MenuEntryCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
+-{
++MenuEntryCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
++{
++#if RENEGADE_VITA_M00_DEMO
++	if (!Is_Enabled()) return true;
++#endif
+@@ -674,1 +686,7 @@
+-			DialogControlClass *control = Parent->Find_Next_Group_Control (this, -1);
++			DialogControlClass *control = Parent->Find_Next_Group_Control (this, -1);
++#if RENEGADE_VITA_M00_DEMO
++			while (control != NULL && control != this &&
++				(!control->Is_Enabled() || !control->Is_Visible())) {
++				control = Parent->Find_Next_Group_Control(control, -1);
++			}
++#endif
+@@ -692,1 +710,7 @@
+-			DialogControlClass *control = Parent->Find_Next_Group_Control (this, 1);
++			DialogControlClass *control = Parent->Find_Next_Group_Control (this, 1);
++#if RENEGADE_VITA_M00_DEMO
++			while (control != NULL && control != this &&
++				(!control->Is_Enabled() || !control->Is_Visible())) {
++				control = Parent->Find_Next_Group_Control(control, 1);
++			}
++#endif
+@@ -730,2 +754,5 @@
+-MenuEntryCtrlClass::On_Pushed (void)
+-{
++MenuEntryCtrlClass::On_Pushed (void)
++{
++#if RENEGADE_VITA_M00_DEMO
++	if (!Is_Enabled()) return;
++#endif
+--- a/dialogmgr.cpp
++++ b/dialogmgr.cpp
+@@ -881,2 +908,5 @@
+-DialogMgrClass::Set_Focus (DialogControlClass *control)
+-{
++DialogMgrClass::Set_Focus (DialogControlClass *control)
++{
++#if RENEGADE_VITA_M00_DEMO
++	if (control != NULL && (!control->Is_Enabled() || !control->Is_Visible())) return;
++#endif

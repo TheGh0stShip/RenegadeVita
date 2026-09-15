@@ -1,0 +1,72 @@
+--- a/action.cpp
++++ b/action.cpp
+@@ -35,6 +35,9 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ #include "action.h"
++#if defined(__vita__)
++#include "a30_vita_runtime.h"
++#endif
+ #include "input.h"
+ #include "persistfactory.h"
+ #include "combatchunkid.h"
+@@ -1528,6 +1531,27 @@
+ 	virtual	ActResult	Act()
+ 	{
+ 		WWPROFILE( "Goto Act" );
++#if defined(__vita__)
++		// Sample only the original tutorial actor; no action or path mutation.
++		static unsigned logan_samples = 0;
++		static unsigned logan_calls = 0;
++		if (Action->Get_Action_Obj()->Get_ID() == 400005 && logan_samples < 128U &&
++			(FirstCall || (++logan_calls % 60U) == 0U)) {
++			++logan_samples;
++			Vector3 position;
++			Action->Get_Action_Obj()->Get_Position(&position);
++			const SafeActionParamsStruct &p = Action->Get_Parameters();
++			A30_Vita_Log("A3.5 Logan move v1: sample=%u first=%d action=%d observer=%d priority=%d waypath=%d endpoints=%d/%d pathfind=%d speed=%.3f arrive=%.3f pos=(%.3f,%.3f,%.3f) target=(%.3f,%.3f,%.3f) solver=%d path=%d remaining=%.3f mechanism_state=%d control=%d\n",
++				logan_samples, FirstCall, p.ActionID, p.ObserverID, p.Priority,
++				p.WaypathID, p.WaypointStartID, p.WaypointEndID, p.MovePathfind,
++				p.MoveSpeed, p.MoveArrivedDistance, position.X, position.Y, position.Z,
++				p.MoveLocation.X, p.MoveLocation.Y, p.MoveLocation.Z,
++				PathSolver ? int(PathSolver->Get_State()) : -1,
++				Path ? int(Path->Get_State()) : -1,
++				Path ? Path->Get_Remaining_Path_Length() : -1.0f,
++				int(PathAction.Get_State()), Action->Get_Action_Obj()->Is_Control_Enabled());
++		}
++#endif
+ 		SoldierGameObj * soldier = Action->Get_Action_Obj()->As_SoldierGameObj();
+ 		ScriptableGameObj * look_obj = Action->Get_Parameters().LookObjectRef.Get_Ptr();
+ 		if ( soldier != NULL && look_obj != NULL ) {
+@@ -3172,6 +3196,14 @@
+ 
+ void	ActionClass::Notify_Completed( int observer_id, int action_id, int reason )
+ {
++#if defined(__vita__)
++	static unsigned logan_completions = 0;
++	if (Get_Action_Obj()->Get_ID() == 400005 && logan_completions < 128U) {
++		++logan_completions;
++		A30_Vita_Log("A3.5 Logan callback v1: count=%u observer=%d action=%d reason=%d\n",
++			logan_completions, observer_id, action_id, reason);
++	}
++#endif
+ 	if ( observer_id != 0 ) {
+ 		// Find the observer and notify
+ 		SmartGameObj *	obj = Get_Action_Obj();
+@@ -3186,6 +3218,16 @@
+ 
+ bool	ActionClass::Request_Action( ActionCodeClass * action, const ActionParamsStruct & parameters )
+ {
++#if defined(__vita__)
++	static unsigned logan_requests = 0;
++	if (Get_Action_Obj()->Get_ID() == 400005 && logan_requests < 128U) {
++		++logan_requests;
++		A30_Vita_Log("A3.5 Logan request v1: count=%u action=%d observer=%d priority=%d current_priority=%d waypath=%d accepted=%d\n",
++			logan_requests, parameters.ActionID, parameters.ObserverID,
++			parameters.Priority, Parameters.Priority, parameters.WaypathID,
++			parameters.Priority >= Parameters.Priority);
++	}
++#endif
+ 	if ( parameters.Priority >= Parameters.Priority ) {
+ 		bool old_action_completed = false;
+ 		int old_observer_id = 0;

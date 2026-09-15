@@ -136,8 +136,8 @@ index 2a43b08..8619324 100755
  	}
  
 +#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
-+	if (new_weapon_state != g_vita_last_logged_weapon_view_state ||
-+		new_weapon_state == WEAPON_STATE_RELOAD) {
++	// Log state transitions once, including reload entry and exit.
++	if (new_weapon_state != g_vita_last_logged_weapon_view_state) {
 +		A30_Vita_Log("A3.5 weapon view: state candidate current=%s new=%s weapon=%s model=%s first_person=%d reload=%d firing=%d complete=%d enabled=%d\n",
 +			Vita_Weapon_View_State_Name(WeaponState),
 +			Vita_Weapon_View_State_Name(new_weapon_state),

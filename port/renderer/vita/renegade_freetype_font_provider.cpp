@@ -18,6 +18,10 @@ struct FontFace {
 	char family[64];
 	std::vector<unsigned char> data;
 	FT_Face face = nullptr;
+	int selected_point_size = 0;
+	uint16_t loaded_character = 0;
+	bool loaded_bold = false;
+	bool glyph_valid = false;
 };
 
 struct FontCandidateList {
@@ -70,7 +74,11 @@ FontCandidateList Retail_Font_Files(const char *family)
 			"DATA\\ARI_____.TTF",
 			"Fonts\\ARI_____.TTF",
 			"FONTS\\ARI_____.TTF",
-			"ARIAL.TTF"
+			"ARIAL.TTF",
+			// User-supplied font fallback: never require editing retail archives
+			// or distributing proprietary font bytes in the application.
+			"user\\fonts\\ARI_____.TTF",
+			"user\\fonts\\arial.ttf"
 		};
 		result.count = sizeof(files) / sizeof(files[0]);
 		for (size_t index = 0; index < result.count; ++index) {
@@ -89,7 +97,7 @@ bool Read_Retail_Font(const char *filename, std::vector<unsigned char> *data)
 	bool read = false;
 	if (file->Open(FileClass::READ)) {
 		const int size = file->Size();
-		if (size > 0) {
+		if (size > 0 && size <= 16 * 1024 * 1024) {
 			data->resize(static_cast<size_t>(size));
 			read = file->Read(data->data(), size) == size;
 		}
@@ -104,8 +112,11 @@ FontFace *Find_Face(const char *family)
 {
 	const FontCandidateList candidates = Retail_Font_Files(family);
 	if (candidates.count == 0U) return nullptr;
+	// Supported aliases have identical ordered retail candidate lists. Key by
+	// that canonical resource name, avoiding duplicate font bytes and FT faces.
+	const char *face_key = candidates.files[0];
 	for (FontFace &entry : g_faces) {
-		if (Equal_No_Case(entry.family, family)) return &entry;
+		if (Equal_No_Case(entry.family, face_key)) return &entry;
 	}
 	if (g_library == nullptr && FT_Init_FreeType(&g_library) != 0) return nullptr;
 	FontFace entry;
@@ -131,7 +142,7 @@ FontFace *Find_Face(const char *family)
 		FT_Done_Face(entry.face);
 		return nullptr;
 	}
-	std::strncpy(entry.family, family, sizeof(entry.family) - 1);
+	std::strncpy(entry.family, face_key, sizeof(entry.family) - 1);
 	entry.family[sizeof(entry.family) - 1] = '\0';
 	g_faces.push_back(std::move(entry));
 	return &g_faces.back();
@@ -140,9 +151,14 @@ FontFace *Find_Face(const char *family)
 bool Select_Size(FontFace *font, int point_size)
 {
 	if (font == nullptr || font->face == nullptr || point_size <= 0) return false;
+	if (font->selected_point_size == point_size) return true;
+	font->selected_point_size = 0;
+	font->glyph_valid = false;
 	// Original GDI chose a 96-DPI logical font. Keep that point-to-pixel
 	// contract independent of Vita's physical display density.
-	return FT_Set_Char_Size(font->face, 0, point_size * 64, 96, 96) == 0;
+	if (FT_Set_Char_Size(font->face, 0, point_size * 64, 96, 96) != 0) return false;
+	font->selected_point_size = point_size;
+	return true;
 }
 
 int Rounded_26_6(FT_Pos value)
@@ -170,10 +186,19 @@ int Glyph_Bitmap_Target_Left(FT_GlyphSlot glyph)
 
 bool Load_Glyph(FontFace *font, uint16_t character, bool bold)
 {
-	if (font == nullptr || font->face == nullptr ||
-		FT_Load_Char(font->face, character, kVitaFontGlyphLoadFlags) != 0) return false;
+	if (font == nullptr || font->face == nullptr) return false;
+	if (font->glyph_valid && font->loaded_character == character &&
+		font->loaded_bold == bold) return true;
+	// Measure and rasterize can share the FT glyph slot. A different glyph,
+	// size, style or failed load invalidates it; never embolden it twice.
+	font->glyph_valid = false;
+	if (FT_Load_Char(font->face, character, kVitaFontGlyphLoadFlags) != 0) return false;
 	if (bold) FT_GlyphSlot_Embolden(font->face->glyph);
-	return FT_Render_Glyph(font->face->glyph, FT_RENDER_MODE_NORMAL) == 0;
+	if (FT_Render_Glyph(font->face->glyph, FT_RENDER_MODE_NORMAL) != 0) return false;
+	font->loaded_character = character;
+	font->loaded_bold = bold;
+	font->glyph_valid = true;
+	return true;
 }
 
 } // namespace
@@ -195,7 +220,7 @@ bool RenegadeVita_Font_Measure_Glyph(const char *family, int point_size,
 	FontFace *font = Find_Face(family);
 	if (!Select_Size(font, point_size) || !Load_Glyph(font, character, bold)) return false;
 	*width = Glyph_Cell_Width(font->face->glyph);
-	*height = RenegadeVita_Font_Height(family, point_size, bold);
+	*height = std::max(Rounded_26_6(font->face->size->metrics.height), 1);
 	return *height > 0;
 }
 

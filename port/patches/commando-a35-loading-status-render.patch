@@ -2,6 +2,27 @@ diff --git a/loadingscreen.cpp b/loadingscreen.cpp
 index a98f5f8..a049f2a 100644
 --- a/loadingscreen.cpp
 +++ b/loadingscreen.cpp
+@@ -43,6 +43,9 @@ LoadingScreenClass::LoadingScreenClass()
+ 	LoadPercentageDrawn = 0;
+ 	LoadPercentageRate = 0;
++	LoadPercentageClamp = 0;
++	LastLoadProgress = -1;
++	LastConsolePercent = -1;
+ 	StatusTextBuffer[0] = '\0';
+ 
+ 	FontCharsClass *font	= StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_TXT );
+ 	backdropText.Set_Font( font );
+@@ -245,8 +248,8 @@ void LoadingScreenClass::Render(bool update_network)
+-	static int last_count = -1;
+-	static int _last_percent_drawn = -1;
++	int &last_count = LastLoadProgress;
++	int &_last_percent_drawn = LastConsolePercent;
+ 	if ( last_count != CombatManager::Get_Load_Progress() ) {
+ 		last_count = CombatManager::Get_Load_Progress();
+ 		Debug_Say(( " ****** Status Count %d at %f\n", last_count, LoadTime ));
+ 		LoadPercentage = Get_Predicted_Percentage( last_count );
+ 		LoadPercentageRate = LoadPercentage / LoadTime;
+ 		LoadPercentageClamp = Get_Predicted_Percentage( last_count+1 );
 @@ -274,6 +274,7 @@ void LoadingScreenClass::Render(bool update_network)
  	backdrop.Render();
  	backdropText.Render();
@@ -10,3 +31,14 @@ index a98f5f8..a049f2a 100644
  
  #if 0
  	StringClass txt=SaveLoadStatus::Get_Status_Text(0);
+--- a/loadingscreen.h
++++ b/loadingscreen.h
+@@ -25,6 +25,8 @@ class LoadingScreenClass
+ 	float	LoadPercentageClamp;
+ 	float	LoadPercentageRate;
+ 	char	StatusTextBuffer[128];
++	int LastLoadProgress;
++	int LastConsolePercent;
+ 
+ 	void Update_Status_Text(void);
+ 

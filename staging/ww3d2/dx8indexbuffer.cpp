@@ -47,6 +47,7 @@
 #if defined(RENEGADE_VITA_PORT)
 #include <new>
 #include <stdlib.h>
+#include "dynamic_buffer_growth.h"
 #endif
 
 #define DEFAULT_IB_SIZE 5000
@@ -492,8 +493,13 @@ void DynamicIBAccessClass::Allocate_DX8_Dynamic_Buffer()
 	// and adjust the size to the new count.
 	if (IndexCount>_DynamicDX8IndexBufferSize) {
 		REF_PTR_RELEASE(_DynamicDX8IndexBuffer);
+#if defined(RENEGADE_VITA_PORT)
+		_DynamicDX8IndexBufferSize=RenegadeVitaBufferGrowth::Capacity(
+			_DynamicDX8IndexBufferSize, IndexCount, DEFAULT_IB_SIZE);
+#else
 		_DynamicDX8IndexBufferSize=IndexCount;
 		if (_DynamicDX8IndexBufferSize<DEFAULT_IB_SIZE) _DynamicDX8IndexBufferSize=DEFAULT_IB_SIZE;
+#endif
 	}
 
 	// Create a new vb if one doesn't exist currently
@@ -530,8 +536,13 @@ void DynamicIBAccessClass::Allocate_Sorting_Dynamic_Buffer()
 	WWASSERT(new_index_count<65536);
 	if (new_index_count>_DynamicSortingIndexArraySize) {
 		REF_PTR_RELEASE(_DynamicSortingIndexArray);
+#if defined(RENEGADE_VITA_PORT)
+		_DynamicSortingIndexArraySize=RenegadeVitaBufferGrowth::Capacity(
+			_DynamicSortingIndexArraySize, new_index_count, DEFAULT_IB_SIZE);
+#else
 		_DynamicSortingIndexArraySize=new_index_count;
 		if (_DynamicSortingIndexArraySize<DEFAULT_IB_SIZE) _DynamicSortingIndexArraySize=DEFAULT_IB_SIZE;
+#endif
 	}
 
 	if (!_DynamicSortingIndexArray) {

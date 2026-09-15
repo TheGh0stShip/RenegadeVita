@@ -1,0 +1,103 @@
+--- a/dlgconfigaudiotab.cpp
++++ b/dlgconfigaudiotab.cpp
+@@ -35,6 +35,7 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ #include "dlgconfigaudiotab.h"
++#include "renegade_vita_options.h"
+ #include "resource.h"
+ #include "sliderctrl.h"
+ #include "wwaudio.h"
+@@ -605,7 +606,11 @@
+ 	WWAudioClass::Get_Instance ()->Allow_Dialog (dialog_on);
+ 	WWAudioClass::Get_Instance ()->Allow_Cinematic_Sound (cinematic_on);
+ 	WWAudioClass::Get_Instance ()->Set_Speaker_Type (speaker_type);
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	return RenegadeVitaOptions::Save_Audio(*WWAudioClass::Get_Instance());
++#else
+ 	return true;
++#endif
+ }
+ 
+ 
+--- a/dlgconfigvideotab.cpp
++++ b/dlgconfigvideotab.cpp
+@@ -37,3 +37,4 @@
+ #include "dlgconfigvideotab.h"
++#include "translatedb.h"
+ #include "resource.h"
+ #include "ww3d.h"
+@@ -166,6 +166,11 @@
+ 	Set_Dlg_Item_Text(IDC_GAMMA_SETTING, L"Fixed");
+ 	Set_Dlg_Item_Text(IDC_BRIGHTNESS_SETTING, L"Fixed");
+ 	Set_Dlg_Item_Text(IDC_CONTRAST_SETTING, L"Fixed");
++	for (int i = 0; i < Get_Control_Count(); ++i) {
++		if (WideStringClass(Get_Control(i)->Get_Text()) == TRANSLATE(IDS_MENU_TEXT745))
++			Get_Control(i)->Set_Text(L"PlayStation Vita uses a fixed 960 x 544 display. Adjust screen brightness with the PS button quick menu.");
++	}
++
+ #endif
+ 
+ 	ChildDialogClass::On_Init_Dialog ();
+--- a/dlgconfigperformancetab.cpp
++++ b/dlgconfigperformancetab.cpp
+@@ -35,6 +35,7 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ #include "dlgconfigperformancetab.h"
++#include "renegade_vita_options.h"
+ #include "resource.h"
+ #include "registry.h"
+ #include "comboboxctrl.h"
+@@ -330,6 +331,14 @@
+ 		// Original particle-detail registry value is consumed only by the
+ 		// desktop initializer; no live native setter exists for this control.
+ 		Enable_Dlg_Item(IDC_PARTICLE_DETAIL_SLIDER, false);
++		Enable_Dlg_Item(IDC_CHAR_SHADOWS_SLIDER, false);
++		Enable_Dlg_Item(IDC_TERRAIN_SHADOW_CHECK, false);
++		Enable_Dlg_Item(IDC_NPATCH_CHECK, false);
++	for (int i = 0; i < Get_Control_Count(); ++i) {
++		if (WideStringClass(Get_Control(i)->Get_Text()) == TRANSLATE(IDS_READ_ONLY))
++			Get_Control(i)->Set_Text(L"Lighting, texture filtering and unavailable effects use fixed settings in this Vita build.");
++	}
++
+ #endif
+ 
+ 		//
+@@ -520,6 +529,9 @@
+ 		//	Determine which control we are updating
+ 		//
+ 		int ctrl_id = _PerformanceLevels[level][index].ctrl_id;
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		if (!Is_Dlg_Item_Enabled(ctrl_id)) continue;
++#endif
+ 		switch (ctrl_id) {
+ 
+ 			//
+@@ -625,8 +637,16 @@
+ 		//
+ 		//	Store the values in the registry
+ 		//
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		int static_budget = 0, dynamic_budget = 0;
++		COMBAT_SCENE->Get_Polygon_Budgets(&static_budget, &dynamic_budget);
++		if (current[4] != InitialSettings[4]) static_budget = dynamic_budget = lod_budget;
++		registry.Set_Int (VALUE_NAME_DYN_LOD, dynamic_budget);
++		registry.Set_Int (VALUE_NAME_STATIC_LOD, static_budget);
++#else
+ 		registry.Set_Int (VALUE_NAME_DYN_LOD, lod_budget);
+ 		registry.Set_Int (VALUE_NAME_STATIC_LOD, lod_budget);
++#endif
+ 
+ 		registry.Set_Int (VALUE_NAME_DYN_SHADOWS, (shadow_mode != PhysicsSceneClass::SHADOW_MODE_NONE));
+ 		registry.Set_Int (VALUE_NAME_STATIC_SHADOWS, static_shadows);
+@@ -659,6 +679,9 @@
+ 		}
+ 		WW3D::Set_Texture_Reduction (max (2 - texture_red, 0));
+ 		SurfaceEffectsManager::Set_Mode ((SurfaceEffectsManager::MODE)surface_effect);
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		return RenegadeVitaOptions::Save_Performance(*COMBAT_SCENE);
++#endif
+ 	}
+ 
+ 	return true;

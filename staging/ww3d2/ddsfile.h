@@ -135,7 +135,9 @@ struct LegacyDDSURFACEDESC2 {
 	};
 	unsigned AlphaBitDepth;
 	unsigned Reserved;
-	void* Surface;
+	// Serialized DX7 field, never a live pointer. Preserve the original
+	// 32-bit disk layout on both Vita and retained 64-bit validation hosts.
+	unsigned Surface;
 	union
 	{
 		LegacyDDCOLORKEY CKDestOverlay;
@@ -148,6 +150,9 @@ struct LegacyDDSURFACEDESC2 {
 	LegacyDDSCAPS2 Caps;
 	unsigned TextureStage;
 };
+
+static_assert(sizeof(LegacyDDSURFACEDESC2) == 124,
+	"DDS surface descriptor must retain its original 124-byte disk layout");
 
 // ----------------------------------------------------------------------------
 //

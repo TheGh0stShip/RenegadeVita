@@ -35,6 +35,8 @@ struct RenegadeFileFactoryStatistics
 	uint32_t read_bytes;
 	uint32_t write_calls;
 	uint32_t write_bytes;
+	uint32_t readonly_availability_skips;
+	uint32_t readonly_open_skips;
 };
 
 void Renegade_File_Factory_Reset_Statistics(void);
@@ -65,6 +67,7 @@ private:
 	RenegadeResolvedPath LastResolution;
 	bool PhysicalNamePrepared;
 	RenegadePathAccess PreparedAccess;
+	bool NativeProbeForced;
 };
 
 class RenegadeRootedFileFactoryClass : public FileFactoryClass

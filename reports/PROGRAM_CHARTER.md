@@ -2,11 +2,26 @@
 
 ## Evidence-led objective
 
-Deliver a native Vita port that retains authentic EA/Westwood Renegade engine
-and gameplay ownership, uses legally user-supplied unchanged retail data, and
-reaches a physically tested, representative playable campaign path. This is a
-Vita-only source port, not a new game, PSP application, viewer, or asset
-conversion runtime.
+Deliver a complete native PlayStation Vita port of Renegade, retaining authentic
+EA/Westwood engine and gameplay ownership and using legally user-supplied,
+unchanged retail data. The durable end-state is the complete game, not M00,
+a demo, or only a representative campaign slice. Full campaign coverage,
+original gameplay/presentation systems, lifecycle stability, performance, and
+original networking capability through supported provider boundaries remain
+tracked toward that end-state. This is not a new game, PSP application, viewer,
+or asset-conversion runtime.
+
+The user's 2026-09-08 clarification makes the M00-only community demo an interim
+showcase of the Renegade Vita project's work. Its release gates do not replace
+the full-port roadmap. Demo-only launch restrictions and completion credits
+belong to a separate build profile, not permanent restrictions on the engine.
+The existing representative-campaign milestones are intermediate deliveries,
+not a declaration that the full port is finished. The target remains 60 FPS+.
+Final physical acceptance requires both PS Vita and PSTV; physical testing is
+authorized on PS Vita by the user's 2026-09-14 full-demo test request.
+PSTV testing remains on hold. Earlier emulator evidence does not establish
+physical correctness, and emulator incompatibilities alone do not justify
+changes to the native port.
 
 Evidence precedence is: immutable physical evidence with matching artifacts;
 current source/build/test evidence; reconciled state/status reports; then

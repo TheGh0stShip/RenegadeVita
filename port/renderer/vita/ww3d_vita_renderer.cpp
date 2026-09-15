@@ -27,10 +27,13 @@ void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
 
 #if defined(__vita__)
 #include "vita_runtime_log.h"
+#include "renegade_vita_text_entry.h"
 
 #include <psp2/io/stat.h>
 #include <psp2/kernel/sysmem.h>
 #include <vitaGL.h>
+#include "ww3d_vita_indexed_mesh_batch.h"
+extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
 #endif
 
 namespace RenegadeVitaRenderer {
@@ -47,8 +50,16 @@ int g_deformed_skin_capacity = 0;
 bool Ensure_Deformed_Skin_Scratch(int vertex_count)
 {
 	if (vertex_count <= g_deformed_skin_capacity) return true;
-	Vector3 *vertices = new (std::nothrow) Vector3[vertex_count];
-	Vector3 *normals = new (std::nothrow) Vector3[vertex_count];
+	// Avoid reallocating both arrays for every slightly larger character mesh.
+	// Bound spare capacity to ordinary skin sizes; unusually large legitimate
+	// meshes still receive their exact requested capacity, not a size rejection.
+	int capacity = vertex_count;
+	if (vertex_count <= 16384) {
+		capacity = 256;
+		while (capacity < vertex_count) capacity *= 2;
+	}
+	Vector3 *vertices = new (std::nothrow) Vector3[capacity];
+	Vector3 *normals = new (std::nothrow) Vector3[capacity];
 	if (vertices == NULL || normals == NULL) {
 		delete[] vertices;
 		delete[] normals;
@@ -58,7 +69,7 @@ bool Ensure_Deformed_Skin_Scratch(int vertex_count)
 	delete[] g_deformed_skin_normals;
 	g_deformed_skin_vertices = vertices;
 	g_deformed_skin_normals = normals;
-	g_deformed_skin_capacity = vertex_count;
+	g_deformed_skin_capacity = capacity;
 	return true;
 }
 
@@ -190,18 +201,77 @@ struct NativeRenderStateCache {
 
 NativeTextureStageCache g_texture_stage_cache[MeshMatDescClass::MAX_TEX_STAGES] = {};
 NativeRenderStateCache g_render_state_cache = {};
+
+// Dev127 candidate reuses invariant platform work. Original draw order,
+// materials and texture ownership remain unchanged. RVRC1 0 restores the
+// baseline for a matching physical comparison; no native acceptance is implied.
+unsigned g_render_work_cache_mode = 15U;
+VitaIndexedMeshBatch g_indexed_mesh_batch;
+uint64_t g_mesh_expanded_corners = 0, g_mesh_unique_vertices = 0;
+uint64_t g_mesh_indexed_batches = 0;
+struct NativeTextureObjectSampler {
+	uint32_t texture;
+	GLenum wrap_u;
+	GLenum wrap_v;
+	GLenum min_filter;
+	GLenum mag_filter;
+	uint32_t generation;
+};
+enum { TEXTURE_OBJECT_SAMPLER_SLOTS = 1024 };
+NativeTextureObjectSampler g_texture_object_samplers[TEXTURE_OBJECT_SAMPLER_SLOTS] = {};
+uint32_t g_texture_object_sampler_generation = 1U;
+
+void Invalidate_Texture_Object_Samplers()
+{
+	// Uploads and external GL users invalidate all object parameters. Tags make
+	// the normal invalidation O(1), including repeated procedural HUD uploads.
+	++g_texture_object_sampler_generation;
+	if (g_texture_object_sampler_generation == 0U) {
+		memset(g_texture_object_samplers, 0, sizeof(g_texture_object_samplers));
+		g_texture_object_sampler_generation = 1U;
+	}
+}
+
+void Read_Render_Work_Cache_Mode()
+{
+	g_render_work_cache_mode = 15U;
+	FILE *file = fopen("ux0:data/renegade/user/config/render-work-cache-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVRC1 ", 6U) == 0 &&
+			value[7] == '\n') {
+			if (value[6] >= '0' && value[6] <= '9') {
+				g_render_work_cache_mode = static_cast<unsigned>(value[6] - '0');
+			} else if (value[6] >= 'A' && value[6] <= 'F') {
+				g_render_work_cache_mode = 10U + static_cast<unsigned>(value[6] - 'A');
+			}
+		}
+	}
+	Vita_Append_A22_Runtime_Breadcrumb("render-work-cache",
+		"version=1 mode=%u sampler=%u material=%u direct_atlas_and_dds=%u indexed_work=%u default=15 acceptance=unassessed",
+		g_render_work_cache_mode, g_render_work_cache_mode & 1U,
+		(g_render_work_cache_mode >> 1U) & 1U,
+		(g_render_work_cache_mode >> 2U) & 1U,
+		(g_render_work_cache_mode >> 3U) & 1U);
+}
 bool g_original_shader_state_known = false;
 uint32_t g_original_shader_state_bits = 0U;
+bool g_original_shader_culling_inverted = false;
 
 void Invalidate_Original_Shader_State_Cache()
 {
 	g_original_shader_state_known = false;
 	g_original_shader_state_bits = 0U;
+	g_original_shader_culling_inverted = false;
 }
 
 void Invalidate_Native_State_Cache()
 {
 	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
+	Invalidate_Texture_Object_Samplers();
 	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
 	Invalidate_Original_Shader_State_Cache();
 	memset(&g_current_native_viewport, 0, sizeof(g_current_native_viewport));
@@ -626,9 +696,9 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uvs[vertex_index].X;
 		source_t = uvs[vertex_index].Y;
 	}
-	if (mode == D3DTSS_TCI_PASSTHRU &&
-		!Has_Loadscreen_Texture_Prefix(texture_name) &&
-		!g_logged_first_passthrough_texture_v_preserved) {
+	if (!g_logged_first_passthrough_texture_v_preserved &&
+		mode == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name)) {
 		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
 			"first gameplay passthrough texture V preserved: texture=%s stage=%u",
 			texture_name != NULL ? texture_name : "none", stage);
@@ -639,8 +709,8 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
 		&s, &t);
 	glMultiTexCoord2f(texture_unit, s, t);
-	if (Uses_Generated_Texture_Coordinates(state) &&
-		!g_logged_first_generated_texture_coordinate) {
+	if (!g_logged_first_generated_texture_coordinate &&
+		Uses_Generated_Texture_Coordinates(state)) {
 		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
 			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) final=(%.3f,%.3f)",
 			stage, static_cast<unsigned>(mode),
@@ -750,9 +820,9 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uv[0];
 		source_t = uv[1];
 	}
-	if (mode == D3DTSS_TCI_PASSTHRU &&
-		!Has_Loadscreen_Texture_Prefix(texture_name) &&
-		!g_logged_first_passthrough_texture_v_preserved) {
+	if (!g_logged_first_passthrough_texture_v_preserved &&
+		mode == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name)) {
 		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
 			"first indexed gameplay passthrough texture V preserved: texture=%s stage=%u",
 			texture_name != NULL ? texture_name : "none", stage);
@@ -764,8 +834,8 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
 		&s, &t);
 	glMultiTexCoord2f(texture_unit, s, t);
-	if (Uses_Generated_Texture_Coordinates(state) &&
-		!g_logged_first_generated_texture_coordinate) {
+	if (!g_logged_first_generated_texture_coordinate &&
+		Uses_Generated_Texture_Coordinates(state)) {
 		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
 			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) final=(%.3f,%.3f)",
 			stage, static_cast<unsigned>(mode),
@@ -780,8 +850,11 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 {
 	Apply_Original_Fog_State(shader);
 	const uint32_t shader_bits = shader.Get_Bits();
+	// Original culling inversion is global, not encoded in ShaderClass bits.
+	const bool culling_inverted = ShaderClass::Is_Backface_Culling_Inverted();
 	if (g_original_shader_state_known &&
-		g_original_shader_state_bits == shader_bits) {
+		g_original_shader_state_bits == shader_bits &&
+		g_original_shader_culling_inverted == culling_inverted) {
 		if (!g_logged_first_original_shader_state_skip) {
 			Vita_Append_A22_Runtime_Breadcrumb("render-state",
 				"first cached original ShaderClass state skip: bits=%08X",
@@ -835,7 +908,7 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		state.color_write ? GL_TRUE : GL_FALSE, state.color_write ? GL_TRUE : GL_FALSE);
 	if (state.cull) {
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		glCullFace(culling_inverted ? GL_FRONT : GL_BACK);
 	} else glDisable(GL_CULL_FACE);
 	g_texture_stage_cache[0].enabled_known = true;
 	g_texture_stage_cache[0].enabled =
@@ -852,6 +925,7 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 	Invalidate_Render_State_Cache(D3DRS_CULLMODE);
 	g_original_shader_state_known = true;
 	g_original_shader_state_bits = shader_bits;
+	g_original_shader_culling_inverted = culling_inverted;
 	++g_statistics.state_changes;
 }
 
@@ -1194,11 +1268,83 @@ struct MaterialVertexColor {
 	unsigned light_count;
 };
 
+struct MaterialLightDirections {
+	Vector3 normalized[4];
+};
+
+void Prepare_Material_Light_Directions(const RenderInfoClass &render_info,
+	MaterialLightDirections &directions)
+{
+	const LightEnvironmentClass *environment = render_info.light_environment;
+	if (environment == NULL) return;
+	const int light_count = environment->Get_Light_Count();
+	for (int index = 0; index < light_count && index < 4; ++index) {
+		directions.normalized[index] = Normalize_Or_Default(
+			environment->Get_Light_Direction(index), Vector3(0.0f, 0.0f, 1.0f));
+		++g_statistics.material_light_normalizations;
+	}
+}
+
+struct CachedMaterialVertexColor {
+	MaterialVertexColor color;
+	VertexMaterialClass *material;
+	unsigned vertex_index;
+	uint32_t generation;
+};
+
+CachedMaterialVertexColor *g_material_color_scratch = NULL;
+int g_material_color_capacity = 0;
+uint32_t g_material_color_generation = 0U;
+uint64_t g_material_skin_rgb_skips = 0U;
+
+bool Begin_Material_Color_Pass(int vertex_count)
+{
+	if ((g_render_work_cache_mode & 2U) == 0U) return false;
+	// Scratch never grows with scene residency and never survives as cached
+	// values across a pass, mesh, frame, skin deformation or load boundary.
+	// Large meshes use direct-mapped entries rather than losing reuse entirely.
+	// Vertex/material keys make collisions evictions, never stale color hits.
+	if (vertex_count <= 0) {
+		++g_statistics.material_color_cache_fallback_passes;
+		return false;
+	}
+	const int entry_count = vertex_count < 8192 ? vertex_count : 8192;
+	if (entry_count > g_material_color_capacity) {
+		CachedMaterialVertexColor *replacement =
+			new (std::nothrow) CachedMaterialVertexColor[entry_count];
+		if (replacement == NULL) {
+			++g_statistics.material_color_cache_fallback_passes;
+			return false;
+		}
+		for (int index = 0; index < entry_count; ++index) {
+			replacement[index].generation = 0U;
+		}
+		delete[] g_material_color_scratch;
+		g_material_color_scratch = replacement;
+		g_material_color_capacity = entry_count;
+		g_statistics.material_color_cache_bytes =
+			static_cast<uint64_t>(entry_count) * sizeof(CachedMaterialVertexColor);
+	}
+	// Starting a pass is O(1), not a sweep of every possible vertex slot.
+	// Zero is reserved for unused entries; wrap clears all allocated entries
+	// before reusing generation one, including slots outside this smaller mesh.
+	++g_material_color_generation;
+	if (g_material_color_generation == 0U) {
+		for (int index = 0; index < g_material_color_capacity; ++index) {
+			g_material_color_scratch[index].generation = 0U;
+		}
+		g_material_color_generation = 1U;
+	}
+	return true;
+}
+
 MaterialVertexColor Evaluate_Original_Material_Vertex_Color(
 	VertexMaterialClass *material, const unsigned *color1,
 	const unsigned *color2, unsigned vertex_index, const Vector3 *normals,
-	const Matrix3D &world_transform, const RenderInfoClass &render_info)
+	const Matrix3D &world_transform, const RenderInfoClass &render_info,
+	const MaterialLightDirections *light_directions)
 {
+	++g_statistics.material_color_evaluations;
 	Vector3 material_diffuse(1.0f, 1.0f, 1.0f);
 	Vector3 material_ambient(1.0f, 1.0f, 1.0f);
 	Vector3 material_emissive(0.0f, 0.0f, 0.0f);
@@ -1246,9 +1392,11 @@ MaterialVertexColor Evaluate_Original_Material_Vertex_Color(
 		const int light_count = light_environment->Get_Light_Count();
 		for (int light_index = 0; light_index < light_count && light_index < 4;
 			++light_index) {
-			const Vector3 light_direction = Normalize_Or_Default(
-				light_environment->Get_Light_Direction(light_index),
-				Vector3(0.0f, 0.0f, 1.0f));
+			const Vector3 light_direction = light_directions != NULL ?
+				light_directions->normalized[light_index] : Normalize_Or_Default(
+					light_environment->Get_Light_Direction(light_index),
+					Vector3(0.0f, 0.0f, 1.0f));
+			if (light_directions == NULL) ++g_statistics.material_light_normalizations;
 			const float dot = Vector3::Dot_Product(normal, light_direction);
 			if (dot > 0.0f) {
 				lit_color += Multiply_Color(diffuse.color,
@@ -1260,6 +1408,59 @@ MaterialVertexColor Evaluate_Original_Material_Vertex_Color(
 	}
 	result.final_color = Clamp_Color(lit_color);
 	return result;
+}
+
+float Evaluate_Original_Diffuse_Alpha(VertexMaterialClass *material,
+	const unsigned *color1, const unsigned *color2, unsigned vertex_index)
+{
+	if (material == NULL) return 1.0f;
+	const VertexMaterialClass::ColorSourceType source =
+		material->Get_Diffuse_Color_Source();
+	const unsigned *colors = source == VertexMaterialClass::COLOR1 ? color1 :
+		(source == VertexMaterialClass::COLOR2 ? color2 : NULL);
+	return colors != NULL ? Decode_DX8_ARGB_Alpha(colors[vertex_index]) :
+		material->Get_Opacity();
+}
+
+MaterialVertexColor Evaluate_Material_Vertex_Color(bool cache_material_colors,
+	VertexMaterialClass *material, const unsigned *color1, const unsigned *color2,
+	unsigned vertex_index, const Vector3 *normals, const Matrix3D &world_transform,
+	const RenderInfoClass &render_info, const MaterialLightDirections &light_directions,
+	bool discarded_skin_rgb = false)
+{
+	// The existing textured-skin path overwrites RGB with white before glColor.
+	// Retain the original diffuse alpha source, including absent-array fallback.
+	// First-color diagnostics request the complete evaluator at the call site.
+	if (discarded_skin_rgb && (g_render_work_cache_mode & 2U) != 0U) {
+		MaterialVertexColor submitted = {};
+		submitted.final_color = Vector3(1.0f, 1.0f, 1.0f);
+		submitted.alpha = Evaluate_Original_Diffuse_Alpha(material, color1,
+			color2, vertex_index);
+		++g_material_skin_rgb_skips;
+		return submitted;
+	}
+	MaterialVertexColor vertex_color;
+	CachedMaterialVertexColor *cached_color = cache_material_colors ?
+		&g_material_color_scratch[vertex_index & 8191U] : NULL;
+	if (cached_color != NULL &&
+		cached_color->generation == g_material_color_generation &&
+		cached_color->vertex_index == vertex_index &&
+		cached_color->material == material) {
+		vertex_color = cached_color->color;
+		++g_statistics.material_color_cache_hits;
+	} else {
+		vertex_color = Evaluate_Original_Material_Vertex_Color(material,
+			color1, color2, vertex_index, normals,
+			world_transform, render_info,
+			cache_material_colors ? &light_directions : NULL);
+		if (cached_color != NULL) {
+			cached_color->color = vertex_color;
+			cached_color->material = material;
+			cached_color->vertex_index = vertex_index;
+			cached_color->generation = g_material_color_generation;
+		}
+	}
+	return vertex_color;
 }
 
 void Log_System_Memory(const char *stage)
@@ -1426,10 +1627,33 @@ void Log_Indexed_Rejection(const char *reason, uint32_t vertex_format)
 
 } // namespace
 
+bool Use_Direct_Text_Atlas_Upload()
+{
+#if defined(__vita__)
+	if ((g_render_work_cache_mode & 4U) != 0U) {
+		++g_statistics.direct_text_atlas_requests;
+		return true;
+	}
+#endif
+	return false;
+}
+
+bool Use_Native_DDS_Upload()
+{
+#if defined(__vita__)
+	return (g_render_work_cache_mode & 4U) != 0U;
+#else
+	return false;
+#endif
+}
+
 void Invalidate_Texture_State_Cache()
 {
 #if defined(__vita__)
 	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
+	// Uploads, external GL mutation and deletion may change a native object's
+	// parameters or recycle its name. Never retain object memos across them.
+	Invalidate_Texture_Object_Samplers();
 	Invalidate_Original_Shader_State_Cache();
 #endif
 }
@@ -1468,6 +1692,19 @@ bool Build_Indexed_Transform_Matrices(const float *world_transform,
 			2.0f * projection_transform[row * 4U + 2U] -
 			projection_transform[row * 4U + 3U];
 	}
+	return true;
+}
+
+bool Map_Native_Pixel_To_Logical(float x, float y, float logical_width,
+	float logical_height, float &logical_x, float &logical_y)
+{
+	const NativePresentationRect &rect = g_native_presentation_rect;
+	if (!(logical_width > 0.0f) || !(logical_height > 0.0f) ||
+		rect.width == 0U || rect.height == 0U ||
+		!(x >= rect.x && y >= rect.y &&
+		  x < rect.x + rect.width && y < rect.y + rect.height)) return false;
+	logical_x = (x - rect.x) * logical_width / rect.width;
+	logical_y = (y - rect.y) * logical_height / rect.height;
 	return true;
 }
 
@@ -1743,6 +1980,7 @@ bool Initialize()
 	g_shader_compiler_available = false;
 	g_shader_init_calls = 0;
 	g_shader_init_last_result = -1;
+	Read_Render_Work_Cache_Mode();
 	Invalidate_Native_State_Cache();
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "vglInit entry");
@@ -1859,6 +2097,11 @@ void Shutdown()
 	g_lifecycle.logical_session_active = false;
 	Release_Deformed_Skin_Scratch();
 #if defined(__vita__)
+	delete[] g_material_color_scratch;
+	g_material_color_scratch = NULL;
+	g_material_color_capacity = 0;
+	g_material_color_generation = 0U;
+	g_statistics.material_color_cache_bytes = 0U;
 	Invalidate_Native_State_Cache();
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-lifecycle",
 		"logical shutdown: shutdowns=%u sessions=%u native_calls=%u native_ready=%d",
@@ -1908,7 +2151,7 @@ void End_Frame(bool present)
 			Vita_Append_A22_Runtime_Breadcrumb("render-frame",
 				"WW3D first End_Frame present entry: frame_before=%u", vglGetFrameNumber());
 		}
-		vglSwapBuffers(GL_FALSE);
+		vglSwapBuffers(RenegadeVitaTextEntry::Active() ? GL_TRUE : GL_FALSE);
 		const GLenum present_error = glGetError();
 		if (present_error != GL_NO_ERROR) {
 			++g_statistics.backend_errors;
@@ -1918,6 +2161,24 @@ void End_Frame(bool present)
 				"WW3D first End_Frame present return: frame_after=%u glGetError=%08X",
 				vglGetFrameNumber(), static_cast<unsigned>(present_error));
 			g_logged_first_present = true;
+		}
+		if (g_statistics.frames % 120U == 0U) {
+			Vita_Append_A22_Runtime_Breadcrumb("render-work-cache",
+				"version=1 mode=%u frame=%u sampler_writes=%llu material_evaluations=%llu material_hits=%llu fallback_passes=%llu scratch_bytes=%llu object_table_bytes=%u direct_atlas_requests=%llu light_normalizations=%llu mesh_corners=%llu mesh_unique=%llu mesh_batches=%llu mesh_scratch=%u skin_rgb_skips=%llu",
+				g_render_work_cache_mode, g_statistics.frames,
+				static_cast<unsigned long long>(g_statistics.texture_sampler_parameter_writes),
+				static_cast<unsigned long long>(g_statistics.material_color_evaluations),
+				static_cast<unsigned long long>(g_statistics.material_color_cache_hits),
+				static_cast<unsigned long long>(g_statistics.material_color_cache_fallback_passes),
+				static_cast<unsigned long long>(g_statistics.material_color_cache_bytes),
+				static_cast<unsigned>(sizeof(g_texture_object_samplers)),
+				static_cast<unsigned long long>(g_statistics.direct_text_atlas_requests),
+				static_cast<unsigned long long>(g_statistics.material_light_normalizations),
+				static_cast<unsigned long long>(g_mesh_expanded_corners),
+				static_cast<unsigned long long>(g_mesh_unique_vertices),
+				static_cast<unsigned long long>(g_mesh_indexed_batches),
+				static_cast<unsigned>(sizeof(g_indexed_mesh_batch)),
+				static_cast<unsigned long long>(g_material_skin_rgb_skips));
 		}
 	}
 #else
@@ -2080,10 +2341,12 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	// maps its established address/filter contract to VitaGL; it does not add a
 	// Vita sensitivity, cache, or material policy of its own.
 	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
-	if (cache.sampler_known && cache.sampler_texture == native_texture &&
+	const bool sampler_matches = cache.sampler_known && cache.sampler_texture == native_texture &&
 		cache.address_u == address_u && cache.address_v == address_v &&
 		cache.min_filter == min_filter && cache.mag_filter == mag_filter &&
-		cache.mip_filter == mip_filter) {
+		cache.mip_filter == mip_filter;
+	const bool binding_matches = cache.texture_known && cache.texture == native_texture;
+	if (sampler_matches && binding_matches) {
 		++g_statistics.texture_sampler_skips;
 		return true;
 	}
@@ -2096,14 +2359,54 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	} else if (mip_filter == 2U || mip_filter == 3U) {
 		native_min = point_min ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR;
 	}
+	const GLenum native_mag = mag_filter == 1U ? GL_NEAREST : GL_LINEAR;
+	NativeTextureObjectSampler &object_sampler = g_texture_object_samplers[
+		(native_texture * 2654435761U) & (TEXTURE_OBJECT_SAMPLER_SLOTS - 1U)];
+	const bool object_known = (g_render_work_cache_mode & 1U) != 0U &&
+		object_sampler.generation == g_texture_object_sampler_generation &&
+		object_sampler.texture == native_texture;
+	const bool write_u = !object_known || object_sampler.wrap_u != wrap_u;
+	const bool write_v = !object_known || object_sampler.wrap_v != wrap_v;
+	const bool write_min = !object_known || object_sampler.min_filter != native_min;
+	const bool write_mag = !object_known || object_sampler.mag_filter != native_mag;
+	const bool write_sampler = write_u || write_v || write_min || write_mag;
+	if (!write_sampler && binding_matches) {
+		++g_statistics.texture_sampler_skips;
+		return true;
+	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
-	glBindTexture(GL_TEXTURE_2D, native_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_u);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_v);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, native_min);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-		mag_filter == 1U ? GL_NEAREST : GL_LINEAR);
+	if (!binding_matches) {
+		glBindTexture(GL_TEXTURE_2D, native_texture);
+		++g_statistics.texture_binds;
+	} else {
+		++g_statistics.texture_bind_skips;
+	}
+	// glTexParameteri mutates the texture object, not the active stage.
+	// Another stage's memo for this object must not survive a sampler write,
+	// including a partially failed write. Other texture objects remain cached.
+	for (uint32_t other = 0U; other < MeshMatDescClass::MAX_TEX_STAGES; ++other) {
+		NativeTextureStageCache &alias = g_texture_stage_cache[other];
+		if (alias.sampler_texture == native_texture) alias.sampler_known = false;
+	}
+	// The original sequential DX8 state changes remain immediate. Suppress
+	// only unchanged native object parameters, not intermediate owner states.
+	// Clear before any write so a partially failed update cannot become a hit.
+	object_sampler.generation = 0U;
+	if (write_u) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_u);
+	if (write_v) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_v);
+	if (write_min) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, native_min);
+	if (write_mag) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, native_mag);
+	g_statistics.texture_sampler_parameter_writes +=
+		static_cast<unsigned>(write_u) + static_cast<unsigned>(write_v) +
+		static_cast<unsigned>(write_min) + static_cast<unsigned>(write_mag);
 	glActiveTexture(GL_TEXTURE0);
+	if (write_sampler) ++g_statistics.texture_sampler_updates;
+	else ++g_statistics.texture_sampler_skips;
+	if (glGetError() != GL_NO_ERROR) {
+		cache.texture_known = false;
+		++g_statistics.backend_errors;
+		return false;
+	}
 	cache.texture_known = true;
 	cache.texture = native_texture;
 	cache.sampler_known = true;
@@ -2113,11 +2416,12 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	cache.min_filter = min_filter;
 	cache.mag_filter = mag_filter;
 	cache.mip_filter = mip_filter;
-	++g_statistics.texture_sampler_updates;
-	if (glGetError() != GL_NO_ERROR) {
-		++g_statistics.backend_errors;
-		return false;
-	}
+	object_sampler.texture = native_texture;
+	object_sampler.wrap_u = wrap_u;
+	object_sampler.wrap_v = wrap_v;
+	object_sampler.min_filter = native_min;
+	object_sampler.mag_filter = native_mag;
+	object_sampler.generation = g_texture_object_sampler_generation;
 #else
 	(void)address_u;
 	(void)address_v;
@@ -2278,7 +2582,10 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 			glDisable(GL_CULL_FACE);
 		} else {
 			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
+			// The native baseline keeps GL's counterclockwise front faces.
+			// DX8 names the winding to discard, not the winding to retain.
+			// Preserve normal CW culling and distinguish the inverted mode.
+			glCullFace(value == D3DCULL_CCW ? GL_FRONT : GL_BACK);
 		}
 		break;
 	case D3DRS_FILLMODE:
@@ -2497,6 +2804,88 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			current_texture_coordinates[MeshMatDescClass::MAX_TEX_STAGES] = {};
 		bool current_detail_stage = false;
 		bool primitive_open = false;
+		const bool cache_material_colors = Begin_Material_Color_Pass(vertex_count);
+		MaterialLightDirections light_directions;
+		if (cache_material_colors) {
+			Prepare_Material_Light_Directions(render_info, light_directions);
+		}
+		const bool indexed_batch = (g_render_work_cache_mode & 8U) != 0U;
+		bool current_texturing = false;
+		auto emit_vertex = [&](unsigned vertex_index, bool emit_position) {
+				if (bound_textures[0] != NULL) {
+					Emit_Original_Texture_Coordinate(0U, GL_TEXTURE0,
+						current_texture_coordinates[0], current_uvs[0], vertices,
+						normals, vertex_index, original_world_transform,
+						original_view_transform,
+						bound_textures[0]->Get_Texture_Name().Peek_Buffer());
+				}
+				if (current_detail_stage) {
+					const Vector2 *detail_uvs =
+						current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
+					Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,
+						current_texture_coordinates[1], detail_uvs, vertices,
+						normals, vertex_index, original_world_transform,
+						original_view_transform,
+						bound_textures[1]->Get_Texture_Name().Peek_Buffer());
+				}
+			/* Preserve the original mesh material color owner.  The former Vita
+			** bridge invented RGB from each normal, visibly recoloring otherwise
+			** valid NPC skin textures.  The current path now evaluates original
+			** VertexMaterial lighting and color-source state below the WW3D
+			** boundary before handing the result to vitaGL for texture modulation. */
+			VertexMaterialClass *material =
+				model->Peek_Material(static_cast<int>(vertex_index), pass);
+			const bool skin_color_passthrough = is_skin && bound_textures[0] != NULL &&
+				current_texturing;
+			const bool record_original_skin_color = skin_color_passthrough &&
+				!g_logged_first_skin_texture_color &&
+				!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
+				!Is_Loading_Screen_Diagnostic_Name(
+					bound_textures[0]->Get_Texture_Name().Peek_Buffer());
+			const MaterialVertexColor vertex_color = Evaluate_Material_Vertex_Color(
+				cache_material_colors, material, color1, color2, vertex_index,
+				normals, original_world_transform, render_info, light_directions,
+				skin_color_passthrough && !record_original_skin_color &&
+					g_logged_first_material_lighting);
+			Vector3 final_color = vertex_color.final_color;
+			if (skin_color_passthrough) {
+				if (record_original_skin_color) {
+					Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
+						"first textured skin color pass-through: mesh=%s pass=%d texture=%s material_lighting=%d original_rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
+						mesh.Get_Name(), pass,
+						bound_textures[0]->Get_Texture_Name().Peek_Buffer(),
+						vertex_color.lighting ? 1 : 0, final_color.X,
+						final_color.Y, final_color.Z, vertex_color.alpha);
+					g_logged_first_skin_texture_color = true;
+				}
+				final_color = Vector3(1.0f, 1.0f, 1.0f);
+			}
+			if (!g_logged_first_material_lighting) {
+				Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+					"first original material lighting: mesh=%s pass=%d lighting=%d lights=%u color1=%d color2=%d rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
+					mesh.Get_Name(), pass, vertex_color.lighting ? 1 : 0,
+					vertex_color.light_count, color1 != NULL ? 1 : 0,
+					color2 != NULL ? 1 : 0, final_color.X, final_color.Y,
+					final_color.Z, vertex_color.alpha);
+				g_logged_first_material_lighting = true;
+			}
+			glColor4f(Clamp01(final_color.X), Clamp01(final_color.Y),
+				Clamp01(final_color.Z), Clamp01(vertex_color.alpha));
+			if (emit_position) glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
+				vertices[vertex_index].Z);
+		};
+		auto end_batch = [&]() {
+			if (indexed_batch && g_indexed_mesh_batch.Count() != 0U) {
+				// Immediate GL attributes persist across draws. Restore the final
+				// original corner even when its vertex was reused from earlier.
+				emit_vertex(g_indexed_mesh_batch.Last(), false);
+				vglRenegadeEndIndexed(g_indexed_mesh_batch.Count(),
+					g_indexed_mesh_batch.Indices());
+				g_mesh_expanded_corners += g_indexed_mesh_batch.Count();
+				g_mesh_unique_vertices += g_indexed_mesh_batch.Vertices();
+				++g_mesh_indexed_batches;
+			} else glEnd();
+		};
 		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
 			TextureClass *triangle_textures[MeshMatDescClass::MAX_TEX_STAGES] = {
 				model->Peek_Texture(triangle_index, pass, 0),
@@ -2517,12 +2906,13 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				triangle_material != current_material ||
 				detail_stage != current_detail_stage ||
 				triangle_shader_bits != current_shader_bits || !primitive_open) {
-				if (primitive_open) glEnd();
+				if (primitive_open) end_batch();
 				bound_textures[0] = triangle_textures[0];
 				bound_textures[1] = triangle_textures[1];
 				current_material = triangle_material;
 				current_detail_stage = detail_stage;
 				current_shader_bits = triangle_shader_bits;
+				current_texturing = triangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;
 				// ShaderClass remains the authoritative original material policy.
 				// Translate only the fixed-function state VitaGL exposes here; this
 				// preserves alpha-cutout, conventional transparency and additive fire.
@@ -2580,6 +2970,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 						current_uvs[1] != NULL ? 1 : 0);
 					g_logged_first_stage1_mesh = true;
 				}
+				if (indexed_batch) g_indexed_mesh_batch.Reset();
 				glBegin(GL_TRIANGLES);
 				primitive_open = true;
 			}
@@ -2601,68 +2992,19 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				vertex_indices[2] >= static_cast<unsigned>(vertex_count)) {
 				continue;
 			}
+			if (indexed_batch && g_indexed_mesh_batch.Full()) {
+				end_batch();
+				g_indexed_mesh_batch.Reset();
+				glBegin(GL_TRIANGLES);
+			}
 			for (int corner = 0; corner < 3; ++corner) {
 				const unsigned vertex_index = vertex_indices[corner];
-					if (bound_textures[0] != NULL) {
-						Emit_Original_Texture_Coordinate(0U, GL_TEXTURE0,
-							current_texture_coordinates[0], current_uvs[0], vertices,
-							normals, vertex_index, original_world_transform,
-							original_view_transform,
-							bound_textures[0]->Get_Texture_Name().Peek_Buffer());
-					}
-					if (current_detail_stage) {
-						const Vector2 *detail_uvs =
-							current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
-						Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,
-							current_texture_coordinates[1], detail_uvs, vertices,
-							normals, vertex_index, original_world_transform,
-							original_view_transform,
-							bound_textures[1]->Get_Texture_Name().Peek_Buffer());
-					}
-				/* Preserve the original mesh material color owner.  The former Vita
-				** bridge invented RGB from each normal, visibly recoloring otherwise
-				** valid NPC skin textures.  The current path now evaluates original
-				** VertexMaterial lighting and color-source state below the WW3D
-				** boundary before handing the result to vitaGL for texture modulation. */
-				VertexMaterialClass *material =
-					model->Peek_Material(static_cast<int>(vertex_index), pass);
-				MaterialVertexColor vertex_color =
-					Evaluate_Original_Material_Vertex_Color(material, color1,
-						color2, vertex_index, normals, original_world_transform,
-						render_info);
-				Vector3 final_color = vertex_color.final_color;
-				if (is_skin && bound_textures[0] != NULL &&
-					triangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE) {
-					if (!g_logged_first_skin_texture_color &&
-						!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
-						!Is_Loading_Screen_Diagnostic_Name(
-							bound_textures[0]->Get_Texture_Name().Peek_Buffer())) {
-						Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
-							"first textured skin color pass-through: mesh=%s pass=%d texture=%s material_lighting=%d original_rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
-							mesh.Get_Name(), pass,
-							bound_textures[0]->Get_Texture_Name().Peek_Buffer(),
-							vertex_color.lighting ? 1 : 0, final_color.X,
-							final_color.Y, final_color.Z, vertex_color.alpha);
-						g_logged_first_skin_texture_color = true;
-					}
-					final_color = Vector3(1.0f, 1.0f, 1.0f);
+				if (!indexed_batch || g_indexed_mesh_batch.Append(vertex_index)) {
+					emit_vertex(vertex_index, true);
 				}
-				if (!g_logged_first_material_lighting) {
-					Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
-						"first original material lighting: mesh=%s pass=%d lighting=%d lights=%u color1=%d color2=%d rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
-						mesh.Get_Name(), pass, vertex_color.lighting ? 1 : 0,
-						vertex_color.light_count, color1 != NULL ? 1 : 0,
-						color2 != NULL ? 1 : 0, final_color.X, final_color.Y,
-						final_color.Z, vertex_color.alpha);
-					g_logged_first_material_lighting = true;
-				}
-				glColor4f(Clamp01(final_color.X), Clamp01(final_color.Y),
-					Clamp01(final_color.Z), Clamp01(vertex_color.alpha));
-				glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
-					vertices[vertex_index].Z);
 			}
 		}
-		if (primitive_open) glEnd();
+		if (primitive_open) end_batch();
 	}
 	Disable_Texture_Stage(1U);
 	Apply_Original_Texture_Coordinate_State(NULL);
@@ -2739,6 +3081,19 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	}
 
 	const uint32_t declared_end = submission.min_vertex_index + submission.vertex_count;
+	uint32_t checksum = g_statistics.indexed_geometry_checksum;
+	checksum = Mix_Checksum(checksum, submission.vertex_format);
+	checksum = Mix_Checksum(checksum, submission.vertex_stride);
+	checksum = Mix_Checksum(checksum, submission.first_index);
+	checksum = Mix_Checksum(checksum, submission.triangle_count);
+	checksum = Mix_Checksum(checksum, submission.base_vertex_index);
+	checksum = Mix_Checksum(checksum, submission.min_vertex_index);
+	checksum = Mix_Checksum(checksum, submission.vertex_count);
+#if defined(__vita__)
+	const bool fused_index_preparation = (g_render_work_cache_mode & 8U) != 0U;
+#else
+	const bool fused_index_preparation = false;
+#endif
 	for (uint32_t offset = 0; offset < requested_indices; ++offset) {
 		const uint32_t relative_index =
 			submission.index_data[submission.first_index + offset];
@@ -2748,6 +3103,23 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 			++g_statistics.rejected_indexed_submissions;
 			Log_Indexed_Rejection("referenced vertex range", submission.vertex_format);
 			return INDEXED_SUBMISSION_VERTEX_RANGE_ERROR;
+		}
+		if (fused_index_preparation) {
+			// Preserve bounds checks and checksum order, including repeated indices.
+			// Commit this local checksum only after the entire draw is valid.
+			const uint32_t actual_index = submission.base_vertex_index + relative_index;
+			const unsigned char *vertex = submission.vertex_data +
+				actual_index * submission.vertex_stride;
+			float position[3];
+			uint32_t diffuse = 0U;
+			memcpy(position, vertex, sizeof(position));
+			memcpy(&diffuse, vertex + 24U, sizeof(diffuse));
+			checksum = Mix_Checksum(checksum, relative_index);
+			checksum = Mix_Checksum(checksum, actual_index);
+			checksum = Mix_Checksum(checksum, Float_Bits(position[0]));
+			checksum = Mix_Checksum(checksum, Float_Bits(position[1]));
+			checksum = Mix_Checksum(checksum, Float_Bits(position[2]));
+			checksum = Mix_Checksum(checksum, diffuse);
 		}
 	}
 	IndexedTransformMatrices transform_matrices = {};
@@ -2760,16 +3132,8 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		return INDEXED_SUBMISSION_MISSING_TRANSFORM;
 	}
 
-	uint32_t checksum = g_statistics.indexed_geometry_checksum;
-	checksum = Mix_Checksum(checksum, submission.vertex_format);
-	checksum = Mix_Checksum(checksum, submission.vertex_stride);
-	checksum = Mix_Checksum(checksum, submission.first_index);
-	checksum = Mix_Checksum(checksum, submission.triangle_count);
-	checksum = Mix_Checksum(checksum, submission.base_vertex_index);
-	checksum = Mix_Checksum(checksum, submission.min_vertex_index);
-	checksum = Mix_Checksum(checksum, submission.vertex_count);
-
-	for (uint32_t offset = 0; offset < requested_indices; ++offset) {
+	// Keep the separate baseline traversal available for later comparison.
+	for (uint32_t offset = 0; !fused_index_preparation && offset < requested_indices; ++offset) {
 		const uint32_t relative_index =
 			submission.index_data[submission.first_index + offset];
 		const uint32_t actual_index = submission.base_vertex_index + relative_index;
@@ -2807,55 +3171,74 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	const uint32_t uv0_offset = 28U;
 	const uint32_t uv1_offset = dynamic_two_uv_layout ? 36U : uv0_offset;
 
+	const bool indexed_batch = fused_index_preparation;
+	auto emit_indexed_vertex = [&](uint32_t actual_index, bool emit_position) {
+		const unsigned char *vertex = submission.vertex_data +
+			actual_index * submission.vertex_stride;
+		float position[3];
+		float normal[3];
+		float uv0[2];
+		float uv1[2];
+		uint32_t diffuse = 0;
+		memcpy(position, vertex, 3U * sizeof(float));
+		/* Render2D's original dynamic FVF retains a second UV slot after
+		 * the populated first UV. Its leading position/normal/diffuse
+		 * layout is therefore identical to the mesh layout. */
+		memcpy(&diffuse, vertex + diffuse_offset, sizeof(diffuse));
+		memcpy(normal, vertex + 12U, 3U * sizeof(float));
+		memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
+		memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
+		glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
+			static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
+			static_cast<GLubyte>(diffuse & 0xffU),
+			static_cast<GLubyte>((diffuse >> 24U) & 0xffU));
+		if (mesh_layout || dynamic_two_uv_layout) {
+			glNormal3f(normal[0], normal[1], normal[2]);
+		} else {
+			glNormal3f(0.0f, 0.0f, 1.0f);
+		}
+			Emit_Indexed_Texture_Coordinate(0U, GL_TEXTURE0,
+				texture_coordinates[0], uv0, uv1, position, normal,
+				submission.world_transform, submission.view_transform,
+				submission.texture_names[0]);
+			Emit_Indexed_Texture_Coordinate(1U, GL_TEXTURE1,
+				texture_coordinates[1], uv0, uv1, position, normal,
+				submission.world_transform, submission.view_transform,
+				submission.texture_names[1]);
+		if (emit_position) glVertex3f(position[0], position[1], position[2]);
+	};
+	auto end_indexed_batch = [&]() {
+		if (indexed_batch && g_indexed_mesh_batch.Count()) {
+			emit_indexed_vertex(g_indexed_mesh_batch.Last(), false);
+			vglRenegadeEndIndexed(g_indexed_mesh_batch.Count(), g_indexed_mesh_batch.Indices());
+			g_mesh_expanded_corners += g_indexed_mesh_batch.Count();
+			g_mesh_unique_vertices += g_indexed_mesh_batch.Vertices();
+			++g_mesh_indexed_batches;
+		} else glEnd();
+	};
+	if (indexed_batch) g_indexed_mesh_batch.Reset();
 	glBegin(GL_TRIANGLES);
 	for (uint32_t triangle = 0; triangle < submission.triangle_count; ++triangle) {
+		if (indexed_batch && g_indexed_mesh_batch.Full()) {
+			end_indexed_batch();
+			g_indexed_mesh_batch.Reset();
+			glBegin(GL_TRIANGLES);
+		}
 		for (uint32_t corner = 0; corner < 3U; ++corner) {
-			const uint32_t index_offset = triangle * 3U + corner;
 			const uint32_t relative_index = submission.index_data[
-				submission.first_index + index_offset];
+				submission.first_index + triangle * 3U + corner];
 			const uint32_t actual_index = submission.base_vertex_index + relative_index;
-			const unsigned char *vertex = submission.vertex_data +
-				actual_index * submission.vertex_stride;
-			float position[3];
-			float normal[3];
-			float uv0[2];
-			float uv1[2];
-			uint32_t diffuse = 0;
-			memcpy(position, vertex, 3U * sizeof(float));
-			/* Render2D's original dynamic FVF retains a second UV slot after
-			 * the populated first UV. Its leading position/normal/diffuse
-			 * layout is therefore identical to the mesh layout. */
-			memcpy(&diffuse, vertex + diffuse_offset, sizeof(diffuse));
-			memcpy(normal, vertex + 12U, 3U * sizeof(float));
-			memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
-			memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
-			glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
-				static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
-				static_cast<GLubyte>(diffuse & 0xffU),
-				static_cast<GLubyte>((diffuse >> 24U) & 0xffU));
-			if (mesh_layout || dynamic_two_uv_layout) {
-				glNormal3f(normal[0], normal[1], normal[2]);
-			} else {
-				glNormal3f(0.0f, 0.0f, 1.0f);
+			if (!indexed_batch || g_indexed_mesh_batch.Append(actual_index)) {
+				emit_indexed_vertex(actual_index, true);
 			}
-				Emit_Indexed_Texture_Coordinate(0U, GL_TEXTURE0,
-					texture_coordinates[0], uv0, uv1, position, normal,
-					submission.world_transform, submission.view_transform,
-					submission.texture_names[0]);
-				Emit_Indexed_Texture_Coordinate(1U, GL_TEXTURE1,
-					texture_coordinates[1], uv0, uv1, position, normal,
-					submission.world_transform, submission.view_transform,
-					submission.texture_names[1]);
-			glVertex3f(position[0], position[1], position[2]);
 		}
 	}
-	glEnd();
+	end_indexed_batch();
 	const uint32_t emitted_triangles = submission.triangle_count;
 	Disable_Texture_Stage(1U);
 
-	// The accepted A2.2 Submit_Mesh path emits already-projected coordinates
-	// and deliberately remains unchanged.  Restore its identity convention in
-	// case both original paths are traversed within one diagnostic frame.
+	// Restore the shared identity baseline after homogeneous GPU submission.
+	// Both mesh and generic indexed draws load their original transforms.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
@@ -2925,7 +3308,8 @@ void Submit_Decals_Unsupported()
 	}
 }
 
-bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes)
+bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes,
+	bool presented_frame)
 {
 	const size_t required = static_cast<size_t>(DISPLAY_WIDTH) *
 		static_cast<size_t>(DISPLAY_HEIGHT) * 4U;
@@ -2933,18 +3317,25 @@ bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes)
 		return false;
 	}
 #if defined(__vita__)
+	memset(output, 0, required);
 	(void)glGetError();
-	/* vglReadPixels performs GPU-backed readback of the active resolved color
-	** target. The runtime invokes this after original WW3D traversal and before
-	** the swap, so the clean image is exactly the frame about to be presented. */
-	vglReadPixels(0, 0, static_cast<GLsizei>(DISPLAY_WIDTH),
+	// vitaGL rotates the back-buffer index in vglSwapBuffers. A post-present
+	// capture must read the front buffer, not the next render destination.
+	glReadBuffer(presented_frame ? GL_FRONT : GL_BACK);
+	// Keep the RGBA8888 CPU readback path. The pinned GPU-transfer variant
+	// uses a negative display stride and Dev122 fails inside Vita3K during
+	// this loading capture. Emulator framebuffer screenshots remain separate
+	// evidence until native readback synchronization is validated.
+	glReadPixels(0, 0, static_cast<GLsizei>(DISPLAY_WIDTH),
 		static_cast<GLsizei>(DISPLAY_HEIGHT), GL_RGBA, GL_UNSIGNED_BYTE, output);
 	const GLenum error = glGetError();
+	glReadBuffer(GL_BACK);
 	if (error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
 		return false;
 	}
 #else
+	(void)presented_frame;
 	memset(output, 0, required);
 #endif
 	return true;
@@ -2977,6 +3368,10 @@ bool Query_Backend_Memory(BackendMemoryStatistics &memory)
 
 void Reset_Statistics()
 {
+#if defined(__vita__)
+	g_mesh_expanded_corners = g_mesh_unique_vertices = g_mesh_indexed_batches = 0;
+	g_material_skin_rgb_skips = 0U;
+#endif
 	const bool initialized = g_statistics.initialized;
 	g_statistics = {};
 	g_statistics.initialized = initialized;

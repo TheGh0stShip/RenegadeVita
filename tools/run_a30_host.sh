@@ -42,7 +42,7 @@ cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_build" -G Ninja \
 	-DRENEGADE_USE_CCACHE=ON
 grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
 cmake --build "$rv_build" --target a30_wwphys_definition_runtime \
-	 a31_gameplay_seed_runtime a31_capture_telemetry_selftest \
+	 a31_gameplay_seed_runtime a31_interactive_runtime a31_capture_telemetry_selftest \
 	 a31_vita_input_contract_selftest a35_vita_button_state_contract_selftest \
 	 a35_vita_render_state_contract_selftest a32_texture_upload_contract_selftest \
 	 a36_m01_mix_probe a36_mix_index a36_cache_health_contract_selftest \

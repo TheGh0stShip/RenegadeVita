@@ -1,0 +1,99 @@
+--- a/vertmaterial.cpp
++++ b/vertmaterial.cpp
+@@ -431,1 +431,2 @@
+-	W3dVertexMaterialStruct vmat;
++	W3dVertexMaterialStruct vmat = {};
++	bool has_material_info = false;
+@@ -437,1 +438,10 @@
+-	unsigned int mapping1_arg_len = 0U;
++	unsigned int mapping1_arg_len = 0U;
++
++	// Original chunk and mapper ownership stays unchanged; scope cleanup also
++	// covers malformed chunks, repeated argument blocks and failed reads.
++	struct MapperBufferCleanup {
++		char *&Zero;
++		char *&One;
++		MapperBufferCleanup(char *&zero, char *&one) : Zero(zero), One(one) {}
++		~MapperBufferCleanup() { delete [] Zero; delete [] One; }
++	} mapper_cleanup(mapping0_arg_buffer, mapping1_arg_buffer);
+@@ -441,4 +451,11 @@
+-			case W3D_CHUNK_VERTEX_MATERIAL_NAME:
+-				cload.Read(&name,cload.Cur_Chunk_Length());
+-				hasname = true;
+-				break;
++			case W3D_CHUNK_VERTEX_MATERIAL_NAME:
++			{
++				const unsigned int name_len = cload.Cur_Chunk_Length();
++				if (name_len == 0U || name_len > sizeof(name) ||
++					cload.Read(name, name_len) != name_len ||
++					name[name_len - 1U] != '\0') {
++					return WW3D_ERROR_LOAD_FAILED;
++				}
++				hasname = true;
++				break;
++			}
+@@ -446,5 +463,6 @@
+-			case W3D_CHUNK_VERTEX_MATERIAL_INFO:
+-				if (cload.Read(&vmat,sizeof(vmat)) != sizeof(vmat)) {
+-					return WW3D_ERROR_LOAD_FAILED;
+-				}
+-				break;
++			case W3D_CHUNK_VERTEX_MATERIAL_INFO:
++				if (cload.Read(&vmat,sizeof(vmat)) != sizeof(vmat)) {
++					return WW3D_ERROR_LOAD_FAILED;
++				}
++				has_material_info = true;
++				break;
+@@ -452,5 +470,10 @@
+-				mapping0_arg_len = cload.Cur_Chunk_Length();
+-				mapping0_arg_buffer = new char[mapping0_arg_len];
+-				if (cload.Read(mapping0_arg_buffer, mapping0_arg_len) != mapping0_arg_len) {
+-					return WW3D_ERROR_LOAD_FAILED;
+-				}
++				mapping0_arg_len = cload.Cur_Chunk_Length();
++				if (mapping0_arg_len > ~0U - 20U) return WW3D_ERROR_LOAD_FAILED;
++				delete [] mapping0_arg_buffer;
++				mapping0_arg_buffer = NULL;
++				mapping0_arg_buffer = new char[mapping0_arg_len + 1U];
++				if (mapping0_arg_buffer == NULL ||
++					cload.Read(mapping0_arg_buffer, mapping0_arg_len) != mapping0_arg_len) {
++					return WW3D_ERROR_LOAD_FAILED;
++				}
++				mapping0_arg_buffer[mapping0_arg_len] = '\0';
+@@ -460,5 +483,10 @@
+-				mapping1_arg_len = cload.Cur_Chunk_Length();
+-				mapping1_arg_buffer = new char[mapping1_arg_len];
+-				if (cload.Read(mapping1_arg_buffer, mapping1_arg_len) != mapping1_arg_len) {
+-					return WW3D_ERROR_LOAD_FAILED;
+-				}
++				mapping1_arg_len = cload.Cur_Chunk_Length();
++				if (mapping1_arg_len > ~0U - 20U) return WW3D_ERROR_LOAD_FAILED;
++				delete [] mapping1_arg_buffer;
++				mapping1_arg_buffer = NULL;
++				mapping1_arg_buffer = new char[mapping1_arg_len + 1U];
++				if (mapping1_arg_buffer == NULL ||
++					cload.Read(mapping1_arg_buffer, mapping1_arg_len) != mapping1_arg_len) {
++					return WW3D_ERROR_LOAD_FAILED;
++				}
++				mapping1_arg_buffer[mapping1_arg_len] = '\0';
+@@ -471,1 +499,3 @@
+-	if (hasname) {
++	if (!has_material_info) return WW3D_ERROR_LOAD_FAILED;
++
++	if (hasname) {
+@@ -480,2 +510,5 @@
+-		char *extended_arg_buffer = new char[mapping0_arg_len + 10];
+-		sprintf(extended_arg_buffer, "[Args]\n%s", mapping0_arg_buffer);
++		char *extended_arg_buffer = new char[mapping0_arg_len + 10];
++		if (extended_arg_buffer == NULL) return WW3D_ERROR_LOAD_FAILED;
++		memcpy(extended_arg_buffer, "[Args]\n", 7U);
++		memcpy(extended_arg_buffer + 7U, mapping0_arg_buffer, mapping0_arg_len);
++		extended_arg_buffer[mapping0_arg_len + 7U] = '\0';
+@@ -497,2 +530,5 @@
+-		char *extended_arg_buffer = new char[mapping1_arg_len + 20];
+-		sprintf(extended_arg_buffer, "[Args]\n%s", mapping1_arg_buffer);
++		char *extended_arg_buffer = new char[mapping1_arg_len + 20];
++		if (extended_arg_buffer == NULL) return WW3D_ERROR_LOAD_FAILED;
++		memcpy(extended_arg_buffer, "[Args]\n", 7U);
++		memcpy(extended_arg_buffer + 7U, mapping1_arg_buffer, mapping1_arg_len);
++		extended_arg_buffer[mapping1_arg_len + 7U] = '\0';

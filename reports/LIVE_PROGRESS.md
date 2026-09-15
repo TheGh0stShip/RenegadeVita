@@ -1,5 +1,850 @@
 # Live engineering progress
 
+User steering (2026-09-15): physical Vita tests are authorized after the next
+milestone. Gate: Dev134 canonical host/sanitizer/ARM/package closure and matching
+Vita3K visual regression. Then recheck target identity/reachability at
+10.0.0.202:1337, preserve installed matching artifacts, and conduct bounded physical
+tests with frame-time evidence. No device access before that milestone. This
+supersedes the earlier indefinite physical hold; emulator FPS remains irrelevant.
+
+## Dev134 active: discarded character RGB work
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev134 canonical and matching visual milestone PASS. Physical executable
+and VPK deployed/readback verified; user launch required (command1338 refused).
+Completed: Dev133 native SELECT/SELECT/Cross reaches Load Delete, controller No
+preserves every save, clean Exit. Return: build/dev133-discovery-return/ (56 files).
+Evidence: Dev134 24 focused checks; production material/mesh ASan/UBSan; fixed
+host submitted-skin median 164.5 -> 19.6 us, unchanged alpha and scratch storage.
+Evidence: build/dev134-refinery-return/return-receipt.json (42 files), native
+clean exit, all14 saves intact; physical deployment receipt at
+build/device-evidence/dev134-deployment-20260915T024507Z/deployment.json.
+Next: physical Dev134 boot/runtime log collection and native frame-time analysis.
+Local follow-up: two prewarm 64-bit printf corrections pass strict ARM format
+checking and eight loading-screen contracts; deployed Dev134 stays frozen.
+Blocker: manual LiveArea launch; FTP available, remote control refuses connections.
+The 300-second read-only monitor ended with no Dev134 log; receipt retained next
+to deployment. No active monitor remains; resume collection after physical run.
+No build/emulator/GDB. No native FPS gain claimed. Earlier entries are history.
+
+## Dev133 active: repeated Load factory lifecycle
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev133 native runtime return retained at build/dev133-reload-return/
+return-receipt.json (275 files). Four original reloads, Load Delete No/Yes,
+SELECT input without capture, Help label and native clean Exit pass.
+Artifacts frozen at build/dev133-closed-incremental/receipt.json (34 files).
+Completed: Dev132 native IME cancel/accept/reopen, named original Save/Load,
+overwrite No/Yes, Save Delete and native END clean. All 14 existing saves
+unchanged; only disposable savegame03.sav removed from Dev132.
+Evidence: build/dev132-keyboard-return/return-receipt.json, 168 files, 15 released
+native input steps. Repeated Load FAIL confirmed by touch and Cross after reload.
+Factory baseline FAIL on cycle two; corrected normal/UBSan PASS. SELECT gesture
+and diagnostics/camera contracts PASS (5 focused checks).
+Next: native Load list-to-Delete sequence and targeted original vehicle/building
+discovery checkpoints, then FPS audit. Follow-up host focus passes both lifetimes:
+SELECT from List reaches Back, Delete, Load, List. No production focus bug found.
+Frozen Dev133 is running bounded Vita3K check Dev133-discovery-20260915-r2,
+owned PID26488, 900-second watchdog. No GDB or build running.
+Blocker: none locally. Physical testing held; native 60 FPS remains unproven.
+Earlier entries below are historical.
+
+## Dev132 active: native save-description keyboard
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev132 incremental ARM/ELF/SELF/VPK and identity PASS; matching artifacts
+frozen in build/dev132-closed-incremental/receipt.json (30 files). Prepare
+native IME cancel/accept and named Save/Load tests in Vita3K.
+Completed: native-width and host-width session tests pass ASan/UBSan for text
+bounds, malformed UTF16, cancellation, owner destruction, failed termination,
+repeated entry and release-before-menu-input. Dev131 controller checks retained.
+Evidence: build/dev132-text-entry-tests.log; 181 zero-fuzz staging patches pass.
+Original host and retained UBSan regression pass two M00 cycles each.
+All 151 focused checks PASS. Next: native keyboard cancel/
+accept/reopen and named Save/Load checks. Cycle Objectives and populated vehicle/
+building pages remain; hardware optimization audit follows menu correctness.
+Blocker: none locally. Physical testing held; native FPS and release unaccepted.
+
+Earlier entries below are historical.
+
+## Dev131 active: controller confirmation focus
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev131 controller confirmation, Save/Delete and Exit regression passes in
+the native ARM app under Vita3K. Continue native text-entry and populated pages.
+Completed: Dev130 independently exercises all pause items. Map and both zooms,
+statistics, Help, settings persistence, Save/Load/Delete and Exit pass functional
+checks. Fresh Weapons and naturally discovered Mobius Characters show models
+and descriptions. Both native runs end clean; no physical acceptance.
+Evidence: build/dev130-fresh-return/return-receipt.json (200 files),
+build/dev130-mobius-return/return-receipt.json (142 files). Long Mobius pause
+did not reproduce the Dev129 hang; its root cause remains unresolved.
+Evidence: Dev131 host baseline FAIL; corrected host and retained UBSan two-cycle
+checks, 149 focused checks and incremental ARM/package closure PASS. Retained
+runtime: build/dev131-controller-return/return-receipt.json. No preserves the
+test save hash; Yes deletes only that save. Mobius discovery survives reload.
+Native Exit Yes ends clean; owned emulator shell stops without force. Wrapper
+reports null process exit separately and is not a zero-exit proof.
+Next: native save-description entry, Cycle Objectives binding and representative
+populated Vehicle/Building checks; then continue the hardware optimization audit.
+Blocker: none for local work. Native save text entry and populated vehicle/
+building checks remain. Physical testing held; native 60 FPS and full demo open.
+
+Earlier entries below are historical.
+
+## Dev130 active: fix independently reproduced pause failures
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev130 native ARM build and package identity pass. Independently repeat
+every pause action, fresh discovery, settings persistence and save/load.
+Completed: Dev129 exercised all seven tabs and every bottom action. Map, Data,
+Help and all Options pages render; Save creates a structurally valid original
+M00 save. Load is blank; Exit confirmation incomplete; old checkpoint has zero
+discovery entries. Mobius START enters EVA during speech, resumes, then hangs
+after frame 600. Clean exit, discovery models and save/load remain unaccepted.
+Evidence: build/dev129-pause-return/return-receipt.json (101 files),
+build/dev129-closed-incremental/receipt.json (30 matching artifact files).
+Next: original settings callbacks and disk reload pass two host M00 cycles and
+retained UBSan. Install this exact package into Vita3K and start fresh M00.
+Blocker: none for local work. Physical testing held; hardware 60 FPS unproven.
+
+Latest: Dev130 retained M00 UBSan, 149 focused checks and ARM package identity
+pass (incremental, not canonical acceptance). Controlled Dev129 baseline stays responsive to frame
+8160, narrowing the earlier hang to the longer menu sequence or an intermittent
+fault. See build/dev129-mobius-debug-return/return-receipt.json. No hang fix or
+clean-exit acceptance is claimed.
+
+Earlier entries below are historical.
+
+## Dev129 active: independent pause-menu audit
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev129 build and matching identities passed. Prepare bounded emulator
+checks of every pause item, controller save/load, and START during Mobius speech.
+Completed: matching Dev128 emulator return shows Map, statistics and objective
+text, navigation to all seven tabs, and resumed Mobius gameplay. Four viewer
+lists are empty. Bottom actions are disabled; touch conversion is incorrect.
+Evidence: build/dev128-pause-return/return-receipt.json; 15 touch/frontend checks,
+247 RC controls, 22 save/free-space cases and two M00 UBSan cycles with original
+starting-weapon discovery and settings behavior pass. All 147 fast checks pass. See
+DEV129_PAUSE_MENU_AUDIT.md for exact limits and remaining steps.
+Next: automated all-page/button checks, then settings persistence corrections.
+Physical testing remains held; no 60 FPS claim.
+Blocker: none for local work.
+
+Earlier work-unit entries below are historical.
+
+## Dev128 active: remaining EVA pages and DDS residency
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: latest user reports black Map, missing statistics text and other pause
+items. Trace original MapMgr, player statistics, dialog resources and viewer
+reveal data; validate each page in Vita3K after correction.
+User reiterates hardware-only tuning: ARM/GXM/memory/CPU specifications govern
+implementation. Vita3K is for functional smoke checks, never an FPS target.
+The user requires independent checks of every tab and button, including
+Help/Save/Load/Options, which the current source explicitly disables.
+Completed: canonical Dev127 and matching identity passed. Initial emulator
+run reached movies/menu/M00; second run opened EVA and visibly confirmed a
+black Map. Developer checkpoint was disabled, so Mobius was not reached.
+Evidence: build/dev127-initial-return/ and build/dev127-early-pause-return/.
+Dev128 DDS chain source passes ASan/UBSan: 800 compressed layouts, 12 retained
+surface chains and 8 production owner transactions. ARM integration is pending.
+Confirmed: lazy map/marker dimensions and omitted RC visibility/alignment are
+corrected. LLVM RC comparison passes all 116 controls. The unavailable-renderer
+row loop is corrected with production sanitizer coverage. Retained M00 UBSan
+passes two cycles with map readiness and statistics player identity checked.
+Stronger debugging found the host map uses a 2x2 fallback because a serialized
+DDS pointer expands on LP64. Positive dimensions alone are insufficient;
+fixed-width host parsing and a stronger real-map check are next source work.
+Next: Dev128 incremental native package and all identity checks passed, along
+with 146 focused checks. Bounded checkpoint and all-tab/button checks are running
+in Vita3K. Matching SELF: 3830e5e57191939e33e9eac6f98a607640bcd67c903258aa6d45f761d10d1df0.
+Blocker: no local blocker. Physical testing remains held; 60 FPS is unproven.
+
+Older entries below are historical.
+
+## Dev127 expanded optimization work; physical testing still held
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: user authorizes Vita3K for initial testing; physical testing stays held.
+Canonical ARM build continues after host/UBSan gates. Six pinned native ports
+are compared in DEV127_UPSTREAM_60FPS_COMPARISON.md; 60 FPS remains the target.
+Completed: indexed mesh/generic equivalence covers 784,560 corners; pinned GXM
+sink covers 540,000 more. Movie transfer/lifetime and sampler tests pass.
+Evidence: build/dev127-indexed-final-tests.log; sampler-expanded-sanitizers.log.
+New DXT-chain prototype compares 9,762,188 blocks in 800 cases with the pinned
+swizzler, plus invalid/allocation-failure cases. It is not integrated yet.
+Next: close current artifacts, back up/install only the emulator title, bounded
+startup/movie/menu test; continue transactional DDS writable fallback work.
+Blocker: no local blocker; native FPS and visual acceptance remain unmeasured.
+
+Older work-in-progress entries below are superseded by this expanded scope.
+
+## Dev127 fixes and pre-hardware FPS audit
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: final canonical Dev127 retry with frozen code, updated dependency and staging;
+no deployment. Local optimization route ledger: DEV127_OPTIMIZATION_AUDIT.md.
+Completed: bounded MPEG playback/metadata, original encyclopedia lifecycle,
+native tutorial caption IDs, deferred movie colour conversion, aligned alternating
+audio output with lifetime drain, checked renderer reuse and native clock policy.
+Evidence: DEV127_FIX_AND_OPTIMIZATION_PLAN.md; production audio lifetime/ring,
+material equivalence, sampler and indexed preparation tests pass with sanitizers.
+FFmpeg speed dependency built with final -O3/NEON; compact vitaGL vertex layout
+passes baseline/patched production emit/draw tests and ARM dependency build.
+Two-minute MPEG test passes ASan/UBSan; native duration math uses 64-bit multiply.
+Initial canonical host/ARM link passed, but the shell wrapper stopped because its
+script was edited while running. Syntax verified; final stable-script retry reuses
+the candidate build directory and reruns all gates. No intermediate deployment.
+Next: close canonical artifact identity, warnings and optimization ledger.
+Blocker: no local blocker; audible output, native timings and whole-demo progress
+remain unaccepted. User requires this audit before another physical test.
+
+## Dev126 physical Mobius/START crash and playability failure
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: symbolicate retained physical START/EVA crash; then measured movie/game
+performance, ladder keyboard hint and missing EVA datalinks.
+Completed: matching installed SELF, runtime log and new crash dump pulled.
+Evidence: dev126-logan-20260914T203526Z/mobius-crash/receipt.json.
+Gameplay late-run average 13.1 FPS; render ~59.7 ms, simulation ~16.5 ms.
+Mapped main-thread exception PC reaches newlib _kill_r; caller diagnosis pending.
+Movie conversion/receive and decode-send dominate; hardware audio API submitted
+buffers without recorded errors, but user reports silence (audibility failed).
+Next: identify abort caller from matching dump; fix narrow demonstrated defects.
+Blocker: none for local diagnosis; native physical acceptance remains failed.
+
+## Physical Logan progression failure — Dev126 investigation
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev126 physical movie failure reported: under 5 FPS and no intro audio.
+Timing/audio return pending; read-only FTP monitor running. Logan gate remains open.
+Completed: Dev124 physical logs retrieved; controls disabled at frame 1578,
+still disabled at frame 2160 with simulation advancing. Prior POKE conversation
+finished at 1342. Course-exterior authored waypath 400074 is the suspected wait.
+Evidence: build/device-evidence/dev124-boot-20260914T202219Z/return-203104.json.
+Movie log confirms four uploads followed by at least 180 consecutive drops.
+Dev125 movie fix and 135 package checks passed; superseded before deployment.
+Dev126: 135 focused checks, ARM/ELF/SELF/VPK closure, identity and deployment
+readback pass; prior Dev124 executable backed up. No retail mutation.
+Next: user launches same dev79 bubble, repeats gate, waits 20 seconds if locked,
+then returns to FTP for a35-dev126-runtime.log retrieval.
+Blocker: remote launch unavailable; user physical replay needed for path state.
+
+## Physical intros reached; movie starvation correction building
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev125 movie presentation-progress correction and decode/draw timing.
+Completed: Dev124 physically reaches intros; user reports less than 1 FPS.
+Production scheduler reproduces 120 consecutive drops; guard and 19 focused
+checks pass with ASan/UBSan. ARM movie unit compiles; package building.
+Evidence: DEV125_PHYSICAL_MOVIE_PROGRESS.md; Dev124 physical observation record.
+Next: collect Dev124 baseline when FTP returns, close Dev125 package, hardware A/B.
+Blocker: physical timing log pending; no performance improvement claimed yet.
+
+## Physical recovery complete
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: native pre-main/bootstrap diagnosis; Dev123 rejected physical candidate.
+Completed: failed executable retained; predecessor restored with matching hash.
+Evidence: recovery-20260914T201913Z receipt under Dev123 physical evidence root;
+no new runtime log or recent dump in checked directories. Nothing relaunched.
+Next: inspect early native startup against matching artifacts.
+Blocker: failure occurs before established runtime evidence; exact cause unknown.
+
+## Dev123 physical failure — recovery required
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: recover user's unresponsive Vita after Dev123 black-screen launch.
+Completed: failed candidate recorded; matching installed backup preserved.
+Evidence: user physical observation; both remote ports refuse connections.
+Next: user power recovery/FTP, evidence retrieval, exact executable restoration.
+Blocker: device unavailable; no physical log/dump or root cause yet.
+
+## Physical full-demo test authorized
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev123 deployed and ready for user's complete physical demo test.
+Completed: installed backup; SELF/VPK/font readback hashes match; normal startup
+config verified; retail M00 hash matches baseline. 134 local checks passed.
+Evidence: build/device-evidence/dev123-full-demo-20260914T201320Z/deployment.json.
+Next: user LiveArea launch, full Tutorial, then physical log retrieval.
+Blocker: command port 1338 unavailable; launch requires user's Vita controls.
+User lifts PS Vita/full-playthrough hold. PSTV testing remains unrequested.
+
+## Connection recovery — Dev123
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev123 capture-regression recovery evidenced; remaining visual work next.
+Completed: froze Dev122 failure, reverified Dev121 rollback, same-save Vulkan
+control reaches visible Weapons Factory gameplay; nine focused checks pass.
+Evidence: DEV123_CAPTURE_REGRESSION_RECOVERY.md and its hashed runtime returns.
+Dev123: 134 focused checks and artifact closure pass; same-save Hotwire
+gameplay and Vulkan screenshot observed. Runtime ended at watchdog; F12
+released. Retained build/dev123-recovery-return/; no clean-exit claim.
+Next: credits atlas/layout, matched-camera world defects, repeated lifecycle.
+Blocker: native capture/visual issues; final playthrough and physical hold.
+
+## Active resume — 2026-09-14
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev121 presented-frame readback validation, runtime runner 39946.
+Completed: 134 focused checks; ARM/ELF/SELF/VPK closure and emulator setup with
+Dev120 backup. Pinned Vita3K override fixed; actual Vulkan F12 captures work.
+Evidence: build/dev120-vulkan-return/ and reports/DEV121_CAPTURE_SOURCE.md.
+Next: compare game-owned front-buffer readback with emulator framebuffer;
+continue matching-camera wall/sky/elevator and credits investigation.
+Blocker: final playthrough held for known issues; physical tests held.
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: wall/sky/elevator rendering and reliable framebuffer capture.
+Completed: Dev120 ARM/package closure; original loading bar visibly fills.
+Evidence: 133 focused checks, matching Dev120 runtime; wall image retained at
+build/dev120-wall-return/. r4 ended at watchdog; native PNG all black.
+Next: r5 verifies corrected backend override and native Select capture input.
+Blocker: known visual defects; final user playthrough and physical tests held.
+Earlier building/running statements below are historical.
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev120 engineering batch for original loading animation and menu music.
+Completed: removed duplicate progress overlay; fixed original animation-name
+varargs; added MP3 decoding below original WWAudio ownership. Dev119 returned
+to the original menu after ending; credits body cutoff remains open.
+Evidence: 133 focused checks; host decode of unchanged menu.mp3 returns
+4,082,688 stereo frames at 44,100 Hz, 16,330,752 PCM bytes, nonzero audio.
+Next: finish ARM package closure, then visible original loading-bar and menu
+playback checks. Continue sky/elevator/credits/repeated-lifecycle corrections.
+Blocker: final user playthrough held until known issues fixed; physical hold.
+Details: DEV120_ORIGINAL_LOADING_AND_MENU_AUDIO.md.
+
+Now: Dev119 original menu return, credits presentation and actual loading fill
+bar, then final user-controlled full tutorial capture/profiling run.
+Completed: Dev118 Power Plant reload, Maus/finale progression, original success
+at frame 4200, visible thanks/credits and clean native teardown in Vita3K.
+Evidence: build/dev118-finale-return/. Physical release gates unchanged.
+Next: complete focused Dev119 changes, test lifecycle/replay, batch package and
+capture setup. See DEV119_ENDING_AND_FINAL_RUN.md.
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev118 package ready for original NPC movement/finale test.
+Completed: restored omitted original per-frame path-resolution service.
+Evidence: 18 targeted checks, 130 package contracts, ARM/SELF/VPK identity pass;
+Dev117 advancing but locked finale retained at build/dev117-finale-stall/.
+Next: Power Plant reload/finale observation; user authorizes proceeding without replies.
+Blocker: runtime traversal unverified; physical access remains held.
+See DEV118_NPC_PATH_SERVICE.md. No full-M00 or visual acceptance claim.
+
+Power Plant checkpoint archived and structurally validated as
+m00-powerplant-dev117. Latest native statuses 1/1/1/1/1/3; reload and full M00
+remain unproven. Previous saves preserved, shortcut released, user retains
+navigation in recovery r2. Evidence: build/dev117-powerplant-checkpoint/.
+
+Refinery checkpoint retained: user-reported Logan objective completion, native
+statuses 1/1/1/1/3/3, active Mobius Refinery conversation. Original save passes
+strict archival validation at build/tutorial-checkpoints/m00-refinery-dev117;
+reload pending. Prior saves preserved, shortcut released, user session remains
+running. No new release gate or full-M00 completion claim.
+
+Hang return: retained stalled Dev117 runtime, screenshot and bounded host thread
+stacks after WF/tank progression and Refinery handoff. Cause unconfirmed.
+At user request, stopped frozen PID and launched same-package Hotwire reload.
+Debugger-enabled r1 stalled before native startup; r2 uses ordinary settings.
+Original Hotwire reload now passes with saved player/camera and advancing
+frames; user owns navigation in PID 17392, recovery r2.
+release gates unchanged. See DEV117_REFINERY_HANG.md.
+
+Latest return: user reports sky/elevator artifacts and objective text squares.
+Hotwire/WF checkpoint archived and save shortcut released. Both original
+objective-message varargs paths corrected; executable formatting regression,
+zero-fuzz staging and objectives ARM compilation pass. Visual acceptance still
+pending; sky/elevator causes unconfirmed. See DEV118_VISUAL_DEFECTS.md.
+
+Crash recovery: existing Dev117 Windows process identity and immutable Mobius
+checkpoint hash verified. Dev118 tutorial hints recovered; 19 focused tests
+and zero-fuzz staging retained, affected scriptcommands/weaponview ARM objects
+compiled successfully in the existing fast tree. No package/install/input;
+user retains navigation. Evidence: DEV118_PENDING_BATCH.md. Gate count unchanged.
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: user controls gameplay in Dev117-progression-20260914-r1; automated
+navigation stopped and development input disabled. Agent handles checkpoints
+and the next coherent source/diagnostic batch. No new build.
+Completed: rifle animation varargs correction, retired synthetic reload motion,
+black EVA margins, latched renderer diagnostic guards, Targa header ABI fix,
+and separate historical load evidence from teardown ownership. Focused tests,
+two original M00 ASan cycles and ARM/SELF/VPK identity checks pass.
+No canonical pipeline retry; the closure retry compiled zero objects.
+Evidence: DEV117_WEAPON_EVA_CORRECTIONS.md; fixed-save Dev116 baseline has
+240 samples: median 16.59 ms, p95 17.87 ms, p99 29.27 ms (Vita3K only).
+Completed: matching replay clean native teardown; rifle pose/reload, black EVA
+margins and resumed gameplay visible. Same package used for both runtime tests.
+Completed: user-reported Mobius position archived through original quicksave;
+structure validates, reload pending. 23 checkpoint/diagnostic tests pass.
+Pending source batch and user-session details: DEV118_PENDING_BATCH.md.
+Next: batch bounded reload diagnostics with moving/firing performance work and
+original M00 progression. Do not package another isolated diagnostic change.
+Blocker: full M00/ending unproven; physical Vita/PSTV testing remains held.
+This current entry supersedes historical current-candidate and pause statements.
+
+## Current: Dev113 checkpoint restoration follow-up
+
+`[███░░░░░░░] 3/10 evidence gates complete`
+
+Now: prove saved-player restoration after asserting mission mode at the original
+checkpoint load seam; completion ending is explicitly M00-map gated.
+Completed: dev113 canonical package and fresh M00 runtime; intro/menu/loading
+text and gameplay reached; native pause/resume input returns to gameplay; focused
+frontend and mission contracts pass.
+Evidence: `build/dev113-host-evidence/canonical-rewind-retry.log`,
+`D:/Vita3K/RenegadeEvidence/Dev113-Fresh-20260909T052123Z/`.
+Next: canonicalize the checkpoint and M00-ending guards, reload the saved tutorial
+state, then repair EVA presentation and prove M00 completion fade/credits.
+Blocker: checkpoint reload and full M00 completion remain unproven; physical
+access remains held. HUD correctness, elevator visuals and 60 FPS remain open.
+
+## Historical dev111 progress, superseded above
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Now: canonical r7 PASS; Dev111 running M00 in Vita3K, PID 100, runner 76938.
+Completed: ARM/SELF/VPK identity and archive/hash checks. Same-directory retry
+had 521 direct hits from 521 cacheable calls. Four directory-admission tests
+pass; the separate debug-prefix-map experiment remains unintegrated.
+Completed: report inventory and canonical checks now derive source identities
+from manifests rather than fixed totals; seven inventory tests pass. The r4
+attempt passed 153 contracts before its obsolete count gate. Same production
+sampler replay preserves E61BC335 while reducing parameter writes 4800 to 2412.
+Evidence: current source identity check returns 516 original, one extracted
+owner, 26 native and six frontend units. These counts are outputs, not gates.
+Retry reuses the hashed completed r3 host runtime log and reruns current
+contracts. r5 passed 155 grouped and three post-staging tests. Fresh retail
+reconciliation matches all 51 source files and validates 31 archive indexes;
+53 installed files include the retained extras. Installed Vita3K is 4093,
+not the 4074 executable associated with the earlier Windows crash.
+Canonical package published under dist/. Matching VPK SHA256 begins
+0b1b5da54a78b0c3; SELF begins 5ea7ae2151531e81. Full hashes are in BUILD_STATE
+and the identity report. New visual/FPS acceptance remains pending.
+Returned: EA logo and orange following intro visible; main/SP labels visible;
+loading status/90 percent visible; gameplay reached. Original quicksaveA.sav
+created and archived unchanged as initial-spawn checkpoint; reload unproven.
+Health digits remain malformed. Observed initial-spawn timing is roughly
+28-34 FPS, not a controlled before/after benchmark. Left-stick input moved the
+original player from (-58.328,-41.527,0.588) to (-56.281,-34.801,-0.159).
+Next: normal tutorial progression, further HUD/loading evidence, checkpoint
+reload and original pause lifecycle. The checkpoint hook draft remains unapplied.
+User lifted build/test hold; physical hold remains. Three read-only agents have
+finished. Experimental files stay outside the candidate. Older hold entries
+below are historical and must not block authorized validation.
+
+
+## Latest: original EVA source selection
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Completed in source: nine original EVA/tab/viewer units selected; native
+dependency boundaries and 64-bit-safe viewer entry indices registered.
+Evidence: applied source changes only, not staging/compile/link success.
+Next: original pause factory, retained UI/input lifetime and safe resume/exit.
+The pause route is not activated yet. No build/test or physical authorization
+has changed. See M00_PAUSE_OWNER_DEPENDENCIES.md.
+
+
+## Latest: original pause dependency preparation
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Completed in source: demo Campaign/Load submenu controls stay visible but
+disabled, including direct command gating; original EVA abandon-game path
+guards absent WOL/LAN modes. EVA is not yet selected or operational.
+Evidence: original source trace and registered patches only, no execution.
+Next: original EVA/tab selection and correct pause UI/input/Combat lifecycle.
+Build/test and physical holds remain. See M00_PAUSE_OWNER_DEPENDENCIES.md.
+
+
+## Latest: M00 loading handoff and demo menu source batch
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Now: user-reported loading presentation, pause crash and M00 preparation gaps.
+Completed in source: hidden 60-frame scene warmup, independent loading clock,
+final progress reserved for preparation, bounded original texture Init sweep,
+visible-but-disabled main-menu options and disabled-control interaction guards.
+Evidence: source paths and applied edits only; no builds, tests or new runtime.
+Next: original pause dialog lifecycle/factory restoration and secondary menu
+restrictions; later consolidated validation after user lifts the hold.
+Blocker: pause crash cause remains unproven; physical hold unchanged.
+See M00_LOADING_MENU_READINESS_BATCH.md. This entry supersedes the prior pause
+at the validation boundary because the user supplied new concrete source work.
+
+
+## Current consolidated optimization status
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Current source batch is ready for consolidated review/validation; user build/test
+hold remains. Approval requested for one consolidated build and host/Vita3K cycle,
+not physical testing. No new source changes should be invented merely to extend
+the pass. The implementation milestone is not full optimization or demo release.
+
+Now: source-first optimization; explicit build/test and physical-device holds.
+Completed in source: renderer work reuse, DDS block/palette preparation, FreeType
+reuse, dynamic/skin buffer growth, audio decode preparation and resource cleanup.
+Evidence: applied source/registered patches, not staging, builds or runtime gains.
+Timer investigation found constant frequency plus one monotonic read; retain it.
+Next: remaining presentation/submission source work, then measurements only after
+the hold is lifted. Dev110 installed binary does not contain this source batch.
+Blocker: none for source work; full M00/save/load/ending and visual gates stay open.
+
+
+## Current: substantial performance batch; existing Dev110 installed
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Now: source-only work on redundant renderer computation and sampler churn.
+User direction: source optimizations first, measurements afterward; no Dev110
+tests or further builds/tests during this pass. Added fused indexed bounds and
+checksum preparation as mode bit 8, retaining original safety checks and hash
+ordering. Selector now hexadecimal 0..F. No new runtime evidence.
+Third batch component: opt-in direct original text-atlas upload avoids creating
+an empty texture before copying the finished glyph atlas; modes 0..7 provide
+individual and combined comparisons. Registered staging patch, not yet built.
+Completed: existing Dev110 installer returned INSTALLED_NOT_LAUNCHED. Added
+opt-in bounded material-color and texture-object sampler reuse for same-build
+A/B comparison, not yet compiled or measured; see RENDER_WORK_REUSE_BATCH.md.
+Evidence: native source trace and retained Dev109 counters, not FPS acceptance.
+Next: consolidate substantial submission/save-resume work before another build.
+Blocker: none for source work. Physical hold and no-small-build rule unchanged.
+
+
+## Latest: Dev110 correctness batch integrated; fast build running
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Stopped superseded Dev109 canonical explicitly, retaining partial evidence;
+Dev108 remains last canonical success. Applied original quicksave dispatch,
+font atlas format conversion, Render2D texture readiness and bounded loading
+animation diagnostics. Fast Dev110 build launched. No retail files changed.
+Next: matching fast package, real original save/load, HUD and loading evidence.
+No M00 completion, 60 FPS+ or physical acceptance claim.
+
+
+## Latest: Dev109 reached M00; Start abort prevented input automation
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Matching runtime initialized the native channel, then reported Start during
+the intro and disabled the channel by policy. The pending sender timed out
+without sending a command. M00 basic movement is visible; HUD/glyph artifacts
+remain. User-input ownership clarification is pending without interrupting play.
+Dev109 canonical build is running in the background; no physical access.
+
+
+## Latest: Dev109 fast package passed and emulator installation completed
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Fast ARM/ELF/SELF/VPK identity and hash gates passed. Existing retail-checking
+installer returned INSTALLED_NOT_LAUNCHED with a candidate-scoped backup receipt.
+Requested a hash-bound 1800-second Vita3K run and first native Cross command;
+acceptance/release and original UI response are not yet established. No physical
+access. Canonical Dev108 closure remains distinct from Dev109 fast evidence.
+
+
+## Latest: Dev108 canonical BUILD SUCCESS; Dev109 input build launched
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Canonical r3 completed with final artifact hash checks. Integrated the opt-in
+native input channel at DirectInput and launched Dev109 fast build in the
+background. No proven menu action, original checkpoint/load, entire M00 ending
+or physical acceptance yet. Next: matching Dev109 build and emulator evidence.
+
+
+## 2026-09-09 UTC: 147-patch preflight/staging passed; background input prepared
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Canonical r3 passed whitespace-independent preflight and staging identity;
+host compilation continues. Prepared opt-in native controller input and local
+sender without modifying compiling sources. Not integrated or tested yet;
+next work unit wires it below original DirectInput and proves menu/save actions.
+No emulator fork, physical access, FPS benchmark or full-demo completion claim.
+
+## 2026-09-09 UTC: whitespace-independent patch-command parsing
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+User authorized the durable fix: parse shell arguments rather than indentation
+or physical line layout. Required zero-fuzz flags, paths, uniqueness and identity
+checks remain strict. Canonical retry is next; runtime/demo gates remain open.
+
+## 2026-09-09 UTC: persistent demo goal and ordered execution gates
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Persistent goal active; exact next gates are in DEMO_EXECUTION_PLAN.md.
+Canonical r2 stopped at early preflight, not after compilation: the new parser
+rejects 11 indented commands (136 matched / 147 references). Coordinator
+disclosed the introduced bug and requested permission for the narrow whitespace
+correction. Native fast/sanitizer evidence remains retained. Background input,
+original save/load, entire M00 and safe ending remain open; no physical access.
+
+## 2026-09-09 UTC: eliminate recurring patch-count drift
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Removed independent report/build count constants rather than incrementing them.
+The ordered staging commands now drive a shared identity inventory; both builds
+preflight before expensive work. Successful staging records patch identities,
+fast reuse requires a matching receipt, and integration checks exact identities
+and order. See PATCH_INVENTORY_CONTRACT.md. Canonical retry pending; native
+Dev108 behavior, runtime blockers and physical-test hold are unchanged.
+
+## 2026-09-09 UTC: Dev108 dialog ABI and original checkpoint input
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Dev107 ASan/leak M00 cycles passed; UBSan menu text failed on remaining libc
+UTF-16 parser searches. Dev108 uses existing UTF-16 helpers and adds bounded
+focus-free QuickSave chord support to the emulator helper. Dev106 prior run
+reached 70,800 frames then runner timeout, not M00 completion; no save exists.
+Dev108 fast ARM/package passed; canonical ASan/leak and targeted UBSan
+M00/M01/City checks passed. Integration report then rejected 147 patches against
+stale expected 145. Coordinator disclosed the missed inventory update and asked
+whether to correct it. Background input remains unreliable at difficulty
+selection; cursor movement is visible but button activation/save is not proven.
+Next: inventory correction with user direction, canonical closure, real save/load.
+No physical access or release claim. 60 FPS+ remains the target.
+
+## 2026-09-08: Dev107 host UTF-16/save fix; Dev106 startup failure retained
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Dev105 returned 20,175 gameplay frames, clean Start teardown, no M00 completion.
+Dev106 canonical failed in host menu text validation: ASan wcslen consumed
+16-bit engine text with the host wide ABI. Dev107 uses existing UTF-16 helpers
+and adds the original user/save bootstrap directory without removing user/saves.
+The emulator directory is created, but no actual checkpoint is proven.
+Dev106 first runtime failed before frontend: Always2.dat opened, then stat/read
+returned 0x80010051; three other archives passed. Root cause remains unresolved.
+Same installed SELF retry (Dev106-probes-retry-20260908T230209Z) reached the
+M00 jump segment; focus-free captures show loading text/percentage and gameplay.
+Initial 100-second retry log has 28 missing/error entries versus the uncontrolled
+Dev105 sample of 1340/60 seconds. Different content/time windows and concurrent
+host build preclude a controlled performance claim. Dev107 canonical continues
+in background; preserve active gameplay and establish a real original checkpoint.
+First-run archive-handle failure remains unresolved. No physical access;
+60 FPS+ remains the target.
+
+## 2026-09-08: Playable Dev105 M00 return; Dev106 native probe-cost fix
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Updated Vita3K now shows Dev105 M00 with readable HUD and Logan targeting.
+User reports continuous missing-file errors during gameplay. Dev106 removes
+redundant native file probes after confirmed read-only misses, preserving
+original fallback, forced checks and writable behavior. Host and fast ARM/package
+closure passed (22 filesystem, 126 fast and 11 DDS checks); canonical is running
+in the background. No measured FPS gain or full tutorial completion claimed. Keep the user's
+current Dev105 run intact while building. Physical hold unchanged.
+
+## 2026-09-08: Retail source coverage repaired; original runtime reads proven
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Dev105 fast passed 126 contracts and ARM/package closure. All 51 current Steam
+Data files now match emulator hashes; two extras are preserved and all 31
+archive indexes passed structural checks. Added missing THU files, repaired
+the stale host link and native loose Data search route. Exact Dev105 startup
+successfully read both loose configs and hd_reticle.dds through original MIX.
+Full texture/HUD rendering and one malformed W3D-name request remain separate
+runtime questions. User updated Vita3K; same SELF retry is running under its
+new executable hash. See DEV105_RETAIL_DATA_RETURN.md. Physical hold unchanged.
+
+## 2026-09-08: Dev105 first-frame correction; retail identity audit
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Dev104 fast passed and matching emulator readback/prewarm progressed beyond
+Dev102's crash location. The new return is native controlled failure on a NULL
+shadow-target probe, not a repeated host access violation. Dev105 separates
+allocation fallback from draw rejection and preserves restored player/camera.
+Exact reticle DDS is present in installed always.dat; full E: Steam versus
+emulator Data SHA-256 comparison is pending. Next: build and first gameplay
+frame, then original checkpoints. No physical tests or full-demo acceptance.
+
+## 2026-09-08: Dev104 native readback and original checkpoint support
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Dev103 fast build passed. Focus-free emulator input reached original Tutorial
+and loaded M00 through post-load finalization, then the emulator crashed before
+the diagnostic capture returned. Dev104 corrects the CPU-buffer readback API
+contract and restores original save-root, quicksave and selected-save loading
+paths. A local immutable checkpoint vault is implemented; no gameplay checkpoint
+or cross-build load is yet proven. Details: `DEV104_READBACK_AND_CHECKPOINTS.md`.
+Next: build and matching route evidence. No physical tests or emulator fork.
+
+## 2026-09-08: Resumed tutorial work; Dev103 cursor clamp integrated
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Dev102 canonical log reports successful package/hash closure; its enclosing
+exec session later returned 143, so preserve the log/runner distinction.
+Previous Vita3K run reached its 600-second deadline at the menu, not mission
+completion. Dev103 now registers the cursor-only clamp as patch 146. Resume
+bounded M00 progression using installed Dev102 while Dev103 builds separately.
+Foreground activation is improved without relaxing the no-input-to-other-app
+guard. No physical access or full M00/60 FPS+ acceptance claimed.
+
+## 2026-09-08: Minor cursor-edge artifact reported
+
+User reports a vertical sliver to the right of the menu cursor. Original cursor
+draws full-range UVs without edge clamping; a Vita-only cursor U/V clamp proposal
+is retained in `DEV103_CURSOR_CLAMP.patch`, with scope in `DEV103_CURSOR_CLAMP.md`.
+It is not yet integrated or tested. Keep the compiling Dev102 source/patch
+snapshot intact, then include the fix in the next coherent candidate. Do not
+delay authentic M00 progression for a cosmetic-only rebuild. No gate count or
+physical acceptance changes.
+
+## 2026-09-08: Dev102 visible menu labels and orange intro captured
+
+`[..........] 0/10 full demo release acceptance gates complete`
+
+Fast ARM/package closure passed 126 tests. Matching Vita3K captures now show
+all six original menu labels and orange/red Renegade intro colors. EA_WW uploads
+195 frames rather than Dev101's one, but complete visual/audio pacing remains
+open. Canonical build continues in the background; no hardware access.
+Next: tutorial entry, loading/HUD and complete M00. Windows refused automated
+keyboard focus, so no input was sent; user asked to click the game window once.
+Exact evidence: `DEV102_VITA3K_PRESENTATION_RETURN.md`. This supersedes the
+restaged-retry state below, not frozen physical evidence or the full-port goal.
+
+## 2026-09-08: Dev102 presentation fixes; restaged build retry
+
+`[..........] 0/10 demo release acceptance gates complete`
+
+Now: retry Dev102 fast build with deterministic restaging, then canonical in
+the background. Completed: source-level cause for skipped original sentence
+rendering identified; first-movie cold-draw lateness isolated; native readiness,
+first-draw clock/audio gate, and RGBA upload implemented. Evidence: Dev101
+fast/canonical closure plus matching failed Vita3K run and user observations;
+Dev102 first compile failed against stale generated declarations. No new visual
+gate closes. Next: exact-package emulator presentation, then full authentic M00.
+Blocker: physical acceptance remains held; no complete-route/60 FPS+ proof.
+
+ETA correction: unsupported days estimate withdrawn. Target a usable M00 alpha
+this working session, not 48 hours; next concrete result within 30 minutes.
+Presentation and tutorial completion take priority over optional optimization.
+Public release acceptance on PS Vita and PSTV remains separate and held.
+The complete native port remains the durable end-goal. Details:
+`DEV102_PRESENTATION_AND_DEMO_PLAN.md`. Older entries below are history.
+
+## 2026-09-08: Dev100 closed; Dev101 selectable demo profile and user-font fix
+
+`[..........] 0/10 demo release acceptance gates complete`
+
+Durable goal: complete native Renegade Vita port; M00 is an interim showcase.
+Dev100 canonical closure passed 148 current contracts and ARM/package gates,
+using retained host semantic evidence. A separate hash-bound fast-package
+Vita3K run exposed a controlled StyleMgr failure: Arial-based glyphs had zero
+width because expected font files were absent. A loading-window screenshot
+is not a menu pass. No physical access or full M00/60 FPS claim.
+
+Dev101 source now separates demo-only launch/ending policy behind a selectable
+profile, identifies the Renegade Vita project in credits, and adds bounded
+user-font fallback through original FileFactory/FreeType ownership. Local
+Windows Arial is staged only in the emulator user namespace with provenance;
+retail remains unchanged. Fast/canonical builds run in the background while
+matching emulator preparation continues. Details and hashes:
+`DEV101_FONT_AND_DEMO_PROFILE.md`. Non-demo ARM closure remains open.
+
+Next: exact Dev101 package closure, bounded emulator intro/menu observation,
+then authentic route progression. Both PS Vita and PSTV final gates remain
+held and unaccepted. Entries below are historical work-unit updates.
+
+## 2026-09-08: Dev100 M00-only demo; local work continues
+
+Latest: user reaffirmed the complete native port as the durable goal; M00 is
+an interim community showcase, not the endpoint. Routine corrections are
+delegated. The remaining M01 cache check is removed, fast closure passed, and
+canonical ARM compilation is running while Windows Vita3K preparation proceeds.
+The PID-owned Windows runner is now implemented; no physical access occurred.
+Next source unit will separate demo-only policy from the full-port build.
+The older compile-blocker update below is retained as attempt history.
+
+`[..........] 0/10 demo release acceptance gates complete`
+
+Now: ARM build blocked by one remaining M01 cache-health reference; no build
+is running. Completed locally: prior-work causal audit; sampler, BINK scheduler
+and performance-ledger regressions; pinned no-splash VitaGL dependency build;
+123 fast-build contracts; executable demo-ending policy; both real retail
+intro host decodes. Evidence: `build/dev100-host-evidence/` and
+`DEV100_PRIOR_WORK_AUDIT.md`. No physical access or acceptance claim.
+
+The ten release gates are: both intro movies paced; original menu text and
+tutorial entry; loading text/progress; gameplay text/HUD; NPC target alignment;
+entire authentic M00 progression including HMVV; success/fade/message/credits
+and clean exit; fixed-route 60 FPS+ evidence; PS Vita lifecycle/soak; PSTV
+lifecycle/soak. Source tests and package closure are prerequisites, not visual
+or end-to-end gate completion. Vita3K can supply preliminary route evidence
+but cannot complete either physical gate.
+
+Next: with user direction, remove the remaining reference to the deleted
+`kM01CacheIndex` at `port/platform/vita/a31_vita_runtime.cpp:2211`, then resume
+background ARM/package closure. Canonical build has not started. Retain hashes
+and provenance, prepare
+the matching title in Vita3K, and collect bounded emulator evidence. Blocking
+release conditions remain full-route/visual/performance evidence and the
+user's physical-test hold. Do not wait idly for builds or weaken these gates.
+
+Older entries below are historical; Dev99 remains the last closed package
+until a Dev100 closure entry is added. The earlier 50 FPS preferred-floor
+language does not replace the user's 60 FPS+ goal.
+
 ## 2026-08-31 — No-build performance/fidelity gate preparation
 
 `[░░░░░░░░░░] 0/10 performance acceptance gates complete; no build, deploy, launch, provider install, or device capture`
@@ -4565,3 +5410,138 @@ LSan proof remains at `build/host-a31-asan/a36-pathmgr-lsan.log`.
   Vita filesystem mutation. The replay remains prepared; work continues on
   the native audio provider beneath original WWAudio ownership using dev13's
   physical `sound_scene=null` and deferred-sound evidence.
+# Dev112 canonical completion
+
+Build and artifact identity passed; see `DEV112_CANONICAL_RETURN.md`.
+Now: title-scoped Vita3K install, then queued post-Sydney reload and EVA pause.
+Release acceptance remains 0/10; build closure is not mission completion.
+# Latest: checkpoint load defect corrected in source
+
+Dev112 canonical passed, but saved-game loading faulted before gameplay.
+Confirmed cause and ARM/staging evidence: `DEV112_CHECKPOINT_LOAD_FAILURE.md`.
+Dev113 is the next corrected candidate. Pause, full M00 and ending remain open.
+# Latest: dev113 stopped at reproduced ASan post-load fault
+
+Original M00 world host checks passed; interactive ASan then found a null
+HumanPhys during soldier post-load. Replay reproduced it. ARM packaging and
+checkpoint runtime return are pending. Details: `DEV113_ACTIVE_BUILD.md`.
+# Latest: causal host regression isolated
+
+A/B and GDB prove that the new compatibility reader exposes an incorrect
+buffered rewind, skipping required objects. The previous reader passes the
+same ASan fixture. See `DEV113_BUFFERED_REWIND_CAUSE.md` for the proposed fix.
+# Latest: reproduced host regression corrected
+
+Buffered rewind fix passed zero-fuzz staging, ARM compilation, and both original
+M00 ASan cycles. See `DEV113_BUFFERED_REWIND_FIX.md`. Full canonical retry and
+Vita3K checkpoint restoration are next; release acceptance remains unchanged.
+# Latest: dev113 tested; session stopped as requested
+
+Canonical PASS. Fresh M00 gameplay and pause/resume observed; EVA controls/text
+are missing. Checkpoint restoration ends in controlled player-identity failure.
+Vita3K closed, inputs released, no build running. See `DEV113_OVERNIGHT_RETURN.md`.
+## Dev114 canonical return and integrated EVA correction
+
+This entry supersedes older current-candidate statements below.
+
+Completed: checkpoint-enabled A3.5-dev114 canonical build and artifact identity
+checks passed. After its process exited, the original EVA shell/seven child
+resources and captionless-edit parser fix were integrated, with permanent
+C++ contract coverage. Integrated host contract passed in
+`build/eva-integrated-twmhL1/`. That source correction is not in Dev114.
+
+Now: bounded Dev114 Vita3K post-Sydney checkpoint run, with matching installed
+SELF and unchanged archived-save hash.
+
+Next: distinguish inactive-player restoration from missing star/control-owner
+identity, apply the original-owner fix if supported, then consolidate with EVA
+for the next candidate. Complete M00, ending, HUD fidelity and 60 FPS remain
+unproven. Details: `DEV114_CHECKPOINT_CANDIDATE_RETURN.md` and
+`DEV114_CHECKPOINT_SESSION_TRACE.md`.
+## Dev114 runtime result; Dev115 consolidated fixes
+
+Dev114 proved the saved star/control owner survive loading, while active-player
+lookup returns null and active count is zero. The native guard then controlled-
+exited. Vita3K subsequently logged a Windows access violation during shutdown;
+do not treat its process result as clean or as physical-Vita evidence.
+
+Implemented for Dev115: strict unique inactive-player/star admission followed
+by original cGod reactivation, with object-identity checks; original EVA shell
+and seven tabs, captionless-edit parsing and permanent resource regression
+coverage. Five checkpoint tests and the integrated EVA C++ contract pass.
+
+Next: checkpoint-enabled Dev115 canonical build, original post-Sydney reload,
+pause/resume capture, then authentic M00 progression. Neither repaired runtime
+behavior nor complete-demo acceptance is yet established.
+## Dev115 canonical pass; Dev116 HUD-format correction integrated
+
+Dev115 canonical build and packaged-SELF identity passed. Its unchanged package
+is being installed for the original post-Sydney checkpoint/EVA test.
+
+Substantial new finding: the Vita WW3D initialization branch omitted original
+`Init_D3D_To_WW3_Conversion`, leaving CPU surface formats UNKNOWN. Restoring
+that call made all ten digits in both HUD fonts match source pixels exactly
+across two original M00 ASan host cycles. This is CPU evidence, not a screenshot
+or a physical visual acceptance claim.
+
+Integrated after Dev115 exited: original format initialization, fixed-width
+TGA disk fields (native layout preserved), permanent host pixel comparison,
+explicit non-sanitized cross-scene target build, repaired dialog validator,
+and visible-disabled EVA Options for the demo. Deterministic restaging is
+running; the current source is ahead of the Dev115 package.
+
+Next: Dev115 checkpoint/EVA runtime result, then consolidated Dev116 build
+and visual confirmation. M00 ending and complete-demo acceptance remain open.
+# Dev115 checkpoint and EVA return; Dev116 building
+
+Original post-Sydney save reload reached gameplay with original player/star
+and saved camera preserved. Native unfocused Start opened the original EVA
+Objectives screen with readable tabs, rows and description. Native Circle
+returned to visible gameplay (`step-20260909T151717741Z.png`).
+Evidence: `reports/DEV115_CHECKPOINT_RELOAD_RETURN.md` and the matching
+`Dev115-checkpoint-20260909T1513Z` Vita3K capture directory.
+These close checkpoint reload and one pause/resume cycle on Vita3K only.
+
+Dev116 canonical build is running in the background with the integrated HUD
+format initialization, fixed-width host TGA layout, stronger atlas regression,
+and disabled demo Options action. Log: `build/dev116-canonical.log`.
+Next: continue original M00 toward Infantry Barracks; assess Dev116 when ready.
+Full M00 completion, ending presentation and physical acceptance remain open.
+# Dev115 new-save reliability blocker
+
+Latest state, 2026-09-09: user paused work. Dev116 canonical closure passed;
+readable HUD digits, fresh original save/reload and reaching Gunner have
+Vita3K evidence. Full M00/ending and current-candidate pause/resume remain
+open. Resume from the archived Gunner checkpoint, not a new tutorial run.
+Current handoff: `reports/HANDOFF_DEV116_20260909.md`. Older updates below
+are historical, not active build/install instructions.
+
+Dev116 runtime update: readable health/armor digits observed; fresh original
+quicksave passed structure validation and original-engine reload. Two emulator
+runs then failed in Windows Qt6Core.dll with matching exception/offset, one
+during pause and one during gameplay. A same-build comparison without the
+PrintWindow helper is active; no game or emulator workaround has been applied.
+See `reports/DEV116_CANDIDATE_RETURN.md` for hashes and run-scoped evidence.
+
+Dev116 canonical retry is now SUCCESS with matching ELF/SELF/VPK identities.
+Runtime installation and checkpoint validation are next, not yet passed.
+Authoritative candidate hashes: `reports/DEV116_CANDIDATE_RETURN.md`.
+
+Dev116 retry milestone: integrated host digit comparisons passed with zero
+pixel mismatches for both font sizes; original M00 host runtime passed two
+in-process cycles. ARM compilation reached 321/558. Artifact closure and
+visual HUD checks remain pending. See `reports/DEV116_BUILD_RETRY.md`.
+
+Update: isolated original rooted WRITE/chunk overwrite host probe passed
+(15 bytes replaced by 11 bytes). Dev116 include-order compile failure was
+corrected and canonical retry launched. Existing quicksave slots are preserved
+outside the live user tree for a fresh-versus-overwrite native comparison.
+The next runtime sequence is recorded in `reports/DEV116_RUNTIME_PLAN.md`.
+
+Original checkpoint reload and pause/resume passed, and the player reached
+outdoors. A subsequent original quicksave overwrite failed strict archival:
+four bytes remain beyond the declared level-data end. Preserved the rejected
+save privately; did not trim it or relax validation. See
+`reports/DEV115_SAVE_OVERWRITE_FAILURE.md`.
+Next: distinguish save chunk accounting from native write/truncate behavior.
+Dev116 build remains separate, running with the existing integrated fixes.

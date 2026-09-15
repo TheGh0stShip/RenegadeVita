@@ -1,0 +1,40 @@
+--- a/dlgsavegame.cpp
++++ b/dlgsavegame.cpp
+@@ -415,7 +415,12 @@
+ 		if (list_ctrl->Get_Entry_Data (curr_sel, 0) != NULL) {
+ 			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, list_ctrl->Get_Entry_Text (curr_sel, 2));
+ 		} else {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++			// A new slot must be usable with the controller before text entry.
++			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, L"Manual save");
++#else
+ 			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, L"");
++#endif
+ 		}
+ 
+ 	} else {
+@@ -499,7 +504,7 @@
+ 				//
+ 				//	Delete the file and remove its entry from the list
+ 				//
+-				if (::DeleteFile (full_path) != 0) {
++				if (Renegade_Delete_User_Save (full_path) != 0) {
+ 					list_ctrl->Delete_Entry (item_index);
+ 					Update_Text_Field ();
+ 					Update_Button_State ();
+--- a/dlgloadspgame.cpp
++++ b/dlgloadspgame.cpp
+@@ -45,3 +45,4 @@
+ #include "savegame.h"
++#include "renegade_find_files.h"
+ #include "devoptions.h"
+ #include "translatedb.h"
+@@ -731,7 +731,7 @@
+ 					//
+ 					//	Delete the file and remove its entry from the list
+ 					//
+-					if (::DeleteFile (filename) != 0) {
++					if (Renegade_Delete_User_Save (filename) != 0) {
+ 						list_ctrl->Delete_Entry (item_index);
+ 					}
+ 				}

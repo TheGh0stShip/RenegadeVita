@@ -36,6 +36,8 @@
 
 
 #include "dlgsavegame.h"
+#include "renegade_ui_pointer_tokens.h"
+#include "renegade_find_files.h"
 #include "listctrl.h"
 #include "dialogresource.h"
 #include "gamedata.h"
@@ -52,13 +54,13 @@
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
-static enum
+enum
 {
 	MBEVENT_OVERWRITE_PROMPT	= 1,
 	MBEVENT_DELETE_PROMPT,
 };
 
-static enum
+enum
 {
 	COL_DATE	= 0,
 	COL_TIME,
@@ -167,8 +169,8 @@ SaveGameMenuClass::On_ListCtrl_Delete_Entry
 		//
 		//	Remove the data we associated with this entry
 		//
-		FILETIME *file_time		= (FILETIME *)list_ctrl->Get_Entry_Data (item_index, 0);
-		StringClass *filename	= (StringClass *)list_ctrl->Get_Entry_Data (item_index, 2);
+		FILETIME *file_time		= static_cast<FILETIME *>(Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 0)));
+		StringClass *filename	= static_cast<StringClass *>(Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 2)));
 		list_ctrl->Set_Entry_Data (item_index, 0, 0);
 		list_ctrl->Set_Entry_Data (item_index, 2, 0);
 		if (file_time != NULL) {
@@ -210,8 +212,8 @@ SaveGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_inde
 			//
 			//	Sort by time
 			//
-			FILETIME *file_time1 = (FILETIME *)list_ctrl->Get_Entry_Data (item_index1, 0);
-			FILETIME *file_time2 = (FILETIME *)list_ctrl->Get_Entry_Data (item_index2, 0);
+			FILETIME *file_time1 = static_cast<FILETIME *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index1, 0)));
+			FILETIME *file_time2 = static_cast<FILETIME *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index2, 0)));
 			retval = ::CompareFileTime (file_time1, file_time2);
 
 		} else {
@@ -298,7 +300,7 @@ SaveGameMenuClass::Save_Game (bool prompt)
 		if (list_ctrl->Get_Entry_Data (item_index, 0) == NULL) {
 			Get_Unique_Save_Filename (full_path);
 		} else {
-			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 2))->Peek_Buffer ();
+			StringClass filename = (static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2))))->Peek_Buffer ();
 
 			//
 			//	Build a full filename
@@ -413,7 +415,12 @@ SaveGameMenuClass::Update_Text_Field (void)
 		if (list_ctrl->Get_Entry_Data (curr_sel, 0) != NULL) {
 			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, list_ctrl->Get_Entry_Text (curr_sel, 2));
 		} else {
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+			// A new slot must be usable with the controller before text entry.
+			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, L"Manual save");
+#else
 			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, L"");
+#endif
 		}
 
 	} else {
@@ -470,7 +477,7 @@ SaveGameMenuClass::Delete_Game (bool prompt)
 		//	Determine what filename this entry refers to
 		//		
 		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
-			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 2))->Peek_Buffer ();
+			StringClass filename = (static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2))))->Peek_Buffer ();
 
 			if (prompt) {
 
@@ -497,7 +504,7 @@ SaveGameMenuClass::Delete_Game (bool prompt)
 				//
 				//	Delete the file and remove its entry from the list
 				//
-				if (::DeleteFile (full_path) != 0) {
+				if (Renegade_Delete_User_Save (full_path) != 0) {
 					list_ctrl->Delete_Entry (item_index);
 					Update_Text_Field ();
 					Update_Button_State ();
@@ -583,8 +590,8 @@ SaveGameMenuClass::Reload_List (const char *current_filename)
 			list_ctrl->Set_Entry_Text (item_index, 1, date_string);
 			list_ctrl->Set_Entry_Text (item_index, 2, description);
 			
-			list_ctrl->Set_Entry_Data (item_index, 0, (uint32)new FILETIME(local_time));
-			list_ctrl->Set_Entry_Data (item_index, 2, (uint32)new StringClass(find_info.cFileName));
+			list_ctrl->Set_Entry_Data (item_index, 0, Renegade_Ui_Pointer_To_Token(new FILETIME(local_time)));
+			list_ctrl->Set_Entry_Data (item_index, 2, Renegade_Ui_Pointer_To_Token(new StringClass(find_info.cFileName)));
 
 			//
 			//	Select this entry if its the default
@@ -708,37 +715,9 @@ SaveGameMenuClass::Check_HD_Space (void)
 {
 	bool retval = true;
 
-	ULARGE_INTEGER freebytecount;		// Free bytes on disk available to caller (caller may not have access to entire disk).
-	ULARGE_INTEGER totalbytecount;	// Total bytes on disk.
-	StringClass		kernelpathname;
-	__int64			diskspace;
+	uint64_t diskspace = 0;
+	if (!Renegade_Get_User_Free_Space(diskspace)) return false;
 
-	int (__stdcall *getfreediskspaceex) (LPCTSTR, PULARGE_INTEGER, PULARGE_INTEGER, PULARGE_INTEGER);
-
-	//	Get the free disk space on the drive.
-	// NOTE IML: For Win'95, must query for support for GetDiskFreeSpaceEx before using it - otherwise use GetDiskFreeSpace().
-	GetSystemDirectory (kernelpathname.Get_Buffer (_MAX_PATH), _MAX_PATH);
-	kernelpathname += "\\";
-	kernelpathname += "Kernel32.dll";
-	getfreediskspaceex = (int (_stdcall*) (LPCTSTR, PULARGE_INTEGER, PULARGE_INTEGER, PULARGE_INTEGER)) GetProcAddress (GetModuleHandle (kernelpathname.Peek_Buffer()), "GetDiskFreeSpaceExA");
-	if (getfreediskspaceex != NULL) {
-
-		if (!getfreediskspaceex (NULL, &freebytecount, &totalbytecount, NULL)) return (false);
-	
-		// Convert to a 64-bit integer.
-		diskspace = freebytecount.QuadPart;
-	
-	} else {
-
-		DWORD sectorspercluster, bytespersector, freeclustercount, totalclustercount;
-		
-		// The Ex version is not available. Use the Win'95 version.
-		// QUESTION: SDK docs say that values returned by this function are erroneous if partition > 2Gb.
-		//				 Does that mean that the partition is guaranteed to be <= 2Gb if Ex is not available?
-		if (!GetDiskFreeSpace (NULL, &sectorspercluster, &bytespersector, &freeclustercount, &totalclustercount)) return (false); 
-		diskspace = sectorspercluster * bytespersector * freeclustercount;
-	}
-	
 	//
 	//	Is there at least 2 megs of disk space available?
 	//

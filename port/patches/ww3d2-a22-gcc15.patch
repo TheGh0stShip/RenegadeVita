@@ -46,7 +46,16 @@
  }
 --- a/dx8wrapper.h
 +++ b/dx8wrapper.h
-@@ -721,7 +721,7 @@
+@@ -213,2 +213,8 @@
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
++	static bool Is_Device_Lost() { return IsDeviceLost || !Is_Native_Device_Ready(); }
++	static bool Is_Initted(void) { return Is_Native_Device_Ready(); }
++	static bool Is_Native_Device_Ready();
++#else
+ 	static bool Is_Device_Lost() { return IsDeviceLost; }
+ 	static bool Is_Initted(void) { return IsInitted; }
++#endif
+@@ -721,7 +727,7 @@
  	return col;
  }
  

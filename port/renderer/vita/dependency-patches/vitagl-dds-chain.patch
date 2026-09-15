@@ -1,0 +1,102 @@
+--- a/source/textures.c
++++ b/source/textures.c
+@@ -2741,3 +2741,99 @@
+ 		SET_GL_ERROR_WITH_RET(GL_INVALID_ENUM, NULL)
+ 	}
+ }
++
++// Private Renegade boundary: initialize a fresh texture from unchanged DDS
++// blocks in one allocation. No asynchronous upload source or incremental mip
++// reallocations. Existing vitaGL sampler, shader and texture lifetime stay owners.
++GLboolean vglRenegadeUploadDXTChain(GLuint id, GLenum internal_format,
++    GLsizei width, GLsizei height, GLsizei levels,
++    const void *const *pixels, const GLsizei *sizes) {
++#ifdef DEBUG_THREAD_SAFENESS
++    if (!vgl_is_main_thread) return GL_FALSE;
++#endif
++    if (!id || id >= TEXTURES_NUM || texture_slots[id].status != TEX_UNINITIALIZED ||
++        width < 4 || height < 4 || width > 2048 || height > 2048 ||
++        (width & (width - 1)) || (height & (height - 1)) ||
++        levels < 1 || levels > 10 || !pixels || !sizes)
++        return GL_FALSE;
++    SceGxmTextureFormat format;
++    unsigned block_bytes;
++    const GLboolean surface_pixels = internal_format == GL_BGRA;
++    if (internal_format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) {
++        format = SCE_GXM_TEXTURE_FORMAT_UBC1_ABGR;
++        block_bytes = 8;
++    } else if (internal_format == GL_COMPRESSED_RGBA_S3TC_DXT5_EXT) {
++        format = SCE_GXM_TEXTURE_FORMAT_UBC3_ABGR;
++        block_bytes = 16;
++    } else if (surface_pixels) {
++        format = SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR;
++        block_bytes = 0;
++    } else return GL_FALSE;
++    unsigned total = 0;
++    for (int level = 0; level < levels; ++level) {
++        unsigned w = (unsigned)width >> level, h = (unsigned)height >> level;
++        if (w < 4 || h < 4) return GL_FALSE;
++        unsigned bytes = surface_pixels ? w * h * 4 : (w / 4) * (h / 4) * block_bytes;
++        if (!pixels[level] || sizes[level] < 0 || (unsigned)sizes[level] < bytes)
++            return GL_FALSE;
++        total += surface_pixels ? (w < 8 ? 8 : w) * h * 4 : bytes;
++    }
++    uint8_t *storage = (uint8_t *)gpu_alloc_mapped_for_gpu(total);
++    if (!storage) return GL_FALSE;
++    unsigned offset = 0;
++    for (int level = 0; level < levels; ++level) {
++        unsigned w = (unsigned)width >> level;
++        unsigned h = (unsigned)height >> level;
++        const uint8_t *source = (const uint8_t *)pixels[level];
++        if (surface_pixels) {
++            unsigned stride = (w < 8 ? 8 : w) * 4;
++            memset(storage + offset, 0, stride * h);
++            for (unsigned y = 0; y < h; ++y) for (unsigned x = 0; x < w; ++x) {
++                const uint8_t *s = source + (y * w + x) * 4;
++                uint8_t *d = storage + offset + y * stride + x * 4;
++                d[0] = s[2]; d[1] = s[1]; d[2] = s[0]; d[3] = s[3];
++            }
++            offset += stride * h;
++            continue;
++        }
++        w /= 4; h /= 4;
++        unsigned tile = w < h ? w : h;
++        for (unsigned y = 0; y < h; ++y) {
++            for (unsigned x = 0; x < w; ++x) {
++                unsigned local_x = x & (tile - 1), local_y = y & (tile - 1);
++                unsigned morton = 0;
++                for (unsigned bit = 0; (1U << bit) < tile; ++bit) {
++                    morton |= ((local_x >> bit) & 1U) << (2U * bit + 1U);
++                    morton |= ((local_y >> bit) & 1U) << (2U * bit);
++                }
++                unsigned block = ((y / tile) * (w / tile) + x / tile) * tile * tile + morton;
++                memcpy(storage + offset + block * block_bytes,
++                    source + (y * w + x) * block_bytes, block_bytes);
++            }
++        }
++        offset += w * h * block_bytes;
++    }
++    texture *tex = &texture_slots[id];
++    tex->format = format;
++    tex->mip_count = levels;
++    if (surface_pixels)
++        vglInitLinearTexture(&tex->gxm_tex, storage, format, width, height,
++            tex->use_mips ? levels : 0);
++    else
++        vglInitSwizzledTexture(&tex->gxm_tex, storage, format, width, height,
++            tex->use_mips ? levels : 0);
++    tex->palette_data = NULL;
++    tex->data = storage;
++    tex->status = TEX_VALID;
++#ifndef TEXTURES_SPEEDHACK
++    tex->last_frame = OBJ_NOT_USED;
++#endif
++    vglSetTexUMode(&tex->gxm_tex, tex->u_mode);
++    vglSetTexVMode(&tex->gxm_tex, tex->v_mode);
++    vglSetTexMinFilter(&tex->gxm_tex, tex->min_filter);
++    vglSetTexMagFilter(&tex->gxm_tex, tex->mag_filter);
++    vglSetTexMipFilter(&tex->gxm_tex, tex->mip_filter);
++    vglSetTexLodBias(&tex->gxm_tex, tex->lod_bias);
++    vglSetTexMipmapCount(&tex->gxm_tex, tex->use_mips ? levels : 1);
++    return GL_TRUE;
++}

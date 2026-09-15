@@ -1,0 +1,43 @@
+--- a/TARGA.H
++++ b/TARGA.H
+@@ -1,3 +1,4 @@
++#include <stdint.h>
+ /*
+ **	Command & Conquer Renegade(tm)
+ **	Copyright 2025 Electronic Arts Inc.
+@@ -133,8 +134,8 @@
+  */
+ typedef struct _TGA2Footer
+ 	{
+-	long Extension;
+-	long Developer;
++	int32_t Extension;
++	int32_t Developer;
+ 	char Signature[16];
+ 	char RsvdChar;
+ 	char BZST;
+@@ -224,12 +225,12 @@
+ 	TGA2TimeStamp JobTime;
+ 	char          SoftID[41];
+ 	TGA2SoftVer   SoftVer;
+-	long          KeyColor;
++	int32_t          KeyColor;
+ 	TGA2Ratio     Aspect;
+ 	TGA2Ratio     Gamma;
+-	long          ColorCor;
+-	long          PostStamp;
+-	long          ScanLine;
++	int32_t          ColorCor;
++	int32_t          PostStamp;
++	int32_t          ScanLine;
+ 	char          Attributes;
+ 	} TGA2Extension;
+ 
+@@ -318,3 +319,7 @@
+ 
+ #endif /* _TARGA_H_ */
+ 
++
++static_assert(sizeof(TGAHeader) == 18, "TGA header disk layout");
++static_assert(sizeof(TGA2Footer) == 26, "TGA footer disk layout");
++static_assert(sizeof(TGA2Extension) == 495, "TGA extension disk layout");

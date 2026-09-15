@@ -10,6 +10,11 @@
 #include "debug.h"
 #include "cnetwork.h"
 #include "gamemode.h"
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
+#include "combatgmode.h"
+#include "gametype.h"
+#include "vita_runtime_log.h"
+#endif
 #include "modpackagemgr.h"
 #include "mpsettingsmgr.h"
 #include "audiblesound.h"
@@ -32,6 +37,7 @@
 #include "input.h"
 #include "messagewindow.h"
 #include "objectives.h"
+#include "pathmgr.h"
 #include "directinput.h"
 #include "dinput.h"
 #include "renegade_vita_input_contract.h"
@@ -47,8 +53,13 @@
 #include "weapons.h"
 #include "wwaudio.h"
 #include "ww3d.h"
+#include "renegade_vita_options.h"
 #include "ww3d_vita_renderer.h"
 #include "a31_vita_hud_presentation.h"
+
+#if defined(__vita__) && RENEGADE_VITA_M00_DEMO
+extern void A31_Vita_Render_Demo_Ending_Overlay(void);
+#endif
 
 // Replaces the Win32 message-loop focus global for the native Vita lifecycle.
 // The application starts foregrounded; original Input::Update retains its
@@ -432,6 +443,7 @@ void A31_Interactive_Apply_Render_Capabilities()
 		scene->Enable_Static_Projectors(false);
 		scene->Enable_Dynamic_Projectors(false);
 		scene->Set_Shadow_Mode(PhysicsSceneClass::SHADOW_MODE_NONE);
+		RenegadeVitaOptions::Apply_Performance(*scene);
 	}
 }
 
@@ -442,6 +454,10 @@ void A31_Interactive_Configure_Vita_Controls()
 	// DirectInput boundary.  The named sensitivity participates in original
 	// Input::Update_Sliders and CCamera integration; it is not a Vita camera.
 	Input::Set_Mouse_Sensitivity(RenegadeVitaInput::DEFAULT_CAMERA_SENSITIVITY);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_QUICKSAVE, DIK_F5);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_QUICKSAVE, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_CYCLE_POG, DIK_BACK);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_CYCLE_POG, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD,
 		Input::SLIDER_JOYSTICK_UP);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_BACKWARD,
@@ -611,11 +627,19 @@ void A31_Interactive_Run_Simulation_Frame()
 #endif
 	GameModeClass *combat_mode = GameModeManager::Find("Combat");
 	if (combat_mode != NULL && Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE)) {
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+		// The native outer loop presents original EVA after this frame returns.
+		extern void A31_Vita_Request_Gameplay_Pause(void);
+		if (combat_mode->Is_Active()) A31_Vita_Request_Gameplay_Pause();
+		cNetwork::Update();
+		return;
+#else
 		if (combat_mode->Is_Active()) {
 			combat_mode->Suspend();
 		} else if (combat_mode->Is_Suspended()) {
 			combat_mode->Resume();
 		}
+#endif
 	}
 	/* Match the desktop main loop: suspended Combat returns before control and
 	** simulation, while cNetwork still services the local session. The missing
@@ -624,6 +648,18 @@ void A31_Interactive_Run_Simulation_Frame()
 	if (combat_mode != NULL && !combat_mode->Is_Active()) {
 		cNetwork::Update();
 		return;
+	}
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
+	if (IS_MISSION && Input::Get_State(INPUT_FUNCTION_QUICKSAVE)) {
+		Vita_Append_A22_Runtime_Breadcrumb("save", "original quicksave requested; file and reload success unassessed");
+		CombatGameModeClass::Quick_Save();
+	}
+#endif
+	// Original Commando mainloop.cpp services queued paths before game-mode
+	// control/Think. Without this, Goto actions wait forever in THINKING.
+	if (COMBAT_CAMERA != NULL) {
+		Vector3 camera_pos = COMBAT_CAMERA->Get_Position();
+		PathMgrClass::Resolve_Paths(camera_pos);
 	}
 	CombatManager::Generate_Control();
 	cNetwork::Update();
@@ -645,7 +681,7 @@ uint32_t Count_Physics_Objects(RefPhysListIterator iterator)
 	return count;
 }
 
-A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
+A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 {
 	A31InteractiveRenderTrace trace = {};
 	PhysicsSceneClass *scene = CombatManager::Get_Scene();
@@ -798,9 +834,12 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame()
 			trace.text_display_render_called = true;
 		}
 #endif
+#if defined(__vita__) && RENEGADE_VITA_M00_DEMO
+		A31_Vita_Render_Demo_Ending_Overlay();
+#endif
 	}
 	trace.end_render_completed = trace.begin_render_completed &&
-		WW3D::End_Render(true) == WW3D_ERROR_OK;
+		WW3D::End_Render(present) == WW3D_ERROR_OK;
 	scene->Post_Render_Processing();
 	trace.post_render_completed = true;
 
@@ -1072,6 +1111,43 @@ void WWAudioClass::Allow_Dialog(bool onoff)
 void WWAudioClass::Allow_Cinematic_Sound(bool onoff)
 {
 	m_IsCinematicSoundEnabled = onoff;
+}
+
+// No-output host builds retain settings state for original UI contracts.
+// Native candidates select WWAudio.cpp instead of this entire guarded block.
+void WWAudioClass::Set_Sound_Effects_Volume(float volume)
+{
+	m_RealSoundVolume = m_SoundVolume = max(0.0F, min(1.0F, volume));
+}
+void WWAudioClass::Set_Music_Volume(float volume)
+{
+	m_RealMusicVolume = m_MusicVolume = max(0.0F, min(1.0F, volume));
+}
+void WWAudioClass::Set_Dialog_Volume(float volume)
+{
+	m_DialogVolume = max(0.0F, min(1.0F, volume));
+}
+void WWAudioClass::Set_Cinematic_Volume(float volume)
+{
+	m_CinematicVolume = max(0.0F, min(1.0F, volume));
+}
+int WWAudioClass::Get_Speaker_Type(void) const { return m_SpeakerType; }
+void WWAudioClass::Set_Speaker_Type(int type) { m_SpeakerType = type; }
+WWAudioClass::DRIVER_TYPE_2D WWAudioClass::Open_2D_Device(bool, int, int)
+{
+	return DRIVER2D_ERROR;
+}
+bool WWAudioClass::Select_3D_Device(const char *) { return false; }
+bool WWAudioClass::Save_To_Registry(const char *, const StringClass &, bool,
+	int, int, bool, bool, bool, bool, float, float, float, float, int)
+{
+	// This headless adapter has no durable audio settings provider.
+	return false;
+}
+void WWAudioClass::Load_Default_Volume(int &music, int &sound, int &dialog, int &cinematic)
+{
+	// Same original fallbacks; retail INI consumption belongs to native WWAudio.
+	music = 31; sound = 43; dialog = 50; cinematic = 100;
 }
 
 void WWAudioClass::Flush_Playlist(SOUND_PAGE page)

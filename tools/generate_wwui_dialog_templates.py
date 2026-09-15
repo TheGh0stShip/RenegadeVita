@@ -1,18 +1,37 @@
 #!/usr/bin/env python3
 """Compile selected original chat.rc DIALOG records into Win32 template bytes."""
 import argparse, re, struct
+from pathlib import Path
 
-IDS = {128,130,131,255,256}
+# Original EVA shell and all seven child tabs must travel together.
+IDS = {128,130,131,145,169,209,210,211,231,232,233,243,255,256} | set(range(146,154))
 FLAGS = {'DS_MODALFRAME':0x80,'DS_SETFONT':0x40,'WS_POPUP':0x80000000,'WS_CAPTION':0x00C00000,'WS_GROUP':0x20000,'WS_TABSTOP':0x10000,
  'BS_PUSHBUTTON':0,'BS_DEFPUSHBUTTON':1,'BS_CHECKBOX':2,'BS_AUTOCHECKBOX':3,'BS_OWNERDRAW':0xB,'BS_LEFT':0x100,'BS_CENTER':0x300,'BS_FLAT':0x8000,
  'SS_LEFT':0,'SS_CENTER':1,'SS_RIGHT':2,'SS_BITMAP':0xE,'ES_MULTILINE':4,'ES_AUTOVSCROLL':0x40,'LBS_NOTIFY':1}
+FLAGS.update({'WS_SYSMENU':0x80000,'WS_BORDER':0x800000,
+ 'WS_CHILD':0x40000000,'WS_VISIBLE':0x10000000,'WS_DISABLED':0x08000000,
+ 'SS_BLACKFRAME':7,
+ 'SS_CENTERIMAGE':0x200,'SS_LEFTNOWORDWRAP':0xC,
+ 'ES_AUTOHSCROLL':0x80,'LVS_REPORT':1,'LVS_NOCOLUMNHEADER':0x4000,
+ 'LVS_SINGLESEL':4,'LVS_SHOWSELALWAYS':8,'LVS_SORTASCENDING':0x10,
+ 'LVS_AUTOARRANGE':0x100,'LVS_NOSORTHEADER':0x8000,
+ 'TBS_AUTOTICKS':1,'TBS_BOTH':8,'TBS_NOTICKS':0x10,
+ 'CBS_DROPDOWNLIST':3,'WS_VSCROLL':0x200000,'SS_ETCHEDHORZ':0x10})
+CAPTIONLESS = {'EDITTEXT','LISTBOX','COMBOBOX','SCROLLBAR'}
 CLASS = {'PUSHBUTTON':0x80,'DEFPUSHBUTTON':0x80,'CHECKBOX':0x80,'AUTOCHECKBOX':0x80,'LTEXT':0x82,'CTEXT':0x82,'RTEXT':0x82,'GROUPBOX':0x82,'EDITTEXT':0x81,'LISTBOX':0x83,'COMBOBOX':0x85,'SCROLLBAR':0x84}
+# RC statements supply these styles even when they are absent from chat.rc.
+# Original DialogTextClass explicitly checks WS_VISIBLE before drawing.
+DEFAULT_STYLE = {'LTEXT':0x20000, 'CTEXT':0x20001, 'RTEXT':0x20002,
+ 'PUSHBUTTON':0x10000, 'DEFPUSHBUTTON':0x10001,
+ 'CHECKBOX':0x10002, 'AUTOCHECKBOX':0x10003, 'GROUPBOX':7,
+ 'EDITTEXT':0x810000, 'LISTBOX':0x800001, 'COMBOBOX':0x10001,
+ 'SCROLLBAR':0}
 
 def macros(paths):
- d=dict(FLAGS); d.update({'IDOK':1,'IDC_STATIC':-1})
+ d=dict(FLAGS); d.update({'IDOK':1,'IDCANCEL':2,'IDYES':6,'IDNO':7,'IDC_STATIC':-1})
  raw={}
  for path in paths:
-  for line in open(path, encoding='latin1'):
+  for line in Path(path).read_text(encoding='latin1').splitlines():
    m=re.match(r'\s*#define\s+(\w+)\s+(.+?)\s*(?://.*)?$',line)
    if m: raw[m.group(1)]=m.group(2).strip()
  def resolve(name, active=()):
@@ -34,10 +53,13 @@ def split(s):
   if c==',' and not q:out.append(cur.strip());cur=''
   else:cur+=c
  out.append(cur.strip()); return out
-def val(expr, d):
- total=0
- for x in expr.replace('NOT ','').split('|'):
-  x=x.strip(); total|=d.get(x, int(x,0) if re.match(r'^-?(0x[0-9a-fA-F]+|\d+)$',x) else 0)
+def val(expr, d, default=0):
+ total=default
+ for x in expr.split('|'):
+  x=x.strip(); negate=x.startswith('NOT ')
+  if negate: x=x[4:].strip()
+  value=d.get(x, int(x,0) if re.match(r'^-?(0x[0-9a-fA-F]+|\d+)$',x) else 0)
+  total = total & ~value if negate else total | value
  return total
 def text(x):
  x=x.strip(); return x[1:-1].replace('""','"') if x.startswith('"') else ''
@@ -46,14 +68,20 @@ def ordinal(x): return struct.pack('<HH',0xffff,x)
 def align(b,n): return b+b'\0'*((-len(b))%n)
 def control(parts,d):
  head=parts[0].split(None,1); kind=head[0].upper(); parts=[kind]+(head[1:])+parts[1:]; style=0; cls=CLASS.get(kind); title=''
+ defaults=d['WS_CHILD'] | d['WS_VISIBLE'] | DEFAULT_STYLE.get(kind,0)
  if kind=='CONTROL':
-  title=text(parts[1]); ident=val(parts[2],d); cname=text(parts[3]); style=val(','.join(parts[4:-4]),d); coords=[val(x,d) for x in parts[-4:]]
+  title=text(parts[1]); ident=val(parts[2],d); cname=text(parts[3]); style=val(','.join(parts[4:-4]),d,defaults); coords=[val(x,d) for x in parts[-4:]]
   cls={'BUTTON':0x80,'STATIC':0x82,'EDIT':0x81,'COMBOBOX':0x85}.get(cname.upper()); cfield=ordinal(cls) if cls else field(cname)
+ elif kind in CAPTIONLESS:
+  ident=val(parts[1],d)
+  coords=[val(x,d) for x in parts[2:6]]
+  style=val(','.join(parts[6:]),d,defaults)
+  cfield=ordinal(cls)
  else:
-  title=text(parts[1]) if len(parts)>1 else ''; ident=val(parts[2],d); coords=[val(x,d) for x in parts[3:7]]; style=val(','.join(parts[7:]),d) if len(parts)>7 else 0; cfield=ordinal(cls)
+  title=text(parts[1]) if len(parts)>1 else ''; ident=val(parts[2],d); coords=[val(x,d) for x in parts[3:7]]; style=val(','.join(parts[7:]),d,defaults); cfield=ordinal(cls)
  return align(struct.pack('<IIhhhhH',style,0,*coords,ident & 0xffff)+cfield+field(title)+struct.pack('<H',0),4)
 def parse(rc,d):
- lines=open(rc,encoding='latin1').read().splitlines(); got={}; i=0
+ lines=Path(rc).read_text(encoding='latin1').splitlines(); got={}; i=0
  while i<len(lines):
   m=re.match(r'\s*(\w+)\s+DIALOG(?:EX)?\s+DISCARDABLE\s+(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)',lines[i])
   if not m:i+=1;continue

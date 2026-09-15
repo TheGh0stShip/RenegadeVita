@@ -1,0 +1,78 @@
+--- a/loadingscreen.h
++++ b/loadingscreen.h
+@@ -26,1 +26,3 @@
+-	float	LoadPercentageRate;
++	float	LoadPercentageRate;
++	float PresentationProgress;
++	unsigned long long LastPresentationUs;
+@@ -40,1 +42,2 @@
+-	void Render(bool update_network = false);
++	void Render(bool update_network = false);
++	void Set_Presentation_Progress(float progress);
+@@ -48,1 +51,2 @@
+-void Commando_Destroy_Original_Loading_Screen( void * screen );
++void Commando_Destroy_Original_Loading_Screen( void * screen );
++void Commando_Set_Original_Loading_Progress(void *screen, float progress);
+--- a/loadingscreen.cpp
++++ b/loadingscreen.cpp
+@@ -29,1 +33,4 @@
+-#include <string.h>
++#include <string.h>
++#if defined(__vita__)
++#include <psp2/kernel/processmgr.h>
++#endif
+@@ -45,1 +52,3 @@
+-	LoadPercentageRate = 0;
++	LoadPercentageRate = 0;
++	PresentationProgress = -1.0f;
++	LastPresentationUs = 0;
+@@ -247,4 +256,17 @@
+-void LoadingScreenClass::Render(bool update_network)
+-{
+-	TimeManager::Update_Frame_Time();
+-	LoadTime += TimeManager::Get_Frame_Seconds();
++void LoadingScreenClass::Set_Presentation_Progress(float progress)
++{
++	PresentationProgress = WWMath::Clamp(progress, 0.0f, 1.0f);
++}
++
++void LoadingScreenClass::Render(bool update_network)
++{
++	TimeManager::Update_Frame_Time();
++	float presentation_seconds = TimeManager::Get_Frame_Seconds();
++#if defined(__vita__)
++	// Loading presentation must not stop when Combat's simulation clock pauses.
++	const unsigned long long now = sceKernelGetProcessTimeWide();
++	presentation_seconds = LastPresentationUs != 0 && now >= LastPresentationUs ?
++		WWMath::Clamp(float(now - LastPresentationUs) / 1000000.0f, 0.0f, 0.25f) : 0.0f;
++	LastPresentationUs = now;
++#endif
++	LoadTime += presentation_seconds;
+@@ -265,1 +287,1 @@
+-	LoadPercentage += LoadPercentageRate * TimeManager::Get_Frame_Seconds();
++	LoadPercentage += LoadPercentageRate * presentation_seconds;
+@@ -275,1 +297,7 @@
+-	backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
++#if defined(__vita__)
++	// Native post-load texture and scene preparation owns the final ten percent.
++	const float predicted = LoadPercentageDrawn;
++	LoadPercentageDrawn = PresentationProgress >= 0.0f ?
++		PresentationProgress : predicted * 0.90f;
++#endif
++	backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
+@@ -276,1 +304,4 @@
+-	Update_Status_Text();
++	Update_Status_Text();
++#if defined(__vita__)
++	LoadPercentageDrawn = predicted;
++#endif
+@@ -305,1 +336,8 @@
+-void Commando_Destroy_Original_Loading_Screen( void * screen )
++void Commando_Set_Original_Loading_Progress(void *screen, float progress)
++{
++	if (screen != NULL) {
++		((LoadingScreenClass *)screen)->Set_Presentation_Progress(progress);
++	}
++}
++
++void Commando_Destroy_Original_Loading_Screen( void * screen )

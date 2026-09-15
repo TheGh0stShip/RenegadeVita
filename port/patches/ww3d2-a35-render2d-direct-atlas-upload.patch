@@ -1,0 +1,36 @@
+--- a/render2dsentence.cpp
++++ b/render2dsentence.cpp
+@@ -47,3 +47,4 @@
+-#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
+-#include "a30_vita_runtime.h"
+-#endif
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
++#include "a30_vita_runtime.h"
++#include "ww3d_vita_renderer.h"
++#endif
+@@ -602,8 +603,17 @@
+-		TextureClass *new_texture = new TextureClass (desc.Width, desc.Height, WW3D_FORMAT_A4R4G4B4, TextureClass::MIP_LEVELS_1);
+-		SurfaceClass *texture_surface = new_texture->Get_Surface_Level ();
+-
+-		//
+-		//	Copy the contents of the texture from the surface
+-		//
+-		DX8Wrapper::_Copy_DX8_Rects (curr_surface->Peek_D3D_Surface (), NULL, 0, texture_surface->Peek_D3D_Surface (), NULL);
+-		REF_PTR_RELEASE (texture_surface);
++		TextureClass *new_texture = NULL;
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
++		// The finished original atlas can seed the original texture directly.
++		// Avoid uploading an empty native texture before copying the same atlas.
++		if (desc.Format == WW3D_FORMAT_A4R4G4B4 &&
++			RenegadeVitaRenderer::Use_Direct_Text_Atlas_Upload ()) {
++			new_texture = new TextureClass (curr_surface, TextureClass::MIP_LEVELS_1);
++		} else
++#endif
++		{
++			new_texture = new TextureClass (desc.Width, desc.Height, WW3D_FORMAT_A4R4G4B4, TextureClass::MIP_LEVELS_1);
++			SurfaceClass *texture_surface = new_texture->Get_Surface_Level ();
++
++			// Preserve the baseline conversion/copy path for other formats.
++			DX8Wrapper::_Copy_DX8_Rects (curr_surface->Peek_D3D_Surface (), NULL, 0, texture_surface->Peek_D3D_Surface (), NULL);
++			REF_PTR_RELEASE (texture_surface);
++		}

@@ -1,0 +1,221 @@
+--- a/dlgevaencyclopedia.cpp
++++ b/dlgevaencyclopedia.cpp
+@@ -58,6 +58,7 @@
+ #include "wwaudio.h"
+ #include "dlghelpscreen.h"
+ #include "dlgsavegame.h"
++#include "dlgtechoptions.h"
+ #include "crandom.h"
+ #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "slavemaster.h"
+@@ -108,8 +109,6 @@
+ {
+ #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #if RENEGADE_VITA_M00_DEMO
+-	// Keep unsupported demo options visible without opening an absent dialog.
+-	if (Get_Dlg_Item (IDC_MENU_OPTIONS_BUTTON) != NULL) Get_Dlg_Item (IDC_MENU_OPTIONS_BUTTON)->Enable (false);
+ 	Set_Dlg_Item_Text (IDC_MENU_MAIN_MENU_BUTTON, L"Exit Demo");
+ #else
+ 	Set_Dlg_Item_Text (IDC_MENU_MAIN_MENU_BUTTON, L"Exit Game");
+@@ -222,11 +221,6 @@
+ EVAEncyclopediaMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
+ {
+ 	bool allow_default_processing = true;
+-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+-#if RENEGADE_VITA_M00_DEMO
+-	if (ctrl_id == IDC_MENU_OPTIONS_BUTTON) return;
+-#endif
+-#endif
+ 
+ 	switch (ctrl_id)
+ 	{
+@@ -235,6 +229,11 @@
+ 			break;
+ 
+ #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		case IDC_MENU_OPTIONS_BUTTON:
++			START_DIALOG (TechOptionsMenuClass);
++			allow_default_processing = false;
++			break;
++
+ 		case IDC_MENU_SAVE_SP_GAME_BUTTON:
+ 			START_DIALOG (SaveGameMenuClass);
+ 			allow_default_processing = false;
+--- a/dlgconfigaudiotab.cpp
++++ b/dlgconfigaudiotab.cpp
+@@ -202,6 +202,15 @@
+ 	Configure_Rate_Combobox ();
+ 	Configure_Speaker_Combobox ();
+ 	Configure_Driver_List ();
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	// Vita has one fixed output provider. Volume/category controls retain
++	// their original WWAudio owners; desktop device reconfiguration is absent.
++	Enable_Dlg_Item(IDC_DRIVER_LIST, false);
++	Enable_Dlg_Item(IDC_QUALITY_COMBO, false);
++	Enable_Dlg_Item(IDC_RATE_COMBO, false);
++	Enable_Dlg_Item(IDC_SPEAKER_SETUP_COMBO, false);
++	Enable_Dlg_Item(IDC_STEREO_CHECK, false);
++#endif
+ 	
+ 	//
+ 	//	Update the enabled state of the volume sliders
+@@ -444,7 +453,7 @@
+ 			//
+ 			int item_index = list_ctrl->Insert_Entry (index, wide_driver_name);
+ 			if (item_index >= 0) {
+-				list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)driver_info->driver);
++				list_ctrl->Set_Entry_Data (item_index, 0, static_cast<DWORD>(index));
+ 
+ 				//
+ 				//	Select this entry if its the default
+@@ -560,6 +569,13 @@
+ 	//
+ 	combo_box = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_SPEAKER_SETUP_COMBO);
+ 	speaker_type = combo_box->Get_Curr_Sel ();
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	bits = InitialBits;
++	hertz = InitialHertz;
++	is_stereo = InitialIsStereo;
++	device_index = InitialDeviceIndex;
++	speaker_type = WWAudioClass::Get_Instance()->Get_Speaker_Type();
++#endif
+ 
+ 	//
+ 	//	Store these settings in the registry
+--- a/dlgconfigvideotab.cpp
++++ b/dlgconfigvideotab.cpp
+@@ -86,8 +86,12 @@
+ 	//
+ 	//	Get the name of the render device
+ 	//
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	StringClass ascii_device_name = "PlayStation Vita";
++#else
+ 	int curr_device					= WW3D::Get_Render_Device ();
+ 	StringClass ascii_device_name	= WW3D::Get_Render_Device_Name (curr_device);
++#endif
+ 
+ 	WideStringClass device_name;
+ 	device_name.Convert_From (ascii_device_name);
+@@ -99,7 +103,12 @@
+ 	int height			= 0;
+ 	int bits				= 0;
+ 	bool is_windowed	= false;
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	// Report the physical panel, not the original 800x600 menu canvas.
++	width = 960; height = 544; bits = 32;
++#else
+ 	WW3D::Get_Device_Resolution (width, height, bits, is_windowed);
++#endif
+ 
+ 	WideStringClass resolution;
+ 	resolution.Format (L"%d x %d", width, height);
+@@ -148,6 +157,16 @@
+ 	// Now the gamma can take effect.
+ 	UpdateGamma = true;
+ 	slider->Set_Pos (ContrastLevel);
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	// The native display provider does not expose a hardware gamma ramp.
++	UpdateGamma = false;
++	Enable_Dlg_Item(IDC_GAMMA_SLIDER, false);
++	Enable_Dlg_Item(IDC_BRIGHTNESS_SLIDER, false);
++	Enable_Dlg_Item(IDC_CONTRAST_SLIDER, false);
++	Set_Dlg_Item_Text(IDC_GAMMA_SETTING, L"Fixed");
++	Set_Dlg_Item_Text(IDC_BRIGHTNESS_SETTING, L"Fixed");
++	Set_Dlg_Item_Text(IDC_CONTRAST_SETTING, L"Fixed");
++#endif
+ 
+ 	ChildDialogClass::On_Init_Dialog ();
+ 	return ;
+--- a/dlgconfigvideotab.h
++++ b/dlgconfigvideotab.h
+@@ -123,13 +123,17 @@
+ 
+ inline void	DlgConfigVideoTabClass::Update_Gamma()
+ {
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 	DX8Wrapper::Set_Gamma (Gamma_Scale (GammaLevel), Gamma_Scale (BrightnessLevel), Gamma_Scale (ContrastLevel), true, false);
++#endif
+ }
+ 
+ 
+ inline void	DlgConfigVideoTabClass::Update_Gamma (int g, int b, int c)
+ {
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 	DX8Wrapper::Set_Gamma (Gamma_Scale (g), Gamma_Scale (b), Gamma_Scale (c), true, false);
++#endif
+ }
+ 
+ 
+--- a/dlgconfigperformancetab.h
++++ b/dlgconfigperformancetab.h
+@@ -96,6 +96,7 @@
+ 	//	Protected member data
+ 	///////////////////////////////////////////////////////////////////
+ 	DynamicVectorClass<DialogControlClass *>	ExpertWindowList;
++	DynamicVectorClass<int> InitialSettings;
+ };
+ 
+ 
+--- a/dlgconfigperformancetab.cpp
++++ b/dlgconfigperformancetab.cpp
+@@ -169,6 +169,8 @@
+ 	Setup_Controls ();
+ 	Load_Values ();
+ 	Determine_Performance_Setting ();
++	InitialSettings.Delete_All();
++	Get_Settings(InitialSettings);
+ 
+ 	//
+ 	//	Set the visibility of the expert windows controls
+@@ -320,6 +322,15 @@
+ 		int texture_red		= registry.Get_Int (VALUE_NAME_TEXTURE_RES, 0);
+ 		int particle_detail	= registry.Get_Int (VALUE_NAME_PARTICLE_DETAIL, 1);
+ 		int npatches			= registry.Get_Int (VALUE_NAME_NPATCHES, 0);
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		static_shadows = COMBAT_SCENE->Are_Static_Projectors_Enabled();
++		shadow_mode = COMBAT_SCENE->Get_Shadow_Mode();
++		texture_red = WW3D::Get_Texture_Reduction();
++		npatches = 0;
++		// Original particle-detail registry value is consumed only by the
++		// desktop initializer; no live native setter exists for this control.
++		Enable_Dlg_Item(IDC_PARTICLE_DETAIL_SLIDER, false);
++#endif
+ 
+ 		//
+ 		//	Get the surface effect mode
+@@ -402,7 +413,7 @@
+ 	//
+ 	float level_sum = 0;
+ 	for (int index = 0; index < MAX_EXPERT_OPTIONS; index ++) {
+-		level_sum += (option_levels[index] / count_per_option[index]);
++		if (count_per_option[index] != 0) level_sum += (option_levels[index] / count_per_option[index]);
+ 	}
+ 
+ 	//
+@@ -568,6 +579,14 @@
+ bool
+ DlgConfigPerformanceTabClass::On_Apply (void)
+ {
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++	DynamicVectorClass<int> current;
++	Get_Settings(current);
++	if (InitialSettings.Count() != MAX_EXPERT_OPTIONS) return false;
++	bool changed = false;
++	for (int i = 0; i < MAX_EXPERT_OPTIONS; ++i) changed |= current[i] != InitialSettings[i];
++	if (!changed) return true;
++#endif
+ 	SliderCtrlClass *geometry_slider			= (SliderCtrlClass *)Get_Dlg_Item (IDC_GEOMETRY_DETAIL_SLIDER);
+ 	SliderCtrlClass *char_shadows_slider	= (SliderCtrlClass *)Get_Dlg_Item (IDC_CHAR_SHADOWS_SLIDER);
+ 	SliderCtrlClass *texture_slider			= (SliderCtrlClass *)Get_Dlg_Item (IDC_TEXTURE_DETAIL_SLIDER);
+@@ -623,6 +642,10 @@
+ 		//
+ 		//	Pass the values onto the game
+ 		//
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++		// The coarse slider must not round an unchanged custom scene budget.
++		if (current[4] != InitialSettings[4])
++#endif
+ 		COMBAT_SCENE->Set_Polygon_Budgets (lod_budget, lod_budget);
+ 		COMBAT_SCENE->Enable_Dynamic_Projectors ((shadow_mode != PhysicsSceneClass::SHADOW_MODE_NONE));
+ 		COMBAT_SCENE->Enable_Static_Projectors ((static_shadows != 0));

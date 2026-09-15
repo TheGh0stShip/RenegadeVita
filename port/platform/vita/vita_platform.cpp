@@ -117,6 +117,7 @@ VitaBootstrapStatus Vita_Initialize_Filesystem()
 	const char *const writable_directories[] = {
 		"ux0:data/renegade",
 		"ux0:data/renegade/user",
+		"ux0:data/renegade/user/save",
 		"ux0:data/renegade/user/saves",
 		"ux0:data/renegade/user/config",
 		"ux0:data/renegade/user/logs",

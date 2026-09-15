@@ -35,6 +35,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "dlgconfigvideotab.h"
+#include "translatedb.h"
 #include "resource.h"
 #include "ww3d.h"
 #include "sliderctrl.h"
@@ -86,8 +87,12 @@ DlgConfigVideoTabClass::On_Init_Dialog (void)
 	//
 	//	Get the name of the render device
 	//
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	StringClass ascii_device_name = "PlayStation Vita";
+#else
 	int curr_device					= WW3D::Get_Render_Device ();
 	StringClass ascii_device_name	= WW3D::Get_Render_Device_Name (curr_device);
+#endif
 
 	WideStringClass device_name;
 	device_name.Convert_From (ascii_device_name);
@@ -99,7 +104,12 @@ DlgConfigVideoTabClass::On_Init_Dialog (void)
 	int height			= 0;
 	int bits				= 0;
 	bool is_windowed	= false;
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	// Report the physical panel, not the original 800x600 menu canvas.
+	width = 960; height = 544; bits = 32;
+#else
 	WW3D::Get_Device_Resolution (width, height, bits, is_windowed);
+#endif
 
 	WideStringClass resolution;
 	resolution.Format (L"%d x %d", width, height);
@@ -148,6 +158,21 @@ DlgConfigVideoTabClass::On_Init_Dialog (void)
 	// Now the gamma can take effect.
 	UpdateGamma = true;
 	slider->Set_Pos (ContrastLevel);
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	// The native display provider does not expose a hardware gamma ramp.
+	UpdateGamma = false;
+	Enable_Dlg_Item(IDC_GAMMA_SLIDER, false);
+	Enable_Dlg_Item(IDC_BRIGHTNESS_SLIDER, false);
+	Enable_Dlg_Item(IDC_CONTRAST_SLIDER, false);
+	Set_Dlg_Item_Text(IDC_GAMMA_SETTING, L"Fixed");
+	Set_Dlg_Item_Text(IDC_BRIGHTNESS_SETTING, L"Fixed");
+	Set_Dlg_Item_Text(IDC_CONTRAST_SETTING, L"Fixed");
+	for (int i = 0; i < Get_Control_Count(); ++i) {
+		if (WideStringClass(Get_Control(i)->Get_Text()) == TRANSLATE(IDS_MENU_TEXT745))
+			Get_Control(i)->Set_Text(L"PlayStation Vita uses a fixed 960 x 544 display. Adjust screen brightness with the PS button quick menu.");
+	}
+
+#endif
 
 	ChildDialogClass::On_Init_Dialog ();
 	return ;

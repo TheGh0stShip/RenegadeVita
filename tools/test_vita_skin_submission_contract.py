@@ -33,15 +33,13 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         )
         self.assertIn("const unsigned *diffuse_colors = model->Get_DCG_Array(pass);", renderer)
         self.assertIn("model->Peek_Material(static_cast<int>(vertex_index), pass)", renderer)
-        self.assertIn("Evaluate_Original_Material_Vertex_Color(material, color1,", renderer)
+        self.assertRegex(renderer, r"Evaluate_Original_Material_Vertex_Color\(material,\s*color1,")
         self.assertIn("material->Get_Diffuse(&material_diffuse);", renderer)
         self.assertIn("glColor4f(Clamp01(final_color.X)", renderer)
         self.assertIn("is_skin ? NULL : mesh.Get_User_Lighting_Array(false);", renderer)
-        self.assertIn(
-            "if (is_skin && bound_textures[0] != NULL &&\n"
-            "\t\t\t\t\ttriangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE)",
-            renderer,
-        )
+        self.assertIn("current_texturing = triangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;", renderer)
+        self.assertRegex(renderer, r"const bool skin_color_passthrough = is_skin && bound_textures\[0\] != NULL &&\s*current_texturing;")
+        self.assertIn("if (skin_color_passthrough)", renderer)
         self.assertIn("first textured skin color pass-through", renderer)
         self.assertIn("final_color = Vector3(1.0f, 1.0f, 1.0f);", renderer)
         self.assertNotIn("0.35f + 0.35f * (normal.X + 1.0f)", renderer)

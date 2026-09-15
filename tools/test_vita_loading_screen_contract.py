@@ -117,9 +117,9 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("RENEGADE_BUILD_STARTUP_PRECACHE_RECEIPT_PATH", runtime)
         self.assertIn("RENEGADE_BUILD_STARTUP_PRECACHE_RECEIPT_PATH", (ROOT / "port/platform/vita/build_identity.h.in").read_text(encoding="utf-8"))
         self.assertIn("kM00CacheIndex", runtime)
-        self.assertIn("kM01CacheIndex", runtime)
+        self.assertNotIn("MixFileFactoryClass m01_factory", runtime)
         self.assertIn("cache/m00-tutorial-mix-index-v1.txt", runtime)
-        self.assertIn("cache/m01-mix-index-v1.txt", runtime)
+        self.assertNotIn("cache/m01-mix-index-v1.txt", runtime)
         self.assertNotIn("a35-dev82-startup-precache.txt", runtime)
         self.assertIn("Pre-cache / pre-warm / pre-compute", runtime)
         self.assertIn("Required startup:      %u/%u", runtime)
@@ -247,11 +247,11 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Vita_Notify_Loading_Status_Change", status_source)
         self.assertIn("g_vita_loading_status_callback_active", status_source)
         self.assertIn(
-            "Vita_Notify_Loading_Status_Change(text, status_count);",
+            "Vita_Notify_Loading_Status_Change(text, -1);",
             status_source,
         )
         self.assertIn(
-            'Vita_Notify_Loading_Status_Change("saveload-status-count", status_count);',
+            'Vita_Notify_Loading_Status_Change("saveload-status-count", -1);',
             status_source,
         )
         self.assertIn("synchronous-load callback armed", runtime)
@@ -304,7 +304,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("new (std::nothrow) A31FrameHistory", runtime)
         self.assertIn("delete capture_history;", runtime)
         self.assertIn("capture_history->Reset();", runtime)
-        self.assertIn("RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels, kCaptureBytes)", runtime)
+        self.assertIn("RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels, kCaptureBytes, true)", runtime)
         self.assertIn("Capture: %s candidate=%s phase=original-loading-screen reason=level-ready", runtime)
         self.assertLess(
             runtime.index('loading_presenter.Render_Original_Progress("level_ready", true, 7);'),
@@ -336,7 +336,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         initialized_index = runtime.index("result.initialized = true;")
         input_loop_index = runtime.index("while (true)", initialized_index)
         self.assertIn(
-            "A31_Interactive_Run_Render_Frame();",
+            "A31_Interactive_Run_Render_Frame(false);",
             runtime[scene_prewarm_definition:scene_prewarm_call],
         )
         scene_prewarm = runtime[scene_prewarm_definition:scene_prewarm_call]
@@ -344,7 +344,10 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             'Apply_Original_Gameplay_Render_Resolution("prewarm_m00_scene"',
             scene_prewarm,
         )
-        self.assertIn("loading_overlay_frames=0", scene_prewarm)
+        self.assertIn("hidden_scene=1", scene_prewarm)
+        self.assertIn("Present_M00_Prewarm_Progress(loading_presenter,", scene_prewarm)
+        self.assertIn("last_trace.post_render_completed", scene_prewarm)
+        self.assertNotIn("A31_Interactive_Run_Simulation_Frame();", scene_prewarm)
         self.assertNotIn(
             'loading_presenter.Render_Original_Progress("prewarm_m00_scene"',
             scene_prewarm,
@@ -404,10 +407,10 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn(
-            "A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(\n\tint startup_screen_result = -1);",
+            "A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(\n\tint startup_screen_result = -1, bool start_at_main_menu = false,\n\tconst char *reload_source = nullptr);",
             header,
         )
-        self.assertIn("A31_Vita_Run_Interactive_Runtime(screen_result)", main)
+        self.assertIn("A31_Vita_Run_Interactive_Runtime(screen_result, start_at_main_menu,", main)
 
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
             encoding="utf-8"

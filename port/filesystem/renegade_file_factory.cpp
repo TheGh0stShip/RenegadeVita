@@ -27,6 +27,8 @@ struct FileFactoryCounters
 	std::atomic<uint32_t> read_bytes;
 	std::atomic<uint32_t> write_calls;
 	std::atomic<uint32_t> write_bytes;
+	std::atomic<uint32_t> readonly_availability_skips;
+	std::atomic<uint32_t> readonly_open_skips;
 };
 
 FileFactoryCounters g_file_factory_counters = {};
@@ -64,6 +66,8 @@ void Renegade_File_Factory_Reset_Statistics(void)
 	Reset(g_file_factory_counters.read_bytes);
 	Reset(g_file_factory_counters.write_calls);
 	Reset(g_file_factory_counters.write_bytes);
+	Reset(g_file_factory_counters.readonly_availability_skips);
+	Reset(g_file_factory_counters.readonly_open_skips);
 }
 
 RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void)
@@ -88,12 +92,15 @@ RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void)
 	result.read_bytes = Snapshot(g_file_factory_counters.read_bytes);
 	result.write_calls = Snapshot(g_file_factory_counters.write_calls);
 	result.write_bytes = Snapshot(g_file_factory_counters.write_bytes);
+	result.readonly_availability_skips = Snapshot(g_file_factory_counters.readonly_availability_skips);
+	result.readonly_open_skips = Snapshot(g_file_factory_counters.readonly_open_skips);
 	return result;
 }
 
 RenegadeRootedFileClass::RenegadeRootedFileClass(const RenegadePathRoots &roots,
 	const char *logical_name) : Roots(roots), LastResolution(),
-	PhysicalNamePrepared(false), PreparedAccess(RENEGADE_PATH_READ)
+	PhysicalNamePrepared(false), PreparedAccess(RENEGADE_PATH_READ),
+	NativeProbeForced(false)
 {
 	LogicalName[0] = 0;
 	Set_Name(logical_name);
@@ -164,6 +171,16 @@ int RenegadeRootedFileClass::Open(int rights)
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
 		return false;
 	}
+	// Retail is immutable during a running candidate. The case-resolution
+	// scan already proved this loose path absent; preserve failure/fallback
+	// without asking the OS to fail the same lookup again. Writable namespaces
+	// and original forced availability checks must still reach native I/O.
+	if (PreparedAccess == RENEGADE_PATH_READ && !NativeProbeForced &&
+		LastResolution.confirmed_missing && !LastResolution.writable_namespace) {
+		g_file_factory_counters.readonly_open_skips.fetch_add(1U, std::memory_order_relaxed);
+		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
+		return false;
+	}
 	const int opened = BufferedFileClass::Open(rights);
 	if (!opened) {
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
@@ -202,7 +219,21 @@ bool RenegadeRootedFileClass::Is_Available(int forced)
 			std::memory_order_relaxed);
 		return false;
 	}
+	if (!forced && LastResolution.confirmed_missing &&
+		!LastResolution.writable_namespace) {
+		g_file_factory_counters.readonly_availability_skips.fetch_add(1U, std::memory_order_relaxed);
+		g_file_factory_counters.availability_failures.fetch_add(1U, std::memory_order_relaxed);
+		return false;
+	}
+	// RawFileClass::Is_Available(forced) calls virtual Open. Carry the forced
+	// request through that nested call instead of accidentally short-circuiting it.
+	const bool previous_forced = NativeProbeForced;
+	NativeProbeForced = previous_forced || forced != 0;
 	const bool available = BufferedFileClass::Is_Available(forced);
+	NativeProbeForced = previous_forced;
+	if (available) {
+		LastResolution.confirmed_missing = false;
+	}
 	if (!available) {
 		g_file_factory_counters.availability_failures.fetch_add(1U,
 			std::memory_order_relaxed);

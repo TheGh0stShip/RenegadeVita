@@ -1,0 +1,41 @@
+--- a/dialogparser.cpp
++++ b/dialogparser.cpp
+@@ -240 +240 @@
+-		WCHAR *string_id = ::wcsstr (dlg_title->Peek_Buffer (), L"IDS_");
++		WCHAR *string_id = const_cast<WCHAR *>(rv_utf16_strstr (dlg_title->Peek_Buffer (), L"IDS_"));
+@@ -293 +293 @@
+-				if (::wcsstr (text_buffer, L"TRACKBAR") != 0) {
++				if (rv_utf16_strstr (text_buffer, L"TRACKBAR") != 0) {
+@@ -295 +295 @@
+-				} else if (::wcsstr (text_buffer, L"TABCONTROL") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"TABCONTROL") != 0) {
+@@ -297 +297 @@
+-				} else if (::wcsstr (text_buffer, L"LISTVIEW") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"LISTVIEW") != 0) {
+@@ -299 +299 @@
+-				} else if (::wcsstr (text_buffer, L"MAP") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"MAP") != 0) {
+@@ -301 +301 @@
+-				} else if (::wcsstr (text_buffer, L"VIEWER") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"VIEWER") != 0) {
+@@ -303 +303 @@
+-				} else if (::wcsstr (text_buffer, L"HOTKEY") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"HOTKEY") != 0) {
+@@ -305 +305 @@
+-				} else if (::wcsstr (text_buffer, L"SHORTCUTBAR") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"SHORTCUTBAR") != 0) {
+@@ -307 +307 @@
+-				} else if (::wcsstr (text_buffer, L"MERCHANDISE") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"MERCHANDISE") != 0) {
+@@ -309 +309 @@
+-				} else if (::wcsstr (text_buffer, L"TREEVIEW") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"TREEVIEW") != 0) {
+@@ -313 +313 @@
+-				} else if (::wcsstr (text_buffer, L"HEALTHBAR") != 0) {
++				} else if (rv_utf16_strstr (text_buffer, L"HEALTHBAR") != 0) {
+@@ -323 +323 @@
+-			WCHAR *string_id = ::wcsstr (text_buffer, L"IDS_");
++			WCHAR *string_id = const_cast<WCHAR *>(rv_utf16_strstr (text_buffer, L"IDS_"));
+@@ -350 +350 @@
+-				::wcscpy (string_id, translation);
++				rv_utf16_copy (string_id, translation);

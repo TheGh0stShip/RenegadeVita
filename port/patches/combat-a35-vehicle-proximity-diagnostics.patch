@@ -32,7 +32,7 @@
 +}
 +
 +#define VITA_VEHICLE_TYPE_NAME(definition) \
-+	((definition).TypeName[0] != '\0' ? (definition).TypeName : "unnamed")
++	((definition).TypeName[0] != '\0' ? (definition).TypeName.Peek_Buffer() : "unnamed")
 +
 +} // namespace
 +#endif
@@ -137,3 +137,9 @@
  }
  
  
+@@ -2057,1 +2148,1 @@
+-	sprintf( string, "V_%sL1.M_%sCL", Get_Definition().TypeName, Get_Definition().TypeName );
++	snprintf( string, sizeof(string), "V_%sL1.M_%sCL", Get_Definition().TypeName.Peek_Buffer(), Get_Definition().TypeName.Peek_Buffer() );
+@@ -2067,1 +2158,1 @@
+-	sprintf( string, "V_%sL1.M_%sOP", Get_Definition().TypeName, Get_Definition().TypeName );
++	snprintf( string, sizeof(string), "V_%sL1.M_%sOP", Get_Definition().TypeName.Peek_Buffer(), Get_Definition().TypeName.Peek_Buffer() );

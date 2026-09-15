@@ -661,6 +661,12 @@ MapCtrlClass::Set_Map_Texture (const char *filename)
 	TextureClass *texture = WW3DAssetManager::Get_Instance ()->Get_Texture (filename, TextureClass::MIP_LEVELS_1);
 	if (texture != NULL) {
 
+#if defined(RENEGADE_VITA_PORT)
+		// Read dimensions only after the original native texture owner has
+		// loaded them; Set_Texture below would otherwise initialize too late.
+		texture->Init();
+#endif
+
 		//
 		//	Get the dimensions of the texture
 		//
@@ -926,6 +932,11 @@ MapCtrlClass::Set_Marker_Texture (const char *filename)
 	//
 	TextureClass *texture = WW3DAssetManager::Get_Instance ()->Get_Texture (filename, TextureClass::MIP_LEVELS_1);
 	if (texture != NULL) {
+
+#if defined(RENEGADE_VITA_PORT)
+		// Marker pixel rectangles also require initialized atlas dimensions.
+		texture->Init();
+#endif
 
 		//
 		//	Get the dimensions of the texture

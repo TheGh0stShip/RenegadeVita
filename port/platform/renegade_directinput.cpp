@@ -9,6 +9,7 @@
 #include "renegade_vita_input_contract.h"
 #include "renegade_vita_input_route.h"
 #include "renegade_vita_input_telemetry.h"
+#include "renegade_vita_text_entry.h"
 #include "timemgr.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "a4_frontend_lifecycle_boundary.h"
@@ -20,6 +21,9 @@
 #include <psp2/io/stat.h>
 #include <psp2/touch.h>
 #include "vita_runtime_log.h"
+#include "renegade_vita_dev_input.h"
+#include "render2d.h"
+#include "ww3d_vita_renderer.h"
 #endif
 
 #include <new>
@@ -40,6 +44,8 @@ namespace {
 
 RenegadeVitaInputTelemetry g_vita_input_telemetry = {};
 long g_vita_joystick_axis[2] = {};
+RenegadeVitaInput::SelectTap g_select_tap;
+bool g_select_capture_enabled = false;
 
 #if !defined(RENEGADE_HOST_ABI_TEST)
 using RenegadeVitaInputRoute::Header;
@@ -84,8 +90,6 @@ const float kLegacyRouteV1FrameSeconds = 1.0f / kLegacyRouteV1SampleRate;
 const float kLegacyRouteV1MaximumFrameStep = 0.25f;
 const uint32_t kDefaultTimedRouteDeltaUs = 16667U;
 const uint32_t kMaximumRecordedRouteDeltaUs = 1000000U;
-const float kOriginalLogicalScreenWidth = 640.0f;
-const float kOriginalLogicalScreenHeight = 480.0f;
 const float kVitaTouchRawWidth = 1919.0f;
 const float kVitaTouchRawHeight = 1087.0f;
 
@@ -171,14 +175,17 @@ VitaTouchSample Sample_Touch_Port(int port, bool &sampling_initialized)
 	const int samples = sceTouchPeek(port, &touch, 1);
 	if (samples > 0 && touch.reportNum > 0U) {
 		result.down = true;
-		result.x = Clamp_Float(
-			static_cast<float>(touch.report[0].x) * kOriginalLogicalScreenWidth /
-				kVitaTouchRawWidth,
-			0.0f, kOriginalLogicalScreenWidth - 1.0f);
-		result.y = Clamp_Float(
-			static_cast<float>(touch.report[0].y) * kOriginalLogicalScreenHeight /
-				kVitaTouchRawHeight,
-			0.0f, kOriginalLogicalScreenHeight - 1.0f);
+		if (port == SCE_TOUCH_PORT_FRONT) {
+			const RectClass &logical = Render2DClass::Get_Screen_Resolution();
+			const float x = Clamp_Float(static_cast<float>(touch.report[0].x) *
+				RenegadeVitaRenderer::DISPLAY_WIDTH / kVitaTouchRawWidth,
+				0.0f, RenegadeVitaRenderer::DISPLAY_WIDTH - 1.0f);
+			const float y = Clamp_Float(static_cast<float>(touch.report[0].y) *
+				RenegadeVitaRenderer::DISPLAY_HEIGHT / kVitaTouchRawHeight,
+				0.0f, RenegadeVitaRenderer::DISPLAY_HEIGHT - 1.0f);
+			result.down = RenegadeVitaRenderer::Map_Native_Pixel_To_Logical(
+				x, y, logical.Width(), logical.Height(), result.x, result.y);
+		}
 	}
 	return result;
 }
@@ -432,6 +439,11 @@ void Clear_Transitions(char *buttons, int count)
 
 BYTE RenegadeVitaWWUIKeyState[256] = {};
 
+bool Renegade_Vita_Select_Capture_Enabled()
+{
+	return g_select_capture_enabled;
+}
+
 const RenegadeVitaInputTelemetry &Renegade_Vita_Last_Input_Telemetry()
 {
 	return g_vita_input_telemetry;
@@ -483,13 +495,18 @@ void DirectInput::Init(void)
 	Flush();
 	memset(&g_vita_input_telemetry, 0, sizeof(g_vita_input_telemetry));
 #if !defined(RENEGADE_HOST_ABI_TEST)
+	g_select_capture_enabled = Is_Regular_File(
+		"ux0:data/renegade/user/config/input-capture-select.flag");
 	Initialize_Route_Mode();
+	RenegadeVitaDevInput::Initialize(g_route_mode == RenegadeVitaInputRoute::MODE_PASSTHROUGH);
 #endif
 	Captured = true;
 }
 
 void DirectInput::Shutdown(void)
 {
+    RenegadeVitaTextEntry::Shutdown();
+	g_select_capture_enabled = false;
 #if !defined(RENEGADE_HOST_ABI_TEST)
 	if (g_route_mode == RenegadeVitaInputRoute::MODE_RECORD) {
 		const bool committed = Commit_Recorded_Route();
@@ -499,6 +516,7 @@ void DirectInput::Shutdown(void)
 			g_route_truncated ? 1 : 0);
 	}
 	Reset_Route_State();
+	RenegadeVitaDevInput::Shutdown();
 #endif
 	Flush();
 	Captured = false;
@@ -508,6 +526,7 @@ void DirectInput::Unacquire(void) { Captured = false; }
 
 void DirectInput::Flush(void)
 {
+	g_select_tap.Reset();
 	memset(DIKeyboardButtons, 0, sizeof(DIKeyboardButtons));
 	memset(DIMouseButtons, 0, sizeof(DIMouseButtons));
 	memset(DIJoystickButtons, 0, sizeof(DIJoystickButtons));
@@ -546,12 +565,18 @@ void DirectInput::Read(void)
 		g_logged_first_read_controller = true;
 	}
 			Apply_Replay_Sample(controller);
+			RenegadeVitaDevInput::Apply(controller);
 			Record_Sample(controller);
 			const unsigned int buttons = controller.buttons;
 			const VitaTouchSample front_touch = Sample_Touch_Port(
 				SCE_TOUCH_PORT_FRONT, g_front_touch_sampling_initialized);
 			const VitaTouchSample back_touch = Sample_Touch_Port(
 				SCE_TOUCH_PORT_BACK, g_back_touch_sampling_initialized);
+            if (RenegadeVitaTextEntry::Block_Input(buttons == 0U &&
+                    !front_touch.down && !back_touch.down)) {
+                Flush();
+                return;
+            }
 			if (!g_logged_first_read_touch) {
 				Vita_Append_A22_Runtime_Breadcrumb("input",
 					"DirectInput::Read first touch front/back=%d/%d",
@@ -573,6 +598,17 @@ void DirectInput::Read(void)
 		const bool frontend_menu_navigation = false;
 #endif
 	const bool gameplay_input_active = !frontend_menu_navigation;
+	Set_Button(DIKeyboardButtons, DIK_BACK, g_select_tap.Sample(
+		(buttons & SCE_CTRL_SELECT) != 0U,
+		(buttons & ~SCE_CTRL_SELECT) != 0U || front_touch.down || back_touch.down,
+		gameplay_input_active && !g_select_capture_enabled));
+	if ((DIKeyboardButtons[DIK_BACK] & DI_BUTTON_HIT) != 0U) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"SELECT release feeds original CyclePog; diagnostic capture disabled");
+	}
+	const bool quicksave_chord = gameplay_input_active &&
+		(buttons & (SCE_CTRL_SELECT | SCE_CTRL_SQUARE)) == (SCE_CTRL_SELECT | SCE_CTRL_SQUARE);
+	Set_Button(DIKeyboardButtons, DIK_F5, quicksave_chord);
 		Set_Virtual_Key(VK_UP,
 			frontend_menu_navigation && (buttons & SCE_CTRL_UP) != 0);
 		Set_Virtual_Key(VK_DOWN,
@@ -604,7 +640,7 @@ void DirectInput::Read(void)
 		gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0);
 	Set_Button(DIKeyboardButtons, DIK_F, gameplay_input_active && back_touch.down);
 	Set_Button(DIKeyboardButtons, DIK_R,
-		gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0);
+		gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0 && !quicksave_chord);
 	Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF,
 		front_touch.down);
 	if (!front_touch.down) {
@@ -618,21 +654,16 @@ void DirectInput::Read(void)
 		DIMouseButtons[DirectInput::BUTTON_MOUSE_LEFT & 0xFF] |=
 			DirectInput::DI_BUTTON_RELEASED;
 	}
-	/* START remains the native direct-route clean-exit control and is sampled
-	** before Input::Update. It feeds the original menu-toggle escape key only
-	** during frontend/movie ownership, where the original code uses it to skip
-	** intro movies and back out of menus. During gameplay, routing START into
-	** the original pause/menu path is not yet a physically accepted Vita route
-	** and has produced PSP2 dumps, so suppress the DIK_ESCAPE edge here while
-	** the outer runtime loop still observes START as clean-exit. */
+	/* Original INPUT_FUNCTION_MENU_TOGGLE requests the outer EVA presenter.
+	** It does not invoke the desktop Combat keyboard/focus-loss handler. */
 	const bool start_pressed = (buttons & SCE_CTRL_START) != 0;
 	Set_Button(DIKeyboardButtons, DIK_ESCAPE,
-		frontend_menu_navigation && start_pressed);
+		(frontend_menu_navigation || gameplay_input_active) && start_pressed);
 #if !defined(RENEGADE_HOST_ABI_TEST)
 	if (start_pressed && !frontend_menu_navigation &&
 		!g_logged_gameplay_start_esc_suppressed) {
 		Vita_Append_A22_Runtime_Breadcrumb("input",
-			"START suppressed from gameplay DIK_ESCAPE; runtime clean-exit poll owns START");
+			"START routed through original menu-toggle input; native EVA presenter owns pause");
 		g_logged_gameplay_start_esc_suppressed = true;
 	}
 #endif

@@ -43,7 +43,10 @@ def command_for(executable: str, vpk: pathlib.Path, console: bool) -> list[str]:
     command = [executable]
     if console:
         command.append("--console")
-    command.append(str(vpk))
+    content_path = str(vpk)
+    if os.name != "nt" and executable.lower().endswith(".exe"):
+        content_path = subprocess.check_output(["wslpath", "-w", content_path], text=True).strip()
+    command.append(content_path)
     return command
 
 
@@ -64,6 +67,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout", type=int, default=120)
     parser.add_argument("--no-console", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--installed", action="store_true",
+                        help="Run a title installed by prepare_vita3k_demo.py instead of reinstalling the VPK")
     args = parser.parse_args(argv)
 
     executable = discover_vita3k(args.vita3k_exe)
@@ -77,6 +82,8 @@ def main(argv: list[str] | None = None) -> int:
     timestamp = _datetime.datetime.now(_datetime.UTC).strftime("%Y%m%dT%H%M%SZ")
     evidence_dir = args.evidence_root / f"{args.candidate}-{timestamp}"
     command = command_for(executable or "VITA3K_EXE_NOT_FOUND", vpk, not args.no_console)
+    if args.installed:
+        command[-1:] = ["--installed-path", args.title_id]
     receipt = {
         "schema": 1,
         "generated_at_utc": _datetime.datetime.now(_datetime.UTC).replace(microsecond=0).isoformat(),
@@ -102,19 +109,30 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     evidence_dir.mkdir(parents=True, exist_ok=True)
-    completed = subprocess.run(
-        command,
-        cwd=ROOT,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        timeout=args.timeout,
-        check=False,
-    )
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=pathlib.Path(executable).resolve().parent,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=args.timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        def decoded(value):
+            return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value or ""
+        (evidence_dir / "stdout.log").write_text(decoded(error.stdout), encoding="utf-8")
+        (evidence_dir / "stderr.log").write_text(decoded(error.stderr), encoding="utf-8")
+        receipt["status"] = "TIMEOUT_UNASSESSED"
+        receipt["notes"].append("A timeout does not distinguish running gameplay from a hang. On WSL, confirm Windows process termination separately.")
+        write_json(evidence_dir / "vita3k-runner-receipt.json", receipt)
+        print(json.dumps({"status": receipt["status"], "evidence": str(evidence_dir)}, sort_keys=True))
+        return 124
     (evidence_dir / "stdout.log").write_text(completed.stdout, encoding="utf-8")
     (evidence_dir / "stderr.log").write_text(completed.stderr, encoding="utf-8")
     receipt["returncode"] = completed.returncode
-    receipt["status"] = "PASSED" if completed.returncode == 0 else "FAILED"
+    receipt["status"] = "PROCESS_EXITED_ZERO_UNASSESSED" if completed.returncode == 0 else "PROCESS_FAILED"
     write_json(evidence_dir / "vita3k-runner-receipt.json", receipt)
     print(json.dumps({"status": receipt["status"], "evidence": str(evidence_dir)}, sort_keys=True))
     return 0 if completed.returncode == 0 else completed.returncode

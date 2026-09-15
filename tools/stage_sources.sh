@@ -5,6 +5,7 @@ rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 rv_upstream="$rv_root/upstream/CnC_Renegade"
 rv_stage_target="$rv_root/staging"
 rv_stage="$rv_stage_target"
+python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --count > /dev/null
 rv_incremental_stage=${RENEGADE_INCREMENTAL_STAGE:-0}
 case "$rv_incremental_stage" in 0|1) ;; *) echo "Invalid RENEGADE_INCREMENTAL_STAGE: $rv_incremental_stage" >&2; exit 2 ;; esac
 
@@ -51,6 +52,8 @@ find "$rv_upstream/Code/wwlib" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -name '*.h' \) \
 	! -name 'bittype.h' ! -name 'mutex.h' ! -name 'osdep.h' \
 	! -name 'win.h' -exec cp {} "$rv_stage/wwlib/" \;
+# The original uppercase Targa header carries on-disk structure declarations.
+cp "$rv_upstream/Code/wwlib/TARGA.H" "$rv_stage/wwlib/TARGA.H"
 find "$rv_upstream/Code/WWMath" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -name '*.h' \) -exec cp {} "$rv_stage/wwmath/" \;
 find "$rv_upstream/Code/wwsaveload" -maxdepth 1 -type f \
@@ -115,6 +118,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a31-host-pointer-token-read.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-chunkio-open-chunk-breadcrumbs.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-buffered-relative-seek.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a22-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -204,6 +209,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a31-scriptcommands-utf16.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-tutorial-help.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-objective-message-varargs.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a31-ccamera-silent-listener.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a31-encyclopedia-zero-read.patch"
@@ -226,6 +235,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-transition-action-diagnostics.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-logan-path-diagnostics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vehicle-proximity-diagnostics.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-latch.patch"
@@ -239,10 +250,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 		-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-hud-think-presentation.patch"
 	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 		-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vita-messagewindow-presentation.patch"
-	patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-		-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-motion.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-reload-visible-fallback.patch"
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-weaponview-animation-varargs.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-menu-clear-color.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -275,6 +286,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-singleplayer-frontend-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-singleplayer-frontend-routes.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-dialog-factory-reentry.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a4-frontend-console-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -350,6 +363,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-stylemgr-font-provider.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-vita-cursor-clamp.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-ime-vita-boundary.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-ime-include-case.patch"
@@ -357,6 +372,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-dialogparser-lp64-alignment.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-dialog-template-vita-diagnostics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-dialogparser-utf16.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a4-listctrl-modern-scope.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -453,6 +470,7 @@ echo "Applied: port/patches/wwlib-a31-trim-overlap.patch"
 echo "Applied: port/patches/wwlib-a31-buffer-array-delete.patch"
 echo "Applied: port/patches/wwlib-a31-host-pointer-token-read.patch"
 echo "Applied: port/patches/wwlib-a35-chunkio-open-chunk-breadcrumbs.patch"
+echo "Applied: port/patches/wwlib-a35-buffered-relative-seek.patch"
 echo "Applied: port/patches/scripts-a35-parameter-array-delete.patch"
 echo "Applied: port/patches/wwmath-a22-gcc15.patch"
 echo "Applied: port/patches/wwmath-a30-gcc15.patch"
@@ -496,6 +514,8 @@ echo "Applied: port/patches/combat-a31-conversation-loop-scope.patch"
 echo "Applied: port/patches/combat-a31-mapmgr-const.patch"
 echo "Applied: port/patches/combat-a31-combatsound-gcc15.patch"
 echo "Applied: port/patches/combat-a31-scriptcommands-utf16.patch"
+echo "Applied: port/patches/combat-a35-vita-tutorial-help.patch"
+echo "Applied: port/patches/combat-a35-objective-message-varargs.patch"
 echo "Applied: port/patches/combat-a31-ccamera-silent-listener.patch"
 echo "Applied: port/patches/combat-a31-encyclopedia-zero-read.patch"
 echo "Applied: port/patches/combat-a35-humanstate-weapon-style-table.patch"
@@ -512,8 +532,8 @@ echo "Applied: port/patches/combat-a35-weaponview-reload-latch.patch"
 echo "Applied: port/patches/combat-a35-target-box-diagnostics.patch"
 echo "Applied: port/patches/combat-a35-vita-hud-think-presentation.patch"
 echo "Applied: port/patches/combat-a35-vita-messagewindow-presentation.patch"
-echo "Applied: port/patches/combat-a35-weaponview-reload-motion.patch"
-echo "Applied: port/patches/combat-a35-weaponview-reload-visible-fallback.patch"
+echo "Applied: port/patches/combat-a35-weaponview-animation-varargs.patch"
+echo "Applied: port/patches/commando-a35-menu-clear-color.patch"
 echo "Applied: port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch"
 echo "Applied: port/patches/ww3d2-a31-wide-abi.patch"
 echo "Applied: port/patches/ww3d2-a35-vita-renderobj-load-trace.patch"
@@ -563,10 +583,12 @@ echo "Applied: port/patches/wwaudio-a35-posix-runtime.patch"
 echo "Applied: port/patches/wwaudio-a35-original-runtime-correctness.patch"
 echo "Applied: port/patches/wwnet-a30-gcc15.patch"
 echo "Applied: port/patches/wwui-a4-stylemgr-font-provider.patch"
+echo "Applied: port/patches/wwui-a35-vita-cursor-clamp.patch"
 echo "Applied: port/patches/wwui-a4-ime-vita-boundary.patch"
 echo "Applied: port/patches/wwui-a4-ime-include-case.patch"
 echo "Applied: port/patches/wwui-a4-dialogparser-lp64-alignment.patch"
 echo "Applied: port/patches/wwui-a35-dialog-template-vita-diagnostics.patch"
+echo "Applied: port/patches/wwui-a35-dialogparser-utf16.patch"
 echo "Applied: port/patches/wwui-a4-listctrl-modern-scope.patch"
 echo "Applied: port/patches/wwui-a4-dialogbase-modern-scope.patch"
 echo "Applied: port/patches/wwui-a4-buttonctrl-modern-scope.patch"
@@ -576,3 +598,41 @@ echo "Applied: port/patches/wwui-a4-multilinetext-gcc15.patch"
 echo "Applied: port/patches/wwui-a4-editctrl-gcc15.patch"
 echo "Applied: port/patches/wwui-a4-treectrl-gcc15.patch"
 echo "Applied: port/patches/a4-post-movie-mainmenu-hardening.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-render2d-texture-readiness.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-map-texture-readiness.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-map-texture-readiness.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-unavailable-text-row.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-dds-disk-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-pause-save-help.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-loading-animation-evidence.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-demo-disabled-menu-options.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-disabled-menu-navigation.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-loading-presentation-clock.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-demo-singleplayer-options.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-eva-optional-network-modes.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-eva-native-dependencies.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-pause-save-help-entry.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-pause-deferred-load.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-eva-viewer-audit.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-pause-native-options.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-pause-save-controller.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-pause-options-persistence.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-controller-button-focus.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwui" -p1 < "$rv_root/port/patches/wwui-a35-native-text-entry.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-render2d-direct-atlas-upload.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-mix-index-allocation-bounds.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-dds-block-palette-precompute.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-dynamic-buffer-growth.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-texture-wrapper-surface-release.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-mix-failure-file-release.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-targa-fixed-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-format-table-init.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage" -p1 < "$rv_root/port/patches/commando-a35-loading-animation-varargs.patch"
+echo "Applied: port/patches/commando-a35-loading-animation-varargs.patch"
+python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

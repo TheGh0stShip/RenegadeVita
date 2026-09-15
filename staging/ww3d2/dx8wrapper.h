@@ -210,8 +210,14 @@ public:
 	static void	Do_Onetime_Device_Dependent_Inits(void);
 	static void Do_Onetime_Device_Dependent_Shutdowns(void);
 
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
+	static bool Is_Device_Lost() { return IsDeviceLost || !Is_Native_Device_Ready(); }
+	static bool Is_Initted(void) { return Is_Native_Device_Ready(); }
+	static bool Is_Native_Device_Ready();
+#else
 	static bool Is_Device_Lost() { return IsDeviceLost; }
 	static bool Is_Initted(void) { return IsInitted; }
+#endif
 
 	/*
 	** Rendering

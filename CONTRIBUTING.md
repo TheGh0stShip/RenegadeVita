@@ -12,7 +12,7 @@ Renegade Vita is an active source port, not a clean-room reimplementation. Keep 
    git -C upstream/CnC_Renegade status --short
    ```
 
-2. Read [AGENTS.md](AGENTS.md), [Current status](docs/CURRENT_STATUS.md), [Evidence policy](docs/EVIDENCE.md), and the current durable reports.
+2. Read the [program charter](reports/PROGRAM_CHARTER.md), [Current status](docs/CURRENT_STATUS.md), [Evidence policy](docs/EVIDENCE.md), and the current durable reports.
 3. Keep `upstream/CnC_Renegade/` pristine. Use a compatibility header, Vita-boundary source, or a deterministic zero-fuzz patch under `port/patches/`.
 
 ## Validation and evidence

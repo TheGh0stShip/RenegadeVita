@@ -1,9 +1,14 @@
 # License notice
 
-This port is a modification and build integration of EA's officially released
-*Command & Conquer: Renegade* source. The upstream source is licensed under
-GPLv3 with additional terms. The complete, controlling license text and
-additional terms are retained verbatim in the pinned upstream submodule at:
+This repository is a modified version and build integration of EA's officially
+released *Command & Conquer: Renegade* source. The source and modifications are
+distributed under **GNU General Public License v3 (GPL-3.0)**, together with
+the additional terms in the upstream notice. Those terms prohibit implying EA
+affiliation, grant no EA trademark rights, and require modified versions to be
+identified as modified.
+
+The complete, controlling GPLv3 text and EA additional terms are retained
+verbatim in the pinned upstream source at:
 
 `upstream/CnC_Renegade/LICENSE.md`
 
@@ -13,7 +18,11 @@ After cloning, initialize the submodule with:
 git submodule update --init --recursive
 ```
 
-Port-specific source changes in this repository are intended to be conveyed
-under the same applicable GPLv3 and upstream additional terms. This repository
-contains no retail game data. Users must provide their own legally obtained
-retail installation/data files.
+Port-specific source changes in this repository are conveyed under the same
+applicable GPLv3 and upstream additional terms. The root repository contains
+the corresponding source, build scripts, and deterministic patch set for this
+port; generated binaries and retail files are intentionally excluded.
+
+For the canonical license text outside a populated submodule, see the official
+[GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html). Users must provide their
+own legally obtained retail installation/data files.

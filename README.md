@@ -4,13 +4,13 @@ An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: 
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Development status — private source repository.** The current Dev134
+> **Development status — source-available development repository.** The current Dev134
 > package is available with the tutorial-only setup guide at
 > [Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
 > No retail data is in this repository or its VPKs. Use only your own legally
 > obtained retail data.
 
-This is not a public game release; it is a private development source repository.
+This repository publishes source code and build instructions only. It is not a public game release; it does not include retail game data or a redistributable game release.
 
 ## Where the port stands
 

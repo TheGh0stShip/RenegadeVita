@@ -7,8 +7,8 @@ not proof of visible text, audible pacing, mission completion, or 60 FPS.
 
 ## Local prerequisites
 
-The user's Windows installation is `D:\Vita3K\Vita3K.exe`. Its existing VFS
-is `C:\Users\steve\AppData\Roaming\Vita3K\Vita3K`. Existing firmware,
+Set `VITA3K_EXE` to your Vita3K executable and `VITA3K_VFS` to its existing
+virtual filesystem. Existing firmware,
 `ur0/data/libshacccg.suprx`, shared retail archives, M00, and both intro movies
 are already present. Reuse them without modifying or redistributing them.
 Never delete other installed retail missions to create the demo.
@@ -30,8 +30,8 @@ Close an existing Vita3K session normally before replacing the title.
 python3 tools/prepare_vita3k_demo.py \
   --candidate A3.5-dev100 \
   --vpk /absolute/path/to/RenegadeVita-A3.5-dev100.vpk \
-  --vfs /mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K \
-  --evidence-root /absolute/path/to/local-vita3k-evidence
+  --vfs "$VITA3K_VFS" \
+  --evidence-root "$VITA3K_EVIDENCE_ROOT"
 ```
 
 The preparation receipt records the VPK hash, retail prerequisite hashes,
@@ -46,9 +46,9 @@ Invoke `tools/run_vita3k_demo_windows.ps1` through Windows PowerShell, passing
 Windows paths. The installed `eboot.bin` hash must match the candidate SELF.
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\path\to\run_vita3k_demo_windows.ps1 `
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File <path-to-runner> `
   -Candidate A3.5-dev100 `
-  -EvidenceDirectory D:\Vita3K\RenegadeEvidence\Dev100-unique-run `
+  -EvidenceDirectory <evidence-directory> `
   -ExpectedEbootSha256 MATCHING_64_CHARACTER_SELF_HASH `
   -TimeoutSeconds 90
 ```

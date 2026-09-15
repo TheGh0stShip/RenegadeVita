@@ -10,6 +10,8 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 > No retail data is in this repository or its VPKs. Use only your own legally
 > obtained retail data.
 
+This is not a public game release; it is a private development source repository.
+
 ## Where the port stands
 
 The current candidate is **A3.5-dev134**. Its canonical ARM/package closure

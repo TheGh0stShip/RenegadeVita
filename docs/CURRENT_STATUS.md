@@ -18,6 +18,9 @@ and [DEV134_SKIN_RGB_WORK.md](../reports/DEV134_SKIN_RGB_WORK.md).
 
 The historical entries below are retained for provenance.
 
+Older candidate rows are Local-only engineering records unless they carry
+matching physical-Vita evidence.
+
 ## Evidence snapshot
 
 | Class | Status | What it establishes |

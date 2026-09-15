@@ -1,11 +1,21 @@
 # Remaining native renderer routes inspected during Dev134 closure
 
+| Field | Value |
+| --- | --- |
+| Candidate | A3.5-dev134 |
+| Scope | Native renderer performance routes |
+| Evidence | Source inspection and dependency comparison |
+| Status | Open; no route is accepted or exhausted |
+| Emulator policy | No emulator-specific tuning |
+
+## Summary
+
 These findings are source/host evidence. No emulator performance policy or
 physical setting was changed. They supplement the Dev127 pinned-port comparison;
 Dev128 already integrated native compressed DDS chains, superseding that older
 comparison's pending-compression statement.
 
-## Native movie YUV
+## Route 1 — Native movie YUV
 
 Pinned vitaGL 6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5 includes
 samples/immediate_mode_texture_yuv/main.c using VGL_YUV420P_BT601. Its
@@ -42,7 +52,7 @@ Next: production planar allocator/copy contracts and a bounded provider prototyp
 Do not import a different movie loop, reduce image dimensions further, or claim
 the GXM sampler is validated by the SDK enum alone.
 
-## Persistent geometry / immutable handoff
+## Route 2 — Persistent geometry and immutable handoff
 
 Original MeshGeometryClass::Get_Vertex_Array returns a writable pointer;
 MeshMatDescClass exposes mutable UV/color arrays, and MeshClass exposes mutable
@@ -58,7 +68,7 @@ prevent sending live original objects to another thread; commands must contain
 immutable copied or retained data. This remains work to implement and measure,
 not an exhausted route or permission to replace WW3D ownership.
 
-## Diagnostic sampling
+## Route 3 — Diagnostic sampling
 
 A31_Interactive_Run_Render_Frame currently counts both physics lists and formats
 player/weapon diagnostic strings each frame. GenericMultiListClass::Count is

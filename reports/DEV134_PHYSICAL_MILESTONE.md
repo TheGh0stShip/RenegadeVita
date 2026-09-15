@@ -1,8 +1,20 @@
 # Dev134 milestone and physical handoff
 
+| Field | Value |
+| --- | --- |
+| Candidate | A3.5-dev134 |
+| Platform | Native ARM PlayStation Vita |
+| Status | Milestone prerequisite PASS; physical acceptance OPEN |
+| Evidence classes | Host, Vita3K, physical deployment/readback |
+| Release gates | 0/10 |
+
+## Result
+
 The user's next-milestone condition is satisfied: canonical host/sanitizer/ARM
 closure, matching package identity and matching Vita3K visual regression PASS.
 This does not earn physical release acceptance or a native FPS claim.
+
+## Artifacts and identity
 
 Canonical artifacts: build/dev134-closed-canonical/receipt.json, 38 files.
 Emulator return: build/dev134-refinery-return/return-receipt.json, 42 files.
@@ -11,6 +23,8 @@ appearance against Dev133. Map imagery, statistics text and Vita Help labels
 are visible. Resume reaches frame2180, native END clean, owned process stopped
 unforced. Five native commands and four touches released; all14 saves unchanged.
 The runner's PROCESS_FAILED/null result is retained separately from native exit.
+
+## Physical deployment
 
 Physical admission at 10.0.0.202:1337 identifies the exact installed Dev126 SELF:
 75bdae5d5d6bd837e3e8670a9481392a2d9c5cf0b15bffc489a48daf72dc1935.
@@ -25,6 +39,8 @@ checkpoint/input override was installed. The existing dev79 bubble runs Dev134.
 
 SELF: 55ec5e560eed2ca94a4ab06d8b10e6f7039c19b8d6c79353f5a63f3ea1e7e385.
 VPK: 1f0b0fb569d47c6fff31504bd890cc2a8910a2d248e4c510155416d49b67002e.
+
+## Blockers and next gate
 
 External blocker: FTP works; remote command port1338 refuses connections.
 VDB doctor/capability receipts are build/dev134-physical-vdb-*.json. User was
@@ -50,6 +66,8 @@ frame-time distribution, render/simulation timings, memory and pause/exit.
 Dev126 cumulative FPS is contextual failure evidence, not a fixed-camera A/B
 baseline. Establish the same physical checkpoint/camera before claiming gains.
 Logs alone do not establish audible movie sound or visual correctness.
+
+## Post-freeze source follow-up
 
 Local source follow-up, not in deployed Dev134: corrected two prewarm printf
 sites using %u for uint64_t counters. Original native compilation with

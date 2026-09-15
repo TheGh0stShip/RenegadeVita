@@ -1,5 +1,15 @@
 # Dev134 discarded character RGB work
 
+| Field | Value |
+| --- | --- |
+| Candidate | A3.5-dev134 |
+| Change type | Measured renderer optimization |
+| Decision | Adopted in source; hardware benefit unaccepted |
+| Physical status | Not tested in this report |
+| Release gates | 0/10 |
+
+## Scope and hypothesis
+
 Latest user steering: physical Vita tests after the next milestone. The milestone
 is Dev134 canonical closure, verified package identity and matching Vita3K visual
 regression. Physical testing remains held until those pass, then title-scoped
@@ -13,6 +23,8 @@ demonstrated redundant calculation inside the measured slow render subsystem;
 Dev126 physical render/simulation cumulative means were 59.7/16.5 ms. Those
 physical observations are not a fixed-scene before/after benchmark.
 
+## Implementation and safeguards
+
 Dev134 skips discarded RGB calculations after first-color diagnostics have
 collected their full original values. Original diffuse alpha still comes from
 COLOR1/COLOR2 or material opacity, with the same absent-array fallback. Rigid,
@@ -21,6 +33,8 @@ deformation, materials, UVs, draw order, texture filtering and pixel resolution
 are unchanged. RVRC1's existing material-work bit controls the shortcut; clearing
 mask 0x2 restores the complete evaluation. Sampled skin_rgb_skips counts actual use.
 No extra allocation; one 64-bit counter. Existing scratch high-water unchanged.
+
+## Validation and measurements
 
 Validation: build/dev134-render-focused.log passes 24 checks. Production material
 code passes 192000 full-color comparisons, 96000 submitted-skin comparisons and
@@ -44,6 +58,8 @@ An earlier run under emulator contention measured 285.2/386.1/697.3/697.3 versus
 Host scratch high-water is 655360 bytes in both variants (the fixture previously
 allocated 8192 cache slots); native layout differs. No GPU or hardware memory
 high-water, frame-time gain or visual acceptance follows from these host numbers.
+
+## Decision and remaining routes
 
 Decision: adopt as a correctness-tested native candidate; hardware benefit
 unaccepted. Risk is accidentally applying the shortcut where RGB is used, or

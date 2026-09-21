@@ -1,5 +1,26 @@
 # Live engineering progress
 
+## Dev135 active: first original campaign-map trial
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: Dev135 full-port profile selects original Single Player -> Soldier ->
+`M13.mix` in Vita3K. Original M13 scene, desert player, HUD, movement,
+pistol fire, audio, and EVA pause were observed in a bounded five-minute run.
+Completed: mission MIX routing beyond tutorial, distinct `RNEGC3101`
+campaign package, 152 focused checks, ARM ELF/SELF/VPK, and two M13 host
+load/update/render cycles. Earlier M00 selection is retained as a failed
+input trial, not campaign evidence. See `reports/DEV135_CAMPAIGN_TRIAL.md`.
+Evidence: `build/vita-dev135-campaign/` and candidate-scoped
+`campaign-dev135-trial-6/` under managed AppData. Vita3K runner ended on
+watchdog, released inputs, and terminated only its owned process; clean
+in-app exit and mission completion were not shown.
+Next: publish source and asset-free Dev135 VPK to GitHub, then trace original
+M13 objective/completion and mission transition ownership. No physical
+deployment or acceptance; no demo source/profile changes in Dev135.
+Blocker: physical Vita evidence and later campaign progression remain open.
+
 User steering (2026-09-15): physical Vita tests are authorized after the next
 milestone. Gate: Dev134 canonical host/sanitizer/ARM/package closure and matching
 Vita3K visual regression. Then recheck target identity/reachability at

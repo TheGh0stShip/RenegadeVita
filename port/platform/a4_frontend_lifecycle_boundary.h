@@ -29,6 +29,10 @@ bool A4_Frontend_Is_Menu_Loop_Active(void);
 bool A4_Frontend_Exit_Requested(void);
 int A4_Frontend_Exit_Code(void);
 bool A4_Frontend_Is_Tutorial_Source(const char *map_name);
+#if !RENEGADE_VITA_M00_DEMO
+bool A4_Frontend_Resolve_Single_Player_Archive(const char *source,
+	char *archive, unsigned archive_size, bool *is_save);
+#endif
 bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice, unsigned long clanID);
 A4FrontendTrace A4_Frontend_Get_Trace(void);
 void A4_Frontend_Record_Bink_Init(bool initialized);

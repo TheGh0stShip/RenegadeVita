@@ -46,6 +46,13 @@ set(RENEGADE_STARTUP_PRECACHE_RECEIPT_PATH
 # package and is not an EA or retail entitlement.
 set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENEGADEVITA0102" CACHE STRING
   "Developer Vita package content identifier")
+set(RENEGADE_VITA_TITLE_ID "RNEGA3101" CACHE STRING
+  "Developer Vita title identifier")
+string(LENGTH "${RENEGADE_VITA_TITLE_ID}" RENEGADE_VITA_TITLE_ID_LENGTH)
+if(NOT RENEGADE_VITA_TITLE_ID_LENGTH EQUAL 9 OR
+   NOT RENEGADE_VITA_TITLE_ID MATCHES "^[A-Z0-9]+$")
+  message(FATAL_ERROR "RENEGADE_VITA_TITLE_ID must be nine uppercase letters or digits")
+endif()
 string(LENGTH "${RENEGADE_VITA_CONTENT_ID}" RENEGADE_VITA_CONTENT_ID_LENGTH)
 if(NOT RENEGADE_VITA_CONTENT_ID_LENGTH EQUAL 36 OR
    NOT RENEGADE_VITA_CONTENT_ID MATCHES "^[A-Z0-9_-]+$")
@@ -521,7 +528,7 @@ vita_create_self(eboot.bin ${PROJECT_NAME})
 # vita_create_vpk otherwise emits an empty CONTENT_ID field. Set the narrow
 # VitaSDK packaging flag immediately before the macro so only param.sfo changes.
 set(VITA_MKSFOEX_FLAGS "-s CONTENT_ID=${RENEGADE_VITA_CONTENT_ID}")
-vita_create_vpk(RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.vpk RNEGA3101 eboot.bin
+vita_create_vpk(RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.vpk ${RENEGADE_VITA_TITLE_ID} eboot.bin
 	VERSION 03.55
 	NAME "Renegade Vita ${RENEGADE_CANDIDATE_LABEL}"
 )

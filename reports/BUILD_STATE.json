@@ -1,4 +1,21 @@
 {
+  "active_dev135_campaign": {
+    "candidate": "A3.5-dev135",
+    "state": "VITA3K_M13_LOAD_MOVEMENT_FIRE_EVA_PAUSE_PASS_PROGRESS_AND_EXIT_OPEN",
+    "profile": "RENEGADE_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV135_CAMPAIGN_TRIAL.md",
+    "runtime_return": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/campaign-dev135-trial-6/",
+    "build_complete": true,
+    "canonical_build": false,
+    "focused_checks": 152,
+    "vpk_sha256": "37b6b42a1f5728364d0596a718ca2741d86daba93df96b7b8d32ff695f7b5fc9",
+    "self_sha256": "12f24de9108001ccb324e5cd17450d9ada910197c37e71541b0fc1709bb2239c",
+    "elf_sha256": "fe24b1f7af3f7d036255f965d052ec27d4d8b29109fa19250fab5d4984732bb3",
+    "physical_acceptance": false,
+    "in_app_clean_exit_verified": false,
+    "mission_completion_verified": false
+  },
   "active_dev134": {
     "candidate": "A3.5-dev134",
     "state": "MILESTONE_PASS_PHYSICAL_DEPLOYMENT_VERIFIED_MANUAL_LAUNCH_REQUIRED",

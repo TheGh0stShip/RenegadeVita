@@ -41,6 +41,9 @@
 #include "gamemenu.h"
 #include "movie.h"
 #include "renegadedialogmgr.h"
+#if !RENEGADE_VITA_M00_DEMO
+#include "scorescreen.h"
+#endif
 #endif
 #include "gdsingleplayer.h"
 #include "gametype.h"
@@ -89,6 +92,7 @@
 #include <debugScreen.h>
 
 #include <new>
+#include <memory>
 #include <algorithm>
 #include <atomic>
 #include <stdio.h>
@@ -2285,8 +2289,16 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	}
 
 	const A4FrontendTrace trace = A4_Frontend_Get_Trace();
+#if RENEGADE_VITA_M00_DEMO
 	const bool tutorial_selected = trace.tutorial_start_latched &&
 		A4_Frontend_Is_Tutorial_Source(trace.tutorial_map);
+#else
+	char selected_archive[96];
+	bool selected_save = false;
+	const bool tutorial_selected = trace.tutorial_start_latched &&
+		A4_Frontend_Resolve_Single_Player_Archive(trace.tutorial_map,
+			selected_archive, sizeof(selected_archive), &selected_save);
+#endif
 	A30_Vita_Log("A4 frontend: menu loop exit latched=%d map=%s movie_play/skip=%u/%u last_movie=%s exit=%d code=%d\n",
 		trace.tutorial_start_latched ? 1 : 0,
 		trace.tutorial_map[0] != '\0' ? trace.tutorial_map : "none",
@@ -2389,6 +2401,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		"Opening original M00_Tutorial.mix archive",
 		"large MIX constructor work is visible before pre-cache");
 	MixFileFactoryClass m00_factory(kM00Archive, &root_factory);
+#if !RENEGADE_VITA_M00_DEMO
+	std::unique_ptr<MixFileFactoryClass> selected_mission_factory;
+#endif
 	Draw_Engine_Setup_Screen(startup_screen_result,
 		"Preparing original FileFactoryList route",
 		"visible pre-cache/pre-warm/pre-compute starts next");
@@ -2475,6 +2490,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			bool frontend_combat_mode_registered = false;
 			MenuGameModeClass2 frontend_menu_mode;
 			MovieGameModeClass frontend_movie_mode;
+#if !RENEGADE_VITA_M00_DEMO
+			ScoreScreenGameModeClass frontend_score_mode;
+			bool frontend_score_mode_registered = false;
+#endif
 			bool frontend_menu_mode_registered_for_handoff = false;
 			bool frontend_dialog_manager_retained = false;
 #endif
@@ -2625,6 +2644,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						frontend_combat_mode_registered = true;
 						A30_Vita_Log("A4 frontend: registered original CombatGameMode owner for menu/direct M00 route\n");
 					}
+#if !RENEGADE_VITA_M00_DEMO
+					if (GameModeManager::Find("ScoreScreen") == NULL) {
+						GameModeManager::Add(&frontend_score_mode);
+						frontend_score_mode_registered = true;
+					}
+#endif
 					{
 						const bool frontend_tutorial_selected =
 							Run_Original_Frontend_Intro_And_Menu(frontend_menu_mode,
@@ -2678,8 +2703,41 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A30_Vita_Log("A3.1 interactive: game-data/mode FAIL\n");
 				break;
 			}
+			const A4FrontendTrace selected_source = A4_Frontend_Get_Trace();
+			const char *load_source = selected_source.tutorial_start_latched
+				? selected_source.tutorial_map : "M00_Tutorial.mix";
+#if !RENEGADE_VITA_M00_DEMO
+			char selected_archive[96];
+			bool loading_checkpoint = false;
+			if (!selected_source.tutorial_start_latched ||
+				!A4_Frontend_Resolve_Single_Player_Archive(load_source,
+					selected_archive, sizeof(selected_archive), &loading_checkpoint)) {
+				A30_Vita_Log("A4 campaign: unsupported original single-player source=%s\n",
+					load_source);
+				break;
+			}
+			if (stricmp(selected_archive, "M00_Tutorial.mix") != 0) {
+				char archive_path[112];
+				snprintf(archive_path, sizeof(archive_path), "Data\\%s", selected_archive);
+				selected_mission_factory.reset(new MixFileFactoryClass(archive_path,
+					&root_factory));
+				if (!selected_mission_factory->Is_Valid()) {
+					A30_Vita_Log("A4 campaign: original mission MIX unavailable archive=%s\n",
+						archive_path);
+					break;
+				}
+				factory_list.Add_FileFactory(selected_mission_factory.get(),
+					selected_archive);
+			}
+			A30_Vita_Log("A4 campaign: original selection source=%s archive=%s save=%d mix_valid=1\n",
+				load_source, selected_archive, loading_checkpoint ? 1 : 0);
+#endif
 			combat_mode->Activate();
+#if RENEGADE_VITA_M00_DEMO
 			StringClass map_name("M00_Tutorial.mix", true);
+#else
+			StringClass map_name(load_source, true);
+#endif
 			The_Game()->Set_Map_Name(map_name);
 			_Force_Link_Soldier();
 			cNetwork::Onetime_Init();
@@ -2752,9 +2810,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			NetworkObjectMgrClass::Set_Is_Level_Loading(true);
 			TextureLoader::Suspend_Texture_Load();
 			A30_Vita_Log("A3.5 texture loader: suspended during threaded M00 load\n");
-			const A4FrontendTrace selected_source = A4_Frontend_Get_Trace();
-			const char *load_source = selected_source.tutorial_start_latched
-				? selected_source.tutorial_map : "M00_Tutorial.mix";
+#if RENEGADE_VITA_M00_DEMO
 			const bool tutorial_source_validated = A4_Frontend_Is_Tutorial_Source(load_source);
 			if (!tutorial_source_validated) {
 				A30_Vita_Log("A3.5 M00 load: rejected incompatible tutorial source\n");
@@ -2763,6 +2819,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			}
 			const bool loading_checkpoint =
 				stricmp(load_source, "M00_Tutorial.mix") != 0;
+#endif
 			A30_Vita_Log("A3.5 M00 load: original source=%s checkpoint=%d\n",
 				load_source, loading_checkpoint ? 1 : 0);
 			CombatManager::Load_Level_Threaded(load_source, false);
@@ -3397,6 +3454,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			frontend_combat_mode_registered = false;
 			A30_Vita_Log("A4 frontend: removed original Combat mode after player/session teardown\n");
 		}
+#if !RENEGADE_VITA_M00_DEMO
+		if (frontend_score_mode_registered) {
+			if (!frontend_score_mode.Is_Inactive()) {
+				frontend_score_mode.Deactivate();
+			}
+			GameModeManager::Safely_Deactivate();
+			GameModeManager::Remove(&frontend_score_mode);
+			frontend_score_mode_registered = false;
+		}
+#endif
 #endif
 			if (campaign_initialized) {
 				EncyclopediaMgrClass::Shutdown();

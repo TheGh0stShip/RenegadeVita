@@ -21,7 +21,11 @@
 #include "systemsettings.h"
 #include "textureloader.h"
 #include "wwuiinput.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "vita/a30_vita_runtime.h"
+#endif
 
+#include <stdio.h>
 #include <string.h>
 
 namespace {
@@ -112,6 +116,16 @@ void Windows_Message_Handler(void) {}
 // Parse_Input is reached, and Bink skip behavior remains logged by its boundary.
 void ConsoleFunctionManager::Parse_Input(const char *) {}
 void ScoreScreenGameModeClass::Save_Stats(void) {}
+#if !RENEGADE_VITA_M00_DEMO
+void ScoreScreenGameModeClass::Init(void)
+{
+#if defined(__vita__)
+	A30_Vita_Log("A4 campaign: ScoreScreen presentation unavailable in this candidate\n");
+#else
+	fputs("A4 campaign: ScoreScreen presentation unavailable in this candidate\n", stderr);
+#endif
+}
+#endif
 #if !defined(RENEGADE_A4_ORIGINAL_MOVIE_OWNER)
 void MovieGameModeClass::Start_Movie(const char *) {}
 #endif
@@ -270,6 +284,48 @@ bool A4_Frontend_Is_Tutorial_Source(const char *map_name)
 	return stricmp(saved_map.Peek_Buffer(), "M00_Tutorial.lsd") == 0 ||
 		A31Demo::IsTutorialMap(saved_map.Peek_Buffer());
 }
+
+#if !RENEGADE_VITA_M00_DEMO
+bool A4_Frontend_Resolve_Single_Player_Archive(const char *source,
+	char *archive, unsigned archive_size, bool *is_save)
+{
+	if (archive == NULL || archive_size == 0U || is_save == NULL) return false;
+	archive[0] = '\0';
+	*is_save = false;
+	if (source == NULL) return false;
+	const size_t length = strlen(source);
+	if (length == 0U || length >= sizeof(g_frontend_trace.tutorial_map)) return false;
+
+	StringClass saved_map;
+	const char *map = source;
+	if (length > 9U && strnicmp(source, "save", 4) == 0 &&
+		(source[4] == '/' || source[4] == '\\') &&
+		stricmp(source + length - 4U, ".sav") == 0 &&
+		strstr(source, "..") == NULL && strchr(source, ':') == NULL) {
+		if (!SaveGameManager::Peek_Map_Name(source, saved_map)) return false;
+		map = saved_map.Peek_Buffer();
+		*is_save = true;
+	}
+
+	if (stricmp(map, "M00_Tutorial.mix") == 0 ||
+		(*is_save && stricmp(map, "M00_Tutorial.lsd") == 0)) {
+		if (archive_size < sizeof("M00_Tutorial.mix")) return false;
+		Copy_Text(archive, archive_size, "M00_Tutorial.mix");
+		return true;
+	}
+	const size_t map_length = strlen(map);
+	if (map_length != 7U || (map[0] != 'M' && map[0] != 'm') ||
+		map[1] < '0' || map[1] > '9' || map[2] < '0' || map[2] > '9' ||
+		map[3] != '.' ||
+		stricmp(map + 4U, *is_save ? "lsd" : "mix") != 0 ||
+		archive_size < 8U) return false;
+	archive[0] = 'M';
+	archive[1] = map[1];
+	archive[2] = map[2];
+	Copy_Text(archive + 3U, archive_size - 3U, ".mix");
+	return true;
+}
+#endif
 
 bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice,
 	unsigned long clanID)

@@ -5,7 +5,7 @@
     "profile": "RENEGADE_M00_DEMO=0",
     "title_id": "RNEGC3101",
     "report": "reports/DEV135_CAMPAIGN_TRIAL.md",
-    "runtime_return": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/campaign-dev135-trial-6/",
+    "runtime_return": "managed AppData: campaign-dev135-trial-6/",
     "build_complete": true,
     "canonical_build": false,
     "focused_checks": 152,

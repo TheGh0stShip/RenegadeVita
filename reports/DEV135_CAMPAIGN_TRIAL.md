@@ -53,7 +53,7 @@ The isolated Vita3K test used user-owned unchanged retail data and fonts.
 The retail `M13.mix` SHA-256 was
 `54d41ea011bf7c4d273064422de961af76ccc38f32dd9b5368ebfbca365bbfc4`.
 Trial screenshots, input receipts, runtime log, and runner receipt are under
-`/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/campaign-dev135-trial-6/`.
+`campaign-dev135-trial-6/` in managed AppData.
 These local traces are not release payloads.
 
 ## Limits and next test

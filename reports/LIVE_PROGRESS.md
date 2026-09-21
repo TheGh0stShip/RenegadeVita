@@ -16,8 +16,8 @@ Evidence: `build/vita-dev135-campaign/` and candidate-scoped
 `campaign-dev135-trial-6/` under managed AppData. Vita3K runner ended on
 watchdog, released inputs, and terminated only its owned process; clean
 in-app exit and mission completion were not shown.
-Next: publish source and asset-free Dev135 VPK to GitHub, then trace original
-M13 objective/completion and mission transition ownership. No physical
+Next: trace original M13 objective/completion and mission transition ownership.
+Source and asset-free Dev135 VPK are published to GitHub. No physical
 deployment or acceptance; no demo source/profile changes in Dev135.
 Blocker: physical Vita evidence and later campaign progression remain open.
 

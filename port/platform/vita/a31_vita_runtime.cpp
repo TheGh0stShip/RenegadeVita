@@ -2250,8 +2250,20 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	Input::Menu_Enable(true);
 	GameModeManager::Add(&menu_mode);
 	GameModeManager::Add(&movie_mode);
-	if (reload_source != NULL && reload_source[0] != '\0' &&
-		A4_Frontend_Is_Tutorial_Source(reload_source)) {
+	bool reload_valid = false;
+	if (reload_source != NULL && reload_source[0] != '\0') {
+#if RENEGADE_VITA_M00_DEMO
+		reload_valid = A4_Frontend_Is_Tutorial_Source(reload_source);
+#else
+		char reload_archive[96];
+		bool reload_is_save = false;
+		reload_valid = A4_Frontend_Resolve_Single_Player_Archive(reload_source,
+			reload_archive, sizeof(reload_archive), &reload_is_save) && reload_is_save;
+		A30_Vita_Log("A4 campaign reload: source=%s archive=%s valid=%d\n",
+			reload_source, reload_valid ? reload_archive : "none", reload_valid ? 1 : 0);
+#endif
+	}
+	if (reload_valid) {
 		A4_Frontend_Latch_Start_Game(reload_source, -1, 0);
 		A30_Vita_Log("A4 load: original save handoff after completed session teardown source=%s\n", reload_source);
 	} else if (start_at_main_menu) {

@@ -1,5 +1,26 @@
 # Live engineering progress
 
+## Dev136 active: campaign save handoff
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: full-port post-teardown reload accepts a validated original single-player
+save from any numbered campaign mission; demo reload remains M00-only.
+Completed: 13 focused frontend checks and full-port ARM ELF/SELF/VPK build.
+The host harness exposed all 36 actual retail campaign flow entries: M13,
+then M01-M11, with original Score/Movie states and finale movie. See
+`reports/DEV136_CAMPAIGN_SAVE_AND_FLOW.md` for the mission checklist.
+Evidence: Dev136 VPK SHA-256
+`2e770738b23ba0e5d4b00b8ee6c2126025f8f02bb8c1e1403d13ec8db4ec71dc`.
+No Vita3K or physical save-reload trial yet. The catalog host run stopped at
+an isolated frontend font probe, before the M13 simulation gate.
+Next: route mission completion through the original CampaignManager states,
+including score/movie callbacks, without midframe level teardown. Then test
+M13 save/reload and the first M13-to-M01 transition.
+Blocker: current Vita simulation observer exits on mission completion and
+bypasses original `CombatGameModeClass::Think` campaign continuation.
+
 ## Dev135 active: first original campaign-map trial
 
 Renegade Vita — v3.5 active

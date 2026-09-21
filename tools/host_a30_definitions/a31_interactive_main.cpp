@@ -949,6 +949,12 @@ int main(int argc, char **argv)
 				static_cast<unsigned>(CampaignFlowDescriptions.Count()));
 			Print("campaign_catalog_loaded", campaign_initialized);
 			if (!campaign_initialized) { passed = false; break; }
+			if (getenv("RENEGADE_TRACE_CAMPAIGN_FLOW") != nullptr) {
+				for (int index = 0; index < CampaignFlowDescriptions.Count(); ++index) {
+					printf("campaign_flow[%d]=%s\n", index,
+						CampaignFlowDescriptions[index].Peek_Buffer());
+				}
+			}
 			Stage("frontend_mainmenu_lifecycle");
 			Register_A4_Host_Harness_Combat_Mode();
 				unsigned main_menu_control_count = 0;

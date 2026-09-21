@@ -1,4 +1,20 @@
 {
+  "active_dev136_campaign": {
+    "candidate": "A3.5-dev136",
+    "state": "ARM_PACKAGE_PASS_CAMPAIGN_SAVE_RELOAD_RUNTIME_UNTESTED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV136_CAMPAIGN_SAVE_AND_FLOW.md",
+    "build_complete": true,
+    "canonical_build": false,
+    "focused_frontend_checks": 13,
+    "vpk_sha256": "2e770738b23ba0e5d4b00b8ee6c2126025f8f02bb8c1e1403d13ec8db4ec71dc",
+    "self_sha256": "941a50ec32407fd5572cdb06dabac81b67a8930606c799d3b462c1b66dae20da",
+    "elf_sha256": "7d7d97c21bd4d9da2674a12e9fa238e79710c25d0bb6dd86345fe0492d372f28",
+    "save_reload_runtime_verified": false,
+    "mission_transition_verified": false,
+    "physical_acceptance": false
+  },
   "active_dev135_campaign": {
     "candidate": "A3.5-dev135",
     "state": "VITA3K_M13_LOAD_MOVEMENT_FIRE_EVA_PAUSE_PASS_PROGRESS_AND_EXIT_OPEN",

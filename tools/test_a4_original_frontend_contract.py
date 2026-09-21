@@ -6,6 +6,17 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class A4OriginalFrontendContractTests(unittest.TestCase):
+    def test_campaign_reload_accepts_only_valid_original_single_player_saves(self):
+        runtime = (ROOT / "port" / "platform" / "vita" / "a31_vita_runtime.cpp").read_text()
+        handoff = runtime[runtime.index("bool Run_Original_Frontend_Intro_And_Menu("):]
+        handoff = handoff[:handoff.index("unsigned frontend_frame = 0U;")]
+
+        self.assertIn("#if RENEGADE_VITA_M00_DEMO", handoff)
+        self.assertIn("reload_valid = A4_Frontend_Is_Tutorial_Source(reload_source);", handoff)
+        self.assertIn("A4_Frontend_Resolve_Single_Player_Archive(reload_source,", handoff)
+        self.assertIn("&& reload_is_save;", handoff)
+        self.assertIn("if (reload_valid) {", handoff)
+
     def test_cmake_selects_original_frontend_and_boundary_sources(self):
         cmake = (ROOT / "CMakeLists.txt").read_text()
         host_cmake = (ROOT / "tools" / "host_a30_definitions" / "CMakeLists.txt").read_text()

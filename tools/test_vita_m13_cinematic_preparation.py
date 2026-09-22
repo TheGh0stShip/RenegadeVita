@@ -39,9 +39,12 @@ def test_m13_intro_keeps_packageable_narrow_prepare_hook():
 def test_m13_dependency_scanner_has_mission_inventory_mode():
     text = SCAN_TOOL.read_text(encoding="utf-8")
     assert "def mission_inventory" in text
+    assert "def chunk_inventory" in text
+    assert "def walk_chunks" in text
+    assert "binary_inventory" in text
     assert "--mission-inventory" in text
     assert "data_scripts_without_source_declare_name_match" in text
-    assert "LDD/LSD binary object graph" in text
+    assert "LDD/LSD binary inventory records chunk structure only" in text
     assert "--quiet" in text
 
 

@@ -21,6 +21,12 @@ Current M13 inventory from `build/dev136-host/retail/Data/M13.mix`:
   92 animation names, 5 audio cue names, 15 script classes.
 - Static source check: all 15 data-referenced script class names have matching
   source `DECLARE_SCRIPT` names.
+- Binary chunk inventory: `m13.ldd` is 277,965 bytes with 4,490 chunk headers,
+  max depth 14, and the expected top-level `0x3c51c460` level-info chunk plus
+  `0x3c51c461` level-data chunk. The level-info microchunk 1 names `M13.lsd`.
+  `m13.lsd` is 888,276 bytes with 19,316 chunk headers, max depth 13, and six
+  top-level save subsystems: `0x00020000`, `0x00020001`, `0x00030005`,
+  `0x00040126`, `0x00040147`, and `0x00040800`.
 
 The intro-specific gate also compares `x00_intro.txt` dependencies against the
 runtime M13 preparation arrays. A broad runtime preparation experiment for all
@@ -40,7 +46,8 @@ Build/package evidence:
 
 Known limits remain explicit:
 
-- LDD/LSD binary object graph is not inventoried yet.
+- LDD/LSD chunk structure is inventoried, but object graph semantics, factory
+  ownership, pointer fixups, and script observer state are not decoded yet.
 - W3D internal texture/material/subobject references are not inventoried yet.
 - DDB preset transitive references are not inventoried yet.
 - Static source matching does not prove compiled linkage or runtime execution.

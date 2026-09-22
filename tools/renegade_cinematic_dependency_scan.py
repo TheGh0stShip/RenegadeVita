@@ -59,6 +59,10 @@ class MixArchive:
                 self.entries[name.lower()] = (crc, offset, bytes_)
 
     def read_text(self, name: str) -> str:
+        payload = self.read_binary(name)
+        return payload.decode("latin1", errors="replace")
+
+    def read_binary(self, name: str) -> bytes:
         entry = self.entries.get(name.lower())
         if entry is None:
             raise KeyError(name)
@@ -69,7 +73,7 @@ class MixArchive:
         with self.path.open("rb") as stream:
             stream.seek(offset)
             payload = stream.read(bytes_)
-        return payload.decode("latin1", errors="replace")
+        return payload
 
 
 def parse_command(line: str) -> tuple[int, str, list[str]] | None:
@@ -318,9 +322,113 @@ def source_inventory(root: Path) -> dict[str, Any]:
     }
 
 
+def parse_microchunks(payload: bytes, start: int, end: int, limit: int = 256) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    offset = start
+    while offset + 2 <= end and len(records) < limit:
+        chunk_id = payload[offset]
+        length = payload[offset + 1]
+        data_start = offset + 2
+        data_end = data_start + length
+        if data_end > end:
+            records.append({
+                "offset": offset,
+                "id": chunk_id,
+                "length": length,
+                "truncated": True,
+            })
+            break
+        value: dict[str, Any] = {}
+        data = payload[data_start:data_end]
+        if data and all((32 <= byte < 127) or byte == 0 for byte in data):
+            value["ascii"] = data.rstrip(b"\0").decode("ascii", errors="replace")
+        if length in (1, 2, 4):
+            value["uint_le"] = int.from_bytes(data, "little", signed=False)
+        records.append({
+            "offset": offset,
+            "id": chunk_id,
+            "length": length,
+            **value,
+        })
+        offset = data_end
+    return records
+
+
+def walk_chunks(payload: bytes, start: int = 0, end: int | None = None,
+                depth: int = 0, limit: int = 50000) -> list[dict[str, Any]]:
+    if end is None:
+        end = len(payload)
+    records: list[dict[str, Any]] = []
+    offset = start
+    while offset + 8 <= end and len(records) < limit:
+        raw_id, raw_size = struct.unpack_from("<II", payload, offset)
+        has_children = bool(raw_size & 0x80000000)
+        size = raw_size & 0x7FFFFFFF
+        data_start = offset + 8
+        data_end = data_start + size
+        record: dict[str, Any] = {
+            "offset": offset,
+            "depth": depth,
+            "id": f"0x{raw_id:08x}",
+            "size": size,
+            "has_children": has_children,
+        }
+        if data_end > end:
+            record["truncated"] = True
+            records.append(record)
+            break
+        if has_children:
+            records.append(record)
+            records.extend(walk_chunks(payload, data_start, data_end, depth + 1,
+                                       limit - len(records)))
+        elif depth == 0 and size > 0:
+            microchunks = parse_microchunks(payload, data_start, data_end, limit=64)
+            if microchunks:
+                record["microchunks"] = microchunks
+            records.append(record)
+        offset = data_end
+    if offset != end and len(records) < limit:
+        records.append({
+            "offset": offset,
+            "depth": depth,
+            "trailing_bytes": end - offset,
+        })
+    return records
+
+
+def chunk_inventory(archive: MixArchive) -> dict[str, Any]:
+    files: dict[str, Any] = {}
+    for name in sorted(entry for entry in archive.entries if entry.endswith((".ldd", ".lsd"))):
+        payload = archive.read_binary(name)
+        chunks = walk_chunks(payload)
+        top_level = [record for record in chunks if record.get("depth") == 0 and "id" in record]
+        top_level_counts = Counter(record["id"] for record in top_level)
+        all_id_counts = Counter(record["id"] for record in chunks if "id" in record)
+        max_depth = max((int(record.get("depth", 0)) for record in chunks), default=0)
+        files[name] = {
+            "bytes": len(payload),
+            "chunk_count": sum(1 for record in chunks if "id" in record),
+            "max_depth": max_depth,
+            "top_level_chunk_count": len(top_level),
+            "top_level_counts": dict(sorted(top_level_counts.items())),
+            "top_level_chunks": top_level,
+            "most_common_chunk_ids": dict(all_id_counts.most_common(64)),
+            "sample_chunks": chunks[:256],
+        }
+    return {
+        "file_count": len(files),
+        "files": files,
+        "limits": [
+            "Chunk inventory records headers, child flags, sizes and small microchunk metadata only; it does not instantiate PersistFactory objects.",
+            "Object definition names, pointer fixups, and script observer state still require original-engine SaveLoad instrumentation.",
+        ],
+    }
+
+
 def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
     text_scan = scan_all_text(archive)
     source_scan = source_inventory(root)
+    binary_scan = chunk_inventory(archive)
     source_scripts_lower = {name.lower() for name in source_scan["script_registrations"]}
     data_scripts = set(text_scan["referenced_scripts"])
     return {
@@ -328,6 +436,7 @@ def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
         "archive": str(archive.path),
         "archive_inventory": archive_inventory(archive),
         "text_inventory": text_scan,
+        "binary_inventory": binary_scan,
         "source_inventory": source_scan,
         "gaps": {
             "data_scripts_without_source_declare_name_match": canonical({
@@ -336,7 +445,8 @@ def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
         },
         "limits": [
             "MIX inventory records names, sizes, offsets, CRCs and script text dependencies only; it does not export retail payloads.",
-            "LDD/LSD binary object graph, W3D internal texture/material references, and DDB preset transitive references still require original-engine or dedicated binary inventory.",
+            "LDD/LSD binary inventory records chunk structure only; object graph semantics still require original-engine SaveLoad instrumentation.",
+            "W3D internal texture/material references and DDB preset transitive references still require original-engine or dedicated binary inventory.",
             "Source inventory is static text coverage; it does not prove compiled linkage or runtime execution.",
         ],
     }

@@ -17,7 +17,10 @@ classes; all 15 data-referenced script class names have matching source
 registrations. A broad runtime prep experiment was rejected after Sony ELF
 conversion failed with a 3936-byte segment overlap, so Dev165 keeps the prior
 packageable narrow runtime prep and records the remaining intro prep gaps:
-15 models, 36 animations, and 16 real-object presets.
+15 models, 36 animations, and 16 real-object presets. Follow-up chunk
+inventory now records `m13.ldd` at 4,490 chunk headers with top-level
+`0x3c51c460`/`0x3c51c461` and `M13.lsd` named by level-info microchunk 1;
+`m13.lsd` has 19,316 chunk headers and six top-level save subsystems.
 Evidence: `build/dev165-m13-mission-inventory.json`,
 `build/dev165-m13-cinematic-dependencies.json`, and
 `reports/DEV165_M13_MISSION_INVENTORY.md`. ARM/package evidence:
@@ -29,7 +32,8 @@ claimed.
 Next: add binary LDD/LSD/DDB and W3D transitive inventory, then use those
 results to drive M13 runtime preparation and mission gates before a broad
 runtime run.
-Blocker: binary mission object graph and W3D internals are not inventoried yet.
+Blocker: binary mission object semantics, DDB preset transitive references, and
+W3D internals are not inventoried yet.
 
 ## Dev160 tooling: Vita3K runner now rejects emulator-only launches
 

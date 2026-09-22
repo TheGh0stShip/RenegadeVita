@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Dev144 active: Score dialog fixed; M13 cinematic camera under investigation
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: isolate the original M13 intro camera-object/control failure; authored
+letterbox and audio advance while the view remains static with HUD.
+Completed: full-port Score dialog resource 239 and controls, four focused
+tests, ARM provider validation, asset-free public VPK build. Diagnostic
+Vita3K reached original Score then `R_L01.bik` Movie without the prior crash.
+Evidence: `reports/DEV144_SCORE_DIALOG_AND_M13_INTRO.md` and matching
+Vita3K capture/log bundles; no physical Vita verification.
+Next: instrument camera host/HUD state at M13 intro start, fix the failing
+original object/control boundary, then verify normal intro and Movie-to-M01.
+Blocker: M13 cinematic camera is not visibly taking over; ordinary objectives
+and full campaign continuity remain unverified.
+
 ## Dev142 active: original campaign intermission handoff candidate
 
 Renegade Vita — v3.5 active

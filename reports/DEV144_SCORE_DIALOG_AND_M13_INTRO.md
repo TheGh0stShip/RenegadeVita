@@ -1,0 +1,7 @@
+# Dev144: original Score dialog and M13 intro investigation
+
+The full-port resource generator now includes retail dialog 239 (`IDD_SCORE_SCREEN`) and its controls. The demo's 22-dialog resource set is unchanged. The original `ScoreScreenDialogClass` previously dereferenced a missing background control and crashed after diagnostic M13 completion.
+
+Evidence: four resource tests passed; host and ARM dialog provider checks passed; asset-free public VPK SHA-256 `c0ffc004063a91ad7e95186c8506c80105a8fade7bb0505f5c3c286b92a2b12d`. A separate diagnostic Vita3K run consumed a one-shot M13 completion request, displayed the original Score intermission, then advanced to Movie and decoded `R_L01.bik`. This does not prove normal objectives, Movie-to-M01, or physical Vita behavior.
+
+The unforced public Dev144 Vita3K run confirms the user's M13 presentation symptom. The original `X00_Intro.txt` commands enable letterbox, create `X00_CAMERA`, take camera control, and restore it after about 71 seconds. The capture showed static world plus HUD within black bars while authored intro audio played; the bars and first-person weapon changed at the expected timeline end. This is not a loading-screen viewport leak or audio from another mission. Camera-object/control execution remains unverified and is the next blocker. Evidence is under managed AppData `campaign-dev144-letterbox-trial-1/` and `campaign-dev144-score-transition-trial-1/`. No physical hardware claim.

@@ -53,14 +53,30 @@ class ResourceStyleTests(unittest.TestCase):
                      'IDD_CONFIG_PERFORMANCE'):
             self.assertIn(definitions[name], generated, name)
 
+    def test_original_score_dialog_contains_dereferenced_controls(self):
+        definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
+        generated = generator.parse(SOURCE/'chat.rc', definitions, generator.CAMPAIGN_IDS)
+        dialog = generated[definitions['IDD_SCORE_SCREEN']]
+        self.assertNotIn(definitions['IDD_SCORE_SCREEN'],
+                         generator.parse(SOURCE/'chat.rc', definitions))
+        present = {struct.unpack_from('<H', header, 16)[0]
+                   for header, _, _ in controls(dialog)}
+        score_source = (SOURCE/'scorescreen.cpp').read_text(encoding='latin1')
+        initializer = score_source.split('ScoreScreenDialogClass::On_Init_Dialog (void)', 1)[1]
+        initializer = initializer.split('ScoreScreenDialogClass::On_Destroy', 1)[0]
+        required = set(re.findall(r'Get_Dlg_Item\s*\(\s*(IDC_\w+)\s*\)', initializer))
+        self.assertTrue(required)
+        for name in required:
+            self.assertIn(definitions[name] & 0xffff, present, name)
+
     def test_original_frontend_controls_match_llvm_rc(self):
         definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
-        generated = generator.parse(SOURCE/'chat.rc', definitions)
+        generated = generator.parse(SOURCE/'chat.rc', definitions, generator.CAMPAIGN_IDS)
         source = (SOURCE/'chat.rc').read_text(encoding='latin1')
         blocks = re.findall(r'^\w+ DIALOG(?:EX)? DISCARDABLE .*?^END',
                             source, re.MULTILINE | re.DOTALL)
-        selected = [b for b in blocks if definitions.get(b.split()[0]) in generator.IDS]
-        self.assertEqual(len(selected), len(generator.IDS))
+        selected = [b for b in blocks if definitions.get(b.split()[0]) in generator.CAMPAIGN_IDS]
+        self.assertEqual(len(selected), len(generator.CAMPAIGN_IDS))
         rc = '\n'.join(f'#define {key} {value}' for key, value in definitions.items())
         rc += '\n' + '\n'.join(selected) + '\n'
         with tempfile.TemporaryDirectory(prefix='renegade-rc-') as folder:

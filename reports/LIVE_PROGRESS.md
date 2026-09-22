@@ -5609,3 +5609,10 @@ save privately; did not trim it or relax validation. See
 `reports/DEV115_SAVE_OVERWRITE_FAILURE.md`.
 Next: distinguish save chunk accounting from native write/truncate behavior.
 Dev116 build remains separate, running with the existing integrated fixes.
+# Dev138 campaign source integration (2026-09-21)
+
+Full-port-only M01 original script unit now builds and registers on ARM using
+a M01-scoped callback-default compatibility header. VPK SHA-256:
+`31f846ce145ddf2834f8d0153b8e7a48b6975e3a1debd0fcfa93535e744d5520`.
+See `reports/DEV138_M01_SCRIPT_INTEGRATION.md`. M01 gameplay and normal M13
+completion-to-M01 transition remain unverified; physical gates remain 0/10.

@@ -67,6 +67,12 @@ def test_m13_chunk_scanner_resolves_original_save_load_owners():
     assert any(factory["class"] == "SoldierGameObj" for factory in factories)
 
 
+def test_m13_chunk_inventory_records_persist_factory_counts():
+    text = SCAN_TOOL.read_text(encoding="utf-8")
+    assert "persist_factory_chunk_counts" in text
+    assert "persist_factory_counts" in text
+
+
 def test_m13_intro_slow_unmapped_slots_are_traced():
     text = TEST_CINEMATIC.read_text(encoding="utf-8")
     assert "slot == 18" in text

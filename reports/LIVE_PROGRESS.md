@@ -1,5 +1,33 @@
 # Live engineering progress
 
+## Dev167: M13 object class count inventory
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: turn M13 SaveLoad ownership into class-count evidence for mission-critical
+objects before more runtime guessing. Completed:
+`tools/renegade_cinematic_dependency_scan.py` now records
+`persist_factory_chunk_counts` per `.ldd/.lsd` file. The generated
+`build/dev167-m13-mission-inventory.json` reports M13 dynamic counts including
+117 `DecorationPhysClass`, 13 `HumanPhysClass`, 8 `Phys3Class`, 2
+`WheeledVehicleClass`, 3 `TrackedVehicleClass`, 8 `PowerUpGameObj`, 111
+`SimpleGameObj`, 13 `SoldierGameObj`, 11 `VehicleGameObj`, 16
+`ScriptZoneGameObj`, and 12 `SoldierObserverClass`; static counts include 421
+`StaticPhysClass`, 42 `LightClass`/`LightPhysClass`, 16 `WaypathClass`, 66
+`WaypointClass`, 8 `Sound3DClass`, and 4 `SoundPseudo3DClass`.
+Evidence: `python3 -m tools.test_development_checkpoint` PASS; direct
+execution of all functions in `tools/test_vita_m13_cinematic_preparation.py`
+PASS; mission inventory generation and JSON validation PASS. No ARM, Vita3K,
+physical, visual, performance, A/V-sync, script-sequence, objective,
+death/reload, or campaign acceptance is claimed.
+Next: add bounded object-instance/runtime inventory for those M13 classes,
+including object IDs, presets/scripts/timers where available, and compare intro
+start, ambush initiation, Havoc death and cleanup state.
+Blocker: specific object payload fields, old-pointer fixups, observer internals,
+script timer values, DDB preset transitive references and W3D internals are not
+decoded yet.
+
 ## Dev166: M13 SaveLoad ownership inventory
 
 Renegade Vita - v3.5 active

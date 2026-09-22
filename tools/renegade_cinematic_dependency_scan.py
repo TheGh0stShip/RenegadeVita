@@ -584,11 +584,18 @@ def chunk_inventory(archive: MixArchive, chunk_sources: dict[str, Any] | None = 
         all_id_counts = Counter(record["id"] for record in chunks if "id" in record)
         resolved_counts: dict[str, int] = {}
         unresolved_counts: dict[str, int] = {}
+        persist_factory_counts: dict[str, dict[str, Any]] = {}
         for hex_id, count in all_id_counts.items():
             resolved = resolve_chunk_id(hex_id, chunk_sources)
             if resolved:
                 label = "/".join(resolved.get("symbols") or [resolved.get("level_chunk", hex_id)])
                 resolved_counts[label] = count
+                factories = resolved.get("persist_factories", [])
+                if factories:
+                    persist_factory_counts[hex_id] = {
+                        "count": count,
+                        "factories": factories,
+                    }
             else:
                 unresolved_counts[hex_id] = count
         max_depth = max((int(record.get("depth", 0)) for record in chunks), default=0)
@@ -604,6 +611,10 @@ def chunk_inventory(archive: MixArchive, chunk_sources: dict[str, Any] | None = 
             "top_level_counts": dict(sorted(top_level_counts.items())),
             "resolved_top_level_chunks": resolved_top_level,
             "resolved_chunk_counts": dict(sorted(resolved_counts.items())),
+            "persist_factory_chunk_counts": dict(sorted(
+                persist_factory_counts.items(),
+                key=lambda item: (-int(item[1]["count"]), item[0]),
+            )),
             "unresolved_chunk_counts_sample": dict(sorted(unresolved_counts.items())[:64]),
             "unresolved_unique_chunk_id_count": len(unresolved_counts),
             "top_level_chunks": top_level,

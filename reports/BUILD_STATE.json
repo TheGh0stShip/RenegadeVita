@@ -1,4 +1,42 @@
 {
+  "dev167_m13_object_class_counts": {
+    "candidate": "A3.5-dev167",
+    "state": "SOURCE_TOOLING_PASS_M13_OBJECT_CLASS_COUNTS_RUNTIME_UNVERIFIED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV167_M13_OBJECT_CLASS_COUNTS.md",
+    "inventory_json": "build/dev167-m13-mission-inventory.json",
+    "m13_ldd_dynamic_factory_counts": {
+      "DecorationPhysClass": 117,
+      "HumanPhysClass": 13,
+      "Phys3Class": 8,
+      "WheeledVehicleClass": 2,
+      "TrackedVehicleClass": 3,
+      "PowerUpGameObj": 8,
+      "SimpleGameObj": 111,
+      "SoldierGameObj": 13,
+      "VehicleGameObj": 11,
+      "ScriptZoneGameObj": 16,
+      "SoldierObserverClass": 12
+    },
+    "m13_lsd_static_factory_counts": {
+      "LightClass": 42,
+      "LightPhysClass": 42,
+      "StaticPhysClass": 421,
+      "StaticAnimPhysClass": 2,
+      "WaypathClass": 16,
+      "WaypointClass": 66,
+      "Sound3DClass": 8,
+      "SoundPseudo3DClass": 4
+    },
+    "focused_tests": "direct tools/test_vita_m13_cinematic_preparation.py functions PASS; pytest unavailable",
+    "development_checkpoint": "PASS",
+    "arm_build_complete": false,
+    "vita3k_acceptance": false,
+    "audio_sync_verified": false,
+    "campaign_progression_verified": false,
+    "physical_acceptance": false
+  },
   "dev166_m13_saveload_ownership": {
     "candidate": "A3.5-dev166",
     "state": "SOURCE_TOOLING_PASS_M13_SAVELOAD_OWNERSHIP_RUNTIME_UNVERIFIED",

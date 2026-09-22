@@ -80,6 +80,7 @@ class MissionCompletionContractTests(unittest.TestCase):
         self.assertNotIn("CombatManager::Mission_Complete(", boundary)
         self.assertNotIn("Commands->Mission_Complete", boundary)
         self.assertNotIn("PendingCampaignContinue", boundary)
+        self.assertIn("if (!success) cGod::Mission_Failed();", boundary)
 
     def test_runtime_observes_callback_after_original_simulation(self) -> None:
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text(
@@ -109,6 +110,15 @@ class MissionCompletionContractTests(unittest.TestCase):
         normal_runtime = runtime[:diagnostic_start] + runtime[diagnostic_end:]
         self.assertNotIn("CombatManager::Mission_Complete(", normal_runtime)
         self.assertNotIn("Commands->Mission_Complete", runtime)
+        self.assertIn("!result.mission_completion_observed", runtime)
+        self.assertIn(
+            "(result.mission_completion_observed && !result.mission_succeeded)",
+            runtime,
+        )
+        self.assertIn(
+            "A4 death: original restart resumed Combat; mission callback observation reset",
+            runtime,
+        )
 
     def test_process_success_requires_orderly_original_runtime_exit(self) -> None:
         main = (ROOT / "port/platform/vita/a30_main.cpp").read_text(

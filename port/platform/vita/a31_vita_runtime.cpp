@@ -3414,7 +3414,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					SoldierGameObj *star = CombatManager::Get_The_Star();
 					if (star != NULL && !star->Is_Dead() && !star->Is_Destroyed()) {
 						const float health_before = star->Get_Defense_Object()->Get_Health();
-						star->Apply_Damage(OffenseObjectClass(100000.0f));
+						star->Apply_Damage_Extended(OffenseObjectClass(100000.0f),
+							1.0f, Vector3(0.0f, 0.0f, 1.0f), NULL);
 						A30_Vita_Log("A4 campaign diagnostic: original lethal damage applied frame=%u health_before=%.2f health_after=%.2f dead=%d\n",
 							result.frames, health_before,
 							star->Get_Defense_Object()->Get_Health(), star->Is_Dead() ? 1 : 0);
@@ -3451,7 +3452,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				const bool first_star_death = mission_state.star_killed_observed &&
 					!result.star_killed_observed;
 				result.star_killed_observed = mission_state.star_killed_observed;
-				if (mission_state.completion_observed) {
+				if (mission_state.completion_observed &&
+					!result.mission_completion_observed) {
 					result.mission_completion_observed = true;
 					result.mission_succeeded = mission_state.mission_succeeded;
 					A30_Vita_Log("A3.5 mission completion: original Combat event observed success=%d frame=%u\n",
@@ -3474,9 +3476,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							level_unload_pending = false;
 							radar_initialized = false;
 						}
+						break;
 					}
 #endif
+#if RENEGADE_VITA_M00_DEMO
 					break;
+#endif
 				}
 				if (first_star_death) {
 					A30_Vita_Log("A3.5 mission completion: original Combat star-killed event observed frame=%u\n",
@@ -3503,7 +3508,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				if (is_suspended) {
 #if !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
-					if (result.star_killed_observed &&
+					if ((result.star_killed_observed ||
+						(result.mission_completion_observed && !result.mission_succeeded)) &&
 						DialogMgrClass::Get_Dialog_Count() > 0) {
 						A30_Vita_Log("A4 death: original popup active dialogs=%d; entering WWUI pump\n",
 							DialogMgrClass::Get_Dialog_Count());
@@ -3517,6 +3523,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							A30_Vita_Log("A4 death: original popup closed without active Combat; ending session\n");
 							break;
 						}
+						A31_Interactive_Begin_Mission_Completion_Observation();
+						result.mission_completion_observed = false;
+						result.mission_succeeded = false;
+						result.star_killed_observed = false;
+						A30_Vita_Log("A4 death: original restart resumed Combat; mission callback observation reset\n");
 						continue;
 					}
 #endif

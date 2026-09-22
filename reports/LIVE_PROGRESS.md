@@ -1,5 +1,34 @@
 # Live engineering progress
 
+## Dev148 diagnostic: M13 cinematic stall and render cost
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: isolate the remaining scene-render stall outside indexed draw completion;
+do not change cinematic clocks or publish the failed diagnostic build.
+Completed: isolated Vita3K M13 traces locate intermittent 0.9-1.3 s frames
+inside original foreground `WW3D::Render` / `scene->Render`, across world-space
+and dynamic objects; background, HUD, and final flush are not the slow phase.
+The WW3D double-sync and camera-wall-clock experiments failed/reverted; the
+latter disrupted authored actor sequencing. A loading-only M13 referenced-texture
+prewarm moved 183 textures to loading, yet the isolated run still reached a
+13.77 s worst frame by frame 480 (p50/p95/p99 100.5/275.9/389.2 ms), so it
+was also rejected/reverted. Demo behavior remains unchanged.
+Bounded in-memory mesh timing found 6.46 s across 10,382 submissions in
+frames 361-480 but only 0.19 s across 25,450 indexed draw completions.
+A repeated-color submission candidate still hit a 6.91 s frame by frame 720;
+it was rejected/reverted. The diagnostic timer is full-port-only.
+Evidence: ARM diagnostic SELF/VPK and isolated `campaign-dev148-textureprep-m13-1`
+plus `campaign-dev148-{meshboundary,colorcache}-m13-1` Vita3K/OpenGL receipts
+under managed AppData; runs timed out unassessed. No
+physical Vita evidence or accepted performance win. Dev147 remains last
+published build.
+Next: distinguish scene traversal/material-state/backend costs in the long
+frame with a bounded in-memory probe, then make one focused candidate.
+Blocker: intermittent large original scene-render stalls still desynchronize
+real-time audio from clamped cinematic/game time; root render cost unconfirmed.
+
 ## Dev145 active: original M13 intro camera restored in Vita3K
 
 Renegade Vita — v3.5 active

@@ -376,6 +376,9 @@ public:
 	virtual void Mission_Complete(bool success)
 	{
 		g_mission_completion_latch.Mission_Complete(success);
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		if (!success) cGod::Mission_Failed();
+#endif
 	}
 
 	virtual void Star_Killed()

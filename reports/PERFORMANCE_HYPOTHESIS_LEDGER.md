@@ -3,6 +3,75 @@
 ## Dev147 campaign preparation and MSAA (2026-09-21)
 
 Source request: `/mnt/e/Renegade_Vita_Performance_Prompt.md`, "Execution prompt".
+Dev148 M13 cinematic-stall continuation (2026-09-22): duplicate WW3D sync
+and a separate camera-wall-clock experiment did not fix the render stall; the
+latter disrupted authored actor sequencing. Both are reverted. The original
+`TimeManager` clamps simulation time after a long render frame while audio
+continues in real time, so eliminating the render stall is still necessary.
+No audio-sync or performance fix is accepted.
+
+An M13 loading-only referenced-texture prewarm prepared 183 textures in a
+diagnostic ARM build. Its Vita3K/OpenGL run had zero texture requests through
+frame 240 versus 39 in the prior object-timing probe, but by frame 480 it
+reached p50/p95/p99/worst 100.5/275.9/389.2/13769.6 ms and 1 new texture
+request. The earlier probe at frame 480 had 64.4/107.8/142.7/2482.1 ms.
+These are not fixed-input repeats, but the severe stall persisted despite
+eliminating early uploads. The prewarm was rejected and reverted. Evidence:
+managed AppData `campaign-dev148-textureprep-m13-1` receipt, status
+`TIMEOUT_UNASSESSED`; no physical-Vita measurement.
+
+Follow-up source/evidence check: the production mesh boundary still feeds
+vitaGL immediate-mode attributes for each original mesh/material batch, then
+calls the project-specific indexed end path. At frame 480 the diagnostic
+counter had about 29,539 mesh submissions and 2.53 million triangles
+cumulatively; texture prewarm did not change this work. The isolated
+texture-prewarm emulator stdout contained 13 `getstat`, 5 `open`, and 4
+`mkdir` warning records, not a contemporaneous high-volume error flood.
+These facts do not yet distinguish CPU attribute submission, shader first-use,
+GPU queue backpressure, or Vita3K host-driver stalls. Next experiment must
+separate those costs within the same frame without per-object disk logging;
+do not apply another clock or texture-cache change as a stall fix.
+
+Dev148 bounded mesh-boundary probe: a full-port-only ARM diagnostic build
+measured each original mesh submission and indexed draw completion in memory,
+logging one aggregate per 120 frames. In the isolated M13 Vita3K/OpenGL run,
+frames 361-480 accumulated 6.46 s across 10,382 mesh submissions, but only
+0.19 s across 25,450 indexed draw completions. The slowest individual mesh
+was 371 ms; its draw completion was not the long operation. The run's frame
+480 p50/p95/p99 was 58.7/93.5/282.5 ms, with 2.19 s worst from startup.
+Evidence: managed AppData `campaign-dev148-meshboundary-m13-1`; candidate
+SELF SHA-256 `4d55f724ae94e1eb9eb7d8281945b29d05c3bce1e140bf94a3d6907497ede4eb`.
+
+A following full-port-only repeated-color suppression candidate compiled and
+ran once against the same direct-entry route. By frame 720 it still had a
+6.91 s worst frame (p50/p95/p99 82.5/377.8/471.6 ms); the indexed draw-end
+maximum was 0.13 ms in frames 601-720. Differences in scene timing/object
+counts prevent claiming an aggregate CPU win. The color change was rejected
+and reverted; no audio-sync or 60 FPS improvement is accepted. Evidence:
+`campaign-dev148-colorcache-m13-1`; candidate SELF SHA-256
+`ab691c1d6f7f64a2b01073aecbaff0f7f28d42116b81f9d60da36d871900269c`.
+Both runs timed out unassessed and do not prove physical behavior. The 6.91 s
+frame exceeds the maximum individual mesh time by orders of magnitude, so
+the next bounded probe must distinguish scene traversal, material/state
+setup, and other backend calls rather than assuming indexed draw completion.
+After reverting the color experiment, the ARM/package rebuild reproduced the
+mesh-timer candidate SELF SHA-256 exactly; five mission-completion contract
+tests passed. This is only diagnostic build consistency, not gameplay or
+performance acceptance.
+
+Separate isolated Vita3K/OpenGL Dev148 M13 probes measured foreground
+`CombatManager::Render` as the slow phase. A timed frame at ambush frame 667
+spent 1.290 s in `WW3D::Render(COMBAT_SCENE)`, including 1.287 s in
+`scene->Render`; its world-space list took 0.977 s and dynamic list 0.305 s.
+Another run observed 1.107 s in `scene->Render` at frame 726. `Flush`,
+background, dazzle, and HUD were not the dominant phases. Per-object threshold
+logs identify distinct original models (for example `MX0_BASEWALL` at 0.336 s
+and `X0E_OBELISK_GD` at 0.307 s), but do not prove shader compilation,
+texture upload, geometry cost, or driver synchronization as the cause. No
+render policy change is adopted. Evidence: managed AppData isolated
+`campaign-dev148-*` receipts; runtime status `TIMEOUT_UNASSESSED`, not hardware
+acceptance. Development-only object probes were removed after diagnosis.
+
 These are isolated Vita3K/OpenGL M13 diagnostic direct-entry observations, not
 physical-Vita acceptance or a fixed-input three-repeat benchmark. The route
 includes the authored intro with no synthetic movement. The same retail data

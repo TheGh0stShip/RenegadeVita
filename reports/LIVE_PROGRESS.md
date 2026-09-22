@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Dev142 active: original campaign intermission handoff candidate
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: full-port mission success dispatches original CampaignManager Score/Movie
+flow and carries its original saved state into a rebuilt next-level session.
+Completed: 19 focused tests and asset-free ARM ELF/SELF/VPK build; Dev141
+Vita3K confirmed M13 first render and bounded movement. See
+`reports/DEV142_CAMPAIGN_INTERMISSION.md`.
+Evidence: Dev142 VPK SHA-256
+`52927e6cf8f521ad025b2921343ddc2f0c678e88f2817a55eb8228694b24520e`.
+Next: bounded diagnostic completion in Vita3K, then ordinary M13 objectives
+and M01 continuity. Blocker: new intermission path has no runtime proof yet.
+
 ## Dev141 active: campaign Movie owner retained
 
 Renegade Vita — v3.5 active

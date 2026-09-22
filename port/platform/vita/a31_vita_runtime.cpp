@@ -54,7 +54,9 @@
 #include "networkobjectmgr.h"
 #include "pathmgr.h"
 #include "playermanager.h"
+#include "playertype.h"
 #include "radar.h"
+#include "ramfile.h"
 #include "renegadecheatmgr.h"
 #include "render2d.h"
 #include "render2dsentence.h"
@@ -2270,7 +2272,7 @@ bool Try_Latch_Development_Campaign_Mission()
 
 bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	MovieGameModeClass &movie_mode, WWAudioClass *audio, bool start_at_main_menu,
-	const char *reload_source)
+	const char *reload_source, const char *campaign_source)
 {
 	A31VitaScopedFrontendRenderResolution frontend_render_resolution;
 	A4_Frontend_Reset_Trace();
@@ -2301,7 +2303,10 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 			reload_source, reload_valid ? reload_archive : "none", reload_valid ? 1 : 0);
 #endif
 	}
-	if (reload_valid) {
+	if (campaign_source != NULL && campaign_source[0] != '\0') {
+		A4_Frontend_Latch_Start_Game(campaign_source, PLAYERTYPE_RENEGADE, 0);
+		A30_Vita_Log("A4 campaign: restored original campaign next source=%s\n", campaign_source);
+	} else if (reload_valid) {
 		A4_Frontend_Latch_Start_Game(reload_source, -1, 0);
 		A30_Vita_Log("A4 load: original save handoff after completed session teardown source=%s\n", reload_source);
 	} else if (start_at_main_menu) {
@@ -2387,6 +2392,78 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	A4_Frontend_End_Menu_Loop();
 	return tutorial_selected;
 }
+
+#if !RENEGADE_VITA_M00_DEMO
+bool Run_Original_Campaign_Intermission(WWAudioClass *audio,
+	A31VitaInteractiveResult &result)
+{
+	A31VitaScopedFrontendRenderResolution presentation_resolution;
+	A4_Frontend_Begin_Menu_Loop();
+	Input::Menu_Enable(true);
+	A30_Vita_Log("A4 campaign: dispatching observed mission success to original CampaignManager\n");
+	CampaignManager::Continue();
+	GameModeClass *combat = GameModeManager::Find("Combat");
+	const bool original_end_game_consumed = combat != NULL && combat->Is_Inactive();
+	A30_Vita_Log("A4 campaign: original Continue returned combat_inactive=%d score_active=%d\n",
+		original_end_game_consumed ? 1 : 0,
+		GameModeManager::Find("ScoreScreen") != NULL &&
+			GameModeManager::Find("ScoreScreen")->Is_Active() ? 1 : 0);
+	if (original_end_game_consumed) {
+		unsigned intermission_frames = 0U;
+		while (!A4_Frontend_Exit_Requested() &&
+			!A4_Frontend_Get_Trace().tutorial_start_latched) {
+			TimeManager::Update();
+			Input::Update();
+			A4_Frontend_Pump_WWUI_Key_Transitions();
+			GameModeManager::Think();
+			GameInitMgrClass::Think();
+			DialogMgrClass::On_Frame_Update();
+			GameModeManager::Render();
+			if (audio != NULL) audio->On_Frame_Update(0);
+			++intermission_frames;
+			if (intermission_frames == 1U || intermission_frames % 600U == 0U) {
+				A30_Vita_Log("A4 campaign: original intermission frame=%u score/movie=%d/%d\n",
+					intermission_frames,
+					GameModeManager::Find("ScoreScreen") != NULL &&
+						GameModeManager::Find("ScoreScreen")->Is_Active() ? 1 : 0,
+					GameModeManager::Find("Movie") != NULL &&
+						GameModeManager::Find("Movie")->Is_Active() ? 1 : 0);
+			}
+			sceKernelDelayThread(16667);
+		}
+		const A4FrontendTrace trace = A4_Frontend_Get_Trace();
+		if (trace.tutorial_start_latched) {
+			char archive[96];
+			bool is_save = false;
+			if (A4_Frontend_Resolve_Single_Player_Archive(trace.tutorial_map,
+				archive, sizeof(archive), &is_save) && !is_save) {
+				RAMFileClass state_file(result.campaign_state,
+					sizeof(result.campaign_state));
+				if (state_file.Open(FileClass::WRITE)) {
+					ChunkSaveClass state_writer(&state_file);
+					const bool saved = CampaignManager::Save(state_writer);
+					const int bytes = state_file.Size();
+					state_file.Close();
+					if (saved && bytes > 0 && bytes <=
+						static_cast<int>(sizeof(result.campaign_state))) {
+						memcpy(result.campaign_next_source, trace.tutorial_map,
+							sizeof(result.campaign_next_source));
+						result.campaign_state_size = static_cast<uint32_t>(bytes);
+						result.campaign_handoff_completed = true;
+						A30_Vita_Log("A4 campaign: original intermission latched next source=%s state_bytes=%u frames=%u\n",
+							result.campaign_next_source, result.campaign_state_size,
+							intermission_frames);
+					}
+				}
+			}
+		}
+		result.frontend_exit_requested = A4_Frontend_Exit_Requested();
+	}
+	Input::Menu_Enable(false);
+	A4_Frontend_End_Menu_Loop();
+	return original_end_game_consumed;
+}
+#endif
 #endif
 
 } // namespace
@@ -2428,7 +2505,9 @@ void A31_Vita_Render_Original_Loading_Callback(const char *phase,
 }
 
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
-	int startup_screen_result, bool start_at_main_menu, const char *reload_source)
+	int startup_screen_result, bool start_at_main_menu, const char *reload_source,
+	const char *campaign_source, const uint8_t *campaign_state,
+	uint32_t campaign_state_size)
 {
 	A31VitaInteractiveResult result = {};
 	result.attempted = true;
@@ -2543,6 +2622,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			bool text_window_scene_initialized = false;
 		bool radar_initialized = false;
 		bool session_initialized = false;
+		bool original_end_game_consumed = false;
 		bool single_player_transport_initialized = false;
 		bool audio_teardown_completed = false;
 			WW3DAssetManager *asset_manager = NULL;
@@ -2697,8 +2777,32 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A31_Interactive_Configure_Vita_Controls();
 				input_initialized = true;
 					CampaignManager::Init();
-					EncyclopediaMgrClass::Initialize();
 					campaign_initialized = true;
+					#if !RENEGADE_VITA_M00_DEMO
+					if (campaign_source != NULL) {
+						char archive[96];
+						bool is_save = false;
+						if (campaign_state == NULL || campaign_state_size == 0U ||
+							campaign_state_size > 64U ||
+							!A4_Frontend_Resolve_Single_Player_Archive(campaign_source,
+								archive, sizeof(archive), &is_save) || is_save) {
+							A30_Vita_Log("A4 campaign: rejected invalid session handoff source=%s bytes=%u\n",
+								campaign_source, campaign_state_size);
+							break;
+						}
+						uint8_t state_bytes[64];
+						memcpy(state_bytes, campaign_state, campaign_state_size);
+						RAMFileClass state_file(state_bytes, campaign_state_size);
+						if (!state_file.Open(FileClass::READ)) break;
+						ChunkLoadClass state_reader(&state_file);
+						const bool loaded = CampaignManager::Load(state_reader);
+						state_file.Close();
+						if (!loaded) break;
+						A30_Vita_Log("A4 campaign: restored original CampaignManager chunk bytes=%u source=%s\n",
+							campaign_state_size, campaign_source);
+					}
+					#endif
+					EncyclopediaMgrClass::Initialize();
 					A30_Vita_Log("A3.5 EVA: original encyclopedia discovery tables initialized\n");
 					A30_Vita_Log("A3.5 loading screen: original CampaignManager catalog initialized\n");
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
@@ -2716,7 +2820,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					{
 						const bool frontend_tutorial_selected =
 							Run_Original_Frontend_Intro_And_Menu(frontend_menu_mode,
-								frontend_movie_mode, audio, start_at_main_menu, reload_source);
+								frontend_movie_mode, audio, start_at_main_menu, reload_source,
+								campaign_source);
 						frontend_menu_mode_registered_for_handoff =
 							frontend_tutorial_selected &&
 							GameModeManager::Find("Menu") == &frontend_menu_mode;
@@ -3189,6 +3294,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					if (result.mission_succeeded) {
 						A30_Vita_Log("A3.5 demo ending: rejected non-M00 completion source=%s\n", load_source);
 					}
+#else
+					if (result.mission_succeeded) {
+						original_end_game_consumed =
+							Run_Original_Campaign_Intermission(audio, result);
+						if (original_end_game_consumed) {
+							level_unload_pending = false;
+							radar_initialized = false;
+						}
+					}
 #endif
 					break;
 				}
@@ -3411,7 +3525,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			}
 				result.clean_exit_requested = !result.render_error &&
 					(result.start_exit_requested ||
+#if RENEGADE_VITA_M00_DEMO
 						(result.mission_completion_observed && result.mission_succeeded));
+#else
+						result.campaign_handoff_completed || result.frontend_exit_requested);
+#endif
 				if (result.clean_exit_requested && capture_history->Count() != 0U &&
 					last_render_trace.star_available && last_render_trace.camera_available) {
 					char label[96];
@@ -3518,7 +3636,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				RadarManager::Shutdown();
 				A30_Vita_Log("A4 breadcrumb: original RadarManager shutdown complete\n");
 			}
-		if (session_initialized) {
+		if (session_initialized && !original_end_game_consumed) {
 			/* Preserve GameInitMgrClass's original session shutdown ordering:
 			 * client-goodbye events are drained by NetworkObjectMgr, then the
 			 * original server teams and player objects leave before a reload. */

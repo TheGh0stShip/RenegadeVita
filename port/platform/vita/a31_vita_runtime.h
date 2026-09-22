@@ -31,6 +31,10 @@ struct A31VitaInteractiveResult
 	bool return_to_menu_requested;
 	bool frontend_exit_requested;
 	char reload_source[96];
+	char campaign_next_source[96];
+	uint8_t campaign_state[64];
+	uint32_t campaign_state_size;
+	bool campaign_handoff_completed;
 	uint32_t frames;
 	uint32_t paused_input_frames;
 	uint32_t mesh_submissions;
@@ -49,4 +53,5 @@ struct A31VitaInteractiveResult
 ** Credits request frontend reentry only after complete owned teardown. */
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	int startup_screen_result = -1, bool start_at_main_menu = false,
-	const char *reload_source = nullptr);
+	const char *reload_source = nullptr, const char *campaign_source = nullptr,
+	const uint8_t *campaign_state = nullptr, uint32_t campaign_state_size = 0);

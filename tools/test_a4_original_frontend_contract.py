@@ -756,6 +756,22 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("font->Initialize_GDI_Font( name, point_size, is_bold );", fontchars)
         self.assertIn("FontCharsList.Add( font );", fontchars)
 
+    def test_campaign_intermission_preserves_original_state_and_session_owner(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        main = (ROOT / "port/platform/vita/a30_main.cpp").read_text()
+        cmake = (ROOT / "CMakeLists.txt").read_text()
+        intermission = runtime[runtime.index("bool Run_Original_Campaign_Intermission("):
+                               runtime.index("#endif\n#endif\n\n} // namespace", runtime.index("bool Run_Original_Campaign_Intermission("))]
+        self.assertIn("CampaignManager::Continue();", intermission)
+        self.assertIn("GameModeManager::Find(\"ScoreScreen\")", intermission)
+        self.assertIn("A4_Frontend_Pump_WWUI_Key_Transitions();", intermission)
+        self.assertIn("CampaignManager::Save(state_writer)", intermission)
+        self.assertIn("CampaignManager::Load(state_reader)", runtime)
+        self.assertIn("original_end_game_consumed", runtime)
+        self.assertIn("if (session_initialized && !original_end_game_consumed)", runtime)
+        self.assertIn("interactive.campaign_handoff_completed", main)
+        self.assertIn("${RENEGADE_STAGE}/wwlib/ramfile.cpp", cmake)
+
 
 if __name__ == "__main__":
     unittest.main()

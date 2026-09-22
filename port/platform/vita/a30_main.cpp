@@ -192,13 +192,21 @@ int main()
 	A31VitaInteractiveResult interactive = {};
 	bool start_at_main_menu = false;
 	char pending_reload[96] = {};
+	char pending_campaign_source[96] = {};
+	uint8_t pending_campaign_state[64] = {};
+	uint32_t pending_campaign_state_size = 0;
 	bool runtime_ok = false;
 	// Re-enter the original frontend only after the prior engine session has
 	// completed its owned cleanup. No world, player or save state is reused.
 	for (;;) {
 	interactive = A31_Vita_Run_Interactive_Runtime(screen_result, start_at_main_menu,
-		pending_reload[0] != '\0' ? pending_reload : nullptr);
+		pending_reload[0] != '\0' ? pending_reload : nullptr,
+		pending_campaign_source[0] != '\0' ? pending_campaign_source : nullptr,
+		pending_campaign_state_size != 0 ? pending_campaign_state : nullptr,
+		pending_campaign_state_size);
 	pending_reload[0] = '\0';
+	pending_campaign_source[0] = '\0';
+	pending_campaign_state_size = 0;
 	const bool audio_teardown_completed = WWAudioClass::Get_Instance() == NULL;
 	A30_Vita_Log("A3.1 breadcrumb: application audio teardown singleton=%p\n",
 		static_cast<void *>(WWAudioClass::Get_Instance()));
@@ -245,6 +253,21 @@ int main()
 		start_at_main_menu = true;
 		continue;
 	}
+#if !RENEGADE_VITA_M00_DEMO
+	if (runtime_ok && interactive.campaign_handoff_completed &&
+		interactive.campaign_next_source[0] != '\0' &&
+		interactive.campaign_state_size <= sizeof(pending_campaign_state)) {
+		memcpy(pending_campaign_source, interactive.campaign_next_source,
+			sizeof(pending_campaign_source));
+		memcpy(pending_campaign_state, interactive.campaign_state,
+			interactive.campaign_state_size);
+		pending_campaign_state_size = interactive.campaign_state_size;
+		A30_Vita_Log("A4 campaign: clean session released; entering original next source=%s state_bytes=%u\n",
+			pending_campaign_source, pending_campaign_state_size);
+		start_at_main_menu = false;
+		continue;
+	}
+#endif
 	if (runtime_ok && interactive.return_to_menu_requested) {
 		A30_Vita_Log("A3.5 demo ending: clean session released; reopening original frontend\n");
 		start_at_main_menu = true;

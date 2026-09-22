@@ -3,6 +3,7 @@
 Status: ARM build and asset-free package pass; M13 direct-entry Vita3K/OpenGL
 diagnostic runs return `TIMEOUT_UNASSESSED`. This is not a performance or
 campaign-completion acceptance build. Physical Vita was not tested.
+Unaccepted prerelease: `https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev148-diagnostic`.
 
 The full-port boundary routes failed mission completion to the original
 `cGod::Mission_Failed()` dialog, and the Vita loop observes restart without

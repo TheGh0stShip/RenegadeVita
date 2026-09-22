@@ -22,8 +22,9 @@ it was rejected/reverted. The diagnostic timer is full-port-only.
 Evidence: ARM diagnostic SELF/VPK and isolated `campaign-dev148-textureprep-m13-1`
 plus `campaign-dev148-{meshboundary,colorcache}-m13-1` Vita3K/OpenGL receipts
 under managed AppData; runs timed out unassessed. No
-physical Vita evidence or accepted performance win. Dev147 remains last
-published build.
+physical Vita evidence or accepted performance win. Dev148 source commit
+`ceef9c0` and its asset-free, explicitly unaccepted diagnostic VPK are
+published; Dev147 remains the last performance checkpoint.
 Next: distinguish scene traversal/material-state/backend costs in the long
 frame with a bounded in-memory probe, then make one focused candidate.
 Blocker: intermittent large original scene-render stalls still desynchronize

@@ -1,4 +1,18 @@
 {
+  "dev148_m13_stall_diagnostic": {
+    "candidate": "A3.5-dev148",
+    "state": "ARM_PACKAGE_PASS_VITA3K_M13_STALL_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "report": "reports/DEV148_M13_STALL_DIAGNOSTIC.md",
+    "source_commit": "ceef9c026e8445a770c8cc10badd184865872734",
+    "release_url": "https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev148-diagnostic",
+    "vpk_sha256": "4ed26752f168035d192f80758acc04e41c32a96433bc0d966f01f31566675261",
+    "self_sha256": "4d55f724ae94e1eb9eb7d8281945b29d05c3bce1e140bf94a3d6907497ede4eb",
+    "audio_sync_verified": false,
+    "performance_accepted": false,
+    "death_restart_verified": false,
+    "physical_acceptance": false
+  },
   "dev147_performance_checkpoint": {
     "candidate": "A3.5-dev147",
     "state": "CANONICAL_HOST_ARM_PACKAGE_IDENTITY_PASS_VITA3K_M13_PARTIAL",

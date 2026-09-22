@@ -5687,7 +5687,7 @@ completion-to-M01 transition remain unverified; physical gates remain 0/10.
 Full-port M13 loading no longer forces original multiplayer backdrop 94; it
 selects the original mission-indexed backdrop 13 and suppresses demo-only
 status/progress presentation. Demo profile remains unchanged. Deterministic
-staging, 13 focused tests, and ARM/VPK build pass; Vita3K trial 1 stalled
-before launch and does not prove visual parity. See
+staging, 13 focused tests, and ARM/VPK build pass; Vita3K trials 1 and 2
+stalled before launch and do not prove visual parity. See
 `reports/DEV143_RETAIL_CAMPAIGN_LOADING.md`. Physical acceptance gates remain
 open; no new physical acceptance is claimed.

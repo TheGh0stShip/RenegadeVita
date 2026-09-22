@@ -18,6 +18,8 @@ loading/diagnostic tests passed; ARM ELF/SELF/VPK build passed. Dev143 SELF
 SHA-256: `4a6d3b44905126fcdb54024e8ffbc59d57b08948bbeab962e9e41f5cc5bf1eb2`.
 VPK SHA-256: `6b38acd8fed30904fc4ff325bf0d4a70e9bb3365d8f20efc35be1f82cad7342f`.
 VPK inventory is only `eboot.bin` and `sce_sys/param.sfo`.
+Source commit: `1506d05` on `main`. Asset-free prerelease:
+`https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev143-campaign`.
 
 Vita3K trial 1: `campaign-dev143-retail-loading-trial-1/` in managed AppData.
 The emulator stalled during frontend startup before a game window or new
@@ -25,3 +27,8 @@ runtime loading breadcrumb, so it supplies no visual-fidelity evidence. A
 matching M13 campaign loading capture, retail PC reference comparison, and
 physical Vita check remain open. This candidate does not establish 1:1 visual
 acceptance or campaign objective completion.
+
+Trial 2 (`campaign-dev143-retail-loading-trial-2/`) repeated the same
+`TIMEOUT_UNASSESSED` result after 90 seconds. Its owned emulator process was
+terminated by the watchdog, no synthetic input was sent, and the runtime log
+hash remained unchanged. Both attempts stalled before the title launched.

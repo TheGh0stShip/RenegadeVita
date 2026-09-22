@@ -1,4 +1,16 @@
 {
+  "active_dev143_campaign_loading": {
+    "candidate": "A3.5-dev143",
+    "state": "ARM_PACKAGE_PASS_VITA3K_LAUNCH_TIMEOUT_VISUAL_PARITY_OPEN",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV143_RETAIL_CAMPAIGN_LOADING.md",
+    "source_commit": "1506d05",
+    "vpk_sha256": "6b38acd8fed30904fc4ff325bf0d4a70e9bb3365d8f20efc35be1f82cad7342f",
+    "self_sha256": "4a6d3b44905126fcdb54024e8ffbc59d57b08948bbeab962e9e41f5cc5bf1eb2",
+    "retail_visual_parity_verified": false,
+    "physical_acceptance": false
+  },
   "active_dev137_campaign": {
     "candidate": "A3.5-dev137",
     "state": "VITA3K_M13_MX0_REGISTERED_RENDER_PASS_OBJECTIVES_OPEN",

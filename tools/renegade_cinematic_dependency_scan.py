@@ -322,6 +322,184 @@ def source_inventory(root: Path) -> dict[str, Any]:
     }
 
 
+def strip_cpp_comments(text: str) -> str:
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.DOTALL)
+    return re.sub(r"//.*", "", text)
+
+
+def parse_int_expression(expression: str, symbols: dict[str, int]) -> int | None:
+    expression = expression.strip()
+    if not expression:
+        return None
+    tokens = re.findall(r"0x[0-9A-Fa-f]+|\d+|[A-Za-z_][A-Za-z0-9_]*|[()+\-*/]", expression)
+    rebuilt: list[str] = []
+    for token in tokens:
+        if re.fullmatch(r"0x[0-9A-Fa-f]+|\d+|[()+\-*/]", token):
+            rebuilt.append(token)
+        elif token in symbols:
+            rebuilt.append(str(symbols[token]))
+        else:
+            return None
+    safe_expression = " ".join(rebuilt)
+    try:
+        value = eval(safe_expression, {"__builtins__": {}}, {})
+    except Exception:
+        return None
+    if not isinstance(value, int):
+        return None
+    return value & 0xFFFFFFFF
+
+
+def parse_enum_constants(path: Path, symbols: dict[str, int]) -> list[dict[str, Any]]:
+    try:
+        text = strip_cpp_comments(path.read_text(encoding="latin1"))
+    except OSError:
+        return []
+    records: list[dict[str, Any]] = []
+    for enum_match in re.finditer(r"\benum(?:\s+[A-Za-z_][A-Za-z0-9_]*)?\s*\{(?P<body>.*?)\}\s*;", text, re.DOTALL):
+        next_value = 0
+        for raw_item in enum_match.group("body").split(","):
+            item = raw_item.strip()
+            if not item:
+                continue
+            item = item.split("=", 1)[0].strip() if "=" not in item else item
+            match = re.match(r"(?P<name>[A-Za-z_][A-Za-z0-9_]*)(?:\s*=\s*(?P<expr>.*))?$", item, re.DOTALL)
+            if match is None:
+                continue
+            name = match.group("name")
+            expr = match.group("expr")
+            if expr is None:
+                value = next_value
+            else:
+                parsed = parse_int_expression(expr, symbols)
+                if parsed is None:
+                    continue
+                value = parsed
+            symbols[name] = value
+            records.append({
+                "name": name,
+                "value": value,
+                "hex": f"0x{value:08x}",
+                "path": str(path),
+            })
+            next_value = (value + 1) & 0xFFFFFFFF
+    return records
+
+
+def collect_chunk_symbols(root: Path) -> dict[str, Any]:
+    relative_headers = [
+        "staging/wwsaveload/saveloadids.h",
+        "staging/ww3d2/ww3dids.h",
+        "staging/wwphys/wwphysids.h",
+        "staging/wwaudio/soundchunkids.h",
+        "staging/combat/CombatChunkID.h",
+        "staging/combat/savegame.cpp",
+    ]
+    symbols: dict[str, int] = {}
+    records: list[dict[str, Any]] = []
+    for relative in relative_headers:
+        path = root / relative
+        for record in parse_enum_constants(path, symbols):
+            record["path"] = relative
+            if record["name"].endswith("CHUNKID") or "CHUNKID" in record["name"]:
+                records.append(record)
+    by_value: dict[str, list[str]] = defaultdict(list)
+    for record in records:
+        by_value[record["hex"]].append(record["name"])
+    return {
+        "symbol_count": len(records),
+        "headers": relative_headers,
+        "symbols": {record["name"]: record["hex"] for record in records},
+        "by_value": {key: sorted(values) for key, values in sorted(by_value.items())},
+        "_raw_values": symbols,
+    }
+
+
+def collect_persist_factories(root: Path, chunk_values: dict[str, int]) -> dict[str, Any]:
+    source_roots = [root / "staging" / "ww3d2", root / "staging" / "wwphys",
+                    root / "staging" / "wwaudio", root / "staging" / "combat",
+                    root / "staging" / "commando", root / "staging" / "wwsaveload"]
+    factory_pattern = re.compile(
+        r"SimplePersistFactoryClass\s*(?:<|\s+<)\s*"
+        r"(?P<class>[A-Za-z_][A-Za-z0-9_:]*)\s*,\s*"
+        r"(?P<chunk>[A-Za-z_][A-Za-z0-9_]*)\s*>",
+        re.MULTILINE,
+    )
+    factories: list[dict[str, Any]] = []
+    by_value: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for source_root in source_roots:
+        if not source_root.exists():
+            continue
+        for path in sorted(source_root.rglob("*")):
+            if path.suffix.lower() not in (".cpp", ".h", ".hpp", ".c"):
+                continue
+            try:
+                text = strip_cpp_comments(path.read_text(encoding="latin1"))
+            except OSError:
+                continue
+            for match in factory_pattern.finditer(text):
+                chunk = match.group("chunk")
+                if chunk not in chunk_values:
+                    continue
+                value = chunk_values[chunk]
+                hex_value = f"0x{value:08x}"
+                record = {
+                    "class": match.group("class"),
+                    "chunk_symbol": chunk,
+                    "chunk_id": hex_value,
+                    "path": str(path.relative_to(root)),
+                }
+                factories.append(record)
+                by_value[hex_value].append({
+                    "class": record["class"],
+                    "chunk_symbol": chunk,
+                    "path": record["path"],
+                })
+    return {
+        "factory_count": len(factories),
+        "factories": factories,
+        "by_chunk_id": {key: value for key, value in sorted(by_value.items())},
+    }
+
+
+def source_chunk_inventory(root: Path) -> dict[str, Any]:
+    symbols = collect_chunk_symbols(root)
+    raw_values = symbols.pop("_raw_values")
+    factories = collect_persist_factories(root, raw_values)
+    return {
+        "schema_version": 1,
+        "symbol_inventory": symbols,
+        "persist_factories": factories,
+        "simple_factory_internal_chunks": {
+            "0x00100100": "SIMPLEFACTORY_CHUNKID_OBJPOINTER",
+            "0x00100101": "SIMPLEFACTORY_CHUNKID_OBJDATA",
+        },
+        "level_chunks": {
+            "0x3c51c460": "CHUNKID_LEVEL_INFO",
+            "0x3c51c461": "CHUNKID_LEVEL_DATA",
+        },
+    }
+
+
+def resolve_chunk_id(hex_id: str, chunk_sources: dict[str, Any] | None) -> dict[str, Any]:
+    if chunk_sources is None:
+        return {}
+    resolved: dict[str, Any] = {}
+    by_value = chunk_sources["symbol_inventory"]["by_value"]
+    factories = chunk_sources["persist_factories"]["by_chunk_id"]
+    if hex_id in by_value:
+        resolved["symbols"] = by_value[hex_id]
+    if hex_id in factories:
+        resolved["persist_factories"] = factories[hex_id]
+    simple = chunk_sources["simple_factory_internal_chunks"]
+    if hex_id in simple:
+        resolved["simple_factory_chunk"] = simple[hex_id]
+    level_chunks = chunk_sources["level_chunks"]
+    if hex_id in level_chunks:
+        resolved["level_chunk"] = level_chunks[hex_id]
+    return resolved
+
+
 def parse_microchunks(payload: bytes, start: int, end: int, limit: int = 256) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     offset = start
@@ -396,7 +574,7 @@ def walk_chunks(payload: bytes, start: int = 0, end: int | None = None,
     return records
 
 
-def chunk_inventory(archive: MixArchive) -> dict[str, Any]:
+def chunk_inventory(archive: MixArchive, chunk_sources: dict[str, Any] | None = None) -> dict[str, Any]:
     files: dict[str, Any] = {}
     for name in sorted(entry for entry in archive.entries if entry.endswith((".ldd", ".lsd"))):
         payload = archive.read_binary(name)
@@ -404,13 +582,30 @@ def chunk_inventory(archive: MixArchive) -> dict[str, Any]:
         top_level = [record for record in chunks if record.get("depth") == 0 and "id" in record]
         top_level_counts = Counter(record["id"] for record in top_level)
         all_id_counts = Counter(record["id"] for record in chunks if "id" in record)
+        resolved_counts: dict[str, int] = {}
+        unresolved_counts: dict[str, int] = {}
+        for hex_id, count in all_id_counts.items():
+            resolved = resolve_chunk_id(hex_id, chunk_sources)
+            if resolved:
+                label = "/".join(resolved.get("symbols") or [resolved.get("level_chunk", hex_id)])
+                resolved_counts[label] = count
+            else:
+                unresolved_counts[hex_id] = count
         max_depth = max((int(record.get("depth", 0)) for record in chunks), default=0)
+        resolved_top_level = []
+        for record in top_level:
+            resolved_record = {"id": record["id"], **resolve_chunk_id(record["id"], chunk_sources)}
+            resolved_top_level.append(resolved_record)
         files[name] = {
             "bytes": len(payload),
             "chunk_count": sum(1 for record in chunks if "id" in record),
             "max_depth": max_depth,
             "top_level_chunk_count": len(top_level),
             "top_level_counts": dict(sorted(top_level_counts.items())),
+            "resolved_top_level_chunks": resolved_top_level,
+            "resolved_chunk_counts": dict(sorted(resolved_counts.items())),
+            "unresolved_chunk_counts_sample": dict(sorted(unresolved_counts.items())[:64]),
+            "unresolved_unique_chunk_id_count": len(unresolved_counts),
             "top_level_chunks": top_level,
             "most_common_chunk_ids": dict(all_id_counts.most_common(64)),
             "sample_chunks": chunks[:256],
@@ -428,7 +623,8 @@ def chunk_inventory(archive: MixArchive) -> dict[str, Any]:
 def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
     text_scan = scan_all_text(archive)
     source_scan = source_inventory(root)
-    binary_scan = chunk_inventory(archive)
+    chunk_source_scan = source_chunk_inventory(root)
+    binary_scan = chunk_inventory(archive, chunk_source_scan)
     source_scripts_lower = {name.lower() for name in source_scan["script_registrations"]}
     data_scripts = set(text_scan["referenced_scripts"])
     return {
@@ -438,6 +634,7 @@ def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
         "text_inventory": text_scan,
         "binary_inventory": binary_scan,
         "source_inventory": source_scan,
+        "source_chunk_inventory": chunk_source_scan,
         "gaps": {
             "data_scripts_without_source_declare_name_match": canonical({
                 name for name in data_scripts if name.lower() not in source_scripts_lower

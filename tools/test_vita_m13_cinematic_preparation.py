@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from tools import renegade_cinematic_dependency_scan as scan_tool
+
 
 ROOT = Path(__file__).resolve().parents[1]
 A31_RUNTIME = ROOT / "port" / "platform" / "vita" / "a31_vita_runtime.cpp"
@@ -40,12 +42,29 @@ def test_m13_dependency_scanner_has_mission_inventory_mode():
     text = SCAN_TOOL.read_text(encoding="utf-8")
     assert "def mission_inventory" in text
     assert "def chunk_inventory" in text
+    assert "def source_chunk_inventory" in text
     assert "def walk_chunks" in text
     assert "binary_inventory" in text
+    assert "source_chunk_inventory" in text
+    assert "SimplePersistFactoryClass" in text
     assert "--mission-inventory" in text
     assert "data_scripts_without_source_declare_name_match" in text
     assert "LDD/LSD binary inventory records chunk structure only" in text
     assert "--quiet" in text
+
+
+def test_m13_chunk_scanner_resolves_original_save_load_owners():
+    inventory = scan_tool.source_chunk_inventory(ROOT)
+    by_value = inventory["symbol_inventory"]["by_value"]
+    assert inventory["level_chunks"]["0x3c51c460"] == "CHUNKID_LEVEL_INFO"
+    assert inventory["level_chunks"]["0x3c51c461"] == "CHUNKID_LEVEL_DATA"
+    assert "PHYSICS_CHUNKID_STATIC_DATA_SUBSYSTEM" in by_value["0x00020000"]
+    assert "PHYSICS_CHUNKID_STATIC_OBJECTS_SUBSYSTEM" in by_value["0x00020001"]
+    assert "CHUNKID_DYNAMIC_SAVELOAD" in by_value["0x00030006"]
+    assert "CHUNKID_COMBAT" in by_value["0x00040000"]
+    assert inventory["simple_factory_internal_chunks"]["0x00100101"] == "SIMPLEFACTORY_CHUNKID_OBJDATA"
+    factories = inventory["persist_factories"]["by_chunk_id"]["0x0004010e"]
+    assert any(factory["class"] == "SoldierGameObj" for factory in factories)
 
 
 def test_m13_intro_slow_unmapped_slots_are_traced():

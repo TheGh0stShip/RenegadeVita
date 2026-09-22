@@ -1,5 +1,36 @@
 # Live engineering progress
 
+## Dev166: M13 SaveLoad ownership inventory
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: use source-owned SaveLoad/factory ownership to target M13 script/object
+correctness and performance fixes instead of treating `.ldd/.lsd` as opaque
+hex. Completed: `tools/renegade_cinematic_dependency_scan.py` now evaluates
+checked-out chunk-ID enum sources, scans registered `SimplePersistFactoryClass`
+owners, and annotates M13 binary chunk inventories with original subsystem and
+persist-factory names while remaining metadata-only. The generated
+`build/dev166-m13-mission-inventory.json` resolves 191 source chunk symbols and
+127 persist factories. `m13.ldd` top-level chunks now resolve to
+`CHUNKID_LEVEL_INFO` and `CHUNKID_LEVEL_DATA`, with common dynamic owners such
+as Combat, dynamic WWPhys, dynamic audio, ConversationMgr, MapMgr,
+EncyclopediaMgr, Soldier/Vehicle/Simple/PowerUp/ScriptZone objects, observer
+objects, and WW3D render objects. `m13.lsd` top-level chunks resolve to
+static WWPhys data, static WWPhys objects, static audio, BackgroundMgr, MapMgr,
+and WeatherMgr.
+Evidence: `python3 -m tools.test_development_checkpoint` PASS; direct
+execution of all functions in `tools/test_vita_m13_cinematic_preparation.py`
+PASS; mission inventory generation and JSON validation PASS. `pytest` is not
+installed in this WSL Python, so the focused pytest-style file was executed
+directly. No ARM, Vita3K, physical, visual, performance, A/V-sync, objective,
+death/reload, or campaign acceptance is claimed.
+Next: add bounded object-semantic/runtime inventory for the resolved M13
+critical owners at intro start, ambush, death/reload and cleanup so the next
+runtime fix addresses the actual missing/stale script and cinematic state.
+Blocker: object payload fields, pointer fixups, script observer state, DDB
+preset transitive references and W3D internals are still not decoded.
+
 ## Dev165: M13 mission inventory tooling before another runtime loop
 
 Renegade Vita - v3.5 active

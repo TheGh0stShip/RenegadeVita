@@ -1,4 +1,30 @@
 {
+  "dev166_m13_saveload_ownership": {
+    "candidate": "A3.5-dev166",
+    "state": "SOURCE_TOOLING_PASS_M13_SAVELOAD_OWNERSHIP_RUNTIME_UNVERIFIED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV166_M13_SAVELOAD_OWNERSHIP.md",
+    "inventory_json": "build/dev166-m13-mission-inventory.json",
+    "source_chunk_symbols": 191,
+    "persist_factories": 127,
+    "m13_ldd_top_level": ["CHUNKID_LEVEL_INFO", "CHUNKID_LEVEL_DATA"],
+    "m13_lsd_top_level": [
+      "PHYSICS_CHUNKID_STATIC_DATA_SUBSYSTEM",
+      "PHYSICS_CHUNKID_STATIC_OBJECTS_SUBSYSTEM",
+      "CHUNKID_STATIC_SAVELOAD",
+      "CHUNKID_BACKGROUND_MGR",
+      "CHUNKID_MAPMGR",
+      "CHUNKID_WEATHER_MGR"
+    ],
+    "focused_tests": "direct tools/test_vita_m13_cinematic_preparation.py functions PASS; pytest unavailable",
+    "development_checkpoint": "PASS",
+    "arm_build_complete": false,
+    "vita3k_acceptance": false,
+    "audio_sync_verified": false,
+    "campaign_progression_verified": false,
+    "physical_acceptance": false
+  },
   "dev159_persistent_runtime_logs": {
     "candidate": "A3.5-dev159",
     "state": "ARM_PACKAGE_PASS_VITA3K_LOG_OPEN_REDUCTION_PERFORMANCE_UNRESOLVED",

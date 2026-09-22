@@ -1,4 +1,21 @@
 {
+  "dev156_m13_rocket_template": {
+    "candidate": "A3.5-dev156",
+    "state": "ARM_PACKAGE_PASS_VITA3K_ROCKET_EVENT_LOCAL_WIN_OVERALL_PERFORMANCE_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV156_M13_ROCKET_TEMPLATE.md",
+    "self_sha256": "f738f786a2dabe07cb701e77b14a436494f1bb32de981c297a722766a2192001",
+    "vpk_sha256": "8079be905602ad33e0c6a0406784f49c422b792369035305ab559508ae664058",
+    "m13_vita3k_evidence": "managed AppData: campaign-dev156-final-m13-1/",
+    "rocket_loading_prepare_us": 134190,
+    "rocket_live_clone_us": [162, 81],
+    "explosion_live_set_model_us": 7090,
+    "event_local_performance_win": true,
+    "overall_performance_accepted": false,
+    "audio_sync_verified": false,
+    "physical_acceptance": false
+  },
   "dev155_m13_aggregate_template": {
     "candidate": "A3.5-dev155",
     "state": "ARM_PACKAGE_PASS_VITA3K_M13_EVENT_LOCAL_WIN_OTHER_STALLS_UNRESOLVED",

@@ -64,8 +64,36 @@ const char * const EMPTY_STRING			= "";
 AggregateLoaderClass	_AggregateLoader;
 
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-static AggregateDefClass *s_vita_x00_aggregate_owner = NULL;
-static RenderObjClass *s_vita_x00_aggregate_template = NULL;
+struct VitaAggregateTemplateSlot {
+	const char *name;
+	AggregateDefClass *owner;
+	RenderObjClass *model;
+};
+static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
+	{"X00_AG_Explode", NULL, NULL},
+	{"ag_rocketl", NULL, NULL}
+};
+
+static VitaAggregateTemplateSlot *Vita_Find_M13_Template(const char *name)
+{
+	if (name == NULL) return NULL;
+	for (unsigned i = 0; i < sizeof(s_vita_m13_templates) / sizeof(s_vita_m13_templates[0]); ++i) {
+		if (stricmp(name, s_vita_m13_templates[i].name) == 0) return &s_vita_m13_templates[i];
+	}
+	return NULL;
+}
+
+static void Vita_Release_M13_Template(AggregateDefClass *owner)
+{
+	for (unsigned i = 0; i < sizeof(s_vita_m13_templates) / sizeof(s_vita_m13_templates[0]); ++i) {
+		VitaAggregateTemplateSlot &slot = s_vita_m13_templates[i];
+		if (slot.owner == owner) {
+			slot.model->Release_Ref();
+			slot.model = NULL;
+			slot.owner = NULL;
+		}
+	}
+}
 #endif
 
 
@@ -126,11 +154,7 @@ AggregateDefClass::AggregateDefClass (RenderObjClass &base_model)
 AggregateDefClass::~AggregateDefClass (void)
 {
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	if (s_vita_x00_aggregate_owner == this) {
-		s_vita_x00_aggregate_template->Release_Ref();
-		s_vita_x00_aggregate_template = NULL;
-		s_vita_x00_aggregate_owner = NULL;
-	}
+	Vita_Release_M13_Template(this);
 #endif
 	// Free the name buffer if necessary
 	if (m_pName != NULL) {
@@ -155,11 +179,7 @@ AggregateDefClass::operator= (const AggregateDefClass &src)
 	int index;
 
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	if (s_vita_x00_aggregate_owner == this) {
-		s_vita_x00_aggregate_template->Release_Ref();
-		s_vita_x00_aggregate_template = NULL;
-		s_vita_x00_aggregate_owner = NULL;
-	}
+	Vita_Release_M13_Template(this);
 #endif
 
 	// Free the name buffer if necessary
@@ -225,9 +245,10 @@ RenderObjClass *
 AggregateDefClass::Create (void)
 {
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	if (s_vita_x00_aggregate_owner == this && s_vita_x00_aggregate_template != NULL) {
+	VitaAggregateTemplateSlot *vita_slot = Vita_Find_M13_Template(m_pName);
+	if (vita_slot != NULL && vita_slot->owner == this && vita_slot->model != NULL) {
 		const uint64_t clone_started_us = sceKernelGetProcessTimeWide();
-		RenderObjClass *instance = s_vita_x00_aggregate_template->Clone();
+		RenderObjClass *instance = vita_slot->model->Clone();
 		A30_Vita_Log("A4 M13 aggregate template clone: name=%s result=%d elapsed_us=%llu\n",
 			m_pName, instance != NULL ? 1 : 0,
 			static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - clone_started_us));
@@ -251,10 +272,10 @@ AggregateDefClass::Create (void)
 	}
 
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	if (pmodel != NULL && m_pName != NULL && stricmp(m_pName, "X00_AG_Explode") == 0) {
-		if (s_vita_x00_aggregate_template != NULL) s_vita_x00_aggregate_template->Release_Ref();
-		s_vita_x00_aggregate_owner = this;
-		s_vita_x00_aggregate_template = pmodel;
+	if (pmodel != NULL && vita_slot != NULL) {
+		if (vita_slot->model != NULL) vita_slot->model->Release_Ref();
+		vita_slot->owner = this;
+		vita_slot->model = pmodel;
 		pmodel->Add_Ref();
 		A30_Vita_Log("A4 M13 aggregate template retained: name=%s subobjects=%d\n",
 			m_pName, m_SubobjectList.Count());

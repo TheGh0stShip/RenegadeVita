@@ -1,5 +1,21 @@
 # Live engineering progress
 
+## Dev156: M13 rocket aggregate live creates reduced
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: identify the non-aggregate fiery-effect path and remaining simulation
+owners. Completed: M13 loading retains original `ag_rocketl`; fresh live
+clones take 81-162 us versus Dev155's roughly 101-151 ms creates. The
+ineffective `ag_fiery_ex06` experiment was removed. Explosion live setup
+remains 7.090 ms.
+Evidence: matching asset-free ARM SELF/VPK and managed AppData
+`campaign-dev156-final-m13-1` Vita3K/OpenGL receipt/log. Whole-route frame
+percentiles did not improve; no A/V, physical or campaign acceptance.
+Next: fiery-effect ownership and >400 ms simulation frames.
+Blocker: overall cinematic pacing remains far below 60 FPS.
+
 ## Dev155: M13 explosion stall moved to loading; A/V still open
 
 Renegade Vita - v3.5 active

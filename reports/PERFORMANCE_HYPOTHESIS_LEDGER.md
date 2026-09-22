@@ -201,3 +201,11 @@ memory high-water and physical visual/audio result are unmeasured. Full-port
 M00 direct entry reached frame360. Evidence: managed AppData
 `campaign-dev155-final-m13-1` and `campaign-dev155-final-m00-1`, SELF
 `980640b313ccca8a9dde948497296ee0681b6e3122f226a903aa7d721f8fc96f`.
+Dev156 extends retained aggregate templates to measured M13 `ag_rocketl`.
+Final-hash live clones took 162 and 81 us versus Dev155's roughly 101-151 ms
+per create. Loading preparation added 134 ms. An `ag_fiery_ex06` attempt did
+not enter the aggregate path and was removed before the final build. This is
+an adopted event-local win only: final frame-480 p50/p95/p99/worst were
+90.3/412.9/449.4/2846.0 ms, so overall performance did not improve cleanly.
+Evidence: managed AppData `campaign-dev156-final-m13-1`, matching SELF
+`f738f786a2dabe07cb701e77b14a436494f1bb32de981c297a722766a2192001`.

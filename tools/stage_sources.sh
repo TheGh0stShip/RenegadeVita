@@ -687,4 +687,6 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p
 echo "Applied: port/patches/ww3d2-a35-create-depth-timing.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-aggregate-template.patch"
 echo "Applied: port/patches/ww3d2-a35-m13-aggregate-template.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-effect-template.patch"
+echo "Applied: port/patches/ww3d2-a35-m13-effect-template.patch"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

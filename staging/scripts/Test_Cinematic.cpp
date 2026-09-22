@@ -40,6 +40,7 @@
 
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
 extern int A30_Vita_Log(const char *format, ...);
+#include <psp2/kernel/processmgr.h>
 #endif
 
 #define		LAST_VALID_TIMESTAMP		999000.0f
@@ -473,7 +474,17 @@ public:
 		}
 
 		// Create a decoration cinematic object, then set it's model
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		const bool vita_trace_slot19 = slot == 19 && strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
+		const uint64_t vita_create_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
+#endif
 		GameObject * obj = Commands->Create_Object( "Generic_Cinematic", Commands->Get_Position( Owner() ) );
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (vita_trace_slot19) {
+			A30_Vita_Log("A4 M13 slot19 create: model=%s object_us=%llu obj=%p\n",
+				model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
+		}
+#endif
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
 		if (strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0 && slot == 0) {
 			A30_Vita_Log("A4 M13 intro script: create slot=0 model=%s object=%p\n",
@@ -484,7 +495,16 @@ public:
 
 		if ( obj ) {
 			Commands->Add_To_Dirty_Cull_List(obj);
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			const uint64_t vita_model_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
+#endif
 			Commands->Set_Model( obj, model_name );
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			if (vita_trace_slot19) {
+				A30_Vita_Log("A4 M13 slot19 model: model=%s set_model_us=%llu obj=%p\n",
+					model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_model_start_us), static_cast<void *>(obj));
+			}
+#endif
 			Commands->Set_Facing( obj, Commands->Get_Facing( Owner() ) );
 			if ( slot != -1 ) {
 				ObjectSlots[ slot ] = Commands->Get_ID( obj );
@@ -930,6 +950,10 @@ public:
 
 	void	Parse_Command( char *command ) 
 	{
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		const char *vita_original_command = command;
+		const uint64_t vita_command_start_us = sceKernelGetProcessTimeWide();
+#endif
 //		Commands->Debug_Message( "Parse %s\n", (int)command );
 
 				if ( Title_Match( &command, "Create_Object" ) )			Command_Create_Object( command );
@@ -953,6 +977,15 @@ public:
 		else {
 //			Commands->Debug_Message( "Failed to parse %s\n", (int)command );
 		}
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		const uint64_t vita_command_us = sceKernelGetProcessTimeWide() - vita_command_start_us;
+		static unsigned vita_slow_command_reports = 0U;
+		if (vita_command_us >= 100000U && vita_slow_command_reports++ < 24U &&
+			strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0) {
+			A30_Vita_Log("A4 slow M13 cinematic command: owner_id=%d us=%llu command=%.160s\n",
+				MyID, static_cast<unsigned long long>(vita_command_us), vita_original_command);
+		}
+#endif
 	}
 
 	void	Parse_Commands( GameObject* obj ) {

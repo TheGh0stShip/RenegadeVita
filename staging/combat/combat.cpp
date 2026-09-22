@@ -95,9 +95,6 @@
 #include "animatedsoundmgr.h"
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
-#if !RENEGADE_VITA_M00_DEMO
-#include <psp2/kernel/processmgr.h>
-#endif
 void A31_Vita_Render_Original_Loading_Callback(const char *phase, int minimum_progress);
 #define VITA_LEVEL_LOAD_TRACE(...) A30_Vita_Log(__VA_ARGS__)
 #define VITA_LEVEL_LOAD_PRESENT(phase, minimum_progress) \
@@ -717,17 +714,6 @@ void 	CombatManager::Think()
 	SyncTime += (int)((TimeManager::Get_Frame_Seconds() * 1000.0f) + 0.5f);
 
 	WWPROFILE( "CombatManager Think" );
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	const uint64_t vita_think_start_us = sceKernelGetProcessTimeWide();
-	uint64_t vita_objects_start_us = 0U;
-	uint64_t vita_objects_end_us = 0U;
-	uint64_t vita_scene_end_us = 0U;
-	uint64_t vita_star_end_us = 0U;
-	uint64_t vita_camera_end_us = 0U;
-	uint64_t vita_postthink_end_us = 0U;
-	uint64_t vita_misc_end_us = 0U;
-	uint64_t vita_audioenv_end_us = 0U;
-#endif
 
 	IsGameplayPermitted=NetworkHandler->Is_Gameplay_Permitted();
 
@@ -752,26 +738,14 @@ void 	CombatManager::Think()
 	// Now, Process all objects logically
 	ConversationMgrClass::Think();
 {	WWPROFILE( "Game Obj Think" );
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_objects_start_us = sceKernelGetProcessTimeWide();
-#endif
 	GameObjManager::Think();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_objects_end_us = sceKernelGetProcessTimeWide();
-#endif
 
 	// Now, Process all objects physically
 }{	WWPROFILE( "Scene" );
   	COMBAT_SCENE->Update( TimeManager::Get_Frame_Seconds(), 0 );
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_scene_end_us = sceKernelGetProcessTimeWide();
-#endif
 
 }{	WWPROFILE( "Star" );
 	Update_Star();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_star_end_us = sceKernelGetProcessTimeWide();
-#endif
 
 	// In normal mode, the camera must think before Post_Think, since the
 	// camera update calls Set_Targeting on the star, which must feed Update_Animation
@@ -779,16 +753,10 @@ void 	CombatManager::Think()
 	if ( !MainCamera->Is_Using_Host_Model() ) {
 		MainCamera->Update();
 	}
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_camera_end_us = sceKernelGetProcessTimeWide();
-#endif
 
 	// Now, Post Process all objects logically
 }{	WWPROFILE( "Post Think" );
 	GameObjManager::Post_Think();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_postthink_end_us = sceKernelGetProcessTimeWide();
-#endif
 }
 	// In host_model mode, the camera must think after Post_Think, so the host model has
 	// a chance to determine where the camera should be
@@ -806,9 +774,6 @@ void 	CombatManager::Think()
 }
 
 	SpawnManager::Update();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_misc_end_us = sceKernelGetProcessTimeWide();
-#endif
 
 {	WWPROFILE( "Sound Environment" );
 
@@ -816,9 +781,6 @@ void 	CombatManager::Think()
 		SoundEnvironment->Update (COMBAT_SCENE, MainCamera);
 	}
 }
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	vita_audioenv_end_us = sceKernelGetProcessTimeWide();
-#endif
 
 {	WWPROFILE( "Background" );
 
@@ -833,24 +795,6 @@ void 	CombatManager::Think()
 	HUDClass::Think();
 	WeaponViewClass::Think();
 	ScreenFadeManager::Think();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	const uint64_t vita_think_end_us = sceKernelGetProcessTimeWide();
-	static unsigned vita_slow_think_reports = 0U;
-	if (vita_think_end_us - vita_think_start_us >= 500000U &&
-		vita_slow_think_reports++ < 16U) {
-		A30_Vita_Log("A4 slow Combat Think: total_us=%llu setup=%llu objects=%llu scene=%llu star=%llu camera=%llu postthink=%llu misc=%llu audioenv=%llu presentation=%llu\n",
-			static_cast<unsigned long long>(vita_think_end_us - vita_think_start_us),
-			static_cast<unsigned long long>(vita_objects_start_us - vita_think_start_us),
-			static_cast<unsigned long long>(vita_objects_end_us - vita_objects_start_us),
-			static_cast<unsigned long long>(vita_scene_end_us - vita_objects_end_us),
-			static_cast<unsigned long long>(vita_star_end_us - vita_scene_end_us),
-			static_cast<unsigned long long>(vita_camera_end_us - vita_star_end_us),
-			static_cast<unsigned long long>(vita_postthink_end_us - vita_camera_end_us),
-			static_cast<unsigned long long>(vita_misc_end_us - vita_postthink_end_us),
-			static_cast<unsigned long long>(vita_audioenv_end_us - vita_misc_end_us),
-			static_cast<unsigned long long>(vita_think_end_us - vita_audioenv_end_us));
-	}
-#endif
 }
 
 /*

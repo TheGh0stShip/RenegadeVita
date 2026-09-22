@@ -1,0 +1,23 @@
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -61,0 +62,4 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#include "a30_vita_runtime.h"
++#include <psp2/kernel/processmgr.h>
++#endif
+@@ -652,0 +657,5 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++				const uint64_t vita_timer_start_us = sceKernelGetProcessTimeWide();
++				const int vita_observer_id = observer_list[index]->Get_ID();
++				const int vita_timer_id = ObserverTimerList[i]->TimerID;
++#endif
+@@ -653,0 +663,9 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++				const uint64_t vita_timer_us = sceKernelGetProcessTimeWide() - vita_timer_start_us;
++				static unsigned vita_slow_timer_reports = 0U;
++				if (vita_timer_us >= 500000U && vita_slow_timer_reports++ < 8U) {
++					A30_Vita_Log("A4 slow script timer: object_id=%d observer_id=%d timer_id=%d us=%llu\n",
++						Get_ID(), vita_observer_id, vita_timer_id,
++						static_cast<unsigned long long>(vita_timer_us));
++				}
++#endif

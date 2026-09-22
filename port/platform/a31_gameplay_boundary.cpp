@@ -61,14 +61,7 @@
 #include "a31_vita_hud_presentation.h"
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 #include <psp2/kernel/processmgr.h>
-#include "vita_runtime_log.h"
 static A31SimulationStageTotals g_campaign_simulation_stages = {};
-struct A31RenderPhaseTiming {
-	uint64_t total_us[6];
-	uint64_t max_us[6];
-	unsigned frames;
-};
-static A31RenderPhaseTiming g_campaign_render_phases = {};
 #endif
 
 #if defined(__vita__) && RENEGADE_VITA_M00_DEMO
@@ -872,27 +865,13 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 	/* Match the original GameModeManager::Render envelope.  PhysicsScene's
 	** render method consumes its visible lists; without this pre-pass an intact
 	** Combat frame can legally traverse zero objects. */
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	uint64_t phase_time[7] = {};
-	phase_time[0] = sceKernelGetProcessTimeWide();
-#endif
 	scene->Pre_Render_Processing(*camera);
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	phase_time[1] = sceKernelGetProcessTimeWide();
-#endif
 	trace.pre_render_completed = true;
 	trace.begin_render_completed =
 		WW3D::Begin_Render(true, true, BackgroundMgrClass::Get_Clear_Color()) ==
 		WW3D_ERROR_OK;
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	phase_time[2] = sceKernelGetProcessTimeWide();
-	phase_time[3] = phase_time[2];
-#endif
 	if (trace.begin_render_completed) {
 		CombatManager::Render();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-		phase_time[3] = sceKernelGetProcessTimeWide();
-#endif
 		trace.combat_render_called = true;
 		A31ScopedGameplayHUDRender2DResolution hud_render_resolution;
 		MessageWindowClass *message_window =
@@ -917,41 +896,9 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 		A31_Vita_Render_Demo_Ending_Overlay();
 #endif
 	}
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	phase_time[4] = sceKernelGetProcessTimeWide();
-#endif
 	trace.end_render_completed = trace.begin_render_completed &&
 		WW3D::End_Render(present) == WW3D_ERROR_OK;
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	phase_time[5] = sceKernelGetProcessTimeWide();
-#endif
 	scene->Post_Render_Processing();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	phase_time[6] = sceKernelGetProcessTimeWide();
-	for (unsigned phase = 0; phase < 6; ++phase) {
-		const uint64_t elapsed = phase_time[phase + 1] - phase_time[phase];
-		g_campaign_render_phases.total_us[phase] += elapsed;
-		if (elapsed > g_campaign_render_phases.max_us[phase])
-			g_campaign_render_phases.max_us[phase] = elapsed;
-	}
-	if (++g_campaign_render_phases.frames == 120U) {
-		Vita_Append_A22_Runtime_Breadcrumb("combat-render-phases",
-			"frames=120 pre=%llu/%llu begin=%llu/%llu combat=%llu/%llu overlay=%llu/%llu end=%llu/%llu post=%llu/%llu total/max_us",
-			static_cast<unsigned long long>(g_campaign_render_phases.total_us[0]),
-			static_cast<unsigned long long>(g_campaign_render_phases.max_us[0]),
-			static_cast<unsigned long long>(g_campaign_render_phases.total_us[1]),
-			static_cast<unsigned long long>(g_campaign_render_phases.max_us[1]),
-			static_cast<unsigned long long>(g_campaign_render_phases.total_us[2]),
-			static_cast<unsigned long long>(g_campaign_render_phases.max_us[2]),
-			static_cast<unsigned long long>(g_campaign_render_phases.total_us[3]),
-			static_cast<unsigned long long>(g_campaign_render_phases.max_us[3]),
-			static_cast<unsigned long long>(g_campaign_render_phases.total_us[4]),
-			static_cast<unsigned long long>(g_campaign_render_phases.max_us[4]),
-			static_cast<unsigned long long>(g_campaign_render_phases.total_us[5]),
-			static_cast<unsigned long long>(g_campaign_render_phases.max_us[5]));
-		g_campaign_render_phases = {};
-	}
-#endif
 	trace.post_render_completed = true;
 
 	const RenegadeVitaRenderer::Statistics &statistics =

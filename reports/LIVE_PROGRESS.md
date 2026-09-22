@@ -1,5 +1,23 @@
 # Live engineering progress
 
+## Dev150 diagnostic: M13 slot-19 model setup identified
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: prepare only the authored `X00_AG_Explode` WW3D model during M13 loading,
+then A/B the first ambush rocket. Completed: original `Invisible_Object`
+1500000007's timer dispatch invokes `Test_Cinematic` `Create_Object, 19`;
+retail M13 data maps slot 19 to `X00_AG_Explode`. The isolated Dev150 run
+measured object allocation at 377 us and original `Set_Model` at 6,166,481 us
+within the 6,168,914 us script timer. No game behavior was bypassed.
+Evidence: matching asset-free ARM SELF/VPK and managed AppData
+`campaign-dev150-slot19-m13-1` Vita3K/OpenGL receipt/log. Timeouts are
+unassessed and do not prove A/V sync, visual sequence, or physical performance.
+Next: same-route loading-time WW3D preparation A/B, M00 regression, and
+retain only a measured win. Blocker: live cinematic still freezes for about
+six seconds at slot 19; audio desync and 60 FPS remain unresolved.
+
 ## Dev149 diagnostic: M13 ambush freeze isolated to one original object
 
 Renegade Vita — v3.5 active

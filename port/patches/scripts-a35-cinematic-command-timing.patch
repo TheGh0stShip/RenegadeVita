@@ -1,0 +1,19 @@
+--- a/Test_Cinematic.cpp
++++ b/Test_Cinematic.cpp
+@@ -42,0 +43,1 @@
++#include <psp2/kernel/processmgr.h>
+@@ -932,0 +934,4 @@
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++		const char *vita_original_command = command;
++		const uint64_t vita_command_start_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -955,0 +961,9 @@
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++		const uint64_t vita_command_us = sceKernelGetProcessTimeWide() - vita_command_start_us;
++		static unsigned vita_slow_command_reports = 0U;
++		if (vita_command_us >= 100000U && vita_slow_command_reports++ < 24U &&
++			strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0) {
++			A30_Vita_Log("A4 slow M13 cinematic command: owner_id=%d us=%llu command=%.160s\n",
++				MyID, static_cast<unsigned long long>(vita_command_us), vita_original_command);
++		}
++#endif

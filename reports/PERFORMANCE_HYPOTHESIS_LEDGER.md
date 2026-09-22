@@ -149,3 +149,12 @@ around animation completion/observer dispatch and resource requests; then
 apply a load-time or boundary fix only to the confirmed operation. Fixed-route
 before/after frame p50/p95/p99/worst, clock drift, visual/script sequence,
 and M00 regression are still required before accepting any optimization.
+Dev150 narrowed the same M13 event to original `Test_Cinematic` slot 19,
+`X00_AG_Explode` in unchanged M13 retail control text. Within the timer's
+6.169 s, object allocation was 0.377 ms and `Commands->Set_Model` was
+6.166 s. The original latter path creates a WW3D render object by name and
+installs it into the physics object/scene. A loading-time creation/release
+of this exact model is now a testable preparation hypothesis, not an accepted
+fix; it may merely move cost or fail to remove scene-notification cost.
+Evidence: managed AppData `campaign-dev150-slot19-m13-1` matching
+SELF `1ba9212ececdb4406e4e6dccb59da0740c12444e1392b6deb6296dbf0136493a`.

@@ -334,6 +334,7 @@ int	GameObjManager::Post_Think()
 	const uint64_t vita_post_start_us = sceKernelGetProcessTimeWide();
 	uint64_t vita_max_object_us = 0U;
 	int vita_max_object_id = 0;
+	const char *vita_max_object_name = "";
 	unsigned vita_object_count = 0U;
 #endif
 	for (	objnode = GameObjList.Head(); objnode; objnode = objnode->Next()) {
@@ -347,6 +348,7 @@ int	GameObjManager::Post_Think()
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 			const uint64_t vita_object_start_us = sceKernelGetProcessTimeWide();
 			const int vita_object_id = objnode->Data()->Get_ID();
+			const char *vita_object_name = objnode->Data()->Get_Definition().Get_Name();
 #endif
 			objnode->Data()->Post_Think();
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
@@ -355,6 +357,7 @@ int	GameObjManager::Post_Think()
 			if (vita_object_us > vita_max_object_us) {
 				vita_max_object_us = vita_object_us;
 				vita_max_object_id = vita_object_id;
+				vita_max_object_name = vita_object_name;
 			}
 #endif
 		}
@@ -376,11 +379,11 @@ int	GameObjManager::Post_Think()
 	static unsigned vita_slow_post_reports = 0U;
 	if (vita_post_end_us - vita_post_start_us >= 500000U &&
 		vita_slow_post_reports++ < 8U) {
-		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u max_object_us=%llu max_object_id=%d observers_us=%llu scripts_us=%llu\n",
+		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u max_object_us=%llu max_object_id=%d max_object_name=%s observers_us=%llu scripts_us=%llu\n",
 			static_cast<unsigned long long>(vita_post_end_us - vita_post_start_us),
 			static_cast<unsigned long long>(vita_objects_end_us - vita_post_start_us),
 			vita_object_count,
-			static_cast<unsigned long long>(vita_max_object_us), vita_max_object_id,
+			static_cast<unsigned long long>(vita_max_object_us), vita_max_object_id, vita_max_object_name,
 			static_cast<unsigned long long>(vita_observers_end_us - vita_objects_end_us),
 			static_cast<unsigned long long>(vita_post_end_us - vita_observers_end_us));
 	}

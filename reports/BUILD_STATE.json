@@ -1,4 +1,20 @@
 {
+  "dev150_m13_slot19_diagnostic": {
+    "candidate": "A3.5-dev150",
+    "state": "ARM_PACKAGE_PASS_VITA3K_SET_MODEL_STALL_IDENTIFIED_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV150_M13_SLOT19_SET_MODEL.md",
+    "vpk_sha256": "9a848325db20e90003be95a97ed9acc29104900ad8bd5c52a9d6000b3b971f79",
+    "self_sha256": "1ba9212ececdb4406e4e6dccb59da0740c12444e1392b6deb6296dbf0136493a",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev150-slot19-m13-1/",
+    "slot19_model": "X00_AG_Explode",
+    "slot19_object_create_us": 377,
+    "slot19_set_model_us": 6166481,
+    "audio_sync_verified": false,
+    "performance_accepted": false,
+    "physical_acceptance": false
+  },
   "dev149_m13_postthink_diagnostic": {
     "candidate": "A3.5-dev149",
     "state": "ARM_PACKAGE_PASS_VITA3K_POSTTHINK_OWNER_IDENTIFIED_STALL_UNRESOLVED",

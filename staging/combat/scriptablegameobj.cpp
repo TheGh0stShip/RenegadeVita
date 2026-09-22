@@ -59,6 +59,10 @@
 #include "pscene.h"
 #include "soundsceneobj.h"
 #include "wwprofile.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#include <psp2/kernel/processmgr.h>
+#endif
 
 /*
 ** ScriptableGameObjDef - Defintion class for a ScriptableGameObj
@@ -650,7 +654,21 @@ void	ScriptableGameObj::Post_Think( void )
 			const GameObjObserverList & observer_list = Get_Observers();
 			for( int index = 0; index < observer_list.Count(); index++ ) {
 				if ( observer_list[ index ]->Get_ID() == ObserverTimerList[i]->ObserverID ) {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+				const uint64_t vita_timer_start_us = sceKernelGetProcessTimeWide();
+				const int vita_observer_id = observer_list[index]->Get_ID();
+				const int vita_timer_id = ObserverTimerList[i]->TimerID;
+#endif
 					observer_list[ index ]->Timer_Expired( this, ObserverTimerList[i]->TimerID );
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+				const uint64_t vita_timer_us = sceKernelGetProcessTimeWide() - vita_timer_start_us;
+				static unsigned vita_slow_timer_reports = 0U;
+				if (vita_timer_us >= 500000U && vita_slow_timer_reports++ < 8U) {
+					A30_Vita_Log("A4 slow script timer: object_id=%d observer_id=%d timer_id=%d us=%llu\n",
+						Get_ID(), vita_observer_id, vita_timer_id,
+						static_cast<unsigned long long>(vita_timer_us));
+				}
+#endif
 					found = true;
 				}
 			}

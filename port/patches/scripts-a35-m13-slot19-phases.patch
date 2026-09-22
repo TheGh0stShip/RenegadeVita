@@ -1,0 +1,25 @@
+--- a/Test_Cinematic.cpp
++++ b/Test_Cinematic.cpp
+@@ -476,0 +477,4 @@
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++		const bool vita_trace_slot19 = slot == 19 && strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
++		const uint64_t vita_create_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
++#endif
+@@ -477,0 +482,6 @@
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++		if (vita_trace_slot19) {
++			A30_Vita_Log("A4 M13 slot19 create: model=%s object_us=%llu obj=%p\n",
++				model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
++		}
++#endif
+@@ -487,0 +498,3 @@
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++			const uint64_t vita_model_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
++#endif
+@@ -488,0 +502,6 @@
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++			if (vita_trace_slot19) {
++				A30_Vita_Log("A4 M13 slot19 model: model=%s set_model_us=%llu obj=%p\n",
++					model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_model_start_us), static_cast<void *>(obj));
++			}
++#endif

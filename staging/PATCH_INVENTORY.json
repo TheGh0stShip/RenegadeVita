@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "82b9c139f8dd03172e93e421e629a853b134d24fcbbccc1496ee384130dcdd02",
-  "patch_count": 189,
+  "stage_script_sha256": "6e8e1fd5958345978b0c02d1442bf222cacecc73123a26f56ccf6c2b964b4934",
+  "patch_count": 190,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -935,20 +935,25 @@
       "sha256": "615b35556398f2e2b34940f922a1ce7f5eb071885bac3e7be837fc5f576b2155"
     },
     {
-      "path": "port/patches/wwphys-a35-scene-render-timing.patch",
-      "stage_directory": "wwphys",
-      "sha256": "d6ddab7eb7c0d3053e250a8386f994ee99dff084f0beb18113e83826e8dfba6d"
-    },
-    {
-      "path": "port/patches/combat-a35-think-slowframe.patch",
-      "stage_directory": "combat",
-      "sha256": "6e980d3c4ac6f52dd07dd58cc6e8e7c6a5a7a0cfc30a57d42379fbfcde00f990"
-    },
-    {
       "path": "port/patches/combat-a35-postthink-owner-timing.patch",
       "stage_directory": "combat",
-      "sha256": "a8abf0eefccfea491a7b100e9773738eb1d726e1a50a61f3913f52b003e79930"
+      "sha256": "8e4e15876fbe6d70067446161037a01eed34c9409b99617663feb370534018c8"
+    },
+    {
+      "path": "port/patches/combat-a35-script-timer-timing.patch",
+      "stage_directory": "combat",
+      "sha256": "3bff484128fa1bb5cc9caf9f41f71ed542dfb2d8d8e2e333671c8a6dd768df13"
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
+      "stage_directory": "scripts",
+      "sha256": "fb5c386a74cdb221db2cbeff7fa75d6540d22ceb2fabf63fc9318ba64679c227"
+    },
+    {
+      "path": "port/patches/scripts-a35-m13-slot19-phases.patch",
+      "stage_directory": "scripts",
+      "sha256": "a9cccd8cc55507cb2e8ee69ffd2f348d0a99a3d1f8f938d20a7871e78ad0da28"
     }
   ],
-  "registry_sha256": "06b0fc70e827c48c6adc519e75571f55e24f8b9ed6724b4cfe0c1c43ce11d505"
+  "registry_sha256": "05f4726626ed9bb58e2dd53cacd35a64dc9a63d8cd7d1558c483d9ad782129f9"
 }

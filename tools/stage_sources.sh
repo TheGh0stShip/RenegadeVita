@@ -643,20 +643,6 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwlib" -p
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-format-table-init.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage" -p1 < "$rv_root/port/patches/commando-a35-loading-animation-varargs.patch"
 echo "Applied: port/patches/commando-a35-loading-animation-varargs.patch"
-rv_pscene_sha=$(sha256sum "$rv_stage/wwphys/pscene.cpp" | cut -d' ' -f1)
-if [[ "$rv_pscene_sha" != "95e148b3e44e85deaccc837e58b41941a8858d451da5537e5eb23e9743427985" ]]; then
-	echo "Refusing unanchored wwphys scene timing patch: pscene.cpp changed ($rv_pscene_sha)" >&2
-	exit 1
-fi
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-scene-render-timing.patch"
-echo "Applied: port/patches/wwphys-a35-scene-render-timing.patch"
-rv_combat_sha=$(sha256sum "$rv_stage/combat/combat.cpp" | cut -d' ' -f1)
-if [[ "$rv_combat_sha" != "2f9e6522ff4c4dd71eb2efbd9f20d980fd6c09144374ad72d2eaf3af87e222a7" ]]; then
-	echo "Refusing unanchored Combat Think timing patch: combat.cpp changed ($rv_combat_sha)" >&2
-	exit 1
-fi
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-think-slowframe.patch"
-echo "Applied: port/patches/combat-a35-think-slowframe.patch"
 rv_gameobjmanager_sha=$(sha256sum "$rv_stage/combat/gameobjmanager.cpp" | cut -d' ' -f1)
 if [[ "$rv_gameobjmanager_sha" != "6519ba7668825baf9f5821253b7d033cd4b1790af2898f062deeaf6cfac06ece" ]]; then
 	echo "Refusing unanchored PostThink timing patch: gameobjmanager.cpp changed ($rv_gameobjmanager_sha)" >&2
@@ -664,4 +650,25 @@ if [[ "$rv_gameobjmanager_sha" != "6519ba7668825baf9f5821253b7d033cd4b1790af2898
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-postthink-owner-timing.patch"
 echo "Applied: port/patches/combat-a35-postthink-owner-timing.patch"
+rv_scriptable_post_sha=$(sha256sum "$rv_stage/combat/scriptablegameobj.cpp" | cut -d' ' -f1)
+if [[ "$rv_scriptable_post_sha" != "995ab56c511d88b940ff8f55630f8b7bc02ee393b3e9ee75f9de33460635016d" ]]; then
+	echo "Refusing unanchored script timer timing patch: scriptablegameobj.cpp changed ($rv_scriptable_post_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-script-timer-timing.patch"
+echo "Applied: port/patches/combat-a35-script-timer-timing.patch"
+rv_cinematic_command_sha=$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)
+if [[ "$rv_cinematic_command_sha" != "40750609e4be927c4ceceb36fc291395c023662c8ad69ce34d185f95d6eb050d" ]]; then
+	echo "Refusing unanchored cinematic command timing patch: Test_Cinematic.cpp changed ($rv_cinematic_command_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-command-timing.patch"
+echo "Applied: port/patches/scripts-a35-cinematic-command-timing.patch"
+rv_slot19_sha=$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)
+if [[ "$rv_slot19_sha" != "7e6190ea669ce3e701332b7bc89c997eef80161f7fd17663ed77872892ade774" ]]; then
+	echo "Refusing unanchored M13 slot19 timing patch: Test_Cinematic.cpp changed ($rv_slot19_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-m13-slot19-phases.patch"
+echo "Applied: port/patches/scripts-a35-m13-slot19-phases.patch"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

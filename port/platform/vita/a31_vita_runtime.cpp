@@ -2369,9 +2369,16 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 		menu_mode.Deactivate();
 	}
 	GameModeManager::Safely_Deactivate();
+#if RENEGADE_VITA_M00_DEMO
 	GameModeManager::Remove(&movie_mode);
+#else
+	if (!tutorial_selected) GameModeManager::Remove(&movie_mode);
+#endif
 	if (tutorial_selected) {
 		A30_Vita_Log("A4 frontend: retained original Menu mode through Combat handoff\n");
+#if !RENEGADE_VITA_M00_DEMO
+		A30_Vita_Log("A4 campaign: retained original Movie mode for campaign intermissions\n");
+#endif
 	} else {
 		GameModeManager::Remove(&menu_mode);
 	}
@@ -3484,6 +3491,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					frontend_menu_mode_registered_for_handoff = false;
 					A30_Vita_Log("A4 frontend: removed retained Menu mode after Combat handoff\n");
 				}
+#if !RENEGADE_VITA_M00_DEMO
+				if (GameModeManager::Find("Movie") == &frontend_movie_mode) {
+					if (!frontend_movie_mode.Is_Inactive()) {
+						frontend_movie_mode.Deactivate();
+					}
+					GameModeManager::Safely_Deactivate();
+					GameModeManager::Remove(&frontend_movie_mode);
+					A30_Vita_Log("A4 campaign: removed retained Movie mode during session teardown\n");
+				}
+#endif
 #endif
 
 				/* Match CombatGameModeClass::Core_Shutdown for the direct M00 route:

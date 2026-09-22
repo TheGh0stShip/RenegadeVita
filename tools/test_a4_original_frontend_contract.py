@@ -633,6 +633,9 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("--enable-demuxer=bink", dependency_build)
         self.assertIn("--enable-decoder=bink,binkaudio_dct,binkaudio_rdft", dependency_build)
         self.assertIn("MovieGameModeClass frontend_movie_mode", runtime)
+        self.assertIn("if (!tutorial_selected) GameModeManager::Remove(&movie_mode);", runtime)
+        self.assertIn('GameModeManager::Find("Movie") == &frontend_movie_mode', runtime)
+        self.assertIn("GameModeManager::Remove(&frontend_movie_mode);", runtime)
         for token in (
             "A4 frontend: first menu loop frame entry",
             "A4 frontend: first menu loop after TimeManager::Update",

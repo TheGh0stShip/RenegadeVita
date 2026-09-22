@@ -1,5 +1,21 @@
 # Live engineering progress
 
+## Dev141 active: campaign Movie owner retained
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: original Movie mode survives full-port mission selection so the original
+campaign intermission lookup can find it. Demo mode lifetime is unchanged.
+Completed: 18 focused tests and full-port ARM ELF/SELF/VPK build. See
+`reports/DEV141_MOVIE_MODE_LIFETIME.md`.
+Evidence: asset-free Dev141 VPK SHA-256
+`a59090105b74fb7c1d4c7e5bf16f2af558dcbbd547144f5e25c0b9565bb9bb8f`.
+Next: Vita3K M13 startup retest, then original Combat-to-Score/Movie/M01
+session handoff.
+Blocker: completion is still consumed as direct-runtime exit; no normal
+campaign transition evidence.
+
 ## Dev140 active: M01 direct-entry gameplay evidence
 
 Renegade Vita — v3.5 active

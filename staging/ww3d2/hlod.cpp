@@ -137,6 +137,19 @@
 #include <win.h>
 #include "sphere.h"
 #include "boxrobj.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+static const HLodDefClass *s_vita_m13_fiery_hlod_owner = NULL;
+static RenderObjClass *s_vita_m13_fiery_hlod_model = NULL;
+
+static void Vita_Release_M13_HLod_Template(const HLodDefClass *owner)
+{
+	if (s_vita_m13_fiery_hlod_owner == owner) {
+		s_vita_m13_fiery_hlod_model->Release_Ref();
+		s_vita_m13_fiery_hlod_model = NULL;
+		s_vita_m13_fiery_hlod_owner = NULL;
+	}
+}
+#endif
 
 
 /*
@@ -249,7 +262,21 @@ PrototypeClass *HLodLoaderClass::Load_W3D( ChunkLoadClass &cload )
  *=============================================================================================*/
 RenderObjClass * HLodPrototypeClass::Create(void)			
 { 
-	HLodClass * hlod = NEW_REF( HLodClass , ( *Definition ) ); 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const bool vita_fiery = stricmp(Definition->Get_Name(), "ag_fiery_ex06") == 0;
+	if (vita_fiery && s_vita_m13_fiery_hlod_owner == Definition && s_vita_m13_fiery_hlod_model != NULL) {
+		return s_vita_m13_fiery_hlod_model->Clone();
+	}
+#endif
+	HLodClass * hlod = NEW_REF( HLodClass , ( *Definition ) );
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	if (hlod != NULL && vita_fiery) {
+		if (s_vita_m13_fiery_hlod_model != NULL) s_vita_m13_fiery_hlod_model->Release_Ref();
+		s_vita_m13_fiery_hlod_owner = Definition;
+		s_vita_m13_fiery_hlod_model = hlod;
+		hlod->Add_Ref();
+	}
+#endif
 	return hlod;
 }
 
@@ -317,6 +344,9 @@ HLodDefClass::HLodDefClass(HLodClass &src_lod) :
  *=============================================================================================*/
 HLodDefClass::~HLodDefClass(void)
 {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	Vita_Release_M13_HLod_Template(this);
+#endif
 	Free ();
 	return ;
 }

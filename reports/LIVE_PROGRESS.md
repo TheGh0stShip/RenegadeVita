@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Dev157: fiery HLOD live create removed, route still failed
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: target the renderer/audio pacing path directly instead of widening
+one-off HLOD caches. Completed: M13 loading retains original `ag_fiery_ex06`
+and later live slow-create records for that model disappear. This is only a
+narrow 92 ms loading tradeoff; the M13 intro remains about 18-21 FPS in
+Vita3K, frame 784 still costs 642.050 ms, and audio remains unaccepted.
+Evidence: asset-free ARM SELF/VPK and managed AppData
+`campaign-dev157-fiery-hlod-m13-1` Vita3K/OpenGL receipt/log. SELF
+`de39b87f8e55c616891835db8f6f35013e93891ff18e3cbf80d4b89f48a4f714`.
+No physical, visual, A/V-sync, script-sequence, or campaign acceptance.
+Next: measured renderer/scene traversal and audio stream timing.
+Blocker: route-level cinematic pacing remains far below 60 FPS.
+
 ## Dev156: M13 rocket aggregate live creates reduced
 
 Renegade Vita - v3.5 active

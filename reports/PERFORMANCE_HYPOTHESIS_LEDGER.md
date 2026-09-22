@@ -209,3 +209,17 @@ an adopted event-local win only: final frame-480 p50/p95/p99/worst were
 90.3/412.9/449.4/2846.0 ms, so overall performance did not improve cleanly.
 Evidence: managed AppData `campaign-dev156-final-m13-1`, matching SELF
 `f738f786a2dabe07cb701e77b14a436494f1bb32de981c297a722766a2192001`.
+
+Dev157 adds a separate full-port-only retained HLOD template for
+`ag_fiery_ex06`, the non-aggregate fiery effect observed after Dev156. In
+managed AppData `campaign-dev157-fiery-hlod-m13-1`, loading preparation took
+92.263 ms and no later `ag_fiery_ex06` slow-create record appeared. This is
+only a narrow event-local improvement. The same route still measured frame-720
+average 18.744 FPS with p50/p95/p99/worst 44.3/138.0/148.6/1928.0 ms, and a
+later frame 784 cost 642.050 ms. Audio stats still reported
+`11-ambient beach.mp3` as the active stream through the intro; that filename is
+present in `M13.mix`, so this is not proven cross-map leakage. The remaining
+accepted blocker is route-level renderer/scene traversal and audio timing under
+frame starvation, not this individual HLOD create. Evidence: matching SELF
+`de39b87f8e55c616891835db8f6f35013e93891ff18e3cbf80d4b89f48a4f714`, runtime
+SHA-256 `f1ed16493bb4c8a885949091ccdd003272f16eea5ea5f1fad7d7ce5600909986`.

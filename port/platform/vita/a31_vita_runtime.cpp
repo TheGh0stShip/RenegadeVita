@@ -3247,7 +3247,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if !RENEGADE_VITA_M00_DEMO
 			if (stricmp(selected_archive, "M13.mix") == 0) {
 				const char *const prepare_models[] = {
-					"X00_AG_Explode", "ag_rocketl"
+					"X00_AG_Explode", "ag_rocketl", "ag_fiery_ex06"
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();

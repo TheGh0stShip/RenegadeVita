@@ -689,4 +689,11 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p
 echo "Applied: port/patches/ww3d2-a35-m13-aggregate-template.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-effect-template.patch"
 echo "Applied: port/patches/ww3d2-a35-m13-effect-template.patch"
+rv_m13_hlod_template_sha=$(sha256sum "$rv_stage/ww3d2/hlod.cpp" | cut -d' ' -f1)
+if [[ "$rv_m13_hlod_template_sha" != "bdd059fb9826b20f01a1cefba306807e0a9900415732e7e6d3ff3fab6ba419b7" ]]; then
+	echo "Refusing unanchored M13 HLOD template patch: hlod.cpp changed ($rv_m13_hlod_template_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-hlod-template.patch"
+echo "Applied: port/patches/ww3d2-a35-m13-hlod-template.patch"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

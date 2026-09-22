@@ -56,6 +56,19 @@ int main() {
     assert(!A31DevelopmentCheckpoint::Parse(valid[0], strlen(valid[0]), output, 5));
     assert(!A31DevelopmentCheckpoint::Parse(NULL, 12, output, sizeof(output)));
     assert(!A31DevelopmentCheckpoint::Parse(valid[0], strlen(valid[0]), NULL, 0));
+    const char *missions[] = {"RVMS1 M13.mix\n", "RVMS1 M01.mix\r\n"};
+    for (auto value : missions) {
+        assert(A31DevelopmentCheckpoint::Parse_Mission(value, strlen(value), output, sizeof(output)));
+        assert(strcmp(output + 3, ".mix") == 0);
+    }
+    const char *bad_missions[] = {"RVMS1 ../M01.mix\n", "RVMS1 M01.sav\n",
+        "RVMS1 M01.mix\nextra", "RVMS1 m01.mix\n", "RVMS1 M0x.mix\n",
+        "RVMS1 M01.mix\r\r\n", "RVMS1 M01.mix", "RVMS1 M01.mix \n"};
+    for (auto value : bad_missions) {
+        assert(!A31DevelopmentCheckpoint::Parse_Mission(value, strlen(value), output, sizeof(output)));
+        assert(output[0] == 0);
+    }
+    assert(!A31DevelopmentCheckpoint::Parse_Mission(missions[0], strlen(missions[0]), output, 7));
 }
 ''')
             subprocess.run(["c++", "-std=c++11", "-Wall", "-Wextra", "-Werror",

@@ -359,7 +359,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         build = (ROOT / "tools/build.sh").read_text()
         checkpoint = runtime[runtime.index("bool Try_Latch_Development_M00_Checkpoint()"):
                              runtime.index("bool Run_Original_Frontend_Intro_And_Menu(")]
-        self.assertIn('"Enable one-shot original M00 save launch requests; keep OFF for public packages" OFF)', cmake)
+        self.assertIn('"Enable one-shot diagnostic save/mission launch requests; keep OFF for public packages" OFF)', cmake)
         self.assertIn("rv_development_checkpoint=${RENEGADE_DEVELOPMENT_CHECKPOINT:-0}", build)
         self.assertIn("#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT", checkpoint)
         self.assertIn("A31DevelopmentCheckpoint::Parse", checkpoint)

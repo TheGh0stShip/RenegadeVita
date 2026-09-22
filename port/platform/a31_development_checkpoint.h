@@ -36,6 +36,23 @@ inline bool Parse(const char *data, size_t bytes, char *source, size_t capacity)
 	source[5U + length] = '\0';
 	return true;
 }
+
+inline bool Parse_Mission(const char *data, size_t bytes, char *source,
+	size_t capacity)
+{
+	if (source == NULL || capacity == 0U) return false;
+	source[0] = '\0';
+	if (data == NULL || (bytes != 14U && bytes != 15U) ||
+		memcmp(data, "RVMS1 ", 6U) != 0 || data[bytes - 1U] != '\n' ||
+		(bytes == 15U && data[13U] != '\r')) return false;
+	const char *map = data + 6U;
+	if (map[0] != 'M' || map[1] < '0' || map[1] > '9' ||
+		map[2] < '0' || map[2] > '9' ||
+		memcmp(map + 3U, ".mix", 4U) != 0 || capacity < 8U) return false;
+	memcpy(source, map, 7U);
+	source[7U] = '\0';
+	return true;
+}
 } // namespace A31DevelopmentCheckpoint
 
 #endif

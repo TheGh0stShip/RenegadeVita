@@ -2230,6 +2230,44 @@ bool Try_Latch_Development_M00_Checkpoint()
 #endif
 }
 
+#if !RENEGADE_VITA_M00_DEMO
+bool Try_Latch_Development_Campaign_Mission()
+{
+#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+	const char *const request_path =
+		"ux0:data/renegade/user/config/dev-mission-launch-v1.txt";
+	FILE *file = fopen(request_path, "rb");
+	if (file == NULL) return false;
+	char request[16];
+	const size_t bytes = fread(request, 1U, sizeof(request), file);
+	const bool read_failed = ferror(file) != 0;
+	const bool close_failed = fclose(file) != 0;
+	char source[8];
+	char archive[96];
+	bool is_save = false;
+	if (read_failed || close_failed ||
+		!A31DevelopmentCheckpoint::Parse_Mission(request, bytes, source,
+			sizeof(source)) ||
+		!A4_Frontend_Resolve_Single_Player_Archive(source, archive,
+			sizeof(archive), &is_save) || is_save) {
+		A30_Vita_Log("A4 campaign diagnostic: invalid mission launch request\n");
+		return false;
+	}
+	if (remove(request_path) != 0) {
+		A30_Vita_Log("A4 campaign diagnostic: request could not be consumed\n");
+		return false;
+	}
+	A4_Frontend_Latch_Start_Game(source, -1, 0UL);
+	const bool latched = A4_Frontend_Get_Trace().tutorial_start_latched;
+	A30_Vita_Log("A4 campaign diagnostic: standalone mission latched=%d source=%s; normal campaign state/transition not exercised\n",
+		latched ? 1 : 0, source);
+	return latched;
+#else
+	return false;
+#endif
+}
+#endif
+
 bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	MovieGameModeClass &movie_mode, WWAudioClass *audio, bool start_at_main_menu,
 	const char *reload_source)
@@ -2269,7 +2307,13 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	} else if (start_at_main_menu) {
 		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_MAIN_MENU);
 		A30_Vita_Log("A3.5 demo ending: returned to original main menu; startup movies and developer checkpoint bypassed\n");
-	} else if (!Try_Latch_Development_M00_Checkpoint()) {
+	}
+#if !RENEGADE_VITA_M00_DEMO
+	else if (Try_Latch_Development_Campaign_Mission()) {
+		A30_Vita_Log("A4 campaign diagnostic: original frontend selected standalone mission\n");
+	}
+#endif
+	else if (!Try_Latch_Development_M00_Checkpoint()) {
 		movie_mode.Activate();
 		movie_mode.Startup_Movies();
 		A30_Vita_Log("A4 frontend: original MovieGameMode startup sequence entered; Bink provider owns decode or per-movie fail-closed skip\n");
@@ -3032,7 +3076,19 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A30_Vita_Log("A3.5 checkpoint: original player/star reused; saved camera preserved first_person=%d\n",
 					CombatManager::Is_First_Person() ? 1 : 0);
 			}
-			if (!Warm_Original_M00_Interactive_Presentation_Cache(audio, loading_presenter)) {
+			bool presentation_ready = true;
+#if !RENEGADE_VITA_M00_DEMO
+			if (stricmp(selected_archive, "M00_Tutorial.mix") != 0 &&
+				stricmp(selected_archive, "M13.mix") != 0) {
+				A30_Vita_Log("A4 campaign: skip M00 eager presentation prewarm archive=%s; original textures remain lazy\n",
+					selected_archive);
+			} else
+#endif
+			{
+				presentation_ready = Warm_Original_M00_Interactive_Presentation_Cache(
+					audio, loading_presenter);
+			}
+			if (!presentation_ready) {
 				result.render_error = true;
 				A30_Vita_Log("A3.5 prewarm: FAIL M00 interactive scene warmup before first input\n");
 				break;

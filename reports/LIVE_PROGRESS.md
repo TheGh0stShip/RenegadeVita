@@ -1,5 +1,24 @@
 # Live engineering progress
 
+## Dev140 active: M01 direct-entry gameplay evidence
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: M01 can be launched through a build-gated, one-shot diagnostic request;
+the public full-port build keeps that route off. M01 retains original lazy
+texture loading instead of running M00's eager prewarm.
+Completed: 18 focused checks, ARM ELF/SELF/VPK; diagnostic Vita3K M01 load,
+first render, player movement, and pistol fire. See
+`reports/DEV140_M01_DIRECT_ENTRY.md`.
+Evidence: managed AppData `campaign-dev140-m01-diagnostic-trial-2/`; M01
+objectives and normal transition remain unverified. The narrowed public M13
+build has not passed a complete runtime retest after a transient preflight
+archive failure.
+Next: establish narrowed-build M13 startup, then implement the original
+Combat -> Score -> Movie -> M01 session handoff.
+Blocker: direct runtime still consumes mission completion as exit.
+
 ## Dev139 active: original score-screen owner
 
 Renegade Vita — v3.5 active

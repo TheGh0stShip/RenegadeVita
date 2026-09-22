@@ -1,0 +1,69 @@
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -97,0 +98,3 @@
++#if !RENEGADE_VITA_M00_DEMO
++#include <psp2/kernel/processmgr.h>
++#endif
+@@ -716,0 +720,11 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	const uint64_t vita_think_start_us = sceKernelGetProcessTimeWide();
++	uint64_t vita_objects_start_us = 0U;
++	uint64_t vita_objects_end_us = 0U;
++	uint64_t vita_scene_end_us = 0U;
++	uint64_t vita_star_end_us = 0U;
++	uint64_t vita_camera_end_us = 0U;
++	uint64_t vita_postthink_end_us = 0U;
++	uint64_t vita_misc_end_us = 0U;
++	uint64_t vita_audioenv_end_us = 0U;
++#endif
+@@ -740,0 +755,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_objects_start_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -741,0 +759,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_objects_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -745,0 +766,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_scene_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -748,0 +772,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_star_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -755,0 +782,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_camera_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -759,0 +789,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_postthink_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -776,0 +809,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_misc_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -783,0 +819,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_audioenv_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -797,0 +836,18 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	const uint64_t vita_think_end_us = sceKernelGetProcessTimeWide();
++	static unsigned vita_slow_think_reports = 0U;
++	if (vita_think_end_us - vita_think_start_us >= 500000U &&
++		vita_slow_think_reports++ < 16U) {
++		A30_Vita_Log("A4 slow Combat Think: total_us=%llu setup=%llu objects=%llu scene=%llu star=%llu camera=%llu postthink=%llu misc=%llu audioenv=%llu presentation=%llu\n",
++			static_cast<unsigned long long>(vita_think_end_us - vita_think_start_us),
++			static_cast<unsigned long long>(vita_objects_start_us - vita_think_start_us),
++			static_cast<unsigned long long>(vita_objects_end_us - vita_objects_start_us),
++			static_cast<unsigned long long>(vita_scene_end_us - vita_objects_end_us),
++			static_cast<unsigned long long>(vita_star_end_us - vita_scene_end_us),
++			static_cast<unsigned long long>(vita_camera_end_us - vita_star_end_us),
++			static_cast<unsigned long long>(vita_postthink_end_us - vita_camera_end_us),
++			static_cast<unsigned long long>(vita_misc_end_us - vita_postthink_end_us),
++			static_cast<unsigned long long>(vita_audioenv_end_us - vita_misc_end_us),
++			static_cast<unsigned long long>(vita_think_end_us - vita_audioenv_end_us));
++	}
++#endif

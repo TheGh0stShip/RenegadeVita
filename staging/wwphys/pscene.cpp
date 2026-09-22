@@ -118,6 +118,24 @@
 #include "phys3.h"
 
 #include "umbrasupport.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include <psp2/kernel/processmgr.h>
+#include "vita_runtime_log.h"
+
+struct VitaSceneRenderTiming {
+	uint64_t scene_total_us;
+	uint64_t scene_max_us;
+	uint64_t lighting_total_us;
+	uint64_t lighting_max_us;
+	uint64_t object_render_total_us;
+	uint64_t object_render_max_us;
+	unsigned scene_count;
+	unsigned object_count;
+};
+static VitaSceneRenderTiming g_vita_scene_timing = {};
+static int g_vita_scene_timing_last_log_frame = -1;
+#endif
+
 
 
 #define STATISTICS_FRAMES  20					// number of frames to average statistics across
@@ -1395,6 +1413,9 @@ void PhysicsSceneClass::Render_Objects(
 	RefPhysListClass * dyn_list)
 {
 	WWPROFILE("Render_Meshes");
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t scene_start_us = sceKernelGetProcessTimeWide();
+#endif
 
 	RefPhysListIterator it(static_ws_list);
 
@@ -1454,6 +1475,28 @@ void PhysicsSceneClass::Render_Objects(
 			Render_Object(rinfo,it.Peek_Obj());
 		}
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t scene_us = sceKernelGetProcessTimeWide() - scene_start_us;
+	g_vita_scene_timing.scene_total_us += scene_us;
+	if (scene_us > g_vita_scene_timing.scene_max_us)
+		g_vita_scene_timing.scene_max_us = scene_us;
+	++g_vita_scene_timing.scene_count;
+	if ((CurrentFrameNumber % 120) == 0 &&
+		g_vita_scene_timing_last_log_frame != CurrentFrameNumber) {
+		g_vita_scene_timing_last_log_frame = CurrentFrameNumber;
+		Vita_Append_A22_Runtime_Breadcrumb("scene-object-time",
+			"frame=%d scenes=%u total_us=%llu max_us=%llu objects=%u lighting_total_us=%llu lighting_max_us=%llu render_total_us=%llu render_max_us=%llu",
+			CurrentFrameNumber, g_vita_scene_timing.scene_count,
+				static_cast<unsigned long long>(g_vita_scene_timing.scene_total_us),
+				static_cast<unsigned long long>(g_vita_scene_timing.scene_max_us),
+				g_vita_scene_timing.object_count,
+				static_cast<unsigned long long>(g_vita_scene_timing.lighting_total_us),
+				static_cast<unsigned long long>(g_vita_scene_timing.lighting_max_us),
+				static_cast<unsigned long long>(g_vita_scene_timing.object_render_total_us),
+				static_cast<unsigned long long>(g_vita_scene_timing.object_render_max_us));
+		g_vita_scene_timing = {};
+	}
+#endif
 }
 
 
@@ -1476,6 +1519,9 @@ void PhysicsSceneClass::Render_Object(RenderInfoClass & context,PhysClass * obj)
 	if ((obj->Peek_Model() == NULL) || (obj->Is_Rendering_Disabled())) {
 		return;
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t lighting_start_us = sceKernelGetProcessTimeWide();
+#endif
 
 	/*
 	** Set up the lighting environment for this object
@@ -1512,6 +1558,13 @@ void PhysicsSceneClass::Render_Object(RenderInfoClass & context,PhysClass * obj)
 		context.light_environment = &_emptylightenvironment;
 
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t lighting_us = sceKernelGetProcessTimeWide() - lighting_start_us;
+	g_vita_scene_timing.lighting_total_us += lighting_us;
+	if (lighting_us > g_vita_scene_timing.lighting_max_us)
+		g_vita_scene_timing.lighting_max_us = lighting_us;
+	const uint64_t object_render_start_us = sceKernelGetProcessTimeWide();
+#endif
 
 	/*
 	** Render the object
@@ -1520,6 +1573,13 @@ void PhysicsSceneClass::Render_Object(RenderInfoClass & context,PhysClass * obj)
 		WWPROFILE("render");
 		obj->Render(context);
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t object_render_us = sceKernelGetProcessTimeWide() - object_render_start_us;
+	g_vita_scene_timing.object_render_total_us += object_render_us;
+	if (object_render_us > g_vita_scene_timing.object_render_max_us)
+		g_vita_scene_timing.object_render_max_us = object_render_us;
+	++g_vita_scene_timing.object_count;
+#endif
 
 	/*
 	** Remove the lighting environment

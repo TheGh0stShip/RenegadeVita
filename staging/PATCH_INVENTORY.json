@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "f30adaeeb00fce92ff6c4620cb13c6b093ef5daf7dc37840bb6cc17c1b473877",
-  "patch_count": 186,
+  "stage_script_sha256": "82b9c139f8dd03172e93e421e629a853b134d24fcbbccc1496ee384130dcdd02",
+  "patch_count": 189,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -933,7 +933,22 @@
       "path": "port/patches/commando-a35-loading-animation-varargs.patch",
       "stage_directory": "",
       "sha256": "615b35556398f2e2b34940f922a1ce7f5eb071885bac3e7be837fc5f576b2155"
+    },
+    {
+      "path": "port/patches/wwphys-a35-scene-render-timing.patch",
+      "stage_directory": "wwphys",
+      "sha256": "d6ddab7eb7c0d3053e250a8386f994ee99dff084f0beb18113e83826e8dfba6d"
+    },
+    {
+      "path": "port/patches/combat-a35-think-slowframe.patch",
+      "stage_directory": "combat",
+      "sha256": "6e980d3c4ac6f52dd07dd58cc6e8e7c6a5a7a0cfc30a57d42379fbfcde00f990"
+    },
+    {
+      "path": "port/patches/combat-a35-postthink-owner-timing.patch",
+      "stage_directory": "combat",
+      "sha256": "a8abf0eefccfea491a7b100e9773738eb1d726e1a50a61f3913f52b003e79930"
     }
   ],
-  "registry_sha256": "fce2b1e214f98cf54bec257211b4d0a443dae0ce3986990e2543148fd3ac9985"
+  "registry_sha256": "06b0fc70e827c48c6adc519e75571f55e24f8b9ed6724b4cfe0c1c43ce11d505"
 }

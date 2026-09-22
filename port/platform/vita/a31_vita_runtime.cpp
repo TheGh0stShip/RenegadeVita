@@ -1917,6 +1917,9 @@ struct InteractiveTiming
 	uint32_t slow_over_33_3ms_count;
 	uint32_t slow_over_50_0ms_count;
 	uint32_t worst_frame_us;
+	uint32_t worst_sync_us;
+	uint32_t worst_simulation_us;
+	uint32_t worst_render_us;
 
 	void Add(uint32_t sync_us, uint32_t simulation_us, uint32_t render_us,
 		uint32_t frame_duration_us)
@@ -1937,6 +1940,15 @@ struct InteractiveTiming
 		if (frame_duration_us > 33333U) ++slow_over_33_3ms_count;
 		if (frame_duration_us > 50000U) ++slow_over_50_0ms_count;
 		if (frame_duration_us > worst_frame_us) worst_frame_us = frame_duration_us;
+		if (sync_us > worst_sync_us) worst_sync_us = sync_us;
+		if (simulation_us > worst_simulation_us) worst_simulation_us = simulation_us;
+		if (render_us > worst_render_us) worst_render_us = render_us;
+		#if !RENEGADE_VITA_M00_DEMO
+		if (frame_duration_us >= 500000U) {
+			A30_Vita_Log("A4 slow frame: frame=%u total_us=%u sync_us=%u simulation_us=%u render_us=%u\n",
+				total_frames, frame_duration_us, sync_us, simulation_us, render_us);
+		}
+		#endif
 	}
 
 	uint32_t Percentile(unsigned percentile) const

@@ -1,12 +1,35 @@
 # Live engineering progress
 
+## Dev149 diagnostic: M13 ambush freeze isolated to one original object
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: trace object `1500000007` inside original `Post_Think`; do not claim a
+performance fix. Completed: bounded, full-port-only scene/render, Combat Think,
+and object timing. An isolated M13 Vita3K/OpenGL run captured a 6.778 s frame
+at frame 633: 6.740 s simulation, 37.6 ms render. Original
+`GameObjManager::Post_Think` consumed 6.701 s, of which one object callback
+consumed 6.700 s; observer and script cleanup each took about 1 us.
+Evidence: `campaign-dev149-postowner-m13-2` in managed AppData, matching
+SELF SHA-256 `d4035771f2820779c6e33604fcd83d016287213ec433a43d6fcb8f59644ad482`;
+189-patch staging inventory and ARM SELF/VPK build pass. Vita3K run timed out
+unassessed; no physical evidence. Earlier Dev149 launch attempts with missing
+package or unopened title are not runtime evidence. Demo profile logging is
+unchanged.
+Next: identify that object's definition and the slow inner callback/asset path,
+fix it at its owner, and repeat the same M13 route plus M00 regression.
+Blocker: root operation inside object `1500000007` is not yet identified;
+ambush A/V sync and 60 FPS remain failed/unverified.
+
 ## Dev148 diagnostic: M13 cinematic stall and render cost
 
 Renegade Vita — v3.5 active
 `[░░░░░░░░░░] 0/10 release acceptance gates complete`
 
-Now: isolate the remaining scene-render stall outside indexed draw completion;
-do not change cinematic clocks or publish the failed diagnostic build.
+Historical: Dev148's render-side hypothesis was superseded by Dev149's
+simulation/object timing. Its diagnostic build was published explicitly
+unaccepted; no cinematic clock or performance change was adopted.
 Completed: isolated Vita3K M13 traces locate intermittent 0.9-1.3 s frames
 inside original foreground `WW3D::Render` / `scene->Render`, across world-space
 and dynamic objects; background, HUD, and final flush are not the slow phase.

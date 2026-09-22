@@ -50,6 +50,10 @@
 #include "wwprofile.h"
 #include "networkobjectmgr.h"
 #include "networkobjectmgr.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#include <psp2/kernel/processmgr.h>
+#endif
 #include "vehicle.h"
 #include "persistentgameobjobserver.h"
 #include "weapons.h"
@@ -326,6 +330,12 @@ int	GameObjManager::Post_Think()
 {
 	// Allow each object in the master list to think
 	SLNode<BaseGameObj> *objnode;
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_post_start_us = sceKernelGetProcessTimeWide();
+	uint64_t vita_max_object_us = 0U;
+	int vita_max_object_id = 0;
+	unsigned vita_object_count = 0U;
+#endif
 	for (	objnode = GameObjList.Head(); objnode; objnode = objnode->Next()) {
 
 		// Don't post_think when cinematic frozen
@@ -334,15 +344,47 @@ int	GameObjManager::Post_Think()
 		}
 
 		if ( !objnode->Data()->Is_Hibernating() && objnode->Data()->Is_Post_Think_Allowed() ) {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+			const uint64_t vita_object_start_us = sceKernelGetProcessTimeWide();
+			const int vita_object_id = objnode->Data()->Get_ID();
+#endif
 			objnode->Data()->Post_Think();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+			const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
+			++vita_object_count;
+			if (vita_object_us > vita_max_object_us) {
+				vita_max_object_us = vita_object_us;
+				vita_max_object_id = vita_object_id;
+			}
+#endif
 		}
 	}
 
 	//Destroy_Pending();
 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_objects_end_us = sceKernelGetProcessTimeWide();
+#endif
 	GameObjObserverManager::Delete_Pending();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_observers_end_us = sceKernelGetProcessTimeWide();
+#endif
 
 	ScriptManager::Destroy_Pending();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_post_end_us = sceKernelGetProcessTimeWide();
+	static unsigned vita_slow_post_reports = 0U;
+	if (vita_post_end_us - vita_post_start_us >= 500000U &&
+		vita_slow_post_reports++ < 8U) {
+		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u max_object_us=%llu max_object_id=%d observers_us=%llu scripts_us=%llu\n",
+			static_cast<unsigned long long>(vita_post_end_us - vita_post_start_us),
+			static_cast<unsigned long long>(vita_objects_end_us - vita_post_start_us),
+			vita_object_count,
+			static_cast<unsigned long long>(vita_max_object_us), vita_max_object_id,
+			static_cast<unsigned long long>(vita_observers_end_us - vita_objects_end_us),
+			static_cast<unsigned long long>(vita_post_end_us - vita_observers_end_us));
+	}
+#endif
 
 	return 0;
 }

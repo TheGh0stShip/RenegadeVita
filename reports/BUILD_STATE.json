@@ -1,4 +1,20 @@
 {
+  "dev149_m13_postthink_diagnostic": {
+    "candidate": "A3.5-dev149",
+    "state": "ARM_PACKAGE_PASS_VITA3K_POSTTHINK_OWNER_IDENTIFIED_STALL_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV149_M13_POSTTHINK_OWNER.md",
+    "vpk_sha256": "b14700ab99397071c4bef75e811700147942a7672b26d0ea1d4e425224d98958",
+    "self_sha256": "d4035771f2820779c6e33604fcd83d016287213ec433a43d6fcb8f59644ad482",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev149-postowner-m13-2/",
+    "slow_frame_us": 6777956,
+    "slow_object_id": 1500000007,
+    "slow_object_postthink_us": 6700026,
+    "audio_sync_verified": false,
+    "performance_accepted": false,
+    "physical_acceptance": false
+  },
   "dev148_m13_stall_diagnostic": {
     "candidate": "A3.5-dev148",
     "state": "ARM_PACKAGE_PASS_VITA3K_M13_STALL_UNRESOLVED",

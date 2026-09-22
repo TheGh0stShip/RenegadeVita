@@ -127,3 +127,25 @@ diagnostic baseline, not an A/B result for the corrected source.
 | vitaGL's default 16 MiB system-RAM reserve leaves too little non-pool memory during M00 static-object creation | Physical A3.5-dev5 diagnostic samples at objects 0, 25, 50, 75, 100, and 108-116 were identical: system user free 16,777,216 bytes; CDRAM/phycont free 0; vitaGL RAM/VRAM/slow/all free 54,998,160 / 80,124,896 / 27,262,336 / 162,385,392 bytes | Consider a larger reserve only after direct internal-heap/high-water evidence identifies pressure | Reduces renderer pools; may move rather than fix exhaustion and can regress textures/geometry | **Rejected as the immediate object-116 fix**: no measured pool consumption across the stall window. Internal heap pressure remains unmeasured, so pool tuning is deferred. |
 | M00 scene pre-warm repeats full original scene rendering and loading-overlay viewport transitions after assets are already resident | Guarded Dev84 physical log: 60 M00 pre-warm frames took 11,489 ms, with 22 resident textures, 23 binds, 0 uploads, 1,515 cumulative backend errors at its completion; the run then reached original M00 control | First add phase-separated timing for original scene render, original loading overlay, resolution/presentation changes, texture work, and forced delay; only then benchmark a reduced warm-frame budget or convergence-based stop against the same fixed M00 camera/content route | Reducing warm coverage can reintroduce shader/texture compilation hitches or change original loading presentation ownership | **Deferred**: the returned run includes later un-attributed physical input, has no fixed replay/camera identifier or p99, and has no A/B capture comparison. No scope, frame budget, or render behavior has changed. |
 | Steady M00 pacing is limited by renderer state/bind churn | Guarded Dev84 physical frame-480 summary: p50/p95 ordinary frame time 33.344/48.957 ms, 431/480 frames over 33.3 ms, 975,308 cumulative state changes, 139,350 texture binds, 75,956 meshes, 3,291,682 triangles, and zero current backend errors | Record state-change categories and redundant-call skips in a fixed M00 camera replay; reduce only proven duplicate platform calls while preserving original material/depth/alpha/fog ordering | DX8 material, alpha, depth, fog, texture-stage, and viewport semantics; sorting or batching would exceed this investigation | **Deferred**: current evidence establishes a cost signal but not a causal category or controlled A/B result. No cache, batching, renderer-profile, or quality setting has been adopted. |
+## Dev149 M13 ambush freeze attribution (2026-09-22)
+
+The earlier scene-render hypothesis did not explain the repeated multi-second
+ambush frame. In isolated Vita3K/OpenGL M13 direct-entry runs, Dev149 bounded
+timers placed a 6.997 s frame in simulation (6.964 s) rather than render
+(33.6 ms); Combat Think then attributed a matching 6.285 s frame to its post
+phase (6.248 s). The final matching candidate captured frame 633 at 6.778 s,
+with 6.740 s simulation and 37.6 ms render. `GameObjManager::Post_Think`
+took 6.701 s; a single original object callback, ID `1500000007`, took
+6.700 s. Observer deletion and pending script destruction each took about
+1 us. This is CPU process-clock timing, not GPU timing. The object definition
+and inner operation remain unverified, so no performance fix is adopted.
+
+Evidence: managed AppData `campaign-dev149-postsplit-m13-3` and
+`campaign-dev149-postowner-m13-2` Vita3K receipts/logs; final diagnostic
+SELF SHA-256 `d4035771f2820779c6e33604fcd83d016287213ec433a43d6fcb8f59644ad482`.
+The final run timed out unassessed, not physical acceptance. Next experiment:
+record the object's definition and split its original post-think callback
+around animation completion/observer dispatch and resource requests; then
+apply a load-time or boundary fix only to the confirmed operation. Fixed-route
+before/after frame p50/p95/p99/worst, clock drift, visual/script sequence,
+and M00 regression are still required before accepting any optimization.

@@ -59,6 +59,9 @@
 #include "dx8indexbuffer.h"
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
+#if !RENEGADE_VITA_M00_DEMO
+#include <psp2/kernel/processmgr.h>
+#endif
 #endif
 
 
@@ -201,16 +204,38 @@ void PhysClass::Set_Model(RenderObjClass * model)
 	
 void PhysClass::Set_Model_By_Name(const char * model_type_name)
 {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_model_start_us = sceKernelGetProcessTimeWide();
+#endif
 	RenderObjClass * model = WW3DAssetManager::Get_Instance()->Create_Render_Obj(model_type_name);
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_create_end_us = sceKernelGetProcessTimeWide();
+#endif
 	if ( model == NULL ) {
 		WWDEBUG_SAY(( "%s failed to load\n", model_type_name ));
 	}
 	WWASSERT(model);		// As above, PhysClasses cannot survive without a model...
 
 	Set_Model(model);
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_install_end_us = sceKernelGetProcessTimeWide();
+#endif
 	if (model) {
 		model->Release_Ref();
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_model_end_us = sceKernelGetProcessTimeWide();
+	static unsigned vita_slow_model_reports = 0U;
+	if (vita_model_end_us - vita_model_start_us >= 500000U &&
+		vita_slow_model_reports++ < 16U) {
+		A30_Vita_Log("A4 slow Phys Set_Model_By_Name: model=%s create_us=%llu install_us=%llu release_us=%llu total_us=%llu\n",
+			model_type_name,
+			static_cast<unsigned long long>(vita_create_end_us - vita_model_start_us),
+			static_cast<unsigned long long>(vita_install_end_us - vita_create_end_us),
+			static_cast<unsigned long long>(vita_model_end_us - vita_install_end_us),
+			static_cast<unsigned long long>(vita_model_end_us - vita_model_start_us));
+	}
+#endif
 }
 
 RenderObjClass * PhysClass::Get_Model(void)								

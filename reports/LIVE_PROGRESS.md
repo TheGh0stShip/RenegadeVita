@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Dev152 diagnostic: WW3D per-instance create owns M13 freeze
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: isolate recursive WW3D prototype creation versus on-demand child loads.
+Completed: rejected Dev151 warmup removed. In matching Dev152 M13 run,
+`PhysClass::Set_Model_By_Name("X00_AG_Explode")` spent 6,083,581 us in
+`WW3DAssetManager::Create_Render_Obj`, 39 us installing the model into the
+physics scene, and 1 us releasing the local reference. This explains why a
+prior create/release prewarm did not remove the live cost.
+Evidence: asset-free ARM SELF/VPK; 191-patch ordered staging; managed AppData
+`campaign-dev152-physmodel-m13-1` Vita3K/OpenGL receipt/log. No physical
+acceptance or A/V sync fix.
+Next: bounded nested asset-manager timings, then a focused fix to the
+confirmed repeated inner work. Blocker: live cinematic still freezes.
+
 ## Dev151 rejected: M13 WW3D pre-create does not remove live stall
 
 Renegade Vita — v3.5 active

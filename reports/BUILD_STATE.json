@@ -1,4 +1,18 @@
 {
+  "dev152_m13_ww3d_create_diagnostic": {
+    "candidate": "A3.5-dev152",
+    "state": "ARM_PACKAGE_PASS_VITA3K_WW3D_CREATE_STALL_IDENTIFIED_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV152_M13_WW3D_CREATE.md",
+    "vpk_sha256": "4eabe813bcafe663a5102212b33b5f4a044cf8040f1896da7da8334117c1327e",
+    "self_sha256": "ce01e50e2cf93e273cacfdb91ab3005a9b29f2c94405c47d56964dbabf1307f3",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev152-physmodel-m13-1/",
+    "ww3d_create_us": 6083581,
+    "physics_install_us": 39,
+    "performance_accepted": false,
+    "physical_acceptance": false
+  },
   "dev151_m13_model_prep_rejected": {
     "candidate": "A3.5-dev151",
     "state": "ARM_PACKAGE_PASS_VITA3K_M13_PREP_REJECTED_LIVE_STALL_PERSISTS",

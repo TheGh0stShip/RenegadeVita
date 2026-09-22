@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "6e8e1fd5958345978b0c02d1442bf222cacecc73123a26f56ccf6c2b964b4934",
-  "patch_count": 190,
+  "stage_script_sha256": "90c82ab62efa02657b3b63c07b8dd169c1ac0c9422ad785976d87bcd310e3f5b",
+  "patch_count": 191,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -953,7 +953,12 @@
       "path": "port/patches/scripts-a35-m13-slot19-phases.patch",
       "stage_directory": "scripts",
       "sha256": "a9cccd8cc55507cb2e8ee69ffd2f348d0a99a3d1f8f938d20a7871e78ad0da28"
+    },
+    {
+      "path": "port/patches/wwphys-a35-model-install-timing.patch",
+      "stage_directory": "wwphys",
+      "sha256": "f087450f0de387bfa1c99fced4a501ed013fdbed2664bdb18239dd0f9b9ad665"
     }
   ],
-  "registry_sha256": "05f4726626ed9bb58e2dd53cacd35a64dc9a63d8cd7d1558c483d9ad782129f9"
+  "registry_sha256": "08839799a890724b28282249a7788fa77c4f6da96f0a2704b64aaba775d2441a"
 }

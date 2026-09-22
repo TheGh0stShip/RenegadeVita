@@ -166,3 +166,11 @@ cost. It suggests a per-instance or scene-installation cost rather than only
 first prototype load, but that is an inference, not a proved root cause.
 Evidence: managed AppData `campaign-dev151-modelprep-m13-1`, matching
 SELF `c7c65ef3001f21ace248b68d3963dc7b0e6b61df262f69eabbb1c8721cae025d`.
+Dev152 removed the rejected pre-create and split the original physics setter.
+In the same M13 route, `WW3DAssetManager::Create_Render_Obj` consumed
+6.084 s, while `PhysClass::Set_Model` scene installation consumed 39 us and
+reference release 1 us. Thus the repeated per-instance asset-manager create,
+not physics scene notification, owns the stall. Whether prototype creation,
+nested child requests, or on-demand file I/O dominates is still unmeasured.
+Evidence: managed AppData `campaign-dev152-physmodel-m13-1`, matching SELF
+`ce01e50e2cf93e273cacfdb91ab3005a9b29f2c94405c47d56964dbabf1307f3`.

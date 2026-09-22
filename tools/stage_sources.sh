@@ -671,4 +671,11 @@ if [[ "$rv_slot19_sha" != "7e6190ea669ce3e701332b7bc89c997eef80161f7fd17663ed778
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-m13-slot19-phases.patch"
 echo "Applied: port/patches/scripts-a35-m13-slot19-phases.patch"
+rv_model_install_sha=$(sha256sum "$rv_stage/wwphys/phys.cpp" | cut -d' ' -f1)
+if [[ "$rv_model_install_sha" != "820e2552cb29ee7dba38ae1c37017043acb98a16dd6bed9263ec34e29fb571da" ]]; then
+	echo "Refusing unanchored model install timing patch: phys.cpp changed ($rv_model_install_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-model-install-timing.patch"
+echo "Applied: port/patches/wwphys-a35-model-install-timing.patch"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

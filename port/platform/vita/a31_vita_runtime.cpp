@@ -3244,19 +3244,6 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A30_Vita_Log("A3.1 interactive: original level load FAIL\n");
 				break;
 			}
-#if !RENEGADE_VITA_M00_DEMO
-			if (stricmp(selected_archive, "M13.mix") == 0) {
-				const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-				RenderObjClass *intro_explosion =
-					WW3DAssetManager::Get_Instance()->Create_Render_Obj("X00_AG_Explode");
-				A30_Vita_Log("A4 M13 prepare: model=X00_AG_Explode created=%d elapsed_us=%llu original_asset_manager=1\n",
-					intro_explosion != NULL ? 1 : 0,
-					static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
-				if (intro_explosion != NULL) {
-					intro_explosion->Release_Ref();
-				}
-			}
-#endif
 			A30_Vita_Log("A3.1 breadcrumb: original M00 level loaded\n");
 
 			WideStringClass local_player_name;

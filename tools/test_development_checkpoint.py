@@ -69,6 +69,10 @@ int main() {
         assert(output[0] == 0);
     }
     assert(!A31DevelopmentCheckpoint::Parse_Mission(missions[0], strlen(missions[0]), output, 7));
+    assert(A31DevelopmentCheckpoint::Parse_M13_Completion("RVMC1 M13.mix\n", 14));
+    assert(!A31DevelopmentCheckpoint::Parse_M13_Completion("RVMC1 M01.mix\n", 14));
+    assert(!A31DevelopmentCheckpoint::Parse_M13_Completion("RVMC1 M13.mix", 13));
+    assert(!A31DevelopmentCheckpoint::Parse_M13_Completion(NULL, 14));
 }
 ''')
             subprocess.run(["c++", "-std=c++11", "-Wall", "-Wextra", "-Werror",

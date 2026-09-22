@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "24467868c42264be541f5739c40a7d9d2e3e7174c48e5611134830083f07b2e1",
-  "patch_count": 183,
+  "stage_script_sha256": "08970556d1fcb22f497d8cba4545cfe8455b6931222b1cc4cf8b65b051a0f743",
+  "patch_count": 184,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -820,6 +820,11 @@
       "sha256": "69e3717c1710d75de2bd698e0dce4f2e2856739505dca9187944eeab55eec604"
     },
     {
+      "path": "port/patches/commando-a35-campaign-retail-loading.patch",
+      "stage_directory": "commando",
+      "sha256": "c553bfa32ead6388a775680c76da42bc0e79dd83baf16547d9e61b7475f448f4"
+    },
+    {
       "path": "port/patches/commando-a35-demo-singleplayer-options.patch",
       "stage_directory": "commando",
       "sha256": "a0458d6eb3b0004e25468ea912442fad8cdb2797bcd96fe802de712a2e7d6d03"
@@ -920,5 +925,5 @@
       "sha256": "615b35556398f2e2b34940f922a1ce7f5eb071885bac3e7be837fc5f576b2155"
     }
   ],
-  "registry_sha256": "8d262c7f498edd1a0a6f717a91a94b17c9e3c5d13b590a3ee5bb9c33f0168fd6"
+  "registry_sha256": "c10568be91c86e23b0fb736f5a538b8a4f4de635d50882ead1259d29698022c7"
 }

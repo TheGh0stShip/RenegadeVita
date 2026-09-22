@@ -53,6 +53,13 @@ inline bool Parse_Mission(const char *data, size_t bytes, char *source,
 	source[7U] = '\0';
 	return true;
 }
+
+inline bool Parse_M13_Completion(const char *data, size_t bytes)
+{
+	static const char request[] = "RVMC1 M13.mix\n";
+	return data != NULL && bytes == sizeof(request) - 1U &&
+		memcmp(data, request, sizeof(request) - 1U) == 0;
+}
 } // namespace A31DevelopmentCheckpoint
 
 #endif

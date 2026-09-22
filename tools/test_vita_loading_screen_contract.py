@@ -80,7 +80,12 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("extern void Commando_Render_Original_Loading_Screen(void *screen, bool update_network);", runtime)
         self.assertIn("extern void Commando_Destroy_Original_Loading_Screen(void *screen);", runtime)
         self.assertIn("CampaignManager::Init();", runtime)
-        self.assertIn("CampaignManager::Select_Backdrop_Number(kCncMultiplayerLoadBackdropNumber)", runtime)
+        self.assertIn("backdrop_number = cGameData::Get_Mission_Number_From_Map_Name(mission_archive);", runtime)
+        self.assertIn("CampaignManager::Select_Backdrop_Number(backdrop_number)", runtime)
+        self.assertIn("loading_presenter.Initialize(", runtime)
+        self.assertIn("selected_archive", runtime)
+        self.assertIn("#if RENEGADE_VITA_M00_DEMO\n\tstatusText.Render();\n#endif", loading_source)
+        self.assertIn("#if RENEGADE_VITA_M00_DEMO\n\tUpdate_Status_Text();\n#endif", loading_source)
         self.assertIn("CampaignManager::Get_Backdrop_Description_Count()", runtime)
         self.assertIn("CampaignManager::Get_Backdrop_Description(index)", runtime)
         self.assertIn("Screen = Commando_Create_Original_Loading_Screen();", runtime)
@@ -331,7 +336,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             "bool Warm_Original_M00_Interactive_Presentation_Cache"
         )
         scene_prewarm_call = runtime.index(
-            "if (!Warm_Original_M00_Interactive_Presentation_Cache(",
+            "presentation_ready = Warm_Original_M00_Interactive_Presentation_Cache(",
         )
         initialized_index = runtime.index("result.initialized = true;")
         input_loop_index = runtime.index("while (true)", initialized_index)
@@ -407,7 +412,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn(
-            "A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(\n\tint startup_screen_result = -1, bool start_at_main_menu = false,\n\tconst char *reload_source = nullptr);",
+            "A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(\n\tint startup_screen_result = -1, bool start_at_main_menu = false,\n\tconst char *reload_source = nullptr, const char *campaign_source = nullptr,",
             header,
         )
         self.assertIn("A31_Vita_Run_Interactive_Runtime(screen_result, start_at_main_menu,", main)

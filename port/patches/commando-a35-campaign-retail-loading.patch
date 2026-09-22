@@ -1,0 +1,27 @@
+--- a/loadingscreen.cpp
++++ b/loadingscreen.cpp
+@@ -42,1 +42,3 @@
+-	statusText.Set_Texture_Size_Hint( 256 );
++#if RENEGADE_VITA_M00_DEMO
++	statusText.Set_Texture_Size_Hint( 256 );
++#endif
+@@ -57,1 +59,3 @@
+-	statusText.Set_Font( font );
++#if RENEGADE_VITA_M00_DEMO
++	statusText.Set_Font( font );
++#endif
+@@ -284,1 +288,1 @@
+-#if defined(__vita__)
++#if defined(__vita__) && RENEGADE_VITA_M00_DEMO
+@@ -291,2 +295,4 @@
+-	Update_Status_Text();
+-#if defined(__vita__)
++#if RENEGADE_VITA_M00_DEMO
++	Update_Status_Text();
++#endif
++#if defined(__vita__) && RENEGADE_VITA_M00_DEMO
+@@ -305,1 +311,3 @@
+-	statusText.Render();
++#if RENEGADE_VITA_M00_DEMO
++	statusText.Render();
++#endif

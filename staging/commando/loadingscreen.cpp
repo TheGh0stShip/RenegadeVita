@@ -39,7 +39,9 @@ LoadingScreenClass::LoadingScreenClass()
 
 	backdropText.Set_Texture_Size_Hint( 256 );
 	backdropText2.Set_Texture_Size_Hint( 256 );
+#if RENEGADE_VITA_M00_DEMO
 	statusText.Set_Texture_Size_Hint( 256 );
+#endif
 
 	LoadTime = 0.001f;
 	LoadPercentage = 0;
@@ -54,7 +56,9 @@ LoadingScreenClass::LoadingScreenClass()
 
 	FontCharsClass *font	= StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_TXT );
 	backdropText.Set_Font( font );
+#if RENEGADE_VITA_M00_DEMO
 	statusText.Set_Font( font );
+#endif
 
 	font = StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_BIG_TXT );
 	backdropText2.Set_Font( font );
@@ -281,15 +285,17 @@ void LoadingScreenClass::Render(bool update_network)
 	} else {
 		LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
 	}
-#if defined(__vita__)
+#if defined(__vita__) && RENEGADE_VITA_M00_DEMO
 	// Native post-load texture and scene preparation owns the final ten percent.
 	const float predicted = LoadPercentageDrawn;
 	LoadPercentageDrawn = PresentationProgress >= 0.0f ?
 		PresentationProgress : predicted * 0.90f;
 #endif
 	backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
+#if RENEGADE_VITA_M00_DEMO
 	Update_Status_Text();
-#if defined(__vita__)
+#endif
+#if defined(__vita__) && RENEGADE_VITA_M00_DEMO
 	LoadPercentageDrawn = predicted;
 #endif
 	if (ConsoleBox.Is_Exclusive() && _last_percent_drawn != LoadPercentageDrawn) {
@@ -302,7 +308,9 @@ void LoadingScreenClass::Render(bool update_network)
 	backdrop.Render();
 	backdropText.Render();
 	backdropText2.Render();
+#if RENEGADE_VITA_M00_DEMO
 	statusText.Render();
+#endif
 
 #if 0
 	StringClass txt=SaveLoadStatus::Get_Status_Text(0);

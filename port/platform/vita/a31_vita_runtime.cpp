@@ -1314,9 +1314,16 @@ public:
 		Screen = NULL;
 	}
 
-	bool Initialize()
+	bool Initialize(const char *mission_archive)
 	{
-		CampaignManager::Select_Backdrop_Number(kCncMultiplayerLoadBackdropNumber);
+		int backdrop_number = kCncMultiplayerLoadBackdropNumber;
+#if !RENEGADE_VITA_M00_DEMO
+		if (mission_archive == NULL || mission_archive[0] == '\0') return false;
+		backdrop_number = cGameData::Get_Mission_Number_From_Map_Name(mission_archive);
+#else
+		(void)mission_archive;
+#endif
+		CampaignManager::Select_Backdrop_Number(backdrop_number);
 		const int description_count = CampaignManager::Get_Backdrop_Description_Count();
 		StringClass selected_model(0, true);
 		for (int index = 0; index < description_count; ++index) {
@@ -1335,7 +1342,7 @@ public:
 		BackdropReady =
 			Commando_Original_Loading_Screen_Has_Backdrop_Model(Screen);
 		A30_Vita_Log("A3.5 loading screen: original class state=%d descriptions=%d model=%s ready=%d direct_vitagl_tiles=0 progress_owner=original_LoadingScreenClass\n",
-			kCncMultiplayerLoadBackdropNumber, description_count,
+			backdrop_number, description_count,
 			selected_model.Get_Length() != 0 ?
 				static_cast<const char *>(selected_model) : "none",
 			BackdropReady ? 1 : 0);
@@ -2268,6 +2275,35 @@ bool Try_Latch_Development_Campaign_Mission()
 	return false;
 #endif
 }
+
+bool Try_Arm_Development_M13_Completion(const char *load_source)
+{
+#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+	if (load_source == NULL || stricmp(load_source, "M13.mix") != 0) return false;
+	const char *const request_path =
+		"ux0:data/renegade/user/config/dev-m13-completion-v1.txt";
+	FILE *file = fopen(request_path, "rb");
+	if (file == NULL) return false;
+	char request[32];
+	const size_t bytes = fread(request, 1U, sizeof(request), file);
+	const bool read_failed = ferror(file) != 0;
+	const bool close_failed = fclose(file) != 0;
+	if (read_failed || close_failed ||
+		!A31DevelopmentCheckpoint::Parse_M13_Completion(request, bytes)) {
+		A30_Vita_Log("A4 campaign diagnostic: invalid M13 completion request\n");
+		return false;
+	}
+	if (remove(request_path) != 0) {
+		A30_Vita_Log("A4 campaign diagnostic: M13 completion request could not be consumed\n");
+		return false;
+	}
+	A30_Vita_Log("A4 campaign diagnostic: M13 completion event armed for frame 120; objectives not exercised\n");
+	return true;
+#else
+	(void)load_source;
+	return false;
+#endif
+}
 #endif
 
 bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
@@ -2955,7 +2991,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				CombatManager::Set_Load_Progress(0);
 				A31VitaScopedLoadingRenderResolution loading_render_resolution;
 				A31VitaLoadingPresenter loading_presenter;
-				if (!loading_presenter.Initialize()) {
+				if (!loading_presenter.Initialize(
+#if RENEGADE_VITA_M00_DEMO
+					load_source
+#else
+					selected_archive
+#endif
+				)) {
 					result.render_error = true;
 					A30_Vita_Log("A3.5 loading screen: FAIL original MenuBackDrop model unavailable\n");
 					break;
@@ -3214,6 +3256,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					capture_pixels = static_cast<uint8_t *>(malloc(kCaptureBytes));
 				}
 				const uint64_t sync_origin = sceKernelGetProcessTimeWide() / 1000ULL;
+#if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+				bool diagnostic_m13_completion_pending =
+					Try_Arm_Development_M13_Completion(load_source);
+#endif
 #if RENEGADE_VITA_M00_DEMO
 				A31DemoEndingPresenter demo_ending;
 #endif
@@ -3276,6 +3322,14 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				const bool was_suspended = combat_mode->Is_Suspended();
 				A31_Interactive_Run_Simulation_Frame();
+#if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+				if (diagnostic_m13_completion_pending && result.frames >= 120U) {
+					diagnostic_m13_completion_pending = false;
+					A30_Vita_Log("A4 campaign diagnostic: dispatch original CombatManager mission success at frame=%u; objectives bypassed only in diagnostic build\n",
+						result.frames);
+					CombatManager::Mission_Complete(true);
+				}
+#endif
 				const A31MissionCompletionState mission_state =
 					A31_Interactive_Get_Mission_Completion_State();
 				result.star_killed_observed = mission_state.star_killed_observed;

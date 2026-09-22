@@ -158,3 +158,11 @@ of this exact model is now a testable preparation hypothesis, not an accepted
 fix; it may merely move cost or fail to remove scene-notification cost.
 Evidence: managed AppData `campaign-dev150-slot19-m13-1` matching
 SELF `1ba9212ececdb4406e4e6dccb59da0740c12444e1392b6deb6296dbf0136493a`.
+Dev151 tested the exact loading-time WW3D object pre-create/release hypothesis.
+In the isolated M13 Vita3K/OpenGL route, it added 5.885 s to loading and the
+live `Set_Model("X00_AG_Explode")` still took 6.005 s (Dev150: 6.166 s).
+This is **rejected**: no demonstrated live improvement and greater total
+cost. It suggests a per-instance or scene-installation cost rather than only
+first prototype load, but that is an inference, not a proved root cause.
+Evidence: managed AppData `campaign-dev151-modelprep-m13-1`, matching
+SELF `c7c65ef3001f21ace248b68d3963dc7b0e6b61df262f69eabbb1c8721cae025d`.

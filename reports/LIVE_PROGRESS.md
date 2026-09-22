@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Dev151 rejected: M13 WW3D pre-create does not remove live stall
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: remove the rejected preparation and time the original
+`PhysClass::Set_Model_By_Name` inner calls. Completed: one M13-only
+loading-phase `WW3DAssetManager::Create_Render_Obj("X00_AG_Explode")`
+and release returned a valid object but cost 5.885 s. The same run's live
+slot-19 Set_Model still cost 6.005 s. This is no performance gain, and the
+candidate must not be retained as an optimization.
+Evidence: asset-free ARM SELF/VPK, `campaign-dev151-modelprep-m13-1`
+Vita3K/OpenGL receipt/log; unassessed watchdog, no physical evidence.
+Next: split WW3D instance creation from `PhysClass::Set_Model` scene
+installation, fix only the confirmed inner cost. Blocker: live cinematic
+freeze and A/V desync remain unresolved.
+
 ## Dev150 diagnostic: M13 slot-19 model setup identified
 
 Renegade Vita — v3.5 active

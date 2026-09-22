@@ -1,4 +1,18 @@
 {
+  "dev151_m13_model_prep_rejected": {
+    "candidate": "A3.5-dev151",
+    "state": "ARM_PACKAGE_PASS_VITA3K_M13_PREP_REJECTED_LIVE_STALL_PERSISTS",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV151_M13_MODEL_PREP_REJECTED.md",
+    "vpk_sha256": "068d5645c2b4b0dd52ffeef082798e002f711bd73800bc5cc7960d9391390b01",
+    "self_sha256": "c7c65ef3001f21ace248b68d3963dc7b0e6b61df262f69eabbb1c8721cae025d",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev151-modelprep-m13-1/",
+    "loading_prepare_us": 5884570,
+    "live_set_model_us": 6005398,
+    "performance_accepted": false,
+    "physical_acceptance": false
+  },
   "dev150_m13_slot19_diagnostic": {
     "candidate": "A3.5-dev150",
     "state": "ARM_PACKAGE_PASS_VITA3K_SET_MODEL_STALL_IDENTIFIED_UNRESOLVED",

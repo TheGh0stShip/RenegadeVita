@@ -685,4 +685,10 @@ if [[ "$rv_ww3d_create_sha" != "290ac62041c1de14327cfb10fa6cfe14a6b55c544c9b9d0c
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-create-depth-timing.patch"
 echo "Applied: port/patches/ww3d2-a35-create-depth-timing.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-prototype-kind-timing.patch"
+echo "Applied: port/patches/ww3d2-a35-m13-prototype-kind-timing.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-aggregate-phase-timing.patch"
+echo "Applied: port/patches/ww3d2-a35-m13-aggregate-phase-timing.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-aggregate-children-timing.patch"
+echo "Applied: port/patches/ww3d2-a35-m13-aggregate-children-timing.patch"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

@@ -1,5 +1,21 @@
 # Live engineering progress
 
+## Dev154 diagnostic: aggregate child creation, not attachment
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: test a retained, assembled original WW3D template for M13 explosion
+instances, preserving fresh per-use clones. Completed: original aggregate
+`X00_AG_Explode` creates 91 children; child creation totals 6,634,366 us,
+attachment 207 us, base 184 us. Class ID 25 did not establish prototype type;
+the earlier HLOD-constructor assumption was wrong. Reject attachment-update
+batching as a freeze fix.
+Evidence: matching asset-free ARM SELF/VPK, 195-patch staging, managed AppData
+`campaign-dev154-children-m13-1` Vita3K/OpenGL receipt/log. No physical or
+accepted performance evidence. Next: retained-template A/B and M00 regression.
+Blocker: live cinematic still freezes for multiple seconds.
+
 ## Dev153 diagnostic: M13 HLOD constructor owns repeated create cost
 
 Renegade Vita — v3.5 active

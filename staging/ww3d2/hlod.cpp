@@ -137,6 +137,10 @@
 #include <win.h>
 #include "sphere.h"
 #include "boxrobj.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#include <psp2/kernel/processmgr.h>
+#endif
 
 
 /*
@@ -249,7 +253,16 @@ PrototypeClass *HLodLoaderClass::Load_W3D( ChunkLoadClass &cload )
  *=============================================================================================*/
 RenderObjClass * HLodPrototypeClass::Create(void)			
 { 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_create_start_us = sceKernelGetProcessTimeWide();
+#endif
 	HLodClass * hlod = NEW_REF( HLodClass , ( *Definition ) ); 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	if (stricmp(Definition->Get_Name(), "X00_AG_Explode") == 0) {
+		A30_Vita_Log("A4 M13 prototype: kind=HLodDef name=%s create_us=%llu\n",
+			Definition->Get_Name(), static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us));
+	}
+#endif
 	return hlod;
 }
 

@@ -42,6 +42,10 @@
 #include "matinfo.h"
 #include "texture.h"
 #include "wwstring.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#include <psp2/kernel/processmgr.h>
+#endif
 
 #include <windows.h>
 
@@ -200,8 +204,14 @@ AggregateDefClass::Free_Subobject_List (void)
 RenderObjClass *
 AggregateDefClass::Create (void)
 {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_create_start_us = sceKernelGetProcessTimeWide();
+#endif
 	// Attempt to create an instance of the hierarchy
 	RenderObjClass *pmodel = Create_Render_Object (m_Info.BaseModelName);
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_base_end_us = sceKernelGetProcessTimeWide();
+#endif
 	if (pmodel != NULL) {
 		
 		// Perform the aggregation
@@ -216,6 +226,15 @@ AggregateDefClass::Create (void)
 		WWDEBUG_SAY (("Unable to load aggregate %s.\r\n", m_Info.BaseModelName));
 	}
 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	if (m_pName != NULL && stricmp(m_pName, "X00_AG_Explode") == 0) {
+		A30_Vita_Log("A4 M13 aggregate: name=%s base=%s subobjects=%d base_us=%llu attach_and_finish_us=%llu total_us=%llu\n",
+			m_pName, m_Info.BaseModelName, m_SubobjectList.Count(),
+			static_cast<unsigned long long>(vita_base_end_us - vita_create_start_us),
+			static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_base_end_us),
+			static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us));
+	}
+#endif
 	// Return a pointer to the new aggregate
 	return pmodel;
 }
@@ -282,13 +301,25 @@ AggregateDefClass::Find_Subobject
 void
 AggregateDefClass::Attach_Subobjects (RenderObjClass &base_model)
 {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const bool vita_trace_m13 = m_pName != NULL && stricmp(m_pName, "X00_AG_Explode") == 0;
+	uint64_t vita_create_us = 0;
+	uint64_t vita_attach_us = 0;
+#endif
 	// Now loop through all the subobjects and attach them to the appropriate bone
 	for (int index = 0; index < m_SubobjectList.Count (); index ++) {
 		W3dAggregateSubobjectStruct *psubobj_info = m_SubobjectList[index];
 		if (psubobj_info != NULL) {
 			
 			// Now create this subobject and attach it to its bone.
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+			const uint64_t vita_child_start_us = vita_trace_m13 ? sceKernelGetProcessTimeWide() : 0;
+#endif
 			RenderObjClass *prender_obj = Create_Render_Object (psubobj_info->SubobjectName);
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+			const uint64_t vita_child_created_us = vita_trace_m13 ? sceKernelGetProcessTimeWide() : 0;
+			vita_create_us += vita_child_created_us - vita_child_start_us;
+#endif
 			if (prender_obj != NULL) {
 
 				// Attach this object to the requested bone
@@ -301,8 +332,18 @@ AggregateDefClass::Attach_Subobjects (RenderObjClass &base_model)
 			} else {
 				WWDEBUG_SAY (("Unable to load aggregate subobject %s.\r\n", psubobj_info->SubobjectName));
 			}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+			if (vita_trace_m13) vita_attach_us += sceKernelGetProcessTimeWide() - vita_child_created_us;
+#endif
 		}
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	if (vita_trace_m13) {
+		A30_Vita_Log("A4 M13 aggregate children: count=%d create_us=%llu attach_us=%llu\n",
+			m_SubobjectList.Count(), static_cast<unsigned long long>(vita_create_us),
+			static_cast<unsigned long long>(vita_attach_us));
+	}
+#endif
 	
 	return ;
 }

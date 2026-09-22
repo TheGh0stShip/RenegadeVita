@@ -174,10 +174,18 @@ not physics scene notification, owns the stall. Whether prototype creation,
 nested child requests, or on-demand file I/O dominates is still unmeasured.
 Evidence: managed AppData `campaign-dev152-physmodel-m13-1`, matching SELF
 `ce01e50e2cf93e273cacfdb91ab3005a9b29f2c94405c47d56964dbabf1307f3`.
-Dev153 split the asset manager: `X00_AG_Explode` had an existing HLOD
-prototype (class ID 25); lookup 4 us, load phase 1 us, `proto->Create()`
+Dev153 split the asset manager: `X00_AG_Explode` had an existing prototype
+whose resulting object has HLOD class ID 25; lookup 4 us, load phase 1 us, `proto->Create()`
 6.123 s. No nested child call exceeded 100 ms in the bounded trace.
 Repeated on-demand file loading is not the immediate 6 s cause. The original
-HLOD constructor phases remain to be timed; no optimization is accepted.
+prototype's inner work remained to be timed; no optimization is accepted.
 Evidence: managed AppData `campaign-dev153-assetdepth-m13-1`, matching
 SELF `d73dfcfcd3f25df0c3d889b5472382e49188631dba7f6ac21f363bb96d24e225`.
+Dev154 identified the actual prototype as an aggregate, not an HLOD or HModel
+prototype. `X00_AG_Explode` has 91 child render objects; in the matching M13
+run their creation consumed 6.634 s while attachment consumed 0.207 ms.
+The base model took 0.184 ms. Repeated bounds updates during attachment are
+therefore not the freeze cause; no performance change is accepted. Next test
+is an assembled retained template with fresh clones, compared against this
+same route and M00. Evidence: managed AppData `campaign-dev154-children-m13-1`,
+matching SELF `e89f3402e43ac431400cea0a6cdfcc6127114f74b0d161316227e07ef830e77d`.

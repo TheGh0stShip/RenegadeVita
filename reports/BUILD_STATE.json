@@ -1,4 +1,19 @@
 {
+  "dev154_m13_aggregate_children_diagnostic": {
+    "candidate": "A3.5-dev154",
+    "state": "ARM_PACKAGE_PASS_VITA3K_AGGREGATE_CHILD_CREATE_STALL_IDENTIFIED_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV154_M13_AGGREGATE_CHILDREN.md",
+    "self_sha256": "e89f3402e43ac431400cea0a6cdfcc6127114f74b0d161316227e07ef830e77d",
+    "vpk_sha256": "2b28cd505a312e6998f2a1be34a1ad770772dd32f6017d42159c2319baba4175",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev154-children-m13-1/",
+    "aggregate_children": 91,
+    "child_create_us": 6634366,
+    "attach_us": 207,
+    "performance_accepted": false,
+    "physical_acceptance": false
+  },
   "dev153_m13_hlod_create_diagnostic": {
     "candidate": "A3.5-dev153",
     "state": "ARM_PACKAGE_PASS_VITA3K_HLOD_CREATE_STALL_IDENTIFIED_UNRESOLVED",

@@ -1,0 +1,39 @@
+--- a/agg_def.cpp
++++ b/agg_def.cpp
+@@ -304,1 +304,6 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	const bool vita_trace_m13 = m_pName != NULL && stricmp(m_pName, "X00_AG_Explode") == 0;
++	uint64_t vita_create_us = 0;
++	uint64_t vita_attach_us = 0;
++#endif
+ 	// Now loop through all the subobjects and attach them to the appropriate bone
+@@ -309,3 +314,10 @@
+ 			// Now create this subobject and attach it to its bone.
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++			const uint64_t vita_child_start_us = vita_trace_m13 ? sceKernelGetProcessTimeWide() : 0;
++#endif
+ 			RenderObjClass *prender_obj = Create_Render_Object (psubobj_info->SubobjectName);
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++			const uint64_t vita_child_created_us = vita_trace_m13 ? sceKernelGetProcessTimeWide() : 0;
++			vita_create_us += vita_child_created_us - vita_child_start_us;
++#endif
+ 			if (prender_obj != NULL) {
+@@ -320,8 +335,18 @@
+ 			} else {
+ 				WWDEBUG_SAY (("Unable to load aggregate subobject %s.\r\n", psubobj_info->SubobjectName));
+ 			}
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++			if (vita_trace_m13) vita_attach_us += sceKernelGetProcessTimeWide() - vita_child_created_us;
++#endif
+ 		}
+ 	}
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	if (vita_trace_m13) {
++		A30_Vita_Log("A4 M13 aggregate children: count=%d create_us=%llu attach_us=%llu\n",
++			m_SubobjectList.Count(), static_cast<unsigned long long>(vita_create_us),
++			static_cast<unsigned long long>(vita_attach_us));
++	}
++#endif
+ 	
+ 	return ;
+ }

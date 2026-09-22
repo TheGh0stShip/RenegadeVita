@@ -1,4 +1,15 @@
 {
+  "dev147_performance_checkpoint": {
+    "candidate": "A3.5-dev147",
+    "state": "HOST_PASS_ARM_PACKAGE_PASS_FINAL_GATE_RETRY_INTERRUPTED_UNPUBLISHED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "report": "reports/DEV147_PERFORMANCE_CHECKPOINT.md",
+    "vpk_sha256_unpromoted": "9bfc3de794903b0b2a6cbbdc83588c210d21e9f940dc0c453d7a299df16d2ba7",
+    "self_sha256_unpromoted": "a39736a08fd9af9d2ae5d1e1e9e40a7ae7ed64effcab8bb353894b654db653d3",
+    "canonical_final_gate_passed": false,
+    "audio_sync_verified": false,
+    "physical_acceptance": false
+  },
   "active_dev146_campaign_effect_lookup": {
     "candidate": "A3.5-dev146",
     "state": "ARM_PACKAGE_PASS_VITA3K_EFFECT_LOOKUP_PASS_AUDIO_DEATH_OPEN",

@@ -18,6 +18,7 @@
 #include "ww3d_vita_renderer.h"
 
 #include "assetmgr.h"
+#include "assetdep.h"
 #include "assets.h"
 #include "campaign.h"
 #include "ccamera.h"
@@ -1982,6 +1983,28 @@ void Copy_Timing_Statistics(A31VitaInteractiveResult &result,
 	result.average_render_us = timing.Average(timing.total_render_us);
 }
 
+void Log_Campaign_Simulation_Stages()
+{
+#if !RENEGADE_VITA_M00_DEMO
+	const A31SimulationStageTotals stages = A31_Interactive_Get_Simulation_Stage_Totals();
+	if (stages.frames == 0U) return;
+	const uint64_t drift_us = stages.real_us > stages.simulated_us ?
+		stages.real_us - stages.simulated_us : 0U;
+	A30_Vita_Log("A4 campaign pacing: frames=%u avg_us time/input/path/control/network/combat/other=%llu/%llu/%llu/%llu/%llu/%llu/%llu clock_real/sim/drift_ms=%llu/%llu/%llu\n",
+		stages.frames,
+		static_cast<unsigned long long>(stages.time_manager_us / stages.frames),
+		static_cast<unsigned long long>(stages.input_us / stages.frames),
+		static_cast<unsigned long long>(stages.path_us / stages.frames),
+		static_cast<unsigned long long>(stages.control_us / stages.frames),
+		static_cast<unsigned long long>(stages.network_us / stages.frames),
+		static_cast<unsigned long long>(stages.combat_us / stages.frames),
+		static_cast<unsigned long long>(stages.other_us / stages.frames),
+		static_cast<unsigned long long>(stages.real_us / 1000U),
+		static_cast<unsigned long long>(stages.simulated_us / 1000U),
+		static_cast<unsigned long long>(drift_us / 1000U));
+#endif
+}
+
 void Log_Timing_Statistics(const InteractiveTiming &timing,
 	const RenegadeVitaRenderer::Statistics &renderer)
 {
@@ -3056,6 +3079,17 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			NetworkObjectMgrClass::Set_Is_Level_Loading(true);
 			TextureLoader::Suspend_Texture_Load();
 			A30_Vita_Log("A3.5 texture loader: suspended during threaded M00 load\n");
+#if !RENEGADE_VITA_M00_DEMO
+			const uint64_t mission_preload_started_us = sceKernelGetProcessTimeWide();
+			A30_Vita_Log("A4 campaign preload: original mission dependency list begin archive=%s\n",
+				selected_archive);
+			AssetDependencyManager::Load_Level_Assets(selected_archive);
+			A30_Vita_Log("A4 campaign preload: original mission dependency list return archive=%s elapsed_ms=%llu\n",
+				selected_archive,
+				static_cast<unsigned long long>((sceKernelGetProcessTimeWide() -
+					mission_preload_started_us) / 1000ULL));
+			loading_presenter.Render_Original_Progress("mission_dependency_preload");
+#endif
 #if RENEGADE_VITA_M00_DEMO
 			const bool tutorial_source_validated = A4_Frontend_Is_Tutorial_Source(load_source);
 			if (!tutorial_source_validated) {
@@ -3066,8 +3100,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			const bool loading_checkpoint =
 				stricmp(load_source, "M00_Tutorial.mix") != 0;
 #endif
-			A30_Vita_Log("A3.5 M00 load: original source=%s checkpoint=%d\n",
-				load_source, loading_checkpoint ? 1 : 0);
+			A30_Vita_Log("A3.5 level load: original source=%s checkpoint=%d preload_always=0 campaign_mission_dep=%d\n",
+				load_source, loading_checkpoint ? 1 : 0, !RENEGADE_VITA_M00_DEMO);
 			CombatManager::Load_Level_Threaded(load_source, false);
 			int last_load_progress = -1;
 			int last_load_status_count = -1;
@@ -3677,6 +3711,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						"checkpoint");
 					Log_Timing_Statistics(timing,
 						RenegadeVitaRenderer::Get_Statistics());
+					Log_Campaign_Simulation_Stages();
 					Log_Input_Telemetry();
 					Log_Audio_Runtime_Statistics("checkpoint", result.frames);
 				}
@@ -3724,6 +3759,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				Copy_Timing_Statistics(result, timing);
 				Log_Timing_Statistics(timing, RenegadeVitaRenderer::Get_Statistics());
+				Log_Campaign_Simulation_Stages();
 				Log_Audio_Runtime_Statistics("final", result.frames);
 			if (result.start_exit_requested && result.clean_exit_requested) {
 				A30_Vita_Log("A3.1 breadcrumb: native orderly exit request detected\n");

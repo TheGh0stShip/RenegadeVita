@@ -59,6 +59,10 @@
 #include "renegade_vita_options.h"
 #include "ww3d_vita_renderer.h"
 #include "a31_vita_hud_presentation.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include <psp2/kernel/processmgr.h>
+static A31SimulationStageTotals g_campaign_simulation_stages = {};
+#endif
 
 #if defined(__vita__) && RENEGADE_VITA_M00_DEMO
 extern void A31_Vita_Render_Demo_Ending_Overlay(void);
@@ -626,8 +630,17 @@ A31MissionProgressState A31_Interactive_Get_Mission_Progress_State()
 
 void A31_Interactive_Run_Simulation_Frame()
 {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t frame_start_us = sceKernelGetProcessTimeWide();
+#endif
 	TimeManager::Update();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t time_end_us = sceKernelGetProcessTimeWide();
+#endif
 	Input::Update();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t input_end_us = sceKernelGetProcessTimeWide();
+#endif
 #if !defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
 	A31_Interactive_Register_Headless_Game_Modes();
 #endif
@@ -667,14 +680,50 @@ void A31_Interactive_Run_Simulation_Frame()
 		Vector3 camera_pos = COMBAT_CAMERA->Get_Position();
 		PathMgrClass::Resolve_Paths(camera_pos);
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t path_end_us = sceKernelGetProcessTimeWide();
+#endif
 	CombatManager::Generate_Control();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t control_end_us = sceKernelGetProcessTimeWide();
+#endif
 	cNetwork::Update();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t network_end_us = sceKernelGetProcessTimeWide();
+#endif
 	CombatManager::Think();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t combat_end_us = sceKernelGetProcessTimeWide();
+#endif
 	A31_Interactive_Apply_Render_Capabilities();
 #if !defined(RENEGADE_HOST_ABI_TEST)
 	TextDisplayGameModeClass *text_display =
 		TextDisplayGameModeClass::Get_Instance();
 	if (text_display != NULL) text_display->Think();
+#endif
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t frame_end_us = sceKernelGetProcessTimeWide();
+	g_campaign_simulation_stages.frames++;
+	g_campaign_simulation_stages.time_manager_us += time_end_us - frame_start_us;
+	g_campaign_simulation_stages.input_us += input_end_us - time_end_us;
+	g_campaign_simulation_stages.path_us += path_end_us - input_end_us;
+	g_campaign_simulation_stages.control_us += control_end_us - path_end_us;
+	g_campaign_simulation_stages.network_us += network_end_us - control_end_us;
+	g_campaign_simulation_stages.combat_us += combat_end_us - network_end_us;
+	g_campaign_simulation_stages.other_us += frame_end_us - combat_end_us;
+	g_campaign_simulation_stages.simulated_us += static_cast<uint64_t>(
+		TimeManager::Get_Frame_Seconds() * 1000000.0f);
+	g_campaign_simulation_stages.real_us += static_cast<uint64_t>(
+		TimeManager::Get_Frame_Real_Seconds() * 1000000.0f);
+#endif
+}
+
+A31SimulationStageTotals A31_Interactive_Get_Simulation_Stage_Totals()
+{
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	return g_campaign_simulation_stages;
+#else
+	return {};
 #endif
 }
 

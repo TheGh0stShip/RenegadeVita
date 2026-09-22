@@ -5737,3 +5737,14 @@ audio sync still fail; post-fix frame-120 average was 4.840 FPS on Vita3K,
 with 110.101 ms simulation and 96.479 ms render-submission CPU per frame.
 Public VPK SHA-256 `c51cef550898a980fb76ab6a29f56c6d2bc01b6bf92456aef7f3f5a3306f1b41`.
 See `reports/DEV146_M13_DEATH_AND_EFFECT_LOOKUP.md`. Physical gates unchanged.
+
+# Dev147 performance checkpoint (2026-09-21)
+
+Mission-only M13 dependency preparation and original simulation/clock timing
+are implemented in the full-port source. Single-run Vita3K comparisons show
+better early drift than no preload, but the late multi-second hitch and audio
+desync remain. 4x MSAA stays default after the off experiment regressed there.
+Canonical host checks and ARM packaging passed; the final artifact gate had a
+stale symbol signature, fixed after packaging, and the full retry was stopped
+at user wrap-up. No Dev147 release or physical acceptance. See
+`reports/DEV147_PERFORMANCE_CHECKPOINT.md`. Evidence gates remain 4/10.

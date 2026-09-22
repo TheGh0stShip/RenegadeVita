@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev134",
+  "milestone": "A3.5-dev147",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 522,
+  "original_source_files_compiled": 527,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -29,6 +29,7 @@
     "Code/Combat/c4.cpp",
     "Code/Combat/ccamera.cpp",
     "Code/Combat/cheatmgr.cpp",
+    "Code/Combat/cinematicgameobj.cpp",
     "Code/Combat/clientcontrol.cpp",
     "Code/Combat/colors.cpp",
     "Code/Combat/combat.cpp",
@@ -178,6 +179,7 @@
     "Code/Commando/renegadecheatmgr.cpp",
     "Code/Commando/renegadedialogmgr.cpp",
     "Code/Commando/sbbomanager.cpp",
+    "Code/Commando/scorescreen.cpp",
     "Code/Commando/scpingresponseevent.cpp",
     "Code/Commando/sctextobj.cpp",
     "Code/Commando/serverfps.cpp",
@@ -187,6 +189,8 @@
     "Code/Commando/textdisplay.cpp",
     "Code/Commando/winevent.cpp",
     "Code/Scripts/Mission00.cpp",
+    "Code/Scripts/Mission01.cpp",
+    "Code/Scripts/MissionX0.cpp",
     "Code/Scripts/ScriptFactory.cpp",
     "Code/Scripts/ScriptRegistrar.cpp",
     "Code/Scripts/Test_Cinematic.cpp",
@@ -350,6 +354,7 @@
     "Code/wwlib/multilist.cpp",
     "Code/wwlib/nstrdup.cpp",
     "Code/wwlib/pipe.cpp",
+    "Code/wwlib/ramfile.cpp",
     "Code/wwlib/random.cpp",
     "Code/wwlib/rawfile.cpp",
     "Code/wwlib/readline.cpp",
@@ -574,7 +579,7 @@
     "port/platform/a4_binkmovie_boundary.cpp"
   ],
   "sdk_framebuffer_helper_files": 1,
-  "compatibility_headers": 53,
+  "compatibility_headers": 55,
   "compatibility_header_paths": [
     "port/compatibility/include/DialogControl.h",
     "port/compatibility/include/GameMode.h",
@@ -616,11 +621,13 @@
     "port/compatibility/include/gamespyadmin.h",
     "port/compatibility/include/imm.h",
     "port/compatibility/include/miscutil.h",
+    "port/compatibility/include/missionX0.h",
     "port/compatibility/include/mmsystem.h",
     "port/compatibility/include/msvc_compat.h",
     "port/compatibility/include/mutex.h",
     "port/compatibility/include/new.h",
     "port/compatibility/include/osdep.h",
+    "port/compatibility/include/renegade_m01_script_defaults.h",
     "port/compatibility/include/renegade_script_call_defaults.h",
     "port/compatibility/include/targa.h",
     "port/compatibility/include/tchar.h",
@@ -630,8 +637,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 182,
-  "mechanically_patched_upstream_files": 285,
+  "patch_count": 186,
+  "mechanically_patched_upstream_files": 289,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -766,6 +773,7 @@
     "Code/WWMath/v3_rnd.h",
     "Code/WWMath/wwmath.cpp",
     "Code/WWMath/wwmath.h",
+    "Code/ww3d2/agg_def.cpp",
     "Code/ww3d2/animatedsoundmgr.cpp",
     "Code/ww3d2/animobj.cpp",
     "Code/ww3d2/assetmgr.cpp",
@@ -910,6 +918,7 @@
     "patch-target/a4-post-movie-mainmenu-hardening.patch/commando/renegadedialogmgr.cpp",
     "patch-target/a4-post-movie-mainmenu-hardening.patch/wwui/menubackdrop.cpp",
     "patch-target/a4-post-movie-mainmenu-hardening.patch/wwui/menudialog.cpp",
+    "patch-target/commando-a35-campaign-retail-loading.patch/loadingscreen.cpp",
     "patch-target/commando-a35-loading-animation-varargs.patch/commando/loadingscreen.cpp",
     "patch-target/commando-a35-loading-presentation-clock.patch/loadingscreen.cpp",
     "patch-target/commando-a35-loading-presentation-clock.patch/loadingscreen.h",
@@ -917,7 +926,9 @@
     "patch-target/commando-a35-loading-status-render.patch/loadingscreen.h",
     "patch-target/commando-a35-loading-status-text.patch/loadingscreen.cpp",
     "patch-target/commando-a35-loading-status-text.patch/loadingscreen.h",
-    "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp"
+    "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp",
+    "patch-target/scripts-a37-mx0-default-arguments.patch/MissionX0.cpp",
+    "patch-target/scripts-a45-m13-intro-camera-trace.patch/Test_Cinematic.cpp"
   ],
   "patches": [
     {
@@ -1348,6 +1359,15 @@
       "upstream_targets": [
         "scene.cpp",
         "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a4-aggregate-vita-factory-lookup.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "2cb08c379a5baf0cf1e3a7ca881902f74681fd5fe0e26ed81bd87f405e8bc9bd",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "agg_def.cpp"
       ]
     },
     {
@@ -2463,6 +2483,24 @@
       ]
     },
     {
+      "path": "port/patches/scripts-a37-mx0-default-arguments.patch",
+      "stage_directory": "scripts",
+      "sha256": "571a50a08c701e4130320853e254ade2697b14fab194c1786586258d057eb6bd",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "MissionX0.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a45-m13-intro-camera-trace.patch",
+      "stage_directory": "scripts",
+      "sha256": "b1711f161762b559176656d68fe36343147a720ea86735f1e2f9475b66950743",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Test_Cinematic.cpp"
+      ]
+    },
+    {
       "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
       "stage_directory": "",
       "sha256": "4595ae7a3fbb7df8ba7e53ebac74e1267d97491b09443def46fc8093cef4970a",
@@ -2566,6 +2604,15 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "loadingscreen.h",
+        "loadingscreen.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-campaign-retail-loading.patch",
+      "stage_directory": "commando",
+      "sha256": "c553bfa32ead6388a775680c76da42bc0e79dd83baf16547d9e61b7475f448f4",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
         "loadingscreen.cpp"
       ]
     },
@@ -2794,7 +2841,7 @@
     },
     "wwlib": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 38,
+      "compiled": 39,
       "total": 105
     },
     "wwsaveload": {
@@ -2824,17 +2871,17 @@
     },
     "Combat": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 105,
+      "compiled": 106,
       "total": 128
     },
     "Commando": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 74,
+      "compiled": 75,
       "total": 213
     },
     "Scripts": {
       "status": "native-static-m00-provider-with-direct-dependencies",
-      "compiled": 6,
+      "compiled": 8,
       "total": 54
     },
     "WWAudio": {

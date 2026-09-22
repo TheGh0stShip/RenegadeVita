@@ -772,7 +772,7 @@
     {
       "path": "port/patches/scripts-a45-m13-intro-camera-trace.patch",
       "stage_directory": "scripts",
-      "sha256": "4949df1f9159a559825698653c8d9ef96cdab0c1f30526b1109b2456e03b1da8"
+      "sha256": "b1711f161762b559176656d68fe36343147a720ea86735f1e2f9475b66950743"
     },
     {
       "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
@@ -935,5 +935,5 @@
       "sha256": "615b35556398f2e2b34940f922a1ce7f5eb071885bac3e7be837fc5f576b2155"
     }
   ],
-  "registry_sha256": "f71a44b74636423f7555e179421fb1e06e0914e56a10f0eef8b87760fc6d8e7a"
+  "registry_sha256": "fce2b1e214f98cf54bec257211b4d0a443dae0ce3986990e2543148fd3ac9985"
 }

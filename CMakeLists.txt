@@ -23,6 +23,8 @@ endif()
 string(TOLOWER "${RENEGADE_CANDIDATE_LABEL}" RENEGADE_CANDIDATE_STEM)
 string(REPLACE "." "" RENEGADE_CANDIDATE_STEM "${RENEGADE_CANDIDATE_STEM}")
 option(RENEGADE_VITA_M00_DEMO "Interim M00 community showcase; not the full-port completion target" ON)
+option(RENEGADE_VITA_CAMPAIGN_MSAA_4X
+  "Use the established 4x MSAA framebuffer in the full-port renderer" ON)
 option(RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
   "Enable one-shot diagnostic save/mission launch requests; keep OFF for public packages" OFF)
 # Only the native launch boundary consumes this option. A directory-wide
@@ -30,6 +32,9 @@ option(RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 set_property(SOURCE port/platform/vita/a31_vita_runtime.cpp APPEND PROPERTY
   COMPILE_DEFINITIONS
   RENEGADE_VITA_DEVELOPMENT_CHECKPOINT=$<BOOL:${RENEGADE_VITA_DEVELOPMENT_CHECKPOINT}>)
+set_property(SOURCE port/renderer/vita/ww3d_vita_renderer.cpp APPEND PROPERTY
+  COMPILE_DEFINITIONS
+  RENEGADE_VITA_CAMPAIGN_MSAA_4X=$<BOOL:${RENEGADE_VITA_CAMPAIGN_MSAA_4X}>)
 if(RENEGADE_VITA_M00_DEMO)
   set(RENEGADE_BUILD_PROFILE "M00-DEMO")
 else()

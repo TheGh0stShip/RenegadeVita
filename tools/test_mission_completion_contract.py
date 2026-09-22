@@ -97,7 +97,17 @@ class MissionCompletionContractTests(unittest.TestCase):
             "result.mission_completion_observed && result.mission_succeeded",
             runtime,
         )
-        self.assertNotIn("CombatManager::Mission_Complete(", runtime)
+        diagnostic_guard = (
+            "#if !RENEGADE_VITA_M00_DEMO && "
+            "RENEGADE_VITA_DEVELOPMENT_CHECKPOINT\n"
+        )
+        diagnostic_call = runtime.index("CombatManager::Mission_Complete(true);", simulation)
+        diagnostic_start = runtime.rindex(diagnostic_guard, simulation, diagnostic_call)
+        diagnostic_end = runtime.index("#endif", diagnostic_start) + len("#endif")
+        diagnostic_only = runtime[diagnostic_start:diagnostic_end]
+        self.assertIn("CombatManager::Mission_Complete(true);", diagnostic_only)
+        normal_runtime = runtime[:diagnostic_start] + runtime[diagnostic_end:]
+        self.assertNotIn("CombatManager::Mission_Complete(", normal_runtime)
         self.assertNotIn("Commands->Mission_Complete", runtime)
 
     def test_process_success_requires_orderly_original_runtime_exit(self) -> None:

@@ -1,5 +1,32 @@
 # Performance hypothesis ledger
 
+## Dev147 campaign preparation and MSAA (2026-09-21)
+
+Source request: `/mnt/e/Renegade_Vita_Performance_Prompt.md`, "Execution prompt".
+These are isolated Vita3K/OpenGL M13 diagnostic direct-entry observations, not
+physical-Vita acceptance or a fixed-input three-repeat benchmark. The route
+includes the authored intro with no synthetic movement. The same retail data
+tree was used; shader/cache warmth and scene timing may differ between runs.
+
+| Experiment | Preparation | Frame 600 FPS; p50/p95/p99/worst (ms) | Frame 600 simulation/render CPU (ms); clock drift (s) | Decision |
+| --- | --- | --- | --- | --- |
+| No dependency preload, 4x MSAA | none | 14.51; 66.5/142.2/145.9/3649.8 | 21.82/47.09; 5.69 | Comparison baseline only |
+| Original global + mission `.dep`, 4x | original loading phase | 7.33; 23.3/282.1/513.9/15804.3 | 69.89/66.61; 28.05 | Rejected: severe late hitch and clock loss |
+| Mission `.dep` only, 4x | 9.52 s before threaded map load | 16.96; 79.8/212.9/279.1/2212.7 | 15.12/43.84; 3.60 | Provisional: better early drift, late hitch remains; repeat and physical test required |
+| Mission `.dep` only, MSAA off | 8.36 s before threaded map load | 12.09; 87.4/203.0/239.3/7039.2 | 34.32/48.42; 10.62 | Rejected for public default; 4x retained |
+
+The original simulation stage timer places nearly all measured simulation CPU
+time inside `CombatManager::Think`, which includes scene/render work; it does
+not establish GPU time. Later mission-only runs reach a roughly 6.86-7.04 s
+single-frame hitch and 14+ s clock drift. Audio uses real time while the
+original simulation clock is capped after long frames, a plausible mechanism
+for the observed desync, not yet a proven root cause. Do not solve this by
+changing mission-script timers or forcing audio clock changes. Next experiment:
+bounded frame-event capture around the late hitch, then fixed-route repeated
+M00/M13 A/B on physical Vita before native acceptance. Diagnostic receipts:
+managed AppData `campaign-dev147-{profile,preload,missiononly,msaa-off}-m13-1`.
+
+
 Current continuation: Dev127 implemented measured CPU-work reductions and
 Dev128 integrated native DDS chains; their reports supersede older pending
 implementation entries below. Physical performance adoption remains open.

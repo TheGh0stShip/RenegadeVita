@@ -11,6 +11,7 @@
 
 #include "assetmgr.h"
 #include "campaign.h"
+#include "scorescreen.h"
 #include "encyclopediamgr.h"
 #include "chunkio.h"
 #include "combat.h"
@@ -81,6 +82,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+
+// The host fixture exercises campaign initialization, not the score screen.
+// The Vita target links the original scorescreen.cpp implementation.
+void ScoreScreenGameModeClass::Save_Stats(void) {}
 
 // The original source uses this deliberate linker anchor to retain the
 // Soldier definition/persist factories when the game is linked from static

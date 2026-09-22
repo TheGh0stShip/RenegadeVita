@@ -1984,7 +1984,16 @@ bool Initialize()
 	Invalidate_Native_State_Cache();
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "vglInit entry");
+#if RENEGADE_VITA_M00_DEMO
 	const GLboolean resolution_fallback = vglInit(4 * 1024 * 1024);
+#else
+	const SceGxmMultisampleMode campaign_msaa = RENEGADE_VITA_CAMPAIGN_MSAA_4X
+		? SCE_GXM_MULTISAMPLE_4X : SCE_GXM_MULTISAMPLE_NONE;
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "campaign framebuffer msaa=%dx",
+		RENEGADE_VITA_CAMPAIGN_MSAA_4X ? 4 : 0);
+	const GLboolean resolution_fallback = vglInitExtended(
+		4 * 1024 * 1024, 960, 544, 0x1000000, campaign_msaa);
+#endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"vglInit return: raw=%d semantic=resolution_fallback call_completed=1",
 		static_cast<int>(resolution_fallback));

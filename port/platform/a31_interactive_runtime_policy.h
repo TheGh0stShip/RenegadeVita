@@ -156,6 +156,20 @@ void A31_Interactive_Apply_Render_Capabilities();
 void A31_Interactive_Configure_Vita_Controls();
 void A31_Interactive_Register_Headless_Game_Modes();
 void A31_Interactive_Run_Simulation_Frame();
+struct A31SimulationStageTotals
+{
+	uint32_t frames;
+	uint64_t time_manager_us;
+	uint64_t input_us;
+	uint64_t path_us;
+	uint64_t control_us;
+	uint64_t network_us;
+	uint64_t combat_us;
+	uint64_t other_us;
+	uint64_t simulated_us;
+	uint64_t real_us;
+};
+A31SimulationStageTotals A31_Interactive_Get_Simulation_Stage_Totals();
 A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present = true);
 /* Install a presentation/lifecycle observer at CombatManager's original misc
 ** handler seam. Mission00 and Combat remain the sole owners of completion. */

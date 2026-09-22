@@ -141,6 +141,14 @@ Check repeated transitions for stale state, leaked resources, and growing memory
 
 ## Optimize actual blockers
 
+For campaign intro performance, distinguish original simulation clock from
+real audio time and measure the longest frame as well as percentiles. Use the
+M00 tutorial and M13 intro as repeatable short/heavy routes. The Dev147
+Vita3K comparison found original global dependency preloading can create a
+late multi-second hitch; never enable it based only on startup improvement.
+The renderer's established 4x MSAA stays the default unless a fixed-route
+physical A/B shows a safe gain. See `reports/PERFORMANCE_HYPOTHESIS_LEDGER.md`.
+
 Measure before optimizing. Separate simulation, rendering submission, GPU execution, synchronization, loading, and memory pressure. Do not describe graphics-call CPU time as GPU time.
 
 Prioritize correctness and campaign coverage unless performance or memory prevents practical play.

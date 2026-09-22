@@ -696,4 +696,17 @@ if [[ "$rv_m13_hlod_template_sha" != "bdd059fb9826b20f01a1cefba306807e0a99004157
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-m13-hlod-template.patch"
 echo "Applied: port/patches/ww3d2-a35-m13-hlod-template.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage" -p1 < "$rv_root/port/patches/dev168-m13-loader-summary.patch"
+echo "Applied: port/patches/dev168-m13-loader-summary.patch"
+python3 - "$rv_stage/combat/objlibrary.cpp" "$rv_stage/scripts/Test_Cinematic.cpp" "$rv_stage/ww3d2/agg_def.cpp" <<'PY'
+from pathlib import Path
+import sys
+
+for name in sys.argv[1:]:
+	path = Path(name)
+	data = path.read_bytes()
+	while data.endswith(b"\n\n"):
+		data = data[:-1]
+	path.write_bytes(data)
+PY
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

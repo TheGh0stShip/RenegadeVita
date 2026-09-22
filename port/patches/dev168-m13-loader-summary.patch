@@ -1,0 +1,308 @@
+--- a/ww3d2/assetmgr.cpp
++++ b/ww3d2/assetmgr.cpp
+@@ -683,14 +680,6 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
+ #if defined(__vita__)
+ 	static uint32_t create_depth = 0U;
+ 	const uint32_t current_depth = ++create_depth;
+-#if !RENEGADE_VITA_M00_DEMO
+-	static unsigned vita_slow_asset_reports = 0U;
+-	if (stricmp(name, "X00_AG_Explode") == 0) vita_slow_asset_reports = 0U;
+-	const uint64_t vita_asset_start_us = sceKernelGetProcessTimeWide();
+-	uint64_t vita_find_end_us = 0U;
+-	uint64_t vita_load_end_us = 0U;
+-	bool vita_had_proto = false;
+-#endif
+ 	A35_Vita_Static_Load_Trace_Name("asset-create-entry", name);
+ 	A35_Vita_Static_Load_Trace_Step("asset-create-depth", current_depth);
+ 	A35_Vita_Static_Load_Trace_Step("asset-find-initial-entry", current_depth);
+@@ -698,11 +687,6 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
+ 
+ 	// Try to find a prototype
+ 	PrototypeClass * proto = Find_Prototype(name);
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+-	vita_find_end_us = sceKernelGetProcessTimeWide();
+-	vita_load_end_us = vita_find_end_us;
+-	vita_had_proto = proto != NULL;
+-#endif
+ #if defined(__vita__)
+ 	A35_Vita_Static_Load_Trace_Step("asset-find-initial-return",
+ 		(current_depth << 1U) | (proto != NULL ? 1U : 0U));
+@@ -740,10 +724,6 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
+ 			(current_depth << 1U) | (proto != NULL ? 1U : 0U));
+ #endif
+ 	}
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+-	vita_load_end_us = sceKernelGetProcessTimeWide();
+-#endif
+-
+ 	if (proto == NULL) {
+ 		AssetStatusClass::Peek_Instance()->Report_Missing_RObj(name);
+ #if defined(__vita__)
+@@ -759,18 +739,6 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
+ 	A35_Vita_Static_Load_Trace_Step("prototype-create-depth", current_depth);
+ #endif
+ 	RenderObjClass * created = proto->Create();
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+-	const uint64_t vita_asset_end_us = sceKernelGetProcessTimeWide();
+-	if (vita_asset_end_us - vita_asset_start_us >= 100000U &&
+-		vita_slow_asset_reports++ < 48U) {
+-		A30_Vita_Log("A4 slow WW3D create: depth=%u name=%s class=%d initial_proto=%d find_us=%llu load_us=%llu create_us=%llu total_us=%llu\n",
+-			current_depth, name, proto->Get_Class_ID(), vita_had_proto ? 1 : 0,
+-			static_cast<unsigned long long>(vita_find_end_us - vita_asset_start_us),
+-			static_cast<unsigned long long>(vita_load_end_us - vita_find_end_us),
+-			static_cast<unsigned long long>(vita_asset_end_us - vita_load_end_us),
+-			static_cast<unsigned long long>(vita_asset_end_us - vita_asset_start_us));
+-	}
+-#endif
+ #if defined(__vita__)
+ 	A35_Vita_Static_Load_Trace_Name("prototype-create-return", name);
+ 	A35_Vita_Static_Load_Trace_Step("prototype-create-return-depth", current_depth);
+--- a/ww3d2/agg_def.cpp
++++ b/ww3d2/agg_def.cpp
+@@ -73,5 +73,6 @@ static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
+ static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
+	{"X00_AG_Explode", NULL, NULL},
+-	{"ag_rocketl", NULL, NULL}
++	{"ag_rocketl", NULL, NULL},
++	{"c_ag_nod_sniper", NULL, NULL}
+ };
+ 
+ static VitaAggregateTemplateSlot *Vita_Find_M13_Template(const char *name)
+--- a/combat/objlibrary.cpp
++++ b/combat/objlibrary.cpp
+@@ -43,6 +43,11 @@
+ #include "definitionfactory.h"
+ #include "definitionmgr.h"
+ 
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++extern int A30_Vita_Log(const char *format, ...);
++#include <psp2/kernel/processmgr.h>
++#endif
++
+ /*
+ **
+ */
+@@ -66,12 +71,40 @@ PhysicalGameObj	*ObjectLibraryManager::Create_Object( int def_id )
+ PhysicalGameObj	*ObjectLibraryManager::Create_Object( const char *name )
+ {
+ 	WWMEMLOG(MEM_GAMEDATA);
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	const bool vita_trace_m13_object =
++		stricmp(name, "gdi_rocketsoldier_0") == 0 ||
++		stricmp(name, "gdi_transport_helicopter_NoAudio") == 0 ||
++		stricmp(name, "GDI_ENGINEER_0") == 0 ||
++		stricmp(name, "GDI_Engineer_0_B") == 0;
++	const uint64_t vita_create_start_us = vita_trace_m13_object ? sceKernelGetProcessTimeWide() : 0U;
++#endif
+ 	DefinitionClass * def = DefinitionMgrClass::Find_Typed_Definition( name, CLASSID_GAME_OBJECTS );
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	const uint64_t vita_find_end_us = vita_trace_m13_object ? sceKernelGetProcessTimeWide() : 0U;
++#endif
+ 	StringClass error_message;
+ //	if ( def && CLASSID_GAME_OBJECTS == SuperClassID_From_ClassID(def->Get_Class_ID())) {
+ 	if ( def ) {
+-		if (def->Is_Valid_Config(error_message)) {
+-			return (PhysicalGameObj *)def->Create();
++		bool valid = def->Is_Valid_Config(error_message);
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++		const uint64_t vita_valid_end_us = vita_trace_m13_object ? sceKernelGetProcessTimeWide() : 0U;
++#endif
++		if (valid) {
++			PhysicalGameObj *created = (PhysicalGameObj *)def->Create();
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++			if (vita_trace_m13_object) {
++				const uint64_t vita_end_us = sceKernelGetProcessTimeWide();
++				A30_Vita_Log("A4 M13 object library create: name=%s class=%u find_us=%llu valid_us=%llu create_us=%llu total_us=%llu obj=%p\n",
++					name, def->Get_Class_ID(),
++					static_cast<unsigned long long>(vita_find_end_us - vita_create_start_us),
++					static_cast<unsigned long long>(vita_valid_end_us - vita_find_end_us),
++					static_cast<unsigned long long>(vita_end_us - vita_valid_end_us),
++					static_cast<unsigned long long>(vita_end_us - vita_create_start_us),
++					static_cast<void *>(created));
++			}
++#endif
++			return created;
+ 		} else {
+ 			WWDEBUG_SAY(("Could not create object %s!\n%s\n",def->Get_Name(),error_message));
+ 			return NULL;
+--- a/scripts/Test_Cinematic.cpp
++++ b/scripts/Test_Cinematic.cpp
+@@ -477,14 +477,14 @@ public:
+ 
+ 		// Create a decoration cinematic object, then set it's model
+ #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+-		const bool vita_trace_slot19 = slot == 19 && strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
+-		const uint64_t vita_create_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
++		const bool vita_trace_object = (slot == 19 || slot == 37) && strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
++		const uint64_t vita_create_start_us = vita_trace_object ? sceKernelGetProcessTimeWide() : 0U;
+ #endif
+ 		GameObject * obj = Commands->Create_Object( "Generic_Cinematic", Commands->Get_Position( Owner() ) );
+ #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+-		if (vita_trace_slot19) {
+-			A30_Vita_Log("A4 M13 slot19 create: model=%s object_us=%llu obj=%p\n",
+-				model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
++		if (vita_trace_object) {
++			A30_Vita_Log("A4 M13 cinematic object create: slot=%d model=%s object_us=%llu obj=%p\n",
++				slot, model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
+ 		}
+ #endif
+ #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+@@ -498,13 +498,13 @@ public:
+ 		if ( obj ) {
+ 			Commands->Add_To_Dirty_Cull_List(obj);
+ #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+-			const uint64_t vita_model_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
++			const uint64_t vita_model_start_us = vita_trace_object ? sceKernelGetProcessTimeWide() : 0U;
+ #endif
+ 			Commands->Set_Model( obj, model_name );
+ #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+-			if (vita_trace_slot19) {
+-				A30_Vita_Log("A4 M13 slot19 model: model=%s set_model_us=%llu obj=%p\n",
+-					model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_model_start_us), static_cast<void *>(obj));
++			if (vita_trace_object) {
++				A30_Vita_Log("A4 M13 cinematic object model: slot=%d model=%s set_model_us=%llu obj=%p\n",
++					slot, model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_model_start_us), static_cast<void *>(obj));
+ 			}
+ #endif
+ 			Commands->Set_Facing( obj, Commands->Get_Facing( Owner() ) );
+@@ -544,6 +544,12 @@ public:
+ 		}
+ 
+ 		GameObject * obj = NULL;
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++		const bool vita_m13_intro = strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
++		const bool vita_trace_real_object =
++			vita_m13_intro && (slot == 13 || slot == 18 || slot == 27 || slot == 34 || slot == 36);
++		const uint64_t vita_real_create_start_us = vita_trace_real_object ? sceKernelGetProcessTimeWide() : 0U;
++#endif
+ 		if (( host_slot_name != NULL ) && ( *host_slot_name != 0 ) ) {
+ 			int host_slot = atoi( host_slot_name );
+ 			GameObject * host_obj = Commands->Find_Object( ObjectSlots[ host_slot ] );
+@@ -552,6 +558,18 @@ public:
+ 			obj = Commands->Create_Object( preset_name, Commands->Get_Position( Owner() ) );
+ 			Commands->Set_Facing( obj, Commands->Get_Facing( Owner() ) );
+ 		}
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++		if (vita_trace_real_object) {
++			A30_Vita_Log("A4 M13 real object create: slot=%d preset=%s host_slot=%s host_bone=%s obj=%p id=%d elapsed_us=%llu\n",
++				slot,
++				preset_name != NULL ? preset_name : "",
++				host_slot_name != NULL ? host_slot_name : "",
++				host_bone_name != NULL ? host_bone_name : "",
++				static_cast<void *>(obj),
++				obj != NULL ? Commands->Get_ID(obj) : 0,
++				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_real_create_start_us));
++		}
++#endif
+ 
+ 		if ( obj ) {
+ 			Commands->Enable_Engine( obj, true );
+--- a/combat/gameobjmanager.cpp
++++ b/combat/gameobjmanager.cpp
+@@ -61,8 +61,97 @@ SList<SmartGameObj>	  	GameObjManager::SmartGameObjList;	// list of all render g
+ SList<SoldierGameObj>	GameObjManager::StarGameObjList;
+ SList<BuildingGameObj>	GameObjManager::BuildingGameObjList;
+ bool							GameObjManager::CinematicFreezeActive;
+ 
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++static const char *Vita_Factory_Name(uint32 factory_id)
++{
++	switch (factory_id) {
++		case CHUNKID_GAME_OBJECT_POWERUP: return "PowerUpGameObj";
++		case CHUNKID_GAME_OBJECT_SIMPLE: return "SimpleGameObj";
++		case CHUNKID_GAME_OBJECT_SOLDIER: return "SoldierGameObj";
++		case CHUNKID_GAME_OBJECT_VEHICLE: return "VehicleGameObj";
++		case CHUNKID_GAME_OBJECT_CINEMATIC: return "CinematicGameObj";
++		case CHUNKID_GAME_OBJECT_SCRIPT_ZONE: return "ScriptZoneGameObj";
++		default: return "other";
++	}
++}
++
++static void Vita_Log_GameObj_Load_Summary(const char *phase)
++{
++	unsigned total = 0U;
++	unsigned physical = 0U;
++	unsigned smart = 0U;
++	unsigned scriptable = 0U;
++	unsigned soldiers = 0U;
++	unsigned vehicles = 0U;
++	unsigned simple = 0U;
++	unsigned powerups = 0U;
++	unsigned script_zones = 0U;
++	unsigned cinematics = 0U;
++	unsigned observer_refs = 0U;
++	unsigned samples = 0U;
++
++	for (SLNode<BaseGameObj> *objnode = GameObjManager::Get_Game_Obj_List()->Head();
++		objnode != NULL; objnode = objnode->Next()) {
++		BaseGameObj *obj = objnode->Data();
++		if (obj == NULL) continue;
++		++total;
++
++		PhysicalGameObj *phys_obj = obj->As_PhysicalGameObj();
++		SmartGameObj *smart_obj = obj->As_SmartGameObj();
++		ScriptableGameObj *script_obj = obj->As_ScriptableGameObj();
++		const uint32 factory_id = obj->Get_Factory().Chunk_ID();
++		unsigned observers = 0U;
++
++		if (phys_obj != NULL) {
++			++physical;
++		}
++		if (smart_obj != NULL) {
++			++smart;
++		}
++		if (script_obj != NULL) {
++			++scriptable;
++			observers = static_cast<unsigned>(script_obj->Get_Observers().Count());
++			observer_refs += observers;
++		}
++		if (factory_id == CHUNKID_GAME_OBJECT_SOLDIER) {
++			++soldiers;
++		} else if (factory_id == CHUNKID_GAME_OBJECT_VEHICLE) {
++			++vehicles;
++		} else if (factory_id == CHUNKID_GAME_OBJECT_SIMPLE) {
++			++simple;
++		} else if (factory_id == CHUNKID_GAME_OBJECT_POWERUP) {
++			++powerups;
++		} else if (factory_id == CHUNKID_GAME_OBJECT_SCRIPT_ZONE) {
++			++script_zones;
++		} else if (factory_id == CHUNKID_GAME_OBJECT_CINEMATIC) {
++			++cinematics;
++		}
++
++		const bool sample =
++			observers > 0U ||
++			factory_id == CHUNKID_GAME_OBJECT_SOLDIER ||
++			factory_id == CHUNKID_GAME_OBJECT_VEHICLE ||
++			factory_id == CHUNKID_GAME_OBJECT_CINEMATIC ||
++			factory_id == CHUNKID_GAME_OBJECT_SCRIPT_ZONE;
++		if (sample && samples < 24U) {
++			const BaseGameObjDef &def = obj->Get_Definition();
++			A30_Vita_Log("A4 mission object sample: phase=%s index=%u id=%d factory=0x%08X class=%s def=%s observers=%u physical=%d smart=%d\n",
++				phase, total - 1U, obj->Get_ID(), factory_id, Vita_Factory_Name(factory_id),
++				def.Get_Name(),
++				observers, phys_obj != NULL ? 1 : 0, smart_obj != NULL ? 1 : 0);
++			++samples;
++		}
++	}
++
++	A30_Vita_Log("A4 mission object summary: phase=%s total=%u physical=%u smart=%u scriptable=%u soldiers=%u vehicles=%u simple=%u powerups=%u script_zones=%u cinematics=%u observer_refs=%u cinematic_freeze=%d first_load=%d\n",
++		phase, total, physical, smart, scriptable, soldiers, vehicles, simple, powerups,
++		script_zones, cinematics, observer_refs, GameObjManager::Is_Cinematic_Freeze_Active() ? 1 : 0,
++		CombatManager::I_Am_Server() ? 1 : 0);
++}
++#endif
++
+ /*
+ **
+ */
+ void GameObjManager::Init(void)
+@@ -157,5 +246,8 @@ bool	GameObjManager::Load( ChunkLoadClass &cload )
+ 
+ 	SmartGameObj::Set_Global_Sight_Range_Scale( sight_scale );
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	Vita_Log_GameObj_Load_Summary("GameObjManager::Load");
++#endif
+ 
+ 	return true;
+ }

@@ -9,6 +9,7 @@ AGG_DEF = ROOT / "staging" / "ww3d2" / "agg_def.cpp"
 HLOD = ROOT / "staging" / "ww3d2" / "hlod.cpp"
 TEST_CINEMATIC = ROOT / "staging" / "scripts" / "Test_Cinematic.cpp"
 SCAN_TOOL = ROOT / "tools" / "renegade_cinematic_dependency_scan.py"
+GAMEOBJ_MANAGER = ROOT / "staging" / "combat" / "gameobjmanager.cpp"
 
 
 def test_m13_intro_sniper_is_prepared_during_loading():
@@ -71,6 +72,17 @@ def test_m13_chunk_inventory_records_persist_factory_counts():
     text = SCAN_TOOL.read_text(encoding="utf-8")
     assert "persist_factory_chunk_counts" in text
     assert "persist_factory_counts" in text
+
+
+def test_m13_runtime_object_summary_is_bounded_at_original_loader():
+    text = GAMEOBJ_MANAGER.read_text(encoding="utf-8")
+    assert "Vita_Log_GameObj_Load_Summary" in text
+    assert "GameObjManager::Load" in text
+    assert "A4 mission object summary" in text
+    assert "A4 mission object sample" in text
+    assert "samples < 24U" in text
+    assert "Get_Observers().Count()" in text
+    assert "observer_objects" not in text
 
 
 def test_m13_intro_slow_unmapped_slots_are_traced():

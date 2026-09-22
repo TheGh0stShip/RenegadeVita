@@ -1,5 +1,33 @@
 # Live engineering progress
 
+## Dev168: M13 runtime object/load summary
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: use the next M13 runtime run to compare original mission object load
+state, scripted observers, cinematic object creation and post-think/script
+timing before changing more behavior. Completed: `A30_Vita_Log_Reset()` now
+preserves append-mode persistent runtime logging; `dev168-m13-loader-summary`
+adds campaign-profile diagnostics at `GameObjManager::Load`, selected M13
+cinematic object/model operations, and selected X00_Intro real-object creation.
+Evidence: deterministic staging PASS with 196 patches and registry
+`3eac24d0025e9fbfacb07483543e2f7d22113fcc461b0b0dee00ce8e2b73a3a1`;
+focused runtime-log, mesh-batch, development-checkpoint and M13 preparation
+tests PASS; `git diff --check` PASS; no staging `.rej/.orig` debris. Default
+canonical package `A3.5-dev110` PASS, VPK
+`88c291ee464585c777f2ef08cddb49840cb06665ae74123b7d79a706f3e303f4`.
+Full-port campaign-profile build in `build/vita-dev135-campaign` with
+`RENEGADE_VITA_M00_DEMO=0` and title `RNEGC3101` PASS, VPK
+`fff51c9d26fa63b0cfbf9e5717523d7c109403455e839ae803a89c50c2c86181`.
+No Vita3K launch, physical launch, visual correctness, audio sync, M13
+objective, death/reload, transition, performance or campaign acceptance is
+claimed.
+Next: run the launch-proof M13 route and compare `A4 mission object summary`,
+`A4 mission object sample`, `A4 M13 cinematic object create/model`, real-object
+creation and existing script/post-think timing against the M13 inventory.
+Blocker: runtime evidence is still pending.
+
 ## Dev167: M13 object class count inventory
 
 Renegade Vita - v3.5 active

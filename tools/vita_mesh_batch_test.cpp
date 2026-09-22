@@ -76,6 +76,14 @@ struct MeshClass {
 static unsigned g_render_work_cache_mode=0;
 static VitaIndexedMeshBatch g_indexed_mesh_batch;
 static uint64_t g_mesh_expanded_corners=0,g_mesh_unique_vertices=0,g_mesh_indexed_batches=0;
+struct MeshBoundaryTiming {
+    uint64_t mesh_total_us=0,mesh_max_us=0,draw_end_total_us=0,draw_end_max_us=0;
+    uint32_t mesh_count=0,draw_end_count=0;
+    char slowest_mesh[64]={};
+};
+static MeshBoundaryTiming g_mesh_boundary_timing;
+static uint64_t fake_process_time_us=0;
+uint64_t sceKernelGetProcessTimeWide() { return ++fake_process_time_us; }
 static bool g_logged_first_user_lighting=true,g_logged_first_skin_passthrough_texture_v_preserved=true;
 static bool g_logged_first_stage1_mesh=true,g_logged_first_skin_texture_color=true,g_logged_first_material_lighting=true;
 template<class... Args> void Vita_Append_A22_Runtime_Breadcrumb(Args...) {}

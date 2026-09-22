@@ -371,15 +371,21 @@ A31CaptureBundleResult Write_Bundle(const char *label, const char *reason,
 int A30_Vita_Log_Reset()
 {
 	if (gA30RuntimeLogFile >= 0) {
+		sceIoSyncByFd(gA30RuntimeLogFile, 0);
 		sceIoClose(gA30RuntimeLogFile);
 		gA30RuntimeLogFile = -1;
 	}
+	const int open_flags = SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND;
+	gA30RuntimeLogFile = sceIoOpen(kA30RuntimeLog, open_flags, 0666);
+	if (gA30RuntimeLogFile < 0) return gA30RuntimeLogFile;
 	char header[320];
 	const int header_count = snprintf(header, sizeof(header),
 		"[LIFECYCLE] START status=begin mode=append candidate=%s log_path=%s\n",
 		RENEGADE_BUILD_CANDIDATE_LABEL, RENEGADE_BUILD_RUNTIME_LOG_PATH);
-	return header_count > 0 ? Write_Runtime_Log_Line(header,
+	const int result = header_count > 0 ? Write_Runtime_Log_Line(header,
 		static_cast<unsigned>(header_count)) : -1;
+	const int sync_result = sceIoSyncByFd(gA30RuntimeLogFile, 0);
+	return result >= 0 && sync_result < 0 ? sync_result : result;
 }
 
 int A30_Vita_Log(const char *format, ...)

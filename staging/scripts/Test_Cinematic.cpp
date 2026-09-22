@@ -485,7 +485,6 @@ public:
 				slot, model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
 		}
 #endif
-
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
 		if (strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0 && slot == 0) {
 			A30_Vita_Log("A4 M13 intro script: create slot=0 model=%s object=%p\n",
@@ -547,7 +546,7 @@ public:
 		const bool vita_m13_intro = strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
 		const bool vita_trace_real_object =
 			vita_m13_intro && (slot == 13 || slot == 18 || slot == 27 || slot == 34 || slot == 36);
-		const uint64_t vita_create_start_us = vita_trace_real_object ? sceKernelGetProcessTimeWide() : 0U;
+		const uint64_t vita_real_create_start_us = vita_trace_real_object ? sceKernelGetProcessTimeWide() : 0U;
 #endif
 		if (( host_slot_name != NULL ) && ( *host_slot_name != 0 ) ) {
 			int host_slot = atoi( host_slot_name );
@@ -566,7 +565,7 @@ public:
 				host_bone_name != NULL ? host_bone_name : "",
 				static_cast<void *>(obj),
 				obj != NULL ? Commands->Get_ID(obj) : 0,
-				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us));
+				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_real_create_start_us));
 		}
 #endif
 

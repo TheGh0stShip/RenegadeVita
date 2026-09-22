@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "504c2aac1cd6ac8fb5e3a281a3cff913fb09b18220bed5d4014d6558f8602a85",
-  "patch_count": 195,
+  "stage_script_sha256": "0e7b5f914264c365236ba9d967482ef8cb9a4275640d999da1cd9f1ef797fe99",
+  "patch_count": 196,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -978,7 +978,12 @@
       "path": "port/patches/ww3d2-a35-m13-hlod-template.patch",
       "stage_directory": "ww3d2",
       "sha256": "53113318b5828673322e78e7938df4fb6ed988a28f6239e25b792f5a6ed0dfc9"
+    },
+    {
+      "path": "port/patches/dev168-m13-loader-summary.patch",
+      "stage_directory": "",
+      "sha256": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
     }
   ],
-  "registry_sha256": "7abd8ec3c9aee957da0911162c6d57a667abe5566af2b4e422fd51c64df6e2cd"
+  "registry_sha256": "3eac24d0025e9fbfacb07483543e2f7d22113fcc461b0b0dee00ce8e2b73a3a1"
 }

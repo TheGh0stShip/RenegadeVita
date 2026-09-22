@@ -68,6 +68,95 @@ SList<SoldierGameObj>	GameObjManager::StarGameObjList;
 SList<BuildingGameObj>	GameObjManager::BuildingGameObjList;
 bool							GameObjManager::CinematicFreezeActive;
 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+static const char *Vita_Factory_Name(uint32 factory_id)
+{
+	switch (factory_id) {
+		case CHUNKID_GAME_OBJECT_POWERUP: return "PowerUpGameObj";
+		case CHUNKID_GAME_OBJECT_SIMPLE: return "SimpleGameObj";
+		case CHUNKID_GAME_OBJECT_SOLDIER: return "SoldierGameObj";
+		case CHUNKID_GAME_OBJECT_VEHICLE: return "VehicleGameObj";
+		case CHUNKID_GAME_OBJECT_CINEMATIC: return "CinematicGameObj";
+		case CHUNKID_GAME_OBJECT_SCRIPT_ZONE: return "ScriptZoneGameObj";
+		default: return "other";
+	}
+}
+
+static void Vita_Log_GameObj_Load_Summary(const char *phase)
+{
+	unsigned total = 0U;
+	unsigned physical = 0U;
+	unsigned smart = 0U;
+	unsigned scriptable = 0U;
+	unsigned soldiers = 0U;
+	unsigned vehicles = 0U;
+	unsigned simple = 0U;
+	unsigned powerups = 0U;
+	unsigned script_zones = 0U;
+	unsigned cinematics = 0U;
+	unsigned observer_refs = 0U;
+	unsigned samples = 0U;
+
+	for (SLNode<BaseGameObj> *objnode = GameObjManager::Get_Game_Obj_List()->Head();
+		objnode != NULL; objnode = objnode->Next()) {
+		BaseGameObj *obj = objnode->Data();
+		if (obj == NULL) continue;
+		++total;
+
+		PhysicalGameObj *phys_obj = obj->As_PhysicalGameObj();
+		SmartGameObj *smart_obj = obj->As_SmartGameObj();
+		ScriptableGameObj *script_obj = obj->As_ScriptableGameObj();
+		const uint32 factory_id = obj->Get_Factory().Chunk_ID();
+		unsigned observers = 0U;
+
+		if (phys_obj != NULL) {
+			++physical;
+		}
+		if (smart_obj != NULL) {
+			++smart;
+		}
+		if (script_obj != NULL) {
+			++scriptable;
+			observers = static_cast<unsigned>(script_obj->Get_Observers().Count());
+			observer_refs += observers;
+		}
+		if (factory_id == CHUNKID_GAME_OBJECT_SOLDIER) {
+			++soldiers;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_VEHICLE) {
+			++vehicles;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_SIMPLE) {
+			++simple;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_POWERUP) {
+			++powerups;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_SCRIPT_ZONE) {
+			++script_zones;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_CINEMATIC) {
+			++cinematics;
+		}
+
+		const bool sample =
+			observers > 0U ||
+			factory_id == CHUNKID_GAME_OBJECT_SOLDIER ||
+			factory_id == CHUNKID_GAME_OBJECT_VEHICLE ||
+			factory_id == CHUNKID_GAME_OBJECT_CINEMATIC ||
+			factory_id == CHUNKID_GAME_OBJECT_SCRIPT_ZONE;
+		if (sample && samples < 24U) {
+			const BaseGameObjDef &def = obj->Get_Definition();
+			A30_Vita_Log("A4 mission object sample: phase=%s index=%u id=%d factory=0x%08X class=%s def=%s observers=%u physical=%d smart=%d\n",
+				phase, total - 1U, obj->Get_ID(), factory_id, Vita_Factory_Name(factory_id),
+				def.Get_Name(),
+				observers, phys_obj != NULL ? 1 : 0, smart_obj != NULL ? 1 : 0);
+			++samples;
+		}
+	}
+
+	A30_Vita_Log("A4 mission object summary: phase=%s total=%u physical=%u smart=%u scriptable=%u soldiers=%u vehicles=%u simple=%u powerups=%u script_zones=%u cinematics=%u observer_refs=%u cinematic_freeze=%d first_load=%d\n",
+		phase, total, physical, smart, scriptable, soldiers, vehicles, simple, powerups,
+		script_zones, cinematics, observer_refs, GameObjManager::Is_Cinematic_Freeze_Active() ? 1 : 0,
+		CombatManager::I_Am_Server() ? 1 : 0);
+}
+#endif
+
 /*
 **
 */
@@ -176,6 +265,9 @@ bool	GameObjManager::Load( ChunkLoadClass &cload )
 	}
 
 	SmartGameObj::Set_Global_Sight_Range_Scale( sight_scale );
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	Vita_Log_GameObj_Load_Summary("GameObjManager::Load");
+#endif
 
 	return true;
 }

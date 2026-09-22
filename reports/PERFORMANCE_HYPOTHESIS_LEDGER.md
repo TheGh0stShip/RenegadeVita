@@ -1,5 +1,21 @@
 # Performance hypothesis ledger
 
+## Dev159 persistent runtime-log handles (2026-09-22)
+
+- Hypothesis: Vita3K console/file-open flood from per-record runtime-log
+  open/sync/close contributes measurable overhead in the M13 intro run.
+- Change: retain file handles for both `A30_Vita_Log` and the legacy
+  `Vita_Append_A22_Runtime_Breadcrumb` path while preserving per-record sync.
+- Evidence: `campaign-dev159-persistent-all-logs-m13-installedtitle-1`
+  compared against the valid Dev158 installed-title evidence.
+- Result: runtime-log open records fell from 52 to 2 and total
+  `export_sceIoOpen` console records fell from 1061 to 888. Dev159 reached
+  frame 720 with 15.266 FPS, but frame 720 p95 remained 178292 us and frame
+  703 still spiked 564717 us.
+- Decision: keep as a diagnostics-overhead reduction, not a campaign
+  performance acceptance. Continue with measured render/scene traversal and
+  residual simulation spikes.
+
 ## Dev147 campaign preparation and MSAA (2026-09-21)
 
 Source request: `/mnt/e/Renegade_Vita_Performance_Prompt.md`, "Execution prompt".

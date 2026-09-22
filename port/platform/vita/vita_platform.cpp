@@ -15,6 +15,7 @@ const char *const kRetailRoot = "ux0:data/renegade/retail";
 const char *const kLogPath = RENEGADE_BUILD_RUNTIME_LOG_PATH;
 const char *const kRendererMilestone = RENEGADE_BUILD_CANDIDATE_LABEL;
 unsigned g_renderer_breadcrumb_sequence = 0;
+SceUID g_renderer_breadcrumb_log = -1;
 
 bool Is_Directory(const char *path)
 {
@@ -51,6 +52,32 @@ void Write_Line(SceUID file, const char *format, ...)
 	sceIoWrite(file, line, length);
 }
 
+SceUID Ensure_Renderer_Breadcrumb_Log()
+{
+	if (g_renderer_breadcrumb_log >= 0) {
+		return g_renderer_breadcrumb_log;
+	}
+	g_renderer_breadcrumb_log = sceIoOpen(kLogPath,
+		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
+	return g_renderer_breadcrumb_log;
+}
+
+int Write_Durable_Log_Line(SceUID file, const char *line, unsigned length)
+{
+	unsigned offset = 0;
+	while (offset < length) {
+		const int written = sceIoWrite(file, line + offset, length - offset);
+		if (written < 0) {
+			return written;
+		}
+		if (written == 0) {
+			return -2;
+		}
+		offset += static_cast<unsigned>(written);
+	}
+	return sceIoSyncByFd(file, 0);
+}
+
 } // namespace
 
 int Vita_Append_A22_Runtime_Breadcrumb(const char *subsystem,
@@ -65,8 +92,7 @@ int Vita_Append_A22_Runtime_Breadcrumb(const char *subsystem,
 		return -1;
 	}
 
-	const SceUID file = sceIoOpen(kLogPath,
-		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
+	const SceUID file = Ensure_Renderer_Breadcrumb_Log();
 	if (file < 0) {
 		return file;
 	}
@@ -81,27 +107,7 @@ int Vita_Append_A22_Runtime_Breadcrumb(const char *subsystem,
 		const unsigned length = static_cast<unsigned>(
 			line_count < static_cast<int>(sizeof(line)) ? line_count :
 			static_cast<int>(sizeof(line) - 1));
-		unsigned offset = 0;
-		while (offset < length) {
-			const int written = sceIoWrite(file, line + offset, length - offset);
-			if (written < 0) {
-				result = written;
-				break;
-			}
-			if (written == 0) {
-				result = -2;
-				break;
-			}
-			offset += static_cast<unsigned>(written);
-		}
-	}
-	const int sync_result = sceIoSyncByFd(file, 0);
-	if (result >= 0 && sync_result < 0) {
-		result = sync_result;
-	}
-	const int close_result = sceIoClose(file);
-	if (result >= 0 && close_result < 0) {
-		result = close_result;
+		result = Write_Durable_Log_Line(file, line, length);
 	}
 	return result;
 }
@@ -146,6 +152,10 @@ int Vita_Write_A22_Startup_Log(const VitaBootstrapStatus &status,
 	const A21FilesystemSelfTestResult &filesystem,
 	int framebuffer_result)
 {
+	if (g_renderer_breadcrumb_log >= 0) {
+		sceIoClose(g_renderer_breadcrumb_log);
+		g_renderer_breadcrumb_log = -1;
+	}
 	const SceUID file = sceIoOpen(kLogPath, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0666);
 	if (file < 0) {
 		return file;

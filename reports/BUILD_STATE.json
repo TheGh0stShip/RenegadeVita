@@ -1,4 +1,21 @@
 {
+  "dev159_persistent_runtime_logs": {
+    "candidate": "A3.5-dev159",
+    "state": "ARM_PACKAGE_PASS_VITA3K_LOG_OPEN_REDUCTION_PERFORMANCE_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV159_PERSISTENT_RUNTIME_LOGS.md",
+    "self_sha256": "b55dfad403dc05dfbdf830268355f6cc087a130981cdb623a5374328e5e01136",
+    "vpk_sha256": "39e1ab980f36b41e72473346a4e8430b734f490eef8ff336034a7555e4c60ff9",
+    "m13_vita3k_evidence": "managed AppData: campaign-dev159-persistent-all-logs-m13-installedtitle-1/",
+    "runtime_log_open_records_dev158_dev159": [52, 2],
+    "stdout_export_sceIoOpen_dev158_dev159": [1061, 888],
+    "frame720_avg_fps": 15.266,
+    "frame720_p50_p95_p99_worst_us": [68666, 178292, 397428, 2028056],
+    "audio_sync_verified": false,
+    "overall_performance_accepted": false,
+    "physical_acceptance": false
+  },
   "dev157_m13_fiery_hlod_template": {
     "candidate": "A3.5-dev157",
     "state": "ARM_PACKAGE_PASS_VITA3K_FIERY_EVENT_LOCAL_WIN_OVERALL_PERFORMANCE_UNRESOLVED",

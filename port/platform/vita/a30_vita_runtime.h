@@ -31,9 +31,9 @@ struct A30VitaWorldRenderResult
 };
 
 /*
-** Persistent A3.0 diagnostic output.  Every call opens, writes, synchronizes,
-** and closes the log so the final completed world-load/render stage survives
-** a crash or power-cycle on physical hardware.
+** Persistent A3.0 diagnostic output.  The file handle is retained after reset,
+** while each completed record is still synchronized so the final completed
+** world-load/render stage survives a crash or power-cycle on physical hardware.
 */
 int A30_Vita_Log_Reset();
 int A30_Vita_Log(const char *format, ...) __attribute__((format(printf, 1, 2)));

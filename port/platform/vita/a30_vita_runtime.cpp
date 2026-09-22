@@ -32,6 +32,34 @@ uint32_t gA35StaticTraceObjectIndex = 0U;
 uint32_t gA35StaticTraceFactoryId = 0U;
 bool gA35StaticTraceSummary = false;
 bool gA35StaticTraceDeep = false;
+SceUID gA30RuntimeLogFile = -1;
+
+int Ensure_Runtime_Log_File()
+{
+	if (gA30RuntimeLogFile >= 0) return gA30RuntimeLogFile;
+	gA30RuntimeLogFile = sceIoOpen(kA30RuntimeLog,
+		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
+	return gA30RuntimeLogFile;
+}
+
+int Write_Runtime_Log_Line(const char *line, unsigned length)
+{
+	const SceUID file = Ensure_Runtime_Log_File();
+	if (file < 0) return file;
+	unsigned offset = 0;
+	int result = 0;
+	while (offset < length) {
+		const int written = sceIoWrite(file, line + offset, length - offset);
+		if (written <= 0) {
+			result = written < 0 ? written : -2;
+			break;
+		}
+		offset += static_cast<unsigned>(written);
+	}
+	const int sync_result = sceIoSyncByFd(file, 0);
+	if (result >= 0 && sync_result < 0) result = sync_result;
+	return result;
+}
 
 float Analog_Axis(unsigned char value)
 {
@@ -342,25 +370,16 @@ A31CaptureBundleResult Write_Bundle(const char *label, const char *reason,
 
 int A30_Vita_Log_Reset()
 {
-	const SceUID file = sceIoOpen(kA30RuntimeLog,
-		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
-	if (file < 0) {
-		return file;
+	if (gA30RuntimeLogFile >= 0) {
+		sceIoClose(gA30RuntimeLogFile);
+		gA30RuntimeLogFile = -1;
 	}
 	char header[320];
 	const int header_count = snprintf(header, sizeof(header),
 		"[LIFECYCLE] START status=begin mode=append candidate=%s log_path=%s\n",
 		RENEGADE_BUILD_CANDIDATE_LABEL, RENEGADE_BUILD_RUNTIME_LOG_PATH);
-	int result = header_count > 0 ? sceIoWrite(file, header,
+	return header_count > 0 ? Write_Runtime_Log_Line(header,
 		static_cast<unsigned>(header_count)) : -1;
-	if (result >= 0) {
-		result = sceIoSyncByFd(file, 0);
-	}
-	const int close_result = sceIoClose(file);
-	if (result >= 0 && close_result < 0) {
-		result = close_result;
-	}
-	return result;
 }
 
 int A30_Vita_Log(const char *format, ...)
@@ -374,33 +393,10 @@ int A30_Vita_Log(const char *format, ...)
 		return -1;
 	}
 
-	const SceUID file = sceIoOpen(kA30RuntimeLog,
-		SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
-	if (file < 0) {
-		return file;
-	}
 	const unsigned length = static_cast<unsigned>(
 		count < static_cast<int>(sizeof(line)) ? count :
 		static_cast<int>(sizeof(line) - 1U));
-	unsigned offset = 0;
-	int result = 0;
-	while (offset < length) {
-		const int written = sceIoWrite(file, line + offset, length - offset);
-		if (written <= 0) {
-			result = written < 0 ? written : -2;
-			break;
-		}
-		offset += static_cast<unsigned>(written);
-	}
-	const int sync_result = sceIoSyncByFd(file, 0);
-	if (result >= 0 && sync_result < 0) {
-		result = sync_result;
-	}
-	const int close_result = sceIoClose(file);
-	if (result >= 0 && close_result < 0) {
-		result = close_result;
-	}
-	return result;
+	return Write_Runtime_Log_Line(line, length);
 }
 
 void A35_Vita_Static_Load_Trace_Begin(uint32_t object_index,

@@ -1,5 +1,24 @@
 # Live engineering progress
 
+## Dev159: persistent runtime-log handles reduce console flood; performance still failed
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: target measured render/scene and residual simulation spikes in the M13
+intro rather than repeating title-launch or logging guesses. Completed: both
+runtime-log paths now retain their file handles after first open while syncing
+completed records; the invalid custom-VFS Vita3K package/autoboot path was
+rejected, and the valid installed-title route was used instead. The temporary
+default-VFS eboot mutation was restored to the prior Dev134 hash.
+Evidence: asset-free ARM SELF/VPK, focused checkpoint tests, `git diff --check`,
+and managed AppData `campaign-dev159-persistent-all-logs-m13-installedtitle-1`.
+Runtime-log open records dropped from Dev158's 52 to 2; M13 reached frame 720
+with avg FPS 15.266 and p50/p95/p99/max 68666/178292/397428/2028056 us. No
+physical, visual, A/V-sync, script-sequence, or campaign acceptance.
+Next: measured renderer/scene traversal and frame-703 simulation spike.
+Blocker: route-level cinematic pacing remains far below 60 FPS.
+
 ## Dev157: fiery HLOD live create removed, route still failed
 
 Renegade Vita - v3.5 active

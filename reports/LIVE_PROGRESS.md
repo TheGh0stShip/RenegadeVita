@@ -5744,7 +5744,6 @@ Mission-only M13 dependency preparation and original simulation/clock timing
 are implemented in the full-port source. Single-run Vita3K comparisons show
 better early drift than no preload, but the late multi-second hitch and audio
 desync remain. 4x MSAA stays default after the off experiment regressed there.
-Canonical host checks and ARM packaging passed; the final artifact gate had a
-stale symbol signature, fixed after packaging, and the full retry was stopped
-at user wrap-up. No Dev147 release or physical acceptance. See
+Canonical host checks, ARM packaging, artifact identity and diagnostics bundle
+now pass after the resumed retry. No physical acceptance. See
 `reports/DEV147_PERFORMANCE_CHECKPOINT.md`. Evidence gates remain 4/10.

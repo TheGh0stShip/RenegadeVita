@@ -10,6 +10,9 @@
 #include "debug.h"
 #include "cnetwork.h"
 #include "gamemode.h"
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "god.h"
+#endif
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
 #include "combatgmode.h"
 #include "gametype.h"
@@ -374,6 +377,9 @@ public:
 	virtual void Star_Killed()
 	{
 		g_mission_completion_latch.Star_Killed();
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		cGod::Star_Killed();
+#endif
 	}
 };
 

@@ -5726,3 +5726,14 @@ staging, 13 focused tests, and ARM/VPK build pass; Vita3K trials 1 and 2
 stalled before launch and do not prove visual parity. See
 `reports/DEV143_RETAIL_CAMPAIGN_LOADING.md`. Physical acceptance gates remain
 open; no new physical acceptance is claimed.
+# Dev146 campaign death/effect lookup (2026-09-21)
+
+Full-port original death UI resources and `cGod::Star_Killed` callback are
+connected; death Restart/Load remains unverified because the 240-second
+Vita3K direct-entry run did not reach the post-intro lethal event. The original
+WW3D aggregate lookup now uses retail/MIX instead of a Windows cwd probe:
+isolated Vita3K M13 `app0:/\\e_*.w3d` errors fell 96 to 0. Frame pacing and
+audio sync still fail; post-fix frame-120 average was 4.840 FPS on Vita3K,
+with 110.101 ms simulation and 96.479 ms render-submission CPU per frame.
+Public VPK SHA-256 `c51cef550898a980fb76ab6a29f56c6d2bc01b6bf92456aef7f3f5a3306f1b41`.
+See `reports/DEV146_M13_DEATH_AND_EFFECT_LOOKUP.md`. Physical gates unchanged.

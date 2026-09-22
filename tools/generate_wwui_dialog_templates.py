@@ -5,7 +5,7 @@ from pathlib import Path
 
 # Original EVA shell and all seven child tabs must travel together.
 IDS = {128,130,131,145,169,209,210,211,231,232,233,243,255,256} | set(range(146,154))
-CAMPAIGN_IDS = IDS | {239}
+CAMPAIGN_IDS = IDS | {196,197,239}
 FLAGS = {'DS_MODALFRAME':0x80,'DS_SETFONT':0x40,'WS_POPUP':0x80000000,'WS_CAPTION':0x00C00000,'WS_GROUP':0x20000,'WS_TABSTOP':0x10000,
  'BS_PUSHBUTTON':0,'BS_DEFPUSHBUTTON':1,'BS_CHECKBOX':2,'BS_AUTOCHECKBOX':3,'BS_OWNERDRAW':0xB,'BS_LEFT':0x100,'BS_CENTER':0x300,'BS_FLAT':0x8000,
  'SS_LEFT':0,'SS_CENTER':1,'SS_RIGHT':2,'SS_BITMAP':0xE,'ES_MULTILINE':4,'ES_AUTOVSCROLL':0x40,'LBS_NOTIFY':1}
@@ -113,7 +113,7 @@ def parse(rc,d,selected_ids=IDS):
  if missing: raise SystemExit('missing original dialogs: '+','.join(map(str,sorted(missing))))
  return got
 def main():
- a=argparse.ArgumentParser();a.add_argument('--rc',required=True);a.add_argument('--resource-h',required=True);a.add_argument('--dialog-resource-h',required=True);a.add_argument('--out',required=True);a.add_argument('--campaign-score',action='store_true');q=a.parse_args(); data=parse(q.rc,macros((q.resource_h,q.dialog_resource_h)),CAMPAIGN_IDS if q.campaign_score else IDS)
+ a=argparse.ArgumentParser();a.add_argument('--rc',required=True);a.add_argument('--resource-h',required=True);a.add_argument('--dialog-resource-h',required=True);a.add_argument('--out',required=True);a.add_argument('--campaign-dialogs',action='store_true');q=a.parse_args(); data=parse(q.rc,macros((q.resource_h,q.dialog_resource_h)),CAMPAIGN_IDS if q.campaign_dialogs else IDS)
  with open(q.out,'w') as f:
   f.write('struct RenegadeDialogTemplate { uint16_t Id; const unsigned char *Bytes; size_t Size; };\n')
   for ident,b in sorted(data.items()): f.write('static const unsigned char kDialog%d[] = {%s};\n'%(ident,','.join(str(x) for x in b)))

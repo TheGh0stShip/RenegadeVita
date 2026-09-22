@@ -345,6 +345,17 @@ AggregateDefClass::Load_Assets (const char *passet_name)
 	// Assume failure
 	bool retval = false;
 
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+	// The PC current-directory probe bypasses the installed retail/MIX factory
+	// and resolves as app0:/\\<name>.w3d on Vita. Keep WW3D's normal loader.
+	if (passet_name != NULL) {
+		char filename[MAX_PATH];
+		snprintf(filename, sizeof(filename), "%s.w3d", passet_name);
+		retval = WW3DAssetManager::Get_Instance()->Load_3D_Assets(filename);
+	}
+	return retval;
+#endif
+
 	// Param OK?
 	if (passet_name != NULL) {
 		

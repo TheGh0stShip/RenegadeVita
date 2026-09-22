@@ -127,9 +127,9 @@ include("${RENEGADE_ROOT}/cmake/A31OriginalSources.cmake")
 if(RENEGADE_A4_ORIGINAL_FRONTEND)
   set(RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE
     "${RENEGADE_GENERATED_INCLUDE}/renegade_dialog_templates.inc")
-  set(RENEGADE_A4_DIALOG_CAMPAIGN_SCORE_ARG)
+  set(RENEGADE_A4_DIALOG_CAMPAIGN_ARG)
   if(NOT RENEGADE_VITA_M00_DEMO)
-    set(RENEGADE_A4_DIALOG_CAMPAIGN_SCORE_ARG --campaign-score)
+    set(RENEGADE_A4_DIALOG_CAMPAIGN_ARG --campaign-dialogs)
   endif()
   add_custom_command(
     OUTPUT "${RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE}"
@@ -139,7 +139,7 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
       --resource-h "${RENEGADE_UPSTREAM}/Code/Commando/resource.h"
       --dialog-resource-h "${RENEGADE_UPSTREAM}/Code/Commando/dialogresource.h"
       --out "${RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE}"
-      ${RENEGADE_A4_DIALOG_CAMPAIGN_SCORE_ARG}
+      ${RENEGADE_A4_DIALOG_CAMPAIGN_ARG}
     DEPENDS
       "${RENEGADE_ROOT}/tools/generate_wwui_dialog_templates.py"
       "${RENEGADE_UPSTREAM}/Code/Commando/chat.rc"

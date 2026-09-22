@@ -29,6 +29,7 @@
 #include "cnetwork.h"
 #include "d3d8.h"
 #include "datasafe.h"
+#include "damage.h"
 #include "debug.h"
 #include "definition.h"
 #include "definitionmgr.h"
@@ -2157,23 +2158,26 @@ bool Is_Start_Pressed()
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 	WWAudioClass *audio, uint64_t sync_origin, bool &pause_observed,
-	bool &resume_observed)
+	bool &resume_observed, bool death_dialog = false)
 {
 	GameModeClass *combat_mode = GameModeManager::Find("Combat");
-	if (combat_mode == NULL || !combat_mode->Is_Active()) return true;
+	if (combat_mode == NULL ||
+		(death_dialog ? !combat_mode->Is_Suspended() : !combat_mode->Is_Active())) return true;
 	A31VitaScopedFrontendRenderResolution frontend_render_resolution;
-	combat_mode->Suspend();
+	if (!death_dialog) combat_mode->Suspend();
 	pause_observed = true;
 	A4_Frontend_Begin_Pause_Loop();
 	Input::Menu_Enable(true);
 	Input::Update();
 	A4_Frontend_Prime_WWUI_Key_Transitions();
 	menu_mode.Activate();
-	EVAEncyclopediaMenuClass::Display();
-	A30_Vita_Log("A4 pause: original EVA entered; Combat suspended; retained WWUI owner\n");
+	if (!death_dialog) EVAEncyclopediaMenuClass::Display();
+	A30_Vita_Log("A4 pause: original %s entered; Combat suspended; retained WWUI owner\n",
+		death_dialog ? "death dialog" : "EVA");
 	while (combat_mode->Is_Suspended() && !A4_Frontend_Exit_Requested() &&
 		!A4_Frontend_Get_Trace().reload_requested &&
-		!Renegade_Vita_Input_Route_Replay_Exit_Requested()) {
+		!Renegade_Vita_Input_Route_Replay_Exit_Requested() &&
+		(!death_dialog || DialogMgrClass::Get_Dialog_Count() > 0)) {
 		WW3D::Sync(static_cast<uint32_t>(
 			sceKernelGetProcessTimeWide() / 1000ULL - sync_origin));
 		TimeManager::Update();
@@ -2301,6 +2305,35 @@ bool Try_Arm_Development_M13_Completion(const char *load_source)
 		return false;
 	}
 	A30_Vita_Log("A4 campaign diagnostic: M13 completion event armed for frame 120; objectives not exercised\n");
+	return true;
+#else
+	(void)load_source;
+	return false;
+#endif
+}
+
+bool Try_Arm_Development_M13_Death(const char *load_source)
+{
+#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+	if (load_source == NULL || stricmp(load_source, "M13.mix") != 0) return false;
+	const char *const request_path =
+		"ux0:data/renegade/user/config/dev-m13-death-v1.txt";
+	FILE *file = fopen(request_path, "rb");
+	if (file == NULL) return false;
+	char request[32];
+	const size_t bytes = fread(request, 1U, sizeof(request), file);
+	const bool read_failed = ferror(file) != 0;
+	const bool close_failed = fclose(file) != 0;
+	if (read_failed || close_failed ||
+		!A31DevelopmentCheckpoint::Parse_M13_Death(request, bytes)) {
+		A30_Vita_Log("A4 campaign diagnostic: invalid M13 death request\n");
+		return false;
+	}
+	if (remove(request_path) != 0) {
+		A30_Vita_Log("A4 campaign diagnostic: M13 death request could not be consumed\n");
+		return false;
+	}
+	A30_Vita_Log("A4 campaign diagnostic: original lethal-damage event armed after intro camera release\n");
 	return true;
 #else
 	(void)load_source;
@@ -3274,6 +3307,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 				bool diagnostic_m13_completion_pending =
 					Try_Arm_Development_M13_Completion(load_source);
+				bool diagnostic_m13_death_pending =
+					Try_Arm_Development_M13_Death(load_source);
 #endif
 #if RENEGADE_VITA_M00_DEMO
 				A31DemoEndingPresenter demo_ending;
@@ -3337,6 +3372,23 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				const bool was_suspended = combat_mode->Is_Suspended();
 				A31_Interactive_Run_Simulation_Frame();
+#if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+				if (diagnostic_m13_death_pending && result.frames >= 120U &&
+					CombatManager::Get_Camera() != NULL &&
+					!CombatManager::Get_Camera()->Is_Using_Host_Model()) {
+					diagnostic_m13_death_pending = false;
+					SoldierGameObj *star = CombatManager::Get_The_Star();
+					if (star != NULL && !star->Is_Dead() && !star->Is_Destroyed()) {
+						const float health_before = star->Get_Defense_Object()->Get_Health();
+						star->Apply_Damage(OffenseObjectClass(100000.0f));
+						A30_Vita_Log("A4 campaign diagnostic: original lethal damage applied frame=%u health_before=%.2f health_after=%.2f dead=%d\n",
+							result.frames, health_before,
+							star->Get_Defense_Object()->Get_Health(), star->Is_Dead() ? 1 : 0);
+					} else {
+						A30_Vita_Log("A4 campaign diagnostic: lethal damage skipped; original star unavailable\n");
+					}
+				}
+#endif
 #if !RENEGADE_VITA_M00_DEMO
 				if (stricmp(selected_archive, "M13.mix") == 0 &&
 					(result.frames == 0U || result.frames == 120U ||
@@ -3362,6 +3414,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 				const A31MissionCompletionState mission_state =
 					A31_Interactive_Get_Mission_Completion_State();
+				const bool first_star_death = mission_state.star_killed_observed &&
+					!result.star_killed_observed;
 				result.star_killed_observed = mission_state.star_killed_observed;
 				if (mission_state.completion_observed) {
 					result.mission_completion_observed = true;
@@ -3390,10 +3444,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 					break;
 				}
-				if (mission_state.star_killed_observed) {
+				if (first_star_death) {
 					A30_Vita_Log("A3.5 mission completion: original Combat star-killed event observed frame=%u\n",
 						result.frames);
+#if RENEGADE_VITA_M00_DEMO
 					break;
+#endif
 				}
 				const bool is_suspended = combat_mode->Is_Suspended();
 				if (!was_suspended && is_suspended) {
@@ -3412,6 +3468,24 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					current_pause_input_frames = 0U;
 				}
 				if (is_suspended) {
+#if !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+					if (result.star_killed_observed &&
+						DialogMgrClass::Get_Dialog_Count() > 0) {
+						A30_Vita_Log("A4 death: original popup active dialogs=%d; entering WWUI pump\n",
+							DialogMgrClass::Get_Dialog_Count());
+						if (!Run_Original_Gameplay_Pause_Menu(frontend_menu_mode, audio,
+							sync_origin, result.pause_observed, result.resume_observed, true)) {
+							A30_Vita_Log("A4 death: original popup requested exit/reload\n");
+							result.start_exit_requested = true;
+							break;
+						}
+						if (!combat_mode->Is_Active()) {
+							A30_Vita_Log("A4 death: original popup closed without active Combat; ending session\n");
+							break;
+						}
+						continue;
+					}
+#endif
 					++current_pause_input_frames;
 					++result.paused_input_frames;
 					/* Preserve the last original Combat frame while the absent desktop

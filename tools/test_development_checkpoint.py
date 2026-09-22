@@ -73,6 +73,9 @@ int main() {
     assert(!A31DevelopmentCheckpoint::Parse_M13_Completion("RVMC1 M01.mix\n", 14));
     assert(!A31DevelopmentCheckpoint::Parse_M13_Completion("RVMC1 M13.mix", 13));
     assert(!A31DevelopmentCheckpoint::Parse_M13_Completion(NULL, 14));
+    assert(A31DevelopmentCheckpoint::Parse_M13_Death("RVMD1 M13.mix\n", 14));
+    assert(!A31DevelopmentCheckpoint::Parse_M13_Death("RVMD1 M01.mix\n", 14));
+    assert(!A31DevelopmentCheckpoint::Parse_M13_Death("RVMD1 M13.mix", 13));
 }
 ''')
             subprocess.run(["c++", "-std=c++11", "-Wall", "-Wextra", "-Werror",

@@ -69,6 +69,23 @@ class ResourceStyleTests(unittest.TestCase):
         for name in required:
             self.assertIn(definitions[name] & 0xffff, present, name)
 
+    def test_full_port_death_and_failure_choices_are_original(self):
+        definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
+        generated = generator.parse(SOURCE/'chat.rc', definitions, generator.CAMPAIGN_IDS)
+        demo = generator.parse(SOURCE/'chat.rc', definitions)
+        for dialog_name, commands in (
+            ('IDD_DEATH_OPTIONS', ('IDC_DEATH_OPTION_RESTART',
+                                   'IDC_DEATH_OPTION_LOAD', 'IDC_DEATH_OPTION_QUIT')),
+            ('IDD_FAILED_OPTIONS', ('IDC_FAILED_OPTION_RESTART',
+                                    'IDC_FAILED_OPTION_LOAD', 'IDC_MENU_MAIN_MENU_BUTTON')),
+        ):
+            dialog_id = definitions[dialog_name]
+            self.assertNotIn(dialog_id, demo)
+            present = {struct.unpack_from('<H', header, 16)[0]
+                       for header, _, _ in controls(generated[dialog_id])}
+            for command in commands:
+                self.assertIn(definitions[command] & 0xffff, present, command)
+
     def test_original_frontend_controls_match_llvm_rc(self):
         definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
         generated = generator.parse(SOURCE/'chat.rc', definitions, generator.CAMPAIGN_IDS)

@@ -1,4 +1,19 @@
 {
+  "active_dev146_campaign_effect_lookup": {
+    "candidate": "A3.5-dev146",
+    "state": "ARM_PACKAGE_PASS_VITA3K_EFFECT_LOOKUP_PASS_AUDIO_DEATH_OPEN",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV146_M13_DEATH_AND_EFFECT_LOOKUP.md",
+    "vpk_sha256": "c51cef550898a980fb76ab6a29f56c6d2bc01b6bf92456aef7f3f5a3306f1b41",
+    "self_sha256": "3481043dff1092a7de6d7e5ebcfcea7ce8de23b180265f681c6d2e477ca532db",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev146-agg-direct-m13-3/",
+    "invalid_app0_effect_probes_before_after": "96/0",
+    "death_restart_verified": false,
+    "audio_sync_verified": false,
+    "normal_campaign_verified": false,
+    "physical_acceptance": false
+  },
   "active_dev145_campaign_cinematic": {
     "candidate": "A3.5-dev145",
     "state": "ARM_PACKAGE_PASS_VITA3K_DIAGNOSTIC_M13_CAMERA_HUD_PASS",

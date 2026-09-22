@@ -1,5 +1,36 @@
 # Live engineering progress
 
+## Dev165: M13 mission inventory tooling before another runtime loop
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: use mission-wide authored-data inventory to drive M13 and then campaign
+mission fixes instead of one-off hitch guessing. Completed:
+`tools/renegade_cinematic_dependency_scan.py` now inventories a mission MIX
+without exporting retail payloads, parses every M13 cinematic `.txt`, compares
+`x00_intro.txt` dependencies against runtime prep arrays, and records static
+source coverage for referenced script names. The first M13 inventory found 137
+archive entries, 22 text scripts, 760 parsed command records, 53 cinematic
+models, 27 real-object presets, 92 animation names, 5 audio cues and 15 script
+classes; all 15 data-referenced script class names have matching source
+registrations. A broad runtime prep experiment was rejected after Sony ELF
+conversion failed with a 3936-byte segment overlap, so Dev165 keeps the prior
+packageable narrow runtime prep and records the remaining intro prep gaps:
+15 models, 36 animations, and 16 real-object presets.
+Evidence: `build/dev165-m13-mission-inventory.json`,
+`build/dev165-m13-cinematic-dependencies.json`, and
+`reports/DEV165_M13_MISSION_INVENTORY.md`. ARM/package evidence:
+ELF `51f768c9fe4e45cafc329df149833271657732db347f85f7e6decaf859178594`,
+SELF `e10b7b56606a839933e18710a8b1c85bf3021c1fc00cd49093ab1e5f0be07ed8`,
+VPK `b31e23bd707eb7ce3f4d5293e54c9596241a1a29e66d383cf6ed531a661f38d2`.
+No Vita3K, physical, performance, visual, A/V-sync, or campaign acceptance is
+claimed.
+Next: add binary LDD/LSD/DDB and W3D transitive inventory, then use those
+results to drive M13 runtime preparation and mission gates before a broad
+runtime run.
+Blocker: binary mission object graph and W3D internals are not inventoried yet.
+
 ## Dev160 tooling: Vita3K runner now rejects emulator-only launches
 
 Renegade Vita - v3.5 active

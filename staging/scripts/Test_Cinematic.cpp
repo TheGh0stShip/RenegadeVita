@@ -475,16 +475,17 @@ public:
 
 		// Create a decoration cinematic object, then set it's model
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-		const bool vita_trace_slot19 = slot == 19 && strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
-		const uint64_t vita_create_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
+		const bool vita_trace_object = (slot == 19 || slot == 37) && strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
+		const uint64_t vita_create_start_us = vita_trace_object ? sceKernelGetProcessTimeWide() : 0U;
 #endif
 		GameObject * obj = Commands->Create_Object( "Generic_Cinematic", Commands->Get_Position( Owner() ) );
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-		if (vita_trace_slot19) {
-			A30_Vita_Log("A4 M13 slot19 create: model=%s object_us=%llu obj=%p\n",
-				model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
+		if (vita_trace_object) {
+			A30_Vita_Log("A4 M13 cinematic object create: slot=%d model=%s object_us=%llu obj=%p\n",
+				slot, model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
 		}
 #endif
+
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
 		if (strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0 && slot == 0) {
 			A30_Vita_Log("A4 M13 intro script: create slot=0 model=%s object=%p\n",
@@ -496,13 +497,13 @@ public:
 		if ( obj ) {
 			Commands->Add_To_Dirty_Cull_List(obj);
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-			const uint64_t vita_model_start_us = vita_trace_slot19 ? sceKernelGetProcessTimeWide() : 0U;
+			const uint64_t vita_model_start_us = vita_trace_object ? sceKernelGetProcessTimeWide() : 0U;
 #endif
 			Commands->Set_Model( obj, model_name );
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-			if (vita_trace_slot19) {
-				A30_Vita_Log("A4 M13 slot19 model: model=%s set_model_us=%llu obj=%p\n",
-					model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_model_start_us), static_cast<void *>(obj));
+			if (vita_trace_object) {
+				A30_Vita_Log("A4 M13 cinematic object model: slot=%d model=%s set_model_us=%llu obj=%p\n",
+					slot, model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_model_start_us), static_cast<void *>(obj));
 			}
 #endif
 			Commands->Set_Facing( obj, Commands->Get_Facing( Owner() ) );
@@ -542,6 +543,12 @@ public:
 		}
 
 		GameObject * obj = NULL;
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		const bool vita_m13_intro = strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
+		const bool vita_trace_real_object =
+			vita_m13_intro && (slot == 13 || slot == 18 || slot == 27 || slot == 34 || slot == 36);
+		const uint64_t vita_create_start_us = vita_trace_real_object ? sceKernelGetProcessTimeWide() : 0U;
+#endif
 		if (( host_slot_name != NULL ) && ( *host_slot_name != 0 ) ) {
 			int host_slot = atoi( host_slot_name );
 			GameObject * host_obj = Commands->Find_Object( ObjectSlots[ host_slot ] );
@@ -550,6 +557,18 @@ public:
 			obj = Commands->Create_Object( preset_name, Commands->Get_Position( Owner() ) );
 			Commands->Set_Facing( obj, Commands->Get_Facing( Owner() ) );
 		}
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (vita_trace_real_object) {
+			A30_Vita_Log("A4 M13 real object create: slot=%d preset=%s host_slot=%s host_bone=%s obj=%p id=%d elapsed_us=%llu\n",
+				slot,
+				preset_name != NULL ? preset_name : "",
+				host_slot_name != NULL ? host_slot_name : "",
+				host_bone_name != NULL ? host_bone_name : "",
+				static_cast<void *>(obj),
+				obj != NULL ? Commands->Get_ID(obj) : 0,
+				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us));
+		}
+#endif
 
 		if ( obj ) {
 			Commands->Enable_Engine( obj, true );
@@ -1135,4 +1154,3 @@ parameter = OBJECT_ID
 
 ;_________________________________________
 #endif
-

@@ -71,7 +71,8 @@ struct VitaAggregateTemplateSlot {
 };
 static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
 	{"X00_AG_Explode", NULL, NULL},
-	{"ag_rocketl", NULL, NULL}
+	{"ag_rocketl", NULL, NULL},
+	{"c_ag_nod_sniper", NULL, NULL}
 };
 
 static VitaAggregateTemplateSlot *Vita_Find_M13_Template(const char *name)
@@ -968,4 +969,3 @@ AggregateLoaderClass::Load_W3D (ChunkLoadClass &chunk_load)
     // Return a pointer to the prototype
 	 return pprototype;
 }
-

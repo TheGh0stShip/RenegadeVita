@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "4c0836ae84d62cb6620c899dd65c353becf6b1ff0e1039d8fe2bc98521cd1eb2",
-  "patch_count": 195,
+  "stage_script_sha256": "c45d723c57b539d2a24a196cfb5359c8ee87f953e0e84a98ecc86f1033452b07",
+  "patch_count": 193,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -965,20 +965,10 @@
       "sha256": "ab86f375cf13e6a7ad0b7ed2ae67fe58f1da8f4ca095e1f72d3304a4f5c4cb45"
     },
     {
-      "path": "port/patches/ww3d2-a35-m13-prototype-kind-timing.patch",
+      "path": "port/patches/ww3d2-a35-m13-aggregate-template.patch",
       "stage_directory": "ww3d2",
-      "sha256": "d324dbc3b98902a742639f9664f0b51d59dcfc0029363275ccd20966a85251f7"
-    },
-    {
-      "path": "port/patches/ww3d2-a35-m13-aggregate-phase-timing.patch",
-      "stage_directory": "ww3d2",
-      "sha256": "2a440a66610c49846b00c9b1469f0e48dfe62cc16f9a8e4aca445a8d5fd5f2de"
-    },
-    {
-      "path": "port/patches/ww3d2-a35-m13-aggregate-children-timing.patch",
-      "stage_directory": "ww3d2",
-      "sha256": "b470aca412bbc615988c3ad13539d4d6abbd6b784d44e0c050d43da1893400c3"
+      "sha256": "3c3524bbcb95898eb65abfd36833dc0fee97be6f5568bf63c7339c950a4f3aa2"
     }
   ],
-  "registry_sha256": "9b7580a01140ab748fe965e615707fd9bb1c841d070f7226c6cba7c2f5f6ff91"
+  "registry_sha256": "8b750d7bef6b97f31c93d6cc496210165becbf99c31e066624f48aab3b055a1b"
 }

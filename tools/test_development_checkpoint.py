@@ -56,10 +56,10 @@ int main() {
     assert(!A31DevelopmentCheckpoint::Parse(valid[0], strlen(valid[0]), output, 5));
     assert(!A31DevelopmentCheckpoint::Parse(NULL, 12, output, sizeof(output)));
     assert(!A31DevelopmentCheckpoint::Parse(valid[0], strlen(valid[0]), NULL, 0));
-    const char *missions[] = {"RVMS1 M13.mix\n", "RVMS1 M01.mix\r\n"};
+    const char *missions[] = {"RVMS1 M13.mix\n", "RVMS1 M01.mix\r\n", "RVMS1 M00_Tutorial.mix\n"};
     for (auto value : missions) {
         assert(A31DevelopmentCheckpoint::Parse_Mission(value, strlen(value), output, sizeof(output)));
-        assert(strcmp(output + 3, ".mix") == 0);
+        assert(strcmp(output + strlen(output) - 4, ".mix") == 0);
     }
     const char *bad_missions[] = {"RVMS1 ../M01.mix\n", "RVMS1 M01.sav\n",
         "RVMS1 M01.mix\nextra", "RVMS1 m01.mix\n", "RVMS1 M0x.mix\n",

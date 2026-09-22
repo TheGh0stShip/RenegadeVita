@@ -189,3 +189,15 @@ therefore not the freeze cause; no performance change is accepted. Next test
 is an assembled retained template with fresh clones, compared against this
 same route and M00. Evidence: managed AppData `campaign-dev154-children-m13-1`,
 matching SELF `e89f3402e43ac431400cea0a6cdfcc6127114f74b0d161316227e07ef830e77d`.
+Dev155 retains one fully assembled original `X00_AG_Explode` aggregate
+template at M13 loading and returns fresh `Clone()` instances thereafter.
+In final-hash M13 Vita3K/OpenGL evidence, preparation cost 8.268 s and the
+first live rocket's original script `Set_Model` cost 9.016 ms versus Dev154's
+6.638 s. This is an adopted event-local win, not an overall 60 FPS result.
+Final-hash M13 frame-480 cumulative p50/p95/p99/worst remained
+101.4/328.5/378.4/2559.1 ms; route frame distributions are not directly
+comparable because the bounded runs reached different content. Template
+memory high-water and physical visual/audio result are unmeasured. Full-port
+M00 direct entry reached frame360. Evidence: managed AppData
+`campaign-dev155-final-m13-1` and `campaign-dev155-final-m00-1`, SELF
+`980640b313ccca8a9dde948497296ee0681b6e3122f226a903aa7d721f8fc96f`.

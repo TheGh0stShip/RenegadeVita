@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Dev155: M13 explosion stall moved to loading; A/V still open
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: isolate remaining ambush asset-create and simulation spikes, then
+validate authored actor/camera/audio sequence. Completed: an untouched
+`X00_AG_Explode` aggregate template is built once during M13 loading;
+fresh original `Clone()` instances reduce the first live rocket `Set_Model`
+from Dev154's 6.638 s to 9.016 ms in matching final-hash Vita3K evidence.
+Full-port M00 direct entry reached 360 frames. The demo profile is unchanged.
+Evidence: asset-free ARM SELF/VPK, 193-patch staging, parser tests,
+`campaign-dev155-final-m13-1` and `campaign-dev155-final-m00-1` managed
+AppData receipts. No physical or full-cinematic acceptance.
+Next: remaining >500 ms ambush frames, A/V sync and memory high-water.
+Blocker: overall cinematic frame pacing remains far below 60 FPS.
+
 ## Dev154 diagnostic: aggregate child creation, not attachment
 
 Renegade Vita - v3.5 active

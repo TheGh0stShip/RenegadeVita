@@ -1,0 +1,89 @@
+--- a/agg_def.cpp
++++ b/agg_def.cpp
+@@ -42,6 +42,10 @@
+ #include "matinfo.h"
+ #include "texture.h"
+ #include "wwstring.h"
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#include "a30_vita_runtime.h"
++#include <psp2/kernel/processmgr.h>
++#endif
+ 
+ #include <windows.h>
+ 
+@@ -63,6 +67,11 @@
+ //
+ AggregateLoaderClass	_AggregateLoader;
+ 
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++static AggregateDefClass *s_vita_x00_aggregate_owner = NULL;
++static RenderObjClass *s_vita_x00_aggregate_template = NULL;
++#endif
++
+ 
+ ///////////////////////////////////////////////////////////////////////////////////
+ //
+@@ -120,6 +129,13 @@
+ //
+ AggregateDefClass::~AggregateDefClass (void)
+ {
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	if (s_vita_x00_aggregate_owner == this) {
++		s_vita_x00_aggregate_template->Release_Ref();
++		s_vita_x00_aggregate_template = NULL;
++		s_vita_x00_aggregate_owner = NULL;
++	}
++#endif
+ 	// Free the name buffer if necessary
+ 	if (m_pName != NULL) {
+ 		
+@@ -142,6 +158,14 @@
+ {
+ 	int index;
+ 
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	if (s_vita_x00_aggregate_owner == this) {
++		s_vita_x00_aggregate_template->Release_Ref();
++		s_vita_x00_aggregate_template = NULL;
++		s_vita_x00_aggregate_owner = NULL;
++	}
++#endif
++
+ 	// Free the name buffer if necessary
+ 	if (m_pName != NULL) {		
+ 		::free (m_pName);
+@@ -202,6 +226,16 @@
+ RenderObjClass *
+ AggregateDefClass::Create (void)
+ {
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	if (s_vita_x00_aggregate_owner == this && s_vita_x00_aggregate_template != NULL) {
++		const uint64_t clone_started_us = sceKernelGetProcessTimeWide();
++		RenderObjClass *instance = s_vita_x00_aggregate_template->Clone();
++		A30_Vita_Log("A4 M13 aggregate template clone: name=%s result=%d elapsed_us=%llu\n",
++			m_pName, instance != NULL ? 1 : 0,
++			static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - clone_started_us));
++		return instance;
++	}
++#endif
+ 	// Attempt to create an instance of the hierarchy
+ 	RenderObjClass *pmodel = Create_Render_Object (m_Info.BaseModelName);
+ 	if (pmodel != NULL) {
+@@ -216,6 +250,17 @@
+ 		WWDEBUG_SAY (("Unable to load aggregate %s.\r\n", m_Info.BaseModelName));
+ 	}
+ 
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	if (pmodel != NULL && m_pName != NULL && stricmp(m_pName, "X00_AG_Explode") == 0) {
++		if (s_vita_x00_aggregate_template != NULL) s_vita_x00_aggregate_template->Release_Ref();
++		s_vita_x00_aggregate_owner = this;
++		s_vita_x00_aggregate_template = pmodel;
++		pmodel->Add_Ref();
++		A30_Vita_Log("A4 M13 aggregate template retained: name=%s subobjects=%d\n",
++			m_pName, m_SubobjectList.Count());
++	}
++#endif
++
+ 	// Return a pointer to the new aggregate
+ 	return pmodel;
+ }

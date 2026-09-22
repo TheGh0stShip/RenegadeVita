@@ -42,10 +42,6 @@
 #include "hmdldef.h"
 #include "hlod.h"
 #include "w3derr.h"
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-#include "a30_vita_runtime.h"
-#include <psp2/kernel/processmgr.h>
-#endif
 
 /*
 ** Global instances of the default loaders for the asset manager to install
@@ -95,19 +91,7 @@ public:
 
 	virtual const char *			Get_Name(void)	const			{ return HModelDef->Get_Name(); }	
 	virtual int						Get_Class_ID(void) const	{ return RenderObjClass::CLASSID_HLOD; }
-	virtual RenderObjClass *	Create(void)					{
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-		const uint64_t vita_create_start_us = sceKernelGetProcessTimeWide();
-#endif
-		RenderObjClass * created = NEW_REF( HLodClass, (*HModelDef) );
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-		if (stricmp(HModelDef->Get_Name(), "X00_AG_Explode") == 0) {
-			A30_Vita_Log("A4 M13 prototype: kind=HModel name=%s create_us=%llu\n",
-				HModelDef->Get_Name(), static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us));
-		}
-#endif
-		return created;
-	}
+	virtual RenderObjClass *	Create(void)					{ return NEW_REF( HLodClass, (*HModelDef) ); }	
 	HModelDefClass *				HModelDef;
 };
 

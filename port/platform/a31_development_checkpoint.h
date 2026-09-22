@@ -42,6 +42,14 @@ inline bool Parse_Mission(const char *data, size_t bytes, char *source,
 {
 	if (source == NULL || capacity == 0U) return false;
 	source[0] = '\0';
+	static const char tutorial_request[] = "RVMS1 M00_Tutorial.mix\n";
+	if (data != NULL && bytes == sizeof(tutorial_request) - 1U &&
+		memcmp(data, tutorial_request, bytes) == 0) {
+		static const char tutorial_source[] = "M00_Tutorial.mix";
+		if (capacity < sizeof(tutorial_source)) return false;
+		memcpy(source, tutorial_source, sizeof(tutorial_source));
+		return true;
+	}
 	if (data == NULL || (bytes != 14U && bytes != 15U) ||
 		memcmp(data, "RVMS1 ", 6U) != 0 || data[bytes - 1U] != '\n' ||
 		(bytes == 15U && data[13U] != '\r')) return false;

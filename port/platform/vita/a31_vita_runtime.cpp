@@ -2289,11 +2289,11 @@ bool Try_Latch_Development_Campaign_Mission()
 		"ux0:data/renegade/user/config/dev-mission-launch-v1.txt";
 	FILE *file = fopen(request_path, "rb");
 	if (file == NULL) return false;
-	char request[16];
+	char request[32];
 	const size_t bytes = fread(request, 1U, sizeof(request), file);
 	const bool read_failed = ferror(file) != 0;
 	const bool close_failed = fclose(file) != 0;
-	char source[8];
+	char source[32];
 	char archive[96];
 	bool is_save = false;
 	if (read_failed || close_failed ||
@@ -3244,6 +3244,18 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A30_Vita_Log("A3.1 interactive: original level load FAIL\n");
 				break;
 			}
+#if !RENEGADE_VITA_M00_DEMO
+			if (stricmp(selected_archive, "M13.mix") == 0) {
+				const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
+				RenderObjClass *intro_explosion =
+					WW3DAssetManager::Get_Instance()->Create_Render_Obj("X00_AG_Explode");
+				A30_Vita_Log("A4 M13 retained preparation: model=X00_AG_Explode created=%d elapsed_us=%llu\n",
+					intro_explosion != NULL ? 1 : 0,
+					static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
+				if (intro_explosion != NULL) intro_explosion->Release_Ref();
+				loading_presenter.Render_Original_Progress("after_m13_model_prepare");
+			}
+#endif
 			A30_Vita_Log("A3.1 breadcrumb: original M00 level loaded\n");
 
 			WideStringClass local_player_name;

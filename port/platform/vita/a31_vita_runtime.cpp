@@ -20,6 +20,7 @@
 #include "assetmgr.h"
 #include "assets.h"
 #include "campaign.h"
+#include "ccamera.h"
 #include "encyclopediamgr.h"
 #include "chunkio.h"
 #include "combat.h"
@@ -29,6 +30,8 @@
 #include "d3d8.h"
 #include "datasafe.h"
 #include "debug.h"
+#include "definition.h"
+#include "definitionmgr.h"
 #include "definitionfactorymgr.h"
 #include "ffactory.h"
 #include "ffactorylist.h"
@@ -3135,6 +3138,19 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A30_Vita_Log("A3.5 scripts: provider_active=%d registered=%d active=%d\n",
 					ScriptManager::Is_Provider_Active() ? 1 : 0,
 					Get_Script_Count(), ScriptManager::Get_Active_Script_Count());
+#if !RENEGADE_VITA_M00_DEMO
+				if (stricmp(selected_archive, "M13.mix") == 0) {
+					DefinitionClass *cinematic_definition =
+						DefinitionMgrClass::Find_Named_Definition("Generic_Cinematic");
+					StringClass cinematic_error;
+					A30_Vita_Log("A4 M13 intro preset: named=%p class_id=%u valid=%d error=%s\n",
+						static_cast<void *>(cinematic_definition),
+						cinematic_definition != NULL ? cinematic_definition->Get_Class_ID() : 0U,
+						cinematic_definition != NULL &&
+							cinematic_definition->Is_Valid_Config(cinematic_error) ? 1 : 0,
+						cinematic_error.Peek_Buffer());
+				}
+#endif
 			A30_Vita_Log("A4 breadcrumb: original RadarManager initialized by CombatGameMode finalization for HUD=%d\n",
 				render_hud ? 1 : 0);
 			const A31InteractiveHUDState post_load_hud =
@@ -3232,8 +3248,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			}
 			bool presentation_ready = true;
 #if !RENEGADE_VITA_M00_DEMO
-			if (stricmp(selected_archive, "M00_Tutorial.mix") != 0 &&
-				stricmp(selected_archive, "M13.mix") != 0) {
+			if (stricmp(selected_archive, "M00_Tutorial.mix") != 0) {
 				A30_Vita_Log("A4 campaign: skip M00 eager presentation prewarm archive=%s; original textures remain lazy\n",
 					selected_archive);
 			} else
@@ -3322,6 +3337,21 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				const bool was_suspended = combat_mode->Is_Suspended();
 				A31_Interactive_Run_Simulation_Frame();
+#if !RENEGADE_VITA_M00_DEMO
+				if (stricmp(selected_archive, "M13.mix") == 0 &&
+					(result.frames == 0U || result.frames == 120U ||
+					 result.frames == 1800U || result.frames == 4200U)) {
+					const A31InteractiveHUDState intro_hud =
+						A31_Interactive_Get_HUD_State();
+					CCameraClass *intro_camera = CombatManager::Get_Camera();
+					A30_Vita_Log("A4 M13 intro: frame=%u camera_host=%d hud_enabled=%d hud_effective=%d star=%p\n",
+						result.frames,
+						intro_camera != NULL && intro_camera->Is_Using_Host_Model() ? 1 : 0,
+						intro_hud.serialized_enabled ? 1 : 0,
+						intro_hud.effectively_displayable ? 1 : 0,
+						static_cast<void *>(CombatManager::Get_The_Star()));
+				}
+#endif
 #if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 				if (diagnostic_m13_completion_pending && result.frames >= 120U) {
 					diagnostic_m13_completion_pending = false;

@@ -1,4 +1,17 @@
 {
+  "active_dev145_campaign_cinematic": {
+    "candidate": "A3.5-dev145",
+    "state": "ARM_PACKAGE_PASS_VITA3K_DIAGNOSTIC_M13_CAMERA_HUD_PASS",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV145_M13_CINEMATIC_FACTORY.md",
+    "vpk_sha256": "d8ee6b6c826965c72511a4426b80909182825d640af750ff0322059af62dad9a",
+    "self_sha256": "6d8ce797c18a32a64b23ddd1d4b1de52a0a54e7ee2fcc4e835a155632c31849d",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev145-factory-direct-m13-1/",
+    "normal_new_game_to_m13_verified": false,
+    "mission_objectives_verified": false,
+    "physical_acceptance": false
+  },
   "active_dev143_campaign_loading": {
     "candidate": "A3.5-dev143",
     "state": "ARM_PACKAGE_PASS_VITA3K_LAUNCH_TIMEOUT_VISUAL_PARITY_OPEN",

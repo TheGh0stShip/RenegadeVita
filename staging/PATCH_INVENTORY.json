@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "08970556d1fcb22f497d8cba4545cfe8455b6931222b1cc4cf8b65b051a0f743",
-  "patch_count": 184,
+  "stage_script_sha256": "7c1315ea8c6aa48889250cab0b497534e4348bde138303d305ece8605ad273eb",
+  "patch_count": 185,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -765,6 +765,11 @@
       "sha256": "571a50a08c701e4130320853e254ade2697b14fab194c1786586258d057eb6bd"
     },
     {
+      "path": "port/patches/scripts-a45-m13-intro-camera-trace.patch",
+      "stage_directory": "scripts",
+      "sha256": "4949df1f9159a559825698653c8d9ef96cdab0c1f30526b1109b2456e03b1da8"
+    },
+    {
       "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
       "stage_directory": "",
       "sha256": "4595ae7a3fbb7df8ba7e53ebac74e1267d97491b09443def46fc8093cef4970a"
@@ -925,5 +930,5 @@
       "sha256": "615b35556398f2e2b34940f922a1ce7f5eb071885bac3e7be837fc5f576b2155"
     }
   ],
-  "registry_sha256": "c10568be91c86e23b0fb736f5a538b8a4f4de635d50882ead1259d29698022c7"
+  "registry_sha256": "71de24a495f220037d73b0fbb1a55230ed1a0e3ec99d125744753379afce9a57"
 }

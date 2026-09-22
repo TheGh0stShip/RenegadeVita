@@ -38,6 +38,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+extern int A30_Vita_Log(const char *format, ...);
+#endif
+
 #define		LAST_VALID_TIMESTAMP		999000.0f
 
 DECLARE_SCRIPT (M00_Cinematic_Attack_Command_DLS, "AttackDuration=1.0:float")
@@ -470,6 +474,12 @@ public:
 
 		// Create a decoration cinematic object, then set it's model
 		GameObject * obj = Commands->Create_Object( "Generic_Cinematic", Commands->Get_Position( Owner() ) );
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0 && slot == 0) {
+			A30_Vita_Log("A4 M13 intro script: create slot=0 model=%s object=%p\n",
+				model_name, static_cast<void *>(obj));
+		}
+#endif
 		Commands->Enable_Hibernation( obj, false );
 
 		if ( obj ) {
@@ -652,6 +662,12 @@ public:
 		if ( slot != -1 ) {
 			int id = ObjectSlots[ slot ];
 			GameObject * obj = Commands->Find_Object( id );
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			if (strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0 && slot == 0) {
+				A30_Vita_Log("A4 M13 intro script: control slot=0 id=%d object=%p\n",
+					id, static_cast<void *>(obj));
+			}
+#endif
 			if ( obj ) {
 				Commands->Set_Camera_Host( obj );
 				Commands->Control_Enable( Commands->Get_The_Star(), false );

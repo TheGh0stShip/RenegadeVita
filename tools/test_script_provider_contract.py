@@ -107,7 +107,15 @@ class ScriptProviderContractTests(unittest.TestCase):
         self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Toolkit_Powerup.cpp", cmake)
         self.assertNotIn("${RENEGADE_SCRIPT_SOURCE}/strtrim.cpp", cmake)
         self.assertIn("${RENEGADE_STAGE}/wwlib/trim.cpp", original_sources)
-        self.assertNotRegex(cmake, r"RENEGADE_SCRIPT_SOURCE\}/Mission0[1-9]\.cpp")
+        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp", cmake)
+        self.assertIn("${RENEGADE_STAGE}/combat/cinematicgameobj.cpp", cmake)
+        self.assertRegex(
+            cmake,
+            r"if\(NOT RENEGADE_VITA_M00_DEMO\)\s*list\(APPEND "
+            r"RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\s*"
+            r"\$\{RENEGADE_CAMPAIGN_SCRIPT_SOURCES\}\s*"
+            r"\$\{RENEGADE_STAGE\}/combat/cinematicgameobj\.cpp",
+        )
 
     def test_gcc_default_argument_bridge_is_callsite_only(self):
         bridge = (

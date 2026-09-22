@@ -1,5 +1,23 @@
 # Live engineering progress
 
+## Dev145 active: original M13 intro camera restored in Vita3K
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: restore original player-death
+dialog/restart ownership; do not use bare mission loads as progression proof.
+Completed: full-port links original CinematicGameObj factory; diagnostic M13
+creates retail `Generic_Cinematic`, takes camera control, hides HUD, shows
+moving scripted viewpoints, then restores gameplay HUD/camera. M00 demo source
+selection is unchanged. Vita3K sampled 11-14 FPS, so performance is open.
+Evidence: `reports/DEV145_M13_CINEMATIC_FACTORY.md`, matching ARM/VPK hashes,
+and isolated Vita3K log/captures; no physical Vita acceptance.
+Next: original death/failure dialog resources and callback, targeted death/
+restart/save test, then prerequisite-aware M13 mission checks.
+Blocker: player death currently exits the direct runtime through a latch-only
+observer instead of preserving original `cGod::Star_Killed` flow.
+
 ## Dev144 active: Score dialog fixed; M13 cinematic camera under investigation
 
 Renegade Vita — v3.5 active

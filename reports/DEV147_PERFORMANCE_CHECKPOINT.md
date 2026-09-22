@@ -2,6 +2,7 @@
 
 Status: canonical build and packaging passed after the interrupted retry was
 resumed. This is a dev candidate, not physical-Vita performance acceptance.
+Asset-free prerelease: `https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev147-campaign`.
 
 ## Changes
 

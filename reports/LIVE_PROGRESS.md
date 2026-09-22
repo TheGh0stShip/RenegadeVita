@@ -5745,5 +5745,6 @@ are implemented in the full-port source. Single-run Vita3K comparisons show
 better early drift than no preload, but the late multi-second hitch and audio
 desync remain. 4x MSAA stays default after the off experiment regressed there.
 Canonical host checks, ARM packaging, artifact identity and diagnostics bundle
-now pass after the resumed retry. No physical acceptance. See
+now pass after the resumed retry. The asset-free prerelease is published at
+`A3.5-dev147-campaign`. No physical acceptance. See
 `reports/DEV147_PERFORMANCE_CHECKPOINT.md`. Evidence gates remain 4/10.

@@ -4,6 +4,7 @@
     "state": "CANONICAL_HOST_ARM_PACKAGE_IDENTITY_PASS_VITA3K_M13_PARTIAL",
     "profile": "RENEGADE_VITA_M00_DEMO=0",
     "report": "reports/DEV147_PERFORMANCE_CHECKPOINT.md",
+    "release_url": "https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev147-campaign",
     "vpk_sha256": "9f34057b7eec02b54285f3474d27b9ee2cd4464d8f1ae8f0d6935900fabffd5b",
     "self_sha256": "a39736a08fd9af9d2ae5d1e1e9e40a7ae7ed64effcab8bb353894b654db653d3",
     "canonical_final_gate_passed": true,

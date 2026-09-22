@@ -36,6 +36,7 @@ Save-Receipt
 $process = $null
 $stem = $Candidate.ToLowerInvariant().Replace('.', '')
 $runtimeLog = Join-Path $Vfs "ux0\data\renegade\user\logs\$stem-runtime.log"
+$receipt.runtime_log_path = $runtimeLog
 try {
     # Modify only a candidate-owned config, never the user's global settings.
     $sourceConfig = Join-Path (Split-Path -Parent $Vita3K) 'config.yml'
@@ -166,8 +167,23 @@ public static class RenegadeEmulatorWindow {
     }
     if (Test-Path -LiteralPath $runtimeLog) {
         Copy-Item -LiteralPath $runtimeLog -Destination (Join-Path $EvidenceDirectory 'runtime-after.log')
-        $receipt.runtime_after_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $runtimeLog).Hash.ToLowerInvariant()
-        $receipt.runtime_changed = $receipt.runtime_before_sha256 -ne $receipt.runtime_after_sha256
+        $runtimeAfterHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $runtimeLog).Hash.ToLowerInvariant()
+        $receipt.runtime_after_sha256 = $runtimeAfterHash
+        $hadRuntimeBefore = $receipt.Contains('runtime_before_sha256')
+        $receipt.runtime_changed = (-not $hadRuntimeBefore) -or ($receipt.runtime_before_sha256 -ne $runtimeAfterHash)
+        $runtimeHead = @(Get-Content -LiteralPath $runtimeLog -TotalCount 16 -ErrorAction SilentlyContinue)
+        $receipt.runtime_candidate_seen = @($runtimeHead | Where-Object { $_ -match [regex]::Escape($Candidate) }).Count -gt 0
+        $receipt.title_launch_proven = [bool]($receipt.runtime_changed -and $receipt.runtime_candidate_seen)
+    } else {
+        $receipt.runtime_changed = $false
+        $receipt.runtime_candidate_seen = $false
+        $receipt.title_launch_proven = $false
+    }
+    if (-not $receipt.title_launch_proven -and
+        ($receipt.status -eq 'TIMEOUT_UNASSESSED' -or $receipt.status -eq 'RUNNING_UNASSESSED' -or
+         $receipt.status -eq 'PROCESS_EXITED_ZERO_UNASSESSED')) {
+        $receipt.status = 'TITLE_NOT_LAUNCHED'
+        $receipt.error = 'Renegade runtime log was missing, unchanged, or did not match the candidate; Vita3K launch alone is not runtime evidence'
     }
     $receipt.finished_utc = [DateTime]::UtcNow.ToString('o')
     # Separate bounded step invocations retain their own receipts. Include
@@ -188,4 +204,5 @@ public static class RenegadeEmulatorWindow {
 }
 $receipt | ConvertTo-Json -Depth 8
 if ($receipt.status -eq 'RUNNER_FAILED' -or $receipt.status -eq 'PROCESS_FAILED') { exit 1 }
+if ($receipt.status -eq 'TITLE_NOT_LAUNCHED') { exit 2 }
 if ($receipt.status -eq 'TIMEOUT_UNASSESSED') { exit 124 }

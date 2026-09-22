@@ -1,5 +1,24 @@
 # Live engineering progress
 
+## Dev160 tooling: Vita3K runner now rejects emulator-only launches
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: resume renderer/scene and simulation-spike work using only launch-proven
+Vita3K evidence. Completed: `tools/run_vita3k_demo_windows.ps1` now records the
+candidate runtime-log path and requires a changed runtime log containing the
+candidate label before a run can remain `TIMEOUT_UNASSESSED` or exited
+unassessed. Missing, unchanged, or wrong-candidate logs become
+`TITLE_NOT_LAUNCHED` with exit code 2, so opening Vita3K alone cannot be
+mistaken for running Renegade.
+Evidence: focused launch-proof test, development checkpoint tests, and Windows
+PowerShell parser check pass. No ARM build, Vita3K gameplay run, physical
+evidence, or performance acceptance is claimed for this tooling-only change.
+Next: run the next M13 candidate through the launch-proof runner and continue
+measured render/scene traversal plus frame-703 simulation spike isolation.
+Blocker: route-level cinematic pacing remains far below 60 FPS.
+
 ## Dev159: persistent runtime-log handles reduce console flood; performance still failed
 
 Renegade Vita - v3.5 active

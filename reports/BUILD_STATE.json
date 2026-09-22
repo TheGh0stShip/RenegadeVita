@@ -1,4 +1,19 @@
 {
+  "dev153_m13_hlod_create_diagnostic": {
+    "candidate": "A3.5-dev153",
+    "state": "ARM_PACKAGE_PASS_VITA3K_HLOD_CREATE_STALL_IDENTIFIED_UNRESOLVED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV153_M13_HLOD_CREATE.md",
+    "vpk_sha256": "5397d1ab1a928cbf38629ddd67d720e9415d93def73f984e2726ddf74261b1cd",
+    "self_sha256": "d73dfcfcd3f25df0c3d889b5472382e49188631dba7f6ac21f363bb96d24e225",
+    "diagnostic_vita3k_evidence": "managed AppData: campaign-dev153-assetdepth-m13-1/",
+    "prototype_initially_present": true,
+    "prototype_class_id": 25,
+    "prototype_create_us": 6122860,
+    "performance_accepted": false,
+    "physical_acceptance": false
+  },
   "dev152_m13_ww3d_create_diagnostic": {
     "candidate": "A3.5-dev152",
     "state": "ARM_PACKAGE_PASS_VITA3K_WW3D_CREATE_STALL_IDENTIFIED_UNRESOLVED",

@@ -113,6 +113,9 @@
 #include "assetstatus.h"
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
+#if !RENEGADE_VITA_M00_DEMO
+#include <psp2/kernel/processmgr.h>
+#endif
 #endif
 
 /*
@@ -680,6 +683,14 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 #if defined(__vita__)
 	static uint32_t create_depth = 0U;
 	const uint32_t current_depth = ++create_depth;
+#if !RENEGADE_VITA_M00_DEMO
+	static unsigned vita_slow_asset_reports = 0U;
+	if (stricmp(name, "X00_AG_Explode") == 0) vita_slow_asset_reports = 0U;
+	const uint64_t vita_asset_start_us = sceKernelGetProcessTimeWide();
+	uint64_t vita_find_end_us = 0U;
+	uint64_t vita_load_end_us = 0U;
+	bool vita_had_proto = false;
+#endif
 	A35_Vita_Static_Load_Trace_Name("asset-create-entry", name);
 	A35_Vita_Static_Load_Trace_Step("asset-create-depth", current_depth);
 	A35_Vita_Static_Load_Trace_Step("asset-find-initial-entry", current_depth);
@@ -687,6 +698,11 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 
 	// Try to find a prototype
 	PrototypeClass * proto = Find_Prototype(name);
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	vita_find_end_us = sceKernelGetProcessTimeWide();
+	vita_load_end_us = vita_find_end_us;
+	vita_had_proto = proto != NULL;
+#endif
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Step("asset-find-initial-return",
 		(current_depth << 1U) | (proto != NULL ? 1U : 0U));
@@ -724,6 +740,9 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 			(current_depth << 1U) | (proto != NULL ? 1U : 0U));
 #endif
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	vita_load_end_us = sceKernelGetProcessTimeWide();
+#endif
 
 	if (proto == NULL) {
 		AssetStatusClass::Peek_Instance()->Report_Missing_RObj(name);
@@ -740,6 +759,18 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 	A35_Vita_Static_Load_Trace_Step("prototype-create-depth", current_depth);
 #endif
 	RenderObjClass * created = proto->Create();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	const uint64_t vita_asset_end_us = sceKernelGetProcessTimeWide();
+	if (vita_asset_end_us - vita_asset_start_us >= 100000U &&
+		vita_slow_asset_reports++ < 48U) {
+		A30_Vita_Log("A4 slow WW3D create: depth=%u name=%s class=%d initial_proto=%d find_us=%llu load_us=%llu create_us=%llu total_us=%llu\n",
+			current_depth, name, proto->Get_Class_ID(), vita_had_proto ? 1 : 0,
+			static_cast<unsigned long long>(vita_find_end_us - vita_asset_start_us),
+			static_cast<unsigned long long>(vita_load_end_us - vita_find_end_us),
+			static_cast<unsigned long long>(vita_asset_end_us - vita_load_end_us),
+			static_cast<unsigned long long>(vita_asset_end_us - vita_asset_start_us));
+	}
+#endif
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Name("prototype-create-return", name);
 	A35_Vita_Static_Load_Trace_Step("prototype-create-return-depth", current_depth);

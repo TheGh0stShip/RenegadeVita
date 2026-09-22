@@ -678,4 +678,11 @@ if [[ "$rv_model_install_sha" != "820e2552cb29ee7dba38ae1c37017043acb98a16dd6bed
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-model-install-timing.patch"
 echo "Applied: port/patches/wwphys-a35-model-install-timing.patch"
+rv_ww3d_create_sha=$(sha256sum "$rv_stage/ww3d2/assetmgr.cpp" | cut -d' ' -f1)
+if [[ "$rv_ww3d_create_sha" != "290ac62041c1de14327cfb10fa6cfe14a6b55c544c9b9d0c237ac2f60fb43b93" ]]; then
+	echo "Refusing unanchored WW3D create timing patch: assetmgr.cpp changed ($rv_ww3d_create_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-create-depth-timing.patch"
+echo "Applied: port/patches/ww3d2-a35-create-depth-timing.patch"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

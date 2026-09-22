@@ -174,3 +174,10 @@ not physics scene notification, owns the stall. Whether prototype creation,
 nested child requests, or on-demand file I/O dominates is still unmeasured.
 Evidence: managed AppData `campaign-dev152-physmodel-m13-1`, matching SELF
 `ce01e50e2cf93e273cacfdb91ab3005a9b29f2c94405c47d56964dbabf1307f3`.
+Dev153 split the asset manager: `X00_AG_Explode` had an existing HLOD
+prototype (class ID 25); lookup 4 us, load phase 1 us, `proto->Create()`
+6.123 s. No nested child call exceeded 100 ms in the bounded trace.
+Repeated on-demand file loading is not the immediate 6 s cause. The original
+HLOD constructor phases remain to be timed; no optimization is accepted.
+Evidence: managed AppData `campaign-dev153-assetdepth-m13-1`, matching
+SELF `d73dfcfcd3f25df0c3d889b5472382e49188631dba7f6ac21f363bb96d24e225`.

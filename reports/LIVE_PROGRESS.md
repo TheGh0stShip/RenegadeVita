@@ -1,5 +1,23 @@
 # Live engineering progress
 
+## Dev153 diagnostic: M13 HLOD constructor owns repeated create cost
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: time original `HLodClass(const HLodDefClass&)` phases for
+`X00_AG_Explode`; retain original instances and animation semantics.
+Completed: WW3D asset-manager trace shows its prototype already present;
+lookup 4 us, on-demand load 1 us, `proto->Create()` 6,122,860 us.
+Class ID 25 is original HLOD. No nested child create exceeded the bounded
+100 ms threshold. Pre-create/cache experiments remain rejected.
+Evidence: asset-free ARM SELF/VPK, 192-patch staging, managed AppData
+`campaign-dev153-assetdepth-m13-1` Vita3K/OpenGL receipt/log. No physical
+acceptance or verified A/V fix.
+Next: isolate constructor LOD/aggregate/bounds/LOD-factor phase, then fix
+the confirmed algorithmic defect or amortize preparation without breaking
+per-instance state. Blocker: live cinematic still freezes.
+
 ## Dev152 diagnostic: WW3D per-instance create owns M13 freeze
 
 Renegade Vita — v3.5 active

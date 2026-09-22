@@ -1,0 +1,38 @@
+--- a/assetmgr.cpp
++++ b/assetmgr.cpp
+@@ -115,0 +116,3 @@
++#if !RENEGADE_VITA_M00_DEMO
++#include <psp2/kernel/processmgr.h>
++#endif
+@@ -682,0 +686,8 @@
++#if !RENEGADE_VITA_M00_DEMO
++	static unsigned vita_slow_asset_reports = 0U;
++	if (stricmp(name, "X00_AG_Explode") == 0) vita_slow_asset_reports = 0U;
++	const uint64_t vita_asset_start_us = sceKernelGetProcessTimeWide();
++	uint64_t vita_find_end_us = 0U;
++	uint64_t vita_load_end_us = 0U;
++	bool vita_had_proto = false;
++#endif
+@@ -689,0 +702,5 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_find_end_us = sceKernelGetProcessTimeWide();
++	vita_load_end_us = vita_find_end_us;
++	vita_had_proto = proto != NULL;
++#endif
+@@ -726,0 +744,3 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	vita_load_end_us = sceKernelGetProcessTimeWide();
++#endif
+@@ -742,0 +762,12 @@
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	const uint64_t vita_asset_end_us = sceKernelGetProcessTimeWide();
++	if (vita_asset_end_us - vita_asset_start_us >= 100000U &&
++		vita_slow_asset_reports++ < 48U) {
++		A30_Vita_Log("A4 slow WW3D create: depth=%u name=%s class=%d initial_proto=%d find_us=%llu load_us=%llu create_us=%llu total_us=%llu\n",
++			current_depth, name, proto->Get_Class_ID(), vita_had_proto ? 1 : 0,
++			static_cast<unsigned long long>(vita_find_end_us - vita_asset_start_us),
++			static_cast<unsigned long long>(vita_load_end_us - vita_find_end_us),
++			static_cast<unsigned long long>(vita_asset_end_us - vita_load_end_us),
++			static_cast<unsigned long long>(vita_asset_end_us - vita_asset_start_us));
++	}
++#endif

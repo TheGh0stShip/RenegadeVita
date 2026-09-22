@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "90c82ab62efa02657b3b63c07b8dd169c1ac0c9422ad785976d87bcd310e3f5b",
-  "patch_count": 191,
+  "stage_script_sha256": "1429bd79cfaee6aa73836b0894baa0f538ac042beef4cd52c0a202258e6d5418",
+  "patch_count": 192,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -958,7 +958,12 @@
       "path": "port/patches/wwphys-a35-model-install-timing.patch",
       "stage_directory": "wwphys",
       "sha256": "f087450f0de387bfa1c99fced4a501ed013fdbed2664bdb18239dd0f9b9ad665"
+    },
+    {
+      "path": "port/patches/ww3d2-a35-create-depth-timing.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "ab86f375cf13e6a7ad0b7ed2ae67fe58f1da8f4ca095e1f72d3304a4f5c4cb45"
     }
   ],
-  "registry_sha256": "08839799a890724b28282249a7788fa77c4f6da96f0a2704b64aaba775d2441a"
+  "registry_sha256": "02df6f232a24941dd767a6c97e66f33258164fc8cb8eba51463999255138f9b6"
 }

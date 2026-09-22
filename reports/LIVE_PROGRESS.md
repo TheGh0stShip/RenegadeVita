@@ -10,7 +10,8 @@ the demo profile is unchanged. Dev138 independently reached M13 gameplay in
 Vita3K with 357 registered scripts and 31 active script instances.
 Completed: Dev139 ARM ELF/SELF/VPK and symbol inspection. See
 `reports/DEV139_ORIGINAL_SCORE_OWNER.md`.
-Evidence: Dev138 bounded Vita3K runtime in managed AppData; Dev139 build only.
+Evidence: Dev138 bounded M13 Vita3K runtime; Dev139 bounded Vita3K frontend
+startup and M13 selection only, plus ARM build and matching published VPK.
 Next: retain original campaign state across M13 completion and execute
 Combat -> Score -> Movie -> M01 without double teardown, then test on Vita3K.
 Blocker: direct runtime currently consumes completion as an exit event.

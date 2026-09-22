@@ -35,4 +35,9 @@ then tears down and reinitializes `CampaignManager`. Calling `Continue` inside
 that frame would invoke original `GameInitMgrClass::End_Game` while the Vita
 outer loop still owns teardown. The safe transition needs one persistent
 campaign session with original Combat/Score/Movie mode callbacks and no double
-unload. Dev139 has not been run on Vita3K or physical Vita.
+unload. Dev139 Vita3K trial 1 reached the original frontend and latched
+Campaign/Soldier to `M13.mix`, but the 130-second watchdog fired before level
+load completed. Its matching SELF hash and runtime return are in managed AppData
+`campaign-dev139-trial-1/`; owned emulator process terminated. This is menu
+startup evidence only, not a score-screen or gameplay test. No physical-Vita
+test was performed.

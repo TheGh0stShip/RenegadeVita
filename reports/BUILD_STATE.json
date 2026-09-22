@@ -1,4 +1,22 @@
 {
+  "active_dev137_campaign": {
+    "candidate": "A3.5-dev137",
+    "state": "VITA3K_M13_MX0_REGISTERED_RENDER_PASS_OBJECTIVES_OPEN",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGC3101",
+    "report": "reports/DEV137_MX0_SCRIPT_CLOSURE.md",
+    "runtime_return": "managed AppData: campaign-dev137-trial-1/",
+    "build_complete": true,
+    "canonical_build": false,
+    "registered_scripts": 68,
+    "active_script_instances_at_load": 31,
+    "vpk_sha256": "fc75c2045c5692ba91dfdfde8912efd181f11c2eb7bba5022429e93995ef5892",
+    "self_sha256": "e7b2ac612f622410bffd66d0559892da9a9eb3fee866bfc7122a49f86abe37bb",
+    "elf_sha256": "3351d998c67096d84cb431b4c44da85633c5d73f318ce9ca9a63f0e56b35592f",
+    "objective_completion_verified": false,
+    "mission_transition_verified": false,
+    "physical_acceptance": false
+  },
   "active_dev136_campaign": {
     "candidate": "A3.5-dev136",
     "state": "ARM_PACKAGE_PASS_CAMPAIGN_SAVE_RELOAD_RUNTIME_UNTESTED",

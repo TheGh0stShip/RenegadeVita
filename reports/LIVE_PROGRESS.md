@@ -1,5 +1,27 @@
 # Live engineering progress
 
+## Dev137 active: original M13 script family
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: original `MissionX0.cpp` is linked in the full-port profile. Its
+`MX0_*` registrants are present in the ARM ELF; retail M13 references those
+names. The demo profile keeps its prior script set.
+Completed: deterministic zero-fuzz staging patch for nine MSVC callback
+defaults, case-sensitive header alias, ARM ELF/SELF/VPK, and bounded Vita3K
+M13 selection/load/first gameplay render. Script registrations increased
+from Dev135's 37 to 68 and active instances from 12 to 31. See
+`reports/DEV137_MX0_SCRIPT_CLOSURE.md`.
+Evidence: `campaign-dev137-trial-1/` in managed AppData, runtime log,
+window capture, and 300-second watchdog receipt. No objective completion,
+transition, clean in-app exit, or physical Vita evidence.
+Next: bring the remaining original campaign mission/shared script units
+through their specific legacy C++ compatibility failures, then connect the
+original completion -> score/movie -> next-level path and test M13 objectives.
+Blocker: direct Vita simulation still observes completion and tears down;
+it does not dispatch `CombatGameModeClass::Think` continuation.
+
 ## Dev136 active: campaign save handoff
 
 Renegade Vita — v3.5 active

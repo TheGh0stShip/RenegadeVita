@@ -1,0 +1,6 @@
+#ifndef RENEGADE_VITA_MISSION_X0_CASE_ALIAS_H
+#define RENEGADE_VITA_MISSION_X0_CASE_ALIAS_H
+
+#include "missionx0.h"
+
+#endif

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "05506f8b67f331e4e8716cd8aef2b8ecc1ce83fb37b6a71e4a632ae55bc6c608",
-  "patch_count": 182,
+  "stage_script_sha256": "24467868c42264be541f5739c40a7d9d2e3e7174c48e5611134830083f07b2e1",
+  "patch_count": 183,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -760,6 +760,11 @@
       "sha256": "49c60a18249dc3d708f9fc87f1856272978ba19160cd412e7d2b36d44f1f12de"
     },
     {
+      "path": "port/patches/scripts-a37-mx0-default-arguments.patch",
+      "stage_directory": "scripts",
+      "sha256": "571a50a08c701e4130320853e254ade2697b14fab194c1786586258d057eb6bd"
+    },
+    {
       "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
       "stage_directory": "",
       "sha256": "4595ae7a3fbb7df8ba7e53ebac74e1267d97491b09443def46fc8093cef4970a"
@@ -915,5 +920,5 @@
       "sha256": "615b35556398f2e2b34940f922a1ce7f5eb071885bac3e7be837fc5f576b2155"
     }
   ],
-  "registry_sha256": "048fd9b54f23d0dc0d1cd8cba185890638d542eb065a496f5b289a9afb28cb85"
+  "registry_sha256": "8d262c7f498edd1a0a6f717a91a94b17c9e3c5d13b590a3ee5bb9c33f0168fd6"
 }

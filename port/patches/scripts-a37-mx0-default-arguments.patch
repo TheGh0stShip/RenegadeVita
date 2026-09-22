@@ -1,0 +1,29 @@
+--- a/MissionX0.cpp
++++ b/MissionX0.cpp
+@@ -1248 +1248 @@
+-		Commands->Apply_Damage(obj, 10000.0f, "Blamokiller");
++		Commands->Apply_Damage(obj, 10000.0f, "Blamokiller", NULL);
+@@ -1263 +1263 @@
+-			Commands->Apply_Damage(obj, 10000.0f, "Blamokiller");
++			Commands->Apply_Damage(obj, 10000.0f, "Blamokiller", NULL);
+@@ -1458 +1458 @@
+-			int conv_id = Commands->Create_Conversation (conv_name);
++			int conv_id = Commands->Create_Conversation (conv_name, 0, 0, true);
+@@ -1481 +1481 @@
+-			int conv_id = Commands->Create_Conversation (conv_name);
++			int conv_id = Commands->Create_Conversation (conv_name, 0, 0, true);
+@@ -1497 +1497 @@
+-			int conv_id = Commands->Create_Conversation ( "MX0_A03_04" );
++			int conv_id = Commands->Create_Conversation ( "MX0_A03_04", 0, 0, true );
+@@ -1994 +1994 @@
+-					int conv_id = Commands->Create_Conversation ( "MX0_A03_08" );
++					int conv_id = Commands->Create_Conversation ( "MX0_A03_08", 0, 0, true );
+@@ -2119 +2119 @@
+-		int conv_id = Commands->Create_Conversation (conv_name);
++		int conv_id = Commands->Create_Conversation (conv_name, 0, 0, true);
+@@ -2362 +2362 @@
+-			Commands->Set_Animation( obj, "V_NOD_HRVSTR.V_NOD_HRVSTR", false);
++			Commands->Set_Animation( obj, "V_NOD_HRVSTR.V_NOD_HRVSTR", false, NULL, 0.0F, -1.0F, false);
+@@ -2484 +2484 @@
+-				int conv_id = Commands->Create_Conversation ( "MX0_A03_05" );
++				int conv_id = Commands->Create_Conversation ( "MX0_A03_05", 0, 0, true );

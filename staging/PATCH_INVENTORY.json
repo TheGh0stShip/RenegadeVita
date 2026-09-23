@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "2d1501e3e8e63ca0b2f1a11fb5494556f5c9d021cce87072458f9d8e46699f7a",
+  "stage_script_sha256": "aa967a9a8274752059f82164b9890fe25dd2d9ceeea9627d07ea087721044650",
   "patch_count": 198,
   "patches": [
     {
@@ -937,7 +937,7 @@
     {
       "path": "port/patches/combat-a35-postthink-owner-timing.patch",
       "stage_directory": "combat",
-      "sha256": "8e4e15876fbe6d70067446161037a01eed34c9409b99617663feb370534018c8"
+      "sha256": "bab159acd8ad90b5a916aa6ca261d2b8af51191b32022e1a1826591df91aa151"
     },
     {
       "path": "port/patches/combat-a35-script-timer-timing.patch",
@@ -947,7 +947,7 @@
     {
       "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
       "stage_directory": "scripts",
-      "sha256": "fb5c386a74cdb221db2cbeff7fa75d6540d22ceb2fabf63fc9318ba64679c227"
+      "sha256": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef"
     },
     {
       "path": "port/patches/scripts-a35-m13-slot19-phases.patch",
@@ -995,5 +995,5 @@
       "sha256": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
     }
   ],
-  "registry_sha256": "2f6db3a5593a373a7f1992ed8d68f4116dbbd43a3a826a99972d49d107619c24"
+  "registry_sha256": "bf39b83e11ec1361f346abedd7a56a9818fa042b0180fdbfd686754672d2f65c"
 }

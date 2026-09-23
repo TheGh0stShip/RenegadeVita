@@ -1,6 +1,7 @@
 #include "a30_vita_runtime.h"
 
 #include "a31_capture_telemetry.h"
+#include "a35_campaign_flight_recorder.h"
 #include "renegade_build_identity.h"
 
 #include "camera.h"
@@ -384,6 +385,10 @@ int A30_Vita_Log_Reset()
 		RENEGADE_BUILD_CANDIDATE_LABEL, RENEGADE_BUILD_RUNTIME_LOG_PATH);
 	const int result = header_count > 0 ? Write_Runtime_Log_Line(header,
 		static_cast<unsigned>(header_count)) : -1;
+	if (header_count > 0) {
+		A35_Campaign_Flight_Record_Log_Line(header,
+			static_cast<unsigned>(header_count));
+	}
 	const int sync_result = sceIoSyncByFd(gA30RuntimeLogFile, 0);
 	return result >= 0 && sync_result < 0 ? sync_result : result;
 }
@@ -402,7 +407,9 @@ int A30_Vita_Log(const char *format, ...)
 	const unsigned length = static_cast<unsigned>(
 		count < static_cast<int>(sizeof(line)) ? count :
 		static_cast<int>(sizeof(line) - 1U));
-	return Write_Runtime_Log_Line(line, length);
+	const int result = Write_Runtime_Log_Line(line, length);
+	A35_Campaign_Flight_Record_Log_Line(line, length);
+	return result;
 }
 
 void A35_Vita_Static_Load_Trace_Begin(uint32_t object_index,

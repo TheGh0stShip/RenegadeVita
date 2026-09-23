@@ -4,6 +4,7 @@
 #include "a31_interactive_runtime_policy.h"
 #include "a31_capture_telemetry.h"
 #include "a31_demo_ending.h"
+#include "a35_campaign_flight_recorder.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "a4_frontend_lifecycle_boundary.h"
 #include "a31_development_checkpoint.h"
@@ -137,7 +138,7 @@ struct A35PreparedRenderObjectSlot {
 	RenderObjClass *object;
 };
 
-static A35PreparedRenderObjectSlot g_A35PreparedRenderObjects[16];
+static A35PreparedRenderObjectSlot g_A35PreparedRenderObjects[32];
 
 void A35_Vita_Clear_Prepared_Render_Objs(void)
 {
@@ -2078,6 +2079,139 @@ void Log_Mission_Progress(const A31MissionProgressState &progress,
 		trace.player_x, trace.player_y, trace.player_z);
 }
 
+A35CampaignFlightMissionState Make_Flight_Mission_State(
+	const A31MissionProgressState &progress,
+	const A31InteractiveRenderTrace &trace, uint32_t frame,
+	const char *archive, const char *load_source)
+{
+	A35CampaignFlightMissionState state = {};
+	state.frame = frame;
+	state.archive = archive;
+	state.load_source = load_source;
+	state.star_available = progress.star_available;
+	state.player_control_enabled = progress.player_control_enabled;
+	state.objective_count = progress.objective_count;
+	for (unsigned index = 0U; index < 6U; ++index) {
+		state.objective_status[index] = progress.objective_status[index];
+	}
+	state.active_conversation_count = progress.active_conversation_count;
+	state.active_conversation_name = progress.active_conversation_name;
+	state.active_conversation_id = progress.active_conversation_id;
+	state.active_conversation_state = progress.active_conversation_state;
+	state.active_conversation_action_id =
+		progress.active_conversation_action_id;
+	state.active_conversation_current_remark =
+		progress.active_conversation_current_remark;
+	state.active_conversation_remark_count =
+		progress.active_conversation_remark_count;
+	state.active_conversation_text_id = progress.active_conversation_text_id;
+	state.active_conversation_sound_id = progress.active_conversation_sound_id;
+	state.active_conversation_string_available =
+		progress.active_conversation_string_available;
+	state.active_conversation_sound_definition_available =
+		progress.active_conversation_sound_definition_available;
+	state.active_conversation_next_remark_seconds =
+		progress.active_conversation_next_remark_seconds;
+	state.active_conversation_speaker_available =
+		progress.active_conversation_speaker_available;
+	state.active_conversation_speech_source =
+		progress.active_conversation_speech_source;
+	state.active_conversation_speech_available =
+		progress.active_conversation_speech_available;
+	state.active_conversation_speech_in_scene =
+		progress.active_conversation_speech_in_scene;
+	state.active_conversation_speech_culled =
+		progress.active_conversation_speech_culled;
+	state.active_conversation_speech_playing =
+		progress.active_conversation_speech_playing;
+	state.active_conversation_speech_class_id =
+		progress.active_conversation_speech_class_id;
+	state.active_conversation_speech_type =
+		progress.active_conversation_speech_type;
+	state.active_conversation_speech_state =
+		progress.active_conversation_speech_state;
+	state.active_conversation_speech_duration_ms =
+		progress.active_conversation_speech_duration_ms;
+	state.active_conversation_speech_dropoff_radius =
+		progress.active_conversation_speech_dropoff_radius;
+	state.active_conversation_speech_listener_distance =
+		progress.active_conversation_speech_listener_distance;
+	state.player_x = trace.player_x;
+	state.player_y = trace.player_y;
+	state.player_z = trace.player_z;
+	return state;
+}
+
+A35CampaignFlightRenderState Make_Flight_Render_State(
+	const A31InteractiveRenderTrace &trace)
+{
+	A35CampaignFlightRenderState state = {};
+	state.scene_available = trace.scene_available;
+	state.camera_available = trace.camera_available;
+	state.star_available = trace.star_available;
+	state.pre_render_completed = trace.pre_render_completed;
+	state.begin_render_completed = trace.begin_render_completed;
+	state.combat_render_called = trace.combat_render_called;
+	state.message_window_render_called = trace.message_window_render_called;
+	state.end_render_completed = trace.end_render_completed;
+	state.post_render_completed = trace.post_render_completed;
+	state.mesh_submissions = trace.mesh_submissions;
+	state.vertex_submissions = trace.vertex_submissions;
+	state.triangle_submissions = trace.triangle_submissions;
+	state.rejected_submissions = trace.rejected_submissions;
+	state.unsupported_submissions = trace.unsupported_submissions;
+	state.camera_x = trace.camera_x;
+	state.camera_y = trace.camera_y;
+	state.camera_z = trace.camera_z;
+	state.player_x = trace.player_x;
+	state.player_y = trace.player_y;
+	state.player_z = trace.player_z;
+	return state;
+}
+
+A35CampaignFlightAudioState Make_Flight_Audio_State()
+{
+	RenegadeMilesRuntimeStats stats = {};
+	Renegade_Miles_Get_Runtime_Stats(&stats);
+	WWAudioClass *audio = WWAudioClass::Get_Instance();
+	A35CampaignFlightAudioState state = {};
+	state.active_samples = stats.active_samples;
+	state.active_streams = stats.active_streams;
+	state.active_stream_position_ms = stats.active_stream_position_ms;
+	state.active_stream_length_ms = stats.active_stream_length_ms;
+	state.active_stream_cursor_frame = stats.active_stream_cursor_frame;
+	state.active_stream_total_frames = stats.active_stream_total_frames;
+	state.output_write_failures = stats.output_write_failures;
+	state.stream_open_failures = stats.stream_open_failures;
+	state.stream_start_silent = stats.stream_start_silent;
+	state.mixed_peak_abs = stats.mixed_peak_abs;
+	state.last_stream_name = stats.last_stream_name[0] != '\0' ?
+		stats.last_stream_name : "none";
+	state.last_error = stats.last_error[0] != '\0' ? stats.last_error : "none";
+	state.dialog_volume = audio != NULL ? audio->Get_Dialog_Volume() : -1.0F;
+	state.cinematic_volume =
+		audio != NULL ? audio->Get_Cinematic_Volume() : -1.0F;
+	return state;
+}
+
+void Copy_Flight_Memory(A31MemoryTelemetry &output)
+{
+	RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+	if (!RenegadeVitaRenderer::Query_Backend_Memory(memory)) return;
+	output.available = true;
+	output.system_user_free = memory.system_user_free;
+	output.system_cdram_free = memory.system_cdram_free;
+	output.system_phycont_free = memory.system_phycont_free;
+	output.vitagl_ram_total = memory.ram_total;
+	output.vitagl_ram_free = memory.ram_free;
+	output.vitagl_vram_total = memory.vram_total;
+	output.vitagl_vram_free = memory.vram_free;
+	output.vitagl_slow_total = memory.slow_total;
+	output.vitagl_slow_free = memory.slow_free;
+	output.vitagl_all_total = memory.all_total;
+	output.vitagl_all_free = memory.all_free;
+}
+
 	A31CaptureBundleResult Capture_Interactive_Frame(const A31StateSnapshot &state,
 		const A31FrameHistory &history, const uint8_t *pixels, const char *label)
 	{
@@ -2346,7 +2480,7 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 		stats.last_error[0] != '\0' ? stats.last_error : "none");
 }
 
-void Log_File_Factory_Statistics()
+void Log_File_Factory_Statistics(uint32_t frame = 0U)
 {
 	const RenegadeFileFactoryStatistics statistics =
 		Renegade_File_Factory_Get_Statistics();
@@ -2362,6 +2496,11 @@ void Log_File_Factory_Statistics()
 		statistics.write_calls, statistics.write_bytes);
 	A30_Vita_Log("A3.6 resources: confirmed-readonly-miss native probes skipped available/open=%u/%u logical_failures_retained=1 writable_and_forced_native=1\n",
 		statistics.readonly_availability_skips, statistics.readonly_open_skips);
+	A35_Campaign_Flight_Record_Resource_Snapshot(frame,
+		statistics.open_attempts, statistics.open_failures,
+		statistics.availability_attempts, statistics.availability_failures,
+		statistics.read_calls, statistics.read_bytes, statistics.write_calls,
+		statistics.write_bytes);
 }
 
 void Copy_Render_Statistics(A31VitaInteractiveResult &result)
@@ -3623,6 +3762,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					"ag_nod_apc_exp1", "ag_ob_exp1",
 					"V_NOD_LTANK", "V_NOD_MGUN",
 					"V_NOD_ART", "B_SAMSITE", "BX_SAMSITE",
+					"v_GDI_trnspt", "V_GDI_ORCA",
+					"v_Nod_cplane", "V_GDI_A10",
+					"X0Z_Effects", "X0Z_Orca01_Traj",
+					"X0Z_Orca02_Traj", "X0D_A10_Traj",
 					"L00.HND^FRONT", "L00.HND^ROOF",
 					"L00.AR_04_03"
 				};
@@ -3662,6 +3805,49 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						prepare_explosions[i], prepared ? 1 : 0,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
 					loading_presenter.Render_Original_Progress("after_m13_explosion_prepare");
+				}
+			}
+			if (stricmp(selected_archive, "M01.mix") == 0) {
+				A35_Vita_Clear_Prepared_Render_Objs();
+				const char *const prepare_models[] = {
+					"v_Nod_cplane",
+					"v_GDI_trnspt", "v_Nod_trnspt",
+					"v_nod_Apache", "Vxag_Nod_apache", "vxag_nod_heli",
+					"V_GDI_ORCA", "V_GDI_A10",
+					"V_AG_X1bGBoat", "V_AG_X1Borca", "VxAG_X1Borca",
+					"X1B_AG_Missiles", "X1B_AG_xplosion",
+					"X1C_AG_Missile", "X1c_AG_xplosion",
+					"X1D_AG_Missile", "X1D_AG_xplosion",
+					"X1D_Apache", "X1D_MTank", "X1d_Trajectory",
+					"X1G_A-10_Traj", "X1G_AG_Effects",
+					"XG_AG_AT_Misl", "XG_AG_AT_Xplsn",
+					"XG_At_ApTraj", "XG_At_TrnTraj",
+					"XG_EV5_Path", "XG_EV5_rope", "XG_EV5_troopBN",
+					"XG_HD_Harness", "XG_HD_HTraj", "XG_TransprtBone"
+				};
+				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
+					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
+					RenderObjClass *prepared = NULL;
+					const bool should_retain =
+						stricmp(prepare_models[i], "v_Nod_cplane") == 0 ||
+						stricmp(prepare_models[i], "v_GDI_trnspt") == 0 ||
+						stricmp(prepare_models[i], "v_Nod_trnspt") == 0 ||
+						stricmp(prepare_models[i], "v_nod_Apache") == 0 ||
+						stricmp(prepare_models[i], "V_GDI_ORCA") == 0 ||
+						stricmp(prepare_models[i], "V_GDI_A10") == 0;
+					bool retained_for_later_use = false;
+					if (should_retain) {
+						retained_for_later_use = A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
+					} else {
+						prepared = WW3DAssetManager::Get_Instance()->Create_Render_Obj(prepare_models[i]);
+					}
+					A30_Vita_Log("A4 M01 retained preparation: model=%s created=%d retained=%d elapsed_us=%llu\n",
+						prepare_models[i],
+						(prepared != NULL || retained_for_later_use) ? 1 : 0,
+						retained_for_later_use ? 1 : 0,
+						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
+					if (prepared != NULL) prepared->Release_Ref();
+					loading_presenter.Render_Original_Progress("after_m01_model_prepare");
 				}
 			}
 #endif
@@ -3771,6 +3957,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					capture_pixels = static_cast<uint8_t *>(malloc(kCaptureBytes));
 				}
 				const uint64_t sync_origin = sceKernelGetProcessTimeWide() / 1000ULL;
+				A35_Campaign_Flight_Reset(RENEGADE_BUILD_CANDIDATE_LABEL,
+					RENEGADE_BUILD_CAPTURE_ROOT, RENEGADE_BUILD_RUNTIME_LOG_PATH,
+					selected_archive, load_source);
+				A35_Campaign_Flight_Record_Event("lifecycle",
+					"interactive_session_ready", result.frames, sync_origin,
+					"original player/session ready; entering campaign frame loop");
 #if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 				bool diagnostic_m13_completion_pending =
 					Try_Arm_Development_M13_Completion(load_source);
@@ -4001,6 +4193,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				if (!mission_progress_recorded ||
 					Mission_Progress_Changed(last_mission_progress, mission_progress)) {
 					Log_Mission_Progress(mission_progress, render_trace, result.frames);
+					A35_Campaign_Flight_Record_Mission(Make_Flight_Mission_State(
+						mission_progress, render_trace, result.frames,
+						selected_archive, load_source));
+					A35_Campaign_Flight_Flush("mission-progress-change");
 					last_mission_progress = mission_progress;
 					mission_progress_recorded = true;
 				}
@@ -4093,6 +4289,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				capture_frame.stages.game_update_us = render_begin - simulation_begin;
 				capture_frame.stages.render_us = frame_end - render_begin;
 				Copy_Renderer_Statistics(capture_frame.renderer);
+				Copy_Flight_Memory(capture_frame.memory);
 				if (capture_frame.renderer.draw_calls == 0U) {
 					capture_frame.renderer.draw_calls = render_trace.mesh_submissions;
 					capture_frame.renderer.mesh_submissions = render_trace.mesh_submissions;
@@ -4109,6 +4306,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					Renegade_Vita_Last_Input_Telemetry();
 				capture_frame.input_action_count = input_telemetry.sample_count;
 				capture_history->Push(capture_frame);
+				A35_Campaign_Flight_Record_Frame(capture_frame,
+					Make_Flight_Render_State(render_trace), Make_Flight_Audio_State());
+				if (capture_frame.frame_time_us >= 250000ULL) {
+					A35_Campaign_Flight_Flush("slow-frame-over-250ms");
+				}
 				/* A player/camera at frame one is an engine-ownership signal, not
 				** proof that the physical panel has reached a settled gameplay
 				** presentation. Dev82 retained a stale loading image and a black/HUD
@@ -4157,7 +4359,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						result.triangle_submissions);
 				}
 		if ((result.frames % kTimingWindowFrames) == 0U) {
-			Log_File_Factory_Statistics();
+			Log_File_Factory_Statistics(result.frames);
 					A30_Vita_Log("A3.5 breadcrumb: %u-frame checkpoint PASS\n",
 						result.frames);
 					Log_Interactive_Player_Effects(render_trace, result.frames,
@@ -4172,6 +4374,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					Log_Campaign_Simulation_Stages();
 					Log_Input_Telemetry();
 					Log_Audio_Runtime_Statistics("checkpoint", result.frames);
+					A35_Campaign_Flight_Flush("checkpoint");
 				}
 			}
 				result.clean_exit_requested = !result.render_error &&
@@ -4200,6 +4403,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						capture.state_written ? 1 : 0,
 						capture.history_written ? 1 : 0, capture.summary_written ? 1 : 0,
 						capture.first_error_code);
+					A35_Campaign_Flight_Record_Event("lifecycle", "pre_clean_exit",
+						result.frames, exit_us, "interactive capture flushed");
+					A35_Campaign_Flight_Flush("pre-clean-exit");
 				} else if (result.render_error && capture_history->Count() != 0U) {
 					char label[96];
 					const uint64_t fatal_us = sceKernelGetProcessTimeWide();
@@ -4214,11 +4420,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						capture.bundle_path, capture.state_written ? 1 : 0,
 						capture.history_written ? 1 : 0, capture.summary_written ? 1 : 0,
 						capture.first_error_code);
+					A35_Campaign_Flight_Record_Event("lifecycle",
+						"fatal_render_error", result.frames, fatal_us,
+						"best-effort fatal capture flushed");
+					A35_Campaign_Flight_Flush("best-effort-fatal-snapshot");
 				}
 				Copy_Timing_Statistics(result, timing);
 				Log_Timing_Statistics(timing, RenegadeVitaRenderer::Get_Statistics());
 				Log_Campaign_Simulation_Stages();
 				Log_Audio_Runtime_Statistics("final", result.frames);
+				A35_Campaign_Flight_Flush("final");
 			if (result.start_exit_requested && result.clean_exit_requested) {
 				A30_Vita_Log("A3.1 breadcrumb: native orderly exit request detected\n");
 			} else if (result.mission_completion_observed && result.mission_succeeded &&
@@ -4228,6 +4439,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A30_Vita_Log("A3.5 breadcrumb: original mission failure transition detected\n");
 			}
 			} while (false);
+			A35_Campaign_Flight_Shutdown();
 			free(capture_pixels);
 			delete capture_history;
 			capture_history = NULL;

@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev176",
+  "milestone": "A3.5-dev179",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -540,9 +540,10 @@
   "staged_original_owner_paths": [
     "staging/commando/loadingscreen.cpp"
   ],
-  "vita_platform_renderer_validation_files": 27,
+  "vita_platform_renderer_validation_files": 28,
   "vita_translation_units": [
     "port/developer/a31_capture_telemetry.cpp",
+    "port/developer/a35_campaign_flight_recorder.cpp",
     "port/audio/vita/renegade_miles_provider.cpp",
     "port/audio/vita/renegade_wave_decoder.cpp",
     "port/filesystem/renegade_cache_health.cpp",
@@ -2824,7 +2825,7 @@
     {
       "path": "port/patches/combat-a35-postthink-owner-timing.patch",
       "stage_directory": "combat",
-      "sha256": "8e4e15876fbe6d70067446161037a01eed34c9409b99617663feb370534018c8",
+      "sha256": "bab159acd8ad90b5a916aa6ca261d2b8af51191b32022e1a1826591df91aa151",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "gameobjmanager.cpp"
@@ -2842,7 +2843,7 @@
     {
       "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
       "stage_directory": "scripts",
-      "sha256": "fb5c386a74cdb221db2cbeff7fa75d6540d22ceb2fabf63fc9318ba64679c227",
+      "sha256": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "Test_Cinematic.cpp"

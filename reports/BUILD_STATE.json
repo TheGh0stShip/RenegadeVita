@@ -1,4 +1,34 @@
 {
+  "dev179_campaign_flight_recorder": {
+    "candidate": "A3.5-dev179",
+    "state": "ARM_PACKAGE_PASS_CAMPAIGN_FLIGHT_RECORDER_RUNTIME_UNVERIFIED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGA3101",
+    "build_dir": "build/vita-a35-dev179-candidate-20260923-122410",
+    "build_log": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/logs/a35-dev179-20260923-122410-build.log",
+    "dist_vpk": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/RenegadeVita-A3.5-dev179.vpk",
+    "diagnostics_zip": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/A3.5-dev179-BUILD-DIAGNOSTICS-20260923-122410.zip",
+    "expected_runtime_log": "ux0:data/renegade/user/logs/a35-dev179-runtime.log",
+    "flight_recorder_outputs": [
+      "campaign-flight-events.jsonl",
+      "campaign-flight-frames.csv",
+      "campaign-flight-summary.json",
+      "campaign-flight-log-tail.txt"
+    ],
+    "vpk_sha256": "25e7aefc1ef00f7741715c0f6f675b093eb88405c8efef99b8231ef403fbc59a",
+    "diagnostics_zip_sha256": "83b58a97466721f3161d2a2f527ac7333ce95855a6ce2659955c3ef2eb26f6d1",
+    "patch_inventory_registry_sha256": "bf39b83e11ec1361f346abedd7a56a9818fa042b0180fdbfd686754672d2f65c",
+    "focused_tests": "flight recorder contract PASS by direct execution; campaign profile defaults PASS; development checkpoint PASS; M13/M01 cinematic preparation PASS; git diff --check PASS; deterministic staging PASS",
+    "host_validation": "PASS: retained A2/A3, M00, M01, City smoke, renderer/input/audio/MIX/material-cache, ASan/LSan/UBSan",
+    "arm_package": "PASS",
+    "vita3k_installed": false,
+    "vita3k_launch_verified": false,
+    "m13_ambush_performance_verified": false,
+    "m13_ion_beacon_performance_verified": false,
+    "m01_beach_freeze_verified": false,
+    "campaign_progression_verified": false,
+    "physical_acceptance": false
+  },
   "dev177_campaign_profile_menu_restore": {
     "candidate": "A3.5-dev177",
     "state": "ARM_PACKAGE_PASS_VITA3K_INSTALLED_FULL_PORT_PROFILE_MENU_RESTORE_RUNTIME_UNVERIFIED",

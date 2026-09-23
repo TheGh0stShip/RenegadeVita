@@ -665,7 +665,7 @@ fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-command-timing.patch"
 echo "Applied: port/patches/scripts-a35-cinematic-command-timing.patch"
 rv_slot19_sha=$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)
-if [[ "$rv_slot19_sha" != "7e6190ea669ce3e701332b7bc89c997eef80161f7fd17663ed77872892ade774" ]]; then
+if [[ "$rv_slot19_sha" != "457f4d2053a3e16a4b8c1526cafbc8e4907356f3906267efa8e87c557bb6091e" ]]; then
 	echo "Refusing unanchored M13 slot19 timing patch: Test_Cinematic.cpp changed ($rv_slot19_sha)" >&2
 	exit 1
 fi

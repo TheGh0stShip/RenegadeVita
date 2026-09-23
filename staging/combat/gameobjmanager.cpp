@@ -424,9 +424,9 @@ int	GameObjManager::Post_Think()
 	SLNode<BaseGameObj> *objnode;
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t vita_post_start_us = sceKernelGetProcessTimeWide();
-	uint64_t vita_max_object_us = 0U;
-	int vita_max_object_id = 0;
-	const char *vita_max_object_name = "";
+	uint64_t vita_top_object_us[4] = { 0U, 0U, 0U, 0U };
+	int vita_top_object_id[4] = { 0, 0, 0, 0 };
+	const char *vita_top_object_name[4] = { "", "", "", "" };
 	unsigned vita_object_count = 0U;
 #endif
 	for (	objnode = GameObjList.Head(); objnode; objnode = objnode->Next()) {
@@ -446,10 +446,18 @@ int	GameObjManager::Post_Think()
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 			const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
 			++vita_object_count;
-			if (vita_object_us > vita_max_object_us) {
-				vita_max_object_us = vita_object_us;
-				vita_max_object_id = vita_object_id;
-				vita_max_object_name = vita_object_name;
+			for (unsigned vita_rank = 0U; vita_rank < 4U; ++vita_rank) {
+				if (vita_object_us > vita_top_object_us[vita_rank]) {
+					for (unsigned vita_move = 3U; vita_move > vita_rank; --vita_move) {
+						vita_top_object_us[vita_move] = vita_top_object_us[vita_move - 1U];
+						vita_top_object_id[vita_move] = vita_top_object_id[vita_move - 1U];
+						vita_top_object_name[vita_move] = vita_top_object_name[vita_move - 1U];
+					}
+					vita_top_object_us[vita_rank] = vita_object_us;
+					vita_top_object_id[vita_rank] = vita_object_id;
+					vita_top_object_name[vita_rank] = vita_object_name != NULL ? vita_object_name : "";
+					break;
+				}
 			}
 #endif
 		}
@@ -471,11 +479,14 @@ int	GameObjManager::Post_Think()
 	static unsigned vita_slow_post_reports = 0U;
 	if (vita_post_end_us - vita_post_start_us >= 500000U &&
 		vita_slow_post_reports++ < 8U) {
-		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u max_object_us=%llu max_object_id=%d max_object_name=%s observers_us=%llu scripts_us=%llu\n",
+		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u top0=%llu/%d/%s top1=%llu/%d/%s top2=%llu/%d/%s top3=%llu/%d/%s observers_us=%llu scripts_us=%llu\n",
 			static_cast<unsigned long long>(vita_post_end_us - vita_post_start_us),
 			static_cast<unsigned long long>(vita_objects_end_us - vita_post_start_us),
 			vita_object_count,
-			static_cast<unsigned long long>(vita_max_object_us), vita_max_object_id, vita_max_object_name,
+			static_cast<unsigned long long>(vita_top_object_us[0]), vita_top_object_id[0], vita_top_object_name[0],
+			static_cast<unsigned long long>(vita_top_object_us[1]), vita_top_object_id[1], vita_top_object_name[1],
+			static_cast<unsigned long long>(vita_top_object_us[2]), vita_top_object_id[2], vita_top_object_name[2],
+			static_cast<unsigned long long>(vita_top_object_us[3]), vita_top_object_id[3], vita_top_object_name[3],
 			static_cast<unsigned long long>(vita_observers_end_us - vita_objects_end_us),
 			static_cast<unsigned long long>(vita_post_end_us - vita_observers_end_us));
 	}

@@ -998,10 +998,18 @@ public:
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
 		const uint64_t vita_command_us = sceKernelGetProcessTimeWide() - vita_command_start_us;
 		static unsigned vita_slow_command_reports = 0U;
-		if (vita_command_us >= 100000U && vita_slow_command_reports++ < 24U &&
-			strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0) {
-			A30_Vita_Log("A4 slow M13 cinematic command: owner_id=%d us=%llu command=%.160s\n",
-				MyID, static_cast<unsigned long long>(vita_command_us), vita_original_command);
+		const char *vita_control_filename = Get_Parameter("ControlFilename");
+		const bool vita_trace_campaign_cinematic =
+			vita_control_filename != NULL &&
+			(strnicmp(vita_control_filename, "X00_", 4) == 0 ||
+			 strnicmp(vita_control_filename, "MX0_", 4) == 0 ||
+			 strnicmp(vita_control_filename, "X0", 2) == 0 ||
+			 strnicmp(vita_control_filename, "X1", 2) == 0 ||
+			 strnicmp(vita_control_filename, "XG_M01", 6) == 0);
+		if (vita_command_us >= 100000U && vita_slow_command_reports++ < 48U &&
+			vita_trace_campaign_cinematic) {
+			A30_Vita_Log("A4 slow campaign cinematic command: file=%s owner_id=%d us=%llu command=%.160s\n",
+				vita_control_filename, MyID, static_cast<unsigned long long>(vita_command_us), vita_original_command);
 		}
 #endif
 	}

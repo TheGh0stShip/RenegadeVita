@@ -1,5 +1,43 @@
 # Live engineering progress
 
+## Dev179: campaign flight recorder
+
+Renegade Vita - v3.5 active
+`[████░░░░░░] 4/10 current evidence gates complete`
+
+Now: run `A3.5-dev179` through the next M13/M01 failure and collect the
+recorder sidecar artifacts instead of adding another one-off logging build.
+Completed: `A3.5-dev178` built cleanly as a superseded prep/timing candidate.
+Dev179 adds a bounded recorder sidecar that captures frame timing, render
+closure, renderer counters, backend memory samples, audio runtime state,
+mission-progress/dialogue/objective transitions, file-factory resource
+snapshots, slow-frame events, and a runtime-log tail into
+`campaign-flight-*` artifacts under the configured capture root. The harness is
+hooked through the existing Vita log path, interactive campaign loop, resource
+checkpoint, clean-exit, fatal-snapshot, and shutdown paths. `A3.5-dev179`
+build/package completed successfully without deployment.
+Evidence: Dev178 host/ARM/package/diagnostics PASS; Dev179 source-contract
+test functions PASS by direct execution because pytest is unavailable in this
+WSL Python; `python3 -m tools.test_development_checkpoint` PASS;
+`python3 -m tools.test_campaign_profile_defaults` PASS; focused M13/M01
+preparation tests PASS; `git diff --check` PASS; deterministic staging PASS
+with patch inventory `bf39b83e11ec1361f346abedd7a56a9818fa042b0180fdbfd686754672d2f65c`;
+full `A3.5-dev179` ARM/VPK build PASS. VPK
+`25e7aefc1ef00f7741715c0f6f675b093eb88405c8efef99b8231ef403fbc59a`;
+diagnostics ZIP
+`83b58a97466721f3161d2a2f527ac7333ce95855a6ce2659955c3ef2eb26f6d1`.
+Artifacts are in
+`/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/`; runtime log is
+expected at `ux0:data/renegade/user/logs/a35-dev179-runtime.log`. Recorder
+outputs are `campaign-flight-events.jsonl`, `campaign-flight-frames.csv`,
+`campaign-flight-summary.json`, and `campaign-flight-log-tail.txt` under the
+configured capture root.
+No Vita3K launch, hardware launch, visual correctness, campaign progression,
+or physical acceptance is claimed. Next: install/run only when requested and
+use the recorder bundle to isolate the M13 ambush/Ion-beacon and M01 beach
+freeze without rebuilding for missing diagnostics. Blocker: runtime evidence
+pending.
+
 ## Dev177: restore full-port campaign profile
 
 Renegade Vita - v3.5 active

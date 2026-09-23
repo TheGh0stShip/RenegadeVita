@@ -312,7 +312,8 @@ foreach(required_path
     "${RENEGADE_STAGE}/combat/savegame.cpp"
     "${RENEGADE_STAGE}/commando/datasafe.cpp"
     "${RENEGADE_ROOT}/port/validation/a30_world_runtime.cpp"
-	"${RENEGADE_ROOT}/port/developer/a31_capture_telemetry.cpp"
+    "${RENEGADE_ROOT}/port/developer/a31_capture_telemetry.cpp"
+    "${RENEGADE_ROOT}/port/developer/a35_campaign_flight_recorder.cpp"
     "${RENEGADE_ROOT}/port/audio/vita/renegade_miles_provider.cpp"
     "${RENEGADE_ROOT}/port/audio/vita/renegade_wave_decoder.cpp"
     "${RENEGADE_ROOT}/port/platform/vita/a30_main.cpp"
@@ -328,6 +329,7 @@ endforeach()
 # source list so their translation-unit factory registration is retained.
 set(RENEGADE_A30_PORT_SOURCES
 	${RENEGADE_ROOT}/port/developer/a31_capture_telemetry.cpp
+	${RENEGADE_ROOT}/port/developer/a35_campaign_flight_recorder.cpp
 	${RENEGADE_ROOT}/port/audio/vita/renegade_miles_provider.cpp
 	${RENEGADE_ROOT}/port/audio/vita/renegade_wave_decoder.cpp
 	${RENEGADE_ROOT}/port/filesystem/renegade_cache_health.cpp

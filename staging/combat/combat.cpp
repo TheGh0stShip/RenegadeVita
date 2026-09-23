@@ -53,6 +53,7 @@
 #include "bones.h"
 #include "humanstate.h"
 #include "surfaceeffects.h"
+#include "explosion.h"
 #include "debug.h"
 #include "backgroundmgr.h"
 #include "cover.h"
@@ -252,6 +253,8 @@ void	CombatManager::Shutdown( void )
 	CombatSoundManager::Shutdown();
 
 	ObjectiveManager::Shutdown();
+
+	ExplosionManager::Shutdown();
 
 	SurfaceEffectsManager::Shutdown();
 
@@ -1421,8 +1424,6 @@ void	CombatManager::Register_Star_Killer( ArmedGameObj * killer )
 		StarKillerID = 0;
 	}
 }
-
-
 
 
 

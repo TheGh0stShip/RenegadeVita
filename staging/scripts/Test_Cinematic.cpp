@@ -1014,6 +1014,19 @@ public:
 #endif
 	}
 
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+	bool Vita_Is_Budgeted_Campaign_Cinematic(void)
+	{
+		const char *filename = Get_Parameter("ControlFilename");
+		return filename != NULL &&
+			(strnicmp(filename, "X00_", 4) == 0 ||
+			 strnicmp(filename, "MX0_", 4) == 0 ||
+			 strnicmp(filename, "X0", 2) == 0 ||
+			 strnicmp(filename, "X1", 2) == 0 ||
+			 strnicmp(filename, "XG_M01", 6) == 0);
+	}
+#endif
+
 	void	Parse_Commands( GameObject* obj ) {
 
 		unsigned int sync_diff = Commands->Get_Sync_Time() - LastSyncTime;
@@ -1025,6 +1038,13 @@ public:
 		MyID = Commands->Get_ID( obj );
 
 //		Commands->Debug_Message( "Cinematic Time %1.3f Frame %1.3f Bump Time %1.3f\n", Time, Time * 30.0f, bump_time );
+
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		const bool vita_budget_commands = Vita_Is_Budgeted_Campaign_Cinematic();
+		const uint64_t vita_budget_start_us =
+			vita_budget_commands ? sceKernelGetProcessTimeWide() : 0U;
+		unsigned vita_budget_command_count = 0U;
+#endif
 
 		// If Primary Destroyed, 
 		if ( PrimaryKilled ) {
@@ -1044,6 +1064,27 @@ public:
 			FrameSync = (Time - Controls->Time) * 30.0f;
 			Parse_Command( Controls->Command );
 			Remove_Head_Control_Line();
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			++vita_budget_command_count;
+			if (vita_budget_commands && Controls != NULL && Controls->Time <= Time) {
+				const uint64_t elapsed_us = sceKernelGetProcessTimeWide() - vita_budget_start_us;
+				if (elapsed_us >= 12000U || vita_budget_command_count >= 4U) {
+					static unsigned vita_budget_reports = 0U;
+					if (vita_budget_reports++ < 64U) {
+						A30_Vita_Log("A4 campaign cinematic budget yield: file=%s owner_id=%d commands=%u elapsed_us=%llu pending_time=%.3f current_time=%.3f\n",
+							Get_Parameter("ControlFilename"), MyID,
+							vita_budget_command_count,
+							static_cast<unsigned long long>(elapsed_us),
+							Controls->Time, Time);
+					}
+					Commands->Start_Timer( obj, this, 0.001f, 0 );
+					if ( IsCameraCinematic ) {
+						Commands->Enable_Cinematic_Freeze( obj, false );
+					}
+					return;
+				}
+			}
+#endif
 		}
 
 		if ( Controls != NULL ) {

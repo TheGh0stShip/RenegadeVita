@@ -1,5 +1,46 @@
 # Live engineering progress
 
+## Dev183: explosion recycler and campaign cinematic budgeting
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: run installed `A3.5-dev183` through M13 ambush, tiberium field, Nod-base
+explosions, ion beacon blast, transition to M01, and the M01 beach/ladder route;
+compare slow-frame clusters and A/V drift against Dev182.
+Completed: Dev182 runtime evidence proved the unsafe prepared-object cache was
+gone (`prepared render object: consumed` count 0), but user testing still found
+unacceptable explosion-heavy lag, audio/video desync, ion-cannon audio leading
+the visual, and an M01 beach freeze. Dev183 keeps Dev182's warm-only cinematic
+object handling and adds two broader fixes. First, `ExplosionManager` now routes
+animated timed-decoration explosion visuals through the original
+`EffectRecyclerClass`, resets that recycler at combat shutdown, and mission
+preparation pre-seeds two recyclable render objects per listed M13/M01 explosion
+definition. Second, Vita full-port campaign `Test_Cinematic` batches for
+X00/MX0/X0/X1/XG control files now yield after a bounded command budget so one
+timestamp cannot execute seconds of object/effect creation while audio advances.
+No mission commands are skipped, no objectives are forced, and demo mode is not
+changed.
+Evidence: Dev182 recorder showed M13 slow frames around explosion/cinematic
+streams up to 3.97 s and M01 first-frame/intro stalls up to 5.8 s / 699 ms.
+Dev183 validation: development checkpoint PASS; campaign profile defaults PASS;
+M13/M01 preparation module returned clean; `git diff --check` PASS; focused fast
+contracts PASS (156 tests); DDS tga-alias executable contract PASS; fast
+ARM/SELF/VPK package PASS. VPK
+`10517bba9e54b6e328756961930e71d135e5c85a80b1e91a296f91a9eb820bf5`; ELF
+`22b6abf3ef3855c42491537298a521fdc97b012628b0a2336c33faceee45bfc8`.
+Dev183 is installed into Vita3K `RNEGA3101` with receipt
+`build/vita3k-backups/A3.5-dev183-setup-20260923T194102716860Z/setup-receipt.json`;
+installed `eboot.bin`
+`5a34eb1291f3f1af4ae0b5c500ff1cca15b24e268f992c758e433feed67a23de` and
+`param.sfo`
+`0ab756e88c1937f1c34fb8f6cc9dccfdf945279436ed1f7e1fe3f16145bd359e`.
+No Vita3K launch, visual result, M13 A/V fix, M01 freeze fix, campaign
+progression, or physical acceptance is claimed. Next: user or bounded emulator
+route should verify whether M13 ambush/Ion and M01 beach slow-frame clusters
+drop and whether the next freeze still reproduces. Blocker: runtime evidence
+pending.
+
 ## Dev182: warm-only volatile campaign effects
 
 Renegade Vita - v3.5 active

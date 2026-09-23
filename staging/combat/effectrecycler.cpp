@@ -107,6 +107,40 @@ void EffectRecyclerClass::Reset(void)
 	InactiveTDecos.Reset_List();
 }
 
+/***********************************************************************************************
+ * EffectRecyclerClass::Preload_Effect -- pre-seed recyclable timed effects                    *
+ *                                                                                             *
+ * INPUT:                                                                                      *
+ *                                                                                             *
+ * OUTPUT:                                                                                     *
+ *                                                                                             *
+ * WARNINGS:                                                                                   *
+ *                                                                                             *
+ * HISTORY:                                                                                    *
+ *=============================================================================================*/
+void EffectRecyclerClass::Preload_Effect(TimedDecorationPhysDefClass * def,const Matrix3D & tm,int count)
+{
+	if (def != NULL) {
+		Preload_Effect(def->Get_Model_Name(),tm,count);
+	}
+}
+
+void EffectRecyclerClass::Preload_Effect(const char * robj_name,const Matrix3D & tm,int count)
+{
+	if ((robj_name == NULL) || (count <= 0)) {
+		return;
+	}
+
+	for (int i = 0; i < count; ++i) {
+		RenderObjClass * model = internal_get_model(robj_name,tm);
+		if (model == NULL) {
+			break;
+		}
+		ModelRecycler.Return_Render_Object(model);
+		REF_PTR_RELEASE(model);
+	}
+}
+
 
 /***********************************************************************************************
  * EffectRecyclerClass::Spawn_Effect -- Spawn a timed effect into the combat scene             *
@@ -255,4 +289,3 @@ RenderObjClass * EffectRecyclerClass::internal_get_model(const char * robj_name,
 
 	return model;
 }
-

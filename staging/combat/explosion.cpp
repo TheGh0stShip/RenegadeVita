@@ -54,6 +54,7 @@
 #include "smartgameobj.h"
 #include "building.h"
 #include "scexplosionevent.h"
+#include "effectrecycler.h"
 
 /*
 ** ExplosionDefinitionClass
@@ -61,6 +62,8 @@
 SimplePersistFactoryClass<ExplosionDefinitionClass, CHUNKID_EXPLOSION_DEF>	_ExplosionDefPersistFactory;
 
 DECLARE_DEFINITION_FACTORY(ExplosionDefinitionClass, CLASSID_DEF_EXPLOSION, "Explosion") _ExplosionDefDefFactory;
+
+static EffectRecyclerClass _ExplosionEffectRecycler;
 
 uint32	ExplosionDefinitionClass::Get_Class_ID (void) const	{ return CLASSID_DEF_EXPLOSION; }
 const PersistFactoryClass & ExplosionDefinitionClass::Get_Factory (void) const { return _ExplosionDefPersistFactory; }
@@ -193,6 +196,29 @@ bool	ExplosionDefinitionClass::Load( ChunkLoadClass &cload )
 	return true;
 }
 
+void	ExplosionManager::Shutdown( void )
+{
+	_ExplosionEffectRecycler.Reset();
+}
+
+bool	ExplosionManager::Prepare_Explosion_Render_Objects( int explosion_def_id, int count )
+{
+	ExplosionDefinitionClass * explosion_def = (ExplosionDefinitionClass *)DefinitionMgrClass::Find_Definition( explosion_def_id );
+	if ( explosion_def == NULL || explosion_def->PhysDefID == 0 || count <= 0 ) {
+		return false;
+	}
+
+	PhysDefClass * phys_def = (PhysDefClass *)DefinitionMgrClass::Find_Definition( explosion_def->PhysDefID );
+	if ( phys_def == NULL || !phys_def->Is_Type( "TimedDecorationPhysDef" ) ) {
+		return false;
+	}
+
+	TimedDecorationPhysDefClass * timed_def = (TimedDecorationPhysDefClass *)phys_def;
+	Matrix3D tm(1);
+	_ExplosionEffectRecycler.Preload_Effect( timed_def, tm, count );
+	return true;
+}
+
 /*
 **
 */
@@ -234,34 +260,37 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 		if ( phys_def != NULL ) {
 			WWASSERT( phys_def );
 			WWASSERT( phys_def->Is_Type( "TimedDecorationPhysDef" ) );
-			TimedDecorationPhysClass * explosion = (TimedDecorationPhysClass *)phys_def->Create();
-			if ( explosion ) {
-				RenderObjClass * model = explosion->Peek_Model();
-				WWASSERT(model != NULL);
-				if (model != NULL) {
+			if ( explosion_def->AnimatedExplosion && phys_def->Is_Type( "TimedDecorationPhysDef" ) ) {
+				_ExplosionEffectRecycler.Spawn_Effect( (TimedDecorationPhysDefClass *)phys_def, up_tm );
+			} else {
+				TimedDecorationPhysClass * explosion = (TimedDecorationPhysClass *)phys_def->Create();
+				if ( explosion ) {
+					RenderObjClass * model = explosion->Peek_Model();
+					WWASSERT(model != NULL);
+					if (model != NULL) {
 
-					explosion->Set_Transform( up_tm );
+						explosion->Set_Transform( up_tm );
 
-					if (model->Get_HTree() != NULL && explosion_def->AnimatedExplosion) {
+						if (model->Get_HTree() != NULL && explosion_def->AnimatedExplosion) {
 
-						// Auto play an explosion anim if we find it
-						StringClass	exp_anim_name;
-						exp_anim_name.Format( "%s.%s",
-							model->Get_HTree()->Get_Name(),
-							model->Get_HTree()->Get_Name() );
-						WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
-						HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim( exp_anim_name );
-						if ( anim != NULL ) {
-							model->Set_Animation( anim, 0, RenderObjClass::ANIM_MODE_ONCE );
-							anim->Release_Ref();
+							// Auto play an explosion anim if we find it
+							StringClass	exp_anim_name;
+							exp_anim_name.Format( "%s.%s",
+								model->Get_HTree()->Get_Name(),
+								model->Get_HTree()->Get_Name() );
+							WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
+							HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim( exp_anim_name );
+							if ( anim != NULL ) {
+								model->Set_Animation( anim, 0, RenderObjClass::ANIM_MODE_ONCE );
+								anim->Release_Ref();
+							}
 						}
+
+						WWASSERT(COMBAT_SCENE != NULL);
+						COMBAT_SCENE->Add_Dynamic_Object( explosion );
 					}
-
-					WWASSERT(COMBAT_SCENE != NULL);
-					COMBAT_SCENE->Add_Dynamic_Object( explosion );
+					explosion->Release_Ref();
 				}
-				explosion->Release_Ref();
-
 			}
 		}
 	}

@@ -2898,8 +2898,14 @@ bool Prepare_Explosion_Definition(const char *name)
 			name != NULL ? name : "(null)");
 		return false;
 	}
-	return Prepare_Timed_Decoration_Phys(explosion->PhysDefID,
+	const bool model_ready = Prepare_Timed_Decoration_Phys(explosion->PhysDefID,
 		explosion->AnimatedExplosion, name, "explosion");
+	const bool recycler_ready =
+		ExplosionManager::Prepare_Explosion_Render_Objects(explosion->Get_ID(), 2);
+	A30_Vita_Log("A4 campaign effect recycler preparation: explosion=%s model_ready=%d recycler_ready=%d\n",
+		name != NULL ? name : "(null)", model_ready ? 1 : 0,
+		recycler_ready ? 1 : 0);
+	return model_ready && recycler_ready;
 }
 
 bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,

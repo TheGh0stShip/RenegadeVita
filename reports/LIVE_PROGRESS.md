@@ -31,12 +31,18 @@ Artifacts are in
 expected at `ux0:data/renegade/user/logs/a35-dev179-runtime.log`. Recorder
 outputs are `campaign-flight-events.jsonl`, `campaign-flight-frames.csv`,
 `campaign-flight-summary.json`, and `campaign-flight-log-tail.txt` under the
-configured capture root.
+configured capture root. Dev179 is installed into Vita3K `RNEGA3101` with
+receipt
+`build/vita3k-backups/A3.5-dev179-setup-20260923T174505585316Z/setup-receipt.json`;
+installed `eboot.bin`
+`c04b28780726e0b1ac6a8557471d0bc9de7a2a6b53f0152393dc37252fc386e9` and
+`param.sfo`
+`d2b0fbf4fc9505b5b58f81ec467e17b9fc51b9b7717ba21f5421c94fb14998ac` match the
+VPK payload.
 No Vita3K launch, hardware launch, visual correctness, campaign progression,
-or physical acceptance is claimed. Next: install/run only when requested and
-use the recorder bundle to isolate the M13 ambush/Ion-beacon and M01 beach
-freeze without rebuilding for missing diagnostics. Blocker: runtime evidence
-pending.
+or physical acceptance is claimed. Next: launch only when requested and use
+the recorder bundle to isolate the M13 ambush/Ion-beacon and M01 beach freeze
+without rebuilding for missing diagnostics. Blocker: runtime evidence pending.
 
 ## Dev177: restore full-port campaign profile
 

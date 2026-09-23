@@ -61,6 +61,7 @@
 #include "a30_vita_runtime.h"
 #if !RENEGADE_VITA_M00_DEMO
 #include <psp2/kernel/processmgr.h>
+extern RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name);
 #endif
 #endif
 
@@ -206,8 +207,13 @@ void PhysClass::Set_Model_By_Name(const char * model_type_name)
 {
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t vita_model_start_us = sceKernelGetProcessTimeWide();
+	bool vita_prepared_model = false;
 #endif
 	RenderObjClass * model = NULL;
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	model = A35_Vita_Take_Prepared_Render_Obj(model_type_name);
+	vita_prepared_model = model != NULL;
+#endif
 	if (model == NULL) {
 		model = WW3DAssetManager::Get_Instance()->Create_Render_Obj(model_type_name);
 	}
@@ -231,8 +237,9 @@ void PhysClass::Set_Model_By_Name(const char * model_type_name)
 	static unsigned vita_slow_model_reports = 0U;
 	if (vita_model_end_us - vita_model_start_us >= 500000U &&
 		vita_slow_model_reports++ < 16U) {
-		A30_Vita_Log("A4 slow Phys Set_Model_By_Name: model=%s create_us=%llu install_us=%llu release_us=%llu total_us=%llu\n",
+		A30_Vita_Log("A4 slow Phys Set_Model_By_Name: model=%s source=%s create_us=%llu install_us=%llu release_us=%llu total_us=%llu\n",
 			model_type_name,
+			vita_prepared_model ? "prepared" : "asset",
 			static_cast<unsigned long long>(vita_create_end_us - vita_model_start_us),
 			static_cast<unsigned long long>(vita_install_end_us - vita_create_end_us),
 			static_cast<unsigned long long>(vita_model_end_us - vita_install_end_us),

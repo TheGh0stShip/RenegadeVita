@@ -14,14 +14,16 @@ GAMEOBJ_MANAGER = ROOT / "staging" / "combat" / "gameobjmanager.cpp"
 
 def test_m13_intro_sniper_is_prepared_during_loading():
     text = A31_RUNTIME.read_text(encoding="utf-8")
-    prepare_block = text[text.index("const char *const prepare_models[]"):]
+    prepare_block = text[text.index("const A35PreparedMissionModel prepare_models[]"):]
     assert '"ag_fiery_ex06"' in prepare_block
 
 
 def test_m13_intro_real_object_render_models_are_prepared_during_loading():
     text = A31_RUNTIME.read_text(encoding="utf-8")
-    prepare_block = text[text.index("const char *const prepare_models[]"):]
+    prepare_block = text[text.index("const A35PreparedMissionModel prepare_models[]"):]
     assert '"X00_AG_Explode"' in prepare_block
+    assert '"X0F_AG_EFFECTS", true' in prepare_block
+    assert '"X0D_AG_Explode", true' in prepare_block
 
 
 def test_m13_intro_inventory_keeps_runtime_gap_honest():
@@ -36,7 +38,7 @@ def test_m13_intro_inventory_keeps_runtime_gap_honest():
 def test_m13_intro_keeps_packageable_narrow_prepare_hook():
     text = A31_RUNTIME.read_text(encoding="utf-8")
     assert "after_m13_model_prepare" in text
-    assert "A4 M13 warmed preparation" in text
+    assert "A4 M13 %s preparation" in text
     assert '"X0Z_Effects"' in text
     assert '"v_Nod_cplane"' in text
 
@@ -45,7 +47,7 @@ def test_m01_beach_aircraft_are_prepared_during_loading():
     text = A31_RUNTIME.read_text(encoding="utf-8")
     m01_block = text[text.index('stricmp(selected_archive, "M01.mix") == 0'):]
     assert "after_m01_model_prepare" in m01_block
-    assert "A4 M01 warmed preparation" in m01_block
+    assert "A4 M01 %s preparation" in m01_block
     assert '"v_Nod_cplane"' in m01_block
     assert '"v_GDI_trnspt"' in m01_block
     assert '"v_nod_Apache"' in m01_block
@@ -60,9 +62,24 @@ def test_campaign_prepare_does_not_reuse_live_volatile_render_objects():
     phys = (ROOT / "staging" / "wwphys" / "phys.cpp").read_text(encoding="utf-8")
     assert "A35_Vita_Warm_Render_Obj" in text
     assert "object->Release_Ref();" in text
+    assert "A35_Vita_Retain_Prepared_Render_Obj(name)" in text
+    assert "A35_Vita_Take_Prepared_Render_Obj(model_type_name)" in phys
+    assert "source=%s create_us" in phys
     assert "A35_Vita_Take_Prepared_Render_Obj" not in surface
     assert "A35_Vita_Take_Prepared_Render_Obj" not in bullet
-    assert "A35_Vita_Take_Prepared_Render_Obj(model_type_name)" not in phys
+
+
+def test_retained_cinematic_models_allow_duplicate_pool_slots():
+    text = A31_RUNTIME.read_text(encoding="utf-8")
+    retain_body = text[
+        text.index("bool A35_Vita_Retain_Prepared_Render_Obj") :
+        text.index("bool A35_Vita_Warm_Render_Obj")
+    ]
+    assert "stricmp" not in retain_body
+    assert "g_A35PreparedRenderObjects[i].object == NULL" in retain_body
+    assert "break;" in retain_body
+    assert '"X0F_AG_EFFECTS", true, 2U' in text
+    assert '"X0D_AG_Explode", true, 2U' in text
 
 
 def test_m13_dependency_scanner_has_mission_inventory_mode():

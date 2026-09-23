@@ -162,21 +162,14 @@ bool A35_Vita_Retain_Prepared_Render_Obj(const char *name)
 	}
 	int slot = -1;
 	for (unsigned i = 0; i < sizeof(g_A35PreparedRenderObjects) / sizeof(g_A35PreparedRenderObjects[0]); ++i) {
-		if (g_A35PreparedRenderObjects[i].name != NULL && stricmp(g_A35PreparedRenderObjects[i].name, name) == 0) {
+		if (g_A35PreparedRenderObjects[i].object == NULL) {
 			slot = static_cast<int>(i);
 			break;
-		}
-		if (slot < 0 && g_A35PreparedRenderObjects[i].object == NULL) {
-			slot = static_cast<int>(i);
 		}
 	}
 	if (slot < 0) {
 		A30_Vita_Log("A4 prepared render object: retain failed no slot model=%s\n", name);
 		return false;
-	}
-	if (g_A35PreparedRenderObjects[slot].object != NULL) {
-		g_A35PreparedRenderObjects[slot].object->Release_Ref();
-		g_A35PreparedRenderObjects[slot].object = NULL;
 	}
 	const uint64_t start_us = sceKernelGetProcessTimeWide();
 	RenderObjClass *object = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
@@ -208,6 +201,19 @@ bool A35_Vita_Warm_Render_Obj(const char *name)
 		object != NULL ? 1 : 0,
 		static_cast<unsigned long long>(elapsed_us));
 	return object != NULL;
+}
+
+bool A35_Vita_Prepare_Render_Obj(const char *name, bool retain, unsigned count)
+{
+	if (!retain) {
+		return A35_Vita_Warm_Render_Obj(name);
+	}
+	bool prepared = false;
+	const unsigned attempts = count > 0U ? count : 1U;
+	for (unsigned i = 0; i < attempts; ++i) {
+		prepared = A35_Vita_Retain_Prepared_Render_Obj(name) || prepared;
+	}
+	return prepared;
 }
 
 RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name)
@@ -3778,27 +3784,52 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if !RENEGADE_VITA_M00_DEMO
 			if (stricmp(selected_archive, "M13.mix") == 0) {
 				A35_Vita_Clear_Prepared_Render_Objs();
-				const char *const prepare_models[] = {
-					"X00_AG_Explode", "X0F_AG_EFFECTS",
-					"ag_rocketl", "ag_fiery_ex06",
-					"ag_tank_exp01", "ag_tank_expld02",
-					"ag_humvee_exp1", "ag_gdi_apc_exp1",
-					"ag_nod_apc_exp1", "ag_ob_exp1",
-					"V_NOD_LTANK", "V_NOD_MGUN",
-					"V_NOD_ART", "B_SAMSITE", "BX_SAMSITE",
-					"v_GDI_trnspt", "V_GDI_ORCA",
-					"v_Nod_cplane", "V_GDI_A10",
-					"X0Z_Effects", "X0Z_Orca01_Traj",
-					"X0Z_Orca02_Traj", "X0D_A10_Traj",
-					"L00.HND^FRONT", "L00.HND^ROOF",
-					"L00.AR_04_03"
+				struct A35PreparedMissionModel {
+					const char *name;
+					bool retain;
+					unsigned count;
+				};
+				const A35PreparedMissionModel prepare_models[] = {
+					{ "X00_AG_Explode", true, 2U },
+					{ "X0F_AG_EFFECTS", true, 2U },
+					{ "X0D_AG_Explode", true, 2U },
+					{ "ag_rocketl", true, 4U },
+					{ "ag_fiery_ex06", true, 2U },
+					{ "ag_tank_exp01", false, 0U },
+					{ "ag_tank_expld02", false, 0U },
+					{ "ag_humvee_exp1", false, 0U },
+					{ "ag_gdi_apc_exp1", false, 0U },
+					{ "ag_nod_apc_exp1", false, 0U },
+					{ "ag_ob_exp1", false, 0U },
+					{ "V_NOD_LTANK", false, 0U },
+					{ "V_NOD_MGUN", false, 0U },
+					{ "V_NOD_ART", false, 0U },
+					{ "B_SAMSITE", false, 0U },
+					{ "BX_SAMSITE", false, 0U },
+					{ "v_GDI_trnspt", false, 0U },
+					{ "V_GDI_ORCA", false, 0U },
+					{ "v_Nod_cplane", false, 0U },
+					{ "V_GDI_A10", false, 0U },
+					{ "X0Z_Effects", true, 2U },
+					{ "X0Z_Orca01_Traj", true, 2U },
+					{ "X0Z_Orca02_Traj", true, 2U },
+					{ "X0D_A10_Traj", true, 1U },
+					{ "L00.HND^FRONT", false, 0U },
+					{ "L00.HND^ROOF", false, 0U },
+					{ "L00.AR_04_03", false, 0U }
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					const bool warmed =
-						A35_Vita_Warm_Render_Obj(prepare_models[i]);
-					A30_Vita_Log("A4 M13 warmed preparation: model=%s created=%d elapsed_us=%llu\n",
-						prepare_models[i], warmed ? 1 : 0,
+					const bool prepared = A35_Vita_Prepare_Render_Obj(
+						prepare_models[i].name,
+						prepare_models[i].retain,
+						prepare_models[i].count);
+					A30_Vita_Log("A4 M13 %s preparation: model=%s created=%d retained=%d count=%u elapsed_us=%llu\n",
+						prepare_models[i].retain ? "retained" : "warmed",
+						prepare_models[i].name,
+						prepared ? 1 : 0,
+						prepare_models[i].retain ? 1 : 0,
+						prepare_models[i].retain ? prepare_models[i].count : 0U,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
 					loading_presenter.Render_Original_Progress("after_m13_model_prepare");
 				}
@@ -3827,29 +3858,57 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			}
 			if (stricmp(selected_archive, "M01.mix") == 0) {
 				A35_Vita_Clear_Prepared_Render_Objs();
-				const char *const prepare_models[] = {
-					"v_Nod_cplane",
-					"v_GDI_trnspt", "v_Nod_trnspt",
-					"v_nod_Apache", "Vxag_Nod_apache", "vxag_nod_heli",
-					"V_GDI_ORCA", "V_GDI_A10",
-					"V_AG_X1bGBoat", "V_AG_X1Borca", "VxAG_X1Borca",
-					"X1B_AG_Missiles", "X1B_AG_xplosion",
-					"X1C_AG_Missile", "X1c_AG_xplosion",
-					"X1D_AG_Missile", "X1D_AG_xplosion",
-					"X1D_Apache", "X1D_MTank", "X1d_Trajectory",
-					"X1G_A-10_Traj", "X1G_AG_Effects",
-					"XG_AG_AT_Misl", "XG_AG_AT_Xplsn",
-					"XG_At_ApTraj", "XG_At_TrnTraj",
-					"XG_EV5_Path", "XG_EV5_rope", "XG_EV5_troopBN",
-					"XG_HD_Harness", "XG_HD_HTraj", "XG_TransprtBone"
+				struct A35PreparedMissionModel {
+					const char *name;
+					bool retain;
+					unsigned count;
+				};
+				const A35PreparedMissionModel prepare_models[] = {
+					{ "v_Nod_cplane", true, 1U },
+					{ "v_GDI_trnspt", true, 1U },
+					{ "v_Nod_trnspt", true, 1U },
+					{ "v_nod_Apache", true, 1U },
+					{ "Vxag_Nod_apache", true, 2U },
+					{ "vxag_nod_heli", true, 2U },
+					{ "V_GDI_ORCA", true, 1U },
+					{ "V_GDI_A10", true, 1U },
+					{ "V_AG_X1bGBoat", true, 1U },
+					{ "V_AG_X1Borca", true, 1U },
+					{ "VxAG_X1Borca", true, 2U },
+					{ "X1B_AG_Missiles", true, 2U },
+					{ "X1B_AG_xplosion", true, 2U },
+					{ "X1C_AG_Missile", true, 2U },
+					{ "X1c_AG_xplosion", true, 2U },
+					{ "X1D_AG_Missile", true, 2U },
+					{ "X1D_AG_xplosion", true, 2U },
+					{ "X1D_Apache", true, 1U },
+					{ "X1D_MTank", true, 1U },
+					{ "X1d_Trajectory", true, 1U },
+					{ "X1G_A-10_Traj", true, 1U },
+					{ "X1G_AG_Effects", true, 2U },
+					{ "XG_AG_AT_Misl", true, 2U },
+					{ "XG_AG_AT_Xplsn", true, 2U },
+					{ "XG_At_ApTraj", true, 1U },
+					{ "XG_At_TrnTraj", true, 1U },
+					{ "XG_EV5_Path", true, 1U },
+					{ "XG_EV5_rope", true, 1U },
+					{ "XG_EV5_troopBN", true, 1U },
+					{ "XG_HD_Harness", true, 1U },
+					{ "XG_HD_HTraj", true, 1U },
+					{ "XG_TransprtBone", true, 1U }
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					const bool warmed =
-						A35_Vita_Warm_Render_Obj(prepare_models[i]);
-					A30_Vita_Log("A4 M01 warmed preparation: model=%s created=%d retained=0 elapsed_us=%llu\n",
-						prepare_models[i],
-						warmed ? 1 : 0,
+					const bool prepared = A35_Vita_Prepare_Render_Obj(
+						prepare_models[i].name,
+						prepare_models[i].retain,
+						prepare_models[i].count);
+					A30_Vita_Log("A4 M01 %s preparation: model=%s created=%d retained=%d count=%u elapsed_us=%llu\n",
+						prepare_models[i].retain ? "retained" : "warmed",
+						prepare_models[i].name,
+						prepared ? 1 : 0,
+						prepare_models[i].retain ? 1 : 0,
+						prepare_models[i].retain ? prepare_models[i].count : 0U,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
 					loading_presenter.Render_Original_Progress("after_m01_model_prepare");
 				}

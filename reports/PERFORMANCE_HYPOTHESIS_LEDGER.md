@@ -1,5 +1,34 @@
 # Performance hypothesis ledger
 
+## Dev185 retained cinematic/effect physics models (2026-09-23)
+
+- Hypothesis: Dev184's remaining M13 ambush/Ion and M01 beach stalls are not
+  solved by warm-only create/release because the expensive render-object
+  construction still happens when scripted physics models are first attached
+  during live cinematics.
+- Evidence: Dev184 runtime logs show `PhysClass::Set_Model_By_Name` taking
+  about 2.57 s for `X0F_AG_EFFECTS` from `X0F_Harvester.txt` and about 2.85 s
+  for `X0D_AG_Explode` from `X0D_A10_Crash.txt`. The flight recorder shows
+  M01 frame 1 at 6.16 s, including 5.21 s simulation and 0.94 s render, right
+  after warm-only preparation and at the user-reported beach plane/vehicle
+  freeze.
+- Change: Allow duplicate retained preparation slots, retain only selected
+  scripted M13/M01 cinematic/effect aggregate render objects during loading,
+  and consume them only in `PhysClass::Set_Model_By_Name` before falling back
+  to original `WW3DAssetManager::Create_Render_Obj`.
+- Guardrails: The earlier Dev181 broad cache remains rejected. Dev185 does not
+  consume prepared render objects in bullets or surface effects, does not skip
+  cinematic commands, does not force objectives, and does not alter AI,
+  collision, animation semantics, or mission progression.
+- Evidence retained: direct M13/M01 preparation assertions PASS, Dev184
+  animation action completion contract PASS, development checkpoint PASS,
+  campaign profile defaults PASS, 158 focused fast contracts PASS, ARM/SELF/VPK
+  identity PASS, Vita3K install PASS.
+- Decision: Adopt as the next runtime candidate because it targets measured
+  multi-second live creation stalls while preserving Dev182's volatile-object
+  safety boundary. Runtime acceptance is pending M13 ambush/tiberium/Ion and
+  M01 beach evidence; no physical performance or A/V-sync acceptance is claimed.
+
 ## Dev182 volatile render-object warm-only correction (2026-09-23)
 
 - Hypothesis: Dev181's retained live render-object cache moved first-use work

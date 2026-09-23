@@ -43,9 +43,6 @@
 #include "wwstring.h"
 #include "crandom.h"
 #include "physcon.h"
-#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name);
-#endif
 #include "wwaudio.h"
 #include "rndstrng.h"
 #include "sound3d.h"
@@ -237,9 +234,6 @@ void	PersistantSurfaceEmitterClass::Set_Emitter( const char * name )
 
 	// Start new Emitter
 	if ( name != NULL ) {
-#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-		Emitter = (ParticleEmitterClass *)A35_Vita_Take_Prepared_Render_Obj( name );
-#endif
 		if ( Emitter == NULL ) {
 			Emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( name );
 		}
@@ -545,9 +539,6 @@ void	SurfaceEffectsManager::Apply_Effect
 		_EmitterRecycler.Spawn_Effect(emitter_name,tm);
 #else
 		ParticleEmitterClass * emitter = NULL;
-#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-		emitter = (ParticleEmitterClass *)A35_Vita_Take_Prepared_Render_Obj( emitter_name );
-#endif
 		if ( emitter == NULL ) {
 			emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( emitter_name );
 		}
@@ -753,5 +744,3 @@ void SurfaceEffectsManager::Set_Override_Surface_Type(int type)
 
 	PhysicsConstants::Set_Override_Surface_Type(OverrideSurfaceType);
 }
-
-

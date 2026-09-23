@@ -1,5 +1,32 @@
 # Performance hypothesis ledger
 
+## Dev182 volatile render-object warm-only correction (2026-09-23)
+
+- Hypothesis: Dev181's retained live render-object cache moved first-use work
+  into loading, but reusing those live objects for original cinematic real
+  objects, missiles, explosions, trails, and particle emitters can age
+  one-shot animation/particle state and corrupt actor/effect presentation.
+- Evidence: The Dev181 user run and flight recorder reached M13 completion and
+  M01, but user-observed regressions included disappearing helicopter
+  engineers, the ambush rocket soldier walking in place, severe M13 ambush
+  audio/video drift, and an M01 ladder freeze. Runtime logs show the live
+  prepared cache being consumed during scripted creation, including
+  `vxag_nod_heli`, `X1c_AG_xplosion`, `VxAG_X1Borca`,
+  `X0Z_Orca01_Traj`, `X0Z_Orca02_Traj`, and `X0Z_Effects`.
+- Change: Keep M13/M01 load-time model preparation, but immediately release
+  created render objects after warming the WW3D asset/prototype path. Remove
+  Vita-only prepared-object consumption from physics model assignment, bullets,
+  and surface emitters so runtime objects are fresh original instances.
+- Risk: This may reintroduce some runtime first-use cost compared with Dev181
+  for objects whose prototypes were not fully warmed by create/release. It
+  intentionally rejects reusing live volatile objects as unsafe.
+- Evidence retained: focused source contracts PASS, 156 fast contracts PASS,
+  ARM/SELF/VPK identity PASS, Vita3K title install PASS. No runtime A/B has
+  been performed yet.
+- Decision: Adopt as a correctness correction for Dev181's unsafe optimization.
+  M13 ambush/Ion performance and M01 ladder/plane behavior remain pending
+  runtime verification; no physical performance acceptance is claimed.
+
 ## Dev159 persistent runtime-log handles (2026-09-22)
 
 - Hypothesis: Vita3K console/file-open flood from per-record runtime-log

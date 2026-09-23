@@ -192,6 +192,24 @@ bool A35_Vita_Retain_Prepared_Render_Obj(const char *name)
 	return object != NULL;
 }
 
+bool A35_Vita_Warm_Render_Obj(const char *name)
+{
+	if (name == NULL || WW3DAssetManager::Get_Instance() == NULL) {
+		return false;
+	}
+	const uint64_t start_us = sceKernelGetProcessTimeWide();
+	RenderObjClass *object = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
+	const uint64_t elapsed_us = sceKernelGetProcessTimeWide() - start_us;
+	if (object != NULL) {
+		object->Release_Ref();
+	}
+	A30_Vita_Log("A4 prepared render object: warmed=%s created=%d elapsed_us=%llu object_released=1\n",
+		name,
+		object != NULL ? 1 : 0,
+		static_cast<unsigned long long>(elapsed_us));
+	return object != NULL;
+}
+
 RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name)
 {
 	if (name == NULL) {
@@ -3771,10 +3789,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					const bool retained_for_later_use =
-						A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
-					A30_Vita_Log("A4 M13 retained preparation: model=%s created=%d elapsed_us=%llu\n",
-						prepare_models[i], retained_for_later_use ? 1 : 0,
+					const bool warmed =
+						A35_Vita_Warm_Render_Obj(prepare_models[i]);
+					A30_Vita_Log("A4 M13 warmed preparation: model=%s created=%d elapsed_us=%llu\n",
+						prepare_models[i], warmed ? 1 : 0,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
 					loading_presenter.Render_Original_Progress("after_m13_model_prepare");
 				}
@@ -3821,12 +3839,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					const bool retained_for_later_use =
-						A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
-					A30_Vita_Log("A4 M01 retained preparation: model=%s created=%d retained=%d elapsed_us=%llu\n",
+					const bool warmed =
+						A35_Vita_Warm_Render_Obj(prepare_models[i]);
+					A30_Vita_Log("A4 M01 warmed preparation: model=%s created=%d retained=0 elapsed_us=%llu\n",
 						prepare_models[i],
-						retained_for_later_use ? 1 : 0,
-						retained_for_later_use ? 1 : 0,
+						warmed ? 1 : 0,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
 					loading_presenter.Render_Original_Progress("after_m01_model_prepare");
 				}

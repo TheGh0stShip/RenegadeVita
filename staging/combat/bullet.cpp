@@ -43,9 +43,6 @@
 #include "debug.h"
 #include "armedgameobj.h"
 #include "crandom.h"
-#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name);
-#endif
 #include "surfaceeffects.h"
 #include "mesh.h"
 #include "wwaudio.h"
@@ -549,9 +546,6 @@ void BulletClass::Init( const BulletDataClass & data, float progress_time, const
 		// We don't need to do anything
 	} else {
 		RenderObjClass * model = NULL;
-#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-		model = A35_Vita_Take_Prepared_Render_Obj( BulletData.AmmoDefinition->ModelName );
-#endif
 		if ( model == NULL ) {
 			model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj( BulletData.AmmoDefinition->ModelName );
 		}
@@ -1078,4 +1072,3 @@ bool	BulletManager::Load( ChunkLoadClass &cload )
 	}
 	return true;
 }
-

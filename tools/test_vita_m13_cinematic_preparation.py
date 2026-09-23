@@ -36,7 +36,7 @@ def test_m13_intro_inventory_keeps_runtime_gap_honest():
 def test_m13_intro_keeps_packageable_narrow_prepare_hook():
     text = A31_RUNTIME.read_text(encoding="utf-8")
     assert "after_m13_model_prepare" in text
-    assert "A4 M13 retained preparation" in text
+    assert "A4 M13 warmed preparation" in text
     assert '"X0Z_Effects"' in text
     assert '"v_Nod_cplane"' in text
 
@@ -45,12 +45,24 @@ def test_m01_beach_aircraft_are_prepared_during_loading():
     text = A31_RUNTIME.read_text(encoding="utf-8")
     m01_block = text[text.index('stricmp(selected_archive, "M01.mix") == 0'):]
     assert "after_m01_model_prepare" in m01_block
-    assert "A4 M01 retained preparation" in m01_block
+    assert "A4 M01 warmed preparation" in m01_block
     assert '"v_Nod_cplane"' in m01_block
     assert '"v_GDI_trnspt"' in m01_block
     assert '"v_nod_Apache"' in m01_block
     assert '"X1G_A-10_Traj"' in m01_block
     assert '"XG_EV5_rope"' in m01_block
+
+
+def test_campaign_prepare_does_not_reuse_live_volatile_render_objects():
+    text = A31_RUNTIME.read_text(encoding="utf-8")
+    surface = (ROOT / "staging" / "combat" / "surfaceeffects.cpp").read_text(encoding="utf-8")
+    bullet = (ROOT / "staging" / "combat" / "bullet.cpp").read_text(encoding="utf-8")
+    phys = (ROOT / "staging" / "wwphys" / "phys.cpp").read_text(encoding="utf-8")
+    assert "A35_Vita_Warm_Render_Obj" in text
+    assert "object->Release_Ref();" in text
+    assert "A35_Vita_Take_Prepared_Render_Obj" not in surface
+    assert "A35_Vita_Take_Prepared_Render_Obj" not in bullet
+    assert "A35_Vita_Take_Prepared_Render_Obj(model_type_name)" not in phys
 
 
 def test_m13_dependency_scanner_has_mission_inventory_mode():

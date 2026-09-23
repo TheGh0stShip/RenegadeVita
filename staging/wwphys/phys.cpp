@@ -61,7 +61,6 @@
 #include "a30_vita_runtime.h"
 #if !RENEGADE_VITA_M00_DEMO
 #include <psp2/kernel/processmgr.h>
-RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name);
 #endif
 #endif
 
@@ -209,9 +208,6 @@ void PhysClass::Set_Model_By_Name(const char * model_type_name)
 	const uint64_t vita_model_start_us = sceKernelGetProcessTimeWide();
 #endif
 	RenderObjClass * model = NULL;
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	model = A35_Vita_Take_Prepared_Render_Obj(model_type_name);
-#endif
 	if (model == NULL) {
 		model = WW3DAssetManager::Get_Instance()->Create_Render_Obj(model_type_name);
 	}
@@ -871,4 +867,3 @@ bool PhysDefClass::Is_Type(const char * type_name)
 		return false;
 	}
 }
-

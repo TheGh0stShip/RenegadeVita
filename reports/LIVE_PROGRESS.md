@@ -1,5 +1,46 @@
 # Live engineering progress
 
+## Dev182: warm-only volatile campaign effects
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: run installed `A3.5-dev182` through M13 ambush/Ion-beacon and M01 beach
+ladder/plane route, comparing actor persistence, audio drift, and slow-frame
+clusters against Dev181.
+Completed: Dev181 runtime evidence showed the retained live render-object cache
+being consumed by original cinematic/effect paths (`vxag_nod_heli`,
+`X1c_AG_xplosion`, `VxAG_X1Borca`, `X0Z_Orca01_Traj`,
+`X0Z_Orca02_Traj`, `X0Z_Effects`) while the user reported disappearing
+engineers, stale rocket soldier behavior, M13 ambush drift, and an M01 ladder
+freeze. Dev182 keeps loading-time preparation for M13/M01 models but makes it
+warm-only: created render objects are immediately released after the asset
+manager/prototype path is touched. The Vita-only `Take_Prepared_Render_Obj`
+injections were removed from `PhysClass::Set_Model_By_Name`, bullets, and
+surface emitters, so volatile cinematic objects, missiles, trails, explosions,
+and particle emitters are fresh original objects at runtime instead of aged
+cached instances. Mission scripts and completion logic are unchanged.
+Evidence: Dev181 recorder parse identified M13 frame 8328 at 3055.83 ms
+(2841.88 ms simulation) and M01 frame 1 at 6089.91 ms, plus live prepared
+object consumption during scripted real-object creation. Dev182 validation:
+focused M13/M01 preparation contract PASS by direct execution (15 tests);
+campaign profile defaults PASS; development checkpoint PASS; Win32 time compat
+PASS; `git diff --check` PASS; focused fast contracts PASS (156 tests);
+DDS tga-alias executable contract PASS; fast ARM/SELF/VPK package PASS. VPK
+`f278beb9cc51c4ed12dd71487ddd72dc90b512362d299118a55b1c254be81005`; ELF
+`3b3542131acd629a031f7bf55e18b686e3be2d7d5557bde3aa7f11876b3be037`.
+Dev182 is installed into Vita3K `RNEGA3101` with receipt
+`build/vita3k-backups/A3.5-dev182-setup-20260923T191816007832Z/setup-receipt.json`;
+installed `eboot.bin`
+`c176368ea894accae38fa9ad61d4140bad95e7e8bd9da46e70c28d4d604975cc` and
+`param.sfo`
+`8693c66e7d2ffe96805ba7142782a77e49512244332a69e8013328bc9e6d33d8`.
+No Vita3K launch, visual result, M13 audio-sync fix, M13 actor behavior fix,
+M01 freeze fix, campaign progression, or physical acceptance is claimed.
+Next: launch the installed candidate and inspect the existing flight recorder
+sidecars for changed M13 ambush/Ion and M01 ladder/plane behavior. Blocker:
+runtime evidence pending.
+
 ## Dev181: shared effect/projectile cache and fast build path
 
 Renegade Vita - v3.5 active

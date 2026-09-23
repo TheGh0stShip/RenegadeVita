@@ -40,6 +40,7 @@
 #include "gamedata.h"
 #include "gameinitmgr.h"
 #include "gamemode.h"
+#include "gameobjmanager.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "dialogmgr.h"
 #include "dlgevaencyclopedia.h"
@@ -71,6 +72,7 @@
 #include "singlepl.h"
 #include "scripts.h"
 #include "scene.h"
+#include "soldier.h"
 #include "stylemgr.h"
 #include "teammanager.h"
 #include "textdisplay.h"
@@ -78,6 +80,7 @@
 #include "timemgr.h"
 #include "textureloader.h"
 #include "texture.h"
+#include "vehicle.h"
 #include "hashtemplate.h"
 #include "menubackdrop.h"
 #include "translatedb.h"
@@ -98,6 +101,7 @@
 
 #include <debugScreen.h>
 
+#include <math.h>
 #include <new>
 #include <memory>
 #include <algorithm>
@@ -1789,8 +1793,89 @@ void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
 			trace.input_zoom_in_key_state,
 			trace.input_zoom_out_key_state,
 			trace.input_objectives_toggle_key_state,
-			trace.input_buttons);
+		trace.input_buttons);
 }
+
+#if !RENEGADE_VITA_M00_DEMO
+struct A31NearbyActorSnapshot
+{
+	SmartGameObj *object;
+	float distance2;
+	bool vehicle;
+};
+
+void Insert_Nearby_Actor(A31NearbyActorSnapshot *nearest, unsigned capacity,
+	SmartGameObj *object, float distance2, bool vehicle)
+{
+	if (object == NULL) return;
+	for (unsigned index = 0U; index < capacity; ++index) {
+		if (nearest[index].object == NULL || distance2 < nearest[index].distance2) {
+			for (unsigned move = capacity - 1U; move > index; --move) {
+				nearest[move] = nearest[move - 1U];
+			}
+			nearest[index].object = object;
+			nearest[index].distance2 = distance2;
+			nearest[index].vehicle = vehicle;
+			return;
+		}
+	}
+}
+
+void Log_M13_Nearby_Actor_Snapshot(uint32_t frame)
+{
+	SoldierGameObj *star = CombatManager::Get_The_Star();
+	if (star == NULL) return;
+	Vector3 star_position;
+	star->Get_Position(&star_position);
+	A31NearbyActorSnapshot nearest[8] = {};
+	unsigned soldier_count = 0U;
+	unsigned vehicle_count = 0U;
+	SList<SmartGameObj> *smart_objects = GameObjManager::Get_Smart_Game_Obj_List();
+	for (SLNode<SmartGameObj> *node = smart_objects != NULL ? smart_objects->Head() : NULL;
+		node != NULL; node = node->Next()) {
+		SmartGameObj *smart = node->Data();
+		if (smart == NULL || smart == star) continue;
+		SoldierGameObj *soldier = smart->As_SoldierGameObj();
+		VehicleGameObj *vehicle = smart->As_VehicleGameObj();
+		if (soldier == NULL && vehicle == NULL) continue;
+		Vector3 position;
+		smart->Get_Position(&position);
+		const Vector3 delta = position - star_position;
+		const float distance2 = delta.Length2();
+		if (soldier != NULL) ++soldier_count;
+		if (vehicle != NULL) ++vehicle_count;
+		Insert_Nearby_Actor(nearest, 8U, smart, distance2, vehicle != NULL);
+	}
+	A30_Vita_Log("A4 M13 actor snapshot: frame=%u star=(%.3f,%.3f,%.3f) soldiers=%u vehicles=%u cinematic_freeze=%d\n",
+		frame, star_position.X, star_position.Y, star_position.Z,
+		soldier_count, vehicle_count,
+		GameObjManager::Is_Cinematic_Freeze_Active() ? 1 : 0);
+	for (unsigned index = 0U; index < 8U; ++index) {
+		SmartGameObj *smart = nearest[index].object;
+		if (smart == NULL) continue;
+		Vector3 position;
+		Vector3 velocity;
+		smart->Get_Position(&position);
+		smart->Get_Velocity(velocity);
+		ActionClass *action = smart->Get_Action();
+		SoldierGameObj *soldier = smart->As_SoldierGameObj();
+		const char *kind = nearest[index].vehicle ? "vehicle" : "soldier";
+		const char *definition = smart->Get_Definition().Get_Name();
+		if (definition == NULL) definition = "unknown";
+		const char *state_name = soldier != NULL ? soldier->Get_State_Name() : "n/a";
+		if (state_name == NULL) state_name = "unknown";
+		DefenseObjectClass *defense = smart->Get_Defense_Object();
+		A30_Vita_Log("A4 M13 actor nearby: frame=%u rank=%u kind=%s id=%d def=%s pos=(%.3f,%.3f,%.3f) dist=%.3f vel=(%.3f,%.3f,%.3f) action=%u/%d/%d human_state=%s health=%.2f\n",
+			frame, index, kind, smart->Get_ID(), definition,
+			position.X, position.Y, position.Z,
+			sqrtf(nearest[index].distance2), velocity.X, velocity.Y, velocity.Z,
+			action != NULL ? action->Get_Act_Count() : 0U,
+			action != NULL && action->Is_Active() ? 1 : 0,
+			action != NULL && action->Is_Busy() ? 1 : 0,
+			state_name, defense != NULL ? defense->Get_Health() : 0.0f);
+		}
+	}
+#endif
 
 bool Mission_Progress_Changed(const A31MissionProgressState &left,
 	const A31MissionProgressState &right)
@@ -3744,10 +3829,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 		if ((result.frames % kTimingWindowFrames) == 0U) {
 			Log_File_Factory_Statistics();
-			A30_Vita_Log("A3.5 breadcrumb: %u-frame checkpoint PASS\n",
-				result.frames);
+					A30_Vita_Log("A3.5 breadcrumb: %u-frame checkpoint PASS\n",
+						result.frames);
 					Log_Interactive_Player_Effects(render_trace, result.frames,
 						"checkpoint");
+#if !RENEGADE_VITA_M00_DEMO
+					if (stricmp(selected_archive, "M13.mix") == 0) {
+						Log_M13_Nearby_Actor_Snapshot(result.frames);
+					}
+#endif
 					Log_Timing_Statistics(timing,
 						RenegadeVitaRenderer::Get_Statistics());
 					Log_Campaign_Simulation_Stages();

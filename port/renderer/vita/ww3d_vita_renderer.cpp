@@ -19,6 +19,7 @@
 #include <stddef.h>
 #include <new>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
 #if defined(RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST) && defined(__GNUC__)
@@ -1305,10 +1306,17 @@ struct CachedMaterialVertexColor {
 	uint32_t generation;
 };
 
+struct CachedConstantMaterialColor {
+	MaterialVertexColor color;
+	VertexMaterialClass *material;
+	uint32_t generation;
+};
+
 CachedMaterialVertexColor *g_material_color_scratch = NULL;
 int g_material_color_capacity = 0;
 uint32_t g_material_color_generation = 0U;
 uint64_t g_material_skin_rgb_skips = 0U;
+CachedConstantMaterialColor g_constant_material_color_cache[512] = {};
 
 bool Begin_Material_Color_Pass(int vertex_count)
 {
@@ -1423,6 +1431,61 @@ MaterialVertexColor Evaluate_Original_Material_Vertex_Color(
 	return result;
 }
 
+bool Material_Color_Source_Is_Vertex(VertexMaterialClass::ColorSourceType source)
+{
+	return source == VertexMaterialClass::COLOR1 ||
+		source == VertexMaterialClass::COLOR2;
+}
+
+bool Try_Evaluate_Constant_Material_Vertex_Color(VertexMaterialClass *material,
+	const unsigned *color1, const unsigned *color2, MaterialVertexColor &result)
+{
+	(void)color1;
+	(void)color2;
+	const uintptr_t material_key = reinterpret_cast<uintptr_t>(material);
+	CachedConstantMaterialColor &cached =
+		g_constant_material_color_cache[(material_key >> 4U) &
+			((sizeof(g_constant_material_color_cache) /
+			  sizeof(g_constant_material_color_cache[0])) - 1U)];
+	if (cached.generation == g_material_color_generation &&
+		cached.material == material) {
+		result = cached.color;
+		++g_statistics.material_color_cache_hits;
+		return true;
+	}
+
+	if (material != NULL) {
+		if (material->Get_Lighting()) return false;
+		if (Material_Color_Source_Is_Vertex(material->Get_Diffuse_Color_Source()) ||
+			Material_Color_Source_Is_Vertex(material->Get_Ambient_Color_Source()) ||
+			Material_Color_Source_Is_Vertex(material->Get_Emissive_Color_Source())) {
+			return false;
+		}
+	}
+	++g_statistics.material_color_evaluations;
+	Vector3 material_diffuse(1.0f, 1.0f, 1.0f);
+	Vector3 material_ambient(1.0f, 1.0f, 1.0f);
+	Vector3 material_emissive(0.0f, 0.0f, 0.0f);
+	float material_alpha = 1.0f;
+	if (material != NULL) {
+		material->Get_Diffuse(&material_diffuse);
+		material->Get_Ambient(&material_ambient);
+		material->Get_Emissive(&material_emissive);
+		material_alpha = material->Get_Opacity();
+	}
+	result.diffuse = material_diffuse;
+	result.ambient = material_ambient;
+	result.emissive = material_emissive;
+	result.final_color = Clamp_Color(material_diffuse);
+	result.alpha = material_alpha;
+	result.lighting = false;
+	result.light_count = 0U;
+	cached.color = result;
+	cached.material = material;
+	cached.generation = g_material_color_generation;
+	return true;
+}
+
 float Evaluate_Original_Diffuse_Alpha(VertexMaterialClass *material,
 	const unsigned *color1, const unsigned *color2, unsigned vertex_index)
 {
@@ -1453,6 +1516,11 @@ MaterialVertexColor Evaluate_Material_Vertex_Color(bool cache_material_colors,
 		return submitted;
 	}
 	MaterialVertexColor vertex_color;
+	if (cache_material_colors &&
+		Try_Evaluate_Constant_Material_Vertex_Color(material, color1, color2,
+			vertex_color)) {
+		return vertex_color;
+	}
 	CachedMaterialVertexColor *cached_color = cache_material_colors ?
 		&g_material_color_scratch[vertex_index & 8191U] : NULL;
 	if (cached_color != NULL &&

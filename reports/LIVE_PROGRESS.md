@@ -1,5 +1,31 @@
 # Live engineering progress
 
+## Dev169: M13 render fast path and actor snapshots
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: run the packaged dev169 candidate through the launch-proof M13 route and
+compare material counters, weapon-view log volume, actor snapshots, and timing
+windows against dev168's preserved freeze evidence. Completed: an unlit
+constant-material renderer fast path is implemented behind original-equivalence
+host checks; M13-only actor-neighborhood snapshots now log nearby
+soldiers/vehicles, definitions, positions, velocity, action state, human state,
+health, and cinematic-freeze status; weapon-view fire/idle diagnostic spam is
+bounded. Evidence: development checkpoint PASS; mission conversation
+diagnostics contract PASS; material-cache host equivalence PASS; full
+`A3.5-dev169` campaign-profile build/package PASS; VPK
+`042c1f7a67f6cfbb1764520f31162e8bdda3d290951dea08e1ad9cd7e7e3afc4`; ELF
+`4e20eb40c5c58abd7a8d1e9e17e1189159d2e15ff22471deb4146a9eac761a80`;
+diagnostics ZIP
+`1d675da9786ca3eaf414272cb7c7e9b148c4e30b7ccbef7f55f559e48dc0e4b1`.
+No Vita3K run, physical run, visual correctness, M13 A/V sync, stuck
+rocket-soldier, tiberium-field freeze, objective, death/reload, transition, or
+campaign acceptance is claimed. Next: run M13 and inspect `A4 M13 actor
+snapshot`, `A4 M13 actor nearby`, material cache hits/evaluations, and timing
+windows around first rocket launch, ambush initiation, and the last pre-freeze
+frame. Blocker: runtime evidence is pending.
+
 ## Dev168: M13 runtime object/load summary
 
 Renegade Vita - v3.5 active

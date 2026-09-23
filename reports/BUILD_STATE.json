@@ -1,4 +1,27 @@
 {
+  "dev176_m13_mx0_script_runtime_link": {
+    "candidate": "A3.5-dev176",
+    "state": "ARM_PACKAGE_PASS_VITA3K_INSTALLED_M13_MX0_SCRIPT_LINK_RUNTIME_UNVERIFIED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0 source integration in default RNEGA3101 title",
+    "title_id": "RNEGA3101",
+    "build_dir": "build/vita-a35-dev110-candidate-20260923-101932",
+    "dist_vpk": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/RenegadeVita-A3.5-dev176.vpk",
+    "dist_elf": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/RenegadeVita-A3.5-dev176.elf",
+    "dist_eboot": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/RenegadeVita-A3.5-dev176.eboot.bin",
+    "vpk_sha256": "a5cf72f639ff609e0bbcc052c4ef5a889c591136884404a35b75a1597378e1b1",
+    "elf_sha256": "ce9a4f7396bee76dc17bc5fd928d8a6608bff2e0381ea2592966e4380e9e3d20",
+    "self_sha256": "62b3ea7ed502ca1ce192404a64aebd06d7f486887788132dc6e2919c95af0df3",
+    "vpk_contents": ["sce_sys/param.sfo", "eboot.bin"],
+    "vita3k_app_root": "/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/app/RNEGA3101",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev176-20260923T111427/install-receipt.txt",
+    "focused_tests": "tools.test_script_provider_contract PASS; git diff --check PASS",
+    "script_link_evidence": "ELF strings/nm contain MX0 Area4, vehicle/soldier/SAM/obelisk/gun-emplacement/ion-beacon script names and registrants from MissionX0.cpp and Test_DLS.cpp",
+    "vita3k_installed": true,
+    "vita3k_launch_verified": false,
+    "m13_objective_progression_verified": false,
+    "campaign_progression_verified": false,
+    "physical_acceptance": false
+  },
   "dev175_m13_duncan_beacon_handoff": {
     "candidate": "A3.5-dev175",
     "state": "ARM_PACKAGE_PASS_M13_DUNCAN_BEACON_HANDOFF_RUNTIME_UNVERIFIED",

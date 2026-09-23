@@ -115,9 +115,6 @@ void Windows_Message_Handler(void) {}
 // adapters; campaign difficulty is already applied by CombatManager before
 // Parse_Input is reached, and Bink skip behavior remains logged by its boundary.
 void ConsoleFunctionManager::Parse_Input(const char *) {}
-#if RENEGADE_VITA_M00_DEMO
-void ScoreScreenGameModeClass::Save_Stats(void) {}
-#endif
 #if !defined(RENEGADE_A4_ORIGINAL_MOVIE_OWNER)
 void MovieGameModeClass::Start_Movie(const char *) {}
 #endif

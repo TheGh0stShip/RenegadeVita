@@ -1,5 +1,39 @@
 # Live engineering progress
 
+## Dev176: M13 MX0 script runtime link
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: run the installed Vita3K `A3.5-dev176` candidate through the hidden Nod
+base / rocket launcher / vehicle-kill / ion beacon finale route and check the
+original `MX0_Area4_Controller_DLS` flow.
+Completed: the Vita target now links original `MissionX0.cpp`, `Test_DLS.cpp`,
+and `Mission01.cpp` together; the script-call default bridge covers the
+legacy arities required by those script units; the Vita frontend boundary no
+longer duplicates `ScoreScreenGameModeClass::Save_Stats()` now that the
+original score screen is linked. `A3.5-dev176` was packaged and installed over
+the Vita3K `RNEGA3101` title slot after backing up the prior installed eboot
+and param.sfo.
+Evidence: `python3 -m tools.test_script_provider_contract` PASS;
+`git diff --check` PASS; ARM package PASS. The linked ELF contains runtime
+script names and registrants for `MX0_Area4_Controller_DLS`,
+`MX0_Area4_Zone_DLS`, `MX0_Vehicle_DLS`, `MX0_GDI_Soldier_DLS`,
+`MX0_Obelisk_Weapon_DLS`, `MX0_Gun_Emplacement_DLS`,
+`MX0_Nod_RocketSoldier_DLS`, `MX0_SAM_DLS`, and
+`MX0_Plant_Ion_Beacon_DLS`. VPK
+`a5cf72f639ff609e0bbcc052c4ef5a889c591136884404a35b75a1597378e1b1`;
+ELF `ce9a4f7396bee76dc17bc5fd928d8a6608bff2e0381ea2592966e4380e9e3d20`;
+installed Vita3K eboot
+`62b3ea7ed502ca1ce192404a64aebd06d7f486887788132dc6e2919c95af0df3`;
+install receipt
+`build/vita3k-backups/A3.5-dev176-20260923T111427/install-receipt.txt`.
+No Vita3K launch, M13 objective completion, transition, save/load, visual,
+performance, audio-sync, or physical acceptance is claimed. Next: launch the
+installed candidate and verify the normal Area 4/finale event chain reaches
+the ion beacon and mission success without forcing objectives. Blocker:
+runtime route evidence is pending.
+
 ## Dev175: M13 Duncan ion beacon handoff
 
 Renegade Vita - v3.5 active
@@ -6074,6 +6108,23 @@ format initialization, fixed-width host TGA layout, stronger atlas regression,
 and disabled demo Options action. Log: `build/dev116-canonical.log`.
 Next: continue original M00 toward Infantry Barracks; assess Dev116 when ready.
 Full M00 completion, ending presentation and physical acceptance remain open.
+# Dev176 M13 script-link checkpoint (2026-09-23)
+
+User runtime evidence showed M13 still freezing and never reaching required
+dialogue/progression near the hidden Nod base. The prior Dev175 direction was
+wrongly centered on `Mission01.cpp`; current log/source evidence shows retail
+M13 uses `MissionX0.cpp` plus `Test_DLS.cpp` for Area 4, hidden-base discovery,
+Obelisk/SAM/gun-emplacement behavior, rocket/GDI soldier conversations, ion
+beacon grant, and `MX0_MISSION_SUCCESS`.
+
+Current source changes link `MissionX0.cpp` and `Test_DLS.cpp` into the Vita
+runtime, expand the original-script default-argument compatibility bridge, and
+remove the Vita `ScoreScreenGameModeClass::Save_Stats` placeholder so the
+original `scorescreen.cpp` owner wins. This scratch note is superseded by the
+top Dev176 entry: preflight passed, `A3.5-dev176` packaged successfully, and
+the candidate was installed into the Vita3K `RNEGA3101` slot. Runtime route
+evidence is still pending.
+
 # Dev115 new-save reliability blocker
 
 Latest state, 2026-09-09: user paused work. Dev116 canonical closure passed;

@@ -108,11 +108,12 @@ class ScriptProviderContractTests(unittest.TestCase):
         self.assertNotIn("${RENEGADE_SCRIPT_SOURCE}/strtrim.cpp", cmake)
         self.assertIn("${RENEGADE_STAGE}/wwlib/trim.cpp", original_sources)
         self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp", cmake)
+        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/MissionX0.cpp", cmake)
+        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Test_DLS.cpp", cmake)
         self.assertIn("${RENEGADE_STAGE}/combat/cinematicgameobj.cpp", cmake)
         self.assertRegex(
             cmake,
-            r"if\(NOT RENEGADE_VITA_M00_DEMO\)\s*list\(APPEND "
-            r"RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\s*"
+            r"list\(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\s*"
             r"\$\{RENEGADE_CAMPAIGN_SCRIPT_SOURCES\}\s*"
             r"\$\{RENEGADE_STAGE\}/combat/cinematicgameobj\.cpp",
         )
@@ -125,10 +126,21 @@ class ScriptProviderContractTests(unittest.TestCase):
             / "include"
             / "renegade_script_call_defaults.h"
         ).read_text(encoding="utf-8")
-        self.assertIn("Mission00.cpp and its two direct", bridge)
+        cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn("original script translation units", bridge)
+        self.assertRegex(
+            cmake,
+            r"\$\{RENEGADE_SCRIPT_SOURCE\}/MissionX0\.cpp\s*"
+            r"\$\{RENEGADE_SCRIPT_SOURCE\}/Test_DLS\.cpp\s*"
+            r"APPEND PROPERTY\s*COMPILE_OPTIONS\s*"
+            r"\"-include\$\{RENEGADE_COMPAT\}/renegade_script_call_defaults\.h\"",
+        )
         self.assertIn(
             "Create_Explosion_At_Bone(explosion, object, bone, NULL)", bridge
         )
+        self.assertIn("Create_Conversation(name, 0, 0.0F, true)", bridge)
+        self.assertIn("Enable_Enemy_Seen(object, true)", bridge)
+        self.assertIn("Give_PowerUp(object, preset, false)", bridge)
         self.assertIn("Send_Custom_Event(from, to, type, param, 0.0F)", bridge)
         self.assertIn(
             "Join_Conversation(object, conversation, allow_move, allow_head_turn, true)",
@@ -138,6 +150,9 @@ class ScriptProviderContractTests(unittest.TestCase):
         self.assertIn(
             "Set_Animation(object, animation, looping, sub_object, start_frame, end_frame, false)",
             bridge,
+        )
+        self.assertIn(
+            "RENEGADE_SCRIPT_SET_ANIMATION_2(animation, looping)", bridge
         )
 
     def test_original_scripts_are_staged_and_array_freed_symmetrically(self):

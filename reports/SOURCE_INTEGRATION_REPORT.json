@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev175",
+  "milestone": "A3.5-dev176",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 527,
+  "original_source_files_compiled": 528,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -194,6 +194,7 @@
     "Code/Scripts/ScriptFactory.cpp",
     "Code/Scripts/ScriptRegistrar.cpp",
     "Code/Scripts/Test_Cinematic.cpp",
+    "Code/Scripts/Test_DLS.cpp",
     "Code/Scripts/Toolkit_Powerup.cpp",
     "Code/Scripts/scripts.cpp",
     "Code/WWAudio/AudibleSound.cpp",
@@ -3002,7 +3003,7 @@
     },
     "Scripts": {
       "status": "native-static-m00-provider-with-direct-dependencies",
-      "compiled": 8,
+      "compiled": 9,
       "total": 54
     },
     "WWAudio": {

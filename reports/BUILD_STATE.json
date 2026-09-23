@@ -1,7 +1,7 @@
 {
   "dev189_canonical_campaign_effect_recycler_and_flight_diagnostics": {
     "candidate": "A3.5-dev189",
-    "state": "CANONICAL_HOST_ARM_PACKAGE_PASS_RUNTIME_UNVERIFIED",
+    "state": "CANONICAL_HOST_ARM_PACKAGE_PASS_VITA3K_INSTALLED_NOT_LAUNCHED",
     "profile": "RENEGADE_VITA_M00_DEMO=0",
     "title_id": "RNEGA3101",
     "build_dir": "build/vita-a35-dev189-candidate-20260923-172752",
@@ -14,12 +14,13 @@
     "elf_sha256": "241a61ba5e4d50fffca8fcaf38220712761d7a2c43c9ef11d120c93fcdd45f3e",
     "map_sha256": "4ceeb47640acc4994c1d06b469d4cc33e59ffa8b9e4e6a84432c55f4978bef88",
     "self_sha256": "8859163ed396a1757336dad764625334c53d19fcd9bf7bece3bfec69cd6832b9",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev189-setup-20260923T230006509772Z/setup-receipt.json",
     "patch_count": 200,
     "patch_inventory_registry_sha256": "4ccdf71ded259d948d6029f73a9603d44858662887df53cab8187653d05e7beb",
     "focused_tests": "Canonical host integration and sanitizer suites pass; 170-test suite PASS; M00 and M01 original host scenarios pass; focused contracts PASS; ARM/SELF/VPK and diagnostics identity PASS.",
     "fix_scope": "Restores Dev183 timed explosion recycler through a registered zero-fuzz patch; reduces mesh/draw-end process-timer calls to deterministic 1/16 samples while preserving submission totals; invalidates cached DX8 texture transform after native matrix reset; adds strict campaign flight-bundle identity/count/order validation.",
     "runtime_basis": "Dev186 M13 recorder sidecars were corrupt and are rejected. No valid Dev188/189 runtime A/B exists.",
-    "vita3k_installed": false,
+    "vita3k_installed": true,
     "vita3k_launch_verified": false,
     "candidate_flight_bundle_validated": false,
     "m13_performance_verified": false,

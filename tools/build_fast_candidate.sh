@@ -163,7 +163,8 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_stage_sources_incremental_contract \
 		tools.test_vita_audio_provider \
 		tools.test_validate_campaign_flight_bundle \
-		tools.test_explosion_effect_recycler_patch
+		tools.test_explosion_effect_recycler_patch \
+		tools.test_vita3k_build_install_contract
 	echo "Running original DDSFileClass tga-alias executable contract..."
 	cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_host_contract_build" -G Ninja \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -330,7 +331,7 @@ cp -- "$rv_log" "$rv_dist/$rv_candidate_label-FAST-COMPILER_LOG.txt"
 	echo "Status: fast candidate; physical Vita validation required; not canonical acceptance."
 	echo "VPK: RenegadeVita-$rv_candidate_label.vpk"
 	echo "Runtime log: $rv_runtime_log"
-	echo "No Vita filesystem was accessed and no deployment was attempted."
+	echo "No physical Vita filesystem was accessed and no physical deployment was attempted."
 } > "$rv_dist/$rv_candidate_label-FAST-HARDWARE-CANDIDATE.txt"
 (
 	cd "$rv_dist"
@@ -343,8 +344,14 @@ cp -- "$rv_log" "$rv_dist/$rv_candidate_label-FAST-COMPILER_LOG.txt"
 	sha256sum -c "$rv_candidate_label"-FAST-SHA256SUMS.txt
 )
 
+rv_vita3k_install_result=$(bash "$rv_root/tools/install_vita3k_candidate.sh" \
+	"$rv_candidate_label" "$rv_dist/RenegadeVita-$rv_candidate_label.vpk")
+printf '%s\n' "$rv_vita3k_install_result"
+rv_vita3k_receipt=$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["receipt"])' "$rv_vita3k_install_result")
+
 trap - ERR
 echo
 echo "$rv_candidate_label FAST CANDIDATE BUILD SUCCESS"
-echo "Install manually only when requested: $rv_dist/RenegadeVita-$rv_candidate_label.vpk"
+echo "Vita3K installed and hash-verified; launch was not requested."
+echo "Vita3K receipt: $rv_vita3k_receipt"
 echo "Canonical acceptance remains: bash ./tools/build.sh plus physical Vita evidence."

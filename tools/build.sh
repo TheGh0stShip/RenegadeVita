@@ -265,6 +265,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_validate_vita_input_route tools.test_vita_route_session_runner \
 	tools.test_stage_sources_incremental_contract \
 	tools.test_mission_conversation_diagnostics_contract \
+	tools.test_vita3k_build_install_contract \
 	tools.test_vita_loading_screen_contract \
 	tools.test_a4_original_frontend_contract \
 	tools.test_vita_texture_surface_contract \
@@ -497,11 +498,17 @@ bash "$rv_root/tools/collect_a35_diagnostics.sh" "$rv_dist" \
 	sha256sum -c "$rv_candidate_label"-SHA256SUMS.txt
 )
 
+rv_vita3k_install_result=$(bash "$rv_root/tools/install_vita3k_candidate.sh" \
+	"$rv_candidate_label" "$rv_dist/RenegadeVita-$rv_candidate_label.vpk")
+printf '%s\n' "$rv_vita3k_install_result"
+rv_vita3k_receipt=$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["receipt"])' "$rv_vita3k_install_result")
+
 trap - ERR
 echo
 echo "$rv_candidate_label BUILD SUCCESS"
-echo "Install manually only when requested: $rv_dist/RenegadeVita-$rv_candidate_label.vpk"
+echo "Vita3K installed and hash-verified; launch was not requested."
+echo "Vita3K receipt: $rv_vita3k_receipt"
 echo "Retail Data transfer: not required."
 echo "Runtime shader prerequisite: ur0:/data/libshacccg.suprx must already be installed."
 echo "Expected runtime log: $rv_runtime_log"
-echo "No Vita filesystem was accessed and no deployment was attempted."
+echo "No physical Vita filesystem was accessed and no physical deployment was attempted."

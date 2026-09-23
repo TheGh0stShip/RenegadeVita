@@ -49,7 +49,7 @@ set(RENEGADE_STARTUP_PRECACHE_RECEIPT_PATH
 # sce_sys/param.sfo. Keep it under the same RNEGA3101 title so the package
 # remains an update of the native Vita port; it identifies only this developer
 # package and is not an EA or retail entitlement.
-set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENEGADEVITA0102" CACHE STRING
+set(RENEGADE_VITA_CONTENT_ID "EP9000-RNEGA3101_00-RENEGADEVITA0110" CACHE STRING
   "Developer Vita package content identifier")
 set(RENEGADE_VITA_TITLE_ID "RNEGA3101" CACHE STRING
   "Developer Vita title identifier")

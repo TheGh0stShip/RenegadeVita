@@ -8,10 +8,14 @@ samples mesh and draw-end process-time calls at 1/16 while retaining exact
 submission counts, and the DX8 texture-transform cache is invalidated after a
 native texture-matrix reset. Campaign-flight validation rejects corrupt or
 mixed evidence instead of profiling it. VPK SHA-256
-`9778e2338d47550ab0246385ef419b6091d2238cbd0fcb18043fe5f66cb2b373`; ELF
-SHA-256 `5e2a2e9f352960eaf208b81c02780c606ecd4ffc66493d7324ae2ad3c2c15b68`.
-Dev189 has not been installed or launched. Therefore these are implementation
-and build improvements, not measured FPS or gameplay wins. NPC behavior, M13
+`7ab645f0c33a748b98747fa4c1c187bb8a596fd1bd3de661c0a84fa4a5fbae53`; ELF
+SHA-256 `241a61ba5e4d50fffca8fcaf38220712761d7a2c43c9ef11d120c93fcdd45f3e`.
+Dev189 is installed in Vita3K `RNEGA3101` with receipt
+`build/vita3k-backups/A3.5-dev189-setup-20260923T230006509772Z/setup-receipt.json`,
+but has not been launched. Canonical and packaged fast builds now install and
+verify the title-scoped Vita3K candidate after their package hashes pass;
+compile-only mode does not install. Therefore these are implementation and build
+improvements, not measured FPS or gameplay wins. NPC behavior, M13
 performance/A-V synchronization, M01 beach freeze, and physical acceptance
 remain unverified. See `BUILD_STATE.json`, `LIVE_PROGRESS.md`, and the Dev189
 performance-ledger entry.

@@ -15,9 +15,6 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
-#if defined(__vita__)
-#include <psp2/rtc.h>
-#endif
 
 // ABI-facing Win32 scalar types. The native Vita target is ILP32, matching the
 // widths assumed by Renegade. Keep UINT and ULONG as distinct C++ types because
@@ -342,25 +339,48 @@ static inline uint64_t Renegade_FileTime_Value(const FILETIME *file_time)
 		static_cast<uint64_t>(file_time->dwLowDateTime);
 }
 
+static inline BOOL Renegade_FileTime_To_Utc_SystemTime(uint64_t stamp,
+	LPSYSTEMTIME system_time)
+{
+	if (system_time == NULL) return 0;
+	memset(system_time, 0, sizeof(*system_time));
+	const uint64_t windows_epoch_ticks = 116444736000000000ULL;
+	if (stamp < windows_epoch_ticks) return 0;
+
+	const uint64_t elapsed_ticks = stamp - windows_epoch_ticks;
+	const int64_t days = static_cast<int64_t>(elapsed_ticks / 864000000000ULL);
+	const uint64_t day_ticks = elapsed_ticks % 864000000000ULL;
+	const uint32_t seconds_of_day = static_cast<uint32_t>(day_ticks / 10000000ULL);
+
+	int64_t z = days + 719468;
+	const int64_t era = (z >= 0 ? z : z - 146096) / 146097;
+	const uint32_t doe = static_cast<uint32_t>(z - era * 146097);
+	const uint32_t yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+	int year = static_cast<int>(yoe) + static_cast<int>(era) * 400;
+	const uint32_t doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+	const uint32_t mp = (5 * doy + 2) / 153;
+	const uint32_t day = doy - (153 * mp + 2) / 5 + 1;
+	const int month = mp < 10 ? static_cast<int>(mp + 3) :
+		static_cast<int>(mp - 9);
+	year += month <= 2 ? 1 : 0;
+
+	system_time->wYear = static_cast<WORD>(year);
+	system_time->wMonth = static_cast<WORD>(month);
+	system_time->wDay = static_cast<WORD>(day);
+	system_time->wDayOfWeek = static_cast<WORD>((days + 4) % 7);
+	system_time->wHour = static_cast<WORD>(seconds_of_day / 3600U);
+	system_time->wMinute = static_cast<WORD>((seconds_of_day / 60U) % 60U);
+	system_time->wSecond = static_cast<WORD>(seconds_of_day % 60U);
+	system_time->wMilliseconds = static_cast<WORD>((day_ticks / 10000ULL) % 1000ULL);
+	return 1;
+}
+
 static inline BOOL FileTimeToLocalFileTime(const FILETIME *source, LPFILETIME destination)
 {
 	if (source == NULL || destination == NULL) return 0;
-#if defined(__vita__)
-	SceDateTime calendar = {};
-	SceRtcTick utc = {}, local = {};
-	SceUInt64 value = 0;
-	if (sceRtcSetWin32FileTime(&calendar, Renegade_FileTime_Value(source)) < 0 ||
-		sceRtcGetTick(&calendar, &utc) < 0 ||
-		sceRtcConvertUtcToLocalTime(&utc, &local) < 0 ||
-		sceRtcSetTick(&calendar, &local) < 0 ||
-		sceRtcGetWin32FileTime(&calendar, &value) < 0) return 0;
-	destination->dwLowDateTime = static_cast<DWORD>(value);
-	destination->dwHighDateTime = static_cast<DWORD>(value >> 32U);
-#else
 	// The Vita runtime presents local calendar fields below; retaining the UTC
 	// stamp here keeps ordering stable and avoids inventing a mutable timezone.
 	*destination = *source;
-#endif
 	return 1;
 }
 
@@ -368,40 +388,9 @@ static inline BOOL FileTimeToSystemTime(const FILETIME *file_time, LPSYSTEMTIME 
 {
 	if (file_time == NULL || system_time == NULL) return 0;
 	const uint64_t stamp = Renegade_FileTime_Value(file_time);
-#if defined(__vita__)
-	SceDateTime calendar = {};
+	if (Renegade_FileTime_To_Utc_SystemTime(stamp, system_time)) return 1;
 	memset(system_time, 0, sizeof(*system_time));
-	if (sceRtcSetWin32FileTime(&calendar, stamp) < 0) return 0;
-	system_time->wYear = calendar.year;
-	system_time->wMonth = calendar.month;
-	system_time->wDay = calendar.day;
-	system_time->wDayOfWeek = static_cast<WORD>(sceRtcGetDayOfWeek(calendar.year, calendar.month, calendar.day));
-	system_time->wHour = calendar.hour;
-	system_time->wMinute = calendar.minute;
-	system_time->wSecond = calendar.second;
-	system_time->wMilliseconds = static_cast<WORD>(calendar.microsecond / 1000U);
-#else
-	const uint64_t windows_epoch_ticks = 116444736000000000ULL;
-	if (stamp < windows_epoch_ticks) {
-		memset(system_time, 0, sizeof(*system_time));
-		return 0;
-	}
-	const time_t seconds = static_cast<time_t>((stamp - windows_epoch_ticks) / 10000000ULL);
-	struct tm calendar;
-	if (localtime_r(&seconds, &calendar) == NULL) {
-		memset(system_time, 0, sizeof(*system_time));
-		return 0;
-	}
-	system_time->wYear = static_cast<WORD>(calendar.tm_year + 1900);
-	system_time->wMonth = static_cast<WORD>(calendar.tm_mon + 1);
-	system_time->wDayOfWeek = static_cast<WORD>(calendar.tm_wday);
-	system_time->wDay = static_cast<WORD>(calendar.tm_mday);
-	system_time->wHour = static_cast<WORD>(calendar.tm_hour);
-	system_time->wMinute = static_cast<WORD>(calendar.tm_min);
-	system_time->wSecond = static_cast<WORD>(calendar.tm_sec);
-	system_time->wMilliseconds = static_cast<WORD>((stamp / 10000ULL) % 1000ULL);
-#endif
-	return 1;
+	return 0;
 }
 
 static inline LONG CompareFileTime(const FILETIME *left, const FILETIME *right)

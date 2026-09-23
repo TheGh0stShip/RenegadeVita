@@ -4,9 +4,13 @@ import tempfile
 import unittest
 
 from tools.request_tutorial_checkpoint import queue_request
+from tools.test_win32_time_compat import main as run_win32_time_compat_test
 
 
 class DevelopmentCheckpointTests(unittest.TestCase):
+    def test_win32_filetime_conversion_avoids_vita_rtc_boundary(self):
+        self.assertEqual(run_win32_time_compat_test(), 0)
+
     def test_runtime_reactivates_only_the_unique_saved_player_before_admission(self):
         root = Path(__file__).resolve().parents[1]
         runtime = (root / "port/platform/vita/a31_vita_runtime.cpp").read_text()

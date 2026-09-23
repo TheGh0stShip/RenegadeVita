@@ -138,7 +138,7 @@ struct A35PreparedRenderObjectSlot {
 	RenderObjClass *object;
 };
 
-static A35PreparedRenderObjectSlot g_A35PreparedRenderObjects[32];
+static A35PreparedRenderObjectSlot g_A35PreparedRenderObjects[128];
 
 void A35_Vita_Clear_Prepared_Render_Objs(void)
 {
@@ -3771,17 +3771,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					RenderObjClass *prepared = NULL;
-					bool retained_for_later_use = stricmp(prepare_models[i], "X0F_AG_EFFECTS") == 0;
-					if (retained_for_later_use) {
-						retained_for_later_use = A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
-					} else {
-						prepared = WW3DAssetManager::Get_Instance()->Create_Render_Obj(prepare_models[i]);
-					}
+					const bool retained_for_later_use =
+						A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
 					A30_Vita_Log("A4 M13 retained preparation: model=%s created=%d elapsed_us=%llu\n",
-						prepare_models[i], (prepared != NULL || retained_for_later_use) ? 1 : 0,
+						prepare_models[i], retained_for_later_use ? 1 : 0,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
-					if (prepared != NULL) prepared->Release_Ref();
 					loading_presenter.Render_Original_Progress("after_m13_model_prepare");
 				}
 				const char *const prepare_explosions[] = {
@@ -3827,26 +3821,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					RenderObjClass *prepared = NULL;
-					const bool should_retain =
-						stricmp(prepare_models[i], "v_Nod_cplane") == 0 ||
-						stricmp(prepare_models[i], "v_GDI_trnspt") == 0 ||
-						stricmp(prepare_models[i], "v_Nod_trnspt") == 0 ||
-						stricmp(prepare_models[i], "v_nod_Apache") == 0 ||
-						stricmp(prepare_models[i], "V_GDI_ORCA") == 0 ||
-						stricmp(prepare_models[i], "V_GDI_A10") == 0;
-					bool retained_for_later_use = false;
-					if (should_retain) {
-						retained_for_later_use = A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
-					} else {
-						prepared = WW3DAssetManager::Get_Instance()->Create_Render_Obj(prepare_models[i]);
-					}
+					const bool retained_for_later_use =
+						A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
 					A30_Vita_Log("A4 M01 retained preparation: model=%s created=%d retained=%d elapsed_us=%llu\n",
 						prepare_models[i],
-						(prepared != NULL || retained_for_later_use) ? 1 : 0,
+						retained_for_later_use ? 1 : 0,
 						retained_for_later_use ? 1 : 0,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
-					if (prepared != NULL) prepared->Release_Ref();
 					loading_presenter.Render_Original_Progress("after_m01_model_prepare");
 				}
 			}

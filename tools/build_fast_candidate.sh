@@ -216,7 +216,7 @@ grep -q 'Machine:.*ARM' "$rv_elf_header"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime(int, bool, char const*)
+A31_Vita_Run_Interactive_Runtime(int, bool, char const*, char const*, unsigned char const*, unsigned int)
 EncyclopediaMgrClass::Initialize()
 EncyclopediaMgrClass::Shutdown()
 RenegadeVitaAudio::Open_Mpeg_Playback

@@ -15,6 +15,7 @@ class NpcPathFrameTests(unittest.TestCase):
         program = r'''
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #define RENEGADE_A4_ORIGINAL_GAMEMODE 1
 #define RENEGADE_HOST_ABI_TEST 1
@@ -47,6 +48,18 @@ struct CombatManager {
     static void Think() { events += 'S'; }
 };
 struct cNetwork { static void Update() { events += 'N'; } };
+struct A31SimulationStageTotals {
+    uint32_t frames;
+    uint64_t time_manager_us;
+    uint64_t input_us;
+    uint64_t path_us;
+    uint64_t control_us;
+    uint64_t network_us;
+    uint64_t combat_us;
+    uint64_t other_us;
+    uint64_t simulated_us;
+    uint64_t real_us;
+};
 void A31_Interactive_Apply_Render_Capabilities() { events += 'R'; }
 void A31_Interactive_Run_Simulation_Frame() FRAME
 int main() {

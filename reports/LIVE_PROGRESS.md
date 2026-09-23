@@ -1,5 +1,43 @@
 # Live engineering progress
 
+## Dev181: shared effect/projectile cache and fast build path
+
+Renegade Vita - v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Now: run installed `A3.5-dev181` through the M13 ambush/Ion-beacon and M01
+beach-plane route, comparing first-use effect/projectile stalls against Dev179.
+Completed: Dev181 keeps Dev180's deterministic Win32 FILETIME conversion and
+extends M13/M01 preparation so all listed cinematic/effect/projectile models
+are retained in the prepared render-object cache. `surfaceeffects.cpp` and
+`bullet.cpp` now consume a retained prepared render object before falling back
+to original `WW3DAssetManager::Create_Render_Obj`, targeting the shared rocket,
+trail, particle, explosion, and aircraft first-use stall path reported by
+Dev179. Fast candidate tests were repaired to match the current campaign
+runtime ABI, and the fast builder now checks the same six-argument runtime
+symbol as the canonical builder.
+Evidence: deterministic staging PASS with 199 ordered patches and registry
+`89c294fd10546ad24490b89dd3a41db012116ca1cd966168d82f020160490a3a`;
+`tools/test_win32_time_compat.py` PASS; campaign profile defaults PASS;
+development checkpoint PASS; M13/M01 cinematic preparation PASS; `git diff
+--check` PASS; focused fast contracts PASS (156 tests); DDS tga-alias executable
+contract PASS; fast ARM/SELF/VPK package PASS. VPK
+`8376405fd47ec8a18d3664e59723574c51bea71481a46595037bda8e5ec43885`; ELF
+`2b5f3862b9e2afe76d20988a4a22efba1e0e6a83ee930cfa52e9274043348032`.
+Dev181 is installed into Vita3K `RNEGA3101` with receipt
+`build/vita3k-backups/A3.5-dev181-setup-20260923T185035462716Z/setup-receipt.json`;
+installed `eboot.bin`
+`2e954334044ef622d8a1dad11df61816e7b03de5b69595dd931236d03185471f` and
+`param.sfo`
+`9d973dffe593682229455a090c94cfc3e0c71e2962bff1db703512a0868f81ab`.
+No Vita3K launch, visual result, route completion, audio-sync fix, campaign
+progression, or physical acceptance is claimed. Compile note: the stable fast
+build tree is now active; this first staged-identity build still only hit ccache
+373/3371 times (11.06%), but avoids the timestamped-dir rebuild pattern for
+subsequent iterations. Next: launch OpenGL Vita3K or accept user runtime
+evidence, then compare recorder sidecars around M13 rockets/Ion and M01 beach
+plane. Blocker: runtime evidence pending.
+
 ## Dev179: campaign flight recorder
 
 Renegade Vita - v3.5 active

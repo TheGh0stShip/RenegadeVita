@@ -22,9 +22,14 @@ class DemoMenuReturnTests(unittest.TestCase):
 struct WWAudioClass { static WWAudioClass *Get_Instance() { return nullptr; } };
 void A30_Vita_Log(const char *, ...) {}
 int mode, calls;
-A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(int, bool menu, const char *reload) {
+A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
+    int, bool menu, const char *reload, const char *campaign_source,
+    const uint8_t *campaign_state, uint32_t campaign_state_size) {
     assert(calls < 3);
     assert(menu == (calls > 0));
+    assert(campaign_source == nullptr);
+    assert(campaign_state == nullptr);
+    assert(campaign_state_size == 0);
     if (calls == 0) assert(reload == nullptr);
     else if (mode >= 3) assert(reload && strcmp(reload, "save/manual.sav") == 0);
     else assert(reload == nullptr);

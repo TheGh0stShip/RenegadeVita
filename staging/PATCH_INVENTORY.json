@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "aa967a9a8274752059f82164b9890fe25dd2d9ceeea9627d07ea087721044650",
-  "patch_count": 198,
+  "stage_script_sha256": "c96e05ab560312d4b8d85edb12a921c26c15d9229a00795295b32bdade67b181",
+  "patch_count": 199,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -945,6 +945,11 @@
       "sha256": "3bff484128fa1bb5cc9caf9f41f71ed542dfb2d8d8e2e333671c8a6dd768df13"
     },
     {
+      "path": "port/patches/combat-a35-prepared-effect-cache.patch",
+      "stage_directory": "combat",
+      "sha256": "2978245bad6a1137004e206644497153e5695b853dc4aee4f73306cc46d37cbe"
+    },
+    {
       "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
       "stage_directory": "scripts",
       "sha256": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef"
@@ -995,5 +1000,5 @@
       "sha256": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
     }
   ],
-  "registry_sha256": "bf39b83e11ec1361f346abedd7a56a9818fa042b0180fdbfd686754672d2f65c"
+  "registry_sha256": "89c294fd10546ad24490b89dd3a41db012116ca1cd966168d82f020160490a3a"
 }

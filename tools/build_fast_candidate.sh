@@ -151,6 +151,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_vita_indexed_state_contract \
 		tools.test_vita_skin_submission_contract \
 		tools.test_vita_hanim_combo_guard \
+		tools.test_animation_action_completion_contract \
 		tools.test_mission_conversation_diagnostics_contract \
 		tools.test_vita_texture_provenance_contract \
 		tools.test_vita_texture_surface_contract \

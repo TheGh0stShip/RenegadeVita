@@ -371,6 +371,13 @@ SimplePersistFactoryClass<PlayAnimationActionCodeClass, CHUNKID_ACTION_CODE_PLAY
 
 class	PlayAnimationActionCodeClass : public ActionCodeClass {
 public:
+	PlayAnimationActionCodeClass( void ) :
+		StartActCount( 0 ),
+		LastFrame( -1.0f ),
+		StalledFrames( 0 )
+	{
+	}
+
 	virtual const PersistFactoryClass &	Get_Factory( void ) const	{ return _PlayAnimationActionCodeClassFactory; }
 
 	/*
@@ -416,6 +423,9 @@ public:
 
 		WWASSERT( obj->Get_Anim_Control() != NULL );
 		obj->Set_Animation( action->Get_Parameters().SafeAnimationName, action->Get_Parameters().AnimationLooping );
+		StartActCount = action->Get_Act_Count();
+		LastFrame = -1.0f;
+		StalledFrames = 0;
 	}
 
 	virtual	void	Shutdown( void )
@@ -445,8 +455,41 @@ public:
 			return ACTION_DONE;
 		}
 
+		if ( !Action->Get_Parameters().AnimationLooping ) {
+			const float frame = obj->Get_Anim_Control()->Get_Current_Frame();
+			if ( frame <= LastFrame + 0.001f ) {
+				++StalledFrames;
+			} else {
+				LastFrame = frame;
+				StalledFrames = 0;
+			}
+
+			const unsigned int elapsed_frames = Action->Get_Act_Count() - StartActCount;
+			if ( elapsed_frames > 1800 || StalledFrames > 300 ) {
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+				static unsigned vita_reports = 0U;
+				if ( vita_reports++ < 32U ) {
+					A30_Vita_Log("A4 animation action forced complete: obj=%d def=%s anim=%s elapsed_frames=%u stalled_frames=%u frame=%.3f\n",
+						obj->Get_ID(),
+						obj->Get_Definition().Get_Name(),
+						Action->Get_Parameters().SafeAnimationName.Peek_Buffer(),
+						elapsed_frames,
+						StalledFrames,
+						frame);
+				}
+#endif
+				Action->Done( ACTION_COMPLETE_NORMAL );
+				return ACTION_DONE;
+			}
+		}
+
 		return ACTION_IN_PROGRESS;
 	}
+
+private:
+	unsigned int StartActCount;
+	float LastFrame;
+	unsigned int StalledFrames;
 };
 
 

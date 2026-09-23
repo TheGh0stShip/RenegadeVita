@@ -1,5 +1,44 @@
 # Live engineering progress
 
+## Dev184: animation action completion and death-freeze guard
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: run installed `A3.5-dev184` through M13 ambush actor behavior, especially
+`GDI_RocketSoldier_0` near the Humvee/ambush area, then kill him if he stalls
+and compare against Dev183's freeze during his death animation.
+Completed: Dev183 runtime evidence tied the user-reported walking-in-place
+rocket soldier to original action animation completion. `GDI_RocketSoldier_0`
+object id `1500000039` was created by X00 intro slot 13 on host bone
+`BN_GDI_MG_05`, then stayed at `(-96.210,-58.508,0.012)` with zero velocity,
+action `119/1/0`, and `human_state=ANIMATION` from frame 1680 through frame
+4920 while health changed after player fire. Dev184 fixes the shared boundary:
+one-shot animation completion now accepts `Frame >= NumFrames-1` instead of an
+exact float equality, and non-looping `PlayAnimationActionCodeClass` instances
+complete normally if the current animation stalls for 300 frames or exceeds
+1800 action frames. The fallback is logged as
+`A4 animation action forced complete` and is limited to non-looping animation
+actions; it does not force objectives, mission success, AI disablement, or
+looping animations.
+Evidence: direct animation action completion contract PASS; development
+checkpoint PASS; campaign profile defaults PASS; M13/M01 preparation module
+returned clean; `git diff --check` PASS; focused fast contracts PASS (158
+tests); DDS tga-alias executable contract PASS; fast ARM/SELF/VPK package PASS.
+VPK `bae2c54179af39c1519ad30242ff055330256a0ae126e489dc6f106ff3b0e709`; ELF
+`7bc8b9b60fff89280dccb7ec27b104945e466a61b3f162503a086c9914deb396`.
+Dev184 is installed into Vita3K `RNEGA3101` with receipt
+`build/vita3k-backups/A3.5-dev184-setup-20260923T200333815364Z/setup-receipt.json`;
+installed `eboot.bin`
+`6d3e293682d50973009e972e8a22ef32927ed14258ed84bbe7b7de85bb2f9e64` and
+`param.sfo`
+`7cf3b59bef3463bfac4c1c8bd035f64ae6b563a6020353b982facd19b545733b`.
+No Vita3K launch, visual result, M13 actor-behavior fix, death-freeze fix,
+campaign progression, or physical acceptance is claimed. Next: verify whether
+the ambush rocket soldier advances out of the scripted animation state and
+whether killing him no longer freezes the game. Blocker: runtime evidence
+pending.
+
 ## Dev183: explosion recycler and campaign cinematic budgeting
 
 Renegade Vita - v3.5 active

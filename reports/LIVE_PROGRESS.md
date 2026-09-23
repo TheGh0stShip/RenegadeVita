@@ -1,5 +1,54 @@
 # Live engineering progress
 
+## Dev189: canonical campaign effect integration and diagnostics
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: obtain a clean candidate-matched M13 flight bundle and inspect soldier
+action/path state around the stationary rocket actor; no emulator/device was
+launched in this work unit.
+Completed: Dev189 canonical host/sanitizer, original M00/M01 host-runtime
+scenarios, focused contracts, ARM compile/link, SELF/VPK closure, candidate
+identity, and diagnostics packaging pass. The explosion recycler is now a
+registered source patch rather than staging-only drift. Mesh/draw-end timer
+calls sample 1/16; counts remain exact. Flight bundle validation rejects mixed
+candidate IDs, malformed data, count mismatches, and non-monotonic frames.
+Evidence: VPK SHA-256
+`9778e2338d47550ab0246385ef419b6091d2238cbd0fcb18043fe5f66cb2b373`; ELF
+SHA-256 `5e2a2e9f352960eaf208b81c02780c606ecd4ffc66493d7324ae2ad3c2c15b68`;
+200 ordered patches with registry SHA-256
+`4ccdf71ded259d948d6029f73a9603d44858662887df53cab8187653d05e7beb`.
+No measured FPS/A-V improvement or NPC fix is claimed. Dev189 is not installed
+or run, and native performance acceptance is pending.
+Next: use the Dev189 flight recorder and validator on the same fixed M13 route,
+then compare sampled mesh cost, frame percentiles, stalls, actor state, and
+events with a valid matching baseline. Blocker: Dev186 sidecars are corrupt;
+there is no clean post-change runtime capture.
+
+## Dev188: canonical explosion recycler and sampled hot-path timing
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: collect a clean Dev188 M13 flight bundle and compare it with Dev186; then
+trace the stationary rocket soldier to its action/animation owner.
+Completed: canonical staging exposed that the Dev183 timed explosion recycler
+was only present in the generated tracked tree, not as an upstream patch. Added
+the zero-fuzz source patch and shutdown include. High-frequency Vita timing now
+samples one of every 16 mesh and draw-end submissions while retaining exact
+submission counts. Added validation for corrupt/mixed campaign flight bundles.
+Evidence: canonical host and sanitizer suites passed; full 171-test suite and
+focused 28 tests passed; ARM, SELF/VPK, identity, diagnostics bundle, and 200
+patches passed. VPK SHA-256
+`7dd9b959529e050f3d8b1b62930447867e874dcfa3252ce2f2caad64efc1978a`; ELF
+SHA-256 `dc8a26aa6c933c20d44f38bd8ec386b2106e35a537bb4c20d9755bd8d4663e5b`.
+Dev188 is not installed or run. No FPS, NPC, A/V, gameplay, or hardware
+improvement is accepted.
+Next: gather a fixed-route M13 flight bundle and validate it before profile
+analysis. Blocker: available Dev186 sidecars are corrupt; no valid post-change
+runtime capture exists.
+
 ## Dev187: NaN HUD freeze guard and prefixed tread discovery
 
 Renegade Vita - v3.5 active

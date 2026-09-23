@@ -1,5 +1,37 @@
 # Performance hypothesis ledger
 
+## Dev189 source/build closure (2026-09-23)
+
+- Hypothesis: two remaining avoidable sources of burst cost are timed
+  explosion visuals that were not connected to the reproducible build patch
+  registry, and unconditional Vita process-time queries on every mesh and draw
+  end. The Dev186 recorder attributed about 13.9 ms/frame to the mesh boundary,
+  but its sidecars are corrupt, so the value is a lead rather than an accepted
+  baseline.
+- Change: register the original `EffectRecyclerClass` preparation/spawn/reset
+  integration as a zero-fuzz source patch; sample process-time calls at a
+  deterministic 1/16 stride while retaining exact event counts; validate
+  candidate identity and monotonic timing before profiling flight bundles.
+- Guardrails: no cinematic/AI/objective skips, no gameplay behavior forced,
+  and no GPU-time inference from CPU boundary timing. Estimated total sampled
+  microseconds scale each observed sample by 16 and are an estimate; sample
+  count and raw sampled total are emitted too.
+- Verification: patch reconstruction and source contracts, canonical host and
+  sanitizer suite, M00/M01 original host harnesses, ARM/SELF/VPK identity,
+  and diagnostics packaging pass. Candidate was not installed or launched.
+- Decision: retain as a candidate implementation; do not call the recycler an
+  in-game win or the timer sampling an FPS gain until a valid same-route runtime
+  A/B confirms frame percentiles, effect correctness, and actor behavior.
+
+## Dev188 build closure (2026-09-23)
+
+Canonical host/sanitizer, 171-test, ARM, SELF/VPK, identity, and diagnostics
+packaging gates pass. VPK SHA-256 is
+`7dd9b959529e050f3d8b1b62930447867e874dcfa3252ce2f2caad64efc1978a`; ELF
+SHA-256 is `dc8a26aa6c933c20d44f38bd8ec386b2106e35a537bb4c20d9755bd8d4663e5b`.
+The candidate was not installed or run, so the explosion-recycler restoration
+and timing-sample reduction have no runtime A/B result yet.
+
 ## Dev187 invalid HUD geometry and prefixed tread names (2026-09-23)
 
 - Hypothesis: the new early M13 freeze is being triggered or amplified by NaN

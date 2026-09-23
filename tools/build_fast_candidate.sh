@@ -161,7 +161,9 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_input_route_contract \
 		tools.test_validate_vita_input_route \
 		tools.test_stage_sources_incremental_contract \
-		tools.test_vita_audio_provider
+		tools.test_vita_audio_provider \
+		tools.test_validate_campaign_flight_bundle \
+		tools.test_explosion_effect_recycler_patch
 	echo "Running original DDSFileClass tga-alias executable contract..."
 	cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_host_contract_build" -G Ninja \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \

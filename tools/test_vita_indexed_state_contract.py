@@ -6,6 +6,16 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class VitaIndexedStateContractTests(unittest.TestCase):
+    def test_mesh_boundary_timing_is_deterministically_sampled(self):
+        renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
+        self.assertIn("MESH_BOUNDARY_TIMING_SAMPLE_STRIDE = 16U", renderer)
+        self.assertIn("g_mesh_boundary_timing_sequence++ % MESH_BOUNDARY_TIMING_SAMPLE_STRIDE", renderer)
+        self.assertIn("g_draw_end_timing_sequence++ % MESH_BOUNDARY_TIMING_SAMPLE_STRIDE", renderer)
+        self.assertIn("estimated_total_us=%llu", renderer)
+        self.assertIn("sampled_max_us=%llu", renderer)
+        self.assertIn("mesh_sample_count", renderer)
+        self.assertIn("draw_end_sample_count", renderer)
+
     def test_deferred_sky_state_is_applied_before_indexed_geometry(self):
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
         function = boundary[boundary.index("void Submit_Bound_Triangles"):]

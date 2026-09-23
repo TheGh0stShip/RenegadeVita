@@ -235,6 +235,7 @@ void RenegadeVita_Release_DX8_Bound_Textures();
 bool RenegadeVita_Get_DX8_Texture_Coordinate_State(DWORD stage,
 	DWORD *texcoord_index, DWORD *texture_transform_flags,
 	D3DMATRIX *texture_transform);
+void RenegadeVita_Invalidate_DX8_Texture_Stage_Transform(DWORD stage);
 
 enum : uint32_t {
 	D3D_OK = 0,

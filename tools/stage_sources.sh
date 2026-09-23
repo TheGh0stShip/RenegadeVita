@@ -665,6 +665,8 @@ if [[ "$rv_prepared_effect_cache_surface_sha" != "86a6d3350b0060ccee110404ac6187
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-prepared-effect-cache.patch"
 echo "Applied: port/patches/combat-a35-prepared-effect-cache.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-explosion-effect-recycler.patch"
+echo "Applied: port/patches/combat-a35-explosion-effect-recycler.patch"
 rv_cinematic_command_sha=$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)
 if [[ "$rv_cinematic_command_sha" != "40750609e4be927c4ceceb36fc291395c023662c8ad69ce34d185f95d6eb050d" ]]; then
 	echo "Refusing unanchored cinematic command timing patch: Test_Cinematic.cpp changed ($rv_cinematic_command_sha)" >&2

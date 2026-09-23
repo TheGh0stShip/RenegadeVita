@@ -2111,6 +2111,13 @@ bool RenegadeVita_Get_DX8_Texture_Coordinate_State(DWORD stage,
 	return true;
 }
 
+void RenegadeVita_Invalidate_DX8_Texture_Stage_Transform(DWORD stage)
+{
+	if (stage < MAX_TEXTURE_STAGES) {
+		g_applied_texture_transform_valid[stage] = false;
+	}
+}
+
 HRESULT IDirect3DDevice8::SetTransform(D3DTRANSFORMSTATETYPE state,
 	const D3DMATRIX *matrix)
 {

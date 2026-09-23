@@ -1,5 +1,33 @@
 # Renegade Vita port status
 
+Current candidate: A3.5-dev189 passed the canonical host/sanitizer and ARM
+package path. The registered zero-fuzz patch now carries Dev183's original
+timed explosion recycler into every reproducible stage/build; source-level
+contracts verify preparation, spawn routing, and shutdown. The Vita renderer
+samples mesh and draw-end process-time calls at 1/16 while retaining exact
+submission counts, and the DX8 texture-transform cache is invalidated after a
+native texture-matrix reset. Campaign-flight validation rejects corrupt or
+mixed evidence instead of profiling it. VPK SHA-256
+`9778e2338d47550ab0246385ef419b6091d2238cbd0fcb18043fe5f66cb2b373`; ELF
+SHA-256 `5e2a2e9f352960eaf208b81c02780c606ecd4ffc66493d7324ae2ad3c2c15b68`.
+Dev189 has not been installed or launched. Therefore these are implementation
+and build improvements, not measured FPS or gameplay wins. NPC behavior, M13
+performance/A-V synchronization, M01 beach freeze, and physical acceptance
+remain unverified. See `BUILD_STATE.json`, `LIVE_PROGRESS.md`, and the Dev189
+performance-ledger entry.
+
+Current candidate: A3.5-dev188 passed canonical host/sanitizer, full 171-test,
+ARM, SELF/VPK, identity, and diagnostics packaging gates. It restores Dev183's
+timed explosion recycler through a missing zero-fuzz upstream patch, reduces
+per-mesh/draw-end profiler timer calls to 1/16 with exact counts preserved, and
+adds flight-bundle validation. VPK SHA-256
+`7dd9b959529e050f3d8b1b62930447867e874dcfa3252ce2f2caad64efc1978a`; ELF
+SHA-256 `dc8a26aa6c933c20d44f38bd8ec386b2106e35a537bb4c20d9755bd8d4663e5b`.
+Dev188 is not installed or run. NPC behavior, FPS, A/V sync, mission play, and
+physical acceptance remain unverified. See `BUILD_STATE.json`,
+`LIVE_PROGRESS.md`, and the Dev188 performance-ledger entry. Dev187 remains
+installed in Vita3K but was not launched during this work.
+
 Current: Dev134 canonical milestone PASS: 179 checks, original host/sanitizer
 cycles, ARM/package identity and matching Vita3K visuals, pause/resume and clean
 native exit. Frozen build: build/dev134-closed-canonical/receipt.json; runtime:

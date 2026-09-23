@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev181",
+  "milestone": "A3.5-dev189",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -639,8 +639,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 198,
-  "mechanically_patched_upstream_files": 298,
+  "patch_count": 200,
+  "mechanically_patched_upstream_files": 304,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -653,6 +653,7 @@
     "Code/Combat/beacongameobj.cpp",
     "Code/Combat/building.cpp",
     "Code/Combat/buildingaggregate.cpp",
+    "Code/Combat/bullet.cpp",
     "Code/Combat/ccamera.cpp",
     "Code/Combat/combat.cpp",
     "Code/Combat/combatsound.cpp",
@@ -664,8 +665,12 @@
     "Code/Combat/damage.h",
     "Code/Combat/dialogue.cpp",
     "Code/Combat/doors.cpp",
+    "Code/Combat/effectrecycler.cpp",
+    "Code/Combat/effectrecycler.h",
     "Code/Combat/elevator.cpp",
     "Code/Combat/encyclopediamgr.cpp",
+    "Code/Combat/explosion.cpp",
+    "Code/Combat/explosion.h",
     "Code/Combat/gameobjmanager.cpp",
     "Code/Combat/hud.cpp",
     "Code/Combat/hud.h",
@@ -690,6 +695,7 @@
     "Code/Combat/soldier.cpp",
     "Code/Combat/soldier.h",
     "Code/Combat/spawn.cpp",
+    "Code/Combat/surfaceeffects.cpp",
     "Code/Combat/textwindow.cpp",
     "Code/Combat/textwindow.h",
     "Code/Combat/transition.cpp",
@@ -2838,6 +2844,29 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "scriptablegameobj.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-prepared-effect-cache.patch",
+      "stage_directory": "combat",
+      "sha256": "2978245bad6a1137004e206644497153e5695b853dc4aee4f73306cc46d37cbe",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "surfaceeffects.cpp",
+        "bullet.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-explosion-effect-recycler.patch",
+      "stage_directory": "combat",
+      "sha256": "e9d503268333a51653274760142b8a41cd33d4a305af48f483f8c300c4b67861",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "explosion.h",
+        "effectrecycler.h",
+        "effectrecycler.cpp",
+        "explosion.cpp",
+        "combat.cpp"
       ]
     },
     {

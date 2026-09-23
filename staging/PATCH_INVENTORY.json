@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "c96e05ab560312d4b8d85edb12a921c26c15d9229a00795295b32bdade67b181",
-  "patch_count": 199,
+  "stage_script_sha256": "ae8e2611fa30bc59c836a6d99d37f13d0c7fbef419adccccd9480180388e828d",
+  "patch_count": 200,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -950,6 +950,11 @@
       "sha256": "2978245bad6a1137004e206644497153e5695b853dc4aee4f73306cc46d37cbe"
     },
     {
+      "path": "port/patches/combat-a35-explosion-effect-recycler.patch",
+      "stage_directory": "combat",
+      "sha256": "e9d503268333a51653274760142b8a41cd33d4a305af48f483f8c300c4b67861"
+    },
+    {
       "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
       "stage_directory": "scripts",
       "sha256": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef"
@@ -1000,5 +1005,5 @@
       "sha256": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
     }
   ],
-  "registry_sha256": "89c294fd10546ad24490b89dd3a41db012116ca1cd966168d82f020160490a3a"
+  "registry_sha256": "4ccdf71ded259d948d6029f73a9603d44858662887df53cab8187653d05e7beb"
 }

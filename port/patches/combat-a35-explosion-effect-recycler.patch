@@ -1,0 +1,127 @@
+--- a/explosion.h
++++ b/explosion.h
+@@ -89,4 +89,7 @@ public:
+ 
+ public:
++	static	void	Shutdown( void );
++	static	bool	Prepare_Explosion_Render_Objects( int explosion_id, int count = 1 );
++
+ 	static	void	Create_Explosion_At( int exlosion_id, const Vector3 & pos, ArmedGameObj * damager, const Vector3 & blast_direction = Vector3( 0,0,-1), DamageableGameObj * force_victim = NULL );
+ 	static	void	Create_Explosion_At( int exlosion_id, const Matrix3D & tm, ArmedGameObj * damager, const Vector3 & blast_direction = Vector3( 0,0,-1), DamageableGameObj * force_victim = NULL  );
+ 
+--- a/effectrecycler.h
++++ b/effectrecycler.h
+@@ -75,6 +75,8 @@
+ 	~EffectRecyclerClass(void);
+ 
+ 	void					Reset(void);
++	void					Preload_Effect(TimedDecorationPhysDefClass * definition,const Matrix3D & tm,int count = 1);
++	void					Preload_Effect(const char * render_obj_name,const Matrix3D & tm,int count = 1);
+ 	void					Spawn_Effect(TimedDecorationPhysDefClass * definition,const Matrix3D & tm);
+ 	void					Spawn_Effect(const char * render_obj_name,const Matrix3D & tm,float time = -1.0f);
+ 	
+--- a/effectrecycler.cpp
++++ b/effectrecycler.cpp
+@@ -107,6 +107,29 @@ void EffectRecyclerClass::Reset(void)
+ 	InactiveTDecos.Reset_List();
+ }
+ 
++void EffectRecyclerClass::Preload_Effect(TimedDecorationPhysDefClass * def,const Matrix3D & tm,int count)
++{
++	if (def != NULL) {
++		Preload_Effect(def->Get_Model_Name(),tm,count);
++	}
++}
++
++void EffectRecyclerClass::Preload_Effect(const char * robj_name,const Matrix3D & tm,int count)
++{
++	if ((robj_name == NULL) || (count <= 0)) {
++		return;
++	}
++
++	for (int i = 0; i < count; ++i) {
++		RenderObjClass * model = internal_get_model(robj_name,tm);
++		if (model == NULL) {
++			break;
++		}
++		ModelRecycler.Return_Render_Object(model);
++		REF_PTR_RELEASE(model);
++	}
++}
++
+ 
+ /***********************************************************************************************
+  * EffectRecyclerClass::Spawn_Effect -- Spawn a timed effect into the combat scene             *
+--- a/explosion.cpp
++++ b/explosion.cpp
+@@ -54,6 +54,7 @@
+ #include "smartgameobj.h"
+ #include "building.h"
+ #include "scexplosionevent.h"
++#include "effectrecycler.h"
+ 
+ /*
+ ** ExplosionDefinitionClass
+@@ -63,0 +64,1 @@
++static EffectRecyclerClass _ExplosionEffectRecycler;
+@@ -193,6 +196,29 @@
+ 	return true;
+ }
+ 
++void	ExplosionManager::Shutdown( void )
++{
++	_ExplosionEffectRecycler.Reset();
++}
++
++bool	ExplosionManager::Prepare_Explosion_Render_Objects( int explosion_def_id, int count )
++{
++	ExplosionDefinitionClass * explosion_def = (ExplosionDefinitionClass *)DefinitionMgrClass::Find_Definition( explosion_def_id );
++	if ( explosion_def == NULL || explosion_def->PhysDefID == 0 || count <= 0 ) {
++		return false;
++	}
++
++	PhysDefClass * phys_def = (PhysDefClass *)DefinitionMgrClass::Find_Definition( explosion_def->PhysDefID );
++	if ( phys_def == NULL || !phys_def->Is_Type( "TimedDecorationPhysDef" ) ) {
++		return false;
++	}
++
++	TimedDecorationPhysDefClass * timed_def = (TimedDecorationPhysDefClass *)phys_def;
++	Matrix3D tm(1);
++	_ExplosionEffectRecycler.Preload_Effect( timed_def, tm, count );
++	return true;
++}
++
+ /*
+ **
+ */
+@@ -234,6 +260,9 @@
+ 		if ( phys_def != NULL ) {
+ 			WWASSERT( phys_def );
+ 			WWASSERT( phys_def->Is_Type( "TimedDecorationPhysDef" ) );
++			if ( explosion_def->AnimatedExplosion && phys_def->Is_Type( "TimedDecorationPhysDef" ) ) {
++				_ExplosionEffectRecycler.Spawn_Effect( (TimedDecorationPhysDefClass *)phys_def, up_tm );
++			} else {
+ 			TimedDecorationPhysClass * explosion = (TimedDecorationPhysClass *)phys_def->Create();
+ 			if ( explosion ) {
+ 				RenderObjClass * model = explosion->Peek_Model();
+@@ -263,6 +292,7 @@
+				explosion->Release_Ref();
+ 
+ 			}
++			}
+ 		}
+ 	}
+ 
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -37,0 +38,1 @@
++#include "explosion.h"
+@@ -253,6 +253,8 @@
+ 
+ 	ObjectiveManager::Shutdown();
+ 
++	ExplosionManager::Shutdown();
++
+ 	SurfaceEffectsManager::Shutdown();
+ 
+ 	CCameraClass::Shutdown();

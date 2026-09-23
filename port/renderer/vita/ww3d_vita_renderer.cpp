@@ -212,16 +212,23 @@ VitaIndexedMeshBatch g_indexed_mesh_batch;
 uint64_t g_mesh_expanded_corners = 0, g_mesh_unique_vertices = 0;
 uint64_t g_mesh_indexed_batches = 0;
 #if !RENEGADE_VITA_M00_DEMO
+enum { MESH_BOUNDARY_TIMING_SAMPLE_STRIDE = 16U };
 struct MeshBoundaryTiming {
 	uint64_t mesh_total_us;
+	uint64_t mesh_sampled_us;
 	uint64_t mesh_max_us;
 	uint64_t draw_end_total_us;
+	uint64_t draw_end_sampled_us;
 	uint64_t draw_end_max_us;
 	uint32_t mesh_count;
+	uint32_t mesh_sample_count;
 	uint32_t draw_end_count;
+	uint32_t draw_end_sample_count;
 	char slowest_mesh[64];
 };
 MeshBoundaryTiming g_mesh_boundary_timing = {};
+uint32_t g_mesh_boundary_timing_sequence = 0U;
+uint32_t g_draw_end_timing_sequence = 0U;
 #endif
 struct NativeTextureObjectSampler {
 	uint32_t texture;
@@ -550,6 +557,7 @@ void Reset_Texture_Matrix_Stage(unsigned stage)
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
+	RenegadeVita_Invalidate_DX8_Texture_Stage_Transform(stage);
 	glActiveTexture(GL_TEXTURE0);
 }
 
@@ -2271,15 +2279,23 @@ void End_Frame(bool present)
 				static_cast<unsigned long long>(g_material_skin_rgb_skips));
 #if !RENEGADE_VITA_M00_DEMO
 			Vita_Append_A22_Runtime_Breadcrumb("mesh-boundary-time",
-				"frame=%u meshes=%u total_us=%llu max_us=%llu max_name=%s draw_ends=%u total_us=%llu max_us=%llu",
+				"frame=%u meshes=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu max_name=%s draw_ends=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu",
 				g_statistics.frames, g_mesh_boundary_timing.mesh_count,
 				static_cast<unsigned long long>(g_mesh_boundary_timing.mesh_total_us),
+				static_cast<unsigned long long>(g_mesh_boundary_timing.mesh_sampled_us),
+				g_mesh_boundary_timing.mesh_sample_count,
+				MESH_BOUNDARY_TIMING_SAMPLE_STRIDE,
 				static_cast<unsigned long long>(g_mesh_boundary_timing.mesh_max_us),
 				g_mesh_boundary_timing.slowest_mesh,
 				g_mesh_boundary_timing.draw_end_count,
 				static_cast<unsigned long long>(g_mesh_boundary_timing.draw_end_total_us),
+				static_cast<unsigned long long>(g_mesh_boundary_timing.draw_end_sampled_us),
+				g_mesh_boundary_timing.draw_end_sample_count,
+				MESH_BOUNDARY_TIMING_SAMPLE_STRIDE,
 				static_cast<unsigned long long>(g_mesh_boundary_timing.draw_end_max_us));
 			g_mesh_boundary_timing = {};
+			g_mesh_boundary_timing_sequence = 0U;
+			g_draw_end_timing_sequence = 0U;
 #endif
 		}
 	}
@@ -2759,7 +2775,10 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		return;
 	}
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	const uint64_t mesh_boundary_start_us = sceKernelGetProcessTimeWide();
+	const bool sample_mesh_boundary =
+		(g_mesh_boundary_timing_sequence++ % MESH_BOUNDARY_TIMING_SAMPLE_STRIDE) == 0U;
+	const uint64_t mesh_boundary_start_us = sample_mesh_boundary ?
+		sceKernelGetProcessTimeWide() : 0U;
 #endif
 	if (is_skin) {
 		if (!Ensure_Deformed_Skin_Scratch(vertex_count)) {
@@ -2981,7 +3000,10 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		};
 		auto end_batch = [&]() {
 #if !RENEGADE_VITA_M00_DEMO
-			const uint64_t draw_end_start_us = sceKernelGetProcessTimeWide();
+			const bool sample_draw_end =
+				(g_draw_end_timing_sequence++ % MESH_BOUNDARY_TIMING_SAMPLE_STRIDE) == 0U;
+			const uint64_t draw_end_start_us = sample_draw_end ?
+				sceKernelGetProcessTimeWide() : 0U;
 #endif
 			if (indexed_batch && g_indexed_mesh_batch.Count() != 0U) {
 				// Immediate GL attributes persist across draws. Restore the final
@@ -2994,11 +3016,15 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				++g_mesh_indexed_batches;
 			} else glEnd();
 #if !RENEGADE_VITA_M00_DEMO
-			const uint64_t draw_end_us = sceKernelGetProcessTimeWide() - draw_end_start_us;
-			g_mesh_boundary_timing.draw_end_total_us += draw_end_us;
 			++g_mesh_boundary_timing.draw_end_count;
-			if (draw_end_us > g_mesh_boundary_timing.draw_end_max_us)
-				g_mesh_boundary_timing.draw_end_max_us = draw_end_us;
+			if (sample_draw_end) {
+				const uint64_t draw_end_us = sceKernelGetProcessTimeWide() - draw_end_start_us;
+				g_mesh_boundary_timing.draw_end_total_us += draw_end_us * MESH_BOUNDARY_TIMING_SAMPLE_STRIDE;
+				g_mesh_boundary_timing.draw_end_sampled_us += draw_end_us;
+				++g_mesh_boundary_timing.draw_end_sample_count;
+				if (draw_end_us > g_mesh_boundary_timing.draw_end_max_us)
+					g_mesh_boundary_timing.draw_end_max_us = draw_end_us;
+			}
 #endif
 		};
 		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
@@ -3139,13 +3165,17 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		g_logged_first_mesh = true;
 	}
 #if !RENEGADE_VITA_M00_DEMO
-	const uint64_t mesh_boundary_us = sceKernelGetProcessTimeWide() - mesh_boundary_start_us;
-	g_mesh_boundary_timing.mesh_total_us += mesh_boundary_us;
 	++g_mesh_boundary_timing.mesh_count;
-	if (mesh_boundary_us > g_mesh_boundary_timing.mesh_max_us) {
-		g_mesh_boundary_timing.mesh_max_us = mesh_boundary_us;
-		snprintf(g_mesh_boundary_timing.slowest_mesh,
-			sizeof(g_mesh_boundary_timing.slowest_mesh), "%s", mesh.Get_Name());
+	if (sample_mesh_boundary) {
+		const uint64_t mesh_boundary_us = sceKernelGetProcessTimeWide() - mesh_boundary_start_us;
+		g_mesh_boundary_timing.mesh_total_us += mesh_boundary_us * MESH_BOUNDARY_TIMING_SAMPLE_STRIDE;
+		g_mesh_boundary_timing.mesh_sampled_us += mesh_boundary_us;
+		++g_mesh_boundary_timing.mesh_sample_count;
+		if (mesh_boundary_us > g_mesh_boundary_timing.mesh_max_us) {
+			g_mesh_boundary_timing.mesh_max_us = mesh_boundary_us;
+			snprintf(g_mesh_boundary_timing.slowest_mesh,
+				sizeof(g_mesh_boundary_timing.slowest_mesh), "%s", mesh.Get_Name());
+		}
 	}
 #endif
 #else

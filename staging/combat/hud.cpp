@@ -1828,6 +1828,17 @@ static RectClass Get_Target_Box( PhysicalGameObj * obj )
 #if defined(__vita__)
 	const Vector2 projected_top = top;
 	const Vector2 projected_bottom = bottom;
+	// A destroyed or mid-transition target can briefly expose an invalid
+	// transform. Never submit NaN coordinates to the Vita 2D stream: besides
+	// corrupting the target box, this can poison the following frame's GPU
+	// command buffer and present as a mission freeze.
+	if (!projected_top.Is_Valid() || !projected_bottom.Is_Valid()) {
+		RectClass screen = Render2DClass::Get_Screen_Resolution();
+		RectClass empty_box(0.0f, 0.0f, 0.0f, 0.0f);
+		Log_Vita_Target_Box_Diagnostics(obj, po, projected_top,
+			projected_bottom, screen, empty_box);
+		return empty_box;
+	}
 #endif
 
 	// Get Box in proper convention

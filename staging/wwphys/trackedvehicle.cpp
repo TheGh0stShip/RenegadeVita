@@ -60,6 +60,16 @@
 
 DECLARE_FORCE_LINK(trackedvehicle);
 
+static bool _has_track_token(const char *name, const char *token)
+{
+	if (name == NULL || token == NULL || *token == '\0') return false;
+	const size_t token_length = strlen(token);
+	for (const char *cursor = name; *cursor != '\0'; ++cursor) {
+		if (strnicmp(cursor, token, token_length) == 0) return true;
+	}
+	return false;
+}
+
 
 
 static bool _is_left_track_name(const char * name) 
@@ -89,7 +99,12 @@ static bool _is_left_track_name(const char * name)
 			return true;
 		}
 	}
-	return false;
+	return _has_track_token(name, "TRACK-L") ||
+		_has_track_token(name, "TREAD-L") ||
+		_has_track_token(name, "TRACK_L") ||
+		_has_track_token(name, "TREAD_L") ||
+		_has_track_token(name, "TRACKL") ||
+		_has_track_token(name, "TREADL");
 }
 
 static bool _is_right_track_name(const char * name)
@@ -119,7 +134,12 @@ static bool _is_right_track_name(const char * name)
 			return true;
 		}
 	}
-	return false;
+	return _has_track_token(name, "TRACK-R") ||
+		_has_track_token(name, "TREAD-R") ||
+		_has_track_token(name, "TRACK_R") ||
+		_has_track_token(name, "TREAD_R") ||
+		_has_track_token(name, "TRACKR") ||
+		_has_track_token(name, "TREADR");
 }
 
 
@@ -533,4 +553,3 @@ bool TrackedVehicleDefClass::Is_Type(const char * type_name)
 		return VehiclePhysDefClass::Is_Type(type_name);
 	}
 }
-

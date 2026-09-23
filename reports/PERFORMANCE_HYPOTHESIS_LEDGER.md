@@ -1,5 +1,24 @@
 # Performance hypothesis ledger
 
+## Dev187 invalid HUD geometry and prefixed tread names (2026-09-23)
+
+- Hypothesis: the new early M13 freeze is being triggered or amplified by NaN
+  target-box coordinates submitted after a target enters a destroyed or
+  transition state; static treads may use prefixed mesh names outside the
+  original dotted-name assumptions.
+- Evidence: Dev186 runtime ends at frame 3720 after 64 HUD diagnostics include
+  repeated `clip_top=(-nan,-nan)` and `box=(-nan,-nan,-nan,-nan)`. The same
+  frames still list `GDI_Engineer_0_B` in the actor registry, so disappearance
+  is not object deletion at that point. The existing matcher only recognized
+  exact `V_TRACK-*`/`V_TREAD-*` prefixes.
+- Change: reject invalid projected target boxes before adding Vita 2D geometry;
+  scan full mesh names for prefixed `TRACKL/TRACKR`, `TREADL/TREADR`, and
+  separator variants.
+- Guardrails: no mission/objective/AI shortcut, no actor deletion, no renderer
+  replacement, and valid target geometry remains unchanged.
+- Decision: adopt for Dev187; retain only if the next run shows no NaN target
+  submissions and a reduction in the reported freeze/tread failures.
+
 ## Dev186 track animation and Vita mapper-state cache (2026-09-23)
 
 - Hypothesis: part of the remaining vehicle/effect cost is avoidable repeated

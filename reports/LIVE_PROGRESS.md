@@ -1,5 +1,27 @@
 # Live engineering progress
 
+## Dev187: NaN HUD freeze guard and prefixed tread discovery
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: Dev187 is installed in Vita3K; the same M13 route needs a runtime A/B.
+Completed: Dev186 runtime evidence ended at frame 3720 while repeatedly
+reporting valid engineers in the actor registry and a stationary rocket actor,
+but the HUD target-box logger emitted repeated `(-nan,-nan)` projections.
+That invalid geometry was allowed into the Vita 2D stream. Dev187 rejects
+invalid projected target boxes before submission and records an empty box.
+Tread recognition now scans the full W3D name for prefixed `TRACKL/TRACKR` and
+`TREADL/TREADR` variants in addition to the original dotted/direct forms.
+Evidence: M13 contracts PASS; 158 focused fast tests PASS; ARM/SELF/VPK
+identity PASS; installed to Vita3K receipt
+`build/vita3k-backups/A3.5-dev187-setup-20260923T210229441926Z/setup-receipt.json`.
+VPK `bc9e9b0b4c6e3eab933a4a3ff5c1b755f2a2272ec36f5fa798c102d9e40d8664`;
+ELF `c5b5967f5ab054d9eae0990afa61f2bfec294536eba6db1a97c5b4c07f47e8b7`.
+No launch, visual, performance, A/V, mission, or physical acceptance is
+claimed until the candidate is run. Next: capture whether the freeze and NaN
+stream disappear and whether tank mapper counts become nonzero.
+
 ## Dev186: track mapping and render-state burst reduction
 
 Renegade Vita - v3.5 active

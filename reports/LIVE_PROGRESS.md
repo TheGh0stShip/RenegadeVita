@@ -1,5 +1,37 @@
 # Live engineering progress
 
+## Dev177: restore full-port campaign profile
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: run the installed Vita3K `A3.5-dev177` candidate from the Campaign menu
+path and verify campaign remains selectable before resuming the M13 hidden-base
+route.
+Completed: full-port/campaign is restored as the default profile in CMake and
+both build wrappers; the M00 demo profile remains available only by explicit
+opt-in. The replacement `A3.5-dev177` package was built from a fresh full-port
+build directory, copied to managed dist, and installed over Vita3K `RNEGA3101`
+after backing up the previous dev176 eboot and param.sfo.
+Evidence: `python3 -m tools.test_campaign_profile_defaults` PASS;
+`python3 -m tools.test_script_provider_contract` PASS; selected original
+frontend contract tests PASS; `git diff --check` PASS before package. ARM
+package PASS. CMakeCache records `RENEGADE_VITA_M00_DEMO:BOOL=0`; build.ninja
+generated dialog templates with `--campaign-dialogs`; ELF strings contain
+`A3.5-dev177` and `FULL-PORT-DEVELOPMENT`; packaged param.sfo says
+`Renegade Vita A3.5-dev177` / `RNEGA3101`. VPK
+`8c344fb31496e0f0742c9088ae2301ab50ead1cf109f7da48567384406f6faba`;
+ELF `9310788a7ff81191ff15b683ff031095db3321aa0e39da65ef0cef3793bd3555`;
+installed Vita3K eboot
+`a6e7068885f0f7a40f4e496bd9b71286a3811c6980e8955de72a5d4b2748131c`;
+install receipt
+`build/vita3k-backups/A3.5-dev177-20260923T113422/install-receipt.txt`.
+No Vita3K launch, Campaign menu selection, M13 objective completion,
+transition, save/load, visual, performance, audio-sync, or physical acceptance
+is claimed. Next: launch dev177 and verify Campaign selection reaches the
+normal full-port path, then continue M13 runtime evidence. Blocker: runtime
+evidence is pending.
+
 ## Dev176: M13 MX0 script runtime link
 
 Renegade Vita - v3.5 active

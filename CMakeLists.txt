@@ -22,7 +22,7 @@ if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
 endif()
 string(TOLOWER "${RENEGADE_CANDIDATE_LABEL}" RENEGADE_CANDIDATE_STEM)
 string(REPLACE "." "" RENEGADE_CANDIDATE_STEM "${RENEGADE_CANDIDATE_STEM}")
-option(RENEGADE_VITA_M00_DEMO "Interim M00 community showcase; not the full-port completion target" ON)
+option(RENEGADE_VITA_M00_DEMO "Interim M00 community showcase; not the full-port completion target" OFF)
 option(RENEGADE_VITA_CAMPAIGN_MSAA_4X
   "Use the established 4x MSAA framebuffer in the full-port renderer" ON)
 option(RENEGADE_VITA_DEVELOPMENT_CHECKPOINT

@@ -13,7 +13,7 @@ rv_candidate_label=${RENEGADE_CANDIDATE_LABEL:-A3.5-dev110}
 case "$rv_candidate_label" in A[0-9]*.[0-9]*-dev[0-9]*) ;; *) echo "Invalid candidate label: $rv_candidate_label" >&2; exit 2 ;; esac
 rv_candidate_stem=$(printf '%s' "$rv_candidate_label" | tr '[:upper:]' '[:lower:]' | tr -d '.')
 rv_vpk_content_id=EP9000-RNEGA3101_00-RENEGADEVITA0110
-rv_m00_demo=${RENEGADE_M00_DEMO:-1}
+rv_m00_demo=${RENEGADE_M00_DEMO:-0}
 case "$rv_m00_demo" in 0|1) ;; *) echo "Invalid RENEGADE_M00_DEMO: $rv_m00_demo (expected 0 or 1)" >&2; exit 2 ;; esac
 rv_development_checkpoint=${RENEGADE_DEVELOPMENT_CHECKPOINT:-0}
 case "$rv_development_checkpoint" in 0|1) ;; *) echo "Invalid RENEGADE_DEVELOPMENT_CHECKPOINT: $rv_development_checkpoint (expected 0 or 1)" >&2; exit 2 ;; esac

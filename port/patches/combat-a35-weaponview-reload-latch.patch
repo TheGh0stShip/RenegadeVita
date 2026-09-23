@@ -52,7 +52,7 @@ index 2a43b08..8619324 100755
  
  DecorationPhysClass*HandsPhysObj;
  RenderObjClass*		WeaponModel;
-@@ -104,6 +110,32 @@ static	void		Release_Hands_Assets( void );
+@@ -104,6 +110,42 @@ static	void		Release_Hands_Assets( void );
  static	void		Aquire_Weapon_Assets( const WeaponClass * weapon );
  static	void		Release_Weapon_Assets( void );
  
@@ -79,6 +79,16 @@ index 2a43b08..8619324 100755
 +static const char *Vita_Safe_Render_Object_Name(RenderObjClass *model)
 +{
 +	return model != NULL && model->Get_Name() != NULL ? model->Get_Name() : "none";
++}
++
++static bool Vita_Should_Log_Weapon_View_State(int current_state, int new_state)
++{
++	return current_state == WEAPON_STATE_RELOAD ||
++		new_state == WEAPON_STATE_RELOAD ||
++		current_state == WEAPON_STATE_ENTER ||
++		new_state == WEAPON_STATE_ENTER ||
++		current_state == WEAPON_STATE_EXIT ||
++		new_state == WEAPON_STATE_EXIT;
 +}
 +#endif
 +
@@ -131,13 +141,14 @@ index 2a43b08..8619324 100755
  				new_weapon_state = WEAPON_STATE_RELOAD;
  			} else if ( star_weapon->Is_Firing() ) {
  				if ( WeaponState == WEAPON_STATE_FIRE ) {
-@@ -375,6 +423,23 @@ void 	WeaponViewClass::Think()
+@@ -375,6 +423,24 @@ void 	WeaponViewClass::Think()
  		Get_Render_Obj_Name_From_Filename( new_weapon_model_name, weapon->Get_First_Person_Model_Name() );
  	}
  
 +#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
 +	// Log state transitions once, including reload entry and exit.
-+	if (new_weapon_state != g_vita_last_logged_weapon_view_state) {
++	if (new_weapon_state != g_vita_last_logged_weapon_view_state &&
++		Vita_Should_Log_Weapon_View_State(WeaponState, new_weapon_state)) {
 +		A30_Vita_Log("A3.5 weapon view: state candidate current=%s new=%s weapon=%s model=%s first_person=%d reload=%d firing=%d complete=%d enabled=%d\n",
 +			Vita_Weapon_View_State_Name(WeaponState),
 +			Vita_Weapon_View_State_Name(new_weapon_state),
@@ -155,13 +166,12 @@ index 2a43b08..8619324 100755
  	// If we need to change the assets,
  	if ( stricmp( cur_weapon_model_name,new_weapon_model_name)!=0) {
  //	if ( cur_weapon_model_name.Compare_No_Case( new_weapon_model_name ) != 0 ) {
-@@ -490,6 +555,24 @@ void 	WeaponViewClass::Think()
+@@ -490,6 +555,23 @@ void 	WeaponViewClass::Think()
    				WeaponAnimControl.Set_Animation( WeaponAnims[ WeaponState ], anim_blend_time );
  				mode = ( WeaponState == WEAPON_STATE_IDLE ) ? ANIM_MODE_LOOP : ANIM_MODE_ONCE;
    				WeaponAnimControl.Set_Mode( (AnimMode)mode );
 +#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
 +				if (WeaponState == WEAPON_STATE_RELOAD ||
-+					WeaponState == WEAPON_STATE_FIRE ||
 +					WeaponState == WEAPON_STATE_ENTER ||
 +					WeaponState == WEAPON_STATE_EXIT) {
 +					A30_Vita_Log("A3.5 weapon view: play state=%s weapon=%s model=%s hands_anim=%p weapon_anim=%p blend=%.3f mode=%d\n",

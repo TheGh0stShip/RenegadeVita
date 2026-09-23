@@ -135,6 +135,16 @@ static const char *Vita_Safe_Render_Object_Name(RenderObjClass *model)
 {
 	return model != NULL && model->Get_Name() != NULL ? model->Get_Name() : "none";
 }
+
+static bool Vita_Should_Log_Weapon_View_State(int current_state, int new_state)
+{
+	return current_state == WEAPON_STATE_RELOAD ||
+		new_state == WEAPON_STATE_RELOAD ||
+		current_state == WEAPON_STATE_ENTER ||
+		new_state == WEAPON_STATE_ENTER ||
+		current_state == WEAPON_STATE_EXIT ||
+		new_state == WEAPON_STATE_EXIT;
+}
 #endif
 
 /*
@@ -429,7 +439,8 @@ void 	WeaponViewClass::Think()
 
 #if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
 	// Log state transitions once, including reload entry and exit.
-	if (new_weapon_state != g_vita_last_logged_weapon_view_state) {
+	if (new_weapon_state != g_vita_last_logged_weapon_view_state &&
+		Vita_Should_Log_Weapon_View_State(WeaponState, new_weapon_state)) {
 		A30_Vita_Log("A3.5 weapon view: state candidate current=%s new=%s weapon=%s model=%s first_person=%d reload=%d firing=%d complete=%d enabled=%d\n",
 			Vita_Weapon_View_State_Name(WeaponState),
 			Vita_Weapon_View_State_Name(new_weapon_state),
@@ -561,7 +572,6 @@ void 	WeaponViewClass::Think()
   				WeaponAnimControl.Set_Mode( (AnimMode)mode );
 #if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)
 				if (WeaponState == WEAPON_STATE_RELOAD ||
-					WeaponState == WEAPON_STATE_FIRE ||
 					WeaponState == WEAPON_STATE_ENTER ||
 					WeaponState == WEAPON_STATE_EXIT) {
 					A30_Vita_Log("A3.5 weapon view: play state=%s weapon=%s model=%s hands_anim=%p weapon_anim=%p blend=%.3f mode=%d\n",

@@ -4,6 +4,7 @@
 // No socket, emulator hook, save-state mutation or background desktop input.
 #include <psp2/ctrl.h>
 #include <psp2/io/fcntl.h>
+#include <psp2/io/stat.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/rtc.h>
 #include <stdint.h>
@@ -26,9 +27,12 @@ struct State {
 	uint64_t expires;
 	uint64_t next_poll;
 	uint64_t next_enable_check;
+	SceOff command_size;
+	SceDateTime command_mtime;
 	uint32_t sequence;
 	uint32_t buttons;
 	uint8_t lx, ly, rx, ry;
+	bool command_stat_valid;
 };
 
 inline State &Get_State()
@@ -71,6 +75,31 @@ inline bool Marker_Enabled()
 {
 	char marker[32];
 	return Read_Text(kEnable, marker, sizeof(marker)) == 7 && strcmp(marker, "RVDEV1\n") == 0;
+}
+
+inline bool Same_Time(const SceDateTime &left, const SceDateTime &right)
+{
+	return left.year == right.year && left.month == right.month &&
+		left.day == right.day && left.hour == right.hour &&
+		left.minute == right.minute && left.second == right.second &&
+		left.microsecond == right.microsecond;
+}
+
+inline bool Command_File_Changed(State &state)
+{
+	SceIoStat status = {};
+	if (sceIoGetstat(kCommand, &status) < 0) {
+		state.command_stat_valid = false;
+		return false;
+	}
+	if (state.command_stat_valid && state.command_size == status.st_size &&
+		Same_Time(state.command_mtime, status.st_mtime)) {
+		return false;
+	}
+	state.command_size = status.st_size;
+	state.command_mtime = status.st_mtime;
+	state.command_stat_valid = true;
+	return true;
 }
 
 inline void Shutdown()
@@ -123,7 +152,8 @@ inline void Apply(SceCtrlData &controller)
 		Write_Ack("RELEASED");
 	}
 	if (now >= state.next_poll) {
-		state.next_poll = now + 50000U;
+		state.next_poll = now + 100000U;
+		if (!Command_File_Changed(state)) return;
 		char text[192];
 		const int length = Read_Text(kCommand, text, sizeof(text));
 		unsigned long long token = 0;

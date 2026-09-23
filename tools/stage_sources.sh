@@ -671,6 +671,13 @@ if [[ "$rv_slot19_sha" != "7e6190ea669ce3e701332b7bc89c997eef80161f7fd17663ed778
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-m13-slot19-phases.patch"
 echo "Applied: port/patches/scripts-a35-m13-slot19-phases.patch"
+rv_m01_duncan_beacon_sha=$(sha256sum "$rv_stage/scripts/Mission01.cpp" | cut -d' ' -f1)
+if [[ "$rv_m01_duncan_beacon_sha" != "ebc0373a57ecf2b751fd3e8b009a6d51892b6a162b9f59fdc7033a215cfabd56" ]]; then
+	echo "Refusing unanchored M01 Duncan beacon handoff patch: Mission01.cpp changed ($rv_m01_duncan_beacon_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-m01-duncan-beacon-handoff.patch"
+echo "Applied: port/patches/scripts-a35-m01-duncan-beacon-handoff.patch"
 rv_model_install_sha=$(sha256sum "$rv_stage/wwphys/phys.cpp" | cut -d' ' -f1)
 if [[ "$rv_model_install_sha" != "820e2552cb29ee7dba38ae1c37017043acb98a16dd6bed9263ec34e29fb571da" ]]; then
 	echo "Refusing unanchored model install timing patch: phys.cpp changed ($rv_model_install_sha)" >&2
@@ -678,6 +685,13 @@ if [[ "$rv_model_install_sha" != "820e2552cb29ee7dba38ae1c37017043acb98a16dd6bed
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-model-install-timing.patch"
 echo "Applied: port/patches/wwphys-a35-model-install-timing.patch"
+rv_prepared_render_obj_sha=$(sha256sum "$rv_stage/wwphys/phys.cpp" | cut -d' ' -f1)
+if [[ "$rv_prepared_render_obj_sha" != "f81fe0985768bf56392f1a698ae778ace7f7318085d27b5878991ff38a6eff17" ]]; then
+	echo "Refusing unanchored prepared render object patch: phys.cpp changed ($rv_prepared_render_obj_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-prepared-render-object-cache.patch"
+echo "Applied: port/patches/wwphys-a35-prepared-render-object-cache.patch"
 rv_ww3d_create_sha=$(sha256sum "$rv_stage/ww3d2/assetmgr.cpp" | cut -d' ' -f1)
 if [[ "$rv_ww3d_create_sha" != "290ac62041c1de14327cfb10fa6cfe14a6b55c544c9b9d0c237ac2f60fb43b93" ]]; then
 	echo "Refusing unanchored WW3D create timing patch: assetmgr.cpp changed ($rv_ww3d_create_sha)" >&2

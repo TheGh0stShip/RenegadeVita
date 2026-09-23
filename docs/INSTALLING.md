@@ -21,6 +21,20 @@ ux0:data/renegade/retail/54251___.TTF
 ux0:data/renegade/retail/ARI_____.TTF
 ```
 
+Dev134 also requires these loose files in `Data/`, alongside `always.dat`,
+`always.dbs`, `Always2.dat`, and `M00_Tutorial.mix`:
+
+```text
+ux0:data/renegade/retail/Data/stylemgr.ini
+ux0:data/renegade/retail/Data/WWAudio.ini
+```
+
+The Dev134 startup probes open both `.ini` files before the menu. The original
+eight-file public setup list omitted them, and its `always.dat` SHA-256 omitted
+the final `a`. The verified Steam digest is
+`f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a`.
+An unpatched CD installation without `Always2.dat` cannot satisfy this build.
+
 The port writes only below:
 
 ```text
@@ -66,6 +80,8 @@ ux0:/data/renegade/user/<vpk-file-name>
 Keep each item bound to the exact candidate hash:
 
 - runtime log under `ux0:data/renegade/user/logs/`;
+- for Dev134 startup failures, `a35-dev134-runtime.log` and
+  `a35-dev134-startup-precache.txt` from that directory;
 - title-owned captures under `ux0:data/renegade/user/captures/`;
 - a PSP2 dump if a crash occurred; and
 - a finalized recorder MP4 only when its own file/hash can be established.

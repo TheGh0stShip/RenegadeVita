@@ -1,4 +1,25 @@
 {
+  "dev175_m13_duncan_beacon_handoff": {
+    "candidate": "A3.5-dev175",
+    "state": "ARM_PACKAGE_PASS_M13_DUNCAN_BEACON_HANDOFF_RUNTIME_UNVERIFIED",
+    "profile": "RENEGADE_VITA_M00_DEMO=0",
+    "title_id": "RNEGA3101",
+    "report": "reports/DEV175_M13_DUNCAN_BEACON_HANDOFF.md",
+    "build_log": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/logs/a35-dev175-20260923-081947-build.log",
+    "diagnostics_zip": "/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/A3.5-dev175-BUILD-DIAGNOSTICS-20260923-081947.zip",
+    "patch_inventory_registry_sha256": "2f6db3a5593a373a7f1992ed8d68f4116dbbd43a3a826a99972d49d107619c24",
+    "vpk_sha256": "11b26fdd8bb80cd40de7c0701b2a1303912951b84f72011dd880fb7289dae205",
+    "elf_sha256": "e160bd63e12cca60713fbd9656ac203e2ac22f54ae89eabe5f1b69b928e2fc29",
+    "diagnostics_zip_sha256": "142c8e11b94c83cc70b8c06d34108168e74a245b8c86a64507c2ac2b676cc09b",
+    "focused_tests": "development checkpoint PASS; mission conversation diagnostics contract PASS; vita m13 cinematic preparation PASS",
+    "host_validation": "PASS: retained A2/A3, M00, M01, City smoke, renderer/input/audio/MIX/material-cache, ASan/LSan/UBSan",
+    "arm_package": "PASS",
+    "vita3k_acceptance": false,
+    "duncan_beacon_handoff_runtime_verified": false,
+    "m13_objective_progression_verified": false,
+    "campaign_progression_verified": false,
+    "physical_acceptance": false
+  },
   "dev169_m13_perf_actor_snapshot": {
     "candidate": "A3.5-dev169",
     "state": "ARM_PACKAGE_PASS_M13_RENDER_FAST_PATH_AND_ACTOR_SNAPSHOTS_RUNTIME_UNVERIFIED",

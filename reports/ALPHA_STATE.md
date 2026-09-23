@@ -1,5 +1,16 @@
 # First-mission alpha state
 
+Current release-support issue (2026-09-21): the published Dev134 demo setup
+omitted loose `Data/stylemgr.ini` and `Data/WWAudio.ini`, both required by the
+startup retail probes, and truncated the verified Steam `always.dat` SHA-256 by
+one final `a`. The corrected public guide and ten-file manifest were published
+together as `TheGh0stShip/Renegade-Vita-Demo` commit `72238b9` and read back.
+The Reddit user's fast exit remains a probable missing-file failure, pending
+their `a35-dev134-runtime.log` and
+`a35-dev134-startup-precache.txt`. No new physical acceptance or source change.
+The corrected manifest passes `sha256sum -c` for all ten local Steam files.
+Next automatic action: collect the user's Dev134 startup log for diagnosis.
+
 Current: Dev134 canonical/package/matching Vita3K visual milestone PASS.
 Resume and native clean exit observed; all 14 saves intact, inputs released.
 Physical Vita identity/backup and title-scoped deployment/readback PASS at

@@ -35,6 +35,7 @@
 #include "definition.h"
 #include "definitionmgr.h"
 #include "definitionfactorymgr.h"
+#include "explosion.h"
 #include "ffactory.h"
 #include "ffactorylist.h"
 #include "gamedata.h"
@@ -54,6 +55,9 @@
 #include "gdsingleplayer.h"
 #include "gametype.h"
 #include "god.h"
+#include "hanim.h"
+#include "htree.h"
+#include "hud.h"
 #include "input.h"
 #include "mixfile.h"
 #include "netinterface.h"
@@ -68,6 +72,7 @@
 #include "render2dsentence.h"
 #include "saveload.h"
 #include "saveloadstatus.h"
+#include "screenfademanager.h"
 #include "serverfps.h"
 #include "singlepl.h"
 #include "scripts.h"
@@ -80,6 +85,7 @@
 #include "timemgr.h"
 #include "textureloader.h"
 #include "texture.h"
+#include "timeddecophys.h"
 #include "vehicle.h"
 #include "hashtemplate.h"
 #include "menubackdrop.h"
@@ -118,6 +124,94 @@ extern void Commando_Render_Original_Loading_Screen(void *screen, bool update_ne
 extern bool Commando_Original_Loading_Screen_Has_Backdrop_Model(void *screen);
 extern void Commando_Destroy_Original_Loading_Screen(void *screen);
 extern void Commando_Set_Original_Loading_Progress(void *screen, float progress);
+extern GameObject *Find_Object(int obj_id);
+extern void Set_Position(GameObject *obj, const Vector3 &position);
+extern void Set_Facing(GameObject *obj, float degrees);
+extern void Select_Weapon(GameObject *obj, const char *weapon_name);
+extern void Send_Custom_Event(GameObject *from, GameObject *to, int type, int param, float delay);
+extern void Attach_Script(GameObject *object, const char *script_name, const char *script_params);
+extern GameObject *Create_Object(const char *type_name, const Vector3 &position);
+
+struct A35PreparedRenderObjectSlot {
+	const char *name;
+	RenderObjClass *object;
+};
+
+static A35PreparedRenderObjectSlot g_A35PreparedRenderObjects[16];
+
+void A35_Vita_Clear_Prepared_Render_Objs(void)
+{
+	for (unsigned i = 0; i < sizeof(g_A35PreparedRenderObjects) / sizeof(g_A35PreparedRenderObjects[0]); ++i) {
+		if (g_A35PreparedRenderObjects[i].object != NULL) {
+			A30_Vita_Log("A4 prepared render object: released stale=%s slot=%u object=%p\n",
+				g_A35PreparedRenderObjects[i].name != NULL ? g_A35PreparedRenderObjects[i].name : "(null)",
+				i,
+				static_cast<void *>(g_A35PreparedRenderObjects[i].object));
+			g_A35PreparedRenderObjects[i].object->Release_Ref();
+			g_A35PreparedRenderObjects[i].object = NULL;
+			g_A35PreparedRenderObjects[i].name = NULL;
+		}
+	}
+}
+
+bool A35_Vita_Retain_Prepared_Render_Obj(const char *name)
+{
+	if (name == NULL || WW3DAssetManager::Get_Instance() == NULL) {
+		return false;
+	}
+	int slot = -1;
+	for (unsigned i = 0; i < sizeof(g_A35PreparedRenderObjects) / sizeof(g_A35PreparedRenderObjects[0]); ++i) {
+		if (g_A35PreparedRenderObjects[i].name != NULL && stricmp(g_A35PreparedRenderObjects[i].name, name) == 0) {
+			slot = static_cast<int>(i);
+			break;
+		}
+		if (slot < 0 && g_A35PreparedRenderObjects[i].object == NULL) {
+			slot = static_cast<int>(i);
+		}
+	}
+	if (slot < 0) {
+		A30_Vita_Log("A4 prepared render object: retain failed no slot model=%s\n", name);
+		return false;
+	}
+	if (g_A35PreparedRenderObjects[slot].object != NULL) {
+		g_A35PreparedRenderObjects[slot].object->Release_Ref();
+		g_A35PreparedRenderObjects[slot].object = NULL;
+	}
+	const uint64_t start_us = sceKernelGetProcessTimeWide();
+	RenderObjClass *object = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
+	const uint64_t elapsed_us = sceKernelGetProcessTimeWide() - start_us;
+	g_A35PreparedRenderObjects[slot].name = object != NULL ? name : NULL;
+	g_A35PreparedRenderObjects[slot].object = object;
+	A30_Vita_Log("A4 prepared render object: retained=%s created=%d slot=%d elapsed_us=%llu object=%p\n",
+		name,
+		object != NULL ? 1 : 0,
+		slot,
+		static_cast<unsigned long long>(elapsed_us),
+		static_cast<void *>(object));
+	return object != NULL;
+}
+
+RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name)
+{
+	if (name == NULL) {
+		return NULL;
+	}
+	for (unsigned i = 0; i < sizeof(g_A35PreparedRenderObjects) / sizeof(g_A35PreparedRenderObjects[0]); ++i) {
+		if (g_A35PreparedRenderObjects[i].object != NULL &&
+			g_A35PreparedRenderObjects[i].name != NULL &&
+			stricmp(g_A35PreparedRenderObjects[i].name, name) == 0) {
+			RenderObjClass *object = g_A35PreparedRenderObjects[i].object;
+			g_A35PreparedRenderObjects[i].object = NULL;
+			g_A35PreparedRenderObjects[i].name = NULL;
+			A30_Vita_Log("A4 prepared render object: consumed=%s slot=%u object=%p\n",
+				name,
+				i,
+				static_cast<void *>(object));
+			return object;
+		}
+	}
+	return NULL;
+}
 
 namespace {
 
@@ -1799,23 +1893,30 @@ void Log_Interactive_Player_Effects(const A31InteractiveRenderTrace &trace,
 #if !RENEGADE_VITA_M00_DEMO
 struct A31NearbyActorSnapshot
 {
-	SmartGameObj *object;
+	int id;
+	char definition[64];
+	char state[32];
+	Vector3 position;
+	Vector3 velocity;
 	float distance2;
+	float health;
+	unsigned action_count;
+	int action_active;
+	int action_busy;
 	bool vehicle;
+	bool valid;
 };
 
 void Insert_Nearby_Actor(A31NearbyActorSnapshot *nearest, unsigned capacity,
-	SmartGameObj *object, float distance2, bool vehicle)
+	const A31NearbyActorSnapshot &candidate)
 {
-	if (object == NULL) return;
+	if (!candidate.valid) return;
 	for (unsigned index = 0U; index < capacity; ++index) {
-		if (nearest[index].object == NULL || distance2 < nearest[index].distance2) {
+		if (!nearest[index].valid || candidate.distance2 < nearest[index].distance2) {
 			for (unsigned move = capacity - 1U; move > index; --move) {
 				nearest[move] = nearest[move - 1U];
 			}
-			nearest[index].object = object;
-			nearest[index].distance2 = distance2;
-			nearest[index].vehicle = vehicle;
+			nearest[index] = candidate;
 			return;
 		}
 	}
@@ -1834,45 +1935,55 @@ void Log_M13_Nearby_Actor_Snapshot(uint32_t frame)
 	for (SLNode<SmartGameObj> *node = smart_objects != NULL ? smart_objects->Head() : NULL;
 		node != NULL; node = node->Next()) {
 		SmartGameObj *smart = node->Data();
-		if (smart == NULL || smart == star) continue;
+		if (smart == NULL || smart == star || smart->Is_Delete_Pending()) continue;
 		SoldierGameObj *soldier = smart->As_SoldierGameObj();
 		VehicleGameObj *vehicle = smart->As_VehicleGameObj();
 		if (soldier == NULL && vehicle == NULL) continue;
 		Vector3 position;
+		Vector3 velocity;
 		smart->Get_Position(&position);
+		smart->Get_Velocity(velocity);
 		const Vector3 delta = position - star_position;
 		const float distance2 = delta.Length2();
 		if (soldier != NULL) ++soldier_count;
 		if (vehicle != NULL) ++vehicle_count;
-		Insert_Nearby_Actor(nearest, 8U, smart, distance2, vehicle != NULL);
+		ActionClass *action = smart->Get_Action();
+		DefenseObjectClass *defense = smart->Get_Defense_Object();
+		A31NearbyActorSnapshot candidate = {};
+		candidate.id = smart->Get_ID();
+		candidate.position = position;
+		candidate.velocity = velocity;
+		candidate.distance2 = distance2;
+		candidate.health = defense != NULL ? defense->Get_Health() : 0.0f;
+		candidate.action_count = action != NULL ? action->Get_Act_Count() : 0U;
+		candidate.action_active = action != NULL && action->Is_Active() ? 1 : 0;
+		candidate.action_busy = action != NULL && action->Is_Busy() ? 1 : 0;
+		candidate.vehicle = vehicle != NULL;
+		candidate.valid = true;
+		const char *definition = smart->Get_Definition().Get_Name();
+		if (definition == NULL) definition = "unknown";
+		snprintf(candidate.definition, sizeof(candidate.definition), "%s", definition);
+		const char *state_name = soldier != NULL ? soldier->Get_State_Name() : "n/a";
+		if (state_name == NULL) state_name = "unknown";
+		snprintf(candidate.state, sizeof(candidate.state), "%s", state_name);
+		Insert_Nearby_Actor(nearest, 8U, candidate);
 	}
 	A30_Vita_Log("A4 M13 actor snapshot: frame=%u star=(%.3f,%.3f,%.3f) soldiers=%u vehicles=%u cinematic_freeze=%d\n",
 		frame, star_position.X, star_position.Y, star_position.Z,
 		soldier_count, vehicle_count,
 		GameObjManager::Is_Cinematic_Freeze_Active() ? 1 : 0);
 	for (unsigned index = 0U; index < 8U; ++index) {
-		SmartGameObj *smart = nearest[index].object;
-		if (smart == NULL) continue;
-		Vector3 position;
-		Vector3 velocity;
-		smart->Get_Position(&position);
-		smart->Get_Velocity(velocity);
-		ActionClass *action = smart->Get_Action();
-		SoldierGameObj *soldier = smart->As_SoldierGameObj();
+		if (!nearest[index].valid) continue;
 		const char *kind = nearest[index].vehicle ? "vehicle" : "soldier";
-		const char *definition = smart->Get_Definition().Get_Name();
-		if (definition == NULL) definition = "unknown";
-		const char *state_name = soldier != NULL ? soldier->Get_State_Name() : "n/a";
-		if (state_name == NULL) state_name = "unknown";
-		DefenseObjectClass *defense = smart->Get_Defense_Object();
 		A30_Vita_Log("A4 M13 actor nearby: frame=%u rank=%u kind=%s id=%d def=%s pos=(%.3f,%.3f,%.3f) dist=%.3f vel=(%.3f,%.3f,%.3f) action=%u/%d/%d human_state=%s health=%.2f\n",
-			frame, index, kind, smart->Get_ID(), definition,
-			position.X, position.Y, position.Z,
-			sqrtf(nearest[index].distance2), velocity.X, velocity.Y, velocity.Z,
-			action != NULL ? action->Get_Act_Count() : 0U,
-			action != NULL && action->Is_Active() ? 1 : 0,
-			action != NULL && action->Is_Busy() ? 1 : 0,
-			state_name, defense != NULL ? defense->Get_Health() : 0.0f);
+			frame, index, kind, nearest[index].id, nearest[index].definition,
+			nearest[index].position.X, nearest[index].position.Y,
+			nearest[index].position.Z,
+			sqrtf(nearest[index].distance2), nearest[index].velocity.X,
+			nearest[index].velocity.Y, nearest[index].velocity.Z,
+			nearest[index].action_count, nearest[index].action_active,
+			nearest[index].action_busy, nearest[index].state,
+			nearest[index].health);
 		}
 	}
 #endif
@@ -2460,7 +2571,179 @@ bool Try_Arm_Development_M13_Death(const char *load_source)
 	return false;
 #endif
 }
+
+bool Try_Arm_Development_M13_A03_Field(const char *load_source)
+{
+#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+	if (load_source == NULL || stricmp(load_source, "M13.mix") != 0) return false;
+	const char *const request_path =
+		"ux0:data/renegade/user/config/dev-m13-a03-field-v1.txt";
+	FILE *file = fopen(request_path, "rb");
+	if (file == NULL) return false;
+	char request[32];
+	const size_t bytes = fread(request, 1U, sizeof(request), file);
+	const bool read_failed = ferror(file) != 0;
+	const bool close_failed = fclose(file) != 0;
+	if (read_failed || close_failed ||
+		!A31DevelopmentCheckpoint::Parse_M13_A03_Field(request, bytes)) {
+		A30_Vita_Log("A4 campaign diagnostic: invalid M13 A03 field request\n");
+		return false;
+	}
+	if (remove(request_path) != 0) {
+		A30_Vita_Log("A4 campaign diagnostic: M13 A03 field request could not be consumed\n");
+		return false;
+	}
+	A30_Vita_Log("A4 campaign diagnostic: M13 A03 field event setup armed; normal objectives not completed\n");
+	return true;
+#else
+	(void)load_source;
+	return false;
 #endif
+}
+
+bool Apply_Development_M13_A03_Field_Setup(uint32_t frame)
+{
+#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+	SoldierGameObj *star = CombatManager::Get_The_Star();
+	CCameraClass *camera = CombatManager::Get_Camera();
+	if (star == NULL || camera == NULL) {
+		A30_Vita_Log("A4 campaign diagnostic: M13 A03 field setup skipped; star/camera unavailable frame=%u star=%p camera=%p\n",
+			frame, static_cast<void *>(star), static_cast<void *>(camera));
+		return false;
+	}
+
+	enum {
+		kControllerId = 1400041,
+		kHumveeDropId = 1400042,
+		kTroopDropId = 1400053,
+		kTankDropId = 1400057,
+		kHarvesterId = 1400001,
+		kMinigunnerOneId = 1400150,
+		kMinigunnerTwoId = 1400149,
+		kStartZone = 401,
+		kHarvesterDamageSelf = 413,
+		kPlacedMinigunnerInnateEnable = 417
+	};
+
+	GameObject *controller = Find_Object(kControllerId);
+	GameObject *humvee_drop = Find_Object(kHumveeDropId);
+	GameObject *troop_drop = Find_Object(kTroopDropId);
+	GameObject *tank_drop = Find_Object(kTankDropId);
+	GameObject *harvester = Find_Object(kHarvesterId);
+	GameObject *minigunner_one = Find_Object(kMinigunnerOneId);
+	GameObject *minigunner_two = Find_Object(kMinigunnerTwoId);
+
+	camera->Set_Host_Model(NULL);
+	GameObjManager::Activate_Cinematic_Freeze(false);
+	ScreenFadeManager::Enable_Letterbox(false, 0.0f);
+	ScreenFadeManager::Set_Screen_Overlay_Opacity(0.0f, 0.0f);
+	HUDClass::Enable(true);
+	star->Control_Enable(true);
+	CombatManager::Set_First_Person_Default(true);
+	CombatManager::Set_First_Person(true);
+	Set_Position(star, Vector3(-38.0f, -6.0f, 1.0f));
+	Set_Facing(star, 25.0f);
+	Select_Weapon(star, "Weapon_AutoRifle_Player");
+
+	if (controller != NULL) {
+		Send_Custom_Event(star, controller, kStartZone, 0, 0.0f);
+	}
+	if (humvee_drop != NULL) {
+		Attach_Script(humvee_drop, "Test_Cinematic", "XG_A03_HumveeDrop_B.txt");
+	}
+	if (troop_drop != NULL) {
+		Attach_Script(troop_drop, "Test_Cinematic", "MX0_A03_GDI_TroopDrop.txt");
+	}
+	if (tank_drop != NULL) {
+		Attach_Script(tank_drop, "Test_Cinematic", "XG_A03_Tank_Drop.txt");
+	}
+	GameObject *orca = Create_Object("Invisible_Object", Vector3(0.0f, 0.0f, 0.0f));
+	if (orca != NULL) {
+		Attach_Script(orca, "Test_Cinematic", "X0F_Harvester.txt");
+	}
+	if (harvester != NULL) {
+		Send_Custom_Event(star, harvester, kHarvesterDamageSelf, 4, 7.6f);
+		Send_Custom_Event(star, harvester, kHarvesterDamageSelf, 3, 9.6f);
+		Send_Custom_Event(star, harvester, kHarvesterDamageSelf, 3, 10.1f);
+	}
+	if (minigunner_one != NULL) {
+		Send_Custom_Event(star, minigunner_one, kPlacedMinigunnerInnateEnable, 0, 0.0f);
+	}
+	if (minigunner_two != NULL) {
+		Send_Custom_Event(star, minigunner_two, kPlacedMinigunnerInnateEnable, 0, 0.0f);
+	}
+
+	A30_Vita_Log("A4 campaign diagnostic: M13 A03 field setup applied frame=%u controller=%p humvee=%p troop=%p tank=%p harvester=%p minigunners=%p/%p orca=%p star=(%.3f,%.3f,%.3f)\n",
+		frame, static_cast<void *>(controller), static_cast<void *>(humvee_drop),
+		static_cast<void *>(troop_drop), static_cast<void *>(tank_drop),
+		static_cast<void *>(harvester), static_cast<void *>(minigunner_one),
+		static_cast<void *>(minigunner_two), static_cast<void *>(orca),
+		-38.0f, -6.0f, 1.0f);
+	return true;
+#else
+	(void)frame;
+	return false;
+#endif
+}
+#endif
+
+bool Prepare_Timed_Decoration_Phys(int phys_def_id, bool animated,
+	const char *label, const char *owner)
+{
+	if (phys_def_id == 0) return false;
+	PhysDefClass *phys_def =
+		(PhysDefClass *)DefinitionMgrClass::Find_Definition(phys_def_id);
+	if (phys_def == NULL || !phys_def->Is_Type("TimedDecorationPhysDef")) {
+		A30_Vita_Log("A4 M13 retained preparation: %s=%s phys_def=%p id=%d timed=0\n",
+			owner, label != NULL ? label : "(id)",
+			static_cast<void *>(phys_def), phys_def_id);
+		return false;
+	}
+	TimedDecorationPhysClass *phys =
+		(TimedDecorationPhysClass *)phys_def->Create();
+	if (phys == NULL) {
+		A30_Vita_Log("A4 M13 retained preparation: %s=%s phys_create=0 id=%d\n",
+			owner, label != NULL ? label : "(id)", phys_def_id);
+		return false;
+	}
+	bool model_ready = false;
+	bool animation_ready = false;
+	RenderObjClass *model = phys->Peek_Model();
+	if (model != NULL) {
+		model_ready = true;
+		if (animated && model->Get_HTree() != NULL) {
+			StringClass animation_name;
+			animation_name.Format("%s.%s",
+				model->Get_HTree()->Get_Name(),
+				model->Get_HTree()->Get_Name());
+			HAnimClass *animation =
+				WW3DAssetManager::Get_Instance()->Get_HAnim(animation_name);
+			if (animation != NULL) {
+				animation_ready = true;
+				animation->Release_Ref();
+			}
+		}
+	}
+	phys->Release_Ref();
+	A30_Vita_Log("A4 M13 retained preparation: %s=%s phys_id=%d model=%d animation=%d\n",
+		owner, label != NULL ? label : "(id)", phys_def_id,
+		model_ready ? 1 : 0, animation_ready ? 1 : 0);
+	return model_ready;
+}
+
+bool Prepare_Explosion_Definition(const char *name)
+{
+	ExplosionDefinitionClass *explosion =
+		(ExplosionDefinitionClass *)DefinitionMgrClass::Find_Typed_Definition(
+			name, CLASSID_DEF_EXPLOSION);
+	if (explosion == NULL) {
+		A30_Vita_Log("A4 M13 retained preparation: explosion=%s definition=0\n",
+			name != NULL ? name : "(null)");
+		return false;
+	}
+	return Prepare_Timed_Decoration_Phys(explosion->PhysDefID,
+		explosion->AnimatedExplosion, name, "explosion");
+}
 
 bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	MovieGameModeClass &movie_mode, WWAudioClass *audio, bool start_at_main_menu,
@@ -3331,17 +3614,54 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			}
 #if !RENEGADE_VITA_M00_DEMO
 			if (stricmp(selected_archive, "M13.mix") == 0) {
+				A35_Vita_Clear_Prepared_Render_Objs();
 				const char *const prepare_models[] = {
-					"X00_AG_Explode", "ag_rocketl", "ag_fiery_ex06"
+					"X00_AG_Explode", "X0F_AG_EFFECTS",
+					"ag_rocketl", "ag_fiery_ex06",
+					"ag_tank_exp01", "ag_tank_expld02",
+					"ag_humvee_exp1", "ag_gdi_apc_exp1",
+					"ag_nod_apc_exp1", "ag_ob_exp1",
+					"V_NOD_LTANK", "V_NOD_MGUN",
+					"V_NOD_ART", "B_SAMSITE", "BX_SAMSITE",
+					"L00.HND^FRONT", "L00.HND^ROOF",
+					"L00.AR_04_03"
 				};
 				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					RenderObjClass *prepared = WW3DAssetManager::Get_Instance()->Create_Render_Obj(prepare_models[i]);
+					RenderObjClass *prepared = NULL;
+					bool retained_for_later_use = stricmp(prepare_models[i], "X0F_AG_EFFECTS") == 0;
+					if (retained_for_later_use) {
+						retained_for_later_use = A35_Vita_Retain_Prepared_Render_Obj(prepare_models[i]);
+					} else {
+						prepared = WW3DAssetManager::Get_Instance()->Create_Render_Obj(prepare_models[i]);
+					}
 					A30_Vita_Log("A4 M13 retained preparation: model=%s created=%d elapsed_us=%llu\n",
-						prepare_models[i], prepared != NULL ? 1 : 0,
+						prepare_models[i], (prepared != NULL || retained_for_later_use) ? 1 : 0,
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
 					if (prepared != NULL) prepared->Release_Ref();
 					loading_presenter.Render_Original_Progress("after_m13_model_prepare");
+				}
+				const char *const prepare_explosions[] = {
+					"Vehicle Explosion 01",
+					"Vehicle Explosion 02",
+					"Vehicle Explosion Twiddler",
+					"Explosion_Large_01",
+					"Explosion_Large_02",
+					"Explosion_Large_07",
+					"Explosion_Small_04",
+					"Explosion_SAM_Site",
+					"Rocket Launcher Explosion Twiddler",
+					"Ground Explosions Twiddler",
+					"Air Explosions Twiddler",
+					"Generic Ground 01"
+				};
+				for (unsigned i = 0; i < sizeof(prepare_explosions) / sizeof(prepare_explosions[0]); ++i) {
+					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
+					const bool prepared = Prepare_Explosion_Definition(prepare_explosions[i]);
+					A30_Vita_Log("A4 M13 retained preparation: explosion_result=%s prepared=%d elapsed_us=%llu\n",
+						prepare_explosions[i], prepared ? 1 : 0,
+						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
+					loading_presenter.Render_Original_Progress("after_m13_explosion_prepare");
 				}
 			}
 #endif
@@ -3456,6 +3776,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					Try_Arm_Development_M13_Completion(load_source);
 				bool diagnostic_m13_death_pending =
 					Try_Arm_Development_M13_Death(load_source);
+				bool diagnostic_m13_a03_field_pending =
+					Try_Arm_Development_M13_A03_Field(load_source);
 #endif
 #if RENEGADE_VITA_M00_DEMO
 				A31DemoEndingPresenter demo_ending;
@@ -3520,6 +3842,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				const bool was_suspended = combat_mode->Is_Suspended();
 				A31_Interactive_Run_Simulation_Frame();
 #if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+				if (diagnostic_m13_a03_field_pending && result.frames >= 180U) {
+					diagnostic_m13_a03_field_pending = false;
+					if (!Apply_Development_M13_A03_Field_Setup(result.frames)) {
+						A30_Vita_Log("A4 campaign diagnostic: M13 A03 field setup failed frame=%u\n",
+							result.frames);
+					}
+				}
 				if (diagnostic_m13_death_pending && result.frames >= 120U &&
 					CombatManager::Get_Camera() != NULL &&
 					!CombatManager::Get_Camera()->Is_Using_Host_Model()) {
@@ -4045,6 +4374,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	A30_Vita_Log("A3.1 breadcrumb: application audio teardown complete singleton=%p\n",
 		static_cast<void *>(WWAudioClass::Get_Instance()));
 
+	A35_Vita_Clear_Prepared_Render_Objs();
 	if (asset_manager != NULL) WW3DAssetManager::Delete_This();
 	if (path_manager_initialized) PathMgrClass::Shutdown();
 	if (math_initialized) WWMath::Shutdown();

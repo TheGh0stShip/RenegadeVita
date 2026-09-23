@@ -75,6 +75,13 @@ inline bool Parse_M13_Death(const char *data, size_t bytes)
 	return data != NULL && bytes == sizeof(request) - 1U &&
 		memcmp(data, request, sizeof(request) - 1U) == 0;
 }
+
+inline bool Parse_M13_A03_Field(const char *data, size_t bytes)
+{
+	static const char request[] = "RVMF1 M13.mix\n";
+	return data != NULL && bytes == sizeof(request) - 1U &&
+		memcmp(data, request, sizeof(request) - 1U) == 0;
+}
 } // namespace A31DevelopmentCheckpoint
 
 #endif

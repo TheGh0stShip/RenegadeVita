@@ -1,5 +1,32 @@
 # Live engineering progress
 
+## Dev175: M13 Duncan ion beacon handoff
+
+Renegade Vita - v3.5 active
+`[░░░░░░░░░░] 0/10 release acceptance gates complete`
+
+Now: run M13 through the hidden Nod base / rocket launcher / vehicle-kill route
+and verify Duncan's original ion beacon handoff through gameplay logs.
+Completed: `Mission01.cpp` now logs the original Duncan/GDI04 handoff chain and
+adds a guarded delayed fallback that grants the original
+`POW_IonCannonBeacon_Player` only if the authored animation-complete callback is
+missed. This preserves the original conversation and normal callback as the
+primary path and does not auto-complete objectives or advance the mission.
+Evidence: development checkpoint PASS; mission conversation diagnostics
+contract PASS; M13 cinematic preparation PASS; deterministic staging PASS with
+198 patches and registry
+`2f6db3a5593a373a7f1992ed8d68f4116dbbd43a3a826a99972d49d107619c24`; full
+`A3.5-dev175` build/package PASS. VPK
+`11b26fdd8bb80cd40de7c0701b2a1303912951b84f72011dd880fb7289dae205`; ELF
+`e160bd63e12cca60713fbd9656ac203e2ac22f54ae89eabe5f1b69b928e2fc29`;
+diagnostics ZIP
+`142c8e11b94c83cc70b8c06d34108168e74a245b8c86a64507c2ac2b676cc09b`.
+No Vita3K route proof, physical run, visual correctness, objective completion,
+transition, save/load, or campaign acceptance is claimed. Next: run the route
+and check for `A4 M01 Duncan: beacon handoff reason=animation-complete` or
+`animation-timeout`, then verify the ion cannon beacon can be used to complete
+M13 normally. Blocker: runtime evidence is pending.
+
 ## Dev169: M13 render fast path and actor snapshots
 
 Renegade Vita - v3.5 active

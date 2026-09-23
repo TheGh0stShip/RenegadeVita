@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "0e7b5f914264c365236ba9d967482ef8cb9a4275640d999da1cd9f1ef797fe99",
-  "patch_count": 196,
+  "stage_script_sha256": "2d1501e3e8e63ca0b2f1a11fb5494556f5c9d021cce87072458f9d8e46699f7a",
+  "patch_count": 198,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -382,7 +382,7 @@
     {
       "path": "port/patches/combat-a35-weaponview-reload-latch.patch",
       "stage_directory": "combat",
-      "sha256": "6fc1683af671d10c7c8f3fd7b95491bcbbab4780069b22c176f60a841add10cf"
+      "sha256": "229943dbeded38136b34fcb014f0f6d1eee70207dfff1b2369b3fe8d9317b38e"
     },
     {
       "path": "port/patches/combat-a35-m00-ui-hud-subtitles.patch",
@@ -955,9 +955,19 @@
       "sha256": "a9cccd8cc55507cb2e8ee69ffd2f348d0a99a3d1f8f938d20a7871e78ad0da28"
     },
     {
+      "path": "port/patches/scripts-a35-m01-duncan-beacon-handoff.patch",
+      "stage_directory": "scripts",
+      "sha256": "939655508ca44caebc7b7a7d6bee0d1f54fce7e2b1d805e9c0c7a9d6cc4417e8"
+    },
+    {
       "path": "port/patches/wwphys-a35-model-install-timing.patch",
       "stage_directory": "wwphys",
       "sha256": "f087450f0de387bfa1c99fced4a501ed013fdbed2664bdb18239dd0f9b9ad665"
+    },
+    {
+      "path": "port/patches/wwphys-a35-prepared-render-object-cache.patch",
+      "stage_directory": "wwphys",
+      "sha256": "85288e21a1b12b6d1cd5bed578d887bc65b90d68e946637a6d72ac0539ce1b5f"
     },
     {
       "path": "port/patches/ww3d2-a35-create-depth-timing.patch",
@@ -985,5 +995,5 @@
       "sha256": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
     }
   ],
-  "registry_sha256": "3eac24d0025e9fbfacb07483543e2f7d22113fcc461b0b0dee00ce8e2b73a3a1"
+  "registry_sha256": "2f6db3a5593a373a7f1992ed8d68f4116dbbd43a3a826a99972d49d107619c24"
 }

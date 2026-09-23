@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev169",
+  "milestone": "A3.5-dev175",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -637,8 +637,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 196,
-  "mechanically_patched_upstream_files": 297,
+  "patch_count": 198,
+  "mechanically_patched_upstream_files": 298,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -933,6 +933,7 @@
     "patch-target/dev168-m13-loader-summary.patch/ww3d2/agg_def.cpp",
     "patch-target/dev168-m13-loader-summary.patch/ww3d2/assetmgr.cpp",
     "patch-target/scripts-a35-cinematic-command-timing.patch/Test_Cinematic.cpp",
+    "patch-target/scripts-a35-m01-duncan-beacon-handoff.patch/Mission01.cpp",
     "patch-target/scripts-a35-m13-slot19-phases.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp",
     "patch-target/scripts-a37-mx0-default-arguments.patch/MissionX0.cpp",
@@ -1748,7 +1749,7 @@
     {
       "path": "port/patches/combat-a35-weaponview-reload-latch.patch",
       "stage_directory": "combat",
-      "sha256": "6fc1683af671d10c7c8f3fd7b95491bcbbab4780069b22c176f60a841add10cf",
+      "sha256": "229943dbeded38136b34fcb014f0f6d1eee70207dfff1b2369b3fe8d9317b38e",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "weapons.cpp",
@@ -2856,9 +2857,27 @@
       ]
     },
     {
+      "path": "port/patches/scripts-a35-m01-duncan-beacon-handoff.patch",
+      "stage_directory": "scripts",
+      "sha256": "939655508ca44caebc7b7a7d6bee0d1f54fce7e2b1d805e9c0c7a9d6cc4417e8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Mission01.cpp"
+      ]
+    },
+    {
       "path": "port/patches/wwphys-a35-model-install-timing.patch",
       "stage_directory": "wwphys",
       "sha256": "f087450f0de387bfa1c99fced4a501ed013fdbed2664bdb18239dd0f9b9ad665",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "phys.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a35-prepared-render-object-cache.patch",
+      "stage_directory": "wwphys",
+      "sha256": "85288e21a1b12b6d1cd5bed578d887bc65b90d68e946637a6d72ac0539ce1b5f",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "phys.cpp"

@@ -1,0 +1,154 @@
+diff --git a/Mission01.cpp b/Mission01.cpp
+--- a/Mission01.cpp
++++ b/Mission01.cpp
+@@ -40,6 +40,8 @@
+ #include "toolkit.h"
+ #include "mission1.h"
+ 
++extern int A30_Vita_Log(const char *format, ...);
++
+ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
+ {
+ 	typedef enum {
+@@ -15734,6 +15736,10 @@ DECLARE_SCRIPT(M01_Commander_Shack_Zone_JDG, "")//115985
+ 		if (enterer == STAR)
+ 		{
+ 			playerinZone = true;
++			A30_Vita_Log("A4 M01 Duncan shack zone: entered player zone commanderAlive=%d clearance=%d convStarted=%d\n",
++				commanderAlive ? 1 : 0,
++				commandClearance ? 1 : 0,
++				convStarted ? 1 : 0);
+ 			Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_JDG, 0 );
+ 
+ 			GameObject * convController = Commands->Find_Object ( 125857 );
+@@ -15759,12 +15765,17 @@ DECLARE_SCRIPT(M01_Commander_Shack_Zone_JDG, "")//115985
+ 			if (param == M01_START_ACTING_JDG)
+ 			{
+ 				commandClearance = true;
++				A30_Vita_Log("A4 M01 Duncan shack zone: clearance playerInZone=%d commanderAlive=%d convStarted=%d\n",
++					playerinZone ? 1 : 0,
++					commanderAlive ? 1 : 0,
++					convStarted ? 1 : 0);
+ 				Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_JDG, 0 );
+ 			}
+ 
+ 			else if (param == M01_IVE_BEEN_KILLED_JDG)
+ 			{
+ 				 commanderAlive = false;
++				A30_Vita_Log("A4 M01 Duncan shack zone: commander killed before beacon handoff\n");
+ 			}
+ 
+ 			else if (param == M01_MODIFY_YOUR_ACTION_JDG && convStarted == false)
+@@ -15775,6 +15786,8 @@ DECLARE_SCRIPT(M01_Commander_Shack_Zone_JDG, "")//115985
+ 					if (gdiCommander != NULL)
+ 					{
+ 						convStarted = true;
++						A30_Vita_Log("A4 M01 Duncan shack zone: starting beacon handoff conversation commander=%p\n",
++							gdiCommander);
+ 						Commands->Send_Custom_Event( obj, gdiCommander, 0, M01_MODIFY_YOUR_ACTION_JDG, 1 );
+ 					}
+ 				}
+@@ -18625,6 +18638,40 @@ DECLARE_SCRIPT(M01_GDIBase_BaseCommander_JDG, "")//106050 Capt Duncan
+ 		gaveIonBeacon = false;
+ 		Commands->Set_Innate_Is_Stationary ( obj, true );
+ 		Commands->Set_Player_Type ( obj, SCRIPT_PLAYERTYPE_NEUTRAL );
++		Vector3 pos = Commands->Get_Position(obj);
++		A30_Vita_Log("A4 M01 Duncan: created obj=%p id=%d pos=(%.3f,%.3f,%.3f)\n",
++			obj,
++			Commands->Get_ID(obj),
++			pos.X,
++			pos.Y,
++			pos.Z);
++	}
++
++	void Give_Ion_Beacon(GameObject * obj, const char *reason)
++	{
++		if (gaveIonBeacon)
++		{
++			A30_Vita_Log("A4 M01 Duncan: beacon handoff skipped reason=%s already_given=1\n",
++				reason);
++			return;
++		}
++
++		Vector3 myPostion (114.848f, 95.401f, 8.923f);
++		GameObject *beacon = Commands->Create_Object ( "POW_IonCannonBeacon_Player", myPostion );
++		gaveIonBeacon = true;
++		A30_Vita_Log("A4 M01 Duncan: beacon handoff reason=%s beacon=%p pos=(%.3f,%.3f,%.3f)\n",
++			reason,
++			beacon,
++			myPostion.X,
++			myPostion.Y,
++			myPostion.Z);
++
++		gdi04conv02 = Commands->Create_Conversation( "M01_GDI04_Conversation_02", 100, 1000, false);
++		Commands->Join_Conversation( obj, gdi04conv02, false, true, true );
++		Commands->Join_Conversation( STAR, gdi04conv02, false, false, false );
++		Commands->Start_Conversation( gdi04conv02,  gdi04conv02 );
++
++		Commands->Monitor_Conversation(  obj, gdi04conv02 );
+ 	}
+ 
+ 	void Killed( GameObject * obj, GameObject * killer ) 
+@@ -18701,6 +18748,7 @@ DECLARE_SCRIPT(M01_GDIBase_BaseCommander_JDG, "")//106050 Capt Duncan
+ 			else if (param == M01_GDI_BASE_POWS_RESCUED_JDG)
+ 			{
+ 				powsRescued = true;
++				A30_Vita_Log("A4 M01 Duncan: POWs rescued signal received\n");
+ 			}
+ 
+ 			else if (param == M01_DO_END_MISSION_CHECK_JDG)
+@@ -18759,6 +18807,9 @@ DECLARE_SCRIPT(M01_GDIBase_BaseCommander_JDG, "")//106050 Capt Duncan
+ 
+ 			else if (param == M01_MODIFY_YOUR_ACTION_JDG)//havoc has saved you--start conversation
+ 			{
++				A30_Vita_Log("A4 M01 Duncan: starting GDI04 conversation 01 powsRescued=%d gaveIonBeacon=%d\n",
++					powsRescued ? 1 : 0,
++					gaveIonBeacon ? 1 : 0);
+ 				gdi04conv01 = Commands->Create_Conversation( "M01_GDI04_Conversation_01", 100, 1000, false);
+ 				Commands->Join_Conversation( obj, gdi04conv01, false, true, true );
+ 				Commands->Join_Conversation( STAR, gdi04conv01, false, false, false );
+@@ -18766,6 +18817,11 @@ DECLARE_SCRIPT(M01_GDIBase_BaseCommander_JDG, "")//106050 Capt Duncan
+ 
+ 				Commands->Monitor_Conversation(  obj, gdi04conv01 );
+ 			}
++
++			else if (param == M01_MODIFY_YOUR_ACTION_11_JDG)
++			{
++				Give_Ion_Beacon(obj, "animation-timeout");
++			}
+ 		}
+ 	}
+ 
+@@ -18777,11 +18833,13 @@ DECLARE_SCRIPT(M01_GDIBase_BaseCommander_JDG, "")//106050 Capt Duncan
+ 		{
+ 			if (action_id == gdi04conv01)
+ 			{
++				A30_Vita_Log("A4 M01 Duncan: GDI04 conversation 01 ended; starting beacon handoff animation\n");
+ 				params.Set_Basic( this, 100, M01_DOING_ANIMATION_01_JDG );
+ 				params.Set_Animation ("H_A_J12C", false);
+ 				Commands->Action_Play_Animation (obj, params);//
+ 
+ 				Commands->Set_Objective_Status( M01_GDI_BASE_COMMANDER_OBJECTIVE_JDG, OBJECTIVE_STATUS_ACCOMPLISHED );
++				Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_11_JDG, 3.5f );
+ 
+ 				/*GameObject * POW01 = Commands->Find_Object ( M01_GDIBASE_POWSCENE02_POWGUY01_JDG );
+ 				if (POW01 != NULL)
+@@ -18815,17 +18873,7 @@ DECLARE_SCRIPT(M01_GDIBase_BaseCommander_JDG, "")//106050 Capt Duncan
+ 
+ 			else if (action_id == M01_DOING_ANIMATION_01_JDG)
+ 			{
+-				Vector3 myPostion (114.848f, 95.401f, 8.923f);
+-
+-				Commands->Create_Object ( "POW_IonCannonBeacon_Player", myPostion );
+-				gaveIonBeacon = true;
+-
+-				gdi04conv02 = Commands->Create_Conversation( "M01_GDI04_Conversation_02", 100, 1000, false);
+-				Commands->Join_Conversation( obj, gdi04conv02, false, true, true );
+-				Commands->Join_Conversation( STAR, gdi04conv02, false, false, false );
+-				Commands->Start_Conversation( gdi04conv02,  gdi04conv02 );
+-
+-				Commands->Monitor_Conversation(  obj, gdi04conv02 );
++				Give_Ion_Beacon(obj, "animation-complete");
+ 			}
+ 
+ 			else if (action_id == M01_GOTO_YOUR_EVAC_SPOT_JDG)

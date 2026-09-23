@@ -124,6 +124,16 @@ TextureStageCombinerState g_texture_combiner_states[MAX_TEXTURE_STAGES] = {
 	}
 };
 IDirect3DBaseTexture8 *g_texture_stage_textures[MAX_TEXTURE_STAGES] = {};
+
+/*
+** Texture mappers are applied once per material submission.  The original
+** DX8 device accepted these redundant writes cheaply; on Vita each write
+** crosses into vitaGL and changes the active texture matrix.  Keep the
+** boundary state exact while avoiding identical GL work for adjacent meshes.
+*/
+D3DMATRIX g_applied_texture_transforms[MAX_TEXTURE_STAGES] = {};
+DWORD g_applied_texture_transform_flags[MAX_TEXTURE_STAGES] = {};
+bool g_applied_texture_transform_valid[MAX_TEXTURE_STAGES] = {};
 // This cache owns one permanent reference for the native renderer's process
 // lifetime.  Failed TextureClass requests receive a separate AddRef(), so an
 // ordinary caller release cannot leave the cache dangling or delete a texture
@@ -176,18 +186,27 @@ bool Apply_Texture_Stage_Transform(DWORD stage)
 	if (stage >= MAX_TEXTURE_STAGES) return false;
 #if defined(__vita__)
 	const TextureStageSamplerState &sampler = g_texture_sampler_states[stage];
+	const D3DMATRIX &transform = g_boundary_transforms[D3DTS_TEXTURE0 + stage];
+	if (g_applied_texture_transform_valid[stage] &&
+		g_applied_texture_transform_flags[stage] == sampler.texture_transform_flags &&
+		memcmp(&g_applied_texture_transforms[stage], &transform, sizeof(D3DMATRIX)) == 0) {
+		return true;
+	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glMatrixMode(GL_TEXTURE);
 	if ((sampler.texture_transform_flags & 0xffU) == D3DTTFF_DISABLE) {
 		glLoadIdentity();
 	} else {
-		glLoadMatrixf(&g_boundary_transforms[D3DTS_TEXTURE0 + stage].m[0][0]);
+		glLoadMatrixf(&transform.m[0][0]);
 	}
 	glMatrixMode(GL_MODELVIEW);
 	glActiveTexture(GL_TEXTURE0);
 	if (glGetError() != GL_NO_ERROR) {
 		return false;
 	}
+	g_applied_texture_transforms[stage] = transform;
+	g_applied_texture_transform_flags[stage] = sampler.texture_transform_flags;
+	g_applied_texture_transform_valid[stage] = true;
 #endif
 	return true;
 }
@@ -2255,6 +2274,12 @@ bool DX8Wrapper::Set_Device_Resolution(int width, int height, int bits,
 	int windowed, bool resize_window)
 {
 	(void)resize_window;
+	// A resolution/session transition can reset the Vita texture matrices while
+	// retaining the process-local boundary cache. Force the next mapper call to
+	// re-emit its state instead of trusting stale GL state.
+	for (int stage = 0; stage < MAX_TEXTURE_STAGES; ++stage) {
+		g_applied_texture_transform_valid[stage] = false;
+	}
 	if (width != -1) {
 		if (width <= 0) return false;
 		ResolutionWidth = width;

@@ -1,5 +1,29 @@
 # Performance hypothesis ledger
 
+## Dev186 track animation and Vita mapper-state cache (2026-09-23)
+
+- Hypothesis: part of the remaining vehicle/effect cost is avoidable repeated
+  Vita GL texture-matrix submission, while static treads are a separate naming
+  mismatch rather than a missing original animation path. A tighter cinematic
+  command budget should prevent authored bursts from monopolizing simulation
+  long enough to let audio drift.
+- Evidence: Dev185 recorder showed M13 render spikes of 0.53 s and simulation
+  spikes up to 1.90 s; M01 frame 1 was 6.336 s (5.356 s simulation). The
+  tracked-vehicle code only searched after `.` and therefore rejected direct
+  retail names such as `V_TRACK-L`/`V_TREAD-L`. The Vita texture-stage boundary
+  performed GL matrix setup for every identical mapper state.
+- Change: accept direct track mesh names; cache per-stage transform/flags and
+  skip identical Vita GL matrix work; reduce full-port campaign cinematic
+  batches from 12 ms/4 commands to 4 ms/2 commands before yielding.
+- Guardrails: original mapper, render ownership, track UV updates, cinematic
+  command order, AI, collision, objectives, audio callbacks, and progression
+  remain intact. Cache is only at the platform boundary and does not reuse
+  volatile render objects.
+- Evidence retained: focused source contracts, ARM/SELF/VPK identity, and
+  Vita3K install PASS. Runtime A/B and visual/audio acceptance remain pending.
+- Decision: adopt for Dev186 as a bounded, measurable candidate; keep or revert
+  after the same M13 ambush/tiberium/Ion and M01 beach/ladder route is captured.
+
 ## Dev185 retained cinematic/effect physics models (2026-09-23)
 
 - Hypothesis: Dev184's remaining M13 ambush/Ion and M01 beach stalls are not

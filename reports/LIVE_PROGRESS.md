@@ -1,5 +1,32 @@
 # Live engineering progress
 
+## Dev186: track mapping and render-state burst reduction
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: Dev186 is installed in Vita3K; runtime comparison is pending.
+Completed: Dev185 flight evidence isolated three pressure points: M13
+simulation spikes up to 1.90 s, render spikes up to 0.53 s, and M01 frame 1
+at 6.34 s total (5.36 s simulation). The tracked-vehicle matcher rejected
+direct no-dot track mesh names, leaving tread UV animation detached. The Vita
+DX8 boundary also re-issued identical texture-matrix state on every mapper
+application. Dev186 accepts direct track names, caches identical
+texture-transform state at the Vita boundary, and reduces full-port cinematic
+command batches to 4 ms or 2 commands before yielding so audio/simulation can
+progress between authored bursts. No mission commands, AI, objectives, or
+progression are skipped.
+Evidence: focused contracts PASS (including new direct-track and transform
+cache assertions); ARM compile/link PASS; SELF/VPK identity PASS; VPK installed
+to Vita3K with receipt
+`build/vita3k-backups/A3.5-dev186-setup-20260923T204812077071Z/setup-receipt.json`.
+VPK `a4b8c225e5e5d771ec25340721e897c25a89f09b8ed39de207036ef10c79fd14`;
+ELF `50a574eb5dffe42df43f6e04955b015dc42efc1253623d416f3b62d7570a7d24`.
+No Vita3K launch, visual result, audio/video acceptance, M13/M01 gameplay
+acceptance, or physical acceptance is claimed yet. Next: run the fixed
+diagnostic route and compare slow-frame, actor, tread, and transition evidence
+against Dev185. Blocker: runtime evidence pending.
+
 ## Dev185: retained cinematic/effect physics models
 
 Renegade Vita - v3.5 active

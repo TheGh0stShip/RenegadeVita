@@ -162,3 +162,16 @@ def test_existing_m13_fiery_hlod_template_is_preserved():
     text = HLOD.read_text(encoding="utf-8")
     assert 'stricmp(Definition->Get_Name(), "ag_fiery_ex06") == 0' in text
     assert "s_vita_m13_fiery_hlod_model->Clone();" in text
+
+
+def test_tracked_vehicle_accepts_direct_track_mesh_names():
+    text = (ROOT / "staging" / "wwphys" / "trackedvehicle.cpp").read_text(encoding="utf-8")
+    assert "Some retail W3D hierarchies expose the track mesh name directly" in text
+    assert text.count("sub_name = name;") == 2
+
+
+def test_vita_texture_transform_boundary_caches_identical_mapper_state():
+    text = (ROOT / "port" / "renderer" / "vita" / "ww3d_dx8_boundary.cpp").read_text(encoding="utf-8")
+    assert "g_applied_texture_transform_valid" in text
+    assert "memcmp(&g_applied_texture_transforms[stage]" in text
+    assert "g_applied_texture_transform_flags[stage]" in text

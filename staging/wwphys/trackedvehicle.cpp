@@ -76,6 +76,11 @@ static bool _is_left_track_name(const char * name)
 	const char * sub_name = strchr(name,'.');
 	if (sub_name != NULL) {
 		sub_name++;
+	} else {
+		/* Some retail W3D hierarchies expose the track mesh name directly. */
+		sub_name = name;
+	}
+	if (sub_name != NULL) {
 		if (	(strnicmp(sub_name,LEFT_TRACK_NAME0,strlen(LEFT_TRACK_NAME0)) == 0) ||
 				(strnicmp(sub_name,LEFT_TRACK_NAME1,strlen(LEFT_TRACK_NAME1)) == 0) || 
 				(strnicmp(sub_name,LEFT_TRACK_NAME2,strlen(LEFT_TRACK_NAME2)) == 0) || 
@@ -101,6 +106,11 @@ static bool _is_right_track_name(const char * name)
 	const char * sub_name = strchr(name,'.');
 	if (sub_name != NULL) {
 		sub_name++;
+	} else {
+		/* Some retail W3D hierarchies expose the track mesh name directly. */
+		sub_name = name;
+	}
+	if (sub_name != NULL) {
 		if (	(strnicmp(sub_name,RIGHT_TRACK_NAME0,strlen(RIGHT_TRACK_NAME0)) == 0) ||
 				(strnicmp(sub_name,RIGHT_TRACK_NAME1,strlen(RIGHT_TRACK_NAME1)) == 0) || 
 				(strnicmp(sub_name,RIGHT_TRACK_NAME2,strlen(RIGHT_TRACK_NAME2)) == 0) || 
@@ -523,5 +533,4 @@ bool TrackedVehicleDefClass::Is_Type(const char * type_name)
 		return VehiclePhysDefClass::Is_Type(type_name);
 	}
 }
-
 

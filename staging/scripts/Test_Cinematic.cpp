@@ -1068,7 +1068,9 @@ public:
 			++vita_budget_command_count;
 			if (vita_budget_commands && Controls != NULL && Controls->Time <= Time) {
 				const uint64_t elapsed_us = sceKernelGetProcessTimeWide() - vita_budget_start_us;
-				if (elapsed_us >= 12000U || vita_budget_command_count >= 4U) {
+				/* Keep authored command order, but cap a burst tightly enough that
+				** the simulation clock cannot run seconds behind the audio clock. */
+				if (elapsed_us >= 4000U || vita_budget_command_count >= 2U) {
 					static unsigned vita_budget_reports = 0U;
 					if (vita_budget_reports++ < 64U) {
 						A30_Vita_Log("A4 campaign cinematic budget yield: file=%s owner_id=%d commands=%u elapsed_us=%llu pending_time=%.3f current_time=%.3f\n",

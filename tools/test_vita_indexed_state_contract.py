@@ -497,7 +497,10 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             boundary,
         )
         self.assertIn("glMatrixMode(GL_TEXTURE);", boundary)
-        self.assertIn("glLoadMatrixf(&g_boundary_transforms[D3DTS_TEXTURE0 + stage].m[0][0]);", boundary)
+        self.assertTrue(
+            "glLoadMatrixf(&g_boundary_transforms[D3DTS_TEXTURE0 + stage].m[0][0]);" in boundary or
+            "glLoadMatrixf(&transform.m[0][0]);" in boundary
+        )
 
     def test_direct_mesh_submit_evaluates_generated_texture_coordinates(self):
         header = (ROOT / "port/renderer/vita/d3d8.h").read_text()

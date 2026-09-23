@@ -5,24 +5,29 @@
 +#include "a30_vita_runtime.h"
 +#include <psp2/kernel/processmgr.h>
 +#endif
-@@ -328,0 +333,7 @@
+@@ -328,0 +333,10 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 +	const uint64_t vita_post_start_us = sceKernelGetProcessTimeWide();
 +	uint64_t vita_top_object_us[4] = { 0U, 0U, 0U, 0U };
 +	int vita_top_object_id[4] = { 0, 0, 0, 0 };
 +	const char *vita_top_object_name[4] = { "", "", "", "" };
 +	unsigned vita_object_count = 0U;
++	unsigned vita_sampled_object_count = 0U;
++	static unsigned vita_sample_phase = 0U;
++	const unsigned vita_sample_offset = vita_sample_phase++ & 15U;
 +#endif
-@@ -336,0 +348,5 @@
+@@ -336,0 +350,6 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-+			const uint64_t vita_object_start_us = sceKernelGetProcessTimeWide();
-+			const int vita_object_id = objnode->Data()->Get_ID();
-+			const char *vita_object_name = objnode->Data()->Get_Definition().Get_Name();
++			const bool vita_sample_object = (vita_object_count++ & 15U) == vita_sample_offset;
++			const uint64_t vita_object_start_us = vita_sample_object ? sceKernelGetProcessTimeWide() : 0U;
++			const int vita_object_id = vita_sample_object ? objnode->Data()->Get_ID() : 0;
++			const char *vita_object_name = vita_sample_object ? objnode->Data()->Get_Definition().Get_Name() : "";
 +#endif
-@@ -337,0 +354,17 @@
+@@ -337,0 +357,19 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-+			const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
-+			++vita_object_count;
++			if (vita_sample_object) {
++				const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
++				++vita_sampled_object_count;
 +			for (unsigned vita_rank = 0U; vita_rank < 4U; ++vita_rank) {
 +				if (vita_object_us > vita_top_object_us[vita_rank]) {
 +					for (unsigned vita_move = 3U; vita_move > vita_rank; --vita_move) {
@@ -36,25 +41,27 @@
 +					break;
 +				}
 +			}
++			}
 +#endif
-@@ -342,0 +366,3 @@
+@@ -342,0 +381,3 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 +	const uint64_t vita_objects_end_us = sceKernelGetProcessTimeWide();
 +#endif
-@@ -343,0 +370,3 @@
+@@ -343,0 +385,3 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 +	const uint64_t vita_observers_end_us = sceKernelGetProcessTimeWide();
 +#endif
-@@ -345,0 +375,17 @@
+@@ -345,0 +390,18 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 +	const uint64_t vita_post_end_us = sceKernelGetProcessTimeWide();
 +	static unsigned vita_slow_post_reports = 0U;
 +	if (vita_post_end_us - vita_post_start_us >= 500000U &&
 +		vita_slow_post_reports++ < 8U) {
-+		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u top0=%llu/%d/%s top1=%llu/%d/%s top2=%llu/%d/%s top3=%llu/%d/%s observers_us=%llu scripts_us=%llu\n",
++		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u sampled=%u stride=16 top0=%llu/%d/%s top1=%llu/%d/%s top2=%llu/%d/%s top3=%llu/%d/%s observers_us=%llu scripts_us=%llu\n",
 +			static_cast<unsigned long long>(vita_post_end_us - vita_post_start_us),
 +			static_cast<unsigned long long>(vita_objects_end_us - vita_post_start_us),
 +			vita_object_count,
++			vita_sampled_object_count,
 +			static_cast<unsigned long long>(vita_top_object_us[0]), vita_top_object_id[0], vita_top_object_name[0],
 +			static_cast<unsigned long long>(vita_top_object_us[1]), vita_top_object_id[1], vita_top_object_name[1],
 +			static_cast<unsigned long long>(vita_top_object_us[2]), vita_top_object_id[2], vita_top_object_name[2],

@@ -1,5 +1,52 @@
 # Performance hypothesis ledger
 
+## Dev190 measured regressions and corrective candidate (2026-09-23)
+
+- Runtime identity: the installed Dev189 candidate's own persistent log
+  identifies `A3.5-dev189`; its package hash matches the recorded installation.
+  The run completed M13, transitioned into M01, and logged M01 through frame 5.
+- M13 evidence: at frame 6000 the recorder reported 35.747 average FPS,
+  p50/p95/p99/max frame times of 32.4/206.4/384.7/2486.1 ms. A 2.49 s
+  simulation stall occurred at frame 5810. One authored cinematic `Create_Object`
+  command took 324.6 ms; other logged object-create commands took 177-275 ms.
+  This points to command/object creation bursts, not mesh submission alone.
+- M01 evidence: frame 1 took 5.66 s (4.82 s simulation, 0.84 s rendering).
+  Its `Post_Think` pass logged 1.72 s over 443 objects. The diagnostic called
+  the process timer twice for every object, so this measurement was heavily
+  intrusive and cannot be accepted as uninstrumented game cost.
+- Behavior evidence: the two M13 engineers were registered and alive in actor
+  snapshots at frames 2880-3600, and their positions changed after the intro.
+  This does not prove they rendered correctly. `GDI_RocketSoldier_0` id
+  1500000039 remained at one position with zero velocity and
+  `human_state=ANIMATION` across the intro and subsequent frames; its action
+  became inactive at frame 2280 while that state persisted. This isolates a
+  scripted-animation lifecycle defect but does not yet identify its authored
+  stop/movement command.
+- Change under test: remove the campaign-only explosion-recycler spawn route
+  and prepared volatile projectile/particle-emitter reuse, preserving original
+  fresh-create/reset/lifetime semantics. Reduce per-object process-time calls
+  to a rotating 1-in-16 sample. Register the previously staging-only direct
+  track-name matcher and NaN target-box guard as source-anchored patches.
+- Decision gate: canonical host/sanitizer/ARM/VPK and Vita3K installation must
+  pass first. Performance, A/V sync, visible explosions/trails, engineer
+  presentation, rocket-soldier behavior, treads, and the M01 aircraft freeze
+  remain runtime-unverified until a matching Dev190 run. The M13/M01 run facts
+  above are user runtime evidence, not a Dev190 before/after result.
+- Candidate result: canonical build, 173 host tests, retained M00 runtime,
+  package identity/closure, and Vita3K installation all passed. VPK SHA-256 is
+  `e7ece5f02d71709a0d681777c6d74e9dfac8f4011267bf66358018e0146a8219`;
+  installation receipt is
+  `build/vita3k-backups/A3.5-dev190-setup-20260923T234508866640Z/setup-receipt.json`.
+  Vita3K was already open; this candidate was not launched. Dev190 route metrics,
+  visible effects, engineers, rocket-soldier behavior, tread animation, and the
+  M01 plane-arrival stall therefore remain unverified.
+- Decision: keep sampled `Post_Think` timing and original fresh effect-spawn
+  semantics because they remove per-object timer pressure and avoid custom
+  reuse paths implicated by missing visuals. Keep direct track-name matching
+  and invalid HUD projection rejection as candidate fixes, not accepted runtime
+  fixes. Do not claim an overall frame-time win without a matching fixed-route
+  before/after capture.
+
 ## Dev189 source/build closure (2026-09-23)
 
 - Hypothesis: two remaining avoidable sources of burst cost are timed

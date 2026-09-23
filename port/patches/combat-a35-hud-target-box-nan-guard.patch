@@ -1,0 +1,10 @@
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -1776,1 +1776,7 @@
++#if defined(__vita__)
++	if (!top.Is_Valid() || !bottom.Is_Valid()) {
++		return RectClass(0.0f, 0.0f, 0.0f, 0.0f);
++	}
++#endif
++
+ 	RectClass	screen = Render2DClass::Get_Screen_Resolution();

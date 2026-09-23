@@ -1,6 +1,6 @@
 {
-  "milestone": "A3.5-dev189",
-  "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
+  "milestone": "A3.5-dev190",
+  "objective": "Dev190 preserves the original campaign effect creation/lifetime paths, samples Post_Think timing, and carries tread-name and HUD-projection corrections through deterministic source staging while preserving the original M00 runtime baseline",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
@@ -640,7 +640,7 @@
     "port/compatibility/include/winuser.h"
   ],
   "patch_count": 200,
-  "mechanically_patched_upstream_files": 304,
+  "mechanically_patched_upstream_files": 299,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -653,7 +653,6 @@
     "Code/Combat/beacongameobj.cpp",
     "Code/Combat/building.cpp",
     "Code/Combat/buildingaggregate.cpp",
-    "Code/Combat/bullet.cpp",
     "Code/Combat/ccamera.cpp",
     "Code/Combat/combat.cpp",
     "Code/Combat/combatsound.cpp",
@@ -665,12 +664,8 @@
     "Code/Combat/damage.h",
     "Code/Combat/dialogue.cpp",
     "Code/Combat/doors.cpp",
-    "Code/Combat/effectrecycler.cpp",
-    "Code/Combat/effectrecycler.h",
     "Code/Combat/elevator.cpp",
     "Code/Combat/encyclopediamgr.cpp",
-    "Code/Combat/explosion.cpp",
-    "Code/Combat/explosion.h",
     "Code/Combat/gameobjmanager.cpp",
     "Code/Combat/hud.cpp",
     "Code/Combat/hud.h",
@@ -695,7 +690,6 @@
     "Code/Combat/soldier.cpp",
     "Code/Combat/soldier.h",
     "Code/Combat/spawn.cpp",
-    "Code/Combat/surfaceeffects.cpp",
     "Code/Combat/textwindow.cpp",
     "Code/Combat/textwindow.h",
     "Code/Combat/transition.cpp",
@@ -888,6 +882,7 @@
     "Code/wwphys/renegadeterrainpatch.cpp",
     "Code/wwphys/staticanimphys.cpp",
     "Code/wwphys/staticphys.cpp",
+    "Code/wwphys/trackedvehicle.cpp",
     "Code/wwphys/transitioneffect.cpp",
     "Code/wwphys/visrendercontext.cpp",
     "Code/wwphys/waypath.cpp",
@@ -2831,10 +2826,19 @@
     {
       "path": "port/patches/combat-a35-postthink-owner-timing.patch",
       "stage_directory": "combat",
-      "sha256": "bab159acd8ad90b5a916aa6ca261d2b8af51191b32022e1a1826591df91aa151",
+      "sha256": "9143a1d10da566176f2bf8b0108ec99af66a87d622e029113237d54c0b6c94c1",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "gameobjmanager.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-hud-target-box-nan-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "1d5f217c8ebefca8325df014e76b4bd3375fc5b6037e6d3c5edda891b1eb7db4",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "hud.cpp"
       ]
     },
     {
@@ -2844,29 +2848,6 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "scriptablegameobj.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-prepared-effect-cache.patch",
-      "stage_directory": "combat",
-      "sha256": "2978245bad6a1137004e206644497153e5695b853dc4aee4f73306cc46d37cbe",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "surfaceeffects.cpp",
-        "bullet.cpp"
-      ]
-    },
-    {
-      "path": "port/patches/combat-a35-explosion-effect-recycler.patch",
-      "stage_directory": "combat",
-      "sha256": "e9d503268333a51653274760142b8a41cd33d4a305af48f483f8c300c4b67861",
-      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
-      "upstream_targets": [
-        "explosion.h",
-        "effectrecycler.h",
-        "effectrecycler.cpp",
-        "explosion.cpp",
-        "combat.cpp"
       ]
     },
     {
@@ -2899,7 +2880,7 @@
     {
       "path": "port/patches/wwphys-a35-model-install-timing.patch",
       "stage_directory": "wwphys",
-      "sha256": "f087450f0de387bfa1c99fced4a501ed013fdbed2664bdb18239dd0f9b9ad665",
+      "sha256": "e50f37874bbae65a036fe1880d4e6120f098000a34d9b67b8dc83df3fdbd5e1a",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "phys.cpp"
@@ -2908,10 +2889,19 @@
     {
       "path": "port/patches/wwphys-a35-prepared-render-object-cache.patch",
       "stage_directory": "wwphys",
-      "sha256": "85288e21a1b12b6d1cd5bed578d887bc65b90d68e946637a6d72ac0539ce1b5f",
+      "sha256": "308082b730bca74870fda0871195b06896885ea1a93e837099ef5b78ccf05c0d",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "phys.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a35-trackedvehicle-mesh-names.patch",
+      "stage_directory": "wwphys",
+      "sha256": "e48c1c4753ee475cf50289b8cb97dc9894a229c43b961c0ce2ab65a7f5e79cdc",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "trackedvehicle.cpp"
       ]
     },
     {
@@ -3064,5 +3054,17 @@
     "custom_game_loop": false,
     "custom_frontend_renderer": false
   },
-  "automatic_vita_deployment": false
+  "automatic_vita_deployment": false,
+  "dev190_candidate": {
+    "title_id": "RNEGA3101",
+    "vpk_sha256": "e7ece5f02d71709a0d681777c6d74e9dfac8f4011267bf66358018e0146a8219",
+    "patch_count": 200,
+    "patch_inventory_registry_sha256": "f5c3989ff12fa4991fa028547c9f6d6f8e02deebf9136bd86147f821ae68b3fd",
+    "vita3k_install_status": "INSTALLED_NOT_LAUNCHED",
+    "physical_acceptance": false,
+    "m13_performance_and_av_sync_verified": false,
+    "visible_effects_and_npc_behavior_verified": false,
+    "m13_treads_verified": false,
+    "m01_plane_arrival_stall_verified": false
+  }
 }

@@ -1,13 +1,44 @@
 # Live engineering progress
 
+## Dev190: effect semantics, sampled simulation timing, canonical tread/HUD fixes
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: analyze a matching Dev190 runtime capture against the Dev189 M13/M01 trace.
+Completed: canonical Dev190 host/sanitizer/ARM/VPK build passed; 173 host tests
+and original M00 world/interactive runtime checks passed. The exact candidate
+was installed and hash-verified in Vita3K, but not launched. Matched the
+persistent Dev189 log to the installed package; traced
+the 5.66 s M01 first frame (4.82 s simulation) and M13 p99/max (384.7/2486.1
+ms). The per-object diagnostic made 886 process-timer calls on M01's 443-object
+frame. Converted it to rotating 1/16 sampling. Restored original fresh volatile
+projectile/particle and explosion spawn paths after missing visual effects were
+reported. Registered the direct tread-name and NaN HUD guards as zero-fuzz
+source patches; both were previously lost during canonical staging.
+Evidence: Dev189 log identity/hash matches; 173 tests and M13/M01 source
+contracts pass; 200 ordered patches, VPK closure, identity checks, and Vita3K
+install receipt pass. Dev190 VPK SHA-256 is
+`e7ece5f02d71709a0d681777c6d74e9dfac8f4011267bf66358018e0146a8219`.
+The same log shows engineers
+registered and moving after the intro, while rocket-soldier id 1500000039 stays
+stationary in scripted `ANIMATION` after its action ends. This is not a fix for
+that authored actor behavior or proof of visible engineers. No performance,
+effect-visual, tread, A/V, or M01 freeze acceptance is claimed.
+Next: capture Dev190 M13 and M01 diagnostics through the installed-title path,
+then trace the first plane-arrival stall and verify the direct-track/effect/NPC
+visual behavior against the candidate-matched log and image evidence.
+Blocker: authored rocket-soldier stop/movement lifecycle, M01 plane-arrival
+stall cause, performance/A-V synchronization, effect presentation, tread
+animation, and all Dev190 runtime acceptance remain open.
+
 ## Dev189: canonical campaign effect integration and diagnostics
 
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 current evidence gates complete`
 
-Now: obtain a clean candidate-matched M13 flight bundle and inspect soldier
-action/path state around the stationary rocket actor; Dev189 is installed but
-not launched.
+Now: use the returned matching Dev189 log to identify the next M13/M01 test
+window; Dev189 was run by the user and transitioned from M13 into M01.
 Completed: Dev189 canonical host/sanitizer, original M00/M01 host-runtime
 scenarios, focused contracts, ARM compile/link, SELF/VPK closure, candidate
 identity, and diagnostics packaging pass. The explosion recycler is now a

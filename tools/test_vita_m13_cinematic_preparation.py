@@ -166,15 +166,18 @@ def test_existing_m13_fiery_hlod_template_is_preserved():
 
 def test_tracked_vehicle_accepts_direct_track_mesh_names():
     text = (ROOT / "staging" / "wwphys" / "trackedvehicle.cpp").read_text(encoding="utf-8")
+    stage = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
     assert "Some retail W3D hierarchies expose the track mesh name directly" in text
     assert text.count("sub_name = name;") == 2
     assert "TRACKL" in text and "TRACKR" in text
+    assert "wwphys-a35-trackedvehicle-mesh-names.patch" in stage
 
 
 def test_vita_hud_rejects_invalid_target_projection():
     text = (ROOT / "staging" / "combat" / "hud.cpp").read_text(encoding="utf-8")
-    assert "projected_top.Is_Valid()" in text
-    assert "Never submit NaN coordinates" in text
+    stage = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
+    assert "if (!top.Is_Valid() || !bottom.Is_Valid())" in text
+    assert "combat-a35-hud-target-box-nan-guard.patch" in stage
 
 
 def test_vita_texture_transform_boundary_caches_identical_mapper_state():

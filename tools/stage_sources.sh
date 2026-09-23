@@ -650,6 +650,13 @@ if [[ "$rv_gameobjmanager_sha" != "6519ba7668825baf9f5821253b7d033cd4b1790af2898
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-postthink-owner-timing.patch"
 echo "Applied: port/patches/combat-a35-postthink-owner-timing.patch"
+rv_hud_target_sha=$(sha256sum "$rv_stage/combat/hud.cpp" | cut -d' ' -f1)
+if [[ "$rv_hud_target_sha" != "01cfa037602fc74edb7812af8fa1776ba567fbc17dee1d496dfcf2d7f1ecf1d9" ]]; then
+	echo "Refusing unanchored HUD target-box patch: hud.cpp changed ($rv_hud_target_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-hud-target-box-nan-guard.patch"
+echo "Applied: port/patches/combat-a35-hud-target-box-nan-guard.patch"
 rv_scriptable_post_sha=$(sha256sum "$rv_stage/combat/scriptablegameobj.cpp" | cut -d' ' -f1)
 if [[ "$rv_scriptable_post_sha" != "995ab56c511d88b940ff8f55630f8b7bc02ee393b3e9ee75f9de33460635016d" ]]; then
 	echo "Refusing unanchored script timer timing patch: scriptablegameobj.cpp changed ($rv_scriptable_post_sha)" >&2
@@ -657,16 +664,6 @@ if [[ "$rv_scriptable_post_sha" != "995ab56c511d88b940ff8f55630f8b7bc02ee393b3e9
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-script-timer-timing.patch"
 echo "Applied: port/patches/combat-a35-script-timer-timing.patch"
-rv_prepared_effect_cache_surface_sha=$(sha256sum "$rv_stage/combat/surfaceeffects.cpp" | cut -d' ' -f1)
-rv_prepared_effect_cache_bullet_sha=$(sha256sum "$rv_stage/combat/bullet.cpp" | cut -d' ' -f1)
-if [[ "$rv_prepared_effect_cache_surface_sha" != "86a6d3350b0060ccee110404ac61877b161f7744f53230334d5ad2cce69e842e" || "$rv_prepared_effect_cache_bullet_sha" != "729a71c5f878688df9880a059b1eae1e48adbb94fc95262a5dbed965d53e4fff" ]]; then
-	echo "Refusing unanchored prepared effect cache patch: surfaceeffects.cpp=$rv_prepared_effect_cache_surface_sha bullet.cpp=$rv_prepared_effect_cache_bullet_sha" >&2
-	exit 1
-fi
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-prepared-effect-cache.patch"
-echo "Applied: port/patches/combat-a35-prepared-effect-cache.patch"
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-explosion-effect-recycler.patch"
-echo "Applied: port/patches/combat-a35-explosion-effect-recycler.patch"
 rv_cinematic_command_sha=$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)
 if [[ "$rv_cinematic_command_sha" != "40750609e4be927c4ceceb36fc291395c023662c8ad69ce34d185f95d6eb050d" ]]; then
 	echo "Refusing unanchored cinematic command timing patch: Test_Cinematic.cpp changed ($rv_cinematic_command_sha)" >&2
@@ -696,12 +693,19 @@ fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-model-install-timing.patch"
 echo "Applied: port/patches/wwphys-a35-model-install-timing.patch"
 rv_prepared_render_obj_sha=$(sha256sum "$rv_stage/wwphys/phys.cpp" | cut -d' ' -f1)
-if [[ "$rv_prepared_render_obj_sha" != "f81fe0985768bf56392f1a698ae778ace7f7318085d27b5878991ff38a6eff17" ]]; then
+if [[ "$rv_prepared_render_obj_sha" != "202bd6f57a0aeda46ee020bd566cb7b03ff87a799c4a9c6c444cccb50d2e63b9" ]]; then
 	echo "Refusing unanchored prepared render object patch: phys.cpp changed ($rv_prepared_render_obj_sha)" >&2
 	exit 1
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-prepared-render-object-cache.patch"
 echo "Applied: port/patches/wwphys-a35-prepared-render-object-cache.patch"
+rv_trackedvehicle_sha=$(sha256sum "$rv_stage/wwphys/trackedvehicle.cpp" | cut -d' ' -f1)
+if [[ "$rv_trackedvehicle_sha" != "c414a11697da26a7e21fc2e481cf59383c065473481642f19a921b20765d962a" ]]; then
+	echo "Refusing unanchored tracked vehicle mesh-name patch: trackedvehicle.cpp changed ($rv_trackedvehicle_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-trackedvehicle-mesh-names.patch"
+echo "Applied: port/patches/wwphys-a35-trackedvehicle-mesh-names.patch"
 rv_ww3d_create_sha=$(sha256sum "$rv_stage/ww3d2/assetmgr.cpp" | cut -d' ' -f1)
 if [[ "$rv_ww3d_create_sha" != "290ac62041c1de14327cfb10fa6cfe14a6b55c544c9b9d0c237ac2f60fb43b93" ]]; then
 	echo "Refusing unanchored WW3D create timing patch: assetmgr.cpp changed ($rv_ww3d_create_sha)" >&2

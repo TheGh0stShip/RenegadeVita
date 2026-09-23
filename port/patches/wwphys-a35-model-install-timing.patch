@@ -4,9 +4,10 @@
 +#if !RENEGADE_VITA_M00_DEMO
 +#include <psp2/kernel/processmgr.h>
 +#endif
-@@ -203,0 +207,3 @@
+@@ -203,0 +207,4 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 +	const uint64_t vita_model_start_us = sceKernelGetProcessTimeWide();
++	bool vita_prepared_model = false;
 +#endif
 @@ -204,0 +211,3 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
@@ -16,14 +17,15 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 +	const uint64_t vita_install_end_us = sceKernelGetProcessTimeWide();
 +#endif
-@@ -213,0 +226,13 @@
+@@ -213,0 +226,14 @@
 +#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 +	const uint64_t vita_model_end_us = sceKernelGetProcessTimeWide();
 +	static unsigned vita_slow_model_reports = 0U;
 +	if (vita_model_end_us - vita_model_start_us >= 500000U &&
 +		vita_slow_model_reports++ < 16U) {
-+		A30_Vita_Log("A4 slow Phys Set_Model_By_Name: model=%s create_us=%llu install_us=%llu release_us=%llu total_us=%llu\n",
++		A30_Vita_Log("A4 slow Phys Set_Model_By_Name: model=%s source=%s create_us=%llu install_us=%llu release_us=%llu total_us=%llu\n",
 +			model_type_name,
++			vita_prepared_model ? "prepared" : "asset",
 +			static_cast<unsigned long long>(vita_create_end_us - vita_model_start_us),
 +			static_cast<unsigned long long>(vita_install_end_us - vita_create_end_us),
 +			static_cast<unsigned long long>(vita_model_end_us - vita_install_end_us),

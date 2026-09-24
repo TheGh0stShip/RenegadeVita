@@ -1,4 +1,5 @@
 from pathlib import Path
+import unittest
 
 from tools import renegade_cinematic_dependency_scan as scan_tool
 
@@ -197,6 +198,20 @@ def test_preservation_patch_cannot_restore_per_object_postthink_timing():
     post_think = post_think[:post_think.index("\n}")]
     assert "const uint64_t vita_object_start_us = sceKernelGetProcessTimeWide();" not in post_think
     assert "const uint64_t vita_object_start_us = vita_sample_object ?" in post_think
+
+
+def test_m01_first_beach_cinematic_uses_fresh_volatile_render_objects():
+    runtime = A31_RUNTIME.read_text(encoding="utf-8")
+    for model in ("vxag_nod_heli", "VxAG_X1Borca", "X1c_AG_xplosion", "X1C_AG_Missile"):
+        assert f'{{ "{model}", false, 2U }}' in runtime
+
+
+class RuntimeInstrumentationContracts(unittest.TestCase):
+    def test_preservation_patch_cannot_restore_per_object_postthink_timing(self):
+        test_preservation_patch_cannot_restore_per_object_postthink_timing()
+
+    def test_m01_first_beach_cinematic_uses_fresh_volatile_render_objects(self):
+        test_m01_first_beach_cinematic_uses_fresh_volatile_render_objects()
 
 
 def test_vita_texture_transform_boundary_caches_identical_mapper_state():

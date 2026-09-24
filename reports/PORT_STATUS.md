@@ -1,5 +1,23 @@
 # Renegade Vita port status
 
+Current candidate: A3.5-dev194 passed canonical host/sanitizer, 174 existing
+tests, original M00/M01 host-runtime cycles, ARM, SELF/VPK identity, and
+diagnostics packaging; installed to Vita3K but not launched. The four animated
+render models consumed at the end of the candidate-matched Dev192 M01 trace are
+now warm-only, preserving fresh per-cinematic instance state. They are
+`vxag_nod_heli`, `VxAG_X1Borca`, `X1c_AG_xplosion`, and `X1C_AG_Missile`; other
+M01 preparation remains unchanged. The Dev193 sampled PostThink profiler
+restoration is included. VPK SHA-256
+`8b7ba2c0bcb8a57eaee978041ca47765807492b09d14329e6c0652e4da61c15c`; install
+receipt `build/vita3k-backups/A3.5-dev194-setup-20260924T024409349999Z/`.
+The Dev192 trace recorded M13 completion and M01 transition, then M01's first
+visible frame (5.93 s) and frame-2 entry into `X1H_Hover_Troop.txt`; it ends
+after those four cache consumes. The freeze call is not identified. M01 freeze
+resolution, rope animation, finale double-Havoc, and performance are not yet
+verified. Two focused source contracts passed post-build and are wired into the
+next canonical test run. See `BUILD_STATE.json`, `LIVE_PROGRESS.md`, and the
+Dev194 performance-ledger entry.
+
 Current candidate: A3.5-dev193 passes canonical host/sanitizer, 174-test,
 original M00/M01 host-runtime, ARM, SELF/VPK identity, and diagnostics
 packaging gates; installed to Vita3K but not launched over the active Dev192

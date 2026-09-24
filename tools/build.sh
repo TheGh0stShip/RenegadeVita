@@ -274,7 +274,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 
 echo "Clean-restaging original source pools with the deterministic patch set..."
 bash "$rv_root/tools/stage_sources.sh"
-python3 -m unittest tools.test_vita_text_readiness tools.test_vita_demo_ending tools.test_wwui_resource_styles tools.test_vita_touch_presentation tools.test_vita_user_settings tools.test_vita_text_entry tools.test_vita_select_tap
+python3 -m unittest tools.test_vita_text_readiness tools.test_vita_demo_ending tools.test_wwui_resource_styles tools.test_vita_touch_presentation tools.test_vita_user_settings tools.test_vita_text_entry tools.test_vita_select_tap tools.test_vita_m13_cinematic_preparation
 if find "$rv_root/staging" -type f \
 	\( -name '*.orig' -o -name '*.rej' \) -print -quit | grep -q .; then
 	echo "Staging contains patch backup/reject debris." >&2

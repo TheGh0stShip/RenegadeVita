@@ -1,5 +1,35 @@
 # Live engineering progress
 
+## Dev194: fresh instances for the first M01 aircraft sequence
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: collect a matching Dev194 M01 startup trace after the open Vita3K process
+is closed; the app was not launched by the build.
+Completed: the four animated models consumed immediately before the Dev192 M01
+log cutoff (`vxag_nod_heli`, `VxAG_X1Borca`, `X1c_AG_xplosion`,
+`X1C_AG_Missile`) are now warmed then released, not retained as mutable live
+objects. Other M01 preparation entries remain unchanged. Dev193's exact,
+guarded PostThink sampler restoration is included. The two source contracts
+are now registered with the canonical unittest suite.
+Evidence: canonical host/sanitizer, 174 existing tests, original M00/M01 host
+runtime cycles, ARM/SELF/VPK identity, diagnostics, and Vita3K installation
+PASS; the two new source contracts PASS directly after build and are wired for
+the next build's full test run. Dev194 VPK SHA-256
+`8b7ba2c0bcb8a57eaee978041ca47765807492b09d14329e6c0652e4da61c15c`; receipt:
+`build/vita3k-backups/A3.5-dev194-setup-20260924T024409349999Z/`.
+Matching Dev192 evidence: M13 recorded original mission completion success at
+frame 8222 and selected next source `M01.mix`. M01 initialized; its first
+visible frame took 5.93 s, including intrusive PostThink measurement of
+1.89 s over 443 objects. Frame 2 entered `X1H_Hover_Troop.txt`; the last
+complete records then show the four retained model instances above. This is a
+specific boundary, not a verified hang call. No runtime fix is accepted yet.
+Next: rerun M01 startup with Dev194 and verify the aircraft sequence advances;
+separately trace the M13 `X00_Havoc_Traj` rope animation and `X0Z_Finale.txt`
+duplicate-Havoc presentation.
+Blocker: runtime confirmation of all three user-reported issues is pending.
+
 ## Dev193: restore sampled PostThink profiler after staging preservation
 
 Renegade Vita - v3.5 active

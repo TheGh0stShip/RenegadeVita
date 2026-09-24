@@ -1,5 +1,37 @@
 # Performance hypothesis ledger
 
+## Dev194: prevent retained-instance reuse in the M01 opening sequence
+
+- Evidence: candidate-matched Dev192 log records M13 original completion
+  success at frame 8222 and normal selection of `M01.mix`. M01 initializes;
+  first visible frame is 5.93 s (5.03 s simulation, 0.90 s rendering), while
+  its intrusive per-object PostThink profiler accounts for 1.89 s over 443
+  objects. At M01 frame 2, `X1H_Hover_Troop.txt` begins; the final complete
+  records show cached instances consumed for `vxag_nod_heli`,
+  `X1c_AG_xplosion`, `VxAG_X1Borca`, and `X1C_AG_Missile`. These names and
+  event ordering match the first authored M01 beach-aircraft sequence in
+  retail `M01.mix`'s `x1c_intro.txt`. The log terminates here; it does not
+  identify the blocking function or prove these consumes caused the hang.
+- Change: these four mutable animated models are now warm-only during M01
+  preparation. Their prototypes are touched during loading, then the temporary
+  instances are released; original cinematic commands still create fresh
+  instances, attach them, and play authored animations. All other M01 retained
+  preparation is unchanged. Dev193's deterministic sampled PostThink fix is
+  also included.
+- Verification: canonical host/sanitizer, 174 existing Python tests, original
+  M00/M01 host runtime cycles, ARM, SELF/VPK identity, diagnostic bundle, and
+  Vita3K install passed. Two focused instrumentation/M01 source tests passed
+  directly after the build; they are now wired into the canonical suite for the
+  next run. Dev194 VPK SHA-256
+  `8b7ba2c0bcb8a57eaee978041ca47765807492b09d14329e6c0652e4da61c15c`.
+- Runtime: Dev194 is installed but not launched. The user's Vita3K process was
+  left untouched. This is a targeted lifetime hypothesis, not a verified M01
+  freeze fix or performance improvement. Havoc rope-animation and finale
+  double-image behavior were not changed.
+- Decision: keep pending a matching Dev194 opening-scene capture, including
+  whether `x1c_intro.txt` completes, the first NOD aircraft appears, and
+  persistent progress reaches a stable M01 frame.
+
 ## Dev193: sampled PostThink object timing restored after preservation patch
 
 - Evidence: Dev192's first M01 frame took 5.93 s (5.03 s simulation,

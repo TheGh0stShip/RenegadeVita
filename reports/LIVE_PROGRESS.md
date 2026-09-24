@@ -1,5 +1,30 @@
 # Live engineering progress
 
+## Dev193: restore sampled PostThink profiler after staging preservation
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: wait for the active Dev192 Vita3K session to close, then run installed
+Dev193 on the same M13-to-M01 route with a candidate-matched flight bundle.
+Completed: canonical staging now verifies the preserved `gameobjmanager.cpp`
+hash and reapplies its exact guarded PostThink sampler transform after the
+Dev190 preservation patch. This restores 1-in-16 per-object timing and limits
+object ID/name lookup to sampled entries; exact eligible-object counts remain.
+Evidence: focused sampler regression, all 174 Python tests, host/sanitizer and
+M00/M01 runtime checks, ARM/SELF/VPK identity, diagnostics hashes, and Vita3K
+installation PASS. VPK SHA-256
+`d373428f36dbbeb533e074464f6a72a0eea910cd522a851565b91284b4c0a8c9`; receipt:
+`build/vita3k-backups/A3.5-dev193-setup-20260924T021712937253Z/`. Dev192 log
+reported its first M01 frame at 5.93 s (5.03 s simulation, 0.90 s render), but
+its per-object profiler itself consumed 1.89 s in PostThink; that is intrusive
+measurement, not a clean baseline. The active Vita3K process was not replaced
+or relaunched. No M01 plane-freeze, rope animation, finale model, or performance
+fix is claimed.
+Next: obtain Dev193 flight telemetry and check the first M01 aircraft event;
+trace rope descent and finale Havoc against the authored cinematic runtime.
+Blocker: all three reported runtime defects await matching, direct evidence.
+
 ## Dev192: campaign log durability and complete records
 
 Renegade Vita - v3.5 active

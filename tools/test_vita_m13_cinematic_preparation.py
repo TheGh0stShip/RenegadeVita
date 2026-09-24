@@ -180,6 +180,25 @@ def test_vita_hud_rejects_invalid_target_projection():
     assert "combat-a35-hud-target-box-nan-guard.patch" in stage
 
 
+def test_preservation_patch_cannot_restore_per_object_postthink_timing():
+    stage = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
+    restore = (ROOT / "tools" / "restore_postthink_sampler.py").read_text(encoding="utf-8")
+    preserve = stage.index('a35-dev190-staging-preserve.patch"')
+    sampler = stage.index("restore_postthink_sampler.py")
+    receipt = stage.index("--write-staging-receipt", sampler)
+    staged = GAMEOBJ_MANAGER.read_text(encoding="utf-8")
+    assert preserve < sampler < receipt
+    assert "def replace_once" in restore
+    assert 'text.count(before) != 1' in restore
+    assert "vita_sampled_object_count" in staged
+    assert "(vita_object_count++ & 15U) == vita_sample_offset" in staged
+    assert "sampled=%u stride=16" in staged
+    post_think = staged[staged.index("int\tGameObjManager::Post_Think()"):]
+    post_think = post_think[:post_think.index("\n}")]
+    assert "const uint64_t vita_object_start_us = sceKernelGetProcessTimeWide();" not in post_think
+    assert "const uint64_t vita_object_start_us = vita_sample_object ?" in post_think
+
+
 def test_vita_texture_transform_boundary_caches_identical_mapper_state():
     text = (ROOT / "port" / "renderer" / "vita" / "ww3d_dx8_boundary.cpp").read_text(encoding="utf-8")
     assert "g_applied_texture_transform_valid" in text

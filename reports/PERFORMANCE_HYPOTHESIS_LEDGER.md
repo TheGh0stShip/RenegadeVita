@@ -1,5 +1,31 @@
 # Performance hypothesis ledger
 
+## Dev193: sampled PostThink object timing restored after preservation patch
+
+- Evidence: Dev192's first M01 frame took 5.93 s (5.03 s simulation,
+  0.90 s rendering). The PostThink recorder attributed 1.89 s to its 443-object
+  pass, but made two process-time calls and object identity/name lookups for
+  every eligible object. This instrumentation materially contaminated its own
+  measurements; it is not evidence that the uninstrumented game spends 1.89 s
+  there.
+- Change: after the deterministic Dev190 preservation patch, verify the exact
+  preserved `gameobjmanager.cpp` SHA-256 and reapply the exact guarded 1-in-16
+  sample transform. Keep exact object counts; time and resolve identity/name
+  only for sampled entries. Added a source regression preventing preservation
+  from silently restoring per-object timing.
+- Verification: focused test, all 174 Python tests, canonical host/sanitizer,
+  original M00/M01 host-runtime checks, ARM/SELF/VPK identity, package hashes,
+  diagnostics, and Vita3K installation pass. The installed receipt is
+  `build/vita3k-backups/A3.5-dev193-setup-20260924T021712937253Z/`. VPK SHA-256
+  `d373428f36dbbeb533e074464f6a72a0eea910cd522a851565b91284b4c0a8c9`.
+- Runtime: Dev193 has not been launched because the user's Dev192 Vita3K
+  session remains active. It does not directly alter M01 aircraft preparation,
+  cinematic actor rendering, rope animation, or mission scripts. No freeze,
+  animation, or frame-time fix is accepted yet.
+- Decision: retain the sampling correction to produce less intrusive hotspot
+  data. Compare same-route M13/M01 timing and inspect first-plane progress in a
+  matching Dev193 run before drawing performance or correctness conclusions.
+
 ## Dev192: campaign log sync overhead and truncated records (2026-09-23)
 
 - Hypothesis: synchronizing the persistent runtime log after every emitted

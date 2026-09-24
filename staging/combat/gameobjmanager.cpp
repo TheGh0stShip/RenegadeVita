@@ -428,6 +428,9 @@ int	GameObjManager::Post_Think()
 	int vita_top_object_id[4] = { 0, 0, 0, 0 };
 	const char *vita_top_object_name[4] = { "", "", "", "" };
 	unsigned vita_object_count = 0U;
+	unsigned vita_sampled_object_count = 0U;
+	static unsigned vita_sample_phase = 0U;
+	const unsigned vita_sample_offset = vita_sample_phase++ & 15U;
 #endif
 	for (	objnode = GameObjList.Head(); objnode; objnode = objnode->Next()) {
 
@@ -438,14 +441,16 @@ int	GameObjManager::Post_Think()
 
 		if ( !objnode->Data()->Is_Hibernating() && objnode->Data()->Is_Post_Think_Allowed() ) {
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-			const uint64_t vita_object_start_us = sceKernelGetProcessTimeWide();
-			const int vita_object_id = objnode->Data()->Get_ID();
-			const char *vita_object_name = objnode->Data()->Get_Definition().Get_Name();
+			const bool vita_sample_object = (vita_object_count++ & 15U) == vita_sample_offset;
+			const uint64_t vita_object_start_us = vita_sample_object ? sceKernelGetProcessTimeWide() : 0U;
+			const int vita_object_id = vita_sample_object ? objnode->Data()->Get_ID() : 0;
+			const char *vita_object_name = vita_sample_object ? objnode->Data()->Get_Definition().Get_Name() : "";
 #endif
 			objnode->Data()->Post_Think();
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+			if (vita_sample_object) {
 			const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
-			++vita_object_count;
+			++vita_sampled_object_count;
 			for (unsigned vita_rank = 0U; vita_rank < 4U; ++vita_rank) {
 				if (vita_object_us > vita_top_object_us[vita_rank]) {
 					for (unsigned vita_move = 3U; vita_move > vita_rank; --vita_move) {
@@ -458,6 +463,7 @@ int	GameObjManager::Post_Think()
 					vita_top_object_name[vita_rank] = vita_object_name != NULL ? vita_object_name : "";
 					break;
 				}
+			}
 			}
 #endif
 		}
@@ -479,10 +485,11 @@ int	GameObjManager::Post_Think()
 	static unsigned vita_slow_post_reports = 0U;
 	if (vita_post_end_us - vita_post_start_us >= 500000U &&
 		vita_slow_post_reports++ < 8U) {
-		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u top0=%llu/%d/%s top1=%llu/%d/%s top2=%llu/%d/%s top3=%llu/%d/%s observers_us=%llu scripts_us=%llu\n",
+		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u sampled=%u stride=16 top0=%llu/%d/%s top1=%llu/%d/%s top2=%llu/%d/%s top3=%llu/%d/%s observers_us=%llu scripts_us=%llu\n",
 			static_cast<unsigned long long>(vita_post_end_us - vita_post_start_us),
 			static_cast<unsigned long long>(vita_objects_end_us - vita_post_start_us),
 			vita_object_count,
+			vita_sampled_object_count,
 			static_cast<unsigned long long>(vita_top_object_us[0]), vita_top_object_id[0], vita_top_object_name[0],
 			static_cast<unsigned long long>(vita_top_object_us[1]), vita_top_object_id[1], vita_top_object_name[1],
 			static_cast<unsigned long long>(vita_top_object_us[2]), vita_top_object_id[2], vita_top_object_name[2],

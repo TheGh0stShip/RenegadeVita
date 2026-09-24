@@ -741,4 +741,11 @@ for name in sys.argv[1:]:
 PY
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage" -p1 < "$rv_root/port/patches/a35-dev190-staging-preserve.patch"
 echo "Applied: port/patches/a35-dev190-staging-preserve.patch"
+rv_gameobjmanager_preserved_sha=$(sha256sum "$rv_stage/combat/gameobjmanager.cpp" | cut -d' ' -f1)
+if [[ "$rv_gameobjmanager_preserved_sha" != "eeba783cab1f52778dcc98e0287d39ab1ee956999041a29eb06373bcab600d91" ]]; then
+	echo "Refusing unanchored PostThink sampler restoration: gameobjmanager.cpp changed ($rv_gameobjmanager_preserved_sha)" >&2
+	exit 1
+fi
+python3 "$rv_root/tools/restore_postthink_sampler.py" "$rv_stage/combat/gameobjmanager.cpp"
+echo "Restored sampled PostThink timing in staged GameObjManager::Post_Think"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

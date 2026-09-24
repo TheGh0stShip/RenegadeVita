@@ -1,5 +1,20 @@
 # Renegade Vita port status
 
+Current candidate: A3.5-dev193 passes canonical host/sanitizer, 174-test,
+original M00/M01 host-runtime, ARM, SELF/VPK identity, and diagnostics
+packaging gates; installed to Vita3K but not launched over the active Dev192
+session. Canonical staging now verifies the preserved `gameobjmanager.cpp`
+baseline and reapplies the exact guarded PostThink sampler transform after the
+Dev190 preservation patch, restoring 1-in-16 per-object timing and sampled-only
+object identity lookup. Exact eligible-object counts remain. VPK SHA-256
+`d373428f36dbbeb533e074464f6a72a0eea910cd522a851565b91284b4c0a8c9`; install
+receipt `build/vita3k-backups/A3.5-dev193-setup-20260924T021712937253Z/`.
+Dev192's 5.93 s first M01 frame included 5.03 s simulation, but 1.89 s of its
+PostThink profiler was intrusive, per-object timing; this does not establish
+that instrumentation caused the freeze or all of the stall. M01 aircraft
+freeze, Havoc rope animation, finale double-Havoc, and performance remain
+unverified. See `BUILD_STATE.json`, `LIVE_PROGRESS.md`, and the Dev193 ledger.
+
 Current candidate: A3.5-dev192 passes canonical host/sanitizer, 174-test,
 original M00/M01 host-runtime, ARM, SELF/VPK identity, and diagnostics packaging
 gates; it is installed in Vita3K but not launched. Campaign runtime-log appends

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "1ec77808c7406bd11210ee1c235198e72ef6ca00a006f85d9934bcf7bd30ea9f",
+  "stage_script_sha256": "fcf8877286195a88bff5be5ba2af2f10b8c93dd7a1dce8de4892a639ab2ecfb0",
   "patch_count": 202,
   "patches": [
     {
@@ -1015,5 +1015,5 @@
       "sha256": "8597377222ff18fb9956bbf4da9de16439b91cb961b6f18123bfa0b907129a91"
     }
   ],
-  "registry_sha256": "9dcc8f86504b285bf907990e8db2d7dc48fa3f7dd3eaf01ae76d2166e46037b1"
+  "registry_sha256": "f2dcd234b1fff520f58c397e478d35d4413f43af3401318e6afb1d843ee628d9"
 }

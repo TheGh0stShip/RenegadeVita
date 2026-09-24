@@ -1,0 +1,545 @@
+diff --git b/combat/action.cpp a/combat/action.cpp
+index 9f38be8..954a8d4 100755
+--- b/combat/action.cpp
++++ a/combat/action.cpp
+@@ -371,6 +371,13 @@ SimplePersistFactoryClass<PlayAnimationActionCodeClass, CHUNKID_ACTION_CODE_PLAY
+ 
+ class	PlayAnimationActionCodeClass : public ActionCodeClass {
+ public:
++	PlayAnimationActionCodeClass( void ) :
++		StartActCount( 0 ),
++		LastFrame( -1.0f ),
++		StalledFrames( 0 )
++	{
++	}
++
+ 	virtual const PersistFactoryClass &	Get_Factory( void ) const	{ return _PlayAnimationActionCodeClassFactory; }
+ 
+ 	/*
+@@ -416,6 +423,9 @@ public:
+ 
+ 		WWASSERT( obj->Get_Anim_Control() != NULL );
+ 		obj->Set_Animation( action->Get_Parameters().SafeAnimationName, action->Get_Parameters().AnimationLooping );
++		StartActCount = action->Get_Act_Count();
++		LastFrame = -1.0f;
++		StalledFrames = 0;
+ 	}
+ 
+ 	virtual	void	Shutdown( void )
+@@ -445,8 +455,41 @@ public:
+ 			return ACTION_DONE;
+ 		}
+ 
++		if ( !Action->Get_Parameters().AnimationLooping ) {
++			const float frame = obj->Get_Anim_Control()->Get_Current_Frame();
++			if ( frame <= LastFrame + 0.001f ) {
++				++StalledFrames;
++			} else {
++				LastFrame = frame;
++				StalledFrames = 0;
++			}
++
++			const unsigned int elapsed_frames = Action->Get_Act_Count() - StartActCount;
++			if ( elapsed_frames > 1800 || StalledFrames > 300 ) {
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++				static unsigned vita_reports = 0U;
++				if ( vita_reports++ < 32U ) {
++					A30_Vita_Log("A4 animation action forced complete: obj=%d def=%s anim=%s elapsed_frames=%u stalled_frames=%u frame=%.3f\n",
++						obj->Get_ID(),
++						obj->Get_Definition().Get_Name(),
++						Action->Get_Parameters().SafeAnimationName.Peek_Buffer(),
++						elapsed_frames,
++						StalledFrames,
++						frame);
++				}
++#endif
++				Action->Done( ACTION_COMPLETE_NORMAL );
++				return ACTION_DONE;
++			}
++		}
++
+ 		return ACTION_IN_PROGRESS;
+ 	}
++
++private:
++	unsigned int StartActCount;
++	float LastFrame;
++	unsigned int StalledFrames;
+ };
+ 
+ 
+diff --git b/combat/animcontrol.h a/combat/animcontrol.h
+index e8bb8e1..d411386 100755
+--- b/combat/animcontrol.h
++++ a/combat/animcontrol.h
+@@ -100,7 +100,7 @@ public:
+ 	// Set Mode
+ 	void			Set_Mode( AnimMode mode, float frame = -1 );
+ 	AnimMode		Get_Mode( void )					{ return Mode; }
+-	bool			Is_Complete( void )				{ return (Animation == NULL) || ((Mode == ANIM_MODE_ONCE) && (Frame == NumFrames-1)) || ((Mode == ANIM_MODE_TARGET) && (Frame == TargetFrame)); }
++	bool			Is_Complete( void )				{ return (Animation == NULL) || ((Mode == ANIM_MODE_ONCE) && (Frame >= NumFrames-1)) || ((Mode == ANIM_MODE_TARGET) && (Frame == TargetFrame)); }
+ 	const char *Get_Animation_Name( void )		{ return Animation ? Animation->Get_Name() : ""; }
+ 
+ 	// Frame
+@@ -307,4 +307,3 @@ private:
+ 
+ #endif		// ANIMCONTROL_H
+ 
+-
+diff --git b/combat/bullet.cpp a/combat/bullet.cpp
+index 85a4a5c..a39e9be 100755
+--- b/combat/bullet.cpp
++++ a/combat/bullet.cpp
+@@ -546,7 +546,9 @@ void BulletClass::Init( const BulletDataClass & data, float progress_time, const
+ 		// We don't need to do anything
+ 	} else {
+ 		RenderObjClass * model = NULL;
+-		model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj( BulletData.AmmoDefinition->ModelName );
++		if ( model == NULL ) {
++			model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj( BulletData.AmmoDefinition->ModelName );
++		}
+ 
+ 		// If no name is given, lets create the NULL render obj
+ 		if ( model == NULL ) {
+@@ -1070,4 +1072,3 @@ bool	BulletManager::Load( ChunkLoadClass &cload )
+ 	}
+ 	return true;
+ }
+-
+diff --git b/combat/combat.cpp a/combat/combat.cpp
+index d9a2ed1..d135e74 100755
+--- b/combat/combat.cpp
++++ a/combat/combat.cpp
+@@ -53,6 +53,7 @@
+ #include "bones.h"
+ #include "humanstate.h"
+ #include "surfaceeffects.h"
++#include "explosion.h"
+ #include "debug.h"
+ #include "backgroundmgr.h"
+ #include "cover.h"
+@@ -253,6 +254,8 @@ void	CombatManager::Shutdown( void )
+ 
+ 	ObjectiveManager::Shutdown();
+ 
++	ExplosionManager::Shutdown();
++
+ 	SurfaceEffectsManager::Shutdown();
+ 
+ 	CCameraClass::Shutdown();
+@@ -1424,5 +1427,3 @@ void	CombatManager::Register_Star_Killer( ArmedGameObj * killer )
+ 
+ 
+ 
+-
+-
+diff --git b/combat/effectrecycler.cpp a/combat/effectrecycler.cpp
+index 87dafaf..b32920d 100755
+--- b/combat/effectrecycler.cpp
++++ a/combat/effectrecycler.cpp
+@@ -107,6 +107,40 @@ void EffectRecyclerClass::Reset(void)
+ 	InactiveTDecos.Reset_List();
+ }
+ 
++/***********************************************************************************************
++ * EffectRecyclerClass::Preload_Effect -- pre-seed recyclable timed effects                    *
++ *                                                                                             *
++ * INPUT:                                                                                      *
++ *                                                                                             *
++ * OUTPUT:                                                                                     *
++ *                                                                                             *
++ * WARNINGS:                                                                                   *
++ *                                                                                             *
++ * HISTORY:                                                                                    *
++ *=============================================================================================*/
++void EffectRecyclerClass::Preload_Effect(TimedDecorationPhysDefClass * def,const Matrix3D & tm,int count)
++{
++	if (def != NULL) {
++		Preload_Effect(def->Get_Model_Name(),tm,count);
++	}
++}
++
++void EffectRecyclerClass::Preload_Effect(const char * robj_name,const Matrix3D & tm,int count)
++{
++	if ((robj_name == NULL) || (count <= 0)) {
++		return;
++	}
++
++	for (int i = 0; i < count; ++i) {
++		RenderObjClass * model = internal_get_model(robj_name,tm);
++		if (model == NULL) {
++			break;
++		}
++		ModelRecycler.Return_Render_Object(model);
++		REF_PTR_RELEASE(model);
++	}
++}
++
+ 
+ /***********************************************************************************************
+  * EffectRecyclerClass::Spawn_Effect -- Spawn a timed effect into the combat scene             *
+@@ -255,4 +289,3 @@ RenderObjClass * EffectRecyclerClass::internal_get_model(const char * robj_name,
+ 
+ 	return model;
+ }
+-
+diff --git b/combat/effectrecycler.h a/combat/effectrecycler.h
+index b1a57c7..98ec483 100755
+--- b/combat/effectrecycler.h
++++ a/combat/effectrecycler.h
+@@ -72,6 +72,8 @@ public:
+ 	~EffectRecyclerClass(void);
+ 
+ 	void					Reset(void);
++	void					Preload_Effect(TimedDecorationPhysDefClass * definition,const Matrix3D & tm,int count = 1);
++	void					Preload_Effect(const char * render_obj_name,const Matrix3D & tm,int count = 1);
+ 	void					Spawn_Effect(TimedDecorationPhysDefClass * definition,const Matrix3D & tm);
+ 	void					Spawn_Effect(const char * render_obj_name,const Matrix3D & tm,float time = -1.0f);
+ 	
+@@ -94,4 +96,3 @@ private:
+ 
+ #endif //EFFECTRECYCLER_H
+ 
+-
+diff --git b/combat/explosion.cpp a/combat/explosion.cpp
+index 69701c9..685469f 100755
+--- b/combat/explosion.cpp
++++ a/combat/explosion.cpp
+@@ -54,6 +54,7 @@
+ #include "smartgameobj.h"
+ #include "building.h"
+ #include "scexplosionevent.h"
++#include "effectrecycler.h"
+ 
+ /*
+ ** ExplosionDefinitionClass
+@@ -62,6 +63,8 @@ SimplePersistFactoryClass<ExplosionDefinitionClass, CHUNKID_EXPLOSION_DEF>	_Expl
+ 
+ DECLARE_DEFINITION_FACTORY(ExplosionDefinitionClass, CLASSID_DEF_EXPLOSION, "Explosion") _ExplosionDefDefFactory;
+ 
++static EffectRecyclerClass _ExplosionEffectRecycler;
++
+ uint32	ExplosionDefinitionClass::Get_Class_ID (void) const	{ return CLASSID_DEF_EXPLOSION; }
+ const PersistFactoryClass & ExplosionDefinitionClass::Get_Factory (void) const { return _ExplosionDefPersistFactory; }
+ 
+@@ -193,6 +196,29 @@ bool	ExplosionDefinitionClass::Load( ChunkLoadClass &cload )
+ 	return true;
+ }
+ 
++void	ExplosionManager::Shutdown( void )
++{
++	_ExplosionEffectRecycler.Reset();
++}
++
++bool	ExplosionManager::Prepare_Explosion_Render_Objects( int explosion_def_id, int count )
++{
++	ExplosionDefinitionClass * explosion_def = (ExplosionDefinitionClass *)DefinitionMgrClass::Find_Definition( explosion_def_id );
++	if ( explosion_def == NULL || explosion_def->PhysDefID == 0 || count <= 0 ) {
++		return false;
++	}
++
++	PhysDefClass * phys_def = (PhysDefClass *)DefinitionMgrClass::Find_Definition( explosion_def->PhysDefID );
++	if ( phys_def == NULL || !phys_def->Is_Type( "TimedDecorationPhysDef" ) ) {
++		return false;
++	}
++
++	TimedDecorationPhysDefClass * timed_def = (TimedDecorationPhysDefClass *)phys_def;
++	Matrix3D tm(1);
++	_ExplosionEffectRecycler.Preload_Effect( timed_def, tm, count );
++	return true;
++}
++
+ /*
+ **
+ */
+@@ -234,34 +260,37 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
+ 		if ( phys_def != NULL ) {
+ 			WWASSERT( phys_def );
+ 			WWASSERT( phys_def->Is_Type( "TimedDecorationPhysDef" ) );
+-			TimedDecorationPhysClass * explosion = (TimedDecorationPhysClass *)phys_def->Create();
+-			if ( explosion ) {
+-				RenderObjClass * model = explosion->Peek_Model();
+-				WWASSERT(model != NULL);
+-				if (model != NULL) {
+-
+-					explosion->Set_Transform( up_tm );
+-
+-					if (model->Get_HTree() != NULL && explosion_def->AnimatedExplosion) {
+-
+-						// Auto play an explosion anim if we find it
+-						StringClass	exp_anim_name;
+-						exp_anim_name.Format( "%s.%s",
+-							model->Get_HTree()->Get_Name(),
+-							model->Get_HTree()->Get_Name() );
+-						WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
+-						HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim( exp_anim_name );
+-						if ( anim != NULL ) {
+-							model->Set_Animation( anim, 0, RenderObjClass::ANIM_MODE_ONCE );
+-							anim->Release_Ref();
++			if ( explosion_def->AnimatedExplosion && phys_def->Is_Type( "TimedDecorationPhysDef" ) ) {
++				_ExplosionEffectRecycler.Spawn_Effect( (TimedDecorationPhysDefClass *)phys_def, up_tm );
++			} else {
++				TimedDecorationPhysClass * explosion = (TimedDecorationPhysClass *)phys_def->Create();
++				if ( explosion ) {
++					RenderObjClass * model = explosion->Peek_Model();
++					WWASSERT(model != NULL);
++					if (model != NULL) {
++
++						explosion->Set_Transform( up_tm );
++
++						if (model->Get_HTree() != NULL && explosion_def->AnimatedExplosion) {
++
++							// Auto play an explosion anim if we find it
++							StringClass	exp_anim_name;
++							exp_anim_name.Format( "%s.%s",
++								model->Get_HTree()->Get_Name(),
++								model->Get_HTree()->Get_Name() );
++							WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
++							HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim( exp_anim_name );
++							if ( anim != NULL ) {
++								model->Set_Animation( anim, 0, RenderObjClass::ANIM_MODE_ONCE );
++								anim->Release_Ref();
++							}
+ 						}
+-					}
+ 
+-					WWASSERT(COMBAT_SCENE != NULL);
+-					COMBAT_SCENE->Add_Dynamic_Object( explosion );
++						WWASSERT(COMBAT_SCENE != NULL);
++						COMBAT_SCENE->Add_Dynamic_Object( explosion );
++					}
++					explosion->Release_Ref();
+ 				}
+-				explosion->Release_Ref();
+-
+ 			}
+ 		}
+ 	}
+@@ -436,4 +465,4 @@ void	ExplosionManager::Explode( int explosion_def_id, const Vector3 & pos, int o
+ 		is_enabled = false;
+ 	}
+ #endif // WWDEBUG
+-/**/
+\ No newline at end of file
++/**/
+diff --git b/combat/explosion.h a/combat/explosion.h
+index 6ca8b13..4249872 100755
+--- b/combat/explosion.h
++++ a/combat/explosion.h
+@@ -86,6 +86,9 @@ public:
+ class	ExplosionManager {
+ 
+ public:
++	static	void	Shutdown( void );
++	static	bool	Prepare_Explosion_Render_Objects( int explosion_id, int count = 1 );
++
+ 	static	void	Create_Explosion_At( int exlosion_id, const Vector3 & pos, ArmedGameObj * damager, const Vector3 & blast_direction = Vector3( 0,0,-1), DamageableGameObj * force_victim = NULL );
+ 	static	void	Create_Explosion_At( int exlosion_id, const Matrix3D & tm, ArmedGameObj * damager, const Vector3 & blast_direction = Vector3( 0,0,-1), DamageableGameObj * force_victim = NULL  );
+ 
+diff --git b/combat/gameobjmanager.cpp a/combat/gameobjmanager.cpp
+index 2303844..85e8936 100755
+--- b/combat/gameobjmanager.cpp
++++ a/combat/gameobjmanager.cpp
+@@ -428,9 +428,6 @@ int	GameObjManager::Post_Think()
+ 	int vita_top_object_id[4] = { 0, 0, 0, 0 };
+ 	const char *vita_top_object_name[4] = { "", "", "", "" };
+ 	unsigned vita_object_count = 0U;
+-	unsigned vita_sampled_object_count = 0U;
+-	static unsigned vita_sample_phase = 0U;
+-	const unsigned vita_sample_offset = vita_sample_phase++ & 15U;
+ #endif
+ 	for (	objnode = GameObjList.Head(); objnode; objnode = objnode->Next()) {
+ 
+@@ -441,16 +438,14 @@ int	GameObjManager::Post_Think()
+ 
+ 		if ( !objnode->Data()->Is_Hibernating() && objnode->Data()->Is_Post_Think_Allowed() ) {
+ #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+-			const bool vita_sample_object = (vita_object_count++ & 15U) == vita_sample_offset;
+-			const uint64_t vita_object_start_us = vita_sample_object ? sceKernelGetProcessTimeWide() : 0U;
+-			const int vita_object_id = vita_sample_object ? objnode->Data()->Get_ID() : 0;
+-			const char *vita_object_name = vita_sample_object ? objnode->Data()->Get_Definition().Get_Name() : "";
++			const uint64_t vita_object_start_us = sceKernelGetProcessTimeWide();
++			const int vita_object_id = objnode->Data()->Get_ID();
++			const char *vita_object_name = objnode->Data()->Get_Definition().Get_Name();
+ #endif
+ 			objnode->Data()->Post_Think();
+ #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+-			if (vita_sample_object) {
+-				const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
+-				++vita_sampled_object_count;
++			const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
++			++vita_object_count;
+ 			for (unsigned vita_rank = 0U; vita_rank < 4U; ++vita_rank) {
+ 				if (vita_object_us > vita_top_object_us[vita_rank]) {
+ 					for (unsigned vita_move = 3U; vita_move > vita_rank; --vita_move) {
+@@ -464,7 +459,6 @@ int	GameObjManager::Post_Think()
+ 					break;
+ 				}
+ 			}
+-			}
+ #endif
+ 		}
+ 	}
+@@ -485,11 +479,10 @@ int	GameObjManager::Post_Think()
+ 	static unsigned vita_slow_post_reports = 0U;
+ 	if (vita_post_end_us - vita_post_start_us >= 500000U &&
+ 		vita_slow_post_reports++ < 8U) {
+-		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u sampled=%u stride=16 top0=%llu/%d/%s top1=%llu/%d/%s top2=%llu/%d/%s top3=%llu/%d/%s observers_us=%llu scripts_us=%llu\n",
++		A30_Vita_Log("A4 slow PostThink: total_us=%llu objects_us=%llu count=%u top0=%llu/%d/%s top1=%llu/%d/%s top2=%llu/%d/%s top3=%llu/%d/%s observers_us=%llu scripts_us=%llu\n",
+ 			static_cast<unsigned long long>(vita_post_end_us - vita_post_start_us),
+ 			static_cast<unsigned long long>(vita_objects_end_us - vita_post_start_us),
+ 			vita_object_count,
+-			vita_sampled_object_count,
+ 			static_cast<unsigned long long>(vita_top_object_us[0]), vita_top_object_id[0], vita_top_object_name[0],
+ 			static_cast<unsigned long long>(vita_top_object_us[1]), vita_top_object_id[1], vita_top_object_name[1],
+ 			static_cast<unsigned long long>(vita_top_object_us[2]), vita_top_object_id[2], vita_top_object_name[2],
+diff --git b/combat/hud.cpp a/combat/hud.cpp
+index 8219d67..052dd13 100755
+--- b/combat/hud.cpp
++++ a/combat/hud.cpp
+@@ -1828,15 +1828,20 @@ static RectClass Get_Target_Box( PhysicalGameObj * obj )
+ #if defined(__vita__)
+ 	const Vector2 projected_top = top;
+ 	const Vector2 projected_bottom = bottom;
+-#endif
+-
+-	// Get Box in proper convention
+-#if defined(__vita__)
+-	if (!top.Is_Valid() || !bottom.Is_Valid()) {
+-		return RectClass(0.0f, 0.0f, 0.0f, 0.0f);
++	// A destroyed or mid-transition target can briefly expose an invalid
++	// transform. Never submit NaN coordinates to the Vita 2D stream: besides
++	// corrupting the target box, this can poison the following frame's GPU
++	// command buffer and present as a mission freeze.
++	if (!projected_top.Is_Valid() || !projected_bottom.Is_Valid()) {
++		RectClass screen = Render2DClass::Get_Screen_Resolution();
++		RectClass empty_box(0.0f, 0.0f, 0.0f, 0.0f);
++		Log_Vita_Target_Box_Diagnostics(obj, po, projected_top,
++			projected_bottom, screen, empty_box);
++		return empty_box;
+ 	}
+ #endif
+ 
++	// Get Box in proper convention
+ 	RectClass	screen = Render2DClass::Get_Screen_Resolution();
+ 	top.X = top.X * 0.5f + 0.5f;
+ 	top.Y = top.Y * -0.5f + 0.5f;
+diff --git b/combat/surfaceeffects.cpp a/combat/surfaceeffects.cpp
+index dee3cfa..5281605 100755
+--- b/combat/surfaceeffects.cpp
++++ a/combat/surfaceeffects.cpp
+@@ -234,7 +234,9 @@ void	PersistantSurfaceEmitterClass::Set_Emitter( const char * name )
+ 
+ 	// Start new Emitter
+ 	if ( name != NULL ) {
+-		Emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( name );
++		if ( Emitter == NULL ) {
++			Emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( name );
++		}
+ 		if ( Emitter ) {
+ 			SET_REF_OWNER( Emitter );
+ //			Emitter->Set_Remove_On_Complete( false );
+@@ -536,7 +538,10 @@ void	SurfaceEffectsManager::Apply_Effect
+ #if (RECYCLE_EMITTERS)
+ 		_EmitterRecycler.Spawn_Effect(emitter_name,tm);
+ #else
+-		ParticleEmitterClass * emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( emitter_name );
++		ParticleEmitterClass * emitter = NULL;
++		if ( emitter == NULL ) {
++			emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( emitter_name );
++		}
+ 		if ( emitter ) {
+ 			SET_REF_OWNER( emitter );
+ 			emitter->Set_Transform( tm );
+@@ -739,5 +744,3 @@ void SurfaceEffectsManager::Set_Override_Surface_Type(int type)
+ 
+ 	PhysicsConstants::Set_Override_Surface_Type(OverrideSurfaceType);
+ }
+-
+-
+diff --git b/scripts/Test_Cinematic.cpp a/scripts/Test_Cinematic.cpp
+index 41c43c0..8fc8dd3 100755
+--- b/scripts/Test_Cinematic.cpp
++++ a/scripts/Test_Cinematic.cpp
+@@ -1014,6 +1014,19 @@ public:
+ #endif
+ 	}
+ 
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++	bool Vita_Is_Budgeted_Campaign_Cinematic(void)
++	{
++		const char *filename = Get_Parameter("ControlFilename");
++		return filename != NULL &&
++			(strnicmp(filename, "X00_", 4) == 0 ||
++			 strnicmp(filename, "MX0_", 4) == 0 ||
++			 strnicmp(filename, "X0", 2) == 0 ||
++			 strnicmp(filename, "X1", 2) == 0 ||
++			 strnicmp(filename, "XG_M01", 6) == 0);
++	}
++#endif
++
+ 	void	Parse_Commands( GameObject* obj ) {
+ 
+ 		unsigned int sync_diff = Commands->Get_Sync_Time() - LastSyncTime;
+@@ -1026,6 +1039,13 @@ public:
+ 
+ //		Commands->Debug_Message( "Cinematic Time %1.3f Frame %1.3f Bump Time %1.3f\n", Time, Time * 30.0f, bump_time );
+ 
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++		const bool vita_budget_commands = Vita_Is_Budgeted_Campaign_Cinematic();
++		const uint64_t vita_budget_start_us =
++			vita_budget_commands ? sceKernelGetProcessTimeWide() : 0U;
++		unsigned vita_budget_command_count = 0U;
++#endif
++
+ 		// If Primary Destroyed, 
+ 		if ( PrimaryKilled ) {
+ 			// skip all timestamps < LAST_VALID_TIMESTAMP  
+@@ -1044,6 +1064,29 @@ public:
+ 			FrameSync = (Time - Controls->Time) * 30.0f;
+ 			Parse_Command( Controls->Command );
+ 			Remove_Head_Control_Line();
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++			++vita_budget_command_count;
++			if (vita_budget_commands && Controls != NULL && Controls->Time <= Time) {
++				const uint64_t elapsed_us = sceKernelGetProcessTimeWide() - vita_budget_start_us;
++				/* Keep authored command order, but cap a burst tightly enough that
++				** the simulation clock cannot run seconds behind the audio clock. */
++				if (elapsed_us >= 4000U || vita_budget_command_count >= 2U) {
++					static unsigned vita_budget_reports = 0U;
++					if (vita_budget_reports++ < 64U) {
++						A30_Vita_Log("A4 campaign cinematic budget yield: file=%s owner_id=%d commands=%u elapsed_us=%llu pending_time=%.3f current_time=%.3f\n",
++							Get_Parameter("ControlFilename"), MyID,
++							vita_budget_command_count,
++							static_cast<unsigned long long>(elapsed_us),
++							Controls->Time, Time);
++					}
++					Commands->Start_Timer( obj, this, 0.001f, 0 );
++					if ( IsCameraCinematic ) {
++						Commands->Enable_Cinematic_Freeze( obj, false );
++					}
++					return;
++				}
++			}
++#endif
+ 		}
+ 
+ 		if ( Controls != NULL ) {
+diff --git b/wwphys/phys.cpp a/wwphys/phys.cpp
+index 968e650..ed6f8a0 100755
+--- b/wwphys/phys.cpp
++++ a/wwphys/phys.cpp
+@@ -61,7 +61,7 @@
+ #include "a30_vita_runtime.h"
+ #if !RENEGADE_VITA_M00_DEMO
+ #include <psp2/kernel/processmgr.h>
+-RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name);
++extern RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name);
+ #endif
+ #endif
+ 
+@@ -874,4 +874,3 @@ bool PhysDefClass::Is_Type(const char * type_name)
+ 		return false;
+ 	}
+ }
+-

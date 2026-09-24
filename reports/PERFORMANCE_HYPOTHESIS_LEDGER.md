@@ -1,5 +1,27 @@
 # Performance hypothesis ledger
 
+## Dev191 tracked-vehicle UV time-unit correction (2026-09-23)
+
+- Evidence: `LinearOffsetTextureMapperClass::Set_UV_Offset_Delta` converts the
+  supplied rate from seconds to a per-millisecond increment, and `Apply`
+  integrates it using elapsed milliseconds. `TrackedVehicleClass::Render`
+  supplied distance accumulated between render calls as if it were a
+  per-second rate, multiplying the result by frame duration a second time.
+- Change: convert the measured world displacement to distance per second using
+  elapsed engine milliseconds; skip a fabricated first-render displacement and
+  reset sample history when a different model is installed. This preserves the
+  original mapper and render ownership.
+- Verification: 2 source contract tests pass; canonical host/sanitizer, 173
+  tests, M00/M01 host runtime, ARM/SELF/VPK identity, diagnostics package, and
+  Vita3K install passed. VPK SHA-256
+  `4d1c39b3fa9da16fb9a352cb1fab28445e46c4e10944c3abbb10dff0b11ed4eb`.
+- Runtime: Dev191 is installed but not launched. Tread animation, frame-time
+  improvement, and campaign behavior are unverified; this fix cannot explain or
+  claim resolution of the Ion Cannon freeze, NPC reload cadence, or mission lag.
+- Decision: retain the unit correction for candidate testing; require matching
+  runtime observation of moving tank tracks before accepting the tread issue as
+  fixed.
+
 ## Dev190 measured regressions and corrective candidate (2026-09-23)
 
 - Runtime identity: the installed Dev189 candidate's own persistent log

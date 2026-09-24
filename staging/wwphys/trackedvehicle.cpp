@@ -172,7 +172,9 @@ TrackedVehicleClass::TrackedVehicleClass(void) :
 	LeftTrackMovement(0),
 	RightTrackMovement(0),
 	LeftTrackLastPosition(0,0,0),
-	RightTrackLastPosition(0,0,0)
+	RightTrackLastPosition(0,0,0),
+	LastTrackSyncTime(0),
+	TrackPositionsInitialized(false)
 {
 }
  
@@ -199,14 +201,22 @@ void TrackedVehicleClass::Render(RenderInfoClass & rinfo)
 	Vector3 forward;
 	tm.Get_X_Vector(&forward);
 
-	Vector3 move;
-	Vector3::Subtract(left_track_position,LeftTrackLastPosition,&move);										
-	LeftTrackMovement = Vector3::Dot_Product(move,forward);
-
-	Vector3::Subtract(right_track_position,RightTrackLastPosition,&move);
-	RightTrackMovement = Vector3::Dot_Product(move,forward);
+	const unsigned int sync_time = WW3D::Get_Sync_Time();
+	const unsigned int elapsed_ms = sync_time - LastTrackSyncTime;
+	if (!TrackPositionsInitialized) {
+		LeftTrackMovement = 0.0f;
+		RightTrackMovement = 0.0f;
+		TrackPositionsInitialized = true;
+	} else {
+		Vector3 move;
+		Vector3::Subtract(left_track_position,LeftTrackLastPosition,&move);
+		LeftTrackMovement = Vector3::Dot_Product(move,forward);
+		Vector3::Subtract(right_track_position,RightTrackLastPosition,&move);
+		RightTrackMovement = Vector3::Dot_Product(move,forward);
+	}
 	LeftTrackLastPosition = left_track_position;
 	RightTrackLastPosition = right_track_position;
+	LastTrackSyncTime = sync_time;
 	
 	/*
 	** Update the mappers
@@ -219,9 +229,12 @@ void TrackedVehicleClass::Render(RenderInfoClass & rinfo)
 		} else {
 			movement = RightTrackMovement;
 		}
+		const float movement_per_second = elapsed_ms > 0U ?
+			movement * 1000.0f / static_cast<float>(elapsed_ms) : 0.0f;
 
 		TrackMappers[i].Mapper->Set_UV_Offset_Delta(
-			Vector2(def->TrackUScaleFactor * movement,def->TrackVScaleFactor * movement) );
+			Vector2(def->TrackUScaleFactor * movement_per_second,
+				def->TrackVScaleFactor * movement_per_second));
 	}
 
 	/*
@@ -242,6 +255,8 @@ void TrackedVehicleClass::Update_Cached_Model_Parameters(void)
 	** Reset our array of mapper pointers
 	*/
 	TrackMappers.Delete_All(false);
+	TrackPositionsInitialized = false;
+	LastTrackSyncTime = WW3D::Get_Sync_Time();
 	
 	/*
 	** Make sure that this model has unique meshes for its tracks

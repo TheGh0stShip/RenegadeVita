@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "ae8e2611fa30bc59c836a6d99d37f13d0c7fbef419adccccd9480180388e828d",
-  "patch_count": 200,
+  "stage_script_sha256": "1ec77808c7406bd11210ee1c235198e72ef6ca00a006f85d9934bcf7bd30ea9f",
+  "patch_count": 202,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -937,22 +937,17 @@
     {
       "path": "port/patches/combat-a35-postthink-owner-timing.patch",
       "stage_directory": "combat",
-      "sha256": "bab159acd8ad90b5a916aa6ca261d2b8af51191b32022e1a1826591df91aa151"
+      "sha256": "9143a1d10da566176f2bf8b0108ec99af66a87d622e029113237d54c0b6c94c1"
+    },
+    {
+      "path": "port/patches/combat-a35-hud-target-box-nan-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "1d5f217c8ebefca8325df014e76b4bd3375fc5b6037e6d3c5edda891b1eb7db4"
     },
     {
       "path": "port/patches/combat-a35-script-timer-timing.patch",
       "stage_directory": "combat",
       "sha256": "3bff484128fa1bb5cc9caf9f41f71ed542dfb2d8d8e2e333671c8a6dd768df13"
-    },
-    {
-      "path": "port/patches/combat-a35-prepared-effect-cache.patch",
-      "stage_directory": "combat",
-      "sha256": "2978245bad6a1137004e206644497153e5695b853dc4aee4f73306cc46d37cbe"
-    },
-    {
-      "path": "port/patches/combat-a35-explosion-effect-recycler.patch",
-      "stage_directory": "combat",
-      "sha256": "e9d503268333a51653274760142b8a41cd33d4a305af48f483f8c300c4b67861"
     },
     {
       "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
@@ -972,12 +967,22 @@
     {
       "path": "port/patches/wwphys-a35-model-install-timing.patch",
       "stage_directory": "wwphys",
-      "sha256": "f087450f0de387bfa1c99fced4a501ed013fdbed2664bdb18239dd0f9b9ad665"
+      "sha256": "e50f37874bbae65a036fe1880d4e6120f098000a34d9b67b8dc83df3fdbd5e1a"
     },
     {
       "path": "port/patches/wwphys-a35-prepared-render-object-cache.patch",
       "stage_directory": "wwphys",
-      "sha256": "85288e21a1b12b6d1cd5bed578d887bc65b90d68e946637a6d72ac0539ce1b5f"
+      "sha256": "308082b730bca74870fda0871195b06896885ea1a93e837099ef5b78ccf05c0d"
+    },
+    {
+      "path": "port/patches/wwphys-a35-trackedvehicle-mesh-names.patch",
+      "stage_directory": "wwphys",
+      "sha256": "e48c1c4753ee475cf50289b8cb97dc9894a229c43b961c0ce2ab65a7f5e79cdc"
+    },
+    {
+      "path": "port/patches/wwphys-a35-trackedvehicle-delta-time.patch",
+      "stage_directory": "wwphys",
+      "sha256": "b4d6b03bf2a4ca91ea8bb60e758b8a37c008089719e9afad545408c6a1f07869"
     },
     {
       "path": "port/patches/ww3d2-a35-create-depth-timing.patch",
@@ -1003,7 +1008,12 @@
       "path": "port/patches/dev168-m13-loader-summary.patch",
       "stage_directory": "",
       "sha256": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
+    },
+    {
+      "path": "port/patches/a35-dev190-staging-preserve.patch",
+      "stage_directory": "",
+      "sha256": "8597377222ff18fb9956bbf4da9de16439b91cb961b6f18123bfa0b907129a91"
     }
   ],
-  "registry_sha256": "4ccdf71ded259d948d6029f73a9603d44858662887df53cab8187653d05e7beb"
+  "registry_sha256": "9dcc8f86504b285bf907990e8db2d7dc48fa3f7dd3eaf01ae76d2166e46037b1"
 }

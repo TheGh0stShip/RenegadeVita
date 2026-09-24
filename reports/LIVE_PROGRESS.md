@@ -1,36 +1,34 @@
 # Live engineering progress
 
-## Dev190: effect semantics, sampled simulation timing, canonical tread/HUD fixes
+## Dev191: tracked-vehicle tread timing and Dev190 staging preservation
 
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 current evidence gates complete`
 
-Now: analyze a matching Dev190 runtime capture against the Dev189 M13/M01 trace.
-Completed: canonical Dev190 host/sanitizer/ARM/VPK build passed; 173 host tests
-and original M00 world/interactive runtime checks passed. The exact candidate
-was installed and hash-verified in Vita3K, but not launched. Matched the
-persistent Dev189 log to the installed package; traced
-the 5.66 s M01 first frame (4.82 s simulation) and M13 p99/max (384.7/2486.1
-ms). The per-object diagnostic made 886 process-timer calls on M01's 443-object
-frame. Converted it to rotating 1/16 sampling. Restored original fresh volatile
-projectile/particle and explosion spawn paths after missing visual effects were
-reported. Registered the direct tread-name and NaN HUD guards as zero-fuzz
-source patches; both were previously lost during canonical staging.
-Evidence: Dev189 log identity/hash matches; 173 tests and M13/M01 source
-contracts pass; 200 ordered patches, VPK closure, identity checks, and Vita3K
-install receipt pass. Dev190 VPK SHA-256 is
-`e7ece5f02d71709a0d681777c6d74e9dfac8f4011267bf66358018e0146a8219`.
-The same log shows engineers
-registered and moving after the intro, while rocket-soldier id 1500000039 stays
-stationary in scripted `ANIMATION` after its action ends. This is not a fix for
-that authored actor behavior or proof of visible engineers. No performance,
-effect-visual, tread, A/V, or M01 freeze acceptance is claimed.
-Next: capture Dev190 M13 and M01 diagnostics through the installed-title path,
-then trace the first plane-arrival stall and verify the direct-track/effect/NPC
-visual behavior against the candidate-matched log and image evidence.
-Blocker: authored rocket-soldier stop/movement lifecycle, M01 plane-arrival
-stall cause, performance/A-V synchronization, effect presentation, tread
-animation, and all Dev190 runtime acceptance remain open.
+Now: run the installed Dev191 campaign candidate through the M13 Ion Cannon event
+with clean candidate-matched diagnostics.
+Completed: corrected `TrackedVehicleClass::Render` to pass UV displacement as
+distance-per-second, matching `LinearOffsetTextureMapperClass`'s milliseconds
+integration; suppresses the initial origin-to-world delta and resets sampling
+when the model changes. Made canonical staging preserve the already-accepted
+Dev190 staged runtime changes, which the current source-patch list had omitted.
+Evidence: 2 tread unit-contract tests pass; canonical host/sanitizer and 173-test
+suite pass; original M00/M01 host runtime passes; ARM, SELF/VPK identity, package
+hashes, and Vita3K installation pass. Dev191 VPK SHA-256 is
+`4d1c39b3fa9da16fb9a352cb1fab28445e46c4e10944c3abbb10dff0b11ed4eb`; installed
+receipt: `build/vita3k-backups/A3.5-dev191-setup-20260924T004113967576Z/`.
+Dev190's user-run trace logged 37.9 average FPS at frame 7200, p95/p99/max of
+51.8/121/1596 ms, with frame 6594 spending 1428 ms in simulation and 11.6 ms in
+render submission. It reaches `MX0_A04_CON012`; it does not prove the reported
+freeze's root cause. The associated flight bundle is mixed/corrupt and rejected.
+NPC reload cadence is unverified; no reload behavior was changed. Dev191 is
+installed but not launched, so tread animation and all runtime behavior remain
+unverified.
+Next: capture clean Dev191 M13 telemetry around CON012 and inspect the full
+mission transition if the event completes; use actor weapon/ammo/state records
+to determine whether reload frequency is incorrect.
+Blocker: Ion Cannon freeze cause, campaign lag, NPC reload behavior, visible
+treads, and Vita3K runtime acceptance remain open.
 
 ## Dev189: canonical campaign effect integration and diagnostics
 

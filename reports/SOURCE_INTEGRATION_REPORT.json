@@ -1,6 +1,6 @@
 {
-  "milestone": "A3.5-dev190",
-  "objective": "Dev190 preserves the original campaign effect creation/lifetime paths, samples Post_Think timing, and carries tread-name and HUD-projection corrections through deterministic source staging while preserving the original M00 runtime baseline",
+  "milestone": "A3.5-dev191",
+  "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
@@ -639,8 +639,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 200,
-  "mechanically_patched_upstream_files": 299,
+  "patch_count": 202,
+  "mechanically_patched_upstream_files": 300,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -883,6 +883,7 @@
     "Code/wwphys/staticanimphys.cpp",
     "Code/wwphys/staticphys.cpp",
     "Code/wwphys/trackedvehicle.cpp",
+    "Code/wwphys/trackedvehicle.h",
     "Code/wwphys/transitioneffect.cpp",
     "Code/wwphys/visrendercontext.cpp",
     "Code/wwphys/waypath.cpp",
@@ -2905,6 +2906,16 @@
       ]
     },
     {
+      "path": "port/patches/wwphys-a35-trackedvehicle-delta-time.patch",
+      "stage_directory": "wwphys",
+      "sha256": "b4d6b03bf2a4ca91ea8bb60e758b8a37c008089719e9afad545408c6a1f07869",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "trackedvehicle.cpp",
+        "trackedvehicle.h"
+      ]
+    },
+    {
       "path": "port/patches/ww3d2-a35-create-depth-timing.patch",
       "stage_directory": "ww3d2",
       "sha256": "ab86f375cf13e6a7ad0b7ed2ae67fe58f1da8f4ca095e1f72d3304a4f5c4cb45",
@@ -2952,6 +2963,13 @@
         "scripts/Test_Cinematic.cpp",
         "combat/gameobjmanager.cpp"
       ]
+    },
+    {
+      "path": "port/patches/a35-dev190-staging-preserve.patch",
+      "stage_directory": "",
+      "sha256": "8597377222ff18fb9956bbf4da9de16439b91cb961b6f18123bfa0b907129a91",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": []
     }
   ],
   "upstream_files_modified_in_place": 0,
@@ -3054,17 +3072,5 @@
     "custom_game_loop": false,
     "custom_frontend_renderer": false
   },
-  "automatic_vita_deployment": false,
-  "dev190_candidate": {
-    "title_id": "RNEGA3101",
-    "vpk_sha256": "e7ece5f02d71709a0d681777c6d74e9dfac8f4011267bf66358018e0146a8219",
-    "patch_count": 200,
-    "patch_inventory_registry_sha256": "f5c3989ff12fa4991fa028547c9f6d6f8e02deebf9136bd86147f821ae68b3fd",
-    "vita3k_install_status": "INSTALLED_NOT_LAUNCHED",
-    "physical_acceptance": false,
-    "m13_performance_and_av_sync_verified": false,
-    "visible_effects_and_npc_behavior_verified": false,
-    "m13_treads_verified": false,
-    "m01_plane_arrival_stall_verified": false
-  }
+  "automatic_vita_deployment": false
 }

@@ -1,6 +1,23 @@
 # Renegade Vita port status
 
-Current candidate: A3.5-dev189 passed the canonical host/sanitizer and ARM
+Current candidate: A3.5-dev191 passed canonical host/sanitizer, 173-test,
+original M00/M01 host-runtime, ARM, SELF/VPK identity, and diagnostics packaging
+gates; it is installed in Vita3K but not launched. It converts tracked-vehicle
+world displacement to the per-second rate expected by the original UV mapper,
+and canonical staging now retains accepted Dev190 runtime changes. VPK
+SHA-256 `4d1c39b3fa9da16fb9a352cb1fab28445e46c4e10944c3abbb10dff0b11ed4eb`;
+ELF SHA-256 `ffa4243ef097660cb0e4b1d732fab77627455ceb9e1dcb92771f338b49292f68`.
+The user-reported M13 freeze after the GPS-lock dialogue, NPC reload cadence,
+campaign lag, and visible tread animation remain runtime-unverified. Dev190
+telemetry records a 1.596 s max frame near the relevant mission segment, mostly
+simulation, but its mixed flight bundle cannot identify the freeze cause. No
+overall performance or functional campaign improvement is claimed until a
+matching runtime test. Vita3K receipt:
+`build/vita3k-backups/A3.5-dev191-setup-20260924T004113967576Z/setup-receipt.json`.
+See `BUILD_STATE.json`, `LIVE_PROGRESS.md`, and the Dev191 performance-ledger
+entry.
+
+Previous candidate: A3.5-dev189 passed the canonical host/sanitizer and ARM
 package path. The registered zero-fuzz patch now carries Dev183's original
 timed explosion recycler into every reproducible stage/build; source-level
 contracts verify preparation, spawn routing, and shutdown. The Vita renderer

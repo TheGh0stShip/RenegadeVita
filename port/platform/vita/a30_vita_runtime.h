@@ -31,12 +31,12 @@ struct A30VitaWorldRenderResult
 };
 
 /*
-** Persistent A3.0 diagnostic output.  The file handle is retained after reset,
-** while each completed record is still synchronized so the final completed
-** world-load/render stage survives a crash or power-cycle on physical hardware.
+** Persistent A3.0 diagnostic output. Campaign logging batches durability at
+** checkpoints; the M00 demo retains per-record sync behavior.
 */
 int A30_Vita_Log_Reset();
 int A30_Vita_Log(const char *format, ...) __attribute__((format(printf, 1, 2)));
+int A30_Vita_Log_Flush();
 
 /*
 ** Bounded, candidate-only flight recorder for the original static-object

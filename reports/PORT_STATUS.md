@@ -1,5 +1,19 @@
 # Renegade Vita port status
 
+Current candidate: A3.5-dev192 passes canonical host/sanitizer, 174-test,
+original M00/M01 host-runtime, ARM, SELF/VPK identity, and diagnostics packaging
+gates; it is installed in Vita3K but not launched. Campaign runtime-log appends
+now synchronize at reset/startup, 120-frame flight checkpoints, fatal capture,
+and final flush rather than after each record; campaign record capacity is
+2048 bytes. M00 demo per-line sync and 768-byte capacity are unchanged. VPK
+SHA-256 `776f7fd028b666a489323be375524f2c87abd9595d4147cb603c7a2ee12e30a2`;
+ELF SHA-256 `694ac2da9d62bd029336b227ec1338e53f3fe97fa242cf8f11e8fe6684d72472`.
+This targets a plausible instrumentation cost and the truncated Dev190 record,
+not a proven freeze cause or measured performance gain. The user-owned Dev190
+Vita3K instance remains active; do not launch or commandeer it. NPC reload
+behavior, visible treads, M13 freeze, campaign lag, and runtime acceptance remain
+unverified.
+
 Current candidate: A3.5-dev191 passed canonical host/sanitizer, 173-test,
 original M00/M01 host-runtime, ARM, SELF/VPK identity, and diagnostics packaging
 gates; it is installed in Vita3K but not launched. It converts tracked-vehicle

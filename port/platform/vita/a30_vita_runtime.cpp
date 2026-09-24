@@ -57,9 +57,17 @@ int Write_Runtime_Log_Line(const char *line, unsigned length)
 		}
 		offset += static_cast<unsigned>(written);
 	}
+	#if RENEGADE_VITA_M00_DEMO
 	const int sync_result = sceIoSyncByFd(file, 0);
 	if (result >= 0 && sync_result < 0) result = sync_result;
+	#endif
 	return result;
+}
+
+int Sync_Runtime_Log_File()
+{
+	const SceUID file = Ensure_Runtime_Log_File();
+	return file >= 0 ? sceIoSyncByFd(file, 0) : file;
 }
 
 float Analog_Axis(unsigned char value)
@@ -389,13 +397,17 @@ int A30_Vita_Log_Reset()
 		A35_Campaign_Flight_Record_Log_Line(header,
 			static_cast<unsigned>(header_count));
 	}
-	const int sync_result = sceIoSyncByFd(gA30RuntimeLogFile, 0);
+	const int sync_result = Sync_Runtime_Log_File();
 	return result >= 0 && sync_result < 0 ? sync_result : result;
 }
 
 int A30_Vita_Log(const char *format, ...)
 {
+#if RENEGADE_VITA_M00_DEMO
 	char line[768];
+#else
+	char line[2048];
+#endif
 	va_list arguments;
 	va_start(arguments, format);
 	const int count = vsnprintf(line, sizeof(line), format, arguments);
@@ -410,6 +422,11 @@ int A30_Vita_Log(const char *format, ...)
 	const int result = Write_Runtime_Log_Line(line, length);
 	A35_Campaign_Flight_Record_Log_Line(line, length);
 	return result;
+}
+
+int A30_Vita_Log_Flush()
+{
+	return Sync_Runtime_Log_File();
 }
 
 void A35_Vita_Static_Load_Trace_Begin(uint32_t object_index,

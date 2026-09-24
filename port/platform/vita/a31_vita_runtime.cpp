@@ -4435,6 +4435,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					Log_Input_Telemetry();
 					Log_Audio_Runtime_Statistics("checkpoint", result.frames);
 					A35_Campaign_Flight_Flush("checkpoint");
+					A30_Vita_Log_Flush();
 				}
 			}
 				result.clean_exit_requested = !result.render_error &&
@@ -4484,12 +4485,14 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						"fatal_render_error", result.frames, fatal_us,
 						"best-effort fatal capture flushed");
 					A35_Campaign_Flight_Flush("best-effort-fatal-snapshot");
+					A30_Vita_Log_Flush();
 				}
 				Copy_Timing_Statistics(result, timing);
 				Log_Timing_Statistics(timing, RenegadeVitaRenderer::Get_Statistics());
 				Log_Campaign_Simulation_Stages();
 				Log_Audio_Runtime_Statistics("final", result.frames);
 				A35_Campaign_Flight_Flush("final");
+				A30_Vita_Log_Flush();
 			if (result.start_exit_requested && result.clean_exit_requested) {
 				A30_Vita_Log("A3.1 breadcrumb: native orderly exit request detected\n");
 			} else if (result.mission_completion_observed && result.mission_succeeded &&

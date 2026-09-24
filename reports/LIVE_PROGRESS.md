@@ -1,5 +1,28 @@
 # Live engineering progress
 
+## Dev192: campaign log durability and complete records
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 current evidence gates complete`
+
+Now: obtain a candidate-matched runtime run through the M13 GPS-lock event;
+Dev190 is still the active Vita3K process, so Dev192 has not been launched.
+Completed: campaign runtime-log records no longer call `sceIoSyncByFd` after
+every append; durability is explicit at reset/startup, each 120-frame flight
+checkpoint, fatal capture, and final flush. Campaign log-line capacity is
+2048 bytes; M00 demo retains per-line synchronization and its 768-byte buffer.
+Evidence: canonical host/sanitizer PASS; 174 tests PASS; original M00 and M01
+host runtime cycles each PASS twice; ARM, SELF/VPK identity, diagnostics hashes,
+and Vita3K installation PASS. Dev192 VPK SHA-256 is
+`776f7fd028b666a489323be375524f2c87abd9595d4147cb603c7a2ee12e30a2`; installed
+receipt: `build/vita3k-backups/A3.5-dev192-setup-20260924T011232556507Z/`.
+Dev190's log ended mid-record after frame 7200, but per-line sync is only a
+plausible stall source; no freeze cause is established.
+Next: after the active Dev190 Vita3K process closes, launch Dev192 and capture
+the same M13 GPS-lock event with complete checkpoint/log-tail records.
+Blocker: runtime acceptance, NPC reload behavior, visible tread animation,
+campaign lag, and the GPS-lock freeze remain unverified.
+
 ## Dev191: tracked-vehicle tread timing and Dev190 staging preservation
 
 Renegade Vita - v3.5 active

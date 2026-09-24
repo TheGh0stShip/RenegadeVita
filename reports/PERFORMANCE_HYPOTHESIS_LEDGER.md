@@ -1,5 +1,28 @@
 # Performance hypothesis ledger
 
+## Dev192: campaign log sync overhead and truncated records (2026-09-23)
+
+- Hypothesis: synchronizing the persistent runtime log after every emitted
+  line adds avoidable storage stalls on the campaign thread and may amplify
+  frame-time spikes; the Dev190 log also ends inside a 768-byte-truncated
+  performance line shortly after frame 7200.
+- Change: campaign appends now defer storage synchronization until explicit
+  startup/reset, each 120-frame flight checkpoint, fatal capture, and final
+  flush. Campaign line capacity is 2048 bytes. The M00 demo retains its
+  existing per-line sync and 768-byte capacity.
+- Limits: the available log termination and freeze are correlated only by
+  proximity in the reported mission; they do not prove storage sync caused the
+  freeze. A larger line buffer does not eliminate all I/O cost. User saves and
+  game data are untouched.
+- Verification: five focused contracts, canonical host/sanitizer, 174 tests,
+  repeated original M00/M01 host-runtime cycles, ARM, SELF/VPK identity,
+  diagnostics, and Vita3K installation pass. The candidate is installed but not
+  launched because the user's Dev190 emulator process was active. VPK SHA-256:
+  `776f7fd028b666a489323be375524f2c87abd9595d4147cb603c7a2ee12e30a2`.
+- Decision: retain as a candidate pending a matching M13 route. Compare complete
+  checkpoint records, log tails, frame percentiles, and GPS-lock progression;
+  accept performance only from same-route runtime measurements.
+
 ## Dev191 tracked-vehicle UV time-unit correction (2026-09-23)
 
 - Evidence: `LinearOffsetTextureMapperClass::Set_UV_Offset_Delta` converts the

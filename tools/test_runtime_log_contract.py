@@ -9,30 +9,47 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class RuntimeLogContractTest(unittest.TestCase):
-    def test_session_log_is_append_only_and_durable(self) -> None:
+    def test_session_log_is_append_only_with_profile_scoped_durability(self) -> None:
         source = (ROOT / "port/platform/vita/a30_vita_runtime.cpp").read_text(
             encoding="utf-8"
         )
         ensure_start = source.index("int Ensure_Runtime_Log_File()")
         write_start = source.index("int Write_Runtime_Log_Line", ensure_start)
         ensure = source[ensure_start:write_start]
-        write_end = source.index("float Analog_Axis", write_start)
+        write_end = source.index("int Sync_Runtime_Log_File", write_start)
         write = source[write_start:write_end]
         reset_start = source.index("int A30_Vita_Log_Reset()")
         append_start = source.index("int A30_Vita_Log(const char *format", reset_start)
         reset = source[reset_start:append_start]
-        append_end = source.index("bool A30_Vita_Render_Loaded_World", append_start)
+        append_end = source.index("int A30_Vita_Log_Flush()", append_start)
         append = source[append_start:append_end]
+        flush_end = source.index("bool A30_Vita_Render_Loaded_World", append_end)
+        flush = source[append_end:flush_end]
         self.assertIn("SCE_O_APPEND", ensure)
         self.assertIn("gA30RuntimeLogFile >= 0", ensure)
         self.assertIn("sceIoSyncByFd", write)
+        self.assertIn("#if RENEGADE_VITA_M00_DEMO", write)
         self.assertNotIn("sceIoClose", write)
         self.assertIn("SCE_O_APPEND", reset)
         self.assertNotIn("SCE_O_TRUNC", reset)
         self.assertIn("[LIFECYCLE] START", reset)
-        self.assertIn("sceIoSyncByFd", reset)
+        self.assertIn("Sync_Runtime_Log_File", reset)
         self.assertIn("Write_Runtime_Log_Line", append)
+        self.assertIn("char line[2048]", append)
         self.assertNotIn("SCE_O_TRUNC", append)
+        self.assertIn("int A30_Vita_Log_Flush()", flush)
+        self.assertIn("Sync_Runtime_Log_File", flush)
+
+    def test_campaign_log_flushes_after_checkpoint_and_terminal_records(self) -> None:
+        interactive = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text(
+            encoding="utf-8"
+        )
+        checkpoint = interactive.index('A35_Campaign_Flight_Flush("checkpoint")')
+        fatal = interactive.index('A35_Campaign_Flight_Flush("best-effort-fatal-snapshot")')
+        final = interactive.index('A35_Campaign_Flight_Flush("final")')
+        self.assertIn("A30_Vita_Log_Flush();", interactive[checkpoint:checkpoint + 150])
+        self.assertIn("A30_Vita_Log_Flush();", interactive[fatal:fatal + 150])
+        self.assertIn("A30_Vita_Log_Flush();", interactive[final:final + 100])
 
     def test_runtime_phases_have_durable_breadcrumbs(self) -> None:
         main = (ROOT / "port/platform/vita/a30_main.cpp").read_text(encoding="utf-8")

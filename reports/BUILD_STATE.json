@@ -19,7 +19,7 @@
     "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev191-setup-20260924T004113967576Z/setup-receipt.json",
     "focused_tests": "2 tracked-vehicle timing tests PASS; canonical host/sanitizer suites PASS; 173 tests PASS; original M00/M01 host runtime PASS; ARM/SELF/VPK identity PASS.",
     "fix_scope": "Convert tracked-vehicle displacement between renders to per-second UV mapper rate; skip first sample and reset history on model change. Restore accepted Dev190 staged baseline in canonical source staging.",
-    "runtime_basis": "User reports a freeze following M13 GPS-lock dialogue. The Dev190 matching log records 37.9 average FPS at frame 7200, p95/p99/max 51.8/121/1596 ms; frame 6594 simulation 1428 ms and render submission 11.6 ms. Log reaches MX0_A04_CON012 but does not prove the freeze cause. Associated mixed flight bundle is invalid.",
+    "runtime_basis": "User reports a freeze following M13 GPS-lock dialogue. Dev190 log records 37.9 average FPS at frame 7200; rolling p95/p99 are 51.8/121 ms, while the 1596 ms maximum is startup frame 1 (1037 ms simulation, 559 ms render). Later frame 6467 takes 1322 ms (1309 ms simulation, 14 ms render); frames 6760-6762 take about 520 ms each across simulation/render. CON012 begins at frame 7168 while CON011 is still active near completion; log terminates mid-record shortly after frame 7200. Cause unproven; associated mixed flight bundle is invalid.",
     "vita3k_installed": true,
     "vita3k_launch_verified": false,
     "m13_performance_verified": false,

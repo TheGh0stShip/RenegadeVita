@@ -8,10 +8,12 @@ and canonical staging now retains accepted Dev190 runtime changes. VPK
 SHA-256 `4d1c39b3fa9da16fb9a352cb1fab28445e46c4e10944c3abbb10dff0b11ed4eb`;
 ELF SHA-256 `ffa4243ef097660cb0e4b1d732fab77627455ceb9e1dcb92771f338b49292f68`.
 The user-reported M13 freeze after the GPS-lock dialogue, NPC reload cadence,
-campaign lag, and visible tread animation remain runtime-unverified. Dev190
-telemetry records a 1.596 s max frame near the relevant mission segment, mostly
-simulation, but its mixed flight bundle cannot identify the freeze cause. No
-overall performance or functional campaign improvement is claimed until a
+campaign lag, and visible tread animation remain runtime-unverified. In Dev190
+telemetry, the 1.596 s maximum is startup frame 1. Later, frame 6467 takes 1.322
+s (1.309 s simulation); frames 6760-6762 take about 0.52 s each. CON012 starts
+while CON011 remains active near completion, and the log stops mid-record after
+frame 7200. The mixed flight bundle is invalid, so the freeze cause is unknown.
+No overall performance or functional campaign improvement is claimed until a
 matching runtime test. Vita3K receipt:
 `build/vita3k-backups/A3.5-dev191-setup-20260924T004113967576Z/setup-receipt.json`.
 See `BUILD_STATE.json`, `LIVE_PROGRESS.md`, and the Dev191 performance-ledger

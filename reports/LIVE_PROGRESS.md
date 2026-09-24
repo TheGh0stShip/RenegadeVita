@@ -17,10 +17,14 @@ suite pass; original M00/M01 host runtime passes; ARM, SELF/VPK identity, packag
 hashes, and Vita3K installation pass. Dev191 VPK SHA-256 is
 `4d1c39b3fa9da16fb9a352cb1fab28445e46c4e10944c3abbb10dff0b11ed4eb`; installed
 receipt: `build/vita3k-backups/A3.5-dev191-setup-20260924T004113967576Z/`.
-Dev190's user-run trace logged 37.9 average FPS at frame 7200, p95/p99/max of
-51.8/121/1596 ms, with frame 6594 spending 1428 ms in simulation and 11.6 ms in
-render submission. It reaches `MX0_A04_CON012`; it does not prove the reported
-freeze's root cause. The associated flight bundle is mixed/corrupt and rejected.
+Dev190's user-run trace logged 37.9 average FPS at frame 7200 and rolling
+p95/p99 of 51.8/121 ms; its 1596 ms maximum is startup frame 1 (1037 ms
+simulation, 559 ms render). Later frame 6467 took 1322 ms (1309 ms simulation,
+14 ms render), while frames 6760-6762 each took about 520 ms across
+simulation/render. Near the reported dialogue, CON012 starts at frame 7168 while
+CON011 remains active near completion; the runtime log stops mid-record shortly
+after frame 7200. This is a conversation-overlap lead, not a proven freeze cause.
+The associated flight bundle is mixed/corrupt and rejected.
 NPC reload cadence is unverified; no reload behavior was changed. Dev191 is
 installed but not launched, so tread animation and all runtime behavior remain
 unverified.

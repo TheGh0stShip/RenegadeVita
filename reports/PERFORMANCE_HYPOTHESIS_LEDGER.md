@@ -18,6 +18,13 @@
 - Runtime: Dev191 is installed but not launched. Tread animation, frame-time
   improvement, and campaign behavior are unverified; this fix cannot explain or
   claim resolution of the Ion Cannon freeze, NPC reload cadence, or mission lag.
+- Freeze lead from the Dev190 log: the 1596 ms maximum belongs to startup frame
+  1 (1037 ms simulation, 559 ms render), not CON012. Frame 6467 later took 1322
+  ms, dominated by simulation (1309 ms); frames 6760-6762 each took about 520 ms
+  across simulation and render. `MX0_A04_CON012` begins at frame 7168 with
+  `MX0_A04_CON011` still active near completion; the log ends mid-record shortly
+  after frame 7200. This does not establish a conversation-manager fault or
+  report the freeze's last executed function. The mixed flight bundle is invalid.
 - Decision: retain the unit correction for candidate testing; require matching
   runtime observation of moving tank tracks before accepting the tread issue as
   fixed.

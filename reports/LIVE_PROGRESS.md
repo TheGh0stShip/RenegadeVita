@@ -5,8 +5,8 @@
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 current evidence gates complete`
 
-Now: obtain a candidate-matched runtime run through the M13 GPS-lock event;
-Dev190 is still the active Vita3K process, so Dev192 has not been launched.
+Now: isolate the M13 `MX0_A04_CON012` completion boundary, then run Dev192 only
+after the existing Vita3K process is closed.
 Completed: campaign runtime-log records no longer call `sceIoSyncByFd` after
 every append; durability is explicit at reset/startup, each 120-frame flight
 checkpoint, fatal capture, and final flush. Campaign log-line capacity is
@@ -16,10 +16,14 @@ host runtime cycles each PASS twice; ARM, SELF/VPK identity, diagnostics hashes,
 and Vita3K installation PASS. Dev192 VPK SHA-256 is
 `776f7fd028b666a489323be375524f2c87abd9595d4147cb603c7a2ee12e30a2`; installed
 receipt: `build/vita3k-backups/A3.5-dev192-setup-20260924T011232556507Z/`.
-Dev190's log ended mid-record after frame 7200, but per-line sync is only a
-plausible stall source; no freeze cause is established.
-Next: after the active Dev190 Vita3K process closes, launch Dev192 and capture
-the same M13 GPS-lock event with complete checkpoint/log-tail records.
+The newly returned Dev190 persistent log reaches frame 7308: CON012 remains in
+TALKING state at remark 1/2, speech is stopped, and the next-remark timer is
+0.301 seconds. This narrows the reported freeze to the next conversation
+completion/update, without proving that callback is the cause. Its flight bundle
+is invalid: events and frames say Dev185 while summary says Dev190. The active
+Vita3K process is still running and was not touched; Dev192 remains installed,
+not launched. Next: after that process exits, capture the same route with Dev192
+and a clean candidate-matched recorder bundle.
 Blocker: runtime acceptance, NPC reload behavior, visible tread animation,
 campaign lag, and the GPS-lock freeze remain unverified.
 

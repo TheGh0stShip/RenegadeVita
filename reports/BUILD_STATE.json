@@ -17,6 +17,7 @@
     "diagnostics_sha256": "620e3851dcaa1cc830601295d1731adcb8621ab1c59e519d7b114063c7acb67f",
     "fix_scope": "Buffer campaign runtime-log appends, retain explicit sync at startup/reset, 120-frame checkpoints, fatal snapshots, and final records; preserve M00 demo per-line sync and expand campaign log-line capacity to 2048 bytes.",
     "runtime_basis": "Dev190 log terminated mid-performance record after frame 7200 and used per-line sceIoSyncByFd. This is a plausible avoidable I/O stall and evidence-truncation source, not a proven cause of the user's freeze.",
+    "latest_dev190_freeze_trace": "Persistent candidate-identified Dev190 log mtime 2026-09-23 20:00:52 ends at M13 frame 7308 with MX0_A04_CON012 state=TALKING, remark=1/2, speech_playing=0, next_remark_seconds=0.301. Dev190 flight sidecars are rejected as mixed: events/frames identify A3.5-dev185 while summary identifies A3.5-dev190.",
     "focused_tests": "5 runtime-log and tracked-vehicle timing tests PASS; canonical host/sanitizer PASS; 174 tests PASS; original M00/M01 host runtime PASS for two cycles each; ARM/SELF/VPK identity and diagnostics hash checks PASS.",
     "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev192-setup-20260924T011232556507Z/setup-receipt.json",
     "vita3k_installed": true,

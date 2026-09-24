@@ -9,8 +9,12 @@ and final flush rather than after each record; campaign record capacity is
 SHA-256 `776f7fd028b666a489323be375524f2c87abd9595d4147cb603c7a2ee12e30a2`;
 ELF SHA-256 `694ac2da9d62bd029336b227ec1338e53f3fe97fa242cf8f11e8fe6684d72472`.
 This targets a plausible instrumentation cost and the truncated Dev190 record,
-not a proven freeze cause or measured performance gain. The user-owned Dev190
-Vita3K instance remains active; do not launch or commandeer it. NPC reload
+not a proven freeze cause or measured performance gain. A fresh Dev190 log ends
+at frame 7308 with M13 `MX0_A04_CON012` still TALKING, speech stopped, and its
+next-remark timer at 0.301 s; this localizes the symptom to the following
+conversation completion/update but does not identify the failing call. Its
+flight sidecars are mixed Dev185/Dev190 and rejected. The user-owned Vita3K
+instance remains active; do not launch or commandeer it. NPC reload
 behavior, visible treads, M13 freeze, campaign lag, and runtime acceptance remain
 unverified.
 

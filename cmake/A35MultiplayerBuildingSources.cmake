@@ -1,0 +1,35 @@
+# Keep original definition/persist registrations directly linked. The M00 seed
+# closure did not include specialized AOW buildings or refinery harvesting.
+set(RENEGADE_A35_MULTIPLAYER_BUILDING_SOURCES
+  ${RENEGADE_STAGE}/combat/refinerygameobj.cpp
+  ${RENEGADE_STAGE}/combat/powerplantgameobj.cpp
+  ${RENEGADE_STAGE}/combat/soldierfactorygameobj.cpp
+  ${RENEGADE_STAGE}/combat/vehiclefactorygameobj.cpp
+  ${RENEGADE_STAGE}/combat/airstripgameobj.cpp
+  ${RENEGADE_STAGE}/combat/warfactorygameobj.cpp
+  ${RENEGADE_STAGE}/combat/comcentergameobj.cpp
+  ${RENEGADE_STAGE}/combat/repairbaygameobj.cpp
+  ${RENEGADE_STAGE}/combat/harvester.cpp
+  ${RENEGADE_STAGE}/combat/specialeffectsgameobj.cpp
+  ${RENEGADE_STAGE}/combat/samsite.cpp
+  ${RENEGADE_STAGE}/combat/damagezone.cpp
+  ${RENEGADE_STAGE}/combat/sakurabossgameobj.cpp
+  ${RENEGADE_STAGE}/combat/mendozabossgameobj.cpp
+  ${RENEGADE_STAGE}/combat/raveshawbossgameobj.cpp
+  ${RENEGADE_STAGE}/combat/characterclasssettings.cpp
+  ${RENEGADE_STAGE}/combat/scobeliskevent.cpp
+  ${RENEGADE_STAGE}/commando/AnnounceEvent.cpp
+  ${RENEGADE_STAGE}/commando/floodprotectionmgr.cpp
+  ${RENEGADE_STAGE}/commando/cstextobj.cpp
+  ${RENEGADE_STAGE}/commando/loadingevent.cpp
+  ${RENEGADE_STAGE}/combat/purchasesettings.cpp
+  ${RENEGADE_STAGE}/combat/teampurchasesettings.cpp
+  ${RENEGADE_STAGE}/commando/vendor.cpp
+  ${RENEGADE_STAGE}/commando/purchaserequestevent.cpp
+  ${RENEGADE_STAGE}/commando/purchaseresponseevent.cpp
+  ${RENEGADE_STAGE}/commando/renegadeplayerterminal.cpp
+  ${RENEGADE_STAGE}/commando/dlgcncpurchasemainmenu.cpp
+  ${RENEGADE_STAGE}/commando/dlgcncpurchasemenu.cpp
+  ${RENEGADE_STAGE}/commando/dlgmpingamechat.cpp
+  ${RENEGADE_STAGE}/commando/mpsettingsmgr.cpp
+)

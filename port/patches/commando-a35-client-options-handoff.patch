@@ -1,0 +1,64 @@
+--- a/gameoptionsevent.cpp
++++ b/gameoptionsevent.cpp
+@@ -50,6 +50,9 @@
+ #include "translatedb.h"
+ #include "string_ids.h"
+ #include "realcrc.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "a31_client_connect_boundary.h"
++#endif
+ 
+ DECLARE_NETWORKOBJECT_FACTORY(cGameOptionsEvent, NETCLASSID_GAMEOPTIONSEVENT);
+ 
+@@ -83,6 +86,9 @@
+ 	The_Game()->Set_Hosted_Game_Number(HostedGameNumber);
+ 
+ 	if (!IS_SOLOPLAY) {
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		if (A31ClientConnect::Game_Options(The_Game(), true)) return;
++#endif
+ 		DialogBaseClass* dialog = DialogMgrClass::Find_Dialog(IDD_MULTIPLAY_CONNECTING);
+ 
+ 		if (dialog != NULL) {
+@@ -158,6 +164,13 @@
+ 
+ 	if (!IS_SOLOPLAY) {
+ 		if (!The_Game()->Is_Map_Valid()) {
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++			act = false;
++			if (A31ClientConnect::Game_Options(The_Game(), false)) {
++				Set_Delete_Pending();
++				return;
++			}
++#endif
+ 			DialogBaseClass* dialog = DialogMgrClass::Find_Dialog(IDD_MULTIPLAY_CONNECTING);
+ 
+ 			if (dialog != NULL) {
+@@ -184,5 +197,4 @@
+ 
+ 
+ 
+-
+ 
+--- a/cnetwork.cpp
++++ b/cnetwork.cpp
+@@ -36,6 +36,9 @@
+ 
+ #include "cnetwork.h"
+ #include "renegade_optional_network_modes.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "a31_client_connect_boundary.h"
++#endif
+ 
+ #include "a31_shell_stub.h"
+ #include <stdio.h>
+@@ -256,6 +259,9 @@
+ 			Flush();
+       }
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++      A31ClientConnect::Connection_Ended(PClientConnection);
++#endif
+       delete PClientConnection;
+       PClientConnection = NULL;
+    }

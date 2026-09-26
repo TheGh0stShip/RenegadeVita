@@ -38,6 +38,7 @@
 #include "gameinitmgr.h"
 #include "gamedata.h"
 #include "gamemode.h"
+#include "renegade_optional_network_modes.h"
 #include "cnetwork.h"
 #include "ww3d.h"
 #include "singlepl.h"
@@ -58,6 +59,7 @@
 #include "dx8renderer.h"
 #include "gdsingleplayer.h"
 #include "gdskirmish.h"
+#include "gdcnc.h"
 #include "playertype.h"
 #include "gameobjmanager.h"
 #include "gametype.h"
@@ -552,11 +554,10 @@ GameInitMgrClass::Start_Client_Server (void)
 {
    WWDEBUG_SAY (("GameInitMgrClass::Start_Client_Server\n"));
 
-	assert(GameModeManager::Find("WOL"));
-	if (GameModeManager::Find("WOL")->Is_Active()) {
+	if (Renegade_Network_Mode_Active("WOL")) {
 		WWASSERT(PTheGameData != NULL);
 		The_Game()->Set_Port(WOLNATInterface.Get_Port_As_Server());
-	} else if (GameModeManager::Find("LAN")->Is_Active() && cGameSpyAdmin::Is_Gamespy_Game()) {
+	} else if (Renegade_Network_Mode_Active("LAN") && cGameSpyAdmin::Is_Gamespy_Game()) {
 		WWASSERT(PTheGameData != NULL);
 		The_Game()->Set_Port(cUserOptions::GameSpyGamePort.Get());
 	}
@@ -598,8 +599,7 @@ GameInitMgrClass::Start_Client_Server (void)
 			PacketManager.Set_Is_Server(false);
 		}
 
-		assert(GameModeManager::Find("WOL"));
-		if (GameModeManager::Find("WOL")->Is_Active()) {
+		if (Renegade_Network_Mode_Active("WOL")) {
 			cNetwork::Init_Client(WOLNATInterface.Get_Port_As_Server_Client());
 		} else {
 			cNetwork::Init_Client();
@@ -733,7 +733,7 @@ GameInitMgrClass::Shutdown_SP (void)
 void
 GameInitMgrClass::Initialize_Skirmish(void)
 {
-#if !defined(MULTIPLAYERDEMO) && !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+#if !defined(MULTIPLAYERDEMO) && (!defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || !RENEGADE_VITA_M00_DEMO)
 
    WWDEBUG_SAY(("GameInitMgrClass::Initialize_Skirmish\n"));
 
@@ -906,6 +906,25 @@ GameInitMgrClass::Shutdown_WOL (void)
 //	Shutdown
 //
 ////////////////////////////////////////////////////////////////
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+bool GameInitMgrClass::Initialize_Direct_IP(bool dedicated_server)
+{
+	// Starting a provider must never replace a live world or an accepted client.
+	if (Mode != MODE_UNKNOWN || PTheGameData != NULL ||
+		cNetwork::I_Am_Client() || cNetwork::I_Am_Server() ||
+		cSinglePlayerData::Is_Single_Player()) return false;
+	cGameType::Set_Game_Type(GAMETYPE_MULTIPLAY);
+	PTheGameData = new cGameDataCnc;
+	PTheGameData->IsDedicated.Set(dedicated_server);
+	WideStringClass name(L"PS Vita");
+	cNetInterface::Set_Nickname(name);
+	IsClientRequired = !dedicated_server;
+	IsServerRequired = dedicated_server;
+	Mode = MODE_DIRECT_IP;
+	return true;
+}
+#endif
+
 void
 GameInitMgrClass::Shutdown (void)
 {
@@ -927,6 +946,9 @@ GameInitMgrClass::Shutdown (void)
 
 		case MODE_WOL:
 			Shutdown_WOL ();
+			break;
+		case MODE_DIRECT_IP:
+			cGameType::Set_Game_Type(GAMETYPE_NONE);
 			break;
 	}
 
@@ -1033,9 +1055,6 @@ void _reload_game_configuration_files(void)
 	ScriptManager::Shutdown();
 	ScriptManager::Init();
 }
-
-
-
 
 
 

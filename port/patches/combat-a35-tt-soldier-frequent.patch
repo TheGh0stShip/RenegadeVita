@@ -1,0 +1,287 @@
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -1060,6 +1060,7 @@
+ 	//
+ #if 0 // (gth) moving back to "Frequent" to fix the game, re-optimize later?
+ 	bool has_weapon = packet.Get(has_weapon);
++   if (packet.Has_Read_Error()) return;
+    if (has_weapon) {
+       WWASSERT(!packet.Is_Flushed());
+ 	
+@@ -1201,14 +1202,28 @@
+ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
+ {
+    WWASSERT(CombatManager::I_Am_Only_Client());
++	bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	modern = Renegade_Client_Uses_TT_Replication();
++#endif
+ 
+ 	/**/
+ 	//TSS101601
+ 	bool in_vehicle = packet.Get(in_vehicle);
++	if (packet.Has_Read_Error()) return;
+ 	if (in_vehicle)
+ 	{
++		if (modern) Peek_Human_Phys()->Reset_Network_History();
+ 		// Just get control info
+ 		SmartGameObj::Import_Frequent(packet);
++		if (modern && !packet.Has_Read_Error() && !packet.Is_Flushed()) {
++			Vector3 position(0, 0, 0);
++			for (int axis = 0; axis < 3; ++axis) {
++				packet.Get(position[axis]);
++				if (!WWMath::Is_Valid_Float(position[axis])) position[axis] = 0;
++			}
++			if (!packet.Has_Read_Error()) Interpret_Sc_Position_Data(position);
++		}
+ 		return;
+ 	}
+ 	/**/
+@@ -1222,12 +1237,14 @@
+       WWASSERT(!packet.Is_Flushed());
+ 	
+ 		int weapon_id = packet.Get(weapon_id);
+-		int rounds = packet.Get(rounds);
++		int rounds = 0;
++		if (!modern) packet.Get(rounds);
++		if (packet.Has_Read_Error()) return;
+ 		if ((Get_Weapon() == NULL) || (weapon_id != Get_Weapon()->Get_ID())) {
+ 			WeaponBag->Select_Weapon_ID(weapon_id);
+ 		}
+ 
+-		if (Get_Weapon() != NULL) {
++		if (!modern && Get_Weapon() != NULL) {
+ 			// If this weapon is currently being fired, ignore the server rounds count packet
+ 			// This should help the jittery rounds count
+ 			if ( !Get_Weapon()->Is_Triggered() ) {
+@@ -1244,8 +1261,14 @@
+ 	//
+ 	// Position
+ 	//
+-	Vector3 sc_position;
++	Vector3 sc_position(0, 0, 0);
+ 
++	if (modern) {
++		for (int axis = 0; axis < 3; ++axis) {
++			packet.Get(sc_position[axis]);
++			if (!WWMath::Is_Valid_Float(sc_position[axis])) sc_position[axis] = 0;
++		}
++	} else {
+ 
+ #ifdef MULTIPLAYERDEMO
+ 	//
+@@ -1265,6 +1288,8 @@
+ 	// we assume the max error is half of the resolution
+ 	float max_error = cEncoderList::Get_Encoder_Type_Entry( BITPACK_WORLD_POSITION_Z ).Get_Resolution() / 2.0f;
+ 	sc_position.Z += max_error;
++	}
++	if (packet.Has_Read_Error()) return;
+ 
+ 	Interpret_Sc_Position_Data(sc_position);
+ 
+@@ -1275,15 +1300,33 @@
+ 	HumanStateClass::HumanStateType state = 
+ 		(HumanStateClass::HumanStateType) h_state;
+ 	int sub_state = packet.Get(sub_state, BITPACK_HUMAN_SUB_STATE);
++	if (packet.Has_Read_Error()) return;
++	if (h_state < 0 || h_state > HumanStateClass::HIGHEST_HUMAN_STATE ||
++		sub_state < 0 || sub_state > HumanStateClass::HIGHEST_HUMAN_SUB_STATE) {
++		packet.Mark_Read_Error();
++		return;
++	}
++	if (modern && state == HumanStateClass::LADDER) {
++		float heading = 0;
++		packet.Get(heading);
++		if (packet.Has_Read_Error()) return;
++		if (!WWMath::Is_Valid_Float(heading)) heading = 0;
++		Peek_Human_Phys()->Set_Heading(heading);
++	}
+ 
+ 	//
+ 	// Velocity (if airborne)
+ 	//
+-	Vector3 velocity;
++	Vector3 velocity(0, 0, 0);
+ 	if (state == HumanStateClass::AIRBORNE) {
+ 		packet.Get(velocity.X);
+ 		packet.Get(velocity.Y);
+ 		packet.Get(velocity.Z);
++		if (packet.Has_Read_Error()) return;
++		if (modern) {
++			for (int axis = 0; axis < 3; ++axis)
++				if (!WWMath::Is_Valid_Float(velocity[axis])) velocity[axis] = 0;
++		}
+ 	}
+ 
+ 	if (HumanState.Is_Locked()) {
+@@ -1305,6 +1348,7 @@
+ 		  ( state == HumanStateClass::IN_VEHICLE ) ) {
+       packet.Get_Terminated_String(trans_name, sizeof(trans_name));
+ 	}
++	if (packet.Has_Read_Error()) return;
+ 
+ 	Interpret_Sc_State_Data(state, sub_state, trans_name, velocity, sc_position);
+ 
+@@ -1314,15 +1358,39 @@
+ 	if ( is_special_damage ) {
+ 		packet.Get(mode);
+ 	}
+-	if ( mode != SpecialDamageMode ) {
++	if (packet.Has_Read_Error()) return;
++	if (mode < ArmorWarheadManager::SPECIAL_DAMAGE_TYPE_NONE ||
++		mode >= ArmorWarheadManager::NUM_SPECIAL_DAMAGE_TYPES) {
++		packet.Mark_Read_Error();
++		return;
++	}
++	// TT does not cancel an existing timed effect when the optional field is absent.
++	if ( (!modern || is_special_damage) && mode != SpecialDamageMode ) {
+ 		Set_Special_Damage_Mode( (ArmorWarheadManager::SpecialDamageType)mode );
+ 	}
++	if (modern) {
++		bool do_tilt = true;
++		packet.Get(do_tilt);
++		if (packet.Has_Read_Error()) return;
++		NetworkDoTilt = do_tilt;
++	}
+ 
+    if (Get_State() == HumanStateClass::DIVE)	{
++		if (modern) return;
+       packet.Flush();
+ 	} else {
+ 		SmartGameObj::Import_Frequent(packet);
+ 	}
++	if (packet.Has_Read_Error()) return;
++	if (modern && !packet.Is_Flushed()) {
++		Vector3 old_position(0, 0, 0);
++		for (int axis = 0; axis < 3; ++axis) {
++			packet.Get(old_position[axis]);
++			if (!WWMath::Is_Valid_Float(old_position[axis])) old_position[axis] = 0;
++		}
++		if (packet.Has_Read_Error()) return;
++		Interpret_Sc_Position_Data(old_position);
++	}
+ 
+    WWASSERT(packet.Is_Flushed());
+ }
+@@ -1357,6 +1425,13 @@
+ 	bool	is_sniping = Is_Sniping();
+ 	packet.Add( is_sniping );
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		SmartGameObj::Export_State_Cs(packet);
++		return;
++	}
++#endif
++
+ 	bool checking = Control.Get_Boolean( ControlClass::BOOLEAN_ACTION );
+ 	packet.Add( checking );
+ 	if ( checking ) {
+@@ -1494,15 +1569,29 @@
+ void SoldierGameObj::Interpret_Sc_Position_Data( const Vector3 & sc_position)
+ {
+ 	Vector3 position = sc_position;
++	bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	modern = Renegade_Client_Uses_TT_Replication();
++#endif
++	if (modern && Get_State() != HumanStateClass::TRANSITION && Is_In_Elevator()) {
++		Vector3 current;
++		Get_Position(&current);
++		position.Z = current.Z;
++	}
+ 
+ 	// Only use the latency code for the star
+ 	if ( _UseLatencyInterpret && (this == COMBAT_STAR) ) {
+-		Peek_Human_Phys()->Network_Latency_State_Update(sc_position,Vector3(0,0,0));
++		Peek_Human_Phys()->Network_Latency_State_Update(modern ? position : sc_position,Vector3(0,0,0));
+ 		return;
+ 	}
+ 
+    WWASSERT(CombatManager::I_Am_Only_Client());
+ 
++	if (modern) {
++		Peek_Human_Phys()->Network_Interpolated_State_Update(position, Get_State() == HumanStateClass::AIRBORNE);
++		return;
++	}
++
+ 	if (Get_State() == HumanStateClass::TRANSITION) {
+ 		//
+ 		// Pop
+@@ -2392,6 +2481,7 @@
+ 		{
+ 			WWPROFILE("Update_Locked_Facing");
+ 			Update_Locked_Facing();
++			NetworkTargetUpdated = false;
+ 		}
+ 
+ 		/*
+@@ -3200,6 +3290,7 @@
+ bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do_tilt )
+ {
+ 	WWPROFILE( "Soldier Set Targeting" );
++	NetworkTargetUpdated = true;
+ 
+ 	if ( CombatManager::Is_Skeleton_Slider_Demo_Enabled() ) {
+ 		return false;
+@@ -3311,6 +3402,9 @@
+ bool	SoldierGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
+ {
+ 	bool retval = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) do_tilt = NetworkDoTilt;
++#endif
+ 
+ 	//
+ 	//	Don't do the targetting if we are locked on an object
+@@ -5312,6 +5406,12 @@
+ 
+ void	SoldierGameObj::Update_Locked_Facing( void )
+ {
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication() && FacingObject == NULL &&
++		!CombatManager::I_Am_Server() && Get_Control_Owner() < 0 && !NetworkTargetUpdated) {
++		Internal_Set_Targeting(Get_Targeting_Pos(), NetworkDoTilt);
++	}
++#endif
+ 	if ( FacingObject != NULL ) {
+ 
+ 		//
+--- a/soldier.h
++++ b/soldier.h
+@@ -355,6 +355,8 @@
+ protected:
+ 	RenegadeSoldierRareState TTState;
+ 	bool TTStateActive = false;
++	bool NetworkDoTilt = true;
++	bool NetworkTargetUpdated = false;
+ 	void Update_TT_Skeleton(float seconds);
+ 	RenderObjClass		*	WeaponRenderModel;
+ 	RenderObjClass		*	BackWeaponRenderModel;
+--- a/smartgameobj.cpp
++++ b/smartgameobj.cpp
+@@ -227,6 +227,7 @@
+ void	SmartGameObj::Re_Init( const SmartGameObjDef & definition )
+ {
+ 	ArmedGameObj::Re_Init( definition );
++	NetworkStealthActive = true;
+ 
+ 	//
+ 	//	Remove the listener from the scene
+--- a/armedgameobj.cpp
++++ b/armedgameobj.cpp
+@@ -398,6 +398,14 @@
+ 	Vector3	my_pos;
+ 	Get_Position( &my_pos );
+ 	Vector3 rel_target = TargetingPos - my_pos;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		packet.Add(rel_target.X);
++		packet.Add(rel_target.Y);
++		packet.Add(rel_target.Z);
++		return;
++	}
++#endif
+ 	packet.Add(rel_target.X, BITPACK_WORLD_POSITION_X);
+ 	packet.Add(rel_target.Y, BITPACK_WORLD_POSITION_Y);
+ 	packet.Add(rel_target.Z, BITPACK_WORLD_POSITION_Z);

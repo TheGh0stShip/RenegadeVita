@@ -388,9 +388,19 @@ AggregateDefClass::Create_Render_Object (const char *passet_name)
 	// Attempt to get an instance of the render object from the asset manager
 	prender_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj (passet_name);
 	
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+	// Create_Render_Obj already tries the W3D and parent path when on-demand
+	// loading is enabled for plain names. Dotted names may name a distinct
+	// full filename that the manager's prefix-based lookup did not try.
+	const bool attempt_direct_load =
+		!WW3DAssetManager::Get_Instance()->Get_WW3D_Load_On_Demand() ||
+		(passet_name != NULL && ::strchr(passet_name, '.') != NULL);
+#else
+	const bool attempt_direct_load = true;
+#endif
 	// If we couldn't find the render object in the asset manager, then attempt to
 	// load it from file
-	if ((prender_obj == NULL) &&
+	if ((prender_obj == NULL) && attempt_direct_load &&
 	    Load_Assets (passet_name)) {
 
 		// It should be in the asset manager now, so attempt to get it again.

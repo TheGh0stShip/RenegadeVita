@@ -156,12 +156,15 @@ bool Public_Service_Active() { return PublicProvider != NULL && PublicProvider->
 bool Parse_Direct_IP(const char *text, Port default_port, Endpoint &endpoint) {
 	if (text == NULL || *text == '\0') return false;
 	char copy[64];
+	if (strlen(text) >= sizeof(copy)) return false;
 	strncpy(copy, text, sizeof(copy) - 1);
 	copy[sizeof(copy) - 1] = '\0';
 	char *port_text = strrchr(copy, ':');
 	Port port = default_port;
 	if (port_text != NULL) {
 		*port_text++ = '\0';
+		for (const char *digit = port_text; *digit; ++digit)
+			if (*digit < '0' || *digit > '9') return false;
 		char *end = NULL;
 		unsigned long parsed = strtoul(port_text, &end, 10);
 		if (end == port_text || *end != '\0' || parsed == 0 || parsed > 65535) return false;
@@ -169,8 +172,19 @@ bool Parse_Direct_IP(const char *text, Port default_port, Endpoint &endpoint) {
 	}
 	struct in_addr address;
 	if (inet_pton(AF_INET, copy, &address) != 1 || port == 0) return false;
-	endpoint.Address = ntohl(address.s_addr);
+	const uint32_t host = ntohl(address.s_addr);
+	if (host == 0 || host == 0xffffffffU || (host & 0xf0000000U) == 0xe0000000U) return false;
+	endpoint.Address = host;
 	endpoint.PortNumber = port;
+	return true;
+}
+
+bool Parse_Client_Request(const char *text, Port default_port, Endpoint &endpoint, bool &tt_client) {
+	const bool modern = text && strncmp(text, "tt://", 5) == 0;
+	Endpoint parsed;
+	if (!Parse_Direct_IP(modern ? text + 5 : text, default_port, parsed)) return false;
+	endpoint = parsed;
+	tt_client = modern;
 	return true;
 }
 

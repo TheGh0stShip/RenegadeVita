@@ -642,6 +642,7 @@ def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
         "schema_version": 1,
         "archive": str(archive.path),
         "archive_inventory": archive_inventory(archive),
+        "level_asset_dependencies": level_asset_dependencies(archive),
         "text_inventory": text_scan,
         "binary_inventory": binary_scan,
         "source_inventory": source_scan,
@@ -657,6 +658,36 @@ def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
             "W3D internal texture/material references and DDB preset transitive references still require original-engine or dedicated binary inventory.",
             "Source inventory is static text coverage; it does not prove compiled linkage or runtime execution.",
         ],
+    }
+
+
+def level_asset_dependencies(archive: MixArchive) -> dict[str, Any]:
+    level_name = archive.path.stem.lower() + ".dep"
+    payload = archive.read_binary(level_name)
+    if len(payload) < 8:
+        raise ValueError(f"{level_name}: truncated chunk header")
+    chunk_id, chunk_size = struct.unpack_from("<II", payload)
+    if chunk_id != 0x04020527 or chunk_size != len(payload) - 8:
+        raise ValueError(f"{level_name}: invalid Westwood asset dependency chunk")
+    offset = 8
+    files = []
+    while offset < len(payload):
+        if offset + 2 > len(payload):
+            raise ValueError(f"{level_name}: truncated filename microchunk")
+        micro_id, length = struct.unpack_from("<BB", payload, offset)
+        offset += 2
+        if micro_id != 1 or offset + length > len(payload):
+            raise ValueError(f"{level_name}: invalid filename microchunk")
+        raw_name = payload[offset:offset + length]
+        if not raw_name.endswith(b"\0"):
+            raise ValueError(f"{level_name}: unterminated filename")
+        files.append(raw_name[:-1].decode("ascii"))
+        offset += length
+    return {
+        "file": level_name,
+        "file_count": len(files),
+        "files": files,
+        "suffix_counts": dict(Counter(Path(name).suffix.lower() for name in files)),
     }
 
 
@@ -732,6 +763,8 @@ def main() -> int:
     parser.add_argument("--entry", default="x00_intro.txt")
     parser.add_argument("--source", type=Path, default=None)
     parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument("--preset-list-output", type=Path, default=None)
+    parser.add_argument("--asset-list-output", type=Path, default=None)
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--fail-on-missing-source-prep", action="store_true")
     parser.add_argument("--mission-inventory", action="store_true")
@@ -749,6 +782,18 @@ def main() -> int:
     if args.output is not None:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(payload, encoding="utf-8")
+    if args.preset_list_output is not None:
+        if not args.mission_inventory:
+            parser.error("--preset-list-output requires --mission-inventory")
+        args.preset_list_output.parent.mkdir(parents=True, exist_ok=True)
+        names = result["text_inventory"]["dependencies"]["real_object_presets"]
+        args.preset_list_output.write_text("\n".join(names) + "\n", encoding="utf-8")
+    if args.asset_list_output is not None:
+        if not args.mission_inventory:
+            parser.error("--asset-list-output requires --mission-inventory")
+        args.asset_list_output.parent.mkdir(parents=True, exist_ok=True)
+        names = result["level_asset_dependencies"]["files"]
+        args.asset_list_output.write_text("\n".join(names) + "\n", encoding="utf-8")
     if not args.quiet:
         print(payload, end="")
     if args.fail_on_missing_source_prep and args.source is not None:

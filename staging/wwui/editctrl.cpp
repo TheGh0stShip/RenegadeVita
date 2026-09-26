@@ -343,7 +343,7 @@ void EditCtrlClass::Get_Display_Text(WideStringClass &text)
 		const wchar_t* compString = mIME->GetCompositionString();
 
 		if (compString) {
-			length += wcslen(compString);
+			length += rv_utf16_length(compString);
 		}
 	}
 
@@ -584,7 +584,7 @@ EditCtrlClass::Character_From_Pos (const Vector2 &mouse_pos)
 	//	Loop over all the characters in the remainder of the string until
 	// we've moved past the x-position we we're looking for.
 	//
-	int count = ::wcslen (text);	
+	int count = rv_utf16_length(text);
 	for (int index = 0; index < count; index ++) {
 		
 		//
@@ -901,7 +901,7 @@ void EditCtrlClass::On_Unicode_Char(WCHAR unicode)
 
 void EditCtrlClass::Insert_String(const WCHAR* string)
 {
-	int count = wcslen(string);
+	int count = rv_utf16_length(string);
 
 	if (count > 0) {
 		//	Delete the old selection
@@ -1187,7 +1187,7 @@ EditCtrlClass::Set_Int (int value)
 void
 EditCtrlClass::Set_Text (const WCHAR *title)
 {
-	int count = wcslen(title);
+	int count = rv_utf16_length(title);
 
 	// If the string is too long then truncate it so that it will fit.
 	if (count > TextLimit) {
@@ -1361,7 +1361,7 @@ void EditCtrlClass::Set_IME_Typing_Text_Pos(void)
 
 void EditCtrlClass::Show_IME_Typing_Text(const wchar_t* text)
 {
-	mShowIMETypingText = (text && wcslen(text) > 0);
+	mShowIMETypingText = (text && rv_utf16_length(text) > 0);
 
 	if (mShowIMETypingText) {
 		Set_IME_Typing_Text_Pos();

@@ -83,6 +83,55 @@ set(RENEGADE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 set(RENEGADE_UPSTREAM "${RENEGADE_ROOT}/upstream/CnC_Renegade")
 set(RENEGADE_STAGE "${RENEGADE_ROOT}/staging")
 set(RENEGADE_COMPAT "${RENEGADE_ROOT}/port/compatibility/include")
+
+# Compile the HTTP boundary separately until a current TLS backend and trust
+# bundle pass native acceptance. The SDK's legacy OpenSSL is not linked into
+# the game merely to satisfy a probe. Parser/cache/factory are selected below.
+add_library(renegade_ttfs_download_probe OBJECT EXCLUDE_FROM_ALL
+  port/filesystem/renegade_ttfs_download.cpp)
+target_compile_options(renegade_ttfs_download_probe PRIVATE
+  -Wall -Wextra -Werror -fno-exceptions)
+
+# Optional link-only closure for the project-local modern HTTPS stack. This is
+# not a game target or device test; network initialization/CA acceptance remain
+# owned by the eventual client resource-loading integration.
+set(RENEGADE_TTFS_HTTPS_PREFIX "${RENEGADE_ROOT}/build/deps/ttfs-https-vita"
+  CACHE PATH "Project-local curl/mbedTLS dependency prefix")
+if(EXISTS "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libcurl.a")
+  add_library(renegade_ttfs_transfer OBJECT EXCLUDE_FROM_ALL
+    port/filesystem/renegade_ttfs_download.cpp
+    port/filesystem/renegade_ttfs_prepare.cpp
+    port/platform/vita/renegade_mbedtls_platform.c)
+  target_include_directories(renegade_ttfs_transfer BEFORE PRIVATE
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/include" port/filesystem)
+  target_compile_options(renegade_ttfs_transfer PRIVATE
+    -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -mthumb
+    "$<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>")
+  target_link_libraries(renegade_ttfs_transfer PUBLIC
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libcurl.a"
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libmbedtls.a"
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libmbedx509.a"
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libmbedcrypto.a"
+    pthread z SceNet_stub SceNetCtl_stub SceLibKernel_stub SceRtc_stub)
+  add_executable(renegade_ttfs_https_link_probe EXCLUDE_FROM_ALL
+    tools/ttfs_probe.cpp
+    port/filesystem/renegade_ttfs.cpp
+    port/filesystem/renegade_ttfs_cache.cpp
+    port/filesystem/renegade_ttfs_download.cpp
+    port/filesystem/renegade_ttfs_prepare.cpp
+    port/platform/vita/renegade_mbedtls_platform.c)
+  target_include_directories(renegade_ttfs_https_link_probe BEFORE PRIVATE
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/include" port/filesystem)
+  target_compile_options(renegade_ttfs_https_link_probe PRIVATE
+    -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -mthumb
+    "$<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>")
+  target_link_libraries(renegade_ttfs_https_link_probe PRIVATE
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libcurl.a"
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libmbedtls.a"
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libmbedx509.a"
+    "${RENEGADE_TTFS_HTTPS_PREFIX}/lib/libmbedcrypto.a"
+    pthread z SceNet_stub SceNetCtl_stub SceLibKernel_stub SceRtc_stub)
+endif()
 set(VITASDK_DEBUG_SCREEN "${VITASDK}/share/gcc-arm-vita-eabi/samples/common")
 set(RENEGADE_GENERATED_INCLUDE "${CMAKE_CURRENT_BINARY_DIR}/generated")
 file(MAKE_DIRECTORY "${RENEGADE_GENERATED_INCLUDE}")
@@ -134,7 +183,7 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
     "${RENEGADE_GENERATED_INCLUDE}/renegade_dialog_templates.inc")
   set(RENEGADE_A4_DIALOG_CAMPAIGN_ARG)
   if(NOT RENEGADE_VITA_M00_DEMO)
-    set(RENEGADE_A4_DIALOG_CAMPAIGN_ARG --campaign-dialogs)
+    set(RENEGADE_A4_DIALOG_CAMPAIGN_ARG --campaign-dialogs --multiplayer-dialogs)
   endif()
   add_custom_command(
     OUTPUT "${RENEGADE_A4_DIALOG_TEMPLATE_INCLUDE}"
@@ -268,7 +317,13 @@ set(RENEGADE_CAMPAIGN_SCRIPT_SOURCES
   ${RENEGADE_SCRIPT_SOURCE}/MissionX0.cpp
   ${RENEGADE_SCRIPT_SOURCE}/Test_DLS.cpp
   ${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp)
+if(NOT RENEGADE_VITA_M00_DEMO)
+  include(${RENEGADE_ROOT}/cmake/A35MultiplayerBuildingSources.cmake)
+  list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
+    ${RENEGADE_A35_MULTIPLAYER_BUILDING_SOURCES})
+endif()
 list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
+  ${RENEGADE_STAGE}/commando/gdskirmish.cpp
   ${RENEGADE_CAMPAIGN_SCRIPT_SOURCES}
   ${RENEGADE_STAGE}/combat/cinematicgameobj.cpp
   ${RENEGADE_STAGE}/wwlib/ramfile.cpp
@@ -335,6 +390,9 @@ set(RENEGADE_A30_PORT_SOURCES
 	${RENEGADE_ROOT}/port/filesystem/renegade_cache_health.cpp
   ${RENEGADE_ROOT}/port/filesystem/renegade_paths.cpp
   ${RENEGADE_ROOT}/port/filesystem/renegade_file_factory.cpp
+  ${RENEGADE_ROOT}/port/filesystem/renegade_ttfs.cpp
+  ${RENEGADE_ROOT}/port/filesystem/renegade_ttfs_cache.cpp
+  ${RENEGADE_ROOT}/port/filesystem/renegade_ttfs_factory.cpp
   ${RENEGADE_ROOT}/port/filesystem/renegade_registry.cpp
   ${RENEGADE_ROOT}/port/platform/renegade_directinput.cpp
   ${RENEGADE_ROOT}/port/platform/renegade_optional_services.cpp
@@ -354,6 +412,9 @@ set(RENEGADE_A30_PORT_SOURCES
   ${RENEGADE_ROOT}/port/platform/a31_gameplay_boundary.cpp
   ${RENEGADE_ROOT}/port/platform/a31_miscutil_boundary.cpp
 	${RENEGADE_ROOT}/port/platform/a31_network_options_boundary.cpp
+	${RENEGADE_ROOT}/port/platform/a31_client_connect_boundary.cpp
+	${RENEGADE_ROOT}/port/platform/renegade_tt_weapon_event.cpp
+	${RENEGADE_ROOT}/port/platform/renegade_tt_purchase_network.cpp
 	${RENEGADE_ROOT}/port/platform/renegade_script_static_provider.cpp
 	${RENEGADE_ROOT}/port/platform/vita/a30_main.cpp
 )
@@ -373,6 +434,18 @@ add_executable(${PROJECT_NAME}
   ${RENEGADE_A4_FRONTEND_PORT_SOURCES}
   ${VITASDK_DEBUG_SCREEN}/debugScreen.c
 )
+if(NOT RENEGADE_VITA_M00_DEMO)
+  if(NOT TARGET renegade_ttfs_transfer)
+    message(FATAL_ERROR "Full port requires tools/build_ttfs_https_vita.sh first")
+  endif()
+  target_link_libraries(${PROJECT_NAME} renegade_ttfs_transfer)
+  target_sources(${PROJECT_NAME} PRIVATE
+    ${RENEGADE_ROOT}/port/platform/a31_client_identity_boundary.cpp
+    ${RENEGADE_ROOT}/port/platform/renegade_client_identity.cpp
+    ${RENEGADE_STAGE}/commando/gamespyscchallengeevent.cpp
+    ${RENEGADE_STAGE}/commando/gamespycschallengeresponseevent.cpp
+    ${RENEGADE_STAGE}/wwlib/md5.cpp)
+endif()
 if(RENEGADE_A4_ORIGINAL_FRONTEND)
   add_dependencies(${PROJECT_NAME} a4_dialog_templates)
 endif()

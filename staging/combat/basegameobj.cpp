@@ -81,12 +81,21 @@ NetworkGameObjectFactoryClass::Prep_Packet (NetworkObjectClass *object, cPacket 
 NetworkObjectClass *
 NetworkGameObjectFactoryClass::Create (cPacket &packet) const
 {
+	if (packet.Get_Bit_Read_Position() > packet.Get_Bit_Write_Position() ||
+		packet.Get_Bit_Write_Position() - packet.Get_Bit_Read_Position() < 32U) {
+		fprintf(stderr, "network-object: truncated preset identifier\n");
+		return NULL;
+	}
 	int definition_id = packet.Get (definition_id);
 
 	//
 	//	Lookup the definition for this object
 	//
 	DefinitionClass *definition = DefinitionMgrClass::Find_Definition (definition_id);
+	if (definition == NULL) {
+		fprintf(stderr, "network-object: unavailable preset id=%d\n", definition_id);
+		return NULL;
+	}
 	WWASSERT (definition != NULL);
 
 	//

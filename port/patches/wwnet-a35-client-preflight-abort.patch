@@ -1,0 +1,18 @@
+--- a/connect.h
++++ b/connect.h
+@@ -127,6 +127,8 @@
+ 		int Get_Num_RHosts()	{return NumRHosts;}
+ 		cRemoteHost * Get_Remote_Host(int rhost);
+ 		bool Is_Destroy() {return IsDestroy;}
++		// Mark failure without deleting a connection still owned by its caller.
++		void Abort_Client() { WWASSERT(!IsServer); if (!IsServer) IsDestroy = true; }
+       int Get_Local_Id() const {return LocalId;}
+ 		double Get_Max_Acceptable_Packetloss_Pc() const {return MaxAcceptablePacketlossPc;}
+ 		cNetStats & Get_Combined_Stats() {return CombinedStats;}
+@@ -275,4 +277,4 @@
+ 		//virtual bool Application_Acceptance_Handler(cPacket & packet);
+       //virtual void Eviction_Handler(int evicted_rhost_id);
+ 		//virtual void Server_Packet_Handler(cPacket & packet, int rhost_id);
+-		//virtual void Client_Packet_Handler(cPacket & packet);
+\ No newline at end of file
++		//virtual void Client_Packet_Handler(cPacket & packet);

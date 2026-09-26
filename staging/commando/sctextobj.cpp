@@ -54,6 +54,9 @@
 #include "a31_messagebox_stub.h"
 #include "a31_console_stub.h"
 #include "mpsettingsmgr.h"
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+#include "a31_client_connect_boundary.h"
+#endif
 
 DECLARE_NETWORKOBJECT_FACTORY(cScTextObj, NETCLASSID_SCTEXTOBJ);
 
@@ -380,6 +383,9 @@ cScTextObj::Import_Creation(BitStreamClass & packet)
 	packet.Get(RecipientId);
 	packet.Get(IsHostAdminMessage);
 	packet.Get_Wide_Terminated_String(Text.Get_Buffer(256), 256);
+	#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+	if (SenderId == HOST_TEXT_SENDER) A31ClientConnect::Server_Message(Text);
+	#endif
 
 	Act();
 }

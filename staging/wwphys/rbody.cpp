@@ -540,6 +540,8 @@ void RigidBodyClass::Init(const RigidBodyDefClass & def)
 
 RigidBodyClass::~RigidBodyClass(void)
 {
+	delete History;
+	History = NULL;
 	REF_PTR_RELEASE(Box);
 	if (ContactBox != NULL) {
 		delete ContactBox;
@@ -2276,7 +2278,6 @@ bool RigidBodyDefClass::Is_Type(const char * type_name)
 		return MoveablePhysDefClass::Is_Type(type_name);
 	}
 }
-
 
 
 

@@ -66,6 +66,20 @@ class RepoHygieneTests(unittest.TestCase):
         finally:
             shutil.rmtree(root)
 
+    def test_private_identity_is_blocked(self):
+        root, result = self._make_repo_with_file("tt-identity-v1.txt", "synthetic")
+        try:
+            self.assertEqual(result, 1)
+        finally:
+            shutil.rmtree(root)
+
+    def test_handoff_notes_are_blocked(self):
+        root, result = self._make_repo_with_file("reports/CODEX_HANDOFF.md", "local only")
+        try:
+            self.assertEqual(result, 1)
+        finally:
+            shutil.rmtree(root)
+
     def test_local_path_leak_in_text_is_blocked(self):
         repo_root = Path(tempfile.mkdtemp())
         try:

@@ -35,6 +35,18 @@ State the exact scene and interaction. For frontend text, dialogue text, and BIN
 
 Preserve the matching VPK, ELF, map, symbols, runtime log, and any `psp2core-*.psp2dmp`. Note the input and the last visible state. Symbolicate only with the exact candidate artifacts.
 
+## Experimental multiplayer fails
+
+Use [Multiplayer](MULTIPLAYER.md) and the candidate-matched runtime log. Distinguish
+identity/admission, TLS/download, package validation, world loading, and gameplay
+failures. Do not post the private identity file or raw packets. Keep certificate
+verification enabled; a missing trusted CA bundle is not a reason to disable it.
+The retail-compatible TTFS User-Agent fixed the observed repository HTTP 403,
+but does not guarantee every server or later server policy is compatible.
+
+Dev195's purchase dialog and early message text remain known defects. A join
+or player-list entry alone does not establish complete multiplayer support.
+
 ## No recorder video appears
 
 A red `R` marks recorder start, not a committed MP4. A crash can prevent finalization. Search only the recorder's expected `ux0:/video` output scope and retain a negative receipt when no MP4 exists. See [Evidence capture](DEMO_CAPTURE.md).

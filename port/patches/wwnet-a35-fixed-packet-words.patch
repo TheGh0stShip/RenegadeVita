@@ -1,0 +1,177 @@
+--- a/packetmgr.cpp
++++ b/packetmgr.cpp
+@@ -38,6 +38,16 @@
+ 
+ #include <always.h>
+ #include <memory.h>
++#include <stdint.h>
++
++// Packet words remain 32-bit on LP64 hosts and may be unaligned on ARM.
++// Width correction cross-checked against OpenW3D 89cfaaffe7d9245e.
++static uint32_t Read_Packet_Word(const void *bytes)
++{
++	uint32_t word;
++	memcpy(&word, bytes, sizeof(word));
++	return word;
++}
+ //#include <winsock.h>
+ #include "systimer.h"
+ #include <malloc.h>
+@@ -317,8 +327,8 @@
+ 
+ 			this_match = false;
+ 
+-			if (*((long*)&base_packet[i]) == *((long*)&add_packet[i])) {
+-				if (*((long*)&base_packet[i+4]) == *((long*)&add_packet[i+4])) {
++			if (Read_Packet_Word(&base_packet[i]) == Read_Packet_Word(&add_packet[i])) {
++				if (Read_Packet_Word(&base_packet[i+4]) == Read_Packet_Word(&add_packet[i+4])) {
+ 					chunks = true;
+ 					this_match = true;
+ 				}
+@@ -744,7 +754,7 @@
+ 						/*
+ 						** Is this packet for the same recipient?
+ 						*/
+-						if (SendBuffers[base_index].Port == SendBuffers[index].Port && (*(unsigned long*)(&SendBuffers[index].IPAddress[0])) == (*(unsigned long*)(&SendBuffers[base_index].IPAddress[0]))) {
++						if (SendBuffers[base_index].Port == SendBuffers[index].Port && Read_Packet_Word(SendBuffers[index].IPAddress) == Read_Packet_Word(SendBuffers[base_index].IPAddress)) {
+ 
+ 							//WWDEBUG_SAY(("Found secondary packet %d\n", index));
+ 
+@@ -849,7 +859,7 @@
+ 				for (int j=i+1 ; j<NumSendBuffers ; j++) {
+ 					if (SendBuffers[j].PacketReady && SendBuffers[j].PacketSendSocket == socket) {
+ 						if (SendBuffers[i].PacketSendLength + SendBuffers[j].PacketSendLength < PACKET_MANAGER_MTU) {
+-							if (SendBuffers[i].Port == SendBuffers[j].Port && (*(unsigned long*)(&SendBuffers[i].IPAddress[0])) == (*(unsigned long*)(&SendBuffers[j].IPAddress[0]))) {
++							if (SendBuffers[i].Port == SendBuffers[j].Port && Read_Packet_Word(SendBuffers[i].IPAddress) == Read_Packet_Word(SendBuffers[j].IPAddress)) {
+ 								unsigned char *dest_ptr = &SendBuffers[i].PacketBuffer->Buffer[current_len];
+ 								memcpy(dest_ptr, SendBuffers[j].PacketBuffer, SendBuffers[j].PacketSendLength);
+ 								current_header->MorePackets = 1;
+@@ -893,7 +903,7 @@
+ 
+ #ifdef WRAPPER_CRC
+ 
+-			unsigned long crc = CRC::Memory((unsigned char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
++			uint32_t crc = CRC::Memory((unsigned char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
+ #if (1)
+ 			/*
+ 			** Reverse byte order to prevent the demo from having the same CRC as the game.
+@@ -901,7 +911,7 @@
+ 			crc = __builtin_bswap32(crc);
+ #endif //(0)
+ 			char *crc_and_buffer = (char*)_alloca(SendBuffers[i].PacketSendLength + sizeof(crc));
+-			*((unsigned long*) crc_and_buffer) = crc;
++			memcpy(crc_and_buffer, &crc, sizeof(crc));
+ 			memcpy(crc_and_buffer + sizeof(crc), (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
+ 
+ 			Register_Packet_Out(&SendBuffers[i].IPAddress[0], SendBuffers[i].Port, SendBuffers[i].PacketSendLength + UDP_HEADER_SIZE + sizeof(crc), 0);
+@@ -1104,7 +1114,7 @@
+  *=============================================================================================*/
+ void PacketManagerClass::Clear_Socket_Error(SOCKET socket)
+ {
+-	unsigned long error_code;
++	int error_code = 0;
+ 	int length = 4;
+ 	assert(socket != INVALID_SOCKET);
+ 
+@@ -1145,9 +1155,10 @@
+ 		sockaddr_in addr;
+ 		memset(&addr, 0, sizeof(addr));
+ 		pm_assert(packet_buffer_size >= PACKET_MANAGER_MTU);
+-		int bytes;
+-		int result = ioctlsocket(socket, FIONREAD, (unsigned long *)&bytes);
+-		if (result == 0 && bytes != 0) {
++		unsigned long available = 0;
++		int result = ioctlsocket(socket, FIONREAD, &available);
++		int bytes = 0;
++		if (result == 0 && available != 0) {
+ 
+ 			bytes = recvfrom(socket, (char*)packet_buffer, packet_buffer_size, 0, (LPSOCKADDR) &addr, &address_size);
+ 			if (bytes > 0) {
+@@ -1156,14 +1167,15 @@
+ #endif //WRAPPER_CRC
+ 
+ #ifdef WRAPPER_CRC
+-				unsigned long crc = CRC::Memory((unsigned char*)packet_buffer + 4, bytes - sizeof(crc));
++				if (bytes < 4 + static_cast<int>(sizeof(PacketPackHeaderStruct))) return 0;
++				uint32_t crc = CRC::Memory((unsigned char*)packet_buffer + 4, bytes - 4);
+ #if (1)
+ 				/*
+ 				** Reverse byte order to prevent the demo from having the same CRC as the game.
+ 				*/
+ 				crc = __builtin_bswap32(crc);
+ #endif //(0)
+-				if (crc != *((unsigned long*)packet_buffer)) {
++				if (crc != Read_Packet_Word(packet_buffer)) {
+ 					WWDEBUG_SAY(("PMC::Get_Packet: Socket %d, received packet %d bytes long from %s\n", socket, bytes, Addr_As_String(&addr)));
+ 					WWDEBUG_SAY(("PMC::Get_Packet: *** PACKET WRAPPER CRC ERROR ***"));
+ 					NumReceivePackets = 0;
+@@ -1335,7 +1347,7 @@
+ 	static unsigned long _last_ip = 0;
+ 	static unsigned short _last_port = 0;
+ 	static int _last_stats = -1;
+-	unsigned long long_ip = *((unsigned long*)ip_address);
++	unsigned long long_ip = Read_Packet_Word(ip_address);
+ 
+ 	if (ResetStatsIn) {
+ 		_last_ip = 0;
+@@ -1386,7 +1398,7 @@
+ 	static unsigned long _last_ip = 0;
+ 	static unsigned short _last_port = 0;
+ 	static int _last_stats = -1;
+-	unsigned long long_ip = *((unsigned long*)ip_address);
++	unsigned long long_ip = Read_Packet_Word(ip_address);
+ 
+ 	if (ResetStatsOut) {
+ 		_last_ip = 0;
+@@ -1605,7 +1617,7 @@
+ unsigned long PacketManagerClass::Get_Raw_Bandwidth_In(SOCKADDR_IN *address)
+ {
+ 	CriticalSectionClass::LockClass lock(CriticalSection);
+-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
++	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
+ 	unsigned short port = address->sin_port;
+ 	int stats = Get_Stats_Index(ip, port, false);
+ 
+@@ -1634,7 +1646,7 @@
+ unsigned long PacketManagerClass::Get_Raw_Bandwidth_Out(SOCKADDR_IN *address)
+ {
+ 	CriticalSectionClass::LockClass lock(CriticalSection);
+-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
++	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
+ 	unsigned short port = address->sin_port;
+ 	int stats = Get_Stats_Index(ip, port, false);
+ 
+@@ -1664,7 +1676,7 @@
+ unsigned long PacketManagerClass::Get_Raw_Bytes_Out(SOCKADDR_IN *address)
+ {
+ 	CriticalSectionClass::LockClass lock(CriticalSection);
+-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
++	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
+ 	unsigned short port = address->sin_port;
+ 	int stats = Get_Stats_Index(ip, port, false);
+ 
+@@ -1695,7 +1707,7 @@
+ unsigned long PacketManagerClass::Get_Compressed_Bandwidth_In(SOCKADDR_IN *address)
+ {
+ 	CriticalSectionClass::LockClass lock(CriticalSection);
+-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
++	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
+ 	unsigned short port = address->sin_port;
+ 	int stats = Get_Stats_Index(ip, port, false);
+ 
+@@ -1724,7 +1736,7 @@
+ unsigned long PacketManagerClass::Get_Compressed_Bandwidth_Out(SOCKADDR_IN *address)
+ {
+ 	CriticalSectionClass::LockClass lock(CriticalSection);
+-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
++	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
+ 	unsigned short port = address->sin_port;
+ 	int stats = Get_Stats_Index(ip, port, false);
+ 
+@@ -1799,4 +1811,4 @@
+ 
+ bool PacketManagerClass::BandwidthStatsStruct::operator != (BandwidthStatsStruct const &stats) {
+ 	return((memcmp(this, &stats, sizeof(*this)) == 0) ? false : true);
+-}
+\ No newline at end of file
++}

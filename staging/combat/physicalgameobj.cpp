@@ -35,6 +35,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "physicalgameobj.h"
+#include "renegade_client_effects.h"
+#include "renegade_physical_rare.h"
 #include "damage.h"
 #include "scripts.h"
 #include "debug.h"
@@ -1053,15 +1055,30 @@ void	PhysicalGameObj::Import_Creation( BitStreamClass &packet )
 	//	Read the object's position
 	//
 	Vector3 position (0, 0, 0);
-	packet.Get( position.X, BITPACK_WORLD_POSITION_X );
-	packet.Get( position.Y, BITPACK_WORLD_POSITION_Y );
-	packet.Get( position.Z, BITPACK_WORLD_POSITION_Z );
+	bool modern = false;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	modern = Renegade_Client_Uses_TT_Replication();
+#endif
+	if (modern) {
+		packet.Get(position.X);
+		packet.Get(position.Y);
+		packet.Get(position.Z);
+	} else {
+		packet.Get(position.X, BITPACK_WORLD_POSITION_X);
+		packet.Get(position.Y, BITPACK_WORLD_POSITION_Y);
+		packet.Get(position.Z, BITPACK_WORLD_POSITION_Z);
+	}
 
 	//
 	//	Read the object's facing
 	//
 	float facing = 0;
 	packet.Get( facing );
+	if (packet.Has_Read_Error()) return;
+	if (!WWMath::Is_Valid_Float(position.X)) position.X = 0;
+	if (!WWMath::Is_Valid_Float(position.Y)) position.Y = 0;
+	if (!WWMath::Is_Valid_Float(position.Z)) position.Z = 0;
+	if (!WWMath::Is_Valid_Float(facing)) facing = 0;
 
 	//
 	//	Build a matrix from the position and facing, then set it
@@ -1163,17 +1180,34 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 {
 	DamageableGameObj::Import_Rare( packet );
+	bool modern = false;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	modern = Renegade_Client_Uses_TT_Replication();
+#endif
+	if (!Renegade_Validate_Physical_Rare(packet, modern, As_VehicleGameObj() != NULL)) {
+		packet.Mark_Read_Error();
+		return;
+	}
+	RenegadePhysicalRarePrefix prefix;
+	if (modern) {
+		Renegade_Read_Physical_Rare_Prefix(packet, prefix);
+		PhysObj->Set_Collision_Group(prefix.CollisionGroup);
+		if (prefix.ClearAnimation && AnimControl) {
+			AnimControl->Set_Animation(static_cast<const char *>(NULL), 0, 0);
+			AnimControl->Set_Mode(ANIM_MODE_STOP);
+		}
+	}
 
 	//
 	//	Get the model name
 	//
 	StringClass model_name;
-	packet.Get_Terminated_String( model_name.Get_Buffer( 256 ), 256, true );
+	packet.Get_Terminated_String(model_name.Get_Buffer(modern ? 1024 : 256), modern ? 1024 : 256, true);
 
 	//
 	//	Set the new model (if necessary)
 	//
-	const char *old_model_name = Peek_Physical_Object()->Peek_Model()->Get_Name();
+	const char *old_model_name = Peek_Model() ? Peek_Model()->Get_Name() : "";
 	if ( model_name.Compare_No_Case (old_model_name) != 0 ) {
 		Peek_Physical_Object()->Set_Model_By_Name( model_name );
 	}
@@ -1185,7 +1219,7 @@ void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 	int target_frame	= 0;
 	int curr_frame		= 0;
 	int anim_mode		= ANIM_MODE_TARGET;
-	packet.Get_Terminated_String( animation_name.Get_Buffer( 256 ), 256, true );
+	packet.Get_Terminated_String(animation_name.Get_Buffer(modern ? 1024 : 256), modern ? 1024 : 256, true);
 	packet.Get( curr_frame );
 	packet.Get( target_frame );
 	packet.Get( anim_mode );
@@ -1226,11 +1260,15 @@ void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 	//
 	int player_type = packet.Get( player_type );
 	Set_Player_Type( player_type );
+	if (modern) {
+		RadarBlipColorType = prefix.RadarColor;
+		RadarBlipShapeType = prefix.RadarShape;
+	}
 
 	HUDPokableIndicatorEnabled = packet.Get( HUDPokableIndicatorEnabled );
 
 
-	if ( As_VehicleGameObj() != NULL ) {
+	if (modern || As_VehicleGameObj() != NULL) {
 		// Get Hidden
 		bool hidden = packet.Get( hidden );
 		if ( Peek_Model() ) {
@@ -1415,4 +1453,3 @@ void PhysicalGameObj::Object_Shattered_Something
 														false		// no emitter
 														);
 }
-

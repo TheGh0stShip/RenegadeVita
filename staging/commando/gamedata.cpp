@@ -36,6 +36,9 @@
 
 #include "gamedata.h"
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "a31_client_connect_boundary.h"
+#endif
 #include <stdio.h>
 #include <string.h>
 
@@ -50,9 +53,11 @@
 #include "teammanager.h"
 #include "playermanager.h"
 #include "assets.h"
+#include "renegade_server_config.h"
 #include "translatedb.h"
 #include "string_ids.h"
 #include "gamemode.h"
+#include "renegade_optional_network_modes.h"
 #include "savegame.h"
 #include "bandwidth.h"
 #include "gametype.h"
@@ -507,7 +512,7 @@ void cGameData::Set_Ip_And_Port(void)
 	//
 	// IP is set automatically in WOL unless there is an IP override and a port overrride.
 	//
-	if (GameModeManager::Find("WOL")->Is_Active()) {
+	if (Renegade_Network_Mode_Active("WOL")) {
 
 		if (g_ip_override == INADDR_NONE || WOLNATInterface.Get_Force_Port() == 0) {
 			unsigned long temp = FirewallHelper.Get_Local_Address();
@@ -633,6 +638,9 @@ bool cGameData::Is_Map_Valid(char **out_filename)
 		if (out_filename) {
 			*out_filename = MapName.Peek_Buffer();
 		}
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		if (A31ClientConnect::Is_Prepared_Map(MapName)) return true;
+#endif
 		map_exists = cMiscUtil::File_Exists (MapName);
 	}
 
@@ -677,7 +685,7 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 	}
 
 #ifndef FREEDEDICATEDSERVER
-	if (GameModeManager::Find("WOL")->Is_Active()) {
+	if (Renegade_Network_Mode_Active("WOL")) {
 #endif //FREEDEDICATEDSERVER
 		if (IsPassworded.Is_True() && Is_QuickMatch_Server()) {
 			Debug_Say(("cGameData::Is_Valid_Settings: Quickmatch can not have passwords.\n" ));
@@ -757,8 +765,12 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 				if (map_name.Get_Length()) {
 					char filename[_MAX_PATH];
 					sprintf(filename, "data\\%s", map_name.Peek_Buffer());
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+					if (!cMiscUtil::File_Exists(filename)) {
+#else
 					RawFileClass file(filename);
 					if (!file.Is_Available()) {
+#endif
 						PRINT_CONFIG_ERROR;
 						ConsoleBox.Print("Map file '%s' not found\n\n", filename);
 						outMsg.Format(TRANSLATE(IDS_HOPTERR_MAP_NOTFOUND), filename);
@@ -1006,16 +1018,7 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 	WWASSERT(config_file != NULL);
    WWASSERT(cMiscUtil::Is_String_Different(config_file, ""));
 
-   INIClass * p_ini = Get_INI(config_file);
-	StringClass full_filename(config_file, true);
-
-	if (p_ini == NULL) {
-      full_filename.Format("data\\%s", config_file);
-      FILE * file = fopen(full_filename, "w");
-	   fclose(file);
-
-		p_ini = Get_INI(config_file);
-   }
+   INIClass * p_ini = Renegade_Load_Server_Config(config_file);
 	WWASSERT(p_ini != NULL);
 
 	LastServerConfigModTime = Get_Config_File_Mod_Time();
@@ -1151,7 +1154,7 @@ void cGameData::Save_To_Server_Config(LPCSTR config_file)
 	WWASSERT(config_file != NULL);
    WWASSERT(cMiscUtil::Is_String_Different(config_file, ""));
 
-   INIClass * p_ini = Get_INI(config_file);
+   INIClass * p_ini = Renegade_Load_Server_Config(config_file);
    WWASSERT(p_ini != NULL);
 
 
@@ -1204,7 +1207,7 @@ void cGameData::Save_To_Server_Config(LPCSTR config_file)
 		p_ini->Put_String(	INI_SECTION_NAME, "Motd", motd.Peek_Buffer());
 	}
 
-	Save_INI(p_ini, config_file);
+	Renegade_Save_Server_Config(p_ini, config_file);
    Release_INI(p_ini);
 }
 
@@ -1530,21 +1533,7 @@ bool cGameData::Has_Config_File_Changed(void)
 //-----------------------------------------------------------------------------
 unsigned long cGameData::Get_Config_File_Mod_Time(void)
 {
-	StringClass full_filename(IniFilename, true);
-	RawFileClass file(full_filename);
-
-	if (!file.Is_Available()) {
-      full_filename.Format("data\\%s", IniFilename);
-		file.Set_Name(full_filename);
-   }
-
-	if (file.Is_Available()) {
-		file.Open();
-		unsigned long mod_time = file.Get_Date_Time();
-		file.Close();
-		return(mod_time);
-	}
-	return(0);
+	return Renegade_Server_Config_Mod_Time(IniFilename);
 }
 
 

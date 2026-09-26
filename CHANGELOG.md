@@ -2,13 +2,27 @@
 
 This changelog records public-facing source, process, and evidence changes. It does not turn a build into a physical acceptance claim.
 
-## Unreleased
+## A3.5-dev195 - 2026-09-26
+
+- Published the native ARM RenCorner join checkpoint: TT admission, validated
+  HTTPS package downloads, original archive mounting and network replication.
+- Vita3K evidence covers City_U1 rendering, bounded movement, and clean session
+  teardown. The public list showed `PSVita`, not the requested spaced name.
+- Integrated six missing original Combat factory owners and verified state
+  machine callbacks/save-load and loaded replication with sanitizers.
+- Kept the demo/full-port split. Campaign fixes remain under validation;
+  multiplayer purchase UI, text, complete gameplay, and physical acceptance
+  are still open. See the [Dev195 report](reports/DEV195_RENCORNER_NATIVE_JOIN.md).
+- Refreshed public setup/status/build documentation and CI publication checks.
+  Private handoff notes, credentials, retail/server assets, and raw logs stay local.
+
+## Historical documentation and Dev85-Dev88 work
 
 ### Documentation and repository
 
 - Rebuilt the public README and documentation navigation around the accepted A3.1.4 baseline, Dev87 physical frontend failure, and Dev88 local-only candidate.
 - Added an explicit evidence/capture policy, security policy, contributor conduct policy, GitHub issue forms, and repository-hygiene documentation checks.
-- Clarified that the historical gallery contains reviewed evidence rather than a synchronized same-camera benchmark; Dev87 has no recovered image and Dev88 has no physical capture.
+- Clarified that the historical gallery contains reviewed evidence rather than a synchronized same-camera benchmark. Six Dev87 recorder-derived stills were subsequently recovered; Dev88 has no physical capture.
 - Clarified the difference between VitaCompanion panel power control, the optional MP4 recorder, and the not-yet-installed VDB framebuffer provider.
 
 ### A3.5-dev85 through dev88

@@ -22,11 +22,17 @@ The mapping below is the current source intent. Its complete physical behavior i
 
 Notes:
 
+- In Dev195's experimental remote session, START disconnects and returns to
+  the original main menu. It does not open the campaign EVA pause menu.
+  Triangle input was delivered at a terminal, but the purchase dialog did not
+  appear; purchase interaction is not accepted.
+
 - Front touch is reserved for original mouse cursor and left-click WWUI/terminal interaction.
 - D-pad navigates the original WWUI focus in the frontend and remains weapon/zoom input in gameplay.
 - D-pad gameplay input must not leak into camera turning.
 - Circle or the original Back control leaves EVA through original Continue_Game. Start no longer requests immediate application exit in the original-frontend route.
-- The native EVA menu keeps unavailable Help, save and load entries visible but disabled. Confirming Exit Demo requests orderly outer-loop teardown.
+- Menu availability depends on the full-port/demo profile and session. The
+  tutorial demo's Exit Demo path is not the remote-session pause contract.
 - Development checkpoint startup is a separate opt-in build feature; public builds default to leaving it disabled. Save files are never packaged with the demo.
 - Rear touch pad remains the gameplay first-person / third-person camera toggle.
 - The MP4 recorder's L+Start finalize gesture is separate from normal game input and is unsafe as a capture workaround until Start lifecycle behavior is accepted.

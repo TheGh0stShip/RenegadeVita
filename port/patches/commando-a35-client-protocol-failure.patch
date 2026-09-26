@@ -1,0 +1,35 @@
+--- a/pkthandlers.cpp
++++ b/pkthandlers.cpp
+@@ -43,6 +43,9 @@
+ #include "playermanager.h"
+ #include "apppacketstats.h"
+ #include "specialbuilds.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "a31_client_connect_boundary.h"
++#endif
+ 
+ 
+ extern char * Addr_As_String(sockaddr_in *addr);
+@@ -301,6 +304,15 @@
+ 		//	Create the network object
+ 		//
+ 		int net_classid = packet.Get (net_classid);
++		#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		if (object == NULL && NetworkObjectFactoryMgrClass::Find_Factory(net_classid) == NULL) {
++			// Leave teardown outside packet dispatch. Unknown required events
++			// are protocol failures, never fabricated objects or successful joins.
++			A31ClientConnect::Unsupported_Network_Class(net_classid);
++			packet.Flush();
++			return;
++		}
++		#endif
+ 		if (object == NULL) {
+ 			object = Create_Network_Object (packet, net_classid, network_obj_id);
+ 		}
+@@ -401,4 +413,4 @@
+ 
+ 
+ 
+-	//BYTE app_packet_type		= packet.Get (app_packet_type);
+\ No newline at end of file
++	//BYTE app_packet_type		= packet.Get (app_packet_type);

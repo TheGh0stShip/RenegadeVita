@@ -1,0 +1,8 @@
+--- a/physicalgameobj.h
++++ b/physicalgameobj.h
+@@ -86,0 +87,5 @@
++#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++	int Get_Killed_Explosion_ID(void) const { return KilledExplosion; }
++#endif
++
++

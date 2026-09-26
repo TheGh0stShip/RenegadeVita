@@ -1,0 +1,50 @@
+--- a/combat/purchasesettings.h
++++ b/combat/purchasesettings.h
+@@ -100,6 +100,9 @@
+ 	//	Accessors
+ 	//
+ 	TYPE								Get_Type (void)							{ return Type; }
++	static bool Is_Valid_Entry(int index, int alternate) {
++		return index >= 0 && index < MAX_ENTRIES && alternate >= -1 && alternate < MAX_ALTERNATES;
++	}
+ 	TEAM								Get_Team (void)							{ return Team; }
+ 
+ 	const WCHAR *					Get_Name (int index);
+--- a/combat/teampurchasesettings.h
++++ b/combat/teampurchasesettings.h
+@@ -87,6 +87,7 @@
+ 	//	Accessors
+ 	//
+ 	TEAM								Get_Team (void)							{ return Team; }
++	static bool Is_Valid_Entry(int index) { return index >= 0 && index < MAX_ENTRIES; }
+ 
+ 	const WCHAR *					Get_Enlisted_Name (int index);
+ 	int								Get_Enlisted_Definition (int index)	{ return DefinitionList[index]; }
+--- a/commando/vendor.cpp
++++ b/commando/vendor.cpp
+@@ -278,7 +278,16 @@
+ 		return retval;
+ 	}
+ 
+-	if (CombatManager::I_Am_Server () == false) {		
++	// Network requests must not index outside the original retail catalogs.
++	if (type < TYPE_CHARACTER || type > TYPE_SECRET_VEHICLE ||
++		!PurchaseSettingsDefClass::Is_Valid_Entry(item_index, alt_skin_index) ||
++		(type == TYPE_ENLISTED_CHARACTER && !TeamPurchaseSettingsDefClass::Is_Valid_Entry(item_index)) ||
++		((type == TYPE_BEACON || type == TYPE_SUPPLY) && item_index != 0)) {
++		return PERR_NOT_IN_STOCK;
++	}
++	if (player->Get_Player_Data() == NULL) return PERR_NO_FUNDS;
++
++	if (CombatManager::I_Am_Server () == false) {
+ 		
+ 		//
+ 		//	Request this purchase from the server
+@@ -306,6 +315,7 @@
+ 		//
+ 		//	Lookup information about this purchase
+ 		//
++		if (base == NULL && type != TYPE_SUPPLY && type != TYPE_BEACON) return PERR_NO_FACTORY;
+ 		int cost					= 0;
+ 		int definition_id		= 0;
+ 		Get_Merchandise_Information (player, type, item_index, alt_skin_index, cost, definition_id);

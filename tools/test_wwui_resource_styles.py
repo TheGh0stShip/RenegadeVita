@@ -44,6 +44,28 @@ def controls(data):
 
 
 class ResourceStyleTests(unittest.TestCase):
+    def test_multiplayer_resources_are_opt_in_and_complete(self):
+        definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
+        generated = generator.parse(SOURCE/'chat.rc', definitions, generator.MULTIPLAYER_IDS)
+        demo = generator.parse(SOURCE/'chat.rc', definitions)
+        owners = {
+            'IDD_CNC_PURCHASE_MAIN_SCREEN': 'dlgcncpurchasemainmenu.cpp',
+            'IDD_CNC_PURCHASE_SCREEN': 'dlgcncpurchasemenu.cpp',
+            'IDD_CHAT_MODULE': 'dlgmpingamechat.cpp',
+        }
+        for name, owner in owners.items():
+            ident = definitions[name]
+            self.assertNotIn(ident, demo)
+            present = {struct.unpack_from('<H', header, 16)[0]
+                       for header, _, _ in controls(generated[ident])}
+            source = (SOURCE/owner).read_text(encoding='latin1')
+            initializer = source.split('::On_Init_Dialog (void)', 1)[1]
+            initializer = initializer.split('\n////////////////////////////////////////////////////////////////', 1)[0]
+            required = set(re.findall(r'Get_Dlg_Item\s*\(\s*(IDC_\w+)\s*\)', initializer))
+            self.assertTrue(required, owner)
+            for control in required:
+                self.assertIn(definitions[control] & 0xffff, present, control)
+
     def test_all_pause_action_and_confirmation_resources_present(self):
         definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
         generated = generator.parse(SOURCE/'chat.rc', definitions)
@@ -88,12 +110,13 @@ class ResourceStyleTests(unittest.TestCase):
 
     def test_original_frontend_controls_match_llvm_rc(self):
         definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
-        generated = generator.parse(SOURCE/'chat.rc', definitions, generator.CAMPAIGN_IDS)
+        selected_ids = generator.CAMPAIGN_IDS | generator.MULTIPLAYER_IDS
+        generated = generator.parse(SOURCE/'chat.rc', definitions, selected_ids)
         source = (SOURCE/'chat.rc').read_text(encoding='latin1')
         blocks = re.findall(r'^\w+ DIALOG(?:EX)? DISCARDABLE .*?^END',
                             source, re.MULTILINE | re.DOTALL)
-        selected = [b for b in blocks if definitions.get(b.split()[0]) in generator.CAMPAIGN_IDS]
-        self.assertEqual(len(selected), len(generator.CAMPAIGN_IDS))
+        selected = [b for b in blocks if definitions.get(b.split()[0]) in selected_ids]
+        self.assertEqual(len(selected), len(selected_ids))
         rc = '\n'.join(f'#define {key} {value}' for key, value in definitions.items())
         rc += '\n' + '\n'.join(selected) + '\n'
         with tempfile.TemporaryDirectory(prefix='renegade-rc-') as folder:

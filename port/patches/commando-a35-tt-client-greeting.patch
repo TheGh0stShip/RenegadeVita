@@ -1,0 +1,38 @@
+--- a/cnetwork.cpp
++++ b/cnetwork.cpp
+@@ -88,6 +88,7 @@
+ #include "a31_slavemaster_stub.h"
+ #include "gamedataupdateevent.h"
+ #include "renegade_network_provider.h"
++#include "renegade_client_identity.h"
+ // Demo playback is outside the Vita runtime boundary.
+ #include "a31_serversettings_stub.h"
+ #include "a31_network_dialog_stub.h"
+@@ -212,10 +213,5 @@
+    PClientConnection->Init_As_Client(
+ 		The_Game()->Get_Ip_Address(), The_Game()->Get_Port(), my_port);
+-	if (!NetworkDataCRCValid) {
+-		fprintf(stderr, "network compatibility: data checksum unavailable; connection stopped\n");
+-		PClientConnection->Abort_Client();
+-		return;
+-	}
+ 
+ 	//
+ 	// This packet resurfaces on the server in Application_Acceptance_Handler
+@@ -230,6 +226,16 @@
+ 	packet.Add(ExeKey);
+ 	packet.Add(bbo); // note, this field is consumed by wwnet
+ 
++	bool modern_greeting = false;
++	const bool greeting_ready = Renegade_Append_Client_Greeting(packet,
++		!IS_SOLOPLAY && I_Am_Only_Client(), &modern_greeting);
++	PClientConnection->Set_TT_Client_Greeting(modern_greeting);
++	if (!NetworkDataCRCValid || !greeting_ready) {
++		fprintf(stderr, "network compatibility: client preflight failed checksum=%d greeting=%d\n",
++			NetworkDataCRCValid, greeting_ready);
++		PClientConnection->Abort_Client();
++		return;
++	}
+    PClientConnection->Connect_Cs(packet);
+ 	packet.Flush();
+ 

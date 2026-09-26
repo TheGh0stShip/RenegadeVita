@@ -1,0 +1,79 @@
+--- a/c4.cpp
++++ b/c4.cpp
+@@ -59,6 +59,10 @@
+ #include "bitpackids.h"
+ #include "surfaceeffects.h"
+ #include "gametype.h"
++#include "renegade_c4_state.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "renegade_client_effects.h"
++#endif
+ 
+ /*
+ ** C4GameObjDef
+@@ -743,10 +747,25 @@
+ void	C4GameObj::Import_Rare( BitStreamClass &packet )
+ {
+ 	SimpleGameObj::Import_Rare( packet );
++    if (packet.Has_Read_Error()) return;
++    bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++    modern = Renegade_Client_Uses_TT_Replication();
++#endif
++    // Validate the entire subclass payload before changing charge/attachment state.
++    BitStreamClass scan;
++    scan = packet;
++    RenegadeC4RareState checked;
++    if (!Renegade_Read_C4_Rare(scan, checked, modern) ||
++        (checked.AmmoID != 0 && !WeaponManager::Find_Ammo_Definition(checked.AmmoID))) {
++        packet.Mark_Read_Error();
++        return;
++    }
++    const int velocity_packing = modern ? BitStreamClass::NO_ENCODER : BITPACK_VEHICLE_VELOCITY;
+ 
+ 	int ammo_def_id = packet.Get( ammo_def_id );
+ 	if ( ammo_def_id != 0 ) {
+-		AmmoDefinition = (AmmoDefinitionClass *)DefinitionMgrClass::Find_Definition( ammo_def_id );
++		AmmoDefinition = WeaponManager::Find_Ammo_Definition( ammo_def_id );
+ 		if ( !AmmoDefinition->ModelName.Is_Empty() ) {
+ 			Peek_Physical_Object()->Set_Model_By_Name( AmmoDefinition->ModelName ) ;
+ 		}
+@@ -760,9 +779,9 @@
+ 	}
+ 
+ 	Vector3 vel;
+-	packet.Get(vel.X, BITPACK_VEHICLE_VELOCITY);
+-	packet.Get(vel.Y, BITPACK_VEHICLE_VELOCITY);
+-	packet.Get(vel.Z, BITPACK_VEHICLE_VELOCITY);
++	packet.Get(vel.X, velocity_packing);
++	packet.Get(vel.Y, velocity_packing);
++	packet.Get(vel.Z, velocity_packing);
+ 
+ 	ProjectileClass * po = Peek_Physical_Object()->As_ProjectileClass();
+ 	if ( po ) {
+@@ -779,9 +798,9 @@
+ 
+ 		// Update the position
+ 		Vector3 pos;
+-		packet.Get(pos.X, BITPACK_WORLD_POSITION_X);
+-		packet.Get(pos.Y, BITPACK_WORLD_POSITION_Y);
+-		packet.Get(pos.Z, BITPACK_WORLD_POSITION_Z);
++		packet.Get(pos.X, modern ? BitStreamClass::NO_ENCODER : BITPACK_WORLD_POSITION_X);
++		packet.Get(pos.Y, modern ? BitStreamClass::NO_ENCODER : BITPACK_WORLD_POSITION_Y);
++		packet.Get(pos.Z, modern ? BitStreamClass::NO_ENCODER : BITPACK_WORLD_POSITION_Z);
+ 		ProjectileClass * po = Peek_Physical_Object()->As_ProjectileClass();
+ 		if ( po )  {
+ 			Vector3 local_pos;
+@@ -800,9 +819,9 @@
+ 		StuckObject = GameObjManager::Find_ScriptableGameObj(stuck_object_id);
+ 
+ 		if (StuckToObject) {
+-			packet.Get(StuckOffset.X, BITPACK_VEHICLE_VELOCITY);	// offset, using velocity packing...
+-			packet.Get(StuckOffset.Y, BITPACK_VEHICLE_VELOCITY);
+-			packet.Get(StuckOffset.Z, BITPACK_VEHICLE_VELOCITY);
++			packet.Get(StuckOffset.X, velocity_packing);
++			packet.Get(StuckOffset.Y, velocity_packing);
++			packet.Get(StuckOffset.Z, velocity_packing);
+ 			packet.Get(StuckBone);
+ 		} 
+ 

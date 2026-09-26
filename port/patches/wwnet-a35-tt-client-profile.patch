@@ -1,0 +1,21 @@
+--- a/connect.h
++++ b/connect.h
+@@ -131,6 +131,10 @@
+ 		bool Is_Destroy() {return IsDestroy;}
+ 		const RenegadeTTServerInfo &Get_TT_Server_Info() const {return TTServerInfo;}
+ 		const RenegadeTTResources &Get_TT_Resources() const {return TTResources;}
++		bool Has_TT_Client_Greeting() const {return TTClientGreeting;}
++		void Set_TT_Client_Greeting(bool modern) {TTClientGreeting = modern;}
++		void Set_TT_Options_Flag(bool value) {TTOptionsFlag = value;}
++		bool Get_TT_Options_Flag() const {return TTOptionsFlag;}
+ 		// Mark failure without deleting a connection still owned by its caller.
+ 		void Abort_Client() { WWASSERT(!IsServer); if (!IsServer) IsDestroy = true; }
+       int Get_Local_Id() const {return LocalId;}
+@@ -228,5 +232,7 @@
+ 		RenegadeTTServerInfo TTServerInfo;
+ 		RenegadeTTResources TTResources;
++		bool TTClientGreeting = false;
++		bool TTOptionsFlag = false;
+ 		static UINT			TotalCompressedBytesSent;
+ 		static UINT			TotalUncompressedBytesSent;
+ 		cMsgStatList *		PStatList;

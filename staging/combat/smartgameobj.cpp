@@ -39,6 +39,7 @@
 **	Includes
 */
 #include "smartgameobj.h"
+#include "renegade_client_effects.h"
 #include "gameobjmanager.h"
 #include "weapons.h"
 #include "bittype.h"
@@ -226,6 +227,7 @@ void	SmartGameObj::Copy_Settings( const SmartGameObjDef & definition )
 void	SmartGameObj::Re_Init( const SmartGameObjDef & definition )
 {
 	ArmedGameObj::Re_Init( definition );
+	NetworkStealthActive = true;
 
 	//
 	//	Remove the listener from the scene
@@ -466,6 +468,24 @@ void SmartGameObj::Import_Frequent(BitStreamClass & packet)
 	//	Import all data from the base classes
 	//
 	ArmedGameObj::Import_Frequent(packet);
+	if (packet.Has_Read_Error()) return;
+
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	if (Renegade_Client_Uses_TT_Replication()) {
+		bool enabled = false, active = false;
+		packet.Get(enabled);
+		packet.Get(active);
+		ControlClass incoming;
+		incoming.Import_Sc(packet);
+		if (packet.Has_Read_Error()) return;
+		if (enabled != StealthEnabled) Enable_Stealth(enabled);
+		NetworkStealthActive = active;
+		// Consume local-player control too, but preserve local input and any
+		// following derived-class fields instead of flushing the whole packet.
+		if (!Is_Controlled_By_Me()) Control = incoming;
+		return;
+	}
+#endif
 
    //
 	//	Don't import the controller if the player is controlling
@@ -760,7 +780,8 @@ void SmartGameObj::Think()
 			StealthEffect->Set_Friendly( Is_Teammate( COMBAT_STAR ) );
 		}
 
-		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) && (StealthFiringTimer <= 0.0f)) {
+		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) &&
+			(StealthFiringTimer <= 0.0f) && NetworkStealthActive) {
 			WWPROFILE("Stealh");
 			
 			Alloc_Stealth_Effect();
@@ -984,6 +1005,7 @@ void	SmartGameObj::Import_Creation( BitStreamClass &packet )
 	//
 	int control_owner = 0;
 	packet.Get( control_owner );
+	if (packet.Has_Read_Error()) return;
 	Set_Control_Owner( control_owner );
 
 	//
@@ -994,6 +1016,11 @@ void	SmartGameObj::Import_Creation( BitStreamClass &packet )
 		Get_Action()->Follow_Input( parameters );
 		CombatManager::Set_The_Star( As_SoldierGameObj() );
 	}
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	if (Renegade_Client_Uses_TT_Replication()) {
+		WeaponBag->Import_Weapon_List(packet);
+	}
+#endif
 
 	return ;
 }
@@ -1060,4 +1087,3 @@ void	SmartGameObj::Reset_Controller( void )
 		CombatManager::Send_Control_Packet(this);
 		CombatManager::Send_State_Packet(this);
 		*/
-

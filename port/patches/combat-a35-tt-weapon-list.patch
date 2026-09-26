@@ -1,0 +1,54 @@
+--- a/weaponbag.cpp
++++ b/weaponbag.cpp
+@@ -36,6 +36,7 @@
+ 
+ 
+ #include "weaponbag.h"
++#include "renegade_client_effects.h"
+ #include "weapons.h"
+ #include "debug.h"
+ #include "weaponmanager.h"
+@@ -390,6 +391,10 @@
+ //-----------------------------------------------------------------------------
+ void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
+ {
++	bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	modern = Renegade_Client_Uses_TT_Replication();
++#endif
+ 	// Validate the whole list before changing inventory. A mismatched protocol
+ 	// must not reinterpret a physics definition as a weapon definition.
+ 	BitStreamClass scan;
+@@ -414,7 +419,12 @@
+ 	int weapon_id;
+ 	for (int weapon = 0; weapon < weapon_count; weapon++) {
+ 		weapon_id = packet.Get(weapon_id);
+-		int total_rounds = packet.Get(total_rounds);
++		int total_rounds = 0;
++		USHORT clip = 0, inventory = 0;
++		if (modern) {
++			packet.Get(clip);
++			packet.Get(inventory);
++		} else packet.Get(total_rounds);
+ 		Add_Weapon(weapon_id, 0);
+ 
+ 		WeaponClass * weapon_instance = NULL;
+@@ -424,7 +434,10 @@
+ 			}
+ 		}
+ 		if ( weapon_instance != NULL ) {
+-			weapon_instance->Set_Total_Rounds( total_rounds );
++			if (modern) {
++				weapon_instance->Set_Clip_Rounds(clip < 0x8000 ? int(clip) : int(clip) - 0x10000);
++				weapon_instance->Set_Inventory_Rounds(inventory < 0x8000 ? int(inventory) : int(inventory) - 0x10000);
++			} else weapon_instance->Set_Total_Rounds( total_rounds );
+ 		}
+ 	}
+ }
+@@ -518,4 +531,4 @@
+ 	if ( Owner != NULL ) {
+ 		Owner->Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
+ 	}
+-}
+\ No newline at end of file
++}

@@ -1,0 +1,65 @@
+--- a/packettype.h
++++ b/packettype.h
+@@ -48,3 +48,4 @@
+-	PACKETTYPE_FIREWALL_PROBE,
++	PACKETTYPE_FIREWALL_PROBE,
++	PACKETTYPE_RESOURCE_MANAGER,
+-
++
+-   PACKETTYPE_LAST = PACKETTYPE_FIREWALL_PROBE,
++   PACKETTYPE_LAST = PACKETTYPE_RESOURCE_MANAGER,
+--- a/connect.h
++++ b/connect.h
+@@ -41,1 +41,2 @@
+-#include "renegade_tt_server_info.h"
++#include "renegade_tt_server_info.h"
++#include "renegade_tt_resources.h"
+@@ -131,1 +132,2 @@
+-		const RenegadeTTServerInfo &Get_TT_Server_Info() const {return TTServerInfo;}
++		const RenegadeTTServerInfo &Get_TT_Server_Info() const {return TTServerInfo;}
++		const RenegadeTTResources &Get_TT_Resources() const {return TTResources;}
+@@ -226,1 +228,2 @@
+-		RenegadeTTServerInfo TTServerInfo;
++		RenegadeTTServerInfo TTServerInfo;
++		RenegadeTTResources TTResources;
+--- a/connect.cpp
++++ b/connect.cpp
+@@ -398,1 +398,2 @@
+-		ADD_CASE(PACKETTYPE_FIREWALL_PROBE);
++		ADD_CASE(PACKETTYPE_FIREWALL_PROBE);
++		ADD_CASE(PACKETTYPE_RESOURCE_MANAGER);
+@@ -944,1 +945,7 @@
++      case PACKETTYPE_RESOURCE_MANAGER:
++            if (IsServer || !TTServerInfo.Present || sender_id != SERVER_RHOST_ID) {
++               packet.Flush();
++               return true;
++            }
++            // TT resources share the original ACK, duplicate and ordering owner.
+       case PACKETTYPE_RELIABLE: {
+@@ -1343,2 +1350,12 @@
+ 	if (ret_code > 0) {
++		const unsigned header_size = cPacket::Get_Packet_Header_Size();
++		if (static_cast<unsigned>(ret_code) < header_size) return 0;
++		const BYTE *header = reinterpret_cast<const BYTE *>(full_packet.Get_Data()) + header_size - 7;
++		const unsigned body_bits = (static_cast<unsigned>(header[5]) << 8) | header[6];
++		if ((header[0] >> 4) > PACKETTYPE_LAST ||
++			body_bits > (static_cast<unsigned>(ret_code) - header_size) * 8U ||
++			body_bits > packet.Get_Buffer_Size() * 8U) {
++			// Reject unknown types before indexing the original per-type statistics.
++			return 0;
++		}
+ 		//
+@@ -1969,1 +1986,12 @@
+-					if (p_packet->Get_Type() == PACKETTYPE_RELIABLE) {
++					if (p_packet->Get_Type() == PACKETTYPE_RESOURCE_MANAGER) {
++						if (!TTResources.Receive(*p_packet)) {
++							fprintf(stderr, "connection: invalid TT %s; session stopped\n", TTResources.Get_Error());
++							Abort_Client();
++						}
++						p_packet->Flush();
++					}
++					if (IsDestroy) {
++						// Preserve queue ownership until normal connection cleanup.
++						break;
++					}
++					if (p_packet->Get_Type() == PACKETTYPE_RELIABLE) {

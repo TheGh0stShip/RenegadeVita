@@ -278,7 +278,32 @@ VendorClass::Purchase_Item
 		return retval;
 	}
 
-	if (CombatManager::I_Am_Server () == false) {		
+	// Network requests must not index outside the original retail catalogs.
+	if (type < TYPE_CHARACTER || type > TYPE_SECRET_VEHICLE ||
+		!PurchaseSettingsDefClass::Is_Valid_Entry(item_index, alt_skin_index) ||
+		(type == TYPE_ENLISTED_CHARACTER && !TeamPurchaseSettingsDefClass::Is_Valid_Entry(item_index)) ||
+		((type == TYPE_BEACON || type == TYPE_SUPPLY) && item_index != 0)) {
+		return PERR_NOT_IN_STOCK;
+	}
+	if (player->Get_Player_Data() == NULL) return PERR_NO_FUNDS;
+
+    const auto catalog_team = player->Get_Player_Type() == PLAYERTYPE_NOD ?
+        PurchaseSettingsDefClass::TEAM_NOD : PurchaseSettingsDefClass::TEAM_GDI;
+    if (type == TYPE_ENLISTED_CHARACTER) {
+        auto *catalog = TeamPurchaseSettingsDefClass::Get_Definition(
+            static_cast<TeamPurchaseSettingsDefClass::TEAM>(catalog_team));
+        if (!catalog || !catalog->Is_Available(item_index)) return PERR_NOT_IN_STOCK;
+    } else if (type == TYPE_CHARACTER || type == TYPE_VEHICLE ||
+               type == TYPE_SECRET_CHARACTER || type == TYPE_SECRET_VEHICLE) {
+        const auto page = type == TYPE_CHARACTER ? PurchaseSettingsDefClass::TYPE_CLASSES :
+            type == TYPE_VEHICLE ? PurchaseSettingsDefClass::TYPE_VEHICLES :
+            type == TYPE_SECRET_CHARACTER ? PurchaseSettingsDefClass::TYPE_SECRET_CLASSES :
+            PurchaseSettingsDefClass::TYPE_SECRET_VEHICLES;
+        auto *catalog = PurchaseSettingsDefClass::Find_Definition(page, catalog_team);
+        if (!catalog || !catalog->Is_Available(item_index)) return PERR_NOT_IN_STOCK;
+    }
+
+	if (CombatManager::I_Am_Server () == false) {
 		
 		//
 		//	Request this purchase from the server
@@ -306,6 +331,7 @@ VendorClass::Purchase_Item
 		//
 		//	Lookup information about this purchase
 		//
+		if (base == NULL && type != TYPE_SUPPLY && type != TYPE_BEACON) return PERR_NO_FACTORY;
 		int cost					= 0;
 		int definition_id		= 0;
 		Get_Merchandise_Information (player, type, item_index, alt_skin_index, cost, definition_id);

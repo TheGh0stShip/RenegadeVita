@@ -1,0 +1,53 @@
+--- a/weaponmanager.cpp
++++ b/weaponmanager.cpp
+@@ -730,7 +730,9 @@
+ 
+ const WeaponDefinitionClass *WeaponManager::Find_Weapon_Definition( int id )
+ {
+-	return (const WeaponDefinitionClass *)DefinitionMgrClass::Find_Definition( id );
++	DefinitionClass *definition = DefinitionMgrClass::Find_Definition(id);
++	return definition && definition->Get_Class_ID() == CLASSID_DEF_WEAPON ?
++		static_cast<const WeaponDefinitionClass *>(definition) : NULL;
+ }
+ 
+ const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( const char *name )
+@@ -741,5 +743,7 @@
+ 
+ const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( int id )
+ {
+-	return (const AmmoDefinitionClass *)DefinitionMgrClass::Find_Definition( id );
++	DefinitionClass *definition = DefinitionMgrClass::Find_Definition(id);
++	return definition && definition->Get_Class_ID() == CLASSID_DEF_AMMO ?
++		static_cast<const AmmoDefinitionClass *>(definition) : NULL;
+ }
+--- a/weaponbag.cpp
++++ b/weaponbag.cpp
+@@ -391,8 +391,28 @@
+ void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
+ {
++	// Validate the whole list before changing inventory. A mismatched protocol
++	// must not reinterpret a physics definition as a weapon definition.
++	BitStreamClass scan;
++	scan = packet;
++	int count = 0;
++	scan.Get(count);
++	if (scan.Has_Read_Error() || count < 0 ||
++		static_cast<unsigned>(count) > (scan.Get_Bit_Write_Position() - scan.Get_Bit_Read_Position()) / 64) {
++		packet.Mark_Read_Error();
++		return;
++	}
++	for (int i = 0; i < count; ++i) {
++		int id = 0, rounds = 0;
++		scan.Get(id);
++		scan.Get(rounds);
++		if (scan.Has_Read_Error() || !WeaponManager::Find_Weapon_Definition(id)) {
++			packet.Mark_Read_Error();
++			return;
++		}
++	}
+ 	int weapon_count = packet.Get(weapon_count);
+ 	int weapon_id;
+ 	for (int weapon = 0; weapon < weapon_count; weapon++) {
+ 		weapon_id = packet.Get(weapon_id);
+ 		int total_rounds = packet.Get(total_rounds);
+ 		Add_Weapon(weapon_id, 0);

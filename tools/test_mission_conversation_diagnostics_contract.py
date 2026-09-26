@@ -403,6 +403,17 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
             self.assertIn("Do not delete a newly chained conversation by using a stale index.", source)
         self.assertIn("combat-a35-conversation-reentrant-think.patch", stage_sources)
 
+    def test_conversation_list_release_preserves_callback_guard(self):
+        staged = (ROOT / "staging/combat/conversationmgr.cpp").read_text()
+        patch = (ROOT / "port/patches/combat-a35-conversation-guard-release.patch").read_text()
+        stage_sources = (ROOT / "tools/stage_sources.sh").read_text()
+        think = staged.split("ConversationMgrClass::Think (void)", 1)[1].split(
+            "ConversationMgrClass::Add_Conversation", 1)[0]
+        self.assertEqual(think.count("active_conversation->Release_Ref ();"), 2)
+        self.assertEqual(think.count("REF_PTR_RELEASE (active_conversation);"), 2)
+        self.assertIn("retain the local callback guard below", patch)
+        self.assertIn("combat-a35-conversation-guard-release.patch", stage_sources)
+
     def test_vehicle_proximity_diagnostics_are_bounded_and_staged(self):
         patch = (ROOT / "port/patches/combat-a35-vehicle-proximity-diagnostics.patch").read_text()
         staged = (ROOT / "staging" / "combat" / "vehicle.cpp").read_text()

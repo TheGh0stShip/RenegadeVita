@@ -21,6 +21,18 @@ The port must never introduce a replacement game loop, world format, scene graph
 
 ## Evidence boundary
 
+The target ABI is ARMv7-A Cortex-A9, little-endian, 32-bit ILP32, hard-float.
+Host LP64 behavior is not interchangeable with Vita layout. Fixed-width wire
+and serialized data, bounded packet reads, and explicit UTF-16 boundaries keep
+platform differences below the original game owners.
+
+The experimental TT provider adds admission, HTTPS package preparation and
+modern wire-layout adaptations to original WWNet/Commando ownership. It is not
+a replacement multiplayer game loop or the complete proprietary TT client.
+Downloaded server packages are separate from unchanged retail data and private
+user settings. See [multiplayer setup](MULTIPLAYER.md) and
+[compatibility evidence](../reports/MULTIPLAYER_COMPATIBILITY.md).
+
 The runtime is an original-owner port, but each claim still needs its own evidence:
 
 - host tests establish source semantics and regression contracts;

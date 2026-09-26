@@ -1,0 +1,35 @@
+--- a/messages.cpp
++++ b/messages.cpp
+@@ -1311,7 +1311,7 @@
+ 		if (I_Am_Only_Client()) {
+ 			if ((DlgMsgBox::Get_Current_Count() == 0)
+ 					&& GameModeManager::Find("Combat") != NULL && GameModeManager::Find("Combat")->Is_Active()
+-					&& The_Game() != NULL && ::wcslen(The_Game()->Get_Motd()) > 0) {
++					&& The_Game() != NULL && The_Game()->Get_Motd()[0] != 0) {
+ 
+ 				DlgMsgBox::DoDialog(TRANSLATE (IDS_MENU_MOTD), The_Game()->Get_Motd());
+ 				HaveDoneMotdDialog = true;
+@@ -1619,4 +1619,4 @@
+ 		p_team_gdi->Set_Score(score_nod);
+ 		p_team_nod->Set_Score(score_gdi);
+ 	}
+-}
+\ No newline at end of file
++}
+--- a/clienthintmanager.cpp
++++ b/clienthintmanager.cpp
+@@ -173,6 +173,7 @@
+ 		}
+ 	}
+ 
++	REF_PTR_RELEASE(pvs);
+ 	if (num_objects < 2) {
+ 		return;
+ 	}
+@@ -290,4 +291,4 @@
+ 	}
+ 
+ 	return(1);
+-}
+\ No newline at end of file
++}

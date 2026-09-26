@@ -1,4 +1,5 @@
 #include "ww3d_vita_renderer.h"
+#include "ww3d_vita_texture_transform.h"
 
 #include "camera.h"
 #include "d3d8.h"
@@ -656,7 +657,13 @@ void Apply_DX8_Texture_Transform(const OriginalTextureCoordinateState &state,
 	const DWORD coordinate_count = state.texture_transform_flags & 0xffU;
 	if (coordinate_count != D3DTTFF_DISABLE) {
 		const D3DMATRIX &matrix = state.texture_transform;
-		const float source[4] = { in_s, in_t, in_r, in_q };
+		// D3D's 2D texture matrix translates UVs through _31/_32. The
+		// implicit third coordinate of a pass-through UV pair is one.
+		const bool passthrough_uv2 = coordinate_count == D3DTTFF_COUNT2 &&
+			Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;
+		float source[4];
+		Build_DX8_Texture_Source(passthrough_uv2, in_s, in_t, in_r, in_q,
+			source);
 		for (unsigned column = 0U; column < 4U; ++column) {
 			transformed[column] =
 				source[0] * matrix.m[0][column] +
@@ -688,6 +695,20 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	float source_t = 0.0f;
 	float source_r = 0.0f;
 	const DWORD mode = Texture_Coordinate_Mode(state);
+	if (mode == D3DTSS_TCI_PASSTHRU &&
+		state.texture_transform_flags == D3DTTFF_DISABLE) {
+		if (uvs == NULL) return false;
+		if (!g_logged_first_passthrough_texture_v_preserved &&
+			!Has_Loadscreen_Texture_Prefix(texture_name)) {
+			Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
+				"first gameplay passthrough texture V preserved: texture=%s stage=%u",
+				texture_name != NULL ? texture_name : "none", stage);
+			g_logged_first_passthrough_texture_v_preserved = true;
+		}
+		glMultiTexCoord2f(texture_unit, uvs[vertex_index].X,
+			uvs[vertex_index].Y);
+		return true;
+	}
 	if (mode == D3DTSS_TCI_PASSTHRU) {
 		if (uvs == NULL) return false;
 		source_s = uvs[vertex_index].X;

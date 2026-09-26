@@ -9,9 +9,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#if defined(__vita__)
-#include <psp2/net/net.h>
-#else
+#if !defined(__vita__)
 #include <sys/ioctl.h>
 #endif
 #include <sys/socket.h>
@@ -27,8 +25,7 @@ typedef struct in_addr IN_ADDR;
 
 typedef struct _WSADATA { int unused; } WSADATA;
 
-// Vita exposes socket nonblocking state as SO_NONBLOCK and queue state through
-// SceNetSockInfo rather than the BSD ioctl request values.  These private
+// Vita libc owns descriptor-to-SceNet handle translation. These private
 // compatibility tokens are only consumed by ioctlsocket below; no original
 // packet or replication code observes their numeric values.
 #if defined(__vita__)
@@ -45,11 +42,7 @@ static inline int WSAGetLastError(void) { return errno; }
 static inline void WSASetLastError(int error) { errno = error; }
 static inline int closesocket(SOCKET socket)
 {
-#if defined(__vita__)
-	return sceNetSocketClose(socket);
-#else
 	return close(socket);
-#endif
 }
 static inline int ioctlsocket(SOCKET socket, long command, unsigned long *value)
 {
@@ -60,25 +53,10 @@ static inline int ioctlsocket(SOCKET socket, long command, unsigned long *value)
 	}
 	if (command == FIONBIO) {
 		const int enabled = *value != 0 ? 1 : 0;
-		const int result = sceNetSetsockopt(socket, SOL_SOCKET, SO_NONBLOCK,
-			&enabled, sizeof(enabled));
-		if (result < 0) errno = *sceNetErrnoLoc();
-		return result;
+		return ::setsockopt(socket, SOL_SOCKET, SO_NONBLOCK, &enabled, sizeof(enabled));
 	}
-	if (command == FIONREAD) {
-		SceNetSockInfo info;
-		memset(&info, 0, sizeof(info));
-		const int result = sceNetGetSockInfo(socket, &info, 1,
-			SCE_NET_SOCKINFO_F_SELF);
-		if (result < 0) {
-			errno = *sceNetErrnoLoc();
-			return -1;
-		}
-		*value = info.recv_queue_length > 0 ?
-			(unsigned long)info.recv_queue_length : 0UL;
-		return 0;
-	}
-	errno = EINVAL;
+	// PacketManager uses nonblocking recvfrom on Vita, not a raw-SceNet FIONREAD.
+	errno = ENOSYS;
 	return -1;
 #else
 	return ioctl(socket, command, value);

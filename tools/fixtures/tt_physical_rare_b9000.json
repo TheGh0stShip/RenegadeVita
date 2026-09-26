@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "physical rare export, synthetic providers, no animation controller",
+  "cases": [
+    {
+      "modern": false,
+      "bits": 305,
+      "hex": "000a564954415f4d4f44454c000000000000000000000000000300000000000000050000000180"
+    },
+    {
+      "modern": true,
+      "bits": 411,
+      "hex": "0000000200000001000000000300052b24aa20afa6a7a222a60000000000000000000000000001800000000000000280000000e0"
+    }
+  ]
+}

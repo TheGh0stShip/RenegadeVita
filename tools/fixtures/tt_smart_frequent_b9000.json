@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "complete Smart/Armed/Control frequent export, synthetic state and encoder ranges",
+  "cases": [
+    {
+      "modern": false,
+      "alternate": false,
+      "bits": 91,
+      "hex": "40cccfad0c1fdebfe01017e0"
+    },
+    {
+      "modern": true,
+      "alternate": false,
+      "bits": 135,
+      "hex": "20a4000060d1000020fc80002bfe01017e"
+    },
+    {
+      "modern": true,
+      "alternate": true,
+      "bits": 135,
+      "hex": "20a4000060d1000020fc80004bfe01017e"
+    }
+  ]
+}

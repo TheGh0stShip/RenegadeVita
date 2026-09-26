@@ -730,7 +730,9 @@ const WeaponDefinitionClass *WeaponManager::Find_Weapon_Definition( const char *
 
 const WeaponDefinitionClass *WeaponManager::Find_Weapon_Definition( int id )
 {
-	return (const WeaponDefinitionClass *)DefinitionMgrClass::Find_Definition( id );
+	DefinitionClass *definition = DefinitionMgrClass::Find_Definition(id);
+	return definition && definition->Get_Class_ID() == CLASSID_DEF_WEAPON ?
+		static_cast<const WeaponDefinitionClass *>(definition) : NULL;
 }
 
 const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( const char *name )
@@ -740,5 +742,7 @@ const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( const char *name
 
 const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( int id )
 {
-	return (const AmmoDefinitionClass *)DefinitionMgrClass::Find_Definition( id );
+	DefinitionClass *definition = DefinitionMgrClass::Find_Definition(id);
+	return definition && definition->Get_Class_ID() == CLASSID_DEF_AMMO ?
+		static_cast<const AmmoDefinitionClass *>(definition) : NULL;
 }

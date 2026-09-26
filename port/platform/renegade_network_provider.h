@@ -75,6 +75,8 @@ bool Public_Service_Active();
 // Direct-IP remains a first-class baseline capability.  Parsing is kept at
 // this boundary so menu/UI code need not own socket syntax.
 bool Parse_Direct_IP(const char *text, Port default_port, Endpoint &endpoint);
+// Explicit opt-in to the experimental TT client. Bare endpoints remain legacy.
+bool Parse_Client_Request(const char *text, Port default_port, Endpoint &endpoint, bool &tt_client);
 
 } // namespace RenegadeNetworkProvider
 

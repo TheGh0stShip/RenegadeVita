@@ -1648,10 +1648,13 @@ static	void	Target_Update( void )
 			draw.Snap_To_Units( Vector2( 1, 1 ) );
 			TargetRenderer->Add_Quad( draw, uv, color );
 
-			if ( obj->Get_Translated_Name_ID() != 0 ) {
+			SoldierGameObj *named_soldier = obj->As_PhysicalGameObj() ? obj->As_PhysicalGameObj()->As_SoldierGameObj() : NULL;
+			const RenegadeSoldierRareState *tt_name = named_soldier ? named_soldier->Get_TT_State() : NULL;
+			const bool bot_named = tt_name && tt_name->BotTag.Get_Length() != 0;
+			if ( obj->Get_Translated_Name_ID() != 0 || bot_named ) {
 				TDBObjClass *translate_obj = TranslateDBClass::Find_Object( obj->Get_Translated_Name_ID() );
-				if ( translate_obj ) {
-					WideStringClass translate_string=translate_obj->Get_String();
+				if ( translate_obj || bot_named ) {
+					WideStringClass translate_string = bot_named ? tt_name->BotTag : translate_obj->Get_String();
 
 					if ( building != NULL && HUDInfo::Get_Info_Object_Is_MCT() ) {
 						translate_string=TRANSLATE( IDS_Enc_Struct_Nod_MCT_Name );

@@ -1,0 +1,35 @@
+--- a/commando/gameoptionsevent.cpp
++++ b/commando/gameoptionsevent.cpp
+@@ -154,6 +154,10 @@
+ 	ULONG mod_name_crc = packet.Get(mod_name_crc);
+ 	ULONG map_name_crc = packet.Get(map_name_crc);
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	A31ClientConnect::Game_Options_Identity(map_name_crc, mod_name_crc, HostedGameNumber);
++#endif
++
+ 	// Find the mod and map names from their CRC
+ 	StringClass mod_name(0, true);
+ 	StringClass map_name(0, true);
+--- a/commando/gamedata.cpp
++++ b/commando/gamedata.cpp
+@@ -36,6 +36,9 @@
+ 
+ #include "gamedata.h"
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "a31_client_connect_boundary.h"
++#endif
+ #include <stdio.h>
+ #include <string.h>
+ 
+@@ -635,6 +638,9 @@
+ 		if (out_filename) {
+ 			*out_filename = MapName.Peek_Buffer();
+ 		}
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		if (A31ClientConnect::Is_Prepared_Map(MapName)) return true;
++#endif
+ 		map_exists = cMiscUtil::File_Exists (MapName);
+ 	}
+ 

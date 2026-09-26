@@ -74,6 +74,7 @@ find "$rv_upstream/Code/Combat" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/combat/" \;
 find "$rv_upstream/Code/Commando" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/commando/" \;
+cp "$rv_upstream/Code/WWOnline/WOLLangCodes.h" "$rv_stage/commando/wollangcodes.h"
 find "$rv_upstream/Code/WWAudio" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/wwaudio/" \;
 find "$rv_upstream/Code/wwnet" -maxdepth 1 -type f \
@@ -126,6 +127,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a4-fastcall-vita.patch"
+test "$(sha256sum "$rv_stage/wwmath/wwmath.h" | cut -d' ' -f1)" = \
+	"031b73ee3f4f202c274dc5860c9745520dfe4892d34dec62c41de69860775fb8"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a35-valid-float-layout.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a30-abi.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -401,6 +406,9 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage" -p1 < "$rv_root/port/patches/a4-post-movie-mainmenu-hardening.patch"
 
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwbitpack" -p1 < "$rv_root/port/patches/wwbitpack-a35-read-position.patch"
+
 # Original source projects were authored on case-insensitive filesystems. The
 # staged copy is native ext4, so generate lower-case header aliases after all
 # patches have applied. This is a filesystem compatibility boundary, not a
@@ -449,18 +457,6 @@ touch "$rv_stage/wwbitpack"/* "$rv_stage/wwutil/mathutil.cpp" "$rv_stage/wwdebug
 	"$rv_stage/commando"/* "$rv_stage/wwaudio"/* "$rv_stage/wwnet"/* \
 	"$rv_stage/wwtranslatedb"/* "$rv_stage/scripts"/*
 
-if [[ "$rv_incremental_stage" == "1" ]]; then
-	rv_sync_args=()
-	for rv_dir in "${rv_managed_stage_dirs[@]}"; do
-		rv_sync_args+=(--managed-dir "$rv_dir")
-	done
-	python3 "$rv_root/tools/sync_staged_tree.py" \
-		--source "$rv_stage" \
-		--target "$rv_stage_target" \
-		"${rv_sync_args[@]}"
-	rv_stage="$rv_stage_target"
-fi
-
 echo "Staged complete dependency pools; build manifests select translation units explicitly."
 echo "Applied: port/patches/wwbitpack-gcc15.patch"
 echo "Applied: port/patches/wwbitpack-a31-utf16-get.patch"
@@ -481,6 +477,7 @@ echo "Applied: port/patches/scripts-a35-parameter-array-delete.patch"
 echo "Applied: port/patches/wwmath-a22-gcc15.patch"
 echo "Applied: port/patches/wwmath-a30-gcc15.patch"
 echo "Applied: port/patches/wwmath-a4-fastcall-vita.patch"
+echo "Applied: port/patches/wwmath-a35-valid-float-layout.patch"
 echo "Applied: port/patches/wwsaveload-a30-abi.patch"
 echo "Applied: port/patches/wwtranslatedb-a31-gcc15.patch"
 echo "Applied: port/patches/wwtranslatedb-a35-empty-string-wide-abi.patch"
@@ -748,4 +745,176 @@ if [[ "$rv_gameobjmanager_preserved_sha" != "eeba783cab1f52778dcc98e0287d39ab1ee
 fi
 python3 "$rv_root/tools/restore_postthink_sampler.py" "$rv_stage/combat/gameobjmanager.cpp"
 echo "Restored sampled PostThink timing in staged GameObjManager::Post_Think"
+test "$(sha256sum "$rv_stage/ww3d2/assetmgr.cpp" | cut -d' ' -f1)" = \
+	"67a92432c2a58e5206b2e421097c79febd6dfdbf07db93d34ca5dcd8df4a26a6"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-unresolved-prototype-reload-cache.patch"
+echo "Applied: port/patches/ww3d2-a35-unresolved-prototype-reload-cache.patch"
+test "$(sha256sum "$rv_stage/ww3d2/agg_def.cpp" | cut -d' ' -f1)" = \
+	"627e337408e733890a219a86363a412dfd7dc705efb425cc23b6d7ee7d4fecf9"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-aggregate-duplicate-load.patch"
+echo "Applied: port/patches/ww3d2-a35-aggregate-duplicate-load.patch"
+test "$(sha256sum "$rv_stage/wwsaveload/twiddler.h" | cut -d' ' -f1)" = \
+	"5e2ae5e16dcc11bc1ee6bd74a09454c20b4ab1024a7b123298fb4b5d87220af7"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a35-twiddler-preparation-access.patch"
+echo "Applied: port/patches/wwsaveload-a35-twiddler-preparation-access.patch"
+test "$(sha256sum "$rv_stage/combat/physicalgameobj.h" | cut -d' ' -f1)" = \
+	"b7bc5f686cdda28fb7a59243a630ed79f7a3d07b22885d0e3fb02acd4de56cd9"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-killed-explosion-query.patch"
+echo "Applied: port/patches/combat-a35-killed-explosion-query.patch"
+test "$(sha256sum "$rv_stage/combat/scriptcommands.cpp" | cut -d' ' -f1)" = \
+	"8f11e19303092b71f9af7b773c08b01d4788bb8137bf8dcf8918ab4f083029ca"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-host-script-file-handles.patch"
+echo "Applied: port/patches/combat-a35-host-script-file-handles.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-skirmish-unused-hud-include.patch"
+echo "Applied: port/patches/commando-a35-skirmish-unused-hud-include.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-server-config-root.patch"
+echo "Applied: port/patches/commando-a35-server-config-root.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-player-heading-optional-wol.patch"
+echo "Applied: port/patches/commando-a35-player-heading-optional-wol.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-fixed-packet-words.patch"
+echo "Applied: port/patches/wwnet-a35-fixed-packet-words.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-receive-bounds.patch"
+echo "Applied: port/patches/wwnet-a35-receive-bounds.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-optional-network-modes.patch"
+echo "Applied: port/patches/commando-a35-optional-network-modes.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-client-options-handoff.patch"
+echo "Applied: port/patches/commando-a35-client-options-handoff.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-direct-ip-session.patch"
+echo "Applied: port/patches/commando-a35-direct-ip-session.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-timeout-host-lifetime.patch"
+echo "Applied: port/patches/wwnet-a35-timeout-host-lifetime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-client-world-lifetime.patch"
+echo "Applied: port/patches/commando-a35-client-world-lifetime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-conversation-guard-release.patch"
+echo "Applied: port/patches/combat-a35-conversation-guard-release.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-vita-libc-receive.patch"
+echo "Applied: port/patches/wwnet-a35-vita-libc-receive.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-client-protocol-failure.patch"
+echo "Applied: port/patches/commando-a35-client-protocol-failure.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-md5-word-width.patch"
+echo "Applied: port/patches/wwlib-a35-md5-word-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-client-identity.patch"
+echo "Applied: port/patches/commando-a35-client-identity.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-client-admission-message.patch"
+echo "Applied: port/patches/commando-a35-client-admission-message.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-crc-word-width.patch"
+echo "Applied: port/patches/wwlib-a35-crc-word-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-network-compatibility-key.patch"
+echo "Applied: port/patches/commando-a35-network-compatibility-key.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-client-preflight-abort.patch"
+echo "Applied: port/patches/wwnet-a35-client-preflight-abort.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-tt-server-info.patch"
+echo "Applied: port/patches/wwnet-a35-tt-server-info.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-network-preset-validation.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-network-object-failure.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-network-announcements.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-control-lifetime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-harvester-observer-lifetime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-purchase-runtime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-purchase-ui-provider.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage" -p1 < "$rv_root/port/patches/commando-a35-purchase-bounds.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage" -p1 < "$rv_root/port/patches/wwui-a35-chat-utf16-boundary.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-tt-resource-queue.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage" -p1 < "$rv_root/port/patches/commando-a35-tt-resource-world.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-tt-client-greeting.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-tt-client-profile.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-tt-options-layout.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-tt-camera-shake.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwbitpack" -p1 < "$rv_root/port/patches/wwbitpack-a35-bounded-reads.patch"
+cp -- "$rv_stage/wwbitpack/BitPacker.h" "$rv_stage/wwbitpack/bitpacker.h"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-network-weapon-validation.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-packet-decode-failure.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-physical-rare.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-physical-creation.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-weapon-list.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-soldier-state.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-shared-frequent.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwbitpack" -p1 < "$rv_root/port/patches/wwbitpack-a35-tt-defense-precision.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-occasional-state.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-datasafe-long-conversion.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-tt-soldier-network-state.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-soldier-frequent.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-vehicle-state.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-network-history-lifetime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-tt-mix-index-order.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-soldier-occasional-selection.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-purchase-catalog.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-tt-purchase-catalog.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a35-tt-purchase-catalog.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-c4-state.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-original-owner-cpp.patch"
+# Compare final patched contents, never an intermediate source revision.
+if [[ "$rv_incremental_stage" == "1" ]]; then
+	rv_sync_args=()
+	for rv_dir in "${rv_managed_stage_dirs[@]}"; do
+		rv_sync_args+=(--managed-dir "$rv_dir")
+	done
+	python3 "$rv_root/tools/sync_staged_tree.py" \
+		--source "$rv_stage" \
+		--target "$rv_stage_target" \
+		"${rv_sync_args[@]}"
+	rv_stage="$rv_stage_target"
+fi
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt

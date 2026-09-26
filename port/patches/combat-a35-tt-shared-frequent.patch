@@ -1,0 +1,85 @@
+--- a/armedgameobj.cpp
++++ b/armedgameobj.cpp
+@@ -39,6 +39,7 @@
+ **	Includes
+ */
+ #include "armedgameobj.h"
++#include "renegade_client_effects.h"
+ #include "debug.h"
+ #include "weaponbag.h"
+ #include "weapons.h"
+@@ -349,11 +350,24 @@
+ void ArmedGameObj::Import_Frequent(BitStreamClass & packet)
+ {
+ 	PhysicalGameObj::Import_Frequent( packet );
++	if (packet.Has_Read_Error()) return;
+ 
+ 	Vector3 targeting_pos;
+-	packet.Get(targeting_pos.X, BITPACK_WORLD_POSITION_X);
+-	packet.Get(targeting_pos.Y, BITPACK_WORLD_POSITION_Y);
+-	packet.Get(targeting_pos.Z, BITPACK_WORLD_POSITION_Z);
++	bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	modern = Renegade_Client_Uses_TT_Replication();
++#endif
++	if (modern) {
++		for (int axis = 0; axis < 3; ++axis) {
++			packet.Get(targeting_pos[axis]);
++			if (!WWMath::Is_Valid_Float(targeting_pos[axis])) targeting_pos[axis] = 0;
++		}
++	} else {
++		packet.Get(targeting_pos.X, BITPACK_WORLD_POSITION_X);
++		packet.Get(targeting_pos.Y, BITPACK_WORLD_POSITION_Y);
++		packet.Get(targeting_pos.Z, BITPACK_WORLD_POSITION_Z);
++	}
++	if (packet.Has_Read_Error()) return;
+ 
+ 	//
+ 	//	Don't force the targetting if the object is controlled
+--- a/smartgameobj.cpp
++++ b/smartgameobj.cpp
+@@ -467,6 +467,24 @@
+ 	//	Import all data from the base classes
+ 	//
+ 	ArmedGameObj::Import_Frequent(packet);
++	if (packet.Has_Read_Error()) return;
++
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		bool enabled = false, active = false;
++		packet.Get(enabled);
++		packet.Get(active);
++		ControlClass incoming;
++		incoming.Import_Sc(packet);
++		if (packet.Has_Read_Error()) return;
++		if (enabled != StealthEnabled) Enable_Stealth(enabled);
++		NetworkStealthActive = active;
++		// Consume local-player control too, but preserve local input and any
++		// following derived-class fields instead of flushing the whole packet.
++		if (!Is_Controlled_By_Me()) Control = incoming;
++		return;
++	}
++#endif
+ 
+    //
+ 	//	Don't import the controller if the player is controlling
+@@ -761,7 +779,8 @@
+ 			StealthEffect->Set_Friendly( Is_Teammate( COMBAT_STAR ) );
+ 		}
+ 
+-		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) && (StealthFiringTimer <= 0.0f)) {
++		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) &&
++			(StealthFiringTimer <= 0.0f) && NetworkStealthActive) {
+ 			WWPROFILE("Stealh");
+ 			
+ 			Alloc_Stealth_Effect();
+--- a/smartgameobj.h
++++ b/smartgameobj.h
+@@ -228,6 +228,7 @@
+ 	void						Alloc_Stealth_Effect(void);
+ 
+ 	bool						StealthEnabled;		// stealth enabled by script or initialization code
++	bool NetworkStealthActive = true;
+ 	float						StealthPowerupTimer;	// stealth power is in effect
+ 	float						StealthFiringTimer;	// timer for de-cloaking during
+ 	StealthEffectClass *	StealthEffect;			// possible stealth effect

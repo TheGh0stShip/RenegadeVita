@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -25,13 +26,15 @@ DOCUMENTS = (
     "docs/HISTORICAL_SCREENSHOT_TIMELINE.md",
     "docs/HISTORICAL_CAPTURE_CAMPAIGN.md",
     "docs/INSTALLING.md",
+    "docs/MULTIPLAYER.md",
     "docs/QUICKSTART.md",
     "docs/TROUBLESHOOTING.md",
 )
 
 REQUIRED_TEXT = {
-    "README.md": ("A3.1.4", "A3.5-dev93", "not a public game release"),
-    "docs/CURRENT_STATUS.md": ("A3.5-dev87", "A3.5-dev93", "Local-only"),
+    "README.md": ("A3.1.4", "not a finished game release", "physical Vita"),
+    "docs/CURRENT_STATUS.md": ("A3.1.4", "Physical Vita", "Campaign status"),
+    "docs/MULTIPLAYER.md": ("TLS certificate and hostname verification", "Current Limits"),
     "docs/EVIDENCE.md": ("capture.screen.v1", "physical Vita"),
     "docs/HISTORICAL_SCREENSHOT_TIMELINE.md": ("Dev87", "not a controlled same-camera comparison"),
     "docs/HISTORICAL_CAPTURE_CAMPAIGN.md": ("dev1 through dev93", "post-render M00 PNG", "READY"),
@@ -44,12 +47,24 @@ def is_external(target: str) -> bool:
     return target.startswith(("#", "/", "http://", "https://", "mailto:", "tel:"))
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--root", type=Path, default=Path("."))
-    args = parser.parse_args()
-    root = args.root.resolve()
+def validate(root: Path) -> list[str]:
+    root = root.resolve()
     failures: list[str] = []
+    try:
+        state = json.loads((root / "reports/BUILD_STATE.json").read_text(encoding="utf-8"))
+        candidate = state["public_candidate"]
+        label = candidate["label"]
+        if not isinstance(label, str) or not re.fullmatch(r"A\d+\.\d+-dev\d+", label):
+            raise ValueError("invalid public candidate label")
+        report = (root / candidate["report"]).resolve()
+        if not report.is_relative_to(root) or not report.is_file():
+            raise ValueError("public candidate report is missing or outside the repository")
+        for relative in ("README.md", "docs/CURRENT_STATUS.md"):
+            document = root / relative
+            if document.is_file() and label not in document.read_text(encoding="utf-8"):
+                failures.append(f"{relative}: missing current candidate {label}")
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        failures.append(f"invalid public candidate metadata: {error}")
 
     for relative in DOCUMENTS:
         document = root / relative
@@ -73,6 +88,14 @@ def main() -> int:
             if not resolved.exists():
                 failures.append(f"{relative}: missing linked path: {raw_target}")
 
+    return failures
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, default=Path("."))
+    args = parser.parse_args()
+    failures = validate(args.root)
     if failures:
         print("\n".join(f"FAIL: {failure}" for failure in failures), file=sys.stderr)
         return 1

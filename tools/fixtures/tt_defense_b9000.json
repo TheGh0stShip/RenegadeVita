@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "defense export/import, synthetic DataSafe values and armor count",
+  "cases": [
+    {
+      "modern": false,
+      "zero": false,
+      "bits": 28,
+      "hex": "06606630",
+      "decoded": {
+        "health": 100.0,
+        "health_max": 9000.0,
+        "skin": 1,
+        "shield": 50.0,
+        "shield_max": 6000.0,
+        "shield_type": 3
+      }
+    },
+    {
+      "modern": true,
+      "zero": false,
+      "bits": 67,
+      "hex": "66650000f999999820",
+      "decoded": {
+        "health": 8000.0,
+        "health_max": 9000.0,
+        "skin": 1,
+        "shield": 5000.0,
+        "shield_max": 6000.0,
+        "shield_type": 3
+      }
+    },
+    {
+      "modern": true,
+      "zero": true,
+      "bits": 67,
+      "hex": "80010000f999999820",
+      "decoded": {
+        "health": 0.0,
+        "health_max": 9000.0,
+        "skin": 1,
+        "shield": 5000.0,
+        "shield_max": 6000.0,
+        "shield_type": 3
+      }
+    }
+  ]
+}

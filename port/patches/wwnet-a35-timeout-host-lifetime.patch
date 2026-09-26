@@ -1,0 +1,29 @@
+--- a/connect.cpp
++++ b/connect.cpp
+@@ -2295,6 +2295,7 @@
+ 
+ 
+                   Destroy_Connection(rhost_id);
++                  p_rhost = NULL;
+                   //WWDEBUG_SAY(("*** WWNET: Exceeded maximum resends (%d)) - assuming connection to rhost %d is broken.\n",
+ 						//	cNetUtil::MAX_RESENDS, rhost_id));
+ 
+@@ -2313,7 +2314,10 @@
+ 			}
+ 
+ 			// Keep track of how many packets in the queue are waiting on late acks.
+-			p_rhost->Set_Total_Resent_Packets_In_Queue(resent_packets);
++			// A reliable-send timeout destroys the host and its queued packets.
++			if (p_rhost != NULL) {
++				p_rhost->Set_Total_Resent_Packets_In_Queue(resent_packets);
++			}
+ 		}
+ 	}
+ 
+@@ -2664,4 +2668,4 @@
+ 
+ 	//KEEPALIVE_TIMEOUT_MS(cNetUtil::Get_Default_Keepalive_Timeout_Ms()),
+ 	//MAX_RESENDS(cNetUtil::Get_Default_Max_Resends()),
+-	//MULTI_SENDS(cNetUtil::Get_Default_Multi_Sends()),		//if (!Application_Acceptance_Handler(packet)) {
+\ No newline at end of file
++	//MULTI_SENDS(cNetUtil::Get_Default_Multi_Sends()),		//if (!Application_Acceptance_Handler(packet)) {

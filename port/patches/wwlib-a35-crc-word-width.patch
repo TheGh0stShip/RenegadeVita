@@ -1,0 +1,97 @@
+--- a/crc.h
++++ b/crc.h
+@@ -41,6 +41,7 @@
+ #define CRC_H
+ 
+ #include	<stdlib.h>
++#include <stdint.h>
+ #ifdef _UNIX
+ 	#include "osdep.h"
+ #endif
+@@ -56,7 +57,7 @@
+ 	public:
+ 
+ 		// Constructor for CRC engine (it can have an override initial CRC value).
+-		CRCEngine(long initial=0) : CRC(initial), Index(0) {
++		CRCEngine(long initial=0) : CRC(static_cast<uint32_t>(initial)), Index(0) {
+ 			StagingBuffer.Composite = 0;
+ 		};
+ 
+@@ -80,16 +81,19 @@
+ 
+ 		long Value(void) const {
+ 			if (Buffer_Needs_Data()) {
+-				return(_lrotl(CRC, 1) + StagingBuffer.Composite);
++				const unsigned char *bytes = StagingBuffer.Buffer;
++				const uint32_t word = uint32_t(bytes[0]) | (uint32_t(bytes[1]) << 8) |
++					(uint32_t(bytes[2]) << 16) | (uint32_t(bytes[3]) << 24);
++				return static_cast<int32_t>(static_cast<uint32_t>(_lrotl(CRC, 1) + word));
+ 			}
+-			return(CRC);
++			return static_cast<int32_t>(CRC);
+ 		};
+ 
+ 		/*
+ 		**	Current accumulator of the CRC value. This value doesn't take into
+ 		**	consideration any pending data in the staging buffer.
+ 		*/
+-		long CRC;
++		uint32_t CRC;
+ 
+ 		/*
+ 		**	This is the sub index into the staging buffer used to keep track of
+@@ -103,8 +107,8 @@
+ 		**	in preparation for additional data.
+ 		*/
+ 		union {
+-			long Composite;
+-			char Buffer[sizeof(long)];
++			uint32_t Composite;
++			unsigned char Buffer[sizeof(uint32_t)];
+ 		} StagingBuffer;
+ };
+ 
+@@ -131,4 +135,3 @@
+ };
+ 
+ #endif
+-
+--- a/crc.cpp
++++ b/crc.cpp
+@@ -62,7 +62,7 @@
+ {
+ 	StagingBuffer.Buffer[Index++] = datum;
+ 
+-	if (Index == sizeof(long))  {
++	if (Index == sizeof(uint32_t))  {
+ 		CRC = Value();
+ 		StagingBuffer.Composite = 0;
+ 		Index = 0;
+@@ -110,18 +110,22 @@
+ 		**	Perform the fast 'bulk' processing by reading long word sized
+ 		**	data blocks.
+ 		*/
+-		long const * longptr = (long const *)dataptr;
+-		int longcount = bytes_left / sizeof(long);		// Whole 'long' elements remaining.
++		// The original wire checksum uses little-endian 32-bit words, including
++		// unaligned input. Neither host long width nor ARM alignment may change it.
++		int longcount = bytes_left / sizeof(uint32_t);
+ 		while (longcount--) {
+-			CRC = _lrotl(CRC, 1) + *longptr++;
+-			bytes_left -= sizeof(long);
++			const unsigned char *bytes = reinterpret_cast<const unsigned char *>(dataptr);
++			const uint32_t word = uint32_t(bytes[0]) | (uint32_t(bytes[1]) << 8) |
++				(uint32_t(bytes[2]) << 16) | (uint32_t(bytes[3]) << 24);
++			CRC = _lrotl(CRC, 1) + word;
++			dataptr += sizeof(uint32_t);
++			bytes_left -= sizeof(uint32_t);
+ 		}
+ 
+ 		/*
+ 		**	If there are remainder bytes, then process these by adding them
+ 		**	to the staging buffer.
+ 		*/
+-		dataptr = (char const *)longptr;
+ 		while (bytes_left) {
+ 			operator()(*dataptr);
+ 			dataptr++;

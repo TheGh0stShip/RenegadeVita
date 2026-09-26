@@ -1,0 +1,80 @@
+diff --git a/mendozabossgameobj.cpp b/mendozabossgameobj.cpp
+index 07e6707..e8a6031 100755
+--- a/mendozabossgameobj.cpp
++++ b/mendozabossgameobj.cpp
+@@ -451,10 +451,10 @@ MendozaBossGameObjClass::MendozaBossGameObjClass (void)	:
+ 	//
+ 	//	Register the camera states with its state machine
+ 	//
+-	CameraState.Add_State (NULL,													NULL,		On_CAMERA_STATE_NORMAL_Begin,					NULL);
+-	CameraState.Add_State (On_CAMERA_STATE_FACE_ZOOM_Think,				NULL,		On_CAMERA_STATE_FACE_ZOOM_Begin,				NULL);
+-	CameraState.Add_State (On_CAMERA_STATE_WAYPATH_FOLLOW_Think,		NULL,		On_CAMERA_STATE_WAYPATH_FOLLOW_Begin,		NULL);
+-	CameraState.Add_State (On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think,	NULL,		On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin,	NULL);	
++	CameraState.Add_State (NULL, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_NORMAL_Begin, NULL);
++	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Begin, NULL);
++	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin, NULL);
++	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin, NULL);
+ 	CameraState.Set_State (CAMERA_STATE_NORMAL);
+ 
+ 	//
+@@ -3885,4 +3885,3 @@ MendozaBossGameObjClass::Spawn_Health_Powerups (void)
+ 
+ 	return ;
+ }
+-
+diff --git a/sakurabossgameobj.cpp b/sakurabossgameobj.cpp
+index 37755d4..f0f1530 100755
+--- a/sakurabossgameobj.cpp
++++ b/sakurabossgameobj.cpp
+@@ -2001,7 +2001,8 @@ SakuraBossGameObj::Set_Sakura_State (int new_state)
+ 				//	Find the first available taunt
+ 				//
+ 				int taunt_id = 0;
+-				for (int index = 0; index < MAX_TAUNTS; index ++) {
++				int index = 0;
++				for (; index < MAX_TAUNTS; index ++) {
+ 					if (TauntList[index] != 0) {
+ 						taunt_id = TauntList[index] - 1;
+ 						TauntList[index] = 0;
+diff --git a/statemachine.h b/statemachine.h
+index 964108a..25c5914 100755
+--- a/statemachine.h
++++ b/statemachine.h
+@@ -61,10 +61,10 @@
+ 
+ #define ADD_STATE_TO_MACHINE(machine, state)		\
+ 		machine.Add_State (								\
+-			On_##state##_Think,							\
+-			On_##state##_Request_End,					\
+-			On_##state##_Begin,							\
+-			On_##state##_End);
++			&decltype(machine)::OWNER_TYPE::On_##state##_Think, \
++			&decltype(machine)::OWNER_TYPE::On_##state##_Request_End, \
++			&decltype(machine)::OWNER_TYPE::On_##state##_Begin, \
++			&decltype(machine)::OWNER_TYPE::On_##state##_End);
+ 
+ 
+ 		//machine.Add_State (On_##state_Think, On_##state_Request_End, On_##state_Begin, On_##state_End);
+@@ -197,6 +197,7 @@ public:
+ 	//	Public typedefs
+ 	///////////////////////////////////////////////////////////////////
+ 	typedef StateClass<T>	STATE_OBJ;
++	typedef T OWNER_TYPE;
+ 
+ 	///////////////////////////////////////////////////////////////////
+ 	//	Save/load constants
+@@ -258,10 +259,10 @@ public:
+ 	///////////////////////////////////////////////////////////////////
+ 	void	Add_State
+ 	(
+-		STATE_OBJ::THINK_PTR think_ptr,
+-		STATE_OBJ::REQUEST_END_PTR request_ptr,
+-		STATE_OBJ::BEGIN_PTR begin_ptr,
+-		STATE_OBJ::END_PTR end_ptr
++		typename STATE_OBJ::THINK_PTR think_ptr,
++		typename STATE_OBJ::REQUEST_END_PTR request_ptr,
++		typename STATE_OBJ::BEGIN_PTR begin_ptr,
++		typename STATE_OBJ::END_PTR end_ptr
+ 	)
+ 	{
+ 		StateClass<T> state;

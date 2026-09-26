@@ -1,20 +1,46 @@
 # Current status
 
-Updated: 2026-09-15
+Updated: 2026-09-26
 
-## Current Dev134 checkpoint
+## Current A3.5-dev195 checkpoint
 
-Dev134 is the current native ARM/GXM candidate. Canonical host/sanitizer/ARM
-and package identity checks passed, followed by matching Vita3K refinery visuals,
-pause Map/statistics/Help checks, resume, and clean native exit. The VPK was
-deployed to the physical Vita with executable and package readback verification;
-manual LiveArea launch is required because remote control services were
-unavailable. Hardware FPS, movie audio, and complete tutorial acceptance remain
-open. The tutorial-only public download guide is
-[Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
+Dev195 is a fast-build native ARM candidate, packaged, installed and run in
+Vita3K. It joined RenCorner, downloaded and mounted five TTFS packages, loaded
+City_U1, rendered 9,723 frames, accepted bounded player movement, and completed
+original session teardown back to the menu. The public player list showed
+`PSVita`; the client requested `PS Vita`. The normalization boundary is unknown.
 
-Exact evidence is retained in [DEV134_PHYSICAL_MILESTONE.md](../reports/DEV134_PHYSICAL_MILESTONE.md)
-and [DEV134_SKIN_RGB_WORK.md](../reports/DEV134_SKIN_RGB_WORK.md).
+| Evidence class | Current result |
+| --- | --- |
+| Build and package | 171 fast contracts, DDS alias executable test, ARM ELF/SELF/VPK, package inventory and installed hashes passed. This was not a new canonical acceptance run. |
+| Host | Original state-machine callback/save-load and loaded-replication sanitizer checks passed. Host tests do not establish Vita gameplay. |
+| Vita3K | Native join, world/weapon/HUD rendering, movement and session teardown observed. Purchase-terminal inputs did not produce a dialog; early multiplayer text had malformed glyphs. |
+| Performance | Short mostly stationary multiplayer run: average 59.578 FPS, median 16.463 ms, p95 17.912 ms, worst 1,870.567 ms. Not a representative campaign benchmark or a lag-free claim. |
+| Physical Vita | A3.1.4 remains the accepted baseline. Dev195 physical testing pending; 60 FPS remains a goal, not acceptance. |
+
+The outer four-minute runner ended `TIMEOUT_UNASSESSED` at the returned main
+menu. That status is not a crash and is not an unqualified full-run pass.
+Full combat, purchases, vehicles, death/respawn, chat, round transitions and
+sustained multiplayer performance remain unaccepted. START leaves the server;
+it does not yet provide the complete multiplayer pause/menu flow.
+
+See [Dev195 evidence and hashes](../reports/DEV195_RENCORNER_NATIVE_JOIN.md),
+[installation](INSTALLING.md), and [multiplayer setup](MULTIPLAYER.md).
+
+## Campaign status
+
+Earlier candidate traces show M13 completion and transition to M01, not a
+complete campaign. M13 ambush/effects pacing, audio synchronization, actors and
+animations, and M01 aircraft-related stalls remain open. Dev194 warmed and
+released four animated M01 models while preserving fresh cinematic instances;
+its canonical host/build checks passed, but those changes were not runtime
+accepted. Dev195's multiplayer run does not validate those campaign fixes.
+
+[Issue #1](https://github.com/TheGh0stShip/RenegadeVita/issues/1) records Dev142
+PSTV tutorial/M01 observations, including blocked progression and save/load.
+These are candidate-specific user reports, not Dev195 hardware acceptance.
+The [tutorial demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo) is separate
+and unchanged. No New Game-to-ending completion is claimed.
 
 The historical entries below are retained for provenance.
 
@@ -23,9 +49,9 @@ matching physical-Vita evidence.
 
 ## Post-Dev99 checkpoint history
 
-The GitHub-visible status is current through Dev134. The table below is a
-compact index of the builds after Dev99; the linked reports retain the detailed
-evidence, hashes, and caveats.
+This table indexes historical Dev100-Dev134 work. Later campaign and multiplayer
+evidence is in [port status](../reports/PORT_STATUS.md); the current checkpoint
+above takes precedence over historical candidate descriptions.
 
 | Candidate | Public status | Evidence |
 | --- | --- | --- |
@@ -36,7 +62,7 @@ evidence, hashes, and caveats.
 | Dev124-Dev126 | Physical testing returned real hardware failures: movie starvation, Logan/control stall, Mobius/START crash, low gameplay FPS, and missing EVA datalinks. Dev126 deployed diagnostics but was not accepted. | [Dev124](../reports/DEV124_NATIVE_BOOT_DIAGNOSIS.md), [Dev125](../reports/DEV125_PHYSICAL_MOVIE_PROGRESS.md), [Dev126](../reports/DEV126_LOGAN_PHYSICAL_STALL.md) |
 | Dev127-Dev134 | Renderer/FPS audit, EVA/DDS, complete pause-menu audit, save/load/delete/settings, native save text entry, repeated Load lifecycle, Cycle Objectives, discarded textured-skin RGB work, and Dev134 canonical milestone. Dev134 has matching Vita3K visual evidence and physical deployment/readback verification; runtime return is pending manual launch. | [Dev127](../reports/DEV127_FIX_AND_OPTIMIZATION_PLAN.md), [Dev129/130](../reports/DEV129_PAUSE_MENU_AUDIT.md), [Dev132](../reports/DEV132_NATIVE_TEXT_ENTRY.md), [Dev133](../reports/DEV133_REPEATED_LOAD_AND_OBJECTIVES.md), [Dev134](../reports/DEV134_PHYSICAL_MILESTONE.md) |
 
-## Evidence snapshot
+## Historical evidence through Dev134
 
 | Class | Status | What it establishes |
 | --- | --- | --- |
@@ -53,7 +79,7 @@ evidence, hashes, and caveats.
 | A3.5-dev96 published local candidate | **Superseded local-only** | 54 focused identity/staging/frontend/loading/runtime/indexed-state/short-wchar contracts, UTF-16 boundary selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev97 published local candidate | **Superseded local-only** | 41 post-formatter focused frontend/loading/runtime/indexed-state/short-wchar contracts, 19 candidate identity/loading/runtime contracts, 63 wider source contracts, UTF-16 formatter selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev98 published local candidate | **Superseded local-only** | Focused frontend/loading/runtime/indexed-state/identity contracts, full 222-tool unittest discovery, hygiene, fast candidate closure, and canonical ARM/package closure passed after Dev98's BINK presentation-clock, WWUI dialog-template copy, and HUD initialization presentation-scope fixes. No physical install, launch, screenshot, or acceptance claim exists. |
-| A3.5-dev99 historical candidate | **Superseded local-only** | Retained for provenance. Dev134 is the current candidate and has separate canonical, Vita3K, and physical deployment evidence. |
+| A3.5-dev99 historical candidate | **Superseded local-only** | Retained for provenance. Dev134 was a later checkpoint with separate canonical, Vita3K, and physical deployment evidence. |
 | Screenshot/video evidence | **Historical gallery plus later emulator/physical diagnostics** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. Later Dev100-Dev134 reports retain Vita3K visual/capture returns and physical failure/deployment receipts where applicable. Physical Dev134 runtime visual evidence is still pending manual LiveArea launch. |
 
 Host validation, package identity, and logs are useful engineering evidence. They do not prove panel output, controls, audio quality, frame pacing, or lifecycle behavior on physical hardware.

@@ -1,5 +1,61 @@
 # Tiberian Technologies patch integration
 
+## 2026-09-24 multiplayer reference update
+
+Continuation: the pinned PackageEditor now runs on self-created MIX fixtures
+through `tools/run_ttfs_reference_fixture.ps1`. Byte-identical repeated output
+enabled an independent native TTFS parser, bounded HTTP(S) downloader and
+original file-factory adapter; 11 host/sanitizer tests pass. No TT binary code
+or retail asset is imported. Details, format limits and native TLS deployment
+gate are in `MULTIPLAYER_COMPATIBILITY.md`. The initial static-only inventory
+below is historical; the fixture executions are authorized reference tooling.
+
+The user's four official 4.8.4 downloads were verified. Source/diff pins below
+are unchanged. Additional archives remain outside the repository at
+`/tmp/renegade-vita-tt-reference/4.8.4-r9000`:
+
+| Archive | Published MD5, verified | Observed SHA-256 |
+|---|---|---|
+| [server-4.8.4.zip](https://www.tiberiantechnologies.org/files/server-4.8.4.zip) | `87639ef6bd7a57e39a643eb40cb34eb0` | `375b6bd8c58019d53cddf0633ad0b9d7386c0180fb8028f67777d0f0646b38f0` |
+| [tools-4.8.4.zip](https://www.tiberiantechnologies.org/files/tools-4.8.4.zip) | `8acdc28e531557d516a39b2eff984a9c` | `00b5d686b58f98e8544ff24f669ad9de1a01f8392009016818b7e7ee9b392968` |
+
+Server has 78 entries, including Windows binaries, `PackageEditor.exe`,
+`tt.cfg`, and bundled game data. Its `ttversion.txt` identifies b9000,
+commit `6c9dba44ee3fb7114d83549e6277768235d8588d`, built 2025-02-25.
+Tools has 14 entries, Windows executables/libraries and `perfdocs.rtf`.
+Neither supplemental archive contains C/C++ sources. The LGPL notice in the
+Server ZIP does not establish a blanket license for every bundled component.
+Nothing was extracted into the port, executed, packaged or redistributed.
+
+PackageEditor binary strings expose `download <packageId> <repositoryUrl>`,
+`packages.dat`, and `packages/%08x.tpi`. These are concrete interface leads,
+not a complete TTFS format or network negotiation specification. The example
+`tt.cfg` repository is not evidence of RenCorner's current repository. A
+bounded editor-generated package comparison is the next useful TTFS
+experiment. Do not fabricate admission/integrity checks or download Windows
+DLLs as executable Vita content.
+
+Tools' performance notes discuss draw calls, material passes, skin uploads
+and VIS. Those are profiling leads, not measured Vita wins; no retail mesh
+edits or renderer rewrites were justified by this document alone.
+
+The existing audit now accepts optional binary archives, verifies both digest
+classes, inventories members and retains selected interface metadata without
+extracting files. Reproduce after fetching the pinned archives:
+
+```sh
+cache=/tmp/renegade-vita-tt-reference/4.8.4-r9000
+python3 tools/audit_tt_reference.py --archive "$cache/source-4.8.4.zip" --diff "$cache/source-diff-4.8.4.diff" --server-archive "$cache/server-4.8.4.zip" --tools-archive "$cache/tools-4.8.4.zip" --output "$cache/TT-4.8.4-r9000-ALL-ARCHIVES-AUDIT.json"
+python3 -m unittest tools.test_audit_tt_reference -v
+```
+
+All-archive audit and three audit tests pass. Original offline skirmish and
+packet fixes implemented this session, with host/ARM/sanitizer evidence, are
+documented in `MULTIPLAYER_COMPATIBILITY.md`. Full TT/TTFS integration and
+RenCorner connectivity are not implemented or verified.
+
+## Earlier integration record
+
 Date: 2026-08-24
 
 Reference: Tiberian Technologies 4.8 Update 4, revision 9000

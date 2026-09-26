@@ -1,5 +1,271 @@
 # Performance hypothesis ledger
 
+## M13 authored intro and shared effects preparation (2026-09-23)
+
+- Retail `M13.mix` `X00_Intro.txt` requires `X00_Havoc_Traj`,
+  `S_A_Human.H_A_X00_Havoc`, and `X00_Rope` at frame 1773; the two engineers
+  use their own trajectories and animations later. These were absent from
+  loading-time preparation. The full-port candidate now loads and releases
+  13 original intro render models and 24 animations during M13 loading. No script command,
+  attachment, animation, or actor lifetime is replaced.
+- Two original M13 host cycles resolve all 13 selected intro render models
+  and 24 animations.
+  Havoc trajectory and body animation each have 228 frames; rope has 333.
+  The three attachment bones exist, and original W3D animation moves
+  `BN_Havoc` 13.75 units over frames 0-200 (Z 11.975 to -1.505).
+  This validates source assets and trajectory motion, not Vita visual output.
+- Original M13 world object definitions expose seven distinct killed-explosion
+  IDs for SAMs, buggy, mobile artillery, light tank, harvester, obelisk,
+  and gun emplacements. Loading-time preparation now follows those IDs and
+  original Twiddler choices. Two host cycles prepare all seven and still kill
+  both retail SAMs through original damage/scripts in 0.22-0.33 ms each.
+  Later scripted vehicle spawns and all explosion visuals still need a
+  candidate-matched run.
+- Original tracked-vehicle texture mapper writes scroll translation to the
+  D3D `_31/_32` fields. The Vita DX8 COUNT2 pass-through UV path previously
+  supplied a zero third coordinate, cancelling the translation. It now
+  supplies the implicit homogeneous one; generated coordinates remain
+  unchanged. The 13-check renderer lifecycle test covers both scroll
+  directions and passes. A visual run is required for medium, light, and
+  mammoth tank treads and the reported medium-tank barrel material.
+- Decision: retain this source-only candidate pending M13 fixed-route
+  p50/p95/p99/worst frame time, audio drift, full explosion visuals, NPC
+  behavior, rope/body pose, memory, and normal transition. No VPK or Vita3K
+  install was produced. M00 tutorial host regression passes twice.
+
+## M13 randomized explosion preparation: cover every retail choice (2026-09-23)
+
+- Primary upstream finding: EA revision
+  `3e00c3a1b97381bb28be89a35b856375e0629a08`,
+  `Code/wwsaveload/definitionmgr.cpp` resolves a named Twiddler by calling
+  `Twiddle`; `Code/wwsaveload/twiddler.cpp` chooses one referenced definition
+  from a time-seeded random index. The existing M13 loading preparation used
+  `Find_Typed_Definition` once, so it warmed only one random explosion variant.
+  The script's later lookup could select another and pay its first-use cost.
+- Actual retail M13 data through the script-linked host runtime: `Air Explosions
+  Twiddler` references exactly `Air Explosion 01` and `Air Explosion 02`.
+  The port now inspects the original un-twiddled definition list, walks nested
+  selectors to depth four, and prepares each referenced original timed
+  decoration model. No effect is spawned, retained, or selected for gameplay;
+  the original script lookup and explosion creation remain unchanged. The
+  accessor is full-port-only; the demo is unchanged.
+- After the two WW3D duplicate-load fixes, warming only one random choice left
+  first-SAM host pauses of 0.14-0.35 s in the sampled runs. Warming both real
+  choices and `Explosion_SAM_Site` reduced the two-cycle non-sanitized host
+  `Apply_Damage` timings to 0.64/0.49 ms and 0.38/0.27 ms for the two SAMs.
+  The same two cycles pass ASan/LeakSanitizer at 1.21/1.49 ms and
+  1.17/1.09 ms. Each SAM still goes from 100 to 0 health; the M00 tutorial
+  regression is being rerun. All changed ARM objects compile, and deterministic
+  staging passes 206 zero-fuzz patches.
+- Decision: retain as a first-use asset preparation candidate, not a proven
+  Vita frame-time win. All explosion variants must render correctly, and the
+  normal M13 scripts, damage/decal visuals, A10/Ion sequence, audio sync,
+  mission transition, memory, and physical-Vita 60 FPS target require a
+  matching runtime replay. No VPK or Vita3K install was produced.
+
+## M13 SAM death: repeated unresolved W3D prototype loads (2026-09-23)
+
+- Reproduction: the original `Test_DLS.cpp` script attached to both retail M13
+  SAMs creates `Air Explosions Twiddler` on death. The script-linked host smoke
+  measures `Apply_Damage` directly: before the change, two non-sanitized cycles
+  took 1.43/1.21 s and 2.26/1.78 s for SAMs 1500015/1500016. These are host
+  wall times, not Vita frame times or a complete mission progression test.
+- Attribution: Callgrind placed about 78% of the second-SAM sampled instruction
+  cost below original `TimedDecorationPhysDefClass::Create`. A GDB loader trace
+  saw repeated `Load_3D_Assets` calls for unresolved explosion child names;
+  `e_19_Asmk1.w3d`, `e_19_Aflame1.w3d`, and `e_19_ARock1.w3d` were each parsed
+  12 times in one SAM death. `strace` confirmed repeated `always.dat` opens and
+  directory scans, with no single long blocking syscall. Original
+  `WW3DAssetManager::Create_Render_Obj` retries the W3D load every time a
+  successfully parsed file did not register the requested child prototype.
+- Change: a source-hash-guarded, zero-fuzz full-port patch retains up to 256
+  names whose W3D file parsed successfully but whose prototype stayed absent.
+  `Find_Prototype` still runs first on every request, failed file loads still
+  retry, and `Free_Assets` clears the names. The demo path is unchanged.
+  Existing original render-object and explosion creation remain authoritative.
+- Host comparison after the change: two non-sanitized cycles measured
+  1.02/0.96 s and 0.77/0.71 s for the two SAMs. Two ASan/LeakSanitizer cycles
+  passed with both SAMs reduced from 100 to 0 health and no reported memory
+  error; the corresponding pauses were 1.06/0.87 s and 0.81/0.92 s.
+  Prewarming original timed-decoration models improved the first SAM but left
+  the second at roughly 0.7-1.1 s. The edited asset-manager object compiles
+  for Vita ARM. This is a measured host reduction, **not** a lag-free or native
+  FPS result, and does not establish the A10/mission transition behavior.
+- Decision: retain the targeted redundant-load fix pending matching M13
+  Vita3K and physical replay with explosion visuals and resource high-water.
+  The 0.7-1.1 s host pause described above was subsequently narrowed to a
+  second load path in the aggregate definition; see the next entry. Do not
+  present either source fix as resolution of the last-SAM freeze, ambush lag,
+  or 60 FPS goal without matching runtime evidence.
+
+## M13 SAM death: aggregate fallback repeated the on-demand load (2026-09-23)
+
+- Primary upstream check: EA source revision
+  `3e00c3a1b97381bb28be89a35b856375e0629a08`, `Code/ww3d2/assetmgr.cpp`
+  `Create_Render_Obj` loads the local and parent W3D when on-demand is enabled.
+  `Code/ww3d2/agg_def.cpp` `Create_Render_Object` then calls `Load_Assets`
+  again when that lookup returns null. The Vita full-port runtime and host
+  route both explicitly enable on-demand loading. After the first targeted
+  cache, Callgrind still attributed 38.8% of second-SAM instructions to W3D
+  loading, reached through aggregate subobject attachment.
+- Change: in full-port mode, skip `AggregateDefClass`'s direct fallback only
+  while asset-manager on-demand loading is enabled; preserve it when disabled.
+  The asset manager still attempts local/parent W3D and prototype lookup.
+  No explosion, decal, damage, or script callback is skipped. The demo is
+  unchanged. Source staging passes 205 ordered zero-fuzz patches and the
+  edited aggregate object compiles for Vita ARM.
+- Identical non-sanitized two-cycle host SAM smoke after both fixes: first
+  SAM 0.441/0.461 s, second SAM 0.00055/0.00032 s. With the two original
+  explosion definitions warmed and released before damage: first SAM
+  0.354/0.143 s, second SAM 0.00052/0.00033 s. ASan/LeakSanitizer prewarmed
+  route passed two cycles; first SAM 0.138/0.100 s, second 0.0011/0.0018 s.
+  These are host wall times for isolated `Apply_Damage`, not complete frame
+  times or a Vita performance claim. Both retail SAMs still fall from 100 to
+  0 health in each cycle.
+- Residual first-SAM Callgrind sample after warming: roughly 689k instructions,
+  with original decal creation and explosion damage/collision prominent; W3D
+  model creation is smaller than before. These original effects and damage
+  cannot be dropped to satisfy a benchmark. This sample warmed only one
+  random Twiddler choice; the full-choice preparation above removed its
+  measured first-SAM host pause. Native frame-time acceptance still needs a
+  candidate-matched replay.
+- Decision: retain as a host-measured algorithmic fix, with acceptance pending
+  original explosion/decal visuals, area-4/A10 completion, frame distribution,
+  memory, and physical Vita comparison. No package/install was produced.
+
+## M13 steady mesh submission: original WW3D and pinned vitaGL review (2026-09-23)
+
+- Measurement: Dev194 M13 frames 5521-5640 submitted 17,002 meshes and
+  47,194 draw ends. The 1-in-16 sampled mesh-boundary estimate is 2,128,032
+  us over 120 frames (~17.7 ms/frame); draw ends account for an estimated
+  225,728 us (~1.9 ms/frame). These are **CPU submission estimates**, not GPU
+  timing. The sampled slowest mesh is `L00.WALL_BUSTED2` (3,569 us).
+- Counter caveat from the original texture boundary: `texture_requests` counts
+  filename-based `_Create_DX8_Texture`, while `texture_decodes/uploads` also
+  count surface-backed texture creation. In Dev192 M13 frames 6000-6120,
+  requests rose by only 3 but uploads rose by 131; this does **not** prove 131
+  repeated DDS decodes or a retail archive cache failure. The existing
+  aggregate counters cannot attribute those dynamic uploads to an owner.
+- Source comparison: original EA `MeshMatDescClass::Peek_Texture` and
+  `Get_Shader` retain per-polygon material ownership; no geometry or material
+  shortcut is justified from these samples. The pinned vitaGL revision
+  `6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5`, `source/ffp.c`
+  (https://github.com/Rinnegatamante/vitaGL/tree/6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5), still
+  performs FFP shader/state resolution and `sceGxmDraw` at `glEnd`; our indexed
+  extension copies transient indices, so caller pointers are not retained.
+  The dependency already uses `SKIP_ERROR_HANDLING`, shader cache, and compact
+  unlit vertices. Upstream's documented optional draw/indices/texture speedhacks
+  (https://github.com/Rinnegatamante/vitaGL/blob/6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5/README.md) explicitly
+  carry crash, compliance, or visual-risk caveats and are deferred pending a
+  fixed route A/B, rather than globally enabled for M13.
+- Focused source change: untransformed `D3DTSS_TCI_PASSTHRU` UVs now submit
+  the original S/T pair directly, avoiding the 4-component temporary and
+  texture-transform path for every emitted vertex. Generated coordinates,
+  projected transforms, missing UVs, and first-use diagnostics retain their
+  existing paths. This is a candidate CPU-work reduction, not an accepted FPS
+  gain. Renderer ARM object compilation passed; script-linked M13 SAM smoke
+  still passes two ASan/LeakSanitizer cycles. No matching runtime A/B or visual
+  comparison exists, so adoption for performance remains pending.
+- Next evidence: same M13 route and camera/content window, before/after
+  p50/p95/p99/worst, simulation/render/present split, mesh-boundary and draw-end
+  estimates, texture upload spikes, memory high-water, A/V drift, visible
+  original effects/NPCs, and SAM-to-A10-to-transition continuity. Physical Vita
+  remains the acceptance target.
+
+## M13 script-linked host sanitizer and WWMath layout (2026-09-23)
+
+- Gap found: the prior M13 host harness did not link `Test_DLS.cpp`, so its
+  120-frame pass could not validate the Area 4 controller that owns SAM
+  destruction, A10 strike, dialogue, and mission completion timers.
+- Change: link the original script unit and assert the retail M13 controller
+  carries `MX0_Area4_Controller_DLS`. The first ASan run then reproduced an
+  8-byte read from a 4-byte float in `WWMath::Is_Valid_Float`, reached from
+  original vehicle physics. `Is_Valid_Double` had the same LP64/word-order
+  assumption. A hash-guarded staged patch uses `memcpy` into `uint32_t` and
+  `uint64_t` and the same exponent tests, without changing physics formulas.
+- Verification: source staging passes 203 zero-fuzz patches; finite, signed
+  zero, subnormal, infinity, and NaN host value tests pass; ARM syntax check
+  passes. With `Test_DLS.cpp` linked, isolated retail M13 and tutorial M00 each
+  complete two 120-frame host cycles under ASan/LeakSanitizer. The pre-fix
+  M13 sanitizer stack and the fixed pass are retained locally under
+  `build/host-m13-diagnostic/` and `build/host-a31-asan/`.
+- Host-only SAM isolation: `M13_SAM_DAMAGE_SMOKE` applies the original
+  `STEEL` warhead through `DamageableGameObj::Apply_Damage` after M13 load.
+  Both retail SAM IDs, 1500015 and 1500016, drop from 100 to 0 health in two
+  ASan/LeakSanitizer cycles with clean teardown and are now a canonical host
+  regression. This tests object death and
+  explosion boundaries, not the later `SAMS_DESTRUCTION`/A10 script state.
+  Dev192's matched route had 1.84 s and 0.77 s simulation stalls near the two
+  SAM losses but continued to A10 dialogue; its result does not prove a
+  permanent SAM-death hang in the later Dev194 report.
+- Decision: retain as a shared portability/correctness fix and stronger host
+  gate. Do not attribute the Vita3K last-SAM freeze or any FPS improvement to
+  it: the host route does not reach either SAM death or the A10 transition,
+  and no matching Vita3K/physical frame-time comparison exists.
+
+## Internal Dev195 M13 first-use preparation and recorder gate (2026-09-23)
+
+- Measured lead: matching Dev194 frames 2040/5032 took 621/780 ms in render
+  submission while 15/14 textures were decoded/uploaded. Frame 5678 took
+  631 ms total, 613 ms simulation; `X0E_Obelisk.txt` created two objects in
+  258/304 ms. The frame timer excludes later recorder flush I/O. Dev194's
+  captured frames end at 5726 with both SAMs alive, so the reported last-SAM
+  freeze is not localized by that trace.
+- Change: prepare one fresh `X0E_Obelisk` and `X0E_AG_OrcaPart` instance at M13
+  loading, consumed by the original `PhysClass::Set_Model_By_Name` path; prepare
+  referenced original texture objects under a 32 MiB soft extra-residency cap.
+  This shifts observed categories of first-use work toward loading but does not
+  alter original script events, texture content, or effect spawn semantics.
+- Diagnostic fix: checkpoint sidecars append deltas, replace on candidate reset
+  and ring rollover, and avoid repeated directory creation. Cross-thread
+  runtime-log writes are serialized; the owner thread alone writes the flight
+  ring. A canonical host self-test now covers append, replacement, rollover,
+  and owner-only log capture.
+- Guardrail: an attempted SAM explosion recycler preload violated the existing
+  fresh-effect source contract, which protects against previously missing
+  explosions/trails. It was removed before the successful ARM compilation.
+- Verification: recorder host test and ASan/UBSan pass; focused contracts pass;
+  internal Dev195 ARM ELF compile/link and identity pass. No package, Vita3K
+  installation/launch, same-route before/after, visual check, memory result,
+  or physical test. The older isolated host M13 runtime completed two 120-frame
+  load/teardown cycles but does not include `Test_DLS` SAM mission scripting.
+- Decision: pending. Do not present a candidate as fixing lag or the freeze.
+  Compare matching M13 frame-time median/p95/p99/worst, texture upload counts,
+  X0E create time, resident memory high-water, complete SAM-to-transition
+  behavior, and visible original effects before retaining these preloads.
+
+## Dev194 runtime: synchronous flight-recorder amplification (superseded by internal Dev195 compile)
+
+- Evidence: candidate-matched `A3.5-dev194` M13 telemetry covers frames 1-5726.
+  It reports 40.1 average FPS; p50/p95/p99 26.5/96.5/160.6 ms; worst 2.43 s
+  at startup. The last recorded frame is 5726 (41 ms; 24.8 ms simulation,
+  16.2 ms render); no SAM destruction event or post-freeze callback was captured.
+  Matching Vita3K logs show the flight recorder reopening events, frames, log
+  tail and summary plus attempting `mkdir` every 2-3 seconds. The runtime calls
+  full flush on each mission-progress change, each 120-frame checkpoint, and
+  every frame above 250 ms. Full flush rewrote up to 4096 frame samples, 768
+  events and 768 log lines synchronously on the campaign thread. This is a
+  confirmed diagnostic cost and plausible self-amplifying stall source, not
+  proof of the reported SAM freeze or the remaining ~25 ms steady workload.
+- Evidence integrity: `campaign-flight-events.jsonl` ends its Dev194 records
+  with a partial Dev192 JSON object and stale Dev192/Dev185 records. The
+  available frame/runtime tail stops at frame 5726 with both SAMs present;
+  it is not evidence for the subsequently reported last-SAM failure and must
+  not be used to infer that callback's cause.
+- Change: local recorder appends only newly recorded frame/event/log deltas;
+  the bounded sidecars are replaced only at ring rollover or when recovering
+  from a write failure. Full ring snapshots remain on fatal, clean exit, final
+  and shutdown. Capture directory creation is no longer repeated per flush.
+- Verification: four focused source contracts, strict host `-fsyntax-only`
+  compilation with warnings-as-errors, and `git diff --check` pass. Pytest is
+  not installed; the focused Python contract functions were invoked directly.
+  No game build, Vita3K install/launch, runtime performance comparison, or
+  physical test occurred. This change is not yet an accepted FPS improvement.
+- Decision: retain as a diagnostic-overhead correction. Do not present a new
+  build or claim 60 FPS/SAM-freeze resolution. Next integrate deeper measured
+  render/simulation work and SAM-callback analysis before one candidate is
+  prepared; compare matching M13 frame distributions and SAM progression.
+
 ## Dev194: prevent retained-instance reuse in the M01 opening sequence
 
 - Evidence: candidate-matched Dev192 log records M13 original completion

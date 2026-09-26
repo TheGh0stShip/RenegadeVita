@@ -1,0 +1,24 @@
+--- a/packetmgr.cpp
++++ b/packetmgr.cpp
+@@ -1166,12 +1166,21 @@
+ 		sockaddr_in addr;
+ 		memset(&addr, 0, sizeof(addr));
+ 		pm_assert(packet_buffer_size >= PACKET_MANAGER_MTU);
++#if defined(RENEGADE_VITA_PORT)
++		// libc sockets are descriptors, not SceNet socket IDs. Receive directly
++		// through libc so its handle and errno translation remains authoritative.
++		int bytes = recvfrom(socket, (char*)packet_buffer, packet_buffer_size,
++			MSG_DONTWAIT, (LPSOCKADDR) &addr, &address_size);
++		if (bytes == SOCKET_ERROR && WSAGetLastError() == WSAEWOULDBLOCK) return 0;
++		{
++#else
+ 		unsigned long available = 0;
+ 		int result = ioctlsocket(socket, FIONREAD, &available);
+ 		int bytes = 0;
+ 		if (result == 0 && available != 0) {
+ 
+ 			bytes = recvfrom(socket, (char*)packet_buffer, packet_buffer_size, 0, (LPSOCKADDR) &addr, &address_size);
++#endif
+ 			if (bytes > 0) {
+ #ifndef WRAPPER_CRC
+ 				Register_Packet_In((unsigned char*) &addr.sin_addr.s_addr, addr.sin_port, bytes + UDP_HEADER_SIZE, 0);

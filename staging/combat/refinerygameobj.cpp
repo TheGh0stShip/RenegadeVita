@@ -288,6 +288,15 @@ RefineryGameObj::RefineryGameObj (void)	:
 ////////////////////////////////////////////////////////////////
 RefineryGameObj::~RefineryGameObj (void)
 {
+	// Vehicle destruction and level teardown may release either owner first.
+	if (Harvester != NULL) {
+		HarvesterClass *observer = Harvester;
+		Harvester = NULL;
+		observer->Set_Refinery(NULL);
+		VehicleGameObj *vehicle = observer->Get_Vehicle();
+		if (vehicle != NULL) vehicle->Remove_Observer(observer);
+		else GameObjObserverManager::Delete_Register(observer);
+	}
 	if (MoneyTrickleSound != NULL) {
 		MoneyTrickleSound->Stop();
 		REF_PTR_RELEASE(MoneyTrickleSound);
@@ -867,5 +876,4 @@ RefineryGameObj::Import_Rare (BitStreamClass &packet)
 
 	packet.Get (IsHarvesterDocked);
 }
-
 

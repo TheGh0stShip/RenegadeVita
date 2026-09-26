@@ -2,12 +2,14 @@
 
 #include <errno.h>
 #include <inttypes.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
 
 #if defined(__vita__)
+#include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
 #endif
 
@@ -91,7 +93,8 @@ struct FlightLogLine
 struct FlightRecorder
 {
 	bool active;
-	bool flushed_once;
+	bool sidecars_initialized;
+	pthread_t main_thread;
 	char candidate[64];
 	char capture_root[kFlightPathCapacity];
 	char runtime_log_path[kFlightPathCapacity];
@@ -100,12 +103,18 @@ struct FlightRecorder
 	FlightFrameSample frames[kFlightFrameCapacity];
 	uint32_t frame_cursor;
 	uint32_t frame_count;
+	uint64_t frame_sequence;
+	uint64_t persisted_frame_sequence;
 	FlightEvent events[kFlightEventCapacity];
 	uint32_t event_cursor;
 	uint32_t event_count;
+	uint64_t event_sequence;
+	uint64_t persisted_event_sequence;
 	FlightLogLine logs[kFlightLogCapacity];
 	uint32_t log_cursor;
 	uint32_t log_count;
+	uint64_t log_sequence;
+	uint64_t persisted_log_sequence;
 	FlightMissionState mission;
 	bool mission_available;
 	uint64_t worst_frame_us;
@@ -167,6 +176,21 @@ bool Build_Path(char *output, size_t capacity, const char *name)
 	return count > 0 && static_cast<size_t>(count) < capacity;
 }
 
+FILE *Open_Flight_File(const char *path, bool append)
+{
+	if (!append) {
+#if defined(__vita__)
+		SceIoStat status = {};
+		if (sceIoGetstat(path, &status) >= 0 && sceIoRemove(path) < 0) {
+			return NULL;
+		}
+#else
+		if (remove(path) != 0 && errno != ENOENT) return NULL;
+#endif
+	}
+	return fopen(path, append ? "ab" : "wb");
+}
+
 void Json_String(FILE *file, const char *text)
 {
 	fputc('"', file);
@@ -192,11 +216,6 @@ void Json_String(FILE *file, const char *text)
 	fputc('"', file);
 }
 
-uint32_t Ring_Start(uint32_t cursor, uint32_t count, uint32_t capacity)
-{
-	return count < capacity ? 0U : cursor;
-}
-
 void Push_Event(const char *category, const char *name, uint32_t frame,
 	uint64_t monotonic_us, const char *detail)
 {
@@ -209,15 +228,29 @@ void Push_Event(const char *category, const char *name, uint32_t frame,
 	gRecorder.event_cursor =
 		(gRecorder.event_cursor + 1U) % kFlightEventCapacity;
 	if (gRecorder.event_count < kFlightEventCapacity) ++gRecorder.event_count;
+	++gRecorder.event_sequence;
 }
 
-void Write_Events(FILE *file)
+uint64_t Ring_First_Sequence(uint64_t sequence, uint32_t capacity)
 {
-	const uint32_t start = Ring_Start(gRecorder.event_cursor,
-		gRecorder.event_count, kFlightEventCapacity);
-	for (uint32_t index = 0U; index < gRecorder.event_count; ++index) {
-		const FlightEvent &event =
-			gRecorder.events[(start + index) % kFlightEventCapacity];
+	return sequence > capacity ? sequence - capacity : 0U;
+}
+
+uint64_t Valid_Range_Start(uint64_t start, uint64_t sequence,
+	uint32_t capacity)
+{
+	const uint64_t first = Ring_First_Sequence(sequence, capacity);
+	return start < first ? first : start;
+}
+
+void Write_Events(FILE *file, uint64_t start, uint64_t end)
+{
+	start = Valid_Range_Start(start, gRecorder.event_sequence,
+		kFlightEventCapacity);
+	if (end > gRecorder.event_sequence) end = gRecorder.event_sequence;
+	for (uint64_t sequence = start; sequence < end; ++sequence) {
+		const FlightEvent &event = gRecorder.events[
+			static_cast<uint32_t>(sequence % kFlightEventCapacity)];
 		fprintf(file,
 			"{\"schema\":%u,\"candidate\":",
 			A35_CAMPAIGN_FLIGHT_SCHEMA_VERSION);
@@ -238,7 +271,7 @@ void Write_Events(FILE *file)
 	}
 }
 
-void Write_Frames(FILE *file)
+void Write_Frames_Header(FILE *file)
 {
 	fputs("schema,candidate,archive,load_source,frame,monotonic_us,frame_us,"
 		"sync_us,simulation_us,render_us,draw_calls,meshes,vertices,triangles,"
@@ -249,11 +282,16 @@ void Write_Frames(FILE *file)
 		"output_write_failures,stream_open_failures,stream_start_silent,"
 		"mixed_peak_abs,player_x,player_y,player_z,camera_x,camera_y,camera_z,"
 		"scene,camera,star,render_closed,render_incomplete\n", file);
-	const uint32_t start = Ring_Start(gRecorder.frame_cursor,
-		gRecorder.frame_count, kFlightFrameCapacity);
-	for (uint32_t index = 0U; index < gRecorder.frame_count; ++index) {
-		const FlightFrameSample &frame =
-			gRecorder.frames[(start + index) % kFlightFrameCapacity];
+}
+
+void Write_Frames(FILE *file, uint64_t start, uint64_t end)
+{
+	start = Valid_Range_Start(start, gRecorder.frame_sequence,
+		kFlightFrameCapacity);
+	if (end > gRecorder.frame_sequence) end = gRecorder.frame_sequence;
+	for (uint64_t sequence = start; sequence < end; ++sequence) {
+		const FlightFrameSample &frame = gRecorder.frames[
+			static_cast<uint32_t>(sequence % kFlightFrameCapacity)];
 		fprintf(file,
 			"%u,%s,%s,%s,%" PRIu64 ",%" PRIu64 ",%" PRIu64
 			",%" PRIu64 ",%" PRIu64 ",%" PRIu64 ",%" PRIu64
@@ -287,13 +325,14 @@ void Write_Frames(FILE *file)
 	}
 }
 
-void Write_Log_Tail(FILE *file)
+void Write_Log_Tail(FILE *file, uint64_t start, uint64_t end)
 {
-	const uint32_t start = Ring_Start(gRecorder.log_cursor,
-		gRecorder.log_count, kFlightLogCapacity);
-	for (uint32_t index = 0U; index < gRecorder.log_count; ++index) {
-		const FlightLogLine &line =
-			gRecorder.logs[(start + index) % kFlightLogCapacity];
+	start = Valid_Range_Start(start, gRecorder.log_sequence,
+		kFlightLogCapacity);
+	if (end > gRecorder.log_sequence) end = gRecorder.log_sequence;
+	for (uint64_t sequence = start; sequence < end; ++sequence) {
+		const FlightLogLine &line = gRecorder.logs[
+			static_cast<uint32_t>(sequence % kFlightLogCapacity)];
 		fputs(line.line, file);
 		if (line.line[0] != '\0' &&
 			line.line[strlen(line.line) - 1U] != '\n') {
@@ -368,6 +407,7 @@ void A35_Campaign_Flight_Reset(const char *candidate, const char *capture_root,
 {
 	memset(&gRecorder, 0, sizeof(gRecorder));
 	gRecorder.active = true;
+	gRecorder.main_thread = pthread_self();
 	Copy_String(gRecorder.candidate, sizeof(gRecorder.candidate), candidate);
 	Copy_String(gRecorder.capture_root, sizeof(gRecorder.capture_root),
 		capture_root);
@@ -391,7 +431,8 @@ void A35_Campaign_Flight_Shutdown(void)
 
 void A35_Campaign_Flight_Record_Log_Line(const char *line, unsigned length)
 {
-	if (!gRecorder.active || line == NULL || length == 0U) return;
+	if (!gRecorder.active || line == NULL || length == 0U ||
+		!pthread_equal(pthread_self(), gRecorder.main_thread)) return;
 	FlightLogLine &slot = gRecorder.logs[gRecorder.log_cursor];
 	const unsigned copy_length =
 		length < (kFlightLogLineCapacity - 1U) ? length :
@@ -400,6 +441,7 @@ void A35_Campaign_Flight_Record_Log_Line(const char *line, unsigned length)
 	slot.line[copy_length] = '\0';
 	gRecorder.log_cursor = (gRecorder.log_cursor + 1U) % kFlightLogCapacity;
 	if (gRecorder.log_count < kFlightLogCapacity) ++gRecorder.log_count;
+	++gRecorder.log_sequence;
 }
 
 void A35_Campaign_Flight_Record_Event(const char *category, const char *name,
@@ -463,6 +505,7 @@ void A35_Campaign_Flight_Record_Frame(const A31FrameTelemetry &frame,
 	gRecorder.frame_cursor =
 		(gRecorder.frame_cursor + 1U) % kFlightFrameCapacity;
 	if (gRecorder.frame_count < kFlightFrameCapacity) ++gRecorder.frame_count;
+	++gRecorder.frame_sequence;
 	if (frame.frame_time_us > gRecorder.worst_frame_us) {
 		gRecorder.worst_frame_us = frame.frame_time_us;
 		gRecorder.worst_frame_index = frame.frame_index;
@@ -547,38 +590,77 @@ void A35_Campaign_Flight_Record_Resource_Snapshot(uint32_t frame,
 bool A35_Campaign_Flight_Flush(const char *reason)
 {
 	if (!gRecorder.active) return false;
-	Make_Directory(gRecorder.capture_root);
+	const bool full_snapshot = reason != NULL &&
+		(strcmp(reason, "shutdown") == 0 ||
+		 strcmp(reason, "pre-clean-exit") == 0 ||
+		 strcmp(reason, "best-effort-fatal-snapshot") == 0 ||
+		 strcmp(reason, "final") == 0);
 	char path[kFlightPathCapacity];
 	bool ok = true;
+	const bool replace_frames = !gRecorder.sidecars_initialized ||
+		(full_snapshot && gRecorder.frame_sequence !=
+			gRecorder.persisted_frame_sequence) ||
+		gRecorder.frame_sequence / kFlightFrameCapacity >
+		gRecorder.persisted_frame_sequence / kFlightFrameCapacity;
+	const bool replace_events = !gRecorder.sidecars_initialized ||
+		(full_snapshot && gRecorder.event_sequence !=
+			gRecorder.persisted_event_sequence) ||
+		gRecorder.event_sequence / kFlightEventCapacity >
+		gRecorder.persisted_event_sequence / kFlightEventCapacity;
+	const bool replace_log_tail = !gRecorder.sidecars_initialized ||
+		(full_snapshot && gRecorder.log_sequence !=
+			gRecorder.persisted_log_sequence) ||
+		gRecorder.log_sequence / kFlightLogCapacity >
+		gRecorder.persisted_log_sequence / kFlightLogCapacity;
+	const uint64_t frame_start = replace_frames ?
+		Ring_First_Sequence(gRecorder.frame_sequence, kFlightFrameCapacity) :
+		gRecorder.persisted_frame_sequence;
+	const uint64_t event_start = replace_events ?
+		Ring_First_Sequence(gRecorder.event_sequence, kFlightEventCapacity) :
+		gRecorder.persisted_event_sequence;
 	if (Build_Path(path, sizeof(path), "campaign-flight-events.jsonl")) {
-		FILE *file = fopen(path, "wb");
+		FILE *file = Open_Flight_File(path, !replace_events);
 		if (file != NULL) {
-			Write_Events(file);
+			Write_Events(file, event_start, gRecorder.event_sequence);
 			ok = fclose(file) == 0 && ok;
+			if (ok) gRecorder.persisted_event_sequence =
+				gRecorder.event_sequence;
 		} else {
 			ok = false;
 		}
 	}
 	if (Build_Path(path, sizeof(path), "campaign-flight-frames.csv")) {
-		FILE *file = fopen(path, "wb");
+		FILE *file = Open_Flight_File(path, !replace_frames);
 		if (file != NULL) {
-			Write_Frames(file);
+			if (replace_frames) Write_Frames_Header(file);
+			Write_Frames(file, frame_start, gRecorder.frame_sequence);
 			ok = fclose(file) == 0 && ok;
+			if (ok) gRecorder.persisted_frame_sequence =
+				gRecorder.frame_sequence;
 		} else {
 			ok = false;
 		}
 	}
-	if (Build_Path(path, sizeof(path), "campaign-flight-log-tail.txt")) {
-		FILE *file = fopen(path, "wb");
-		if (file != NULL) {
-			Write_Log_Tail(file);
-			ok = fclose(file) == 0 && ok;
-		} else {
-			ok = false;
+	if (replace_log_tail ||
+		gRecorder.log_sequence != gRecorder.persisted_log_sequence) {
+		if (Build_Path(path, sizeof(path), "campaign-flight-log-tail.txt")) {
+			FILE *file = Open_Flight_File(path, !replace_log_tail);
+			if (file != NULL) {
+				const uint64_t log_start = replace_log_tail ?
+					Ring_First_Sequence(gRecorder.log_sequence,
+						kFlightLogCapacity) :
+					gRecorder.persisted_log_sequence;
+				Write_Log_Tail(file, log_start, gRecorder.log_sequence);
+				ok = fclose(file) == 0 && ok;
+				if (ok) gRecorder.persisted_log_sequence =
+					gRecorder.log_sequence;
+			} else {
+				ok = false;
+			}
 		}
 	}
 	if (Build_Path(path, sizeof(path), "campaign-flight-summary.json")) {
-		FILE *file = fopen(path, "wb");
+		FILE *file = Open_Flight_File(path, false);
 		if (file != NULL) {
 			fprintf(file,
 				"{\n  \"schema\":%u,\n  \"candidate\":",
@@ -621,6 +703,6 @@ bool A35_Campaign_Flight_Flush(const char *reason)
 			ok = false;
 		}
 	}
-	gRecorder.flushed_once = true;
+	gRecorder.sidecars_initialized = ok;
 	return ok;
 }

@@ -1,0 +1,11 @@
+--- a/bitpackids.h
++++ b/bitpackids.h
+@@ -92,6 +92,8 @@
+ 
+ 	BITPACK_PACKET_TYPE,
+ 	BITPACK_PACKET_ID,
++	BITPACK_TT_HEALTH,
++	BITPACK_TT_SHIELD_STRENGTH,
+ 
+ };
+ 

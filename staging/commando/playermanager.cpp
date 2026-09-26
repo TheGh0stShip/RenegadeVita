@@ -1050,7 +1050,8 @@ void cPlayerManager::Construct_Heading(WideStringClass & string, bool force_verb
    //
 	// WOL rank
 	//
-   if (GameModeManager::Find("WOL")->Is_Active() && is_verbose) {
+   GameModeClass *wol_mode = GameModeManager::Find("WOL");
+   if (wol_mode != NULL && wol_mode->Is_Active() && is_verbose) {
 		substring.Format(L"%-8s", TRANSLATION(IDS_MP_RANK));
 	   string += substring;
    }

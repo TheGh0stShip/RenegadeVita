@@ -47,6 +47,8 @@
 #include <float.h>
 #include <assert.h>
 #include <float.h>
+#include <stdint.h>
+#include <string.h>
 
 /*
 ** Some global constants.
@@ -275,26 +277,18 @@ WWINLINE double WWMath::Lerp(double a, double b, float lerp )
 
 WWINLINE bool WWMath::Is_Valid_Float(float x)
 {
-	unsigned long * plong = (unsigned long *)(&x);
-	unsigned long exponent = ((*plong) & 0x7F800000) >> (32-9);
-
-	// if exponent is 0xFF, this is a NAN 
-	if (exponent == 0xFF) {
-		return false;
-	}
-	return true;
+	uint32_t bits = 0;
+	static_assert(sizeof(bits) == sizeof(x), "float storage must be 32 bits");
+	memcpy(&bits, &x, sizeof(bits));
+	return (bits & 0x7F800000U) != 0x7F800000U;
 }
 
 WWINLINE bool WWMath::Is_Valid_Double(double x)
 {
-	unsigned long * plong = (unsigned long *)(&x) + 1;
-	unsigned long exponent = ((*plong) & 0x7FF00000) >> (32-12);
-
-	// if exponent is 0x7FF, this is a NAN 
-	if (exponent == 0x7FF) {
-		return false;
-	}
-	return true;
+	uint64_t bits = 0;
+	static_assert(sizeof(bits) == sizeof(x), "double storage must be 64 bits");
+	memcpy(&bits, &x, sizeof(bits));
+	return (bits & 0x7FF0000000000000ULL) != 0x7FF0000000000000ULL;
 }
 
 // ----------------------------------------------------------------------------

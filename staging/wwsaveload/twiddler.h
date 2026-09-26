@@ -88,6 +88,17 @@ public:
 	virtual DefinitionClass *		Twiddle (void) const;
 	virtual uint32						Get_Indirect_Class_ID (void) const;
 	virtual void						Set_Indirect_Class_ID (uint32 class_id);
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+	int Get_Referenced_Definition_Count(void) const {
+		return m_DefinitionList.Count();
+	}
+	int Get_Referenced_Definition_ID(int index) const {
+		return index >= 0 && index < m_DefinitionList.Count() ?
+			m_DefinitionList[index] : 0;
+	}
+#endif
+
+
 
 private:
 

@@ -210,6 +210,7 @@ public:
    virtual	void	Export_Rare( BitStreamClass &packet );
 	virtual	void	Import_Rare( BitStreamClass &packet );
 	virtual	void	Import_Frequent( BitStreamClass & packet );
+	virtual void Import_Occasional(BitStreamClass &packet);
    virtual	void	Export_Frequent( BitStreamClass & packet );
    virtual	void	Import_State_Cs( BitStreamClass & packet );
    virtual	void	Export_State_Cs( BitStreamClass & packet );
@@ -323,6 +324,14 @@ protected:
 	// Lock feature.  Vehicle can be locked to all but the purchaser for some number of seconds
 	GameObjReference		LockOwner;	// who owns the lock for this vehicle?
 	float						LockTimer;
+	bool TTStateActive = false;
+	bool NetworkCanFire = true, NetworkCanDrive = true;
+	bool NetworkAllowEmptyStealth = false, NetworkCanBeStolen = false;
+	BYTE NetworkLockTeam = 2;
+	GameObjReference NetworkOwner;
+	bool NetworkFixedTurret = false;
+	bool NetworkTargetUpdated = false, NetworkDamageMeshes = false;
+	float NetworkTurretTurn = 0, NetworkBarrelTilt = 0;
 
 	void		Remove_Transitions( TransitionDataClass::StyleType transition_type );
 	void		Create_New_Transitions( TransitionDataClass::StyleType transition_type );

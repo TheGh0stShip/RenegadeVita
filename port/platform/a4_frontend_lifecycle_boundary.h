@@ -11,6 +11,8 @@ struct A4FrontendTrace
 	bool exit_requested;
 	int exit_code;
 	bool tutorial_start_latched;
+	bool skirmish_selected;
+	bool client_only_selected;
 	char tutorial_map[96];
 	int tutorial_team_choice;
 	unsigned long tutorial_clan_id;
@@ -30,6 +32,8 @@ bool A4_Frontend_Exit_Requested(void);
 int A4_Frontend_Exit_Code(void);
 bool A4_Frontend_Is_Tutorial_Source(const char *map_name);
 #if !RENEGADE_VITA_M00_DEMO
+bool A4_Frontend_Resolve_Skirmish_Archive(const char *source,
+	char *archive, unsigned archive_size);
 bool A4_Frontend_Resolve_Single_Player_Archive(const char *source,
 	char *archive, unsigned archive_size, bool *is_save);
 #endif

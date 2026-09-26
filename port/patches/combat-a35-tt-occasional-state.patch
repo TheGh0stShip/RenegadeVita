@@ -1,0 +1,90 @@
+--- a/damage.cpp
++++ b/damage.cpp
+@@ -38,6 +38,7 @@
+ **	Includes
+ */
+ #include "damage.h"
++#include "renegade_client_effects.h"
+ #include "assets.h"
+ #include "debug.h"
+ #include "smartgameobj.h"
+@@ -1099,11 +1100,33 @@
+ void DefenseObjectClass::Import(BitStreamClass & packet)
+ {
+ 	bool is_health_zero = packet.Get(is_health_zero);
++	bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	modern = Renegade_Client_Uses_TT_Replication();
++#endif
+ 
+-	int health				= packet.Get(health, BITPACK_HEALTH);
+-	int shield_strength	= packet.Get(shield_strength, BITPACK_SHIELD_STRENGTH);
++	int health = 0, shield_strength = 0;
++	packet.Get(health, modern ? BITPACK_TT_HEALTH : BITPACK_HEALTH);
++	packet.Get(shield_strength, modern ? BITPACK_TT_SHIELD_STRENGTH : BITPACK_SHIELD_STRENGTH);
+ 	unsigned int shield_type;
+ 	packet.Get(shield_type, BITPACK_SHIELD_TYPE);
++	int health_max = 0, shield_max = 0;
++	unsigned int skin = 0;
++	if (modern) {
++		packet.Get(health_max, BITPACK_TT_HEALTH);
++		packet.Get(shield_max, BITPACK_TT_SHIELD_STRENGTH);
++		packet.Get(skin, BITPACK_SHIELD_TYPE);
++		if (health < 0 || health > 10000 || shield_strength < 0 || shield_strength > 10000 ||
++			health_max < 0 || health_max > 10000 || shield_max < 0 || shield_max > 10000 ||
++			shield_type >= (unsigned)ArmorWarheadManager::Get_Num_Armor_Types() ||
++			skin >= (unsigned)ArmorWarheadManager::Get_Num_Armor_Types()) packet.Mark_Read_Error();
++	}
++	if (packet.Has_Read_Error()) return;
++	if (modern) {
++		HealthMax = (float)health_max;
++		ShieldStrengthMax = (float)shield_max;
++		Skin = skin;
++	}
+ 
+ 	ShieldType			= shield_type;
+ 	Health				= (float)health;
+@@ -1320,6 +1343,8 @@
+ 
+ 	cEncoderList::Set_Precision(BITPACK_HEALTH, 0, (int) MAX_MAX_HEALTH);
+ 	cEncoderList::Set_Precision(BITPACK_SHIELD_STRENGTH, 0, (int) MAX_MAX_SHIELD_STRENGTH);
++	cEncoderList::Set_Precision(BITPACK_TT_HEALTH, 0, 10000);
++	cEncoderList::Set_Precision(BITPACK_TT_SHIELD_STRENGTH, 0, 10000);
+ 	cEncoderList::Set_Precision(BITPACK_SHIELD_TYPE, 0,
+ 		//ArmorWarheadManager::Get_Num_Armor_Types(), 1);
+ 		ArmorWarheadManager::Get_Num_Armor_Types());
+@@ -1408,4 +1433,3 @@
+ 				smart->Get_Player_Data()->On_Kill(victim_id, victim_team);
+ 			}
+ 			*/
+-
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -1053,6 +1053,7 @@
+    WWASSERT(CombatManager::I_Am_Only_Client());
+ 
+ 	SmartGameObj::Import_Occasional( packet );
++	if (packet.Has_Read_Error()) return;
+ 
+ 	//
+ 	// Held weapon
+@@ -1088,6 +1089,19 @@
+ 	//
+ 	WWASSERT(WeaponBag != NULL);
+ 	WeaponBag->Import_Weapon_List(packet);
++	if (packet.Has_Read_Error()) return;
++
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		bool sniping = false, fly = false;
++		packet.Get(sniping);
++		packet.Get(fly);
++		if (packet.Has_Read_Error()) return;
++		if (!Is_Controlled_By_Me() && sniping != Is_Sniping())
++			HumanState.Toggle_State_Flag(HumanStateClass::SNIPING_FLAG);
++		if (fly != InFlyMode) Toggle_Fly_Mode();
++	}
++#endif
+ 
+ 
+ 	/*

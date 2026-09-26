@@ -1,0 +1,419 @@
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -39,6 +39,9 @@
+ **	Includes
+ */
+ #include "vehicle.h"
++#include "renegade_client_effects.h"
++#include "renegade_vehicle_state.h"
++#include "weaponbag.h"
+ #include "animcontrol.h"
+ #include "debug.h"
+ #include "combat.h"
+@@ -872,16 +875,20 @@
+ void	VehicleGameObj::Import_Creation( BitStreamClass &packet )
+ {
+ 	SmartGameObj::Import_Creation( packet );
++	if (packet.Has_Read_Error()) return;
+ 
+ 	//
+ 	//	Get the lock status from the server
+ 	//
+-	int lock_owner_id;
++	int lock_owner_id = 0;
+ 	packet.Get(lock_owner_id);
++	float lock_timer = 0;
+ 	if (lock_owner_id != 0) {
+-		LockOwner = GameObjManager::Find_PhysicalGameObj( lock_owner_id );
+-		packet.Get(LockTimer,BITPACK_VEHICLE_LOCK_TIMER);
+-	}
++		Renegade_Read_Vehicle_Float(packet, lock_timer, BITPACK_VEHICLE_LOCK_TIMER);
++	}
++	if (packet.Has_Read_Error()) return;
++	LockOwner = lock_owner_id ? GameObjManager::Find_PhysicalGameObj(lock_owner_id) : NULL;
++	LockTimer = lock_timer;
+ 
+ 	return ;
+ }
+@@ -910,6 +917,51 @@
+ {
+    WWASSERT(CombatManager::I_Am_Only_Client());
+ 	SmartGameObj::Import_Rare( packet );
++	if (packet.Has_Read_Error()) return;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		RenegadeVehicleRareState next;
++		if (!Renegade_Read_Vehicle_Rare(packet, SeatOccupants.Length(), next)) return;
++		std::vector<SoldierGameObj *> occupants(next.Occupants.size(), NULL);
++		for (unsigned i = 0; i < occupants.size(); ++i) {
++			int id = next.Occupants[i];
++			if (id < -1) { packet.Mark_Read_Error(); return; }
++			if (id <= 0) continue;
++			for (unsigned j = 0; j < i; ++j) {
++				if (next.Occupants[j] == id) { packet.Mark_Read_Error(); return; }
++			}
++			SmartGameObj *obj = GameObjManager::Find_SmartGameObj(id);
++			if (obj && !obj->As_SoldierGameObj()) { packet.Mark_Read_Error(); return; }
++			occupants[i] = obj ? obj->As_SoldierGameObj() : NULL;
++		}
++		// Remove old seats first so a driver/gunner swap cannot duplicate an occupant.
++		for (int i = 0; i < SeatOccupants.Length(); ++i)
++			if (SeatOccupants[i] && SeatOccupants[i] != occupants[i]) Remove_Occupant(SeatOccupants[i]);
++		for (int i = 0; i < SeatOccupants.Length(); ++i) {
++			SoldierGameObj *occupant = occupants[i];
++			if (occupant && !SeatOccupants[i]) {
++				VehicleGameObj *old = occupant->Get_Vehicle();
++				if (old && old != this) old->Remove_Occupant(occupant);
++				Add_Occupant(occupant, i);
++			}
++		}
++		bool was_delivered = VehicleDelivered;
++		VehicleDelivered = next.Delivered;
++		TTStateActive = true;
++		NetworkAllowEmptyStealth = next.AllowEmptyStealth;
++		NetworkLockTeam = next.LockTeam;
++		NetworkOwner = next.OwnerID ? GameObjManager::Find_PhysicalGameObj(next.OwnerID) : NULL;
++		NetworkCanBeStolen = next.CanBeStolen;
++		NetworkCanDrive = next.CanDrive;
++		// Stock vehicle types have no TT underground-effect owner; retail also
++		// consumes its color without applying it when that effect is absent.
++		if (!was_delivered && VehicleDelivered) {
++			BaseControllerClass *base = BaseControllerClass::Find_Base(Get_Player_Type());
++			if (base) base->On_Vehicle_Delivered(this);
++		}
++		return;
++	}
++#endif
+ 
+ 	//
+ 	// Update the seat occupants
+@@ -966,6 +1018,35 @@
+ */
+ void VehicleGameObj::Import_Frequent(BitStreamClass & packet)
+ {
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		VehiclePhysClass *physics = Peek_Vehicle_Phys();
++		const bool moving = Get_Definition().Type != VEHICLE_TYPE_TURRET && physics;
++		RenegadeVehicleFrequentState next;
++		if (!Renegade_Read_Vehicle_Frequent(packet, moving, next)) return;
++		TTStateActive = true;
++		DriverIsGunner = next.DriverIsGunner;
++		NetworkCanFire = next.CanFire;
++		NetworkFixedTurret = next.FixedTurret;
++		NetworkTurretTurn = next.TurretTurn;
++		NetworkBarrelTilt = next.BarrelTilt;
++		if (moving) {
++			if (COMBAT_STAR && COMBAT_STAR->Get_Vehicle() == this)
++				physics->Network_Latency_State_Update(next.Position, next.Orientation, next.Velocity, next.AngularVelocity);
++			else physics->Network_Interpolate_State_Update(next.Position, next.Orientation, next.Velocity, next.AngularVelocity, 0.1f);
++			physics->Enable_Engine(next.Engine);
++		}
++		if (Peek_Physical_Object()) {
++			Peek_Physical_Object()->Set_Immovable(next.Immovable);
++			MoveablePhysClass *moveable = Peek_Physical_Object()->As_MoveablePhysClass();
++			if (next.Immovable && moveable) moveable->Set_Velocity(Vector3(0, 0, 0));
++		}
++		SmartGameObj::Import_Frequent(packet);
++		if (packet.Has_Read_Error()) return;
++		NetworkDamageMeshes = next.DamageMeshes;
++		return;
++	}
++#endif
+ 	/*
+ 	if (Get_Definition().Type == VEHICLE_TYPE_TURRET) {
+ 		WWDEBUG_SAY(("VEHICLE_TYPE_TURRET::Import_Frequent: %s, %d, %d\n",
+@@ -1160,6 +1241,25 @@
+    SmartGameObj::Import_State_Cs(packet);
+ }
+ 
++void VehicleGameObj::Import_Occasional(BitStreamClass &packet)
++{
++	SmartGameObj::Import_Occasional(packet);
++	if (packet.Has_Read_Error()) return;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		bool changed = WeaponBag->Import_TT_Weapon_Selection(packet);
++		if (packet.Has_Read_Error()) return;
++		if (changed) {
++			Init_Muzzle_Bones();
++			if (Get_Weapon()) {
++				Get_Weapon()->Update_Muzzle_Flash(false, false);
++				Get_Weapon()->Stop_Firing_Sound();
++			}
++		}
++	}
++#endif
++}
++
+ void VehicleGameObj::Export_State_Cs(BitStreamClass & packet)
+ {
+    SmartGameObj::Export_State_Cs(packet);
+@@ -1261,6 +1361,21 @@
+ 		}
+ 	}
+ 
++
++	if (TTStateActive && NetworkFixedTurret) {
++		relative_turn = TurretBone ? NetworkTurretTurn - TurretTurn : 0;
++		if (TurretBone && WWMath::Fabs(Get_Definition().WeaponTurnMax - Get_Definition().WeaponTurnMin) >= DEG_TO_RADF(360)) {
++			float wrapped = fmodf(relative_turn, DEG_TO_RADF(360));
++			if (wrapped > DEG_TO_RADF(180)) wrapped -= DEG_TO_RADF(360);
++			if (wrapped < -DEG_TO_RADF(180)) wrapped += DEG_TO_RADF(360);
++			TurretTurn += relative_turn - wrapped;
++			relative_turn = wrapped;
++		}
++		relative_tilt = BarrelBone ? NetworkBarrelTilt - BarrelTilt : 0;
++	}
++	if (TTStateActive && NetworkTargetUpdated)
++		return WWMath::Fabs(relative_turn) < 0.001f && WWMath::Fabs(relative_tilt) < 0.001f;
++	if (TTStateActive) NetworkTargetUpdated = true;
+ 
+ 	// Move the tilt and turn towards the desired, following rates and limits
+ 	float max_move;
+@@ -1291,7 +1406,7 @@
+ 	Update_Turret( TurretTurn, BarrelTilt );
+ 
+ 	// if a fast turner and had to turn, do it again,just to make sure (trying to fix obelisk)
+-	if ( Get_Definition().WeaponTurnRate > DEG_TO_RAD(1000) &&
++	if ( !TTStateActive && Get_Definition().WeaponTurnRate > DEG_TO_RAD(1000) &&
+ 		( WWMath::Fabs(relative_turn) >= DEG_TO_RAD( 2 ) || WWMath::Fabs(relative_tilt) > DEG_TO_RAD( 2 ) ) ) {
+ 		static int calls = 0;
+ 		if ( calls < 3 ) {
+@@ -1461,6 +1576,17 @@
+ 	Control.Set_Analog( ControlClass::ANALOG_TURN_LEFT,
+ 		WWMath::Clamp( Control.Get_Analog( ControlClass::ANALOG_TURN_LEFT ), -1.0F, 1.0F ) );
+ 
++	if (TTStateActive && !NetworkCanDrive) {
++		Control.Set_Analog(ControlClass::ANALOG_MOVE_FORWARD, 0);
++		Control.Set_Analog(ControlClass::ANALOG_MOVE_LEFT, 0);
++		Control.Set_Analog(ControlClass::ANALOG_MOVE_UP, 0);
++		Control.Set_Analog(ControlClass::ANALOG_TURN_LEFT, 0);
++	}
++	if (TTStateActive && !NetworkCanFire) {
++		Control.Set_Boolean(ControlClass::BOOLEAN_WEAPON_FIRE_PRIMARY, false);
++		Control.Set_Boolean(ControlClass::BOOLEAN_WEAPON_FIRE_SECONDARY, false);
++		Control.Set_Boolean(ControlClass::BOOLEAN_WEAPON_RELOAD, false);
++	}
+ 	SmartGameObj::Apply_Control();
+ }
+ 
+@@ -1490,7 +1616,7 @@
+ 
+ 	// UnStealth if we don't have any occupants, and we aren't in single play
+ 	if (StealthEffect != NULL) {
+-		if ((Get_Occupant_Count() == 0 ) && ( !IS_MISSION )) {
++		if ((Get_Occupant_Count() == 0 ) && ( !IS_MISSION ) && !(TTStateActive && NetworkAllowEmptyStealth)) {
+ 			StealthEffect->Enable_Stealth(false);
+ 		}
+ 	}
+@@ -1522,6 +1648,14 @@
+ 	}
+ }
+ 	SmartGameObj::Post_Think();
++	if (TTStateActive) {
++		if (!NetworkTargetUpdated) Set_Targeting(Get_Targeting_Pos());
++		NetworkTargetUpdated = false;
++		if (NetworkDamageMeshes) {
++			Update_Damage_Meshes();
++			NetworkDamageMeshes = false;
++		}
++	}
+ 
+ {	WWPROFILE( _post_profile_name );
+ 	if ( Get_Weapon() && !Get_Definition().Fire0Anim.Is_Empty() ) {
+@@ -2014,6 +2148,15 @@
+ 	//
+ 
+ 	WWASSERT(p_soldier != NULL);
++	if (!p_soldier) return false;
++	if (TTStateActive) {
++		if (p_soldier->Get_Vehicle() || Peek_Physical_Object()->Get_Collision_Group() == UNCOLLIDEABLE_GROUP)
++			return false;
++		SoldierGameObj *owner = NetworkOwner.Get_Ptr() ? NetworkOwner.Get_Ptr()->As_SoldierGameObj() : NULL;
++		if (owner && owner != p_soldier && !Get_Driver() && owner->Get_Player_Type() == p_soldier->Get_Player_Type())
++			return false;
++		if (NetworkLockTeam != 2 && NetworkLockTeam != p_soldier->Get_Player_Type()) return false;
++	}
+ 
+ 	bool is_permitted = true;
+ 	if (!p_soldier->Can_Drive_Vehicles() && Get_Driver() == NULL) return false;
+@@ -2050,7 +2193,8 @@
+ 
+ 	// If the vehicle is locked and you are not the lock owner, entry is not permitted
+ 	if (Is_Locked() && (p_soldier != LockOwner.Get_Ptr())) {
+-		is_permitted = false;
++		if (!(TTStateActive && NetworkCanBeStolen && p_soldier->Can_Steal_Vehicles() &&
++			p_soldier->Get_Player_Type() != Get_Player_Type())) is_permitted = false;
+ 	}
+ 
+ 	return is_permitted;
+--- a/vehicle.h
++++ b/vehicle.h
+@@ -210,6 +210,7 @@
+    virtual	void	Export_Rare( BitStreamClass &packet );
+ 	virtual	void	Import_Rare( BitStreamClass &packet );
+ 	virtual	void	Import_Frequent( BitStreamClass & packet );
++	virtual void Import_Occasional(BitStreamClass &packet);
+    virtual	void	Export_Frequent( BitStreamClass & packet );
+    virtual	void	Import_State_Cs( BitStreamClass & packet );
+    virtual	void	Export_State_Cs( BitStreamClass & packet );
+@@ -323,6 +324,14 @@
+ 	// Lock feature.  Vehicle can be locked to all but the purchaser for some number of seconds
+ 	GameObjReference		LockOwner;	// who owns the lock for this vehicle?
+ 	float						LockTimer;
++	bool TTStateActive = false;
++	bool NetworkCanFire = true, NetworkCanDrive = true;
++	bool NetworkAllowEmptyStealth = false, NetworkCanBeStolen = false;
++	BYTE NetworkLockTeam = 2;
++	GameObjReference NetworkOwner;
++	bool NetworkFixedTurret = false;
++	bool NetworkTargetUpdated = false, NetworkDamageMeshes = false;
++	float NetworkTurretTurn = 0, NetworkBarrelTilt = 0;
+ 
+ 	void		Remove_Transitions( TransitionDataClass::StyleType transition_type );
+ 	void		Create_New_Transitions( TransitionDataClass::StyleType transition_type );
+--- a/armedgameobj.cpp
++++ b/armedgameobj.cpp
+@@ -39,6 +39,8 @@
+ **	Includes
+ */
+ #include "armedgameobj.h"
++#include "vehicle.h"
++#include "combat.h"
+ #include "renegade_client_effects.h"
+ #include "debug.h"
+ #include "weaponbag.h"
+@@ -374,6 +376,11 @@
+ 	// by this player
+ 	//
+ 	SmartGameObj *smart_game_obj = As_SmartGameObj ();
++	if (modern && smart_game_obj && smart_game_obj->As_VehicleGameObj()) {
++		VehicleGameObj *vehicle = smart_game_obj->As_VehicleGameObj();
++		if (vehicle->Get_Actual_Gunner() != COMBAT_STAR) Set_Targeting(targeting_pos);
++		return;
++	}
+ 	if (smart_game_obj == NULL || smart_game_obj->Is_Controlled_By_Me() == false) {
+ 		Set_Targeting(targeting_pos);
+ 	}
+--- a/armedgameobj.h
++++ b/armedgameobj.h
+@@ -138,6 +138,7 @@
+ 
+ protected:
+ 	WeaponBagClass *			WeaponBag;				// Weapon & Ammo collection
++	void Init_Muzzle_Bones(void);
+ 
+ private:
+ 	Vector3						TargetingPos;
+@@ -150,7 +151,6 @@
+ 	enum { MAX_MUZZLES = 4 };
+ 	MuzzleRecoilClass			MuzzleRecoilController[MAX_MUZZLES];
+ 
+-	void							Init_Muzzle_Bones( void );
+ };
+ 
+ 
+--- a/weaponbag.cpp
++++ b/weaponbag.cpp
+@@ -36,6 +36,7 @@
+ 
+ 
+ #include "weaponbag.h"
++#include <vector>
+ #include "renegade_client_effects.h"
+ #include "weapons.h"
+ #include "debug.h"
+@@ -162,9 +163,15 @@
+ 	//
+ 	//	Simply destroy the weapon if its in our list
+ 	//
+-	if ( index >= 0 && index < WeaponList.Count() ) {
++	if ( index > 0 && index < WeaponList.Count() ) {
++		// Deselect while the weapon still exists; preserve the selected object
++		// when removing a preceding slot. Slot zero is the permanent sentinel.
++		if (WeaponIndex == index) Select_Index(0);
+ 		delete	WeaponList[index];
+-		WeaponList.Delete( index );		
++		WeaponList.Delete( index );
++		if (WeaponIndex > index) --WeaponIndex;
++		IsChanged = HUDIsChanged = true;
++		Mark_Owner_Dirty();
+ 	}
+ 
+ 	return ;
+@@ -175,6 +182,7 @@
+ */
+ void	WeaponBagClass::Clear_Weapons( void )
+ {
++	Select_Index(0);
+ 	// find the next existing weapons
+ 	while ( WeaponList.Count() > 1 ) {
+ 		int index = WeaponList.Count()-1;
+@@ -182,7 +190,6 @@
+ 		WeaponList.Delete( index );		
+ 	}
+ 
+-	Select_Index( 0 );
+ 	return ;
+ }
+ 
+@@ -389,6 +396,48 @@
+ 
+ 
+ //-----------------------------------------------------------------------------
++bool WeaponBagClass::Import_TT_Weapon_Selection(BitStreamClass &packet, bool has_selection)
++{
++	int count = 0, selected = 0;
++	packet.Get(count);
++	if (packet.Has_Read_Error() || count < 0 ||
++		unsigned(count) > (packet.Get_Bit_Write_Position() - packet.Get_Bit_Read_Position()) / 32) {
++		packet.Mark_Read_Error();
++		return false;
++	}
++	std::vector<int> ids;
++	for (int i = 0; i < count; ++i) {
++		int id = 0;
++		packet.Get(id);
++		if (packet.Has_Read_Error() || !WeaponManager::Find_Weapon_Definition(id)) {
++			packet.Mark_Read_Error(); return false;
++		}
++		for (unsigned j = 0; j < ids.size(); ++j)
++			if (ids[j] == id) { packet.Mark_Read_Error(); return false; }
++		ids.push_back(id);
++	}
++	if (has_selection) packet.Get(selected);
++	if (packet.Has_Read_Error() || (has_selection && (selected < 0 || selected > count))) {
++		packet.Mark_Read_Error(); return false;
++	}
++	// Modern occasional updates reconcile membership, not ammunition. Keep
++	// existing weapon instances/rounds and let the original bag own changes.
++	for (int i = WeaponList.Count() - 1; i > 0; --i) {
++		int match = -1;
++		for (unsigned j = 0; j < ids.size(); ++j)
++			if (WeaponList[i]->Get_ID() == ids[j]) { match = j; break; }
++		if (match < 0) Remove_Weapon(i);
++		else ids.erase(ids.begin() + match);
++	}
++	for (unsigned i = 0; i < ids.size(); ++i) {
++		Add_Weapon(ids[i], 0);
++		if (WeaponIndex == 0 && WeaponList.Count() > 1) Select_Index(1);
++	}
++	const bool changed = has_selection && WeaponIndex != selected;
++	if (changed) Select_Index(selected);
++	return changed;
++}
++
+ void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
+ {
+ 	bool modern = false;
+--- a/weaponbag.h
++++ b/weaponbag.h
+@@ -85,6 +85,7 @@
+ 	WeaponClass	*	Get_Next_Weapon( void );
+ 
+ 	void				Import_Weapon_List(BitStreamClass & packet);
++	bool Import_TT_Weapon_Selection(BitStreamClass &packet, bool has_selection = true);
+ 	void				Export_Weapon_List(BitStreamClass & packet);
+ 
+ 	int				Get_Index( void )					{ return WeaponIndex; }

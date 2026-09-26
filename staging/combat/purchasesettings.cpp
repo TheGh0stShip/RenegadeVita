@@ -92,6 +92,9 @@ PurchaseSettingsDefClass *		PurchaseSettingsDefClass::DefinitionArray[TYPE_COUNT
 //
 //////////////////////////////////////////////////////////////////////
 PurchaseSettingsDefClass::PurchaseSettingsDefClass (void)	:
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+    NetworkObjectClass(false),
+#endif
 	Team (TEAM_GDI),
 	Type (TYPE_CLASSES)
 {
@@ -183,7 +186,8 @@ PurchaseSettingsDefClass::~PurchaseSettingsDefClass (void)
 	//
 	//	Remove this entry from the static array
 	//
-	if (Type < TYPE_COUNT && Team < TEAM_COUNT) {
+	if (Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT &&
+        DefinitionArray[Type][Team] == this) {
 		DefinitionArray[Type][Team] = NULL;
 	}
 	return ;
@@ -375,7 +379,7 @@ PurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
 	//
 	//	Add this definition to the static array
 	//
-	if (Type < TYPE_COUNT && Team < TEAM_COUNT) {
+	if (Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT) {
 		DefinitionArray[Type][Team] = this;
 	}
 	return ;
@@ -411,6 +415,7 @@ PurchaseSettingsDefClass::Get_Name (int index)
 PurchaseSettingsDefClass *
 PurchaseSettingsDefClass::Find_Definition (TYPE type, TEAM team)
 {
+	if (type < 0 || type >= TYPE_COUNT || team < 0 || team >= TEAM_COUNT) return NULL;
 	PurchaseSettingsDefClass *retval = DefinitionArray[type][team];
 
 	if (retval == NULL) {
@@ -439,3 +444,10 @@ PurchaseSettingsDefClass::Find_Definition (TYPE type, TEAM team)
 	return retval;
 }
 
+PurchaseSettingsDefClass *
+PurchaseSettingsDefClass::Find_Network_Definition(int type, int team)
+{
+    // Network identity is exact; gameplay's mutant/secret fallback is not valid here.
+    if (type < 0 || type >= TYPE_COUNT || team < 0 || team >= TEAM_COUNT) return NULL;
+    return DefinitionArray[type][team];
+}

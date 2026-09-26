@@ -158,7 +158,12 @@ public:
 		ControlLine *	Next;
 	};
 
-	ControlLine * Controls;
+	ControlLine * Controls = NULL;
+
+	~Test_Cinematic() override
+	{
+		while (Controls != NULL) Remove_Head_Control_Line();
+	}
 
 	void	Add_Control_Line( float time, const char * command )
 	{

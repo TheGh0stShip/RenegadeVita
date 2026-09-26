@@ -27,6 +27,20 @@ Evidence precedence is: immutable physical evidence with matching artifacts;
 current source/build/test evidence; reconciled state/status reports; then
 planning records. Build/host/Vita3K/physical results must remain distinct.
 
+## Fixed architecture contract
+
+PS Vita is little-endian ARMv7-A/Cortex-A9, 32-bit ARM/Thumb, ILP32: int,
+long, pointers and size_t are 32-bit. It is not AArch64. Check compiler and
+dependency ELF attributes for matching floating-point calling conventions.
+WSL/Linux x86-64 host probes are normally LP64; Windows x64 is LLP64. Neither
+host ABI may change the original 32-bit disk, packet, checksum or pointer-token
+formats. Use explicit widths, endian-safe accesses and layout checks at those
+boundaries, without truncating actual host pointers or globally packing structs.
+Check these assumptions before implementation and before trusting host evidence.
+Label host-only ABI defects accurately; they are not discoveries of Vita's width.
+The force-included `renegade_target_abi.h` enforces the native target contract;
+`tools/test_vita_target_abi.py` verifies native acceptance and host rejection.
+
 ## Active status
 
 - A3.1.4: accepted physical interactive M00 baseline.

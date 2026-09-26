@@ -1,0 +1,72 @@
+--- a/dlgmpingamechat.cpp
++++ b/dlgmpingamechat.cpp
+@@ -47,7 +47,9 @@
+ #include "player.h"
+ #include "listctrl.h"
+ #include "messagewindow.h"
++#if !defined(RENEGADE_VITA_PORT)
+ #include "wolgmode.h"
++#endif
+ #include "translatedb.h"
+ #include "string_ids.h"
+ 
+@@ -179,6 +181,7 @@
+ ////////////////////////////////////////////////////////////////
+ bool MPChatChildDialogClass::Process_Commands(const WCHAR* message)
+ {
++#if !defined(RENEGADE_VITA_PORT)
+ 	// Does this look like a command?
+ 	if (message && message[0] == L'/') {
+ 		// Separate the parameters into individual strings
+@@ -314,6 +317,8 @@
+ 		}
+ 	}
+ 
++	// These commands require the optional WOL provider, not the game server.
++#endif
+ 	return false;
+ }
+ 
+@@ -494,7 +499,7 @@
+ 		//
+ 		//	Is this the best match so far?
+ 		//
+-		if (::wcsnicmp (player_name, typed_name, typed_len) == 0) {
++		if (::_wcsnicmp (player_name, typed_name, typed_len) == 0) {
+ 			if (	completed_name.Get_Length () == 0 ||
+ 					::wcsicmp (player_name, completed_name) < 0)
+ 			{
+--- a/mpsettingsmgr.cpp
++++ b/mpsettingsmgr.cpp
+@@ -39,8 +39,12 @@
+ #include "registry.h"
+ #include "bittype.h"
+ #include "_globals.h"
++#if !defined(RENEGADE_VITA_PORT)
+ #include "wwonline\\wolsession.h"
+ #include <WWOnline\WOLLangCodes.h>
++#else
++#include "wollangcodes.h"
++#endif
+ #include "time.h"
+ 
+ 
+@@ -370,6 +374,7 @@
+ 		//
+ 		//	Do we have a valid WOL session to query?
+ 		//
++#if !defined(RENEGADE_VITA_PORT)
+ 		RefPtr<WWOnline::Session> wol_session = WWOnline::Session::GetInstance ();
+ 		if (wol_session.IsValid ()) {
+ 
+@@ -410,7 +415,9 @@
+ 				}
+ 			}
+ 
+-		} else {
++		} else
++#endif
++		{
+ 
+ 			//
+ 			//	First, build a time structure representing when the skins are unlocked for everybody

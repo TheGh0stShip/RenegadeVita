@@ -1,11 +1,10 @@
 # Capability roadmap
 
-2026-09-15 checkpoint: Dev134 canonical/package/matching Vita3K visual milestone
-PASS; physical deployment/readback verified under the user's post-milestone test
-authorization. Manual LiveArea launch is required (remote command1338 refused).
-This engineering checkpoint does not close any physical release gate or prove
-60 FPS. Current execution: DEV134_PHYSICAL_MILESTONE.md. Older candidate labels
-in the roadmap table below describe historical evidence.
+2026-09-26 checkpoint: Dev195 fast ARM/package closure and native Vita3K
+RenCorner join, rendering, bounded movement and session teardown are verified.
+Campaign completion, full multiplayer and physical performance remain open.
+Current evidence: [Dev195](DEV195_RENCORNER_NATIVE_JOIN.md). This checkpoint
+does not close a physical release gate or establish sustained 60 FPS.
 
 ## Durable destination and interim demo
 
@@ -22,23 +21,21 @@ through the supported provider boundaries. Do not invent a public release
 number or claim these gates have passed. Preserve original owners and retail
 formats throughout. Both PS Vita and PSTV final validation remain required.
 
-Dev100 established the interim demo/full-port profile split and is now
-historical. Current work is Dev134: canonical host/sanitizer/ARM/package
-closure and matching Vita3K visual evidence passed, and the exact package was
-deployed/readback-verified on physical Vita. Physical runtime logs, visuals,
-audio and frame-time evidence are pending manual LiveArea launch. See
-`DEV134_PHYSICAL_MILESTONE.md`.
+Dev100 established the preserved demo/full-port split. Dev134 is a historical
+physical deployment checkpoint, not current runtime acceptance. Earlier
+campaign runs completed M13 and entered M01 with unresolved stalls, cinematic
+pacing and actor defects. Dev195 multiplayer evidence does not resolve them.
 
 | Milestone | Capability contract | Status |
 |---|---|---|
 | A3.1.4 | Visible original interactive M00 lifecycle | physically validated; frozen |
 | A3.2 | Frozen failed physical evidence: input, animation, projection, material, and exit defects | `A3.2-dev1` immutable; never promote from it |
-| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | `A3.5-dev87` is retained physical frontend-usability failure evidence. `A3.5-dev88` through `A3.5-dev123` are superseded source/build/Vita3K history, with Dev123 also retaining a failed physical launch/recovery. Dev124 and Dev126 returned physical failure/debug evidence. `A3.5-dev134` is the current checkpoint: canonical/package and matching Vita3K visual milestone passed, and physical deployment/readback is verified. Intro/menu A/V/text, loading/HUD/dialogue/pickup text, shadows/walls, START-exit, Logan/HMVV/Mobius stability, and native FPS remain physically open until the Dev134 runtime return is collected. |
+| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | Dev195 is the current development checkpoint. Historical physical failures remain immutable; new physical correctness and performance gates remain open. |
 | v3.6 | Resource, memory, deterministic cache/index, tutorial plus second scene and map smoke | pending v3.5 physical gate |
 | v3.7 | Perspective-correct efficient renderer and measured Balanced frame pacing | pending v3.6 infrastructure |
 | v3.8 | Original frontend, HUD, essential audio, intro path/fallback | host/ARM closure exists; physical integration pending |
-| v3.9 | Representative campaign RC and controlled Direct-IP/LAN foundation | deferred until campaign stability |
-| v4.0 | First genuinely playable representative campaign release | deferred; future W3DHub/TT provider remains tracked but optional |
+| v3.9 | Representative campaign RC and controlled Direct-IP/LAN foundation | Direct TT join and package mounting now observed in Vita3K; purchase UI, full gameplay, campaign stability and physical validation remain open. |
+| v4.0 | First genuinely playable representative campaign release | Not accepted. Full campaign and multiplayer remain separate completion gates. |
 
 Public milestone identity is reserved for earned capability contracts. Builds and
 host-only iterations use internal identities such as `A3.2-devN` and

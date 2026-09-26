@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "Execute retail b9000 C4 rare export, excluding the separately verified Physical prefix.",
+  "cases": [
+    {
+      "mode": 0,
+      "bits": 161,
+      "hex": "0001e240000004d23f800000400000004040000000"
+    },
+    {
+      "mode": 1,
+      "bits": 292,
+      "hex": "0001e240000004d23f8000004000000040400000a164200021a4200020fa00001fffffffe0"
+    },
+    {
+      "mode": 2,
+      "bits": 420,
+      "hex": "0001e240000004d23f8000004000000040400000a164200021a4200020fa0000200002c5c7d0000017e0000007e800000000000060"
+    },
+    {
+      "mode": 3,
+      "bits": 324,
+      "hex": "0001e240000004d23f8000004000000040400000a164200021a4200020fa00005ffffffff0000002a0"
+    }
+  ]
+}

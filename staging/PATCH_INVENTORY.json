@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "fcf8877286195a88bff5be5ba2af2f10b8c93dd7a1dce8de4892a639ab2ecfb0",
-  "patch_count": 202,
+  "stage_script_sha256": "df33f02d7c198e3305ddf26e8a9b69fb3c4ce6fe487b0bb96e72fb5e729b4b84",
+  "patch_count": 266,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -93,6 +93,11 @@
       "path": "port/patches/wwmath-a4-fastcall-vita.patch",
       "stage_directory": "wwmath",
       "sha256": "0d27ac0f7f1772782102386371a6cc60edfb283d6c9f311359003598384b2a4c"
+    },
+    {
+      "path": "port/patches/wwmath-a35-valid-float-layout.patch",
+      "stage_directory": "wwmath",
+      "sha256": "b3d84d96a6292ee60f2b405a8c04990598133349ebc8e06478f2266dc179878c"
     },
     {
       "path": "port/patches/wwsaveload-a30-abi.patch",
@@ -577,7 +582,7 @@
     {
       "path": "port/patches/commando-a4-gameinitmgr-skirmish-boundary.patch",
       "stage_directory": "commando",
-      "sha256": "43af44e06394c0636bf54bb025dd2cb4dffc6b6f4a74e9491f0913ecb3cbc17d"
+      "sha256": "cabf071f3d08ce412fd182f167eff2ebea47d52880900e4c03b69559dbe9bc5a"
     },
     {
       "path": "port/patches/commando-a4-gameinitmgr-lan-start-boundary.patch",
@@ -778,6 +783,11 @@
       "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
       "stage_directory": "",
       "sha256": "4595ae7a3fbb7df8ba7e53ebac74e1267d97491b09443def46fc8093cef4970a"
+    },
+    {
+      "path": "port/patches/wwbitpack-a35-read-position.patch",
+      "stage_directory": "wwbitpack",
+      "sha256": "fa168b577b8debc4f09af0bb6d3d2fca87a3ccf5307cf2bde9f2792836485608"
     },
     {
       "path": "port/patches/ww3d2-a35-render2d-texture-readiness.patch",
@@ -1013,7 +1023,317 @@
       "path": "port/patches/a35-dev190-staging-preserve.patch",
       "stage_directory": "",
       "sha256": "8597377222ff18fb9956bbf4da9de16439b91cb961b6f18123bfa0b907129a91"
+    },
+    {
+      "path": "port/patches/ww3d2-a35-unresolved-prototype-reload-cache.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "ce3aa033146a3d2d2dd4205a621a91596c8a9a9576a3d2d837cba1230da30171"
+    },
+    {
+      "path": "port/patches/ww3d2-a35-aggregate-duplicate-load.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "00172069edff2f913450e93dfe89def5e8524003b0fc7a168ea087116566ef4e"
+    },
+    {
+      "path": "port/patches/wwsaveload-a35-twiddler-preparation-access.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "7630f94335f9119b37ceb27e712029b373821457cc30e6f4ad9a4463df11f37d"
+    },
+    {
+      "path": "port/patches/combat-a35-killed-explosion-query.patch",
+      "stage_directory": "combat",
+      "sha256": "02d318ce28dc91afe3363a587c6d8244b33464f9c2b75cf051e9e0eda3dfefe1"
+    },
+    {
+      "path": "port/patches/combat-a35-host-script-file-handles.patch",
+      "stage_directory": "combat",
+      "sha256": "3925e0dc57f4bb4b2c721c47a897e39b45b89a1214e71c8eb687c04f0544f447"
+    },
+    {
+      "path": "port/patches/commando-a35-skirmish-unused-hud-include.patch",
+      "stage_directory": "commando",
+      "sha256": "ff75761e522e369254b98419f9f01255581f73ad5cd7f4f6d695a32b443d927d"
+    },
+    {
+      "path": "port/patches/commando-a35-server-config-root.patch",
+      "stage_directory": "commando",
+      "sha256": "637ea030f1a0baf3229b4c0711e5316e8b35fb354d7a79e1a16b00318d51aba5"
+    },
+    {
+      "path": "port/patches/commando-a35-player-heading-optional-wol.patch",
+      "stage_directory": "commando",
+      "sha256": "417a3afeee4112f737f33dd32c47e96d3951c8bb2458c7c99c5716078ba0a12b"
+    },
+    {
+      "path": "port/patches/wwnet-a35-fixed-packet-words.patch",
+      "stage_directory": "wwnet",
+      "sha256": "2cd125be1cc6663744b64f92df758e90cf63c1595b69e5f61e78467ac500aeda"
+    },
+    {
+      "path": "port/patches/wwnet-a35-receive-bounds.patch",
+      "stage_directory": "wwnet",
+      "sha256": "0f9f2688b46c8f33caab166c4f0e5ba3bb767117dc9e8b9944c1546261ff8da6"
+    },
+    {
+      "path": "port/patches/commando-a35-optional-network-modes.patch",
+      "stage_directory": "commando",
+      "sha256": "f4fffb4e1a2ed62b6e83c275fffe5b3a49f98e8c0736a2334730c927a619910e"
+    },
+    {
+      "path": "port/patches/commando-a35-client-options-handoff.patch",
+      "stage_directory": "commando",
+      "sha256": "1148bdd706da01e781d8a860c843fce0cf8a6b17f2afe503426ba3e5cf4661e4"
+    },
+    {
+      "path": "port/patches/commando-a35-direct-ip-session.patch",
+      "stage_directory": "commando",
+      "sha256": "79436c413958f4a20c596fb323a47912e688253c6c13c9e190f1830256da89ec"
+    },
+    {
+      "path": "port/patches/wwnet-a35-timeout-host-lifetime.patch",
+      "stage_directory": "wwnet",
+      "sha256": "490a8f2845afaa4f56e6cb019977967837b7099c0efd6c6cb800de5d06bf5006"
+    },
+    {
+      "path": "port/patches/commando-a35-client-world-lifetime.patch",
+      "stage_directory": "commando",
+      "sha256": "788e03568c86fd9f97eb3f20a473694ce96f545f6508a192e998cf0ec4362ac2"
+    },
+    {
+      "path": "port/patches/combat-a35-conversation-guard-release.patch",
+      "stage_directory": "combat",
+      "sha256": "786af6407a8f706a2de77630bf093e70572b61316270f746548a216716662f17"
+    },
+    {
+      "path": "port/patches/wwnet-a35-vita-libc-receive.patch",
+      "stage_directory": "wwnet",
+      "sha256": "5636bd86d91b08ea4436f32c140c5bb19fd7b3a6fed7fd73ecbf734b1068dc00"
+    },
+    {
+      "path": "port/patches/commando-a35-client-protocol-failure.patch",
+      "stage_directory": "commando",
+      "sha256": "73dfc05fb3f6e84eb71ad8d8930e10b2f4e8c970a894bf1d0d8288cbb38ac380"
+    },
+    {
+      "path": "port/patches/wwlib-a35-md5-word-width.patch",
+      "stage_directory": "wwlib",
+      "sha256": "0240052c8561740c2bcd35d016e256b8622ef897fcc8693a98ed84f3c15d276b"
+    },
+    {
+      "path": "port/patches/commando-a35-client-identity.patch",
+      "stage_directory": "commando",
+      "sha256": "39e86690f9279b96a5f28b7877573205779a4a6b391ca80a3011884e87ff390d"
+    },
+    {
+      "path": "port/patches/commando-a35-client-admission-message.patch",
+      "stage_directory": "commando",
+      "sha256": "712aadde10386d00a7e973dd9c7dfb6024a81235d06f3367c6c00619f8c26ad4"
+    },
+    {
+      "path": "port/patches/wwlib-a35-crc-word-width.patch",
+      "stage_directory": "wwlib",
+      "sha256": "a6d0846b40d4dd909f752ac88d7c6c06b414ab7e538131fb2070ee32fec855a1"
+    },
+    {
+      "path": "port/patches/commando-a35-network-compatibility-key.patch",
+      "stage_directory": "commando",
+      "sha256": "2dea2e534ea38c5ebdb0b53647d8ca2c620f09ec8a89b895d0f32d1d1164aec4"
+    },
+    {
+      "path": "port/patches/wwnet-a35-client-preflight-abort.patch",
+      "stage_directory": "wwnet",
+      "sha256": "5019642d2666a0370e6f89e99cceb6ee6a1e2369fd48cd9780d8c82d7f9984fd"
+    },
+    {
+      "path": "port/patches/wwnet-a35-tt-server-info.patch",
+      "stage_directory": "wwnet",
+      "sha256": "1cd08384c4c92556e60dc16863b82c66b47b60674298d0504f71effb8cc90128"
+    },
+    {
+      "path": "port/patches/combat-a35-network-preset-validation.patch",
+      "stage_directory": "combat",
+      "sha256": "a165ff9eb26949efc026ca9a36d292e793bbff19bb5f7625f995bf9b806fe489"
+    },
+    {
+      "path": "port/patches/commando-a35-network-object-failure.patch",
+      "stage_directory": "commando",
+      "sha256": "4733789144757c90d1d1f2443ef2e9ca15e5d63fb1c68b5c1a8764cf162ad0b4"
+    },
+    {
+      "path": "port/patches/commando-a35-network-announcements.patch",
+      "stage_directory": "commando",
+      "sha256": "2dc5aa8832bf7749ca5f8a93e84413cd1899bbce44bab15b0625a54328500c3f"
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-control-lifetime.patch",
+      "stage_directory": "scripts",
+      "sha256": "ac2676873f36ab541033f782252d120de8090af76c88a7d098bd8e8c600437e8"
+    },
+    {
+      "path": "port/patches/combat-a35-harvester-observer-lifetime.patch",
+      "stage_directory": "combat",
+      "sha256": "085b43725ffa293f17c7debf54a64d63e35009f622c5f37c3885f7749d83214b"
+    },
+    {
+      "path": "port/patches/commando-a35-purchase-runtime.patch",
+      "stage_directory": "commando",
+      "sha256": "d63b88ef5c1bf1769b33fb6acf59fe82e724dc7f2f58d1f2aafefebf71c7fc1a"
+    },
+    {
+      "path": "port/patches/commando-a35-purchase-ui-provider.patch",
+      "stage_directory": "commando",
+      "sha256": "dc7f86eacd696d9329c0d03c7ec85fd7d942b7b94edd1489689cfe6dce0f1e59"
+    },
+    {
+      "path": "port/patches/commando-a35-purchase-bounds.patch",
+      "stage_directory": "",
+      "sha256": "729bb4269eb97a1ea7f21e95700522332c8dabd1d6d6b0d1ffc9ea357124acfa"
+    },
+    {
+      "path": "port/patches/wwui-a35-chat-utf16-boundary.patch",
+      "stage_directory": "",
+      "sha256": "7d7d7dc9b99f0a5bd0c953c5b86b61d797a96d2831289a9ae098955969398f15"
+    },
+    {
+      "path": "port/patches/wwnet-a35-tt-resource-queue.patch",
+      "stage_directory": "wwnet",
+      "sha256": "9ca05930bcd5cc86b408ffb9045ae3047e9dff2d6984527c282885c775dbb15e"
+    },
+    {
+      "path": "port/patches/commando-a35-tt-resource-world.patch",
+      "stage_directory": "",
+      "sha256": "a3a4844f1a26832dd1198597372337a064678697ddc6a5289f4c232cfb4312a4"
+    },
+    {
+      "path": "port/patches/commando-a35-tt-client-greeting.patch",
+      "stage_directory": "commando",
+      "sha256": "86815a80ebca9f785253fba271c231fa685f4699b2aa4189c7d292f455884657"
+    },
+    {
+      "path": "port/patches/wwnet-a35-tt-client-profile.patch",
+      "stage_directory": "wwnet",
+      "sha256": "3f8cc42d855172a058dec2d582f56fef75df7e459243a44a4f663ff3637f757c"
+    },
+    {
+      "path": "port/patches/commando-a35-tt-options-layout.patch",
+      "stage_directory": "commando",
+      "sha256": "16444fb55351001c1b9a8163c2141531f26377720a7ee513a90f59cf0cbb342f"
+    },
+    {
+      "path": "port/patches/wwphys-a35-tt-camera-shake.patch",
+      "stage_directory": "wwphys",
+      "sha256": "20dc8a7053e9099b065e69ade62035af5e54cdc4f0ba6dab07040323aa0c1eb5"
+    },
+    {
+      "path": "port/patches/wwbitpack-a35-bounded-reads.patch",
+      "stage_directory": "wwbitpack",
+      "sha256": "a8992f31cef306d36d12c91ec89c790e4468abca0548da44927312677d2646e8"
+    },
+    {
+      "path": "port/patches/combat-a35-network-weapon-validation.patch",
+      "stage_directory": "combat",
+      "sha256": "837ce91a3f40f30680522c286a4307452f9436ecd704d5daaf9406098ddd3f13"
+    },
+    {
+      "path": "port/patches/commando-a35-packet-decode-failure.patch",
+      "stage_directory": "commando",
+      "sha256": "80b7dfe35cd3b6915051b1b321bc217326a71eb67fccd5e0ef083a4849768f63"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-physical-rare.patch",
+      "stage_directory": "combat",
+      "sha256": "2bee2c67960b22e7d173d3ee9d47f63b98c37eb3d7265d599f7efee554174099"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-physical-creation.patch",
+      "stage_directory": "combat",
+      "sha256": "45635e5efdf2d9663f97f91e069c0ed7eb7f1df79da03b1449f9f3b73f10fa04"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-weapon-list.patch",
+      "stage_directory": "combat",
+      "sha256": "6392db80785057f6f2215accaffb2e71f3e1782a714a8f57c960f37352da5b27"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-soldier-state.patch",
+      "stage_directory": "combat",
+      "sha256": "635b7da3ed1457ae64189680919ff2ec967c541de05f480c571adad2f8ee896b"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-shared-frequent.patch",
+      "stage_directory": "combat",
+      "sha256": "e02ecf3599b7cc0ecea5f89e578809d37a8652ca7a0b020f5b511bc6ec89023e"
+    },
+    {
+      "path": "port/patches/wwbitpack-a35-tt-defense-precision.patch",
+      "stage_directory": "wwbitpack",
+      "sha256": "a5b025a3b45ebcaca1110062214c565d49b573409a2b62efd7bbfead17fb9eda"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-occasional-state.patch",
+      "stage_directory": "combat",
+      "sha256": "2848cfec748b43e518c75680165e0f40cb3043b3fc9fa0eb14077e31f394a686"
+    },
+    {
+      "path": "port/patches/commando-a35-datasafe-long-conversion.patch",
+      "stage_directory": "commando",
+      "sha256": "6b9e47dbea6eb0442ccbbcb47330be1b379658b1362db693ca803e8a3880c939"
+    },
+    {
+      "path": "port/patches/wwphys-a35-tt-soldier-network-state.patch",
+      "stage_directory": "wwphys",
+      "sha256": "b154a863ac5346166c72e50ce348df4e48b950937fbd114400590c77b3653394"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-soldier-frequent.patch",
+      "stage_directory": "combat",
+      "sha256": "dd1d30dab8e0c19f58cdfbf0e2883d627e8de4357882358d9cd39f9d6d8aac54"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-vehicle-state.patch",
+      "stage_directory": "combat",
+      "sha256": "91e602aaf9189ea8e66f219ca6d81cb64721765f3a22de8c77e14bac33a207b7"
+    },
+    {
+      "path": "port/patches/wwphys-a35-network-history-lifetime.patch",
+      "stage_directory": "wwphys",
+      "sha256": "2a86f725db7dbad312391dfb6935beaf95db77575d58ca1d4e260d31cc397fa3"
+    },
+    {
+      "path": "port/patches/wwlib-a35-tt-mix-index-order.patch",
+      "stage_directory": "wwlib",
+      "sha256": "c7bd1948b5ca34a48b28daa2c8769b80429b7440d52c9ec963064a6daeeb692f"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-soldier-occasional-selection.patch",
+      "stage_directory": "combat",
+      "sha256": "1dfe7655b31292300d6de81be4fe99325ee018fab6fc0e348cf16edb3a7d49e5"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-purchase-catalog.patch",
+      "stage_directory": "combat",
+      "sha256": "5d417ce762e2801ed51ee9c9d5e17d7ca278ebdf70e9e28e56740e8142cb703f"
+    },
+    {
+      "path": "port/patches/commando-a35-tt-purchase-catalog.patch",
+      "stage_directory": "commando",
+      "sha256": "4cff119c35645690960ff53d0727516f8f0ecb5e5eb46fceb513cf197b2a3c20"
+    },
+    {
+      "path": "port/patches/wwnet-a35-tt-purchase-catalog.patch",
+      "stage_directory": "wwnet",
+      "sha256": "b546588d6b5314614c793c5a865fc939d5b50cd58809adfba6d793e567ddfe9a"
+    },
+    {
+      "path": "port/patches/combat-a35-tt-c4-state.patch",
+      "stage_directory": "combat",
+      "sha256": "e4dc49560fb62ccdef455fb92ab49926ec51f7fd8fe1fc8f38d342a9b98f8c1c"
+    },
+    {
+      "path": "port/patches/combat-a35-original-owner-cpp.patch",
+      "stage_directory": "combat",
+      "sha256": "463397d6bc3bf09c88c827782dfdf8a33688d66703956932d1513e8806b7b5aa"
     }
   ],
-  "registry_sha256": "f2dcd234b1fff520f58c397e478d35d4413f43af3401318e6afb1d843ee628d9"
+  "registry_sha256": "d46a9e4123d23f9f67ca535593eedd234c16478d9daf033c9b96b6adce1bea98"
 }

@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "Execute pinned b9000 vehicle exports against synthetic objects/accessors.\n\nRare excludes its separately verified physical prefix. Frequent executes the\ncomplete shared tail. Occasional excludes Defense, but executes the original\nweapon ID-list serializer. No retail initialization, assets or network access.\n",
+  "cases": [
+    {
+      "mode": "rare",
+      "alternate": false,
+      "turret": false,
+      "bits": 204,
+      "hex": "ffffffffffffffff008000000010000000000000000000000000",
+      "excluded_owners_or_accessors": [
+        "0x121f1120"
+      ]
+    },
+    {
+      "mode": "rare",
+      "alternate": true,
+      "turret": false,
+      "bits": 204,
+      "hex": "000004d2ffffffffc040000134a3e8000003f0000003f4000000",
+      "excluded_owners_or_accessors": [
+        "0x121f1120"
+      ]
+    },
+    {
+      "mode": "occasional",
+      "alternate": false,
+      "turret": false,
+      "bits": 64,
+      "hex": "0000000000000000",
+      "excluded_owners_or_accessors": [
+        "0x180050"
+      ]
+    },
+    {
+      "mode": "occasional",
+      "alternate": true,
+      "turret": false,
+      "bits": 96,
+      "hex": "000000010001e24000000001",
+      "excluded_owners_or_accessors": [
+        "0x180050",
+        "0x180060"
+      ]
+    },
+    {
+      "mode": "frequent",
+      "alternate": false,
+      "turret": false,
+      "bits": 366,
+      "hex": "a164200021a4200020fa00004004004007ffc0b682d9088a029fae07a841480000c1a2000041f9000057fc0202fc",
+      "excluded_owners_or_accessors": [
+        "0x180000",
+        "0x180010",
+        "0x180020",
+        "0x180030",
+        "0x180040"
+      ]
+    },
+    {
+      "mode": "frequent",
+      "alternate": true,
+      "turret": false,
+      "bits": 430,
+      "hex": "a164200021a4200020fa00004004004007ffc0b682d9088a029fae07967e8000017d00000041480000c1a2000041f9000057fc0202fc",
+      "excluded_owners_or_accessors": [
+        "0x180000",
+        "0x180010",
+        "0x180020",
+        "0x180030",
+        "0x180040"
+      ]
+    },
+    {
+      "mode": "frequent",
+      "alternate": false,
+      "turret": true,
+      "bits": 140,
+      "hex": "a1052000030688000107e400015ff0080bf0",
+      "excluded_owners_or_accessors": [
+        "0x180000"
+      ]
+    },
+    {
+      "mode": "frequent",
+      "alternate": true,
+      "turret": true,
+      "bits": 204,
+      "hex": "59fa000005f4000001052000030688000107e400015ff0080bf0",
+      "excluded_owners_or_accessors": [
+        "0x180000"
+      ]
+    }
+  ],
+  "soldier_occasional_cases": [
+    {
+      "mode": "soldier_occasional",
+      "alternate": false,
+      "turret": false,
+      "bits": 34,
+      "hex": "0000000000",
+      "excluded_owners_or_accessors": [
+        "0x180050"
+      ]
+    },
+    {
+      "mode": "soldier_occasional",
+      "alternate": true,
+      "turret": false,
+      "bits": 66,
+      "hex": "000000010001e240c0",
+      "excluded_owners_or_accessors": [
+        "0x180050",
+        "0x180060"
+      ]
+    }
+  ]
+}

@@ -24,6 +24,7 @@ __pycache__/
 # Local coordination material and private work-packet automation.
 AGENTS.md
 reports/*HANDOFF.md
+reports/HANDOFF*.md
 reports/*WORK_PACKET*.md
 reports/*GAMEPLAN.md
 tools/*packet*/
@@ -33,6 +34,7 @@ reports/a35-dev1/
 reports/crash/
 # Local OAuth clients and tokens; never commit authorization material.
 /.secrets/
+tt-identity-v1.txt
 
 # Local gh-pages player working copy; the full MP4/player artifact lives on the
 # dedicated gh-pages branch, not on main.

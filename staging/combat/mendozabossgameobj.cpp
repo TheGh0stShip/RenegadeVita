@@ -451,10 +451,10 @@ MendozaBossGameObjClass::MendozaBossGameObjClass (void)	:
 	//
 	//	Register the camera states with its state machine
 	//
-	CameraState.Add_State (NULL,													NULL,		On_CAMERA_STATE_NORMAL_Begin,					NULL);
-	CameraState.Add_State (On_CAMERA_STATE_FACE_ZOOM_Think,				NULL,		On_CAMERA_STATE_FACE_ZOOM_Begin,				NULL);
-	CameraState.Add_State (On_CAMERA_STATE_WAYPATH_FOLLOW_Think,		NULL,		On_CAMERA_STATE_WAYPATH_FOLLOW_Begin,		NULL);
-	CameraState.Add_State (On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think,	NULL,		On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin,	NULL);	
+	CameraState.Add_State (NULL, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_NORMAL_Begin, NULL);
+	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Begin, NULL);
+	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin, NULL);
+	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin, NULL);
 	CameraState.Set_State (CAMERA_STATE_NORMAL);
 
 	//
@@ -3885,4 +3885,3 @@ MendozaBossGameObjClass::Spawn_Health_Powerups (void)
 
 	return ;
 }
-

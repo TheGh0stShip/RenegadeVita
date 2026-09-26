@@ -1,5 +1,136 @@
 # Known gaps
 
+2026-09-24 native Dev195 now joins/renders in Vita3K; public listing PSVita is
+verified. Remaining: purchase dialog activation/update/render, malformed early
+multiplayer text, complete pause/chat/round transitions, full combat/vehicles/
+respawn acceptance, exact requested-space name, float-VIS ownership and physical
+testing. No full multiplayer or lag-free claim. See DEV195_RENCORNER_NATIVE_JOIN.md.
+
+2026-09-24 Dev195 supersedes the six Combat linkage gaps below. Package and
+Vita3K installation pass, but native TT entry has not launched. Full modern
+round transitions, native gameplay, float-VIS ownership and GitHub publication
+remain open. Uphill host60-frame player test passes. One interrupted long run
+sampled weather spawning; subsequent normal weather values and short-run pass
+do not establish either a deadlock or a performance fix. Public join-message
+visibility is still unverified. Current evidence: MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 live-player checkpoint: host player join now verified for3600 frames,
+after linking original SpecialEffectsGameObj requested as preset82110001. Native
+TT launch profile is implemented/compiled, not executed. Remaining registered-
+owner audit gaps: SAMSite, DamageZone, Sakura/Mendoza/RaveshawBoss and Character
+ClassSettings; editor records and host-only audio absence are separate categories.
+Float-VIS1032-byte leak, native assets/TLS/rendering/input/audio and full modern
+events/purchase/respawn/round-transition acceptance remain open. No VPK/installed
+change; Dev194 installed. Current details: MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 catalog/C4 checkpoint supersedes missing catalogs below. Both original
+catalog owners and availability/UI behavior now pass reference and loaded tests.
+Latest live failure was captured C4 full-float versus legacy-compressed decoding;
+fix passes reference and loaded sanitizer tests, not a live retest. Full events,
+round transitions, static-animated C4 attachment runtime and native/player
+acceptance remain open. Glacier1032-byte leak matches18 unowned type15 float-VIS
+channels; correct ownership/visibility semantics remain to implement. No new
+VPK; Dev194 installed. HTTP403 fixed. Details: MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 current checkpoint supersedes missing vehicle/input/occasional-bag
+and unsorted-MIX support below. Those now pass reference and loaded tests; final
+ARM link passes. Ammo event2003 is implemented/tested. Latest live original host
+loads downloaded Glacier, then stops at class2004 PurchaseSettings; related
+TeamPurchaseSettings2005 remains missing. No server-created player is verified.
+Raw-animation channel teardown leaks1032 bytes/36 allocations on this map;
+cause remains unproven. Other modern events, scaling/team visibility/animation,
+round transitions and native HTTPS/gameplay remain open. HTTP403 is resolved.
+No new SELF/VPK or installed update; Dev194 remains installed. Exact evidence
+and next combined catalog integration: MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 movement checkpoint supersedes missing Soldier frequent/outgoing aim
+and Smart Re_Init active-stealth reset. Those now have reference/loaded-object
+and ARM-link evidence. Full client-control/event contracts, vehicle state and
+occupant aiming/stealing, team visibility, scaling, animation and round/session
+transitions remain open. Vehicle fast-path packet tests do not prove occupancy
+or driving. No live retest/native/public-player acceptance/VPK; Dev194 installed.
+See MULTIPLAYER_COMPATIBILITY.md for exact scope and hashes.
+
+2026-09-24 shared-state checkpoint supersedes wholly missing nested imports:
+Armed/Smart frequent and Defense/Soldier occasional have reference, host-loaded
+and ARM-link evidence. Full Soldier frequent/outgoing and vehicle formats,
+vehicle occupant aiming, Smart Re_Init active-stealth reset, non-unit scaling,
+team visibility, full stealing and animation behavior still need work. No new
+public join/native acceptance/VPK; Dev194 installed. HTTP403 remains fixed.
+Exact evidence and DoTilt (not UpdatedTarget) correction: MULTIPLAYER_COMPATIBILITY.
+
+2026-09-24 soldier checkpoint supersedes wholly missing rare-suffix notes.
+Supported soldier fields are implemented with reference/parser/loaded-object
+tests and ARM linkage. Non-unit model scale rejects explicitly; complete
+stealing permission depends on vehicle TT state. Modern frequent/occasional
+and nested replication, team visibility, modern animation-controller behavior,
+player/round transitions and native acceptance remain open. Visual effects of
+bot names/animation options are not established by headless tests. No new VPK;
+Dev194 remains installed. HTTP403 remains fixed. See MULTIPLAYER_COMPATIBILITY.
+
+2026-09-24 replication continuation: the repository is no longer blocking, and
+the original host loads downloaded Hourglass. Modern object decoding then
+fails. Creation/inventory/physical rare and bounded-reader corrections pass
+focused host checks and ARM linkage, not a live world retest. Soldier rare suffix, other modern replication
+contracts, non-default team visibility and modern animation semantics still need
+implementation. Camera-shake policy is now applied; no player/native acceptance,
+new VPK or claim of full TT compatibility. See MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 modern admission supersedes the missing-greeting/zero-offer gap:
+diagnostic greeting, modern options and actual resource-map resolution work.
+Repository403 resolved by exact retail TTFS User-Agent: same-edge A/B confirms
+custom/suffixed headers403 versus exact retail200. Original host downloads,
+validates and mounts all four Hourglass packages. TLS verification stays enabled.
+DisableCameraShake is decoded/retained but not applied; normal modern gameplay,
+downloaded-world/player replication, round transitions and native acceptance
+remain open. No new VPK; Dev194 stays installed. Evidence: MULTIPLAYER_COMPATIBILITY.
+
+2026-09-24 current resource checkpoint supersedes earlier missing-implementation
+notes: type8 receipt, complete package preparation/activation, original nested
+MIX factories and modern native TLS linkage now exist and pass focused host/
+ARM checks. Live RenCorner still sends no resource groups to our legacy greeting.
+Modern TT version-dependent contracts must be implemented, not merely advertised.
+Downloaded-world/player replication, round transitions, full vehicle delivery,
+native HTTPS with trusted CA provisioned, and physical play remain open.
+Archive preflight currently rejects unsorted indices and caps total entries at
+65,536. No new VPK/native execution/public join; Dev194 remains installed.
+
+2026-09-24 purchase continuation: original terminal/catalogs and purchase events
+are linked and host-tested, superseding earlier missing-purchase-owner notes.
+Both factions' menu/character/refill/vehicle-order tests pass ASan/LSan; original
+UDP purchase/replication/disconnect passes. Vehicle delivery and round transitions
+still need runtime tests. TT resource type8/group parsing is reference-researched,
+not integrated. Native TLS/download, package activation and public join remain
+open. ARM ELF links; no new VPK or native execution. Dev194 stays installed.
+
+2026-09-24 AOW continuation: legacy server options are supported for captured
+C&C_Walls.mix; the earlier layout hypothesis is superseded. Live world loading
+exposed omitted original WarFactory and announcement owners, now linked with
+the specialized building cluster and related events. Local Walls replication/
+disconnect/cleanup passes ASan/LSan, but no playable RenCorner join is proven.
+Latest live run stopped at an unresolved map lookup; do not infer its precise
+cause without captured CRC/package metadata. TT resource-manager negotiation,
+native downloader/TLS, purchases, remaining client events, round transitions,
+full multiplayer UI and physical testing remain open. Linkage audit identifies
+13 omitted original macro-registered event owners; it is not runtime proof.
+No new VPK; Dev194 remains installed.
+
+2026-09-24 compatibility-key continuation supersedes the earlier version-refusal
+blocker below. One host attempt now receives server options after the verified
+32-bit checksum/retail-wire-stamp corrections, but the legacy options decoder
+produces an empty map. TT options/accept metadata and package negotiation remain
+incomplete. Do not call this a missing asset, verified identity acceptance or
+player join. Native execution and download/TLS acceptance remain pending.
+
+2026-09-24 networking source checkpoint: original serial challenge response
+passes isolated TT-reference and original UDP/sanitizer checks. RenCorner now
+explicitly refuses the host port with "Version mismatch." Public TT source
+maps that to the executable/data compatibility key. Verify Compute_Exe_Key's
+unstamped original build marker, translation version, CRC inputs and TT changes
+before altering its advertised identity. No RenCorner player join, native TT
+runtime, server package negotiation, new VPK or physical acceptance. Dev194
+remains installed. See MULTIPLAYER_COMPATIBILITY.md; credentials stay private.
+
 Current: Dev134 canonical and matching visual milestone PASS; physical
 deployment/readback PASS under the user's post-milestone authorization. Manual
 LiveArea launch required because remote command1338 refuses. Native FPS, full demo,

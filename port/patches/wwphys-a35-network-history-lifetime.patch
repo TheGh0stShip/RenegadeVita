@@ -1,0 +1,16 @@
+--- a/rbody.cpp
++++ b/rbody.cpp
+@@ -540,6 +540,8 @@
+ 
+ RigidBodyClass::~RigidBodyClass(void)
+ {
++	delete History;
++	History = NULL;
+ 	REF_PTR_RELEASE(Box);
+ 	if (ContactBox != NULL) {
+ 		delete ContactBox;
+@@ -2286,4 +2288,3 @@
+ 
+ 
+ 
+-

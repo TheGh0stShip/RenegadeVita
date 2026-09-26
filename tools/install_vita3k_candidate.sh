@@ -4,7 +4,7 @@ set -Eeuo pipefail
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 rv_candidate=${1:?usage: install_vita3k_candidate.sh CANDIDATE VPK}
 rv_vpk=${2:?usage: install_vita3k_candidate.sh CANDIDATE VPK}
-rv_vfs=${RENEGADE_VITA3K_VFS:-/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K}
+rv_vfs=${RENEGADE_VITA3K_VFS:?Set RENEGADE_VITA3K_VFS to the existing Vita3K filesystem root}
 rv_exe=${RENEGADE_VITA3K_EXE:-/mnt/d/Vita3K/Vita3K.exe}
 rv_receipts="$rv_root/build/vita3k-backups"
 

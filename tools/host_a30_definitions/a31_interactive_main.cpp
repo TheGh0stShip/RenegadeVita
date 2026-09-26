@@ -15,13 +15,31 @@
 #include "encyclopediamgr.h"
 #include "chunkio.h"
 #include "combat.h"
+#include "combatgmode.h"
 #include "pscene.h"
 #include "cnetwork.h"
 #include "definitionfactorymgr.h"
 #include "definitionmgr.h"
 #include "definition.h"
+#include "damage.h"
+#include "damageablegameobj.h"
+#include "physicalgameobj.h"
+#include "explosion.h"
 #include "directinput.h"
 #include "hud_bitmap_atlas_probe.h"
+#include "m13_runtime_inventory.h"
+#include "wwnet_packet_probe.h"
+#include "local_session_probe.h"
+#include "ttfs_factory_probe.h"
+#include "direct_client_probe.h"
+#include "tt_soldier_probe.h"
+#include "tt_vehicle_probe.h"
+#include <memory>
+#include "purchase_probe.h"
+#include "tt_purchase_probe.h"
+#include "tt_c4_probe.h"
+#include "state_machine_probe.h"
+#include "m13_cinematic_probe.h"
 #include "dinput.h"
 #include "networkobjectmgr.h"
 #include "ffactory.h"
@@ -29,8 +47,11 @@
 #include "font3d.h"
 #include "gamedata.h"
 #include "gameinitmgr.h"
+#include "gameobjmanager.h"
 #include "gamemode.h"
 #include "gdsingleplayer.h"
+#include "gdskirmish.h"
+#include "hanim.h"
 #include "gametype.h"
 #include "god.h"
 #include "hud.h"
@@ -48,9 +69,12 @@
 #include "render2dsentence.h"
 #include "serverfps.h"
 #include "singlepl.h"
+#include "scriptablegameobj.h"
 #include "stylemgr.h"
 #include "teammanager.h"
 #include "timemgr.h"
+#include "timeddecophys.h"
+#include "twiddler.h"
 #include "ww3d.h"
 #include "ww3d_vita_renderer.h"
 #include "wwaudio.h"
@@ -79,9 +103,39 @@
 #include "movie.h"
 
 #include <stdio.h>
+#include <stdarg.h>
+#include <chrono>
+#if __has_include(<valgrind/callgrind.h>)
+#include <valgrind/callgrind.h>
+#else
+#define CALLGRIND_START_INSTRUMENTATION ((void)0)
+#define CALLGRIND_STOP_INSTRUMENTATION ((void)0)
+#define CALLGRIND_ZERO_STATS ((void)0)
+#define CALLGRIND_DUMP_STATS_AT(label) ((void)0)
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+
+#ifndef __vita__
+static bool HostFixedSimulationClock = false;
+extern "C" float __real__ZN4WW3D28Get_Movie_Capture_Frame_RateEv();
+extern "C" float __wrap__ZN4WW3D28Get_Movie_Capture_Frame_RateEv()
+{
+	return HostFixedSimulationClock ? 62.5F :
+		__real__ZN4WW3D28Get_Movie_Capture_Frame_RateEv();
+}
+
+// Preserve campaign diagnostic messages through the host's output boundary.
+void A30_Vita_Log(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	vfprintf(stderr, format, args);
+	va_end(args);
+	fputc('\n', stderr);
+}
+#endif
 
 // The host fixture exercises campaign initialization, not the score screen.
 // The Vita target links the original scorescreen.cpp implementation.
@@ -442,9 +496,10 @@ unsigned Count_Definitions(uint32 class_id)
 bool Client_Connection_Present(const char *stage)
 {
 	const bool present = cNetwork::PClientConnection != NULL;
-	fprintf(stderr, "a31.network_client_connection.%s=%s\n", stage,
-		present ? "present" : "missing");
-	fflush(stderr);
+	if (!present) {
+		fprintf(stderr, "a31.network_client_connection.%s=missing\n", stage);
+		fflush(stderr);
+	}
 	return present;
 }
 
@@ -791,17 +846,166 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 	}
 
 
+	bool Prepare_Explosion_Choice_For_Smoke(DefinitionClass *definition,
+		const char *name, unsigned depth)
+	{
+		if (definition == NULL || depth >= 4U) {
+			printf("a31.m13_sam_prewarm=%s missing_or_deep=%u\n", name, depth);
+			return false;
+		}
+		if (definition->Get_Class_ID() == CLASSID_TWIDDLERS) {
+			const TwiddlerClass *twiddler = (const TwiddlerClass *)definition;
+			const int count = twiddler->Get_Referenced_Definition_Count();
+			bool all_ready = count > 0;
+			printf("a31.m13_sam_prewarm_twiddler=%s choices=%d\n", name, count);
+			for (int index = 0; index < count; ++index) {
+				DefinitionClass *choice = DefinitionMgrClass::Find_Definition(
+					twiddler->Get_Referenced_Definition_ID(index), false);
+				if (!Prepare_Explosion_Choice_For_Smoke(choice, name, depth + 1U)) {
+					all_ready = false;
+				}
+			}
+			return all_ready;
+		}
+		if (definition->Get_Class_ID() != CLASSID_DEF_EXPLOSION) {
+			printf("a31.m13_sam_prewarm=%s unexpected_class=%u\n", name,
+				static_cast<unsigned>(definition->Get_Class_ID()));
+			return false;
+		}
+		ExplosionDefinitionClass *explosion =
+			(ExplosionDefinitionClass *)definition;
+		PhysDefClass *phys_def = static_cast<PhysDefClass *>(
+			DefinitionMgrClass::Find_Definition(explosion->PhysDefID));
+		TimedDecorationPhysClass *phys = phys_def != NULL &&
+			phys_def->Is_Type("TimedDecorationPhysDef") ?
+			static_cast<TimedDecorationPhysClass *>(phys_def->Create()) : NULL;
+		const bool ready = phys != NULL && phys->Peek_Model() != NULL;
+		printf("a31.m13_sam_prewarm=%s variant=%s ready=%d\n", name,
+			explosion->Get_Name(), ready ? 1 : 0);
+		if (phys != NULL) phys->Release_Ref();
+		return ready;
+	}
+
 	} // namespace
 
 int main(int argc, char **argv)
 {
+    if (argc == 2 && strcmp(argv[1], "--state-machine-selftest") == 0)
+        return OriginalStateMachineProbe::Run();
+    if (argc >= 3 && argc <= 258 && strcmp(argv[1], "--persist-factories") == 0) {
+        for (int i = 2; i < argc; ++i) {
+            char *end = NULL;
+            const unsigned long id = strtoul(argv[i], &end, 10);
+            if (!*argv[i] || *end || id > 0xffffffffUL) return 2;
+            printf("persist_factory.%lu=%d\n", id,
+                SaveLoadSystemClass::Find_Persist_Factory(static_cast<uint32>(id)) != NULL);
+        }
+        return 0;
+    }
+	if ((argc == 3 || argc == 4) && strcmp(argv[1], "--export-resource-options") == 0)
+		return DirectClientProbe::Export_Resource_Options(argv[2], argc == 4 ? argv[3] : "C&C_ResourceFixture.mix");
+	if (argc == 2 && strcmp(argv[1], "--direct-client-selftest") == 0)
+		return DirectClientProbe::Run();
+	if (argc == 4 && strcmp(argv[1], "--options-wire-probe") == 0)
+		return DirectClientProbe::Replay_Options(argv[2], argv[3]);
+	if (argc == 2 && strcmp(argv[1], "--tt-server-info-selftest") == 0)
+		return DirectClientProbe::TT_Server_Info_Test();
+	if (argc == 2 && strcmp(argv[1], "--tt-client-greeting-selftest") == 0)
+		return DirectClientProbe::TT_Client_Greeting_Test();
+	if (argc == 2 && strcmp(argv[1], "--missing-network-preset-selftest") == 0)
+		return DirectClientProbe::Run_Missing_Preset();
+	if (argc == 2 && strcmp(argv[1], "--building-factory-selftest") == 0)
+		return DirectClientProbe::Building_Factory_Test();
+	if (argc == 2 && strcmp(argv[1], "--announcement-selftest") == 0)
+		return DirectClientProbe::Announcement_Test();
+	if (argc == 2 && strcmp(argv[1], "--connection-timeout-selftest") == 0)
+		return DirectClientProbe::Run_Timeout();
+	if (argc == 2 && strcmp(argv[1], "--client-options-selftest") == 0)
+		return DirectClientProbe::Run_Options();
+	if (argc == 2 && strcmp(argv[1], "--tt-physical-rare-selftest") == 0)
+		return DirectClientProbe::Physical_Rare_Test();
+	if (argc == 2 && strcmp(argv[1], "--tt-soldier-rare-selftest") == 0)
+		return Validate_TT_Soldier_Rare();
+	if (argc == 2 && strcmp(argv[1], "--tt-smart-frequent-selftest") == 0)
+		return Validate_TT_Smart_Frequent();
+	if (argc == 2 && strcmp(argv[1], "--tt-soldier-frequent-selftest") == 0)
+		return Validate_TT_Soldier_Frequent();
+	if (argc == 2 && strcmp(argv[1], "--tt-vehicle-selftest") == 0)
+		return Validate_TT_Vehicle_Vectors();
+	if (argc == 2 && strcmp(argv[1], "--tt-purchase-catalog-selftest") == 0)
+		return Validate_TT_Purchase_Catalogs();
+	if (argc == 2 && strcmp(argv[1], "--tt-c4-selftest") == 0)
+		return Validate_TT_C4_Vectors();
+	if (argc == 2 && strcmp(argv[1], "--tt-defense-selftest") == 0)
+		return Validate_TT_Defense();
 	static unsigned interactive_cycle = 0;
+	if (argc == 2 && strcmp(argv[1], "--network-selftest") == 0)
+		return Validate_Original_WWNet_Packets();
+	if (argc == 2 && strcmp(argv[1], "--local-session-selftest") == 0)
+		return Validate_Local_Session_Boundaries();
+	if (argc == 3 && strcmp(argv[1], "--ttfs-cache-selftest") == 0)
+		return Validate_TTFS_Fixture_Factory(argv[2]);
 	const unsigned cycle = ++interactive_cycle;
-	if (argc != 5 && argc != 6) {
-		fprintf(stderr, "usage: %s RETAIL_ROOT USER_ROOT CACHE_ROOT MODS_ROOT [LEVEL_MIX]\n", argv[0]);
+	if (argc != 5 && argc != 6 && argc != 7 && argc != 8) {
+		fprintf(stderr, "usage: %s RETAIL_ROOT USER_ROOT CACHE_ROOT MODS_ROOT [LEVEL_MIX] [M13_INVENTORY|M13_INTRO_SMOKE|M13_SAM_DAMAGE_SMOKE|M13_SAM_PREWARM_SMOKE|SKIRMISH_SMOKE]\n", argv[0]);
 		return 2;
 	}
-	const char *const level_mix = argc == 6 ? argv[5] : "M00_Tutorial.mix";
+	const char *level_mix = argc >= 6 ? argv[5] : "M00_Tutorial.mix";
+	std::string negotiated_map;
+	const bool remote_purchase = argc == 8 && (strcmp(argv[6], "REMOTE_SERVER_PURCHASE_SMOKE") == 0 ||
+		strcmp(argv[6], "REMOTE_CLIENT_PURCHASE_SMOKE") == 0);
+	const bool remote_server = argc == 8 && (strcmp(argv[6], "REMOTE_SERVER_SMOKE") == 0 ||
+		strcmp(argv[6], "REMOTE_SERVER_PURCHASE_SMOKE") == 0);
+	const bool tt_admission = argc == 8 && strcmp(argv[6], "TT_ADMISSION_PROBE") == 0;
+	const bool tt_soak = argc == 8 && strcmp(argv[6], "TT_WORLD_SOAK") == 0;
+	bool tt_world = tt_soak || (argc == 8 && strcmp(argv[6], "TT_WORLD_PROBE") == 0);
+	const bool resource_fixture = argc == 8 && strcmp(argv[6], "RESOURCE_ADMISSION_FIXTURE") == 0;
+	const bool remote_admission = tt_admission || resource_fixture ||
+		(argc == 8 && strcmp(argv[6], "REMOTE_ADMISSION_PROBE") == 0);
+	const bool remote_client = tt_world || remote_admission || (argc == 8 && (strcmp(argv[6], "REMOTE_CLIENT_SMOKE") == 0 ||
+		strcmp(argv[6], "REMOTE_CLIENT_PURCHASE_SMOKE") == 0));
+	const bool remote_smoke = remote_server || remote_client;
+	const bool harvester_lifetime = argc == 7 && strcmp(argv[6], "HARVESTER_LIFETIME_SMOKE") == 0;
+	const bool tt_soldier_smoke = argc == 7 && strcmp(argv[6], "TT_SOLDIER_STATE_SMOKE") == 0;
+	const bool tt_vehicle_smoke = argc == 7 && strcmp(argv[6], "TT_VEHICLE_STATE_SMOKE") == 0;
+	unsigned remote_port = 0;
+	bool tt_client_request = false;
+	if (remote_purchase && strchr(argv[7], ':')) return 2; // Isolated loopback experiment only.
+	RenegadeNetworkProvider::Endpoint remote_endpoint;
+	remote_endpoint.Address = INADDR_LOOPBACK;
+	if (remote_admission || (remote_client && strchr(argv[7], ':') != NULL)) {
+		if (!RenegadeNetworkProvider::Parse_Client_Request(argv[7], 0, remote_endpoint, tt_client_request)) return 2;
+		remote_port = remote_endpoint.PortNumber;
+		if (tt_client_request && remote_client && !remote_admission) tt_world = true;
+	} else if (remote_smoke) {
+		char *end = nullptr;
+		unsigned long port = strtoul(argv[7], &end, 10);
+		if (!*argv[7] || *end || port < 1024 || port > 65535) return 2;
+		remote_port = port;
+	}
+	const bool m13_sam_prewarm_smoke = argc == 7 &&
+		strcmp(level_mix, "M13.mix") == 0 &&
+		strcmp(argv[6], "M13_SAM_PREWARM_SMOKE") == 0;
+	const bool m13_sam_damage_smoke = argc == 7 &&
+		strcmp(level_mix, "M13.mix") == 0 &&
+		(strcmp(argv[6], "M13_SAM_DAMAGE_SMOKE") == 0 ||
+			m13_sam_prewarm_smoke);
+	const bool m13_inventory = argc == 7 &&
+		strcmp(level_mix, "M13.mix") == 0 &&
+		strcmp(argv[6], "M13_INVENTORY") == 0;
+	const bool m13_intro_smoke = argc == 7 &&
+		strcmp(level_mix, "M13.mix") == 0 &&
+		strcmp(argv[6], "M13_INTRO_SMOKE") == 0;
+	char skirmish_archive[96];
+	const bool purchase_smoke = argc == 7 && strcmp(argv[6], "PURCHASE_SMOKE") == 0;
+	const bool skirmish_smoke = argc == 7 && (strcmp(argv[6], "SKIRMISH_SMOKE") == 0 || purchase_smoke) &&
+		A4_Frontend_Resolve_Skirmish_Archive(level_mix, skirmish_archive, sizeof(skirmish_archive));
+	if (argc >= 7 && !remote_smoke && !harvester_lifetime && !tt_soldier_smoke && !tt_vehicle_smoke && !m13_sam_damage_smoke && !m13_inventory && !m13_intro_smoke && !skirmish_smoke) return 2;
+#ifndef __vita__
+	HostFixedSimulationClock = m13_inventory || m13_intro_smoke;
+#else
+	if (m13_intro_smoke) return 2;
+#endif
 	char level_archive[96] = {};
 	char level_ldd_name[96] = {};
 	snprintf(level_archive, sizeof(level_archive), "Data\\%s", level_mix);
@@ -818,12 +1022,13 @@ int main(int argc, char **argv)
 	MixFileFactoryClass always_dbs_factory(kAlwaysDbsArchive, &root_factory);
 	MixFileFactoryClass always_factory(kAlwaysArchive, &root_factory);
 	MixFileFactoryClass m00_factory(level_archive, &root_factory);
+	std::unique_ptr<MixFileFactoryClass> negotiated_factory;
 	FileFactoryListClass factory_list;
 	factory_list.Add_FileFactory(&root_factory, "");
 	factory_list.Add_FileFactory(&always2_factory, "Always2.dat");
 	factory_list.Add_FileFactory(&always_dbs_factory, "Always.dbs");
 	factory_list.Add_FileFactory(&always_factory, "Always.dat");
-	factory_list.Add_FileFactory(&m00_factory, level_mix);
+	if (!tt_world) factory_list.Add_FileFactory(&m00_factory, level_mix);
 
 	FileFactoryClass *previous_read_factory = _TheFileFactory;
 	FileFactoryClass *previous_write_factory = _TheWritingFileFactory;
@@ -831,7 +1036,7 @@ int main(int argc, char **argv)
 	_TheWritingFileFactory = &root_factory;
 
 	bool passed = always2_factory.Is_Valid() && always_dbs_factory.Is_Valid() &&
-		always_factory.Is_Valid() && m00_factory.Is_Valid();
+		always_factory.Is_Valid() && (tt_world || m00_factory.Is_Valid());
 	bool math_initialized = false;
 	bool path_manager_initialized = false;
 	bool ww3d_initialized = false;
@@ -846,6 +1051,8 @@ int main(int argc, char **argv)
 	bool session_initialized = false;
 	bool single_player_transport_initialized = false;
 	bool level_loaded = false;
+	A31ClientConnect remote_join;
+	cConnection *accepted_connection = nullptr;
 	WW3DAssetManager *asset_manager = NULL;
 	{
 		Stage("audio_construct");
@@ -1012,18 +1219,22 @@ int main(int argc, char **argv)
 				Stage("gamedata_create");
 			// The original local session owns both WWNet endpoints.  Rendering/UI
 			// one-time setup remains under the existing Vita presentation path.
-			cServerFps::Create_Instance();
-			Stage("gameinit_sp");
+			if (!remote_client) cServerFps::Create_Instance();
+			Stage(skirmish_smoke ? "gameinit_skirmish" : "gameinit_sp");
 			/* Preserve the original single-player session owner rather than
 			 * reproducing its cSinglePlayerData/nickname/game-data setup in the
 			 * direct M00 development harness.  The level-loader remains below this
 			 * boundary until the full desktop mode graph is portable. */
-			GameInitMgrClass::Initialize_SP();
+			if (remote_smoke) {
+				if (!GameInitMgrClass::Initialize_Direct_IP(remote_server)) { passed = false; break; }
+			} else if (skirmish_smoke) GameInitMgrClass::Initialize_Skirmish();
+			else GameInitMgrClass::Initialize_SP();
 			single_player_transport_initialized = cSinglePlayerData::Is_Single_Player();
-			Print("original_gameinit_sp_initialized",
+			Print(skirmish_smoke ? "original_gameinit_skirmish_initialized" : "original_gameinit_sp_initialized",
 				single_player_transport_initialized && PTheGameData != NULL &&
-				cGameType::Get_Game_Type() == GAMETYPE_MISSION);
-			if (!single_player_transport_initialized || PTheGameData == NULL) {
+				cGameType::Get_Game_Type() == (skirmish_smoke ? GAMETYPE_SKIRMISH : GAMETYPE_MISSION));
+			if ((!remote_smoke && !single_player_transport_initialized) ||
+				(remote_smoke && single_player_transport_initialized) || PTheGameData == NULL) {
 				passed = false;
 				break;
 			}
@@ -1031,8 +1242,16 @@ int main(int argc, char **argv)
 			GameModeClass *combat_mode = GameModeManager::Find("Combat");
 			if (combat_mode == NULL) { passed = false; break; }
 			combat_mode->Activate();
+			if (skirmish_smoke || remote_smoke) combat_mode->Suspend();
 			StringClass map_name(level_mix, true);
 			The_Game()->Set_Map_Name(map_name);
+			if (remote_smoke) {
+				The_Game()->Set_Ip_Address(htonl(remote_endpoint.Address));
+				The_Game()->Set_Port(remote_port);
+				// Original one-slot C&C games permit play without an opposing human.
+				The_Game()->Set_Max_Players(1);
+				The_Game()->Set_Map_Cycle(0, map_name);
+			}
 			_Force_Link_Soldier();
 			// Own the local authoritative session through the original cNetwork
 			// lifecycle.  This follows GameInitMgrClass::Start_Client_Server:
@@ -1042,14 +1261,23 @@ int main(int argc, char **argv)
 			Stage("network_onetime_init");
 			cNetwork::Onetime_Init();
 			Stage("network_server_init");
-			cNetwork::Init_Server();
+			if (!remote_client) cNetwork::Init_Server();
 			Stage("network_client_init");
-			cNetwork::Init_Client();
-			if (!Client_Connection_Present("after_init")) { passed = false; break; }
+			if (tt_admission || tt_world || tt_client_request) Renegade_Arm_TT_Greeting_Probe();
+			if (!remote_server) cNetwork::Init_Client();
+			if (remote_client && !remote_join.Begin()) { passed = false; break; }
+			if (remote_client) remote_join.Configure_Resources((std::string(argv[3]) + "/ttfs").c_str());
+			PacketManager.Set_Is_Server(!remote_client);
+			if (!remote_server && !Client_Connection_Present("after_init")) { passed = false; break; }
 			session_initialized = true;
+			if (remote_admission) {
+				Print_Text("direct_admission_endpoint", argv[7]);
+				passed = DirectClientProbe::Admission(remote_join, resource_fixture);
+				break;
+			}
 			Stage("combat_scene_init");
 			CombatManager::Scene_Init();
-			if (!Client_Connection_Present("after_scene_init")) { passed = false; break; }
+			if (!remote_server && !Client_Connection_Present("after_scene_init")) { passed = false; break; }
 			/* Exercise the original Font3D asset route before Combat owns the HUD:
 			 * FileFactory -> Targa -> CPU SurfaceClass -> TextureClass -> Vita edge. */
 			Stage("font3d_render_capability");
@@ -1124,20 +1352,51 @@ int main(int argc, char **argv)
 			Stage("combat_init_shared_hud_policy");
 			CombatManager::Init(A31_Interactive_Render_HUD_Available());
 			combat_initialized = true;
-			if (!Client_Connection_Present("after_combat_init")) { passed = false; break; }
+			if (!remote_server && !Client_Connection_Present("after_combat_init")) { passed = false; break; }
 			Stage("network_handshake");
-			for (unsigned update_count = 0; update_count < 120; ++update_count) {
+			for (unsigned update_count = 0; !remote_server && update_count < (remote_client ? 30000U : 120U); ++update_count) {
 				if (!Client_Connection_Present("before_update")) { passed = false; break; }
-				if (cNetwork::PClientConnection->Is_Established()) break;
+				if (remote_client && remote_join.Poll() == A31ClientConnect::WaitingResources)
+					remote_join.Prepare_Resources();
+				if (remote_client && remote_join.Poll() != A31ClientConnect::WaitingOptions &&
+					remote_join.Poll() != A31ClientConnect::WaitingResources) break;
+				if (cNetwork::PClientConnection->Is_Established() &&
+					(!remote_client || remote_join.Poll() == A31ClientConnect::Ready)) break;
 				cNetwork::Update();
+				if (remote_client) { PacketManager.Flush(true); usleep(1000); }
 				if (!Client_Connection_Present("after_update")) { passed = false; break; }
 			}
-			const bool transport_established = cNetwork::PClientConnection != NULL &&
-				cNetwork::PClientConnection->Is_Established();
+			const bool transport_established = remote_server || (cNetwork::PClientConnection != NULL &&
+				cNetwork::PClientConnection->Is_Established());
 			Print("original_singleplayer_transport_established", transport_established);
 			if (!transport_established) {
 				passed = false;
 				break;
+			}
+			if (remote_client) {
+				if (tt_world) {
+					char archive[96];
+					if (remote_join.Poll() != A31ClientConnect::Ready ||
+						!A4_Frontend_Resolve_Skirmish_Archive(The_Game()->Get_Map_Name(), archive, sizeof(archive))) {
+						passed = false; break;
+					}
+					negotiated_map = archive;
+					level_mix = negotiated_map.c_str();
+					std::string retail_archive = std::string("Data\\") + negotiated_map;
+					negotiated_factory.reset(new MixFileFactoryClass(retail_archive.c_str(), &root_factory));
+					if (negotiated_factory->Is_Valid())
+						factory_list.Add_FileFactory(negotiated_factory.get(), level_mix);
+					else if (!A31ClientConnect::Is_Prepared_Map(level_mix)) { passed = false; break; }
+					snprintf(level_ldd_name, sizeof(level_ldd_name), "%s", level_mix);
+					strcpy(strrchr(level_ldd_name, '.'), ".ldd");
+					Print_Text("remote_negotiated_world", level_mix);
+				}
+				A4_Frontend_Begin_Menu_Loop();
+				bool start = remote_join.Request_Start(1, 0);
+				A4_Frontend_End_Menu_Loop();
+				if (!start || !remote_join.Begin_World_Load() ||
+					stricmp(The_Game()->Get_Map_Name(), level_mix) != 0) { passed = false; break; }
+				accepted_connection = cNetwork::PClientConnection;
 			}
 			FileClass *objects_ddb = factory_list.Get_File("Objects.DDB");
 			Print("objects_ddb_visible_before_load",
@@ -1152,16 +1411,49 @@ int main(int argc, char **argv)
 				factory_list.Return_File(level_ldd);
 			}
 			Stage("combat_preload");
+			if (remote_smoke) CombatGameModeClass::Vita_Begin_Level_Load(nullptr, true);
 			CombatManager::Pre_Load_Level(false);
 			NetworkObjectMgrClass::Set_Is_Level_Loading(true);
 			Stage("combat_load");
 			CombatManager::Load_Level_Threaded(level_mix, false);
-			while (!CombatManager::Is_Load_Level_Complete()) {}
+			while (!CombatManager::Is_Load_Level_Complete()) {
+				if (remote_smoke) { cNetwork::Update(); usleep(1000); }
+			}
 			Stage("post_load_processing");
-			SaveLoadSystemClass::Post_Load_Processing(NULL);
+			SaveLoadSystemClass::Post_Load_Processing(remote_smoke ? &cNetwork::Update : NULL);
 			NetworkObjectMgrClass::Set_Is_Level_Loading(false);
 			Stage("combat_postload");
 			CombatManager::Post_Load_Level();
+			if (remote_smoke) {
+				CombatGameModeClass::Vita_Finalize_Loaded_Level(nullptr, true);
+				radar_initialized = true;
+				combat_mode->Resume();
+				level_loaded = true;
+			}
+			if (skirmish_smoke) {
+				The_Game()->Reset_Game(true);
+				GameObjManager::Init_Buildings();
+				The_Game()->On_Game_Begin();
+				combat_mode->Resume();
+				Print("original_skirmish_game_started", IS_SKIRMISH);
+			}
+			if (strcmp(level_mix, "M13.mix") == 0) {
+				ScriptableGameObj *controller =
+					GameObjManager::Find_ScriptableGameObj(1500017);
+				bool area4_script = false;
+				if (controller != NULL) {
+					const GameObjObserverList &observers = controller->Get_Observers();
+					for (int index = 0; index < observers.Count(); ++index) {
+						GameObjObserverClass *observer = observers[index];
+						if (observer != NULL && observer->Get_Name() != NULL &&
+							strcmp(observer->Get_Name(), "MX0_Area4_Controller_DLS") == 0) {
+							area4_script = true;
+						}
+					}
+				}
+				Print("m13_area4_controller_script_registered", area4_script);
+				if (!area4_script) { passed = false; break; }
+			}
 			if (strcmp(level_mix, "M00_Tutorial.mix") == 0) {
 				StringClass map_name;
 				MapMgrClass::Get_Map_Texture_Filename(map_name);
@@ -1181,7 +1473,7 @@ int main(int argc, char **argv)
 			 * post-load sequence.  This direct M00 development route retains that
 			 * ownership ordering whenever the real render HUD is enabled; without
 			 * it HUDClass::Think legitimately has no RadarManager renderer. */
-			if (A31_Interactive_Render_HUD_Available()) {
+			if (A31_Interactive_Render_HUD_Available() && !radar_initialized) {
 				Stage("combat_mode_radar_init");
 				RadarManager::Init();
 				RadarManager::Set_Radar_Mode(The_Game()->Get_Radar_Mode());
@@ -1199,11 +1491,50 @@ int main(int argc, char **argv)
 				Count_Definitions(CLASSID_GAME_OBJECT_DEF_SOLDIER));
 			Print("commando_definition_loaded",
 				DefinitionMgrClass::Find_Typed_Definition("Commando", CLASSID_GAME_OBJECTS) != NULL);
+			if (!DirectClientProbe::Weapon_Definition_Test()) { passed = false; break; }
+			if (harvester_lifetime) {
+				passed = DirectClientProbe::Harvester_Lifetime_Test() == 0;
+				break;
+			}
+			if (remote_smoke) {
+				if (remote_client && (accepted_connection != cNetwork::PClientConnection ||
+					!cNetwork::I_Am_Only_Client() || cPlayerManager::Count() != 0 ||
+					!remote_join.Complete_World_Load(1, 0))) { passed = false; break; }
+				Print(remote_server ? "remote_server_ready" : "remote_client_world_loaded", true);
+				const unsigned required_frames = tt_soak ? 3600U : 60U;
+				const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(tt_soak ? 180 : 60);
+				bool received_player = false;
+				unsigned verified_frames = 0;
+				RemotePurchaseProbe purchase_probe;
+				while (std::chrono::steady_clock::now() < deadline) {
+					A31_Interactive_Run_Simulation_Frame();
+					if (remote_purchase) purchase_probe.Tick(remote_server);
+					PacketManager.Flush(true);
+					if (remote_client) {
+						received_player = remote_join.Poll() == A31ClientConnect::InGame;
+						if (received_player && ++verified_frames >= required_frames &&
+							(!remote_purchase || purchase_probe.Passed())) break;
+						if (remote_join.Poll() == A31ClientConnect::ConnectionLost ||
+							remote_join.Poll() == A31ClientConnect::ProtocolMismatch) break;
+					} else {
+						cPlayer *player = cPlayerManager::Find_Player(L"PS Vita");
+						if (player && player->Get_GameObj()) received_player = true;
+						if (received_player && cPlayerManager::Count() == 0) break;
+					}
+					usleep(16000);
+				}
+				passed = received_player && (remote_server ? cPlayerManager::Count() == 0 :
+					verified_frames >= required_frames) && (!remote_purchase || purchase_probe.Passed());
+				if (remote_client) Print_Number("remote_verified_simulation_frames", verified_frames);
+				if (remote_server) Print("remote_server_observed_disconnect", passed);
+				Print(remote_server ? "remote_server_created_player" : "remote_client_replicated_star", passed);
+				break;
+			}
 			WideStringClass local_player_name;
-			local_player_name.Convert_From("Renegade");
+			local_player_name.Convert_From(skirmish_smoke ? "PS Vita" : "Renegade");
 			Stage("player_create");
 			cPlayer *local_player = cGod::Create_Player(cNetwork::Get_My_Id(),
-				local_player_name, -1, 0);
+				local_player_name, skirmish_smoke ? 1 : -1, 0);
 			Print("original_session_player_created", local_player != NULL);
 			Print("original_session_player_registered", cPlayerManager::Count() == 1);
 			const bool eva_player_ready = local_player != NULL &&
@@ -1213,6 +1544,19 @@ int main(int argc, char **argv)
 			Stage("god_think");
 			cGod::Think();
 			Print("original_god_created_commando", CombatManager::Get_The_Star() != NULL);
+			if (tt_soldier_smoke || tt_vehicle_smoke) {
+				A31_Interactive_Run_Simulation_Frame();
+				passed = CombatManager::Get_The_Star() &&
+					(tt_vehicle_smoke ? Validate_TT_Vehicle_Runtime(CombatManager::Get_The_Star()->Get_Definition()) :
+					Validate_TT_Soldier_Runtime(CombatManager::Get_The_Star()->Get_Definition()));
+                if (tt_soldier_smoke) passed = Validate_TT_C4_Runtime(*CombatManager::Get_The_Star()) && passed;
+				break;
+			}
+			if (purchase_smoke) {
+				A31_Interactive_Run_Simulation_Frame();
+				passed = Validate_Original_Purchases();
+				break;
+			}
 			const bool starting_weapon_revealed = EncyclopediaMgrClass::Is_Object_Revealed(
 				EncyclopediaMgrClass::TYPE_WEAPON, 14);
 			Print("fresh_m00_original_script_weapon_discovery", starting_weapon_revealed);
@@ -1221,16 +1565,20 @@ int main(int argc, char **argv)
 			}
 
 			Stage("hardware_equivalent_120_frame_loop");
+			M13CinematicProbe cinematic_probe;
+			const unsigned target_frames = m13_intro_smoke ? 5000U : 120U;
 			/* Make each cycle's first-frame geometry a per-cycle measurement,
 			** matching the Vita adapter's reset immediately before its loop. */
 			RenegadeVitaRenderer::Reset_Statistics();
 			unsigned complete_frames = 0;
 			bool first_frame_geometry = false;
-			for (; complete_frames < 120U; ++complete_frames) {
-				WW3D::Sync((complete_frames + 1U) * 16U);
+			for (; complete_frames < target_frames; ++complete_frames) {
+				if (!m13_inventory && !m13_intro_smoke)
+					WW3D::Sync((complete_frames + 1U) * 16U);
 				A31_Interactive_Run_Simulation_Frame();
 				const A31InteractiveRenderTrace render_trace =
 					A31_Interactive_Run_Render_Frame();
+				if (m13_intro_smoke) cinematic_probe.Observe(complete_frames);
 				if (complete_frames == 0U) {
 					Print("interactive_scene_available", render_trace.scene_available);
 					Print("interactive_camera_available", render_trace.camera_available);
@@ -1272,12 +1620,198 @@ int main(int argc, char **argv)
 				}
 			}
 			Print_Number("hardware_equivalent_complete_frames", complete_frames);
-			Print("hardware_equivalent_render_frame", complete_frames == 120U);
+			Print("hardware_equivalent_render_frame", complete_frames == target_frames);
 			Print("interactive_first_frame_geometry", first_frame_geometry);
-			passed = passed && complete_frames == 120U && first_frame_geometry &&
+			passed = passed && complete_frames == target_frames && first_frame_geometry &&
 				CombatManager::Get_Scene() != NULL &&
 				CombatManager::Get_Camera() != NULL &&
 				CombatManager::Get_The_Star() != NULL;
+			if (m13_intro_smoke) {
+				const bool intro_passed = cinematic_probe.Validate();
+				Print("m13_intro_scripted_actor_contract", intro_passed);
+				passed = passed && intro_passed;
+			}
+			if (passed && m13_inventory) {
+				Dump_M13_Linked_Scripts();
+				Dump_M13_Runtime_Inventory();
+				const bool presets_ready = Dump_M13_Cinematic_Preset_Definitions();
+				const bool w3d_ready = Dump_M13_W3D_Dependencies(m00_factory);
+				passed = presets_ready && w3d_ready;
+			}
+			if (passed && m13_sam_damage_smoke) {
+				if (m13_sam_prewarm_smoke) {
+					struct WorldExplosionUse { int id; unsigned count; } uses[64] = {};
+					unsigned use_count = 0;
+					for (SLNode<BaseGameObj> *node =
+						GameObjManager::Get_Game_Obj_List()->Head(); node != NULL;
+						node = node->Next()) {
+						PhysicalGameObj *physical =
+							node->Data()->As_PhysicalGameObj();
+						if (physical == NULL) continue;
+						const int id = physical->Get_Definition().Get_Killed_Explosion_ID();
+						if (id <= 0) continue;
+						unsigned index = 0;
+						for (; index < use_count && uses[index].id != id; ++index) {}
+						if (index == use_count) {
+							if (use_count == 64U) { passed = false; break; }
+							uses[use_count++] = {id, 0U};
+							DefinitionClass *explosion =
+								DefinitionMgrClass::Find_Definition(id, false);
+							printf("a31.m13_world_explosion_id=%d preset=%s explosion=%s\n",
+								id, physical->Get_Definition().Get_Name(),
+								explosion != NULL ? explosion->Get_Name() : "(missing)");
+						}
+						++uses[index].count;
+					}
+					printf("a31.m13_world_explosion_unique=%u\n", use_count);
+					for (unsigned index = 0; index < use_count; ++index) {
+						printf("a31.m13_world_explosion_count_id=%d count=%u\n",
+							uses[index].id, uses[index].count);
+						DefinitionClass *definition = DefinitionMgrClass::Find_Definition(
+							uses[index].id, false);
+						const bool ready = Prepare_Explosion_Choice_For_Smoke(
+							definition, definition != NULL ? definition->Get_Name() :
+								"(missing)", 0U);
+						printf("a31.m13_world_explosion_ready_id=%d ready=%d\n",
+							uses[index].id, ready ? 1 : 0);
+						if (!ready) passed = false;
+					}
+					const char *const names[] = {
+						"Explosion_SAM_Site",
+						"Rocket Launcher Explosion Twiddler",
+						"Ground Explosions Twiddler",
+						"Air Explosions Twiddler"
+					};
+					bool all_prepared = true;
+					for (const char *name : names) {
+						if (!Prepare_Explosion_Choice_For_Smoke(
+							DefinitionMgrClass::Find_Named_Definition(name, false),
+							name, 0U)) all_prepared = false;
+					}
+					passed = passed && all_prepared;
+					const char *const intro_models[] = {
+						"X00_MTank_traj", "X00_Humvee_Traj", "X00_apc_Traj",
+						"X00_GDI_Troops", "X00_Havoc_Traj", "X00_Trnspt_traj",
+						"X00_Rope", "X00_Ltank_traj", "X00_NOD_Troops",
+						"X00_Scorpion", "X00_ROC2_traj", "X00_ENG1_traj",
+						"X00_ENG2_traj"
+					};
+					for (const char *name : intro_models) {
+						RenderObjClass *object = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
+						printf("a31.m13_intro_model=%s ready=%d\n", name, object != NULL ? 1 : 0);
+						if (object != NULL) object->Release_Ref();
+						else passed = false;
+					}
+					const char *const intro_animations[] = {
+						"X00_MTank_traj.X00_MTank_traj",
+						"v_gdi_medtnk.x00_Mtank_anim",
+						"X00_Humvee_Traj.X00_Humvee_Traj",
+						"X00_apc_Traj.X00_apc_Traj",
+						"X00_GDI_Troops.X00_GDI_Troops",
+						"S_A_Human.H_A_x00_walk_01",
+						"S_A_Human.H_A_X00_WALK_04",
+						"S_A_Human.H_A_X00_Walk_02",
+						"X00_Havoc_Traj.X00_Havoc_Traj",
+						"S_A_Human.H_A_X00_Havoc",
+						"X00_Trnspt_traj.X00_Trnspt_traj",
+						"V_GDI_Trnspt.X00_Trnspt_anim",
+						"X00_Rope.X00_Rope",
+						"X00_Ltank_traj.X00_Ltank_traj",
+						"V_Nod_Ltank.X00_Ltank_Anim",
+						"X00_NOD_Troops.X00_NOD_Troops",
+						"X00_Scorpion.X00_Scorpion",
+						"X00_ROC2_traj.X00_ROC2_traj",
+						"S_A_Human.H_A_X00_ROC2",
+						"X00_ENG1_traj.X00_ENG1_traj",
+						"S_A_Human.H_A_X00_ENG1",
+						"X00_ENG2_traj.X00_ENG2_traj",
+						"S_A_Human.H_A_X00_ENG2"
+					};
+					for (const char *name : intro_animations) {
+						HAnimClass *animation = WW3DAssetManager::Get_Instance()->Get_HAnim(name);
+						const int frames = animation != NULL ? animation->Get_Num_Frames() : 0;
+						printf("a31.m13_intro_animation=%s frames=%d\n", name, frames);
+						if (animation != NULL) animation->Release_Ref();
+						if (frames <= 0) passed = false;
+					}
+					struct IntroAttachment {
+						const char *model;
+						const char *bone;
+					};
+					const IntroAttachment attachments[] = {
+						{"X00_Havoc_Traj", "BN_Havoc"},
+						{"X00_ENG1_traj", "BN_ENGINEER_1"},
+						{"X00_ENG2_traj", "BN_ENGINEER_2"}
+					};
+					for (const IntroAttachment &attachment : attachments) {
+						RenderObjClass *object = WW3DAssetManager::Get_Instance()->Create_Render_Obj(attachment.model);
+						const int bone = object != NULL ? object->Get_Bone_Index(attachment.bone) : -1;
+						printf("a31.m13_intro_attachment=%s bone=%s index=%d\n",
+							attachment.model, attachment.bone, bone);
+						if (object != NULL) object->Release_Ref();
+						if (bone < 0) passed = false;
+					}
+					RenderObjClass *trajectory = WW3DAssetManager::Get_Instance()->Create_Render_Obj("X00_Havoc_Traj");
+					HAnimClass *rappel = WW3DAssetManager::Get_Instance()->Get_HAnim("X00_Havoc_Traj.X00_Havoc_Traj");
+					if (trajectory != NULL && rappel != NULL) {
+						trajectory->Set_Animation(rappel, 0.0f);
+						const Vector3 start = trajectory->Get_Bone_Transform("BN_Havoc").Get_Translation();
+						trajectory->Set_Animation(rappel, 200.0f);
+						const Vector3 end = trajectory->Get_Bone_Transform("BN_Havoc").Get_Translation();
+						const float movement = (end - start).Length();
+						printf("a31.m13_havoc_rappel_bone_movement=%.3f start_z=%.3f end_z=%.3f\n",
+							movement, start.Z, end.Z);
+						if (movement <= 0.1f) passed = false;
+					} else {
+						passed = false;
+					}
+					if (rappel != NULL) rappel->Release_Ref();
+					if (trajectory != NULL) trajectory->Release_Ref();
+				}
+				if (!passed) break;
+				const WarheadType steel = ArmorWarheadManager::Get_Warhead_Type("STEEL");
+				for (int sam_id = 1500015; sam_id <= 1500016; ++sam_id) {
+					ScriptableGameObj *object =
+						GameObjManager::Find_ScriptableGameObj(sam_id);
+					DamageableGameObj *sam = object != NULL ?
+						object->As_DamageableGameObj() : NULL;
+					if (sam == NULL) { passed = false; break; }
+					printf("a31.m13_sam_damage_smoke_id=%d health_before=%.1f\n",
+						sam_id, sam->Get_Defense_Object()->Get_Health());
+					fflush(stdout);
+					OffenseObjectClass damage(50000.0f, steel);
+					const bool profile_sam = cycle == 1U && sam_id ==
+						(m13_sam_prewarm_smoke ? 1500015 : 1500016);
+					if (profile_sam) {
+						CALLGRIND_ZERO_STATS;
+						CALLGRIND_START_INSTRUMENTATION;
+					}
+					const auto damage_start = std::chrono::steady_clock::now();
+					sam->Apply_Damage(damage);
+					const auto damage_end = std::chrono::steady_clock::now();
+					if (profile_sam) {
+						CALLGRIND_STOP_INSTRUMENTATION;
+						CALLGRIND_DUMP_STATS_AT(m13_sam_prewarm_smoke ?
+							"m13_first_sam_damage" : "m13_second_sam_damage");
+					}
+					printf("a31.m13_sam_damage_us_id=%d elapsed=%lld\n", sam_id,
+						static_cast<long long>(std::chrono::duration_cast<
+							std::chrono::microseconds>(damage_end - damage_start).count()));
+					fflush(stdout);
+					for (unsigned settle = 0U; settle < 2U; ++settle) {
+						A31_Interactive_Run_Simulation_Frame();
+						A31_Interactive_Run_Render_Frame();
+					}
+					object = GameObjManager::Find_ScriptableGameObj(sam_id);
+					sam = object != NULL ? object->As_DamageableGameObj() : NULL;
+					const float remaining_health = sam != NULL ?
+						sam->Get_Defense_Object()->Get_Health() : 0.0f;
+					printf("a31.m13_sam_damage_smoke_id=%d health_after=%.1f\n",
+						sam_id, remaining_health);
+					if (remaining_health > 0.0f) { passed = false; break; }
+				}
+				Print("m13_sam_damage_smoke_completed", passed);
+			}
 		} while (false);
 
 		Print("factory_chain_ready", always2_factory.Is_Valid() &&
@@ -1286,7 +1820,7 @@ int main(int argc, char **argv)
 		Print("combat_scene_owned", CombatManager::Get_Scene() != NULL);
 		Print("original_camera_owned", CombatManager::Get_Camera() != NULL);
 		Print("original_star_restored", CombatManager::Get_The_Star() != NULL);
-		Print("one_original_control_think_frame", passed);
+		if (!remote_admission) Print("one_original_control_think_frame", passed);
 
 			if (passed && combat_initialized) {
 				Stage("original_native_settings");
@@ -1302,6 +1836,7 @@ int main(int argc, char **argv)
 			 * release radar before Combat's process-level state. */
 			if (level_loaded) {
 				cGod::Exit();
+				if (skirmish_smoke || remote_smoke) The_Game()->On_Game_End();
 				CombatManager::Unload_Level();
 				level_loaded = false;
 			}
@@ -1339,7 +1874,7 @@ int main(int argc, char **argv)
 			GameInitMgrClass::Shutdown();
 			cNetwork::Onetime_Shutdown();
 		}
-		if (session_initialized) cServerFps::Destroy_Instance();
+		if (session_initialized && cServerFps::Get_Instance()) cServerFps::Destroy_Instance();
 		if (input_initialized) Input::Shutdown();
 	}
 
@@ -1352,6 +1887,11 @@ int main(int argc, char **argv)
 	_TheFileFactory = previous_read_factory;
 	_TheWritingFileFactory = previous_write_factory;
 
+	if (remote_smoke) {
+		printf("A3.1 original remote %s: %s\n", remote_admission ? "admission probe (not gameplay)" :
+			remote_server ? "server runtime" : "client runtime", passed ? "PASS" : "FAIL");
+		return passed ? 0 : 1;
+	}
 	if (passed && cycle < 2U) {
 		Stage("start_equivalent_exit_and_second_cycle");
 		return main(argc, argv);

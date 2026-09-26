@@ -934,9 +934,10 @@ bool ModPackageMgrClass::Get_Mod_Map_Name_From_CRC(uint32, uint32,
 }
 #endif // !RENEGADE_A4_ORIGINAL_GAMEMODE
 
-// The local text filter starts with original defaults. WOL account preference
-// persistence is intentionally outside the LAN/direct-IP baseline.
+// The retained seed/demo targets do not link the original purchase settings owner.
+#if !defined(RENEGADE_A4_ORIGINAL_GAMEMODE) || (defined(__vita__) && RENEGADE_VITA_M00_DEMO)
 int MPSettingsMgrClass::OptionFlags = MPSettingsMgrClass::OPTION_DEFAULTS;
+#endif
 #include "sortingrenderer.h"
 #include "texturethumbnail.h"
 #include "WWAudio.h"

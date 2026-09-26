@@ -22,3 +22,5 @@ jobs:
         run: python3 tools/verify_public_docs.py --root .
       - name: Verify repository hygiene
         run: python3 tools/verify_repo_hygiene.py --root .
+      - name: Test publication guards
+        run: python3 -m unittest tools.test_verify_public_docs tools.test_verify_repo_hygiene

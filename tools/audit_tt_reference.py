@@ -19,6 +19,12 @@ TT_ARCHIVE_SHA256 = "8d3c2df2af0b2a7bb49b4e1a0353947b49fc2b228f849024e1a7bf18a0f
 TT_DIFF_SHA256 = "6a73ca645b1591b3c0456bb34c859d8b4644a64401503ae0f30a8ee68d1e314b"
 TT_ARCHIVE_URL = "https://www.tiberiantechnologies.org/files/source-4.8.4.zip"
 TT_DIFF_URL = "https://www.tiberiantechnologies.org/files/source-diff-4.8.4.diff"
+TT_SUPPLEMENTAL = {
+    "server": ("87639ef6bd7a57e39a643eb40cb34eb0",
+               "375b6bd8c58019d53cddf0633ad0b9d7386c0180fb8028f67777d0f0646b38f0"),
+    "tools": ("8acdc28e531557d516a39b2eff984a9c",
+              "00b5d686b58f98e8544ff24f669ad9de1a01f8392009016818b7e7ee9b392968"),
+}
 
 
 def digest(path: pathlib.Path, algorithm: str) -> str:
@@ -41,6 +47,39 @@ def safe_archive_members(archive: zipfile.ZipFile) -> list[str]:
 
 def archive_text(archive: zipfile.ZipFile, name: str) -> str:
     return archive.read(name).decode("utf-8", errors="replace")
+
+
+def audit_supplemental(path: pathlib.Path, kind: str) -> dict[str, object]:
+    """Inventory pinned binaries without extracting or executing any member."""
+    md5, sha256 = digest(path, "md5"), digest(path, "sha256")
+    if (md5, sha256) != TT_SUPPLEMENTAL[kind]:
+        raise ValueError(f"TT {kind} archive digest mismatch")
+    with zipfile.ZipFile(path) as archive:
+        members = safe_archive_members(archive)
+        result = {
+            "url": f"https://www.tiberiantechnologies.org/files/{kind}-4.8.4.zip",
+            "md5": md5,
+            "sha256": sha256,
+            "member_count": len(members),
+            "members": members,
+            "source_members": [n for n in members if pathlib.PurePosixPath(n).suffix.lower()
+                               in {".c", ".cpp", ".h", ".hpp"}],
+            "extracted_or_executed": False,
+        }
+        if kind == "server":
+            result["build_identity"] = archive_text(archive, "serverfiles/ttversion.txt").strip()
+            result["example_repository_config"] = archive_text(archive, "serverfiles/tt.cfg")
+            result["package_editor_present"] = "serverfiles/PackageEditor.exe" in members
+            result["contains_bundled_game_data_do_not_redistribute"] = any(
+                n.startswith("serverfiles/data/") for n in members)
+            strings = re.findall(rb"[\x20-\x7e]{5,}", archive.read("serverfiles/PackageEditor.exe"))
+            result["package_editor_interface_clues_not_format_specification"] = [
+                s.decode("ascii") for s in strings
+                if b"Usage: download" in s or b".tpi" in s or s == b"packages.dat"
+            ]
+        else:
+            result["performance_notes_present"] = "perfdocs.rtf" in members
+        return result
 
 
 def audit_reference(
@@ -326,8 +365,15 @@ def main() -> int:
     parser.add_argument("--diff", type=pathlib.Path, required=True)
     parser.add_argument("--root", type=pathlib.Path, default=pathlib.Path(__file__).resolve().parents[1])
     parser.add_argument("--output", type=pathlib.Path, required=True)
+    parser.add_argument("--server-archive", type=pathlib.Path)
+    parser.add_argument("--tools-archive", type=pathlib.Path)
     args = parser.parse_args()
     result = audit_reference(args.archive, args.diff, args.root.resolve())
+    result["supplemental_archives"] = {
+        kind: audit_supplemental(path, kind)
+        for kind, path in (("server", args.server_archive), ("tools", args.tools_archive))
+        if path is not None
+    }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))

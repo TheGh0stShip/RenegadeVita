@@ -139,6 +139,8 @@ def _is_allowed_fixture(file: Path) -> bool:
 
 def _is_credential_file(path: Path) -> bool:
     filename = path.name.lower()
+    if filename == "tt-identity-v1.txt":
+        return True
     if filename in FORBIDDEN_CRED_BASENAME_PREFIXES:
         return True
 
@@ -215,6 +217,9 @@ def verify_repo(root: Path) -> list[dict[str, str]]:
         if tracked_path.is_absolute():
             continue
         full = root / tracked_path
+        if "handoff" in tracked_path.name.lower() and tracked_path.suffix.lower() == ".md":
+            _append_violation(violations, tracked_path, "local_only_handoff",
+                              "handoff notes must remain local")
         # A broken symlink must still be examined; it can encode a
         # machine-specific external target even when that target is absent.
         if not full.exists() and not full.is_symlink():

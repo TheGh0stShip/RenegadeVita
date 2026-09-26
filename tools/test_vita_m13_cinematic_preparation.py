@@ -27,12 +27,17 @@ def test_m13_intro_real_object_render_models_are_prepared_during_loading():
     assert '"X0D_AG_Explode", true' in prepare_block
 
 
-def test_m13_intro_inventory_keeps_runtime_gap_honest():
+def test_m13_intro_prepares_authored_rappel_and_engineer_animations():
     text = A31_RUNTIME.read_text(encoding="utf-8")
     scan_text = SCAN_TOOL.read_text(encoding="utf-8")
     assert "runtime_preparation_scope" in scan_text
-    assert "A31_Prepare_M13_HAnim" not in text
-    assert '"S_A_Human.H_A_X00_Havoc"' not in text
+    assert '"X00_Havoc_Traj.X00_Havoc_Traj"' in text
+    assert '"S_A_Human.H_A_X00_Havoc"' in text
+    assert '"X00_Rope.X00_Rope"' in text
+    assert '"S_A_Human.H_A_X00_ENG1"' in text
+    assert '"S_A_Human.H_A_X00_ENG2"' in text
+    assert '"S_A_Human.H_A_X00_Walk_02"' in text
+    assert "Get_HAnim(intro_animations[i])" in text
     assert '"X00_CAMERA.X00_CAMERA"' not in text
 
 
@@ -177,7 +182,7 @@ def test_tracked_vehicle_accepts_direct_track_mesh_names():
 def test_vita_hud_rejects_invalid_target_projection():
     text = (ROOT / "staging" / "combat" / "hud.cpp").read_text(encoding="utf-8")
     stage = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
-    assert "if (!top.Is_Valid() || !bottom.Is_Valid())" in text
+    assert "if (!projected_top.Is_Valid() || !projected_bottom.Is_Valid())" in text
     assert "combat-a35-hud-target-box-nan-guard.patch" in stage
 
 

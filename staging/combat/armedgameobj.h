@@ -138,6 +138,7 @@ public:
 
 protected:
 	WeaponBagClass *			WeaponBag;				// Weapon & Ammo collection
+	void Init_Muzzle_Bones(void);
 
 private:
 	Vector3						TargetingPos;
@@ -150,7 +151,6 @@ private:
 	enum { MAX_MUZZLES = 4 };
 	MuzzleRecoilClass			MuzzleRecoilController[MAX_MUZZLES];
 
-	void							Init_Muzzle_Bones( void );
 };
 
 

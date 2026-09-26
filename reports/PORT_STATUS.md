@@ -1,5 +1,338 @@
 # Renegade Vita port status
 
+2026-09-26 public status; runtime evidence from 2026-09-25: Vita3K ran the Dev195
+ARM client, downloaded five TTFS packages, loaded City_U1, received the server
+player/Soldier and rendered 9,723
+frames. Bounded movement and START session teardown/menu return passed. Public
+snapshot lists PSVita (no space); exact-name normalization remains unresolved.
+Purchase dialog did not appear; multiplayer dialog dispatch/text/round flow and
+full gameplay acceptance remain open. No physical performance/acceptance claim.
+Exact evidence, limitations and setup: [Dev195](DEV195_RENCORNER_NATIVE_JOIN.md).
+This supersedes the unlaunched state below. GitHub publication being prepared.
+
+2026-09-24 Dev195 package checkpoint: six missing original Combat owners now
+link; state-machine syntax adaptation passes callback/save-load ASan/LSan test.
+Loaded replication probes pass two cycles; all171 fast contracts pass. Dev195
+packaged and installed/hash-verified in Vita3K, not launched. Host rejoin on
+Uphill verifies60 player frames; public join-message visibility remains open.
+Subsequent host soak passes3600 frames/normal teardown; no weather root-cause
+claim from one sampled stack.
+GitHub publication and native/full-multiplayer acceptance remain pending.
+Current hashes/evidence: MULTIPLAYER_COMPATIBILITY.md. Dev194 notes are history.
+
+2026-09-24 live-player checkpoint: original host now joins RenCorner as PS Vita,
+loads negotiated DethRiver and completes3600 verified simulation frames. A
+longer test exposed absent SpecialEffectsGameObj linkage; the unchanged original
+owner is now linked and the subsequent live run passes. Explicit native tt://
+one-shot entry is implemented/ARM-linked, not executed. Tutorial and UDP purchase
+sanitizer regressions pass;14 reference/audit/ABI tests pass. Factory inventory
+identifies six more unlinked Combat owners; float-VIS1032-byte leak remains.
+No native/full-multiplayer acceptance or new VPK; Dev194 installed. Current
+evidence: MULTIPLAYER_COMPATIBILITY.md. Earlier no-host-player notes are history.
+
+2026-09-24 catalog/C4 checkpoint: HTTP403 remains fixed; all17 downloader/TLS
+tests pass with original-engine cache checks. Purchase catalogs2004/2005 now
+pass reference, original UI/availability and two-cycle sanitizer tests. Live
+advances to a captured C4 float-layout mismatch; the fix passes four reference
+vectors,1197 truncations and two loaded sanitizer cycles. Host/ARM link and
+20 focused contracts pass. No post-fix live/player/native acceptance or new
+VPK; Dev194 installed. Float-visibility channel inventory explains the1032-byte
+Glacier leak, still unfixed. Current evidence: MULTIPLAYER_COMPATIBILITY.md.
+The older missing-catalog checkpoint below is superseded.
+
+2026-09-24 current checkpoint: HTTP403 fixed by exact retail TTFS User-Agent;
+live host downloads/mounts five Glacier packages and loads the original world.
+Vehicle state/occupancy/control, full outgoing client-control vectors, Soldier
+occasional inventory and ammo event2003 pass focused original-owner tests.
+Final host/ARM links, tutorial and UDP purchase/world sanitizer regressions pass.
+Latest live failure is purchase-catalog class2004, not HTTP; class2005 also needs
+integration. Raw-animation teardown leak1032 bytes remains unresolved. No public
+player/native acceptance or new SELF/VPK; Dev194 remains installed. Current
+hashes, limitations and exact next work: MULTIPLAYER_COMPATIBILITY.md. Older
+checkpoint statements below describe their historical source state.
+
+2026-09-24 movement checkpoint: modern Soldier frequent state, original physics
+corrections and outgoing sniping/relative aim are implemented. Eleven reference
+vectors and two loaded-object sanitizer cycles pass, including 1829 truncated
+frequent updates per cycle. Original UDP purchase/world regression and ARM link
+pass; 257 patches. Vehicle/full client contracts and native/public join remain
+open. No new VPK; Dev194 installed. MULTIPLAYER_COMPATIBILITY.md has current
+hashes/evidence; shared-state notes below are historical.
+
+2026-09-24 shared-state checkpoint: modern Armed/Smart frequent and Defense/
+Soldier occasional imports pass reference and loaded-object checks. Fixed a
+host LP64 DataSafe long-conversion overread; Vita remains ARMv7 ILP32. Final
+host/ARM links, original purchase/world and two-cycle tutorial sanitizer tests
+pass; 255 patches. Full Soldier frequent/vehicle contracts remain incomplete.
+HTTP403 is fixed. No new VPK/native/public-player acceptance; Dev194 installed.
+Current evidence: MULTIPLAYER_COMPATIBILITY.md. Earlier checkpoints are history.
+
+2026-09-24 soldier checkpoint: TT rare suffix now decodes transactionally and
+applies supported fields through original soldier/animation/control/HUD owners.
+Three reference profiles, 5904 truncations and two loaded-soldier sanitizer
+cycles pass; original purchase/world/tutorial regressions remain passing.
+Full ARM ELF links; 251 staged patches. Non-unit model scaling, full vehicle
+permissions, occasional/frequent contracts and live player replication remain
+open. HTTP403 remains fixed. No new VPK/native execution; Dev194 stays installed.
+Current evidence and exact limitations: MULTIPLAYER_COMPATIBILITY.md.
+This supersedes the wholly missing soldier-suffix notes below.
+
+2026-09-24 replication continuation: HTTP403 remains resolved. An explicit host
+downloaded-world probe now loads negotiated Hourglass through the original
+runtime, then fails during modern replication, not asset preparation. The
+captured packet confirms a 160-bit creation-layout mismatch. Source fixes cover
+bounded reads, weapon type/count validation, modern creation/inventory and
+physical rare fields, and the original camera-shake option owner. Host/ARM links,
+focused protocol checks, all16 downloader tests, original UDP purchase/world and
+two-cycle tutorial sanitizer regressions pass. Soldier suffix and other modern replication
+contracts remain incomplete; normal modern gameplay stays disabled. No verified
+player join/native execution or new VPK. Dev194 remains installed. Details:
+MULTIPLAYER_COMPATIBILITY.md. This supersedes "no world"/unapplied-shake below.
+
+2026-09-24 modern-admission checkpoint: one-shot TT diagnostic greeting now
+receives real RenCorner resource offers. Fixed the modern options suffix and
+basename/checksum resource selection; original game-data importers retained.
+Reference vectors, 1437 truncated options, UDP/download fixtures, legacy
+purchase/world and tutorial regressions pass ASan/LSan; full ARM ELF links.
+The repository 403 is fixed: controlled comparison isolated its rejection of
+our custom User-Agent. Exact retail TT/4.80.9000-20252502 returns200. The original
+host now downloads/validates/mounts all four required Hourglass packages; no
+world/player/native join. All 16 downloader sanitizer tests pass; ARM ELF links.
+The options flag is DisableCameraShake; retained, not yet applied to gameplay.
+243 patches, no new VPK; Dev194 remains installed. Full evidence and next
+experiments: MULTIPLAYER_COMPATIBILITY.md. This supersedes zero-offer notes below.
+
+2026-09-24 resource-preparation checkpoint supersedes earlier resource gaps:
+original reliable offers now drive cancellable complete-cache preparation,
+temporary original factory mounting and deferred original Start_Game. Flat
+levels, stock-map overrides and nested MIX1/.dat/.pkg archives are supported.
+15 cache/download/factory sanitizer tests, eight initial UDP preparation modes
+and four archive modes pass. Original purchase/world/disconnect and tutorial
+regressions pass ASan/LSan. Full ARM ELF links modern pinned TLS; 240 patches.
+No downloaded-world gameplay, native execution or RenCorner player join yet.
+Latest live admission has TT metadata but no resource offers: modern client
+negotiation remains missing. No VPK; Dev194 remains installed. Full evidence,
+hashes, native CA requirement and next actions: MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 purchase-runtime checkpoint: ten further original owners linked in
+full-port targets (24 AOW units total), including catalogs, purchase events,
+terminal, dialogs and chat. Both factions' original menus, character purchases,
+funds/refills, invalid indices and vehicle orders pass two ASan/LSan cycles;
+startup harvester production completes through original simulation first.
+Original UDP character purchase/replication/disconnect passes ASan/LSan.
+The host-only UTF-16 edit/chat overread is fixed using existing helpers.
+Full ARM ELF links and verifies ELF32 little-endian ARM EABI5 hard-float;
+238 deterministic patches reproduce the source. Six resource/5 staging/3 ABI
+checks pass. TT resource type8 and manifest routing are reference-researched,
+not implemented/accepted. No public join, new VPK, native execution or physical
+acceptance. Dev194 remains installed. See MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 AOW source checkpoint: integrated eight specialized original building
+owners, harvester AI, Obelisk/announcement/chat/loading events and original flood
+protection (14 units, full-port-only source selection). The missing preset
+491590001 was the unlinked WarFactory class, not evidence of custom server data.
+This advances live original world import to announcement 1016, also previously
+unlinked. Its original importer wrote instead of reading the radio-command word;
+the corrected field-consumption test passes ASan/LSan. Local C&C_Walls server/
+client replication, 60 frames, disconnect and teardown pass ASan/LSan after
+unfinished-cinematic and harvester-observer lifetime fixes. Nineteen ARM objects
+compile. Latest live attempt stops at unresolved map lookup, so latest events
+are not live-accepted. No native execution, VPK or public player-join claim.
+Incremental staging now syncs after all patches: repeated pass changes 0/1946
+managed files; seven staging tests pass. 234 patches reproduce current source.
+
+2026-09-24 subsequent world-admission work: the incoming public-options capture
+and offline original-import replay resolve C&C_Walls.mix correctly and consume
+all 1198 bits. This disproves the suspected legacy options-layout mismatch below;
+the earlier empty-map cause was not captured. Connection-owned TT accept metadata
+now retains the observed revision/repository without advertising TT capabilities.
+415 truncation cases, unaligned reads, original transport/options and separate
+host world replication/disconnect pass. Two changed ARM objects compile.
+An authorized live host world load then reproduced a null definition dereference
+in NetworkGameObjectFactoryClass::Create while importing server objects. This is
+not a successful player join. Missing-preset failure propagation and focused
+regression coverage are being implemented; server package negotiation remains
+open. No new VPK or native execution; Dev194 remains installed.
+
+2026-09-24 compatibility-key continuation: fixed original CRCEngine's host LP64
+word width and unaligned loads, four-byte build-stamp access, and TT-compatible
+EOF asset checksum reads with explicit error cleanup. Uses reference-verified
+retail wire build 838, separately from Vita artifact identity; no TT revision is
+advertised or final key copied. Sixteen original-PC key and twelve TT data-CRC
+oracle vectors pass; 832 checksum cases pass UBSan (512 failed before).
+File-read failure/cache/retry and build-stamp tests pass ASan/UBSan. Native ABI
+guards and durable architecture instructions are now in the normal workflow.
+Full host runtime and four ARM objects compile; original transport/options,
+separate-world replication/disconnect, synthetic TT response and two-cycle M00
+regressions pass. One bounded host RenCorner attempt now receives server options
+instead of the prior version refusal, but the legacy parser yields an empty map.
+TT options layout/metadata/package negotiation remain incomplete: this is NOT a
+missing-map diagnosis, verified identity acceptance, native run or player join.
+227 deterministic patches reproduce the source. No VPK; Dev194 stays installed.
+
+2026-09-24 identity continuation: original challenge events are now linked,
+with a private numeric-retail serial provider and original pre-world response
+dispatch. Twelve synthetic comparisons against the user's pinned TT DLL pass;
+normal and ASan/LSan captured-greeting replay sends a verified response over
+UDP, and missing credentials fail cleanly. Six focused tests, original transport/
+options/codec and ASan/LSan world/disconnect checks pass; six ARM objects compile.
+One live identity attempt exited cleanly but received no options in ten seconds.
+This does NOT establish server identity acceptance or a RenCorner player join.
+The next attempt captured "Version mismatch." Public TT source identifies the
+executable/data compatibility-key check, not the scripts-revision check, as its
+origin. The port's unstamped build placeholder and full key calculation are the
+next investigation; no key/version override was added. Message capture and the
+seventh changed ARM object pass. Credentials remain private;
+no new VPK, native run or physical acceptance. Dev194 remains installed.
+See MULTIPLAYER_COMPATIBILITY.md; earlier missing-identity notes are superseded.
+
+2026-09-24 RenCorner live-admission checkpoint: user supplied AOW endpoint
+51.222.10.72:5001. One host original-client attempt received a 99-byte TT
+reply advertising https://ttfs.rencorner.net.co/marathon, then crashed at an
+absent class-1017 (GameSpyScChallengeEvent) factory. Offline replay pinpoints
+the null dereference. Full-port now rejects unsupported network classes with
+an explicit protocol-failure state and deferred cleanup; identical reply
+passes normal and ASan/LSan controlled-failure tests. This is NOT admission
+or gameplay success. Native connection-preserving world adoption and libc
+socket-descriptor corrections compile for ARM. Host transport/options/codec,
+35 contracts and separate-world replication/disconnect regressions pass;
+221 deterministic patches match tested sources. No new VPK or native run;
+Dev194 remains installed. TT identity/challenge response, package negotiation
+and native verification remain open. See MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 remote-world continuation: separate original server/client processes
+load retail Skirmish00, retain the accepted UDP connection, replicate the
+server-created player/soldier and run 60 client frames. Normal and ASan/LSan
+passes exposed and now cover rooted map-cycle lookup, host UTF-16 MOTD read,
+network timeout use-after-free, visibility hints leak and a shared conversation
+guard leak. Silent-peer timeout and tutorial/skirmish sanitizer regressions
+pass. Seven ARM objects and 219-patch reproducible staging pass. Final normal
+and sanitizer runs also explicitly pass server-observed disconnection.
+This is not native multiplayer or RenCorner acceptance. Vita frontend adoption,
+TT admission/TLS/download negotiation and multiplayer UI remain incomplete.
+No new VPK; Dev194 remains installed. See MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 server-options continuation: original UDP options import now reaches
+a deferred, validated original GameInitMgr start request. Fixed Data/ archive
+existence lookup and missing-map acceptance when no popup exists. Ten options
+and 18 transport cases pass normally and under ASan/LSan; 14 frontend contracts
+and six ARM objects pass. Remote world adoption remains deliberately disabled
+in Vita so it cannot reset an accepted client session into single-player.
+No remote gameplay, TT acceptance, new VPK or physical acceptance is claimed.
+See MULTIPLAYER_COMPATIBILITY.md; Dev194 remains installed.
+Final checks: tutorial/skirmish two-cycle regressions, 11 TTFS tests, packet
+codec/config tests and matching 215-patch restage pass. No native runtime proof.
+
+2026-09-24 original client transport: fixed reproduced missing LAN/WOL mode
+dereferences and disconnect-before-server-FPS-replication crash. Eighteen
+original UDP acceptance/refusal/cleanup sessions pass on host and ASan/LSan;
+four changed ARM objects compile. Tutorial/skirmish each pass two cycles,
+codec/config regressions pass, 214-patch restage matches tested sources.
+This does not yet connect remote map loading, TT negotiation or RenCorner.
+No new VPK; Dev194 remains installed. Details in MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 TTFS continuation: official PackageEditor generates two asset-free
+fixtures reproducibly. Native C++ manifest/download/cache code and original
+read-only file-factory adapter now pass 11 host tests, including download to
+original-engine read/seek, malformed inputs, rollback, certificate rejection
+and explicit trusted-CA success under ASan/UBSan/LSan. ARM objects and a
+standalone transport link probe pass; M00/Skirmish00 pass two host cycles each.
+Native downloader is compile-only until the SDK's old OpenSSL backend and
+trust bundle are replaced/validated. Automatic TT repository negotiation,
+client-only join and RenCorner acceptance remain incomplete. No new VPK or
+installation; Dev194 remains installed. See MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 new user scope: skirmish and native TT/W3DHub interoperability,
+targeting RenCorner as `PS Vita` with server package downloads. Original
+Skirmish00 now passes two host session/load/run/cleanup cycles. The original
+WWNet packet codec passes 18 UDP loopback cases and independent retail
+CRC/header checks after an OpenW3D-cross-checked width correction. This is
+source-only progress, not modern TT or live multiplayer support. Config,
+changed ARM objects, 577 malformed packet cases and ASan/LeakSanitizer skirmish
+cycles now pass. All four TT archives supplied by the user are checksum-verified
+and inventoried outside the repository. See `MULTIPLAYER_COMPATIBILITY.md` for exact scope,
+upstream pins, gaps and commands. Dev194 remains installed. The earlier
+campaign pause and unresolved M13/M01 checkpoint below remain historical facts.
+
+2026-09-24 wrap-up: development paused at user request. Expanded host testing
+exposed a coverage gap: MissionX0, Mission01 and cinematic object factories
+were present in Vita but absent from the host target. They now link, and a
+host-only cinematic file-handle truncation is fixed. The original M13 intro
+now starts in the host test, then hits its explicit unsupported sorted-mesh
+render boundary. The new 80-second scripted actor probe has not completed.
+Earlier 152-object/28-observer inventory counts lack mission-start behavior
+and are superseded pending regeneration. Normal host build and nine focused
+tests pass; ASan build was interrupted for wrap-up. No new package, install,
+push, runtime acceptance, or native performance claim. Resume details are
+local; the next technical step is the host SortingRenderer boundary.
+
+Current source-only M13 candidate now prepares 13 original intro render models
+and 24 animations, including Havoc rope descent and engineer paths, during
+loading, prepares seven
+distinct world vehicle/turret killed-explosion definitions, and restores the
+DX8 COUNT2 UV translation used by tracked-vehicle treads. Original M13 host
+smoke resolves the authored animations/bones and moves the Havoc trajectory
+bone down 13.48 Z units across frames 0-200; both SAMs still die normally in
+two prewarmed cycles. Two M00 host cycles and the 13-check renderer lifecycle
+test pass; edited Vita ARM objects compile. Havoc's rendered body pose,
+engineer persistence, rocket-soldier movement, tank tread visuals, medium-tank
+barrel material, full-scene FPS/A-V sync, and campaign progression remain
+unverified. The source is ahead of Dev194; no newer VPK was packaged,
+installed, or pushed. The separate mission-wide inventory in
+`M13_MISSION_INVENTORY.md` combines all 137 MIX entries, 315 original level
+dependency records, a two-cycle 152-object/28-observer census, 27 resolved
+cinematic presets, and a 259-W3D dependency closure; it does not claim late
+mission behavior or visual correctness.
+
+Latest M13 source-only work: original retail `Air Explosions Twiddler` selects
+between two explosion definitions. Previous loading-time preparation warmed
+only one random choice, leaving an intermittent first-SAM spike. Full-port
+preparation now warms and releases both original choices without spawning or
+retaining an effect. Together with two WW3D redundant-load fixes, a two-cycle
+non-sanitized host replay measured 0.27-0.64 ms at both SAM damage boundaries;
+ASan/LeakSanitizer passes at 1.09-1.49 ms. Both SAMs still die normally, and
+changed Vita ARM objects compile. This does not prove full M13 progression,
+original visuals, Vita3K/native FPS, or the reported freeze resolved. No new
+VPK was packaged, installed, or pushed.
+
+Latest M13 source-only finding: both retail SAM death scripts create original
+explosions, and the WW3D asset manager repeatedly reparsed successfully loaded
+W3D files for unresolved child prototype names. A bounded full-port cache
+reduced the measured non-sanitized second-SAM host pause from 1.78-2.26 s to
+0.71-0.77 s across two cycles. Two ASan/LeakSanitizer cycles pass; the edited
+asset-manager object compiles for ARM. This does not resolve the residual
+subsecond stall, prove original visuals or A10 progression, establish Vita3K
+FPS, or accept a physical-Vita build. No new VPK is packaged or installed.
+See the performance ledger and live progress for evidence and next gate.
+
+Follow-on source-only result: original aggregate fallback redundantly loaded
+missing W3D children after the on-demand manager already tried them. The
+full-port fix skips that duplicate attempt only while on-demand is enabled.
+In a two-cycle non-sanitized host replay, second-SAM `Apply_Damage` is now
+0.3-0.6 ms; first-SAM damage still takes 0.14-0.46 s. The prewarmed SAM route
+passes two ASan/LeakSanitizer cycles, and the aggregate object compiles for
+ARM. This is neither a full M13 gameplay pass nor a native/Vita3K FPS result;
+decal/collision first-use and other campaign issues remain.
+
+Latest source-only M13 work: Dev194 mesh-boundary samples and the pinned
+vitaGL FFP source identify CPU mesh submission, not draw-end or measured GPU
+time, as the larger steady render cost. Untransformed pass-through texture
+coordinates now use an equivalent direct UV path; the edited renderer object
+compiles for ARM. The original script-linked M13 SAM smoke continues to pass
+two ASan/LeakSanitizer cycles. No runtime FPS improvement, last-SAM freeze
+resolution, A10 transition, or physical acceptance is claimed; no new VPK is
+packaged or installed. See the performance ledger for source identifiers and
+the required fixed-route comparison.
+
+Current source is ahead of the latest packaged Dev194 and the internal
+Dev195 compile-only ELF. The host M13 harness now links original `Test_DLS.cpp`
+and verifies the retail Area 4 controller; two M13 and two M00 120-frame
+cycles pass ASan/LeakSanitizer after a zero-fuzz fixed-width WWMath float/double
+validity patch. A host-only SAM smoke also kills both retail M13 SAM objects
+twice under ASan without a crash. This closes a host ABI overflow, not the reported Vita3K
+last-SAM freeze or the 60 FPS target. No newer VPK was packaged or installed.
+See `LIVE_PROGRESS.md` and the current performance ledger entry.
+
 Current candidate: A3.5-dev194 passed canonical host/sanitizer, 174 existing
 tests, original M00/M01 host-runtime cycles, ARM, SELF/VPK identity, and
 diagnostics packaging; installed to Vita3K but not launched. The four animated

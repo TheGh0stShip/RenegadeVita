@@ -1,0 +1,76 @@
+--- a/physicalgameobj.cpp
++++ b/physicalgameobj.cpp
+@@ -1055,15 +1055,30 @@
+ 	//	Read the object's position
+ 	//
+ 	Vector3 position (0, 0, 0);
+-	packet.Get( position.X, BITPACK_WORLD_POSITION_X );
+-	packet.Get( position.Y, BITPACK_WORLD_POSITION_Y );
+-	packet.Get( position.Z, BITPACK_WORLD_POSITION_Z );
++	bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	modern = Renegade_Client_Uses_TT_Replication();
++#endif
++	if (modern) {
++		packet.Get(position.X);
++		packet.Get(position.Y);
++		packet.Get(position.Z);
++	} else {
++		packet.Get(position.X, BITPACK_WORLD_POSITION_X);
++		packet.Get(position.Y, BITPACK_WORLD_POSITION_Y);
++		packet.Get(position.Z, BITPACK_WORLD_POSITION_Z);
++	}
+ 
+ 	//
+ 	//	Read the object's facing
+ 	//
+ 	float facing = 0;
+ 	packet.Get( facing );
++	if (packet.Has_Read_Error()) return;
++	if (!WWMath::Is_Valid_Float(position.X)) position.X = 0;
++	if (!WWMath::Is_Valid_Float(position.Y)) position.Y = 0;
++	if (!WWMath::Is_Valid_Float(position.Z)) position.Z = 0;
++	if (!WWMath::Is_Valid_Float(facing)) facing = 0;
+ 
+ 	//
+ 	//	Build a matrix from the position and facing, then set it
+@@ -1438,4 +1453,3 @@
+ 														false		// no emitter
+ 														);
+ }
+-
+--- a/smartgameobj.cpp
++++ b/smartgameobj.cpp
+@@ -39,6 +39,7 @@
+ **	Includes
+ */
+ #include "smartgameobj.h"
++#include "renegade_client_effects.h"
+ #include "gameobjmanager.h"
+ #include "weapons.h"
+ #include "bittype.h"
+@@ -984,6 +985,7 @@
+ 	//
+ 	int control_owner = 0;
+ 	packet.Get( control_owner );
++	if (packet.Has_Read_Error()) return;
+ 	Set_Control_Owner( control_owner );
+ 
+ 	//
+@@ -994,6 +996,11 @@
+ 		Get_Action()->Follow_Input( parameters );
+ 		CombatManager::Set_The_Star( As_SoldierGameObj() );
+ 	}
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) {
++		WeaponBag->Import_Weapon_List(packet);
++	}
++#endif
+ 
+ 	return ;
+ }
+@@ -1060,4 +1067,3 @@
+ 		CombatManager::Send_Control_Packet(this);
+ 		CombatManager::Send_State_Packet(this);
+ 		*/
+-

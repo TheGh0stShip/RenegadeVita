@@ -75,9 +75,24 @@ bool cMiscUtil::File_Exists(LPCSTR filename)
 		return false;
 	}
 	FileClass *file = _TheFileFactory->Get_File(filename);
-	const bool available = file != NULL && file->Is_Available();
+	bool available = file != NULL && file->Is_Available();
 	if (file != NULL) {
 		_TheFileFactory->Return_File(file);
 	}
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	// Original map discovery enumerates Data/*.mix and returns a basename.
+	// The rooted factory does not inherit desktop SimpleFileFactory's Data path.
+	const size_t length = strlen(filename);
+	if (!available && length > 4 && length < 256 &&
+		!strpbrk(filename, "/\\:") &&
+		(stricmp(filename + length - 4, ".mix") == 0 ||
+		 stricmp(filename + length - 4, ".pkg") == 0)) {
+		char logical[272];
+		snprintf(logical, sizeof(logical), "Data/%s", filename);
+		file = _TheFileFactory->Get_File(logical);
+		available = file && file->Is_Available();
+		if (file) _TheFileFactory->Return_File(file);
+	}
+#endif
 	return available;
 }

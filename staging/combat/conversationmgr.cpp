@@ -1115,7 +1115,8 @@ ConversationMgrClass::Think (void)
 				for (int remove_index = 0; remove_index < ActiveConversationList.Count (); remove_index ++) {
 					if (ActiveConversationList[remove_index] == active_conversation) {
 						ActiveConversationList.Delete (remove_index);
-						REF_PTR_RELEASE (active_conversation);
+						// Release list ownership; retain the local callback guard below.
+						active_conversation->Release_Ref ();
 						if (remove_index < index) {
 							index --;
 						}
@@ -1158,7 +1159,8 @@ ConversationMgrClass::Think (void)
 				if (ActiveConversationList[remove_index] == active_conversation) {
 					ActiveConversationList.Delete (remove_index);
 					if (active_conversation != NULL) {
-						REF_PTR_RELEASE (active_conversation);
+						// Release list ownership; retain the local callback guard below.
+						active_conversation->Release_Ref ();
 					}
 					if (remove_index <= index) {
 						index --;

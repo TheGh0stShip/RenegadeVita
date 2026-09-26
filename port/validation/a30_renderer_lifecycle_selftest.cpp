@@ -1,4 +1,5 @@
 #include "ww3d_vita_renderer.h"
+#include "ww3d_vita_texture_transform.h"
 
 #include <stdio.h>
 
@@ -21,6 +22,21 @@ int main()
 {
 	unsigned checks = 0;
 	unsigned failures = 0;
+	float source[4] = {};
+	RenegadeVitaRenderer::Build_DX8_Texture_Source(true, 0.1f, 0.9f,
+		0.0f, 1.0f, source);
+	Check(source[2] == 1.0f && source[3] == 0.0f &&
+		source[0] + source[2] * 0.25f > 0.34999f &&
+		source[0] + source[2] * 0.25f < 0.35001f &&
+		source[1] - source[2] * 0.5f > 0.39999f &&
+		source[1] - source[2] * 0.5f < 0.40001f,
+		"DX8 COUNT2 tread UV translation follows forward/reverse delta",
+		checks, failures);
+	RenegadeVitaRenderer::Build_DX8_Texture_Source(false, 0.1f, 0.9f,
+		0.4f, 1.0f, source);
+	Check(source[2] == 0.4f && source[3] == 1.0f,
+		"generated texture coordinates keep their original components",
+		checks, failures);
 	const RenegadeVitaRenderer::BackendLifecycleStatistics &initial =
 		RenegadeVitaRenderer::Get_Backend_Lifecycle_Statistics();
 	Check(!initial.native_initialization_attempted &&

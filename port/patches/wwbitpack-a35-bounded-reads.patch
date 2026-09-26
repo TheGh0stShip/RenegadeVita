@@ -1,0 +1,108 @@
+--- a/BitPacker.h
++++ b/BitPacker.h
+@@ -51,6 +51,8 @@
+ 		UINT Get_Buffer_Size() const {return MAX_BUFFER_SIZE;}
+ 		void Flush() {BitReadPosition = BitWritePosition;}
+ 		bool Is_Flushed() const {return (BitReadPosition == BitWritePosition);}
++		bool Has_Read_Error() const {return ReadError;}
++		void Mark_Read_Error() {ReadError = true; Flush();}
+ 
+ 		void Add_Bits(ULONG value, UINT num_bits);
+ 		void Get_Bits(ULONG & value, UINT num_bits);
+@@ -74,6 +76,7 @@
+ 		BYTE Buffer[MAX_BUFFER_SIZE];
+ 		UINT BitWritePosition;
+ 		UINT BitReadPosition;
++		bool ReadError = false;
+ };
+ 
+ #endif // BITPACKER_H
+--- a/BitPacker.cpp
++++ b/BitPacker.cpp
+@@ -64,6 +64,7 @@
+ 	memcpy(Buffer, rhs.Buffer, MAX_BUFFER_SIZE);
+ 	BitReadPosition		= rhs.BitReadPosition;
+ 	BitWritePosition		= rhs.BitWritePosition;
++	ReadError = rhs.ReadError;
+ 
+    return * this;
+ }
+@@ -165,23 +166,21 @@
+-	// Verify that we're not reading over buffer or write pointer
+-	WWASSERT(num_bits > 0 && num_bits <= MAX_BITS);
+-	WWASSERT(BitReadPosition+num_bits <= MAX_BUFFER_SIZE * 8);
+-	WWASSERT(BitReadPosition+num_bits <= BitWritePosition);
+-
+-	UINT read_len=num_bits;
+-	UINT byte_num = BitReadPosition / 8;
+-	UINT bit_offset = BitReadPosition % 8;
+-	BitReadPosition += num_bits;
+-
+-	UINT bit_count = 8 - bit_offset;
+-	if (bit_count>num_bits) bit_count=num_bits;
+-	value = (ULONG(Buffer[byte_num++]) << (bit_offset+24));
+-	num_bits-=bit_count;
+-
+-	int shift=24-bit_count;
+-	for (;shift>0;shift-=8,num_bits-=8) value|=unsigned(Buffer[byte_num++]) << shift;
+-	if (num_bits>0) value|=Buffer[byte_num++]>>(-shift);
+-
+-	value >>= 32-read_len;
++	value = 0;
++	if (ReadError || num_bits == 0 || num_bits > MAX_BITS ||
++		BitWritePosition > MAX_BUFFER_SIZE * 8 || BitReadPosition > BitWritePosition ||
++		num_bits > BitWritePosition - BitReadPosition) {
++		Mark_Read_Error();
++		return;
++	}
++	// Consume only the requested bytes, including a partial final byte.
++	// The old fast reader speculatively accessed three bytes even for one bit.
++	while (num_bits) {
++		const UINT offset = BitReadPosition & 7;
++		const UINT count = num_bits < 8 - offset ? num_bits : 8 - offset;
++		const UINT shift = 8 - offset - count;
++		value = (value << count) |
++			((Buffer[BitReadPosition / 8] >> shift) & ((1u << count) - 1));
++		BitReadPosition += count;
++		num_bits -= count;
++	}
+ #endif
+ }
+ 
+@@ -198,4 +197,10 @@
+ 	//WWASSERT(position <= BufferSize * 8);
+ 	WWASSERT(position <= MAX_BUFFER_SIZE * 8);
++	if (position > MAX_BUFFER_SIZE * 8) {
++		BitWritePosition = 0;
++		Mark_Read_Error();
++		return;
++	}
++	if (position == 0) {BitReadPosition = 0; ReadError = false;}
+ 	BitWritePosition = position;
+ }
+--- a/bitstream.cpp
++++ b/bitstream.cpp
+@@ -143,5 +143,11 @@
+ 	USHORT len;
+ 	Get(len);
++	if (Has_Read_Error() || !buffer || !buffer_size || len >= buffer_size ||
++		(!permit_empty && !len) || len > (Get_Bit_Write_Position() - Get_Bit_Read_Position()) / 8) {
++		if (buffer && buffer_size) buffer[0] = 0;
++		Mark_Read_Error();
++		return;
++	}
+ 	WWASSERT(len < buffer_size);
+ 	if (!permit_empty) {
+ 		WWASSERT(len > 0);
+@@ -194,5 +200,11 @@
+ 	USHORT len;
+ 	Get(len);
++	if (Has_Read_Error() || !buffer || !buffer_len || len >= buffer_len ||
++		(!permit_empty && !len) || len > (Get_Bit_Write_Position() - Get_Bit_Read_Position()) / 16) {
++		if (buffer && buffer_len) buffer[0] = 0;
++		Mark_Read_Error();
++		return;
++	}
+ 	WWASSERT(len < buffer_len && "String length exceeds provided buffer");
+ 	if (!permit_empty) {
+ 		WWASSERT(len > 0 && "Empty string not permitted");

@@ -1,0 +1,57 @@
+--- a/pkthandlers.cpp
++++ b/pkthandlers.cpp
+@@ -61,12 +61,14 @@
+ 	//	Lookup the factory for this type of network object
+ 	//
+ 	NetworkObjectFactoryClass *factory = NetworkObjectFactoryMgrClass::Find_Factory (class_id);
++	if (factory == NULL) return NULL;
+ 	WWASSERT (factory != NULL);
+ 
+ 	//
+ 	//	Create the new object
+ 	//
+ 	NetworkObjectClass *new_object = factory->Create (packet);
++	if (new_object == NULL) return NULL;
+ 	WWASSERT (new_object != NULL);
+ 
+ 	new_object->Set_Network_ID(network_obj_id);//TSS2001b
+@@ -171,6 +173,12 @@
+ 		//	Create the network object
+ 		//
+ 		object = Create_Network_Object (packet, net_classid, network_obj_id);
++		if (object == NULL) {
++			fprintf(stderr, "network-object: rejected client creation class=%d object=%d\n",
++				net_classid, network_obj_id);
++			packet.Flush();
++			return;
++		}
+ #ifdef WWDEBUG
+ 		object->Set_Created_By_Packet_ID(packet.Get_Id());
+ #endif //WWDEBUG
+@@ -258,6 +266,12 @@
+ void cNetwork::Client_Packet_Handler(cPacket & packet)
+ {
+ #ifndef FREEDEDICATEDSERVER
++	#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (A31ClientConnect::Protocol_Failed()) {
++		packet.Flush();
++		return;
++	}
++	#endif
+ 
+ 	WWASSERT(I_Am_Client());
+ 	WWASSERT(Receiver != NULL);
+@@ -316,6 +330,13 @@
+ 		if (object == NULL) {
+ 			object = Create_Network_Object (packet, net_classid, network_obj_id);
+ 		}
++		if (object == NULL) {
++			#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++			A31ClientConnect::Object_Creation_Failed(net_classid, network_obj_id);
++			#endif
++			packet.Flush();
++			return;
++		}
+ 		object->Import_Creation (packet);
+ 
+ 		//

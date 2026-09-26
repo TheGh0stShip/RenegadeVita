@@ -1,0 +1,10 @@
+--- a/gdskirmish.cpp
++++ b/gdskirmish.cpp
+@@ -40,7 +40,6 @@
+ #include "translatedb.h"
+ #include "string_ids.h"
+ #include "assets.h"
+-#include "multihud.h"
+ #include "playerdata.h"
+ #include "player.h"
+ #include "playertype.h"

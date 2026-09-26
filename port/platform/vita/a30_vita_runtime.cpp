@@ -16,6 +16,7 @@
 #include <psp2/kernel/threadmgr.h>
 
 #include <math.h>
+#include <pthread.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -34,6 +35,9 @@ uint32_t gA35StaticTraceFactoryId = 0U;
 bool gA35StaticTraceSummary = false;
 bool gA35StaticTraceDeep = false;
 SceUID gA30RuntimeLogFile = -1;
+pthread_mutex_t gA30RuntimeLogMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_t gA30RuntimeLogOwnerThread;
+bool gA30RuntimeLogOwnerSet = false;
 
 int Ensure_Runtime_Log_File()
 {
@@ -379,6 +383,9 @@ A31CaptureBundleResult Write_Bundle(const char *label, const char *reason,
 
 int A30_Vita_Log_Reset()
 {
+	pthread_mutex_lock(&gA30RuntimeLogMutex);
+	gA30RuntimeLogOwnerThread = pthread_self();
+	gA30RuntimeLogOwnerSet = true;
 	if (gA30RuntimeLogFile >= 0) {
 		sceIoSyncByFd(gA30RuntimeLogFile, 0);
 		sceIoClose(gA30RuntimeLogFile);
@@ -386,7 +393,11 @@ int A30_Vita_Log_Reset()
 	}
 	const int open_flags = SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND;
 	gA30RuntimeLogFile = sceIoOpen(kA30RuntimeLog, open_flags, 0666);
-	if (gA30RuntimeLogFile < 0) return gA30RuntimeLogFile;
+	if (gA30RuntimeLogFile < 0) {
+		const int error = gA30RuntimeLogFile;
+		pthread_mutex_unlock(&gA30RuntimeLogMutex);
+		return error;
+	}
 	char header[320];
 	const int header_count = snprintf(header, sizeof(header),
 		"[LIFECYCLE] START status=begin mode=append candidate=%s log_path=%s\n",
@@ -398,6 +409,7 @@ int A30_Vita_Log_Reset()
 			static_cast<unsigned>(header_count));
 	}
 	const int sync_result = Sync_Runtime_Log_File();
+	pthread_mutex_unlock(&gA30RuntimeLogMutex);
 	return result >= 0 && sync_result < 0 ? sync_result : result;
 }
 
@@ -419,14 +431,21 @@ int A30_Vita_Log(const char *format, ...)
 	const unsigned length = static_cast<unsigned>(
 		count < static_cast<int>(sizeof(line)) ? count :
 		static_cast<int>(sizeof(line) - 1U));
+	pthread_mutex_lock(&gA30RuntimeLogMutex);
 	const int result = Write_Runtime_Log_Line(line, length);
-	A35_Campaign_Flight_Record_Log_Line(line, length);
+	const bool on_owner_thread = gA30RuntimeLogOwnerSet &&
+		pthread_equal(pthread_self(), gA30RuntimeLogOwnerThread);
+	pthread_mutex_unlock(&gA30RuntimeLogMutex);
+	if (on_owner_thread) A35_Campaign_Flight_Record_Log_Line(line, length);
 	return result;
 }
 
 int A30_Vita_Log_Flush()
 {
-	return Sync_Runtime_Log_File();
+	pthread_mutex_lock(&gA30RuntimeLogMutex);
+	const int result = Sync_Runtime_Log_File();
+	pthread_mutex_unlock(&gA30RuntimeLogMutex);
+	return result;
 }
 
 void A35_Vita_Static_Load_Trace_Begin(uint32_t object_index,

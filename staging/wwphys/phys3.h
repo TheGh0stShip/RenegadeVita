@@ -138,6 +138,8 @@ public:
 	/*
 	** Network state updates
 	*/
+	void Network_Interpolated_State_Update(const Vector3 & pos, bool airborne);
+	void Reset_Network_History();
 	void								Network_State_Update(	const Vector3 & pos,
 																		const Vector3 & vel);
 

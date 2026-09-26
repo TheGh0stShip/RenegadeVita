@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "options event suffix, tier serializers excluded",
+  "cases": [
+    {
+      "flag": false,
+      "bits": 65,
+      "hex": "43a080000000002a00"
+    },
+    {
+      "flag": true,
+      "bits": 65,
+      "hex": "43a080000000002a80"
+    }
+  ]
+}

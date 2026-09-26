@@ -42,10 +42,10 @@ Final artifact hashes:
 
 Artifacts:
 
-- `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/RenegadeVita-A3.5-dev169.vpk`
-- `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/dist/A3.5-dev169-BUILD-DIAGNOSTICS-20260922-201213.zip`
+- `<managed-dist>/RenegadeVita-A3.5-dev169.vpk`
+- `<managed-dist>/A3.5-dev169-BUILD-DIAGNOSTICS-20260922-201213.zip`
 - Build log:
-  `/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder/logs/a35-dev169-20260922-201213-build.log`
+  `<managed-log-root>/a35-dev169-20260922-201213-build.log`
 
 ## Runtime status
 

@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "Retail CClientControl/Control/Soldier/Armed exports; synthetic Smart list and position accessor",
+  "cases": [
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 32,
+      "hex": "ffffffff",
+      "accessor_hooks": [],
+      "mode": "creation",
+      "pending_one_time": 4194817,
+      "pending_continuous": 5,
+      "next_object_id": 1234
+    },
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 188,
+      "hex": "000004d2800402bfe01017ec2af4000c35c80003f2000000",
+      "accessor_hooks": [
+        "0x180000"
+      ],
+      "mode": "soldier",
+      "pending_one_time": 0,
+      "pending_continuous": 0,
+      "next_object_id": 4294967295
+    },
+    {
+      "state": 1,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 188,
+      "hex": "000004d2800402bfe01017fc2af4000c35c80003f2000000",
+      "accessor_hooks": [
+        "0x180000"
+      ],
+      "mode": "soldier",
+      "pending_one_time": 0,
+      "pending_continuous": 0,
+      "next_object_id": 4294967295
+    },
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 187,
+      "hex": "000004d2800402bfe01017f855e800186b900007e4000000",
+      "accessor_hooks": [
+        "0x180000"
+      ],
+      "mode": "armed",
+      "pending_one_time": 0,
+      "pending_continuous": 0,
+      "next_object_id": 4294967295
+    },
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 32,
+      "hex": "ffffffff",
+      "accessor_hooks": [],
+      "mode": "missing",
+      "pending_one_time": 4194817,
+      "pending_continuous": 5,
+      "next_object_id": 4294967295
+    },
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 32,
+      "hex": "ffffffff",
+      "accessor_hooks": [],
+      "mode": "delete_pending",
+      "pending_one_time": 4194817,
+      "pending_continuous": 5,
+      "next_object_id": 4294967295
+    },
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 32,
+      "hex": "ffffffff",
+      "accessor_hooks": [],
+      "mode": "idle",
+      "pending_one_time": 4194817,
+      "pending_continuous": 5,
+      "next_object_id": 4294967295
+    }
+  ]
+}

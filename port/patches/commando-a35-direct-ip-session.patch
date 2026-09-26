@@ -1,0 +1,97 @@
+--- a/gameinitmgr.cpp
++++ b/gameinitmgr.cpp
+@@ -59,6 +59,7 @@
+ #include "dx8renderer.h"
+ #include "gdsingleplayer.h"
+ #include "gdskirmish.h"
++#include "gdcnc.h"
+ #include "playertype.h"
+ #include "gameobjmanager.h"
+ #include "gametype.h"
+@@ -905,6 +906,25 @@
+ //	Shutdown
+ //
+ ////////////////////////////////////////////////////////////////
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++bool GameInitMgrClass::Initialize_Direct_IP(bool dedicated_server)
++{
++	// Starting a provider must never replace a live world or an accepted client.
++	if (Mode != MODE_UNKNOWN || PTheGameData != NULL ||
++		cNetwork::I_Am_Client() || cNetwork::I_Am_Server() ||
++		cSinglePlayerData::Is_Single_Player()) return false;
++	cGameType::Set_Game_Type(GAMETYPE_MULTIPLAY);
++	PTheGameData = new cGameDataCnc;
++	PTheGameData->IsDedicated.Set(dedicated_server);
++	WideStringClass name(L"PS Vita");
++	cNetInterface::Set_Nickname(name);
++	IsClientRequired = !dedicated_server;
++	IsServerRequired = dedicated_server;
++	Mode = MODE_DIRECT_IP;
++	return true;
++}
++#endif
++
+ void
+ GameInitMgrClass::Shutdown (void)
+ {
+@@ -927,6 +947,9 @@
+ 		case MODE_WOL:
+ 			Shutdown_WOL ();
+ 			break;
++		case MODE_DIRECT_IP:
++			cGameType::Set_Game_Type(GAMETYPE_NONE);
++			break;
+ 	}
+ 
+ 	//
+@@ -1035,6 +1058,4 @@
+ 
+ 
+ 
+-
+-
+ 
+--- a/gameinitmgr.h
++++ b/gameinitmgr.h
+@@ -82,6 +82,9 @@
+ 	static void		Initialize_WOL (void);
+ 	static void		Initialize_SP (void);
+ 	static void		Initialize_Skirmish (void);
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	static bool		Initialize_Direct_IP(bool dedicated_server);
++#endif
+ 
+ 	static bool		Is_LAN_Initialized (void)			{ return Mode == MODE_LAN; }
+ 	static bool		Is_WOL_Initialized (void)			{ return Mode == MODE_WOL; }
+@@ -119,7 +122,8 @@
+ 		MODE_SP,
+ 		MODE_SKIRMISH,
+ 		MODE_LAN,
+-		MODE_WOL
++		MODE_WOL,
++		MODE_DIRECT_IP
+ 	};
+ 
+ 	////////////////////////////////////////////////////////////////
+@@ -143,4 +147,4 @@
+ };
+ 
+ 
+-#endif //__GAME_INIT_MGR_H
+\ No newline at end of file
++#endif //__GAME_INIT_MGR_H
+--- a/gamedata.cpp
++++ b/gamedata.cpp
+@@ -759,8 +759,12 @@
+ 				if (map_name.Get_Length()) {
+ 					char filename[_MAX_PATH];
+ 					sprintf(filename, "data\\%s", map_name.Peek_Buffer());
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++					if (!cMiscUtil::File_Exists(filename)) {
++#else
+ 					RawFileClass file(filename);
+ 					if (!file.Is_Available()) {
++#endif
+ 						PRINT_CONFIG_ERROR;
+ 						ConsoleBox.Print("Map file '%s' not found\n\n", filename);
+ 						outMsg.Format(TRANSLATE(IDS_HOPTERR_MAP_NOTFOUND), filename);

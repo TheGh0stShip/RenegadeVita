@@ -54,6 +54,42 @@ cmake --build "$rv_build" --target a30_wwphys_definition_runtime \
 "$rv_build/a32_texture_upload_contract_selftest"
 "$rv_build/a36_cache_health_contract_selftest"
 "$rv_build/a36_file_factory_telemetry_contract_selftest"
+"$rv_build/a31_m00_interactive_runtime" --network-selftest
+"$rv_build/a31_m00_interactive_runtime" --local-session-selftest
+timeout 45s "$rv_build/a31_m00_interactive_runtime" --direct-client-selftest
+timeout 45s "$rv_build/a31_m00_interactive_runtime" --client-options-selftest
+"$rv_build/a31_m00_interactive_runtime" --tt-server-info-selftest
+"$rv_build/a31_m00_interactive_runtime" --missing-network-preset-selftest
+"$rv_build/a31_m00_interactive_runtime" --building-factory-selftest
+"$rv_build/a31_m00_interactive_runtime" --announcement-selftest
+python3 -m unittest discover -s "$rv_root/tools" -p test_vita_socket_boundary.py -q
+python3 -m unittest discover -s "$rv_root/tools" -p test_client_identity.py -q
+RENEGADE_HOST_RUNTIME="$rv_build/a31_m00_interactive_runtime" \
+	python3 "$rv_root/tools/test_tt_client_greeting.py"
+RENEGADE_HOST_RUNTIME="$rv_build/a31_m00_interactive_runtime" \
+	python3 "$rv_root/tools/test_tt_physical_rare.py"
+RENEGADE_HOST_RUNTIME="$rv_build/a31_m00_interactive_runtime" \
+	python3 "$rv_root/tools/test_tt_soldier_rare.py"
+python3 -m unittest discover -s "$rv_root/tools" -p test_vita_target_abi.py -q
+python3 -m unittest discover -s "$rv_root/tools" -p 'test_network*crc.py' -q
+python3 -m unittest discover -s "$rv_root/tools" -p test_build_stamp.py -q
+python3 "$rv_root/tools/test_remote_world.py" \
+	--binary "$rv_build/a31_m00_interactive_runtime" --retail "$rv_retail_root" \
+	--output "$rv_runtime/remote-world-$rv_timestamp"
+python3 "$rv_root/tools/replay_tt_admission.py" \
+	--binary "$rv_build/a31_m00_interactive_runtime" --retail "$rv_retail_root" \
+	--output "$rv_runtime/tt-admission-replay-$rv_timestamp"
+PYTHONPATH="$rv_root${PYTHONPATH:+:$PYTHONPATH}" \
+	TTFS_ENGINE_PROBE="$rv_build/a31_m00_interactive_runtime" \
+	python3 -m unittest tools.test_ttfs -v
+for rv_tt_mode in good options-first prefetch removed missing-level wrong-map corrupt retail-overlay \
+    archive-mix archive-dat archive-pkg archive-bad-index stem stem-archive prefetch-first \
+    modern-stem modern-truncated; do
+	PYTHONPATH="$rv_root${PYTHONPATH:+:$PYTHONPATH}" \
+		python3 -m tools.test_tt_resource_preparation \
+		--binary "$rv_build/a31_m00_interactive_runtime" --retail "$rv_retail_root" \
+		--output "$rv_runtime/tt-preparation-$rv_tt_mode-$rv_timestamp" --mode "$rv_tt_mode"
+done
 "$rv_build/a36_m01_mix_probe" "$rv_retail_root" \
 	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods"
 "$rv_build/a36_mix_index" "$rv_retail_root" \
@@ -106,6 +142,27 @@ cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_interactive_build" -G Nin
 	-DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
 	-DRENEGADE_USE_CCACHE=ON
 cmake --build "$rv_interactive_build" --target a31_interactive_runtime --parallel 4
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' \
+	RENEGADE_HOST_RUNTIME="$rv_interactive_build/a31_m00_interactive_runtime" \
+	python3 "$rv_root/tools/test_tt_client_greeting.py"
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 45s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" --direct-client-selftest
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 45s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" --client-options-selftest
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 90s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" --connection-timeout-selftest
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' \
+	python3 "$rv_root/tools/test_remote_world.py" \
+	--binary "$rv_interactive_build/a31_m00_interactive_runtime" --retail "$rv_retail_root" \
+	--output "$rv_runtime/remote-world-asan-$rv_timestamp"
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' \
+	python3 "$rv_root/tools/replay_tt_admission.py" \
+	--binary "$rv_interactive_build/a31_m00_interactive_runtime" --retail "$rv_retail_root" \
+	--output "$rv_runtime/tt-admission-replay-asan-$rv_timestamp"
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' \
+	python3 "$rv_root/tools/replay_tt_admission.py" \
+	--binary "$rv_interactive_build/a31_m00_interactive_runtime" --retail "$rv_retail_root" \
+	--output "$rv_runtime/tt-identity-synthetic-asan-$rv_timestamp" --synthetic-identity
 ASAN_OPTIONS='abort_on_error=1:detect_leaks=0:halt_on_error=1' timeout 120s \
 	"$rv_interactive_build/a31_m00_interactive_runtime" "$rv_retail_root" \
 	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods"
@@ -116,6 +173,33 @@ ASAN_OPTIONS='abort_on_error=1:detect_leaks=0:halt_on_error=1' timeout 120s \
 ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 120s \
 	"$rv_interactive_build/a31_m00_interactive_runtime" "$rv_retail_root" \
 	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods"
+
+# Harvester lifetime needs real loaded vehicle definitions and physics.
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 120s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" "$rv_retail_root" \
+	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" \
+	M00_Tutorial.mix HARVESTER_LIFETIME_SMOKE
+
+# Modern soldier state must affect an original loaded soldier, not just parse.
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 120s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" "$rv_retail_root" \
+	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" \
+	M00_Tutorial.mix TT_SOLDIER_STATE_SMOKE
+
+# Exercise the original M13 SAM damage/death path separately from campaign
+# progression. The host controller must be present; this does not force an
+# Area 4 objective, timer, or mission completion state.
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 180s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" "$rv_retail_root" \
+	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" \
+M13.mix M13_SAM_DAMAGE_SMOKE
+
+# Repeat with original M13 explosion definitions warmed and released, as the
+# Vita loading path does. Fresh effects, decals, and damage must still work.
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 180s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" "$rv_retail_root" \
+	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" \
+	M13.mix M13_SAM_PREWARM_SMOKE
 
 # Targeted undefined-behavior validation covers the same shared visible-frame
 # path.  The original desktop source deliberately relies on x64-only
@@ -137,6 +221,11 @@ UBSAN_OPTIONS='halt_on_error=1:print_stacktrace=1' timeout 120s \
 # this is a normal host regression, not a physical-render claim.
 timeout 180s "$rv_build/a31_m00_interactive_runtime" "$rv_retail_root" \
 	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" M01.mix
+
+# Original offline skirmish also needs its own session/base lifecycle coverage.
+timeout 240s "$rv_build/a31_m00_interactive_runtime" "$rv_retail_root" \
+	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" \
+	Skirmish00.mix SKIRMISH_SMOKE
 
 # This selected multiplayer-map archive exercises a distinct original world,
 # visibility, lighting, and resource set through the same offline Combat route.

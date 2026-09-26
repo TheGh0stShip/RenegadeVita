@@ -1,0 +1,211 @@
+--- a/purchasesettings.h
++++ b/purchasesettings.h
+@@ -44,6 +44,9 @@
+ #include "always.h"
+ #include "definition.h"
+ #include "widestring.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "networkobject.h"
++#endif
+ 
+ 
+ ///////////////////////////////////////////////////////////////////////////////////////////
+@@ -52,6 +55,9 @@
+ //
+ ///////////////////////////////////////////////////////////////////////////////////////////
+ class PurchaseSettingsDefClass : public DefinitionClass
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++    , public NetworkObjectClass
++#endif
+ {
+ public:
+ 
+@@ -65,6 +71,8 @@
+ 		TYPE_EQUIPMENT,
+ 		TYPE_SECRET_CLASSES,
+ 		TYPE_SECRET_VEHICLES,
++		TYPE_AIR,
++		TYPE_NAVAL,
+ 		TYPE_COUNT
+ 	} TYPE;
+ 
+@@ -83,6 +91,26 @@
+ 	PurchaseSettingsDefClass (void);
+ 	~PurchaseSettingsDefClass (void);
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++    uint32 Get_Network_Class_ID() const override { return 2004; }
++    void Import_Occasional(BitStreamClass &packet) override;
++    void Export_Occasional(BitStreamClass &packet) override;
++    // Definitions own this lifetime; network cleanup must not delete presets.
++    void Delete() override {}
++    void Set_Delete_Pending() override {}
++#endif
++    bool Get_Hidden(int index) const { return Hidden[index]; }
++    bool Get_Disabled(int index) const { return Disabled[index]; }
++    bool Get_Busy(int index) const { return Busy[index]; }
++    bool Get_Page_Hidden() const { return PageHidden; }
++    bool Get_Page_Disabled() const { return PageDisabled; }
++    bool Get_Page_Busy() const { return PageBusy; }
++    bool Is_Available(int index) const {
++        return Is_Valid_Entry(index, -1) && !PageHidden && !PageDisabled && !PageBusy &&
++            !Hidden[index] && !Disabled[index] && !Busy[index];
++    }
++    static PurchaseSettingsDefClass *Find_Network_Definition(int type, int team);
++
+ 	//////////////////////////////////////////////////////////////////////////
+ 	//	Public methods
+ 	//////////////////////////////////////////////////////////////////////////
+@@ -163,6 +191,10 @@
+ 	StringClass			AlternateTextureList[MAX_ENTRIES][MAX_ALTERNATES];
+ 	
+ 	static PurchaseSettingsDefClass *	DefinitionArray[TYPE_COUNT][TEAM_COUNT];
++    bool Hidden[MAX_ENTRIES] = {};
++    bool Disabled[MAX_ENTRIES] = {};
++    bool Busy[MAX_ENTRIES] = {};
++    bool PageHidden = false, PageDisabled = false, PageBusy = false;
+ };
+ 
+ 
+--- a/purchasesettings.cpp
++++ b/purchasesettings.cpp
+@@ -92,6 +92,9 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ PurchaseSettingsDefClass::PurchaseSettingsDefClass (void)	:
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++    NetworkObjectClass(false),
++#endif
+ 	Team (TEAM_GDI),
+ 	Type (TYPE_CLASSES)
+ {
+@@ -183,7 +186,8 @@
+ 	//
+ 	//	Remove this entry from the static array
+ 	//
+-	if (Type < TYPE_COUNT && Team < TEAM_COUNT) {
++	if (Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT &&
++        DefinitionArray[Type][Team] == this) {
+ 		DefinitionArray[Type][Team] = NULL;
+ 	}
+ 	return ;
+@@ -375,7 +379,7 @@
+ 	//
+ 	//	Add this definition to the static array
+ 	//
+-	if (Type < TYPE_COUNT && Team < TEAM_COUNT) {
++	if (Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT) {
+ 		DefinitionArray[Type][Team] = this;
+ 	}
+ 	return ;
+@@ -411,6 +415,7 @@
+ PurchaseSettingsDefClass *
+ PurchaseSettingsDefClass::Find_Definition (TYPE type, TEAM team)
+ {
++	if (type < 0 || type >= TYPE_COUNT || team < 0 || team >= TEAM_COUNT) return NULL;
+ 	PurchaseSettingsDefClass *retval = DefinitionArray[type][team];
+ 
+ 	if (retval == NULL) {
+@@ -439,3 +444,10 @@
+ 	return retval;
+ }
+ 
++PurchaseSettingsDefClass *
++PurchaseSettingsDefClass::Find_Network_Definition(int type, int team)
++{
++    // Network identity is exact; gameplay's mutant/secret fallback is not valid here.
++    if (type < 0 || type >= TYPE_COUNT || team < 0 || team >= TEAM_COUNT) return NULL;
++    return DefinitionArray[type][team];
++}
+--- a/teampurchasesettings.h
++++ b/teampurchasesettings.h
+@@ -44,6 +44,9 @@
+ #include "translatedb.h"
+ #include "wwstring.h"
+ #include "definition.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "networkobject.h"
++#endif
+ 
+ //////////////////////////////////////////////////////////////////////
+ //
+@@ -51,6 +54,9 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ class TeamPurchaseSettingsDefClass : public DefinitionClass
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++    , public NetworkObjectClass
++#endif
+ {
+ public:
+ 
+@@ -70,6 +76,21 @@
+ 	TeamPurchaseSettingsDefClass (void);
+ 	~TeamPurchaseSettingsDefClass (void);
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++    uint32 Get_Network_Class_ID() const override { return 2005; }
++    void Import_Occasional(BitStreamClass &packet) override;
++    void Export_Occasional(BitStreamClass &packet) override;
++    // The definition manager, not the network delete queue, owns presets.
++    void Delete() override {}
++    void Set_Delete_Pending() override {}
++#endif
++    bool Get_Hidden(int index) const { return Hidden[index]; }
++    bool Get_Disabled(int index) const { return Disabled[index]; }
++    bool Get_Busy(int index) const { return Busy[index]; }
++    bool Is_Available(int index) const {
++        return Is_Valid_Entry(index) && !Hidden[index] && !Disabled[index] && !Busy[index];
++    }
++
+ 	//////////////////////////////////////////////////////////////////////
+ 	//	Public methods
+ 	//////////////////////////////////////////////////////////////////////
+@@ -153,6 +174,9 @@
+ 	StringClass			SupplyTextureName;
+ 	
+ 	static TeamPurchaseSettingsDefClass *	DefinitionArray[TEAM_COUNT];
++    bool Hidden[MAX_ENTRIES] = {};
++    bool Disabled[MAX_ENTRIES] = {};
++    bool Busy[MAX_ENTRIES] = {};
+ };
+ 
+ 
+--- a/teampurchasesettings.cpp
++++ b/teampurchasesettings.cpp
+@@ -90,6 +90,9 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++    NetworkObjectClass(false),
++#endif
+ 	Team (TEAM_GDI),
+ 	BeaconNameID (0),
+ 	BeaconDefinitionID (0),
+@@ -174,7 +177,7 @@
+ 	//
+ 	//	Remove this entry from the static array
+ 	//
+-	if (Team < TEAM_COUNT) {
++	if (Team >= 0 && Team < TEAM_COUNT && DefinitionArray[Team] == this) {
+ 		DefinitionArray[Team] = NULL;
+ 	}
+ 
+@@ -350,7 +353,7 @@
+ 	//
+ 	//	Add this definition to the static array
+ 	//
+-	if (Team < TEAM_COUNT) {
++	if (Team >= 0 && Team < TEAM_COUNT) {
+ 		DefinitionArray[Team] = this;
+ 	}
+ 	return ;
+@@ -386,6 +389,6 @@
+ TeamPurchaseSettingsDefClass *
+ TeamPurchaseSettingsDefClass::Get_Definition (TEAM team)
+ {
++	if (team < 0 || team >= TEAM_COUNT) return NULL;
+ 	return DefinitionArray[team];
+ }
+-

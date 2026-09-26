@@ -344,7 +344,9 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             "A31_Interactive_Run_Render_Frame(false);",
             runtime[scene_prewarm_definition:scene_prewarm_call],
         )
-        scene_prewarm = runtime[scene_prewarm_definition:scene_prewarm_call]
+        # Inspect the prewarm definition, not unrelated functions before its caller.
+        scene_prewarm_end = runtime.index("\n}\n", scene_prewarm_definition) + 3
+        scene_prewarm = runtime[scene_prewarm_definition:scene_prewarm_end]
         self.assertIn(
             'Apply_Original_Gameplay_Render_Resolution("prewarm_m00_scene"',
             scene_prewarm,

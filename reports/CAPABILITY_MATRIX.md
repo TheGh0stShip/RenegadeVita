@@ -1,5 +1,115 @@
 # Capability matrix
 
+2026-09-24 native Dev195: original ARM client in Vita3K downloads five packages,
+loads City_U1, receives server player/Soldier, renders world/HUD and responds to
+bounded movement.9723 frames, START clean session teardown/menu return. Public
+listing confirms PSVita without a space. Purchase UI did not appear; full
+multiplayer/round transitions and physical acceptance remain open. Details:
+DEV195_RENCORNER_NATIVE_JOIN.md. Earlier unlaunched notes below are history.
+
+2026-09-24 Dev195: six audited Combat factory gaps closed in full-port links;
+original state-machine callbacks and save/load pass focused sanitizer checks.
+Loaded replication probes and171 fast contracts pass. Package and Vita3K
+install/hash verification pass; native execution and full multiplayer remain
+unverified. Live host Uphill player test passes60 frames; public join-message
+confirmation pending. See MULTIPLAYER_COMPATIBILITY.md for exact evidence.
+
+2026-09-24 live-player checkpoint: original host negotiates/downloads DethRiver,
+receives server-created PS Vita player and controlled Soldier, completes3600
+simulation frames and disconnects normally. Original special-effects owner is
+now linked. Native explicit tt:// direct-IP entry compiles, but native execution,
+rendering/input/audio, purchases/respawn/round transitions remain unverified.
+Six Combat factory gaps and float-VIS leak remain. No new VPK; Dev194 installed.
+Details: MULTIPLAYER_COMPATIBILITY.md; supersedes no-host-player statements below.
+
+2026-09-24 catalog/C4 checkpoint: original catalog network factories, lifetime,
+availability and item UI states pass reference and loaded-owner tests. Modern
+C4 float layout now passes reference/truncation and loaded attachment/ownership
+checks after a live captured decode failure. Host/ARM link;20 focused tests and
+17 downloader/TLS tests pass. Static-animated C4 attachment runtime, full TT
+events/transitions, float-visibility ownership and live/native player acceptance
+remain open. No new VPK; Dev194 installed. MULTIPLAYER_COMPATIBILITY.md is current.
+
+2026-09-24 current checkpoint: live TTFS downloads/mounts and Glacier world load
+pass on host; HTTP403 fixed. Modern vehicle state/occupants/control, outgoing
+client-control conformance, Soldier occasional inventory and ammo event2003 have
+reference/loaded-object evidence. Final ARM link, tutorial and UDP purchase/world
+sanitizer tests pass. Purchase catalogs2004/2005, full events/transitions and
+native/public-player acceptance remain open. No new VPK; Dev194 installed.
+MULTIPLAYER_COMPATIBILITY.md supersedes older missing-vehicle/input statements.
+
+2026-09-24 movement checkpoint: modern Soldier frequent and outgoing aim/state
+now pass retail-vector and original loaded-object checks, including ladder,
+airborne, locked animation and physics corrections. ARM links; original UDP
+purchase/world sanitizer regression passes. Vehicle/full client and native/
+public-player acceptance remain open. No VPK; Dev194 installed. Current details
+and limitations: MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 shared-state checkpoint: Armed/Smart aim/control/stealth, Defense
+health/armor and Soldier occasional sniping/fly imports pass reference and
+loaded-object sanitizer checks. Host/ARM link; original tutorial and UDP
+purchase/world regressions pass. Full Soldier frequent/vehicle contracts and
+native/public-player acceptance remain open. HTTP403 fixed; no new VPK.
+Current details: MULTIPLAYER_COMPATIBILITY.md; prior entries are history.
+
+2026-09-24 soldier checkpoint: reference-matching rare decoder and supported
+original-owner state integration pass 5904 malformed updates and two loaded
+soldier sanitizer cycles; host/ARM link. Full vehicle permissions, non-unit
+model scale, frequent/occasional contracts and modern gameplay remain open.
+No native/public-player acceptance or new VPK; Dev194 remains installed.
+MULTIPLAYER_COMPATIBILITY.md supersedes wholly missing soldier-suffix notes.
+
+2026-09-24 replication continuation: downloaded Hourglass world loading is now
+observed on the host, followed by replication failure. Modern creation/inventory,
+physical rare fields, bounded decoders and camera-shake policy pass focused host
+checks and ARM linkage; legacy purchase/world/tutorial sanitizer checks pass.
+Soldier/vehicle and other TT contracts remain incomplete;
+no playable public player or native acceptance. No new VPK. Current details in
+MULTIPLAYER_COMPATIBILITY.md supersede no-world/unapplied-shake statements below.
+
+2026-09-24 modern admission: real resource offers now arrive, modern options
+decode through original owners, and required-package preparation starts.
+Exact retail TTFS User-Agent fixes the repository403; original host downloads,
+validates and mounts all four required Hourglass packages. All16 downloader
+sanitizer tests pass; native HTTPS still unverified. Modern synthetic
+download/mount and malformed-options rejection pass; original legacy purchase/
+world and tutorial sanitizer regressions pass. ARM ELF links, not native runtime.
+No public player join or new VPK. DisableCameraShake semantics remain to apply;
+normal modern gameplay is not enabled. See MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-24 resource preparation: implemented original reliable offer -> bounded
+HTTP(S)/cache -> original temporary factory -> deferred start. Flat level pairs,
+stock-map overlays and nested MIX1 archives pass host sanitizer fixtures. Native
+TLS links in the full ARM executable, but has not executed on Vita. Downloaded
+world gameplay, modern TT greeting/replication, normal round transitions and a
+RenCorner player join remain unverified. No new VPK; Dev194 stays installed.
+See MULTIPLAYER_COMPATIBILITY.md for authoritative current evidence.
+
+2026-09-24 purchase continuation: 24 original AOW units now link, including
+catalogs, purchase events, terminal and dialogs/chat. Both factions' original
+menus, character/funds/refill and vehicle orders pass two ASan/LSan cycles.
+Separate UDP character purchase replicates and disconnects cleanly under ASan.
+Full ARM executable links and verifies ELF32 ARM hard-float; this is not native
+execution. Full vehicle delivery, TT resource negotiation/TLS and live RenCorner
+join remain unverified. No VPK; Dev194 remains installed.
+
+2026-09-24 AOW continuation supersedes the options-layout suspicion below.
+Original captured options replay resolves C&C_Walls.mix. Eight specialized
+building factories, original harvesting, announcement/chat/loading and Obelisk
+event owners now link in full-port targets (14 added original units). Separate
+C&C_Walls server/client replication, disconnect and cleanup pass ASan/LSan.
+Missing preset 491590001 exposed absent original WarFactory linkage; after that
+fix the live host reached missing announcement class 1016, now linked with a
+tested original decoder correction. The subsequent live attempt stopped at an
+unresolved map, before verifying this latest event integration. Nineteen ARM
+objects compile; no new VPK, native execution or RenCorner player join.
+
+2026-09-24 key continuation: original checksum matches PC/TT reference vectors;
+host LP64 semantics now preserve Vita/Windows x86 32-bit words. Host runtime,
+four ARM objects, original network regressions and two-cycle M00 pass. A live
+host RenCorner attempt receives options but decodes an empty map: TT options,
+downloads and a playable/native join remain unverified. No new package.
+
 2026-09-15 current candidate: Dev134 canonical/package/matching Vita3K visual
 milestone PASS, physical deployment/readback verified. No current physical FPS
 or full-demo acceptance. See DEV134_PHYSICAL_MILESTONE.md for current evidence
@@ -31,4 +141,4 @@ and remaining gates; older candidate numbers below are historical capabilities.
 | Essential audio | provider/sanitizer + Vita lifecycle contract + ARM linked; physical pending | All 20 selected original WWAudio TUs retain sound/scene/callback ownership over a local Miles-compatible provider. PCM8/16, IMA ADPCM, Microsoft ADPCM, encoded-byte timing, pan, distance, loop/rate mixing, and `SceAudio` linkage pass focused checks. Dev16 statically enforces retail/MIX-chain installation before the original basename-stripping adapter, non-lite construction and initialization before engine/world setup, 2D/3D driver admission, active/suspended frame updates, and audio destruction before renderer/factory teardown; fresh retail host routes pass but intentionally do not claim audible execution. No physical-audio or retail-format claim yet. |
 | TT patch/reference integration | toolkit validated; declarations/provenance corroborated | Official TT 4.8.4 revision 9000 archive/diff are checksum-pinned and audited outside the tree. Five portable semantics are already/equivalently present. TT declares the relevant WWAudio interface but publishes no constructor, frame-update, main-loop, or conversation implementation; dev16 restores authoritative EA semantics and imports no TT source or binary. |
 | Campaign catalog / launch path | catalog host-validated + ARM-linked; launch source-traced | original `CampaignManager::Init` loads 36 retail `campaign.ini` flow records and matching Shutdown clears them across two normal and ASan/LeakSanitizer M00 cycles. `CampaignManager::Start_Campaign` calls `GameInitMgrClass::Start_Game`, whose original branch calls `CombatGameModeClass::Load_Level`; device activation awaits the A3.2 gate and full ownership closure |
-| Multiplayer | deferred | original local route preserved; no public-service work |
+| Multiplayer | native adoption and identity implemented; live admission refused | Original Skirmish00 and separate-process UDP world/player replication pass host/ASan/LSan. Native client ownership/socket fixes compile for ARM. Original challenge response matches 12 TT-reference vectors and transmits over original UDP in normal/ASan replay. RenCorner explicitly refuses the executable/data version key; original unstamped build identity is under investigation. No RenCorner player join, native runtime or automatic TTFS negotiation verified; multiplayer HUD/round flow remain incomplete. See MULTIPLAYER_COMPATIBILITY.md |

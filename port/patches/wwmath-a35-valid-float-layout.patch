@@ -1,0 +1,31 @@
+--- a/wwmath.h
++++ b/wwmath.h
+@@ -49,0 +50,2 @@
++#include <stdint.h>
++#include <string.h>
+@@ -278,8 +280,4 @@
+-	unsigned long * plong = (unsigned long *)(&x);
+-	unsigned long exponent = ((*plong) & 0x7F800000) >> (32-9);
+-
+-	// if exponent is 0xFF, this is a NAN 
+-	if (exponent == 0xFF) {
+-		return false;
+-	}
+-	return true;
++	uint32_t bits = 0;
++	static_assert(sizeof(bits) == sizeof(x), "float storage must be 32 bits");
++	memcpy(&bits, &x, sizeof(bits));
++	return (bits & 0x7F800000U) != 0x7F800000U;
+@@ -290,8 +288,4 @@
+-	unsigned long * plong = (unsigned long *)(&x) + 1;
+-	unsigned long exponent = ((*plong) & 0x7FF00000) >> (32-12);
+-
+-	// if exponent is 0x7FF, this is a NAN 
+-	if (exponent == 0x7FF) {
+-		return false;
+-	}
+-	return true;
++	uint64_t bits = 0;
++	static_assert(sizeof(bits) == sizeof(x), "double storage must be 64 bits");
++	memcpy(&bits, &x, sizeof(bits));
++	return (bits & 0x7FF0000000000000ULL) != 0x7FF0000000000000ULL;

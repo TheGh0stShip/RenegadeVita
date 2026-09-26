@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(RenegadeA30DefinitionRuntimeHost LANGUAGES CXX)
+project(RenegadeA30DefinitionRuntimeHost LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS ON)
@@ -42,11 +42,33 @@ add_custom_command(
     --resource-h "${RV_UPSTREAM}/Code/Commando/resource.h"
     --dialog-resource-h "${RV_UPSTREAM}/Code/Commando/dialogresource.h"
     --out "${RV_A4_DIALOG_GENERATED}"
+    --multiplayer-dialogs
   DEPENDS "${RV_ROOT}/tools/generate_wwui_dialog_templates.py"
     "${RV_UPSTREAM}/Code/Commando/chat.rc" "${RV_UPSTREAM}/Code/Commando/resource.h"
     "${RV_UPSTREAM}/Code/Commando/dialogresource.h"
   VERBATIM)
 add_custom_target(a4_dialog_templates DEPENDS "${RV_A4_DIALOG_GENERATED}")
+
+add_executable(a35_campaign_flight_recorder_selftest
+  ${RV_ROOT}/tools/host_a35_campaign_flight_recorder_test.cpp
+  ${RV_ROOT}/port/developer/a35_campaign_flight_recorder.cpp
+)
+target_include_directories(a35_campaign_flight_recorder_selftest PRIVATE
+  ${RV_ROOT}/port/developer
+)
+target_link_libraries(a35_campaign_flight_recorder_selftest PRIVATE pthread)
+
+add_executable(a35_wwmath_validity_selftest
+  ${RV_ROOT}/tools/host_a35_wwmath_validity_test.cpp
+)
+target_include_directories(a35_wwmath_validity_selftest PRIVATE
+  ${RV_STAGE}/wwmath
+  ${RV_STAGE}/wwlib
+  ${RV_COMPAT}
+)
+target_compile_options(a35_wwmath_validity_selftest PRIVATE
+  "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
+)
 
 # This executable is deliberately narrower than the WWPhys compile frontier.
 # It exercises the genuine retail DDB entry point and the original WWSaveLoad
@@ -607,13 +629,45 @@ set(RV_A4_FRONTEND_RUNTIME_LINK_SOURCES
 # the original Combat level path.  The extra AudioSaveLoad owner is required by
 # the retail dynamic LDD subsystem table; the no-output device remains at the
 # Vita platform boundary, not in the serialized graph.
+include(${RV_ROOT}/cmake/A35MultiplayerBuildingSources.cmake)
+add_library(ttfs_host_transfer OBJECT
+    ${RV_ROOT}/port/filesystem/renegade_ttfs_download.cpp
+    ${RV_ROOT}/port/filesystem/renegade_ttfs_prepare.cpp)
+if(NOT CMAKE_CROSSCOMPILING)
+  target_compile_options(ttfs_host_transfer PRIVATE
+    -idirafter /usr/local/vitasdk/arm-vita-eabi/include)
+  target_link_libraries(ttfs_host_transfer PUBLIC -l:libcurl.so.4 z)
+else()
+  set(RV_TTFS_HTTPS_PREFIX "${RV_ROOT}/build/deps/ttfs-https-vita")
+  if(NOT EXISTS "${RV_TTFS_HTTPS_PREFIX}/lib/libcurl.a")
+    message(FATAL_ERROR "Run tools/build_ttfs_https_vita.sh before ARM frontend closure")
+  endif()
+  target_sources(ttfs_host_transfer PRIVATE ${RV_ROOT}/port/platform/vita/renegade_mbedtls_platform.c)
+  target_include_directories(ttfs_host_transfer PRIVATE "${RV_TTFS_HTTPS_PREFIX}/include")
+  target_compile_options(ttfs_host_transfer PRIVATE -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -mthumb)
+  target_link_libraries(ttfs_host_transfer PUBLIC
+    "${RV_TTFS_HTTPS_PREFIX}/lib/libcurl.a"
+    "${RV_TTFS_HTTPS_PREFIX}/lib/libmbedtls.a"
+    "${RV_TTFS_HTTPS_PREFIX}/lib/libmbedx509.a"
+    "${RV_TTFS_HTTPS_PREFIX}/lib/libmbedcrypto.a"
+    pthread z SceNet_stub SceNetCtl_stub SceLibKernel_stub SceRtc_stub)
+endif()
 add_executable(a31_interactive_runtime
+  ${RV_STAGE}/wwlib/ramfile.cpp
+  ${RENEGADE_A35_MULTIPLAYER_BUILDING_SOURCES}
+  ${RV_ROOT}/port/filesystem/renegade_ttfs.cpp
+  ${RV_ROOT}/port/filesystem/renegade_ttfs_cache.cpp
+  ${RV_ROOT}/port/filesystem/renegade_ttfs_factory.cpp
   ${RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCES}
   ${RV_A4_FRONTEND_RUNTIME_LINK_SOURCES}
+  ${RV_STAGE}/combat/cinematicgameobj.cpp
   ${RV_SCRIPT_SOURCE}/ScriptFactory.cpp
   ${RV_SCRIPT_SOURCE}/ScriptRegistrar.cpp
   ${RV_SCRIPT_SOURCE}/scripts.cpp
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
+  ${RV_SCRIPT_SOURCE}/MissionX0.cpp
+  ${RV_SCRIPT_SOURCE}/Mission01.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
   ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
   ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   ${RV_STAGE}/wwlib/pipe.cpp
@@ -638,6 +692,7 @@ add_executable(a31_interactive_runtime
   ${RV_STAGE}/wwui/stylemgr.cpp
   ${RV_STAGE}/commando/gamedata.cpp
   ${RV_STAGE}/commando/gdsingleplayer.cpp
+  ${RV_STAGE}/commando/gdskirmish.cpp
   # Original single-player frontend mode owner.  It is admitted separately
   # from the direct harness so Start_Game's required Menu entry can be closed
   # without fabricating a substitute menu mode.
@@ -659,6 +714,9 @@ add_executable(a31_interactive_runtime
   ${RV_STAGE}/commando/sctextobj.cpp
   ${RV_STAGE}/commando/netinterface.cpp
   ${RV_STAGE}/commando/netevent.cpp
+  ${RV_STAGE}/commando/gamespyscchallengeevent.cpp
+  ${RV_STAGE}/commando/gamespycschallengeresponseevent.cpp
+  ${RV_STAGE}/wwlib/md5.cpp
   ${RV_STAGE}/commando/cnetwork.cpp
   # Keep cNetwork's authoritative receiver, packet dispatch, event, and
   # replicated-combat handlers in their original owners.  The only omitted
@@ -680,6 +738,7 @@ add_executable(a31_interactive_runtime
   ${RV_STAGE}/commando/playerkill.cpp
   ${RV_STAGE}/commando/serverfps.cpp
   ${RV_STAGE}/commando/clientfps.cpp
+  ${RV_STAGE}/ww3d2/w3d_dep.cpp
   ${RV_STAGE}/commando/priority.cpp
   ${RV_STAGE}/commando/regint.cpp
   ${RV_STAGE}/commando/regbool.cpp
@@ -707,6 +766,11 @@ add_executable(a31_interactive_runtime
   ${RV_ROOT}/port/platform/renegade_optional_services.cpp
   ${RV_ROOT}/port/platform/renegade_network_provider.cpp
   ${RV_ROOT}/port/platform/a31_network_options_boundary.cpp
+  ${RV_ROOT}/port/platform/a31_client_connect_boundary.cpp
+  ${RV_ROOT}/port/platform/renegade_tt_weapon_event.cpp
+  ${RV_ROOT}/port/platform/renegade_tt_purchase_network.cpp
+  ${RV_ROOT}/port/platform/a31_client_identity_boundary.cpp
+  ${RV_ROOT}/port/platform/renegade_client_identity.cpp
   ${RV_ROOT}/port/platform/a31_gameplay_boundary.cpp
   ${RV_ROOT}/port/platform/a31_miscutil_boundary.cpp
   ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
@@ -796,6 +860,9 @@ set_source_files_properties(
   ${RV_SCRIPT_SOURCE}/ScriptRegistrar.cpp
   ${RV_SCRIPT_SOURCE}/scripts.cpp
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
+  ${RV_SCRIPT_SOURCE}/MissionX0.cpp
+  ${RV_SCRIPT_SOURCE}/Mission01.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
   ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
   ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
@@ -803,11 +870,17 @@ set_source_files_properties(
 )
 set_property(SOURCE
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
+  ${RV_SCRIPT_SOURCE}/MissionX0.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
   ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
   ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   APPEND PROPERTY
   COMPILE_OPTIONS
   "-include${RV_COMPAT}/renegade_script_call_defaults.h")
+set_property(SOURCE
+  ${RV_SCRIPT_SOURCE}/Mission01.cpp
+  APPEND PROPERTY COMPILE_OPTIONS
+  "-include${RV_COMPAT}/renegade_m01_script_defaults.h")
 set_source_files_properties(
   ${RV_STAGE}/combat/scripts.cpp
   PROPERTIES
@@ -822,6 +895,11 @@ set_source_files_properties(
   COMPILE_OPTIONS "-fpermissive"
 )
 target_link_options(a31_interactive_runtime PRIVATE -Wl,--gc-sections)
+if(NOT CMAKE_CROSSCOMPILING)
+  # Drive original TimeManager's capture-rate override without recording video.
+  target_link_options(a31_interactive_runtime PRIVATE
+    -Wl,--wrap=_ZN4WW3D28Get_Movie_Capture_Frame_RateEv)
+endif()
 # The closure target is used for both host validation and genuine ARM/Vita
 # source closure.  The former intentionally uses the host runtime library;
 # the latter must select VitaSDK's static FreeType plus its decoder archives.
@@ -850,6 +928,7 @@ if(CMAKE_CROSSCOMPILING)
     -Wl,--wrap=shark_init
   )
   target_link_libraries(a31_interactive_runtime PRIVATE
+    ttfs_host_transfer
     vitaGL
     stdc++
     SceLibKernel_stub
@@ -885,7 +964,7 @@ else()
   if(NOT EXISTS "${RV_HOST_FREETYPE}")
     message(FATAL_ERROR "Host FreeType runtime library is required for the frontend glyph contract")
   endif()
-  target_link_libraries(a31_interactive_runtime PRIVATE m pthread "${RV_HOST_FREETYPE}")
+  target_link_libraries(a31_interactive_runtime PRIVATE m pthread z "${RV_HOST_FREETYPE}" ttfs_host_transfer)
 endif()
 
 # Bounded A4 frontend frontier: compile the original dialog manager and its

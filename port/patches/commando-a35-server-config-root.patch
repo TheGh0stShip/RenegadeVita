@@ -1,0 +1,157 @@
+--- a/gamedata.cpp
++++ b/gamedata.cpp
+@@ -50,6 +50,7 @@
+ #include "teammanager.h"
+ #include "playermanager.h"
+ #include "assets.h"
++#include "renegade_server_config.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
+ #include "gamemode.h"
+@@ -1006,16 +1007,7 @@
+ 	WWASSERT(config_file != NULL);
+    WWASSERT(cMiscUtil::Is_String_Different(config_file, ""));
+ 
+-   INIClass * p_ini = Get_INI(config_file);
+-	StringClass full_filename(config_file, true);
+-
+-	if (p_ini == NULL) {
+-      full_filename.Format("data\\%s", config_file);
+-      FILE * file = fopen(full_filename, "w");
+-	   fclose(file);
+-
+-		p_ini = Get_INI(config_file);
+-   }
++   INIClass * p_ini = Renegade_Load_Server_Config(config_file);
+ 	WWASSERT(p_ini != NULL);
+ 
+ 	LastServerConfigModTime = Get_Config_File_Mod_Time();
+@@ -1151,7 +1143,7 @@
+ 	WWASSERT(config_file != NULL);
+    WWASSERT(cMiscUtil::Is_String_Different(config_file, ""));
+ 
+-   INIClass * p_ini = Get_INI(config_file);
++   INIClass * p_ini = Renegade_Load_Server_Config(config_file);
+    WWASSERT(p_ini != NULL);
+ 
+ 
+@@ -1204,7 +1196,7 @@
+ 		p_ini->Put_String(	INI_SECTION_NAME, "Motd", motd.Peek_Buffer());
+ 	}
+ 
+-	Save_INI(p_ini, config_file);
++	Renegade_Save_Server_Config(p_ini, config_file);
+    Release_INI(p_ini);
+ }
+ 
+@@ -1530,21 +1522,7 @@
+ //-----------------------------------------------------------------------------
+ unsigned long cGameData::Get_Config_File_Mod_Time(void)
+ {
+-	StringClass full_filename(IniFilename, true);
+-	RawFileClass file(full_filename);
+-
+-	if (!file.Is_Available()) {
+-      full_filename.Format("data\\%s", IniFilename);
+-		file.Set_Name(full_filename);
+-   }
+-
+-	if (file.Is_Available()) {
+-		file.Open();
+-		unsigned long mod_time = file.Get_Date_Time();
+-		file.Close();
+-		return(mod_time);
+-	}
+-	return(0);
++	return Renegade_Server_Config_Mod_Time(IniFilename);
+ }
+ 
+ 
+@@ -2511,4 +2489,4 @@
+ 	if (cNetwork::I_Am_Server()) {
+ 		IsBloodShed.Set(false);
+    }
+-	*/
+\ No newline at end of file
++	*/
+--- a/gdskirmish.cpp
++++ b/gdskirmish.cpp
+@@ -40,6 +40,7 @@
+ #include "translatedb.h"
+ #include "string_ids.h"
+ #include "assets.h"
++#include "renegade_server_config.h"
+ #include "playerdata.h"
+ #include "player.h"
+ #include "playertype.h"
+@@ -282,7 +283,7 @@
+ {
+ 	cGameData::Load_From_Server_Config(Get_Ini_Filename());
+ 
+-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
++   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
+    WWASSERT(p_ini != NULL);
+ 
+    bool				b;
+@@ -322,7 +323,7 @@
+ {
+ 	cGameData::Save_To_Server_Config(Get_Ini_Filename());
+ 
+-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
++   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
+    WWASSERT(p_ini != NULL);
+ 
+ 
+@@ -335,7 +336,7 @@
+ 	p_ini->Put_Int(   INI_SECTION_NAME, "StartingCredits",			Get_Starting_Credits());
+ 
+ 
+-	Save_INI(p_ini, Get_Ini_Filename());
++	Renegade_Save_Server_Config(p_ini, Get_Ini_Filename());
+    Release_INI(p_ini);
+ }
+ 
+--- a/gdcnc.cpp
++++ b/gdcnc.cpp
+@@ -41,6 +41,7 @@
+ #include "translatedb.h"
+ #include "string_ids.h"
+ #include "assets.h"
++#include "renegade_server_config.h"
+ #include "a31_multihud_stub.h"
+ #include "playerdata.h"
+ #include "player.h"
+@@ -301,7 +302,7 @@
+ {
+ 	cGameData::Load_From_Server_Config(Get_Ini_Filename());
+ 
+-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
++   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
+    WWASSERT(p_ini != NULL);
+ 
+    bool				b;
+@@ -344,7 +345,7 @@
+ {
+ 	cGameData::Save_To_Server_Config(Get_Ini_Filename());
+ 
+-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
++   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
+    WWASSERT(p_ini != NULL);
+ 
+ 
+@@ -358,7 +359,7 @@
+ 	p_ini->Put_Int(   INI_SECTION_NAME, "StartingCredits",			Get_Starting_Credits());
+ 
+ 
+-	Save_INI(p_ini, Get_Ini_Filename());
++	Renegade_Save_Server_Config(p_ini, Get_Ini_Filename());
+    Release_INI(p_ini);
+ }
+ 
+@@ -518,4 +519,4 @@
+ }
+ */
+ 
+-//-----------------------------------------------------------------------------
+\ No newline at end of file
++//-----------------------------------------------------------------------------

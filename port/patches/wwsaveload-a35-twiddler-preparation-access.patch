@@ -1,0 +1,14 @@
+--- a/twiddler.h
++++ b/twiddler.h
+@@ -90,0 +91,11 @@
++#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++	int Get_Referenced_Definition_Count(void) const {
++		return m_DefinitionList.Count();
++	}
++	int Get_Referenced_Definition_ID(int index) const {
++		return index >= 0 && index < m_DefinitionList.Count() ?
++			m_DefinitionList[index] : 0;
++	}
++#endif
++
++

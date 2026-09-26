@@ -3057,6 +3057,10 @@ void	Cinematic_Sniper_Control(bool enabled, float zoom)
 /*
 **
 */
+#if defined(RENEGADE_HOST_ABI_TEST)
+#include "renegade_ui_pointer_tokens.h"
+#endif
+
 int	Text_File_Open( const char * filename )
 {
 	FileClass * file = _TheFileFactory->Get_File( filename );
@@ -3067,12 +3071,21 @@ int	Text_File_Open( const char * filename )
 			file = NULL;
 		}
 	}
+#if defined(RENEGADE_HOST_ABI_TEST)
+	return static_cast<int>(Renegade_Ui_Pointer_To_Token(file));
+#else
 	return (int)( file );
+#endif
 }
 
 bool	Text_File_Get_String( int handle, char * buffer, int size )
 {
+#if defined(RENEGADE_HOST_ABI_TEST)
+	FileClass * file = static_cast<FileClass *>(Renegade_Ui_Pointer_From_Token(handle));
+	if (file == NULL) return false;
+#else
 	FileClass * file = (FileClass *)handle;
+#endif
 	char ch[4];
 	char *b = buffer;
 	while ( file->Read( &ch[0], 1 ) == 1 ) {
@@ -3090,7 +3103,11 @@ bool	Text_File_Get_String( int handle, char * buffer, int size )
 
 void	Text_File_Close( int handle )
 {
+#if defined(RENEGADE_HOST_ABI_TEST)
+	FileClass * file = static_cast<FileClass *>(Renegade_Ui_Take_Pointer_Token(handle));
+#else
 	FileClass * file = (FileClass *)handle;
+#endif
 	if ( file != NULL ) {
 		file->Close();
 		_TheFileFactory->Return_File( file );

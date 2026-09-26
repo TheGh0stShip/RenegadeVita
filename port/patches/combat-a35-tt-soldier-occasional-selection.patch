@@ -1,0 +1,15 @@
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -1089,7 +1089,11 @@
+ 	// Weapon list
+ 	//
+ 	WWASSERT(WeaponBag != NULL);
+-	WeaponBag->Import_Weapon_List(packet);
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	if (Renegade_Client_Uses_TT_Replication()) WeaponBag->Import_TT_Weapon_Selection(packet, false);
++	else
++#endif
++		WeaponBag->Import_Weapon_List(packet);
+ 	if (packet.Has_Read_Error()) return;
+ 
+ #if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO

@@ -18,6 +18,7 @@
 #include "movie.h"
 #include "scorescreen.h"
 #include "savegame.h"
+#include "gametype.h"
 #include "systemsettings.h"
 #include "textureloader.h"
 #include "wwuiinput.h"
@@ -214,6 +215,7 @@ void A4_Frontend_Begin_Menu_Loop(void)
 	g_frontend_trace.exit_requested = false;
 	g_frontend_trace.exit_code = 0;
 	g_frontend_trace.tutorial_start_latched = false;
+	g_frontend_trace.skirmish_selected = false;
 	g_frontend_trace.tutorial_map[0] = '\0';
 	g_frontend_trace.tutorial_team_choice = 0;
 	g_frontend_trace.tutorial_clan_id = 0;
@@ -316,6 +318,25 @@ bool A4_Frontend_Resolve_Single_Player_Archive(const char *source,
 }
 #endif
 
+#if !RENEGADE_VITA_M00_DEMO
+bool A4_Frontend_Resolve_Skirmish_Archive(const char *source,
+	char *archive, unsigned archive_size)
+{
+	if (source == NULL || archive == NULL) return false;
+	const size_t length = strlen(source);
+	if (length <= 4U || length >= archive_size ||
+		stricmp(source + length - 4U, ".mix") != 0 ||
+		(strnicmp(source, "C&C_", 4U) != 0 &&
+		 strnicmp(source, "Skirmish", 8U) != 0)) return false;
+	for (size_t i = 0; i < length; ++i) {
+		const unsigned char c = static_cast<unsigned char>(source[i]);
+		if (c < 32U || c == '/' || c == '\\' || c == ':' || c == 127U) return false;
+	}
+	Copy_Text(archive, archive_size, source);
+	return true;
+}
+#endif
+
 bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice,
 	unsigned long clanID)
 {
@@ -335,6 +356,10 @@ bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice,
 	if (!g_frontend_trace.menu_loop_active || map_name == NULL) return false;
 	if (strlen(source.Peek_Buffer()) >= sizeof(g_frontend_trace.tutorial_map)) return true;
 	g_frontend_trace.tutorial_start_latched = true;
+#if !RENEGADE_VITA_M00_DEMO
+	g_frontend_trace.skirmish_selected = cGameType::Get_Game_Type() == GAMETYPE_SKIRMISH;
+	g_frontend_trace.client_only_selected = cGameType::Get_Game_Type() == GAMETYPE_MULTIPLAY;
+#endif
 	Copy_Text(g_frontend_trace.tutorial_map,
 		sizeof(g_frontend_trace.tutorial_map), source.Peek_Buffer());
 	g_frontend_trace.tutorial_team_choice = teamChoice;

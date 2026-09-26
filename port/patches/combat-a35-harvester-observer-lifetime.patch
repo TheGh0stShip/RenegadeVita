@@ -1,0 +1,35 @@
+--- a/harvester.cpp
++++ b/harvester.cpp
+@@ -307,7 +307,9 @@
+ 		Refinery->Set_Harvester (NULL);
+ 	}
+ 
++	Refinery = NULL;
+ 	Vehicle = NULL;
++	GameObjObserverManager::Delete_Register(this);
+ 	return ;
+ }
+ 
+--- a/refinerygameobj.cpp
++++ b/refinerygameobj.cpp
+@@ -288,6 +288,15 @@
+ ////////////////////////////////////////////////////////////////
+ RefineryGameObj::~RefineryGameObj (void)
+ {
++	// Vehicle destruction and level teardown may release either owner first.
++	if (Harvester != NULL) {
++		HarvesterClass *observer = Harvester;
++		Harvester = NULL;
++		observer->Set_Refinery(NULL);
++		VehicleGameObj *vehicle = observer->Get_Vehicle();
++		if (vehicle != NULL) vehicle->Remove_Observer(observer);
++		else GameObjObserverManager::Delete_Register(observer);
++	}
+ 	if (MoneyTrickleSound != NULL) {
+ 		MoneyTrickleSound->Stop();
+ 		REF_PTR_RELEASE(MoneyTrickleSound);
+@@ -868,4 +877,3 @@
+ 	packet.Get (IsHarvesterDocked);
+ }
+ 
+-

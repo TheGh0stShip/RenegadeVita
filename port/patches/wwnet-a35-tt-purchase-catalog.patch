@@ -1,0 +1,46 @@
+--- a/networkobject.h
++++ b/networkobject.h
+@@ -90,7 +90,8 @@
+ 	////////////////////////////////////////////////////////////////
+ 	//	Public constructors/destructors
+ 	////////////////////////////////////////////////////////////////
+-	NetworkObjectClass (void);
++    // Definition-owned TT catalogs attach only when a remote ID arrives.
++	NetworkObjectClass (bool register_on_server = true);
+ 	virtual ~NetworkObjectClass (void);
+ 
+ 	////////////////////////////////////////////////////////////////
+@@ -354,4 +355,4 @@
+ 	//virtual float		Get_Object_Distance (const Vector3 &client_pos);
+ 	//virtual float		Get_Cached_Priority (void) const													{ return CachedPriority; }
+ 	//static void			Set_Max_Distance (float distance)				{ MaxDistance = distance; }
+-	//static float		MaxDistance;
+\ No newline at end of file
++	//static float		MaxDistance;
+--- a/networkobject.cpp
++++ b/networkobject.cpp
+@@ -54,7 +54,7 @@
+ //	NetworkObjectClass
+ //
+ ////////////////////////////////////////////////////////////////
+-NetworkObjectClass::NetworkObjectClass (void)	:
++NetworkObjectClass::NetworkObjectClass (bool register_on_server)	:
+ 	ImportStateCount (0),
+ 	LastClientsideUpdateTime (0),
+ 	NetworkID (0),
+@@ -73,7 +73,7 @@
+ 	LastObjectIdIGotDamagedBy(-1)
+ 
+ {
+-	if (IsServer)
++	if (IsServer && register_on_server)
+ 	{
+ 		//
+ 		//	Assign the object a unique ID. This will happen on the client too during object
+@@ -658,4 +658,4 @@
+ {
+ 	CreatedByPacketID = id;
+ }
+-#endif //WWDEBUG
+\ No newline at end of file
++#endif //WWDEBUG

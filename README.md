@@ -4,30 +4,36 @@ An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: 
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Development status — source-available development repository.** The current Dev134
-> package is available with the tutorial-only setup guide at
-> [Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
-> No retail data is in this repository or its VPKs. Use only your own legally
-> obtained retail data.
+> **Current development candidate: A3.5-dev195.** The native ARM client joined
+> RenCorner in Vita3K, downloaded server packages, rendered City_U1, accepted
+> movement input, and returned cleanly to the menu. Full multiplayer, complete
+> campaign progression, and physical Vita performance remain unverified.
 
-This repository publishes source code and build instructions only. It is not a public game release; it does not include retail game data or a redistributable game release.
+[Download Dev195](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev195)
+| [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
+| [Multiplayer setup](docs/MULTIPLAYER.md)
+
+Development prereleases contain the executable and package metadata only. This
+is not a finished game release. Supply your own legally obtained retail data.
+The separate [tutorial demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
+is preserved; its data subset is not sufficient for the full-port candidate.
 
 ## Where the port stands
 
-The current candidate is **A3.5-dev134**. Its canonical ARM/package closure
-and matching Vita3K tutorial checkpoint passed. The exact physical deployment
-was readback-verified on title `RNEGA3101`; physical runtime FPS, movie audio,
-and complete-demo acceptance remain separate open gates. See
-[reports/DEV134_PHYSICAL_MILESTONE.md](reports/DEV134_PHYSICAL_MILESTONE.md).
+Dev195 is a **fast-build development checkpoint**, installed and run in
+Vita3K. It is not canonical or physical acceptance. See the
+[candidate report](reports/DEV195_RENCORNER_NATIVE_JOIN.md) for hashes,
+verification scope, performance caveats, and remaining defects.
 
 | Evidence area | Current state |
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
-| Latest physical return | **A3.5-dev134 deployment/readback verified**: the exact ARM executable and VPK were installed title-scoped after matching Vita3K checks. Manual LiveArea launch and hardware runtime evidence remain pending because remote launch services were unavailable. |
-| Retained historical local candidates | **A3.5-dev88 through A3.5-dev123**, including **A3.5-dev93**: superseded source/build and emulator milestones retained for provenance. Dev124 and Dev126 returned physical failure evidence; Dev134 is the current verified deployment checkpoint. |
-| Latest local candidate | **A3.5-dev134**: canonical host/sanitizer/ARM/package closure and matching Vita3K refinery visual, pause/resume, and clean-exit checks passed. The discarded textured-skin RGB work is measured and correctness-tested; native hardware FPS remains unaccepted. |
-| Visual evidence | The gallery contains reviewed historical frames only. A user-finalized Dev87 recording supplied six labelled M00 stills. Later Vita3K screenshots are emulator evidence and are not promoted as physical acceptance. Physical Dev124/Dev126 evidence is retained as failure/debug context; Dev134 physical visual return is pending manual launch. |
-| Capture path | Physical Dev134 log/capture return is pending manual LiveArea launch. Vita3K images are explicitly emulator evidence; no VDB logical-framebuffer capture or physical visual acceptance is claimed. |
+| Dev195 build | 171 fast contracts and the original DDS alias test passed; 266 deterministic patches; ARM ELF/SELF/VPK produced and installation hashes verified. |
+| Dev195 multiplayer | Vita3K joined RenCorner, mounted five packages, rendered 9,723 frames, moved the player, and completed session teardown. The public list showed `PSVita`; the client requested `PS Vita`. The name-normalization boundary is unresolved. |
+| Remaining multiplayer work | Purchase dialog did not appear; early text had malformed glyphs. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
+| Campaign | Earlier runs completed M13 and entered M01. M13 cinematic/effects/animation defects and M01 stalls remain open; Dev195's multiplayer test does not resolve them. |
+| Physical testing | Dev134 deployment/readback is historical, not Dev195 acceptance. Issue #1 contains Dev142 PSTV user observations, including blocked progression and save/load. No Dev195 physical test is claimed. |
+| Visual evidence | The gallery below is historical. Emulator captures and historical physical stills do not establish current physical acceptance or stable 60 FPS. |
 
 Read the concise [current status](docs/CURRENT_STATUS.md) before treating any candidate as playable. The durable engineering record is in [reports/PORT_STATUS.md](reports/PORT_STATUS.md); it distinguishes host, Vita3K, and physical-Vita evidence.
 
@@ -58,7 +64,8 @@ Those images are historical, not a same-camera benchmark. A verified post-render
 
 - [Quickstart](docs/QUICKSTART.md) — clone and produce a local canonical or fast candidate build.
 - [Installing on Vita](docs/INSTALLING.md) — retail-data boundaries and manual installation safeguards.
-- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, post-Dev99 build history, Dev134 checkpoint, and next physical evidence gate.
+- [Current status](docs/CURRENT_STATUS.md) — Dev195 evidence, campaign limitations, and physical gates.
+- [Multiplayer](docs/MULTIPLAYER.md) — experimental direct entry, private identity, trusted TLS, and downloaded-asset boundaries.
 - [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
 - [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
 - [Historical capture campaign](docs/HISTORICAL_CAPTURE_CAMPAIGN.md) — the no-rebuild plan for comparable in-game frames, held until a physical session is explicitly authorized.
@@ -73,7 +80,7 @@ WSL2 Ubuntu or Linux with VitaSDK is the supported host environment.
 git clone --recurse-submodules https://github.com/TheGh0stShip/RenegadeVita.git
 cd RenegadeVita
 git submodule update --init --recursive
-bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 `tools/build.sh` is the canonical candidate path. It preserves validation, deterministic staging, ARM package identity, diagnostics, and retail-exclusion checks. A fast build is useful for iteration only; it never substitutes for a canonical candidate or physical proof.
@@ -87,6 +94,6 @@ bash ./tools/build.sh
 
 ## License and retail data
 
-The released Renegade source carries GPLv3 plus EA's additional terms; see the upstream notice after initializing the submodule. You must supply your own retail data at `ux0:data/renegade/retail/Data/`. The application writes only to `ux0:data/renegade/user/`.
+The released Renegade source carries GPLv3 plus EA's additional terms; see the upstream notice after initializing the submodule. You must supply your own retail data at `ux0:data/renegade/retail/Data/`. User state lives under `ux0:data/renegade/user/`; downloaded TTFS packages are separate at `ux0:data/renegade/cache/ttfs/`.
 
 See [LICENSE.md](LICENSE.md), [CONTRIBUTING.md](CONTRIBUTING.md), and [SECURITY.md](SECURITY.md) before contributing or sharing diagnostics.

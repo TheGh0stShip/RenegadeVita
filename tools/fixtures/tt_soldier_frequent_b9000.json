@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "modern Soldier/Smart/Armed/Control export; synthetic position, velocity, transform and weapon ID accessors",
+  "cases": [
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": false,
+      "bits": 249,
+      "hex": "10b2100010d21000107d000000014829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180000"
+      ]
+    },
+    {
+      "state": 2,
+      "weapon": false,
+      "damage": false,
+      "client_state": false,
+      "bits": 409,
+      "hex": "10b2100010d21000107d000006010012535f415f48554d414e2e485f415f343232414829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180000"
+      ]
+    },
+    {
+      "state": 5,
+      "weapon": false,
+      "damage": false,
+      "client_state": false,
+      "bits": 345,
+      "hex": "10b2100010d21000107d000010013f80000040000000404000004829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180000",
+        "0x180010"
+      ]
+    },
+    {
+      "state": 6,
+      "weapon": false,
+      "damage": false,
+      "client_state": false,
+      "bits": 249,
+      "hex": "10b2100010d21000107d000014014829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180000"
+      ]
+    },
+    {
+      "state": 8,
+      "weapon": false,
+      "damage": false,
+      "client_state": false,
+      "bits": 281,
+      "hex": "10b2100010d21000107d00001a013fc90fdb4829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180000",
+        "0x180030"
+      ]
+    },
+    {
+      "state": 9,
+      "weapon": false,
+      "damage": false,
+      "client_state": false,
+      "bits": 136,
+      "hex": "9052000030688000107e400015ff0080bf",
+      "accessor_hooks": []
+    },
+    {
+      "state": 10,
+      "weapon": false,
+      "damage": false,
+      "client_state": false,
+      "bits": 409,
+      "hex": "10b2100010d21000107d000020010012535f415f48554d414e2e485f415f343232414829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180000"
+      ]
+    },
+    {
+      "state": 0,
+      "weapon": true,
+      "damage": false,
+      "client_state": false,
+      "bits": 281,
+      "hex": "4000789010b2100010d21000107d000000014829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180020",
+        "0x180000"
+      ]
+    },
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": true,
+      "client_state": false,
+      "bits": 281,
+      "hex": "10b2100010d21000107d0000000180000000c829000018344000083f20000aff80405f80",
+      "accessor_hooks": [
+        "0x180000"
+      ]
+    }
+  ],
+  "client_state_cases": [
+    {
+      "state": 0,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 97,
+      "hex": "6157a00061ae40001f90000000",
+      "accessor_hooks": [
+        "0x180000"
+      ]
+    },
+    {
+      "state": 1,
+      "weapon": false,
+      "damage": false,
+      "client_state": true,
+      "bits": 97,
+      "hex": "e157a00061ae40001f90000000",
+      "accessor_hooks": [
+        "0x180000"
+      ]
+    }
+  ]
+}

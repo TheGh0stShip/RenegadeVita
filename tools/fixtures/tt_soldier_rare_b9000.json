@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "scope": "soldier rare suffix, synthetic state, physical prefix excluded",
+  "cases": [
+    {
+      "modern": false,
+      "alternate": false,
+      "bits": 32,
+      "hex": "30010001"
+    },
+    {
+      "modern": true,
+      "alternate": false,
+      "bits": 345,
+      "hex": "30010001c9fc000004fe0000000000000000000001fffffffe00008000000000000000000000000000000000"
+    },
+    {
+      "modern": true,
+      "alternate": true,
+      "bits": 457,
+      "hex": "3001000171fd000000ff8000027c99999b7b99999a00000005000700560069007400610042006f00741f6666669f4ccccd1ea666669ee6666680"
+    }
+  ]
+}

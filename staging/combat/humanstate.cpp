@@ -661,6 +661,8 @@ static const char * _weapon_style_names[] = {
 
 static_assert((sizeof(_weapon_style_names) / sizeof(_weapon_style_names[0])) ==
 	NUM_WEAPON_HOLD_STYLES, "weapon hold style table must match enum");
+// Additional TT b9000 animation styles; original weapon definitions stay intact.
+static const char * _tt_extra_weapon_style_names[] = { "J2", "K2", "L2", "M0", "N0" };
 
 static const char * _dive_anims[ 4 * 2 ] = {
 	// Forwrd Anims
@@ -698,7 +700,11 @@ void	HumanStateClass::Update_Animation( void )
 		// if you change your animn when locked, death state may clear a scripted anim
 	}
 
-	int hold_style = WeaponHoldStyle;
+	if (NetworkHoldStyle == 14 && State != DEATH) {
+		WeaponHoldStyle = 14;
+		return;
+	}
+	int hold_style = NetworkHoldStyle >= 0 ? NetworkHoldStyle : WeaponHoldStyle;
 
 	// Setup animation for state, substate, weapon, tilt, etc.
 	if ( (State == UPRIGHT) || (State == AIRBORNE) ) {
@@ -740,11 +746,12 @@ void	HumanStateClass::Update_Animation( void )
 		}
 
 		const char * leg_anim_name = LegAnimNames[ leg_style ];
-		if ( hold_style < 0 || hold_style >= NUM_WEAPON_HOLD_STYLES ) {
+		if ( hold_style < 0 || hold_style >= (NetworkHoldStyle >= 0 ? 15 : NUM_WEAPON_HOLD_STYLES) ) {
 			// Corrupt serialized/mod data must not index the animation table.
 			hold_style = WEAPON_HOLD_STYLE_EMPTY_HANDS;
 		}
-		const char * torso_anim_name = _weapon_style_names[hold_style];
+		const char * torso_anim_name = hold_style < NUM_WEAPON_HOLD_STYLES ?
+			_weapon_style_names[hold_style] : _tt_extra_weapon_style_names[hold_style - NUM_WEAPON_HOLD_STYLES];
 		if ( torso_anim_name == NULL ) {
 			torso_anim_name = _weapon_style_names[WEAPON_HOLD_STYLE_EMPTY_HANDS];
 		}
@@ -791,7 +798,7 @@ void	HumanStateClass::Update_Animation( void )
 			anim_name.Format( "S_A_HUMAN.H_A_%s%s", torso_anim_name, leg_anim_name );
 
 			// Human Anim Override
-			if ( HumanAnimOverride != NULL ) {
+			if ( HumanAnimOverride != NULL && NetworkAnimOverride ) {
 				if ( hold_style == WEAPON_HOLD_STYLE_EMPTY_HANDS ) {
 					if ( leg_style == LEG_STYLE_RUN_FORWARD ) {
 						anim_name = HumanAnimOverride->RunEmptyHands;
@@ -1046,7 +1053,7 @@ void	HumanStateClass::Update_State( void )
 	if ( WeaponHoldTimer > 0 && !Get_State_Flag( CROUCHED_FLAG ) ) {
 		Reset_Loiter_Delay();
 		WeaponHoldTimer -= TimeManager::Get_Frame_Seconds();
-		if ( WeaponHoldTimer <= 0 ) {
+		if ( WeaponHoldTimer <= 0 && NetworkMovementLoiters ) {
 			if (	WeaponHoldStyle == WEAPON_HOLD_STYLE_HANDGUN ||
 					WeaponHoldStyle == WEAPON_HOLD_STYLE_C4 ||
 					WeaponHoldStyle == WEAPON_HOLD_STYLE_BEACON )
@@ -1518,4 +1525,3 @@ void	HumanStateClass::Complete_Jump( void )
 	int ground_type = HumanPhys->Get_Contact_Surface_Type();
 	SurfaceEffectsManager::Apply_Effect( ground_type, SurfaceEffectsManager::HITTER_TYPE_FOOTSTEP_LAND, tm );
 }
-

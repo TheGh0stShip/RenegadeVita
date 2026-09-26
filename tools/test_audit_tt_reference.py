@@ -2,15 +2,34 @@ import hashlib
 import pathlib
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
-from tools.audit_tt_reference import audit_reference
+from tools.audit_tt_reference import audit_reference, audit_supplemental
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class TiberianTechnologiesReferenceAuditTests(unittest.TestCase):
+    def test_supplemental_archive_is_pinned_and_not_extracted(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = pathlib.Path(temporary) / "tools.zip"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr("tool.exe", b"MZ-not-executable-test-fixture")
+                archive.writestr("perfdocs.rtf", "performance notes")
+            with self.assertRaisesRegex(ValueError, "digest mismatch"):
+                audit_supplemental(path, "tools")
+            data = path.read_bytes()
+            pins = (hashlib.md5(data).hexdigest(), hashlib.sha256(data).hexdigest())
+            with patch.dict("tools.audit_tt_reference.TT_SUPPLEMENTAL", {"tools": pins}):
+                result = audit_supplemental(path, "tools")
+            self.assertEqual(result["source_members"], [])
+            self.assertEqual(result["member_count"], 2)
+            self.assertTrue(result["performance_notes_present"])
+            self.assertFalse(result["extracted_or_executed"])
+            self.assertEqual(list(path.parent.iterdir()), [path])
+
     def test_pinned_official_reference_audit_is_read_only_and_semantic(self):
         with tempfile.TemporaryDirectory() as temporary:
             temp = pathlib.Path(temporary)

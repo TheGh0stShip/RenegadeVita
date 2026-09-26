@@ -1,0 +1,57 @@
+--- a/pkthandlers.cpp
++++ b/pkthandlers.cpp
+@@ -267,6 +267,16 @@
+ void cNetwork::Client_Packet_Handler(cPacket & packet)
+ {
+ #ifndef FREEDEDICATEDSERVER
++	auto decode_failed = [&](int id, const char *stage) {
++		if (!packet.Has_Read_Error()) return false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		A31ClientConnect::Packet_Decode_Failed(id, stage);
++#else
++		Debug_Say(("Invalid replication object=%d stage=%s\n", id, stage));
++#endif
++		return true;
++	};
++	if (decode_failed(0, "entry")) return;
+ 	#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+ 	if (A31ClientConnect::Protocol_Failed()) {
+ 		packet.Flush();
+@@ -296,6 +308,7 @@
+ 	int network_obj_id		= packet.Get (network_obj_id);
+ 	BYTE dirty_bits			= packet.Get (dirty_bits);
+ 	bool is_delete_pending	= packet.Get (is_delete_pending);
++	if (decode_failed(network_obj_id, "header")) return;
+ 	//BYTE app_packet_type		= packet.Get (app_packet_type);
+ 
+ 	//
+@@ -318,4 +329,5 @@
+ 		//
+ 		int net_classid = packet.Get (net_classid);
++		if (decode_failed(network_obj_id, "class")) return;
+ 		#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+ 		if (object == NULL && NetworkObjectFactoryMgrClass::Find_Factory(net_classid) == NULL) {
+@@ -340,4 +352,5 @@
+ 		object->Import_Creation (packet);
++		if (decode_failed(network_obj_id, "creation")) return;
+ 
+ 		//
+ 		//	HACK - HACK
+@@ -376,4 +389,5 @@
+ 			object->Import_Rare (packet);
++			if (decode_failed(network_obj_id, "rare")) return;
+ 		}
+ 
+ 		//
+@@ -383,4 +397,5 @@
+ 			object->Import_Occasional (packet);
++			if (decode_failed(network_obj_id, "occasional")) return;
+ 		}
+ 
+ 		//
+@@ -390,4 +405,5 @@
+ 			object->Import_Frequent (packet);
++			if (decode_failed(network_obj_id, "frequent")) return;
+ 			//object->Increment_Import_State_Count ();
+ 		}
+ 

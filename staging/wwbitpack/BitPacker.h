@@ -53,12 +53,15 @@ class cBitPacker
 		UINT Get_Buffer_Size() const {return MAX_BUFFER_SIZE;}
 		void Flush() {BitReadPosition = BitWritePosition;}
 		bool Is_Flushed() const {return (BitReadPosition == BitWritePosition);}
+		bool Has_Read_Error() const {return ReadError;}
+		void Mark_Read_Error() {ReadError = true; Flush();}
 
 		void Add_Bits(ULONG value, UINT num_bits);
 		void Get_Bits(ULONG & value, UINT num_bits);
 
 		void Set_Bit_Write_Position(UINT position);
 		UINT Get_Bit_Write_Position() const {return BitWritePosition;}
+		UINT Get_Bit_Read_Position() const {return BitReadPosition;}
 
 	protected:
       cBitPacker& operator=(const cBitPacker& rhs);
@@ -72,6 +75,7 @@ class cBitPacker
 		BYTE Buffer[MAX_BUFFER_SIZE];
 		UINT BitWritePosition;
 		UINT BitReadPosition;
+		bool ReadError = false;
 };
 
 #endif // BITPACKER_H

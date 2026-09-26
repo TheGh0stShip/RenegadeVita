@@ -24,17 +24,19 @@ Do not edit `upstream/CnC_Renegade/`. Portability changes belong in `port/` or i
 Run the canonical candidate build:
 
 ```bash
-bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 For an iteration build only:
 
 ```bash
-RENEGADE_FAST_SCOPE=compile bash ./tools/build_fast_candidate.sh
-RENEGADE_FAST_SCOPE=package bash ./tools/build_fast_candidate.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 \
+RENEGADE_INCREMENTAL_STAGE=1 bash ./tools/build_fast_candidate.sh
 ```
 
 Fast output is not hardware-candidate evidence. Run the canonical builder before a physical handoff.
+Use an explicit new candidate label for runtime changes. See
+[Building](BUILDING.md) for first-checkout HTTPS dependency preparation.
 
 Useful variables:
 
@@ -70,5 +72,9 @@ Writable logs, caches, captures, and saves belong under:
 ```text
 ux0:data/renegade/user/
 ```
+
+The experimental TTFS server-package cache is separately rooted at
+`ux0:data/renegade/cache/ttfs/`. Both writable roots are excluded from Git
+and packages; unchanged retail files remain separate.
 
 Use [Installing on Vita](INSTALLING.md) for manual installation and evidence custody. A local build is never permission to overwrite a Vita installation.

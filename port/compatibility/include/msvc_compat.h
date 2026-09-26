@@ -1,5 +1,7 @@
 #pragma once
 
+#include "renegade_target_abi.h"
+
 // Centralized spellings for Microsoft compiler extensions used by the 2002
 // Westwood code. Calling-convention attributes are irrelevant on ARM EABI.
 #ifndef _MSC_VER

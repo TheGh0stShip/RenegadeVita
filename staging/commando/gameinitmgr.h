@@ -82,6 +82,9 @@ public:
 	static void		Initialize_WOL (void);
 	static void		Initialize_SP (void);
 	static void		Initialize_Skirmish (void);
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	static bool		Initialize_Direct_IP(bool dedicated_server);
+#endif
 
 	static bool		Is_LAN_Initialized (void)			{ return Mode == MODE_LAN; }
 	static bool		Is_WOL_Initialized (void)			{ return Mode == MODE_WOL; }
@@ -119,7 +122,8 @@ private:
 		MODE_SP,
 		MODE_SKIRMISH,
 		MODE_LAN,
-		MODE_WOL
+		MODE_WOL,
+		MODE_DIRECT_IP
 	};
 
 	////////////////////////////////////////////////////////////////

@@ -11,7 +11,9 @@ A physical baseline requires:
 3. observed physical Vita behavior for the declared gate; and
 4. durable status and immutable milestone records.
 
-Tag only a documented, physically accepted baseline. Never move or reuse a published tag.
+Milestone tags require a documented, physically accepted baseline. Development
+tags such as `A3.5-dev195` may identify an explicitly labelled GitHub prerelease;
+they do not confer physical acceptance. Never move or reuse a published tag.
 
 ## Evidence labels
 

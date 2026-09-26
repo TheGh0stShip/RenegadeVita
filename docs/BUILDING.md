@@ -5,7 +5,7 @@
 ## Canonical build
 
 ```bash
-bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 The canonical path checks host prerequisites, the pinned clean upstream source, retained host contracts, deterministic zero-fuzz staging, ARM ELF/SELF/VPK identity, VPK contents, SHA-256 manifests, diagnostics, and retail exclusion.
@@ -17,11 +17,22 @@ The BINK dependency build is reproducible and limited to the FFmpeg pieces neede
 ## Fast iteration
 
 ```bash
-RENEGADE_FAST_SCOPE=compile bash ./tools/build_fast_candidate.sh
-RENEGADE_FAST_SCOPE=package bash ./tools/build_fast_candidate.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 \
+RENEGADE_INCREMENTAL_STAGE=1 bash ./tools/build_fast_candidate.sh
 ```
 
 Fast builds reduce iteration work but are not canonical evidence. Before a physical handoff, run the canonical build for the exact candidate.
+
+Always set the candidate label explicitly; the legacy script default is not
+the public current candidate. The command above describes Dev195's profile;
+use a new label for changed runtime code rather than replacing a published tag.
+Do not restage sources while a compiler is running. Incremental staging
+preserves unchanged file timestamps while applying the same zero-fuzz patches.
+
+TTFS HTTPS uses project-local pinned curl/Mbed TLS libraries built by
+`tools/build_ttfs_https_vita.sh`; it does not overwrite global SDK libraries.
+Set `VITASDK` to the same root as `RENEGADE_VITASDK` for dependency scripts.
+The fast path needs those dependencies prepared first on a fresh checkout.
 
 ## Configuration
 
@@ -41,6 +52,8 @@ The PowerShell wrapper only invokes the same Bash builder through WSL. Prefer th
 
 ```bash
 python3 tools/verify_repo_hygiene.py --root .
+python3 tools/verify_public_docs.py --root .
+python3 -m unittest tools.test_verify_public_docs tools.test_verify_repo_hygiene
 ```
 
 Retain matching artifacts and read [Current status](CURRENT_STATUS.md). A successful build is not proof of physical gameplay.

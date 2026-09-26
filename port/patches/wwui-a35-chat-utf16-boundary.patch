@@ -1,0 +1,43 @@
+--- a/wwui/editctrl.cpp
++++ b/wwui/editctrl.cpp
+@@ -346 +346 @@
+-			length += wcslen(compString);
++			length += rv_utf16_length(compString);
+@@ -587 +587 @@
+-	int count = ::wcslen (text);	
++	int count = rv_utf16_length(text);
+@@ -904 +904 @@
+-	int count = wcslen(string);
++	int count = rv_utf16_length(string);
+@@ -1190 +1190 @@
+-	int count = wcslen(title);
++	int count = rv_utf16_length(title);
+@@ -1364 +1364 @@
+-	mShowIMETypingText = (text && wcslen(text) > 0);
++	mShowIMETypingText = (text && rv_utf16_length(text) > 0);
+--- a/commando/dlgmpingamechat.cpp
++++ b/commando/dlgmpingamechat.cpp
+@@ -352 +352 @@
+-		wcsncpy(buffer, command, length);
++		rv_utf16_n_copy(buffer, command, length);
+@@ -406 +406 @@
+-				::wcsncpy (first_part.Peek_Buffer (), message, cmd_start_index);
++				rv_utf16_n_copy(first_part.Peek_Buffer (), message, cmd_start_index);
+@@ -413 +413 @@
+-				::wcscpy (last_part.Peek_Buffer (), message.Peek_Buffer () + cmd_end_index);					
++				rv_utf16_copy(last_part.Peek_Buffer (), message.Peek_Buffer () + cmd_end_index);
+@@ -420 +420 @@
+-				::wcsncpy (typed_name.Peek_Buffer (), name_start, typed_len);
++				rv_utf16_n_copy(typed_name.Peek_Buffer (), name_start, typed_len);
+@@ -473 +473 @@
+-	int typed_len = ::wcslen (typed_name);
++	int typed_len = rv_utf16_length(typed_name);
+@@ -607 +607 @@
+-		const WCHAR *command_start = ::wcsrchr (message, L'/');
++		const WCHAR *command_start = rv_utf16_rchr(message, L'/');
+@@ -616 +616 @@
+-			const WCHAR *first_space = ::wcschr (command_start, L' ');
++			const WCHAR *first_space = rv_utf16_chr(command_start, L' ');
+@@ -618 +618 @@
+-				end_index = ::wcslen (message);
++				end_index = rv_utf16_length(message);

@@ -31,6 +31,24 @@ def test_campaign_flight_recorder_schema_outputs_are_present():
         assert field in source
 
 
+def test_campaign_flight_checkpoints_append_deltas_not_full_snapshots():
+    source = (
+        ROOT / "port" / "developer" / "a35_campaign_flight_recorder.cpp"
+    ).read_text(encoding="utf-8")
+    flush = source[source.index("bool A35_Campaign_Flight_Flush("):]
+    assert "persisted_frame_sequence / kFlightFrameCapacity" in flush
+    assert "persisted_event_sequence / kFlightEventCapacity" in flush
+    assert "persisted_log_sequence / kFlightLogCapacity" in flush
+    assert "strcmp(reason, \"best-effort-fatal-snapshot\") == 0" in flush
+    assert "Make_Directory(gRecorder.capture_root)" not in flush
+    assert "Write_Log_Tail(file, log_start, gRecorder.log_sequence)" in flush
+    assert "Open_Flight_File(path, !replace_events)" in flush
+    assert "Open_Flight_File(path, !replace_frames)" in flush
+    assert "Open_Flight_File(path, !replace_log_tail)" in flush
+    assert "sceIoRemove(path)" in source
+    assert "remove(path) != 0 && errno != ENOENT" in source
+
+
 def test_campaign_flight_recorder_runtime_hooks_are_present():
     log_runtime = (
         ROOT / "port" / "platform" / "vita" / "a30_vita_runtime.cpp"

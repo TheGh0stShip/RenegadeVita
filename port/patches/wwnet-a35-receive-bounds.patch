@@ -1,0 +1,152 @@
+--- a/packetmgr.cpp
++++ b/packetmgr.cpp
+@@ -435,8 +435,10 @@
+  * HISTORY:                                                                                    *
+  *   9/26/2001 2:14PM ST : Created                                                             *
+  *=============================================================================================*/
+-int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size)
++int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size, int available_delta_bytes)
+ {
++	delta_size = 0;
++	if (available_delta_bytes < static_cast<int>(sizeof(PacketDeltaHeaderStruct))) return 0;
+ 	if (base_packet == NULL) {
+ 		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad base packet\n"));
+ 		return(0);
+@@ -452,7 +454,7 @@
+ 		return(0);
+ 	}
+ 
+-	if (base_packet_size > 500) {
++	if (base_packet_size < 1 || base_packet_size > 500) {
+ 		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad base packet size\n"));
+ 		return(0);
+ 	}
+@@ -471,12 +473,14 @@
+ 	unsigned char *read_delta_ptr = delta_packet + sizeof(PacketDeltaHeaderStruct);
+ 	pm_assert(sizeof(PacketDeltaHeaderStruct) == 1);
+ 	unsigned char *chunk_ptr = read_delta_ptr;
++	const unsigned char *delta_end = delta_packet + available_delta_bytes;
+ 
+ 	/*
+ 	** If there is chunk info then extract that first. Use it to copy the approprate parts of the base packet into the add packet.
+ 	*/
+ 	if (header->ChunkPack) {
+ 		for (int i=0 ; i<base_packet_size - 7 ; i+=8) {
++			if (read_delta_ptr >= delta_end) return 0;
+ 			if (Get_Bit(read_delta_ptr, read_bit_pos)) {
+ 				memcpy(&reconstructed_packet[i], &base_packet[i], 8);
+ 				restored_bytes += 8;
+@@ -487,6 +491,7 @@
+ 		** If the packet isn't an even number of chunks long then pull out an extra bit and throw it away. It should always be 0.
+ 		*/
+ 		if ((base_packet_size & 7) != 0) {
++			if (read_delta_ptr >= delta_end) return 0;
+ //#ifdef WWDEBUG
+ 			unsigned char bitty =
+ //#endif //WWDEBUG
+@@ -509,6 +514,7 @@
+ 		** If we have chunk info, then use it to skip matching chunks.
+ 		*/
+ 		if (header->ChunkPack) {
++			if (chunk_ptr >= delta_end) return 0;
+ 			if (Get_Bit(chunk_ptr, read_chunk_pos)) {
+ 				continue;
+ 			}
+@@ -518,6 +524,7 @@
+ 		** If this chunk didn't match then go through byte by byte and note differences.
+ 		*/
+ 		for (int j=i ; j<i+8 && j<base_packet_size ; j++) {
++			if (read_delta_ptr >= delta_end) return 0;
+ 			if (Get_Bit(read_delta_ptr, read_bit_pos)) {
+ 				reconstructed_packet[j] = base_packet[j];
+ 				restored_bytes++;
+@@ -534,6 +541,7 @@
+ 	if (read_bit_pos != 0) {
+ 		patch_bytes++;
+ 	}
++	if (patch_bytes > delta_end || num_patches > delta_end - patch_bytes) return 0;
+ 
+ 	/*
+ 	** Work out how many delta bytes we processed - it's needed for meta packet decoding.
+@@ -998,6 +1006,8 @@
+  *=============================================================================================*/
+ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet_size, unsigned char *ip_address, unsigned short port)
+ {
++	if (original_packet_size < static_cast<int>(sizeof(PacketPackHeaderStruct))) return false;
++	const unsigned char *packet_end = packet + original_packet_size;
+ 	/*
+ 	** Dereference a pointer to the packet header.
+ 	*/
+@@ -1010,7 +1020,9 @@
+ 	int packet_size = header->PacketSize;
+ 	bool more_packets = header->MorePackets;
+ 
+-	if (num_packets < 1 || packet_size > PACKET_MANAGER_MTU) {
++	if (num_packets < 1 || packet_size < 1 || packet_size > PACKET_MANAGER_MTU ||
++		num_packets > NumReceiveBuffers - NumReceivePackets ||
++		packet_size > original_packet_size - static_cast<int>(sizeof(*header))) {
+ 		WWDEBUG_SAY(("PacketManager - Packet decode error. num_packets = %d\n, packet_size = %d\n", num_packets, packet_size));
+ 		return(false);
+ 	}
+@@ -1036,6 +1048,7 @@
+ 	** Get the rest of the packets.
+ 	*/
+ 	for (int i=0 ; i<num_packets-1 ; i++) {
++		if (packet_ptr >= packet_end) return false;
+ 		PacketDeltaHeaderStruct * delta_header = (PacketDeltaHeaderStruct*) packet_ptr;
+ 
+ 		/*
+@@ -1046,7 +1059,7 @@
+ //#ifdef WWDEBUG
+ 			int bytes =
+ //#endif //WWDEBUG
+-				Reconstruct_From_Delta(&ReceiveBuffers[delta_base_index].ReceiveHoldingBuffer[0], &ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], (unsigned char *)delta_header, packet_size, delta_size);
++				Reconstruct_From_Delta(&ReceiveBuffers[delta_base_index].ReceiveHoldingBuffer[0], &ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], (unsigned char *)delta_header, packet_size, delta_size, static_cast<int>(packet_end - packet_ptr));
+ 			if (bytes != packet_size) {
+ 				WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Break_Packet -- bytes !=  packet_size\n"));
+ 				return(false);
+@@ -1067,6 +1080,7 @@
+ 			** Not a delta, just copy the whole thing.
+ 			*/
+ 			packet_ptr += sizeof(*delta_header);
++			if (packet_size > packet_end - packet_ptr) return false;
+ 			memcpy(&ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], packet_ptr, packet_size);
+ 			ReceiveBuffers[NumReceivePackets].ReceivePacketLength = packet_size;
+ 			packet_ptr += packet_size;
+@@ -1074,9 +1088,6 @@
+ 			Register_Packet_In(ip_address, port, 0, packet_size + UDP_HEADER_SIZE);
+ 			//WWDEBUG_SAY(("Extracted secondary packet from metapacket - %d (+1) bytes\n", PacketLength));
+ 		}
+-		if (NumReceivePackets >= PACKET_MANAGER_RECEIVE_BUFFERS) {
+-			break;
+-		}
+ 	}
+ 
+ 	int bytes_pulled_from_packet = packet_ptr - packet;
+@@ -1084,7 +1095,7 @@
+ 	/*
+ 	** More packets in this buffer?
+ 	*/
+-	if (more_packets && NumReceivePackets < PACKET_MANAGER_RECEIVE_BUFFERS) {
++	if (more_packets) {
+ 		if (!Break_Packet(packet_ptr, original_packet_size - bytes_pulled_from_packet, ip_address, port)) {
+ 			return(false);
+ 		}
+--- a/packetmgr.h
++++ b/packetmgr.h
+@@ -198,7 +198,7 @@
+ 		** Delta compression.
+ 		*/
+ 		static int Build_Delta_Packet_Patch(unsigned char *base_packet, unsigned char *add_packet, unsigned char *delta_packet, int base_packet_size, int add_packet_size);
+-		static int Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size);
++		static int Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size, int available_delta_bytes);
+ 		bool Break_Packet(unsigned char *packet, int packet_len, unsigned char *ip_address, unsigned short port);
+ 
+ 		/*
+@@ -356,4 +356,4 @@
+ */
+ extern PacketManagerClass PacketManager;
+ 
+-#endif //_PACKETMGR_H
+\ No newline at end of file
++#endif //_PACKETMGR_H

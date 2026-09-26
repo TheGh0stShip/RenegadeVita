@@ -1,0 +1,47 @@
+--- a/datasafe.h
++++ b/datasafe.h
+@@ -4161,7 +4161,7 @@
+ template <class T>
+ inline SafeDataClass<T>::operator long (void) const
+ {
+-	ds_assert(sizeof(T) == sizeof(long));
++	static_assert(sizeof(T) == sizeof(int32_t), "DataSafe long conversion preserves a 32-bit word");
+ 
+ 	T *data_ptr = NULL;
+ 
+@@ -4185,7 +4185,9 @@
+ 			DataSafeClass<T>::Get(Handle, data_ptr);
+ 		ds_assert(ok);
+ 		if (data_ptr) {
+-			return(*((long*)data_ptr));
++			int32_t word;
++			memcpy(&word, data_ptr, sizeof(word));
++			return static_cast<long>(word);
+ 		}
+ 	}
+ 
+@@ -4216,7 +4218,7 @@
+ template <class T>
+ inline SafeDataClass<T>::operator unsigned long (void) const
+ {
+-	ds_assert(sizeof(T) == sizeof(unsigned long));
++	static_assert(sizeof(T) == sizeof(uint32_t), "DataSafe unsigned long conversion preserves a 32-bit word");
+ 
+ 	T *data_ptr = NULL;
+ 
+@@ -4240,7 +4242,9 @@
+ 			DataSafeClass<T>::Get(Handle, data_ptr);
+ 		ds_assert(ok);
+ 		if (data_ptr) {
+-			return(*((unsigned long*)data_ptr));
++			uint32_t word;
++			memcpy(&word, data_ptr, sizeof(word));
++			return static_cast<unsigned long>(word);
+ 		}
+ 	}
+ 
+@@ -4461,4 +4465,3 @@
+ 
+ 
+ 
+-

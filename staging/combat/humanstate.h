@@ -178,6 +178,11 @@ public:
 	void				Update_State( void );
 	void				Post_Think( void );
 	void				Update_Animation( void );
+	void Set_Network_Animation_Options(int hold_style, bool anim_override, bool movement_loiters) {
+		NetworkHoldStyle = hold_style;
+		NetworkAnimOverride = anim_override;
+		NetworkMovementLoiters = movement_loiters;
+	}
 	bool				Is_Locked( void )												{ return StateLocked; }
 
 	bool				Get_Leg_Mode( void );
@@ -198,6 +203,9 @@ private:
 	int					StateFlags;
 	int					SubState;
 	int					WeaponHoldStyle;		// How is he holding his weapon?
+	int NetworkHoldStyle = -1;
+	bool NetworkAnimOverride = true;
+	bool NetworkMovementLoiters = true;
 	float					WeaponHoldTimer;		// How long until we lower the weapon?
 	bool					LoitersAllowed;
 	float					LoiterDelay;

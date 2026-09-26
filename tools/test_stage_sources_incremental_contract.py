@@ -7,6 +7,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class StageSourcesIncrementalContractTests(unittest.TestCase):
+    def test_final_patch_precedes_content_comparison(self):
+        script = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
+        self.assertLess(script.rindex('patch --batch'), script.index('tools/sync_staged_tree.py'))
+        self.assertLess(script.index('tools/sync_staged_tree.py'),
+                        script.index('--write-staging-receipt'))
+
     def test_stage_sources_has_opt_in_content_preserving_mode(self):
         script = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
         self.assertIn("RENEGADE_INCREMENTAL_STAGE", script)

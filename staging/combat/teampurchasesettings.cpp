@@ -90,6 +90,9 @@ TeamPurchaseSettingsDefClass *		TeamPurchaseSettingsDefClass::DefinitionArray[TE
 //
 //////////////////////////////////////////////////////////////////////
 TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+    NetworkObjectClass(false),
+#endif
 	Team (TEAM_GDI),
 	BeaconNameID (0),
 	BeaconDefinitionID (0),
@@ -174,7 +177,7 @@ TeamPurchaseSettingsDefClass::~TeamPurchaseSettingsDefClass (void)
 	//
 	//	Remove this entry from the static array
 	//
-	if (Team < TEAM_COUNT) {
+	if (Team >= 0 && Team < TEAM_COUNT && DefinitionArray[Team] == this) {
 		DefinitionArray[Team] = NULL;
 	}
 
@@ -350,7 +353,7 @@ TeamPurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
 	//
 	//	Add this definition to the static array
 	//
-	if (Team < TEAM_COUNT) {
+	if (Team >= 0 && Team < TEAM_COUNT) {
 		DefinitionArray[Team] = this;
 	}
 	return ;
@@ -386,6 +389,6 @@ TeamPurchaseSettingsDefClass::Get_Enlisted_Name (int index)
 TeamPurchaseSettingsDefClass *
 TeamPurchaseSettingsDefClass::Get_Definition (TEAM team)
 {
+	if (team < 0 || team >= TEAM_COUNT) return NULL;
 	return DefinitionArray[team];
 }
-

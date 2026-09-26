@@ -1,0 +1,314 @@
+--- a/soldier.h
++++ b/soldier.h
+@@ -59,6 +59,7 @@
+ 
+ 
+ struct TransitionCompletionDataStruct;
++#include "renegade_soldier_rare.h"
+ class	PrivateTimerClass;
+ class DynamicSpeechAnimClass;
+ class	TransitionEffectClass;
+@@ -347,8 +348,14 @@
+ 
+ 	// Stealth
+ 	virtual float		Get_Stealth_Fade_Distance(void) const;
++	bool Can_Steal_Vehicles() const { return !TTStateActive || TTState.CanStealVehicles; }
++	bool Can_Drive_Vehicles() const { return !TTStateActive || TTState.CanDriveVehicles; }
++	const RenegadeSoldierRareState *Get_TT_State() const { return TTStateActive ? &TTState : NULL; }
+ 
+ protected:
++	RenegadeSoldierRareState TTState;
++	bool TTStateActive = false;
++	void Update_TT_Skeleton(float seconds);
+ 	RenderObjClass		*	WeaponRenderModel;
+ 	RenderObjClass		*	BackWeaponRenderModel;
+ 	RenderObjClass		*	BackFlagRenderModel;
+@@ -444,4 +451,3 @@
+ };
+ 
+ #endif	//	SOLDIER_H
+-
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -35,6 +35,7 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ #include "soldier.h"
++#include "renegade_client_effects.h"
+ #include "debug.h"
+ #include "pscene.h"
+ #include "combat.h"
+@@ -958,12 +959,30 @@
+  	Get_Weapon_Bag()->Force_Changed();
+ 
+ 	SmartGameObj::Import_Rare( packet );
++	if (packet.Has_Read_Error()) return;
+ 
+ 	//
+ 	//	Read the definition ID from the packet
+ 	//
+ 	uint32 definition_id	= 0;
+ 	packet.Get( definition_id );
++	if (packet.Has_Read_Error()) return;
++	bool modern = false;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	modern = Renegade_Client_Uses_TT_Replication();
++#endif
++	RenegadeSoldierRareState incoming;
++	if (modern) {
++		if (!Renegade_Read_Soldier_Rare(packet, incoming)) return;
++		// Non-unit model scaling needs TT's renderer semantics, not a destructive
++		// call to the original shared hierarchy's relative Scale operation.
++		if (incoming.NetworkScale != 1.0f || incoming.WeaponHoldStyle < -1 ||
++			incoming.WeaponHoldStyle > 14) {
++			fprintf(stderr, "tt-soldier: unsupported model scale or hold style id=%u\n", definition_id);
++			packet.Mark_Read_Error();
++			return;
++		}
++	}
+ 
+ 	//
+ 	//	Did our definition change?
+@@ -981,7 +1000,19 @@
+ 			//	Re-initialize ourselves
+ 			//
+ 			Re_Init (*soldier_def);
+-		}		
++		} else if (modern) {
++			packet.Mark_Read_Error();
++			return;
++		}
++	}
++	if (modern) {
++		TTState = incoming;
++		TTStateActive = true;
++		Set_Max_Speed(TTState.MaxSpeed);
++		HumanState.Set_Network_Animation_Options(TTState.WeaponHoldStyle,
++			TTState.HumanAnimOverride, TTState.MovementLoitersAllowed);
++		Adjust_Skeleton(TTState.SkeletonHeight, TTState.SkeletonWidth);
++		if (!HumanState.Is_Locked()) HumanState.Update_Animation();
+ 	}
+ 
+ 	return ;
+@@ -1610,6 +1641,10 @@
+ //------------------------------------------------------------------------------------
+ void SoldierGameObj::Apply_Control( void )
+ {
++	if (TTStateActive) {
++		if (TTState.Freeze) Clear_Control();
++		if (TTState.BlockActionKey) Control.Set_Boolean(ControlClass::BOOLEAN_ACTION, false);
++	}
+ 	// if gameplay not permitted, skip
+ 	if ( !CombatManager::Is_Gameplay_Permitted() ) {
+ 		Clear_Control();
+@@ -2239,7 +2274,7 @@
+ 	}
+ 
+ 	// Footsteps
+-	if (!Is_Sniping() && !InFlyMode && CombatManager::Is_Gameplay_Permitted() && do_steps && Is_Control_Enabled() ) {
++	if ((!TTStateActive || TTState.Footsteps) && !Is_Sniping() && !InFlyMode && CombatManager::Is_Gameplay_Permitted() && do_steps && Is_Control_Enabled() ) {
+ 
+ 		bool leg_mode = HumanState.Get_Leg_Mode();
+ 
+@@ -2286,6 +2321,7 @@
+ //------------------------------------------------------------------------------------
+ void	SoldierGameObj::Think( void )
+ {
++	if (TTStateActive) Update_TT_Skeleton(TimeManager::Get_Frame_Seconds());
+ 	{	WWPROFILE( _profile_name );
+ 
+ 		if ( this == COMBAT_STAR ) {
+@@ -2690,7 +2726,7 @@
+ 		Vector3 muzzle_pos = true_muzzle.Get_Translation();
+ 		_muzzle.Obj_Look_At( muzzle_pos, Get_Targeting_Pos(), 0 );
+ 
+-		if ( !Is_Human_Controlled() ) {
++		if ( !Is_Human_Controlled() && (!TTStateActive || !TTState.OverrideMuzzleDirection) ) {
+ 			// If the bullet is not close to going down the muzzle, force it to be
+ 			Vector3	to_target = _muzzle.Get_X_Vector();
+ 			Vector3	down_muzzle = true_muzzle.Get_X_Vector();
+@@ -3976,7 +4012,8 @@
+ 	} else {
+ 		// Play wound animation
+ 		// If state is interruptable.....
+-		if ( Get_State() == HumanStateClass::UPRIGHT && anim_ok ) {
++		if ( Get_State() == HumanStateClass::UPRIGHT && anim_ok &&
++			(!TTStateActive || TTState.CanPlayDamageAnimations) ) {
+ 			HumanState.Set_State( HumanStateClass::WOUNDED, ouch_type );
+ 		}
+ 	}
+@@ -4251,13 +4288,29 @@
+ }
+ 
+ //------------------------------------------------------------------------------------
++void SoldierGameObj::Update_TT_Skeleton(float seconds)
++{
++	const float old_height = TTState.SkeletonHeight, old_width = TTState.SkeletonWidth;
++	const auto advance = [seconds](float value, float target, float speed) {
++		const float step = WWMath::Max(0.0f, speed * seconds);
++		return value < target ? WWMath::Min(target, value + step) : WWMath::Max(target, value - step);
++	};
++	TTState.SkeletonHeight = advance(old_height, TTState.TargetHeight, TTState.HeightSpeed);
++	TTState.SkeletonWidth = advance(old_width, TTState.TargetWidth, TTState.WidthSpeed);
++	if (TTState.SkeletonHeight != old_height || TTState.SkeletonWidth != old_width)
++		Adjust_Skeleton(TTState.SkeletonHeight, TTState.SkeletonWidth);
++}
++
+ void	SoldierGameObj::Adjust_Skeleton( float height, float width )
+ {
+ //	Debug_Say(( "Height %f, width %f\n", height, width ));
+ 
+ 	// Only adjust male skeletons
+ 	Animatable3DObjClass * robj = (Animatable3DObjClass *)Peek_Model();
+-	if ( !robj || !robj->Get_HTree() || robj->Get_HTree()->Get_Name()[2] != 'A' ) {
++	if ( !robj || !robj->Get_HTree() ) return;
++	const char *skeleton = robj->Get_HTree()->Get_Name();
++	if (TTStateActive ? (strlen(skeleton) != 9 || skeleton[0] != 'S' || skeleton[1] != '_') :
++		skeleton[2] != 'A') {
+ 		return;
+ 	}
+ 
+@@ -4266,9 +4319,11 @@
+ 	HTreeClass	* tree_wide = NULL;
+ 
+ 	if ( tree_base == NULL ) {
+-		tree_base = WW3DAssetManager::Get_Instance()->Get_HTree( "s_a_human" );
+-		tree_tall = WW3DAssetManager::Get_Instance()->Get_HTree( "s_a_tall" );
+-		tree_wide = WW3DAssetManager::Get_Instance()->Get_HTree( "s_a_wide" );
++		char base[16] = "s_a_human", tall[16] = "s_a_tall", wide[16] = "s_a_wide";
++		if (TTStateActive) base[2] = tall[2] = wide[2] = skeleton[2];
++		tree_base = WW3DAssetManager::Get_Instance()->Get_HTree(base);
++		tree_tall = WW3DAssetManager::Get_Instance()->Get_HTree(tall);
++		tree_wide = WW3DAssetManager::Get_Instance()->Get_HTree(wide);
+ 	}
+ 
+ 	if ( ( tree_base != NULL ) && ( tree_tall != NULL ) && ( tree_wide != NULL ) ) {
+@@ -4284,7 +4339,7 @@
+ 
+ /*
+ //------------------------------------------------------------------------------------
+-void SoldierGameObj::Set_Ctf_Team_Flag(int team) 
++void SoldierGameObj::Set_Ctf_Team_Flag(int team)
+ {
+ 	WWASSERT(
+ 		team == NO_FLAG			|| 
+@@ -5309,4 +5364,3 @@
+ 		CombatManager::Soldier_Dies(this);
+ 	}
+ 	*/
+-
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -2016,6 +2016,7 @@
+ 	WWASSERT(p_soldier != NULL);
+ 
+ 	bool is_permitted = true;
++	if (!p_soldier->Can_Drive_Vehicles() && Get_Driver() == NULL) return false;
+ 
+ 	int player_type = p_soldier->Get_Player_Type();
+ 
+--- a/humanstate.h
++++ b/humanstate.h
+@@ -178,6 +178,11 @@
+ 	void				Update_State( void );
+ 	void				Post_Think( void );
+ 	void				Update_Animation( void );
++	void Set_Network_Animation_Options(int hold_style, bool anim_override, bool movement_loiters) {
++		NetworkHoldStyle = hold_style;
++		NetworkAnimOverride = anim_override;
++		NetworkMovementLoiters = movement_loiters;
++	}
+ 	bool				Is_Locked( void )												{ return StateLocked; }
+ 
+ 	bool				Get_Leg_Mode( void );
+@@ -198,6 +203,9 @@
+ 	int					StateFlags;
+ 	int					SubState;
+ 	int					WeaponHoldStyle;		// How is he holding his weapon?
++	int NetworkHoldStyle = -1;
++	bool NetworkAnimOverride = true;
++	bool NetworkMovementLoiters = true;
+ 	float					WeaponHoldTimer;		// How long until we lower the weapon?
+ 	bool					LoitersAllowed;
+ 	float					LoiterDelay;
+--- a/humanstate.cpp
++++ b/humanstate.cpp
+@@ -661,6 +661,8 @@
+ 
+ static_assert((sizeof(_weapon_style_names) / sizeof(_weapon_style_names[0])) ==
+ 	NUM_WEAPON_HOLD_STYLES, "weapon hold style table must match enum");
++// Additional TT b9000 animation styles; original weapon definitions stay intact.
++static const char * _tt_extra_weapon_style_names[] = { "J2", "K2", "L2", "M0", "N0" };
+ 
+ static const char * _dive_anims[ 4 * 2 ] = {
+ 	// Forwrd Anims
+@@ -698,7 +700,11 @@
+ 		// if you change your animn when locked, death state may clear a scripted anim
+ 	}
+ 
+-	int hold_style = WeaponHoldStyle;
++	if (NetworkHoldStyle == 14 && State != DEATH) {
++		WeaponHoldStyle = 14;
++		return;
++	}
++	int hold_style = NetworkHoldStyle >= 0 ? NetworkHoldStyle : WeaponHoldStyle;
+ 
+ 	// Setup animation for state, substate, weapon, tilt, etc.
+ 	if ( (State == UPRIGHT) || (State == AIRBORNE) ) {
+@@ -740,11 +746,12 @@
+ 		}
+ 
+ 		const char * leg_anim_name = LegAnimNames[ leg_style ];
+-		if ( hold_style < 0 || hold_style >= NUM_WEAPON_HOLD_STYLES ) {
++		if ( hold_style < 0 || hold_style >= (NetworkHoldStyle >= 0 ? 15 : NUM_WEAPON_HOLD_STYLES) ) {
+ 			// Corrupt serialized/mod data must not index the animation table.
+ 			hold_style = WEAPON_HOLD_STYLE_EMPTY_HANDS;
+ 		}
+-		const char * torso_anim_name = _weapon_style_names[hold_style];
++		const char * torso_anim_name = hold_style < NUM_WEAPON_HOLD_STYLES ?
++			_weapon_style_names[hold_style] : _tt_extra_weapon_style_names[hold_style - NUM_WEAPON_HOLD_STYLES];
+ 		if ( torso_anim_name == NULL ) {
+ 			torso_anim_name = _weapon_style_names[WEAPON_HOLD_STYLE_EMPTY_HANDS];
+ 		}
+@@ -791,7 +798,7 @@
+ 			anim_name.Format( "S_A_HUMAN.H_A_%s%s", torso_anim_name, leg_anim_name );
+ 
+ 			// Human Anim Override
+-			if ( HumanAnimOverride != NULL ) {
++			if ( HumanAnimOverride != NULL && NetworkAnimOverride ) {
+ 				if ( hold_style == WEAPON_HOLD_STYLE_EMPTY_HANDS ) {
+ 					if ( leg_style == LEG_STYLE_RUN_FORWARD ) {
+ 						anim_name = HumanAnimOverride->RunEmptyHands;
+@@ -1046,7 +1053,7 @@
+ 	if ( WeaponHoldTimer > 0 && !Get_State_Flag( CROUCHED_FLAG ) ) {
+ 		Reset_Loiter_Delay();
+ 		WeaponHoldTimer -= TimeManager::Get_Frame_Seconds();
+-		if ( WeaponHoldTimer <= 0 ) {
++		if ( WeaponHoldTimer <= 0 && NetworkMovementLoiters ) {
+ 			if (	WeaponHoldStyle == WEAPON_HOLD_STYLE_HANDGUN ||
+ 					WeaponHoldStyle == WEAPON_HOLD_STYLE_C4 ||
+ 					WeaponHoldStyle == WEAPON_HOLD_STYLE_BEACON )
+@@ -1518,4 +1525,3 @@
+ 	int ground_type = HumanPhys->Get_Contact_Surface_Type();
+ 	SurfaceEffectsManager::Apply_Effect( ground_type, SurfaceEffectsManager::HITTER_TYPE_FOOTSTEP_LAND, tm );
+ }
+-
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -1648,10 +1648,13 @@
+ 			draw.Snap_To_Units( Vector2( 1, 1 ) );
+ 			TargetRenderer->Add_Quad( draw, uv, color );
+ 
+-			if ( obj->Get_Translated_Name_ID() != 0 ) {
++			SoldierGameObj *named_soldier = obj->As_PhysicalGameObj() ? obj->As_PhysicalGameObj()->As_SoldierGameObj() : NULL;
++			const RenegadeSoldierRareState *tt_name = named_soldier ? named_soldier->Get_TT_State() : NULL;
++			const bool bot_named = tt_name && tt_name->BotTag.Get_Length() != 0;
++			if ( obj->Get_Translated_Name_ID() != 0 || bot_named ) {
+ 				TDBObjClass *translate_obj = TranslateDBClass::Find_Object( obj->Get_Translated_Name_ID() );
+-				if ( translate_obj ) {
+-					WideStringClass translate_string=translate_obj->Get_String();
++				if ( translate_obj || bot_named ) {
++					WideStringClass translate_string = bot_named ? tt_name->BotTag : translate_obj->Get_String();
+ 
+ 					if ( building != NULL && HUDInfo::Get_Info_Object_Is_MCT() ) {
+ 						translate_string=TRANSLATE( IDS_Enc_Struct_Nod_MCT_Name );

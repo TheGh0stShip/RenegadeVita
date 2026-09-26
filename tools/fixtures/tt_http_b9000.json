@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "reference_sha256": "d520443f5618b7d34d48a2e1d4b8348516d53d3ac9a7e201077e259f64c100db",
+  "user_agent": "TT/4.80.9000-20252502",
+  "evidence": "pinned WinINet initializer constants and call site",
+  "function": "0x121c6d40",
+  "credentials_read": false
+}

@@ -132,6 +132,9 @@ export CCACHE_BASEDIR="$rv_root"
 echo "Verifying the pinned Bink-enabled Vita FFmpeg dependency..."
 bash "$rv_root/tools/build_ffmpeg_bink_vita.sh"
 bash "$rv_root/tools/build_vitagl_demo.sh"
+if [[ "$rv_m00_demo" == "0" ]]; then
+	bash "$rv_root/tools/build_ttfs_https_vita.sh"
+fi
 ccache --zero-stats
 echo "ccache statistics reset; native-ext4 CMake launchers are required."
 
@@ -204,17 +207,22 @@ cmake --build "$rv_root/build/host-a30-definitions" \
 		a35_vita_button_state_contract_selftest \
 		a35_vita_render_state_contract_selftest \
 		a35_ddsfile_tga_alias_contract_selftest \
+		a35_campaign_flight_recorder_selftest \
+		a35_wwmath_validity_selftest \
 	--parallel "$rv_build_jobs"
 "$rv_root/build/host-a30-definitions/a31_capture_telemetry_selftest" | tee -a "$rv_host_output"
 "$rv_root/build/host-a30-definitions/a31_vita_input_contract_selftest" | tee -a "$rv_host_output"
 "$rv_root/build/host-a30-definitions/a35_vita_button_state_contract_selftest" | tee -a "$rv_host_output"
 "$rv_root/build/host-a30-definitions/a35_vita_render_state_contract_selftest" | tee -a "$rv_host_output"
 "$rv_root/build/host-a30-definitions/a35_ddsfile_tga_alias_contract_selftest" | tee -a "$rv_host_output"
+"$rv_root/build/host-a30-definitions/a35_campaign_flight_recorder_selftest" | tee -a "$rv_host_output"
+"$rv_root/build/host-a30-definitions/a35_wwmath_validity_selftest" | tee -a "$rv_host_output"
 require_host_line "A2.2 host asset integration PASS"
 require_host_line "A3.0 canonical host integration PASS"
 require_host_line "A3.1 gameplay-seed host integration PASS"
 require_host_line "A3.1 original interactive ASan host integration PASS"
 require_host_line "A3.1 hardware-equivalent interactive ASan PASS: two in-process cycles; 120 original input/network/Combat/render frames each"
+require_host_line "a31.m13_sam_damage_smoke_completed=true"
 require_host_line "a31.interactive_first_frame_geometry=true"
 require_host_line "a31.interactive_first_frame_rejected=0"
 require_host_line "a31.interactive_first_frame_unsupported=0"
@@ -222,6 +230,8 @@ require_host_line "A3.1 capture telemetry host self-test: PASS (26 checks, 0 fai
 require_host_line "A3.2 Vita controller axis-contract: PASS (22 checks, 0 failures)"
 require_host_line "A3.5 Vita button-state contract: PASS (10 checks, 0 failures)"
 require_host_line "A3.5 Vita ShaderClass render-state contract: 13 checks, 0 failures"
+require_host_line "flight recorder append, replacement, ring rollover and owner thread PASS"
+require_host_line "WWMath 32/64-bit validity storage PASS"
 require_host_line "A3.5 DDSFileClass tga-alias contract: 11 checks, 0 failures"
 require_host_line "A3 renderer process lifecycle: 11 checks, 0 failures; native=1 sessions=2 shutdowns=2"
 require_host_line "A3.2 texture upload contract: PASS (4 checks, 0 failures)"
@@ -270,6 +280,8 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_a4_original_frontend_contract \
 	tools.test_vita_texture_surface_contract \
 	tools.test_audit_tt_reference tools.test_vita_audio_provider \
+	tools.test_query_renegade_server \
+	tools.test_ttfs \
 	tools.test_vita_open_source_references
 
 echo "Clean-restaging original source pools with the deterministic patch set..."

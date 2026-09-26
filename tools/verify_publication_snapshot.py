@@ -30,7 +30,9 @@ def main() -> int:
         if archived or unpack.returncode:
             raise RuntimeError("could not materialize publication tree")
         subprocess.run(["git", "init", "-q"], cwd=snapshot, check=True)
-        subprocess.run(["git", "add", "--all"], cwd=snapshot, check=True)
+        # Every archived file was tracked. Preserve that even if a newer ignore
+        # rule would hide it, so accidental tracked secrets cannot evade hygiene.
+        subprocess.run(["git", "add", "--force", "--all"], cwd=snapshot, check=True)
         for check in (
             [sys.executable, "tools/verify_public_docs.py", "--root", "."],
             [sys.executable, "tools/verify_repo_hygiene.py", "--root", "."],

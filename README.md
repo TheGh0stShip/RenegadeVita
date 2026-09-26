@@ -4,12 +4,12 @@ An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: 
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Current development candidate: A3.5-dev195.** The native ARM client joined
-> RenCorner in Vita3K, downloaded server packages, rendered City_U1, accepted
-> movement input, and returned cleanly to the menu. Full multiplayer, complete
-> campaign progression, and physical Vita performance remain unverified.
+> **Current development candidate: A3.5-dev197.** The M13 EVA exit-to-menu
+> handoff is repaired, packaged, and installed in Vita3K. Campaign save reload
+> and physical Vita/PSTV behavior still require testing. Dev195's RenCorner join remains the
+> latest multiplayer runtime evidence.
 
-[Download Dev195](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev195)
+[Download Dev197](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev197)
 | [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
 | [Multiplayer setup](docs/MULTIPLAYER.md)
 | [Project video page](https://thegh0stship.github.io/RenegadeVita/)
@@ -21,19 +21,20 @@ is preserved; its data subset is not sufficient for the full-port candidate.
 
 ## Where the port stands
 
-Dev195 is a **fast-build development checkpoint**, installed and run in
-Vita3K. It is not canonical or physical acceptance. See the
-[candidate report](reports/DEV195_RENCORNER_NATIVE_JOIN.md) for hashes,
-verification scope, performance caveats, and remaining defects.
+Dev197 is a **campaign menu-handoff development checkpoint**, built and
+installed in Vita3K but not yet gameplay-tested. See the
+[candidate report](reports/DEV197_ISSUE1_SAVE_MENU.md) for hashes and limits.
+Dev195 remains the latest [multiplayer runtime evidence](reports/DEV195_RENCORNER_NATIVE_JOIN.md).
 
 | Evidence area | Current state |
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
+| Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation and Vita3K installation passed. EVA exit now queues a return to the original frontend after session cleanup; runtime retest pending. |
 | Dev195 build | 171 fast contracts and the original DDS alias test passed; 266 deterministic patches; ARM ELF/SELF/VPK produced and installation hashes verified. |
 | Dev195 multiplayer | Vita3K joined RenCorner, mounted five packages, rendered 9,723 frames, moved the player, and completed session teardown. The public list showed `PSVita`; the client requested `PS Vita`. The name-normalization boundary is unresolved. |
 | Remaining multiplayer work | Purchase dialog did not appear; early text had malformed glyphs. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
-| Campaign | Earlier runs completed M13 and entered M01. M13 cinematic/effects/animation defects and M01 stalls remain open; Dev195's multiplayer test does not resolve them. |
-| Physical testing | Dev134 deployment/readback is historical, not Dev195 acceptance. Issue #1 contains Dev142 PSTV user observations, including blocked progression and save/load. No Dev195 physical test is claimed. |
+| Campaign | Dev196 wrote an M13 pre-Ion-beacon save, but its reload is unverified. Earlier runs completed M13 and entered M01; cinematic, actor and M01 stalls remain open. |
+| Physical testing | Dev134 deployment/readback is historical, not Dev197 acceptance. Issue #1 contains Dev142 PSTV user observations, including blocked progression and save/load. No Dev197 physical test is claimed. |
 | Visual evidence | The gallery below is historical. Emulator captures and historical physical stills do not establish current physical acceptance or stable 60 FPS. |
 
 Read the concise [current status](docs/CURRENT_STATUS.md) before treating any candidate as playable. The durable engineering record is in [reports/PORT_STATUS.md](reports/PORT_STATUS.md); it distinguishes host, Vita3K, and physical-Vita evidence.
@@ -65,7 +66,7 @@ Those images are historical, not a same-camera benchmark. A verified post-render
 
 - [Quickstart](docs/QUICKSTART.md) — clone and produce a local canonical or fast candidate build.
 - [Installing on Vita](docs/INSTALLING.md) — retail-data boundaries and manual installation safeguards.
-- [Current status](docs/CURRENT_STATUS.md) — Dev195 evidence, campaign limitations, and physical gates.
+- [Current status](docs/CURRENT_STATUS.md) — Dev197 evidence, campaign limitations, and physical gates.
 - [Multiplayer](docs/MULTIPLAYER.md) — experimental direct entry, private identity, trusted TLS, and downloaded-asset boundaries.
 - [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
 - [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
@@ -81,7 +82,7 @@ WSL2 Ubuntu or Linux with VitaSDK is the supported host environment.
 git clone --recurse-submodules https://github.com/TheGh0stShip/RenegadeVita.git
 cd RenegadeVita
 git submodule update --init --recursive
-RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev197 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 `tools/build.sh` is the canonical candidate path. It preserves validation, deterministic staging, ARM package identity, diagnostics, and retail-exclusion checks. A fast build is useful for iteration only; it never substitutes for a canonical candidate or physical proof.

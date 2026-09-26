@@ -2,7 +2,16 @@
 
 Updated: 2026-09-26
 
-## Current A3.5-dev195 checkpoint
+## Current A3.5-dev197 checkpoint
+
+Dev197 repairs the M13 EVA exit handoff: after original Combat/session teardown,
+the Vita outer loop reopens the original frontend rather than ending the app.
+Canonical host/ARM/package checks passed and the VPK was installed and
+hash-verified in Vita3K. The pre-Ion-beacon `savegame03.sav` exists, but Dev197
+has not yet reloaded it or been tested on PSTV. Issue #1 remains open.
+See [Dev197 evidence and limits](../reports/DEV197_ISSUE1_SAVE_MENU.md).
+
+## Dev195 multiplayer evidence
 
 Dev195 is a fast-build native ARM candidate, packaged, installed and run in
 Vita3K. It joined RenCorner, downloaded and mounted five TTFS packages, loaded

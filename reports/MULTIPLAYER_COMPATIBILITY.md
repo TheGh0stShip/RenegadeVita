@@ -1,10 +1,10 @@
 # Native multiplayer compatibility
 
-## 2026-09-24: Dev195 Native Join In Vita3K
+## 2026-09-26 Status: Dev195 Native Join In Vita3K
 
 The installed ARM executable now downloads all five server packages, mounts
 them through original factories, loads City_U1 and receives the server-created
-player/Soldier.9723 rendered frames, bounded movement and START original session
+player/Soldier. 9,723 rendered frames, bounded movement and START original session
 teardown/main-menu return are verified. Public snapshot lists PSVita without a
 space, rather than the requested PS Vita. Exact normalization is unresolved.
 The purchase dialog did not appear after Action; ongoing native dialog dispatch
@@ -14,6 +14,9 @@ physical acceptance and leak closure remain open. The outer runner timed out
 at the returned menu; retain TIMEOUT_UNASSESSED separately from session PASS.
 Evidence and exact setup/hashes: DEV195_RENCORNER_NATIVE_JOIN.md. This supersedes
 all earlier unlaunched/public-list-unverified entries, not full-game acceptance.
+The runtime return is from 2026-09-25. Dev195 is now published with matching
+source, green GitHub Actions and a redownload-verified VPK. Older work-unit
+entries below preserve their original unpublished/unlaunched states as history.
 
 ## 2026-09-24: Original Owners And Dev195 Package
 

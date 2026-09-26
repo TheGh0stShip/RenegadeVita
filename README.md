@@ -12,6 +12,7 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 [Download Dev195](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev195)
 | [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
 | [Multiplayer setup](docs/MULTIPLAYER.md)
+| [Project video page](https://thegh0stship.github.io/RenegadeVita/)
 
 Development prereleases contain the executable and package metadata only. This
 is not a finished game release. Supply your own legally obtained retail data.

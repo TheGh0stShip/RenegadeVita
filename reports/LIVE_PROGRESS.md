@@ -5,12 +5,14 @@
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 existing candidate evidence gates complete`
 
-Now: Dev195 native RenCorner join/render/movement/clean session exit verified in
-Vita3K; preserving and publishing the matching development checkpoint.
+Now: Dev195 native RenCorner checkpoint published with verified source CI and
+release-asset hash; public documentation and installation guidance are current.
 Completed: native private identity/trust provisioning and one-shot TT entry;
 five downloaded packages, City_U1 world, server-created player and Soldier.
 Evidence: public listing PSVita, visible world/HUD captures, bounded movement,
-9723 frames and original START session teardown/menu return. No physical gate.
+9,723 frames and original START session teardown/menu return. No physical gate.
+Publication: source e7f4875, GitHub Actions 36273078667 success; exact-tree local
+checks, 13 publication guard tests and 12 build/loading/ABI tests passed.
 Next: original multiplayer dialog dispatch, terminal activation/text, round flow.
 Blocker: no external blocker; full multiplayer and physical acceptance remain open.
 

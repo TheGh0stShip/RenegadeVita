@@ -25,7 +25,8 @@ sustained multiplayer performance remain unaccepted. START leaves the server;
 it does not yet provide the complete multiplayer pause/menu flow.
 
 See [Dev195 evidence and hashes](../reports/DEV195_RENCORNER_NATIVE_JOIN.md),
-[installation](INSTALLING.md), and [multiplayer setup](MULTIPLAYER.md).
+[installation](INSTALLING.md), [multiplayer setup](MULTIPLAYER.md), and
+[verified publication](../reports/DEV195_PUBLICATION.md).
 
 ## Campaign status
 

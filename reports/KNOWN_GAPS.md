@@ -5,6 +5,13 @@ verified. Remaining: purchase dialog activation/update/render, malformed early
 multiplayer text, complete pause/chat/round transitions, full combat/vehicles/
 respawn acceptance, exact requested-space name, float-VIS ownership and physical
 testing. No full multiplayer or lag-free claim. See DEV195_RENCORNER_NATIVE_JOIN.md.
+Dev195 publication is complete; the source CI passed and the released VPK hash
+was independently verified after download.
+
+## Historical gap snapshots
+
+The entries below retain the state of earlier work units; later evidence above
+supersedes their unlaunched or unpublished status, not their unresolved gameplay gaps.
 
 2026-09-24 Dev195 supersedes the six Combat linkage gaps below. Package and
 Vita3K installation pass, but native TT entry has not launched. Full modern

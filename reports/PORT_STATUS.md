@@ -8,7 +8,12 @@ snapshot lists PSVita (no space); exact-name normalization remains unresolved.
 Purchase dialog did not appear; multiplayer dialog dispatch/text/round flow and
 full gameplay acceptance remain open. No physical performance/acceptance claim.
 Exact evidence, limitations and setup: [Dev195](DEV195_RENCORNER_NATIVE_JOIN.md).
-This supersedes the unlaunched state below. GitHub publication being prepared.
+This supersedes the unlaunched state below. Dev195 is published as an experimental
+[prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev195).
+The matching source commit passed GitHub Actions; the downloaded release VPK
+matches the tested package hash. No new runtime or physical claim follows.
+
+## Historical checkpoints
 
 2026-09-24 Dev195 package checkpoint: six missing original Combat owners now
 link; state-machine syntax adaptation passes callback/save-load ASan/LSan test.

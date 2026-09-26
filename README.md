@@ -4,30 +4,34 @@ An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: 
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Development status — source-available development repository.** The current Dev134
-> package is available with the tutorial-only setup guide at
-> [Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
-> No retail data is in this repository or its VPKs. Use only your own legally
+> **Development status — source-available development repository.** The current
+> campaign candidate is **A3.5-dev194**. It passed build and host checks and was
+> installed in Vita3K, but has not been launched there. The separate
+> [Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
+> has a tutorial setup guide; its download is not a Dev194 campaign release.
+> No retail data is in this repository or its VPKs. Use your own legally
 > obtained retail data.
 
 This repository publishes source code and build instructions only. It is not a public game release; it does not include retail game data or a redistributable game release.
 
 ## Where the port stands
 
-The current candidate is **A3.5-dev134**. Its canonical ARM/package closure
-and matching Vita3K tutorial checkpoint passed. The exact physical deployment
-was readback-verified on title `RNEGA3101`; physical runtime FPS, movie audio,
-and complete-demo acceptance remain separate open gates. See
-[reports/DEV134_PHYSICAL_MILESTONE.md](reports/DEV134_PHYSICAL_MILESTONE.md).
+The current campaign candidate is **A3.5-dev194**. Canonical host/sanitizer,
+174 existing tests, original M00/M01 host-runtime cycles, ARM build, SELF/VPK
+identity, and diagnostics packaging passed. It was installed in Vita3K but
+**has not been launched**. Its VPK SHA-256 is
+`8b7ba2c0bcb8a57eaee978041ca47765807492b09d14329e6c0652e4da61c15c`.
+The four animated M01 models at the end of the Dev192 trace are now warmed
+without retaining mutable live instances; that change has no verified runtime
+result yet. See [port status](reports/PORT_STATUS.md) and
+[live progress](reports/LIVE_PROGRESS.md).
 
 | Evidence area | Current state |
 | --- | --- |
-| Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
-| Latest physical return | **A3.5-dev134 deployment/readback verified**: the exact ARM executable and VPK were installed title-scoped after matching Vita3K checks. Manual LiveArea launch and hardware runtime evidence remain pending because remote launch services were unavailable. |
-| Retained historical local candidates | **A3.5-dev88 through A3.5-dev123**, including **A3.5-dev93**: superseded source/build and emulator milestones retained for provenance. Dev124 and Dev126 returned physical failure evidence; Dev134 is the current verified deployment checkpoint. |
-| Latest local candidate | **A3.5-dev134**: canonical host/sanitizer/ARM/package closure and matching Vita3K refinery visual, pause/resume, and clean-exit checks passed. The discarded textured-skin RGB work is measured and correctness-tested; native hardware FPS remains unaccepted. |
-| Visual evidence | The gallery contains reviewed historical frames only. A user-finalized Dev87 recording supplied six labelled M00 stills. Later Vita3K screenshots are emulator evidence and are not promoted as physical acceptance. Physical Dev124/Dev126 evidence is retained as failure/debug context; Dev134 physical visual return is pending manual launch. |
-| Capture path | Physical Dev134 log/capture return is pending manual LiveArea launch. Vita3K images are explicitly emulator evidence; no VDB logical-framebuffer capture or physical visual acceptance is claimed. |
+| Host/build | Dev194 canonical host/sanitizer, 174 existing tests, M00/M01 host-runtime cycles, ARM, package identity, and diagnostics passed. The two new source contracts passed directly after build and are registered for the next canonical run. |
+| Vita3K | Dev194 installed, **not launched**. Earlier candidate traces show M13 completion and M01 entry, but M01 aircraft startup and other reported faults remain unresolved. |
+| Physical Vita/PSTV | A3.1.4 remains the accepted physical baseline for native startup, visible original M00 world/session lifecycle, player/camera ownership, and clean exit. Dev134 deployment/readback was verified without a corresponding physical runtime return. Issue #1 reports Dev142 PSTV tutorial and M01 observations, including blocked progression and save/load; these are user reports, not Dev194 acceptance. |
+| Visual evidence | The gallery contains labelled historical frames. Earlier Vita3K images and Dev87 physical recorder stills do not prove Dev194 visual or physical acceptance. |
 
 Read the concise [current status](docs/CURRENT_STATUS.md) before treating any candidate as playable. The durable engineering record is in [reports/PORT_STATUS.md](reports/PORT_STATUS.md); it distinguishes host, Vita3K, and physical-Vita evidence.
 
@@ -58,7 +62,7 @@ Those images are historical, not a same-camera benchmark. A verified post-render
 
 - [Quickstart](docs/QUICKSTART.md) — clone and produce a local canonical or fast candidate build.
 - [Installing on Vita](docs/INSTALLING.md) — retail-data boundaries and manual installation safeguards.
-- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, post-Dev99 build history, Dev134 checkpoint, and next physical evidence gate.
+- [Current status](docs/CURRENT_STATUS.md) — accepted baseline, historical build checkpoints, Dev194 campaign evidence, and open runtime gates.
 - [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
 - [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
 - [Historical capture campaign](docs/HISTORICAL_CAPTURE_CAMPAIGN.md) — the no-rebuild plan for comparable in-game frames, held until a physical session is explicitly authorized.

@@ -228,10 +228,11 @@ timeout 240s "$rv_build/a31_m00_interactive_runtime" "$rv_retail_root" \
 	Skirmish00.mix SKIRMISH_SMOKE
 
 # This selected multiplayer-map archive exercises a distinct original world,
-# visibility, lighting, and resource set through the same offline Combat route.
+# visibility, lighting, and resource set through the original offline skirmish
+# lifecycle, which initializes the base controllers used by map refineries.
 # It is a rendering/lifecycle smoke only: no multiplayer session is claimed.
 timeout 180s "$rv_build/a31_m00_interactive_runtime" "$rv_retail_root" \
-	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" C\&C_City.mix
+	"$rv_runtime/user" "$rv_runtime/cache" "$rv_runtime/mods" C\&C_City.mix SKIRMISH_SMOKE
 
 echo "A3.0 canonical host integration PASS"
 echo "A3.1 gameplay-seed host integration PASS"
@@ -240,5 +241,5 @@ echo "A3.1 original interactive LeakSanitizer host integration PASS"
 echo "A3.1 hardware-equivalent interactive ASan PASS: two in-process cycles; 120 original input/network/Combat/render frames each"
 echo "A3.1 hardware-equivalent interactive targeted UBSan PASS: same two-cycle visible-frame path; ILP32-irrelevant alignment/signed-wrap/shift checks excluded explicitly"
 echo "A3.6 original M01 interactive host runtime PASS: two original Combat load/render/teardown cycles"
-echo "A3.6 original C&C City host map smoke PASS: two original Combat load/render/teardown cycles; not multiplayer gameplay"
+echo "A3.6 original C&C City skirmish host map smoke PASS: two original Combat load/render/teardown cycles; not multiplayer gameplay"
 echo "Complete log: $rv_log"

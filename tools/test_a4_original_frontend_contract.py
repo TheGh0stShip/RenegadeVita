@@ -6,6 +6,16 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class A4OriginalFrontendContractTests(unittest.TestCase):
+    def test_eva_exit_returns_to_frontend_after_clean_session_teardown(self):
+        runtime = (ROOT / "port" / "platform" / "vita" / "a31_vita_runtime.cpp").read_text()
+        pause_result = runtime[runtime.index("if (!Run_Original_Gameplay_Pause_Menu(frontend_menu_mode"):
+                               runtime.index("if (Is_Start_Pressed())")]
+        self.assertIn("if (request.reload_requested)", pause_result)
+        self.assertIn("else if (request.exit_requested &&", pause_result)
+        self.assertIn("!Renegade_Vita_Input_Route_Replay_Exit_Requested()", pause_result)
+        self.assertIn("result.return_to_menu_requested = true;", pause_result)
+        self.assertIn("result.start_exit_requested = true;", pause_result)
+
     def test_campaign_reload_accepts_only_valid_original_single_player_saves(self):
         runtime = (ROOT / "port" / "platform" / "vita" / "a31_vita_runtime.cpp").read_text()
         handoff = runtime[runtime.index("bool Run_Original_Frontend_Intro_And_Menu("):]

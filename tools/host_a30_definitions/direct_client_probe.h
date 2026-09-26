@@ -102,6 +102,8 @@ inline int Physical_Rare_Test() {
 
 inline int Export_Resource_Options(const char *path, const char *map = "C&C_ResourceFixture.mix") {
     cGameDataCnc game;
+    WideStringClass owner(L"Fixture");
+    game.Set_Owner(owner);
     game.Set_Map_Name(map);
     game.Set_Max_Players(8);
     game.Set_Port(5001);

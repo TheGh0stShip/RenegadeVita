@@ -1,9 +1,18 @@
 {
   "public_candidate": {
-    "label": "A3.5-dev195",
-    "report": "reports/DEV195_RENCORNER_NATIVE_JOIN.md",
-    "evidence_class": "Vita3K",
+    "label": "A3.5-dev197",
+    "report": "reports/DEV197_ISSUE1_SAVE_MENU.md",
+    "evidence_class": "host_build_and_vita3k_install",
     "physical_acceptance": false
+  },
+  "issue1_dev197_candidate": {
+    "state": "PACKAGED_INSTALLED_RELOAD_UNVERIFIED",
+    "vpk_sha256": "b01c61f254edaeff1ce49e9d73424ac3c33e15ac6912023cff57c19d94304cdb",
+    "vita3k_installed": true,
+    "vita3k_gameplay_verified": false,
+    "campaign_save_reload_verified": false,
+    "pstv_verified": false,
+    "issue_closed": false
   },
   "tt_dev195_package_candidate": {
     "date": "2026-09-24",

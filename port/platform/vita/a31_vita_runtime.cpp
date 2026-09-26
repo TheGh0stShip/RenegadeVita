@@ -4352,6 +4352,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							if (request.reload_requested) {
 								memcpy(result.reload_source, request.tutorial_map, sizeof(result.reload_source));
 								A30_Vita_Log("A4 load: pause request queued; original session cleanup required source=%s\n", result.reload_source);
+							} else if (request.exit_requested &&
+								!Renegade_Vita_Input_Route_Replay_Exit_Requested()) {
+								result.return_to_menu_requested = true;
+								A30_Vita_Log("A4 frontend: EVA exit queued; return to main menu after session cleanup\n");
 							}
 							result.start_exit_requested = true;
 							break;

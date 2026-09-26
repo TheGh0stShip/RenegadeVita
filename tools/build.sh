@@ -233,7 +233,7 @@ require_host_line "A3.5 Vita ShaderClass render-state contract: 13 checks, 0 fai
 require_host_line "flight recorder append, replacement, ring rollover and owner thread PASS"
 require_host_line "WWMath 32/64-bit validity storage PASS"
 require_host_line "A3.5 DDSFileClass tga-alias contract: 11 checks, 0 failures"
-require_host_line "A3 renderer process lifecycle: 11 checks, 0 failures; native=1 sessions=2 shutdowns=2"
+require_host_line "A3 renderer process lifecycle: 13 checks, 0 failures; native=1 sessions=2 shutdowns=2"
 require_host_line "A3.2 texture upload contract: PASS (4 checks, 0 failures)"
 require_host_line "runtime.checks=45"
 require_host_line "runtime.failures=0"

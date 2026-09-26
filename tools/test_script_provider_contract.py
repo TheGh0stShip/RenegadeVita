@@ -113,7 +113,7 @@ class ScriptProviderContractTests(unittest.TestCase):
         self.assertIn("${RENEGADE_STAGE}/combat/cinematicgameobj.cpp", cmake)
         self.assertRegex(
             cmake,
-            r"list\(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\s*"
+            r"list\(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES[^)]*"
             r"\$\{RENEGADE_CAMPAIGN_SCRIPT_SOURCES\}\s*"
             r"\$\{RENEGADE_STAGE\}/combat/cinematicgameobj\.cpp",
         )

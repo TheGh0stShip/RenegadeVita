@@ -1,5 +1,12 @@
 # Renegade Vita port status
 
+2026-09-26 Dev197 issue #1 checkpoint: Dev196 M13 wrote a pre-Ion-beacon
+`savegame03.sav`, but EVA exit tore down the app instead of returning to the
+main menu. Dev197 routes confirmed EVA exit through clean session teardown
+back to the original frontend. Canonical host/ARM/package checks pass and the
+VPK is installed/hash-verified in Vita3K. Dev197 reload and PSTV behavior are
+not yet verified. See [Dev197](DEV197_ISSUE1_SAVE_MENU.md).
+
 2026-09-26 public status; runtime evidence from 2026-09-25: Vita3K ran the Dev195
 ARM client, downloaded five TTFS packages, loaded City_U1, received the server
 player/Soldier and rendered 9,723

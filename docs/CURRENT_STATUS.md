@@ -1,31 +1,45 @@
 # Current status
 
-Updated: 2026-09-15
+Updated: 2026-09-26
 
-## Current Dev134 checkpoint
+## Current A3.5-dev194 campaign checkpoint
 
-Dev134 is the current native ARM/GXM candidate. Canonical host/sanitizer/ARM
-and package identity checks passed, followed by matching Vita3K refinery visuals,
-pause Map/statistics/Help checks, resume, and clean native exit. The VPK was
-deployed to the physical Vita with executable and package readback verification;
-manual LiveArea launch is required because remote control services were
-unavailable. Hardware FPS, movie audio, and complete tutorial acceptance remain
-open. The tutorial-only public download guide is
-[Renegade-Vita-Demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo).
+Dev194 passed canonical host/sanitizer validation, 174 existing tests, original
+M00 and M01 host-runtime cycles, ARM compilation, SELF/VPK identity, and
+diagnostics packaging. Two new source contracts passed separately after the
+build and are registered for the next canonical test run. VPK SHA-256:
+`8b7ba2c0bcb8a57eaee978041ca47765807492b09d14329e6c0652e4da61c15c`.
+It is **installed in Vita3K but has not been launched**. Installation and host
+cycles do not establish Vita3K gameplay, frame pacing, or physical behavior.
 
-Exact evidence is retained in [DEV134_PHYSICAL_MILESTONE.md](../reports/DEV134_PHYSICAL_MILESTONE.md)
-and [DEV134_SKIN_RGB_WORK.md](../reports/DEV134_SKIN_RGB_WORK.md).
+The candidate warms and releases four animated M01 models seen at the end of
+a candidate-matched Dev192 trace, preserving fresh per-cinematic instances.
+That trace recorded original M13 completion and transition to M01, a 5.93 s
+first visible M01 frame, and frame-2 entry into `X1H_Hover_Troop.txt`. The
+last complete records end after four model-cache consumes; the freeze call is
+unknown. Dev193's sampled PostThink profiler restoration is included in
+Dev194. M01 aircraft/plane freeze resolution, M13 rope animation, finale
+double-Havoc presentation, and campaign performance remain unverified. See
+[port status](../reports/PORT_STATUS.md) and
+[live progress](../reports/LIVE_PROGRESS.md).
 
-The historical entries below are retained for provenance.
+| Evidence class | What is established |
+| --- | --- |
+| Host and package | Dev194 build, sanitizer, tests, M00/M01 host-runtime cycles, ARM and package/diagnostic identity passed. These are not gameplay acceptance on Vita. |
+| Vita3K | Dev194 installed, not launched. Earlier candidate traces show M13-to-M01 transition, with stalls and unresolved reported defects; they cannot validate Dev194's runtime changes. |
+| Physical Vita/PSTV | A3.1.4 is the accepted baseline for native startup, visible M00 world/session lifecycle, player/camera ownership, and clean exit. Dev134 had verified physical deployment/readback, with runtime return pending. [Issue #1](https://github.com/TheGh0stShip/RenegadeVita/issues/1) reports Dev142 PSTV tutorial and M01 observations, but describes blocked story progression and nonworking save/load. It is a user report for that candidate, not Dev194 proof. |
 
-Older candidate rows are Local-only engineering records unless they carry
-matching physical-Vita evidence.
+The [demo setup guide](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
+is for the separate tutorial demo. This repository remains source and build
+instructions, without retail data or a public campaign release. The historical
+entries below retain their candidate-specific evidence; the Dev134 checkpoint
+is not the current candidate.
 
 ## Post-Dev99 checkpoint history
 
-The GitHub-visible status is current through Dev134. The table below is a
-compact index of the builds after Dev99; the linked reports retain the detailed
-evidence, hashes, and caveats.
+The following table indexes historical Dev100-Dev134 work. Later campaign
+candidate evidence is tracked in [port status](../reports/PORT_STATUS.md) and
+[live progress](../reports/LIVE_PROGRESS.md).
 
 | Candidate | Public status | Evidence |
 | --- | --- | --- |
@@ -36,7 +50,7 @@ evidence, hashes, and caveats.
 | Dev124-Dev126 | Physical testing returned real hardware failures: movie starvation, Logan/control stall, Mobius/START crash, low gameplay FPS, and missing EVA datalinks. Dev126 deployed diagnostics but was not accepted. | [Dev124](../reports/DEV124_NATIVE_BOOT_DIAGNOSIS.md), [Dev125](../reports/DEV125_PHYSICAL_MOVIE_PROGRESS.md), [Dev126](../reports/DEV126_LOGAN_PHYSICAL_STALL.md) |
 | Dev127-Dev134 | Renderer/FPS audit, EVA/DDS, complete pause-menu audit, save/load/delete/settings, native save text entry, repeated Load lifecycle, Cycle Objectives, discarded textured-skin RGB work, and Dev134 canonical milestone. Dev134 has matching Vita3K visual evidence and physical deployment/readback verification; runtime return is pending manual launch. | [Dev127](../reports/DEV127_FIX_AND_OPTIMIZATION_PLAN.md), [Dev129/130](../reports/DEV129_PAUSE_MENU_AUDIT.md), [Dev132](../reports/DEV132_NATIVE_TEXT_ENTRY.md), [Dev133](../reports/DEV133_REPEATED_LOAD_AND_OBJECTIVES.md), [Dev134](../reports/DEV134_PHYSICAL_MILESTONE.md) |
 
-## Evidence snapshot
+## Historical evidence snapshot through Dev134
 
 | Class | Status | What it establishes |
 | --- | --- | --- |
@@ -53,8 +67,8 @@ evidence, hashes, and caveats.
 | A3.5-dev96 published local candidate | **Superseded local-only** | 54 focused identity/staging/frontend/loading/runtime/indexed-state/short-wchar contracts, UTF-16 boundary selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev97 published local candidate | **Superseded local-only** | 41 post-formatter focused frontend/loading/runtime/indexed-state/short-wchar contracts, 19 candidate identity/loading/runtime contracts, 63 wider source contracts, UTF-16 formatter selftests, two-cycle host M00/menu validation, fast candidate closure, and canonical ARM/package closure passed. No physical install, launch, screenshot, or acceptance claim exists. |
 | A3.5-dev98 published local candidate | **Superseded local-only** | Focused frontend/loading/runtime/indexed-state/identity contracts, full 222-tool unittest discovery, hygiene, fast candidate closure, and canonical ARM/package closure passed after Dev98's BINK presentation-clock, WWUI dialog-template copy, and HUD initialization presentation-scope fixes. No physical install, launch, screenshot, or acceptance claim exists. |
-| A3.5-dev99 historical candidate | **Superseded local-only** | Retained for provenance. Dev134 is the current candidate and has separate canonical, Vita3K, and physical deployment evidence. |
-| Screenshot/video evidence | **Historical gallery plus later emulator/physical diagnostics** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. Later Dev100-Dev134 reports retain Vita3K visual/capture returns and physical failure/deployment receipts where applicable. Physical Dev134 runtime visual evidence is still pending manual LiveArea launch. |
+| A3.5-dev99 historical candidate | **Superseded local-only** | Retained for provenance. Dev134 was a historical candidate with separate canonical, Vita3K, and physical deployment evidence. |
+| Screenshot/video evidence | **Historical gallery plus later emulator/physical diagnostics** | No separate Dev87 title-owned screenshot was recovered, but a user-finalized MP4 yielded six reviewed M00 stills. Dev100-Dev134 reports retain Vita3K visual/capture returns and physical failure/deployment receipts where applicable. No physical Dev134 runtime visual return is recorded in the cited milestone. |
 
 Host validation, package identity, and logs are useful engineering evidence. They do not prove panel output, controls, audio quality, frame pacing, or lifecycle behavior on physical hardware.
 
@@ -93,7 +107,11 @@ ELF SHA-256 is
 diagnostics ZIP SHA-256 is
 `f13a8f28309821a3c4d408000fccc681e955ba467d267bccab72c21b71302c68`.
 
-## Current physical blockers
+## Open physical validation gates
+
+The historical M00 physical checklist below remains open for a matching current
+candidate. Campaign progression and performance also require candidate-matched
+runtime evidence.
 
 The next physical gate must establish, with matching candidate identity:
 
@@ -114,10 +132,8 @@ remains MP4 recorder evidence, not VDB logical-framebuffer evidence.
 
 The [evidence policy](EVIDENCE.md) and [historical timeline](HISTORICAL_SCREENSHOT_TIMELINE.md)
 explain the resulting gallery boundary. Six Dev87 M00 stills are explicitly
-labelled as recorder-derived and do not pass its failed frontend gate. Later
-Dev100-Dev134 screenshots/captures remain classified by evidence class in their
-reports; Vita3K visuals are not physical acceptance, and Dev134 physical
-runtime visual evidence has not returned yet.
+labelled as recorder-derived and do not pass its failed frontend gate. Dev100-Dev134 screenshots/captures remain classified by evidence class in their
+reports; Vita3K visuals are not physical acceptance, and the cited Dev134 physical milestone has no runtime visual return.
 
 ## Authoritative records
 

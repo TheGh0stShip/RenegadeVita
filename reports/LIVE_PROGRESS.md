@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Dev202 Practice and multiplayer loading candidate
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: Dev202 fast ARM package installed in Vita3K; bounded run reached the
+original main menu but did not enter Practice before timeout. No further build
+is planned tonight. Completed: restored original mode-specific loading
+backdrops (Practice 96, C&C multiplayer 94) and linked the original full-port
+MultiHUD. Evidence: 177 focused tests, ARM package identity, Vita3K install
+readback, main-menu runtime log and capture. The temporary M13 one-shot launch
+file was restored with its original SHA-256. Next: enter Practice through the
+original menu, verify loading/HUD/gameplay, then physical Vita. Blocker:
+Practice and multiplayer loading visuals remain unverified in this candidate.
+
 ## Dev201 multiplayer text and Glacier texture candidate
 
 Renegade Vita - v3.5 active

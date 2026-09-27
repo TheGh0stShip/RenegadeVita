@@ -1,5 +1,9 @@
 #pragma once
 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "multihud.h"
+#else
+
 // The original multiplayer-only HUD shares method names with GameModeClass
 // virtuals, an MSVC-era construct rejected by current GCC. The campaign's
 // authentic HUD remains separate; this narrow disabled provider only absorbs
@@ -28,3 +32,5 @@ public:
 private:
 	inline static float BottomTextYPos = 0.0F;
 };
+
+#endif

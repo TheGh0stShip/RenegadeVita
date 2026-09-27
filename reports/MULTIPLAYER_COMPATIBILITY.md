@@ -1,5 +1,19 @@
 # Native multiplayer compatibility
 
+## 2026-09-27: Dev202 Original Mode Loading And Practice HUD Candidate
+
+The full-port loading presenter now selects original campaign backdrops for
+campaign, original backdrop 96 for Practice, and the original C&C multiplayer
+backdrop 94 for remote C&C. The full-port links original `MultiHUDClass` rather
+than its no-op compatibility header. Practice map selection and game/session
+initialization remain owned by the original frontend. The user's retail
+`campaign.ini` and `Skirmish00.mix` were inspected unchanged.
+
+Dev202 passed 177 focused tests, fast ARM package and Vita3K install/readback.
+VPK SHA-256: `d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28`.
+A bounded Vita3K run reached the original main menu but did not enter Practice;
+loading visuals, Practice gameplay and physical Vita remain unverified.
+
 ## 2026-09-27: Dev201 Glacier Texture And Multiplayer Text Candidate
 
 Dev200 Glacier logged a real `l02_ice.tga` source fallback and repeated checkerboard

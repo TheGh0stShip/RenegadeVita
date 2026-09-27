@@ -1,4 +1,15 @@
 {
+  "dev202_practice_loading_candidate": {
+    "state": "FAST_BUILT_VITA3K_INSTALLED_MAIN_MENU_PRACTICE_UNVERIFIED",
+    "vpk_sha256": "d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28",
+    "installed_eboot_sha256": "6a25bf16139135a02062099cfe9995f04fc0a88dc095a5dcb21806a4fde7874e",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev202-setup-20260927T035217391832Z/setup-receipt.json",
+    "focused_tests_passed": 177,
+    "vita3k_main_menu_observed": true,
+    "practice_loading_verified": false,
+    "practice_gameplay_verified": false,
+    "physical_acceptance": false
+  },
   "tt_dev201_glacier_text_candidate": {
     "state": "FAST_BUILT_VITA3K_INSTALLED_LIVE_SKATEPARK_JOINED_GLACIER_UNVERIFIED",
     "vpk_sha256": "576f974a167efb92ea034c6b05505aba5bce7413a53984c4274b818227f06b87",
@@ -57,9 +68,9 @@
     "physical_acceptance": false
   },
   "public_candidate": {
-    "label": "A3.5-dev201",
+    "label": "A3.5-dev202",
     "report": "reports/MULTIPLAYER_COMPATIBILITY.md",
-    "evidence_class": "Vita3K_live_Skatepark_bounded_join_Glacier_unverified",
+    "evidence_class": "Vita3K_main_menu_only_Practice_unverified",
     "physical_acceptance": false
   },
   "issue1_dev197_candidate": {

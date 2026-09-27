@@ -1,5 +1,10 @@
 # Renegade Vita port status
 
+2026-09-27 Dev202: full-port mode-specific original loading backdrop selection
+and original MultiHUD compiled/linked. Fast ARM package, 177 focused tests,
+Vita3K install/readback and original main-menu launch passed. Practice launch,
+loading visual, gameplay and physical Vita are not yet verified.
+
 2026-09-27 multiplayer Dev201: fixed ARM variadic UTF-16 player/chat formatting
 and mounted user-owned retail M02 textures only for remote Glacier U1. Fast ARM
 package and Vita3K install passed. Live RenCorner replay joined Skatepark, so

@@ -1,5 +1,9 @@
 # Known gaps
 
+2026-09-27 Dev202: original Practice loading and MultiHUD are source/build
+integrated but Practice was not entered in the bounded Vita3K run. Do not infer
+playable Practice, correct loading visuals, or physical acceptance from this.
+
 2026-09-27 Dev201: Glacier checkerboard root is evidenced as missing
 `l02_ice.tga` with `l02_ice.dds` present in unchanged retail M02.mix; scoped
 factory fallback is implemented but Glacier visual validation is pending server

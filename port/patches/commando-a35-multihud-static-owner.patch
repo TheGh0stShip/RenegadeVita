@@ -1,0 +1,5 @@
+--- a/multihud.h
++++ b/multihud.h
+@@ -60 +60 @@
+-class	MultiHUDClass : public GameModeClass {
++class	MultiHUDClass {

@@ -2,7 +2,16 @@
 
 Updated: 2026-09-27
 
-## Latest A3.5-dev201 development candidate
+## Latest A3.5-dev202 development candidate
+
+Dev202 selects the original mode-specific loading backdrops for Practice (96)
+and C&C multiplayer (94), and links the original full-port MultiHUD. It passed
+177 focused tests, fast ARM package identity and Vita3K install/readback. A
+bounded Vita3K launch reached the original main menu but did not enter
+Practice; its loading visuals and gameplay remain unverified. See the
+[Dev202 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
+
+## Dev201 multiplayer evidence
 
 Dev201 is a fast-built ARM package, installed and hash-verified in Vita3K. It
 corrects ARM variadic UTF-16 player/chat formatting and adds a Glacier-only

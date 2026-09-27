@@ -6,6 +6,26 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class A4OriginalFrontendContractTests(unittest.TestCase):
+    def test_practice_and_multiplayer_use_original_loading_backdrops(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        selector = runtime[runtime.index("bool Initialize(const char *mission_archive,"):
+                           runtime.index("Screen = Commando_Create_Original_Loading_Screen();")]
+        self.assertIn("kSkirmishPracticeLoadBackdropNumber = 96", runtime)
+        self.assertIn("kCncMultiplayerLoadBackdropNumber = 94", runtime)
+        self.assertIn("if (skirmish_practice)", selector)
+        self.assertIn("if (multiplayer_client)", selector)
+        self.assertIn("CampaignManager::Select_Backdrop_Number_By_MP_Type(", selector)
+        self.assertIn("cGameData::Get_Mission_Number_From_Map_Name(mission_archive)", selector)
+        self.assertIn("selected_archive, selected_source.skirmish_selected,", runtime)
+
+    def test_full_port_links_original_multiplayer_hud(self):
+        cmake = (ROOT / "CMakeLists.txt").read_text()
+        wrapper = (ROOT / "port/compatibility/include/a31_multihud_stub.h").read_text()
+        stage = (ROOT / "tools/stage_sources.sh").read_text()
+        self.assertIn("${RENEGADE_STAGE}/commando/multihud.cpp", cmake)
+        self.assertIn('#include "multihud.h"', wrapper)
+        self.assertIn("commando-a35-multihud-static-owner.patch", stage)
+
     def test_remote_player_wait_uses_original_loading_timeout_window(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
         block = runtime[runtime.index("if (remote_client) {\n\t\t\t\tif (!remote_join.Complete_World_Load"):

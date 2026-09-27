@@ -282,6 +282,7 @@ const unsigned kStartupStatusRepaintIntervalUs = 250000U;
 const unsigned kLoadingPrewarmFrames = 1U;
 const unsigned kM00ScenePrewarmFrames = 60U;
 const int kCncMultiplayerLoadBackdropNumber = 94;
+const int kSkirmishPracticeLoadBackdropNumber = 96;
 const float kOriginalLoadingLogicalWidth = 640.0f;
 const float kOriginalLoadingLogicalHeight = 480.0f;
 const float kOriginalFrontendLogicalWidth = 800.0f;
@@ -1450,16 +1451,28 @@ public:
 		Screen = NULL;
 	}
 
-	bool Initialize(const char *mission_archive)
+	bool Initialize(const char *mission_archive,
+		bool skirmish_practice = false, bool multiplayer_client = false)
 	{
 		int backdrop_number = kCncMultiplayerLoadBackdropNumber;
 #if !RENEGADE_VITA_M00_DEMO
 		if (mission_archive == NULL || mission_archive[0] == '\0') return false;
-		backdrop_number = cGameData::Get_Mission_Number_From_Map_Name(mission_archive);
+		if (skirmish_practice) {
+			backdrop_number = kSkirmishPracticeLoadBackdropNumber;
+		} else if (!multiplayer_client) {
+			backdrop_number = cGameData::Get_Mission_Number_From_Map_Name(mission_archive);
+		}
 #else
 		(void)mission_archive;
+		(void)skirmish_practice;
+		(void)multiplayer_client;
 #endif
-		CampaignManager::Select_Backdrop_Number(backdrop_number);
+		if (multiplayer_client) {
+			CampaignManager::Select_Backdrop_Number_By_MP_Type(
+				The_Game()->Get_Game_Type());
+		} else {
+			CampaignManager::Select_Backdrop_Number(backdrop_number);
+		}
 		const int description_count = CampaignManager::Get_Backdrop_Description_Count();
 		StringClass selected_model(0, true);
 		for (int index = 0; index < description_count; ++index) {
@@ -3833,7 +3846,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if RENEGADE_VITA_M00_DEMO
 					load_source
 #else
-					selected_archive
+					selected_archive, selected_source.skirmish_selected,
+					remote_client
 #endif
 				)) {
 					result.render_error = true;

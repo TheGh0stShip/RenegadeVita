@@ -5,14 +5,16 @@ Updated: 2026-09-27
 ## Archived campaign packages
 
 Retained [Dev205](releases/A3.5-dev205.md), [Dev206](releases/A3.5-dev206.md)
-and [Dev207](releases/A3.5-dev207.md) packages are published as experimental
-prereleases for comparison. Dev207 is the newest retained binary, not the
+and [Dev207](releases/A3.5-dev207.md) packages are published for comparison.
+Dev205 and Dev206 are prereleases. Dev207 carries GitHub's Latest badge but
+remains explicitly experimental, not a stable or accepted campaign release.
+Dev207 is the newest retained binary, not the
 current source tree and not a verified campaign fix. Package hashes and known
 failures are listed in each release note. No new compilation was performed.
 
 ## Unreleased campaign source checkpoint
 
-The repository is ahead of the published Dev204 package. Dev207 was packaged
+The repository is ahead of the published Dev207 package. Dev207 was packaged
 and installed locally in Vita3K but not launched; subsequent source changes
 have not been packaged as a new development release.
 

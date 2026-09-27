@@ -28,7 +28,7 @@ verified solutions to campaign freezes. Read their limitations before testing.
 > Dev197 remains the last bounded physical PSTV save-load/menu-return result.
 > Full multiplayer, campaign and physical Vita performance acceptance remain open.
 
-[Download Dev204](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204)
+[Download Dev207 (experimental)](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev207)
 | [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
 | [Multiplayer setup](docs/MULTIPLAYER.md)
 | [Project video page](https://thegh0stship.github.io/RenegadeVita/)
@@ -42,7 +42,7 @@ is preserved; its data subset is not sufficient for the full-port candidate.
 
 ## Where the port stands
 
-**Source development has advanced beyond the Dev204 download.** The current
+**Source development has advanced beyond the Dev207 download.** The current
 M13/M01 work repairs invalid AI paths, saved-object ownership, animation frame
 selection, sorted effects and audio cleanup. Several fixes have focused host
 sanitizer evidence; the newest audio lifecycle changes have only passed source

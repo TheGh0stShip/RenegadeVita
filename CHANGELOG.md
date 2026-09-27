@@ -15,15 +15,18 @@ This changelog records public-facing source, process, and evidence changes. It d
   newer audio lifecycle fixes are staged but not compiled or runtime-tested.
 - Recorded 290-patch source staging and the remaining verification gaps.
   Campaign completion, native freeze resolution and stable frame pacing are
-  not established. Dev204 remains the published download; no new binary
+  not established. Dev207 is the newest archived download; no new binary
   release accompanies this checkpoint.
 
 ## Archived Dev205-Dev207 packages - 2026-09-27
 
-- Published retained campaign diagnostic packages as experimental prereleases,
+- Published retained campaign diagnostic packages with experimental labels,
   with verified VPK hashes, package contents and explicit runtime limitations.
 - These historical packages do not contain the newer source-checkpoint fixes.
   Release tags identify publication, not exact original build snapshots.
+- Dev207 is explicitly selected as GitHub's Latest release so the repository
+  no longer points to Dev142. This listing status is not stability acceptance;
+  Dev205 and Dev206 remain prereleases.
 
 ## A3.5-dev204 - 2026-09-27
 

@@ -1,8 +1,19 @@
 # Current status
 
-Updated: 2026-09-26
+Updated: 2026-09-27
 
-## Current A3.5-dev197 checkpoint
+## Latest A3.5-dev201 development candidate
+
+Dev201 is a fast-built ARM package, installed and hash-verified in Vita3K. It
+corrects ARM variadic UTF-16 player/chat formatting and adds a Glacier-only
+fallback to the user's unchanged retail `M02.mix` for a missing ice texture.
+The bounded live RenCorner run joined Skatepark after a server map rotation,
+rendered readable server text, and ended by runner timeout. It did not verify
+Glacier terrain or player-name appearance. Neither full multiplayer nor
+physical Vita performance is accepted. See [current multiplayer evidence](../reports/MULTIPLAYER_COMPATIBILITY.md)
+and the [Dev201 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev201).
+
+## Dev197 campaign checkpoint
 
 Dev197 repairs the M13 EVA exit handoff: after original Combat/session teardown,
 the Vita outer loop reopens the original frontend rather than ending the app.

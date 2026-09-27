@@ -28,7 +28,7 @@ Choose a focused contract that matches the changed boundary; do not use the exam
 Do not restage during compilation. Replace the example label with the actual
 new candidate and preserve existing runtime evidence. Check the exact staged
 snapshot before publication, then verify the corresponding GitHub Actions run.
-Private Codex handoff notes remain local, not in source history or release assets.
+Private handoff notes remain local, not in source history or release assets.
 
 After staging the intended files, run `python3 tools/verify_publication_snapshot.py`.
 It exports the exact Git index to a temporary checkout and runs the same three

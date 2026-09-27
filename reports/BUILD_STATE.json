@@ -57,9 +57,9 @@
     "physical_acceptance": false
   },
   "public_candidate": {
-    "label": "A3.5-dev197",
-    "report": "reports/DEV197_ISSUE1_SAVE_MENU.md",
-    "evidence_class": "physical_PSTV_bounded_save_menu_run",
+    "label": "A3.5-dev201",
+    "report": "reports/MULTIPLAYER_COMPATIBILITY.md",
+    "evidence_class": "Vita3K_live_Skatepark_bounded_join_Glacier_unverified",
     "physical_acceptance": false
   },
   "issue1_dev197_candidate": {

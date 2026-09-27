@@ -25,6 +25,8 @@ __pycache__/
 AGENTS.md
 reports/*HANDOFF.md
 reports/HANDOFF*.md
+reports/PARALLEL_WORKERS.md
+reports/DEMO_EXECUTION_PLAN.md
 reports/*WORK_PACKET*.md
 reports/*GAMEPLAN.md
 tools/*packet*/

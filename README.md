@@ -4,13 +4,14 @@ An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: 
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Current development candidate: A3.5-dev197.** The M13 pre-Ion save restored
-> correctly in a user-driven Vita3K run, and EVA exit returned to the main menu.
-> A matching physical PSTV run passed that same bounded check. Broader
-> physical Vita/PSTV behavior and later mission progression still require
-> testing. Dev195's RenCorner join remains the latest multiplayer evidence.
+> **Current development candidate: A3.5-dev201.** This fast-built native ARM
+> package is installed in Vita3K. It joined RenCorner on Skatepark and contains
+> targeted multiplayer text and Glacier texture fixes; their final visual
+> verification is pending. Dev197 remains the last bounded physical PSTV
+> save-load/menu-return result. Full multiplayer, campaign and physical Vita
+> performance acceptance remain open.
 
-[Download Dev197](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev197)
+[Download Dev201](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev201)
 | [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
 | [Multiplayer setup](docs/MULTIPLAYER.md)
 | [Project video page](https://thegh0stship.github.io/RenegadeVita/)
@@ -22,18 +23,18 @@ is preserved; its data subset is not sufficient for the full-port candidate.
 
 ## Where the port stands
 
-Dev197 is a **campaign menu-handoff development checkpoint**, built and
-tested for one M13 save reload and menu return in Vita3K. See the
-[candidate report](reports/DEV197_ISSUE1_SAVE_MENU.md) for hashes and limits.
-Dev195 remains the latest [multiplayer runtime evidence](reports/DEV195_RENCORNER_NATIVE_JOIN.md).
+Dev201 is an **experimental multiplayer development candidate**. Its
+[runtime record](reports/MULTIPLAYER_COMPATIBILITY.md) separates the live
+Vita3K join from the unverified Glacier texture and player-name appearance.
+Dev197 remains the last [bounded physical PSTV result](reports/DEV197_ISSUE1_SAVE_MENU.md).
 
 | Evidence area | Current state |
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
 | Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation passed. Bounded M13 save reload and EVA exit-to-menu passed in Vita3K and physical PSTV, with matching runtime logs and installed SELF hash. |
-| Dev195 build | 171 fast contracts and the original DDS alias test passed; 266 deterministic patches; ARM ELF/SELF/VPK produced and installation hashes verified. |
-| Dev195 multiplayer | Vita3K joined RenCorner, mounted five packages, rendered 9,723 frames, moved the player, and completed session teardown. The public list showed `PSVita`; the client requested `PS Vita`. The name-normalization boundary is unresolved. |
-| Remaining multiplayer work | Purchase dialog did not appear; early text had malformed glyphs. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
+| Dev201 build | Fast ARM ELF/SELF/VPK, focused contracts, package identity and Vita3K install/readback passed. This is not a new canonical or physical acceptance run. |
+| Dev200/201 multiplayer | Dev200 joined Glacier and received an original successful purchase response. Dev201 joined Skatepark after map rotation. The client requested `PS Vita`; public name normalization remains unresolved. |
+| Remaining multiplayer work | Dev201's player-name formatting and Glacier ice-texture changes need visual confirmation. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
 | Campaign | Dev197 reloaded the M13 pre-Ion-beacon save and returned to the menu; later Ion progression was not exercised in that run. Earlier runs completed M13 and entered M01; cinematic, actor and M01 stalls remain open. |
 | Physical testing | Dev197 passed one PSTV M13 checkpoint reload and menu return. The long load and first-frame stalls remain measured defects; no full physical acceptance or steady 60 FPS is claimed. |
 | Visual evidence | The gallery below is historical. Emulator captures and historical physical stills do not establish current physical acceptance or stable 60 FPS. |
@@ -83,7 +84,7 @@ WSL2 Ubuntu or Linux with VitaSDK is the supported host environment.
 git clone --recurse-submodules https://github.com/TheGh0stShip/RenegadeVita.git
 cd RenegadeVita
 git submodule update --init --recursive
-RENEGADE_CANDIDATE_LABEL=A3.5-dev197 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-dev201 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 `tools/build.sh` is the canonical candidate path. It preserves validation, deterministic staging, ARM package identity, diagnostics, and retail-exclusion checks. A fast build is useful for iteration only; it never substitutes for a canonical candidate or physical proof.

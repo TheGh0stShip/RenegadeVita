@@ -1,0 +1,1330 @@
+[
+  {
+    "build": 104,
+    "file": "dev104-000.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t623560351/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 105,
+    "file": "dev105-001.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f20175-t666884099/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 106,
+    "file": "dev106-002.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t47937532/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 109,
+    "file": "dev109-003.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/manual-select-visible-gameplay-f13024-t385042196/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 111,
+    "file": "dev111-004.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/manual-select-visible-gameplay-f1064-t192823061/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 113,
+    "file": "dev113-005.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t134243673/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 114,
+    "file": "dev114-006.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t15963220/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 115,
+    "file": "dev115-007.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/manual-select-visible-gameplay-f18326-t443550567/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 116,
+    "file": "dev116-008.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/manual-select-visible-gameplay-f15287-t300152349/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 117,
+    "file": "dev117-009.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/manual-select-visible-gameplay-f12232-t302167943/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 118,
+    "file": "dev118-010.png",
+    "caption": "Tutorial exterior, NPC and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "active/dev118-finale-return/visible-20260914T190216273Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "17c95f1a29485a55003052c5285c93ade6962f40f994ba40246c78dd344f3665",
+    "sha256": "17c95f1a29485a55003052c5285c93ade6962f40f994ba40246c78dd344f3665",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 119,
+    "file": "dev119-013.png",
+    "caption": "Demo credits",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "active/dev119-ending-return/visible-20260914T191730454Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "491169675c90c343e7dc2fd38b938b6b0189b7d43a9e46a6b05fab7ef5d72758",
+    "sha256": "491169675c90c343e7dc2fd38b938b6b0189b7d43a9e46a6b05fab7ef5d72758",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 120,
+    "file": "dev120-015.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/manual-select-visible-gameplay-f448-t34928397/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 121,
+    "file": "dev121-017.png",
+    "caption": "Tutorial vehicle view",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "active/dev121-resume-control-return/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "3bf07b4b19fbdb4f6c5f1027b66c7f32af0d354a52414d8aa8ea7db5c9d0f541",
+    "sha256": "3bf07b4b19fbdb4f6c5f1027b66c7f32af0d354a52414d8aa8ea7db5c9d0f541",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 122,
+    "file": "dev122-018.png",
+    "caption": "Blank emulator window",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "active/dev122-resume-failure-return/window-010.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "b36093ec02502fec70213200cada11e880b8811126419f051ef6bb4110cd4f1e",
+    "sha256": "b36093ec02502fec70213200cada11e880b8811126419f051ef6bb4110cd4f1e",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 123,
+    "file": "dev123-020.png",
+    "caption": "Tutorial interior and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "active/dev123-recovery-return/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "35e779fff861da7ca97668d5bdad7daf234f7e5c8bdadd7227c0bdcb7802a00d",
+    "sha256": "35e779fff861da7ca97668d5bdad7daf234f7e5c8bdadd7227c0bdcb7802a00d",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 127,
+    "file": "dev127-022.png",
+    "caption": "Overlapping menu text diagnostic",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "active/dev127-early-pause-return/window-010.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "bfc1a850c97632f6b2bbd01473df25183090ed01b39c588e9f6a937b9f7d9b8a",
+    "sha256": "bfc1a850c97632f6b2bbd01473df25183090ed01b39c588e9f6a937b9f7d9b8a",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 128,
+    "file": "dev128-026.png",
+    "caption": "EVA data links",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "active/dev128-pause-return/window-270.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "d7883d70ea092996a5aaf818bf0cb3172e47bc732db156b49a698fcfea0bb696",
+    "sha256": "d7883d70ea092996a5aaf818bf0cb3172e47bc732db156b49a698fcfea0bb696",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 129,
+    "file": "dev129-029.png",
+    "caption": "Tutorial interior NPC and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "active/dev129-pause-return/emulator/window-531.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "75d0e0d97372acc8221e4f2487910e94a524701778ef0b60feb1e7d0700653b7",
+    "sha256": "75d0e0d97372acc8221e4f2487910e94a524701778ef0b60feb1e7d0700653b7",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 130,
+    "file": "dev130-032.png",
+    "caption": "Audio configuration menu",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "active/dev130-fresh-return/emulator/step-20260915T001857472Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "36337fcf581681e26a941ff1a28ff6bf25156ef42c0ee21bf5f6f3c6ca1d98c5",
+    "sha256": "36337fcf581681e26a941ff1a28ff6bf25156ef42c0ee21bf5f6f3c6ca1d98c5",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 131,
+    "file": "dev131-035.png",
+    "caption": "Exit confirmation",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "active/dev131-controller-return/emulator/step-20260915T004948734Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "4d3b34d4056e86a5f4e3abb70b7184d6c80a38d522742a1b25247de162135047",
+    "sha256": "4d3b34d4056e86a5f4e3abb70b7184d6c80a38d522742a1b25247de162135047",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 132,
+    "file": "dev132-038.png",
+    "caption": "Save dialog",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "active/dev132-keyboard-return/emulator/step-20260915T012112031Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "9960ac80b5ebf4b0c4ff914d162aa93a1fce8c2123109dc130994251ee25c2f0",
+    "sha256": "9960ac80b5ebf4b0c4ff914d162aa93a1fce8c2123109dc130994251ee25c2f0",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 133,
+    "file": "dev133-040.png",
+    "caption": "Tutorial loading screen",
+    "kind": "loading",
+    "platform": "Vita3K",
+    "source": "active/dev133-discovery-return/emulator/visible-20260915T020635250Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "783f8f9eca3e7754cc04a2010b35b4610f4c7176c3b8bdebf0a49a86c32466c2",
+    "sha256": "783f8f9eca3e7754cc04a2010b35b4610f4c7176c3b8bdebf0a49a86c32466c2",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 134,
+    "file": "dev134-044.png",
+    "caption": "Controller help overlay",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "active/dev134-refinery-return/emulator/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "4d442dadf5a30cc59b799f0a82edc58e44cfa3dbab413e507b37bf8f8c8fedc3",
+    "sha256": "4d442dadf5a30cc59b799f0a82edc58e44cfa3dbab413e507b37bf8f8c8fedc3",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 135,
+    "file": "dev135-046.png",
+    "caption": "Startup movie frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev135-trial-5/window-050.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "a4d47ccc8957a4b25dca03a28166f3e8c429746b3aaa84c333136707558d0a3d",
+    "sha256": "a4d47ccc8957a4b25dca03a28166f3e8c429746b3aaa84c333136707558d0a3d",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 137,
+    "file": "dev137-049.png",
+    "caption": "Startup movie frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev137-trial-1/window-150.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "e7650a9572acb6687cdae2faf4c42036e18bbb8ae6b86c19411fdc23f922ecff",
+    "sha256": "e7650a9572acb6687cdae2faf4c42036e18bbb8ae6b86c19411fdc23f922ecff",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 138,
+    "file": "dev138-053.png",
+    "caption": "Campaign difficulty selection",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev138-trial-1/window-151.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "2514a4e1ed910df9f8f717727ba1dba88e2eedf90bef7c0c406795f7b9348c20",
+    "sha256": "2514a4e1ed910df9f8f717727ba1dba88e2eedf90bef7c0c406795f7b9348c20",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 139,
+    "file": "dev139-055.png",
+    "caption": "Startup movie frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev139-trial-1/window-030.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "2f4791f06899ce16315730aba4db8abe951846632d9d7d02c95856afaf167091",
+    "sha256": "2f4791f06899ce16315730aba4db8abe951846632d9d7d02c95856afaf167091",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 140,
+    "file": "dev140-059.png",
+    "caption": "Beach world and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev140-m01-diagnostic-trial-2/window-171.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "b19def68e839182dd77a4df25e3b2962f5212cd3a9d03b9568df628460b001fc",
+    "sha256": "b19def68e839182dd77a4df25e3b2962f5212cd3a9d03b9568df628460b001fc",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 141,
+    "file": "dev141-061.png",
+    "caption": "Campaign loading presentation",
+    "kind": "loading",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev141-m13-trial-1/window-050.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "fab5cd46e1a28eee20a5fcd411d58146e279d46ab0be78bb6dfa845ba44cbcf2",
+    "sha256": "fab5cd46e1a28eee20a5fcd411d58146e279d46ab0be78bb6dfa845ba44cbcf2",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 143,
+    "file": "dev143-065.png",
+    "caption": "Loading screen",
+    "kind": "loading",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev143-m13-transition-trial-1/window-051.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "7b0417d3de9153bda23bf5b04456ccd78ba090295ba92f0659fc39a1ba96e3ca",
+    "sha256": "7b0417d3de9153bda23bf5b04456ccd78ba090295ba92f0659fc39a1ba96e3ca",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 144,
+    "file": "dev144-068.png",
+    "caption": "Startup logo",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev144-score-transition-trial-1/window-030.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "72c06ed483a0417a3c0477352d524639c71f51783d25a8372c41ff0d2f07eada",
+    "sha256": "72c06ed483a0417a3c0477352d524639c71f51783d25a8372c41ff0d2f07eada",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 145,
+    "file": "dev145-071.png",
+    "caption": "Campaign canyon and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev145-intro-trace-3/window-071.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "3c402f3c79adb665fa6068e5fd7f0970d585f8e0ecf6bd778709ac1a3e0faa4c",
+    "sha256": "3c402f3c79adb665fa6068e5fd7f0970d585f8e0ecf6bd778709ac1a3e0faa4c",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 146,
+    "file": "dev146-074.png",
+    "caption": "Campaign canyon cinematic",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev146-death-direct-m13-1/window-030.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "d9877a78a1654227783b4b45cf98d80bdce31ff98f3bd98831ad156f2327d2a7",
+    "sha256": "d9877a78a1654227783b4b45cf98d80bdce31ff98f3bd98831ad156f2327d2a7",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 147,
+    "file": "dev147-077.png",
+    "caption": "The Scorpion Hunters loading screen",
+    "kind": "loading",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev147-preload-m13-1/window-030.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "06ad531b311b874371217824bff6d82944f6af7306240f8816d3ef897851b86e",
+    "sha256": "06ad531b311b874371217824bff6d82944f6af7306240f8816d3ef897851b86e",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 148,
+    "file": "dev148-080.png",
+    "caption": "Campaign canyon cinematic with NPCs",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev148-combattiming-m13-1/window-110.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "b6e8edea61f096cfbd8a833c14ea1240ddccefef1f80431114ec2b7d959742f0",
+    "sha256": "b6e8edea61f096cfbd8a833c14ea1240ddccefef1f80431114ec2b7d959742f0",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 149,
+    "file": "dev149-082.png",
+    "caption": "The Scorpion Hunters loading screen",
+    "kind": "loading",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev149-combatthink-m13-1/window-030.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "796cb42eb9f837257d5d0337f86181afcc0ad818bcd5bca5233c473a79f7b17a",
+    "sha256": "796cb42eb9f837257d5d0337f86181afcc0ad818bcd5bca5233c473a79f7b17a",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 150,
+    "file": "dev150-085.png",
+    "caption": "Startup diagnostic text",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev150-physicalpost-m13-1/window-010.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "72fdc6fc452c8297c232d239091ca4d21ea14c58d491af58e0fe83e28e7f8828",
+    "sha256": "72fdc6fc452c8297c232d239091ca4d21ea14c58d491af58e0fe83e28e7f8828",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 151,
+    "file": "dev151-089.png",
+    "caption": "Havoc cinematic frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev151-modelprep-m13-1/window-071.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "1be8d51b1ce9e2c88188645a68815abd06234c985744a01e8bbc7d940bc253b5",
+    "sha256": "1be8d51b1ce9e2c88188645a68815abd06234c985744a01e8bbc7d940bc253b5",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 152,
+    "file": "dev152-092.png",
+    "caption": "Campaign NPC cinematic frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev152-physmodel-m13-1/window-071.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "f5bead5a1028c491a9057e0dd2eb2103b4e2eecfd066390e7a3c78a5751e8a1c",
+    "sha256": "f5bead5a1028c491a9057e0dd2eb2103b4e2eecfd066390e7a3c78a5751e8a1c",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 153,
+    "file": "dev153-095.png",
+    "caption": "Campaign vehicle cinematic frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev153-assetdepth-m13-1/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "568c97ec89cf0d769d94299dadc95752f31c8eb1cb1626e0ac76c681ef812643",
+    "sha256": "568c97ec89cf0d769d94299dadc95752f31c8eb1cb1626e0ac76c681ef812643",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 154,
+    "file": "dev154-098.png",
+    "caption": "Campaign NPC cinematic frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev154-prototype-m13-2/window-071.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "9167475490c1f8ad6d06b54544ae6c6cfdd92a14d961fc256ac5472a2df0bf7b",
+    "sha256": "9167475490c1f8ad6d06b54544ae6c6cfdd92a14d961fc256ac5472a2df0bf7b",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 155,
+    "file": "dev155-101.png",
+    "caption": "Campaign NPCs and HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev155-template-m13-1/window-130.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "228e6087e06b45a9a7e7ae9191aced1ff51b10d086b4c126082f4ea5f7b09b58",
+    "sha256": "228e6087e06b45a9a7e7ae9191aced1ff51b10d086b4c126082f4ea5f7b09b58",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 156,
+    "file": "dev156-103.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev135-vfs/ux0/data/renegade/user/captures/original-loading-screen-level-ready-t23066148/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 157,
+    "file": "dev157-104.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "managed/campaign-dev135-vfs/ux0/data/renegade/user/captures/original-loading-screen-level-ready-t19219729/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 158,
+    "file": "dev158-105.png",
+    "caption": "Campaign vehicles cinematic frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev158-defaultvfs-m13-installedtitle-1/window-050.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "228c337d82c3b08be06b1c837c3b3222bcd143d1529dd1c9db2525642d92a1af",
+    "sha256": "228c337d82c3b08be06b1c837c3b3222bcd143d1529dd1c9db2525642d92a1af",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 159,
+    "file": "dev159-108.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t20910536/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 161,
+    "file": "dev161-110.png",
+    "caption": "Campaign Humvee cinematic frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev161-material-hotpath-m13-installedtitle-1/window-071.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "2642cbc9050dc8988bf374ef2f4e65115391290b35c4f8a18ece092c73761a6a",
+    "sha256": "2642cbc9050dc8988bf374ef2f4e65115391290b35c4f8a18ece092c73761a6a",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 162,
+    "file": "dev162-112.png",
+    "caption": "Campaign canyon and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev162-m13-slot27-template-m13-installedtitle-1/window-170.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "604a7ebe6dc08784777543e7f96d8f33b873ace3529aa914cfd26e31cffb3a69",
+    "sha256": "604a7ebe6dc08784777543e7f96d8f33b873ace3529aa914cfd26e31cffb3a69",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 163,
+    "file": "dev163-115.png",
+    "caption": "Campaign canyon and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev163-m13-realobject-map-m13-installedtitle-1/window-131.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "d57c6a1934b09552699eb3e33ca2d1e9fe61d4c7c631bc0562d0e808584937f4",
+    "sha256": "d57c6a1934b09552699eb3e33ca2d1e9fe61d4c7c631bc0562d0e808584937f4",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 164,
+    "file": "dev164-118.png",
+    "caption": "Campaign NPC cinematic frame with rendering defect",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/evidence/campaign-dev164-m13-object-preset-prep-m13-installedtitle-1/window-110.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "0c72e772b9c7a4a922c78d0b488d4768cd2ffaa5637dd81fcae6d3b2ca4496ca",
+    "sha256": "0c72e772b9c7a4a922c78d0b488d4768cd2ffaa5637dd81fcae6d3b2ca4496ca",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 168,
+    "file": "dev168-120.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t15355969/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 169,
+    "file": "dev169-122.png",
+    "caption": "Tiberium field and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/A3.5-dev169-m13-vita3k-20260923T0133Z/window-210.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "7ca6f69fff13532e24ee66d1dc86e691276c984e5feef07908ea2f9634b7f63e",
+    "sha256": "7ca6f69fff13532e24ee66d1dc86e691276c984e5feef07908ea2f9634b7f63e",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 170,
+    "file": "dev170-125.png",
+    "caption": "Campaign vehicles and NPCs cinematic frame",
+    "kind": "cinematic",
+    "platform": "Vita3K",
+    "source": "managed/logs/A3.5-dev170-m13-vita3k-20260923T0202Z/window-051.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "ac61e282d31ef0f1c735eb8727083ad7f206dd053dccffce9fb664f7d1d98648",
+    "sha256": "ac61e282d31ef0f1c735eb8727083ad7f206dd053dccffce9fb664f7d1d98648",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 171,
+    "file": "dev171-128.png",
+    "caption": "Campaign base perimeter and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/A3.5-dev171-m13-a03field-vita3k-20260923T030419Z/window-330.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "52ab4303a8d63e88b44e6eacee7ff500d582eae3efc44541c766a193feecb3d5",
+    "sha256": "52ab4303a8d63e88b44e6eacee7ff500d582eae3efc44541c766a193feecb3d5",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 172,
+    "file": "dev172-130.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t15750572/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 173,
+    "file": "dev173-132.png",
+    "caption": "Campaign helicopter and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/A3.5-dev173-m13-a03field-vita3k-20260923T041756Z/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "8ec18864e72dd0453247ac804553197024ceed369b35fc578c121da843c46f86",
+    "sha256": "8ec18864e72dd0453247ac804553197024ceed369b35fc578c121da843c46f86",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 174,
+    "file": "dev174-135.png",
+    "caption": "Campaign canyon and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/A3.5-dev174-m13-a03field-vita3k-20260923T044346Z/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "b58f0ca135fa7a126484adebc87ce7a0fb471771a4fc12327a7c9c2c7fa0d690",
+    "sha256": "b58f0ca135fa7a126484adebc87ce7a0fb471771a4fc12327a7c9c2c7fa0d690",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 175,
+    "file": "dev175-137.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t25691322/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 177,
+    "file": "dev177-138.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f8832-t448990179/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 179,
+    "file": "dev179-139.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f6164-t380569282/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 181,
+    "file": "dev181-140.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f10312-t347547776/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 182,
+    "file": "dev182-141.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f11708-t366688804/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 183,
+    "file": "dev183-142.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t30220267/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 184,
+    "file": "dev184-143.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f10875-t526110752/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 185,
+    "file": "dev185-144.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f13661-t494153235/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 186,
+    "file": "dev186-145.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t26849833/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 189,
+    "file": "dev189-146.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f7558-t282941486/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 190,
+    "file": "dev190-147.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t26469691/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 192,
+    "file": "dev192-148.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f8222-t326461184/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 194,
+    "file": "dev194-149.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/original-loading-screen-level-ready-t24262391/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 195,
+    "file": "dev195-151.png",
+    "caption": "Purchase terminal and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev195-tt-native-01/window-151.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "8520111c5ee96897631fee0540888719faa983fbc1a20115fe729b57e124ca7e",
+    "sha256": "8520111c5ee96897631fee0540888719faa983fbc1a20115fe729b57e124ca7e",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 196,
+    "file": "dev196-153.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f6041-t269905494/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 197,
+    "file": "dev197-155.png",
+    "caption": "Rescue and Retribution loading screen",
+    "kind": "loading",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev197-m01-guest-debug-20260926/window-411.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "8dcb4faeb493763b1c68668b68cd4b2ce1fa8de82f9747f330d6ed8308faf468",
+    "sha256": "8dcb4faeb493763b1c68668b68cd4b2ce1fa8de82f9747f330d6ed8308faf468",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 198,
+    "file": "dev198-158.png",
+    "caption": "Multiplayer interior and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev198-tt-native-01/window-071.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "690721e97a8c08ee00c10c75b58213b3c2e0fac3f60bc7f1a1d8d3d762169939",
+    "sha256": "690721e97a8c08ee00c10c75b58213b3c2e0fac3f60bc7f1a1d8d3d762169939",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 199,
+    "file": "dev199-160.png",
+    "caption": "Black capture buffer",
+    "kind": "diagnostic",
+    "platform": "Vita3K",
+    "source": "vita3k/captures/pre-clean-exit-f236-t47710954/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "82ceaab02154aa798d5f6de71dae0b279d5182ee1517872a4c319103b224980e",
+    "sha256": "8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 200,
+    "file": "dev200-161.png",
+    "caption": "Multiplayer purchase dialog",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev200-tt-purchase-01/window-071.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "2511e2c3c2b2f2c2d870eec7530f7ba42e1045785a3580712234bf6f541021cb",
+    "sha256": "2511e2c3c2b2f2c2d870eec7530f7ba42e1045785a3580712234bf6f541021cb",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 201,
+    "file": "dev201-164.png",
+    "caption": "Multiplayer interior and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev201-glacier-texture-font-01/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "7e87328b5da92beba6b36934a1acc4d579390b98ec7c6aec4c6fe755a40107f6",
+    "sha256": "7e87328b5da92beba6b36934a1acc4d579390b98ec7c6aec4c6fe755a40107f6",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 202,
+    "file": "dev202-167.png",
+    "caption": "Multiplayer Practice interior and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev202-visual-01/window-130.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "814058a5cc07f3416a45a40d29409f1087fce0925a2d319c75788584b96e3516",
+    "sha256": "814058a5cc07f3416a45a40d29409f1087fce0925a2d319c75788584b96e3516",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 205,
+    "file": "dev205-169.png",
+    "caption": "Main menu",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev205-campaign-first-menu-01/visible-20260927T155010180Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "f0c04cf4345eb4b68010867e7ad4e828ca49ba14f9b4d04f81df922331d8b6e8",
+    "sha256": "f0c04cf4345eb4b68010867e7ad4e828ca49ba14f9b4d04f81df922331d8b6e8",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 206,
+    "file": "dev206-172.png",
+    "caption": "Single-player menu",
+    "kind": "menu",
+    "platform": "Vita3K",
+    "source": "managed/logs/dev206-save05-reload-01/window-090.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "731a04f49c5bfd32db0404a8cb91656909ba3a8b54c1c1e9b11c4fa4cceae2a8",
+    "sha256": "731a04f49c5bfd32db0404a8cb91656909ba3a8b54c1c1e9b11c4fa4cceae2a8",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 117,
+    "file": "dev117-001.png",
+    "caption": "Tutorial exterior and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "active/dev117-refinery-freeze/visible-20260914T183752137Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "d6e23e59aebabc82c31bb7138e4a0723d9615ac1df2ff63df276429328aec4c7",
+    "sha256": "d6e23e59aebabc82c31bb7138e4a0723d9615ac1df2ff63df276429328aec4c7",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  },
+  {
+    "build": 120,
+    "file": "dev120-003.png",
+    "caption": "Tutorial interior and weapon HUD",
+    "kind": "world",
+    "platform": "Vita3K",
+    "source": "active/dev120-wall-return/visible-20260914T194157182Z.png",
+    "attribution": "directory or filename; requires review",
+    "source_sha256": "c1ac71f265b9e46daf5052575de463fbaf3091dac4d4172062146d9071a794d6",
+    "sha256": "c1ac71f265b9e46daf5052575de463fbaf3091dac4d4172062146d9071a794d6",
+    "dimensions": [
+      976,
+      583
+    ],
+    "conversion": "unchanged PNG copy"
+  }
+]

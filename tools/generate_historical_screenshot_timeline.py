@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the GitHub historical screenshot timeline and evidence inventory."""
+"""Regenerate the timeline from reviewed, committed screenshot catalogs."""
 
 from __future__ import annotations
 
@@ -304,48 +304,91 @@ MISSING_SCREENSHOT_BUILDS = [
 ]
 
 
-CAPTURE_COMPLETENESS = [
-    (
-        "A3.1.4",
-        "Accepted physical interactive baseline; preserved historical M00 frames exist.",
-    ),
-    (
-        "A3.5-dev82",
-        "Four returned physical diagnostic frames are retained below; none is gameplay acceptance.",
-    ),
-    (
-        "A3.5-dev86",
-        "One returned loading diagnostic is retained; it is not a menu or gameplay frame.",
-    ),
-    (
-        "A3.5-dev87",
-        "One user-finalized physical MP4 was recovered read-only; six selected, labelled M00 stills are derived from it. The raw recording remains local-only and Dev87 remains a frontend-usability failure.",
-    ),
-    (
-        "A3.5-dev88",
-        "Superseded local-only canonical candidate; no Vita capture exists.",
-    ),
-    (
-        "A3.5-dev89",
-        "Superseded local-only canonical candidate; no Vita capture exists.",
-    ),
-    (
-        "A3.5-dev90",
-        "Superseded local-only canonical candidate; no Vita capture exists.",
-    ),
-    (
-        "A3.5-dev91",
-        "Superseded local-only canonical candidate; no Vita capture exists.",
-    ),
-    (
-        "A3.5-dev92",
-        "Superseded local-only canonical candidate; no Vita capture exists.",
-    ),
-    (
-        "A3.5-dev93",
-        "Current local-only canonical candidate; no Vita capture exists.",
-    ),
+RECENT_CAPTURES = [
+    (133, "vita3k/dev133-eva-objectives.png", "Vita3K", "Tutorial EVA objectives", "dev133-reload-return"),
+    (134, "vita3k/dev134-eva-data.png", "Vita3K", "Tutorial EVA data screen", "dev134-refinery-return"),
+    (195, "vita3k/dev195-purchase-terminal-diagnostic.png", "Vita3K", "Purchase terminal diagnostic; connection interrupted, not successful-join evidence", "dev195-tt-native-01"),
+    (197, "pstv/dev197-m13-loading.png", "Physical PSTV", "M13 loading screen; PC keyboard prompts remain visible", "a35-dev197-pstv-20260927 / original-loading-screen-level-ready-t56845132"),
+    (197, "pstv/dev197-exit-confirmation.png", "Physical PSTV", "Exit confirmation; this frame alone does not demonstrate completed exit", "a35-dev197-pstv-20260927 / pre-clean-exit-f15-t99517028"),
+    (200, "vita3k/dev200-rencorner-purchase-dialog.png", "Vita3K", "RenCorner purchase dialog", "Previously published Dev200 capture"),
+    (200, "vita3k/dev200-rencorner-purchase-response.png", "Vita3K", "RenCorner purchase response", "Previously published Dev200 capture"),
+    (202, "vita3k/dev202-main-menu.png", "Vita3K", "Main menu", "Previously published Dev202 capture"),
+    (202, "vita3k/dev202-practice-loading.png", "Vita3K", "Multiplayer Practice loading screen", "Previously published Dev202 capture"),
+    (202, "vita3k/dev202-practice-gameplay.png", "Vita3K", "Multiplayer Practice world and HUD", "Previously published Dev202 capture"),
+    (204, "vita3k/dev204-livearea.png", "Vita3K", "LiveArea presentation, not gameplay", "Previously published Dev204 capture"),
+    (205, "vita3k/dev205-main-menu.png", "Vita3K", "Main menu; a still does not establish responsiveness", "dev205-campaign-first-menu-01"),
+    (206, "vita3k/dev206-single-player-menu.png", "Vita3K", "Single-player menu, not save/load verification", "dev206-save05-reload-01"),
 ]
+
+def recent_capture_section() -> list[str]:
+    lines = [
+        "## Recent Build Captures",
+        "",
+        "Updated September 27, 2026. These 13 retained captures cover nine builds from Dev133 through Dev206. Physical PSTV and Vita3K evidence are labeled separately. Menus, loading screens, and network diagnostics are included here, not passed off as gameplay or physical acceptance. Images are unchanged copies; click to inspect their original resolution.",
+        "",
+        "Dev207 is the latest published experimental binary. No Dev207 runtime image is included in this reviewed selection. Gaps between build numbers mean no selected capture is published here, not that a build was never tested. This is not an exhaustive inventory of every retained capture. Instantaneous FPS counters do not establish comparative performance.",
+        "",
+    ]
+    for build, filename, platform, caption, source in RECENT_CAPTURES:
+        path = ROOT / "docs" / "media" / filename
+        width, height = png_dimensions(path)
+        label = f"Dev{build} ({platform}): {caption}"
+        lines.extend([
+            f"### Dev{build}: {caption}", "",
+            f'<a href="media/{filename}"><img src="media/{filename}" width="640" alt="{html.escape(label, quote=True)}"></a>',
+            "", f"**{platform}.** Source: `{source}`. Original dimensions: {width} x {height}.", "",
+            "<details><summary>Capture checksum (SHA-256)</summary>", "",
+            f"`{sha256(path)}`", "", "</details>", "",
+        ])
+    return lines
+
+
+def recovered_catalog() -> list[dict]:
+    entries = []
+    for folder in ("build-captures", "physical-captures"):
+        path = ROOT / "docs" / "history" / folder / "catalog.json"
+        if path.exists():
+            for entry in json.loads(path.read_text()):
+                entries.append({**entry, "link": f"history/{folder}/{entry['file']}"})
+    return entries
+
+
+def complete_build_section() -> list[str]:
+    catalog = recovered_catalog()
+    groups = defaultdict(list)
+    for entry in sorted(catalog, key=lambda item: item["kind"] == "diagnostic"):
+        groups[entry["build"]].append((entry["link"], entry["platform"], entry["caption"]))
+    for path in sorted(SCREENSHOT_DIR.glob("*.png")):
+        match = re.search(r"a35-dev(\d+)-", path.name)
+        if match:
+            groups[int(match.group(1))].append((rel_img(path.name), "Historical physical evidence", "Early archive"))
+    for build, filename, platform, caption, _ in RECENT_CAPTURES:
+        groups[build].append((f"media/{filename}", platform, caption))
+    lines = [
+        "## All Builds With Retained Screenshots", "",
+        f"This index covers **{len(groups)} numbered development builds**, plus the earlier A3.1 gallery. Every build identified in the reviewed local and device capture inventories has an entry, including builds whose retained buffers are black. A black capture does not establish that the game displayed a black screen: framebuffer capture itself could fail.", "",
+        "The September 27 archive pass checked the active workspace, managed Windows builder archive, Vita3K user captures, the historical E: project tree, and both live physical devices through read-only FTP. The E: project tree returned no images. Device capture metadata supplied build labels where filenames did not. Directory-attributed emulator captures were reviewed visually; attribution method, source-relative path, dimensions and hashes are retained in the [emulator catalog](history/build-captures/catalog.json) and [physical catalog](history/physical-captures/catalog.json).", "",
+        "This is build coverage, not publication of every repeated frame. Original PNGs remain unchanged. BMP captures are losslessly converted to PNG with decoded-pixel equality checked. Private logs, saves, retail files, and desktop captures unrelated to the game are excluded. No missing build number is filled with an image from another build.", "",
+        "| Build | Evidence platform | Retained example |", "| --- | --- | --- |",
+        "| A3.1 | Historical physical evidence | [Early M00 world](history/screenshots/a31-vita-log-select-capture-f2278.png) |",
+    ]
+    for build, entries in sorted(groups.items()):
+        platforms = ", ".join(sorted(set(platform for _, platform, _ in entries)))
+        link, _, caption = entries[0]
+        lines.append(f"| Dev{build} | {platforms} | [{caption}]({link}) |")
+    lines.extend(["", "## Recovered Build Gallery", "",
+                  "Expand a build to inspect its retained image. Black or blank diagnostics are linked in the index and catalog instead of repeated as large empty thumbnails. Cinematic stills do not prove animation, audio synchronization, or mission completion. Physical and emulator performance cannot be compared from these screenshots.", ""])
+    for entry in sorted(catalog, key=lambda item: (item["build"], item["platform"])):
+        if entry["kind"] == "diagnostic":
+            continue
+        title = f"Dev{entry['build']} ({entry['platform']}): {entry['caption']}"
+        lines.extend([
+            f"<details><summary>{html.escape(title)}</summary>", "",
+            f'<a href="{entry["link"]}"><img src="{entry["link"]}" width="640" alt="{html.escape(title, quote=True)}"></a>',
+            "", f"{entry['dimensions'][0]} x {entry['dimensions'][1]}. {entry['conversion']}.",
+            "", "</details>", "",
+        ])
+    return lines
 
 
 def png_dimensions(path: Path) -> tuple[int, int]:
@@ -456,7 +499,7 @@ def write_timeline() -> None:
         "Evidence policy:",
         "",
         "- Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `<vita3k-data-root>/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `<historical-evidence-root>/Vita Logs/`.",
-        "- The gallery stores PNG copies under `docs/history/screenshots/` so GitHub can render them directly.",
+        "- The gallery stores PNGs under `docs/history/` and `docs/media/` so GitHub can render them directly. The all-build index includes menus, loading screens, cinematics and diagnostics with explicit labels; the older gameplay-only gallery remains separate.",
         "- Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list every useful local or Vita-pulled gameplay sample found.",
         "- One historical loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler, except the four exact returned Dev82 diagnostic frames shown separately below.",
         "- Vita-pulled screenshots are mapped through each build's own `a35-devXX-runtime.log` capture paths before being included.",
@@ -468,10 +511,13 @@ def write_timeline() -> None:
         "",
         "| Candidate | GitHub-hosted visual state |",
         "| --- | --- |",
-        *[f"| {build} | {state} |" for build, state in CAPTURE_COMPLETENESS],
+        "| A3.1.4 | Accepted historical physical baseline; not acceptance of later builds. |",
+        "| A3.5-dev207 | Latest published experimental binary; no runtime capture exists in this reviewed archive. |",
         "",
-        "The future comparison route is an authenticated, exact-title VDB post-render framebuffer capture provider. It is not installed on the active device yet. Until then, this page will not add guessed, retimed, or unrelated images merely to fill a build row.",
+        "The early-build inventory below remains historical. Newer reviewed captures are listed separately with their platform and source collection. No guessed or unrelated images are added to fill build-number gaps. See [current status](CURRENT_STATUS.md) for present build and verification status.",
         "",
+        *complete_build_section(),
+        *recent_capture_section(),
         "## Quick Gameplay View",
         "",
         "This overview deliberately shows actual gameplay/world frames, including NPC detail crops, rather than one thumbnail from every build. Some later builds only produced loading, black, or diagnostic buffers locally; those are inventoried later but not promoted into this first visual impression.",
@@ -503,7 +549,7 @@ def write_timeline() -> None:
         [
             "## One Loading-Screen Regression Reference",
             "",
-            "The gallery keeps one displayed loading-screen reference because the late dev78/dev79 loading regression is part of the story dev82 targets. The rest of the displayed sample images above are gameplay/world captures.",
+            "This early-gallery loading-screen reference records the Dev78/79 regression. The preceding Quick Gameplay View and Gameplay Timeline contain world captures; the separately labeled recovered gallery also includes menus and loading screens.",
             "",
             image_table([("a35-dev78-loading-physical.png", "A3.5-dev78 physical loading regression frame")], columns=1),
             "",
@@ -556,7 +602,7 @@ def write_timeline() -> None:
             "",
             "## Builds With No Local Or Vita-Pulled Screenshot File",
             "",
-            "The current bash workspace, VitaShell FTP pull, targeted C/AppData check, and E: Vita Logs check did not find matching PNG/BMP/JPG screenshot files for these build groups:",
+            "The original early-build audit did not find matching PNG/BMP/JPG screenshot files for these build groups. The all-build index above supersedes the old audit wherever new evidence was recovered:",
             "",
             "`" + "`, `".join(MISSING_SCREENSHOT_BUILDS) + "`.",
             "",
@@ -564,9 +610,17 @@ def write_timeline() -> None:
             "",
             "## Complete Gallery Manifest",
             "",
-            f"The GitHub gallery currently contains {len(manifest)} PNG files. Every file below is stored under `docs/history/screenshots/`; not every file is displayed as a timeline thumbnail because black/loading/diagnostic frames would obscure the gameplay progression.",
+            f"This original-gallery manifest contains {len(manifest)} PNG files under `docs/history/screenshots/`. Newer additions have separate [emulator](history/build-captures/catalog.json) and [physical](history/physical-captures/catalog.json) manifests. The [coverage summary](history/screenshot-coverage.json) records every build identified by the expanded audit. Not every diagnostic file is shown as a thumbnail.",
             "",
             *manifest_rows,
+            "",
+            "## Maintaining This Gallery",
+            "",
+            "1. Inventory capture roots with `tools/inventory_screenshot_sources.py --root LABEL=PATH --output LOCAL_JSON`. The full path inventory stays local; `--summary-from LOCAL_JSON --output PUBLIC_JSON` exports path-free build coverage.",
+            "2. For authorized read-only device collection, use `tools/collect_screenshot_archive.py --host DEVICE_IP --output LOCAL_DIRECTORY`. It retrieves only title-owned `state.json` and `frame.bmp` files, never saves or retail data.",
+            "3. Prepare local review sheets with `tools/prepare_screenshot_review.py`, inspect the actual images, and explicitly select captions and evidence classes before using `tools/publish_screenshot_selection.py`. Review helpers require Pillow. Keep reviewer scratch files and unreviewed captures local.",
+            "4. Regenerate this page with `python3 tools/generate_historical_screenshot_timeline.py`. The earlier inventory reports are historical records and are not overwritten by this command.",
+            "5. Run `python3 -m unittest tools.test_historical_screenshot_timeline` and `python3 tools/verify_public_docs.py` before publication. Coverage, image hashes, dimensions, links, and reproducible generation must pass.",
             "",
         ]
     )
@@ -694,7 +748,8 @@ def write_inventory() -> None:
 
 def main() -> int:
     write_timeline()
-    write_inventory()
+    # Preserve the original evidence inventory; new scans use the explicit
+    # inventory_screenshot_sources.py workflow instead of rewriting history.
     return 0
 
 

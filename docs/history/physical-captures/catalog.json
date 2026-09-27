@@ -1,0 +1,130 @@
+[
+  {
+    "build": 84,
+    "file": "dev84-000.png",
+    "caption": "Loading-screen diagnostic with missing text",
+    "kind": "loading",
+    "platform": "Physical PS Vita",
+    "source": "physical_vita/original-loading-screen-level-ready-t85559925/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "63afb21c4fad21b38b8f769bab36b6461decea8a1465e356a45bf9fc5232a302",
+    "sha256": "1dc41b900e65adee06298fae49aebb2c422862d3f96b2c26676d3a87d89efcfd",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 87,
+    "file": "dev87-002.png",
+    "caption": "Tutorial world, NPC and weapon HUD",
+    "kind": "world",
+    "platform": "Physical PS Vita",
+    "source": "physical_vita/pre-clean-exit-f1200-t182673429/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "1c450aa0fc2ab21fbf36df5812f25981a14874378a6581d89015deb005d25f13",
+    "sha256": "ec3770678bb404531c7d1762880f4188b3c0216bf6be3deea9a16ad7365bac90",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 124,
+    "file": "dev124-004.png",
+    "caption": "Tutorial loading screen",
+    "kind": "loading",
+    "platform": "Physical PS Vita",
+    "source": "physical_vita/original-loading-screen-level-ready-t120704470/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "47bf9865d2f591f9d9edb8ecd766b1fa91c232970eaf19ae9596047ad236f2c3",
+    "sha256": "2db5f90e4aca5c3c70cfbf6eb583e00b43958b81b87edab3c1cb61eaead6a2a4",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 126,
+    "file": "dev126-005.png",
+    "caption": "Tutorial loading screen",
+    "kind": "loading",
+    "platform": "Physical PS Vita",
+    "source": "physical_vita/original-loading-screen-level-ready-t106565739/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "47bf9865d2f591f9d9edb8ecd766b1fa91c232970eaf19ae9596047ad236f2c3",
+    "sha256": "2db5f90e4aca5c3c70cfbf6eb583e00b43958b81b87edab3c1cb61eaead6a2a4",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 134,
+    "file": "dev134-006.png",
+    "caption": "Demo credits",
+    "kind": "menu",
+    "platform": "Physical PS Vita",
+    "source": "physical_vita/pre-clean-exit-f45440-t1768523089/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "e1e14706caed013619915f0057cfdd8a44ca1c764eb2fbc569b6e548ae116444",
+    "sha256": "09988db4f03241252fccf1a1bda29ca141114b0002ba900c1ad01437524d4f28",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 134,
+    "file": "dev134-007.png",
+    "caption": "Tutorial loading screen",
+    "kind": "loading",
+    "platform": "Physical PS Vita",
+    "source": "physical_vita/original-loading-screen-level-ready-t105710094/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "cd719faf37f58099dc6b6506fee0b5b5f70e73650ae3ec6368f51e51bd4cb563",
+    "sha256": "2c22ce3fff6dae72377bf71d613eb4b0bf61033cbc1b5d5fe0bddf1820069dd4",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 197,
+    "file": "dev197-008.png",
+    "caption": "Exit confirmation",
+    "kind": "menu",
+    "platform": "Physical PSTV",
+    "source": "physical_pstv/pre-clean-exit-f15-t99517028/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "5be9e8527c910960a011ac44f08905aea431a67f5b96528ef3b09c692bfef9ef",
+    "sha256": "e1c0c21d0d8c8218e14c7caa263bdb380b9ae96fd7b52721282c6291a6f9c955",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  },
+  {
+    "build": 197,
+    "file": "dev197-009.png",
+    "caption": "The Scorpion Hunters loading screen",
+    "kind": "loading",
+    "platform": "Physical PSTV",
+    "source": "physical_pstv/original-loading-screen-level-ready-t179559507/frame.bmp",
+    "attribution": "capture state.json build label",
+    "source_sha256": "d8ee41ca18167a36b2f92d2d59bc2a3184e30a8481cc7aa3e75b910504e7275f",
+    "sha256": "723e80b84bbd98984ccae9a440ea0fa3c900a85a906367e87159c6dc72215898",
+    "dimensions": [
+      960,
+      544
+    ],
+    "conversion": "lossless BMP-to-PNG; decoded RGBA pixels checked"
+  }
+]

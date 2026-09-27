@@ -96,7 +96,7 @@ Read the concise [current status](docs/CURRENT_STATUS.md) before treating any ca
 
 ## Visual evidence, honestly presented
 
-The [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) contains the reviewed GitHub-hosted frames, their labels, hashes, and diagnostic inventory. It intentionally does not fill later builds with black, loading, or early-frame captures just to create a visual sequence. Dev87's six frames are derived from the user-finalized physical-Vita recorder output and remain explicitly failure-context evidence, not acceptance proof.
+The [historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) now indexes all 108 numbered builds with captures identified in the archive audit, plus A3.1. It includes recovered campaign, multiplayer, menu, and loading images through Dev206, with physical PS Vita, PSTV, and Vita3K evidence labeled separately. Black-buffer diagnostics are linked without presenting them as gameplay. Each recovered image has provenance and a checksum; screenshots do not establish gameplay or performance acceptance. Dev87's recorder-derived stills remain failure-context evidence, not acceptance proof.
 
 <table>
 <tr>

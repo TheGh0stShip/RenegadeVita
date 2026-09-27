@@ -1,6 +1,9 @@
 import re
+import json
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -9,6 +12,49 @@ SCREENSHOT_DIR = ROOT / "docs" / "history" / "screenshots"
 
 
 class HistoricalScreenshotTimelineContract(unittest.TestCase):
+    def test_every_audited_build_has_an_index_entry(self):
+        coverage = json.loads((ROOT / "docs/history/screenshot-coverage.json").read_text())
+        doc = TIMELINE.read_text(encoding="utf-8")
+        builds = {int(build) for build in coverage["candidate_file_counts_by_build"]}
+        index = {int(build) for build in re.findall(r"\| Dev(\d+) \|", doc)}
+        self.assertGreaterEqual(len(builds), 108)
+        self.assertFalse(builds - index, f"Uncovered builds: {builds - index}")
+
+    def test_recovered_catalog_matches_images(self):
+        from tools.generate_historical_screenshot_timeline import recovered_catalog, sha256, png_dimensions
+
+        doc = TIMELINE.read_text(encoding="utf-8")
+        for entry in recovered_catalog():
+            path = ROOT / "docs" / entry["link"]
+            self.assertEqual(entry["sha256"], sha256(path))
+            self.assertEqual(tuple(entry["dimensions"]), png_dimensions(path))
+            self.assertIn(entry["link"], doc)
+            self.assertNotIn("/mnt/", entry["source"])
+            self.assertNotIn("/home/", entry["source"])
+
+    def test_regeneration_preserves_published_timeline(self):
+        from tools import generate_historical_screenshot_timeline as generator
+
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "timeline.md"
+            with patch.object(generator, "TIMELINE_PATH", target):
+                generator.write_timeline()
+            self.assertEqual(TIMELINE.read_bytes(), target.read_bytes())
+
+    def test_recent_captures_have_platform_source_and_matching_checksums(self):
+        from tools.generate_historical_screenshot_timeline import RECENT_CAPTURES, sha256
+
+        doc = TIMELINE.read_text(encoding="utf-8")
+        recent = doc.split("## Recent Build Captures", 1)[1].split("## Quick Gameplay View", 1)[0]
+        self.assertGreaterEqual(len(RECENT_CAPTURES), 13)
+        for build, filename, platform, caption, source in RECENT_CAPTURES:
+            self.assertIn(f"media/{filename}", recent)
+            self.assertIn(platform, recent)
+            self.assertIn(source, recent)
+            self.assertIn(sha256(ROOT / "docs" / "media" / filename), recent)
+        self.assertIn("No Dev207 runtime image", recent)
+        self.assertNotIn("Dev134 is the current", doc)
+
     def test_timeline_references_every_gallery_png(self):
         doc = TIMELINE.read_text(encoding="utf-8")
         screenshots = sorted(path.name for path in SCREENSHOT_DIR.glob("*.png"))

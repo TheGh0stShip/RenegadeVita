@@ -1,9 +1,10 @@
 # Known gaps
 
-2026-09-26 Dev197: EVA exit-to-menu source handoff is repaired and packaged;
-Vita3K gameplay retest and PSTV confirmation are pending. M13 save file
-existence is verified, but reload/state restoration, Practice mode, and issue
-#1's PSTV frame drops remain unverified. See DEV197_ISSUE1_SAVE_MENU.md.
+2026-09-26 Dev197: M13 pre-Ion save reload and EVA exit-to-menu passed a
+user-driven Vita3K run with matching load/teardown/frontend log evidence.
+Later Ion-beacon progression, broader save-state coverage, PSTV confirmation,
+Practice mode, and issue #1's reported frame drops remain unverified.
+See DEV197_ISSUE1_SAVE_MENU.md.
 
 2026-09-24 native Dev195 now joins/renders in Vita3K; public listing PSVita is
 verified. Remaining: purchase dialog activation/update/render, malformed early

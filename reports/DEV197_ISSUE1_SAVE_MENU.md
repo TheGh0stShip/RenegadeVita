@@ -21,10 +21,15 @@ Evidence: focused frontend contract tests pass (15); the canonical host,
 ARM, ELF/SELF/VPK and hash gates pass; Dev197 is installed and hash-verified
 in Vita3K. VPK SHA-256:
 `b01c61f254edaeff1ce49e9d73424ac3c33e15ac6912023cff57c19d94304cdb`.
-No Dev197 gameplay launch, save reload or PSTV result is claimed here.
+The subsequent user-driven Dev197 Vita3K run loaded `savegame03.sav` and the
+user confirmed the restored state was correct. The matching log records the
+save selection, original `load-game-return`, Combat post-load completion,
+reused saved player/camera, 31 interactive frames, EVA exit, complete session
+teardown, and the original frontend reopening. This passes the bounded M13
+save-reload and exit-to-menu check in Vita3K; it does not prove later Ion-beacon
+progression, full save-state coverage, or physical PSTV behavior.
 
-Next experiment: launch Dev197 in Vita3K, load `savegame03`, verify M13
-position, inventory and objectives, then complete the Ion-beacon event.
-Choose EVA exit and verify return to the main menu without app termination.
-Repeat on PSTV before closing issue #1 as resolved. Practice mode and the
-reported frame drops remain separate unverified issue items.
+Next experiment: continue from the restored M13 checkpoint through the
+Ion-beacon event and mission transition, then repeat save/reload and EVA
+menu return on PSTV. Practice mode and the reported frame drops remain
+separate unverified issue items. Issue #1 stays open.

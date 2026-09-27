@@ -2,15 +2,17 @@
   "public_candidate": {
     "label": "A3.5-dev197",
     "report": "reports/DEV197_ISSUE1_SAVE_MENU.md",
-    "evidence_class": "host_build_and_vita3k_install",
+    "evidence_class": "Vita3K_user_run_with_matching_log",
     "physical_acceptance": false
   },
   "issue1_dev197_candidate": {
-    "state": "PACKAGED_INSTALLED_RELOAD_UNVERIFIED",
+    "state": "VITA3K_M13_SAVE_RELOAD_AND_MENU_RETURN_VERIFIED",
     "vpk_sha256": "b01c61f254edaeff1ce49e9d73424ac3c33e15ac6912023cff57c19d94304cdb",
     "vita3k_installed": true,
-    "vita3k_gameplay_verified": false,
-    "campaign_save_reload_verified": false,
+    "vita3k_gameplay_verified": true,
+    "campaign_save_reload_verified": true,
+    "campaign_save_reload_scope": "M13 pre-Ion checkpoint, user-observed restoration and matching original load/post-load log",
+    "eva_exit_to_main_menu_verified": true,
     "pstv_verified": false,
     "issue_closed": false
   },

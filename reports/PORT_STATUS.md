@@ -4,7 +4,10 @@
 `savegame03.sav`, but EVA exit tore down the app instead of returning to the
 main menu. Dev197 routes confirmed EVA exit through clean session teardown
 back to the original frontend. Canonical host/ARM/package checks pass and the
-VPK is installed/hash-verified in Vita3K. Dev197 reload and PSTV behavior are
+VPK is installed/hash-verified in Vita3K. The user then reloaded the M13
+pre-Ion save, confirmed the restored game was correct, and exited to the
+main menu. The matching log records original load/post-load, saved player/camera
+reuse, clean teardown and frontend reopening. PSTV and later progression are
 not yet verified. See [Dev197](DEV197_ISSUE1_SAVE_MENU.md).
 
 2026-09-26 public status; runtime evidence from 2026-09-25: Vita3K ran the Dev195

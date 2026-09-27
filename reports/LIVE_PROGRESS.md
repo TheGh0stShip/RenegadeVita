@@ -5,14 +5,17 @@
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 existing candidate evidence gates complete`
 
-Now: Dev197 installed in Vita3K for M13 save reload and EVA exit-to-menu test.
+Now: Dev197 M13 save reload and EVA exit-to-menu passed in Vita3K.
 Completed: corrected the confirmed EVA exit handoff to reopen the frontend
 after clean session teardown; retained diagnostic replay and reload routing.
 Evidence: Dev196 runtime cleanly exited the app after EVA; pre-Ion save file
 exists and is unchanged. Dev197 focused contracts (15), canonical host/ARM,
 package/integrity and Vita3K install/hash checks pass. No Dev197 gameplay or
-PSTV result yet. Next: load the save, finish Ion event, exit to menu; then
-verify on PSTV. Blocker: runtime results pending, not a build failure.
+PSTV result yet. User confirmed the pre-Ion save restored correctly and EVA
+exit returned to the main menu; matching log shows original load/post-load,
+saved player/camera reuse, clean teardown and frontend reopening. Next:
+continue the Ion event/transition, then verify on PSTV. Blocker: PSTV and
+remaining issue #1 behaviors have no new test evidence.
 
 ## Active scope: original skirmish and RenCorner compatibility
 

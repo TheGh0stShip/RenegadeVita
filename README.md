@@ -4,10 +4,10 @@ An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: 
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Current development candidate: A3.5-dev197.** The M13 EVA exit-to-menu
-> handoff is repaired, packaged, and installed in Vita3K. Campaign save reload
-> and physical Vita/PSTV behavior still require testing. Dev195's RenCorner join remains the
-> latest multiplayer runtime evidence.
+> **Current development candidate: A3.5-dev197.** The M13 pre-Ion save restored
+> correctly in a user-driven Vita3K run, and EVA exit returned to the main menu.
+> physical Vita/PSTV behavior and later mission progression still require
+> testing. Dev195's RenCorner join remains the latest multiplayer evidence.
 
 [Download Dev197](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev197)
 | [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
@@ -22,18 +22,18 @@ is preserved; its data subset is not sufficient for the full-port candidate.
 ## Where the port stands
 
 Dev197 is a **campaign menu-handoff development checkpoint**, built and
-installed in Vita3K but not yet gameplay-tested. See the
+tested for one M13 save reload and menu return in Vita3K. See the
 [candidate report](reports/DEV197_ISSUE1_SAVE_MENU.md) for hashes and limits.
 Dev195 remains the latest [multiplayer runtime evidence](reports/DEV195_RENCORNER_NATIVE_JOIN.md).
 
 | Evidence area | Current state |
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
-| Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation and Vita3K installation passed. EVA exit now queues a return to the original frontend after session cleanup; runtime retest pending. |
+| Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation and Vita3K installation passed. A user-driven M13 save reload and EVA exit-to-menu passed with matching runtime logs. |
 | Dev195 build | 171 fast contracts and the original DDS alias test passed; 266 deterministic patches; ARM ELF/SELF/VPK produced and installation hashes verified. |
 | Dev195 multiplayer | Vita3K joined RenCorner, mounted five packages, rendered 9,723 frames, moved the player, and completed session teardown. The public list showed `PSVita`; the client requested `PS Vita`. The name-normalization boundary is unresolved. |
 | Remaining multiplayer work | Purchase dialog did not appear; early text had malformed glyphs. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
-| Campaign | Dev196 wrote an M13 pre-Ion-beacon save, but its reload is unverified. Earlier runs completed M13 and entered M01; cinematic, actor and M01 stalls remain open. |
+| Campaign | Dev197 reloaded the M13 pre-Ion-beacon save and returned to the menu; later Ion progression was not exercised in that run. Earlier runs completed M13 and entered M01; cinematic, actor and M01 stalls remain open. |
 | Physical testing | Dev134 deployment/readback is historical, not Dev197 acceptance. Issue #1 contains Dev142 PSTV user observations, including blocked progression and save/load. No Dev197 physical test is claimed. |
 | Visual evidence | The gallery below is historical. Emulator captures and historical physical stills do not establish current physical acceptance or stable 60 FPS. |
 

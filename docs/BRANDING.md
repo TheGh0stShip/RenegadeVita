@@ -26,6 +26,10 @@ background and gate through Vita's `a1` LiveArea layout. All four PNGs and the
 template are packaged alongside `eboot.bin` and `param.sfo`; no retail asset is
 included.
 
+The [Dev204 Vita3K LiveArea capture](media/vita3k/dev204-livearea.png) confirms
+that this candidate's background, gate, and version stamp render in the
+emulator. It is not physical-Vita visual acceptance.
+
 Generate a local preview with:
 
 ```bash
@@ -35,8 +39,8 @@ python3 tools/render_livearea.py --candidate A3.5-devNN \
 
 ImageMagick's `convert` is required. The renderer validates dimensions and
 indexed PNG color type. The identity and package checks reject missing or
-mis-sized Vita images. Visual appearance still requires Vita3K and physical
-Vita review; a successful package check alone does not prove LiveArea display.
+mis-sized Vita images. Visual appearance still requires physical Vita review;
+a successful package check alone does not prove LiveArea display.
 
 ## Sources
 

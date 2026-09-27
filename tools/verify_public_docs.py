@@ -20,6 +20,7 @@ DOCUMENTS = (
     "CODE_OF_CONDUCT.md",
     "docs/ARCHITECTURE.md",
     "docs/BUILDING.md",
+    "docs/BRANDING.md",
     "docs/CONTROLS.md",
     "docs/CURRENT_STATUS.md",
     "docs/DEMO_CAPTURE.md",

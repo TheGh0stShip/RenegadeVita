@@ -3,19 +3,19 @@
   <rect width="960" height="544" fill="#11191d"/>
   <path d="M0 454h960M0 476h960M0 498h960M0 520h960" stroke="#243136" stroke-width="1"/>
   <path d="M0 0h960v10H0z" fill="#d4473c"/>
-  <path d="M54 66v412h860" fill="none" stroke="#46545a" stroke-width="2"/>
-  <path d="M72 74h400v400H72z" fill="#182227" stroke="#8a3933" stroke-width="2"/>
-  <g transform="translate(60 52) scale(.82)">
+  <path d="M36 66v412h888" fill="none" stroke="#46545a" stroke-width="2"/>
+  <path d="M52 78h296v394H52z" fill="#182227" stroke="#8a3933" stroke-width="2"/>
+  <g transform="translate(4 88) scale(.70)">
     <path d="M101 410V117l27-24h151l44 11 36 31 12 34v47l-14 38-29 25 66 131h-97l-57-109h-50v109zm89-238v56h83l15-8 6-17-6-18-15-13z" fill="#d4473c"/>
     <path d="M101 315h89v19h-89zM110 105h62l-71 66v-54z" fill="#182227"/>
     <path d="M224 254h79l57 103 57-103h53l-86 158h-54z" fill="#eef0e9"/>
     <path d="M340 392l19 20 24-43-23 10z" fill="#b8bfbb"/>
     <path d="M410 267h50M225 267h43" stroke="#c89a5a" stroke-width="4"/>
   </g>
-  <path d="M525 177h357" stroke="#c89a5a" stroke-width="4"/>
-  <text x="521" y="264" fill="#eef0e9" font-family="DejaVu Sans" font-size="44" font-weight="bold">RENEGADE</text>
-  <text x="522" y="342" fill="#d4473c" font-family="DejaVu Sans" font-size="70" font-weight="bold">VITA</text>
-  <path d="M522 373h360" stroke="#46545a" stroke-width="2"/>
-  <text x="522" y="408" fill="#b7c0bb" font-family="DejaVu Sans" font-size="18">NATIVE ARM PORT</text>
-  <text x="522" y="448" fill="#c89a5a" font-family="DejaVu Sans" font-size="20">BUILD __CANDIDATE__</text>
+  <path d="M642 177h270" stroke="#c89a5a" stroke-width="4"/>
+  <text x="640" y="255" fill="#eef0e9" font-family="DejaVu Sans" font-size="34" font-weight="bold">RENEGADE</text>
+  <text x="640" y="334" fill="#d4473c" font-family="DejaVu Sans" font-size="68" font-weight="bold">VITA</text>
+  <path d="M640 373h272" stroke="#46545a" stroke-width="2"/>
+  <text x="640" y="408" fill="#b7c0bb" font-family="DejaVu Sans" font-size="17">NATIVE ARM PORT</text>
+  <text x="640" y="448" fill="#c89a5a" font-family="DejaVu Sans" font-size="19">BUILD __CANDIDATE__</text>
 </svg>

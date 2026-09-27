@@ -2,6 +2,17 @@
 
 This changelog records public-facing source, process, and evidence changes. It does not turn a build into a physical acceptance claim.
 
+## A3.5-dev204 - 2026-09-27
+
+- Added an original R/V identity and version-stamped Vita LiveArea artwork.
+  Dev204 refines the first Dev203 composition so the gate and background remain
+  readable around Vita3K's Start control.
+- Passed 177 focused tests, fast ARM package, and Vita3K installation/hash
+  checks. A bounded Vita3K capture shows the title's LiveArea; physical Vita
+  appearance, canonical build acceptance, and gameplay remain unverified.
+- See the [Dev204 evidence record](reports/DEV204_LIVEAREA_IDENTITY.md) and
+  [artwork source/provenance](docs/BRANDING.md).
+
 ## A3.5-dev202 - 2026-09-27
 
 - Routed original loading-backdrop selection by full-port mode: Practice uses

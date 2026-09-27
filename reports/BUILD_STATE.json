@@ -1,4 +1,20 @@
 {
+  "tt_dev199_purchase_diagnostic_candidate": {
+    "state": "FAST_BUILT_VITA3K_INSTALLED_ORIGINAL_PURCHASE_DIALOG_INSTANTIATED_PURCHASE_UNVERIFIED",
+    "vpk_sha256": "12d95a0f7007b8fb7954ee59ae1b97304dd6f1ea16cc2005f59383a6728a1987",
+    "installed_eboot_sha256": "d6ff0b5cec3c641c8900521e604d368c9701b8a7ce665a644b55de871389e649",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev199-setup-20260927T024927943341Z/setup-receipt.json",
+    "first_native_run_player_id": 5,
+    "first_native_run_map": "C&C_Mesa.mix",
+    "original_purchase_dialog_template_observed": 236,
+    "diagnostic_marker_consumed": true,
+    "first_native_run_last_complete_frame": 236,
+    "first_native_run_end_state": "ConnectionLost",
+    "purchase_request_and_response_verified": false,
+    "visual_purchase_dialog_verified": false,
+    "full_multiplayer_verified": false,
+    "physical_acceptance": false
+  },
   "tt_dev198_dialog_candidate": {
     "state": "CANONICAL_BUILT_VITA3K_INSTALLED_NATIVE_MESA_JOIN_480_FRAMES_PURCHASE_UNVERIFIED",
     "vpk_sha256": "2336fb7f705cedfa50dbaa5717a5d59f41e526bd23f9536eda88af7b23f7556f",

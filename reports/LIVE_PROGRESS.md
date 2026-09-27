@@ -1,5 +1,23 @@
 # Live engineering progress
 
+## Dev199 RenCorner purchase-menu diagnostic
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: Dev199 is installed in Vita3K. A one-shot diagnostic invoked the original
+purchase terminal after server player ID 5 arrived on Mesa; template 236 was
+instantiated. The connection later ended at frame 236 (state 5). No purchase or
+visual dialog proof. A second capture replay did not receive a server player
+and ended with a Vita3K host access violation during close. Both markers we
+created are absent. Evidence: fast ARM/package/install checks, 35 focused
+contracts, managed `dev199-tt-purchase-01/02`; VPK SHA-256
+`12d95a0f7007b8fb7954ee59ae1b97304dd6f1ea16cc2005f59383a6728a1987`.
+Next: distinguish server disconnect from client reliable-packet timeout using
+the existing WWNet connection state, then capture original dialog rendering
+and a real purchase response. Physical multiplayer and exact public name proof
+remain open.
+
 ## Dev198 native RenCorner return
 
 Renegade Vita - v3.5 active

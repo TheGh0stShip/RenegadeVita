@@ -71,6 +71,7 @@
 #include "networkobjectmgr.h"
 #include "pathmgr.h"
 #include "playermanager.h"
+#include "playerterminal.h"
 #include "playertype.h"
 #include "radar.h"
 #include "ramfile.h"
@@ -4305,6 +4306,27 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A35_Campaign_Flight_Record_Event("lifecycle",
 					"interactive_session_ready", result.frames, sync_origin,
 					"original player/session ready; entering campaign frame loop");
+#if !RENEGADE_VITA_M00_DEMO
+				if (remote_client) {
+					const char *const terminal_request =
+						"ux0:data/renegade/user/config/dev-tt-purchase-menu-once.flag";
+					FILE *request = fopen(terminal_request, "rb");
+					if (request != NULL) {
+						const bool request_closed = fclose(request) == 0;
+						SoldierGameObj *star = CombatManager::Get_The_Star();
+						PlayerTerminalClass *terminal = PlayerTerminalClass::Get_Instance();
+						if (!request_closed || star == NULL || star->Get_Player_Data() != local_player ||
+							(star->Get_Player_Type() != PLAYERTYPE_GDI &&
+							 star->Get_Player_Type() != PLAYERTYPE_NOD) ||
+							terminal == NULL || remove(terminal_request) != 0) {
+							A30_Vita_Log("A4 direct client: diagnostic purchase menu rejected; player/terminal/request invalid\n");
+						} else {
+							terminal->Display_Default_Terminal_For_Player(star);
+							A30_Vita_Log("A4 direct client: diagnostic original purchase menu requested for replicated player\n");
+						}
+					}
+				}
+#endif
 #if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 				bool diagnostic_m13_completion_pending =
 					Try_Arm_Development_M13_Completion(load_source);

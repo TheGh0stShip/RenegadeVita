@@ -3,7 +3,8 @@ param(
     [ValidateSet('None','W','A','S','D','I','J','K','L','Q','E','X','Z','V','C','Up','Down','Left','Right','QuickSave','Select','Start','F12')][string]$Key = 'None',
     [ValidateRange(50,3000)][int]$HoldMilliseconds = 120,
     [ValidateRange(-1,959)][int]$TouchX = -1,
-    [ValidateRange(-1,543)][int]$TouchY = -1
+    [ValidateRange(-1,543)][int]$TouchY = -1,
+    [switch]$FocusOwnedGameForCapture
 )
 
 # Bounded interactive emulator step, never physical Vita input.
@@ -37,6 +38,7 @@ public static class RenegadeStepWindow {
     [DllImport("user32.dll", SetLastError=true)] public static extern bool PostMessage(IntPtr hwnd, uint message, UIntPtr key, IntPtr detail);
     [DllImport("user32.dll")] public static extern uint MapVirtualKey(uint key, uint mode);
     [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hwnd);
     [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hwnd, out RECT rect);
     [DllImport("user32.dll")] public static extern bool GetClientRect(IntPtr hwnd, out RECT rect);
     public static bool QueueTouch(IntPtr hwnd, uint pid, int x, int y, bool release) {
@@ -139,8 +141,13 @@ try {
     try {
         # Do not ask the accelerated Qt window to repaint through PrintWindow.
         # Two matching runs failed in Qt; the no-PrintWindow comparison survived.
-        # Input remains background-capable. Screen capture never forces focus.
+        # Input remains background-capable. Focus changes only with explicit opt-in.
         $record.capture_method = 'SKIPPED_NOT_FOREGROUND'
+        if ($FocusOwnedGameForCapture) {
+            $record.focus_requested = $true
+            $record.focus_api_accepted = [RenegadeStepWindow]::SetForegroundWindow($window)
+            Start-Sleep -Milliseconds 250
+        }
         if ([RenegadeStepWindow]::GetForegroundWindow() -eq $window) {
             $graphics.CopyFromScreen($rect.Left, $rect.Top, 0, 0, $bitmap.Size)
             $record.capture_method = 'SCREEN_COPY_NOT_FRAMEBUFFER_PROOF'

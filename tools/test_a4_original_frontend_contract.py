@@ -6,6 +6,19 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class A4OriginalFrontendContractTests(unittest.TestCase):
+    def test_remote_purchase_diagnostic_uses_original_terminal_only_after_player_ready(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        ready = runtime.index('"interactive_session_ready"')
+        diagnostic = runtime.index('"ux0:data/renegade/user/config/dev-tt-purchase-menu-once.flag"')
+        frame_loop = runtime.index("while (true) {", diagnostic)
+        block = runtime[ready:frame_loop]
+        self.assertLess(ready, diagnostic)
+        self.assertIn("if (remote_client) {", block)
+        self.assertIn("star->Get_Player_Data() != local_player", block)
+        self.assertIn("terminal == NULL || remove(terminal_request) != 0", block)
+        self.assertIn("terminal->Display_Default_Terminal_For_Player(star);", block)
+        self.assertNotIn("VendorClass::Purchase_Item", block)
+
     def test_full_port_updates_and_renders_original_gameplay_dialogs(self):
         gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
         mainloop = (ROOT / "staging/commando/mainloop.cpp").read_text()

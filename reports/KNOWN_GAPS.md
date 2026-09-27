@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-09-27 Dev199: opt-in diagnostic opened original purchase dialog template
+236 for a server-replicated RenCorner player in Vita3K. Rendering, controller
+selection, purchase request/response and sustained connection are unverified;
+the first run lost connection at frame 236. A second run failed to receive a
+player and Vita3K crashed during close. No physical Vita evidence. See
+MULTIPLAYER_COMPATIBILITY.md.
+
 2026-09-27 Dev197 PSTV M13 checkpoint reload and EVA menu return passed with
 matching installed SELF and runtime evidence. The user reports a long load;
 mission dependency preparation measured 12.4 s and first-frame cost is high.

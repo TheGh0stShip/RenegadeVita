@@ -1,5 +1,35 @@
 # Native multiplayer compatibility
 
+## 2026-09-27: Dev199 Original Purchase Menu Diagnostic
+
+The full-port runtime now recognizes an opt-in, one-shot local file
+`ux0:data/renegade/user/config/dev-tt-purchase-menu-once.flag`. Only after a
+remote session has a valid replicated Soldier and matching player data does it
+consume the marker and call the original
+`PlayerTerminalClass::Display_Default_Terminal_For_Player`. It does not move the
+player, alter credits/items, or bypass the original purchase request/response.
+Absent the marker, normal gameplay is unchanged; the demo profile is untouched.
+
+Dev199 fast build/package and Vita3K install/readback passed; VPK SHA-256 is
+`12d95a0f7007b8fb7954ee59ae1b97304dd6f1ea16cc2005f59383a6728a1987`.
+The first live Vita3K run joined RenCorner Mesa as requested `PS Vita`, received
+player ID 5, consumed the marker, and instantiated original purchase dialog
+template 236. It reached 236 gameplay frames, then left with `ConnectionLost`
+(state 5). No visual dialog, selection, purchase request/response, respawn, or
+round transition is proven. Private evidence is `dev199-tt-purchase-01` in
+managed logs; its runtime-log SHA-256 is
+`251130155d4efb3ebcfa1fe8ba2a0dcb91ea693dc222bd332d852c38a0ed8d0e`.
+A second same-binary capture attempt failed during remote-player replication;
+Vita3K then reported a host access violation during game close. It never
+consumed the diagnostic marker, which was removed afterward. This does not
+establish an ARM crash or visual result. The opted-in owned-window focus
+capture helper was syntax-checked but has not captured an active dialog.
+
+The broader optional Python discovery suite found three failures in unrelated
+historical screenshot, diagnostic-hotpath, and wide-character contracts;
+Dev199's focused tests and fast package gates passed. Canonical acceptance and
+physical Vita multiplayer remain open.
+
 ## 2026-09-27: Dev198 Gameplay Dialog Candidate Return
 
 Canonical host, ARM, ELF/SELF/VPK identity and Vita3K install/readback gates

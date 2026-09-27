@@ -1,5 +1,36 @@
 # Live engineering progress
 
+## Dev198 native RenCorner return
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: Dev198 canonical build and Vita3K installation passed; bounded live
+RenCorner run loaded Mesa with replicated player ID 3 and reached 480 frames.
+Completed: original gameplay dialog dispatch/key-routing integration, 34 focused
+contracts, canonical host/ARM/package gates and installed SELF readback.
+Evidence: VPK SHA-256 `2336fb7f705cedfa50dbaa5717a5d59f41e526bd23f9536eda88af7b23f7556f`;
+managed `dev198-tt-native-01` ended `TIMEOUT_UNASSESSED` after the log stopped
+during the next checkpoint. Next: localize the stalled frame, then activate a
+real terminal and test purchase/respawn/round flow. Blocker: no proven purchase
+dialog or physical Vita multiplayer result; exact public name remains unverified.
+
+## RenCorner gameplay-dialog integration
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: the native gameplay loop now updates/renders original `DialogMgrClass` and pumps WWUI keys under the full-port guard, matching original mainloop/GameMode order. While a dialog exists, Vita D-pad/Cross/Circle route to WWUI and gameplay buttons are suppressed by original menu input ownership. This closes two source-level wiring gaps behind missing multiplayer purchase UI; it does not prove a terminal opens or purchases complete. Evidence: focused frontend/input contracts 21/21 passed, and both changed Vita ARM objects compiled. No new ELF/VPK or install was produced. Next: candidate link/package, mandatory Vita3K install, RenCorner terminal/purchase/respawn test, then physical verification. Exact `PS Vita` public display name remains unverified (`PSVita` was observed).
+
+## M01 opening hang and M13 ending audio, Dev197 return
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: user's restarted Vita3K Dev197 run reproduced the M01 opening freeze as aircraft/vehicles entered; PSTV Dev197 also stopped during this opening. The Vita3K runtime log ends after an `X1C_Intro.txt` cinematic budget yield near time 1.167, but that completed yield does not identify the blocking call. Music continues, and neither run proves a guest crash. The user also heard the Ion-beacon sound during the M13 finale on both devices. Original `Test_DLS.cpp` starts the finale 25 seconds after starting an independently timed AI beacon; the retail beacon preset timing and actual sound owner still need confirmation. No gameplay fix or new build is claimed from these observations. Next: obtain a guest-thread stack at the frozen M01 boundary in a debugger-enabled Vita3K run, then implement the identified interface fix; verify beacon preset and sound lifetime before changing its authored sequence.
+
+Later same-session evidence: a debugger-attached Dev197 replay of the original pre-Ion save passed M01's first aircraft entry and reached frame 387. The user made a fresh M01 manual save, walked a few feet, and reported a freeze before reaching the ladder. Flight recorder's last complete frame is 387; frames 386/387 spent 568.8/552.5 ms in render and 3.3/7.7 ms in simulation. Two CDB thread snapshots of the frozen Vita3K process place its OpenGL presentation thread in Intel `DrvSwapBuffers` -> `wglSwapBuffers` -> DWM wait. This is an emulator/host presentation observation, not proof that the physical PSTV frame-six stop has the same root cause. Vita3K's installed guest GDB stub did not respond to an interrupt request, so no valid ARM guest PC was obtained. The native save is untouched and is now the shortest known replay point. No fix/build claimed.
+
 ## Physical PSTV Dev197 return
 
 Renegade Vita - v3.5 active

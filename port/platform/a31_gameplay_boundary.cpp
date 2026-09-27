@@ -11,6 +11,8 @@
 #include "cnetwork.h"
 #include "gamemode.h"
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "a4_frontend_lifecycle_boundary.h"
+#include "dialogmgr.h"
 #include "god.h"
 #endif
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
@@ -641,6 +643,9 @@ void A31_Interactive_Run_Simulation_Frame()
 	const uint64_t time_end_us = sceKernelGetProcessTimeWide();
 #endif
 	Input::Update();
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	A4_Frontend_Pump_WWUI_Key_Transitions();
+#endif
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t input_end_us = sceKernelGetProcessTimeWide();
 #endif
@@ -695,6 +700,9 @@ void A31_Interactive_Run_Simulation_Frame()
 	const uint64_t network_end_us = sceKernelGetProcessTimeWide();
 #endif
 	CombatManager::Think();
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	DialogMgrClass::On_Frame_Update();
+#endif
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t combat_end_us = sceKernelGetProcessTimeWide();
 #endif
@@ -883,6 +891,9 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 		}
 		ObjectiveManager::Render_Viewer();
 		trace.objective_viewer_render_called = true;
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		DialogMgrClass::Render();
+#endif
 #if !defined(RENEGADE_HOST_ABI_TEST)
 		TextDisplayGameModeClass *text_display =
 			TextDisplayGameModeClass::Get_Instance();

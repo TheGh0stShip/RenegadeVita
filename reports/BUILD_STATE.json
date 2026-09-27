@@ -1,4 +1,18 @@
 {
+  "tt_dev198_dialog_candidate": {
+    "state": "CANONICAL_BUILT_VITA3K_INSTALLED_NATIVE_MESA_JOIN_480_FRAMES_PURCHASE_UNVERIFIED",
+    "vpk_sha256": "2336fb7f705cedfa50dbaa5717a5d59f41e526bd23f9536eda88af7b23f7556f",
+    "elf_sha256": "595643935e52207bbd5fecb7dc594f2cc5ba7654c9048355678729cece49715a",
+    "installed_eboot_sha256": "3c334d2ecce1f44c03fd2e9a965922eb7d32b19dfc47dc9ba69e225d54fb4fc7",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev198-setup-20260927T022641590693Z/setup-receipt.json",
+    "vita3k_map": "C&C_Mesa.mix",
+    "vita3k_player_id": 3,
+    "vita3k_last_complete_checkpoint_frame": 480,
+    "vita3k_runner_status": "TIMEOUT_UNASSESSED",
+    "native_purchase_ui_verified": false,
+    "full_multiplayer_verified": false,
+    "physical_acceptance": false
+  },
   "public_candidate": {
     "label": "A3.5-dev197",
     "report": "reports/DEV197_ISSUE1_SAVE_MENU.md",

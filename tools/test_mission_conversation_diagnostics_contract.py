@@ -156,7 +156,7 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_MOVE_FORWARD, 0);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_LEFT, 0);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_RIGHT, 0);", controls)
-        self.assertIn("const bool gameplay_input_active = !frontend_menu_navigation;", directinput)
+        self.assertIn("const bool gameplay_input_active = !dialog_navigation;", directinput)
         for token in (
             "gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0",
             "gameplay_input_active && back_touch.down",
@@ -174,13 +174,13 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn('#include "a4_frontend_lifecycle_boundary.h"', directinput)
         self.assertIn("const bool frontend_menu_navigation = A4_Frontend_Is_Menu_Loop_Active();", directinput)
         self.assertIn("Set_Virtual_Key(VK_LEFT,", directinput)
-        self.assertIn("frontend_menu_navigation && (buttons & SCE_CTRL_LEFT) != 0", directinput)
+        self.assertIn("dialog_navigation && (buttons & SCE_CTRL_LEFT) != 0", directinput)
         self.assertIn("Set_Virtual_Key(VK_RIGHT,", directinput)
-        self.assertIn("frontend_menu_navigation && (buttons & SCE_CTRL_RIGHT) != 0", directinput)
+        self.assertIn("dialog_navigation && (buttons & SCE_CTRL_RIGHT) != 0", directinput)
         self.assertIn("Set_Virtual_Key(VK_UP,", directinput)
-        self.assertIn("frontend_menu_navigation && (buttons & SCE_CTRL_UP) != 0", directinput)
+        self.assertIn("dialog_navigation && (buttons & SCE_CTRL_UP) != 0", directinput)
         self.assertIn("Set_Virtual_Key(VK_DOWN,", directinput)
-        self.assertIn("frontend_menu_navigation && (buttons & SCE_CTRL_DOWN) != 0", directinput)
+        self.assertIn("dialog_navigation && (buttons & SCE_CTRL_DOWN) != 0", directinput)
         self.assertIn("g_vita_input_telemetry.zoom_in_key_state", directinput)
         self.assertIn("g_vita_input_telemetry.zoom_out_key_state", directinput)
         self.assertIn("g_vita_input_telemetry.objectives_toggle_key_state = 0U;", directinput)

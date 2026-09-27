@@ -1,5 +1,11 @@
 # Performance hypothesis ledger
 
+## Dev197 M01 short-save freeze boundary (2026-09-26)
+
+- Hypothesis: the freeze a few steps before the M01 ladder is render/presentation-bound in the current Vita3K OpenGL run, not a long simulation command. Do not generalize this to the separate physical PSTV frame-six stop.
+- Evidence: debugger-attached replay of the original M13 pre-Ion save completed M13 and passed M01's first aircraft entry. The user saved in M01, moved a few feet, and reported a freeze. Flight recorder last completed frame 387; frame 386 simulation/render 3.3/568.8 ms, frame 387 7.7/552.5 ms. Two host CDB samples found Vita3K's OpenGL presentation thread inside Intel `DrvSwapBuffers` -> `wglSwapBuffers` -> DWM wait. This is a Windows host thread stack, not an ARM guest stack or GPU timing. Installed Vita3K guest GDB did not respond to interrupt.
+- Decision: no renderer or gameplay change from these observations alone. Preserve the user-created save for the short replay; compare OpenGL presentation behavior and capture a physical PSTV frame boundary before adopting a fix. No before/after win claimed.
+
 ## M13 authored intro and shared effects preparation (2026-09-23)
 
 - Retail `M13.mix` `X00_Intro.txt` requires `X00_Havoc_Traj`,

@@ -10,8 +10,8 @@ The mapping below is the current source intent. Its complete physical behavior i
 | Circle | Crouch / back in UI contexts |
 | Square | Reload |
 | Triangle | Action/use/interact |
-| D-pad Left / Right | Previous / next weapon in gameplay; WWUI focus navigation in frontend |
-| D-pad Up / Down | Sniper zoom in / out in gameplay |
+| D-pad Left / Right | Previous / next weapon in gameplay; WWUI focus navigation in menus and open dialogs |
+| D-pad Up / Down | Sniper zoom in / out in gameplay; WWUI focus navigation in menus and open dialogs |
 | Left shoulder | Original joystick button 0 / secondary-fire path |
 | Right shoulder | Original joystick button 1 / primary-fire path |
 | Front touch | Original WWUI cursor plus left-click/tap |
@@ -28,7 +28,9 @@ Notes:
   appear; purchase interaction is not accepted.
 
 - Front touch is reserved for original mouse cursor and left-click WWUI/terminal interaction.
-- D-pad navigates the original WWUI focus in the frontend and remains weapon/zoom input in gameplay.
+- A full-port gameplay dialog routes D-pad, Cross and Circle to original WWUI;
+  movement, jump, weapon and zoom input are suppressed until it closes. This
+  source behavior is not yet verified in a packaged multiplayer run.
 - D-pad gameplay input must not leak into camera turning.
 - Circle or the original Back control leaves EVA through original Continue_Game. Start no longer requests immediate application exit in the original-frontend route.
 - Menu availability depends on the full-port/demo profile and session. The

@@ -1,5 +1,23 @@
 # Native multiplayer compatibility
 
+## 2026-09-27: Dev198 Gameplay Dialog Candidate Return
+
+Canonical host, ARM, ELF/SELF/VPK identity and Vita3K install/readback gates
+passed. VPK SHA-256: `2336fb7f705cedfa50dbaa5717a5d59f41e526bd23f9536eda88af7b23f7556f`.
+The bounded OpenGL Vita3K run requested `PS Vita` at RenCorner, accepted the
+server's Mesa map, received the replicated player/Soldier (ID 3), and passed
+the 480-frame checkpoint. It did not exercise a purchase terminal. The runtime
+log ends during the next checkpoint and the six-minute runner returned
+`TIMEOUT_UNASSESSED`; do not infer a crash, a dialog pass, or sustained frame
+pacing. Matching private evidence is `dev198-tt-native-01` in managed logs;
+runtime log SHA-256 is
+`2b88f42958f2408ff1759314db7db0fdc65fe7dfdcf1ea7cc76a7a3c2b14e8e4`.
+No physical Vita test or exact public display-name proof follows.
+
+## 2026-09-26: Gameplay Dialog Dispatch Candidate
+
+Original desktop `mainloop.cpp` updates `DialogMgrClass` once per frame and `gamemode.cpp` renders it with the combat overlay. The native gameplay boundary omitted both, although the original purchase dialog and resource providers were linked. It also omitted the existing WWUI key-transition pump during gameplay; Vita D-pad input stayed mapped to weapon/zoom controls even when a dialog opened. The full-port-only Vita boundary now calls the original update/render methods in desktop order, pumps WWUI keys each gameplay frame, and routes D-pad/Cross/Circle to WWUI while a dialog exists. Original `Input::Menu_Enable` suppresses gameplay actions, and `MenuGameModeClass2::Deactivate` flushes frontend dialogs before gameplay. Demo behavior is unchanged. Focused frontend/input contracts pass (21/21); Dev198 packaging and a bounded native join passed as detailed above. Native purchase UI remains unverified. Next proof: exercise a real terminal and verify dialog presentation, selection, purchase result, respawn, and round transitions. The requested display name with a space also remains unverified; Dev195 was listed publicly as `PSVita`.
+
 ## 2026-09-26 Status: Dev195 Native Join In Vita3K
 
 The installed ARM executable now downloads all five server packages, mounts

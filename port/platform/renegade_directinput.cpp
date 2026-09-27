@@ -13,6 +13,9 @@
 #include "timemgr.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "a4_frontend_lifecycle_boundary.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "dialogmgr.h"
+#endif
 #endif
 
 #if !defined(RENEGADE_HOST_ABI_TEST)
@@ -597,7 +600,13 @@ void DirectInput::Read(void)
 #else
 		const bool frontend_menu_navigation = false;
 #endif
-	const bool gameplay_input_active = !frontend_menu_navigation;
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	const bool dialog_navigation = frontend_menu_navigation ||
+		DialogMgrClass::Get_Dialog_Count() != 0;
+#else
+	const bool dialog_navigation = frontend_menu_navigation;
+#endif
+	const bool gameplay_input_active = !dialog_navigation;
 	Set_Button(DIKeyboardButtons, DIK_BACK, g_select_tap.Sample(
 		(buttons & SCE_CTRL_SELECT) != 0U,
 		(buttons & ~SCE_CTRL_SELECT) != 0U || front_touch.down || back_touch.down,
@@ -610,13 +619,13 @@ void DirectInput::Read(void)
 		(buttons & (SCE_CTRL_SELECT | SCE_CTRL_SQUARE)) == (SCE_CTRL_SELECT | SCE_CTRL_SQUARE);
 	Set_Button(DIKeyboardButtons, DIK_F5, quicksave_chord);
 		Set_Virtual_Key(VK_UP,
-			frontend_menu_navigation && (buttons & SCE_CTRL_UP) != 0);
+			dialog_navigation && (buttons & SCE_CTRL_UP) != 0);
 		Set_Virtual_Key(VK_DOWN,
-			frontend_menu_navigation && (buttons & SCE_CTRL_DOWN) != 0);
+			dialog_navigation && (buttons & SCE_CTRL_DOWN) != 0);
 		Set_Virtual_Key(VK_LEFT,
-			frontend_menu_navigation && (buttons & SCE_CTRL_LEFT) != 0);
+			dialog_navigation && (buttons & SCE_CTRL_LEFT) != 0);
 		Set_Virtual_Key(VK_RIGHT,
-			frontend_menu_navigation && (buttons & SCE_CTRL_RIGHT) != 0);
+			dialog_navigation && (buttons & SCE_CTRL_RIGHT) != 0);
 	Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);
 	Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);

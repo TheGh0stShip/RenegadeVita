@@ -6,6 +6,27 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class A4OriginalFrontendContractTests(unittest.TestCase):
+    def test_full_port_updates_and_renders_original_gameplay_dialogs(self):
+        gameplay = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()
+        mainloop = (ROOT / "staging/commando/mainloop.cpp").read_text()
+        gamemode = (ROOT / "staging/commando/gamemode.cpp").read_text()
+        self.assertIn("DialogMgrClass::On_Frame_Update ();", mainloop)
+        self.assertIn("DialogMgrClass::Render();", gamemode)
+        guard = "#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO"
+        think = gameplay[gameplay.index("void A31_Interactive_Run_Simulation_Frame()"):
+                         gameplay.index("A31_Interactive_Apply_Render_Capabilities();")]
+        render = gameplay[gameplay.index("A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame"):
+                          gameplay.index("trace.text_display_available =")]
+        self.assertIn(guard + "\n\tA4_Frontend_Pump_WWUI_Key_Transitions();", think)
+        self.assertIn(guard + "\n\tDialogMgrClass::On_Frame_Update();", think)
+        self.assertIn(guard + "\n\t\tDialogMgrClass::Render();", render)
+        self.assertLess(think.index("Input::Update();"),
+                        think.index("A4_Frontend_Pump_WWUI_Key_Transitions();"))
+        self.assertLess(think.index("CombatManager::Think();"),
+                        think.index("DialogMgrClass::On_Frame_Update();"))
+        self.assertLess(render.index("ObjectiveManager::Render_Viewer();"),
+                        render.index("DialogMgrClass::Render();"))
+
     def test_eva_exit_returns_to_frontend_after_clean_session_teardown(self):
         runtime = (ROOT / "port" / "platform" / "vita" / "a31_vita_runtime.cpp").read_text()
         pause_result = runtime[runtime.index("if (!Run_Original_Gameplay_Pause_Menu(frontend_menu_mode"):
@@ -197,7 +218,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 
         self.assertIn('#include "a4_frontend_lifecycle_boundary.h"', directinput)
         self.assertIn("const bool frontend_menu_navigation = A4_Frontend_Is_Menu_Loop_Active();", directinput)
-        self.assertIn("const bool gameplay_input_active = !frontend_menu_navigation;", directinput)
+        self.assertIn("DialogMgrClass::Get_Dialog_Count() != 0;", directinput)
+        self.assertIn("const bool gameplay_input_active = !dialog_navigation;", directinput)
         for key_name, sce_button in (
             ("VK_UP", "SCE_CTRL_UP"),
             ("VK_DOWN", "SCE_CTRL_DOWN"),
@@ -205,7 +227,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             ("VK_RIGHT", "SCE_CTRL_RIGHT"),
         ):
             self.assertIn(f"Set_Virtual_Key({key_name},", directinput)
-            self.assertIn(f"frontend_menu_navigation && (buttons & {sce_button}) != 0", directinput)
+            self.assertIn(f"dialog_navigation && (buttons & {sce_button}) != 0", directinput)
 
         for token in (
             "Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);",
@@ -248,7 +270,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("g_frontend_key_dispatcher.ProcessMessage(NULL, message", lifecycle)
         self.assertIn("WM_KEYDOWN", lifecycle)
         self.assertIn("WM_KEYUP", lifecycle)
-        self.assertIn("D-pad navigates the original WWUI focus", controls_doc)
+        self.assertIn("WWUI focus navigation in menus and open dialogs", controls_doc)
         self.assertIn("Front touch", controls_doc)
         self.assertIn("mouse cursor", controls_doc)
         self.assertIn("Rear touch pad", controls_doc)

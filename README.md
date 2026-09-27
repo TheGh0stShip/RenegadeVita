@@ -6,6 +6,7 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 
 > **Current development candidate: A3.5-dev197.** The M13 pre-Ion save restored
 > correctly in a user-driven Vita3K run, and EVA exit returned to the main menu.
+> A matching physical PSTV run passed that same bounded check. Broader
 > physical Vita/PSTV behavior and later mission progression still require
 > testing. Dev195's RenCorner join remains the latest multiplayer evidence.
 
@@ -29,12 +30,12 @@ Dev195 remains the latest [multiplayer runtime evidence](reports/DEV195_RENCORNE
 | Evidence area | Current state |
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
-| Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation and Vita3K installation passed. A user-driven M13 save reload and EVA exit-to-menu passed with matching runtime logs. |
+| Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation passed. Bounded M13 save reload and EVA exit-to-menu passed in Vita3K and physical PSTV, with matching runtime logs and installed SELF hash. |
 | Dev195 build | 171 fast contracts and the original DDS alias test passed; 266 deterministic patches; ARM ELF/SELF/VPK produced and installation hashes verified. |
 | Dev195 multiplayer | Vita3K joined RenCorner, mounted five packages, rendered 9,723 frames, moved the player, and completed session teardown. The public list showed `PSVita`; the client requested `PS Vita`. The name-normalization boundary is unresolved. |
 | Remaining multiplayer work | Purchase dialog did not appear; early text had malformed glyphs. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
 | Campaign | Dev197 reloaded the M13 pre-Ion-beacon save and returned to the menu; later Ion progression was not exercised in that run. Earlier runs completed M13 and entered M01; cinematic, actor and M01 stalls remain open. |
-| Physical testing | Dev134 deployment/readback is historical, not Dev197 acceptance. Issue #1 contains Dev142 PSTV user observations, including blocked progression and save/load. No Dev197 physical test is claimed. |
+| Physical testing | Dev197 passed one PSTV M13 checkpoint reload and menu return. The long load and first-frame stalls remain measured defects; no full physical acceptance or steady 60 FPS is claimed. |
 | Visual evidence | The gallery below is historical. Emulator captures and historical physical stills do not establish current physical acceptance or stable 60 FPS. |
 
 Read the concise [current status](docs/CURRENT_STATUS.md) before treating any candidate as playable. The durable engineering record is in [reports/PORT_STATUS.md](reports/PORT_STATUS.md); it distinguishes host, Vita3K, and physical-Vita evidence.

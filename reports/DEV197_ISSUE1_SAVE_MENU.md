@@ -30,6 +30,26 @@ save-reload and exit-to-menu check in Vita3K; it does not prove later Ion-beacon
 progression, full save-state coverage, or physical PSTV behavior.
 
 Next experiment: continue from the restored M13 checkpoint through the
-Ion-beacon event and mission transition, then repeat save/reload and EVA
-menu return on PSTV. Practice mode and the reported frame drops remain
-separate unverified issue items. Issue #1 stays open.
+Ion-beacon event and mission transition. Practice mode and the reported
+frame drops remain separate unverified issue items. Issue #1 stays open.
+
+## Physical PSTV return
+
+The user installed Dev197 on PSTV 3.65 Enso and confirmed the diagnostic
+pre-Ion M13 save loaded correctly and EVA exit returned to the main menu.
+The installed `eboot.bin` SHA-256 matched the packaged SELF:
+`4d81003ab8fcf4dbe8a958623e83600ce4b8ac468f22971e907b65a723bde831`.
+The matching PSTV log records original `load-game-return`, Combat post-load
+completion, saved object/player/camera reuse, 15 interactive frames, EVA exit,
+clean session teardown, and a new original main-menu dialog. The retained
+flight recorder and title-owned captures are local physical evidence, not
+retail data or release assets.
+
+This is a **passed bounded physical PSTV save-load/menu-return check**. It is
+not full physical candidate acceptance: the user reported a long load, and
+the log measured 12,443 ms for M13 dependency preparation. The first 15
+gameplay frames were dominated by startup work (p50 146 ms, p95 473 ms,
+worst 2,216 ms); this short sample cannot establish steady-state FPS.
+The original loading-screen and EVA confirmation captures were inspected.
+Ion-beacon completion, subsequent mission progression, Practice, and the
+reporter's other PSTV symptoms remain unverified on this build.

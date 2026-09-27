@@ -1,5 +1,14 @@
 # Renegade Vita port status
 
+2026-09-27 physical PSTV Dev197 return: the user loaded the pre-Ion M13
+checkpoint successfully and EVA exit returned to the main menu. Installed
+SELF hash matches the package; the matching log shows original load/post-load,
+saved player/camera reuse, clean teardown and a new main-menu dialog.
+Dependency preparation took 12.4 seconds and the first 15 gameplay frames
+were slow, so this is a bounded correctness pass, not performance acceptance.
+See [Dev197](DEV197_ISSUE1_SAVE_MENU.md). Issue #1 remains open for its other
+reported behavior and longer PSTV progression.
+
 2026-09-26 Dev197 issue #1 checkpoint: Dev196 M13 wrote a pre-Ion-beacon
 `savegame03.sav`, but EVA exit tore down the app instead of returning to the
 main menu. Dev197 routes confirmed EVA exit through clean session teardown
@@ -7,8 +16,9 @@ back to the original frontend. Canonical host/ARM/package checks pass and the
 VPK is installed/hash-verified in Vita3K. The user then reloaded the M13
 pre-Ion save, confirmed the restored game was correct, and exited to the
 main menu. The matching log records original load/post-load, saved player/camera
-reuse, clean teardown and frontend reopening. PSTV and later progression are
-not yet verified. See [Dev197](DEV197_ISSUE1_SAVE_MENU.md).
+reuse, clean teardown and frontend reopening. The bounded PSTV result above
+supersedes the earlier PSTV-pending state; later progression remains open.
+See [Dev197](DEV197_ISSUE1_SAVE_MENU.md).
 
 2026-09-26 public status; runtime evidence from 2026-09-25: Vita3K ran the Dev195
 ARM client, downloaded five TTFS packages, loaded City_U1, received the server

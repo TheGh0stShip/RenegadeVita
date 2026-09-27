@@ -2,18 +2,24 @@
   "public_candidate": {
     "label": "A3.5-dev197",
     "report": "reports/DEV197_ISSUE1_SAVE_MENU.md",
-    "evidence_class": "Vita3K_user_run_with_matching_log",
+    "evidence_class": "physical_PSTV_bounded_save_menu_run",
     "physical_acceptance": false
   },
   "issue1_dev197_candidate": {
-    "state": "VITA3K_M13_SAVE_RELOAD_AND_MENU_RETURN_VERIFIED",
+    "state": "PHYSICAL_PSTV_M13_SAVE_RELOAD_AND_MENU_RETURN_VERIFIED",
     "vpk_sha256": "b01c61f254edaeff1ce49e9d73424ac3c33e15ac6912023cff57c19d94304cdb",
     "vita3k_installed": true,
     "vita3k_gameplay_verified": true,
     "campaign_save_reload_verified": true,
     "campaign_save_reload_scope": "M13 pre-Ion checkpoint, user-observed restoration and matching original load/post-load log",
     "eva_exit_to_main_menu_verified": true,
-    "pstv_verified": false,
+    "pstv_verified": true,
+    "pstv_scope": "M13 diagnostic pre-Ion save reload and EVA return to main menu only",
+    "pstv_installed_eboot_sha256": "4d81003ab8fcf4dbe8a958623e83600ce4b8ac468f22971e907b65a723bde831",
+    "pstv_mission_dependency_preload_ms": 12443,
+    "pstv_first_15_frames_p50_us": 146176,
+    "pstv_first_15_frames_p95_us": 473408,
+    "pstv_first_15_frames_worst_us": 2216414,
     "issue_closed": false
   },
   "tt_dev195_package_candidate": {

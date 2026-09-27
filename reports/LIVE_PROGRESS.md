@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Physical PSTV Dev197 return
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: physical PSTV M13 diagnostic save reload and EVA exit-to-menu passed.
+Completed: exact Dev197 SELF identity verified; user-visible restored save and
+menu return matched original load/post-load and clean-teardown log markers.
+Evidence: retained PSTV runtime log, flight recorder, original loading/EVA
+captures. Dependency preload 12.4 s; first 15 frames p50 146 ms, p95 473 ms,
+worst 2,216 ms. No steady FPS or full campaign acceptance claim.
+Next: measure repeat-load and warm gameplay, then exercise Ion completion,
+M01 and remaining issue #1 symptoms on PSTV. Blocker: none external.
+
 ## Active scope: issue #1 campaign save and menu return
 
 Renegade Vita - v3.5 active

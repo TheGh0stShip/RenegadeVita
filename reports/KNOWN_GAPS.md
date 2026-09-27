@@ -1,5 +1,11 @@
 # Known gaps
 
+2026-09-27 Dev197 PSTV M13 checkpoint reload and EVA menu return passed with
+matching installed SELF and runtime evidence. The user reports a long load;
+mission dependency preparation measured 12.4 s and first-frame cost is high.
+This does not resolve steady FPS, later Ion progression, M01 stability,
+Practice, or the full scope of issue #1. See DEV197_ISSUE1_SAVE_MENU.md.
+
 2026-09-26 Dev197: M13 pre-Ion save reload and EVA exit-to-menu passed a
 user-driven Vita3K run with matching load/teardown/frontend log evidence.
 Later Ion-beacon progression, broader save-state coverage, PSTV confirmation,

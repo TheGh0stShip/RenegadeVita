@@ -9,10 +9,13 @@ the Vita outer loop reopens the original frontend rather than ending the app.
 Canonical host/ARM/package checks passed and the VPK was installed and
 hash-verified in Vita3K. The user then loaded the pre-Ion-beacon
 `savegame03.sav`, confirmed the restored game was correct, and exited back
-to the main menu. The matching runtime log records original save-load and
-post-load completion, saved player/camera reuse, clean session teardown and
-frontend reopening. PSTV and later Ion progression remain untested; issue #1
-stays open.
+to the main menu. A subsequent physical PSTV run passed the same bounded
+save-load/menu-return check. The installed SELF hash matches the package; the
+matching runtime log records original save-load and post-load completion,
+saved player/camera reuse, clean session teardown and frontend reopening.
+M13 dependency preparation took 12.4 seconds and the first gameplay frames
+were slow, so later Ion progression, steady FPS, and full physical acceptance
+remain open. Issue #1 stays open for its other reported symptoms.
 See [Dev197 evidence and limits](../reports/DEV197_ISSUE1_SAVE_MENU.md).
 
 ## Dev195 multiplayer evidence

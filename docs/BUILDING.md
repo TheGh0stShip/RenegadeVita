@@ -1,11 +1,15 @@
 # Building
 
 `tools/build.sh` is the canonical build path. Use it for every candidate that may be handed to physical hardware.
+The current published candidate is
+[A3.5-dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
+The commands below intentionally use a fresh placeholder label rather than
+reusing that release identity.
 
 ## Canonical build
 
 ```bash
-RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-devNN RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 The canonical path checks host prerequisites, the pinned clean upstream source, retained host contracts, deterministic zero-fuzz staging, ARM ELF/SELF/VPK identity, VPK contents, SHA-256 manifests, diagnostics, and retail exclusion.
@@ -17,15 +21,15 @@ The BINK dependency build is reproducible and limited to the FFmpeg pieces neede
 ## Fast iteration
 
 ```bash
-RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 \
+RENEGADE_CANDIDATE_LABEL=A3.5-devNN RENEGADE_M00_DEMO=0 \
 RENEGADE_INCREMENTAL_STAGE=1 bash ./tools/build_fast_candidate.sh
 ```
 
 Fast builds reduce iteration work but are not canonical evidence. Before a physical handoff, run the canonical build for the exact candidate.
 
 Always set the candidate label explicitly; the legacy script default is not
-the public current candidate. The command above describes Dev195's profile;
-use a new label for changed runtime code rather than replacing a published tag.
+the public current candidate. Replace `devNN` with a new unused number for
+changed runtime code rather than replacing a published tag.
 Do not restage sources while a compiler is running. Incremental staging
 preserves unchanged file timestamps while applying the same zero-fuzz patches.
 

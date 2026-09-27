@@ -2,6 +2,30 @@
 
 This changelog records public-facing source, process, and evidence changes. It does not turn a build into a physical acceptance claim.
 
+## A3.5-dev202 - 2026-09-27
+
+- Routed original loading-backdrop selection by full-port mode: Practice uses
+  96, remote C&C multiplayer uses 94, and campaign keeps its mission backdrop.
+- Linked the original MultiHUD owner for the full port. The separate tutorial
+  demo profile remains unchanged.
+- Passed 177 focused tests, fast ARM package identity, Vita3K install/readback,
+  and original main-menu launch. Practice loading visuals and gameplay were not
+  exercised; no physical Vita acceptance is claimed.
+- Published the matching
+  [Dev202 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
+  and updated source, setup and status documentation. The VPK SHA-256 is
+  `d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28`.
+
+## Dev200-Dev201 multiplayer evidence - 2026-09-27
+
+- Dev200 joined RenCorner Glacier in Vita3K, rendered the original purchase
+  dialog and received a successful server purchase response. The public list
+  still displayed `PSVita`; complete multiplayer behavior is not accepted.
+- Dev201 corrected ARM UTF-16 player/chat varargs calls and added a scoped
+  fallback to unchanged user-owned retail `M02.mix` for a Glacier ice texture.
+  It joined Skatepark after map rotation, so Glacier terrain and player-name
+  appearance remain unverified. These changes are carried into Dev202.
+
 ## A3.5-dev195 - 2026-09-26
 
 - Published the native ARM RenCorner join checkpoint: TT admission, validated

@@ -1,9 +1,12 @@
 # Experimental Multiplayer
 
-Dev195's native ARM executable joined RenCorner in Vita3K. This is a development
-checkpoint, not a complete TT client, a W3DHub launcher port, or physical Vita
-acceptance. Original WWNet, Commando, Combat, and archive owners remain in use.
-See [evidence and limitations](../reports/DEV195_RENCORNER_NATIVE_JOIN.md).
+The current [Dev202 candidate](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
+integrates original multiplayer loading-backdrop selection and MultiHUD, but
+its bounded Vita3K test reached only the main menu. Earlier native RenCorner
+tests joined live maps, downloaded server packages, and completed a purchase
+response in Vita3K. This is not a complete TT client, W3DHub launcher port, or
+physical Vita acceptance. Original WWNet, Commando, Combat, and archive owners
+remain in use. See [current evidence](../reports/MULTIPLAYER_COMPATIBILITY.md).
 
 ## Requirements
 
@@ -53,11 +56,13 @@ release package, or retail installation. Do not redistribute them.
 
 ## Current Limits
 
-Dev195 verified joining, rendering, bounded movement and clean session teardown
-on City_U1. START leaves the server and returns to the menu. Purchase UI did not
-open in the observed test; early message text had malformed glyphs. Full combat,
-vehicles, death/respawn, chat, round transitions and stable long-session behavior
-remain unaccepted. Skirmish integration is not a claim of a fully tested mode.
+Dev195 verified joining, rendering, bounded movement and session teardown on
+City_U1. Dev200 rendered the original purchase dialog on Glacier and received a
+successful server purchase response. Dev201 joined Skatepark after the server
+rotated; its player-name text fix and Glacier ice-texture fallback still need
+matching visual checks. Dev202's loading-screen and original MultiHUD changes
+still need an in-game test. Full combat, vehicles, death/respawn, chat, round
+transitions, stable long-session behavior and Practice remain unaccepted.
 
 For failures, retain the candidate-matched runtime log locally. Share only a
 reviewed excerpt identifying the failing stage; remove credentials, identity

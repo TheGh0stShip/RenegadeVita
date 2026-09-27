@@ -7,9 +7,9 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 > **Current development candidate: A3.5-dev202.** This fast-built native ARM
 > package is installed in Vita3K. It connects original Practice and multiplayer
 > loading-backdrop selection and links original MultiHUD; a bounded run reached
-> the main menu, but Practice gameplay is unverified. Dev197 remains the last bounded physical PSTV
-> save-load/menu-return result. Full multiplayer, campaign and physical Vita
-> performance acceptance remain open.
+> the main menu, but Practice gameplay and loading visuals are unverified.
+> Dev197 remains the last bounded physical PSTV save-load/menu-return result.
+> Full multiplayer, campaign and physical Vita performance acceptance remain open.
 
 [Download Dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
 | [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
@@ -68,7 +68,7 @@ Those images are historical, not a same-camera benchmark. A verified post-render
 
 - [Quickstart](docs/QUICKSTART.md) — clone and produce a local canonical or fast candidate build.
 - [Installing on Vita](docs/INSTALLING.md) — retail-data boundaries and manual installation safeguards.
-- [Current status](docs/CURRENT_STATUS.md) — Dev197 evidence, campaign limitations, and physical gates.
+- [Current status](docs/CURRENT_STATUS.md) — Dev202 evidence, campaign limitations, and physical gates.
 - [Multiplayer](docs/MULTIPLAYER.md) — experimental direct entry, private identity, trusted TLS, and downloaded-asset boundaries.
 - [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
 - [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
@@ -84,10 +84,12 @@ WSL2 Ubuntu or Linux with VitaSDK is the supported host environment.
 git clone --recurse-submodules https://github.com/TheGh0stShip/RenegadeVita.git
 cd RenegadeVita
 git submodule update --init --recursive
-RENEGADE_CANDIDATE_LABEL=A3.5-dev202 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-devNN RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 `tools/build.sh` is the canonical candidate path. It preserves validation, deterministic staging, ARM package identity, diagnostics, and retail-exclusion checks. A fast build is useful for iteration only; it never substitutes for a canonical candidate or physical proof.
+Replace `devNN` with a new unused candidate number; do not rebuild under the
+published Dev202 identity.
 
 ## Project boundaries
 

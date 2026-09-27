@@ -38,6 +38,18 @@ class PublicDocsTests(unittest.TestCase):
         self.assertTrue(any("README.md: missing current" in item for item in failures))
         self.assertTrue(any("CURRENT_STATUS.md: missing current" in item for item in failures))
 
+    def test_stale_install_and_build_guides_fail(self):
+        for relative in ("docs/INSTALLING.md", "docs/BUILDING.md"):
+            (self.root / relative).write_text("Old candidate\n", encoding="utf-8")
+        failures = validate(self.root)
+        self.assertTrue(any("docs/INSTALLING.md: missing current" in item for item in failures))
+        self.assertTrue(any("docs/BUILDING.md: missing current" in item for item in failures))
+
+    def test_reusing_published_label_in_build_example_fails(self):
+        with (self.root / "docs/QUICKSTART.md").open("a", encoding="utf-8") as document:
+            document.write("RENEGADE_CANDIDATE_LABEL=A3.5-dev195 bash ./tools/build.sh\n")
+        self.assertTrue(any("build example reuses" in item for item in validate(self.root)))
+
     def test_missing_report_fails(self):
         (self.root / "reports/candidate.md").unlink()
         self.assertTrue(any("report is missing" in item for item in validate(self.root)))

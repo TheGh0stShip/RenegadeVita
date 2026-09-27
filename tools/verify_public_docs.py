@@ -31,6 +31,16 @@ DOCUMENTS = (
     "docs/TROUBLESHOOTING.md",
 )
 
+CURRENT_CANDIDATE_DOCUMENTS = (
+    "README.md",
+    "CHANGELOG.md",
+    "docs/BUILDING.md",
+    "docs/CURRENT_STATUS.md",
+    "docs/INSTALLING.md",
+    "docs/MULTIPLAYER.md",
+    "docs/QUICKSTART.md",
+)
+
 REQUIRED_TEXT = {
     "README.md": ("A3.1.4", "not a finished game release", "physical Vita"),
     "docs/CURRENT_STATUS.md": ("A3.1.4", "Physical Vita", "Campaign status"),
@@ -59,10 +69,16 @@ def validate(root: Path) -> list[str]:
         report = (root / candidate["report"]).resolve()
         if not report.is_relative_to(root) or not report.is_file():
             raise ValueError("public candidate report is missing or outside the repository")
-        for relative in ("README.md", "docs/CURRENT_STATUS.md"):
+        for relative in CURRENT_CANDIDATE_DOCUMENTS:
             document = root / relative
             if document.is_file() and label not in document.read_text(encoding="utf-8"):
                 failures.append(f"{relative}: missing current candidate {label}")
+        for relative in ("README.md", "docs/BUILDING.md", "docs/QUICKSTART.md"):
+            document = root / relative
+            if document.is_file() and re.search(
+                    r"RENEGADE_CANDIDATE_LABEL=A\d+\.\d+-dev\d+\b",
+                    document.read_text(encoding="utf-8")):
+                failures.append(f"{relative}: build example reuses a published candidate label")
     except (OSError, ValueError, KeyError, TypeError) as error:
         failures.append(f"invalid public candidate metadata: {error}")
 

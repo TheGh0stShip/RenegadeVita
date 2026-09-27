@@ -13,6 +13,10 @@ Dev202 passed 177 focused tests, fast ARM package and Vita3K install/readback.
 VPK SHA-256: `d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28`.
 A bounded Vita3K run reached the original main menu but did not enter Practice;
 loading visuals, Practice gameplay and physical Vita remain unverified.
+The [Dev202 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
+is tied to source commit `30b0d27a492c43ab2807f925230f5d6f0b47b601`;
+GitHub's uploaded VPK digest matches the SHA-256 above. This is publication
+and package integrity evidence, not additional runtime acceptance.
 
 ## 2026-09-27: Dev201 Glacier Texture And Multiplayer Text Candidate
 

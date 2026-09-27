@@ -1,10 +1,13 @@
 # Installing on Vita
 
 This guide covers the full-port development candidate, currently
-[Dev197](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev197).
+[Dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
 It is experimental, not a completed campaign or multiplayer release. The
 separate [tutorial demo guide](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
 remains specific to that demo.
+Dev202 passed a fast ARM build, Vita3K installation and main-menu launch, not
+a canonical build or physical gameplay acceptance. Dev197 has the latest
+bounded PSTV save-load/menu-return evidence.
 
 The VPK deliberately contains only the executable and package metadata. It never includes retail data, saves, configuration, logs, screenshots, videos, or crash dumps.
 
@@ -58,7 +61,7 @@ private identity, trust-bundle, and one-shot launch setup.
 
 ## Before installation
 
-1. Download the development VPK and verify its published SHA-256, or build the exact candidate with an explicit `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev197 passed that build, but physical gameplay acceptance remains pending.
+1. Download the development VPK and verify its published SHA-256, or build a new candidate with an unused `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev202 has only fast-build/package and Vita3K menu evidence. Dev197 passed a canonical build and a bounded PSTV checkpoint test, not full physical acceptance.
 2. Retain its VPK, packaged SELF, map, symbols, SHA-256 manifest, and build log together.
 3. Verify the VPK contains no retail data.
 4. Review [Current status](CURRENT_STATUS.md) and use a bounded physical test plan.
@@ -93,8 +96,8 @@ ux0:/data/renegade/user/<vpk-file-name>
 Keep each item bound to the exact candidate hash:
 
 - runtime log under `ux0:data/renegade/user/logs/`;
-- for Dev197, `a35-dev197-runtime.log` and matching startup diagnostics from
-  that directory (use the matching label for older candidates);
+- for Dev202, `a35-dev202-runtime.log` and matching startup diagnostics from
+  that directory (use the matching label for other candidates);
 - title-owned captures under `ux0:data/renegade/user/captures/`;
 - a PSP2 dump if a crash occurred; and
 - a finalized recorder MP4 only when its own file/hash can be established.

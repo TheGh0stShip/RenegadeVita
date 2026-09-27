@@ -3,7 +3,10 @@
 2026-09-27 Dev202: full-port mode-specific original loading backdrop selection
 and original MultiHUD compiled/linked. Fast ARM package, 177 focused tests,
 Vita3K install/readback and original main-menu launch passed. Practice launch,
-loading visual, gameplay and physical Vita are not yet verified.
+loading visual, gameplay and physical Vita are not yet verified. The matching
+source and VPK are published under the Dev202 prerelease; source CI and Pages
+deployment passed. Dev200's live purchase response remains the strongest
+verified multiplayer transaction.
 
 2026-09-27 multiplayer Dev201: fixed ARM variadic UTF-16 player/chat formatting
 and mounted user-owned retail M02 textures only for remote Glacier U1. Fast ARM

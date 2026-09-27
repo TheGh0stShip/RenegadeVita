@@ -5,12 +5,13 @@
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 existing candidate evidence gates complete`
 
-Now: Dev202 fast ARM package installed in Vita3K; bounded run reached the
-original main menu but did not enter Practice before timeout. No further build
-is planned tonight. Completed: restored original mode-specific loading
+Now: Dev202 is published and installed in Vita3K; bounded run reached the
+original main menu but did not enter Practice before timeout. Completed:
+restored original mode-specific loading
 backdrops (Practice 96, C&C multiplayer 94) and linked the original full-port
 MultiHUD. Evidence: 177 focused tests, ARM package identity, Vita3K install
-readback, main-menu runtime log and capture. The temporary M13 one-shot launch
+readback, main-menu runtime log and capture, GitHub source CI and Pages
+deployment. The temporary M13 one-shot launch
 file was restored with its original SHA-256. Next: enter Practice through the
 original menu, verify loading/HUD/gameplay, then physical Vita. Blocker:
 Practice and multiplayer loading visuals remain unverified in this candidate.
@@ -20,8 +21,8 @@ Practice and multiplayer loading visuals remain unverified in this candidate.
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 existing candidate evidence gates complete`
 
-Now: Dev201 fast ARM package installed in Vita3K; source and artifact publication
-pending. Live RenCorner test joined Skatepark rather than Glacier.
+Now: Dev201 was published and installed in Vita3K; its live RenCorner test
+joined Skatepark rather than Glacier. This is a historical candidate.
 Completed: corrected ARM UTF-16 varargs player/chat call sites; added Glacier-only
 user-retail M02 texture fallback. Focused tests, clean staging, package identity
 and Vita3K install passed.

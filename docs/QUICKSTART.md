@@ -21,16 +21,20 @@ Do not edit `upstream/CnC_Renegade/`. Portability changes belong in `port/` or i
 
 ## Build
 
+The current published candidate is
+[A3.5-dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
+Use a fresh label for your own build; do not reuse the published release tag.
+
 Run the canonical candidate build:
 
 ```bash
-RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 bash ./tools/build.sh
+RENEGADE_CANDIDATE_LABEL=A3.5-devNN RENEGADE_M00_DEMO=0 bash ./tools/build.sh
 ```
 
 For an iteration build only:
 
 ```bash
-RENEGADE_CANDIDATE_LABEL=A3.5-dev195 RENEGADE_M00_DEMO=0 \
+RENEGADE_CANDIDATE_LABEL=A3.5-devNN RENEGADE_M00_DEMO=0 \
 RENEGADE_INCREMENTAL_STAGE=1 bash ./tools/build_fast_candidate.sh
 ```
 

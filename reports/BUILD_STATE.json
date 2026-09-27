@@ -5,6 +5,12 @@
     "installed_eboot_sha256": "6a25bf16139135a02062099cfe9995f04fc0a88dc095a5dcb21806a4fde7874e",
     "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev202-setup-20260927T035217391832Z/setup-receipt.json",
     "focused_tests_passed": 177,
+    "source_commit": "30b0d27a492c43ab2807f925230f5d6f0b47b601",
+    "github_release_tag": "A3.5-dev202",
+    "github_repository_hygiene_run": 36292916303,
+    "github_pages_commit": "0a576a9c3ea4012815695b201247e72369c95be7",
+    "github_pages_deployment_run": 36292978623,
+    "github_vpk_digest_matches_local": true,
     "vita3k_main_menu_observed": true,
     "practice_loading_verified": false,
     "practice_gameplay_verified": false,
@@ -71,6 +77,8 @@
     "label": "A3.5-dev202",
     "report": "reports/MULTIPLAYER_COMPATIBILITY.md",
     "evidence_class": "Vita3K_main_menu_only_Practice_unverified",
+    "source_commit": "30b0d27a492c43ab2807f925230f5d6f0b47b601",
+    "release_tag": "A3.5-dev202",
     "physical_acceptance": false
   },
   "issue1_dev197_candidate": {

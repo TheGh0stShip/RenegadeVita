@@ -10,6 +10,11 @@ and C&C multiplayer (94), and links the original full-port MultiHUD. It passed
 bounded Vita3K launch reached the original main menu but did not enter
 Practice; its loading visuals and gameplay remain unverified. See the
 [Dev202 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
+The release tag points to source commit
+`30b0d27a492c43ab2807f925230f5d6f0b47b601`; GitHub's VPK digest is
+`d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28`.
+Dev202 does not supersede Dev200's live purchase-response evidence or Dev197's
+bounded physical PSTV checkpoint.
 
 ## Dev201 multiplayer evidence
 
@@ -54,11 +59,13 @@ original session teardown back to the menu. The public player list showed
 | Performance | Short mostly stationary multiplayer run: average 59.578 FPS, median 16.463 ms, p95 17.912 ms, worst 1,870.567 ms. Not a representative campaign benchmark or a lag-free claim. |
 | Physical Vita | A3.1.4 remains the accepted baseline. Dev195 physical testing pending; 60 FPS remains a goal, not acceptance. |
 
-The outer four-minute runner ended `TIMEOUT_UNASSESSED` at the returned main
+The outer four-minute Dev195 runner ended `TIMEOUT_UNASSESSED` at the returned main
 menu. That status is not a crash and is not an unqualified full-run pass.
 Full combat, purchases, vehicles, death/respawn, chat, round transitions and
 sustained multiplayer performance remain unaccepted. START leaves the server;
 it does not yet provide the complete multiplayer pause/menu flow.
+Dev200 later verified one successful purchase response; the Dev195 purchase
+failure above is retained only as that candidate's historical observation.
 
 See [Dev195 evidence and hashes](../reports/DEV195_RENCORNER_NATIVE_JOIN.md),
 [installation](INSTALLING.md), [multiplayer setup](MULTIPLAYER.md), and

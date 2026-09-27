@@ -1,10 +1,12 @@
 # Capability roadmap
 
-2026-09-26 checkpoint: Dev195 fast ARM/package closure and native Vita3K
-RenCorner join, rendering, bounded movement and session teardown are verified.
-Campaign completion, full multiplayer and physical performance remain open.
-Current evidence: [Dev195](DEV195_RENCORNER_NATIVE_JOIN.md). This checkpoint
-does not close a physical release gate or establish sustained 60 FPS.
+2026-09-27 checkpoint: Dev202 is the current published fast ARM/Vita3K menu
+candidate. Original Practice/C&C loading-backdrop selection and MultiHUD link;
+Practice gameplay and loading visuals remain unverified. Dev200's RenCorner
+purchase response and Dev195's join/movement evidence are earlier Vita3K
+results. Campaign completion, full multiplayer and physical performance remain
+open. Current evidence: [multiplayer](MULTIPLAYER_COMPATIBILITY.md). These
+checkpoints do not close a physical release gate or establish sustained 60 FPS.
 
 ## Durable destination and interim demo
 
@@ -30,7 +32,7 @@ pacing and actor defects. Dev195 multiplayer evidence does not resolve them.
 |---|---|---|
 | A3.1.4 | Visible original interactive M00 lifecycle | physically validated; frozen |
 | A3.2 | Frozen failed physical evidence: input, animation, projection, material, and exit defects | `A3.2-dev1` immutable; never promote from it |
-| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | Dev195 is the current development checkpoint. Historical physical failures remain immutable; new physical correctness and performance gates remain open. |
+| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | Dev202 is the current published development candidate. Historical physical failures remain immutable; new physical correctness and performance gates remain open. |
 | v3.6 | Resource, memory, deterministic cache/index, tutorial plus second scene and map smoke | pending v3.5 physical gate |
 | v3.7 | Perspective-correct efficient renderer and measured Balanced frame pacing | pending v3.6 infrastructure |
 | v3.8 | Original frontend, HUD, essential audio, intro path/fallback | host/ARM closure exists; physical integration pending |

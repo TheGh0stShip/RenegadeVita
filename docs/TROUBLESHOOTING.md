@@ -44,8 +44,11 @@ verification enabled; a missing trusted CA bundle is not a reason to disable it.
 The retail-compatible TTFS User-Agent fixed the observed repository HTTP 403,
 but does not guarantee every server or later server policy is compatible.
 
-Dev195's purchase dialog and early message text remain known defects. A join
-or player-list entry alone does not establish complete multiplayer support.
+Dev200's Vita3K run rendered the original purchase dialog and received a
+successful response. Dev201 corrected specific ARM player/chat text formatting
+call sites, but player-name appearance still needs a matching visual check.
+Dev202's Practice and multiplayer loading visuals remain unverified. A join or
+player-list entry alone does not establish complete multiplayer support.
 
 ## No recorder video appears
 

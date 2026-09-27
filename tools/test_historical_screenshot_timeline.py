@@ -124,6 +124,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         self.assertEqual(builds, sorted(set(builds)))
         self.assertNotIn("## Recent Build Captures", doc)
         self.assertNotIn("## Recovered Build Gallery", doc)
+        self.assertNotIn("Historical captures; platform and visible state are labeled below.", doc)
         self.assertNotIn("<details>", doc)
         self.assertNotIn('width="640"', doc)
         self.assertEqual(re.findall(r"^## (.+)$", doc, re.MULTILINE), [

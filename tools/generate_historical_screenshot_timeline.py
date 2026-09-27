@@ -365,7 +365,7 @@ def chronological_sections(gameplay: bool = True) -> list[str]:
         seen.add(key)
         section = sections.setdefault(entry["build"], {
             "title": f"A3.5-dev{entry['build']} - {'World' if gameplay else 'Presentation'} Capture Evidence",
-            "summary": "Historical captures; platform and visible state are labeled below.",
+            "summary": "",
             "images": [], "sources": [],
         })
         section["images"].append((entry["link"], f"{entry['platform']}: {entry['caption']}"))
@@ -373,8 +373,10 @@ def chronological_sections(gameplay: bool = True) -> list[str]:
             section["sources"].append(entry["source"])
     lines = []
     for _, section in sorted(sections.items()):
-        lines.extend([f"### {section['title']}", "", section["summary"], "",
-                      image_table(section["images"], columns=5, relative_paths=True), "",
+        lines.extend([f"### {section['title']}", ""])
+        if section["summary"]:
+            lines.extend([section["summary"], ""])
+        lines.extend([image_table(section["images"], columns=5, relative_paths=True), "",
                       "Source evidence:", "", source_list(section["sources"]), ""])
     return lines
 

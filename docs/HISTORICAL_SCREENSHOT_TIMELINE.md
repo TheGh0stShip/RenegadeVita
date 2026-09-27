@@ -276,8 +276,6 @@ Source evidence:
 
 ### A3.5-dev117 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev117-001.png" width="220" alt="Vita3K: Tutorial exterior and weapon HUD"><br>Vita3K: Tutorial exterior and weapon HUD</td>
@@ -289,8 +287,6 @@ Source evidence:
 - `active/dev117-refinery-freeze/visible-20260914T183752137Z.png`
 
 ### A3.5-dev118 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -304,8 +300,6 @@ Source evidence:
 
 ### A3.5-dev120 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev120-003.png" width="220" alt="Vita3K: Tutorial interior and weapon HUD"><br>Vita3K: Tutorial interior and weapon HUD</td>
@@ -317,8 +311,6 @@ Source evidence:
 - `active/dev120-wall-return/visible-20260914T194157182Z.png`
 
 ### A3.5-dev121 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -332,8 +324,6 @@ Source evidence:
 
 ### A3.5-dev123 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev123-020.png" width="220" alt="Vita3K: Tutorial interior and weapon HUD"><br>Vita3K: Tutorial interior and weapon HUD</td>
@@ -345,8 +335,6 @@ Source evidence:
 - `active/dev123-recovery-return/window-090.png`
 
 ### A3.5-dev129 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -360,8 +348,6 @@ Source evidence:
 
 ### A3.5-dev140 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev140-059.png" width="220" alt="Vita3K: Beach world and weapon HUD"><br>Vita3K: Beach world and weapon HUD</td>
@@ -373,8 +359,6 @@ Source evidence:
 - `managed/campaign-dev140-m01-diagnostic-trial-2/window-171.png`
 
 ### A3.5-dev145 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -388,8 +372,6 @@ Source evidence:
 
 ### A3.5-dev146 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev146-074.png" width="220" alt="Vita3K: Campaign canyon cinematic"><br>Vita3K: Campaign canyon cinematic</td>
@@ -401,8 +383,6 @@ Source evidence:
 - `managed/campaign-dev146-death-direct-m13-1/window-030.png`
 
 ### A3.5-dev148 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -416,8 +396,6 @@ Source evidence:
 
 ### A3.5-dev151 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev151-089.png" width="220" alt="Vita3K: Havoc cinematic frame"><br>Vita3K: Havoc cinematic frame</td>
@@ -429,8 +407,6 @@ Source evidence:
 - `managed/evidence/campaign-dev151-modelprep-m13-1/window-071.png`
 
 ### A3.5-dev152 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -444,8 +420,6 @@ Source evidence:
 
 ### A3.5-dev153 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev153-095.png" width="220" alt="Vita3K: Campaign vehicle cinematic frame"><br>Vita3K: Campaign vehicle cinematic frame</td>
@@ -457,8 +431,6 @@ Source evidence:
 - `managed/evidence/campaign-dev153-assetdepth-m13-1/window-090.png`
 
 ### A3.5-dev154 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -472,8 +444,6 @@ Source evidence:
 
 ### A3.5-dev155 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev155-101.png" width="220" alt="Vita3K: Campaign NPCs and HUD"><br>Vita3K: Campaign NPCs and HUD</td>
@@ -485,8 +455,6 @@ Source evidence:
 - `managed/evidence/campaign-dev155-template-m13-1/window-130.png`
 
 ### A3.5-dev158 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -500,8 +468,6 @@ Source evidence:
 
 ### A3.5-dev161 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev161-110.png" width="220" alt="Vita3K: Campaign Humvee cinematic frame"><br>Vita3K: Campaign Humvee cinematic frame</td>
@@ -513,8 +479,6 @@ Source evidence:
 - `managed/evidence/campaign-dev161-material-hotpath-m13-installedtitle-1/window-071.png`
 
 ### A3.5-dev162 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -528,8 +492,6 @@ Source evidence:
 
 ### A3.5-dev163 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev163-115.png" width="220" alt="Vita3K: Campaign canyon and weapon HUD"><br>Vita3K: Campaign canyon and weapon HUD</td>
@@ -541,8 +503,6 @@ Source evidence:
 - `managed/evidence/campaign-dev163-m13-realobject-map-m13-installedtitle-1/window-131.png`
 
 ### A3.5-dev164 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -556,8 +516,6 @@ Source evidence:
 
 ### A3.5-dev169 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev169-122.png" width="220" alt="Vita3K: Tiberium field and weapon HUD"><br>Vita3K: Tiberium field and weapon HUD</td>
@@ -569,8 +527,6 @@ Source evidence:
 - `managed/logs/A3.5-dev169-m13-vita3k-20260923T0133Z/window-210.png`
 
 ### A3.5-dev170 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -584,8 +540,6 @@ Source evidence:
 
 ### A3.5-dev171 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev171-128.png" width="220" alt="Vita3K: Campaign base perimeter and weapon HUD"><br>Vita3K: Campaign base perimeter and weapon HUD</td>
@@ -597,8 +551,6 @@ Source evidence:
 - `managed/logs/A3.5-dev171-m13-a03field-vita3k-20260923T030419Z/window-330.png`
 
 ### A3.5-dev173 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -612,8 +564,6 @@ Source evidence:
 
 ### A3.5-dev174 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev174-135.png" width="220" alt="Vita3K: Campaign canyon and weapon HUD"><br>Vita3K: Campaign canyon and weapon HUD</td>
@@ -625,8 +575,6 @@ Source evidence:
 - `managed/logs/A3.5-dev174-m13-a03field-vita3k-20260923T044346Z/window-090.png`
 
 ### A3.5-dev195 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -640,8 +588,6 @@ Source evidence:
 
 ### A3.5-dev198 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev198-158.png" width="220" alt="Vita3K: Multiplayer interior and weapon HUD"><br>Vita3K: Multiplayer interior and weapon HUD</td>
@@ -654,8 +600,6 @@ Source evidence:
 
 ### A3.5-dev201 - World Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev201-164.png" width="220" alt="Vita3K: Multiplayer interior and weapon HUD"><br>Vita3K: Multiplayer interior and weapon HUD</td>
@@ -667,8 +611,6 @@ Source evidence:
 - `managed/logs/dev201-glacier-texture-font-01/window-090.png`
 
 ### A3.5-dev202 - World Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -787,8 +729,6 @@ These builds have local or Vita-pulled screenshots, but the available images are
 
 ### A3.5-dev84 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/physical-captures/dev84-000.png" width="220" alt="Physical PS Vita: Loading-screen diagnostic with missing text"><br>Physical PS Vita: Loading-screen diagnostic with missing text</td>
@@ -800,8 +740,6 @@ Source evidence:
 - `physical_vita/original-loading-screen-level-ready-t85559925/frame.bmp`
 
 ### A3.5-dev119 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -815,8 +753,6 @@ Source evidence:
 
 ### A3.5-dev124 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/physical-captures/dev124-004.png" width="220" alt="Physical PS Vita: Tutorial loading screen"><br>Physical PS Vita: Tutorial loading screen</td>
@@ -828,8 +764,6 @@ Source evidence:
 - `physical_vita/original-loading-screen-level-ready-t120704470/frame.bmp`
 
 ### A3.5-dev126 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -843,8 +777,6 @@ Source evidence:
 
 ### A3.5-dev127 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev127-022.png" width="220" alt="Vita3K: Overlapping menu text diagnostic"><br>Vita3K: Overlapping menu text diagnostic</td>
@@ -856,8 +788,6 @@ Source evidence:
 - `active/dev127-early-pause-return/window-010.png`
 
 ### A3.5-dev128 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -871,8 +801,6 @@ Source evidence:
 
 ### A3.5-dev130 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev130-032.png" width="220" alt="Vita3K: Audio configuration menu"><br>Vita3K: Audio configuration menu</td>
@@ -884,8 +812,6 @@ Source evidence:
 - `active/dev130-fresh-return/emulator/step-20260915T001857472Z.png`
 
 ### A3.5-dev131 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -899,8 +825,6 @@ Source evidence:
 
 ### A3.5-dev132 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev132-038.png" width="220" alt="Vita3K: Save dialog"><br>Vita3K: Save dialog</td>
@@ -912,8 +836,6 @@ Source evidence:
 - `active/dev132-keyboard-return/emulator/step-20260915T012112031Z.png`
 
 ### A3.5-dev133 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -928,8 +850,6 @@ Source evidence:
 - `dev133-reload-return`
 
 ### A3.5-dev134 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -949,8 +869,6 @@ Source evidence:
 
 ### A3.5-dev135 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev135-046.png" width="220" alt="Vita3K: Startup movie frame"><br>Vita3K: Startup movie frame</td>
@@ -962,8 +880,6 @@ Source evidence:
 - `managed/campaign-dev135-trial-5/window-050.png`
 
 ### A3.5-dev137 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -977,8 +893,6 @@ Source evidence:
 
 ### A3.5-dev138 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev138-053.png" width="220" alt="Vita3K: Campaign difficulty selection"><br>Vita3K: Campaign difficulty selection</td>
@@ -990,8 +904,6 @@ Source evidence:
 - `managed/campaign-dev138-trial-1/window-151.png`
 
 ### A3.5-dev139 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -1005,8 +917,6 @@ Source evidence:
 
 ### A3.5-dev141 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev141-061.png" width="220" alt="Vita3K: Campaign loading presentation"><br>Vita3K: Campaign loading presentation</td>
@@ -1018,8 +928,6 @@ Source evidence:
 - `managed/campaign-dev141-m13-trial-1/window-050.png`
 
 ### A3.5-dev143 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -1033,8 +941,6 @@ Source evidence:
 
 ### A3.5-dev144 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev144-068.png" width="220" alt="Vita3K: Startup logo"><br>Vita3K: Startup logo</td>
@@ -1046,8 +952,6 @@ Source evidence:
 - `managed/campaign-dev144-score-transition-trial-1/window-030.png`
 
 ### A3.5-dev147 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -1061,8 +965,6 @@ Source evidence:
 
 ### A3.5-dev149 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev149-082.png" width="220" alt="Vita3K: The Scorpion Hunters loading screen"><br>Vita3K: The Scorpion Hunters loading screen</td>
@@ -1075,8 +977,6 @@ Source evidence:
 
 ### A3.5-dev195 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="media/vita3k/dev195-purchase-terminal-diagnostic.png" width="220" alt="Vita3K: Purchase terminal diagnostic; connection interrupted, not successful-join evidence"><br>Vita3K: Purchase terminal diagnostic; connection interrupted, not successful-join evidence</td>
@@ -1088,8 +988,6 @@ Source evidence:
 - `dev195-tt-native-01`
 
 ### A3.5-dev197 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -1111,8 +1009,6 @@ Source evidence:
 
 ### A3.5-dev200 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="history/build-captures/dev200-161.png" width="220" alt="Vita3K: Multiplayer purchase dialog"><br>Vita3K: Multiplayer purchase dialog</td>
@@ -1128,8 +1024,6 @@ Source evidence:
 
 ### A3.5-dev202 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="media/vita3k/dev202-main-menu.png" width="220" alt="Vita3K: Main menu"><br>Vita3K: Main menu</td>
@@ -1143,8 +1037,6 @@ Source evidence:
 
 ### A3.5-dev204 - Presentation Capture Evidence
 
-Historical captures; platform and visible state are labeled below.
-
 <table>
 <tr>
 <td width="20%"><img src="media/vita3k/dev204-livearea.png" width="220" alt="Vita3K: LiveArea presentation, not gameplay"><br>Vita3K: LiveArea presentation, not gameplay</td>
@@ -1156,8 +1048,6 @@ Source evidence:
 - `Previously published Dev204 capture`
 
 ### A3.5-dev205 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>
@@ -1171,8 +1061,6 @@ Source evidence:
 - `dev205-campaign-first-menu-01`
 
 ### A3.5-dev206 - Presentation Capture Evidence
-
-Historical captures; platform and visible state are labeled below.
 
 <table>
 <tr>

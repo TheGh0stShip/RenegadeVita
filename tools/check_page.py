@@ -27,6 +27,8 @@ assert "Historical Dev87" in page
 assert "physical Vita acceptance remain open" in page
 assert "Full Practice gameplay" in page
 assert "no audio track" in page
+assert 'https://hits.sh/thegh0stship.github.io/RenegadeVita.svg?label=visitors&amp;color=d4473c&amp;labelColor=38474a' in page
+assert "Renegade Vita visitor count" in page
 for target in parser.targets:
     url = urlsplit(target)
     if url.scheme:

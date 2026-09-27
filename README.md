@@ -14,7 +14,13 @@ the platform boundaries needed to run that original code on Vita.
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Current development candidate: A3.5-dev204.** This fast-built native ARM
+Archived campaign test packages are also available: [Dev205](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev205),
+[Dev206](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev206),
+and [Dev207](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev207).
+These are experimental historical binaries, not the newer source fixes or
+verified solutions to campaign freezes. Read their limitations before testing.
+
+> **Title-presentation checkpoint: A3.5-dev204.** This fast-built native ARM
 > package is installed in Vita3K. Its project-authored application icon and
 > versioned LiveArea art rendered there. It carries Dev202's original Practice
 > and multiplayer loading-backdrop selection and MultiHUD linkage; those

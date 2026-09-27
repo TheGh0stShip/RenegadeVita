@@ -18,6 +18,13 @@ This changelog records public-facing source, process, and evidence changes. It d
   not established. Dev204 remains the published download; no new binary
   release accompanies this checkpoint.
 
+## Archived Dev205-Dev207 packages - 2026-09-27
+
+- Published retained campaign diagnostic packages as experimental prereleases,
+  with verified VPK hashes, package contents and explicit runtime limitations.
+- These historical packages do not contain the newer source-checkpoint fixes.
+  Release tags identify publication, not exact original build snapshots.
+
 ## A3.5-dev204 - 2026-09-27
 
 - Added an original R/V identity and version-stamped Vita LiveArea artwork.

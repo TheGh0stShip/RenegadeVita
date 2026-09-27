@@ -2,6 +2,14 @@
 
 Updated: 2026-09-27
 
+## Archived campaign packages
+
+Retained [Dev205](releases/A3.5-dev205.md), [Dev206](releases/A3.5-dev206.md)
+and [Dev207](releases/A3.5-dev207.md) packages are published as experimental
+prereleases for comparison. Dev207 is the newest retained binary, not the
+current source tree and not a verified campaign fix. Package hashes and known
+failures are listed in each release note. No new compilation was performed.
+
 ## Unreleased campaign source checkpoint
 
 The repository is ahead of the published Dev204 package. Dev207 was packaged

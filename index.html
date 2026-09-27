@@ -13,6 +13,10 @@
       p, li { line-height: 1.55; }
       .notice { border-left: .25rem solid #d99224; padding: .2rem 1rem; background: #1b2024; }
       video { background: #000; display: block; height: auto; margin: 1.5rem 0; max-width: 100%; width: 100%; }
+      .captures { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin: 1.5rem 0; }
+      figure { margin: 0; }
+      figure img { display: block; height: auto; max-width: 100%; width: 100%; }
+      figcaption { color: #b9c4c8; font-size: .9rem; margin-top: .4rem; }
       code { background: #1b2024; padding: .1rem .3rem; overflow-wrap: anywhere; }
       a { color: #93d8ff; }
     </style>
@@ -22,8 +26,20 @@
       <h1>Renegade Vita</h1>
       <p>Native ARM PlayStation Vita source port of Command &amp; Conquer: Renegade.</p>
       <p><strong>Latest development candidate: A3.5-dev202 (September 27, 2026).</strong> The native ARM client has joined RenCorner in Vita3K, downloaded server maps and assets, spawned into live play, and received a successful original purchase response. Dev202 restores original mode-specific Practice and multiplayer loading-backdrop selection and links the original full-port multiplayer HUD.</p>
-      <p class="notice">Experimental build, not a finished game. Dev202 passed focused tests, fast ARM packaging, Vita3K install and main-menu launch. Practice gameplay and the new loading visuals have not yet been verified. Full campaign, full multiplayer, stable frame rate and physical Vita acceptance remain open.</p>
+      <p class="notice">Experimental build, not a finished game. Dev202 passed focused tests and fast ARM packaging. A bounded Vita3K run selected Practice, showed its original loading screen, and rendered Skirmish00 with brief movement input. Full Practice gameplay, full campaign, full multiplayer, stable frame rate and physical Vita acceptance remain open.</p>
       <p><a href="https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202">Download Dev202</a> &middot; <a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/INSTALLING.md">Setup</a> &middot; <a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/reports/MULTIPLAYER_COMPATIBILITY.md">Multiplayer evidence</a> &middot; <a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/CURRENT_STATUS.md">Project status</a></p>
+      <h2>Dev202 Practice in Vita3K</h2>
+      <p>This 35-second window recording has no audio track. It shows a bounded Practice spawn and movement check, not a complete match or physical Vita performance result. The capture run was deliberately stopped afterward.</p>
+      <video controls preload="metadata" poster="dev202-practice-gameplay.png">
+        <source src="dev202-practice-vita3k-silent.mp4" type="video/mp4">
+        Your browser does not support HTML5 video. Download the MP4 from this page instead.
+      </video>
+      <p><a href="dev202-practice-vita3k-silent.mp4">Download the silent Dev202 MP4</a> &middot; SHA-256: <code>4e07cddc0d42911ad2f2cd5a81d05a32057e75c5c0938f5a54eb718286478899</code></p>
+      <div class="captures">
+        <figure><a href="dev202-main-menu.png"><img src="dev202-main-menu.png" alt="Dev202 original main menu in Vita3K"></a><figcaption>Original main menu</figcaption></figure>
+        <figure><a href="dev202-practice-loading.png"><img src="dev202-practice-loading.png" alt="Dev202 original Practice loading screen in Vita3K"></a><figcaption>Practice loading, backdrop 96</figcaption></figure>
+        <figure><a href="dev202-practice-gameplay.png"><img src="dev202-practice-gameplay.png" alt="Dev202 Skirmish00 Practice world and HUD in Vita3K"></a><figcaption>Skirmish00 world and HUD</figcaption></figure>
+      </div>
       <h2>Historical Dev87 physical M00 recording</h2>
       <p>This is an earlier build, not footage of Dev202. Original recording and artifact identity are preserved.</p>
       <p class="notice">Physical evidence only. This recording demonstrates a returned Dev87 M00 session; it does not accept the failed menu text, HUD text, dialogue, intro A/V, performance, or lifecycle gates.</p>

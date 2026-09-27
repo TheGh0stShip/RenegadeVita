@@ -24,7 +24,8 @@ parser.feed(page)
 assert "A3.5-dev202" in page
 assert "Historical Dev87" in page
 assert "physical Vita acceptance remain open" in page
-assert "Practice gameplay and the new loading visuals have not yet been verified" in page
+assert "Full Practice gameplay" in page
+assert "no audio track" in page
 for target in parser.targets:
     url = urlsplit(target)
     if url.scheme:
@@ -37,4 +38,13 @@ assert video.stat().st_size == 44746182
 assert hashlib.sha256(video.read_bytes()).hexdigest() == (
     "e6f10ac1add71090bfa83246f4829b668d2d7629f25e5c0f3dfd1eb09ea44aaf")
 assert (root / "dev87-m00-poster.png").read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
-print("PASS: page links, current-status caveats, poster and immutable recording hash")
+new_video = root / "dev202-practice-vita3k-silent.mp4"
+assert hashlib.sha256(new_video.read_bytes()).hexdigest() == (
+    "4e07cddc0d42911ad2f2cd5a81d05a32057e75c5c0938f5a54eb718286478899")
+for name, digest in {
+    "dev202-main-menu.png": "58823a89f870d01565b3ba8a54ebde1ef7d50c073a7f881858802c9e8b4a8b6d",
+    "dev202-practice-loading.png": "61f2f098cc755545e307e87b16d68878e2af096a2b7e9a5cc37f4b1e51f63b25",
+    "dev202-practice-gameplay.png": "041a76808d9fe611b7176d660a718f3541e4212b84f77791537128eb0e04e9f2",
+}.items():
+    assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest
+print("PASS: page links, status caveats, historical video and Dev202 media hashes")

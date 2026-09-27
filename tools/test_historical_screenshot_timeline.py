@@ -12,11 +12,12 @@ SCREENSHOT_DIR = ROOT / "docs" / "history" / "screenshots"
 
 
 class HistoricalScreenshotTimelineContract(unittest.TestCase):
-    def test_every_audited_build_has_an_index_entry(self):
+    def test_every_audited_build_has_a_manifest_entry(self):
         coverage = json.loads((ROOT / "docs/history/screenshot-coverage.json").read_text())
         doc = TIMELINE.read_text(encoding="utf-8")
         builds = {int(build) for build in coverage["candidate_file_counts_by_build"]}
-        index = {int(build) for build in re.findall(r"\| Dev(\d+) \|", doc)}
+        manifest = doc.split("## Complete Gallery Manifest", 1)[1]
+        index = {int(build) for build in re.findall(r"\| A3\.5-dev(\d+) \|", manifest)}
         self.assertGreaterEqual(len(builds), 108)
         self.assertFalse(builds - index, f"Uncovered builds: {builds - index}")
 
@@ -45,7 +46,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         from tools.generate_historical_screenshot_timeline import RECENT_CAPTURES, sha256
 
         doc = TIMELINE.read_text(encoding="utf-8")
-        recent = doc.split("## Recent Build Captures", 1)[1].split("## Quick Gameplay View", 1)[0]
+        recent = doc
         self.assertGreaterEqual(len(RECENT_CAPTURES), 13)
         for build, filename, platform, caption, source in RECENT_CAPTURES:
             self.assertIn(f"media/{filename}", recent)
@@ -104,7 +105,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             self.assertNotIn("loading-replay", image_ref)
             self.assertNotIn("loading-physical", image_ref)
 
-    def test_gameplay_sections_are_capped_and_do_not_use_loading_frames(self):
+    def test_chronological_sections_use_original_thumbnail_layout(self):
         doc = TIMELINE.read_text(encoding="utf-8")
         timeline = doc.split("## Gameplay Timeline", 1)[1].split(
             "## One Loading-Screen Regression Reference", 1
@@ -114,12 +115,28 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         for section in sections:
             if not section.strip():
                 continue
-            image_refs = re.findall(r"history/screenshots/[^\"<\s]+\.png", section)
+            image_refs = re.findall(r'<img src="[^"]+" width="220"', section)
+            self.assertGreater(len(image_refs), 0)
             self.assertLessEqual(len(image_refs), 15, section.splitlines()[0])
-            for image_ref in image_refs:
-                self.assertNotIn("loading-screen", image_ref)
-                self.assertNotIn("loading-replay", image_ref)
-                self.assertNotIn("loading-physical", image_ref)
+            self.assertIn("<table>", section)
+            self.assertNotIn("<details>", section)
+        builds = [int(n) for n in re.findall(r"### A3\.5-dev(\d+)\b", timeline)]
+        self.assertEqual(builds, sorted(set(builds)))
+        self.assertNotIn("## Recent Build Captures", doc)
+        self.assertNotIn("## Recovered Build Gallery", doc)
+        self.assertNotIn("<details>", doc)
+        self.assertNotIn('width="640"', doc)
+        self.assertEqual(re.findall(r"^## (.+)$", doc, re.MULTILINE), [
+            "Current Capture Completeness",
+            "Quick Gameplay View",
+            "Gameplay Timeline",
+            "One Loading-Screen Regression Reference",
+            "A3.5-dev82 — Returned Physical Diagnostic Evidence",
+            "A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence",
+            "Diagnostic-Only Screenshot Inventory",
+            "Builds With No Local Or Vita-Pulled Screenshot File",
+            "Complete Gallery Manifest",
+        ])
 
         for diagnostic_build in (
             "A3.5-dev6",
@@ -129,7 +146,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             "A3.5-dev78",
             "A3.5-dev79",
         ):
-            self.assertNotIn(f"### {diagnostic_build}", timeline)
+            self.assertNotRegex(timeline, rf"### {re.escape(diagnostic_build)}\b")
 
     def test_recovered_builds_have_expected_gameplay_counts(self):
         doc = TIMELINE.read_text(encoding="utf-8")

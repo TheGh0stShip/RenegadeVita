@@ -5,8 +5,8 @@ This page collects web-viewable diagnostic screenshots from the Renegade Vita ev
 Evidence policy:
 
 - Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `<vita3k-data-root>/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `<historical-evidence-root>/Vita Logs/`.
-- The gallery stores PNGs under `docs/history/` and `docs/media/` so GitHub can render them directly. The all-build index includes menus, loading screens, cinematics and diagnostics with explicit labels; the older gameplay-only gallery remains separate.
-- Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list every useful local or Vita-pulled gameplay sample found.
+- The gallery stores PNGs under `docs/history/` and `docs/media/` so GitHub can render them directly. Physical PS Vita, PSTV, and Vita3K captures are labeled separately.
+- Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list the useful reviewed samples; menus and loading screens remain in the diagnostic section.
 - One historical loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler, except the four exact returned Dev82 diagnostic frames shown separately below.
 - Vita-pulled screenshots are mapped through each build's own `a35-devXX-runtime.log` capture paths before being included.
 - These images are historical evidence. They do not make dev82 physically accepted; dev82 still requires a returned Vita test with matching logs, screenshots/captures, and any crash dumps.
@@ -18,797 +18,13 @@ The gallery is a reviewed history, not a controlled same-camera comparison. Its 
 | Candidate | GitHub-hosted visual state |
 | --- | --- |
 | A3.1.4 | Accepted historical physical baseline; not acceptance of later builds. |
+| A3.5-dev5-Dev87 | Historical physical gameplay and separately labeled diagnostic captures. |
+| A3.5-dev104-Dev134 | Tutorial, menu, loading, and black-buffer captures from Vita3K and physical Vita. |
+| A3.5-dev135-Dev194 | Campaign world/cinematic captures and separately retained loading or black-buffer diagnostics. |
+| A3.5-dev195-Dev206 | Multiplayer, Practice, menu, and loading captures; physical PSTV and Vita3K evidence are labeled separately. |
 | A3.5-dev207 | Latest published experimental binary; no runtime capture exists in this reviewed archive. |
 
-The early-build inventory below remains historical. Newer reviewed captures are listed separately with their platform and source collection. No guessed or unrelated images are added to fill build-number gaps. See [current status](CURRENT_STATUS.md) for present build and verification status.
-
-## All Builds With Retained Screenshots
-
-This index covers **108 numbered development builds**, plus the earlier A3.1 gallery. Every build identified in the reviewed local and device capture inventories has an entry, including builds whose retained buffers are black. A black capture does not establish that the game displayed a black screen: framebuffer capture itself could fail.
-
-The September 27 archive pass checked the active workspace, managed Windows builder archive, Vita3K user captures, the historical E: project tree, and both live physical devices through read-only FTP. The E: project tree returned no images. Device capture metadata supplied build labels where filenames did not. Directory-attributed emulator captures were reviewed visually; attribution method, source-relative path, dimensions and hashes are retained in the [emulator catalog](history/build-captures/catalog.json) and [physical catalog](history/physical-captures/catalog.json).
-
-This is build coverage, not publication of every repeated frame. Original PNGs remain unchanged. BMP captures are losslessly converted to PNG with decoded-pixel equality checked. Private logs, saves, retail files, and desktop captures unrelated to the game are excluded. No missing build number is filled with an image from another build.
-
-| Build | Evidence platform | Retained example |
-| --- | --- | --- |
-| A3.1 | Historical physical evidence | [Early M00 world](history/screenshots/a31-vita-log-select-capture-f2278.png) |
-| Dev5 | Historical physical evidence | [Early archive](history/screenshots/a35-dev5-first-interactive-annotated-bmp.png) |
-| Dev6 | Historical physical evidence | [Early archive](history/screenshots/a35-dev6-vita-first-interactive-player-frame-f1-t31158328-annotated.png) |
-| Dev7 | Historical physical evidence | [Early archive](history/screenshots/a35-dev7-effects-130626-capture1-annotated.png) |
-| Dev12 | Historical physical evidence | [Early archive](history/screenshots/a35-dev12-first-frame-raw-bmp.png) |
-| Dev13 | Historical physical evidence | [Early archive](history/screenshots/a35-dev13-npc-crop.png) |
-| Dev16 | Historical physical evidence | [Early archive](history/screenshots/a35-dev16-capture1-annotated.png) |
-| Dev17 | Historical physical evidence | [Early archive](history/screenshots/a35-dev17-capture1-annotated.png) |
-| Dev18 | Historical physical evidence | [Early archive](history/screenshots/a35-dev18-capture1-annotated.png) |
-| Dev19 | Historical physical evidence | [Early archive](history/screenshots/a35-dev19-npc-detail-crop.png) |
-| Dev20 | Historical physical evidence | [Early archive](history/screenshots/a35-dev20-vita-first-interactive-player-frame-f1-t30968807-annotated.png) |
-| Dev21 | Historical physical evidence | [Early archive](history/screenshots/a35-dev21-vita-first-interactive-player-frame-f1-t30678441-annotated.png) |
-| Dev24 | Historical physical evidence | [Early archive](history/screenshots/a35-dev24-vita-first-interactive-player-frame-f1-t31590612-annotated.png) |
-| Dev42 | Historical physical evidence | [Early archive](history/screenshots/a35-dev42-vita-first-interactive-player-frame-f1-t33048100-annotated.png) |
-| Dev43 | Historical physical evidence | [Early archive](history/screenshots/a35-dev43-capture1-annotated.png) |
-| Dev44 | Historical physical evidence | [Early archive](history/screenshots/a35-dev44-vita-first-interactive-player-frame-f1-t32936764-annotated.png) |
-| Dev45 | Historical physical evidence | [Early archive](history/screenshots/a35-dev45-capture1-annotated.png) |
-| Dev46 | Historical physical evidence | [Early archive](history/screenshots/a35-dev46-capture1-annotated.png) |
-| Dev47 | Historical physical evidence | [Early archive](history/screenshots/a35-dev47-vita-first-interactive-player-frame-f1-t32303654-annotated.png) |
-| Dev78 | Historical physical evidence | [Early archive](history/screenshots/a35-dev78-loading-annotated-bmp.png) |
-| Dev79 | Historical physical evidence | [Early archive](history/screenshots/a35-dev79-vita-first-interactive-player-frame-f1-t39743964-annotated.png) |
-| Dev82 | Historical physical evidence | [Early archive](history/screenshots/a35-dev82-vita-first-interactive-frame-t64590857.png) |
-| Dev84 | Physical PS Vita | [Loading-screen diagnostic with missing text](history/physical-captures/dev84-000.png) |
-| Dev86 | Historical physical evidence | [Early archive](history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png) |
-| Dev87 | Historical physical evidence, Physical PS Vita | [Tutorial world, NPC and weapon HUD](history/physical-captures/dev87-002.png) |
-| Dev104 | Vita3K | [Black capture buffer](history/build-captures/dev104-000.png) |
-| Dev105 | Vita3K | [Black capture buffer](history/build-captures/dev105-001.png) |
-| Dev106 | Vita3K | [Black capture buffer](history/build-captures/dev106-002.png) |
-| Dev109 | Vita3K | [Black capture buffer](history/build-captures/dev109-003.png) |
-| Dev111 | Vita3K | [Black capture buffer](history/build-captures/dev111-004.png) |
-| Dev113 | Vita3K | [Black capture buffer](history/build-captures/dev113-005.png) |
-| Dev114 | Vita3K | [Black capture buffer](history/build-captures/dev114-006.png) |
-| Dev115 | Vita3K | [Black capture buffer](history/build-captures/dev115-007.png) |
-| Dev116 | Vita3K | [Black capture buffer](history/build-captures/dev116-008.png) |
-| Dev117 | Vita3K | [Tutorial exterior and weapon HUD](history/build-captures/dev117-001.png) |
-| Dev118 | Vita3K | [Tutorial exterior, NPC and weapon HUD](history/build-captures/dev118-010.png) |
-| Dev119 | Vita3K | [Demo credits](history/build-captures/dev119-013.png) |
-| Dev120 | Vita3K | [Tutorial interior and weapon HUD](history/build-captures/dev120-003.png) |
-| Dev121 | Vita3K | [Tutorial vehicle view](history/build-captures/dev121-017.png) |
-| Dev122 | Vita3K | [Blank emulator window](history/build-captures/dev122-018.png) |
-| Dev123 | Vita3K | [Tutorial interior and weapon HUD](history/build-captures/dev123-020.png) |
-| Dev124 | Physical PS Vita | [Tutorial loading screen](history/physical-captures/dev124-004.png) |
-| Dev126 | Physical PS Vita | [Tutorial loading screen](history/physical-captures/dev126-005.png) |
-| Dev127 | Vita3K | [Overlapping menu text diagnostic](history/build-captures/dev127-022.png) |
-| Dev128 | Vita3K | [EVA data links](history/build-captures/dev128-026.png) |
-| Dev129 | Vita3K | [Tutorial interior NPC and weapon HUD](history/build-captures/dev129-029.png) |
-| Dev130 | Vita3K | [Audio configuration menu](history/build-captures/dev130-032.png) |
-| Dev131 | Vita3K | [Exit confirmation](history/build-captures/dev131-035.png) |
-| Dev132 | Vita3K | [Save dialog](history/build-captures/dev132-038.png) |
-| Dev133 | Vita3K | [Tutorial loading screen](history/build-captures/dev133-040.png) |
-| Dev134 | Physical PS Vita, Vita3K | [Controller help overlay](history/build-captures/dev134-044.png) |
-| Dev135 | Vita3K | [Startup movie frame](history/build-captures/dev135-046.png) |
-| Dev137 | Vita3K | [Startup movie frame](history/build-captures/dev137-049.png) |
-| Dev138 | Vita3K | [Campaign difficulty selection](history/build-captures/dev138-053.png) |
-| Dev139 | Vita3K | [Startup movie frame](history/build-captures/dev139-055.png) |
-| Dev140 | Vita3K | [Beach world and weapon HUD](history/build-captures/dev140-059.png) |
-| Dev141 | Vita3K | [Campaign loading presentation](history/build-captures/dev141-061.png) |
-| Dev143 | Vita3K | [Loading screen](history/build-captures/dev143-065.png) |
-| Dev144 | Vita3K | [Startup logo](history/build-captures/dev144-068.png) |
-| Dev145 | Vita3K | [Campaign canyon and weapon HUD](history/build-captures/dev145-071.png) |
-| Dev146 | Vita3K | [Campaign canyon cinematic](history/build-captures/dev146-074.png) |
-| Dev147 | Vita3K | [The Scorpion Hunters loading screen](history/build-captures/dev147-077.png) |
-| Dev148 | Vita3K | [Campaign canyon cinematic with NPCs](history/build-captures/dev148-080.png) |
-| Dev149 | Vita3K | [The Scorpion Hunters loading screen](history/build-captures/dev149-082.png) |
-| Dev150 | Vita3K | [Startup diagnostic text](history/build-captures/dev150-085.png) |
-| Dev151 | Vita3K | [Havoc cinematic frame](history/build-captures/dev151-089.png) |
-| Dev152 | Vita3K | [Campaign NPC cinematic frame](history/build-captures/dev152-092.png) |
-| Dev153 | Vita3K | [Campaign vehicle cinematic frame](history/build-captures/dev153-095.png) |
-| Dev154 | Vita3K | [Campaign NPC cinematic frame](history/build-captures/dev154-098.png) |
-| Dev155 | Vita3K | [Campaign NPCs and HUD](history/build-captures/dev155-101.png) |
-| Dev156 | Vita3K | [Black capture buffer](history/build-captures/dev156-103.png) |
-| Dev157 | Vita3K | [Black capture buffer](history/build-captures/dev157-104.png) |
-| Dev158 | Vita3K | [Campaign vehicles cinematic frame](history/build-captures/dev158-105.png) |
-| Dev159 | Vita3K | [Black capture buffer](history/build-captures/dev159-108.png) |
-| Dev161 | Vita3K | [Campaign Humvee cinematic frame](history/build-captures/dev161-110.png) |
-| Dev162 | Vita3K | [Campaign canyon and weapon HUD](history/build-captures/dev162-112.png) |
-| Dev163 | Vita3K | [Campaign canyon and weapon HUD](history/build-captures/dev163-115.png) |
-| Dev164 | Vita3K | [Campaign NPC cinematic frame with rendering defect](history/build-captures/dev164-118.png) |
-| Dev168 | Vita3K | [Black capture buffer](history/build-captures/dev168-120.png) |
-| Dev169 | Vita3K | [Tiberium field and weapon HUD](history/build-captures/dev169-122.png) |
-| Dev170 | Vita3K | [Campaign vehicles and NPCs cinematic frame](history/build-captures/dev170-125.png) |
-| Dev171 | Vita3K | [Campaign base perimeter and weapon HUD](history/build-captures/dev171-128.png) |
-| Dev172 | Vita3K | [Black capture buffer](history/build-captures/dev172-130.png) |
-| Dev173 | Vita3K | [Campaign helicopter and weapon HUD](history/build-captures/dev173-132.png) |
-| Dev174 | Vita3K | [Campaign canyon and weapon HUD](history/build-captures/dev174-135.png) |
-| Dev175 | Vita3K | [Black capture buffer](history/build-captures/dev175-137.png) |
-| Dev177 | Vita3K | [Black capture buffer](history/build-captures/dev177-138.png) |
-| Dev179 | Vita3K | [Black capture buffer](history/build-captures/dev179-139.png) |
-| Dev181 | Vita3K | [Black capture buffer](history/build-captures/dev181-140.png) |
-| Dev182 | Vita3K | [Black capture buffer](history/build-captures/dev182-141.png) |
-| Dev183 | Vita3K | [Black capture buffer](history/build-captures/dev183-142.png) |
-| Dev184 | Vita3K | [Black capture buffer](history/build-captures/dev184-143.png) |
-| Dev185 | Vita3K | [Black capture buffer](history/build-captures/dev185-144.png) |
-| Dev186 | Vita3K | [Black capture buffer](history/build-captures/dev186-145.png) |
-| Dev189 | Vita3K | [Black capture buffer](history/build-captures/dev189-146.png) |
-| Dev190 | Vita3K | [Black capture buffer](history/build-captures/dev190-147.png) |
-| Dev192 | Vita3K | [Black capture buffer](history/build-captures/dev192-148.png) |
-| Dev194 | Vita3K | [Black capture buffer](history/build-captures/dev194-149.png) |
-| Dev195 | Vita3K | [Purchase terminal and weapon HUD](history/build-captures/dev195-151.png) |
-| Dev196 | Vita3K | [Black capture buffer](history/build-captures/dev196-153.png) |
-| Dev197 | Physical PSTV, Vita3K | [Rescue and Retribution loading screen](history/build-captures/dev197-155.png) |
-| Dev198 | Vita3K | [Multiplayer interior and weapon HUD](history/build-captures/dev198-158.png) |
-| Dev199 | Vita3K | [Black capture buffer](history/build-captures/dev199-160.png) |
-| Dev200 | Vita3K | [Multiplayer purchase dialog](history/build-captures/dev200-161.png) |
-| Dev201 | Vita3K | [Multiplayer interior and weapon HUD](history/build-captures/dev201-164.png) |
-| Dev202 | Vita3K | [Multiplayer Practice interior and weapon HUD](history/build-captures/dev202-167.png) |
-| Dev204 | Vita3K | [LiveArea presentation, not gameplay](media/vita3k/dev204-livearea.png) |
-| Dev205 | Vita3K | [Main menu](history/build-captures/dev205-169.png) |
-| Dev206 | Vita3K | [Single-player menu](history/build-captures/dev206-172.png) |
-
-## Recovered Build Gallery
-
-Expand a build to inspect its retained image. Black or blank diagnostics are linked in the index and catalog instead of repeated as large empty thumbnails. Cinematic stills do not prove animation, audio synchronization, or mission completion. Physical and emulator performance cannot be compared from these screenshots.
-
-<details><summary>Retained black-buffer and startup diagnostics</summary>
-
-- [Dev104: Black capture buffer](history/build-captures/dev104-000.png) (Vita3K)
-- [Dev105: Black capture buffer](history/build-captures/dev105-001.png) (Vita3K)
-- [Dev106: Black capture buffer](history/build-captures/dev106-002.png) (Vita3K)
-- [Dev109: Black capture buffer](history/build-captures/dev109-003.png) (Vita3K)
-- [Dev111: Black capture buffer](history/build-captures/dev111-004.png) (Vita3K)
-- [Dev113: Black capture buffer](history/build-captures/dev113-005.png) (Vita3K)
-- [Dev114: Black capture buffer](history/build-captures/dev114-006.png) (Vita3K)
-- [Dev115: Black capture buffer](history/build-captures/dev115-007.png) (Vita3K)
-- [Dev116: Black capture buffer](history/build-captures/dev116-008.png) (Vita3K)
-- [Dev117: Black capture buffer](history/build-captures/dev117-009.png) (Vita3K)
-- [Dev120: Black capture buffer](history/build-captures/dev120-015.png) (Vita3K)
-- [Dev122: Blank emulator window](history/build-captures/dev122-018.png) (Vita3K)
-- [Dev150: Startup diagnostic text](history/build-captures/dev150-085.png) (Vita3K)
-- [Dev156: Black capture buffer](history/build-captures/dev156-103.png) (Vita3K)
-- [Dev157: Black capture buffer](history/build-captures/dev157-104.png) (Vita3K)
-- [Dev159: Black capture buffer](history/build-captures/dev159-108.png) (Vita3K)
-- [Dev168: Black capture buffer](history/build-captures/dev168-120.png) (Vita3K)
-- [Dev172: Black capture buffer](history/build-captures/dev172-130.png) (Vita3K)
-- [Dev175: Black capture buffer](history/build-captures/dev175-137.png) (Vita3K)
-- [Dev177: Black capture buffer](history/build-captures/dev177-138.png) (Vita3K)
-- [Dev179: Black capture buffer](history/build-captures/dev179-139.png) (Vita3K)
-- [Dev181: Black capture buffer](history/build-captures/dev181-140.png) (Vita3K)
-- [Dev182: Black capture buffer](history/build-captures/dev182-141.png) (Vita3K)
-- [Dev183: Black capture buffer](history/build-captures/dev183-142.png) (Vita3K)
-- [Dev184: Black capture buffer](history/build-captures/dev184-143.png) (Vita3K)
-- [Dev185: Black capture buffer](history/build-captures/dev185-144.png) (Vita3K)
-- [Dev186: Black capture buffer](history/build-captures/dev186-145.png) (Vita3K)
-- [Dev189: Black capture buffer](history/build-captures/dev189-146.png) (Vita3K)
-- [Dev190: Black capture buffer](history/build-captures/dev190-147.png) (Vita3K)
-- [Dev192: Black capture buffer](history/build-captures/dev192-148.png) (Vita3K)
-- [Dev194: Black capture buffer](history/build-captures/dev194-149.png) (Vita3K)
-- [Dev196: Black capture buffer](history/build-captures/dev196-153.png) (Vita3K)
-- [Dev199: Black capture buffer](history/build-captures/dev199-160.png) (Vita3K)
-
-</details>
-
-<details><summary>Dev84 (Physical PS Vita): Loading-screen diagnostic with missing text</summary>
-
-<a href="history/physical-captures/dev84-000.png"><img src="history/physical-captures/dev84-000.png" width="640" alt="Dev84 (Physical PS Vita): Loading-screen diagnostic with missing text"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev87 (Physical PS Vita): Tutorial world, NPC and weapon HUD</summary>
-
-<a href="history/physical-captures/dev87-002.png"><img src="history/physical-captures/dev87-002.png" width="640" alt="Dev87 (Physical PS Vita): Tutorial world, NPC and weapon HUD"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev117 (Vita3K): Tutorial exterior and weapon HUD</summary>
-
-<a href="history/build-captures/dev117-001.png"><img src="history/build-captures/dev117-001.png" width="640" alt="Dev117 (Vita3K): Tutorial exterior and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev118 (Vita3K): Tutorial exterior, NPC and weapon HUD</summary>
-
-<a href="history/build-captures/dev118-010.png"><img src="history/build-captures/dev118-010.png" width="640" alt="Dev118 (Vita3K): Tutorial exterior, NPC and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev119 (Vita3K): Demo credits</summary>
-
-<a href="history/build-captures/dev119-013.png"><img src="history/build-captures/dev119-013.png" width="640" alt="Dev119 (Vita3K): Demo credits"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev120 (Vita3K): Tutorial interior and weapon HUD</summary>
-
-<a href="history/build-captures/dev120-003.png"><img src="history/build-captures/dev120-003.png" width="640" alt="Dev120 (Vita3K): Tutorial interior and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev121 (Vita3K): Tutorial vehicle view</summary>
-
-<a href="history/build-captures/dev121-017.png"><img src="history/build-captures/dev121-017.png" width="640" alt="Dev121 (Vita3K): Tutorial vehicle view"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev123 (Vita3K): Tutorial interior and weapon HUD</summary>
-
-<a href="history/build-captures/dev123-020.png"><img src="history/build-captures/dev123-020.png" width="640" alt="Dev123 (Vita3K): Tutorial interior and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev124 (Physical PS Vita): Tutorial loading screen</summary>
-
-<a href="history/physical-captures/dev124-004.png"><img src="history/physical-captures/dev124-004.png" width="640" alt="Dev124 (Physical PS Vita): Tutorial loading screen"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev126 (Physical PS Vita): Tutorial loading screen</summary>
-
-<a href="history/physical-captures/dev126-005.png"><img src="history/physical-captures/dev126-005.png" width="640" alt="Dev126 (Physical PS Vita): Tutorial loading screen"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev127 (Vita3K): Overlapping menu text diagnostic</summary>
-
-<a href="history/build-captures/dev127-022.png"><img src="history/build-captures/dev127-022.png" width="640" alt="Dev127 (Vita3K): Overlapping menu text diagnostic"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev128 (Vita3K): EVA data links</summary>
-
-<a href="history/build-captures/dev128-026.png"><img src="history/build-captures/dev128-026.png" width="640" alt="Dev128 (Vita3K): EVA data links"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev129 (Vita3K): Tutorial interior NPC and weapon HUD</summary>
-
-<a href="history/build-captures/dev129-029.png"><img src="history/build-captures/dev129-029.png" width="640" alt="Dev129 (Vita3K): Tutorial interior NPC and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev130 (Vita3K): Audio configuration menu</summary>
-
-<a href="history/build-captures/dev130-032.png"><img src="history/build-captures/dev130-032.png" width="640" alt="Dev130 (Vita3K): Audio configuration menu"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev131 (Vita3K): Exit confirmation</summary>
-
-<a href="history/build-captures/dev131-035.png"><img src="history/build-captures/dev131-035.png" width="640" alt="Dev131 (Vita3K): Exit confirmation"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev132 (Vita3K): Save dialog</summary>
-
-<a href="history/build-captures/dev132-038.png"><img src="history/build-captures/dev132-038.png" width="640" alt="Dev132 (Vita3K): Save dialog"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev133 (Vita3K): Tutorial loading screen</summary>
-
-<a href="history/build-captures/dev133-040.png"><img src="history/build-captures/dev133-040.png" width="640" alt="Dev133 (Vita3K): Tutorial loading screen"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev134 (Physical PS Vita): Demo credits</summary>
-
-<a href="history/physical-captures/dev134-006.png"><img src="history/physical-captures/dev134-006.png" width="640" alt="Dev134 (Physical PS Vita): Demo credits"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev134 (Physical PS Vita): Tutorial loading screen</summary>
-
-<a href="history/physical-captures/dev134-007.png"><img src="history/physical-captures/dev134-007.png" width="640" alt="Dev134 (Physical PS Vita): Tutorial loading screen"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev134 (Vita3K): Controller help overlay</summary>
-
-<a href="history/build-captures/dev134-044.png"><img src="history/build-captures/dev134-044.png" width="640" alt="Dev134 (Vita3K): Controller help overlay"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev135 (Vita3K): Startup movie frame</summary>
-
-<a href="history/build-captures/dev135-046.png"><img src="history/build-captures/dev135-046.png" width="640" alt="Dev135 (Vita3K): Startup movie frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev137 (Vita3K): Startup movie frame</summary>
-
-<a href="history/build-captures/dev137-049.png"><img src="history/build-captures/dev137-049.png" width="640" alt="Dev137 (Vita3K): Startup movie frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev138 (Vita3K): Campaign difficulty selection</summary>
-
-<a href="history/build-captures/dev138-053.png"><img src="history/build-captures/dev138-053.png" width="640" alt="Dev138 (Vita3K): Campaign difficulty selection"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev139 (Vita3K): Startup movie frame</summary>
-
-<a href="history/build-captures/dev139-055.png"><img src="history/build-captures/dev139-055.png" width="640" alt="Dev139 (Vita3K): Startup movie frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev140 (Vita3K): Beach world and weapon HUD</summary>
-
-<a href="history/build-captures/dev140-059.png"><img src="history/build-captures/dev140-059.png" width="640" alt="Dev140 (Vita3K): Beach world and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev141 (Vita3K): Campaign loading presentation</summary>
-
-<a href="history/build-captures/dev141-061.png"><img src="history/build-captures/dev141-061.png" width="640" alt="Dev141 (Vita3K): Campaign loading presentation"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev143 (Vita3K): Loading screen</summary>
-
-<a href="history/build-captures/dev143-065.png"><img src="history/build-captures/dev143-065.png" width="640" alt="Dev143 (Vita3K): Loading screen"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev144 (Vita3K): Startup logo</summary>
-
-<a href="history/build-captures/dev144-068.png"><img src="history/build-captures/dev144-068.png" width="640" alt="Dev144 (Vita3K): Startup logo"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev145 (Vita3K): Campaign canyon and weapon HUD</summary>
-
-<a href="history/build-captures/dev145-071.png"><img src="history/build-captures/dev145-071.png" width="640" alt="Dev145 (Vita3K): Campaign canyon and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev146 (Vita3K): Campaign canyon cinematic</summary>
-
-<a href="history/build-captures/dev146-074.png"><img src="history/build-captures/dev146-074.png" width="640" alt="Dev146 (Vita3K): Campaign canyon cinematic"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev147 (Vita3K): The Scorpion Hunters loading screen</summary>
-
-<a href="history/build-captures/dev147-077.png"><img src="history/build-captures/dev147-077.png" width="640" alt="Dev147 (Vita3K): The Scorpion Hunters loading screen"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev148 (Vita3K): Campaign canyon cinematic with NPCs</summary>
-
-<a href="history/build-captures/dev148-080.png"><img src="history/build-captures/dev148-080.png" width="640" alt="Dev148 (Vita3K): Campaign canyon cinematic with NPCs"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev149 (Vita3K): The Scorpion Hunters loading screen</summary>
-
-<a href="history/build-captures/dev149-082.png"><img src="history/build-captures/dev149-082.png" width="640" alt="Dev149 (Vita3K): The Scorpion Hunters loading screen"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev151 (Vita3K): Havoc cinematic frame</summary>
-
-<a href="history/build-captures/dev151-089.png"><img src="history/build-captures/dev151-089.png" width="640" alt="Dev151 (Vita3K): Havoc cinematic frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev152 (Vita3K): Campaign NPC cinematic frame</summary>
-
-<a href="history/build-captures/dev152-092.png"><img src="history/build-captures/dev152-092.png" width="640" alt="Dev152 (Vita3K): Campaign NPC cinematic frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev153 (Vita3K): Campaign vehicle cinematic frame</summary>
-
-<a href="history/build-captures/dev153-095.png"><img src="history/build-captures/dev153-095.png" width="640" alt="Dev153 (Vita3K): Campaign vehicle cinematic frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev154 (Vita3K): Campaign NPC cinematic frame</summary>
-
-<a href="history/build-captures/dev154-098.png"><img src="history/build-captures/dev154-098.png" width="640" alt="Dev154 (Vita3K): Campaign NPC cinematic frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev155 (Vita3K): Campaign NPCs and HUD</summary>
-
-<a href="history/build-captures/dev155-101.png"><img src="history/build-captures/dev155-101.png" width="640" alt="Dev155 (Vita3K): Campaign NPCs and HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev158 (Vita3K): Campaign vehicles cinematic frame</summary>
-
-<a href="history/build-captures/dev158-105.png"><img src="history/build-captures/dev158-105.png" width="640" alt="Dev158 (Vita3K): Campaign vehicles cinematic frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev161 (Vita3K): Campaign Humvee cinematic frame</summary>
-
-<a href="history/build-captures/dev161-110.png"><img src="history/build-captures/dev161-110.png" width="640" alt="Dev161 (Vita3K): Campaign Humvee cinematic frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev162 (Vita3K): Campaign canyon and weapon HUD</summary>
-
-<a href="history/build-captures/dev162-112.png"><img src="history/build-captures/dev162-112.png" width="640" alt="Dev162 (Vita3K): Campaign canyon and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev163 (Vita3K): Campaign canyon and weapon HUD</summary>
-
-<a href="history/build-captures/dev163-115.png"><img src="history/build-captures/dev163-115.png" width="640" alt="Dev163 (Vita3K): Campaign canyon and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev164 (Vita3K): Campaign NPC cinematic frame with rendering defect</summary>
-
-<a href="history/build-captures/dev164-118.png"><img src="history/build-captures/dev164-118.png" width="640" alt="Dev164 (Vita3K): Campaign NPC cinematic frame with rendering defect"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev169 (Vita3K): Tiberium field and weapon HUD</summary>
-
-<a href="history/build-captures/dev169-122.png"><img src="history/build-captures/dev169-122.png" width="640" alt="Dev169 (Vita3K): Tiberium field and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev170 (Vita3K): Campaign vehicles and NPCs cinematic frame</summary>
-
-<a href="history/build-captures/dev170-125.png"><img src="history/build-captures/dev170-125.png" width="640" alt="Dev170 (Vita3K): Campaign vehicles and NPCs cinematic frame"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev171 (Vita3K): Campaign base perimeter and weapon HUD</summary>
-
-<a href="history/build-captures/dev171-128.png"><img src="history/build-captures/dev171-128.png" width="640" alt="Dev171 (Vita3K): Campaign base perimeter and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev173 (Vita3K): Campaign helicopter and weapon HUD</summary>
-
-<a href="history/build-captures/dev173-132.png"><img src="history/build-captures/dev173-132.png" width="640" alt="Dev173 (Vita3K): Campaign helicopter and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev174 (Vita3K): Campaign canyon and weapon HUD</summary>
-
-<a href="history/build-captures/dev174-135.png"><img src="history/build-captures/dev174-135.png" width="640" alt="Dev174 (Vita3K): Campaign canyon and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev195 (Vita3K): Purchase terminal and weapon HUD</summary>
-
-<a href="history/build-captures/dev195-151.png"><img src="history/build-captures/dev195-151.png" width="640" alt="Dev195 (Vita3K): Purchase terminal and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev197 (Physical PSTV): Exit confirmation</summary>
-
-<a href="history/physical-captures/dev197-008.png"><img src="history/physical-captures/dev197-008.png" width="640" alt="Dev197 (Physical PSTV): Exit confirmation"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev197 (Physical PSTV): The Scorpion Hunters loading screen</summary>
-
-<a href="history/physical-captures/dev197-009.png"><img src="history/physical-captures/dev197-009.png" width="640" alt="Dev197 (Physical PSTV): The Scorpion Hunters loading screen"></a>
-
-960 x 544. lossless BMP-to-PNG; decoded RGBA pixels checked.
-
-</details>
-
-<details><summary>Dev197 (Vita3K): Rescue and Retribution loading screen</summary>
-
-<a href="history/build-captures/dev197-155.png"><img src="history/build-captures/dev197-155.png" width="640" alt="Dev197 (Vita3K): Rescue and Retribution loading screen"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev198 (Vita3K): Multiplayer interior and weapon HUD</summary>
-
-<a href="history/build-captures/dev198-158.png"><img src="history/build-captures/dev198-158.png" width="640" alt="Dev198 (Vita3K): Multiplayer interior and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev200 (Vita3K): Multiplayer purchase dialog</summary>
-
-<a href="history/build-captures/dev200-161.png"><img src="history/build-captures/dev200-161.png" width="640" alt="Dev200 (Vita3K): Multiplayer purchase dialog"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev201 (Vita3K): Multiplayer interior and weapon HUD</summary>
-
-<a href="history/build-captures/dev201-164.png"><img src="history/build-captures/dev201-164.png" width="640" alt="Dev201 (Vita3K): Multiplayer interior and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev202 (Vita3K): Multiplayer Practice interior and weapon HUD</summary>
-
-<a href="history/build-captures/dev202-167.png"><img src="history/build-captures/dev202-167.png" width="640" alt="Dev202 (Vita3K): Multiplayer Practice interior and weapon HUD"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev205 (Vita3K): Main menu</summary>
-
-<a href="history/build-captures/dev205-169.png"><img src="history/build-captures/dev205-169.png" width="640" alt="Dev205 (Vita3K): Main menu"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-<details><summary>Dev206 (Vita3K): Single-player menu</summary>
-
-<a href="history/build-captures/dev206-172.png"><img src="history/build-captures/dev206-172.png" width="640" alt="Dev206 (Vita3K): Single-player menu"></a>
-
-976 x 583. unchanged PNG copy.
-
-</details>
-
-## Recent Build Captures
-
-Updated September 27, 2026. These 13 retained captures cover nine builds from Dev133 through Dev206. Physical PSTV and Vita3K evidence are labeled separately. Menus, loading screens, and network diagnostics are included here, not passed off as gameplay or physical acceptance. Images are unchanged copies; click to inspect their original resolution.
-
-Dev207 is the latest published experimental binary. No Dev207 runtime image is included in this reviewed selection. Gaps between build numbers mean no selected capture is published here, not that a build was never tested. This is not an exhaustive inventory of every retained capture. Instantaneous FPS counters do not establish comparative performance.
-
-### Dev133: Tutorial EVA objectives
-
-<a href="media/vita3k/dev133-eva-objectives.png"><img src="media/vita3k/dev133-eva-objectives.png" width="640" alt="Dev133 (Vita3K): Tutorial EVA objectives"></a>
-
-**Vita3K.** Source: `dev133-reload-return`. Original dimensions: 558 x 340.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`eddc4f7f02bc7325be8ed3d6b6f0dda730544845c9bd5ea940eaef6d48d9fd88`
-
-</details>
-
-### Dev134: Tutorial EVA data screen
-
-<a href="media/vita3k/dev134-eva-data.png"><img src="media/vita3k/dev134-eva-data.png" width="640" alt="Dev134 (Vita3K): Tutorial EVA data screen"></a>
-
-**Vita3K.** Source: `dev134-refinery-return`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`40d828c1894c09e76453ff2f2fc3b396e5a341908527ade8ed43ae8095f6d2b0`
-
-</details>
-
-### Dev195: Purchase terminal diagnostic; connection interrupted, not successful-join evidence
-
-<a href="media/vita3k/dev195-purchase-terminal-diagnostic.png"><img src="media/vita3k/dev195-purchase-terminal-diagnostic.png" width="640" alt="Dev195 (Vita3K): Purchase terminal diagnostic; connection interrupted, not successful-join evidence"></a>
-
-**Vita3K.** Source: `dev195-tt-native-01`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`465569c88bb269edeac2b11fae73a9c35be019595147ffc0da1ca3080f09f7e7`
-
-</details>
-
-### Dev197: M13 loading screen; PC keyboard prompts remain visible
-
-<a href="media/pstv/dev197-m13-loading.png"><img src="media/pstv/dev197-m13-loading.png" width="640" alt="Dev197 (Physical PSTV): M13 loading screen; PC keyboard prompts remain visible"></a>
-
-**Physical PSTV.** Source: `a35-dev197-pstv-20260927 / original-loading-screen-level-ready-t56845132`. Original dimensions: 960 x 544.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`3f39bd45d6b4ff00fb5e5f231850abd1a89b6d2c16e9d294a3d4185bc5bff1c5`
-
-</details>
-
-### Dev197: Exit confirmation; this frame alone does not demonstrate completed exit
-
-<a href="media/pstv/dev197-exit-confirmation.png"><img src="media/pstv/dev197-exit-confirmation.png" width="640" alt="Dev197 (Physical PSTV): Exit confirmation; this frame alone does not demonstrate completed exit"></a>
-
-**Physical PSTV.** Source: `a35-dev197-pstv-20260927 / pre-clean-exit-f15-t99517028`. Original dimensions: 960 x 544.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`c3e22459a8825489597a5d3575ab52d839f8c9983af19f1317e4d6202ed57474`
-
-</details>
-
-### Dev200: RenCorner purchase dialog
-
-<a href="media/vita3k/dev200-rencorner-purchase-dialog.png"><img src="media/vita3k/dev200-rencorner-purchase-dialog.png" width="640" alt="Dev200 (Vita3K): RenCorner purchase dialog"></a>
-
-**Vita3K.** Source: `Previously published Dev200 capture`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`dfa5f287894f915629fb1777eb0d1257480fbca5287ceba59d3d2435906097db`
-
-</details>
-
-### Dev200: RenCorner purchase response
-
-<a href="media/vita3k/dev200-rencorner-purchase-response.png"><img src="media/vita3k/dev200-rencorner-purchase-response.png" width="640" alt="Dev200 (Vita3K): RenCorner purchase response"></a>
-
-**Vita3K.** Source: `Previously published Dev200 capture`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`cdf4c2ae8617984f99de12f34bd984b9246938eb36f666185836da4cea2b8424`
-
-</details>
-
-### Dev202: Main menu
-
-<a href="media/vita3k/dev202-main-menu.png"><img src="media/vita3k/dev202-main-menu.png" width="640" alt="Dev202 (Vita3K): Main menu"></a>
-
-**Vita3K.** Source: `Previously published Dev202 capture`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`58823a89f870d01565b3ba8a54ebde1ef7d50c073a7f881858802c9e8b4a8b6d`
-
-</details>
-
-### Dev202: Multiplayer Practice loading screen
-
-<a href="media/vita3k/dev202-practice-loading.png"><img src="media/vita3k/dev202-practice-loading.png" width="640" alt="Dev202 (Vita3K): Multiplayer Practice loading screen"></a>
-
-**Vita3K.** Source: `Previously published Dev202 capture`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`61f2f098cc755545e307e87b16d68878e2af096a2b7e9a5cc37f4b1e51f63b25`
-
-</details>
-
-### Dev202: Multiplayer Practice world and HUD
-
-<a href="media/vita3k/dev202-practice-gameplay.png"><img src="media/vita3k/dev202-practice-gameplay.png" width="640" alt="Dev202 (Vita3K): Multiplayer Practice world and HUD"></a>
-
-**Vita3K.** Source: `Previously published Dev202 capture`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`041a76808d9fe611b7176d660a718f3541e4212b84f77791537128eb0e04e9f2`
-
-</details>
-
-### Dev204: LiveArea presentation, not gameplay
-
-<a href="media/vita3k/dev204-livearea.png"><img src="media/vita3k/dev204-livearea.png" width="640" alt="Dev204 (Vita3K): LiveArea presentation, not gameplay"></a>
-
-**Vita3K.** Source: `Previously published Dev204 capture`. Original dimensions: 960 x 544.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`001e27fea0d44693ecee0c2b0139b4b176e8a36daabb02972a1c1c8f3838c10e`
-
-</details>
-
-### Dev205: Main menu; a still does not establish responsiveness
-
-<a href="media/vita3k/dev205-main-menu.png"><img src="media/vita3k/dev205-main-menu.png" width="640" alt="Dev205 (Vita3K): Main menu; a still does not establish responsiveness"></a>
-
-**Vita3K.** Source: `dev205-campaign-first-menu-01`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`f0c04cf4345eb4b68010867e7ad4e828ca49ba14f9b4d04f81df922331d8b6e8`
-
-</details>
-
-### Dev206: Single-player menu, not save/load verification
-
-<a href="media/vita3k/dev206-single-player-menu.png"><img src="media/vita3k/dev206-single-player-menu.png" width="640" alt="Dev206 (Vita3K): Single-player menu, not save/load verification"></a>
-
-**Vita3K.** Source: `dev206-save05-reload-01`. Original dimensions: 976 x 583.
-
-<details><summary>Capture checksum (SHA-256)</summary>
-
-`07442500de16c078dc2759239527372bf98e234e876e2a10899e0bdf41ff74c4`
-
-</details>
+Updated September 27, 2026: 108 numbered builds have retained captures, plus A3.1. No Dev207 runtime image is included. See [current status](CURRENT_STATUS.md) for present verification status and the complete manifest below for all retained images.
 
 ## Quick Gameplay View
 
@@ -1048,6 +264,7 @@ Six selected stills are derived from the user-finalized 200.917-second physical-
 </tr>
 <tr>
 <td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-interior-objective-t0190s.png" width="220" alt="Interior objective-area view"><br>Interior objective-area view</td>
+<td width="20%"><img src="history/physical-captures/dev87-002.png" width="220" alt="Physical PS Vita: Tutorial world, NPC and weapon HUD"><br>Physical PS Vita: Tutorial world, NPC and weapon HUD</td>
 </tr>
 </table>
 
@@ -1055,10 +272,419 @@ Source evidence:
 
 - `build/device-evidence/a35-dev87-video-return-20260831T060240Z/raw/2026-08-31_004224.mp4 (local-only raw recording)`
 - `build/device-evidence/a35-dev87-video-return-20260831T060240Z/README.md`
+- `physical_vita/pre-clean-exit-f1200-t182673429/frame.bmp`
+
+### A3.5-dev117 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev117-001.png" width="220" alt="Vita3K: Tutorial exterior and weapon HUD"><br>Vita3K: Tutorial exterior and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev117-refinery-freeze/visible-20260914T183752137Z.png`
+
+### A3.5-dev118 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev118-010.png" width="220" alt="Vita3K: Tutorial exterior, NPC and weapon HUD"><br>Vita3K: Tutorial exterior, NPC and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev118-finale-return/visible-20260914T190216273Z.png`
+
+### A3.5-dev120 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev120-003.png" width="220" alt="Vita3K: Tutorial interior and weapon HUD"><br>Vita3K: Tutorial interior and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev120-wall-return/visible-20260914T194157182Z.png`
+
+### A3.5-dev121 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev121-017.png" width="220" alt="Vita3K: Tutorial vehicle view"><br>Vita3K: Tutorial vehicle view</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev121-resume-control-return/window-090.png`
+
+### A3.5-dev123 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev123-020.png" width="220" alt="Vita3K: Tutorial interior and weapon HUD"><br>Vita3K: Tutorial interior and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev123-recovery-return/window-090.png`
+
+### A3.5-dev129 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev129-029.png" width="220" alt="Vita3K: Tutorial interior NPC and weapon HUD"><br>Vita3K: Tutorial interior NPC and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev129-pause-return/emulator/window-531.png`
+
+### A3.5-dev140 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev140-059.png" width="220" alt="Vita3K: Beach world and weapon HUD"><br>Vita3K: Beach world and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev140-m01-diagnostic-trial-2/window-171.png`
+
+### A3.5-dev145 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev145-071.png" width="220" alt="Vita3K: Campaign canyon and weapon HUD"><br>Vita3K: Campaign canyon and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev145-intro-trace-3/window-071.png`
+
+### A3.5-dev146 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev146-074.png" width="220" alt="Vita3K: Campaign canyon cinematic"><br>Vita3K: Campaign canyon cinematic</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev146-death-direct-m13-1/window-030.png`
+
+### A3.5-dev148 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev148-080.png" width="220" alt="Vita3K: Campaign canyon cinematic with NPCs"><br>Vita3K: Campaign canyon cinematic with NPCs</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev148-combattiming-m13-1/window-110.png`
+
+### A3.5-dev151 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev151-089.png" width="220" alt="Vita3K: Havoc cinematic frame"><br>Vita3K: Havoc cinematic frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev151-modelprep-m13-1/window-071.png`
+
+### A3.5-dev152 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev152-092.png" width="220" alt="Vita3K: Campaign NPC cinematic frame"><br>Vita3K: Campaign NPC cinematic frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev152-physmodel-m13-1/window-071.png`
+
+### A3.5-dev153 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev153-095.png" width="220" alt="Vita3K: Campaign vehicle cinematic frame"><br>Vita3K: Campaign vehicle cinematic frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev153-assetdepth-m13-1/window-090.png`
+
+### A3.5-dev154 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev154-098.png" width="220" alt="Vita3K: Campaign NPC cinematic frame"><br>Vita3K: Campaign NPC cinematic frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev154-prototype-m13-2/window-071.png`
+
+### A3.5-dev155 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev155-101.png" width="220" alt="Vita3K: Campaign NPCs and HUD"><br>Vita3K: Campaign NPCs and HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev155-template-m13-1/window-130.png`
+
+### A3.5-dev158 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev158-105.png" width="220" alt="Vita3K: Campaign vehicles cinematic frame"><br>Vita3K: Campaign vehicles cinematic frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev158-defaultvfs-m13-installedtitle-1/window-050.png`
+
+### A3.5-dev161 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev161-110.png" width="220" alt="Vita3K: Campaign Humvee cinematic frame"><br>Vita3K: Campaign Humvee cinematic frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev161-material-hotpath-m13-installedtitle-1/window-071.png`
+
+### A3.5-dev162 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev162-112.png" width="220" alt="Vita3K: Campaign canyon and weapon HUD"><br>Vita3K: Campaign canyon and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev162-m13-slot27-template-m13-installedtitle-1/window-170.png`
+
+### A3.5-dev163 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev163-115.png" width="220" alt="Vita3K: Campaign canyon and weapon HUD"><br>Vita3K: Campaign canyon and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev163-m13-realobject-map-m13-installedtitle-1/window-131.png`
+
+### A3.5-dev164 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev164-118.png" width="220" alt="Vita3K: Campaign NPC cinematic frame with rendering defect"><br>Vita3K: Campaign NPC cinematic frame with rendering defect</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev164-m13-object-preset-prep-m13-installedtitle-1/window-110.png`
+
+### A3.5-dev169 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev169-122.png" width="220" alt="Vita3K: Tiberium field and weapon HUD"><br>Vita3K: Tiberium field and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/A3.5-dev169-m13-vita3k-20260923T0133Z/window-210.png`
+
+### A3.5-dev170 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev170-125.png" width="220" alt="Vita3K: Campaign vehicles and NPCs cinematic frame"><br>Vita3K: Campaign vehicles and NPCs cinematic frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/A3.5-dev170-m13-vita3k-20260923T0202Z/window-051.png`
+
+### A3.5-dev171 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev171-128.png" width="220" alt="Vita3K: Campaign base perimeter and weapon HUD"><br>Vita3K: Campaign base perimeter and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/A3.5-dev171-m13-a03field-vita3k-20260923T030419Z/window-330.png`
+
+### A3.5-dev173 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev173-132.png" width="220" alt="Vita3K: Campaign helicopter and weapon HUD"><br>Vita3K: Campaign helicopter and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/A3.5-dev173-m13-a03field-vita3k-20260923T041756Z/window-090.png`
+
+### A3.5-dev174 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev174-135.png" width="220" alt="Vita3K: Campaign canyon and weapon HUD"><br>Vita3K: Campaign canyon and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/A3.5-dev174-m13-a03field-vita3k-20260923T044346Z/window-090.png`
+
+### A3.5-dev195 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev195-151.png" width="220" alt="Vita3K: Purchase terminal and weapon HUD"><br>Vita3K: Purchase terminal and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev195-tt-native-01/window-151.png`
+
+### A3.5-dev198 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev198-158.png" width="220" alt="Vita3K: Multiplayer interior and weapon HUD"><br>Vita3K: Multiplayer interior and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev198-tt-native-01/window-071.png`
+
+### A3.5-dev201 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev201-164.png" width="220" alt="Vita3K: Multiplayer interior and weapon HUD"><br>Vita3K: Multiplayer interior and weapon HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev201-glacier-texture-font-01/window-090.png`
+
+### A3.5-dev202 - World Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev202-167.png" width="220" alt="Vita3K: Multiplayer Practice interior and weapon HUD"><br>Vita3K: Multiplayer Practice interior and weapon HUD</td>
+<td width="20%"><img src="media/vita3k/dev202-practice-gameplay.png" width="220" alt="Vita3K: Multiplayer Practice world and HUD"><br>Vita3K: Multiplayer Practice world and HUD</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev202-visual-01/window-130.png`
+- `Previously published Dev202 capture`
 
 ## One Loading-Screen Regression Reference
 
-This early-gallery loading-screen reference records the Dev78/79 regression. The preceding Quick Gameplay View and Gameplay Timeline contain world captures; the separately labeled recovered gallery also includes menus and loading screens.
+The gallery keeps one displayed loading-screen reference because the late dev78/dev79 loading regression is part of the story dev82 targets. The rest of the displayed sample images above are gameplay/world captures.
 
 <table>
 <tr>
@@ -1125,10 +751,445 @@ These builds have local or Vita-pulled screenshots, but the available images are
 | A3.5-dev79 | 0 | 4 physical loading/control-candidate frames recovered; no gameplay screenshot was returned for dev79. | [`a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png`](history/screenshots/a35-dev79-vita-first-interactive-player-frame-f1-t39743964.png) |
 | A3.5-dev82 | 0 | Four returned physical capture records are visibly preserved in the dedicated Dev82 diagnostic gallery: two distinct loading presentations are vertically inverted, the t64590857 first-interactive record is byte-identical to the full-frame loading image, and t88041059 is black except for a small HUD fragment. None establishes gameplay acceptance. | [`a35-dev82-vita-original-loading-screen-t67280479.png`](history/screenshots/a35-dev82-vita-original-loading-screen-t67280479.png) |
 | A3.5-dev86 | 0 | One returned physical original-loading-screen frame is visibly preserved in the dedicated Dev86 diagnostic gallery. It shows the original loading artwork and color panels but no legible original UI labels; it is not a main-menu or gameplay acceptance image. | [`a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png`](history/screenshots/a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png) |
+| A3.5-dev104 | 0 in this capture | Vita3K: Black capture buffer | [dev104-000.png](history/build-captures/dev104-000.png) |
+| A3.5-dev105 | 0 in this capture | Vita3K: Black capture buffer | [dev105-001.png](history/build-captures/dev105-001.png) |
+| A3.5-dev106 | 0 in this capture | Vita3K: Black capture buffer | [dev106-002.png](history/build-captures/dev106-002.png) |
+| A3.5-dev109 | 0 in this capture | Vita3K: Black capture buffer | [dev109-003.png](history/build-captures/dev109-003.png) |
+| A3.5-dev111 | 0 in this capture | Vita3K: Black capture buffer | [dev111-004.png](history/build-captures/dev111-004.png) |
+| A3.5-dev113 | 0 in this capture | Vita3K: Black capture buffer | [dev113-005.png](history/build-captures/dev113-005.png) |
+| A3.5-dev114 | 0 in this capture | Vita3K: Black capture buffer | [dev114-006.png](history/build-captures/dev114-006.png) |
+| A3.5-dev115 | 0 in this capture | Vita3K: Black capture buffer | [dev115-007.png](history/build-captures/dev115-007.png) |
+| A3.5-dev116 | 0 in this capture | Vita3K: Black capture buffer | [dev116-008.png](history/build-captures/dev116-008.png) |
+| A3.5-dev117 | 0 in this capture | Vita3K: Black capture buffer | [dev117-009.png](history/build-captures/dev117-009.png) |
+| A3.5-dev120 | 0 in this capture | Vita3K: Black capture buffer | [dev120-015.png](history/build-captures/dev120-015.png) |
+| A3.5-dev122 | 0 in this capture | Vita3K: Blank emulator window | [dev122-018.png](history/build-captures/dev122-018.png) |
+| A3.5-dev150 | 0 in this capture | Vita3K: Startup diagnostic text | [dev150-085.png](history/build-captures/dev150-085.png) |
+| A3.5-dev156 | 0 in this capture | Vita3K: Black capture buffer | [dev156-103.png](history/build-captures/dev156-103.png) |
+| A3.5-dev157 | 0 in this capture | Vita3K: Black capture buffer | [dev157-104.png](history/build-captures/dev157-104.png) |
+| A3.5-dev159 | 0 in this capture | Vita3K: Black capture buffer | [dev159-108.png](history/build-captures/dev159-108.png) |
+| A3.5-dev168 | 0 in this capture | Vita3K: Black capture buffer | [dev168-120.png](history/build-captures/dev168-120.png) |
+| A3.5-dev172 | 0 in this capture | Vita3K: Black capture buffer | [dev172-130.png](history/build-captures/dev172-130.png) |
+| A3.5-dev175 | 0 in this capture | Vita3K: Black capture buffer | [dev175-137.png](history/build-captures/dev175-137.png) |
+| A3.5-dev177 | 0 in this capture | Vita3K: Black capture buffer | [dev177-138.png](history/build-captures/dev177-138.png) |
+| A3.5-dev179 | 0 in this capture | Vita3K: Black capture buffer | [dev179-139.png](history/build-captures/dev179-139.png) |
+| A3.5-dev181 | 0 in this capture | Vita3K: Black capture buffer | [dev181-140.png](history/build-captures/dev181-140.png) |
+| A3.5-dev182 | 0 in this capture | Vita3K: Black capture buffer | [dev182-141.png](history/build-captures/dev182-141.png) |
+| A3.5-dev183 | 0 in this capture | Vita3K: Black capture buffer | [dev183-142.png](history/build-captures/dev183-142.png) |
+| A3.5-dev184 | 0 in this capture | Vita3K: Black capture buffer | [dev184-143.png](history/build-captures/dev184-143.png) |
+| A3.5-dev185 | 0 in this capture | Vita3K: Black capture buffer | [dev185-144.png](history/build-captures/dev185-144.png) |
+| A3.5-dev186 | 0 in this capture | Vita3K: Black capture buffer | [dev186-145.png](history/build-captures/dev186-145.png) |
+| A3.5-dev189 | 0 in this capture | Vita3K: Black capture buffer | [dev189-146.png](history/build-captures/dev189-146.png) |
+| A3.5-dev190 | 0 in this capture | Vita3K: Black capture buffer | [dev190-147.png](history/build-captures/dev190-147.png) |
+| A3.5-dev192 | 0 in this capture | Vita3K: Black capture buffer | [dev192-148.png](history/build-captures/dev192-148.png) |
+| A3.5-dev194 | 0 in this capture | Vita3K: Black capture buffer | [dev194-149.png](history/build-captures/dev194-149.png) |
+| A3.5-dev196 | 0 in this capture | Vita3K: Black capture buffer | [dev196-153.png](history/build-captures/dev196-153.png) |
+| A3.5-dev199 | 0 in this capture | Vita3K: Black capture buffer | [dev199-160.png](history/build-captures/dev199-160.png) |
+
+### A3.5-dev84 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/physical-captures/dev84-000.png" width="220" alt="Physical PS Vita: Loading-screen diagnostic with missing text"><br>Physical PS Vita: Loading-screen diagnostic with missing text</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `physical_vita/original-loading-screen-level-ready-t85559925/frame.bmp`
+
+### A3.5-dev119 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev119-013.png" width="220" alt="Vita3K: Demo credits"><br>Vita3K: Demo credits</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev119-ending-return/visible-20260914T191730454Z.png`
+
+### A3.5-dev124 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/physical-captures/dev124-004.png" width="220" alt="Physical PS Vita: Tutorial loading screen"><br>Physical PS Vita: Tutorial loading screen</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `physical_vita/original-loading-screen-level-ready-t120704470/frame.bmp`
+
+### A3.5-dev126 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/physical-captures/dev126-005.png" width="220" alt="Physical PS Vita: Tutorial loading screen"><br>Physical PS Vita: Tutorial loading screen</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `physical_vita/original-loading-screen-level-ready-t106565739/frame.bmp`
+
+### A3.5-dev127 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev127-022.png" width="220" alt="Vita3K: Overlapping menu text diagnostic"><br>Vita3K: Overlapping menu text diagnostic</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev127-early-pause-return/window-010.png`
+
+### A3.5-dev128 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev128-026.png" width="220" alt="Vita3K: EVA data links"><br>Vita3K: EVA data links</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev128-pause-return/window-270.png`
+
+### A3.5-dev130 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev130-032.png" width="220" alt="Vita3K: Audio configuration menu"><br>Vita3K: Audio configuration menu</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev130-fresh-return/emulator/step-20260915T001857472Z.png`
+
+### A3.5-dev131 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev131-035.png" width="220" alt="Vita3K: Exit confirmation"><br>Vita3K: Exit confirmation</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev131-controller-return/emulator/step-20260915T004948734Z.png`
+
+### A3.5-dev132 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev132-038.png" width="220" alt="Vita3K: Save dialog"><br>Vita3K: Save dialog</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev132-keyboard-return/emulator/step-20260915T012112031Z.png`
+
+### A3.5-dev133 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev133-040.png" width="220" alt="Vita3K: Tutorial loading screen"><br>Vita3K: Tutorial loading screen</td>
+<td width="20%"><img src="media/vita3k/dev133-eva-objectives.png" width="220" alt="Vita3K: Tutorial EVA objectives"><br>Vita3K: Tutorial EVA objectives</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev133-discovery-return/emulator/visible-20260915T020635250Z.png`
+- `dev133-reload-return`
+
+### A3.5-dev134 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev134-044.png" width="220" alt="Vita3K: Controller help overlay"><br>Vita3K: Controller help overlay</td>
+<td width="20%"><img src="history/physical-captures/dev134-006.png" width="220" alt="Physical PS Vita: Demo credits"><br>Physical PS Vita: Demo credits</td>
+<td width="20%"><img src="history/physical-captures/dev134-007.png" width="220" alt="Physical PS Vita: Tutorial loading screen"><br>Physical PS Vita: Tutorial loading screen</td>
+<td width="20%"><img src="media/vita3k/dev134-eva-data.png" width="220" alt="Vita3K: Tutorial EVA data screen"><br>Vita3K: Tutorial EVA data screen</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `active/dev134-refinery-return/emulator/window-090.png`
+- `physical_vita/pre-clean-exit-f45440-t1768523089/frame.bmp`
+- `physical_vita/original-loading-screen-level-ready-t105710094/frame.bmp`
+- `dev134-refinery-return`
+
+### A3.5-dev135 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev135-046.png" width="220" alt="Vita3K: Startup movie frame"><br>Vita3K: Startup movie frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev135-trial-5/window-050.png`
+
+### A3.5-dev137 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev137-049.png" width="220" alt="Vita3K: Startup movie frame"><br>Vita3K: Startup movie frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev137-trial-1/window-150.png`
+
+### A3.5-dev138 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev138-053.png" width="220" alt="Vita3K: Campaign difficulty selection"><br>Vita3K: Campaign difficulty selection</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev138-trial-1/window-151.png`
+
+### A3.5-dev139 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev139-055.png" width="220" alt="Vita3K: Startup movie frame"><br>Vita3K: Startup movie frame</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev139-trial-1/window-030.png`
+
+### A3.5-dev141 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev141-061.png" width="220" alt="Vita3K: Campaign loading presentation"><br>Vita3K: Campaign loading presentation</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev141-m13-trial-1/window-050.png`
+
+### A3.5-dev143 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev143-065.png" width="220" alt="Vita3K: Loading screen"><br>Vita3K: Loading screen</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev143-m13-transition-trial-1/window-051.png`
+
+### A3.5-dev144 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev144-068.png" width="220" alt="Vita3K: Startup logo"><br>Vita3K: Startup logo</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev144-score-transition-trial-1/window-030.png`
+
+### A3.5-dev147 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev147-077.png" width="220" alt="Vita3K: The Scorpion Hunters loading screen"><br>Vita3K: The Scorpion Hunters loading screen</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/campaign-dev147-preload-m13-1/window-030.png`
+
+### A3.5-dev149 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev149-082.png" width="220" alt="Vita3K: The Scorpion Hunters loading screen"><br>Vita3K: The Scorpion Hunters loading screen</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/evidence/campaign-dev149-combatthink-m13-1/window-030.png`
+
+### A3.5-dev195 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="media/vita3k/dev195-purchase-terminal-diagnostic.png" width="220" alt="Vita3K: Purchase terminal diagnostic; connection interrupted, not successful-join evidence"><br>Vita3K: Purchase terminal diagnostic; connection interrupted, not successful-join evidence</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `dev195-tt-native-01`
+
+### A3.5-dev197 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev197-155.png" width="220" alt="Vita3K: Rescue and Retribution loading screen"><br>Vita3K: Rescue and Retribution loading screen</td>
+<td width="20%"><img src="history/physical-captures/dev197-008.png" width="220" alt="Physical PSTV: Exit confirmation"><br>Physical PSTV: Exit confirmation</td>
+<td width="20%"><img src="history/physical-captures/dev197-009.png" width="220" alt="Physical PSTV: The Scorpion Hunters loading screen"><br>Physical PSTV: The Scorpion Hunters loading screen</td>
+<td width="20%"><img src="media/pstv/dev197-m13-loading.png" width="220" alt="Physical PSTV: M13 loading screen; PC keyboard prompts remain visible"><br>Physical PSTV: M13 loading screen; PC keyboard prompts remain visible</td>
+<td width="20%"><img src="media/pstv/dev197-exit-confirmation.png" width="220" alt="Physical PSTV: Exit confirmation; this frame alone does not demonstrate completed exit"><br>Physical PSTV: Exit confirmation; this frame alone does not demonstrate completed exit</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev197-m01-guest-debug-20260926/window-411.png`
+- `physical_pstv/pre-clean-exit-f15-t99517028/frame.bmp`
+- `physical_pstv/original-loading-screen-level-ready-t179559507/frame.bmp`
+- `a35-dev197-pstv-20260927 / original-loading-screen-level-ready-t56845132`
+- `a35-dev197-pstv-20260927 / pre-clean-exit-f15-t99517028`
+
+### A3.5-dev200 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev200-161.png" width="220" alt="Vita3K: Multiplayer purchase dialog"><br>Vita3K: Multiplayer purchase dialog</td>
+<td width="20%"><img src="media/vita3k/dev200-rencorner-purchase-dialog.png" width="220" alt="Vita3K: RenCorner purchase dialog"><br>Vita3K: RenCorner purchase dialog</td>
+<td width="20%"><img src="media/vita3k/dev200-rencorner-purchase-response.png" width="220" alt="Vita3K: RenCorner purchase response"><br>Vita3K: RenCorner purchase response</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev200-tt-purchase-01/window-071.png`
+- `Previously published Dev200 capture`
+
+### A3.5-dev202 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="media/vita3k/dev202-main-menu.png" width="220" alt="Vita3K: Main menu"><br>Vita3K: Main menu</td>
+<td width="20%"><img src="media/vita3k/dev202-practice-loading.png" width="220" alt="Vita3K: Multiplayer Practice loading screen"><br>Vita3K: Multiplayer Practice loading screen</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `Previously published Dev202 capture`
+
+### A3.5-dev204 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="media/vita3k/dev204-livearea.png" width="220" alt="Vita3K: LiveArea presentation, not gameplay"><br>Vita3K: LiveArea presentation, not gameplay</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `Previously published Dev204 capture`
+
+### A3.5-dev205 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev205-169.png" width="220" alt="Vita3K: Main menu"><br>Vita3K: Main menu</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev205-campaign-first-menu-01/visible-20260927T155010180Z.png`
+- `dev205-campaign-first-menu-01`
+
+### A3.5-dev206 - Presentation Capture Evidence
+
+Historical captures; platform and visible state are labeled below.
+
+<table>
+<tr>
+<td width="20%"><img src="history/build-captures/dev206-172.png" width="220" alt="Vita3K: Single-player menu"><br>Vita3K: Single-player menu</td>
+<td width="20%"><img src="media/vita3k/dev206-single-player-menu.png" width="220" alt="Vita3K: Single-player menu, not save/load verification"><br>Vita3K: Single-player menu, not save/load verification</td>
+</tr>
+</table>
+
+Source evidence:
+
+- `managed/logs/dev206-save05-reload-01/window-090.png`
+- `dev206-save05-reload-01`
+
 
 ## Builds With No Local Or Vita-Pulled Screenshot File
 
-The original early-build audit did not find matching PNG/BMP/JPG screenshot files for these build groups. The all-build index above supersedes the old audit wherever new evidence was recovered:
+The original early-build audit did not find matching PNG/BMP/JPG screenshot files for these build groups:
 
 `A3.5-dev1`, `A3.5-dev14`, `A3.5-dev22`, `A3.5-dev23`, `A3.5-dev34`, `A3.5-dev36`, `A3.5-dev37`, `A3.5-dev38`, `A3.5-dev40`, `A3.5-dev41`.
 
@@ -1136,7 +1197,7 @@ Those builds should be added later only if matching diagnostic captures are retu
 
 ## Complete Gallery Manifest
 
-This original-gallery manifest contains 182 PNG files under `docs/history/screenshots/`. Newer additions have separate [emulator](history/build-captures/catalog.json) and [physical](history/physical-captures/catalog.json) manifests. The [coverage summary](history/screenshot-coverage.json) records every build identified by the expanded audit. Not every diagnostic file is shown as a thumbnail.
+All retained gallery images are listed below, including diagnostic-only captures. Additional provenance is available in the [emulator catalog](history/build-captures/catalog.json), [physical catalog](history/physical-captures/catalog.json), and [coverage summary](history/screenshot-coverage.json).
 
 | Gallery file | Build | Dimensions | SHA-256 |
 | --- | --- | --- | --- |
@@ -1322,11 +1383,107 @@ This original-gallery manifest contains 182 PNG files under `docs/history/screen
 | [`a35-dev87-vita-recorder-m00-interior-npc-t0160s.png`](history/screenshots/a35-dev87-vita-recorder-m00-interior-npc-t0160s.png) | A3.5-dev87 | 640x368 | `d26658d3db81481113ab1a683dfb5d49f28806a51d5d3f1358a85a999c54dfc0` |
 | [`a35-dev87-vita-recorder-m00-interior-objective-t0190s.png`](history/screenshots/a35-dev87-vita-recorder-m00-interior-objective-t0190s.png) | A3.5-dev87 | 640x368 | `34b4f9567fcfddcd05e37adc0f6b3ae14afcff37945c2442fdf97ac91014d022` |
 | [`a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png`](history/screenshots/a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png) | A3.5-dev87 | 640x368 | `19090b2e78913559f9cb6c666763ac9c4e7356680eb784aba7cde5714835f418` |
-
-## Maintaining This Gallery
-
-1. Inventory capture roots with `tools/inventory_screenshot_sources.py --root LABEL=PATH --output LOCAL_JSON`. The full path inventory stays local; `--summary-from LOCAL_JSON --output PUBLIC_JSON` exports path-free build coverage.
-2. For authorized read-only device collection, use `tools/collect_screenshot_archive.py --host DEVICE_IP --output LOCAL_DIRECTORY`. It retrieves only title-owned `state.json` and `frame.bmp` files, never saves or retail data.
-3. Prepare local review sheets with `tools/prepare_screenshot_review.py`, inspect the actual images, and explicitly select captions and evidence classes before using `tools/publish_screenshot_selection.py`. Review helpers require Pillow. Keep reviewer scratch files and unreviewed captures local.
-4. Regenerate this page with `python3 tools/generate_historical_screenshot_timeline.py`. The earlier inventory reports are historical records and are not overwritten by this command.
-5. Run `python3 -m unittest tools.test_historical_screenshot_timeline` and `python3 tools/verify_public_docs.py` before publication. Coverage, image hashes, dimensions, links, and reproducible generation must pass.
+| [`dev104-000.png`](history/build-captures/dev104-000.png) | A3.5-dev104 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev105-001.png`](history/build-captures/dev105-001.png) | A3.5-dev105 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev106-002.png`](history/build-captures/dev106-002.png) | A3.5-dev106 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev109-003.png`](history/build-captures/dev109-003.png) | A3.5-dev109 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev111-004.png`](history/build-captures/dev111-004.png) | A3.5-dev111 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev113-005.png`](history/build-captures/dev113-005.png) | A3.5-dev113 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev114-006.png`](history/build-captures/dev114-006.png) | A3.5-dev114 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev115-007.png`](history/build-captures/dev115-007.png) | A3.5-dev115 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev116-008.png`](history/build-captures/dev116-008.png) | A3.5-dev116 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev117-009.png`](history/build-captures/dev117-009.png) | A3.5-dev117 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev118-010.png`](history/build-captures/dev118-010.png) | A3.5-dev118 | 976x583 | `17c95f1a29485a55003052c5285c93ade6962f40f994ba40246c78dd344f3665` |
+| [`dev119-013.png`](history/build-captures/dev119-013.png) | A3.5-dev119 | 976x583 | `491169675c90c343e7dc2fd38b938b6b0189b7d43a9e46a6b05fab7ef5d72758` |
+| [`dev120-015.png`](history/build-captures/dev120-015.png) | A3.5-dev120 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev121-017.png`](history/build-captures/dev121-017.png) | A3.5-dev121 | 976x583 | `3bf07b4b19fbdb4f6c5f1027b66c7f32af0d354a52414d8aa8ea7db5c9d0f541` |
+| [`dev122-018.png`](history/build-captures/dev122-018.png) | A3.5-dev122 | 976x583 | `b36093ec02502fec70213200cada11e880b8811126419f051ef6bb4110cd4f1e` |
+| [`dev123-020.png`](history/build-captures/dev123-020.png) | A3.5-dev123 | 976x583 | `35e779fff861da7ca97668d5bdad7daf234f7e5c8bdadd7227c0bdcb7802a00d` |
+| [`dev127-022.png`](history/build-captures/dev127-022.png) | A3.5-dev127 | 976x583 | `bfc1a850c97632f6b2bbd01473df25183090ed01b39c588e9f6a937b9f7d9b8a` |
+| [`dev128-026.png`](history/build-captures/dev128-026.png) | A3.5-dev128 | 976x583 | `d7883d70ea092996a5aaf818bf0cb3172e47bc732db156b49a698fcfea0bb696` |
+| [`dev129-029.png`](history/build-captures/dev129-029.png) | A3.5-dev129 | 976x583 | `75d0e0d97372acc8221e4f2487910e94a524701778ef0b60feb1e7d0700653b7` |
+| [`dev130-032.png`](history/build-captures/dev130-032.png) | A3.5-dev130 | 976x583 | `36337fcf581681e26a941ff1a28ff6bf25156ef42c0ee21bf5f6f3c6ca1d98c5` |
+| [`dev131-035.png`](history/build-captures/dev131-035.png) | A3.5-dev131 | 976x583 | `4d3b34d4056e86a5f4e3abb70b7184d6c80a38d522742a1b25247de162135047` |
+| [`dev132-038.png`](history/build-captures/dev132-038.png) | A3.5-dev132 | 976x583 | `9960ac80b5ebf4b0c4ff914d162aa93a1fce8c2123109dc130994251ee25c2f0` |
+| [`dev133-040.png`](history/build-captures/dev133-040.png) | A3.5-dev133 | 976x583 | `783f8f9eca3e7754cc04a2010b35b4610f4c7176c3b8bdebf0a49a86c32466c2` |
+| [`dev134-044.png`](history/build-captures/dev134-044.png) | A3.5-dev134 | 976x583 | `4d442dadf5a30cc59b799f0a82edc58e44cfa3dbab413e507b37bf8f8c8fedc3` |
+| [`dev135-046.png`](history/build-captures/dev135-046.png) | A3.5-dev135 | 976x583 | `a4d47ccc8957a4b25dca03a28166f3e8c429746b3aaa84c333136707558d0a3d` |
+| [`dev137-049.png`](history/build-captures/dev137-049.png) | A3.5-dev137 | 976x583 | `e7650a9572acb6687cdae2faf4c42036e18bbb8ae6b86c19411fdc23f922ecff` |
+| [`dev138-053.png`](history/build-captures/dev138-053.png) | A3.5-dev138 | 976x583 | `2514a4e1ed910df9f8f717727ba1dba88e2eedf90bef7c0c406795f7b9348c20` |
+| [`dev139-055.png`](history/build-captures/dev139-055.png) | A3.5-dev139 | 976x583 | `2f4791f06899ce16315730aba4db8abe951846632d9d7d02c95856afaf167091` |
+| [`dev140-059.png`](history/build-captures/dev140-059.png) | A3.5-dev140 | 976x583 | `b19def68e839182dd77a4df25e3b2962f5212cd3a9d03b9568df628460b001fc` |
+| [`dev141-061.png`](history/build-captures/dev141-061.png) | A3.5-dev141 | 976x583 | `fab5cd46e1a28eee20a5fcd411d58146e279d46ab0be78bb6dfa845ba44cbcf2` |
+| [`dev143-065.png`](history/build-captures/dev143-065.png) | A3.5-dev143 | 976x583 | `7b0417d3de9153bda23bf5b04456ccd78ba090295ba92f0659fc39a1ba96e3ca` |
+| [`dev144-068.png`](history/build-captures/dev144-068.png) | A3.5-dev144 | 976x583 | `72c06ed483a0417a3c0477352d524639c71f51783d25a8372c41ff0d2f07eada` |
+| [`dev145-071.png`](history/build-captures/dev145-071.png) | A3.5-dev145 | 976x583 | `3c402f3c79adb665fa6068e5fd7f0970d585f8e0ecf6bd778709ac1a3e0faa4c` |
+| [`dev146-074.png`](history/build-captures/dev146-074.png) | A3.5-dev146 | 976x583 | `d9877a78a1654227783b4b45cf98d80bdce31ff98f3bd98831ad156f2327d2a7` |
+| [`dev147-077.png`](history/build-captures/dev147-077.png) | A3.5-dev147 | 976x583 | `06ad531b311b874371217824bff6d82944f6af7306240f8816d3ef897851b86e` |
+| [`dev148-080.png`](history/build-captures/dev148-080.png) | A3.5-dev148 | 976x583 | `b6e8edea61f096cfbd8a833c14ea1240ddccefef1f80431114ec2b7d959742f0` |
+| [`dev149-082.png`](history/build-captures/dev149-082.png) | A3.5-dev149 | 976x583 | `796cb42eb9f837257d5d0337f86181afcc0ad818bcd5bca5233c473a79f7b17a` |
+| [`dev150-085.png`](history/build-captures/dev150-085.png) | A3.5-dev150 | 976x583 | `72fdc6fc452c8297c232d239091ca4d21ea14c58d491af58e0fe83e28e7f8828` |
+| [`dev151-089.png`](history/build-captures/dev151-089.png) | A3.5-dev151 | 976x583 | `1be8d51b1ce9e2c88188645a68815abd06234c985744a01e8bbc7d940bc253b5` |
+| [`dev152-092.png`](history/build-captures/dev152-092.png) | A3.5-dev152 | 976x583 | `f5bead5a1028c491a9057e0dd2eb2103b4e2eecfd066390e7a3c78a5751e8a1c` |
+| [`dev153-095.png`](history/build-captures/dev153-095.png) | A3.5-dev153 | 976x583 | `568c97ec89cf0d769d94299dadc95752f31c8eb1cb1626e0ac76c681ef812643` |
+| [`dev154-098.png`](history/build-captures/dev154-098.png) | A3.5-dev154 | 976x583 | `9167475490c1f8ad6d06b54544ae6c6cfdd92a14d961fc256ac5472a2df0bf7b` |
+| [`dev155-101.png`](history/build-captures/dev155-101.png) | A3.5-dev155 | 976x583 | `228e6087e06b45a9a7e7ae9191aced1ff51b10d086b4c126082f4ea5f7b09b58` |
+| [`dev156-103.png`](history/build-captures/dev156-103.png) | A3.5-dev156 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev157-104.png`](history/build-captures/dev157-104.png) | A3.5-dev157 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev158-105.png`](history/build-captures/dev158-105.png) | A3.5-dev158 | 976x583 | `228c337d82c3b08be06b1c837c3b3222bcd143d1529dd1c9db2525642d92a1af` |
+| [`dev159-108.png`](history/build-captures/dev159-108.png) | A3.5-dev159 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev161-110.png`](history/build-captures/dev161-110.png) | A3.5-dev161 | 976x583 | `2642cbc9050dc8988bf374ef2f4e65115391290b35c4f8a18ece092c73761a6a` |
+| [`dev162-112.png`](history/build-captures/dev162-112.png) | A3.5-dev162 | 976x583 | `604a7ebe6dc08784777543e7f96d8f33b873ace3529aa914cfd26e31cffb3a69` |
+| [`dev163-115.png`](history/build-captures/dev163-115.png) | A3.5-dev163 | 976x583 | `d57c6a1934b09552699eb3e33ca2d1e9fe61d4c7c631bc0562d0e808584937f4` |
+| [`dev164-118.png`](history/build-captures/dev164-118.png) | A3.5-dev164 | 976x583 | `0c72e772b9c7a4a922c78d0b488d4768cd2ffaa5637dd81fcae6d3b2ca4496ca` |
+| [`dev168-120.png`](history/build-captures/dev168-120.png) | A3.5-dev168 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev169-122.png`](history/build-captures/dev169-122.png) | A3.5-dev169 | 976x583 | `7ca6f69fff13532e24ee66d1dc86e691276c984e5feef07908ea2f9634b7f63e` |
+| [`dev170-125.png`](history/build-captures/dev170-125.png) | A3.5-dev170 | 976x583 | `ac61e282d31ef0f1c735eb8727083ad7f206dd053dccffce9fb664f7d1d98648` |
+| [`dev171-128.png`](history/build-captures/dev171-128.png) | A3.5-dev171 | 976x583 | `52ab4303a8d63e88b44e6eacee7ff500d582eae3efc44541c766a193feecb3d5` |
+| [`dev172-130.png`](history/build-captures/dev172-130.png) | A3.5-dev172 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev173-132.png`](history/build-captures/dev173-132.png) | A3.5-dev173 | 976x583 | `8ec18864e72dd0453247ac804553197024ceed369b35fc578c121da843c46f86` |
+| [`dev174-135.png`](history/build-captures/dev174-135.png) | A3.5-dev174 | 976x583 | `b58f0ca135fa7a126484adebc87ce7a0fb471771a4fc12327a7c9c2c7fa0d690` |
+| [`dev175-137.png`](history/build-captures/dev175-137.png) | A3.5-dev175 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev177-138.png`](history/build-captures/dev177-138.png) | A3.5-dev177 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev179-139.png`](history/build-captures/dev179-139.png) | A3.5-dev179 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev181-140.png`](history/build-captures/dev181-140.png) | A3.5-dev181 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev182-141.png`](history/build-captures/dev182-141.png) | A3.5-dev182 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev183-142.png`](history/build-captures/dev183-142.png) | A3.5-dev183 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev184-143.png`](history/build-captures/dev184-143.png) | A3.5-dev184 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev185-144.png`](history/build-captures/dev185-144.png) | A3.5-dev185 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev186-145.png`](history/build-captures/dev186-145.png) | A3.5-dev186 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev189-146.png`](history/build-captures/dev189-146.png) | A3.5-dev189 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev190-147.png`](history/build-captures/dev190-147.png) | A3.5-dev190 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev192-148.png`](history/build-captures/dev192-148.png) | A3.5-dev192 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev194-149.png`](history/build-captures/dev194-149.png) | A3.5-dev194 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev195-151.png`](history/build-captures/dev195-151.png) | A3.5-dev195 | 976x583 | `8520111c5ee96897631fee0540888719faa983fbc1a20115fe729b57e124ca7e` |
+| [`dev196-153.png`](history/build-captures/dev196-153.png) | A3.5-dev196 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev197-155.png`](history/build-captures/dev197-155.png) | A3.5-dev197 | 976x583 | `8dcb4faeb493763b1c68668b68cd4b2ce1fa8de82f9747f330d6ed8308faf468` |
+| [`dev198-158.png`](history/build-captures/dev198-158.png) | A3.5-dev198 | 976x583 | `690721e97a8c08ee00c10c75b58213b3c2e0fac3f60bc7f1a1d8d3d762169939` |
+| [`dev199-160.png`](history/build-captures/dev199-160.png) | A3.5-dev199 | 960x544 | `8c46760e660bfa746f35bfd09778b6aec01f364352eea504e674fb5ed5d81e86` |
+| [`dev200-161.png`](history/build-captures/dev200-161.png) | A3.5-dev200 | 976x583 | `2511e2c3c2b2f2c2d870eec7530f7ba42e1045785a3580712234bf6f541021cb` |
+| [`dev201-164.png`](history/build-captures/dev201-164.png) | A3.5-dev201 | 976x583 | `7e87328b5da92beba6b36934a1acc4d579390b98ec7c6aec4c6fe755a40107f6` |
+| [`dev202-167.png`](history/build-captures/dev202-167.png) | A3.5-dev202 | 976x583 | `814058a5cc07f3416a45a40d29409f1087fce0925a2d319c75788584b96e3516` |
+| [`dev205-169.png`](history/build-captures/dev205-169.png) | A3.5-dev205 | 976x583 | `f0c04cf4345eb4b68010867e7ad4e828ca49ba14f9b4d04f81df922331d8b6e8` |
+| [`dev206-172.png`](history/build-captures/dev206-172.png) | A3.5-dev206 | 976x583 | `731a04f49c5bfd32db0404a8cb91656909ba3a8b54c1c1e9b11c4fa4cceae2a8` |
+| [`dev117-001.png`](history/build-captures/dev117-001.png) | A3.5-dev117 | 976x583 | `d6e23e59aebabc82c31bb7138e4a0723d9615ac1df2ff63df276429328aec4c7` |
+| [`dev120-003.png`](history/build-captures/dev120-003.png) | A3.5-dev120 | 976x583 | `c1ac71f265b9e46daf5052575de463fbaf3091dac4d4172062146d9071a794d6` |
+| [`dev84-000.png`](history/physical-captures/dev84-000.png) | A3.5-dev84 | 960x544 | `1dc41b900e65adee06298fae49aebb2c422862d3f96b2c26676d3a87d89efcfd` |
+| [`dev87-002.png`](history/physical-captures/dev87-002.png) | A3.5-dev87 | 960x544 | `ec3770678bb404531c7d1762880f4188b3c0216bf6be3deea9a16ad7365bac90` |
+| [`dev124-004.png`](history/physical-captures/dev124-004.png) | A3.5-dev124 | 960x544 | `2db5f90e4aca5c3c70cfbf6eb583e00b43958b81b87edab3c1cb61eaead6a2a4` |
+| [`dev126-005.png`](history/physical-captures/dev126-005.png) | A3.5-dev126 | 960x544 | `2db5f90e4aca5c3c70cfbf6eb583e00b43958b81b87edab3c1cb61eaead6a2a4` |
+| [`dev134-006.png`](history/physical-captures/dev134-006.png) | A3.5-dev134 | 960x544 | `09988db4f03241252fccf1a1bda29ca141114b0002ba900c1ad01437524d4f28` |
+| [`dev134-007.png`](history/physical-captures/dev134-007.png) | A3.5-dev134 | 960x544 | `2c22ce3fff6dae72377bf71d613eb4b0bf61033cbc1b5d5fe0bddf1820069dd4` |
+| [`dev197-008.png`](history/physical-captures/dev197-008.png) | A3.5-dev197 | 960x544 | `e1c0c21d0d8c8218e14c7caa263bdb380b9ae96fd7b52721282c6291a6f9c955` |
+| [`dev197-009.png`](history/physical-captures/dev197-009.png) | A3.5-dev197 | 960x544 | `723e80b84bbd98984ccae9a440ea0fa3c900a85a906367e87159c6dc72215898` |
+| [`dev133-eva-objectives.png`](media/vita3k/dev133-eva-objectives.png) | A3.5-dev133 | 558x340 | `eddc4f7f02bc7325be8ed3d6b6f0dda730544845c9bd5ea940eaef6d48d9fd88` |
+| [`dev134-eva-data.png`](media/vita3k/dev134-eva-data.png) | A3.5-dev134 | 976x583 | `40d828c1894c09e76453ff2f2fc3b396e5a341908527ade8ed43ae8095f6d2b0` |
+| [`dev195-purchase-terminal-diagnostic.png`](media/vita3k/dev195-purchase-terminal-diagnostic.png) | A3.5-dev195 | 976x583 | `465569c88bb269edeac2b11fae73a9c35be019595147ffc0da1ca3080f09f7e7` |
+| [`dev197-m13-loading.png`](media/pstv/dev197-m13-loading.png) | A3.5-dev197 | 960x544 | `3f39bd45d6b4ff00fb5e5f231850abd1a89b6d2c16e9d294a3d4185bc5bff1c5` |
+| [`dev197-exit-confirmation.png`](media/pstv/dev197-exit-confirmation.png) | A3.5-dev197 | 960x544 | `c3e22459a8825489597a5d3575ab52d839f8c9983af19f1317e4d6202ed57474` |
+| [`dev200-rencorner-purchase-dialog.png`](media/vita3k/dev200-rencorner-purchase-dialog.png) | A3.5-dev200 | 976x583 | `dfa5f287894f915629fb1777eb0d1257480fbca5287ceba59d3d2435906097db` |
+| [`dev200-rencorner-purchase-response.png`](media/vita3k/dev200-rencorner-purchase-response.png) | A3.5-dev200 | 976x583 | `cdf4c2ae8617984f99de12f34bd984b9246938eb36f666185836da4cea2b8424` |
+| [`dev202-main-menu.png`](media/vita3k/dev202-main-menu.png) | A3.5-dev202 | 976x583 | `58823a89f870d01565b3ba8a54ebde1ef7d50c073a7f881858802c9e8b4a8b6d` |
+| [`dev202-practice-loading.png`](media/vita3k/dev202-practice-loading.png) | A3.5-dev202 | 976x583 | `61f2f098cc755545e307e87b16d68878e2af096a2b7e9a5cc37f4b1e51f63b25` |
+| [`dev202-practice-gameplay.png`](media/vita3k/dev202-practice-gameplay.png) | A3.5-dev202 | 976x583 | `041a76808d9fe611b7176d660a718f3541e4212b84f77791537128eb0e04e9f2` |
+| [`dev204-livearea.png`](media/vita3k/dev204-livearea.png) | A3.5-dev204 | 960x544 | `001e27fea0d44693ecee0c2b0139b4b176e8a36daabb02972a1c1c8f3838c10e` |
+| [`dev205-main-menu.png`](media/vita3k/dev205-main-menu.png) | A3.5-dev205 | 976x583 | `f0c04cf4345eb4b68010867e7ad4e828ca49ba14f9b4d04f81df922331d8b6e8` |
+| [`dev206-single-player-menu.png`](media/vita3k/dev206-single-player-menu.png) | A3.5-dev206 | 976x583 | `07442500de16c078dc2759239527372bf98e234e876e2a10899e0bdf41ff74c4` |

@@ -341,22 +341,28 @@ def additional_captures() -> list[dict]:
     return entries
 
 
-def chronological_sections(gameplay: bool = True) -> list[str]:
+def chronological_sections() -> list[str]:
     sections = {}
-    for section in GAMEPLAY_SECTIONS if gameplay else []:
+    for section in GAMEPLAY_SECTIONS:
         match = re.search(r"dev(\d+)", section["title"])
         build = int(match.group(1)) if match else 0
         sections[build] = {"title": section["title"], "summary": section["summary"] + " I did not pad this section to 15 with loading screens or diagnostic-only frames.",
                            "images": [(rel_img(name), caption) for name, caption in section["images"]],
                            "sources": list(section["sources"])}
+    for label, note, filename in DIAGNOSTIC_ONLY:
+        build = int(label.split("dev")[1])
+        images = [(filename, "Physical Vita: diagnostic capture")]
+        if build == 82:
+            images = DEV82_RETURNED_DIAGNOSTICS
+            note = "All four raw capture records returned for Dev82 are retained here. They contain three distinct rendered images: two inverted loading presentations, a first-interactive record byte-identical to the full-frame loading image, and a black buffer with partial HUD. These must not be presented as gameplay proof."
+        elif build == 86:
+            images = DEV86_RETURNED_DIAGNOSTICS
+            note = "The exact returned physical capture shows loading artwork, but the original WWUI text regions are blank. It is not a main-menu or gameplay acceptance image."
+        sections[build] = {"title": f"{label} - Retained Capture Evidence", "summary": note,
+                           "images": [(rel_img(name), caption) for name, caption in images],
+                           "sources": []}
     seen = set()
     for entry in additional_captures():
-        if entry["kind"] == "diagnostic":
-            continue
-        world_capture = entry["kind"] == "world" or (
-            entry["kind"] == "cinematic" and entry["caption"].startswith(("Campaign", "Havoc")))
-        if world_capture != gameplay:
-            continue
         key = (entry["build"], entry["platform"], entry["sha256"])
         if key in seen:
             if entry["source"] not in sections[entry["build"]]["sources"]:
@@ -364,7 +370,7 @@ def chronological_sections(gameplay: bool = True) -> list[str]:
             continue
         seen.add(key)
         section = sections.setdefault(entry["build"], {
-            "title": f"A3.5-dev{entry['build']} - {'World' if gameplay else 'Presentation'} Capture Evidence",
+            "title": f"A3.5-dev{entry['build']} - Retained Capture Evidence",
             "summary": "",
             "images": [], "sources": [],
         })
@@ -376,8 +382,9 @@ def chronological_sections(gameplay: bool = True) -> list[str]:
         lines.extend([f"### {section['title']}", ""])
         if section["summary"]:
             lines.extend([section["summary"], ""])
-        lines.extend([image_table(section["images"], columns=5, relative_paths=True), "",
-                      "Source evidence:", "", source_list(section["sources"]), ""])
+        lines.extend([image_table(section["images"], columns=5, relative_paths=True), ""])
+        if section["sources"]:
+            lines.extend(["Source evidence:", "", source_list(section["sources"]), ""])
     return lines
 
 
@@ -495,8 +502,8 @@ def write_timeline() -> None:
         "",
         "- Source evidence came from `build/device-evidence/` in the bash workspace, read-only VitaShell FTP pulls recorded under `build/device-evidence/vitashell-gallery-pull-*`, targeted Vita3K AppData checks under `<vita3k-data-root>/ux0/data/renegade/user/`, and older A3.1 developer captures preserved under `<historical-evidence-root>/Vita Logs/`.",
         "- The gallery stores PNGs under `docs/history/` and `docs/media/` so GitHub can render them directly. Physical PS Vita, PSTV, and Vita3K captures are labeled separately.",
-        "- Each build may include up to 15 displayed screenshots, but gameplay/world captures are the only images shown in the gameplay timeline. Builds with fewer than 15 gameplay captures list the useful reviewed samples; menus and loading screens remain in the diagnostic section.",
-        "- One historical loading-screen frame is displayed as a regression reference. Other loading, black-screen, logo, and magenta diagnostic captures remain available through the complete manifest and inventory instead of being used as gameplay filler, except the four exact returned Dev82 diagnostic frames shown separately below.",
+        "- Each build may include up to 15 displayed screenshots. World views, cinematics, menus, loading screens, and diagnostics are grouped together under that build in ascending build order.",
+        "- Captions identify the platform and visible state. Black buffers are capture diagnostics, not proof that the game displayed a black screen. One historical loading-screen frame is displayed as a regression reference within Dev78's group.",
         "- Vita-pulled screenshots are mapped through each build's own `a35-devXX-runtime.log` capture paths before being included.",
         "- These images are historical evidence. They do not make dev82 physically accepted; dev82 still requires a returned Vita test with matching logs, screenshots/captures, and any crash dumps.",
         "",
@@ -521,66 +528,11 @@ def write_timeline() -> None:
         "",
         image_table([(name, f"{build}: {caption}") for build, name, caption in QUICK_GAMEPLAY], columns=5),
         "",
-        "## Gameplay Timeline",
+        "## Screenshot Timeline",
         "",
         *chronological_sections(),
     ]
 
-    doc.extend(
-        [
-            "## One Loading-Screen Regression Reference",
-            "",
-            "The gallery keeps one displayed loading-screen reference because the late dev78/dev79 loading regression is part of the story dev82 targets. The rest of the displayed sample images above are gameplay/world captures.",
-            "",
-            image_table([("a35-dev78-loading-physical.png", "A3.5-dev78 physical loading regression frame")], columns=1),
-            "",
-            "## A3.5-dev82 — Returned Physical Diagnostic Evidence",
-            "",
-            "All four raw capture records returned for Dev82 are displayed here, rather than being reduced to a manifest link. There are three distinct rendered images: the two original-loading frames show different vertically inverted loading presentations (`loadscreen_vflip=1`); the `t64590857` first-interactive record is byte-identical to the full-frame loading image; and the `t88041059` first-interactive record is a black framebuffer with only a partial weapon/ammo HUD. The user subsequently reported reaching a live world after additional input, but these first-frame captures do not show that later state and must not be presented as gameplay proof.",
-            "",
-            image_table(DEV82_RETURNED_DIAGNOSTICS, columns=2),
-            "",
-            "Source evidence:",
-            "",
-            source_list(
-                [
-                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/original-loading-screen-t54494725/",
-                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/original-loading-screen-t67280479/",
-                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/first-interactive-frame-t64590857/",
-                    "build/device-evidence/a35-dev82-user-return-20260830-205700/captures/first-interactive-frame-t88041059/",
-                    "build/device-evidence/a35-dev82-user-return-20260830-205700/a35-dev82-runtime.log",
-                ]
-            ),
-            "",
-            "## A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence",
-            "",
-            "The exact returned physical capture is shown here as a diagnostic, not a pass. Its phase is `original-loading-screen` / `level-ready`: the original loading artwork and colored panels render, while the original WWUI text regions are blank. The user separately reported a textless main menu; no main-menu image was returned, so this image is not presented as one.",
-            "",
-            image_table(DEV86_RETURNED_DIAGNOSTICS, columns=1),
-            "",
-            "Source evidence:",
-            "",
-            source_list(
-                [
-                    "build/device-evidence/a35-dev86-user-return-20260831T011721Z/captures/original-loading-screen-level-ready-t119137636/frame-annotated.bmp",
-                    "build/device-evidence/a35-dev86-user-return-20260831T011721Z/a35-dev86-runtime-user-report.log",
-                ]
-            ),
-            "",
-            "## Diagnostic-Only Screenshot Inventory",
-            "",
-            "These builds have local or Vita-pulled screenshots, but the available images are loading, black/logo, magenta diagnostic, or otherwise not useful as gameplay samples. They stay in the GitHub manifest below, and the underlying logs remain inventoried in `reports/HISTORICAL_EVIDENCE_INVENTORY.md`.",
-            "",
-            "| Build | Displayed gameplay count | Screenshot evidence status | Representative manifest file |",
-            "| --- | ---: | --- | --- |",
-        ]
-    )
-    for build, note, filename in DIAGNOSTIC_ONLY:
-        doc.append(f"| {build} | 0 | {note} | [`{filename}`](history/screenshots/{filename}) |")
-    for entry in recovered_catalog():
-        if entry["kind"] == "diagnostic":
-            doc.append(f"| A3.5-dev{entry['build']} | 0 in this capture | {entry['platform']}: {entry['caption']} | [{Path(entry['link']).name}]({entry['link']}) |")
-    doc.extend(["", *chronological_sections(gameplay=False)])
 
     doc.extend(
         [

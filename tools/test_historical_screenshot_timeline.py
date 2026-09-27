@@ -73,7 +73,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         self.assertIn("not pad this section to 15", doc)
         self.assertIn("NPC detail crop", doc)
         lead = doc.split("## Quick Gameplay View", 1)[1].split(
-            "## Gameplay Timeline", 1
+            "## Screenshot Timeline", 1
         )[0]
         image_refs = re.findall(r"history/screenshots/[^\"<\s]+\.png", lead)
 
@@ -107,8 +107,8 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
 
     def test_chronological_sections_use_original_thumbnail_layout(self):
         doc = TIMELINE.read_text(encoding="utf-8")
-        timeline = doc.split("## Gameplay Timeline", 1)[1].split(
-            "## One Loading-Screen Regression Reference", 1
+        timeline = doc.split("## Screenshot Timeline", 1)[1].split(
+            "## Builds With No Local Or Vita-Pulled Screenshot File", 1
         )[0]
         sections = re.split(r"\n### ", timeline)
 
@@ -130,24 +130,26 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         self.assertEqual(re.findall(r"^## (.+)$", doc, re.MULTILINE), [
             "Current Capture Completeness",
             "Quick Gameplay View",
-            "Gameplay Timeline",
-            "One Loading-Screen Regression Reference",
-            "A3.5-dev82 — Returned Physical Diagnostic Evidence",
-            "A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence",
-            "Diagnostic-Only Screenshot Inventory",
+            "Screenshot Timeline",
             "Builds With No Local Or Vita-Pulled Screenshot File",
             "Complete Gallery Manifest",
         ])
+        coverage = json.loads((ROOT / "docs/history/screenshot-coverage.json").read_text())
+        self.assertEqual(set(builds), {int(n) for n in coverage["candidate_file_counts_by_build"]})
 
-        for diagnostic_build in (
-            "A3.5-dev6",
-            "A3.5-dev12",
-            "A3.5-dev20",
-            "A3.5-dev42",
-            "A3.5-dev78",
-            "A3.5-dev79",
-        ):
-            self.assertNotRegex(timeline, rf"### {re.escape(diagnostic_build)}\b")
+    def test_each_build_keeps_all_capture_types_together(self):
+        from tools.generate_historical_screenshot_timeline import additional_captures
+
+        doc = TIMELINE.read_text(encoding="utf-8")
+        timeline = doc.split("## Screenshot Timeline", 1)[1].split("## Builds With No Local Or Vita-Pulled Screenshot File", 1)[0]
+        seen = set()
+        for entry in additional_captures():
+            key = (entry["build"], entry["platform"], entry["sha256"])
+            if key in seen:
+                continue
+            seen.add(key)
+            section = timeline.split(f"### A3.5-dev{entry['build']} -", 1)[1].split("\n### ", 1)[0]
+            self.assertIn(f'<img src="{entry["link"]}"', section)
 
     def test_recovered_builds_have_expected_gameplay_counts(self):
         doc = TIMELINE.read_text(encoding="utf-8")
@@ -162,8 +164,8 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
             "A3.5-dev19": 5,
             "A3.5-dev87": 6,
         }
-        gameplay_timeline = doc.split("## Gameplay Timeline", 1)[1].split(
-            "## One Loading-Screen Regression Reference", 1
+        gameplay_timeline = doc.split("## Screenshot Timeline", 1)[1].split(
+            "## Builds With No Local Or Vita-Pulled Screenshot File", 1
         )[0]
 
         for build, expected in expected_counts.items():
@@ -180,13 +182,10 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         self.assertIn("VitaShell FTP pull", doc)
         self.assertIn("These images are historical evidence", doc)
         self.assertIn("They do not make dev82 physically accepted", normalized)
-        self.assertIn("## Diagnostic-Only Screenshot Inventory", doc)
         self.assertIn("## Builds With No Local Or Vita-Pulled Screenshot File", doc)
         self.assertIn("## Complete Gallery Manifest", doc)
         self.assertIn("Do not fabricate images from logs", normalized)
-        loading_section = doc.split("## One Loading-Screen Regression Reference", 1)[1].split(
-            "## A3.5-dev82 — Returned Physical Diagnostic Evidence", 1
-        )[0]
+        loading_section = doc.split("### A3.5-dev78 -", 1)[1].split("\n### ", 1)[0]
         self.assertEqual(
             len(re.findall(r"<img src=\"history/screenshots/", loading_section)),
             1,
@@ -199,9 +198,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
 
     def test_dev82_returned_diagnostics_are_visibly_displayed(self):
         doc = TIMELINE.read_text(encoding="utf-8")
-        section = doc.split("## A3.5-dev82 — Returned Physical Diagnostic Evidence", 1)[1].split(
-            "## A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence", 1
-        )[0]
+        section = doc.split("### A3.5-dev82 -", 1)[1].split("\n### ", 1)[0]
         expected = (
             "a35-dev82-vita-original-loading-screen-t54494725.png",
             "a35-dev82-vita-original-loading-screen-t67280479.png",
@@ -228,9 +225,7 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
     def test_dev86_returned_frontend_diagnostic_is_visibly_displayed(self):
         timeline = TIMELINE.read_text(encoding="utf-8")
         filename = "a35-dev86-vita-original-loading-screen-level-ready-t119137636-annotated.png"
-        section = timeline.split(
-            "## A3.5-dev86 — Returned Physical Frontend Diagnostic Evidence", 1
-        )[1].split("## Diagnostic-Only Screenshot Inventory", 1)[0]
+        section = timeline.split("### A3.5-dev86 -", 1)[1].split("\n### ", 1)[0]
 
         self.assertIn("exact returned physical capture", section)
         self.assertIn("original WWUI text regions are blank", section)

@@ -7,6 +7,10 @@ EA's retail emblem or the Westwood Studios logo. This is an independent port,
 not an official EA or Westwood product. No retail image is required to build
 or distribute this artwork.
 
+The editable SVGs and generated application PNGs are project-authored work
+distributed under this repository's GPLv3 license. This does not grant rights
+to EA or Westwood names or marks; see the [license scope](../LICENSE-NOTICE.md).
+
 ## Source and generated assets
 
 | Asset | Purpose | Size |

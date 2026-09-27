@@ -19,3 +19,7 @@ packages, third-party libraries, trademarks, screenshots, or recordings.
 Those materials retain their own rights and applicable notices. No retail
 files are included in the source repository or VPK. See [NOTICE.md](NOTICE.md)
 and [CONTRIBUTING.md](CONTRIBUTING.md) for provenance and distribution context.
+
+The original R/V artwork sources in `assets/branding/` and their generated
+application images are project-authored and distributed under GPLv3. They do
+not copy or license EA or Westwood logos or trademarks.

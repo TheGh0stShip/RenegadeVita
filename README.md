@@ -6,7 +6,11 @@ Original project artwork in the Dev204 package. The
 [Vita3K LiveArea capture](docs/media/vita3k/dev204-livearea.png) shows it in
 the emulator; physical Vita appearance is still unverified.
 
-An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: Renegade*. The original EA/Westwood engine remains the owner of game logic, MIX/archive access, W3D/WW3D rendering ownership, Combat, Commando, mission scripts, HUD, and networking. This project replaces only the platform boundaries needed to run that original code on Vita.
+An evidence-led, native ARM PlayStation Vita source port of
+*Command & Conquer: Renegade*. The original EA/Westwood engine remains the
+owner of game logic, MIX/archive access, W3D/WW3D rendering, Combat,
+Commando, mission scripts, HUD, and networking. This project replaces only
+the platform boundaries needed to run that original code on Vita.
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 

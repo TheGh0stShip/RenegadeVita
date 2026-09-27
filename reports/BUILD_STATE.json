@@ -1,4 +1,18 @@
 {
+  "dev205_campaign_first_candidate": {
+    "state": "CANONICAL_BUILT_VITA3K_INSTALLED_NOT_LAUNCHED",
+    "vpk_sha256": "18dfe3c86b0b320c8885f3d9341e33e0d64c5b22c67cfecc5ef947cf36f2ac24",
+    "installed_eboot_sha256": "6f9a0c41fdc1c9d2547a3f5843cfd6f70f26f3faafe7289b481d6b53dca97c7f",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev205-setup-20260927T152819998709Z/setup-receipt.json",
+    "canonical_host_arm_package_gates_passed": true,
+    "canonical_script_exit": "INSTALL_ENV_MISSING_THEN_MANUAL_TITLE_SCOPED_INSTALL_PASSED",
+    "host_campaign_first_two_cycles_passed": true,
+    "vita3k_launched": false,
+    "physical_acceptance": false,
+    "m01_intro_freeze_fixed": false,
+    "reporter_save_load_fixed": false,
+    "report": "reports/DEV205_CAMPAIGN_FIRST.md"
+  },
   "dev204_livearea_candidate": {
     "state": "FAST_BUILT_VITA3K_LIVEAREA_VISUAL_VERIFIED_GAMEPLAY_UNTESTED",
     "vpk_sha256": "840966d4a7c17a0fbb78f4b1c47a345309e17022cb95f8f834bbd9584e10c11d",

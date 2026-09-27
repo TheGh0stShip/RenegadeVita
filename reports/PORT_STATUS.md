@@ -1,5 +1,13 @@
 # Renegade Vita port status
 
+2026-09-27 Dev205 issue #1 checkpoint: a full-port-only empty-session guard
+addresses the original Campaign-first `End_Game` call before M13 exists. Two
+host Campaign-first/M01 cycles and canonical host/sanitizer/ARM/package checks
+pass; Vita3K installation/readback passes. Launch was blocked by an existing
+Vita3K process, so native Campaign-first, M01 intro and reporter save/load
+remain unverified. Dev204 remains the latest public release. See
+[Dev205](DEV205_CAMPAIGN_FIRST.md).
+
 2026-09-27 Dev204: original project-authored R/V icon and version-stamped
 LiveArea background, gate and launch image are packaged. Fast ARM/package,
 177 focused tests and Vita3K install/readback passed. A bounded Vita3K capture

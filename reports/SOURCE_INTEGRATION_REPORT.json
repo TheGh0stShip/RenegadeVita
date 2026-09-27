@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev198",
+  "milestone": "A3.5-dev205",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 532,
+  "original_source_files_compiled": 533,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -168,6 +168,7 @@
     "Code/Commando/modpackage.cpp",
     "Code/Commando/modpackagemgr.cpp",
     "Code/Commando/movie.cpp",
+    "Code/Commando/multihud.cpp",
     "Code/Commando/netevent.cpp",
     "Code/Commando/nethandler.cpp",
     "Code/Commando/netinterface.cpp",
@@ -652,8 +653,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 266,
-  "mechanically_patched_upstream_files": 355,
+  "patch_count": 268,
+  "mechanically_patched_upstream_files": 356,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -789,6 +790,7 @@
     "Code/Commando/modpackage.h",
     "Code/Commando/movie.cpp",
     "Code/Commando/mpsettingsmgr.cpp",
+    "Code/Commando/multihud.h",
     "Code/Commando/netinterface.cpp",
     "Code/Commando/pkthandlers.cpp",
     "Code/Commando/player.cpp",
@@ -2228,7 +2230,7 @@
     {
       "path": "port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch",
       "stage_directory": "commando",
-      "sha256": "bd33e230c58a3926de0ba0327bbff7b981f2df17020d63a46cc58176d7d2e01b",
+      "sha256": "9b50e46da38483313184640587306a3a59f2b7ccb1d2d342a2259803de6f9a9a",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "gameinitmgr.cpp"
@@ -3257,6 +3259,25 @@
       ]
     },
     {
+      "path": "port/patches/commando-a35-multiplayer-utf16-format.patch",
+      "stage_directory": "commando",
+      "sha256": "9822e1debc71290567d7e5e691ea5945877005a1b57ea065d242c3765c717ae0",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "player.cpp",
+        "sctextobj.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-multihud-static-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "62928c20057e220912dd3fa4c948307c05db3a894153d453d47c065cecccd1ea",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "multihud.h"
+      ]
+    },
+    {
       "path": "port/patches/wwlib-a35-crc-word-width.patch",
       "stage_directory": "wwlib",
       "sha256": "a6d0846b40d4dd909f752ac88d7c6c06b414ab7e538131fb2070ee32fec855a1",
@@ -3731,7 +3752,7 @@
     },
     "Commando": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 78,
+      "compiled": 79,
       "total": 213
     },
     "Scripts": {

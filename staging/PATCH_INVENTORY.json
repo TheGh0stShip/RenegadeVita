@@ -592,7 +592,7 @@
     {
       "path": "port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch",
       "stage_directory": "commando",
-      "sha256": "bd33e230c58a3926de0ba0327bbff7b981f2df17020d63a46cc58176d7d2e01b"
+      "sha256": "9b50e46da38483313184640587306a3a59f2b7ccb1d2d342a2259803de6f9a9a"
     },
     {
       "path": "port/patches/commando-a4-movie-vita-provider-boundary.patch",
@@ -1345,5 +1345,5 @@
       "sha256": "463397d6bc3bf09c88c827782dfdf8a33688d66703956932d1513e8806b7b5aa"
     }
   ],
-  "registry_sha256": "8fd864b4b21dc840571beaed5406caa36c22db1b350948c6cdc8285541f10684"
+  "registry_sha256": "d99fa7783c35a0ecf46902a65918011d13f4728d39d976a5f430ae816a226992"
 }

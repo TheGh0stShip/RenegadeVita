@@ -6,6 +6,16 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class A4OriginalFrontendContractTests(unittest.TestCase):
+    def test_campaign_first_ignores_only_empty_native_menu_session(self):
+        patch = (ROOT / "port/patches/commando-a4-gameinitmgr-frontend-start-latch.patch").read_text()
+        staged = (ROOT / "staging/commando/gameinitmgr.cpp").read_text()
+        guard = "A4_Frontend_Is_Menu_Loop_Active() && !Is_Game_In_Progress()"
+        self.assertIn("!RENEGADE_VITA_M00_DEMO", patch)
+        self.assertIn(guard, patch)
+        self.assertIn(guard, staged)
+        self.assertIn("if ( !IS_MISSION && (!Is_Game_In_Progress()))", staged)
+        self.assertLess(staged.index(guard), staged.index("// Do nothing if the game is not in progress."))
+
     def test_practice_and_multiplayer_use_original_loading_backdrops(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
         selector = runtime[runtime.index("bool Initialize(const char *mission_archive,"):

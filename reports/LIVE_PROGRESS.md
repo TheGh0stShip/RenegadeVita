@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Dev205 Campaign-first startup boundary
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: issue #1's new PSTV report is being investigated. An empty-session guard
+was added to the original Campaign-first `End_Game` boundary for the full port.
+Completed: original Campaign-before-Tutorial host replay latched M13 twice;
+canonical host/sanitizer/ARM/package identity passed; Dev205 installed and
+hash-verified in Vita3K. Evidence: [Dev205 record](DEV205_CAMPAIGN_FIRST.md).
+Next: test Campaign-first in an idle Vita3K session, then M01 transition and
+save/load; obtain matching physical PSTV evidence. Blocker: a Windows Vita3K
+process was already running, so the bounded launcher refused to interfere.
+No Dev205 runtime pass or M01/save fix is claimed.
+
 ## Dev204 title identity and publication
 
 Renegade Vita - v3.5 active

@@ -289,6 +289,14 @@ GameInitMgrClass::End_Game (void)
 
 	WWDEBUG_SAY (("GameInitMgrClass::End_Game\n"));
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	// New Campaign calls End_Game before its first world is created.  On the
+	// Vita frontend that is an empty session, not a mission to tear down.
+	if (A4_Frontend_Is_Menu_Loop_Active() && !Is_Game_In_Progress()) {
+		return;
+	}
+#endif
+
 	// Do nothing if the game is not in progress.
 	if ( !IS_MISSION && (!Is_Game_In_Progress())) {
 		return;

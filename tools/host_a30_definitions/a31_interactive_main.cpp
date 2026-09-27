@@ -321,6 +321,39 @@ void Register_A4_Host_Harness_Combat_Mode()
 	}
 }
 
+bool Validate_Frontend_Campaign_First_Latch()
+{
+	if (!g_a4_host_harness_combat_mode.Is_Inactive()) {
+		g_a4_host_harness_combat_mode.Deactivate();
+		GameModeManager::Safely_Deactivate();
+	}
+	A4_Frontend_Reset_Trace();
+	A4_Frontend_Begin_Menu_Loop();
+	MovieGameModeClass movie_mode;
+	class ScoreMode final : public GameModeClass {
+	public:
+		const char *Name(void) override { return "ScoreScreen"; }
+		void Init(void) override {}
+		void Shutdown(void) override {}
+		void Render(void) override {}
+		void Think(void) override {}
+	} score_mode;
+	GameModeManager::Add(&movie_mode);
+	GameModeManager::Add(&score_mode);
+	GameInitMgrClass::Initialize_SP();
+	CampaignManager::Start_Campaign(1);
+	const A4FrontendTrace trace = A4_Frontend_Get_Trace();
+	const bool valid = trace.tutorial_start_latched &&
+		::strcmp(trace.tutorial_map, "M13.mix") == 0 &&
+		PTheGameData != NULL;
+	GameModeManager::Remove(&score_mode);
+	GameModeManager::Remove(&movie_mode);
+	GameInitMgrClass::Shutdown();
+	CampaignManager::Reset();
+	A4_Frontend_End_Menu_Loop();
+	return valid;
+}
+
 void Print(const char *name, bool value)
 {
 	printf("a31.%s=%s\n", name, value ? "true" : "false");
@@ -1169,6 +1202,9 @@ int main(int argc, char **argv)
 			}
 			Stage("frontend_mainmenu_lifecycle");
 			Register_A4_Host_Harness_Combat_Mode();
+			const bool campaign_first_latch = Validate_Frontend_Campaign_First_Latch();
+			Print("frontend_campaign_first_latched", campaign_first_latch);
+			if (!campaign_first_latch) { passed = false; break; }
 				unsigned main_menu_control_count = 0;
 				unsigned main_menu_render_frames = 0;
 				unsigned main_menu_valid_labels = 0U;

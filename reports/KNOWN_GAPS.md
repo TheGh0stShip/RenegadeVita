@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-09-27 issue #1 PSTV update: the reporter says Dev204 Tutorial is stable,
+Campaign-first crashes, Campaign after Tutorial freezes during the M01 intro,
+and save/load does not work on their CD/1.037 installation. Dev205's
+empty-session startup guard passes host/canonical build and Vita3K install,
+but has no native run yet. The M01 freeze and reporter-specific save/load
+failure remain open; Dev197's bounded PSTV M13 reload is not a general pass.
+
 2026-09-27 Dev204: the R/V icon and version-stamped LiveArea passed a bounded
 Vita3K visual check. Physical Vita/PSTV appearance, canonical package
 acceptance, and Dev204 gameplay remain unverified. The title artwork does not

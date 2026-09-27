@@ -1,7 +1,7 @@
 # Installing on Vita
 
 This guide covers the full-port development candidate, currently
-[Dev195](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev195).
+[Dev197](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev197).
 It is experimental, not a completed campaign or multiplayer release. The
 separate [tutorial demo guide](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
 remains specific to that demo.
@@ -41,7 +41,7 @@ this build. A CD tester in [issue #1](https://github.com/TheGh0stShip/RenegadeVi
 obtained the file with the Renegade 1.037 English patch and copied BIK files from
 disc 2 to `Movies`. Those are user-reported setup steps, not campaign acceptance.
 
-Preserve the installation's movies at `ux0:data/renegade/retail/Movies/`.
+Preserve the installation's movies at `ux0:data/renegade/retail/Data/Movies/`.
 The original PC demo and the Vita tutorial-demo subset are not full-port data.
 Do not rename missions, edit retail archives, or supply third-party game downloads.
 
@@ -58,7 +58,7 @@ private identity, trust-bundle, and one-shot launch setup.
 
 ## Before installation
 
-1. Download the development VPK and verify its published SHA-256, or build the exact candidate with an explicit `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev195's published checkpoint used the fast builder.
+1. Download the development VPK and verify its published SHA-256, or build the exact candidate with an explicit `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev197 passed that build, but physical gameplay acceptance remains pending.
 2. Retain its VPK, packaged SELF, map, symbols, SHA-256 manifest, and build log together.
 3. Verify the VPK contains no retail data.
 4. Review [Current status](CURRENT_STATUS.md) and use a bounded physical test plan.
@@ -93,7 +93,7 @@ ux0:/data/renegade/user/<vpk-file-name>
 Keep each item bound to the exact candidate hash:
 
 - runtime log under `ux0:data/renegade/user/logs/`;
-- for Dev195, `a35-dev195-runtime.log` and matching startup diagnostics from
+- for Dev197, `a35-dev197-runtime.log` and matching startup diagnostics from
   that directory (use the matching label for older candidates);
 - title-owned captures under `ux0:data/renegade/user/captures/`;
 - a PSP2 dump if a crash occurred; and

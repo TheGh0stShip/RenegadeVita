@@ -5,7 +5,8 @@ This path produces a local native Vita candidate without copying, packaging, or 
 ## Prerequisites
 
 - Linux or WSL2 Ubuntu with VitaSDK. Set `RENEGADE_VITASDK` when it is not at `/usr/local/vitasdk`.
-- `git`, `cmake`, `ninja`, `python3`, `patch`, `zip`, `unzip`, `sha256sum`, and `ccache`.
+- `git`, `cmake`, `ninja`, `python3`, `patch`, `zip`, `unzip`, `sha256sum`,
+  `ccache`, and ImageMagick's `convert` (for the versioned LiveArea artwork).
 - A legally owned retail Renegade installation for host validation and a Vita with the same user-owned data for physical testing.
 - On Vita, the vitaGL shader compiler dependency `ur0:/data/libshacccg.suprx`.
 
@@ -65,7 +66,10 @@ Check [Building](BUILDING.md) for the complete closure and [Current status](CURR
 
 ## Install only with a bounded test plan
 
-The VPK contains only the executable and package metadata. It expects user-owned retail data at:
+The current Dev202 VPK contains only the executable and package metadata.
+New candidates also package five project-authored LiveArea files, including
+the versioned background and application icon. Neither package contains retail
+data. The game expects user-owned retail data at:
 
 ```text
 ux0:data/renegade/retail/Data/

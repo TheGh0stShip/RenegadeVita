@@ -35,7 +35,12 @@ REQUIRED_FILES = {
     "sha_manifest": "{candidate}-SHA256SUMS.txt",
 }
 
-EXPECTED_VPK_FILES = ("eboot.bin", "sce_sys/param.sfo")
+EXPECTED_VPK_FILES = (
+    "eboot.bin", "sce_sys/icon0.png", "sce_sys/livearea/contents/bg0.png",
+    "sce_sys/livearea/contents/startup.png",
+    "sce_sys/livearea/contents/template.xml", "sce_sys/param.sfo",
+    "sce_sys/pic0.png",
+)
 OUTPUT_BASENAME = "{candidate}-CANDIDATE-PROVENANCE"
 
 

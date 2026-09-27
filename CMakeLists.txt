@@ -627,10 +627,32 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 vita_create_self(eboot.bin ${PROJECT_NAME})
+set(RENEGADE_LIVEAREA_DIR "${CMAKE_CURRENT_BINARY_DIR}/livearea/${RENEGADE_CANDIDATE_LABEL}")
+set(RENEGADE_LIVEAREA_FILES
+  "${RENEGADE_LIVEAREA_DIR}/icon0.png"
+  "${RENEGADE_LIVEAREA_DIR}/bg0.png"
+  "${RENEGADE_LIVEAREA_DIR}/startup.png"
+  "${RENEGADE_LIVEAREA_DIR}/pic0.png")
+add_custom_command(OUTPUT ${RENEGADE_LIVEAREA_FILES}
+  COMMAND ${Python3_EXECUTABLE} "${RENEGADE_ROOT}/tools/render_livearea.py"
+    --candidate "${RENEGADE_CANDIDATE_LABEL}"
+    --assets "${RENEGADE_ROOT}/assets"
+    --output "${RENEGADE_LIVEAREA_DIR}"
+  DEPENDS
+    "${RENEGADE_ROOT}/tools/render_livearea.py"
+    "${RENEGADE_ROOT}/assets/branding/renegade-vita-mark.svg"
+    "${RENEGADE_ROOT}/assets/branding/renegade-vita-banner.svg"
+    "${RENEGADE_ROOT}/assets/branding/renegade-vita-startup.svg"
+  VERBATIM)
 # vita_create_vpk otherwise emits an empty CONTENT_ID field. Set the narrow
 # VitaSDK packaging flag immediately before the macro so only param.sfo changes.
 set(VITA_MKSFOEX_FLAGS "-s CONTENT_ID=${RENEGADE_VITA_CONTENT_ID}")
 vita_create_vpk(RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.vpk ${RENEGADE_VITA_TITLE_ID} eboot.bin
 	VERSION 03.55
 	NAME "Renegade Vita ${RENEGADE_CANDIDATE_LABEL}"
+	FILE "${RENEGADE_LIVEAREA_DIR}/icon0.png" sce_sys/icon0.png
+	     "${RENEGADE_LIVEAREA_DIR}/pic0.png" sce_sys/pic0.png
+	     "${RENEGADE_LIVEAREA_DIR}/bg0.png" sce_sys/livearea/contents/bg0.png
+	     "${RENEGADE_LIVEAREA_DIR}/startup.png" sce_sys/livearea/contents/startup.png
+	     "${RENEGADE_ROOT}/assets/livearea/template.xml" sce_sys/livearea/contents/template.xml
 )

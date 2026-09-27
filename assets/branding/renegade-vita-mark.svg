@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Renegade Vita R/V monogram</title>
+  <rect width="512" height="512" fill="#11191d"/>
+  <path d="M52 52h408v408H52z" fill="none" stroke="#38474a" stroke-width="4"/>
+  <path d="M78 78h356v356H78z" fill="none" stroke="#a43d35" stroke-width="2"/>
+  <path d="M101 410V117l27-24h151l44 11 36 31 12 34v47l-14 38-29 25 66 131h-97l-57-109h-50v109zm89-238v56h83l15-8 6-17-6-18-15-13z" fill="#d4473c"/>
+  <path d="M101 315h89v19h-89zM110 105h62l-71 66v-54z" fill="#11191d"/>
+  <path d="M224 254h79l57 103 57-103h53l-86 158h-54z" fill="#eef0e9"/>
+  <path d="M340 392l19 20 24-43-23 10z" fill="#b8bfbb"/>
+  <path d="M410 267h50M225 267h43" stroke="#c89a5a" stroke-width="4"/>
+  <path d="M105 429h103" stroke="#c89a5a" stroke-width="6"/>
+</svg>

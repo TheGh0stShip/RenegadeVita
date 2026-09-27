@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import json
+import struct
 import subprocess
 import tempfile
 import unittest
 import zipfile
 from pathlib import Path
+
+from tools.render_livearea import SIZES
 
 
 TOOL = Path(__file__).with_name("verify_candidate_identity.py")
@@ -32,6 +35,13 @@ class CandidateIdentityTests(unittest.TestCase):
             with zipfile.ZipFile(vpk, "w") as archive:
                 archive.writestr("eboot.bin", b"wrong" if mutate_vpk else b"self-payload")
                 archive.writestr("sce_sys/param.sfo", b"sfo")
+                for name, (width, height) in SIZES.items():
+                    member = ("sce_sys/livearea/contents/" if name in ("bg0.png", "startup.png")
+                              else "sce_sys/") + name
+                    header = b"\x89PNG\r\n\x1a\n" + struct.pack(">I4sIIBBBBB", 13, b"IHDR", width,
+                                                               height, 8, 3, 0, 0, 0)
+                    archive.writestr(member, header)
+                archive.writestr("sce_sys/livearea/contents/template.xml", b"<livearea/>")
             command = ["python3", str(TOOL), "--elf", str(elf), "--self", str(self_file),
                        "--vpk", str(vpk), "--candidate", candidate,
                        "--runtime-log", f"ux0:data/renegade/user/logs/{candidate.lower().replace('.', '')}-runtime.log",

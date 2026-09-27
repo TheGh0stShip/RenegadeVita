@@ -10,7 +10,11 @@ also captured Practice loading and spawn. It is not a canonical build or
 physical gameplay acceptance. Dev197 has the latest
 bounded PSTV save-load/menu-return evidence.
 
-The VPK deliberately contains only the executable and package metadata. It never includes retail data, saves, configuration, logs, screenshots, videos, or crash dumps.
+The Dev202 VPK contains only the executable and package metadata. New
+candidates also include five project-authored LiveArea files: application
+icon, launch image, background, gate image, and template. The candidate label
+is visible in the LiveArea artwork. Neither package contains retail data,
+saves, configuration, logs, screenshots, videos, or crash dumps.
 
 ## Filesystem boundary
 

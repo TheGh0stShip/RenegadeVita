@@ -1,5 +1,11 @@
 # Renegade Vita
 
+![Renegade Vita R/V insignia and LiveArea banner](docs/media/brand/renegade-vita-banner.png)
+
+Original project artwork preview for the next candidate. The published Dev202
+VPK still has its earlier title presentation; no Dev203 runtime or physical
+Vita appearance is claimed by this image.
+
 An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: Renegade*. The original EA/Westwood engine remains the owner of game logic, MIX/archive access, W3D/WW3D rendering ownership, Combat, Commando, mission scripts, HUD, and networking. This project replaces only the platform boundaries needed to run that original code on Vita.
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
@@ -17,7 +23,7 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 | [Multiplayer setup](docs/MULTIPLAYER.md)
 | [Project video page](https://thegh0stship.github.io/RenegadeVita/)
 
-The VPK contains the executable and package metadata only; the prerelease also
+The Dev202 VPK contains the executable and package metadata only; the prerelease also
 offers separately labelled screenshots and a silent Vita3K clip. This is
 not a finished game release. Supply your own legally obtained retail data.
 The separate [tutorial demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
@@ -92,6 +98,7 @@ Those images are historical, not a same-camera benchmark. A verified post-render
 - [Evidence and capture policy](docs/EVIDENCE.md) — what images, logs, videos, and builds can and cannot prove.
 - [Historical screenshot timeline](docs/HISTORICAL_SCREENSHOT_TIMELINE.md) — reviewed visual history and complete image manifest.
 - [Historical capture campaign](docs/HISTORICAL_CAPTURE_CAMPAIGN.md) — the no-rebuild plan for comparable in-game frames, held until a physical session is explicitly authorized.
+- [Project identity](docs/BRANDING.md) — original R/V artwork, LiveArea packaging, and version-stamp rules.
 - [Controls](docs/CONTROLS.md) — current mapping and known lifecycle caveat.
 - [Building](docs/BUILDING.md), [development](docs/DEVELOPMENT.md), and [troubleshooting](docs/TROUBLESHOOTING.md) — contributor workflow.
 

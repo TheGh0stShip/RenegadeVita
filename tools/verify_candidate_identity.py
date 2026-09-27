@@ -11,8 +11,16 @@ import sys
 import zipfile
 from pathlib import Path
 
+from render_livearea import SIZES, png_geometry_bytes
+
 
 SCHEMA_VERSION = 1
+EXPECTED_VPK_FILES = (
+    "eboot.bin", "sce_sys/icon0.png", "sce_sys/livearea/contents/bg0.png",
+    "sce_sys/livearea/contents/startup.png",
+    "sce_sys/livearea/contents/template.xml", "sce_sys/param.sfo",
+    "sce_sys/pic0.png",
+)
 DEFAULT_PROHIBITED = (
     "A3.5-dev1",
     "a35-dev1-runtime.log",
@@ -81,9 +89,15 @@ def main(argv: list[str] | None = None) -> int:
     try:
         with zipfile.ZipFile(args.vpk) as archive:
             names = tuple(sorted(archive.namelist()))
-            check("vpk_expected_entries", names == ("eboot.bin", "sce_sys/param.sfo"),
+            check("vpk_expected_entries", names == EXPECTED_VPK_FILES,
                   ",".join(names))
             packaged = archive.read("eboot.bin")
+            for name, dimensions in SIZES.items():
+                member = "sce_sys/livearea/contents/" + name if name in ("bg0.png", "startup.png") else "sce_sys/" + name
+                try:
+                    check(f"livearea_{name}", png_geometry_bytes(archive.read(member)) == (*dimensions, 3), member)
+                except (KeyError, ValueError):
+                    check(f"livearea_{name}", False, member)
     except (OSError, zipfile.BadZipFile, KeyError) as error:
         check("vpk_readable", False, type(error).__name__)
     else:

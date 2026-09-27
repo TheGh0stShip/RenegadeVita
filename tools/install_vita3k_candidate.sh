@@ -46,13 +46,10 @@ def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 assert digest(vpk_path.read_bytes()) == receipt["vpk_sha256"]
 with zipfile.ZipFile(vpk_path) as archive:
-    expected_eboot = digest(archive.read("eboot.bin"))
-    expected_param = digest(archive.read("sce_sys/param.sfo"))
-installed = {
-    "eboot.bin": digest((vfs_path / "ux0/app/RNEGA3101/eboot.bin").read_bytes()),
-    "sce_sys/param.sfo": digest((vfs_path / "ux0/app/RNEGA3101/sce_sys/param.sfo").read_bytes()),
-}
-expected = {"eboot.bin": expected_eboot, "sce_sys/param.sfo": expected_param}
+    expected = {name: digest(archive.read(name)) for name in archive.namelist()
+                if not name.endswith("/")}
+installed = {name: digest((vfs_path / "ux0/app/RNEGA3101" / name).read_bytes())
+             for name in expected}
 assert installed == expected, f"installed Vita3K title hashes do not match candidate: {installed}"
 assert {entry["name"]: entry["installed_sha256"] for entry in receipt["files"]} == expected
 print(f"Vita3K install verified: {candidate} RNEGA3101; launch not requested", file=sys.stderr)

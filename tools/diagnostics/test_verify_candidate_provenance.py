@@ -42,7 +42,13 @@ class CandidateProvenanceTests(unittest.TestCase):
     def make_fixture(self, dist: Path, vpk_contents: list[str] | None = None,
                      manifest_entries: dict[str, str] | None = None) -> None:
         if vpk_contents is None:
-            vpk_contents = ["eboot.bin", "sce_sys/param.sfo"]
+            vpk_contents = [
+                "eboot.bin", "sce_sys/icon0.png",
+                "sce_sys/livearea/contents/bg0.png",
+                "sce_sys/livearea/contents/startup.png",
+                "sce_sys/livearea/contents/template.xml",
+                "sce_sys/param.sfo", "sce_sys/pic0.png",
+            ]
         for required in REQUIRED_FILES.values():
             path = dist / required.format(candidate=self.candidate)
             if "{candidate}" not in required:

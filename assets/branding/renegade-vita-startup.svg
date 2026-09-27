@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="158" viewBox="0 0 280 158">
+  <title>Renegade Vita LiveArea gate artwork</title>
+  <rect width="280" height="158" fill="#11191d"/>
+  <path d="M3 3h274v152H3z" fill="none" stroke="#8a3933" stroke-width="2"/>
+  <g transform="translate(8 12) scale(.24)">
+    <path d="M101 410V117l27-24h151l44 11 36 31 12 34v47l-14 38-29 25 66 131h-97l-57-109h-50v109zm89-238v56h83l15-8 6-17-6-18-15-13z" fill="#d4473c"/>
+    <path d="M101 315h89v19h-89zM110 105h62l-71 66v-54z" fill="#11191d"/>
+    <path d="M224 254h79l57 103 57-103h53l-86 158h-54z" fill="#eef0e9"/>
+    <path d="M340 392l19 20 24-43-23 10z" fill="#b8bfbb"/>
+  </g>
+  <text x="132" y="74" fill="#eef0e9" font-family="DejaVu Sans" font-size="23" font-weight="bold">RENEGADE</text>
+  <text x="132" y="103" fill="#d4473c" font-family="DejaVu Sans" font-size="28" font-weight="bold">VITA</text>
+  <text x="132" y="128" fill="#c89a5a" font-family="DejaVu Sans" font-size="13">__CANDIDATE__</text>
+</svg>

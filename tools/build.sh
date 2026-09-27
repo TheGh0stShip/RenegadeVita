@@ -95,7 +95,7 @@ echo "Log: $rv_log"
 echo "Native working directory: $rv_build"
 echo "Development checkpoint launch enabled: $rv_development_checkpoint (public packages require 0)"
 
-for rv_command in cmake ninja python3 git patch unzip zip sha256sum grep find tee wc ccache curl tar make; do
+for rv_command in cmake ninja python3 git patch unzip zip sha256sum grep find tee wc ccache curl tar make convert; do
 	require_command "$rv_command"
 done
 rv_patch_count=$(python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --count)
@@ -402,7 +402,10 @@ unzip -tq "$rv_vpk"
 unzip -Z1 "$rv_vpk" > "$rv_vpk_contents"
 grep -Fxq 'eboot.bin' "$rv_vpk_contents"
 grep -Fxq 'sce_sys/param.sfo' "$rv_vpk_contents"
-test "$(wc -l < "$rv_vpk_contents")" -eq 2
+for rv_asset in sce_sys/icon0.png sce_sys/pic0.png sce_sys/livearea/contents/bg0.png sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/template.xml; do
+	grep -Fxq "$rv_asset" "$rv_vpk_contents"
+done
+test "$(wc -l < "$rv_vpk_contents")" -eq 7
 unzip -p "$rv_vpk" sce_sys/param.sfo | strings | grep -Fxq "$rv_vpk_content_id"
 if grep -Eiq '(^|/)(retail|data)(/|$)|(^|/)(always[^/]*\.(dat|dbs)|[^/]+\.(mix|w3d|rva))$' "$rv_vpk_contents"; then
 	echo "Retail or custom asset content was unexpectedly packaged in the VPK." >&2

@@ -72,7 +72,7 @@ echo "Fast tests: $rv_fast_tests"
 echo "Development checkpoint launch enabled: $rv_development_checkpoint (public packages require 0)"
 echo "Scope: hardware-testable iteration only; this does not replace tools/build.sh canonical acceptance."
 
-for rv_command in cmake ninja python3 git unzip sha256sum grep find tee wc ccache curl tar make; do
+for rv_command in cmake ninja python3 git unzip sha256sum grep find tee wc ccache curl tar make convert; do
 	require_command "$rv_command"
 done
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --count
@@ -292,7 +292,10 @@ unzip -tq "$rv_vpk"
 unzip -Z1 "$rv_vpk" > "$rv_vpk_contents"
 grep -Fxq 'eboot.bin' "$rv_vpk_contents"
 grep -Fxq 'sce_sys/param.sfo' "$rv_vpk_contents"
-test "$(wc -l < "$rv_vpk_contents")" -eq 2
+for rv_asset in sce_sys/icon0.png sce_sys/pic0.png sce_sys/livearea/contents/bg0.png sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/template.xml; do
+	grep -Fxq "$rv_asset" "$rv_vpk_contents"
+done
+test "$(wc -l < "$rv_vpk_contents")" -eq 7
 unzip -p "$rv_vpk" sce_sys/param.sfo | strings | grep -Fxq "$rv_vpk_content_id"
 if grep -Eiq '(^|/)(retail|data)(/|$)|(^|/)(always[^/]*\.(dat|dbs)|[^/]+\.(mix|w3d|rva))$' "$rv_vpk_contents"; then
 	echo "Retail or custom asset content was unexpectedly packaged in the VPK." >&2
@@ -313,7 +316,7 @@ grep -Fq '"status": "PASS"' "$rv_identity_report"
 	echo "Restage mode: ${RENEGADE_FAST_RESTAGE:-0}"
 	echo "Fast tests: $rv_fast_tests"
 	echo "Focused contracts: loading screen, CombatGameMode load-finalization, shader cache/prewarm, indexed state, direct mesh base-pass replay, stage-1 multitexture boundary, streamed-dialogue fact/duration runtime metadata, skin submission, animation combo guard, conversation diagnostics, texture provenance, texture surface copy/upload ownership, retail DDS top-down upload ownership, DDS retained surface levels, camera/input route, audio provider, DDS-first texture boundary, original DDSFileClass tga-to-dds alias, original Commando frontend source/movie/menu/tutorial route"
-	echo "VPK contains: eboot.bin and sce_sys/param.sfo only"
+	echo "VPK contains: eboot.bin, sce_sys/param.sfo, and five project-authored LiveArea assets only"
 	echo "Runtime log: $rv_runtime_log"
 } > "$rv_build_report"
 

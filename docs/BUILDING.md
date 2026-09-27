@@ -18,6 +18,12 @@ It produces a candidate-scoped VPK plus matching ELF, map, symbols, build report
 
 The BINK dependency build is reproducible and limited to the FFmpeg pieces needed for Bink demux/video/audio decode, scaling, and resampling. It neither downloads RAD code nor packages a retail movie.
 
+ImageMagick's `convert` renders the original, project-authored LiveArea PNGs
+from [`assets/branding/`](../assets/branding/) during packaging. The candidate
+label is burned into the background, gate and launch image on each build. The
+package contains only `eboot.bin`, `param.sfo` and five title-scoped artwork
+files; it does not include retail data. See [Project identity](BRANDING.md).
+
 ## Fast iteration
 
 ```bash

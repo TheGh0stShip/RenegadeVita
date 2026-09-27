@@ -378,6 +378,11 @@ def complete_build_section() -> list[str]:
         lines.append(f"| Dev{build} | {platforms} | [{caption}]({link}) |")
     lines.extend(["", "## Recovered Build Gallery", "",
                   "Expand a build to inspect its retained image. Black or blank diagnostics are linked in the index and catalog instead of repeated as large empty thumbnails. Cinematic stills do not prove animation, audio synchronization, or mission completion. Physical and emulator performance cannot be compared from these screenshots.", ""])
+    lines.extend(["<details><summary>Retained black-buffer and startup diagnostics</summary>", ""])
+    for entry in catalog:
+        if entry["kind"] == "diagnostic":
+            lines.append(f"- [Dev{entry['build']}: {entry['caption']}]({entry['link']}) ({entry['platform']})")
+    lines.extend(["", "</details>", ""])
     for entry in sorted(catalog, key=lambda item: (item["build"], item["platform"])):
         if entry["kind"] == "diagnostic":
             continue

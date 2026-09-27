@@ -146,6 +146,44 @@ This is build coverage, not publication of every repeated frame. Original PNGs r
 
 Expand a build to inspect its retained image. Black or blank diagnostics are linked in the index and catalog instead of repeated as large empty thumbnails. Cinematic stills do not prove animation, audio synchronization, or mission completion. Physical and emulator performance cannot be compared from these screenshots.
 
+<details><summary>Retained black-buffer and startup diagnostics</summary>
+
+- [Dev104: Black capture buffer](history/build-captures/dev104-000.png) (Vita3K)
+- [Dev105: Black capture buffer](history/build-captures/dev105-001.png) (Vita3K)
+- [Dev106: Black capture buffer](history/build-captures/dev106-002.png) (Vita3K)
+- [Dev109: Black capture buffer](history/build-captures/dev109-003.png) (Vita3K)
+- [Dev111: Black capture buffer](history/build-captures/dev111-004.png) (Vita3K)
+- [Dev113: Black capture buffer](history/build-captures/dev113-005.png) (Vita3K)
+- [Dev114: Black capture buffer](history/build-captures/dev114-006.png) (Vita3K)
+- [Dev115: Black capture buffer](history/build-captures/dev115-007.png) (Vita3K)
+- [Dev116: Black capture buffer](history/build-captures/dev116-008.png) (Vita3K)
+- [Dev117: Black capture buffer](history/build-captures/dev117-009.png) (Vita3K)
+- [Dev120: Black capture buffer](history/build-captures/dev120-015.png) (Vita3K)
+- [Dev122: Blank emulator window](history/build-captures/dev122-018.png) (Vita3K)
+- [Dev150: Startup diagnostic text](history/build-captures/dev150-085.png) (Vita3K)
+- [Dev156: Black capture buffer](history/build-captures/dev156-103.png) (Vita3K)
+- [Dev157: Black capture buffer](history/build-captures/dev157-104.png) (Vita3K)
+- [Dev159: Black capture buffer](history/build-captures/dev159-108.png) (Vita3K)
+- [Dev168: Black capture buffer](history/build-captures/dev168-120.png) (Vita3K)
+- [Dev172: Black capture buffer](history/build-captures/dev172-130.png) (Vita3K)
+- [Dev175: Black capture buffer](history/build-captures/dev175-137.png) (Vita3K)
+- [Dev177: Black capture buffer](history/build-captures/dev177-138.png) (Vita3K)
+- [Dev179: Black capture buffer](history/build-captures/dev179-139.png) (Vita3K)
+- [Dev181: Black capture buffer](history/build-captures/dev181-140.png) (Vita3K)
+- [Dev182: Black capture buffer](history/build-captures/dev182-141.png) (Vita3K)
+- [Dev183: Black capture buffer](history/build-captures/dev183-142.png) (Vita3K)
+- [Dev184: Black capture buffer](history/build-captures/dev184-143.png) (Vita3K)
+- [Dev185: Black capture buffer](history/build-captures/dev185-144.png) (Vita3K)
+- [Dev186: Black capture buffer](history/build-captures/dev186-145.png) (Vita3K)
+- [Dev189: Black capture buffer](history/build-captures/dev189-146.png) (Vita3K)
+- [Dev190: Black capture buffer](history/build-captures/dev190-147.png) (Vita3K)
+- [Dev192: Black capture buffer](history/build-captures/dev192-148.png) (Vita3K)
+- [Dev194: Black capture buffer](history/build-captures/dev194-149.png) (Vita3K)
+- [Dev196: Black capture buffer](history/build-captures/dev196-153.png) (Vita3K)
+- [Dev199: Black capture buffer](history/build-captures/dev199-160.png) (Vita3K)
+
+</details>
+
 <details><summary>Dev84 (Physical PS Vita): Loading-screen diagnostic with missing text</summary>
 
 <a href="history/physical-captures/dev84-000.png"><img src="history/physical-captures/dev84-000.png" width="640" alt="Dev84 (Physical PS Vita): Loading-screen diagnostic with missing text"></a>

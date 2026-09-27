@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="dark">
-    <meta name="description" content="Evidence-led native PlayStation Vita source port of Command &amp; Conquer: Renegade. Dev204 LiveArea art and verified development status.">
+    <meta name="description" content="Renegade Vita: native PlayStation Vita port of Command &amp; Conquer: Renegade. Experimental Dev207 download, campaign progress, multiplayer captures, and build history.">
     <meta property="og:title" content="Renegade Vita">
     <meta property="og:description" content="Native PlayStation Vita port. Follow real build, emulator and physical-device evidence.">
     <meta property="og:image" content="https://thegh0stship.github.io/RenegadeVita/dev204-banner.png">
@@ -37,11 +37,21 @@
       <img class="brand" src="dev204-banner.png" alt="Project-authored red and steel R/V insignia for Renegade Vita">
       <h1>Renegade Vita</h1>
       <p>Native ARM PlayStation Vita source port of <em>Command &amp; Conquer: Renegade</em>.</p>
-      <p><strong>Latest development candidate: A3.5-dev204 (September 27, 2026).</strong> It packages the original project R/V identity and version-stamped Vita LiveArea. A bounded Vita3K capture confirms the icon, background, gate, and build number display. The executable carries Dev202's Practice and multiplayer loading work, but gameplay was not retested in Dev204.</p>
+      <p><strong>Latest published build: A3.5-dev207. Updated September 27, 2026.</strong> Dev205, Dev206, and Dev207 are retained campaign test builds, now available for comparison. Dev207 is experimental: its package and installation were checked, but it was not launched in our recorded test. It is not a verified fix for campaign freezes.</p>
       <p class="notice">Experimental build, not a finished game. Earlier Dev202 footage shows Practice loading and brief movement; Dev200 received a live RenCorner purchase response. Full Practice gameplay, campaign, multiplayer, stable frame rate, and physical Vita acceptance remain open. Supply your own legally obtained retail data.</p>
-      <p class="links"><a href="https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204">Download Dev204</a><a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/INSTALLING.md">Setup</a><a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/BRANDING.md">Artwork and provenance</a><a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/CURRENT_STATUS.md">Project status</a></p>
+      <p class="links"><a href="https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev207">Download Dev207 (experimental)</a><a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/INSTALLING.md">Setup</a><a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/CURRENT_STATUS.md">Project status</a><a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/HISTORICAL_SCREENSHOT_TIMELINE.md">Screenshot timeline</a><a href="https://github.com/TheGh0stShip/RenegadeVita">Source repository</a></p>
+      <p>Earlier comparison packages: <a href="https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev205">Dev205</a> and <a href="https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev206">Dev206</a>. Read each release's limitations before installing. Supply the full retail data listed in the setup guide; the separate tutorial demo's data subset is not sufficient.</p>
+      <h2>Campaign and multiplayer progress</h2>
+      <p>The source tree has advanced beyond the Dev207 download. Work has addressed invalid AI paths, animation sampling, saved-object ownership, rendering of sorted effects, and reproduced audio cleanup defects. Several changes passed focused host checks; the newest audio fixes remain uncompiled and untested. These later changes are not included in Dev207.</p>
+      <p>M13/M01 freezes, cinematic audio synchronization, performance spikes, and complete mission progression remain open. Save/load has passed specific tests across Vita3K and PSTV, while a reporter's failure to create a save is still being investigated. <a href="https://github.com/TheGh0stShip/RenegadeVita/issues/1">Issue #1 remains open</a>; neither a successful compile nor an isolated successful run proves every reported problem is fixed.</p>
+      <div class="captures">
+        <figure><a href="https://raw.githubusercontent.com/TheGh0stShip/RenegadeVita/main/docs/history/build-captures/dev145-071.png"><img loading="lazy" src="https://raw.githubusercontent.com/TheGh0stShip/RenegadeVita/main/docs/history/build-captures/dev145-071.png" alt="Dev145 campaign canyon and weapon HUD in Vita3K"></a><figcaption>Dev145 &middot; Vita3K &middot; Campaign canyon</figcaption></figure>
+        <figure><a href="https://raw.githubusercontent.com/TheGh0stShip/RenegadeVita/main/docs/history/build-captures/dev169-122.png"><img loading="lazy" src="https://raw.githubusercontent.com/TheGh0stShip/RenegadeVita/main/docs/history/build-captures/dev169-122.png" alt="Dev169 Tiberium field and weapon HUD in Vita3K"></a><figcaption>Dev169 &middot; Vita3K &middot; Tiberium field</figcaption></figure>
+        <figure><a href="https://raw.githubusercontent.com/TheGh0stShip/RenegadeVita/main/docs/history/build-captures/dev201-164.png"><img loading="lazy" src="https://raw.githubusercontent.com/TheGh0stShip/RenegadeVita/main/docs/history/build-captures/dev201-164.png" alt="Dev201 multiplayer interior and weapon HUD in Vita3K"></a><figcaption>Dev201 &middot; Vita3K &middot; Multiplayer interior</figcaption></figure>
+      </div>
+      <p>The <a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/HISTORICAL_SCREENSHOT_TIMELINE.md">full screenshot timeline</a> covers 108 numbered builds plus A3.1, with each build's world, cinematic, menu, and loading captures grouped together. It includes recovered physical PS Vita and PSTV captures. Images show historical development states, not a controlled performance comparison.</p>
       <h2>Dev204 LiveArea in Vita3K</h2>
-      <p>This is a capture of the installed title presentation, not a mockup or a physical Vita screenshot. The R/V art is independently authored for this port; it does not reuse an EA or Westwood logo.</p>
+      <p>This historical Dev204 capture shows the installed title presentation, not a mockup or a physical Vita screenshot. The R/V art is independently authored for this port; it does not reuse an EA or Westwood logo. See <a href="https://github.com/TheGh0stShip/RenegadeVita/blob/main/docs/BRANDING.md">artwork and provenance</a>.</p>
       <figure><a href="dev204-livearea.png"><img src="dev204-livearea.png" alt="Dev204 LiveArea in Vita3K showing R/V mark, Start gate, and A3.5-dev204 label"></a><figcaption>Vita3K title screen, Dev204. Physical Vita appearance remains unverified.</figcaption></figure>
       <h2>Dev202 Practice in Vita3K</h2>
       <p>This 35-second window recording has no audio track. It shows a bounded Practice spawn and movement check, not a complete match or physical Vita performance result. The capture run was deliberately stopped afterward.</p>
@@ -56,7 +66,7 @@
         <figure><a href="dev202-practice-gameplay.png"><img src="dev202-practice-gameplay.png" alt="Dev202 Skirmish00 Practice world and HUD in Vita3K"></a><figcaption>Skirmish00 world and HUD</figcaption></figure>
       </div>
       <h2>Historical Dev87 physical M00 recording</h2>
-      <p>This is an earlier build, not footage of Dev202. Original recording and artifact identity are preserved.</p>
+      <p>This is an earlier build, not footage of Dev207 or the current source. Original recording and artifact identity are preserved.</p>
       <p class="notice">Physical evidence only. This recording demonstrates a returned Dev87 M00 session; it does not accept the failed menu text, HUD text, dialogue, intro A/V, performance, or lifecycle gates.</p>
       <video controls preload="metadata" poster="dev87-m00-poster.png">
         <source src="RenegadeVita-A3.5-dev87-physical-M00.mp4" type="video/mp4">

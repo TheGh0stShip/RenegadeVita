@@ -22,6 +22,14 @@ page = (root / "index.html").read_text(encoding="utf-8")
 parser = Links()
 parser.feed(page)
 assert "A3.5-dev204" in page
+assert "Latest published build: A3.5-dev207" in page
+assert "Latest development candidate: A3.5-dev204" not in page
+assert "These later changes are not included in Dev207" in page
+assert "108 numbered builds plus A3.1" in page
+assert "HISTORICAL_SCREENSHOT_TIMELINE.md" in page
+assert "Issue #1 remains open" in page
+for build in (205, 206, 207):
+    assert f"releases/tag/A3.5-dev{build}" in page
 assert "Dev204 LiveArea in Vita3K" in page
 assert "Historical Dev87" in page
 assert "physical Vita acceptance remain open" in page
@@ -53,4 +61,4 @@ for name, digest in {
     "dev202-practice-gameplay.png": "041a76808d9fe611b7176d660a718f3541e4212b84f77791537128eb0e04e9f2",
 }.items():
     assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest
-print("PASS: page links, evidence caveats, historical video and Dev202/Dev204 media hashes")
+print("PASS: Dev207 publication status, timeline links, evidence caveats, and unchanged historical media hashes")

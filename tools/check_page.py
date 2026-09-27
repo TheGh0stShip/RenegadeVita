@@ -21,9 +21,10 @@ root = Path(__file__).resolve().parents[1]
 page = (root / "index.html").read_text(encoding="utf-8")
 parser = Links()
 parser.feed(page)
-assert "A3.5-dev195" in page
+assert "A3.5-dev201" in page
 assert "Historical Dev87" in page
-assert "physical Vita performance remain unverified" in page
+assert "physical Vita acceptance remain unverified" in page
+assert "Glacier texture and player-name appearance still need visual confirmation" in page
 for target in parser.targets:
     url = urlsplit(target)
     if url.scheme:

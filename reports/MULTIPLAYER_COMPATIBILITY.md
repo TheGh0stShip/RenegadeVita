@@ -1,5 +1,65 @@
 # Native multiplayer compatibility
 
+## 2026-09-27: Dev201 Glacier Texture And Multiplayer Text Candidate
+
+Dev200 Glacier logged a real `l02_ice.tga` source fallback and repeated checkerboard
+binds while buildings rendered. The user's unchanged retail `M02.mix` contains
+`l02_ice.dds`; the multiplayer factory list did not mount that archive. Dev201
+mounts the retail M02 archive only for the remote Glacier U1 map, after the
+server map factory, without packaging or modifying retail data. The original
+texture loader remains responsible for resolving and decoding the DDS.
+
+Original player-join/leave, scoreboard, and chat formatting passed
+`WideStringClass` objects into `%s` varargs on ARM. Dev201 passes explicit
+UTF-16 pointers at those call sites through a deterministic staging patch.
+This explains the square player-name glyphs despite working StyleMgr fonts.
+
+Dev201 fast ARM/package, candidate identity, Vita3K install/readback, and
+focused contracts passed. VPK SHA-256:
+`576f974a167efb92ea034c6b05505aba5bce7413a53984c4274b818227f06b87`.
+The bounded live Vita3K replay joined RenCorner as `PS Vita` (replicated ID 12),
+but the server had rotated to `C&C_SkateparkV2.mix`. Its capture shows readable
+server text, not enough player names to prove the glyph fix. No Glacier visual
+validation occurred. The 150-second runner ended `TIMEOUT_UNASSESSED`, not a
+clean-exit proof. Private evidence: managed `dev201-glacier-texture-font-01`,
+runtime log SHA-256
+`bf722448cc895a0c297648737b561f04812b61015d8ce58d68c6f88cc4aca8ea`.
+Full map textures, player names, physical Vita, and stable performance remain
+open.
+
+## 2026-09-27: Dev200 Live Purchase Response
+
+The Vita remote-player wait now uses original WWNet's server loading window
+(15-second connection timeout plus 45-second loading allowance) instead of the
+port's fixed 30-second cutoff. It still exits on connection failure, protocol
+failure, START cancellation, or expiry. This addresses a demonstrated local
+early-abort condition; the following run does not isolate this change from the
+different negotiated map, so no causal connection-stability claim is made.
+
+Dev200 fast ARM/package and Vita3K install/readback passed. VPK SHA-256:
+`1197653f2ac16243f7dbd2cc705117d5fab46eaf5bb99b20bf63019811405ab9`.
+On RenCorner Glacier the client requested `PS Vita`, received player ID 30,
+and the one-shot diagnostic opened the original purchase screen. An owned-window
+Vita3K capture visibly shows the original item grid, credits and Buy control.
+Two native touch steps, both with release receipts, selected zero-cost Nod
+Soldier and activated Buy. The dialog closed and a subsequent capture displayed
+"Purchase request granted." In original source, that exact message is emitted
+by `cPurchaseResponseEvent::Act` for `VendorClass::PERR_SUCCESS`; this is
+evidence of a successful original server purchase response, not merely a local
+button press. The run reached at least 1,560 gameplay frames without a recorded
+connection-loss transition. Public RenCorner listing showed `PSVita` with no
+space; exact display-name preservation remains unresolved.
+
+Private evidence: managed `dev200-tt-purchase-01` (runtime log SHA-256
+`0ae761ccd832dae365bbadb3dec67e1b3ef263cf10c3f25e5b65a18b393b48b2`,
+owned-window captures at 03:09:22, 03:09:44 and 03:09:58 UTC). The runner ended
+at its three-minute limit with `TIMEOUT_UNASSESSED`, not a clean-exit proof.
+Vita3K title-window captures are user-visible visual evidence, not direct
+framebuffer readback. A bounded host original-client comparison also joined
+the same endpoint after the map changed to Glacier, received its player and
+completed 60 simulation frames. No physical Vita, respawn, vehicles, chat,
+round transition, sustained 60 FPS or full multiplayer acceptance is claimed.
+
 ## 2026-09-27: Dev199 Original Purchase Menu Diagnostic
 
 The full-port runtime now recognizes an opt-in, one-shot local file

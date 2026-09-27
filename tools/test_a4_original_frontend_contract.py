@@ -6,6 +6,16 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class A4OriginalFrontendContractTests(unittest.TestCase):
+    def test_remote_player_wait_uses_original_loading_timeout_window(self):
+        runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
+        block = runtime[runtime.index("if (remote_client) {\n\t\t\t\tif (!remote_join.Complete_World_Load"):
+                        runtime.index("local_player = cNetwork::Get_My_Player_Object();")]
+        self.assertIn("cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT", block)
+        self.assertIn("cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE", block)
+        self.assertIn("remote_join.Poll() == A31ClientConnect::WaitingPlayer", block)
+        self.assertIn("!Is_Start_Pressed()", block)
+        self.assertNotIn("30000000ULL", block)
+
     def test_remote_purchase_diagnostic_uses_original_terminal_only_after_player_ready(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
         ready = runtime.index('"interactive_session_ready"')

@@ -1,5 +1,16 @@
 # Capability matrix
 
+2026-09-27 Dev201: multiplayer UTF-16 name/chat formatting and scoped Glacier
+retail-texture factory are implemented, fast ARM-packaged and Vita3K-installed.
+Live RenCorner joined Skatepark (ID 12), not Glacier; both visual fixes and
+physical Vita remain unverified. See MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-27 Dev200: live RenCorner Glacier purchase UI rendered and the original
+server purchase-response success message followed two released native touch
+steps. Player ID 30, at least 1,560 gameplay frames, Vita3K only. Full
+multiplayer, exact public display name, performance and physical acceptance
+remain open. See MULTIPLAYER_COMPATIBILITY.md.
+
 2026-09-24 native Dev195: original ARM client in Vita3K downloads five packages,
 loads City_U1, receives server player/Soldier, renders world/HUD and responds to
 bounded movement.9723 frames, START clean session teardown/menu return. Public

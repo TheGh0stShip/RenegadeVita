@@ -68,6 +68,7 @@
 #include "input.h"
 #include "mixfile.h"
 #include "netinterface.h"
+#include "netutil.h"
 #include "networkobjectmgr.h"
 #include "pathmgr.h"
 #include "playermanager.h"
@@ -3372,6 +3373,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	MixFileFactoryClass m00_factory(kM00Archive, &root_factory);
 #if !RENEGADE_VITA_M00_DEMO
 	std::unique_ptr<MixFileFactoryClass> selected_mission_factory;
+	std::unique_ptr<MixFileFactoryClass> glacier_retail_texture_factory;
 #endif
 	Draw_Engine_Setup_Screen(startup_screen_result,
 		"Preparing original FileFactoryList route",
@@ -3744,6 +3746,21 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				factory_list.Add_FileFactory(selected_mission_factory.get(),
 					selected_archive);
+			}
+			// The server Glacier map references the retail M02 ice texture without
+			// bundling it. Keep this fallback scoped to Glacier and user-owned data.
+			if (remote_client && stricmp(selected_archive,
+				"C&C_Glacier_Flying_U1.mix") == 0) {
+				glacier_retail_texture_factory.reset(new MixFileFactoryClass(
+					"Data\\M02.mix", &root_factory));
+				if (glacier_retail_texture_factory->Is_Valid()) {
+					factory_list.Add_FileFactory(glacier_retail_texture_factory.get(),
+						"M02.mix Glacier retail texture fallback");
+					A30_Vita_Log("A4 Glacier: retail M02 texture fallback mounted for l02_ice.dds\n");
+				} else {
+					A30_Vita_Log("A4 Glacier: retail M02.mix unavailable; ice texture may be missing\n");
+					glacier_retail_texture_factory.reset();
+				}
 			}
 			A30_Vita_Log("A4 campaign: original selection source=%s archive=%s save=%d mix_valid=1\n",
 				load_source, selected_archive, loading_checkpoint ? 1 : 0);
@@ -4184,7 +4201,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			if (remote_client) {
 				if (!remote_join.Complete_World_Load(selected_source.tutorial_team_choice,
 					selected_source.tutorial_clan_id)) break;
-				const uint64_t deadline = sceKernelGetProcessTimeWide() + 30000000ULL;
+				const uint64_t loading_window_us = 1000ULL *
+					(static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT) +
+					 static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE));
+				const uint64_t deadline = sceKernelGetProcessTimeWide() + loading_window_us;
 				while (remote_join.Poll() == A31ClientConnect::WaitingPlayer &&
 					sceKernelGetProcessTimeWide() < deadline && !Is_Start_Pressed()) {
 					A31_Interactive_Run_Simulation_Frame();
@@ -4193,7 +4213,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					sceKernelDelayThread(1000);
 				}
 				if (remote_join.Poll() != A31ClientConnect::InGame) {
-					A30_Vita_Log("A4 direct client: server player unavailable state=%d\n", remote_join.Poll());
+					A30_Vita_Log("A4 direct client: server player unavailable state=%d loading_window_ms=%llu cancelled=%d\n",
+						remote_join.Poll(),
+						static_cast<unsigned long long>(loading_window_us / 1000ULL),
+						Is_Start_Pressed() ? 1 : 0);
 					break;
 				}
 				local_player = cNetwork::Get_My_Player_Object();

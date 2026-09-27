@@ -1,4 +1,31 @@
 {
+  "tt_dev201_glacier_text_candidate": {
+    "state": "FAST_BUILT_VITA3K_INSTALLED_LIVE_SKATEPARK_JOINED_GLACIER_UNVERIFIED",
+    "vpk_sha256": "576f974a167efb92ea034c6b05505aba5bce7413a53984c4274b818227f06b87",
+    "installed_eboot_sha256": "b3f849a0fb766bab5b8e1a9a02ea9cd6cd65ff8afa2dc604d7385b0b27776786",
+    "vita3k_map": "C&C_SkateparkV2.mix",
+    "vita3k_player_id": 12,
+    "runtime_sha256": "bf722448cc895a0c297648737b561f04812b61015d8ce58d68c6f88cc4aca8ea",
+    "physical_acceptance": false,
+    "glacier_visual_acceptance": false
+  },
+  "tt_dev200_purchase_response_candidate": {
+    "state": "FAST_BUILT_VITA3K_INSTALLED_LIVE_GLACIER_PURCHASE_RESPONSE_VERIFIED",
+    "vpk_sha256": "1197653f2ac16243f7dbd2cc705117d5fab46eaf5bb99b20bf63019811405ab9",
+    "installed_eboot_sha256": "f329d4fa421bb94af01a94915c89247b5140be2a27e46a3b9b65f7aa30c1332b",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev200-setup-20260927T030748468522Z/setup-receipt.json",
+    "vita3k_map": "C&C_Glacier_Flying_U1.mix",
+    "vita3k_player_id": 30,
+    "vita3k_last_complete_checkpoint_frame": 1560,
+    "vita3k_runner_status": "TIMEOUT_UNASSESSED",
+    "original_purchase_dialog_visually_observed": true,
+    "original_purchase_response_success_observed": true,
+    "purchase_input_release_receipts": 2,
+    "requested_player_name": "PS Vita",
+    "public_listing_name": "PSVita",
+    "full_multiplayer_verified": false,
+    "physical_acceptance": false
+  },
   "tt_dev199_purchase_diagnostic_candidate": {
     "state": "FAST_BUILT_VITA3K_INSTALLED_ORIGINAL_PURCHASE_DIALOG_INSTANTIATED_PURCHASE_UNVERIFIED",
     "vpk_sha256": "12d95a0f7007b8fb7954ee59ae1b97304dd6f1ea16cc2005f59383a6728a1987",

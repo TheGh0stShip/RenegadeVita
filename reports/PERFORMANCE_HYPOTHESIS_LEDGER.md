@@ -1,5 +1,15 @@
 # Performance hypothesis ledger
 
+## Dev200 RenCorner Glacier bounded Vita3K run (2026-09-27)
+
+The live purchase-response run reached 1,560 frames. At that checkpoint the
+flight recorder's rolling 120-frame distribution was p50 149.788 ms and p95
+284.171 ms, with 1,560/1,560 frames over 33.3 ms. Original gameplay pacing
+reported 139.178 s real versus 116.756 s simulation, a 22.422 s drift.
+These are emulator measurements; render-stage CPU time is not GPU time. No
+optimization was adopted from this run. Native Vita frame pacing remains
+unmeasured and the 60 FPS goal is unmet on this heavier emulator route.
+
 ## Dev197 M01 short-save freeze boundary (2026-09-26)
 
 - Hypothesis: the freeze a few steps before the M01 ladder is render/presentation-bound in the current Vita3K OpenGL run, not a long simulation command. Do not generalize this to the separate physical PSTV frame-six stop.
@@ -799,3 +809,11 @@ accepted blocker is route-level renderer/scene traversal and audio timing under
 frame starvation, not this individual HLOD create. Evidence: matching SELF
 `de39b87f8e55c616891835db8f6f35013e93891ff18e3cbf80d4b89f48a4f714`, runtime
 SHA-256 `f1ed16493bb4c8a885949091ccdd003272f16eea5ea5f1fad7d7ce5600909986`.
+# Dev201 Glacier texture and text replay (2026-09-27)
+
+Dev200 Glacier showed `l02_ice.tga` source fallback and checkerboard binds;
+Dev201 scopes user-retail M02.mix to that remote map. No measured performance
+claim: the Dev201 live server had rotated to Skatepark, and its 150-second
+runner timed out. The UTF-16 player-name formatting change is correctness work,
+not an optimization. Re-run fixed Glacier camera/content before comparing
+frame-time median/p95/p99/worst or adopting performance conclusions.

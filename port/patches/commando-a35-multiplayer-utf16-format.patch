@@ -1,0 +1,53 @@
+--- a/player.cpp
++++ b/player.cpp
+@@ -252 +252 @@
+-						Name);
++						(const WCHAR *)Name);
+@@ -268 +268 @@
+-							Name);
++							(const WCHAR *)Name);
+@@ -273 +273 @@
+-							Name,
++							(const WCHAR *)Name,
+@@ -275,2 +275,2 @@
+-							The_Game()->Get_Team_Word(),
+-							cTeamManager::Get_Team_Name(PlayerType));
++							(const WCHAR *)The_Game()->Get_Team_Word(),
++							(const WCHAR *)cTeamManager::Get_Team_Name(PlayerType));
+@@ -299 +299 @@
+-						Name,
++						(const WCHAR *)Name,
+@@ -316 +316 @@
+-							Name,
++							(const WCHAR *)Name,
+@@ -321 +321 @@
+-							Name,
++							(const WCHAR *)Name,
+@@ -323,2 +323,2 @@
+-							The_Game()->Get_Team_Word(),
+-							cTeamManager::Get_Team_Name(PlayerType));
++							(const WCHAR *)The_Game()->Get_Team_Word(),
++							(const WCHAR *)cTeamManager::Get_Team_Name(PlayerType));
+@@ -353 +353 @@
+-			Name, TRANSLATION(IDS_MP_PLAYER_LEFT_GAME));
++			(const WCHAR *)Name, TRANSLATION(IDS_MP_PLAYER_LEFT_GAME));
+@@ -489 +489 @@
+-		substring.Format(L"%-34s", Name);
++		substring.Format(L"%-34s", (const WCHAR *)Name);
+@@ -491 +491 @@
+-		substring.Format(L"%-9s", Name);
++		substring.Format(L"%-9s", (const WCHAR *)Name);
+--- a/sctextobj.cpp
++++ b/sctextobj.cpp
+@@ -292 +292 @@
+-					sender_name,
++					(const WCHAR *)sender_name,
+@@ -294 +294 @@
+-					recipient_name);
++					(const WCHAR *)recipient_name);
+@@ -298 +298 @@
+-				formatted_text.Format(L"%s: ", sender_name);
++				formatted_text.Format(L"%s: ", (const WCHAR *)sender_name);
+@@ -329 +329 @@
+-				message.Format(L"%s\n", Text);
++				message.Format(L"%s\n", (const WCHAR *)Text);

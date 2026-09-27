@@ -1,5 +1,39 @@
 # Live engineering progress
 
+## Dev201 multiplayer text and Glacier texture candidate
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: Dev201 fast ARM package installed in Vita3K; source and artifact publication
+pending. Live RenCorner test joined Skatepark rather than Glacier.
+Completed: corrected ARM UTF-16 varargs player/chat call sites; added Glacier-only
+user-retail M02 texture fallback. Focused tests, clean staging, package identity
+and Vita3K install passed.
+Evidence: managed `dev201-glacier-texture-font-01`, readable server text capture,
+replicated player ID 12, runner `TIMEOUT_UNASSESSED`.
+Next: capture Glacier terrain and player names in a matching live run; verify
+no `l02_ice.tga` checkerboard fallback, then physical Vita.
+Blocker: current RenCorner map rotated to Skatepark.
+
+## Dev200 live RenCorner purchase response
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: Dev200 is installed in Vita3K. On RenCorner Glacier, the original purchase
+dialog rendered for replicated player ID 30; two released touch inputs selected
+zero-cost Nod Soldier and Buy. The world then displayed the original server
+success response, "Purchase request granted." The client reached 1,560 frames;
+the bounded runner ended at its three-minute timeout, not a clean exit.
+Evidence: VPK SHA-256 `1197653f2ac16243f7dbd2cc705117d5fab46eaf5bb99b20bf63019811405ab9`,
+managed `dev200-tt-purchase-01` captures/log, public listing `PSVita`, and a
+separate 60-frame host join. The 60-second player wait follows original WWNet
+constants; this run does not prove that change caused the stable join.
+Next: full controller purchase workflow, death/respawn, vehicle use, chat and
+ordinary round transition; resolve the server-visible name and heavy Glacier
+frame times. Blocker: no physical Vita multiplayer or complete match coverage.
+
 ## Dev199 RenCorner purchase-menu diagnostic
 
 Renegade Vita - v3.5 active

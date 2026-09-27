@@ -819,6 +819,9 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-client-admission-message.patch"
 echo "Applied: port/patches/commando-a35-client-admission-message.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-multiplayer-utf16-format.patch"
+echo "Applied: port/patches/commando-a35-multiplayer-utf16-format.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-crc-word-width.patch"
 echo "Applied: port/patches/wwlib-a35-crc-word-width.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \

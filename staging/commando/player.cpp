@@ -249,7 +249,7 @@ void cPlayer::On_Create(void)
 					widestring.Format(
 						L"%s, %s.\n",
 						TRANSLATION(IDS_MP_WELCOME_RENEGADE),
-						Name);
+						(const WCHAR *)Name);
 					//
 					//	Display the message...
 					//
@@ -265,15 +265,15 @@ void cPlayer::On_Create(void)
 						widestring.Format(
 							L"%s, %s.\n",
 							TRANSLATION(IDS_MP_WELCOME_RENEGADE),
-							Name);
+							(const WCHAR *)Name);
 					} else {
 						widestring.Format(
 							L"%s, %s, %s %s %s.\n",
 							TRANSLATION(IDS_MP_WELCOME_RENEGADE),
-							Name,
+							(const WCHAR *)Name,
 							TRANSLATION(IDS_MP_TO),
-							The_Game()->Get_Team_Word(),
-							cTeamManager::Get_Team_Name(PlayerType));
+							(const WCHAR *)The_Game()->Get_Team_Word(),
+							(const WCHAR *)cTeamManager::Get_Team_Name(PlayerType));
 					}
 
 					//
@@ -296,7 +296,7 @@ void cPlayer::On_Create(void)
 					WideStringClass widestring;
 					widestring.Format(
 						L"%s %s\n",
-						Name,
+						(const WCHAR *)Name,
 						TRANSLATION(IDS_MP_RENEGADE_JOINS));
 
 					//
@@ -313,15 +313,15 @@ void cPlayer::On_Create(void)
 					if (The_Game()->IsTeamChangingAllowed.Is_True()) {
 						widestring.Format(
 							L"%s %s\n",
-							Name,
+							(const WCHAR *)Name,
 							TRANSLATION(IDS_MP_RENEGADE_JOINS));
 					} else {
 						widestring.Format(
 							L"%s %s %s %s\n",
-							Name,
+							(const WCHAR *)Name,
 							TRANSLATION(IDS_MP_TEAMPLAYER_JOINS),
-							The_Game()->Get_Team_Word(),
-							cTeamManager::Get_Team_Name(PlayerType));
+							(const WCHAR *)The_Game()->Get_Team_Word(),
+							(const WCHAR *)cTeamManager::Get_Team_Name(PlayerType));
 					}
 
 					//
@@ -350,7 +350,7 @@ void cPlayer::On_Destroy(void)
 		WideStringClass message;
 		message.Format(
 			L"%s %s\n",
-			Name, TRANSLATION(IDS_MP_PLAYER_LEFT_GAME));
+			(const WCHAR *)Name, TRANSLATION(IDS_MP_PLAYER_LEFT_GAME));
 
 		//
 		//	Display the message...
@@ -486,9 +486,9 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
 	}
 	*/
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		substring.Format(L"%-34s", Name);
+		substring.Format(L"%-34s", (const WCHAR *)Name);
 	} else {
-		substring.Format(L"%-9s", Name);
+		substring.Format(L"%-9s", (const WCHAR *)Name);
 	}
 	if (IsActive.Is_True()) {
 		substring += L"  ";

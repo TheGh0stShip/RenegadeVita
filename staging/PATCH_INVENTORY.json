@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "df33f02d7c198e3305ddf26e8a9b69fb3c4ce6fe487b0bb96e72fb5e729b4b84",
-  "patch_count": 266,
+  "stage_script_sha256": "10869ee930e6fdd13c21ee46307ff234574601c4d46128a645270dc95e647da5",
+  "patch_count": 267,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1130,6 +1130,11 @@
       "sha256": "712aadde10386d00a7e973dd9c7dfb6024a81235d06f3367c6c00619f8c26ad4"
     },
     {
+      "path": "port/patches/commando-a35-multiplayer-utf16-format.patch",
+      "stage_directory": "commando",
+      "sha256": "9822e1debc71290567d7e5e691ea5945877005a1b57ea065d242c3765c717ae0"
+    },
+    {
       "path": "port/patches/wwlib-a35-crc-word-width.patch",
       "stage_directory": "wwlib",
       "sha256": "a6d0846b40d4dd909f752ac88d7c6c06b414ab7e538131fb2070ee32fec855a1"
@@ -1335,5 +1340,5 @@
       "sha256": "463397d6bc3bf09c88c827782dfdf8a33688d66703956932d1513e8806b7b5aa"
     }
   ],
-  "registry_sha256": "d46a9e4123d23f9f67ca535593eedd234c16478d9daf033c9b96b6adce1bea98"
+  "registry_sha256": "c965203d7aa1b0d6cdea9c8ad0f3c20b0118a3ab763d27b6c4b3f5d53da1a0e9"
 }

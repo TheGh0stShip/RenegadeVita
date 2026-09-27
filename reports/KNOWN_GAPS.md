@@ -1,5 +1,18 @@
 # Known gaps
 
+2026-09-27 Dev201: Glacier checkerboard root is evidenced as missing
+`l02_ice.tga` with `l02_ice.dds` present in unchanged retail M02.mix; scoped
+factory fallback is implemented but Glacier visual validation is pending server
+rotation. UTF-16 player-name varargs fix is built; readable player names still
+need a fresh capture. Dev201 live Skatepark run timed out without clean exit.
+
+2026-09-27 Dev200: original live RenCorner purchase dialog and successful
+server purchase response passed in Vita3K on Glacier, with 1,560 gameplay
+frames. Public listing remains `PSVita` despite requested `PS Vita`; controller
+navigation, respawn, vehicle use, chat and round transition remain unverified.
+The final rolling 120-frame median was 149.8 ms, far from the 60 FPS target.
+No physical Vita multiplayer acceptance. See MULTIPLAYER_COMPATIBILITY.md.
+
 2026-09-27 Dev199: opt-in diagnostic opened original purchase dialog template
 236 for a server-replicated RenCorner player in Vita3K. Rendering, controller
 selection, purchase request/response and sustained connection are unverified;

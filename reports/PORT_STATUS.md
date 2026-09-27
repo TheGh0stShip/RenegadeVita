@@ -1,5 +1,18 @@
 # Renegade Vita port status
 
+2026-09-27 multiplayer Dev201: fixed ARM variadic UTF-16 player/chat formatting
+and mounted user-owned retail M02 textures only for remote Glacier U1. Fast ARM
+package and Vita3K install passed. Live RenCorner replay joined Skatepark, so
+the Glacier texture and player-name visual fixes remain unverified. See
+MULTIPLAYER_COMPATIBILITY.md.
+
+2026-09-27 multiplayer Dev200: Vita3K joined RenCorner Glacier as requested
+`PS Vita`, rendered the original purchase menu and received an original success
+response after a zero-cost Nod Soldier selection. It reached 1,560 frames;
+public listing still showed `PSVita`, and the three-minute runner timeout does
+not prove a clean exit. Performance, respawn, vehicles, chat, round transitions
+and physical Vita multiplayer remain open. See MULTIPLAYER_COMPATIBILITY.md.
+
 2026-09-27 physical PSTV Dev197 return: the user loaded the pre-Ion M13
 checkpoint successfully and EVA exit returned to the main menu. Installed
 SELF hash matches the package; the matching log shows original load/post-load,

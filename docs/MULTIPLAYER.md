@@ -1,8 +1,9 @@
 # Experimental Multiplayer
 
-The current [Dev202 candidate](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
-integrates original multiplayer loading-backdrop selection and MultiHUD. A
-bounded Vita3K run entered Practice, showed its original loading screen, and
+The current [Dev204 candidate](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204)
+carries the original multiplayer loading-backdrop selection and MultiHUD
+integrated in Dev202. Dev204's bounded Vita3K check covered only the LiveArea;
+an earlier Dev202 run entered Practice, showed its original loading screen, and
 rendered `Skirmish00.mix` with brief movement input. Earlier native RenCorner
 tests joined live maps, downloaded server packages, and completed a purchase
 response in Vita3K. This is not a complete TT client, W3DHub launcher port, or

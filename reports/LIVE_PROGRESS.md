@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Dev204 title identity and publication
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: Dev204 is the published artwork candidate, installed and visually
+captured in Vita3K. Completed: original R/V source artwork; candidate-stamped
+LiveArea rendering; seven-entry retail-free package and readback validation;
+177 focused tests; GitHub release and matching artifact hashes. Evidence:
+[Dev204 record](DEV204_LIVEAREA_IDENTITY.md). Next: verify presentation on
+physical Vita/PSTV and continue the unfinished Practice/campaign gameplay
+work. Blocker: no physical title-presentation or Dev204 gameplay acceptance.
+
 ## Dev202 Practice and multiplayer loading candidate
 
 Renegade Vita - v3.5 active
@@ -155,8 +168,8 @@ Previous packaged checkpoint:
 Now: user-requested host rejoin completed; Dev195 installed, native launch pending.
 Completed: six missing original Combat owners, portable state registrations,
 callback/save-load executable test, narrowed prewarm source-contract boundary.
-Evidence: Uphill host60-frame and3600-frame player PASS; loaded replication two-cycle sanitizer
-PASS; eight focused tests and171 fast package contracts PASS. Dev195 VPK and
+Evidence: Uphill host 60-frame and 3,600-frame player PASS; loaded replication two-cycle sanitizer
+PASS; eight focused tests and 171 fast package contracts PASS. Dev195 VPK and
 Vita3K installed SELF hashes match. No new physical gate or native launch claim.
 Next: confirm user-visible join, native TT execution
 and source-reviewed GitHub publication. Float-VIS leak/full transitions remain.
@@ -166,10 +179,10 @@ Previous live-player checkpoint:
 Now: live host PS Vita player verified; native launch profile compiled, untested.
 Completed: native explicit tt:// selection through original WWNet, original
 SpecialEffectsGameObj linkage after417-frame live failure, DDB factory audit.
-Evidence: subsequent RenCorner DethRiver run passes3600 verified player frames
+Evidence: subsequent RenCorner DethRiver run passes 3,600 verified player frames
 and normal teardown.14 reference/audit/ABI tests, original UDP purchase/world
 and two tutorial sanitizer cycles pass. Full ARM link/no-work pass;265 patches.
-No new physical gate. Native execution/full multiplayer and1032-byte float-VIS
+No new physical gate. Native execution/full multiplayer and 1,032-byte float-VIS
 leak remain open; audit finds six further unlinked Combat definition owners.
 Next: close audited runtime gaps and prepare native package/isolated TT launch.
 Blocker: no external blocker; no new VPK, Dev194 remains installed.
@@ -180,7 +193,7 @@ Completed: original purchase catalog2004/2005 network/lifetime/availability/UI;
 C4 modern full-float suffix and typed ammunition validation through original owners.
 Evidence: catalog reference/loaded purchase tests and original UDP pass; C4 four
 retail vectors,1197 truncations and two loaded sanitizer cycles pass. Final20
-reference/audit/ABI/stage tests and17 downloader/TLS checks pass. Host/ARM link
+reference/audit/ABI/stage tests and 17 downloader/TLS checks pass. Host/ARM link
 and no-work repeats pass;265 patches. Hashes: tt-c4-artifacts.sha256.
 Final same-binary ordinary tutorial and UDP purchase/world ASan/LSan pass.
 Live catalog probe captured C4 decode failure; no post-C4 live retest yet.

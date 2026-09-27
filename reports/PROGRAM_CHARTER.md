@@ -43,7 +43,12 @@ The force-included `renegade_target_abi.h` enforces the native target contract;
 
 ## Active status
 
-- A3.5-dev202: current published fast ARM/Vita3K Practice candidate. Original
+- A3.5-dev204: current published fast ARM title-presentation candidate. An
+  original R/V icon and version-stamped LiveArea art are packaged; Vita3K
+  install/readback and bounded LiveArea visual capture passed. It carries
+  Dev202 runtime changes but was not retested for gameplay. Physical Vita/PSTV
+  visual review and canonical acceptance remain pending.
+- A3.5-dev202: earlier fast ARM/Vita3K Practice candidate. Original
   Practice/C&C loading-backdrop routing and full-port MultiHUD linkage are
   integrated. A later bounded Vita3K run showed Practice loading backdrop 96,
   `Skirmish00.mix` rendering and brief movement; full gameplay and physical

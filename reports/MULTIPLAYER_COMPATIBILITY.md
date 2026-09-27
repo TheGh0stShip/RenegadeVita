@@ -193,7 +193,7 @@ build/host-m13-diagnostic: tt-combat-owners-factory-audit-final.json,
 tt-state-machine-selftest.log, tt-combat-owners-loaded.log and
 tt-combat-owners-focused.log.
 
-The fast package gate passes171 contracts plus the original DDS alias executable
+The fast package gate passes 171 contracts plus the original DDS alias executable
 test. One source-contract test originally scanned from the M00 prewarm definition
 through unrelated multiplayer startup to its caller. It now restricts the
 no-simulation assertion to that prewarm function. No runtime change was needed.
@@ -207,7 +207,7 @@ installation pass; no native launch or physical acceptance yet. Canonical
 acceptance and asset-free GitHub publication remain pending.
 
 At the user's request, live host rejoin now negotiates C&C_Uphill.mix and five
-packages. A bounded short run verifies the server-created player/Soldier for60
+packages. A bounded short run verifies the server-created player/Soldier for 60
 frames and exits normally. The first long run was manually interrupted before
 its outer timeout; the sampled stack was in weather spawning. This does NOT
 prove a deadlock: a subsequent weather probe found normal density0.3, emitter
@@ -322,7 +322,7 @@ type. Legacy serialization remains unchanged. Parent state is not claimed to
 be transactional. Static-attachment bytes are reference-tested, but an actual
 loaded static-animated attachment has not been exercised.
 
-Four C4 vectors and1197 truncated suffixes pass; airborne, ground and dynamic
+Four C4 vectors and 1,197 truncated suffixes pass; airborne, ground and dynamic
 attachment imports/readback pass two loaded ASan/LSan cycles. The initial loaded
 test failed because its legacy readback encoders were uninitialized; setting
 the original velocity precision and explicit fixture world bounds fixed the

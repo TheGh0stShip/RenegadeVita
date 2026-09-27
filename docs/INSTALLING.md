@@ -1,19 +1,20 @@
 # Installing on Vita
 
 This guide covers the full-port development candidate, currently
-[Dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
+[Dev204](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204).
 It is experimental, not a completed campaign or multiplayer release. The
 separate [tutorial demo guide](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
 remains specific to that demo.
-Dev202 passed a fast ARM build and Vita3K installation; a bounded emulator run
-also captured Practice loading and spawn. It is not a canonical build or
-physical gameplay acceptance. Dev197 has the latest
+Dev204 passed a fast ARM build and Vita3K installation; a bounded emulator
+capture shows its original LiveArea art. Dev202 previously captured Practice
+loading and spawn. Neither is a canonical build or physical gameplay
+acceptance. Dev197 has the latest
 bounded PSTV save-load/menu-return evidence.
 
-The Dev202 VPK contains only the executable and package metadata. New
-candidates also include five project-authored LiveArea files: application
-icon, launch image, background, gate image, and template. The candidate label
-is visible in the LiveArea artwork. Neither package contains retail data,
+The Dev204 VPK contains the executable, package metadata, and five
+project-authored LiveArea files: application icon, launch image, background,
+gate image, and template. The candidate label is visible in the LiveArea
+artwork. No full-port VPK contains retail data,
 saves, configuration, logs, screenshots, videos, or crash dumps.
 
 ## Filesystem boundary
@@ -66,7 +67,7 @@ private identity, trust-bundle, and one-shot launch setup.
 
 ## Before installation
 
-1. Download the development VPK and verify its published SHA-256, or build a new candidate with an unused `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev202 has fast-build/package and bounded Vita3K Practice evidence only. Dev197 passed a canonical build and a bounded PSTV checkpoint test, not full physical acceptance.
+1. Download the development VPK and verify its published SHA-256, or build a new candidate with an unused `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev204 has fast-build/package and bounded Vita3K LiveArea evidence only. Dev202 separately has Practice evidence. Dev197 passed a canonical build and a bounded PSTV checkpoint test, not full physical acceptance.
 2. Retain its VPK, packaged SELF, map, symbols, SHA-256 manifest, and build log together.
 3. Verify the VPK contains no retail data.
 4. Review [Current status](CURRENT_STATUS.md) and use a bounded physical test plan.

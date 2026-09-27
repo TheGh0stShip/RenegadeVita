@@ -23,7 +23,7 @@ Do not edit `upstream/CnC_Renegade/`. Portability changes belong in `port/` or i
 ## Build
 
 The current published candidate is
-[A3.5-dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
+[A3.5-dev204](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204).
 Use a fresh label for your own build; do not reuse the published release tag.
 
 Run the canonical candidate build:
@@ -66,8 +66,8 @@ Check [Building](BUILDING.md) for the complete closure and [Current status](CURR
 
 ## Install only with a bounded test plan
 
-The current Dev202 VPK contains only the executable and package metadata.
-New candidates also package five project-authored LiveArea files, including
+The current Dev204 VPK packages the executable, metadata, and five
+project-authored LiveArea files, including
 the versioned background and application icon. Neither package contains retail
 data. The game expects user-owned retail data at:
 

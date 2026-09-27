@@ -1,4 +1,21 @@
 {
+  "dev204_livearea_candidate": {
+    "state": "FAST_BUILT_VITA3K_LIVEAREA_VISUAL_VERIFIED_GAMEPLAY_UNTESTED",
+    "vpk_sha256": "840966d4a7c17a0fbb78f4b1c47a345309e17022cb95f8f834bbd9584e10c11d",
+    "installed_eboot_sha256": "5b15a10d9dd02a0088dc772b63abf51f01e0e9014e68cc6c80958055a9576a8f",
+    "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev204-setup-20260927T053840890405Z/setup-receipt.json",
+    "focused_tests_passed": 177,
+    "source_commit": "ba9802e10ea029d4675f04cde40dfc3004babf28",
+    "github_release_tag": "A3.5-dev204",
+    "github_repository_hygiene_run": 36297993081,
+    "github_vpk_digest_matches_local": true,
+    "vpk_entry_count": 7,
+    "vita3k_livearea_screenshot_sha256": "001e27fea0d44693ecee0c2b0139b4b176e8a36daabb02972a1c1c8f3838c10e",
+    "vita3k_livearea_visual_verified": true,
+    "gameplay_verified": false,
+    "canonical_build": false,
+    "physical_acceptance": false
+  },
   "dev202_practice_loading_candidate": {
     "state": "FAST_BUILT_VITA3K_PRACTICE_LOADING_SPAWN_MOVEMENT_CAPTURED",
     "vpk_sha256": "d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28",
@@ -89,11 +106,11 @@
     "physical_acceptance": false
   },
   "public_candidate": {
-    "label": "A3.5-dev202",
-    "report": "reports/MULTIPLAYER_COMPATIBILITY.md",
-    "evidence_class": "Vita3K_Practice_loading_spawn_bounded_movement_full_mode_unverified",
-    "source_commit": "30b0d27a492c43ab2807f925230f5d6f0b47b601",
-    "release_tag": "A3.5-dev202",
+    "label": "A3.5-dev204",
+    "report": "reports/DEV204_LIVEAREA_IDENTITY.md",
+    "evidence_class": "Vita3K_LiveArea_visual_only_gameplay_unverified",
+    "source_commit": "ba9802e10ea029d4675f04cde40dfc3004babf28",
+    "release_tag": "A3.5-dev204",
     "physical_acceptance": false
   },
   "issue1_dev197_candidate": {

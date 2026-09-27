@@ -2,41 +2,50 @@
 
 ![Renegade Vita R/V insignia and LiveArea banner](docs/media/brand/renegade-vita-banner.png)
 
-Original project artwork preview for the next candidate. The published Dev202
-VPK still has its earlier title presentation; no Dev203 runtime or physical
-Vita appearance is claimed by this image.
+Original project artwork in the Dev204 package. The
+[Vita3K LiveArea capture](docs/media/vita3k/dev204-livearea.png) shows it in
+the emulator; physical Vita appearance is still unverified.
 
 An evidence-led, native ARM PlayStation Vita source port of *Command & Conquer: Renegade*. The original EA/Westwood engine remains the owner of game logic, MIX/archive access, W3D/WW3D rendering ownership, Combat, Commando, mission scripts, HUD, and networking. This project replaces only the platform boundaries needed to run that original code on Vita.
 
 It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset conversion runtime.
 
-> **Current development candidate: A3.5-dev202.** This fast-built native ARM
-> package is installed in Vita3K. It connects original Practice and multiplayer
-> loading-backdrop selection and links original MultiHUD. A bounded Vita3K run
-> selected Practice, showed its original loading screen and rendered
-> `Skirmish00.mix` with brief movement input. Full Practice gameplay is unverified.
+> **Current development candidate: A3.5-dev204.** This fast-built native ARM
+> package is installed in Vita3K. Its project-authored application icon and
+> versioned LiveArea art rendered there. It carries Dev202's original Practice
+> and multiplayer loading-backdrop selection and MultiHUD linkage; those
+> gameplay paths were not retested in Dev204. Full Practice play is unverified.
 > Dev197 remains the last bounded physical PSTV save-load/menu-return result.
 > Full multiplayer, campaign and physical Vita performance acceptance remain open.
 
-[Download Dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
+[Download Dev204](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204)
 | [Setup](docs/INSTALLING.md) | [Current status](docs/CURRENT_STATUS.md)
 | [Multiplayer setup](docs/MULTIPLAYER.md)
 | [Project video page](https://thegh0stship.github.io/RenegadeVita/)
 
-The Dev202 VPK contains the executable and package metadata only; the prerelease also
-offers separately labelled screenshots and a silent Vita3K clip. This is
+The Dev204 VPK contains the executable, package metadata, and five
+project-authored LiveArea files. It offers a labelled emulator LiveArea
+screenshot. The earlier Dev202 prerelease also offers a silent Vita3K clip. This is
 not a finished game release. Supply your own legally obtained retail data.
 The separate [tutorial demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
 is preserved; its data subset is not sufficient for the full-port candidate.
 
 ## Where the port stands
 
-Dev202 is an **experimental Practice/multiplayer development candidate**. Its
+Dev204 is an **experimental full-port development candidate**. It adds only
+title-presentation artwork to Dev202's runtime; its own observed Vita3K result
+is the LiveArea, not Practice gameplay. Dev202's
 [runtime record](reports/MULTIPLAYER_COMPATIBILITY.md) separates bounded
 Practice loading/rendering from unverified full gameplay and physical behavior.
 Dev197 remains the last [bounded physical PSTV result](reports/DEV197_ISSUE1_SAVE_MENU.md).
 
 ### Recent Vita3K Captures
+
+The [Dev204 LiveArea screenshot](docs/media/vita3k/dev204-livearea.png) is a
+real emulator capture. The R/V mark and version stamp are project-authored
+artwork, not a retail game logo.
+
+[![Dev204 Renegade Vita LiveArea in Vita3K](docs/media/vita3k/dev204-livearea.png)](docs/media/vita3k/dev204-livearea.png)
 
 These are unaltered window captures, not physical Vita framebuffer evidence.
 Dev202 entered `Skirmish00.mix` through the original Practice menu. The
@@ -58,6 +67,7 @@ show an earlier live RenCorner purchase, not Dev202 multiplayer gameplay.
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
 | Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation passed. Bounded M13 save reload and EVA exit-to-menu passed in Vita3K and physical PSTV, with matching runtime logs and installed SELF hash. |
 | Dev202 build | Fast ARM ELF/SELF/VPK, 177 focused tests, package identity and Vita3K install/readback passed. Practice selected `Skirmish00.mix`, showed original loading backdrop 96, rendered gameplay and accepted brief movement input. This is not a canonical or physical acceptance run. |
+| Dev204 build | Fast ARM package and Vita3K install/readback passed. The original icon, background, gate and version stamp were visible in Vita3K. Gameplay was not retested; physical LiveArea appearance remains pending. |
 | Dev200/201 multiplayer | Dev200 joined Glacier and received an original successful purchase response. Dev201 joined Skatepark after map rotation. The client requested `PS Vita`; public name normalization remains unresolved. |
 | Remaining multiplayer work | Full Practice play, bots/objectives and transitions remain unverified; Dev201 player-name formatting and Glacier ice texture also need visual confirmation. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
 | Campaign | Dev197 reloaded the M13 pre-Ion-beacon save and returned to the menu; later Ion progression was not exercised in that run. Earlier runs completed M13 and entered M01; cinematic, actor and M01 stalls remain open. |

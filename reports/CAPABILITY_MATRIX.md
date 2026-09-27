@@ -1,5 +1,11 @@
 # Capability matrix
 
+2026-09-27 Dev204: original icon, LiveArea background/gate, and launch image
+are version-stamped and packaged. Fast build, Vita3K install/readback and
+bounded LiveArea capture pass. This is emulator title-presentation evidence,
+not physical acceptance or a new gameplay pass; Dev202 below remains the
+latest Practice run.
+
 2026-09-27 Dev202: Practice retains original frontend map/session ownership;
 original MultiHUD is linked for full port, and Practice/C&C select original
 loading backdrops 96/94. Build/install passed; a bounded Vita3K run entered
@@ -27,13 +33,13 @@ DEV195_RENCORNER_NATIVE_JOIN.md. Earlier unlaunched notes below are history.
 
 2026-09-24 Dev195: six audited Combat factory gaps closed in full-port links;
 original state-machine callbacks and save/load pass focused sanitizer checks.
-Loaded replication probes and171 fast contracts pass. Package and Vita3K
+Loaded replication probes and 171 fast contracts pass. Package and Vita3K
 install/hash verification pass; native execution and full multiplayer remain
-unverified. Live host Uphill player test passes60 frames; public join-message
+unverified. Live host Uphill player test passes 60 frames; public join-message
 confirmation pending. See MULTIPLAYER_COMPATIBILITY.md for exact evidence.
 
 2026-09-24 live-player checkpoint: original host negotiates/downloads DethRiver,
-receives server-created PS Vita player and controlled Soldier, completes3600
+receives server-created PS Vita player and controlled Soldier, completes 3,600
 simulation frames and disconnects normally. Original special-effects owner is
 now linked. Native explicit tt:// direct-IP entry compiles, but native execution,
 rendering/input/audio, purchases/respawn/round transitions remain unverified.

@@ -2,7 +2,20 @@
 
 Updated: 2026-09-27
 
-## Latest A3.5-dev202 development candidate
+## Current A3.5-dev204 development candidate
+
+Dev204 adds an original R/V icon, version-stamped LiveArea background and gate,
+and launch image to the existing full-port build. The fast ARM package and
+Vita3K install/readback checks passed; a [bounded emulator capture](media/vita3k/dev204-livearea.png)
+shows the installed LiveArea with a readable `A3.5-dev204` label. No gameplay
+was exercised in this candidate's visual check. The package is not canonical
+and its LiveArea appearance is not yet verified on PS Vita or PSTV. See the
+[Dev204 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204)
+and [matching evidence record](../reports/DEV204_LIVEAREA_IDENTITY.md). The
+VPK SHA-256 is
+`840966d4a7c17a0fbb78f4b1c47a345309e17022cb95f8f834bbd9584e10c11d`.
+
+## A3.5-dev202 Practice checkpoint
 
 Dev202 selects the original mode-specific loading backdrops for Practice (96)
 and C&C multiplayer (94), and links the original full-port MultiHUD. It passed

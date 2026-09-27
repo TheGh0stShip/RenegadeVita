@@ -1,5 +1,10 @@
 # Known gaps
 
+2026-09-27 Dev204: the R/V icon and version-stamped LiveArea passed a bounded
+Vita3K visual check. Physical Vita/PSTV appearance, canonical package
+acceptance, and Dev204 gameplay remain unverified. The title artwork does not
+resolve the Dev202 Practice or campaign gaps below.
+
 2026-09-27 Dev202: a later bounded Vita3K run entered Practice and captured
 original backdrop 96, `Skirmish00.mix` world/HUD, brief movement and a silent
 35-second clip. This does not establish bots, objectives, purchases,
@@ -60,7 +65,7 @@ sampled weather spawning; subsequent normal weather values and short-run pass
 do not establish either a deadlock or a performance fix. Public join-message
 visibility is still unverified. Current evidence: MULTIPLAYER_COMPATIBILITY.md.
 
-2026-09-24 live-player checkpoint: host player join now verified for3600 frames,
+2026-09-24 live-player checkpoint: host player join now verified for 3,600 frames,
 after linking original SpecialEffectsGameObj requested as preset82110001. Native
 TT launch profile is implemented/compiled, not executed. Remaining registered-
 owner audit gaps: SAMSite, DamageZone, Sakura/Mendoza/RaveshawBoss and Character

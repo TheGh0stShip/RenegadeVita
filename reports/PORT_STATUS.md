@@ -1,5 +1,13 @@
 # Renegade Vita port status
 
+2026-09-27 Dev204: original project-authored R/V icon and version-stamped
+LiveArea background, gate and launch image are packaged. Fast ARM/package,
+177 focused tests and Vita3K install/readback passed. A bounded Vita3K capture
+shows the icon and readable version on the installed LiveArea. The source tag
+and release VPK hash match; no Dev204 gameplay or physical Vita/PSTV acceptance
+is claimed. Dev202 remains the latest Practice gameplay evidence. See
+[Dev204](DEV204_LIVEAREA_IDENTITY.md).
+
 2026-09-27 Dev202: full-port mode-specific original loading backdrop selection
 and original MultiHUD compiled/linked. Fast ARM package, 177 focused tests,
 Vita3K install/readback passed. A later bounded Vita3K run selected original
@@ -64,13 +72,13 @@ link; state-machine syntax adaptation passes callback/save-load ASan/LSan test.
 Loaded replication probes pass two cycles; all171 fast contracts pass. Dev195
 packaged and installed/hash-verified in Vita3K, not launched. Host rejoin on
 Uphill verifies60 player frames; public join-message visibility remains open.
-Subsequent host soak passes3600 frames/normal teardown; no weather root-cause
+Subsequent host soak passes 3,600 frames/normal teardown; no weather root-cause
 claim from one sampled stack.
 GitHub publication and native/full-multiplayer acceptance remain pending.
 Current hashes/evidence: MULTIPLAYER_COMPATIBILITY.md. Dev194 notes are history.
 
 2026-09-24 live-player checkpoint: original host now joins RenCorner as PS Vita,
-loads negotiated DethRiver and completes3600 verified simulation frames. A
+loads negotiated DethRiver and completes 3,600 verified simulation frames. A
 longer test exposed absent SpecialEffectsGameObj linkage; the unchanged original
 owner is now linked and the subsequent live run passes. Explicit native tt://
 one-shot entry is implemented/ARM-linked, not executed. Tutorial and UDP purchase

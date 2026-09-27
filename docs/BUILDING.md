@@ -2,7 +2,7 @@
 
 `tools/build.sh` is the canonical build path. Use it for every candidate that may be handed to physical hardware.
 The current published candidate is
-[A3.5-dev202](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
+[A3.5-dev204](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204).
 The commands below intentionally use a fresh placeholder label rather than
 reusing that release identity.
 

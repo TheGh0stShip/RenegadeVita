@@ -1,9 +1,11 @@
 # Capability roadmap
 
-2026-09-27 checkpoint: Dev202 is the current published fast ARM/Vita3K Practice
-candidate. Original Practice/C&C loading-backdrop selection and MultiHUD link;
-Practice loading and spawn now have bounded Vita3K evidence, but full Practice
-gameplay remains unverified. Dev200's RenCorner
+2026-09-27 checkpoint: Dev204 is the current published fast ARM/Vita3K title-
+presentation candidate. Its original icon and version-stamped LiveArea are
+visually verified in Vita3K, not on physical Vita. Dev202 remains the latest
+bounded Practice gameplay evidence: original Practice/C&C loading-backdrop
+selection and MultiHUD link, loading and spawn. Full Practice gameplay remains
+unverified. Dev200's RenCorner
 purchase response and Dev195's join/movement evidence are earlier Vita3K
 results. Campaign completion, full multiplayer and physical performance remain
 open. Current evidence: [multiplayer](MULTIPLAYER_COMPATIBILITY.md). These
@@ -33,7 +35,7 @@ pacing and actor defects. Dev195 multiplayer evidence does not resolve them.
 |---|---|---|
 | A3.1.4 | Visible original interactive M00 lifecycle | physically validated; frozen |
 | A3.2 | Frozen failed physical evidence: input, animation, projection, material, and exit defects | `A3.2-dev1` immutable; never promote from it |
-| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | Dev202 is the current published development candidate. Historical physical failures remain immutable; new physical correctness and performance gates remain open. |
+| v3.5 | Correctness and flight recorder: repair A3.2 defects; matching diagnostic candidate | Dev204 is the current published development candidate; its new evidence covers Vita3K LiveArea only. Historical physical failures remain immutable; new physical correctness and performance gates remain open. |
 | v3.6 | Resource, memory, deterministic cache/index, tutorial plus second scene and map smoke | pending v3.5 physical gate |
 | v3.7 | Perspective-correct efficient renderer and measured Balanced frame pacing | pending v3.6 infrastructure |
 | v3.8 | Original frontend, HUD, essential audio, intro path/fallback | host/ARM closure exists; physical integration pending |

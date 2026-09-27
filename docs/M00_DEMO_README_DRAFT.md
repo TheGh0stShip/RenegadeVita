@@ -52,8 +52,9 @@ Movie decoding: FFmpeg contributors.
 Fonts and libraries: FreeType, zlib, libpng, bzip2 and minizip contributors.
 Platform support: taiHEN and math-neon contributors.
 
-The repository's LICENSE.md points to the controlling upstream license and
-additional terms. A public release must identify its matching source and
+The repository includes the complete GPLv3 [LICENSE](../LICENSE),
+[EA source terms](../EA-SOURCE-LICENSE.md), and a
+[scope notice](../LICENSE-NOTICE.md). A public release must identify its matching source and
 dependency notices rather than relying only on these short credits.
 
 ## Before publishing

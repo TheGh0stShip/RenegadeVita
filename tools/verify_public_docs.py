@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -12,6 +13,7 @@ from pathlib import Path
 DOCUMENTS = (
     "README.md",
     "CHANGELOG.md",
+    "LICENSE-NOTICE.md",
     "CONTRIBUTING.md",
     "VERSIONING.md",
     "SECURITY.md",
@@ -31,6 +33,11 @@ DOCUMENTS = (
     "docs/TROUBLESHOOTING.md",
 )
 
+LICENSE_FILES = {
+    "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "EA-SOURCE-LICENSE.md": "c13278f0aa0fc48b06dc6e623ef7349788b9d79eff74fd50fefebd5315846005",
+}
+
 CURRENT_CANDIDATE_DOCUMENTS = (
     "README.md",
     "CHANGELOG.md",
@@ -43,6 +50,7 @@ CURRENT_CANDIDATE_DOCUMENTS = (
 
 REQUIRED_TEXT = {
     "README.md": ("A3.1.4", "not a finished game release", "physical Vita"),
+    "LICENSE-NOTICE.md": ("GNU GPL version 3", "EA additional terms"),
     "docs/CURRENT_STATUS.md": ("A3.1.4", "Physical Vita", "Campaign status"),
     "docs/MULTIPLAYER.md": ("TLS certificate and hostname verification", "Current Limits"),
     "docs/EVIDENCE.md": ("capture.screen.v1", "physical Vita"),
@@ -60,6 +68,12 @@ def is_external(target: str) -> bool:
 def validate(root: Path) -> list[str]:
     root = root.resolve()
     failures: list[str] = []
+    for relative, expected_hash in LICENSE_FILES.items():
+        path = root / relative
+        if not path.is_file():
+            failures.append(f"missing complete license file: {relative}")
+        elif hashlib.sha256(path.read_bytes()).hexdigest() != expected_hash:
+            failures.append(f"{relative}: license text differs from reviewed source")
     try:
         state = json.loads((root / "reports/BUILD_STATE.json").read_text(encoding="utf-8"))
         candidate = state["public_candidate"]

@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.verify_public_docs import DOCUMENTS, REQUIRED_TEXT, validate
+from tools.verify_public_docs import DOCUMENTS, LICENSE_FILES, REQUIRED_TEXT, validate
 
 
 class PublicDocsTests(unittest.TestCase):
@@ -18,6 +18,9 @@ class PublicDocsTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("\n".join(REQUIRED_TEXT.get(relative, ())) +
                             "\nA3.5-dev195\n", encoding="utf-8")
+        source_root = Path(__file__).resolve().parents[1]
+        for relative in LICENSE_FILES:
+            (self.root / relative).write_bytes((source_root / relative).read_bytes())
         (self.root / "reports").mkdir()
         (self.root / "reports/candidate.md").write_text("Evidence\n", encoding="utf-8")
         self.state = {"public_candidate": {
@@ -53,6 +56,14 @@ class PublicDocsTests(unittest.TestCase):
     def test_missing_report_fails(self):
         (self.root / "reports/candidate.md").unlink()
         self.assertTrue(any("report is missing" in item for item in validate(self.root)))
+
+    def test_missing_full_license_fails(self):
+        (self.root / "LICENSE").unlink()
+        self.assertTrue(any("missing complete license" in item for item in validate(self.root)))
+
+    def test_changed_ea_terms_fail(self):
+        (self.root / "EA-SOURCE-LICENSE.md").write_text("GPLv3\n", encoding="utf-8")
+        self.assertTrue(any("license text differs" in item for item in validate(self.root)))
 
     def test_invalid_candidate_fails(self):
         self.state["public_candidate"]["label"] = "latest"

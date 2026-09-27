@@ -119,6 +119,14 @@ published Dev202 identity.
 
 ## License and retail data
 
-The released Renegade source carries GPLv3 plus EA's additional terms; see the upstream notice after initializing the submodule. You must supply your own retail data at `ux0:data/renegade/retail/Data/`. User state lives under `ux0:data/renegade/user/`; downloaded TTFS packages are separate at `ux0:data/renegade/cache/ttfs/`.
+The released Renegade source carries [GPLv3](LICENSE) plus
+[EA's additional terms](EA-SOURCE-LICENSE.md). Project-authored port source
+and modifications to that covered work follow those terms; the
+[license scope](LICENSE-NOTICE.md) distinguishes retail data, third-party
+libraries and captured media. You must supply your own retail data at
+`ux0:data/renegade/retail/Data/`. User state lives under
+`ux0:data/renegade/user/`; downloaded TTFS packages are separate at
+`ux0:data/renegade/cache/ttfs/`.
 
-See [LICENSE.md](LICENSE.md), [CONTRIBUTING.md](CONTRIBUTING.md), and [SECURITY.md](SECURITY.md) before contributing or sharing diagnostics.
+See [NOTICE.md](NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md), and
+[SECURITY.md](SECURITY.md) before contributing or sharing diagnostics.

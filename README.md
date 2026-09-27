@@ -151,3 +151,5 @@ libraries and captured media. You must supply your own retail data at
 
 See [NOTICE.md](NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md), and
 [SECURITY.md](SECURITY.md) before contributing or sharing diagnostics.
+
+[![Repository visitors](https://hits.sh/github.com/TheGh0stShip/RenegadeVita.svg?label=repo%20visitors&color=d4473c&labelColor=38474a)](https://hits.sh/github.com/TheGh0stShip/RenegadeVita/)

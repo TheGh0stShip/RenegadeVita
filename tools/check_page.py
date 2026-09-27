@@ -21,7 +21,8 @@ root = Path(__file__).resolve().parents[1]
 page = (root / "index.html").read_text(encoding="utf-8")
 parser = Links()
 parser.feed(page)
-assert "A3.5-dev202" in page
+assert "A3.5-dev204" in page
+assert "Dev204 LiveArea in Vita3K" in page
 assert "Historical Dev87" in page
 assert "physical Vita acceptance remain open" in page
 assert "Full Practice gameplay" in page
@@ -42,9 +43,11 @@ new_video = root / "dev202-practice-vita3k-silent.mp4"
 assert hashlib.sha256(new_video.read_bytes()).hexdigest() == (
     "4e07cddc0d42911ad2f2cd5a81d05a32057e75c5c0938f5a54eb718286478899")
 for name, digest in {
+    "dev204-banner.png": "d00735971158b95138a5d698cf92bb5290a5aff1361e2634c7e1267035af1ddc",
+    "dev204-livearea.png": "001e27fea0d44693ecee0c2b0139b4b176e8a36daabb02972a1c1c8f3838c10e",
     "dev202-main-menu.png": "58823a89f870d01565b3ba8a54ebde1ef7d50c073a7f881858802c9e8b4a8b6d",
     "dev202-practice-loading.png": "61f2f098cc755545e307e87b16d68878e2af096a2b7e9a5cc37f4b1e51f63b25",
     "dev202-practice-gameplay.png": "041a76808d9fe611b7176d660a718f3541e4212b84f77791537128eb0e04e9f2",
 }.items():
     assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest
-print("PASS: page links, status caveats, historical video and Dev202 media hashes")
+print("PASS: page links, evidence caveats, historical video and Dev202/Dev204 media hashes")

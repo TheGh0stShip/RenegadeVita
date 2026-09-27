@@ -28,34 +28,36 @@ Updated September 27, 2026: 108 numbered builds have retained captures, plus A3.
 
 ## Quick Gameplay View
 
-This overview deliberately shows actual gameplay/world frames, including NPC detail crops, rather than one thumbnail from every build. Some later builds only produced loading, black, or diagnostic buffers locally; those are inventoried later but not promoted into this first visual impression.
+Selected world and cinematic captures from A3.1 through Dev202, ordered by build. Each caption identifies the build and platform. Dev204-Dev206 have newer presentation captures, shown in their own build groups below, but no newer reviewed gameplay image in this gallery. These are historical views, not a same-camera performance comparison.
 
 <table>
 <tr>
-<td width="20%"><img src="history/screenshots/a31-vita-log-select-capture-f2278.png" width="220" alt="A3.1: Early visible M00 world"><br>A3.1: Early visible M00 world</td>
-<td width="20%"><img src="history/screenshots/a31-vita-log-select-capture-f3232.png" width="220" alt="A3.1: Second early M00 world view"><br>A3.1: Second early M00 world view</td>
-<td width="20%"><img src="history/screenshots/a35-dev5-spawn-control.png" width="220" alt="A3.5-dev5: Visible M00 world and weapon"><br>A3.5-dev5: Visible M00 world and weapon</td>
-<td width="20%"><img src="history/screenshots/a35-dev5-walk-manual.png" width="220" alt="A3.5-dev5: Manual movement capture"><br>A3.5-dev5: Manual movement capture</td>
-<td width="20%"><img src="history/screenshots/a35-dev5-vita-manual-select-interactive-f355-t39869172.png" width="220" alt="A3.5-dev5: Recovered weapon/world frame"><br>A3.5-dev5: Recovered weapon/world frame</td>
+<td width="20%"><img src="history/screenshots/a31-vita-log-select-capture-f2278.png" width="220" alt="A3.1: Physical Vita: early M00 world"><br>A3.1: Physical Vita: early M00 world</td>
+<td width="20%"><img src="history/screenshots/a35-dev5-walk-manual.png" width="220" alt="Dev5: Physical Vita: tutorial movement"><br>Dev5: Physical Vita: tutorial movement</td>
+<td width="20%"><img src="history/screenshots/a35-dev13-selected-frame.png" width="220" alt="Dev13: Physical Vita: NPC/material defects"><br>Dev13: Physical Vita: NPC/material defects</td>
+<td width="20%"><img src="history/screenshots/a35-dev19-npc-detail-crop.png" width="220" alt="Dev19: Physical Vita: NPC detail"><br>Dev19: Physical Vita: NPC detail</td>
+<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png" width="220" alt="Dev87: Physical Vita: tutorial exterior"><br>Dev87: Physical Vita: tutorial exterior</td>
 </tr>
 <tr>
-<td width="20%"><img src="history/screenshots/a35-dev7-effects-131326.png" width="220" alt="A3.5-dev7: Effects/input gameplay view"><br>A3.5-dev7: Effects/input gameplay view</td>
-<td width="20%"><img src="history/screenshots/a35-dev7-vita-manual-select-interactive-f1527-t61897982.png" width="220" alt="A3.5-dev7: Recovered wall/weapon frame"><br>A3.5-dev7: Recovered wall/weapon frame</td>
-<td width="20%"><img src="history/screenshots/a35-dev13-selected-frame.png" width="220" alt="A3.5-dev13: NPC/material defect route frame"><br>A3.5-dev13: NPC/material defect route frame</td>
-<td width="20%"><img src="history/screenshots/a35-dev13-npc-crop.png" width="220" alt="A3.5-dev13: NPC material detail crop"><br>A3.5-dev13: NPC material detail crop</td>
-<td width="20%"><img src="history/screenshots/a35-dev16-selected-frame.png" width="220" alt="A3.5-dev16: Audio lifecycle route frame"><br>A3.5-dev16: Audio lifecycle route frame</td>
+<td width="20%"><img src="history/build-captures/dev117-001.png" width="220" alt="Dev117: Vita3K: tutorial exterior"><br>Dev117: Vita3K: tutorial exterior</td>
+<td width="20%"><img src="history/build-captures/dev118-010.png" width="220" alt="Dev118: Vita3K: tutorial NPC and HUD"><br>Dev118: Vita3K: tutorial NPC and HUD</td>
+<td width="20%"><img src="history/build-captures/dev121-017.png" width="220" alt="Dev121: Vita3K: tutorial vehicle"><br>Dev121: Vita3K: tutorial vehicle</td>
+<td width="20%"><img src="history/build-captures/dev123-020.png" width="220" alt="Dev123: Vita3K: tutorial interior"><br>Dev123: Vita3K: tutorial interior</td>
+<td width="20%"><img src="history/build-captures/dev129-029.png" width="220" alt="Dev129: Vita3K: tutorial NPC"><br>Dev129: Vita3K: tutorial NPC</td>
 </tr>
 <tr>
-<td width="20%"><img src="history/screenshots/a35-dev17-selected-frame.png" width="220" alt="A3.5-dev17: Route replay frame"><br>A3.5-dev17: Route replay frame</td>
-<td width="20%"><img src="history/screenshots/a35-dev18-capture2.png" width="220" alt="A3.5-dev18: Crate/world route frame"><br>A3.5-dev18: Crate/world route frame</td>
-<td width="20%"><img src="history/screenshots/a35-dev18-vita-manual-select-interactive-f2184-t75384736.png" width="220" alt="A3.5-dev18: Manual gameplay route frame"><br>A3.5-dev18: Manual gameplay route frame</td>
-<td width="20%"><img src="history/screenshots/a35-dev19-vita-manual-select-interactive-f2570-t85917941.png" width="220" alt="A3.5-dev19: NPC route capture"><br>A3.5-dev19: NPC route capture</td>
-<td width="20%"><img src="history/screenshots/a35-dev19-npc-detail-crop.png" width="220" alt="A3.5-dev19: NPC detail crop"><br>A3.5-dev19: NPC detail crop</td>
+<td width="20%"><img src="history/build-captures/dev145-071.png" width="220" alt="Dev145: Vita3K: campaign canyon"><br>Dev145: Vita3K: campaign canyon</td>
+<td width="20%"><img src="history/build-captures/dev148-080.png" width="220" alt="Dev148: Vita3K: campaign cinematic"><br>Dev148: Vita3K: campaign cinematic</td>
+<td width="20%"><img src="history/build-captures/dev151-089.png" width="220" alt="Dev151: Vita3K: Havoc cinematic"><br>Dev151: Vita3K: Havoc cinematic</td>
+<td width="20%"><img src="history/build-captures/dev155-101.png" width="220" alt="Dev155: Vita3K: campaign NPCs"><br>Dev155: Vita3K: campaign NPCs</td>
+<td width="20%"><img src="history/build-captures/dev169-122.png" width="220" alt="Dev169: Vita3K: Tiberium field"><br>Dev169: Vita3K: Tiberium field</td>
 </tr>
 <tr>
-<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png" width="220" alt="A3.5-dev87: Recorder-derived exterior NPC view"><br>A3.5-dev87: Recorder-derived exterior NPC view</td>
-<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png" width="220" alt="A3.5-dev87: Recorder-derived war-factory door"><br>A3.5-dev87: Recorder-derived war-factory door</td>
-<td width="20%"><img src="history/screenshots/a35-dev87-vita-recorder-m00-interior-console-t0120s.png" width="220" alt="A3.5-dev87: Recorder-derived interior console"><br>A3.5-dev87: Recorder-derived interior console</td>
+<td width="20%"><img src="history/build-captures/dev174-135.png" width="220" alt="Dev174: Vita3K: campaign canyon and HUD"><br>Dev174: Vita3K: campaign canyon and HUD</td>
+<td width="20%"><img src="history/build-captures/dev195-151.png" width="220" alt="Dev195: Vita3K: multiplayer terminal"><br>Dev195: Vita3K: multiplayer terminal</td>
+<td width="20%"><img src="history/build-captures/dev198-158.png" width="220" alt="Dev198: Vita3K: multiplayer interior"><br>Dev198: Vita3K: multiplayer interior</td>
+<td width="20%"><img src="history/build-captures/dev201-164.png" width="220" alt="Dev201: Vita3K: multiplayer world"><br>Dev201: Vita3K: multiplayer world</td>
+<td width="20%"><img src="media/vita3k/dev202-practice-gameplay.png" width="220" alt="Dev202: Vita3K: Multiplayer Practice"><br>Dev202: Vita3K: Multiplayer Practice</td>
 </tr>
 </table>
 

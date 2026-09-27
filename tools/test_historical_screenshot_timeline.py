@@ -65,45 +65,32 @@ class HistoricalScreenshotTimelineContract(unittest.TestCase):
         for name in screenshots:
             self.assertIn(f"history/screenshots/{name}", doc)
 
-    def test_quick_gameplay_view_excludes_loading_and_diagnostic_only_refs(self):
+    def test_quick_view_spans_early_campaign_and_multiplayer_builds(self):
         doc = TIMELINE.read_text(encoding="utf-8")
-        self.assertNotIn("## Five Gameplay-First Samples", doc)
-        self.assertIn("## Quick Gameplay View", doc)
-        self.assertIn("up to 15", doc)
-        self.assertIn("not pad this section to 15", doc)
-        self.assertIn("NPC detail crop", doc)
-        lead = doc.split("## Quick Gameplay View", 1)[1].split(
-            "## Screenshot Timeline", 1
-        )[0]
-        image_refs = re.findall(r"history/screenshots/[^\"<\s]+\.png", lead)
+        overview = doc.split("## Quick Gameplay View", 1)[1].split("## Screenshot Timeline", 1)[0]
+        images = re.findall(r'<img src="([^"]+)"', overview)
+        self.assertEqual(len(images), 20)
+        numbers = [int(match.group(1)) for image in images if (match := re.search(r"dev(\d+)", image))]
+        self.assertEqual(numbers, sorted(set(numbers)))
+        self.assertEqual(numbers[-1], 202)
+        for build in (5, 87, 117, 145, 169, 195, 198, 201, 202):
+            self.assertIn(build, numbers)
+        self.assertIn("Physical Vita", overview)
+        self.assertIn("Vita3K", overview)
 
-        self.assertGreaterEqual(len(image_refs), 15)
-        self.assertIn("a35-dev5-spawn-control.png", lead)
-        self.assertIn("a35-dev7-effects-131326.png", lead)
-        self.assertIn("a35-dev13-npc-crop.png", lead)
-        self.assertIn("a35-dev19-npc-detail-crop.png", lead)
-        forbidden = (
-            "a35-dev6-",
-            "a35-dev12-first-frame",
-            "a35-dev20-",
-            "a35-dev21-",
-            "a35-dev24-",
-            "a35-dev42-",
-            "a35-dev43-",
-            "a35-dev44-",
-            "a35-dev45-",
-            "a35-dev46-",
-            "a35-dev47-",
-            "a35-dev78-",
-            "a35-dev79-",
-            "a35-dev82-",
-        )
-        for image_ref in image_refs:
-            for name in forbidden:
-                self.assertNotIn(name, image_ref)
-            self.assertNotIn("loading-screen", image_ref)
-            self.assertNotIn("loading-replay", image_ref)
-            self.assertNotIn("loading-physical", image_ref)
+    def test_full_timeline_never_combines_different_builds(self):
+        doc = TIMELINE.read_text(encoding="utf-8")
+        timeline = doc.split("## Screenshot Timeline", 1)[1].split("## Builds With No Local Or Vita-Pulled Screenshot File", 1)[0]
+        for section in re.split(r"\n### ", timeline):
+            if not section.strip():
+                continue
+            title = section.splitlines()[0]
+            expected = re.search(r"dev(\d+)", title)
+            for image in re.findall(r'<img src="([^"]+)"', section):
+                actual = re.search(r"dev(\d+)", image)
+                if actual:
+                    self.assertIsNotNone(expected, title)
+                    self.assertEqual(actual.group(1), expected.group(1), image)
 
     def test_chronological_sections_use_original_thumbnail_layout(self):
         doc = TIMELINE.read_text(encoding="utf-8")

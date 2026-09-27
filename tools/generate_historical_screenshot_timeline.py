@@ -28,24 +28,26 @@ HISTORICAL_PROJECT_LABEL = "<historical-evidence-root>/workspace/active"
 
 
 QUICK_GAMEPLAY = [
-    ("A3.1", "a31-vita-log-select-capture-f2278.png", "Early visible M00 world"),
-    ("A3.1", "a31-vita-log-select-capture-f3232.png", "Second early M00 world view"),
-    ("A3.5-dev5", "a35-dev5-spawn-control.png", "Visible M00 world and weapon"),
-    ("A3.5-dev5", "a35-dev5-walk-manual.png", "Manual movement capture"),
-    ("A3.5-dev5", "a35-dev5-vita-manual-select-interactive-f355-t39869172.png", "Recovered weapon/world frame"),
-    ("A3.5-dev7", "a35-dev7-effects-131326.png", "Effects/input gameplay view"),
-    ("A3.5-dev7", "a35-dev7-vita-manual-select-interactive-f1527-t61897982.png", "Recovered wall/weapon frame"),
-    ("A3.5-dev13", "a35-dev13-selected-frame.png", "NPC/material defect route frame"),
-    ("A3.5-dev13", "a35-dev13-npc-crop.png", "NPC material detail crop"),
-    ("A3.5-dev16", "a35-dev16-selected-frame.png", "Audio lifecycle route frame"),
-    ("A3.5-dev17", "a35-dev17-selected-frame.png", "Route replay frame"),
-    ("A3.5-dev18", "a35-dev18-capture2.png", "Crate/world route frame"),
-    ("A3.5-dev18", "a35-dev18-vita-manual-select-interactive-f2184-t75384736.png", "Manual gameplay route frame"),
-    ("A3.5-dev19", "a35-dev19-vita-manual-select-interactive-f2570-t85917941.png", "NPC route capture"),
-    ("A3.5-dev19", "a35-dev19-npc-detail-crop.png", "NPC detail crop"),
-    ("A3.5-dev87", "a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png", "Recorder-derived exterior NPC view"),
-    ("A3.5-dev87", "a35-dev87-vita-recorder-m00-warfactory-door-t0080s.png", "Recorder-derived war-factory door"),
-    ("A3.5-dev87", "a35-dev87-vita-recorder-m00-interior-console-t0120s.png", "Recorder-derived interior console"),
+    ("A3.1", "history/screenshots/a31-vita-log-select-capture-f2278.png", "Physical Vita: early M00 world"),
+    ("Dev5", "history/screenshots/a35-dev5-walk-manual.png", "Physical Vita: tutorial movement"),
+    ("Dev13", "history/screenshots/a35-dev13-selected-frame.png", "Physical Vita: NPC/material defects"),
+    ("Dev19", "history/screenshots/a35-dev19-npc-detail-crop.png", "Physical Vita: NPC detail"),
+    ("Dev87", "history/screenshots/a35-dev87-vita-recorder-m00-exterior-npc-t0040s.png", "Physical Vita: tutorial exterior"),
+    ("Dev117", "history/build-captures/dev117-001.png", "Vita3K: tutorial exterior"),
+    ("Dev118", "history/build-captures/dev118-010.png", "Vita3K: tutorial NPC and HUD"),
+    ("Dev121", "history/build-captures/dev121-017.png", "Vita3K: tutorial vehicle"),
+    ("Dev123", "history/build-captures/dev123-020.png", "Vita3K: tutorial interior"),
+    ("Dev129", "history/build-captures/dev129-029.png", "Vita3K: tutorial NPC"),
+    ("Dev145", "history/build-captures/dev145-071.png", "Vita3K: campaign canyon"),
+    ("Dev148", "history/build-captures/dev148-080.png", "Vita3K: campaign cinematic"),
+    ("Dev151", "history/build-captures/dev151-089.png", "Vita3K: Havoc cinematic"),
+    ("Dev155", "history/build-captures/dev155-101.png", "Vita3K: campaign NPCs"),
+    ("Dev169", "history/build-captures/dev169-122.png", "Vita3K: Tiberium field"),
+    ("Dev174", "history/build-captures/dev174-135.png", "Vita3K: campaign canyon and HUD"),
+    ("Dev195", "history/build-captures/dev195-151.png", "Vita3K: multiplayer terminal"),
+    ("Dev198", "history/build-captures/dev198-158.png", "Vita3K: multiplayer interior"),
+    ("Dev201", "history/build-captures/dev201-164.png", "Vita3K: multiplayer world"),
+    ("Dev202", "media/vita3k/dev202-practice-gameplay.png", "Vita3K: Multiplayer Practice"),
 ]
 
 
@@ -457,7 +459,7 @@ def build_ref(name: str) -> str:
 def validate_files() -> None:
     missing = []
     for _, filename, _ in QUICK_GAMEPLAY:
-        if not (SCREENSHOT_DIR / filename).is_file():
+        if not (ROOT / "docs" / filename).is_file():
             missing.append(filename)
     for section in GAMEPLAY_SECTIONS:
         for filename, _ in section["images"]:
@@ -524,9 +526,9 @@ def write_timeline() -> None:
         "",
         "## Quick Gameplay View",
         "",
-        "This overview deliberately shows actual gameplay/world frames, including NPC detail crops, rather than one thumbnail from every build. Some later builds only produced loading, black, or diagnostic buffers locally; those are inventoried later but not promoted into this first visual impression.",
+        "Selected world and cinematic captures from A3.1 through Dev202, ordered by build. Each caption identifies the build and platform. Dev204-Dev206 have newer presentation captures, shown in their own build groups below, but no newer reviewed gameplay image in this gallery. These are historical views, not a same-camera performance comparison.",
         "",
-        image_table([(name, f"{build}: {caption}") for build, name, caption in QUICK_GAMEPLAY], columns=5),
+        image_table([(name, f"{build}: {caption}") for build, name, caption in QUICK_GAMEPLAY], columns=5, relative_paths=True),
         "",
         "## Screenshot Timeline",
         "",

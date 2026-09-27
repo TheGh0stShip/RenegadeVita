@@ -44,6 +44,7 @@ assert hashlib.sha256(new_video.read_bytes()).hexdigest() == (
     "4e07cddc0d42911ad2f2cd5a81d05a32057e75c5c0938f5a54eb718286478899")
 for name, digest in {
     "dev204-banner.png": "d00735971158b95138a5d698cf92bb5290a5aff1361e2634c7e1267035af1ddc",
+    "dev204-icon.png": "e47a1c2a6cfe0bbbf8473363f1ecb419ebf19e9a2f38e95fd8c78a4a744e8d27",
     "dev204-livearea.png": "001e27fea0d44693ecee0c2b0139b4b176e8a36daabb02972a1c1c8f3838c10e",
     "dev202-main-menu.png": "58823a89f870d01565b3ba8a54ebde1ef7d50c073a7f881858802c9e8b4a8b6d",
     "dev202-practice-loading.png": "61f2f098cc755545e307e87b16d68878e2af096a2b7e9a5cc37f4b1e51f63b25",

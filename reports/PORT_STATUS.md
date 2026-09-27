@@ -2,8 +2,11 @@
 
 2026-09-27 Dev202: full-port mode-specific original loading backdrop selection
 and original MultiHUD compiled/linked. Fast ARM package, 177 focused tests,
-Vita3K install/readback and original main-menu launch passed. Practice launch,
-loading visual, gameplay and physical Vita are not yet verified. The matching
+Vita3K install/readback passed. A later bounded Vita3K run selected original
+Practice, logged backdrop state 96, displayed its original loading screen,
+loaded `Skirmish00.mix`, rendered the world/HUD and accepted brief movement.
+The 35-second window-only recording is silent. Full Practice gameplay,
+natural exit, online loading and physical Vita remain unverified. The matching
 source and VPK are published under the Dev202 prerelease; source CI and Pages
 deployment passed. Dev200's live purchase response remains the strongest
 verified multiplayer transaction.

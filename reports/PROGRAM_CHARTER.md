@@ -43,9 +43,11 @@ The force-included `renegade_target_abi.h` enforces the native target contract;
 
 ## Active status
 
-- A3.5-dev202: current published fast ARM/Vita3K menu candidate. Original
+- A3.5-dev202: current published fast ARM/Vita3K Practice candidate. Original
   Practice/C&C loading-backdrop routing and full-port MultiHUD linkage are
-  integrated; Practice loading/gameplay and physical behavior are unverified.
+  integrated. A later bounded Vita3K run showed Practice loading backdrop 96,
+  `Skirmish00.mix` rendering and brief movement; full gameplay and physical
+  behavior are unverified.
   Earlier Dev200 live RenCorner purchase and Dev197 PSTV checkpoint evidence
   remain bounded, not full multiplayer or campaign acceptance.
 - A3.1.4: accepted physical interactive M00 baseline.

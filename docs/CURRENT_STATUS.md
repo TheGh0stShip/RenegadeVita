@@ -7,14 +7,21 @@ Updated: 2026-09-27
 Dev202 selects the original mode-specific loading backdrops for Practice (96)
 and C&C multiplayer (94), and links the original full-port MultiHUD. It passed
 177 focused tests, fast ARM package identity and Vita3K install/readback. A
-bounded Vita3K launch reached the original main menu but did not enter
-Practice; its loading visuals and gameplay remain unverified. See the
+bounded Vita3K run selected original Multiplayer Practice, displayed the
+original loading screen with logged backdrop state 96, loaded `Skirmish00.mix`,
+rendered gameplay/HUD, and accepted brief movement input. The run was
+deliberately stopped after capture; full Practice gameplay and clean natural
+exit remain unverified. See the
 [Dev202 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202).
 The release tag points to source commit
 `30b0d27a492c43ab2807f925230f5d6f0b47b601`; GitHub's VPK digest is
 `d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28`.
 Dev202 does not supersede Dev200's live purchase-response evidence or Dev197's
 bounded physical PSTV checkpoint.
+Reviewed, build-labelled [Vita3K captures](../README.md#recent-vita3k-captures)
+show Dev202's main menu, Practice loading and spawn, plus Dev200's live
+RenCorner transaction. The [35-second Dev202 clip](https://github.com/TheGh0stShip/RenegadeVita/releases/download/A3.5-dev202/dev202-practice-vita3k-silent.mp4)
+is window-only and silent; it is not physical or audio-sync evidence.
 
 ## Dev201 multiplayer evidence
 

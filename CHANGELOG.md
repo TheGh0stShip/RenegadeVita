@@ -8,9 +8,11 @@ This changelog records public-facing source, process, and evidence changes. It d
   96, remote C&C multiplayer uses 94, and campaign keeps its mission backdrop.
 - Linked the original MultiHUD owner for the full port. The separate tutorial
   demo profile remains unchanged.
-- Passed 177 focused tests, fast ARM package identity, Vita3K install/readback,
-  and original main-menu launch. Practice loading visuals and gameplay were not
-  exercised; no physical Vita acceptance is claimed.
+- Passed 177 focused tests, fast ARM package identity and Vita3K install/readback.
+  A later bounded run selected original Practice, showed loading backdrop 96,
+  rendered `Skirmish00.mix` and accepted brief movement. A silent 35-second
+  Vita3K clip and build-labelled screenshots are published; full Practice
+  gameplay, natural exit and physical Vita acceptance are not claimed.
 - Published the matching
   [Dev202 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
   and updated source, setup and status documentation. The VPK SHA-256 is

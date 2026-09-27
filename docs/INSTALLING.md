@@ -5,8 +5,9 @@ This guide covers the full-port development candidate, currently
 It is experimental, not a completed campaign or multiplayer release. The
 separate [tutorial demo guide](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
 remains specific to that demo.
-Dev202 passed a fast ARM build, Vita3K installation and main-menu launch, not
-a canonical build or physical gameplay acceptance. Dev197 has the latest
+Dev202 passed a fast ARM build and Vita3K installation; a bounded emulator run
+also captured Practice loading and spawn. It is not a canonical build or
+physical gameplay acceptance. Dev197 has the latest
 bounded PSTV save-load/menu-return evidence.
 
 The VPK deliberately contains only the executable and package metadata. It never includes retail data, saves, configuration, logs, screenshots, videos, or crash dumps.
@@ -61,7 +62,7 @@ private identity, trust-bundle, and one-shot launch setup.
 
 ## Before installation
 
-1. Download the development VPK and verify its published SHA-256, or build a new candidate with an unused `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev202 has only fast-build/package and Vita3K menu evidence. Dev197 passed a canonical build and a bounded PSTV checkpoint test, not full physical acceptance.
+1. Download the development VPK and verify its published SHA-256, or build a new candidate with an unused `RENEGADE_CANDIDATE_LABEL`. Canonical `bash ./tools/build.sh` closure is required before physical acceptance; Dev202 has fast-build/package and bounded Vita3K Practice evidence only. Dev197 passed a canonical build and a bounded PSTV checkpoint test, not full physical acceptance.
 2. Retain its VPK, packaged SELF, map, symbols, SHA-256 manifest, and build log together.
 3. Verify the VPK contains no retail data.
 4. Review [Current status](CURRENT_STATUS.md) and use a bounded physical test plan.

@@ -6,8 +6,9 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 
 > **Current development candidate: A3.5-dev202.** This fast-built native ARM
 > package is installed in Vita3K. It connects original Practice and multiplayer
-> loading-backdrop selection and links original MultiHUD; a bounded run reached
-> the main menu, but Practice gameplay and loading visuals are unverified.
+> loading-backdrop selection and links original MultiHUD. A bounded Vita3K run
+> selected Practice, showed its original loading screen and rendered
+> `Skirmish00.mix` with brief movement input. Full Practice gameplay is unverified.
 > Dev197 remains the last bounded physical PSTV save-load/menu-return result.
 > Full multiplayer, campaign and physical Vita performance acceptance remain open.
 
@@ -16,25 +17,43 @@ It is not a PSP/Adrenaline build, a W3D viewer, a new game engine, or an asset c
 | [Multiplayer setup](docs/MULTIPLAYER.md)
 | [Project video page](https://thegh0stship.github.io/RenegadeVita/)
 
-Development prereleases contain the executable and package metadata only. This
-is not a finished game release. Supply your own legally obtained retail data.
+The VPK contains the executable and package metadata only; the prerelease also
+offers separately labelled screenshots and a silent Vita3K clip. This is
+not a finished game release. Supply your own legally obtained retail data.
 The separate [tutorial demo](https://github.com/TheGh0stShip/Renegade-Vita-Demo)
 is preserved; its data subset is not sufficient for the full-port candidate.
 
 ## Where the port stands
 
 Dev202 is an **experimental Practice/multiplayer development candidate**. Its
-[runtime record](reports/MULTIPLAYER_COMPATIBILITY.md) separates build and
-main-menu evidence from unverified Practice gameplay and loading visuals.
+[runtime record](reports/MULTIPLAYER_COMPATIBILITY.md) separates bounded
+Practice loading/rendering from unverified full gameplay and physical behavior.
 Dev197 remains the last [bounded physical PSTV result](reports/DEV197_ISSUE1_SAVE_MENU.md).
+
+### Recent Vita3K Captures
+
+These are unaltered window captures, not physical Vita framebuffer evidence.
+Dev202 entered `Skirmish00.mix` through the original Practice menu. The
+[35-second Vita3K recording](https://github.com/TheGh0stShip/RenegadeVita/releases/download/A3.5-dev202/dev202-practice-vita3k-silent.mp4)
+shows a short movement check; it has **no audio track** and does not prove
+complete Practice gameplay or performance acceptance. The Dev200 images below
+show an earlier live RenCorner purchase, not Dev202 multiplayer gameplay.
+
+| Dev202 main menu | Dev202 Practice loading | Dev202 Practice spawn |
+| --- | --- | --- |
+| [![Dev202 original main menu](docs/media/vita3k/dev202-main-menu.png)](docs/media/vita3k/dev202-main-menu.png) | [![Dev202 original Practice loading screen](docs/media/vita3k/dev202-practice-loading.png)](docs/media/vita3k/dev202-practice-loading.png) | [![Dev202 Skirmish00 Practice gameplay](docs/media/vita3k/dev202-practice-gameplay.png)](docs/media/vita3k/dev202-practice-gameplay.png) |
+
+| Dev200 RenCorner purchase | Dev200 server response |
+| --- | --- |
+| [![Dev200 original RenCorner purchase dialog](docs/media/vita3k/dev200-rencorner-purchase-dialog.png)](docs/media/vita3k/dev200-rencorner-purchase-dialog.png) | [![Dev200 purchase request granted in RenCorner](docs/media/vita3k/dev200-rencorner-purchase-response.png)](docs/media/vita3k/dev200-rencorner-purchase-response.png) |
 
 | Evidence area | Current state |
 | --- | --- |
 | Accepted physical baseline | **A3.1.4**: native startup, original M00 world/session lifecycle, player/camera ownership, and clean exit. |
 | Dev197 build | Canonical host/ARM/ELF/SELF/VPK validation passed. Bounded M13 save reload and EVA exit-to-menu passed in Vita3K and physical PSTV, with matching runtime logs and installed SELF hash. |
-| Dev202 build | Fast ARM ELF/SELF/VPK, 177 focused tests, package identity, Vita3K install/readback and main-menu launch passed. This is not a new canonical or physical acceptance run. |
+| Dev202 build | Fast ARM ELF/SELF/VPK, 177 focused tests, package identity and Vita3K install/readback passed. Practice selected `Skirmish00.mix`, showed original loading backdrop 96, rendered gameplay and accepted brief movement input. This is not a canonical or physical acceptance run. |
 | Dev200/201 multiplayer | Dev200 joined Glacier and received an original successful purchase response. Dev201 joined Skatepark after map rotation. The client requested `PS Vita`; public name normalization remains unresolved. |
-| Remaining multiplayer work | Dev202 Practice launch and loading visuals need runtime confirmation; Dev201 player-name formatting and Glacier ice texture also need visual confirmation. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
+| Remaining multiplayer work | Full Practice play, bots/objectives and transitions remain unverified; Dev201 player-name formatting and Glacier ice texture also need visual confirmation. Combat, vehicles, death/respawn, chat, round transitions, and sustained performance are not accepted. |
 | Campaign | Dev197 reloaded the M13 pre-Ion-beacon save and returned to the menu; later Ion progression was not exercised in that run. Earlier runs completed M13 and entered M01; cinematic, actor and M01 stalls remain open. |
 | Physical testing | Dev197 passed one PSTV M13 checkpoint reload and menu return. The long load and first-frame stalls remain measured defects; no full physical acceptance or steady 60 FPS is claimed. |
 | Visual evidence | The gallery below is historical. Emulator captures and historical physical stills do not establish current physical acceptance or stable 60 FPS. |

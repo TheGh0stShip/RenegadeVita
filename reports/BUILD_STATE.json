@@ -1,6 +1,6 @@
 {
   "dev202_practice_loading_candidate": {
-    "state": "FAST_BUILT_VITA3K_INSTALLED_MAIN_MENU_PRACTICE_UNVERIFIED",
+    "state": "FAST_BUILT_VITA3K_PRACTICE_LOADING_SPAWN_MOVEMENT_CAPTURED",
     "vpk_sha256": "d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28",
     "installed_eboot_sha256": "6a25bf16139135a02062099cfe9995f04fc0a88dc095a5dcb21806a4fde7874e",
     "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev202-setup-20260927T035217391832Z/setup-receipt.json",
@@ -12,7 +12,20 @@
     "github_pages_deployment_run": 36292978623,
     "github_vpk_digest_matches_local": true,
     "vita3k_main_menu_observed": true,
-    "practice_loading_verified": false,
+    "practice_archive": "Skirmish00.mix",
+    "original_loading_backdrop_state": 96,
+    "practice_spawn_rendered": true,
+    "bounded_movement_input_released": true,
+    "practice_loading_screenshot_sha256": "61f2f098cc755545e307e87b16d68878e2af096a2b7e9a5cc37f4b1e51f63b25",
+    "practice_gameplay_screenshot_sha256": "041a76808d9fe611b7176d660a718f3541e4212b84f77791537128eb0e04e9f2",
+    "practice_video_sha256": "4e07cddc0d42911ad2f2cd5a81d05a32057e75c5c0938f5a54eb718286478899",
+    "practice_video_duration_seconds": 35,
+    "practice_video_audio": false,
+    "practice_run_end": "CONTROLLED_FORCED_STOP_AFTER_CAPTURE_NOT_NATURAL_EXIT",
+    "public_intro_screenshot_sha256": "327c35cbce56e1f82d874291e8ee7291753b875321a1e3cc52e46d5e565d13c0",
+    "dev202_gameplay_screenshot_verified": true,
+    "dev202_recording_verified": true,
+    "practice_loading_verified": true,
     "practice_gameplay_verified": false,
     "physical_acceptance": false
   },
@@ -37,6 +50,8 @@
     "vita3k_runner_status": "TIMEOUT_UNASSESSED",
     "original_purchase_dialog_visually_observed": true,
     "original_purchase_response_success_observed": true,
+    "public_purchase_dialog_screenshot_sha256": "dfa5f287894f915629fb1777eb0d1257480fbca5287ceba59d3d2435906097db",
+    "public_purchase_response_screenshot_sha256": "cdf4c2ae8617984f99de12f34bd984b9246938eb36f666185836da4cea2b8424",
     "purchase_input_release_receipts": 2,
     "requested_player_name": "PS Vita",
     "public_listing_name": "PSVita",
@@ -76,7 +91,7 @@
   "public_candidate": {
     "label": "A3.5-dev202",
     "report": "reports/MULTIPLAYER_COMPATIBILITY.md",
-    "evidence_class": "Vita3K_main_menu_only_Practice_unverified",
+    "evidence_class": "Vita3K_Practice_loading_spawn_bounded_movement_full_mode_unverified",
     "source_commit": "30b0d27a492c43ab2807f925230f5d6f0b47b601",
     "release_tag": "A3.5-dev202",
     "physical_acceptance": false

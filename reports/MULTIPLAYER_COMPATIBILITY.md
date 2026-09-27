@@ -11,12 +11,36 @@ initialization remain owned by the original frontend. The user's retail
 
 Dev202 passed 177 focused tests, fast ARM package and Vita3K install/readback.
 VPK SHA-256: `d0b0eb1b803ec07d8ee17e1f361a5a10684ecee8b66a86126abdf229c7025f28`.
-A bounded Vita3K run reached the original main menu but did not enter Practice;
-loading visuals, Practice gameplay and physical Vita remain unverified.
+A first bounded Vita3K run reached the original main menu. A second,
+candidate-hash-matched run (`dev202-visual-01`) selected Practice through that
+menu, logged original loading class state 96/model `IF_LVL94LOAD`, showed the
+original Practice loading screen, loaded `Skirmish00.mix`, rendered the
+world/HUD, and accepted released W/D movement input. The run was deliberately
+force-stopped after capture, so it is not a natural-exit pass. Complete
+Practice gameplay, remote C&C loading visuals and physical Vita remain open.
 The [Dev202 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev202)
 is tied to source commit `30b0d27a492c43ab2807f925230f5d6f0b47b601`;
 GitHub's uploaded VPK digest matches the SHA-256 above. This is publication
 and package integrity evidence, not additional runtime acceptance.
+The reviewed [Dev202 intro frame](../docs/media/vita3k/dev202-intro-frame.png)
+has SHA-256 `327c35cbce56e1f82d874291e8ee7291753b875321a1e3cc52e46d5e565d13c0`.
+It is a Vita3K window capture from `dev202-practice-menu-01/window-051.png`;
+the original main menu was later logged but not captured in that first run.
+
+The later run's reviewed Vita3K window captures are the
+[main menu](../docs/media/vita3k/dev202-main-menu.png)
+(`58823a89f870d01565b3ba8a54ebde1ef7d50c073a7f881858802c9e8b4a8b6d`),
+[Practice loading](../docs/media/vita3k/dev202-practice-loading.png)
+(`61f2f098cc755545e307e87b16d68878e2af096a2b7e9a5cc37f4b1e51f63b25`),
+and [Practice world/HUD](../docs/media/vita3k/dev202-practice-gameplay.png)
+(`041a76808d9fe611b7176d660a718f3541e4212b84f77791537128eb0e04e9f2`).
+The [35-second silent H.264 recording](https://github.com/TheGh0stShip/RenegadeVita/releases/download/A3.5-dev202/dev202-practice-vita3k-silent.mp4)
+is 960x544, 839 frames, SHA-256
+`4e07cddc0d42911ad2f2cd5a81d05a32057e75c5c0938f5a54eb718286478899`.
+It is window-only, not framebuffer or audio-sync proof. GitHub asset digests
+match the reviewed local files. The original M13 launch flag was restored
+with unchanged SHA-256 after the run; no save action or retail-data edit was
+issued.
 
 ## 2026-09-27: Dev201 Glacier Texture And Multiplayer Text Candidate
 
@@ -46,6 +70,13 @@ Full map textures, player names, physical Vita, and stable performance remain
 open.
 
 ## 2026-09-27: Dev200 Live Purchase Response
+
+Reviewed Vita3K window captures from `dev200-tt-purchase-01` are now public:
+[original purchase dialog](../docs/media/vita3k/dev200-rencorner-purchase-dialog.png)
+(SHA-256 `dfa5f287894f915629fb1777eb0d1257480fbca5287ceba59d3d2435906097db`)
+and [purchase granted](../docs/media/vita3k/dev200-rencorner-purchase-response.png)
+(SHA-256 `cdf4c2ae8617984f99de12f34bd984b9246938eb36f666185836da4cea2b8424`).
+These remain Dev200 emulator evidence, not Dev202 or physical captures.
 
 The Vita remote-player wait now uses original WWNet's server loading window
 (15-second connection timeout plus 45-second loading allowance) instead of the

@@ -1,8 +1,9 @@
 # Capability roadmap
 
-2026-09-27 checkpoint: Dev202 is the current published fast ARM/Vita3K menu
+2026-09-27 checkpoint: Dev202 is the current published fast ARM/Vita3K Practice
 candidate. Original Practice/C&C loading-backdrop selection and MultiHUD link;
-Practice gameplay and loading visuals remain unverified. Dev200's RenCorner
+Practice loading and spawn now have bounded Vita3K evidence, but full Practice
+gameplay remains unverified. Dev200's RenCorner
 purchase response and Dev195's join/movement evidence are earlier Vita3K
 results. Campaign completion, full multiplayer and physical performance remain
 open. Current evidence: [multiplayer](MULTIPLAYER_COMPATIBILITY.md). These

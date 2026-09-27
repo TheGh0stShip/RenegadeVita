@@ -2,8 +2,10 @@
 
 2026-09-27 Dev202: Practice retains original frontend map/session ownership;
 original MultiHUD is linked for full port, and Practice/C&C select original
-loading backdrops 96/94. Build/install/menu launch passed; in-game Practice
-and backdrop presentation remain unverified.
+loading backdrops 96/94. Build/install passed; a bounded Vita3K run entered
+Practice, showed backdrop 96, rendered `Skirmish00.mix` with HUD and accepted
+brief movement. Original C&C loading visuals, full Practice gameplay,
+natural exit and physical Vita remain unverified.
 
 2026-09-27 Dev201: multiplayer UTF-16 name/chat formatting and scoped Glacier
 retail-texture factory are implemented, fast ARM-packaged and Vita3K-installed.

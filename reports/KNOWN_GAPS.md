@@ -1,8 +1,11 @@
 # Known gaps
 
-2026-09-27 Dev202: original Practice loading and MultiHUD are source/build
-integrated but Practice was not entered in the bounded Vita3K run. Do not infer
-playable Practice, correct loading visuals, or physical acceptance from this.
+2026-09-27 Dev202: a later bounded Vita3K run entered Practice and captured
+original backdrop 96, `Skirmish00.mix` world/HUD, brief movement and a silent
+35-second clip. This does not establish bots, objectives, purchases,
+death/respawn, natural exit, online C&C loading or physical acceptance. The
+run was intentionally force-stopped after capture; that exit is not a crash
+diagnosis or a clean-exit pass.
 
 2026-09-27 Dev201: Glacier checkerboard root is evidenced as missing
 `l02_ice.tga` with `l02_ice.dds` present in unchanged retail M02.mix; scoped

@@ -47,8 +47,9 @@ but does not guarantee every server or later server policy is compatible.
 Dev200's Vita3K run rendered the original purchase dialog and received a
 successful response. Dev201 corrected specific ARM player/chat text formatting
 call sites, but player-name appearance still needs a matching visual check.
-Dev202's Practice and multiplayer loading visuals remain unverified. A join or
-player-list entry alone does not establish complete multiplayer support.
+Dev202's Practice loading screen rendered in a bounded Vita3K run, but online
+multiplayer loading visuals and full Practice gameplay remain unverified. A
+join or player-list entry alone does not establish complete multiplayer support.
 
 ## No recorder video appears
 

@@ -5,16 +5,21 @@
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 existing candidate evidence gates complete`
 
-Now: Dev202 is published and installed in Vita3K; bounded run reached the
-original main menu but did not enter Practice before timeout. Completed:
-restored original mode-specific loading
-backdrops (Practice 96, C&C multiplayer 94) and linked the original full-port
-MultiHUD. Evidence: 177 focused tests, ARM package identity, Vita3K install
-readback, main-menu runtime log and capture, GitHub source CI and Pages
-deployment. The temporary M13 one-shot launch
-file was restored with its original SHA-256. Next: enter Practice through the
-original menu, verify loading/HUD/gameplay, then physical Vita. Blocker:
-Practice and multiplayer loading visuals remain unverified in this candidate.
+Now: Dev202 is published and installed in Vita3K. A second bounded run selected
+original Practice, showed backdrop 96, loaded `Skirmish00.mix`, rendered the
+world/HUD and accepted brief movement. Completed: source/build integration,
+177 focused tests, package identity, install readback, GitHub CI, reviewed
+screenshots and a 35-second silent window recording. The user-owned M13 launch
+flag was restored with its original SHA-256. Next: test Practice bots,
+objectives, purchases, death/respawn and natural exit; verify remote C&C
+loading separately, then physical Vita. Blocker: no full-mode or physical
+acceptance; the capture run was deliberately force-stopped.
+
+2026-09-27 visual-publication update: reviewed source-hash-matched Vita3K
+window captures show Dev200's RenCorner purchase dialog/response and Dev202's
+menu, Practice loading and world/HUD. A silent Dev202 Practice recording is
+attached to the prerelease. The separate initial Dev202 intro frame is not
+used to claim gameplay.
 
 ## Dev201 multiplayer text and Glacier texture candidate
 

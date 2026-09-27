@@ -1,0 +1,15 @@
+--- a/hrawanim.cpp
++++ b/hrawanim.cpp
+@@ -474,2 +474,3 @@
+-//	int frame0 = (int)frame;
+-	int frame0=WWMath::Float_To_Long(frame-0.499999f);
++	// Select the preceding key independently of x87 versus ARM rounding.
++	// Float_To_Long truncates on ARM, so the old half-frame bias extrapolates.
++	int frame0 = static_cast<int>(WWMath::Floor(frame));
+@@ -532,2 +533 @@
+-//	int frame0 = (int)frame;
+-	int frame0=WWMath::Float_To_Long(frame-0.499999f);
++	int frame0 = static_cast<int>(WWMath::Floor(frame));
+@@ -586 +586 @@
+-	int frame0=WWMath::Float_To_Long(frame-0.499999f);
++	int frame0 = static_cast<int>(WWMath::Floor(frame));

@@ -2,6 +2,36 @@
 
 Updated: 2026-09-27
 
+## Unreleased campaign source checkpoint
+
+The repository is ahead of the published Dev204 package. Dev207 was packaged
+and installed locally in Vita3K but not launched; subsequent source changes
+have not been packaged as a new development release.
+
+- Fixed a reproduced zero-distance AI path failure affecting M13 engineers,
+  saved-path and animation reference leaks, and raw-animation frame selection.
+- Restored the original full-port triangle sorter and corrected reproduced
+  capacity/ownership defects. Native particle and explosion visuals remain
+  unverified; the separate tutorial demo profile is unchanged.
+- Removed the forced two-command cinematic yield and extended bounded
+  loading-time texture preparation to M01. Native frame-time and audio-sync
+  improvements are not yet established.
+- Reproduced and corrected an audio release-worker deadlock and logical-sound
+  use-after-free. Earlier combined host checks passed two M13 intros and two
+  M01 saved-state replays with original audio under sanitizers. These are
+  targeted checks, not full mission completion.
+- Three newer audio lifecycle corrections are staged with regression probes,
+  but have not compiled or executed. All 290 deterministic patches stage.
+
+**Still open:** M13/M01 freezes on the native runtime, cinematic audio sync,
+performance spikes, native actor/tread visuals, Ion cue overlap and complete
+mission progression. Issue #1 remains unresolved. No new gameplay screenshots,
+recordings or release artifacts are claimed for this source checkpoint.
+
+Details: [port status](../reports/PORT_STATUS.md),
+[Dev207 evidence](../reports/DEV207_M13_ZERO_PATH.md) and
+[investigation ledger](../reports/PERFORMANCE_HYPOTHESIS_LEDGER.md).
+
 ## Current A3.5-dev204 development candidate
 
 Dev204 adds an original R/V icon, version-stamped LiveArea background and gate,

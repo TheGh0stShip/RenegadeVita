@@ -1,5 +1,111 @@
 # Renegade Vita port status
 
+Current source-only audit: 290 deterministic patches now stage successfully.
+Audio flush and enqueue now share the queue lock; destruction occurs outside
+it. Concurrent stress coverage is prepared but uncompiled/unexecuted.
+The additional 2D/3D scene-removal lifetime and duplicate audio-completion
+corrections are integrated but have not compiled or run. New regression entry
+points are prepared. No build, package, install or launch under the current user
+restriction. Last host executable is unchanged; native freeze/performance and
+complete M13/M01 remain unverified. Details: performance ledger.
+
+Tank-track follow-up: repeated TrackedVehicle::Render at one sync timestamp
+overwrote the scroll rate with zero. A reproduced production-method fixture
+now passes after preserving the first update while retaining every parent
+render call. Forward/reverse/stop/reset checks pass with sanitizers; ARM object
+compiles. 287 patches stage. Whether this explains the reported native tread
+appearance remains unverified; earlier mission replays precede this guard.
+
+The same source also passes two complete 5,000-frame M13 intros with original
+audio under ASan/LSan: camera handback, rappel advancement, both engineers alive
+and detached, finite physics and all audio handles released. No new native run.
+
+Original-audio M01 replay now passes two 1,800-frame cycles at 200 ms with
+ASan/LSan, finite physics, zero decode failures and all audio handles released.
+The second-cycle failure exposed logical-sound deletion during scene removal;
+the method now retains itself until state is cleared, and collection advances
+its iterator before removal instead of reusing the deleted list node. A fast
+asset-free three-sound cleanup test also passes. Eleven focused tests pass;
+affected audio objects compile for ARMv7 hard-float/wchar16. 286 patches stage.
+This does not establish native freeze resolution, A/V sync or mission completion.
+
+The original audio release worker has a reproduced lock-order deadlock.
+Detaching expired objects under the list lock and destroying them outside it
+makes the same deterministic test complete under ASan/LSan. This is a real
+source defect, not yet proof of the reported native M01 freeze. Original-audio
+host now links; its M01 replay exposed a further host-only sample-handle
+truncation before map loading, now corrected in staged source. 285 patches
+stage; that latest pointer correction needs rebuilding. No game deployment.
+
+Original-audio host integration now preserves object pointers through the
+Miles-compatible user-data slots, which remain 32-bit on Vita. Provider
+pointer round trips and continuous-sound lifecycle checks pass ASan/UBSan;
+282 deterministic patches stage, including pointer-safe logical-hearing
+callback arguments. Full original-audio mission replay remains
+pending. No native audio, freeze or performance acceptance is implied.
+
+2026-09-27 sorted-effect capacity checks reproduced two buffer overwrites and
+a dropped/leaked node in the newly restored original sorter. The engine queue
+now grows, and oversized pools preserve global triangle order while using
+16-bit-safe draw batches. Eight asset-free ASan/LSan checks pass, including
+interleaved depths, exact limits, draw counts and ownership. ARM objects compile;
+these are not claimed as the cause of earlier native freezes or a performance
+gain. Canonical host checks now include this coverage. See the performance ledger.
+
+2026-09-27 sorted-effect integration: the full-port target now selects the
+original triangle sorter instead of rejecting its submissions. The two-cycle
+M13 host intro now completes 5,000 frames per cycle under ASan/LSan, observing
+Havoc's rappel, camera handback, and both engineers alive and detached, with
+finite physics throughout. Four affected Vita objects compile. The demo profile
+is unchanged. Staging now contains 280 patches. Native effects, frame pacing,
+A/V, M01 freeze and full mission completion remain unverified. No new game
+package or deployment. Evidence and limitations are in the performance ledger.
+
+2026-09-27 M13/M01 source pass: deterministic staging now has 278
+patches. Saved `PathAction` borrowed pointers no longer acquire unbalanced
+references during remap, and saved previous animations release the extra
+lookup reference after attachment. Vita campaign cinematics yield on the existing 4 ms
+work budget without forcing a yield after two cheap commands; M01 reuses the
+bounded loading-time referenced-texture preparation already used by M13.
+Physical Dev197 M01 frame 1 took 4.17 s, including 2.61 s rendering and 28
+texture decodes/uploads, which motivates the loading-time change. No new
+linked ARM game or native run of these follow-ups exists. Two-cycle ASan/LSan
+host save replays now pass for M13 (600 frames/cycle) and M01 (1,800/cycle).
+The last remaining borrowed-path leak was in VehicleDriver's saved pointer
+remap, which incorrectly acquired a reference despite Initialize/Reset borrowing
+the path. M13's 40,872-byte baseline leak is absent in the new replay.
+A host-only 200 ms M01 replay also exposed an explosion-decal release-range
+error in both rigid/skinned deletion paths. Correcting offset-plus-count bounds
+removes the 314-byte/four-allocation leak in the repeated replay. Driver/decal
+objects compile with the existing Vita configuration. Raw animation's x86
+half-frame rounding bias has also been replaced by explicit floor in all three
+samplers; numeric key-selection and original synthetic sampler output checks pass.
+The integer conversion helpers also no longer perform undefined shifts;
+one million input bit patterns pass UBSan. Original cinematic camera state
+now survives a save/load roundtrip under ASan/UBSan. Four isolated Vita ARM
+objects compile, but old active-cutscene saves and native playback remain
+unverified. Neither mission is claimed complete. See
+[performance ledger](PERFORMANCE_HYPOTHESIS_LEDGER.md).
+
+2026-09-27 Dev207 packaged and Vita3K-installed, not launched: a private M13 save replay reproduced the
+engineers' first invalid physics state at host frame 321. The original AI
+path had zero distance and infinite look-ahead; a narrow original-PathClass
+guard now passes two 600-frame host save replays with both engineers finite.
+M01 save and smoke host routes pass two 1,800-frame cycles each. Focused
+contracts and ARM link pass, but saved-action/animation leaks remain under
+LSan. Package inventory and Vita3K title install/readback pass; no Dev207
+runtime or physical result exists.
+M01 native freeze, Campaign-first and reporter save/load remain open. See
+[Dev207](DEV207_M13_ZERO_PATH.md).
+
+2026-09-27 Dev205 follow-up: Vita3K launched M13 in a user-driven run and
+wrote a structurally complete `savegame05.sav` identifying M13. No reload
+occurred in the initial observed window; a later user run loaded that slot
+and advanced gameplay. A separate
+owned frontend test became unresponsive before Campaign selection and was
+stopped. Campaign-first, M01 intro freeze and reporter save/load remain open.
+See [Dev205](DEV205_CAMPAIGN_FIRST.md).
+
 2026-09-27 Dev205 issue #1 checkpoint: a full-port-only empty-session guard
 addresses the original Campaign-first `End_Game` call before M13 exists. Two
 host Campaign-first/M01 cycles and canonical host/sanitizer/ARM/package checks

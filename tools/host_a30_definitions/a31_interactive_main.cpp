@@ -4,6 +4,12 @@
 // required below CombatManager's existing network-handler seam.
 
 #include "renegade_file_factory.h"
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+#include "assets.h"
+#include "renegade_miles_test.h"
+#include "renegade_miles_runtime_stats.h"
+#include "audio_release_probe.h"
+#endif
 #include "renegade_find_files.h"
 #include "renegade_vita_options.h"
 #include "a31_interactive_runtime_policy.h"
@@ -24,6 +30,8 @@
 #include "damage.h"
 #include "damageablegameobj.h"
 #include "physicalgameobj.h"
+#include "humanphys.h"
+#include "soldier.h"
 #include "explosion.h"
 #include "directinput.h"
 #include "hud_bitmap_atlas_probe.h"
@@ -35,11 +43,15 @@
 #include "tt_soldier_probe.h"
 #include "tt_vehicle_probe.h"
 #include <memory>
+#include <atomic>
 #include "purchase_probe.h"
 #include "tt_purchase_probe.h"
 #include "tt_c4_probe.h"
 #include "state_machine_probe.h"
 #include "m13_cinematic_probe.h"
+#if defined(RENEGADE_ORIGINAL_SORTING) && defined(RENEGADE_HOST_ABI_TEST)
+#include "sorting_renderer_probe.h"
+#endif
 #include "dinput.h"
 #include "networkobjectmgr.h"
 #include "ffactory.h"
@@ -61,6 +73,7 @@
 #include "texture.h"
 #include "netinterface.h"
 #include "pathmgr.h"
+#include "Path.h"
 #include "playermanager.h"
 #include "radar.h"
 #include "renegadedialogmgr.h"
@@ -116,13 +129,39 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include "movephys.h"
 
+static unsigned HostReplayFrameMilliseconds = 16U;
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+// Same basename adapter as the native Commando/WWAudio boundary.
+class HostAudioFileFactory final : public SimpleFileFactoryClass {
+public:
+	explicit HostAudioFileFactory(FileFactoryClass *base) : Base(base) {}
+	FileClass *Get_File(const char *name) override {
+		if (name == NULL || Base == NULL) return NULL;
+		StringClass stripped(true);
+		Strip_Path_From_Filename(stripped, name);
+		return Base->Get_File(stripped);
+	}
+private:
+	FileFactoryClass *Base;
+};
+#endif
 #ifndef __vita__
 static bool HostFixedSimulationClock = false;
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+static std::atomic<uint32_t> HostAudioClockMilliseconds{1U};
+extern "C" int Renegade_Host_Audio_Clock(DWORD *milliseconds)
+{
+	if (!HostFixedSimulationClock) return 0;
+	*milliseconds = HostAudioClockMilliseconds.load(std::memory_order_relaxed);
+	return 1;
+}
+#endif
 extern "C" float __real__ZN4WW3D28Get_Movie_Capture_Frame_RateEv();
 extern "C" float __wrap__ZN4WW3D28Get_Movie_Capture_Frame_RateEv()
 {
-	return HostFixedSimulationClock ? 62.5F :
+	return HostFixedSimulationClock ? 1000.0F / HostReplayFrameMilliseconds :
 		__real__ZN4WW3D28Get_Movie_Capture_Frame_RateEv();
 }
 
@@ -923,6 +962,23 @@ bool Validate_Frontend_Font_Glyph(WW3DAssetManager *asset_manager,
 
 int main(int argc, char **argv)
 {
+#if defined(RENEGADE_ORIGINAL_SORTING) && defined(RENEGADE_HOST_ABI_TEST)
+	if (argc == 3 && strcmp(argv[1], "--sorting-selftest") == 0) {
+		WWMath::Init();
+		if (WW3D::Init(NULL, NULL, true) != WW3D_ERROR_OK) return 1;
+		bool passed = false;
+		if (strcmp(argv[2], "basic") == 0) passed = Check_Original_Sorting_Renderer();
+		if (strcmp(argv[2], "nodes") == 0) passed = Check_Original_Sorting_Capacity(4097, 3, 1);
+		if (strcmp(argv[2], "vertices") == 0) passed = Check_Original_Sorting_Capacity(3000, 24, 1);
+		if (strcmp(argv[2], "indices") == 0) passed = Check_Original_Sorting_Capacity(2, 3, 11000);
+		if (strcmp(argv[2], "zero") == 0) passed = Check_Original_Sorting_Capacity(1, 3, 0);
+		if (strcmp(argv[2], "index-limit") == 0) passed = Check_Original_Sorting_Capacity(1, 3, 21845);
+		if (strcmp(argv[2], "vertex-limit") == 0) passed = Check_Original_Sorting_Capacity(1, 65535, 1);
+		if (strcmp(argv[2], "interleaved") == 0) passed = Check_Original_Sorting_Capacity(1000, 72, 2, true);
+		WW3D::Shutdown();
+		return passed ? 0 : 1;
+	}
+#endif
     if (argc == 2 && strcmp(argv[1], "--state-machine-selftest") == 0)
         return OriginalStateMachineProbe::Run();
     if (argc >= 3 && argc <= 258 && strcmp(argv[1], "--persist-factories") == 0) {
@@ -974,6 +1030,20 @@ int main(int argc, char **argv)
 	static unsigned interactive_cycle = 0;
 	if (argc == 2 && strcmp(argv[1], "--network-selftest") == 0)
 		return Validate_Original_WWNet_Packets();
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+	if (argc == 2 && strcmp(argv[1], "--audio-release-selftest") == 0)
+		return AudioReleaseProbe::Run();
+	if (argc == 2 && strcmp(argv[1], "--audio-flush-enqueue-selftest") == 0)
+		return AudioReleaseProbe::Run_Flush_Enqueue();
+	if (argc == 2 && strcmp(argv[1], "--audio-logical-removal-selftest") == 0)
+		return AudioReleaseProbe::Run_Logical_Removal();
+	if (argc == 2 && strcmp(argv[1], "--audio-audible-removal-selftest") == 0)
+		return AudioReleaseProbe::Run_Audible_Removal();
+	if (argc == 2 && strcmp(argv[1], "--audio-completed-sounds-selftest") == 0)
+		return AudioReleaseProbe::Run_Completed_Sounds();
+	if (argc == 2 && strcmp(argv[1], "--audio-continuous-removal-selftest") == 0)
+		return AudioReleaseProbe::Run_Continuous_Removal();
+#endif
 	if (argc == 2 && strcmp(argv[1], "--local-session-selftest") == 0)
 		return Validate_Local_Session_Boundaries();
 	if (argc == 3 && strcmp(argv[1], "--ttfs-cache-selftest") == 0)
@@ -1029,15 +1099,37 @@ int main(int argc, char **argv)
 	const bool m13_intro_smoke = argc == 7 &&
 		strcmp(level_mix, "M13.mix") == 0 &&
 		strcmp(argv[6], "M13_INTRO_SMOKE") == 0;
+	const bool m13_save_replay = argc == 7 &&
+		strcmp(level_mix, "M13.mix") == 0 &&
+		strcmp(argv[6], "M13_SAVE_REPLAY") == 0;
+	const bool m01_intro_smoke = argc == 7 &&
+		strcmp(level_mix, "M01.mix") == 0 &&
+		strcmp(argv[6], "M01_INTRO_SMOKE") == 0;
+	const bool m01_save_replay = argc == 7 &&
+		strcmp(level_mix, "M01.mix") == 0 &&
+		strcmp(argv[6], "M01_SAVE_REPLAY") == 0;
 	char skirmish_archive[96];
 	const bool purchase_smoke = argc == 7 && strcmp(argv[6], "PURCHASE_SMOKE") == 0;
 	const bool skirmish_smoke = argc == 7 && (strcmp(argv[6], "SKIRMISH_SMOKE") == 0 || purchase_smoke) &&
 		A4_Frontend_Resolve_Skirmish_Archive(level_mix, skirmish_archive, sizeof(skirmish_archive));
-	if (argc >= 7 && !remote_smoke && !harvester_lifetime && !tt_soldier_smoke && !tt_vehicle_smoke && !m13_sam_damage_smoke && !m13_inventory && !m13_intro_smoke && !skirmish_smoke) return 2;
+	if (argc >= 7 && !remote_smoke && !harvester_lifetime && !tt_soldier_smoke && !tt_vehicle_smoke && !m13_sam_damage_smoke && !m13_inventory && !m13_intro_smoke && !m13_save_replay && !m01_intro_smoke && !m01_save_replay && !skirmish_smoke) return 2;
 #ifndef __vita__
-	HostFixedSimulationClock = m13_inventory || m13_intro_smoke;
+	HostFixedSimulationClock = m13_inventory || m13_intro_smoke || m13_save_replay || m01_intro_smoke || m01_save_replay;
+	const char *replay_frame_ms = getenv("A31_HOST_REPLAY_FRAME_MS");
+	if (replay_frame_ms != NULL) {
+		char *end = NULL;
+		const unsigned long value = strtoul(replay_frame_ms, &end, 10);
+		if (!HostFixedSimulationClock || replay_frame_ms[0] == '\0' ||
+			*end != '\0' || value < 1UL || value > 200UL) {
+			fprintf(stderr, "A31_HOST_REPLAY_FRAME_MS requires a replay mode and 1..200 milliseconds\n");
+			return 2;
+		}
+		HostReplayFrameMilliseconds = static_cast<unsigned>(value);
+	}
+	if (HostFixedSimulationClock)
+		printf("a31.host_replay_frame_ms=%u native_timing_changed=0\n", HostReplayFrameMilliseconds);
 #else
-	if (m13_intro_smoke) return 2;
+	if (m13_intro_smoke || m01_intro_smoke) return 2;
 #endif
 	char level_archive[96] = {};
 	char level_ldd_name[96] = {};
@@ -1089,7 +1181,20 @@ int main(int argc, char **argv)
 	WW3DAssetManager *asset_manager = NULL;
 	{
 		Stage("audio_construct");
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+		Renegade_Miles_Reset_Runtime_Stats();
+		HostAudioFileFactory audio_factory(&factory_list);
+		WWAudioClass audio(false);
+		audio.Initialize();
+		audio.Set_File_Factory(&audio_factory);
+		const bool audio_ready = audio.Get_Sound_Scene() != NULL &&
+			audio.Get_2D_Driver() != NULL && audio.Get_3D_Driver() != 0;
+		Print("host_original_audio_scene_and_drivers", audio_ready);
+		passed = passed && audio_ready;
+		std::vector<int16_t> audio_mix(HostReplayFrameMilliseconds * 48U * 2U);
+#else
 		WWAudioClass audio(true);
+#endif
 		// The original campaign loader persists its own cheat history.  Keep the
 		// original manager alive for that serialized lifecycle.
 		RenegadeCheatMgrClass cheat_manager;
@@ -1103,12 +1208,28 @@ int main(int argc, char **argv)
 			 * than surviving a load/play/exit harness cycle. */
 			PathMgrClass::Initialize();
 			path_manager_initialized = true;
+			{
+				const Vector3 point(12.0f, -4.0f, 2.0f);
+				PathClass zero_path;
+				zero_path.Initialize(point, point);
+				Vector3 next;
+				const bool zero_path_valid = zero_path.Evaluate_Next_Point(point, next) &&
+					zero_path.Get_State() == PathClass::STATE_PATH_COMPLETE &&
+					next.Is_Valid() && next.X == point.X && next.Y == point.Y && next.Z == point.Z;
+				Print("zero_length_original_path_completes", zero_path_valid);
+				if (!zero_path_valid) { passed = false; break; }
+			}
 			asset_manager = new WW3DAssetManager;
 			asset_manager->Set_WW3D_Load_On_Demand(true);
 			asset_manager->Set_Activate_Fog_On_Load(true);
 			Stage("ww3d_init");
 			ww3d_initialized = WW3D::Init(NULL, NULL, true) == WW3D_ERROR_OK;
 			if (!ww3d_initialized) { passed = false; break; }
+#if defined(RENEGADE_ORIGINAL_SORTING) && defined(RENEGADE_HOST_ABI_TEST)
+			const bool sorting_ready = Check_Original_Sorting_Renderer();
+			Print("original_sorting_queue_draw_cleanup", sorting_ready);
+			if (!sorting_ready) { passed = false; break; }
+#endif
 			Stage("wwphys_init");
 			WWPhys::Init();
 			wwphys_initialized = true;
@@ -1451,7 +1572,8 @@ int main(int argc, char **argv)
 			CombatManager::Pre_Load_Level(false);
 			NetworkObjectMgrClass::Set_Is_Level_Loading(true);
 			Stage("combat_load");
-			CombatManager::Load_Level_Threaded(level_mix, false);
+			CombatManager::Load_Level_Threaded(m13_save_replay ? "save\\savegame05.sav" :
+				m01_save_replay ? "save\\savegame04.sav" : level_mix, false);
 			while (!CombatManager::Is_Load_Level_Complete()) {
 				if (remote_smoke) { cNetwork::Update(); usleep(1000); }
 			}
@@ -1580,6 +1702,22 @@ int main(int argc, char **argv)
 			Stage("god_think");
 			cGod::Think();
 			Print("original_god_created_commando", CombatManager::Get_The_Star() != NULL);
+			if (m01_intro_smoke) {
+				HumanPhysClass *phys = CombatManager::Get_The_Star() != NULL ?
+					CombatManager::Get_The_Star()->Peek_Human_Phys() : NULL;
+				Vector3 before, after;
+				if (phys != NULL) {
+					phys->Get_Velocity(&before);
+					phys->Jump_To_Point(phys->Get_Transform().Get_Translation());
+					phys->Get_Velocity(&after);
+				}
+				const bool finite_jump = phys != NULL &&
+					WWMath::Is_Valid_Float(after.X) && WWMath::Is_Valid_Float(after.Y) &&
+					WWMath::Is_Valid_Float(after.Z) &&
+					before.X == after.X && before.Y == after.Y && before.Z == after.Z;
+				Print("m01_zero_distance_jump_preserves_velocity", finite_jump);
+				if (!finite_jump) { passed = false; break; }
+			}
 			if (tt_soldier_smoke || tt_vehicle_smoke) {
 				A31_Interactive_Run_Simulation_Frame();
 				passed = CombatManager::Get_The_Star() &&
@@ -1602,16 +1740,95 @@ int main(int argc, char **argv)
 
 			Stage("hardware_equivalent_120_frame_loop");
 			M13CinematicProbe cinematic_probe;
-			const unsigned target_frames = m13_intro_smoke ? 5000U : 120U;
+			const unsigned target_frames = m13_intro_smoke ? 5000U :
+				m13_save_replay ? 600U :
+				m01_save_replay ? 1800U :
+				m01_intro_smoke ? 1800U : 120U;
 			/* Make each cycle's first-frame geometry a per-cycle measurement,
 			** matching the Vita adapter's reset immediately before its loop. */
 			RenegadeVitaRenderer::Reset_Statistics();
 			unsigned complete_frames = 0;
 			bool first_frame_geometry = false;
 			for (; complete_frames < target_frames; ++complete_frames) {
-				if (!m13_inventory && !m13_intro_smoke)
-					WW3D::Sync((complete_frames + 1U) * 16U);
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+				HostAudioClockMilliseconds += HostReplayFrameMilliseconds;
+#endif
+				if (!m13_inventory && !m13_intro_smoke && !m01_intro_smoke)
+					WW3D::Sync((complete_frames + 1U) * HostReplayFrameMilliseconds);
 				A31_Interactive_Run_Simulation_Frame();
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+				audio.On_Frame_Update(HostReplayFrameMilliseconds);
+				bool mixed = true;
+				// Match the provider's bounded output blocks, including long replay steps.
+				for (size_t offset = 0; offset < audio_mix.size() / 2U; ) {
+					const size_t frames = std::min<size_t>(1024U, audio_mix.size() / 2U - offset);
+					if (!Renegade_Miles_Mix_For_Test(audio_mix.data() + offset * 2U, frames)) {
+						mixed = false;
+						break;
+					}
+					offset += frames;
+				}
+				if (!mixed) {
+					Print("host_original_audio_mix", false);
+					passed = false;
+					break;
+				}
+#endif
+				if (m13_save_replay || m13_intro_smoke || m01_save_replay || m01_intro_smoke) {
+					unsigned checked = 0;
+					for (SLNode<BaseGameObj> *node = GameObjManager::Get_Game_Obj_List()->Head();
+						node != NULL; node = node->Next()) {
+						PhysicalGameObj *object = node->Data()->As_PhysicalGameObj();
+						PhysClass *phys = object != NULL ? object->Peek_Physical_Object() : NULL;
+						if (phys == NULL) continue;
+						const Matrix3D &transform = phys->Get_Transform();
+						Vector3 velocity(0.0f, 0.0f, 0.0f);
+						MoveablePhysClass *moving = phys->As_MoveablePhysClass();
+						if (moving != NULL) moving->Get_Velocity(&velocity);
+						bool valid = velocity.Is_Valid();
+						for (int row = 0; row < 3; ++row)
+							for (int column = 0; column < 4; ++column)
+								valid = valid && WWMath::Is_Valid_Float(transform[row][column]);
+						if (!valid) {
+							printf("a31.invalid_mission_physics map=%s frame=%u id=%d preset=%s\n",
+								level_mix, complete_frames + 1U, object->Get_ID(), object->Get_Definition().Get_Name());
+							passed = false;
+							break;
+						}
+						++checked;
+					}
+					if (!passed) break;
+					if (complete_frames + 1U == target_frames)
+						printf("a31.mission_physics_finite map=%s frames=%u final_objects=%u\n",
+							level_mix, target_frames, checked);
+				}
+				if (m13_save_replay) {
+					for (int id : {1500000055, 1500000059}) {
+						ScriptableGameObj *obj = GameObjManager::Find_ScriptableGameObj(id);
+						SoldierGameObj *soldier = obj != NULL ? obj->As_SoldierGameObj() : NULL;
+						if (soldier == NULL || soldier->Peek_Human_Phys() == NULL) {
+							printf("a31.m13_missing_engineer frame=%u id=%d\n", complete_frames + 1U, id);
+							passed = false;
+							break;
+						}
+						HumanPhysClass *phys = soldier->Peek_Human_Phys();
+						Vector3 velocity;
+						phys->Get_Velocity(&velocity);
+						const Vector3 position = phys->Get_Position();
+						if (!position.Is_Valid() || !velocity.Is_Valid()) {
+							printf("a31.m13_first_invalid_engineer frame=%u id=%d pos=%.6f,%.6f,%.6f vel=%.6f,%.6f,%.6f\n",
+								complete_frames + 1U, id, position.X, position.Y, position.Z,
+								velocity.X, velocity.Y, velocity.Z);
+							passed = false;
+							break;
+						}
+						if (complete_frames + 1U == target_frames)
+							printf("a31.m13_engineer_final id=%d pos=%.6f,%.6f,%.6f vel=%.6f,%.6f,%.6f\n",
+								id, position.X, position.Y, position.Z,
+								velocity.X, velocity.Y, velocity.Z);
+					}
+					if (!passed) break;
+				}
 				const A31InteractiveRenderTrace render_trace =
 					A31_Interactive_Run_Render_Frame();
 				if (m13_intro_smoke) cinematic_probe.Observe(complete_frames);
@@ -1656,6 +1873,17 @@ int main(int argc, char **argv)
 				}
 			}
 			Print_Number("hardware_equivalent_complete_frames", complete_frames);
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+			RenegadeMilesRuntimeStats audio_stats = {};
+			Renegade_Miles_Get_Runtime_Stats(&audio_stats);
+			printf("a31.host_audio starts=%u mixed_nonzero=%llu decode_failures=%u active_samples=%u manual_clock=%d\n",
+				audio_stats.sample_start_successes,
+				static_cast<unsigned long long>(audio_stats.mixed_nonzero_buffers),
+				audio_stats.sample_file_load_failures + audio_stats.sample_3d_file_load_failures,
+				audio_stats.active_samples, HostFixedSimulationClock ? 1 : 0);
+			if (m13_intro_smoke || m13_save_replay || m01_intro_smoke || m01_save_replay)
+				passed = passed && audio_stats.sample_start_successes > 0 && audio_stats.mixed_nonzero_buffers > 0;
+#endif
 			Print("hardware_equivalent_render_frame", complete_frames == target_frames);
 			Print("interactive_first_frame_geometry", first_frame_geometry);
 			passed = passed && complete_frames == target_frames && first_frame_geometry &&
@@ -1914,6 +2142,13 @@ int main(int argc, char **argv)
 		if (input_initialized) Input::Shutdown();
 	}
 
+#if defined(RENEGADE_A35_ORIGINAL_WWAUDIO)
+	RenegadeMilesRuntimeStats teardown_audio = {};
+	Renegade_Miles_Get_Runtime_Stats(&teardown_audio);
+	const bool audio_released = teardown_audio.allocated_samples == 0 && teardown_audio.active_streams == 0;
+	Print("host_original_audio_handles_released", audio_released);
+	passed = passed && audio_released;
+#endif
 	if (asset_manager != NULL) WW3DAssetManager::Delete_This();
 	if (path_manager_initialized) PathMgrClass::Shutdown();
 	if (math_initialized) WWMath::Shutdown();

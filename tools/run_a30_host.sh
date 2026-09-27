@@ -55,6 +55,9 @@ cmake --build "$rv_build" --target a30_wwphys_definition_runtime \
 "$rv_build/a36_cache_health_contract_selftest"
 "$rv_build/a36_file_factory_telemetry_contract_selftest"
 "$rv_build/a31_m00_interactive_runtime" --network-selftest
+for rv_sorting_case in basic nodes vertices indices zero index-limit vertex-limit interleaved; do
+	timeout 30s "$rv_build/a31_m00_interactive_runtime" --sorting-selftest "$rv_sorting_case"
+done
 "$rv_build/a31_m00_interactive_runtime" --local-session-selftest
 timeout 45s "$rv_build/a31_m00_interactive_runtime" --direct-client-selftest
 timeout 45s "$rv_build/a31_m00_interactive_runtime" --client-options-selftest
@@ -142,6 +145,10 @@ cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_interactive_build" -G Nin
 	-DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
 	-DRENEGADE_USE_CCACHE=ON
 cmake --build "$rv_interactive_build" --target a31_interactive_runtime --parallel 4
+for rv_sorting_case in basic nodes vertices indices zero index-limit vertex-limit interleaved; do
+	ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 30s \
+		"$rv_interactive_build/a31_m00_interactive_runtime" --sorting-selftest "$rv_sorting_case"
+done
 ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' \
 	RENEGADE_HOST_RUNTIME="$rv_interactive_build/a31_m00_interactive_runtime" \
 	python3 "$rv_root/tools/test_tt_client_greeting.py"

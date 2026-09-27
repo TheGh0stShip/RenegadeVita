@@ -203,7 +203,7 @@ SoundSceneClass::Collect_Logical_Sounds (int listener_count)
 				//	Is the sound ready to notify?
 				//
 				if (sound_obj->Allow_Notify (timestamp)) {
-					listener->On_Event (AudioCallbackClass::EVENT_LOGICAL_HEARD, (uint32)listener, (uint32)sound_obj);
+					listener->On_Event (AudioCallbackClass::EVENT_LOGICAL_HEARD, (uintptr_t)listener, (uintptr_t)sound_obj);
 				}
 			}
 		}
@@ -214,16 +214,16 @@ SoundSceneClass::Collect_Logical_Sounds (int listener_count)
 	// been completely processed
 	//
 	MultiListIterator<LogicalSoundClass> single_shot_it (&m_SingleShotLogicalSounds);
-	for (single_shot_it.First (); !single_shot_it.Is_Done (); single_shot_it.Next ()) {
+	for (single_shot_it.First (); !single_shot_it.Is_Done (); ) {
 		LogicalSoundClass *sound_obj = single_shot_it.Peek_Obj ();
+		// Remove_From_Scene removes the current list node; advance before that.
+		single_shot_it.Next ();
 
 		//
 		//	Remove this sound if its been completely processed
 		//
 		if (sound_obj->Get_Listener_Timestamp () <= LogicalListenerClass::Get_Oldest_Timestamp ()) {
 			sound_obj->Remove_From_Scene ();
-			single_shot_it.Remove_Current_Object ();
-			single_shot_it.Prev ();
 		}
 	}
 

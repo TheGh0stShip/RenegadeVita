@@ -824,7 +824,7 @@ AudibleSoundClass::Initialize_Miles_Handle (void)
 		//
 		// Associate this object instance with the handle
 		//
-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (S32)this);
+		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (AIL_USER_DATA)this);
 	}
 
 	return ;
@@ -1372,9 +1372,12 @@ AudibleSoundClass::Remove_From_Scene (void)
 		//
 		//	Remove this sound from the  static culling system
 		//
+		// Immediate wrapper release can drop the scene's last sound reference.
+		Add_Ref ();
 		m_Scene->Remove_Static_Sound (this);
 		m_Scene = NULL;
 		m_PhysWrapper = NULL;
+		Release_Ref ();
 	}
 
 	return ;

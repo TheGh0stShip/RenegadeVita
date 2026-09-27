@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "f911f8917e23f90399de0d2ae81ba53c63d648ed0d771bc99a86a89d28042c71",
-  "patch_count": 268,
+  "stage_script_sha256": "bf61f89235c34a235711510bb0a140ae2c899ed6c47a0ecd84fdf5be1863d0bc",
+  "patch_count": 290,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -98,6 +98,11 @@
       "path": "port/patches/wwmath-a35-valid-float-layout.patch",
       "stage_directory": "wwmath",
       "sha256": "b3d84d96a6292ee60f2b405a8c04990598133349ebc8e06478f2266dc179878c"
+    },
+    {
+      "path": "port/patches/wwmath-a35-portable-int-conversion.patch",
+      "stage_directory": "wwmath",
+      "sha256": "1c1368cebb22dee67eaef0ff03bb9e0448b6ee26d7a3bcd057d13220d5a88266"
     },
     {
       "path": "port/patches/wwsaveload-a30-abi.patch",
@@ -675,6 +680,51 @@
       "sha256": "b51d08ca29a567ded9d8e7d57f41cb4839cc6760d8b4039e010442d0587a37c2"
     },
     {
+      "path": "port/patches/wwaudio-a35-user-data-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "b37aef4af414d69cfa7f28c011b35ea451dc0d93f45af1921b2c912ddc99ddec"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-event-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "a0899c101b2fd4025d0eaa31565b6faf38ee639e459f04e654e7ea93f3d6878e"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-file-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "5e1853330b82a464112b77c39f1b74306b1797431767351cb81e2ee4d2c7fef5"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-release-lock-order.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "2b6c443118d7a610b546baf9719d31fdf7a7746480d877c1013159e3c00cf1a8"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-sample-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "3b66f8c33438e4cde886be925fd33ddabed06c783203d396a6a9cd46b39b7057"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-logical-removal-lifetime.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "73d9907c89e0e794d07483c6dd462c53340a544c6b9b5ced820e4ded27122047"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-audible-removal-lifetime.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "7a31847d43eb1ebc2e4eaade56e2a6ff6a624abfb08027aac1bc3f0088d11ae7"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-completed-sound-uniqueness.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "2bb8df0d88a35fceb65a26f653e345f8de39a7c0a5a4e8def68b95f7cf000da5"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-flush-enqueue-order.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "b4a157a340fae36337718099db8cb5dca6b19adb5d693457ccc657111620151a"
+    },
+    {
       "path": "port/patches/wwnet-a30-gcc15.patch",
       "stage_directory": "wwnet",
       "sha256": "f413890b7a2d8dab753ec8ad37352753cd04ba5a42d7fa5d62dbe16abe69d338"
@@ -993,6 +1043,46 @@
       "path": "port/patches/wwphys-a35-trackedvehicle-delta-time.patch",
       "stage_directory": "wwphys",
       "sha256": "b4d6b03bf2a4ca91ea8bb60e758b8a37c008089719e9afad545408c6a1f07869"
+    },
+    {
+      "path": "port/patches/wwphys-a35-trackedvehicle-repeat-render.patch",
+      "stage_directory": "wwphys",
+      "sha256": "9e617a99dd347a3a586aa17c1dd2d5b7839455d75e71fe1a4e1db1cba33e00fd"
+    },
+    {
+      "path": "port/patches/wwphys-a35-human-jump-finite.patch",
+      "stage_directory": "wwphys",
+      "sha256": "3eecd0e3cd6348fb4dfce9de8570972bd4af896c32e0ca4a7579278db1d8e1cf"
+    },
+    {
+      "path": "port/patches/wwphys-a35-zero-length-path.patch",
+      "stage_directory": "wwphys",
+      "sha256": "514102812e7086d25b06b67fd2910287359cd5b55e40e4e49b216bcf0ffe361f"
+    },
+    {
+      "path": "port/patches/wwphys-a35-prev-animation-load-ref.patch",
+      "stage_directory": "wwphys",
+      "sha256": "3afab42f854873011c3be235b489d04bdfe66911123fd6874b78f8fb8a8e6f15"
+    },
+    {
+      "path": "port/patches/ww3d-a35-raw-animation-frame-floor.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "ccc4e8917d1340b674ba0867b6e8189bdace1f92ba24aa7da49a823b49510615"
+    },
+    {
+      "path": "port/patches/combat-a35-pathaction-borrowed-remap.patch",
+      "stage_directory": "combat",
+      "sha256": "d8cc36cb76ede248a09d5b5137df2b348fa7f929c2320970a18fc03e4b4e540f"
+    },
+    {
+      "path": "port/patches/combat-a35-vehicledriver-borrowed-remap.patch",
+      "stage_directory": "combat",
+      "sha256": "34791eb540f8095c04ba44ee18fba3b1539691020ed8f6205baf99bdcee83b11"
+    },
+    {
+      "path": "port/patches/ww3d-a35-decal-release-range.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "aa3c77599d06681131243f862c56bffd3dc0aa972445ce6c6a72c87864802743"
     },
     {
       "path": "port/patches/ww3d2-a35-create-depth-timing.patch",
@@ -1343,7 +1433,27 @@
       "path": "port/patches/combat-a35-original-owner-cpp.patch",
       "stage_directory": "combat",
       "sha256": "463397d6bc3bf09c88c827782dfdf8a33688d66703956932d1513e8806b7b5aa"
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-time-budget-only.patch",
+      "stage_directory": "scripts",
+      "sha256": "dc904cab25938f1bc384e368e1f58adbabe45f1a530d2922ff5c095a7a1de7c7"
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-camera-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "4e86faf55954d4c67d77a6c96a3e51baadfd8a1391ea7da2592841d36a6c19c8"
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-sorting-port.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "18dc2f9c451d9eafcfdace1a9a9b95bb53125e0b033fa7980fd2e076c8b136cc"
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-sorting-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "eea4162324e51c7261780c9a0f77159aba5d413af6a926706050b029f94c1119"
     }
   ],
-  "registry_sha256": "d99fa7783c35a0ecf46902a65918011d13f4728d39d976a5f430ae816a226992"
+  "registry_sha256": "a8603b2be7d65bf63d588ef860705262dc44069caf5bb75af038a31ec930bd98"
 }

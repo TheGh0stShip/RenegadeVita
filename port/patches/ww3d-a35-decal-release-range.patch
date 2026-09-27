@@ -1,0 +1,14 @@
+--- a/decalmsh.cpp
++++ b/decalmsh.cpp
+@@ -666 +666 @@
+-	for (int fi=decal->FaceStartIndex; fi<decal->FaceCount; fi++) {
++	for (int fi=decal->FaceStartIndex; fi<decal->FaceStartIndex + decal->FaceCount; fi++) {
+@@ -669 +669 @@
+-	for (int vi=decal->VertexStartIndex; vi<decal->VertexCount; vi++) {
++	for (int vi=decal->VertexStartIndex; vi<decal->VertexStartIndex + decal->VertexCount; vi++) {
+@@ -1087 +1087 @@
+-	for (int fi = decal->FaceStartIndex; fi < decal->FaceCount; fi++) {
++	for (int fi = decal->FaceStartIndex; fi < decal->FaceStartIndex + decal->FaceCount; fi++) {
+@@ -1090 +1090 @@
+-	for (int vi=decal->VertexStartIndex; vi<decal->VertexCount; vi++) {
++	for (int vi=decal->VertexStartIndex; vi<decal->VertexStartIndex + decal->VertexCount; vi++) {

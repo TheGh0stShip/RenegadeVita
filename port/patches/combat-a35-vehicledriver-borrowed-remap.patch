@@ -1,0 +1,6 @@
+--- a/vehicledriver.cpp
++++ b/vehicledriver.cpp
+@@ -957 +957,2 @@
+-		REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&m_CurrentPath);
++		// Initialize borrows the action's path; Reset does not release it.
++		REQUEST_POINTER_REMAP ((void **)&m_CurrentPath);

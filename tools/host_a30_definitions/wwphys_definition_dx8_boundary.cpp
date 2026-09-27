@@ -89,6 +89,7 @@ void DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)
 	Unsupported_GPU_Call("DX8Wrapper::Set_Light_Environment");
 }
 
+#if !defined(RENEGADE_ORIGINAL_SORTING)
 void SortingRendererClass::Insert_Triangles(const SphereClass &,
 	unsigned short, unsigned short, unsigned short, unsigned short)
 {
@@ -100,3 +101,4 @@ void SortingRendererClass::Insert_Triangles(unsigned short, unsigned short,
 {
 	Unsupported_GPU_Call("SortingRendererClass::Insert_Triangles");
 }
+#endif

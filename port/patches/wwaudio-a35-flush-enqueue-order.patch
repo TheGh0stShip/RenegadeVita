@@ -1,0 +1,66 @@
+--- a/Threads.cpp
++++ b/Threads.cpp
+@@ -168,8 +168,8 @@
+ )
+ {
+-	if (m_IsFlushing) {
+-		REF_PTR_RELEASE (object);
+-	} else {
++	{
++		CriticalSectionClass::LockClass lock(m_ListMutex);
++		if (!m_IsFlushing) {
+ 
+ 		//
+ 		//	Make sure we have a thread running that will handle
+@@ -184,7 +184,6 @@
+ 		// list pointer
+ 		//
+ 		{
+-			CriticalSectionClass::LockClass lock(m_ListMutex);
+ 
+ 			//
+ 			//	Create a new delay-information structure and
+@@ -202,6 +201,10 @@
+ 			m_ReleaseListHead = info;
++			return;
++		}
+ 		}
+ 	}
+ 
++	// Never invoke destructors while holding the release-list lock.
++	REF_PTR_RELEASE (object);
+ 	return ;
+ }
+@@ -215,8 +218,13 @@
+ void
+ WWAudioThreadsClass::Flush_Delayed_Release_Objects (void)
+ {
+-	CriticalSectionClass::LockClass lock(m_ListMutex);
+-	m_IsFlushing = true;
++	DELAYED_RELEASE_INFO *release_head = NULL;
++	{
++		CriticalSectionClass::LockClass lock(m_ListMutex);
++		m_IsFlushing = true;
++		release_head = m_ReleaseListHead;
++		m_ReleaseListHead = NULL;
++	}
+ 
+ 	//
+ 	//	Loop through all the objects in our delay list, and
+@@ -224,7 +232,7 @@
+ 	//
+ 	DELAYED_RELEASE_INFO *info = NULL;
+ 	DELAYED_RELEASE_INFO *next = NULL;
+-	for (info = m_ReleaseListHead; info != NULL; info = next) {
++	for (info = release_head; info != NULL; info = next) {
+ 		next = info->next;
+ 
+ 		//
+@@ -235,7 +243,6 @@
+ 		SAFE_DELETE (info);
+ 	}
+ 
+-	m_ReleaseListHead = NULL;
+ 	return ;
+ }
+ 

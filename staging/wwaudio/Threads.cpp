@@ -166,9 +166,9 @@ WWAudioThreadsClass::Add_Delayed_Release_Object
 	DWORD					delay
 )
 {
-	if (m_IsFlushing) {
-		REF_PTR_RELEASE (object);
-	} else {
+	{
+		CriticalSectionClass::LockClass lock(m_ListMutex);
+		if (!m_IsFlushing) {
 
 		//
 		//	Make sure we have a thread running that will handle
@@ -183,7 +183,6 @@ WWAudioThreadsClass::Add_Delayed_Release_Object
 		// list pointer
 		//
 		{
-			CriticalSectionClass::LockClass lock(m_ListMutex);
 
 			//
 			//	Create a new delay-information structure and
@@ -200,9 +199,13 @@ WWAudioThreadsClass::Add_Delayed_Release_Object
 			}
 
 			m_ReleaseListHead = info;
+			return;
+		}
 		}
 	}
 
+	// Never invoke destructors while holding the release-list lock.
+	REF_PTR_RELEASE (object);
 	return ;
 }
 
@@ -215,8 +218,13 @@ WWAudioThreadsClass::Add_Delayed_Release_Object
 void
 WWAudioThreadsClass::Flush_Delayed_Release_Objects (void)
 {
-	CriticalSectionClass::LockClass lock(m_ListMutex);
-	m_IsFlushing = true;
+	DELAYED_RELEASE_INFO *release_head = NULL;
+	{
+		CriticalSectionClass::LockClass lock(m_ListMutex);
+		m_IsFlushing = true;
+		release_head = m_ReleaseListHead;
+		m_ReleaseListHead = NULL;
+	}
 
 	//
 	//	Loop through all the objects in our delay list, and
@@ -224,7 +232,7 @@ WWAudioThreadsClass::Flush_Delayed_Release_Objects (void)
 	//
 	DELAYED_RELEASE_INFO *info = NULL;
 	DELAYED_RELEASE_INFO *next = NULL;
-	for (info = m_ReleaseListHead; info != NULL; info = next) {
+	for (info = release_head; info != NULL; info = next) {
 		next = info->next;
 
 		//
@@ -234,7 +242,6 @@ WWAudioThreadsClass::Flush_Delayed_Release_Objects (void)
 		SAFE_DELETE (info);
 	}
 
-	m_ReleaseListHead = NULL;
 	return ;
 }
 
@@ -276,6 +283,8 @@ WWAudioThreadsClass::Delayed_Release_Thread_Proc (LPVOID /*param*/)
 	while (::WaitForSingleObject (m_hDelayedReleaseEvent, timeout) == WAIT_TIMEOUT) {
 #endif
 
+		DELAYED_RELEASE_INFO *release_head = NULL;
+		DELAYED_RELEASE_INFO *release_tail = NULL;
 		{
 			CriticalSectionClass::LockClass lock(m_ListMutex);
 
@@ -314,10 +323,22 @@ WWAudioThreadsClass::Delayed_Release_Thread_Proc (LPVOID /*param*/)
 					//
 					//	Free the object
 					//
-					REF_PTR_RELEASE (curr->object);
-					SAFE_DELETE (curr);
+					curr->next = NULL;
+					curr->prev = NULL;
+					if (release_tail != NULL) release_tail->next = curr;
+					else release_head = curr;
+					release_tail = curr;
 				}
 			}
+		}
+
+		// Destructors can acquire the audio lock or enqueue another release.
+		// Never run them while holding the list lock (opposite audio lock order).
+		while (release_head != NULL) {
+			DELAYED_RELEASE_INFO *info = release_head;
+			release_head = info->next;
+			REF_PTR_RELEASE (info->object);
+			SAFE_DELETE (info);
 		}
 
 		//

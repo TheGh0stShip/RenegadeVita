@@ -1,5 +1,555 @@
 # Performance hypothesis ledger
 
+## 2026-09-27 TT Audio Reference Check
+
+Reverified the local official TT 4.8.4 revision-9000 archive SHA-256:
+`8d3c2df2af0b2a7bb49b4e1a0353947b49fc2b228f849024e1a7bf18a0fddfcd`.
+Source URL: https://www.tiberiantechnologies.org/files/source-4.8.4.zip.
+Read `WWAudioClass.h`, `AudioCallbackListClass.h`, `ThreadClass.cpp` and the
+archive's audio-member inventory. The headers retain playlist/completed-sound
+interfaces; they do not provide the audio queue or delayed-release method
+bodies needed to validate our fixes. Generic ThreadClass::Stop uses Windows
+TerminateThread after a timeout. Decision: do not import that forced-termination
+path; it is neither a native Vita implementation nor safe ownership cleanup.
+No TT source copied into the port.
+
+Existing read-only reference audit passes, output
+`build/dev208-tt-audio-reference-audit.json`; its three Python tests pass.
+These execute no C++ compiler or game. This verifies archive provenance and
+the auditor, not campaign or audio runtime correctness.
+
+Verification boundary: the three newly staged audio corrections and new
+probes now need compiled before/after sanitizer checks. Requested clarification
+on asset-free test compilation is unanswered. Do not grow this patch set with
+speculative lifecycle changes or claim all freeze classes eliminated. Game
+builds, packaging, installation and launches remain held. Both missions and
+native frame pacing remain incomplete.
+
+## 2026-09-27 Delayed Audio Flush Synchronization
+
+Source interleaving: producer reads `m_IsFlushing == false`, flush acquires
+the list mutex, marks flushing and drains the list, producer later acquires
+the mutex and appends. The worker can already have exited, stranding that
+reference. The plain flag also had an unsynchronized read/write. Added
+`wwaudio-a35-flush-enqueue-order.patch`: check and insertion share the list
+mutex; flushing detaches the entire list under that mutex and destroys outside
+it. Immediate-release destructors also run outside it, preserving the earlier
+audio/list lock-order correction. No timer or gameplay behavior is bypassed.
+
+Prepared `--audio-flush-enqueue-selftest`: prestarts the worker, races four
+producers against flush, and checks 2,049 destroyed references before End's
+additional drain could hide stranded entries. This is a stress regression,
+not a deterministic scheduler; ThreadSanitizer remains needed for race evidence.
+Not compiled or executed. Full staging passes 290 patches, ordered SHA
+`a8603b2be7d65bf63d588ef860705262dc44069caf5bb75af038a31ec930bd98`;
+log `build/dev208-audio-flush-staging.log`. No native-causality or FPS claim.
+Thread creation failure, recreation after permanent flushing, and ownership
+outside this queue remain separate lifecycle questions, not claimed fixed.
+
+Direct observer removal search in Combat/Scripts found teardown, Re_Init,
+network creation and refinery cleanup sites, rather than a demonstrated M13/M01
+timer callback removal. No speculative dispatch rewrite was made. Requested
+clarification whether asset-free sanitizer compilation is allowed while game
+builds remain held; no answer yet and no compilation performed.
+
+## 2026-09-27 Source Integration and Shared Loop Review
+
+Both pending audio corrections now pass deterministic zero-fuzz staging.
+Only three managed source files changed; 1,944 were unchanged. Inventory:
+289 ordered patches, SHA-256
+`05984b7ee5c3dc7da162e663d93a16e6ffc337e53eb090963bf09d6fbae53dd7`.
+Log: `build/dev208-audio-source-audit-staging.log`. No compilation or launch.
+Existing host executable SHA remains
+`f9c55beb0daeb9d8a6e4d65571617c1973f84066f8a18cb959e2f223d6c977db`;
+it does not contain these two corrections or their new tests.
+
+| Reviewed path | Source evidence | Decision |
+| --- | --- | --- |
+| Phys3 collision recursion | `Collide_Move` rejects reentry with `InCollision`, clears it on return. | No recursion limiter added. Called collision callbacks still need coverage. |
+| Phys3 movement loop | `Apply_Move` sets done after the iteration bound; no later reset to false in the body. | No arbitrary work-skipping guard added. |
+| Scene substeps | `PhysicsScene::Update` subtracts positive bounded steps; normal caller uses integer-derived `TimeManager` seconds with an existing frame-tick cap. | No observed invalid-dt cause established; no new simulation clamp. |
+| Script timer queues | `Post_Think` walks backwards; `Start_Observer_Timer`/`Start_Custom_Timer` append. | Appending alone does not invalidate earlier timer indices; no queue rewrite. |
+| Script deletion | `Request_Destroy_Script` queues unique pointers; `GameObjManager::Post_Think` drains after object callbacks. | Normal deferred destruction retained; direct observer-list mutation remains a separate audit item. |
+| Audio shutdown | `WWAudio` destructor joins release worker before Shutdown; inspected caller does not hold MMSLock. | No proven shutdown lock cycle from this call site. Flush destruction under list lock and concurrent producer access remain open. |
+
+These are bounded source conclusions, not an exhaustive proof of freeze freedom.
+Next source targets: direct observer-list mutation during event delivery and
+release-worker producer/shutdown synchronization. Prepared audio regressions
+still need before/after sanitizer execution when compilation is allowed.
+
+## 2026-09-27 Audio Completion Ownership Audit
+
+Source-only finding: `Play(false) -> Stop -> Play(false) -> Stop` before
+`Free_Completed_Sounds` leaves one owning playlist reference and two borrowed
+completion entries. Cleanup dereferences both entries; the first can delete
+the sound, leaving the second dangling. The correction admits each sound to
+the completion queue once. End-of-sound callbacks remain outside this guard
+and still run for every stop. No saved state, sound timing or loop count changes.
+
+Added `--audio-completed-sounds-selftest`: three stop/restart sequences, final
+stopped and final playing cases, final-reference destruction counts, and seven
+expected end callbacks. Registered deterministic patch
+`wwaudio-a35-completed-sound-uniqueness.patch`. Zero-fuzz dry-run passes.
+This test is not compiled or executed under the user's current no-build rule;
+there is no sanitizer result or native-causality claim for this finding yet.
+The preceding 2D/3D removal correction is also pending compilation/execution.
+Both patches are registered but unstaged; the staged inventory remains 287.
+
+Adjacent audit: ordinary `On_Loop_End` retains the playlist reference until
+next-frame completed cleanup, so scene removal alone does not establish a
+callback use-after-free. Reentrant callbacks still require separate review.
+Rigid-body integration already caps collision iterations at ten and contact
+search at six attempts; rider traversal explicitly advances. These loops were
+not modified or labeled infinite-loop causes. Their called functions and
+callback mutation still require review. No frame-time or mission acceptance
+claim follows from source inspection.
+
+## 2026-09-27 Repeated Tank Render State
+
+Combined host rebuild including this guard succeeds. SHA
+`f9c55beb0daeb9d8a6e4d65571617c1973f84066f8a18cb959e2f223d6c977db`.
+Release-lock, logical-removal and continuous-removal audio regressions all pass
+again under ASan/LSan (`build/dev208-combined-audio-*.log`). No new native run.
+
+`TrackedVehicle::Render` recomputed zero displacement/elapsed time on a repeated
+same-timestamp submission, overwriting the texture mapper's rate. With deferred
+mesh submission that rate can be consumed after being erased. An extracted
+production Render-method fixture reproduces this: the rate/update-count
+assertion fails before the guard, passes afterward. The guard retains every
+parent render call and updates track movement only on a new timestamp or
+initialization. No changes to movement/UV scale math or serialized fields.
+
+Three tests pass under ASan/UBSan, covering forward movement, reversal, stop,
+repeat submissions and reset without an origin jump. The translation-only
+fixture does not validate tank meshes, turns or native pixels. Native occurrence
+and whether this explains the user's stationary treads remain unverified.
+Command: `python3 -m unittest tools.test_trackedvehicle_uv_time_units`.
+Logs: `build/dev208-track-repeat-before.log`, `build/dev208-track-repeat-after.log`.
+The canonical Vita trackedvehicle object compiles
+(`build/dev208-track-repeat-vita-object.log`). 287 zero-fuzz patches stage,
+SHA `ffbf6445aa9220518113dda415bd09c7243630ae9194d1a48aac179db28ba5fb`.
+No frame-time gain claimed. Earlier full mission host replays precede this guard.
+
+## 2026-09-27 Saved M13 and Explosion Audio Coverage
+
+The audio-enabled host passes two M13 save replays, 600 frames each, finite
+physics (145 objects), 54 sound starts per cycle, zero decode failures and
+released audio handles. Log: `build/dev208-m13-save-original-audio-asan.log`.
+This does not cover the reported later Ion/ending overlap.
+
+The existing `M13_SAM_PREWARM_SMOKE` diagnostic also passes twice with original
+audio: referenced world/explosion choices prepare, the two SAM targets reach
+zero health via original Apply_Damage, and teardown is ASan/LSan clean.
+Log: `build/dev208-m13-explosion-original-audio-asan.log`. This is diagnostic
+damage/asset coverage, not ordinary mission completion or proof that every
+vehicle death is correct. ASan host damage timings are not Vita frame times.
+The process completed normally before an attempted host stack attachment;
+no hang was established and no stack was captured.
+
+Executable: `c3fb46e7234c37a814ed03cf04aa310801610be922a8046042361365a5c654ec`.
+Commands use the same isolated roots and ASAN_OPTIONS as the earlier replay,
+with `M13.mix M13_SAVE_REPLAY` or `M13.mix M13_SAM_PREWARM_SMOKE` and a 180 s
+external bound. No source fix, new game package or native run in this pass.
+
+## 2026-09-27 Continuous Sound Removal Boundary
+
+The original Test_Cinematic regression now executes Play_Audio commands across
+save/load: an executed cue is not replayed, and a pending cue fires once at its
+restored relative time. ASan/UBSan pass; command
+`python3 -m unittest tools.test_cinematic_save`, log
+`build/dev208-cinematic-audio-save-test.log`. This covers the script's command
+queue, not the live Ion cue, observer recreation or all saved timer scheduling.
+
+New asset-free `--audio-continuous-removal-selftest` uses original WWAudio,
+Sound3D and sound-scene ownership with a generated PCM fixture. It verifies
+audible infinite looping beyond the fixture duration, the exact beacon-style
+Remove_From_Scene/Release_Ref sequence followed by silence, then an audible
+one-shot ending cue followed by silence. ASan/LSan pass; log
+`build/dev208-audio-continuous-probe.log`. This extends the earlier provider-only
+test through original engine ownership. No retail assets are included.
+
+It does not reproduce the reported Ion save/ending overlap or prove its cause.
+The normal cleanup path works in this fixture; investigate actual saved script
+events/cue ownership instead of adding a speculative global sound stop.
+Original dynamic sound-scene save/load methods remain empty; the normal dynamic
+save does not serialize a complete sound list. Beacon Stop_Armed_Sound already
+calls scene removal and release. No native performance/visual claim.
+
+## 2026-09-27 Original-Audio M01 Lifecycle Regression
+
+Follow-up: `build/dev208-m13-original-audio-asan.log` passes two complete
+5,000-frame M13 intros with original audio, ASan/LSan, camera handback, rappel
+advancement, both engineers alive/detached, finite physics and handles released.
+Executable including the asset-free probe:
+`3513be76fb31a5541bd0353f8d94dfcb1d016472c250c8f943087acfa9081154`.
+Run the same audio-enabled target with the isolated roots above and
+`M13.mix M13_INTRO_SMOKE`, default 16 ms replay cadence. Existing host unsupported
+mesh warnings remain. This is not native rendering or A/V synchronization proof.
+
+With all host pointer boundaries preserved, two-cycle M01 audio replay
+reproduced a heap-use-after-free in `LogicalSound::Remove_From_Scene`: removing
+the scene's last references could delete the object before its fields were
+cleared. `Collect_Logical_Sounds` also accessed its iterator after the called
+removal had already removed the current node. The fix holds a temporary self
+reference and advances the iterator before calling removal. No sound events,
+AI hearing, or mission behavior are skipped.
+
+Before: `build/dev208-m01-original-audio-pointer-fixed-asan.log`, exit 1,
+ASan use-after-free at LogicalSound.cpp:134 in cycle two. After:
+`build/dev208-m01-original-audio-lifetime-fixed-asan.log`, exit 0, two 1,800-frame
+cycles at 200 ms, finite physics (286 final objects each), 103/108 sound starts,
+zero decode failures and all handles released. ASan/LSan clean.
+Passing replay executable SHA: `11653250868bd1855fd98abf4f7b84b8c54b3a74f8bb23ef7b2f3d37ee303777`.
+
+The asset-free `--audio-logical-removal-selftest` additionally removes three
+one-shot objects through the original sound scene and verifies all three
+destructors run under ASan/LSan (`build/dev208-audio-logical-probe.log`).
+It tests immediate release as reached after shutdown/recreation. The earlier
+release-lock probe still passes. All eleven focused audio/animation/cinematic/
+preparation tests pass (`build/dev208-audio-combined-focused-tests.log`).
+
+Affected audio objects compile with the Vita compiler; readelf confirms ARMv7,
+VFP-register arguments and 16-bit wchar. Logs: `build/dev208-audio-vita-objects.log`,
+`build/dev208-audio-handles-vita-objects.log`, and
+`build/dev208-audio-logical-vita-objects.log`. 286 patches stage with inventory
+SHA `9d7174f5b69ed1bbcd5d196c046027e2b927ee05f23f0e110121fc651ff4833e`.
+No native performance, audio synchronization or full-mission acceptance claim.
+
+## 2026-09-27 Reproduced Audio Release Deadlock
+
+Original `AudibleSound::Stop` holds MMSLock while removing a continuous logical
+sound, which queues its wrapper under the release-list mutex. The worker held
+that list mutex while destroying objects whose destructor acquires MMSLock.
+The deterministic `--audio-release-selftest` holds the audio lock, waits for
+worker destruction to enter, then enqueues another object. Before the fix it
+reaches the worker marker and times out with exit 124. After detaching expired
+objects under the list lock and releasing them outside it, the same test exits
+0, both objects destroyed, with ASan/LSan clean. Queue order/delays are retained.
+
+Evidence: `build/dev208-audio-release-before.log`,
+`build/dev208-audio-release-after.log`, `build/dev208-audio-release-build.log`.
+Passing host SHA: `533dc477331a8cfb188f062c1f404624f0ba6c1befd3238fbeabc54c20bc6281`.
+Command: `ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 timeout 8s
+build/host-a31-audio-asan/a31_m00_interactive_runtime --audio-release-selftest`.
+This proves a source deadlock, not its occurrence in the user's native run.
+
+The real-audio M01 saved replay then failed in frontend sound initialization:
+`Set_Miles_Handle(uint32)` truncated a host sample pointer despite the earlier
+outer MILES_HANDLE being pointer-sized. All three handle implementations and
+the base declaration now preserve uintptr_t. File callback pointers are also
+preserved and tested with a pointer-valued stream handle. Provider ASan/UBSan
+test passes. 285 patches stage; latest sample-pointer change still needs a
+host rebuild. Replay log: `build/dev208-m01-original-audio-asan.log`.
+No native launch, performance measurement, or mission-completion claim.
+
+## 2026-09-27 Original audio host boundary
+
+The optional original-WWAudio host target exposed pointer truncation in Miles
+object slots and logical-hearing event parameters. These are LP64 host
+integration defects, not native ILP32 freeze evidence. Pointer-sized types now
+cover those in-process associations, without widening U32/S32 or serialized
+state. Provider pointer round trips and continuous stop/resume/end/reuse/
+release pass `python3 -m unittest tools.test_vita_audio_provider` with ASan/UBSan.
+Long replay steps now use the mixer's bounded 1024-frame blocks.
+
+282 staging patches pass (`build/dev208-audio-pointer-staging.log`). The last
+host build compiled slot changes but stopped at callback casts; the callback
+correction is staged and requires recompilation. Original-audio mission replay
+and native acceptance remain pending. No performance win claimed.
+
+Source shows opposing audio/list-lock order through continuous logical sound
+removal and delayed cull-wrapper destruction. A deterministic threaded
+reproduction is needed; this is not yet the proven M01 freeze cause.
+
+## 2026-09-27 Sorted-effect capacity and ordering
+
+The restored original sorter failed three asset-free stress checks: 4,097
+queued nodes leaked one 688-byte host node and dropped its triangle; a
+72,000-vertex pool wrote beyond its truncated dynamic VB; a 66,000-index pool
+wrote beyond its truncated dynamic IB. Both buffer constructors accept 16-bit
+counts. Evidence: `build/dev208-sorting-{nodes,vertices,indices}-before.log`.
+These are acceptance defects in the newly linked sorter, not an explanation
+of freezes in older candidates where that sorter was not linked.
+
+The queue now uses the engine's growable vector. Ordinary pools retain the
+original combined-buffer path. Oversized pools still run the original global
+depth sort, retaining node-local indices and emitting consecutive sorted runs
+within 16-bit buffer limits. They do not flush unsorted chunks or drop effects.
+Zero-polygon submissions are ignored before queue allocation. A host-only
+synchronous submission observer checks actual transformed triangle order;
+it is absent from native builds.
+
+Eight asset-free ASan/LSan checks pass: normal queue/draw/shutdown, 4,097 nodes,
+72,000 vertices, 66,000 indices, empty submission, exact 65,535 vertex/index
+limits, and triangles with interleaved node depths. All requested triangles
+are submitted, transforms produce the expected depth range, order is monotonic,
+and source-buffer references return to one. Logs:
+`build/dev208-sorting-*-after.log`. Current host executable SHA-256:
+`eed949320a71d742f6dd6504ee94b03b7756984235aef63ccb2905eae5481409`.
+Run `build/host-a31-asan/a31_m00_interactive_runtime --sorting-selftest CASE`
+with `ASAN_OPTIONS=detect_leaks=1:halt_on_error=1`; cases are `basic`, `nodes`,
+`vertices`, `indices`, `zero`, `index-limit`, `vertex-limit`, `interleaved`.
+The normal and ASan canonical host workflows now run these checks automatically.
+
+Deterministic staging passes at 280 patches, patch-set SHA-256
+`c7964cfd392bdabe197ef06ecb9722c46eb9ecb5510d3fe6218e7c41fcf428aa`.
+Sorter and renderer ARM objects compile with the existing Vita configuration
+(`build/dev208-sorting-capacity-vita-objects.log`). No new game package or native
+run. This is a correctness fix, not a measured performance gain. Oversized
+interleaved pools can require extra vertex copies; native frequency and cost
+must be measured before performance acceptance. Original gameplay is untouched.
+
+The same current host executable passes two further 5,000-frame M13 intro
+cycles with rappel/camera/engineer contracts and finite physics, and two saved
+M01 1,800-frame cycles at 200 ms with finite physics, all under ASan/LSan.
+Logs: `build/dev208-m13-sorting-capacity-asan.log` and
+`build/dev208-m01-save-sorting-capacity-asan.log`. Saved-state hashes remain
+unchanged. Native object symbol inspection confirms the host submission
+observer is absent. Neither result establishes native visuals, audio, frame
+time or whole-mission completion.
+
+## 2026-09-27 Original sorted-effect submission restored
+
+The fresh M13 intro fixture aborted at the host sorting boundary, reproduced
+with the all-object finite-state checks in
+`build/dev208-m13-fresh-physics-asan.log`. Source inspection found the native
+boundary also rejected these submissions, and original `sortingrenderer.cpp`
+was not linked. This is a confirmed rendering integration gap, not proof of
+the M01 native freeze or a measured explanation of its frame time.
+
+The full-port target now selects the original sorter. Its D3DX row-matrix
+operations use equivalent original WWMath column-matrix operations; deferred
+draws restore the wrapper's world/view/light state consumed by the existing
+CPU-backed DX8 boundary. WW3D flush/end-frame/shutdown own its lifecycle.
+Original typed Draw_Triangles dispatch enters the queue. The M00 demo profile
+retains its existing selection. No replacement renderer or gameplay shortcut
+was introduced. Incremental staging passes with 280 patches.
+
+An asset-free host probe checks two queued triangles, nonzero source offsets,
+draw acceptance, queued reference retention, flush release, and pending-queue
+shutdown. The first combined host executable, SHA-256
+`b9da33e58ac573d102403b66246c84530de26b391201d5ee8890ff73b64fb7a2`,
+passes two complete 5,000-frame original M13 intro cycles with ASan/LSan:
+`build/dev208-m13-original-sorting-asan.log`. Both cycles observe the original
+camera activate/release, Havoc's rappel advance, and both engineers survive
+and detach. All physical objects retain finite transforms/velocities. The
+existing unsupported host mesh warning (`L00.AR_01_10`) remains; this is not a
+visual acceptance result. Host audio is still a deferred boundary.
+
+Four changed native objects compile under the existing Vita configuration:
+`build/dev208-sorting-vita-objects.log`. No game ELF/SELF/VPK was linked or
+installed. Native visuals, effect stress/capacity, A/V sync, frame-time
+percentiles, and complete mission progression remain pending. This is adopted
+source integration for a demonstrated missing path, not a performance win.
+
+The subsequent typed-dispatch host executable, SHA-256
+`e8d321c29173acb862ab5aa7f1edd4be0bdbb6e919ba5fc783b18aed522c156e`,
+also passes fresh M01 twice at 1,800 frames/cycle and 200 ms/frame under
+ASan/LSan. The sorting queue/draw/cleanup probe passes in both sessions;
+all physical states remain finite. Log:
+`build/dev208-m01-original-sorting-200ms-asan.log`. Ten existing focused
+animation/cinematic/preparation tests pass in
+`build/dev208-sorting-focused-regressions.log`. The final typed-dispatch native
+boundary object compiles in `build/dev208-sorting-dispatch-vita-object.log`.
+Private savegame04/savegame05 SHA-256 values remain unchanged.
+
+Before sorting integration, fresh M01 also passed two 1,800-frame cycles at
+200 ms with ASan/LSan and all-object finite checks (final object counts 286/283):
+`build/dev208-m01-fresh-physics-200ms-asan.log`, executable SHA-256
+`bac292d39cde4de8d5da084e7faca892a16f5624c78b8c7a97ab6092001768c3`.
+The retained PSTV 15 MiB system-free value is already present immediately after
+vitaGL initialization; it is not evidence that M01 exhausted the process heap.
+
+## 2026-09-27 Long-timestep explosion-decal lifetime
+
+The 200 ms M01 saved-state run completes two 1,800-frame cycles without a
+simulation hang, but LSan finds 314 bytes/four allocations retained from an
+explosion decal. It also reports an unsupported host render object
+`LVL_01_EXT011.AR1-ROCKS05`; this is not a rendering acceptance result.
+Evidence: `build/dev208-m01-save-200ms-asan.log`, host binary identified below.
+
+Source inspection finds both `RigidDecalMeshClass::Delete_Decal` and
+`SkinDecalMeshClass::Delete_Decal` release material/texture indices starting at
+the decal offset but stop at its count. Nonzero-offset removals therefore miss
+references before deleting the arrays. All four loops now stop at offset plus
+count, matching the geometry/array deletion ranges. This does not reduce decal
+coverage or change collision/explosion behavior. Deterministic incremental
+staging passes 278 patches. The same 200 ms/two 1,800-frame replay now exits
+zero with no ASan/LSan errors. Log:
+`build/dev208-m01-save-200ms-decal-fixed-asan.log`; host executable SHA-256:
+`e68363478c4fc7087f189f0387541c4abf53a3fa06bd8475a87ac3d3d716e54c`.
+The host renderer warning remains; no native rendering claim is made.
+Both VehicleDriver and decalmesh also compile using the existing Vita Ninja
+object targets, with ARMv7/VFP-register arguments/16-bit wchar verified.
+All ten focused animation/cinematic/preparation contracts pass; log:
+`build/dev208-focused-regressions.log`.
+No new game ELF/SELF/VPK was linked or installed. Use
+`RENEGADE_INCREMENTAL_STAGE=1 bash ./tools/stage_sources.sh` for subsequent
+staging verification to preserve unchanged file timestamps.
+
+Exact replay command (isolated copies; native title unaffected):
+
+```sh
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 A31_HOST_REPLAY_FRAME_MS=200 \
+  timeout 180s build/host-a31-asan/a31_m00_interactive_runtime retail-pc \
+  build/dev208-save-replay/user build/dev208-save-replay/cache \
+  build/dev208-save-replay/mods M01.mix M01_SAVE_REPLAY
+```
+
+Omit the cadence variable for the 16 ms baseline. M13 uses `M13.mix
+M13_SAVE_REPLAY`. These tests preserve save hashes and do not run menus or
+automate the user's emulator.
+
+## 2026-09-27 Saved-path ownership verification
+
+The combined host rebuild reduced M13's retained two-cycle leak from 40,872
+bytes/34 allocations to 3,216 bytes/14 allocations. Remaining stacks originated
+in saved GotoAction paths; M01 similarly leaked 1,424 bytes/8 allocations.
+`VehicleDriverClass::Initialize` borrows `m_CurrentPath`, and Reset merely clears
+it, but Load requested a ref-counted remap. Changing that request to the original
+plain pointer-remap API removes the remaining leak in both saved-state fixtures.
+This matches Pilot's existing ownership convention and preserves GotoAction as
+the path owner; no path geometry, actor state or mission event is substituted.
+
+After the change, both M13 600-frame cycles and M01 1,800-frame cycles exit zero
+with ASan/LSan enabled. Both M13 engineers remain present and finite. Logs:
+`build/dev208-m13-save-driver-fixed-asan.log` and
+`build/dev208-m01-save-driver-fixed-asan.log`. Host executable SHA-256:
+`5495b7bcde67ddba884fe83230af4dad3df047bbee3ceec438bdd39de47e1c75`.
+The follow-up compile rebuilt only VehicleDriver and linked; deterministic
+staging passes 277 patches. This verifies host lifecycle cleanup, not native
+freeze resolution or a frame-rate gain.
+
+The old replay always forced 16 ms simulation steps. Host-only
+`A31_HOST_REPLAY_FRAME_MS=1..200` now permits testing the original 200 ms cap
+seen in PSTV M01 evidence. Native timing is unchanged, invalid values reject
+before loading, and save copies retain their recorded hashes. Headless audio
+remains deferred; these runs cannot verify the Ion sound or audiovisual sync.
+
+## 2026-09-27 Original raw-animation output regression
+
+`python3 -m unittest tools.test_raw_animation` executes the original
+`HRawAnimClass` samplers with synthetic four-key translation and quaternion
+channels. Thirty-two eighth-frame samples cover translation, transform
+translation, quaternion Z/W output and last-to-first wrap. A generated private
+copy restoring the old half-frame bias fails the same fixture with an output
+mismatch; the staged correction passes. The fixture initializes original trig
+tables but excludes unrelated curve-preset registration. It neither loads retail
+animation files nor validates rendered actors. Canonical build checks now run
+this regression. Nine combined animation/cinematic/preparation unit tests pass.
+Retail asset playback, native animation and both mission completion gates remain
+unverified; this is output-level host evidence, not a new game build.
+
+## 2026-09-27 Ion audio save-path boundary check
+
+Source evidence, not a playback result: `combat/savegame.cpp:Save_Game` saves
+`_DynamicAudioSaveLoadSubsystem`; the normal menu and autosave callers add
+only `_CommandoSaveLoad`. Dynamic audio saves background music and listener
+scale, while `SoundSceneClass::Save_Dynamic` writes no scene sounds.
+Consequently, the normal save writer does not capture the live static sound
+list for replay. Do not patch `Save_Static_Sounds` to address the reported Ion
+loop without evidence of another caller.
+
+`BeaconGameObj` constructs `ArmedSound` as null, creates it on first arming,
+and removes/releases it on detonation, disarm and destruction. Load restores
+state/timers but not this sound reference, and has no beacon-specific post-load
+sound reconstruction. This exposes a separate armed-save audio restoration
+gap; it does not establish the cause of the reported extra sound after a
+pre-Ion save. `AudibleSoundClass::Update_Play_Position` uses wall-clock time,
+whereas beacon countdown uses simulation frame time. Their divergence during
+a hitch remains relevant, but no authored timing or audio lifecycle was changed
+on this evidence. Next: identify the reported sound's preset/owner from retained
+audio evidence and compare its provider cursor against the cinematic clock.
+No new game launch, native performance result, or resolved-Ion claim.
+
+## Unbuilt M13/M01 source pass (2026-09-27)
+
+- A focused UBSan reproduction of `WWMath::Float_To_Int_Chop(0)` fails with
+  `shift exponent 158 is too large for 32-bit type 'unsigned int'`.
+  The related floor helper uses the same unbounded shifts and aliased reads.
+  Both feed the original fast trigonometric lookup paths. Their replacements
+  use bounded float-to-int conversion and the fractional correction for floor;
+  non-representable inputs return `INT32_MIN`. One million float bit patterns,
+  explicit fractions/subnormals, and the existing 24,576 animation key cases
+  pass UBSan. The standard host math target now enables UBSan so this failure
+  cannot silently return. Before/after logs: `build/wwmath-conversion-before.log`
+  and `build/wwmath-conversion-after.log`. This is a proven math defect, not
+  proof of the M01 hang's cause or a frame-time improvement.
+- Original `Test_Cinematic` saved time, slots and pending commands but omitted
+  `IsCameraCinematic`; construction/load left that bool uninitialized. The
+  new optional variable microchunk 8 retains it, and construction initializes
+  transient fields. The real script passes an ASan/UBSan in-memory chunk
+  roundtrip with camera mode both on/off, sync-time rebasing, slot IDs and
+  pending command text. The canonical build runs this new regression.
+  Legacy saves without the field default to false; resuming an old save
+  inside an active camera cinematic remains unverified.
+- The math probe and changed cinematic translation unit compile with VitaSDK;
+  both objects are ELF32 ARMv7 with VFP arguments and 16-bit `wchar_t`.
+  These are isolated compile checks, not a new linked game or package.
+- Upstream comparison: TT 4.8.4 source archive SHA-256
+  `8d3c2df2af0b2a7bb49b4e1a0353947b49fc2b228f849024e1a7bf18a0fddfcd`,
+  `source/scripts/wwmath.h` still has the undefined shift-based helpers;
+  `source/scripts/jfwcine.cpp` also omits its camera flag from save/load.
+  Neither supplies a reusable correction for these defects. Reference:
+  <https://www.tiberiantechnologies.org/Downloads>.
+- Read-only mission-local compressed-channel check: M13's eight and M01's
+  four time-coded channels have ordered keys starting at zero. That does not
+  cover shared archives, but gives no evidence for changing the binary-search
+  path in response to the aircraft freeze. No lookup change was made.
+- Raw animation sampling contained an x86-specific rounding assumption in
+  all three `HRawAnimClass` translation/orientation/transform methods:
+  `Float_To_Long(frame - 0.499999f)`. The MSVC/x86 implementation uses `fistp`,
+  while the portable implementation truncates. At frame 1.25 the portable
+  path selected key 0 and weight 1.25, extrapolating outside the intended
+  key interval. The staged correction explicitly floors the frame through
+  existing `WWMath::Floor`, preserving interpolation and channel ownership.
+  The host numeric check passes 24,576 key/fraction combinations; seven
+  source contracts pass, including all three corrected call sites. These
+  checks establish key selection, not full animation output or a freeze fix.
+  Full animation and mission playback validation remain pending.
+- The saved M13 engineer path failure was reproduced at host frame 321 with a
+  zero-length route and infinite look-ahead. The staged zero-distance guard
+  passes two 600-frame save replays; Dev207 contains that guard and is
+  Vita3K-installed but unlaunched.
+- LeakSanitizer attributed two leaked saved `PathClass` objects per two-cycle
+  replay to `GotoActionCodeClass::Load`. Source inspection found that
+  `PathActionClass::Initialize` borrows `Path` and `Mechanism`, and `Reset`
+  clears them without releasing references, while `Load_Variables` requested
+  ref-counted remaps that call `Add_Ref`. The new staged patch requests plain
+  pointer remaps for those borrowed fields. Its effect on the leak count has
+  not yet been measured.
+- The same LeakSanitizer trace contained one leaked `HRawAnimClass` per replay
+  cycle. `AnimCollisionManagerClass::Load` obtains the saved previous animation
+  with `Get_HAnim` and then `REF_PTR_SET` adds a second reference; unlike its
+  current-animation path, it omitted `REF_PTR_RELEASE` on the temporary.
+  The staged patch releases that temporary reference after attachment.
+- Dev197's M01 trace shows repeated `X1C_Intro.txt` two-command yields at
+  390-1,756 microseconds while the script had overdue commands. The Dev186
+  count cap therefore added scheduling delay independently of expensive
+  commands. The staged cinematic patch retains the 4 ms callback budget but
+  removes the two-command cap. A/V improvement is unmeasured. The physical
+  PSTV M01 run still ended after frame 6, with frame 1 at 4.17 s and frame 6
+  at 0.59 s; this patch is not a freeze fix claim.
+- The same physical first frame spent 2.61 s in rendering with 28 texture
+  decodes/uploads. M13 already initializes referenced textures during loading
+  under a 32 MiB additional-residency budget; M01 omitted that call. The
+  source pass shares the bounded preparation after M01 model loading, before
+  the first world frame. It does not change original texture data or claim a
+  measured win until the same route is compared.
+- A read-only M01 MIX scan found three unregistered names only in
+  `xg_m01_honescort_evacanim.txt`. The installed retail `scripts.dll` also
+  lacks them (SHA-256
+  `65ed3a90adb147d161b229b91915c519d41ad7949ed89bbb9a950f3813461666`),
+  and no source launch of that file was found. Treat it as
+  possibly unused retail content, not a reason to invent handlers.
+- Decision: keep these source corrections for one integrated candidate,
+  pending saved-state LSan and candidate-matched M13/M01 runtime comparison.
+  Deterministic staging passed with 276 patches, inventory SHA-256
+  `367d4c633c45e6e572efdcd371ea837607f63d38ef9cb2075be8008ddc58a374`.
+  Seven source contracts, numeric conversion checks and the original cinematic
+  save/load fixture pass. No new mission replay, linked ARM game, emulator run,
+  physical result, or performance win is claimed.
+
 ## Dev200 RenCorner Glacier bounded Vita3K run (2026-09-27)
 
 The live purchase-response run reached 1,560 frames. At that checkpoint the

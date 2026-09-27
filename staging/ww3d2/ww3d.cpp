@@ -356,6 +356,9 @@ WW3DErrorType WW3D::Shutdown(void)
 
 #if defined(RENEGADE_VITA_PORT)
 	PredictiveLODOptimizerClass::Free();
+#if defined(RENEGADE_ORIGINAL_SORTING)
+	SortingRendererClass::Deinit();
+#endif
 	if (WW3DAssetManager::Get_Instance()) {
 		WW3DAssetManager::Get_Instance()->Free_Assets();
 	}
@@ -1101,6 +1104,9 @@ void WW3D::Flush(RenderInfoClass & rinfo)
 {
 #if defined(RENEGADE_VITA_PORT)
 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
+#if defined(RENEGADE_ORIGINAL_SORTING)
+	SortingRendererClass::Flush();
+#endif
 #else
 	TheDX8MeshRenderer.Flush();
 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
@@ -1134,6 +1140,9 @@ WW3DErrorType WW3D::End_Render(bool flip_frame)
 	assert(IsInitted);
 
 #if defined(RENEGADE_VITA_PORT)
+#if defined(RENEGADE_ORIGINAL_SORTING)
+	SortingRendererClass::Flush();
+#endif
 	IsRendering = false;
 	RenegadeVitaRenderer::End_Frame(flip_frame);
 	FrameCount++;

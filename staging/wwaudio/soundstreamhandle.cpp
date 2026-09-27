@@ -291,7 +291,7 @@ SoundStreamHandleClass::Get_Sample_MS_Position (S32 *len, S32 *pos)
 //
 //////////////////////////////////////////////////////////////////////
 void
-SoundStreamHandleClass::Set_Sample_User_Data (S32 i, U32 val)
+SoundStreamHandleClass::Set_Sample_User_Data (S32 i, AIL_USER_DATA val)
 {
 	if (SampleHandle != (HSAMPLE)INVALID_MILES_HANDLE) {
 		::AIL_set_sample_user_data (SampleHandle, i, val);
@@ -306,10 +306,10 @@ SoundStreamHandleClass::Set_Sample_User_Data (S32 i, U32 val)
 //	Get_Sample_User_Data
 //
 //////////////////////////////////////////////////////////////////////
-U32
+AIL_USER_DATA
 SoundStreamHandleClass::Get_Sample_User_Data (S32 i)
 {
-	U32 retval = 0;
+	AIL_USER_DATA retval = 0;
 
 	if (SampleHandle != (HSAMPLE)INVALID_MILES_HANDLE) {
 		retval = ::AIL_sample_user_data (SampleHandle, i);
@@ -359,7 +359,7 @@ SoundStreamHandleClass::Set_Sample_Playback_Rate (S32 rate)
 //
 //////////////////////////////////////////////////////////////////////
 void
-SoundStreamHandleClass::Set_Miles_Handle (uint32 handle)
+SoundStreamHandleClass::Set_Miles_Handle (uintptr_t handle)
 {
 	SampleHandle = (HSAMPLE)handle;
 	return ;

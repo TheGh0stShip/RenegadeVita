@@ -1,0 +1,34 @@
+--- a/AudibleSound.cpp
++++ b/AudibleSound.cpp
+@@ -1372,9 +1372,12 @@
+ 		//
+ 		//	Remove this sound from the  static culling system
+ 		//
++		// Immediate wrapper release can drop the scene's last sound reference.
++		Add_Ref ();
+ 		m_Scene->Remove_Static_Sound (this);
+ 		m_Scene = NULL;
+ 		m_PhysWrapper = NULL;
++		Release_Ref ();
+ 	}
+ 
+ 	return ;
+--- a/Sound3D.cpp
++++ b/Sound3D.cpp
+@@ -645,6 +645,8 @@
+ Sound3DClass::Remove_From_Scene (void)
+ {
+ 	if (m_Scene != NULL) {
++		// Retain this object until both scene-owned pointers are cleared.
++		Add_Ref ();
+ 
+ 		// Determine what culling system this sound belongs to
+ 		if (m_IsStatic) {
+@@ -655,6 +657,7 @@
+ 
+ 		m_Scene = NULL;
+ 		m_PhysWrapper = NULL;
++		Release_Ref ();
+ 	}
+ 
+ 	return ;

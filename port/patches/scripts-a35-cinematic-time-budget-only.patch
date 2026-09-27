@@ -1,0 +1,10 @@
+--- a/Test_Cinematic.cpp
++++ b/Test_Cinematic.cpp
+@@ -1076,2 +1076,2 @@
+-				/* Keep authored command order, but cap a burst tightly enough that
+-				** the simulation clock cannot run seconds behind the audio clock. */
++				/* Process cheap authored commands together; yield only when this
++				** callback has consumed its real-time budget. */
+@@ -1078 +1078 @@
+-				if (elapsed_us >= 4000U || vita_budget_command_count >= 2U) {
++				if (elapsed_us >= 4000U) {

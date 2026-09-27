@@ -171,6 +171,10 @@ void Apply_Indexed_Shader_State(const ShaderClass &shader,
 	bool stage0_texture, bool stage1_texture);
 IndexedSubmissionResult Submit_Indexed_Triangles(
 	const IndexedTriangleSubmission &submission);
+#if defined(RENEGADE_HOST_ABI_TEST)
+// Synchronous observation of validated submissions; absent from native builds.
+void Set_Host_Indexed_Submission_Observer(void (*observer)(const IndexedTriangleSubmission &));
+#endif
 bool Build_Indexed_Transform_Matrices(const float *world_transform,
 	const float *view_transform, const float *projection_transform,
 	IndexedTransformMatrices &matrices);

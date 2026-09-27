@@ -4,6 +4,7 @@ project(RenegadeA30DefinitionRuntimeHost LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+option(RENEGADE_HOST_ORIGINAL_AUDIO "Run original WWAudio over the manual host mixer" OFF)
 
 get_filename_component(RV_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 include("${RV_ROOT}/cmake/RenegadeCcache.cmake")
@@ -69,6 +70,11 @@ target_include_directories(a35_wwmath_validity_selftest PRIVATE
 target_compile_options(a35_wwmath_validity_selftest PRIVATE
   "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
 )
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(a35_wwmath_validity_selftest PRIVATE
+    -fsanitize=undefined -fno-sanitize-recover=all)
+  target_link_options(a35_wwmath_validity_selftest PRIVATE -fsanitize=undefined)
+endif()
 
 # This executable is deliberately narrower than the WWPhys compile frontier.
 # It exercises the genuine retail DDB entry point and the original WWSaveLoad
@@ -784,6 +790,17 @@ add_executable(a31_interactive_runtime
 set_target_properties(a31_interactive_runtime PROPERTIES
   OUTPUT_NAME a31_m00_interactive_runtime
 )
+target_sources(a31_interactive_runtime PRIVATE ${RV_STAGE}/ww3d2/sortingrenderer.cpp)
+target_compile_definitions(a31_interactive_runtime PRIVATE RENEGADE_ORIGINAL_SORTING=1)
+if(RENEGADE_HOST_ORIGINAL_AUDIO)
+  target_sources(a31_interactive_runtime PRIVATE
+    ${RENEGADE_A35_ORIGINAL_AUDIO_SOURCES}
+    ${RV_ROOT}/port/audio/vita/renegade_miles_provider.cpp
+    ${RV_ROOT}/port/audio/vita/renegade_wave_decoder.cpp)
+  target_include_directories(a31_interactive_runtime PRIVATE ${RV_ROOT}/port/audio/vita)
+  target_compile_definitions(a31_interactive_runtime PRIVATE
+    RENEGADE_A35_ORIGINAL_WWAUDIO=1 RENEGADE_MILES_MANUAL_MIX=1)
+endif()
 target_include_directories(a31_interactive_runtime PRIVATE
   ${RV_COMPAT}
   ${RV_A4_DIALOG_GENERATED_DIR}

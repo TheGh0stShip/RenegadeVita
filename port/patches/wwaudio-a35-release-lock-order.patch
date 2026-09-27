@@ -1,0 +1,38 @@
+--- a/Threads.cpp
++++ b/Threads.cpp
+@@ -276,6 +276,8 @@
+ 	while (::WaitForSingleObject (m_hDelayedReleaseEvent, timeout) == WAIT_TIMEOUT) {
+ #endif
+ 
++		DELAYED_RELEASE_INFO *release_head = NULL;
++		DELAYED_RELEASE_INFO *release_tail = NULL;
+ 		{
+ 			CriticalSectionClass::LockClass lock(m_ListMutex);
+ 
+@@ -314,12 +316,24 @@
+ 					//
+ 					//	Free the object
+ 					//
++					curr->next = NULL;
++					curr->prev = NULL;
++					if (release_tail != NULL) release_tail->next = curr;
++					else release_head = curr;
++					release_tail = curr;
+-					REF_PTR_RELEASE (curr->object);
+-					SAFE_DELETE (curr);
+ 				}
+ 			}
+ 		}
+ 
++		// Destructors can acquire the audio lock or enqueue another release.
++		// Never run them while holding the list lock (opposite audio lock order).
++		while (release_head != NULL) {
++			DELAYED_RELEASE_INFO *info = release_head;
++			release_head = info->next;
++			REF_PTR_RELEASE (info->object);
++			SAFE_DELETE (info);
++		}
++
+ 		//
+ 		//	To avoid 'periodic' releases, randomize our timeout
+ 		//

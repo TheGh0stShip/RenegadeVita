@@ -1,6 +1,137 @@
 # Live engineering progress
 
+## Source-Only Freeze Audit
+
+Verification blocked pending clarification of asset-free sanitizer compilation.
+No live build/test process; existing executable unchanged. Three new audio
+corrections are staged but unverified. M13/M01 completion and native freeze
+resolution remain open; this is not completion or a claim of exhaustive safety.
+
+Reference check: official TT 4.8.4 archive identity and existing read-only
+audit pass; three Python auditor tests pass. No usable public audio-release
+implementation found in that archive. No C++ compilation or game execution.
+Next required evidence is sanitizer validation of the staged audio fixes;
+clarification of asset-free test compilation is still unanswered.
+
+Latest: 290 patches stage after correcting the flush/enqueue race and moving
+flush destruction outside the list lock. Four-producer stress probe prepared,
+not compiled or run. Clarification requested about asset-free sanitizer builds;
+all game builds and launches remain held. No new native acceptance.
+
+Current integration: both follow-up audio patches are now staged, 289 total,
+with zero fuzz. Three source files changed; existing host binary is unchanged.
+No compilation or launch. Shared physics/script loop inspection is recorded
+in the performance ledger, distinguishing existing bounds from open callback
+and synchronization risks. No new runtime or physical acceptance gate.
+
+Follow-up: corrected duplicate borrowed entries in the audio completion queue
+for stop/restart/stop before frame cleanup. Added stopped/restarted destruction
+and callback-count checks; zero-fuzz patch dry-run passes. Not staged, compiled
+or executed. Ordinary loop-end callback retains its playlist reference; inspected
+rigid-body and rider loops already have progress/bounds and were left unchanged.
+
+Now: no builds or launches, per the latest user restriction. Continuing the
+shared ownership and synchronization audit before another candidate.
+Completed: traced scene-wrapper destruction through 2D/3D removal and added
+a temporary-reference correction plus a three-case regression entry point.
+Evidence: zero-fuzz patch dry-run and shell syntax pass only; new regression
+has not compiled or executed. Staging remains 287 patches; correction is
+registered but not staged. Existing binary is unchanged.
+Next: callback/playlist lifetime and shutdown locking, followed by shared
+physics and script-event loops. No new acceptance gate; full M13/M01 gameplay,
+native freeze resolution and performance remain unverified.
+
+## Original Audio Mission Replays
+
+Completed: reproduced logical-sound use-after-free and invalid iterator use,
+fixed ownership/removal ordering, and passed two M01 saved replays (1,800 frames
+each at 200 ms) plus two full M13 intros (5,000 frames each) with original audio
+under ASan/LSan. Rappel, camera handback and engineer-state checks pass.
+The asset-free three-sound cleanup probe and eleven focused tests pass;
+changed audio objects compile for Vita. No new native acceptance gate.
+Next: extend coverage to Ion sound persistence and remaining native/rendering
+issues before the combined candidate. Performance and complete missions remain
+unverified. Saves unchanged; no game package, launch or deployment this pass.
+
+## Original Audio Deadlock
+
+Now: original delayed-release lock inversion reproduced and corrected.
+Evidence: `build/dev208-audio-release-before.log` reaches worker destruction
+then times out (124); the same probe after the patch exits 0 with both objects
+destroyed and ASan/LSan clean. Original-audio host links successfully.
+Next: rebuild the staged sample-pointer follow-up, repeat M01/M13 audio replays,
+and ARM-check the shared release-worker change. No new physical evidence gate.
+M01 audio replay failed before map loading at a host pointer truncation;
+the native freeze, performance, A/V and full-mission acceptance remain open.
+
+## Original sorting path and full M13 host intro
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: original sorted-effect integration passes M13/M01 host regressions.
+Follow-up: three sorting-capacity failures reproduced and fixed. Eight
+asset-free ASan/LSan count/order/ownership cases pass; ARM objects compile.
+The combined source also passes two further full M13 host intros and two
+long-step M01 save replays under ASan/LSan; private saves remain unchanged.
+Completed: two complete 5,000-frame M13 host intros under ASan/LSan; observed
+rappel advancement, camera handback, both engineers alive/detached, and finite
+physics. Four affected ARM objects compile; 280 deterministic patches stage.
+M01 also passes two 1,800-frame cycles at 200 ms under ASan/LSan with the
+sorting queue/draw/cleanup checks and finite physics; ten focused tests pass.
+Evidence: `build/dev208-m13-original-sorting-asan.log`; performance ledger.
+Next: remaining native freeze, audio/timing and tread integration review;
+the integrated native candidate gate follows when the larger source pass is ready.
+Blocker: native M01 freeze, A/V/performance and full missions remain unverified;
+no new physical gate, game package, emulator launch or deployment.
+
+## Dev207 zero-distance AI path, installed but unlaunched
+
+Renegade Vita - v3.5 active
+`[████████░░] 8/10 existing candidate evidence gates complete`
+
+Now: a larger unbuilt source pass has corrected saved-path and animation
+reference ownership, M13/M01 cinematic scheduling, and M01 loading-time
+texture preparation.
+The raw-animation translation, rotation and transform samplers now select
+the lower key explicitly, correcting an x86 rounding assumption on ARM.
+The numeric check passes 24,576 cases and seven source checks pass;
+278 deterministic patches stage successfully. Integer conversions also pass
+one million input bit patterns under UBSan after a reproduced invalid shift;
+the original cinematic save/load fixture passes ASan/UBSan with retained camera
+state. Original raw-animation synthetic output and its old-code negative control
+pass. Two isolated Vita ARM objects compile. Native animation remains untested.
+The combined host build and final borrowed VehicleDriver path-remap correction
+now pass M13 (two 600-frame cycles) and M01 (two 1,800-frame cycles) with ASan/LSan;
+the previously recorded saved-path/animation leaks are absent in these fixtures.
+Host-only 200 ms M01 replay completes but exposes a separate 314-byte decal
+resource leak. Both rigid/skinned deletion ranges are corrected; the same replay
+now passes ASan/LSan through both cycles. The changed driver/decal objects compile
+with the existing Vita Ninja configuration. Native timing is unchanged.
+Dev207 remains installed but unlaunched.
+Completed: both engineers present and finite through two 600-frame ASan
+cycles; direct zero-path contract passes; M01 saved-state and smoke host runs
+complete two 1,800-frame cycles each; focused contracts and ARM link pass.
+Evidence: [Dev207 record](DEV207_M13_ZERO_PATH.md), ELF hash
+`187cfec06117cd0549a8fbb3df387bc5f90908bbb25fe650b84bb6630f95db9d`,
+VPK hash `17712335a08305af3f49c364ba99c3e6d82c6a3343d18882663e757fdf4b3e08`,
+and title-scoped Vita3K install receipt in `build/vita3k-backups/`.
+Next: finish source review, run one integrated host/ARM/package gate, then
+compare M13/M01 against the retained saves when runtime testing resumes.
+Blocker: M01 aircraft freeze and issue #1 remain unverified. This does not
+add a completed evidence gate. The unbuilt source pass and measured limits
+are recorded in [the performance ledger](PERFORMANCE_HYPOTHESIS_LEDGER.md).
+
 ## Dev205 Campaign-first startup boundary
+
+2026-09-27 follow-up: Dev205 launched in Vita3K. An owned frontend test
+became unresponsive before Campaign selection and was stopped; temporary
+diagnostic input was disabled and the prior M13 launch marker restored with
+its original hash. A later user-driven M13 run wrote `savegame05.sav` with
+matching M13 header and exact top-level chunk lengths. No reload event was
+observed during the three-minute watch window, so save/load, Campaign-first,
+M01 intro and physical acceptance remain open. The active Vita3K session is
+user-owned and was not interrupted. See [Dev205 record](DEV205_CAMPAIGN_FIRST.md).
 
 Renegade Vita - v3.5 active
 `[████████░░] 8/10 existing candidate evidence gates complete`

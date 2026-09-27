@@ -12,6 +12,9 @@
 
 typedef uint32_t U32;
 typedef int32_t S32;
+// In-process object associations, never serialized; 32 bits on native Vita.
+typedef uintptr_t AIL_USER_DATA;
+typedef uintptr_t AIL_FILE_HANDLE;
 typedef uint16_t U16;
 typedef int16_t S16;
 typedef uint8_t U8;
@@ -90,10 +93,10 @@ enum {
 #define AILCALLBACK
 #endif
 
-typedef U32 (AILCALLBACK *AIL_FILE_OPEN_CALLBACK)(const char *, U32 *);
-typedef void (AILCALLBACK *AIL_FILE_CLOSE_CALLBACK)(U32);
-typedef S32 (AILCALLBACK *AIL_FILE_SEEK_CALLBACK)(U32, S32, U32);
-typedef U32 (AILCALLBACK *AIL_FILE_READ_CALLBACK)(U32, void *, U32);
+typedef U32 (AILCALLBACK *AIL_FILE_OPEN_CALLBACK)(const char *, AIL_FILE_HANDLE *);
+typedef void (AILCALLBACK *AIL_FILE_CLOSE_CALLBACK)(AIL_FILE_HANDLE);
+typedef S32 (AILCALLBACK *AIL_FILE_SEEK_CALLBACK)(AIL_FILE_HANDLE, S32, U32);
+typedef U32 (AILCALLBACK *AIL_FILE_READ_CALLBACK)(AIL_FILE_HANDLE, void *, U32);
 
 void AIL_startup(void);
 void AIL_shutdown(void);
@@ -123,8 +126,8 @@ void AIL_set_sample_loop_count(HSAMPLE sample, U32 count);
 U32 AIL_sample_loop_count(HSAMPLE sample);
 void AIL_set_sample_ms_position(HSAMPLE sample, U32 milliseconds);
 void AIL_sample_ms_position(HSAMPLE sample, S32 *length, S32 *position);
-void AIL_set_sample_user_data(HSAMPLE sample, S32 index, U32 value);
-U32 AIL_sample_user_data(HSAMPLE sample, S32 index);
+void AIL_set_sample_user_data(HSAMPLE sample, S32 index, AIL_USER_DATA value);
+AIL_USER_DATA AIL_sample_user_data(HSAMPLE sample, S32 index);
 S32 AIL_sample_playback_rate(HSAMPLE sample);
 void AIL_set_sample_playback_rate(HSAMPLE sample, S32 rate);
 
@@ -148,8 +151,8 @@ U32 AIL_3D_sample_loop_count(H3DSAMPLE sample);
 void AIL_set_3D_sample_offset(H3DSAMPLE sample, U32 bytes);
 U32 AIL_3D_sample_offset(H3DSAMPLE sample);
 U32 AIL_3D_sample_length(H3DSAMPLE sample);
-void AIL_set_3D_object_user_data(H3DSAMPLE sample, S32 index, U32 value);
-U32 AIL_3D_object_user_data(H3DSAMPLE sample, S32 index);
+void AIL_set_3D_object_user_data(H3DSAMPLE sample, S32 index, AIL_USER_DATA value);
+AIL_USER_DATA AIL_3D_object_user_data(H3DSAMPLE sample, S32 index);
 S32 AIL_3D_sample_playback_rate(H3DSAMPLE sample);
 void AIL_set_3D_sample_playback_rate(H3DSAMPLE sample, S32 rate);
 void AIL_set_3D_position(H3DSAMPLE sample, F32 x, F32 y, F32 z);

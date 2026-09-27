@@ -621,6 +621,21 @@ PathClass::Evaluate_Next_Point (const Vector3 &curr_pos, Vector3 &new_pos)
 		return true;
 	}
 
+	// A route whose nodes coincide has no spline distance to traverse.  The
+	// normal look-ahead calculation divides by that distance and eventually
+	// feeds an invalid target to the AI movement controller.
+	if (m_TotalDist <= WWMATH_EPSILON) {
+		new_pos = m_DestPos;
+		m_ExpectedPos = m_DestPos;
+		if (m_CurrentAction + 1 < m_PathActions.Count ()) {
+			m_CurrentAction ++;
+			m_State = STATE_ACTION_REQUIRED;
+		} else {
+			m_State = STATE_PATH_COMPLETE;
+		}
+		return true;
+	}
+
 	//
 	//	Get the delta from our current position to the point where we
 	// should be heading

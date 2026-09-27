@@ -1,0 +1,8 @@
+--- a/pathaction.cpp
++++ b/pathaction.cpp
+@@ -664 +664 @@
+-		REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&Mechanism);
++		REQUEST_POINTER_REMAP ((void **)&Mechanism);
+@@ -671 +671 @@
+-		REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&Path);
++		REQUEST_POINTER_REMAP ((void **)&Path);

@@ -51,7 +51,9 @@ bool DX8Wrapper::Is_Native_Device_Ready()
 #endif
 unsigned DX8Wrapper::RenderStates[256] = {};
 unsigned DX8Wrapper::render_state_changes = 0;
+#if !defined(RENEGADE_ORIGINAL_SORTING)
 bool SortingRendererClass::_EnableTriangleDraw = true;
+#endif
 bool DX8RendererDebugger::Enabled = false;
 
 void DX8RendererDebugger::Enable(bool enable) { Enabled = enable; }
@@ -1587,6 +1589,9 @@ namespace Debug_Statistics {
 // Vita keeps the authoritative resource counters in RenegadeVitaRenderer;
 // this deliberately narrow compatibility sink preserves Apply's call path.
 void Record_Texture(TextureClass *) {}
+// Queue insertion is not a draw. Flushed sorting batches are counted by the
+// existing indexed submission counters, avoiding duplicate frame totals.
+void Record_Sorting_Polys_And_Vertices(int, int) {}
 }
 
 IDirect3DSurface8 *DX8Wrapper::_Create_DX8_Surface(unsigned int width,
@@ -2498,8 +2503,13 @@ void DX8Wrapper::Draw_Triangles(unsigned buffer_type,
 {
 	if (buffer_type == BUFFER_TYPE_SORTING ||
 		buffer_type == BUFFER_TYPE_DYNAMIC_SORTING) {
+#if defined(RENEGADE_ORIGINAL_SORTING)
+		SortingRendererClass::Insert_Triangles(start_index, polygon_count,
+			min_vertex_index, vertex_count);
+#else
 		RenegadeVitaRenderer::Reject_Indexed_Submission(
 			"sorting renderer submission is deferred", 0U);
+#endif
 		return;
 	}
 	if (buffer_type != BUFFER_TYPE_DX8 &&

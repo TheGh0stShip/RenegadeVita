@@ -75,24 +75,24 @@ std::vector<uint8_t> g_stream_fixture;
 size_t g_stream_position = 0;
 bool g_stream_open = false;
 
-U32 AILCALLBACK Stream_Open(const char *name, U32 *handle)
+U32 AILCALLBACK Stream_Open(const char *name, AIL_FILE_HANDLE *handle)
 {
 	if (handle == nullptr || name == nullptr ||
 		std::strcmp(name, "logan_test.wav") != 0) return 0U;
 	g_stream_position = 0;
 	g_stream_open = true;
-	*handle = 1U;
+	*handle = reinterpret_cast<AIL_FILE_HANDLE>(&g_stream_fixture);
 	return 1U;
 }
 
-void AILCALLBACK Stream_Close(U32 handle)
+void AILCALLBACK Stream_Close(AIL_FILE_HANDLE handle)
 {
-	if (handle == 1U) g_stream_open = false;
+	if (handle == reinterpret_cast<AIL_FILE_HANDLE>(&g_stream_fixture)) g_stream_open = false;
 }
 
-S32 AILCALLBACK Stream_Seek(U32 handle, S32 offset, U32 type)
+S32 AILCALLBACK Stream_Seek(AIL_FILE_HANDLE handle, S32 offset, U32 type)
 {
-	if (handle != 1U || !g_stream_open) return -1;
+	if (handle != reinterpret_cast<AIL_FILE_HANDLE>(&g_stream_fixture) || !g_stream_open) return -1;
 	size_t next = g_stream_position;
 	if (type == AIL_FILE_SEEK_BEGIN) {
 		if (offset < 0) return -1;
@@ -113,9 +113,9 @@ S32 AILCALLBACK Stream_Seek(U32 handle, S32 offset, U32 type)
 	return static_cast<S32>(g_stream_position);
 }
 
-U32 AILCALLBACK Stream_Read(U32 handle, void *buffer, U32 bytes)
+U32 AILCALLBACK Stream_Read(AIL_FILE_HANDLE handle, void *buffer, U32 bytes)
 {
-	if (handle != 1U || !g_stream_open || buffer == nullptr) return 0U;
+	if (handle != reinterpret_cast<AIL_FILE_HANDLE>(&g_stream_fixture) || !g_stream_open || buffer == nullptr) return 0U;
 	const size_t available = g_stream_fixture.size() - g_stream_position;
 	const size_t count = std::min<size_t>(available, bytes);
 	std::memcpy(buffer, g_stream_fixture.data() + g_stream_position, count);
@@ -271,6 +271,14 @@ int main()
 	HSAMPLE sample = AIL_allocate_sample_handle(driver);
 	passed &= Require(sample != nullptr, "sample allocation failed");
 	AIL_init_sample(sample);
+	static_assert(sizeof(AIL_USER_DATA) == sizeof(void *), "audio association must preserve pointers");
+	const AIL_USER_DATA association = reinterpret_cast<AIL_USER_DATA>(&driver);
+	AIL_set_sample_user_data(sample, 0, association);
+	passed &= Require(AIL_sample_user_data(sample, 0) == association,
+		"2D audio object pointer truncated");
+	AIL_set_3D_object_user_data(sample, 1, association);
+	passed &= Require(AIL_3D_object_user_data(sample, 1) == association,
+		"3D audio object pointer truncated");
 	passed &= Require(AIL_set_named_sample_file(sample, nullptr, pcm.data(),
 		static_cast<uint32_t>(pcm.size()), 0) != 0, "provider PCM load failed");
 	AIL_set_sample_pan(sample, 0);
@@ -463,10 +471,51 @@ int main()
 		stats.active_stream_position_ms == 0 &&
 		stats.active_stream_loop_count == 0,
 		"provider start stats differ");
+	// Continuous effects must stop immediately and must not contaminate a
+	// subsequently allocated voice after a level/save transition.
+	sample3d = AIL_allocate_3D_sample_handle(1);
+	passed &= Require(sample3d != nullptr && AIL_set_3D_sample_file(sample3d, pcm.data()) != 0,
+		"continuous 3D fixture load failed");
+	AIL_set_3D_sample_volume(sample3d, 127);
+	AIL_set_3D_position(sample3d, 0.0F, 0.0F, 0.0F);
+	AIL_set_3D_sample_loop_count(sample3d, 0);
+	AIL_start_3D_sample(sample3d);
+	int16_t continuous[32] = {};
+	passed &= Require(Renegade_Miles_Mix_For_Test(continuous, 16) && continuous[24] != 0,
+		"infinite 3D sound did not continue across loop boundaries");
+	AIL_stop_3D_sample(sample3d);
+	const U32 stopped_offset = AIL_3D_sample_offset(sample3d);
+	passed &= Require(Renegade_Miles_Mix_For_Test(continuous, 16) &&
+		std::all_of(std::begin(continuous), std::end(continuous), [](int16_t v) { return v == 0; }) &&
+		AIL_3D_sample_offset(sample3d) == stopped_offset,
+		"stopped infinite 3D sound remained audible or advanced");
+	AIL_resume_3D_sample(sample3d);
+	passed &= Require(Renegade_Miles_Mix_For_Test(continuous, 1) && continuous[0] != 0,
+		"paused infinite 3D sound did not resume");
+	AIL_end_3D_sample(sample3d);
+	passed &= Require(Renegade_Miles_Mix_For_Test(continuous, 16) &&
+		std::all_of(std::begin(continuous), std::end(continuous), [](int16_t v) { return v == 0; }) &&
+		AIL_3D_sample_offset(sample3d) == 0,
+		"ended infinite 3D sound remained audible or failed to rewind");
+	AIL_release_3D_sample_handle(sample3d);
+	sample3d = AIL_allocate_3D_sample_handle(1);
+	passed &= Require(sample3d != nullptr && AIL_set_3D_sample_file(sample3d, pcm.data()) != 0 &&
+		AIL_3D_sample_loop_count(sample3d) == 1,
+		"new 3D voice inherited the released infinite loop");
+	AIL_set_3D_sample_volume(sample3d, 127);
+	AIL_start_3D_sample(sample3d);
+	passed &= Require(Renegade_Miles_Mix_For_Test(continuous, 16) && continuous[0] != 0 &&
+		std::all_of(std::begin(continuous) + 8, std::end(continuous), [](int16_t v) { return v == 0; }),
+		"reallocated one-shot voice repeated unexpectedly");
+	AIL_release_3D_sample_handle(sample3d);
+	passed &= Require(Renegade_Miles_Mix_For_Test(continuous, 16) &&
+		std::all_of(std::begin(continuous), std::end(continuous), [](int16_t v) { return v == 0; }),
+		"released 3D voice remained audible");
 	AIL_waveOutClose(driver);
 	AIL_shutdown();
 
 	if (!passed) return 1;
+	std::puts("vita_audio_continuous_lifecycle=passed stop=1 resume=1 end=1 reuse=1 release=1");
 	std::puts("vita_audio_provider=passed pcm=3 ima_adpcm=2 ms_adpcm=2 bounds=2 mixer=1 spatial=2 stream=3");
 	return 0;
 }

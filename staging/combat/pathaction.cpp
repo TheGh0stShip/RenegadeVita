@@ -661,14 +661,14 @@ PathActionClass::Load_Variables (ChunkLoadClass &cload)
 	//	Request that the mechanism ptr gets remapped
 	//
 	if (Mechanism != NULL) {
-		REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&Mechanism);
+		REQUEST_POINTER_REMAP ((void **)&Mechanism);
 	}
 
 	//
 	//	Request that the path ptr gets remapped
 	//
 	if (Path != NULL) {
-		REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&Path);
+		REQUEST_POINTER_REMAP ((void **)&Path);
 	}
 
 	return ;

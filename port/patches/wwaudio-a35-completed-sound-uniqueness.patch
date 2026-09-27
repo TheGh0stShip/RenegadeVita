@@ -1,0 +1,21 @@
+--- a/WWAudio.cpp
++++ b/WWAudio.cpp
+@@ -1420,9 +1420,16 @@
+ 				if (sound_obj == m_Playlist[page][index]) {
+ 
+ 					//
+-					// Add this sound to the 'completed' list
++					// A stop/restart/stop before cleanup still owns one playlist ref.
+ 					//
+-					m_CompletedSounds.Add (sound_obj);
++					bool pending = false;
++					for (int completed = 0; completed < m_CompletedSounds.Count (); ++completed) {
++						if (m_CompletedSounds[completed] == sound_obj) {
++							pending = true;
++							break;
++						}
++					}
++					if (!pending) m_CompletedSounds.Add (sound_obj);
+ 					retval = true;
+ 				}
+ 			}

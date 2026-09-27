@@ -1,0 +1,35 @@
+--- a/Test_Cinematic.cpp
++++ b/Test_Cinematic.cpp
+@@ -132 +132 @@
+-	int	ObjectSlots[ NUM_SLOTS ];
++	int	ObjectSlots[ NUM_SLOTS ] = {};
+@@ -134 +134 @@
+-	int	MyID;  // doesn't need to be saved
++	int	MyID = 0;  // doesn't need to be saved
+@@ -139,4 +139,4 @@
+-	unsigned int	LastSyncTime;
+-	float				Time;
+-	float				FrameSync;
+-	bool				PrimaryKilled;
++	unsigned int	LastSyncTime = 0;
++	float				Time = 0.0f;
++	float				FrameSync = 0.0f;
++	bool				PrimaryKilled = false;
+@@ -144 +144 @@
+-	bool				IsCameraCinematic;
++	bool				IsCameraCinematic = false;
+@@ -150 +150 @@
+-	char * NextParameter;
++	char * NextParameter = NULL;
+@@ -318,0 +319 @@
++#define CHUNKID_CAMERA_CINEMATIC 8
+@@ -335,0 +337 @@
++			Commands->Save_Data(saver, CHUNKID_CAMERA_CINEMATIC, sizeof(IsCameraCinematic), &IsCameraCinematic);
+@@ -365,0 +368,2 @@
++		// Legacy saves omit this field; never read an uninitialized bool.
++		IsCameraCinematic = false;
+@@ -402,0 +408,4 @@
++							case CHUNKID_CAMERA_CINEMATIC:
++								Commands->Load_Data(loader, sizeof(IsCameraCinematic), &IsCameraCinematic);
++								break;
++

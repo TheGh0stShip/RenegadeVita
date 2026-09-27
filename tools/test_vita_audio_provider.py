@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import pathlib
+import os
 import subprocess
 import tempfile
 import unittest
@@ -18,6 +19,8 @@ class VitaAudioProviderTest(unittest.TestCase):
                 "g++",
                 "-std=c++17",
                 "-O2",
+                "-fsanitize=address,undefined",
+                "-fno-omit-frame-pointer",
                 "-Wall",
                 "-Wextra",
                 "-Werror",
@@ -35,9 +38,12 @@ class VitaAudioProviderTest(unittest.TestCase):
             ]
             subprocess.run(command, cwd=ROOT, check=True)
             completed = subprocess.run(
-                [str(executable)], cwd=ROOT, check=True, capture_output=True, text=True
+                [str(executable)], cwd=ROOT, check=True, capture_output=True, text=True,
+                env={**os.environ, "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+                     "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"},
             )
             self.assertIn("vita_audio_provider=passed", completed.stdout)
+            self.assertIn("vita_audio_continuous_lifecycle=passed", completed.stdout)
 
 
 if __name__ == "__main__":

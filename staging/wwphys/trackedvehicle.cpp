@@ -189,6 +189,13 @@ TrackedVehicleClass::~TrackedVehicleClass(void)
 
 void TrackedVehicleClass::Render(RenderInfoClass & rinfo)
 {
+	// Multiple submissions at one sync time must not erase the mapper rate
+	// before deferred meshes consume it. Accumulate motion on the next tick.
+	if (TrackPositionsInitialized && LastTrackSyncTime == WW3D::Get_Sync_Time()) {
+		VehiclePhysClass::Render(rinfo);
+		return;
+	}
+
 	/*
 	** Compute the track movement
 	*/

@@ -1,0 +1,37 @@
+--- a/LogicalSound.cpp
++++ b/LogicalSound.cpp
+@@ -130,10 +130,13 @@
+ 		//
+ 		//	Remove this sound from the culling system
+ 		//
++		// Removal can drop the scene's last references before state is cleared.
++		Add_Ref ();
+ 		m_Scene->Remove_Logical_Sound (this, m_IsSingleShot);
+ 		m_Scene					= NULL;
+ 		m_PhysWrapper			= NULL;
+ 		m_LastNotification	= 0;
++		Release_Ref ();
+ 	}
+ 
+ 	return ;
+--- a/SoundScene.cpp
++++ b/SoundScene.cpp
+@@ -214,16 +214,16 @@
+ 	// been completely processed
+ 	//
+ 	MultiListIterator<LogicalSoundClass> single_shot_it (&m_SingleShotLogicalSounds);
++	for (single_shot_it.First (); !single_shot_it.Is_Done (); ) {
+-	for (single_shot_it.First (); !single_shot_it.Is_Done (); single_shot_it.Next ()) {
+ 		LogicalSoundClass *sound_obj = single_shot_it.Peek_Obj ();
++		// Remove_From_Scene removes the current list node; advance before that.
++		single_shot_it.Next ();
+ 
+ 		//
+ 		//	Remove this sound if its been completely processed
+ 		//
+ 		if (sound_obj->Get_Listener_Timestamp () <= LogicalListenerClass::Get_Oldest_Timestamp ()) {
+ 			sound_obj->Remove_From_Scene ();
+-			single_shot_it.Remove_Current_Object ();
+-			single_shot_it.Prev ();
+ 		}
+ 	}

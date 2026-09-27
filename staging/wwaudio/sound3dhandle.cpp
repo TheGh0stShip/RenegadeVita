@@ -310,7 +310,7 @@ Sound3DHandleClass::Get_Sample_MS_Position (S32 *len, S32 *pos)
 //
 //////////////////////////////////////////////////////////////////////
 void
-Sound3DHandleClass::Set_Sample_User_Data (S32 i, U32 val)
+Sound3DHandleClass::Set_Sample_User_Data (S32 i, AIL_USER_DATA val)
 {
 	if (SampleHandle != (H3DSAMPLE)INVALID_MILES_HANDLE) {
 		::AIL_set_3D_object_user_data (SampleHandle, i, val);
@@ -324,10 +324,10 @@ Sound3DHandleClass::Set_Sample_User_Data (S32 i, U32 val)
 //	Get_Sample_User_Data
 //
 //////////////////////////////////////////////////////////////////////
-U32
+AIL_USER_DATA
 Sound3DHandleClass::Get_Sample_User_Data (S32 i)
 {
-	U32 retval = 0;
+	AIL_USER_DATA retval = 0;
 
 	if (SampleHandle != (H3DSAMPLE)INVALID_MILES_HANDLE) {
 		retval = AIL_3D_object_user_data (SampleHandle, i);
@@ -377,7 +377,7 @@ Sound3DHandleClass::Set_Sample_Playback_Rate (S32 rate)
 //
 //////////////////////////////////////////////////////////////////////
 void
-Sound3DHandleClass::Set_Miles_Handle (uint32 handle)
+Sound3DHandleClass::Set_Miles_Handle (uintptr_t handle)
 {
 	WWASSERT (SampleHandle == (H3DSAMPLE)INVALID_MILES_HANDLE);
 

@@ -1,0 +1,41 @@
+--- a/SoundSceneObj.h
++++ b/SoundSceneObj.h
+@@ -39,6 +39,7 @@
+ #ifndef __SOUND_SCENE_OBJ_H
+ #define __SOUND_SCENE_OBJ_H
+ 
++#include <stdint.h>
+ #include "refcount.h"
+ #include "WWAudio.h"
+ #include "bittype.h"
+@@ -128,7 +129,7 @@
+ 		//////////////////////////////////////////////////////////////////////
+ 		//	Event handling
+ 		//////////////////////////////////////////////////////////////////////		
+-		virtual void			On_Event (AudioCallbackClass::EVENTS event, uint32 param1 = 0, uint32 param2 = 0);
++		virtual void			On_Event (AudioCallbackClass::EVENTS event, uintptr_t param1 = 0, uintptr_t param2 = 0);
+ 		virtual void			Register_Callback (AudioCallbackClass::EVENTS events, AudioCallbackClass *callback);
+ 		virtual void			Remove_Callback (void);
+ 
+@@ -231,8 +232,8 @@
+ SoundSceneObjClass::On_Event
+ (
+ 	AudioCallbackClass::EVENTS	event,
+-	uint32							param1,
++	uintptr_t							param1,
+-	uint32							param2
++	uintptr_t							param2
+ )
+ {
+ 	if ((m_pCallback != NULL) && (m_RegisteredEvents & event)) {
+--- a/SoundScene.cpp
++++ b/SoundScene.cpp
+@@ -203,7 +203,7 @@
+ 				//	Is the sound ready to notify?
+ 				//
+ 				if (sound_obj->Allow_Notify (timestamp)) {
+-					listener->On_Event (AudioCallbackClass::EVENT_LOGICAL_HEARD, (uint32)listener, (uint32)sound_obj);
++					listener->On_Event (AudioCallbackClass::EVENT_LOGICAL_HEARD, (uintptr_t)listener, (uintptr_t)sound_obj);
+ 				}
+ 			}
+ 		}

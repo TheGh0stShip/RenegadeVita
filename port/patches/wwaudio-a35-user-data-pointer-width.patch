@@ -1,0 +1,157 @@
+--- a/Listener.cpp
++++ b/Listener.cpp
+@@ -84,7 +84,7 @@
+ 
+ 
+ 		// Associate this object instance with the handle
+-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (S32)this);
++		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (AIL_USER_DATA)this);
+ 	}
+ 		
+ 	return ;
+--- a/AudibleSound.cpp
++++ b/AudibleSound.cpp
+@@ -824,7 +824,7 @@
+ 		//
+ 		// Associate this object instance with the handle
+ 		//
+-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (S32)this);
++		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (AIL_USER_DATA)this);
+ 	}
+ 
+ 	return ;
+--- a/Sound3D.cpp
++++ b/Sound3D.cpp
+@@ -584,7 +584,7 @@
+ 		Seek (m_CurrentPosition);
+ 
+ 		// Associate this object instance with the handle
+-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (S32)this);
++		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (AIL_USER_DATA)this);
+ 	}
+ 
+ 	return ;
+--- a/soundhandle.h
++++ b/soundhandle.h
+@@ -108,8 +108,8 @@
+ 	virtual U32		Get_Sample_Loop_Count (void) = 0;
+ 	virtual void	Set_Sample_MS_Position (U32 ms) = 0;
+ 	virtual void	Get_Sample_MS_Position (S32 *len, S32 *pos) = 0;
+-	virtual void	Set_Sample_User_Data (S32 i, U32 val) = 0;
++	virtual void	Set_Sample_User_Data (S32 i, AIL_USER_DATA val) = 0;
+-	virtual U32		Get_Sample_User_Data (S32 i) = 0;
++	virtual AIL_USER_DATA		Get_Sample_User_Data (S32 i) = 0;
+ 	virtual S32		Get_Sample_Playback_Rate (void) = 0;
+ 	virtual void	Set_Sample_Playback_Rate (S32 rate) = 0;
+ 	
+--- a/sound2dhandle.h
++++ b/sound2dhandle.h
+@@ -90,8 +90,8 @@
+ 	U32							Get_Sample_Loop_Count (void);
+ 	void							Set_Sample_MS_Position (U32 ms);
+ 	void							Get_Sample_MS_Position (S32 *len, S32 *pos);
+-	void							Set_Sample_User_Data (S32 i, U32 val);
++	void							Set_Sample_User_Data (S32 i, AIL_USER_DATA val);
+-	U32							Get_Sample_User_Data (S32 i);
++	AIL_USER_DATA							Get_Sample_User_Data (S32 i);
+ 	S32							Get_Sample_Playback_Rate (void);
+ 	void							Set_Sample_Playback_Rate (S32 rate);
+ 	
+--- a/sound3dhandle.h
++++ b/sound3dhandle.h
+@@ -91,8 +91,8 @@
+ 	U32							Get_Sample_Loop_Count (void);
+ 	void							Set_Sample_MS_Position (U32 ms);
+ 	void							Get_Sample_MS_Position (S32 *len, S32 *pos);
+-	void							Set_Sample_User_Data (S32 i, U32 val);
++	void							Set_Sample_User_Data (S32 i, AIL_USER_DATA val);
+-	U32							Get_Sample_User_Data (S32 i);
++	AIL_USER_DATA							Get_Sample_User_Data (S32 i);
+ 	S32							Get_Sample_Playback_Rate (void);
+ 	void							Set_Sample_Playback_Rate (S32 rate);
+ 	
+--- a/soundstreamhandle.h
++++ b/soundstreamhandle.h
+@@ -92,8 +92,8 @@
+ 	U32							Get_Sample_Loop_Count (void);
+ 	void							Set_Sample_MS_Position (U32 ms);
+ 	void							Get_Sample_MS_Position (S32 *len, S32 *pos);
+-	void							Set_Sample_User_Data (S32 i, U32 val);
++	void							Set_Sample_User_Data (S32 i, AIL_USER_DATA val);
+-	U32							Get_Sample_User_Data (S32 i);
++	AIL_USER_DATA							Get_Sample_User_Data (S32 i);
+ 	S32							Get_Sample_Playback_Rate (void);
+ 	void							Set_Sample_Playback_Rate (S32 rate);
+ 
+--- a/sound2dhandle.cpp
++++ b/sound2dhandle.cpp
+@@ -297,7 +297,7 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ void
+-Sound2DHandleClass::Set_Sample_User_Data (S32 i, U32 val)
++Sound2DHandleClass::Set_Sample_User_Data (S32 i, AIL_USER_DATA val)
+ {
+ 	if (SampleHandle != (HSAMPLE)INVALID_MILES_HANDLE) {
+ 		::AIL_set_sample_user_data (SampleHandle, i, val);
+@@ -312,10 +312,10 @@
+ //	Get_Sample_User_Data
+ //
+ //////////////////////////////////////////////////////////////////////
+-U32
++AIL_USER_DATA
+ Sound2DHandleClass::Get_Sample_User_Data (S32 i)
+ {
+-	U32 retval = 0;
++	AIL_USER_DATA retval = 0;
+ 
+ 	if (SampleHandle != (HSAMPLE)INVALID_MILES_HANDLE) {
+ 		retval = ::AIL_sample_user_data (SampleHandle, i);
+--- a/sound3dhandle.cpp
++++ b/sound3dhandle.cpp
+@@ -310,7 +310,7 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ void
+-Sound3DHandleClass::Set_Sample_User_Data (S32 i, U32 val)
++Sound3DHandleClass::Set_Sample_User_Data (S32 i, AIL_USER_DATA val)
+ {
+ 	if (SampleHandle != (H3DSAMPLE)INVALID_MILES_HANDLE) {
+ 		::AIL_set_3D_object_user_data (SampleHandle, i, val);
+@@ -324,10 +324,10 @@
+ //	Get_Sample_User_Data
+ //
+ //////////////////////////////////////////////////////////////////////
+-U32
++AIL_USER_DATA
+ Sound3DHandleClass::Get_Sample_User_Data (S32 i)
+ {
+-	U32 retval = 0;
++	AIL_USER_DATA retval = 0;
+ 
+ 	if (SampleHandle != (H3DSAMPLE)INVALID_MILES_HANDLE) {
+ 		retval = AIL_3D_object_user_data (SampleHandle, i);
+--- a/soundstreamhandle.cpp
++++ b/soundstreamhandle.cpp
+@@ -291,7 +291,7 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ void
+-SoundStreamHandleClass::Set_Sample_User_Data (S32 i, U32 val)
++SoundStreamHandleClass::Set_Sample_User_Data (S32 i, AIL_USER_DATA val)
+ {
+ 	if (SampleHandle != (HSAMPLE)INVALID_MILES_HANDLE) {
+ 		::AIL_set_sample_user_data (SampleHandle, i, val);
+@@ -306,10 +306,10 @@
+ //	Get_Sample_User_Data
+ //
+ //////////////////////////////////////////////////////////////////////
+-U32
++AIL_USER_DATA
+ SoundStreamHandleClass::Get_Sample_User_Data (S32 i)
+ {
+-	U32 retval = 0;
++	AIL_USER_DATA retval = 0;
+ 
+ 	if (SampleHandle != (HSAMPLE)INVALID_MILES_HANDLE) {
+ 		retval = ::AIL_sample_user_data (SampleHandle, i);

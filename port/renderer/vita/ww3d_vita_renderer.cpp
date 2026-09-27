@@ -43,6 +43,9 @@ namespace RenegadeVitaRenderer {
 namespace {
 
 Statistics g_statistics = {};
+#if defined(RENEGADE_HOST_ABI_TEST)
+void (*g_host_indexed_observer)(const IndexedTriangleSubmission &) = NULL;
+#endif
 BackendLifecycleStatistics g_lifecycle = {};
 bool g_logged_first_unsupported = false;
 bool g_logged_first_indexed_rejection = false;
@@ -3204,6 +3207,13 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 #endif
 }
 
+#if defined(RENEGADE_HOST_ABI_TEST)
+void Set_Host_Indexed_Submission_Observer(void (*observer)(const IndexedTriangleSubmission &))
+{
+	g_host_indexed_observer = observer;
+}
+#endif
+
 IndexedSubmissionResult Submit_Indexed_Triangles(
 	const IndexedTriangleSubmission &submission)
 {
@@ -3309,6 +3319,9 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	}
 
 	// Keep the separate baseline traversal available for later comparison.
+#if defined(RENEGADE_HOST_ABI_TEST)
+	if (g_host_indexed_observer != NULL) g_host_indexed_observer(submission);
+#endif
 	for (uint32_t offset = 0; !fused_index_preparation && offset < requested_indices; ++offset) {
 		const uint32_t relative_index =
 			submission.index_data[submission.first_index + offset];

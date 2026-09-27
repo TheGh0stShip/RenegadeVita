@@ -27,15 +27,24 @@ The canonical script returned nonzero only at its final install step because
 with the existing VFS path explicitly supplied. Install receipt is local at
 `build/vita3k-backups/A3.5-dev205-setup-20260927T152819998709Z/setup-receipt.json`.
 
-The bounded Dev205 Vita3K launch was refused because an existing Windows
-Vita3K process was running. No process was stopped. Dev205 has **not** been
-launched or tested on Vita3K or physical Vita/PSTV. The M01 intro freeze and
-the reporter's save/load failure have not been fixed by this change. Earlier
+Subsequent bounded Vita3K testing launched Dev205. One owned frontend test
+became unresponsive before Campaign selection; its process was stopped and
+the original diagnostic launch marker was restored byte-for-byte. A separate
+user-driven run entered M13 and wrote `savegame05.sav`. Its stable 264,944-byte
+file has the original level-info and level-data top-level chunks with exact
+lengths and identifies `M13.lsd`; SHA-256 is
+`f63495330797522cd84973cbc26606c99637cfdb7fc6c6517bcc732bc17054c1`.
+No load of that slot appeared in the next three minutes of runtime logging.
+This initially established a save write only. In a later user-driven Dev205
+run, that same slot loaded through original pre-load, load, post-load and
+saved-player/camera restoration, and gameplay advanced beyond 3,600 frames.
+Thus this one Vita3K save/reload passed. Both M13 engineers then developed
+NaN physics positions; the broader M01 intro freeze and reporter-specific
+save/load failure remain open. Dev205 has no physical Vita/PSTV result. Earlier
 Dev197 physical PSTV evidence passed one M13 pre-Ion save reload and menu
 return, which does not supersede the reporter's broader failure.
 
-Next: with an idle Vita3K instance, run Dev205 Campaign-first without Tutorial
-and preserve the runtime log/capture. If it starts, replay M13-to-M01 and the
-short M01 save, then inspect the last guest stage at the intro stop. Reproduce
+Next: verify the engineer path fix in a new native build, then replay
+M13-to-M01 and inspect the last guest stage at the intro stop. Reproduce
 save and load on the reporter's CD/1.037 setup or collect a matching log and
 file-state receipt. Keep issue #1 open until those paths pass on physical PSTV.

@@ -1,5 +1,37 @@
 # Known gaps
 
+2026-09-27: the omitted original sorting renderer is now selected by the full
+port; native visual/effect-capacity validation remains pending. Two full M13
+host intro cycles pass ASan/LSan and original rappel/camera/engineer checks,
+but retain an unsupported host mesh warning and deferred audio. These checks
+do not establish native cinematic sync, performance, or mission completion.
+M01 native freeze and Ion audio overlap remain open.
+
+2026-09-27 Dev207: the M13 engineers' NaN state has a reproduced host cause
+and a host-tested zero-distance path fix. Dev207 is installed in Vita3K but
+has not been launched; there is no new runtime or physical result.
+The copied M13 save's first invalid engineer was frame 321 before the patch;
+both engineers remain finite through two 600-frame host replays after it.
+The M01 saved-state host replay passes 1,800 frames twice but does not cover
+the reported native freeze. Save-load teardown still leaks 40,872 bytes over
+two M13 host cycles under LSan. See DEV207_M13_ZERO_PATH.md.
+
+2026-09-27 unbuilt source follow-up: borrowed path-action remaps, a missing
+saved previous-animation reference release, and the
+Dev186 two-command cinematic throttle have focused corrections staged.
+M01 now uses the existing bounded referenced-texture preparation during
+loading to target a measured 28-upload, 2.61-second first render frame.
+The saved-path and animation ownership corrections now pass two-cycle M13/M01
+host save replays with ASan/LSan after also correcting VehicleDriver's borrowed
+path remap. No new Vita3K or physical result exists; the M01 aircraft freeze and
+full mission completion stay open. Host audio and rendering are not native.
+The later raw-animation rounding correction passes numeric key selection
+and source checks; full animation output and native behavior remain unverified.
+Portable integer conversion and cinematic camera-state serialization now pass
+focused sanitizer tests and isolated ARM compilation. Old saves made during
+active camera cinematics omit that flag and still require compatibility testing.
+M13 Ion audio overlap and M01 native freeze are not resolved by these tests.
+
 2026-09-27 issue #1 PSTV update: the reporter says Dev204 Tutorial is stable,
 Campaign-first crashes, Campaign after Tutorial freezes during the M01 intro,
 and save/load does not work on their CD/1.037 installation. Dev205's

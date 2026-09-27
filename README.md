@@ -36,6 +36,14 @@ is preserved; its data subset is not sufficient for the full-port candidate.
 
 ## Where the port stands
 
+**Source development has advanced beyond the Dev204 download.** The current
+M13/M01 work repairs invalid AI paths, saved-object ownership, animation frame
+selection, sorted effects and audio cleanup. Several fixes have focused host
+sanitizer evidence; the newest audio lifecycle changes have only passed source
+staging and still need compilation and runtime tests. No new release or claim
+of resolved campaign freezes accompanies this source update. See the
+[campaign source checkpoint](docs/CURRENT_STATUS.md#unreleased-campaign-source-checkpoint).
+
 Dev204 is an **experimental full-port development candidate**. It adds only
 title-presentation artwork to Dev202's runtime; its own observed Vita3K result
 is the LiveArea, not Practice gameplay. Dev202's

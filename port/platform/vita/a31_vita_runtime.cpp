@@ -1813,7 +1813,8 @@ bool Warm_Original_M00_Referenced_Textures(A31VitaLoadingPresenter &presenter)
 	return presented;
 }
 
-void Warm_Original_M13_Referenced_Textures(A31VitaLoadingPresenter &presenter)
+void Warm_Original_Campaign_Referenced_Textures(A31VitaLoadingPresenter &presenter,
+	const char *mission)
 {
 	// The original mission dependency loader has populated this hash. Only
 	// textures held by live render resources are worth preparing before play.
@@ -1833,7 +1834,7 @@ void Warm_Original_M13_Referenced_Textures(A31VitaLoadingPresenter &presenter)
 			pending[count++] = texture;
 		}
 	}
-	SaveLoadStatus::Set_Status_Text("Preparing M13 textures", 0);
+	SaveLoadStatus::Set_Status_Text("Preparing mission textures", 0);
 	const uint64_t start_bytes = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
 	const uint64_t additional_budget = 32ULL * 1024ULL * 1024ULL;
 	unsigned prepared = 0U;
@@ -1842,13 +1843,13 @@ void Warm_Original_M13_Referenced_Textures(A31VitaLoadingPresenter &presenter)
 		if (resident >= start_bytes && resident - start_bytes >= additional_budget) break;
 		pending[prepared]->Init();
 		if ((prepared + 1U) % 8U == 0U || prepared + 1U == count) {
-			presenter.Render_Original_Progress("m13_texture_prepare");
+			presenter.Render_Original_Progress("campaign_texture_prepare");
 		}
 	}
 	for (unsigned i = 0U; i < count; ++i) pending[i]->Release_Ref();
 	const uint64_t end_bytes = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
-	A30_Vita_Log("A4 M13 referenced textures: prepared=%u deferred=%u resident_before=%llu resident_after=%llu soft_extra_budget_bytes=%llu\n",
-		prepared, count - prepared + overflow,
+	A30_Vita_Log("A4 %s referenced textures: prepared=%u deferred=%u resident_before=%llu resident_after=%llu soft_extra_budget_bytes=%llu\n",
+		mission, prepared, count - prepared + overflow,
 		static_cast<unsigned long long>(start_bytes),
 		static_cast<unsigned long long>(end_bytes),
 		static_cast<unsigned long long>(additional_budget));
@@ -4143,7 +4144,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					loading_presenter.Render_Original_Progress("after_m13_explosion_prepare");
 				}
 				Warm_M13_World_Killed_Explosions(loading_presenter);
-				Warm_Original_M13_Referenced_Textures(loading_presenter);
+				Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M13");
 			}
 			if (stricmp(selected_archive, "M01.mix") == 0) {
 				A35_Vita_Clear_Prepared_Render_Objs();
@@ -4201,6 +4202,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
 					loading_presenter.Render_Original_Progress("after_m01_model_prepare");
 				}
+				Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M01");
 			}
 #endif
 			A30_Vita_Log("A3.1 breadcrumb: original M00 level loaded\n");

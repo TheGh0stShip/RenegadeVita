@@ -33,7 +33,7 @@ struct RenegadeMilesSample {
 	S32 pan = 64;
 	U32 loop_count = 1;
 	U32 loops_remaining = 1;
-	U32 user_data[8] = {};
+	AIL_USER_DATA user_data[8] = {};
 	F32 position[3] = {};
 	F32 maximum_distance = 100.0F;
 	F32 minimum_distance = 1.0F;
@@ -553,7 +553,7 @@ bool Read_Stream_Image(const char *name, std::vector<uint8_t> *image)
 		Set_Error("stream file callbacks are unavailable");
 		return false;
 	}
-	U32 handle = 0;
+	AIL_FILE_HANDLE handle = 0;
 	if (g_file_open(name, &handle) == 0U) {
 		Set_Error("stream source open failed");
 		return false;
@@ -789,17 +789,17 @@ void AIL_sample_ms_position(HSAMPLE sample, S32 *length, S32 *position)
 	AIL_unlock();
 }
 
-void AIL_set_sample_user_data(HSAMPLE sample, S32 index, U32 value)
+void AIL_set_sample_user_data(HSAMPLE sample, S32 index, AIL_USER_DATA value)
 {
 	AIL_lock();
 	if (sample != nullptr && index >= 0 && index < 8) sample->user_data[index] = value;
 	AIL_unlock();
 }
 
-U32 AIL_sample_user_data(HSAMPLE sample, S32 index)
+AIL_USER_DATA AIL_sample_user_data(HSAMPLE sample, S32 index)
 {
 	AIL_lock();
-	const U32 value = sample != nullptr && index >= 0 && index < 8
+	const AIL_USER_DATA value = sample != nullptr && index >= 0 && index < 8
 		? sample->user_data[index] : 0U;
 	AIL_unlock();
 	return value;
@@ -915,8 +915,8 @@ U32 AIL_3D_sample_length(H3DSAMPLE sample)
 	return value;
 }
 
-void AIL_set_3D_object_user_data(H3DSAMPLE sample, S32 index, U32 value) { AIL_set_sample_user_data(sample, index, value); }
-U32 AIL_3D_object_user_data(H3DSAMPLE sample, S32 index) { return AIL_sample_user_data(sample, index); }
+void AIL_set_3D_object_user_data(H3DSAMPLE sample, S32 index, AIL_USER_DATA value) { AIL_set_sample_user_data(sample, index, value); }
+AIL_USER_DATA AIL_3D_object_user_data(H3DSAMPLE sample, S32 index) { return AIL_sample_user_data(sample, index); }
 S32 AIL_3D_sample_playback_rate(H3DSAMPLE sample) { return AIL_sample_playback_rate(sample); }
 void AIL_set_3D_sample_playback_rate(H3DSAMPLE sample, S32 rate) { AIL_set_sample_playback_rate(sample, rate); }
 

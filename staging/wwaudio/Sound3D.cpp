@@ -584,7 +584,7 @@ Sound3DClass::Initialize_Miles_Handle (void)
 		Seek (m_CurrentPosition);
 
 		// Associate this object instance with the handle
-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (S32)this);
+		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (AIL_USER_DATA)this);
 	}
 
 	return ;
@@ -645,6 +645,8 @@ void
 Sound3DClass::Remove_From_Scene (void)
 {
 	if (m_Scene != NULL) {
+		// Retain this object until both scene-owned pointers are cleared.
+		Add_Ref ();
 
 		// Determine what culling system this sound belongs to
 		if (m_IsStatic) {
@@ -655,6 +657,7 @@ Sound3DClass::Remove_From_Scene (void)
 
 		m_Scene = NULL;
 		m_PhysWrapper = NULL;
+		Release_Ref ();
 	}
 
 	return ;

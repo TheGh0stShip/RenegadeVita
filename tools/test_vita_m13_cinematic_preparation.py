@@ -11,6 +11,8 @@ HLOD = ROOT / "staging" / "ww3d2" / "hlod.cpp"
 TEST_CINEMATIC = ROOT / "staging" / "scripts" / "Test_Cinematic.cpp"
 SCAN_TOOL = ROOT / "tools" / "renegade_cinematic_dependency_scan.py"
 GAMEOBJ_MANAGER = ROOT / "staging" / "combat" / "gameobjmanager.cpp"
+PATH_ACTION = ROOT / "staging" / "combat" / "pathaction.cpp"
+ANIM_COLLISION = ROOT / "staging" / "wwphys" / "animcollisionmanager.cpp"
 
 
 def test_m13_intro_sniper_is_prepared_during_loading():
@@ -59,6 +61,45 @@ def test_m01_beach_aircraft_are_prepared_during_loading():
     assert '"v_nod_Apache"' in m01_block
     assert '"X1G_A-10_Traj"' in m01_block
     assert '"XG_EV5_rope"' in m01_block
+
+
+def test_m01_referenced_textures_prepare_before_first_world_frame():
+    text = A31_RUNTIME.read_text(encoding="utf-8")
+    m01_block = text[text.index('stricmp(selected_archive, "M01.mix") == 0'):]
+    assert 'Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M01")' in m01_block
+    assert m01_block.index('Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M01")') < m01_block.index('A3.1 breadcrumb: original M00 level loaded')
+    assert 'additional_budget = 32ULL * 1024ULL * 1024ULL' in text
+
+
+def test_saved_path_action_remaps_borrowed_pointers_without_new_references():
+    text = PATH_ACTION.read_text(encoding="utf-8")
+    load = text[text.index('PathActionClass::Load_Variables'):text.index('PathActionClass::Set_Ladder_Occupant')]
+    assert 'REQUEST_POINTER_REMAP ((void **)&Mechanism)' in load
+    assert 'REQUEST_POINTER_REMAP ((void **)&Path)' in load
+    assert 'REQUEST_REF_COUNTED_POINTER_REMAP' not in load
+    driver = (ROOT / "staging/combat/vehicledriver.cpp").read_text(encoding="utf-8")
+    assert 'REQUEST_POINTER_REMAP ((void **)&m_CurrentPath)' in driver
+    assert 'REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&m_CurrentPath)' not in driver
+
+
+def test_loaded_previous_animation_releases_lookup_reference():
+    text = ANIM_COLLISION.read_text(encoding="utf-8")
+    load = text[text.index('bool AnimCollisionManagerClass::Load('):]
+    previous = load[load.index('Get_HAnim(prev_anim_name)'):load.index('return true;')]
+    assert previous.index('REF_PTR_SET(PrevAnimation,anim)') < previous.index('REF_PTR_RELEASE(anim)')
+
+
+def test_decal_removal_releases_the_complete_offset_range():
+    text = (ROOT / "staging/ww3d2/decalmsh.cpp").read_text(encoding="utf-8")
+    assert text.count('fi<decal->FaceStartIndex + decal->FaceCount') == 1
+    assert text.count('fi < decal->FaceStartIndex + decal->FaceCount') == 1
+    assert text.count('vi<decal->VertexStartIndex + decal->VertexCount') == 2
+
+
+def test_campaign_cinematic_budget_is_time_only():
+    text = TEST_CINEMATIC.read_text(encoding="utf-8")
+    assert 'if (elapsed_us >= 4000U)' in text
+    assert 'vita_budget_command_count >= 2U' not in text
 
 
 def test_campaign_prepare_does_not_reuse_live_volatile_render_objects():
@@ -212,11 +253,31 @@ def test_m01_first_beach_cinematic_uses_fresh_volatile_render_objects():
 
 
 class RuntimeInstrumentationContracts(unittest.TestCase):
+    def test_raw_animation_samplers_use_portable_lower_key(self):
+        text = (ROOT / "staging" / "ww3d2" / "hrawanim.cpp").read_text(encoding="utf-8")
+        self.assertEqual(text.count("int frame0 = static_cast<int>(WWMath::Floor(frame));"), 3)
+        self.assertNotIn("WWMath::Float_To_Long(frame-0.499999f)", text)
+
     def test_preservation_patch_cannot_restore_per_object_postthink_timing(self):
         test_preservation_patch_cannot_restore_per_object_postthink_timing()
 
     def test_m01_first_beach_cinematic_uses_fresh_volatile_render_objects(self):
         test_m01_first_beach_cinematic_uses_fresh_volatile_render_objects()
+
+    def test_m01_referenced_textures_prepare_before_first_world_frame(self):
+        test_m01_referenced_textures_prepare_before_first_world_frame()
+
+    def test_saved_path_action_remaps_borrowed_pointers_without_new_references(self):
+        test_saved_path_action_remaps_borrowed_pointers_without_new_references()
+
+    def test_loaded_previous_animation_releases_lookup_reference(self):
+        test_loaded_previous_animation_releases_lookup_reference()
+
+    def test_decal_removal_releases_the_complete_offset_range(self):
+        test_decal_removal_releases_the_complete_offset_range()
+
+    def test_campaign_cinematic_budget_is_time_only(self):
+        test_campaign_cinematic_budget_is_time_only()
 
 
 def test_vita_texture_transform_boundary_caches_identical_mapper_state():

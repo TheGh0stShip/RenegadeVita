@@ -1,0 +1,63 @@
+--- a/WWAudio.h
++++ b/WWAudio.h
+@@ -591,10 +591,10 @@
+ 	//////////////////////////////////////////////////////////////////////
+ 	//	Miles File Callbacks
+ 	//////////////////////////////////////////////////////////////////////
+-	static U32 AILCALLBACK	File_Open_Callback (char const *filename, U32 *file_handle);
++	static U32 AILCALLBACK	File_Open_Callback (char const *filename, AIL_FILE_HANDLE *file_handle);
+-	static void AILCALLBACK	File_Close_Callback (U32 file_handle);
++	static void AILCALLBACK	File_Close_Callback (AIL_FILE_HANDLE file_handle);
+-	static S32 AILCALLBACK	File_Seek_Callback (U32 file_handle, S32 offset, U32 type);
++	static S32 AILCALLBACK	File_Seek_Callback (AIL_FILE_HANDLE file_handle, S32 offset, U32 type);
+-	static U32 AILCALLBACK	File_Read_Callback (U32 file_handle, void *buffer, U32 bytes);
++	static U32 AILCALLBACK	File_Read_Callback (AIL_FILE_HANDLE file_handle, void *buffer, U32 bytes);
+ 
+ private:
+ 
+--- a/WWAudio.cpp
++++ b/WWAudio.cpp
+@@ -3244,7 +3244,7 @@
+ //
+ ////////////////////////////////////////////////////////////////////////////////////////////
+ U32 AILCALLBACK
+-WWAudioClass::File_Open_Callback (char const *filename, U32 *file_handle)
++WWAudioClass::File_Open_Callback (char const *filename, AIL_FILE_HANDLE *file_handle)
+ {
+ 	U32 retval = false;
+ 
+@@ -3255,7 +3255,7 @@
+ 		//
+ 		FileClass *file = Get_Instance ()->Get_File (filename);
+ 		if (file != NULL && file->Open ()) {
+-			(*file_handle) = (U32)file;
++			(*file_handle) = (AIL_FILE_HANDLE)file;
+ 			retval = true;
+ 		}
+ 	}
+@@ -3270,7 +3270,7 @@
+ //
+ ////////////////////////////////////////////////////////////////////////////////////////////
+ void AILCALLBACK
+-WWAudioClass::File_Close_Callback (U32 file_handle)
++WWAudioClass::File_Close_Callback (AIL_FILE_HANDLE file_handle)
+ {
+ 	if (Get_Instance () != NULL) {
+ 
+@@ -3293,7 +3293,7 @@
+ //
+ ////////////////////////////////////////////////////////////////////////////////////////////
+ S32 AILCALLBACK
+-WWAudioClass::File_Seek_Callback (U32 file_handle, S32 offset, U32 type)
++WWAudioClass::File_Seek_Callback (AIL_FILE_HANDLE file_handle, S32 offset, U32 type)
+ {
+ 	S32 retval = 0;
+ 
+@@ -3338,7 +3338,7 @@
+ //
+ ////////////////////////////////////////////////////////////////////////////////////////////
+ U32 AILCALLBACK
+-WWAudioClass::File_Read_Callback (U32 file_handle, void *buffer, U32 bytes)
++WWAudioClass::File_Read_Callback (AIL_FILE_HANDLE file_handle, void *buffer, U32 bytes)
+ {
+ 	U32 retval = 0;

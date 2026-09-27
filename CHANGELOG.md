@@ -2,6 +2,22 @@
 
 This changelog records public-facing source, process, and evidence changes. It does not turn a build into a physical acceptance claim.
 
+## Unreleased - M13/M01 source checkpoint
+
+- Corrected zero-distance AI path handling, saved-reference ownership,
+  animation frame selection and repeated-render tank-track state updates.
+- Restored original sorted effects for the full port, with sanitizer coverage
+  for queue capacity, triangle ordering and reference ownership.
+- Extended loading-time texture preparation to M01 and removed an unnecessary
+  two-command cinematic scheduling limit.
+- Added original-audio host replay and regression probes. Reproduced worker
+  deadlock and logical-sound lifetime fixes have sanitizer evidence; three
+  newer audio lifecycle fixes are staged but not compiled or runtime-tested.
+- Recorded 290-patch source staging and the remaining verification gaps.
+  Campaign completion, native freeze resolution and stable frame pacing are
+  not established. Dev204 remains the published download; no new binary
+  release accompanies this checkpoint.
+
 ## A3.5-dev204 - 2026-09-27
 
 - Added an original R/V identity and version-stamped Vita LiveArea artwork.

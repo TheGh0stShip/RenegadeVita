@@ -130,10 +130,13 @@ LogicalSoundClass::Remove_From_Scene (void)
 		//
 		//	Remove this sound from the culling system
 		//
+		// Removal can drop the scene's last references before state is cleared.
+		Add_Ref ();
 		m_Scene->Remove_Logical_Sound (this, m_IsSingleShot);
 		m_Scene					= NULL;
 		m_PhysWrapper			= NULL;
 		m_LastNotification	= 0;
+		Release_Ref ();
 	}
 
 	return ;

@@ -1450,6 +1450,7 @@ void DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)
 	// state above this unimplemented fixed-function device edge.
 }
 
+#if !defined(RENEGADE_ORIGINAL_SORTING)
 void SortingRendererClass::Insert_Triangles(const SphereClass &,
 	unsigned short, unsigned short, unsigned short, unsigned short)
 {
@@ -1464,6 +1465,7 @@ void SortingRendererClass::Insert_Triangles(unsigned short, unsigned short,
 		"sorted indexed submission is deferred", 0U);
 }
 
+#endif
 #endif
 /* The original profiler only needs the calibrated reciprocal.  CPU feature
  * probing is x86/Win32 assembly and stays behind the platform boundary. */

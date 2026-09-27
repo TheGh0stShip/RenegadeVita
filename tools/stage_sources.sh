@@ -131,6 +131,10 @@ test "$(sha256sum "$rv_stage/wwmath/wwmath.h" | cut -d' ' -f1)" = \
 	"031b73ee3f4f202c274dc5860c9745520dfe4892d34dec62c41de69860775fb8"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a35-valid-float-layout.patch"
+test "$(sha256sum "$rv_stage/wwmath/wwmath.h" | cut -d' ' -f1)" = \
+	"6f9d2deef7687cd7e0423d0e0dbfc2739fd0c99b52511a985a0e82d38b81fec5"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a35-portable-int-conversion.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a30-abi.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -361,6 +365,24 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-posix-runtime.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-original-runtime-correctness.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-user-data-pointer-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-event-pointer-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-file-pointer-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-release-lock-order.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-sample-pointer-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-logical-removal-lifetime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-audible-removal-lifetime.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-completed-sound-uniqueness.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-flush-enqueue-order.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -705,6 +727,51 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -
 echo "Applied: port/patches/wwphys-a35-trackedvehicle-mesh-names.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-trackedvehicle-delta-time.patch"
 echo "Applied: port/patches/wwphys-a35-trackedvehicle-delta-time.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-trackedvehicle-repeat-render.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-human-jump-finite.patch"
+echo "Applied: port/patches/wwphys-a35-human-jump-finite.patch"
+rv_path_sha=$(sha256sum "$rv_stage/wwphys/Path.cpp" | cut -d' ' -f1)
+if [[ "$rv_path_sha" != "7c8d88c83db6401010274eb8cc53493ef8f832de4fb1cfa056936239351e6184" ]]; then
+	echo "Refusing unanchored zero-length path patch: Path.cpp changed ($rv_path_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-zero-length-path.patch"
+echo "Applied: port/patches/wwphys-a35-zero-length-path.patch"
+rv_prev_animation_sha=$(sha256sum "$rv_stage/wwphys/animcollisionmanager.cpp" | cut -d' ' -f1)
+if [[ "$rv_prev_animation_sha" != "1087c76adabc61910a94841f4c44806adee8d577ba39d08bd6d221a7c6d49595" ]]; then
+	echo "Refusing unanchored previous-animation ref patch: animcollisionmanager.cpp changed ($rv_prev_animation_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a35-prev-animation-load-ref.patch"
+echo "Applied: port/patches/wwphys-a35-prev-animation-load-ref.patch"
+rv_raw_animation_sha=$(sha256sum "$rv_stage/ww3d2/hrawanim.cpp" | cut -d' ' -f1)
+if [[ "$rv_raw_animation_sha" != "8e86f98902adc33842c01b83af7155b3b84e62a25c09b13d08df6f70a28b26a0" ]]; then
+	echo "Refusing unanchored raw-animation frame patch: hrawanim.cpp changed ($rv_raw_animation_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-raw-animation-frame-floor.patch"
+echo "Applied: port/patches/ww3d-a35-raw-animation-frame-floor.patch"
+rv_pathaction_sha=$(sha256sum "$rv_stage/combat/pathaction.cpp" | cut -d' ' -f1)
+if [[ "$rv_pathaction_sha" != "239633e2c55ed42f7d15b27419de92443b359379915ae16eb9128a9f47443263" ]]; then
+	echo "Refusing unanchored borrowed path-action remap patch: pathaction.cpp changed ($rv_pathaction_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-pathaction-borrowed-remap.patch"
+echo "Applied: port/patches/combat-a35-pathaction-borrowed-remap.patch"
+rv_vehicledriver_sha=$(sha256sum "$rv_stage/combat/vehicledriver.cpp" | cut -d' ' -f1)
+if [[ "$rv_vehicledriver_sha" != "31f65d6648671fa7d959f36b6fa4a44b627cfbaa8f0fe634229677cf27d79fc1" ]]; then
+	echo "Refusing unanchored vehicle-driver remap patch: vehicledriver.cpp changed ($rv_vehicledriver_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-vehicledriver-borrowed-remap.patch"
+echo "Applied: port/patches/combat-a35-vehicledriver-borrowed-remap.patch"
+rv_decalmesh_sha=$(sha256sum "$rv_stage/ww3d2/decalmsh.cpp" | cut -d' ' -f1)
+if [[ "$rv_decalmesh_sha" != "aaa99b948b868ee3b52fc1b75e0bfd139ae1e31379559f28b89ffa15383c7785" ]]; then
+	echo "Refusing unanchored decal release-range patch: decalmsh.cpp changed ($rv_decalmesh_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-decal-release-range.patch"
+echo "Applied: port/patches/ww3d-a35-decal-release-range.patch"
 rv_ww3d_create_sha=$(sha256sum "$rv_stage/ww3d2/assetmgr.cpp" | cut -d' ' -f1)
 if [[ "$rv_ww3d_create_sha" != "290ac62041c1de14327cfb10fa6cfe14a6b55c544c9b9d0c237ac2f60fb43b93" ]]; then
 	echo "Refusing unanchored WW3D create timing patch: assetmgr.cpp changed ($rv_ww3d_create_sha)" >&2
@@ -911,6 +978,25 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-tt-c4-state.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-original-owner-cpp.patch"
+rv_cinematic_budget_sha=$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)
+if [[ "$rv_cinematic_budget_sha" != "6ea137fedd3a31409a5615a924ccf3776efec5a5727b88a68979ee359a76b10d" ]]; then
+	echo "Refusing unanchored cinematic time-budget patch: Test_Cinematic.cpp changed ($rv_cinematic_budget_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-time-budget-only.patch"
+test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
+	"f422957863652a66c89b13c23c1458992615ae441ed6f23d9b99a80645463174"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-camera-save.patch"
+test "$(sha256sum "$rv_stage/ww3d2/sortingrenderer.cpp" | cut -d' ' -f1)" = \
+	"b4687cdd516789a73ae2b99d7c80486c476a6a6613fd2cffbd275fe60363a609"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-original-sorting-port.patch"
+test "$(sha256sum "$rv_stage/ww3d2/ww3d.cpp" | cut -d' ' -f1)" = \
+	"1f9ffbf3e35a171d09c7bc5182581191ab6ffd0a3dac6bba4093fbb8690c3e88"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-original-sorting-lifecycle.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

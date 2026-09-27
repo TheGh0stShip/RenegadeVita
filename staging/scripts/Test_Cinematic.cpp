@@ -129,25 +129,25 @@ public:
 	** Object Slots
 	*/
 	#define	NUM_SLOTS	40
-	int	ObjectSlots[ NUM_SLOTS ];
+	int	ObjectSlots[ NUM_SLOTS ] = {};
 
-	int	MyID;  // doesn't need to be saved
+	int	MyID = 0;  // doesn't need to be saved
 
 	/*
 	** Timing
 	*/
-	unsigned int	LastSyncTime;
-	float				Time;
-	float				FrameSync;
-	bool				PrimaryKilled;
+	unsigned int	LastSyncTime = 0;
+	float				Time = 0.0f;
+	float				FrameSync = 0.0f;
+	bool				PrimaryKilled = false;
 
-	bool				IsCameraCinematic;
+	bool				IsCameraCinematic = false;
 
 
 	/*
 	** Parameters
 	*/
-	char * NextParameter;
+	char * NextParameter = NULL;
 
 	/*
 	** Control Lines
@@ -316,6 +316,7 @@ public:
 #define	CHUNKID_CONTROL_COMMAND_SIZE				5
 #define	CHUNKID_CONTROL_COMMAND						6
 #define	CHUNKID_PRIMARY_KILLED						7
+#define CHUNKID_CAMERA_CINEMATIC 8
 
 	/*
 	**
@@ -333,6 +334,7 @@ public:
 			Commands->Save_Data(saver, CHUNKID_VARIABLE_TIME, sizeof( Time ), &Time );
 //Commands->Debug_Message( "Saving Time %f\n", Time );
 			Commands->Save_Data(saver, CHUNKID_PRIMARY_KILLED, sizeof( PrimaryKilled ), &PrimaryKilled );
+			Commands->Save_Data(saver, CHUNKID_CAMERA_CINEMATIC, sizeof(IsCameraCinematic), &IsCameraCinematic);
 		Commands->End_Chunk(saver);
 
 		// Save the Object Slots
@@ -363,6 +365,8 @@ public:
 	void Load(ScriptLoader& loader)
 	{
 		Controls = NULL;
+		// Legacy saves omit this field; never read an uninitialized bool.
+		IsCameraCinematic = false;
 		NextParameter = NULL;
 
 		for ( int i = 0; i < NUM_SLOTS; i++ ) {
@@ -398,6 +402,10 @@ public:
 							case CHUNKID_PRIMARY_KILLED:
 								Commands->Load_Data(loader, sizeof( PrimaryKilled ), &PrimaryKilled );
 //Commands->Debug_Message( "Loading Time %f\n", Time );
+								break;
+
+							case CHUNKID_CAMERA_CINEMATIC:
+								Commands->Load_Data(loader, sizeof(IsCameraCinematic), &IsCameraCinematic);
 								break;
 
 						}
@@ -1073,9 +1081,9 @@ public:
 			++vita_budget_command_count;
 			if (vita_budget_commands && Controls != NULL && Controls->Time <= Time) {
 				const uint64_t elapsed_us = sceKernelGetProcessTimeWide() - vita_budget_start_us;
-				/* Keep authored command order, but cap a burst tightly enough that
-				** the simulation clock cannot run seconds behind the audio clock. */
-				if (elapsed_us >= 4000U || vita_budget_command_count >= 2U) {
+				/* Process cheap authored commands together; yield only when this
+				** callback has consumed its real-time budget. */
+				if (elapsed_us >= 4000U) {
 					static unsigned vita_budget_reports = 0U;
 					if (vita_budget_reports++ < 64U) {
 						A30_Vita_Log("A4 campaign cinematic budget yield: file=%s owner_id=%d commands=%u elapsed_us=%llu pending_time=%.3f current_time=%.3f\n",

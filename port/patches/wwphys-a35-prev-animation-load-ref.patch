@@ -1,0 +1,4 @@
+--- a/animcollisionmanager.cpp
++++ b/animcollisionmanager.cpp
+@@ -1466,0 +1467 @@
++		REF_PTR_RELEASE(anim);

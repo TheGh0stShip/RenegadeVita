@@ -32,6 +32,9 @@ DOCUMENTS = (
     "docs/MULTIPLAYER.md",
     "docs/QUICKSTART.md",
     "docs/TROUBLESHOOTING.md",
+    "docs/releases/A3.5-dev202.md",
+    "docs/releases/A3.5-dev203.md",
+    "docs/releases/A3.5-dev204.md",
 )
 
 LICENSE_FILES = {

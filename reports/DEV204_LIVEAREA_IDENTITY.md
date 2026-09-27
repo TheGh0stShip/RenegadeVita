@@ -25,6 +25,17 @@ frame appeared during navigation, but no gameplay, natural exit, or
 performance result is claimed. Vita3K was stopped after capture. Physical
 Vita/PSTV LiveArea appearance and canonical package acceptance remain pending.
 
+## Publication
+
+The [Dev204 prerelease](https://github.com/TheGh0stShip/RenegadeVita/releases/tag/A3.5-dev204)
+is tagged at `ba9802e10ea029d4675f04cde40dfc3004babf28`. A fresh download
+matched the VPK and screenshot hashes above. Repository-hygiene run
+`36297993081` passed for the tag commit; the later public-status commit
+`b2b076f35c8ac80b389df4db97a7b29dc1e82b75` passed run `36298140746`.
+The [project page](https://thegh0stship.github.io/RenegadeVita/) was deployed
+from gh-pages commit `91dd46ba13ae0340981d7e632c0fe03e9cebbed0`;
+page-validation run `36298263940` and deployment run `36298263659` passed.
+
 ## References
 
 - [VitaSDK VPK resource packaging](https://github.com/vitasdk/vita-toolchain/blob/master/cmake_toolchain/vita.cmake)

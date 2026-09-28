@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "mission": "M13.mix",
+  "display_mission": "The Scorpion Hunters (video labels it M01)",
+  "reference_url": "https://www.youtube.com/watch?v=fHR-BlCfE60",
+  "reference_duration_seconds": 327.587120,
+  "reference_local_sha256": "b1dfd1c87c9c4d156f9267d8500aa1e29fe4adfab50bc05dbc42bace1daad265",
+  "review_method": "Sequential two-second frame samples across the video, captions, and one-second samples of the local file's repair/handoff section. Not continuous audiovisual playback or frame-pacing validation.",
+  "retail_text_script_roots": [
+    "M00_Cinematic_Attack_Command_DLS", "M00_Cinematic_Kill_Object_DAY",
+    "M00_Damage_Modifier_DME", "M00_Disable_Loiter_DAY", "M00_Generic_Conv_DME",
+    "M00_Send_Object_ID", "M08_Petra_C_Helo", "MX0_A02_ACTOR",
+    "MX0_A02_HELICOPTER", "MX0_A03_GDI_INFANTRY", "MX0_A03_HUMVEE",
+    "MX0_A03_TANK", "MX0_Engineer1", "MX0_Engineer2", "MX0_NOD_INFANTRY"
+  ],
+  "root_provenance": "All 15 Attach_Script names in all 22 text files of the user's M13.mix, cross-referenced to original EA declarations. Names only; no retail payloads.",
+  "segments": [
+    {"id": "intro", "seconds": [0, 71], "behavior": "Recon convoy, ambush, transport arrival, rappel and camera handback", "owners": ["MissionX0.cpp", "Test_Cinematic.cpp", "Test_DAY.cpp"], "native_acceptance": "unverified"},
+    {"id": "rescue", "seconds": [71, 174], "behavior": "Squad defense, sniper/infantry waves, helicopter reinforcements and retreat", "owners": ["Test_RAD.cpp", "MissionX0.cpp"], "native_acceptance": "unverified"},
+    {"id": "repair_handoff", "seconds": [174, 200], "behavior": "Squad acknowledgement, engineer repair, player tank handoff/entry and blockage demolition", "owners": ["Test_RAD.cpp", "Toolkit_Objects.cpp"], "native_acceptance": "unverified"},
+    {"id": "tiberium", "seconds": [200, 230], "behavior": "Vehicle advance, GDI reinforcements, harvester and Orca attack", "owners": ["MissionX0.cpp", "Toolkit.cpp", "Toolkit_Objects.cpp", "mission08.cpp"], "native_acceptance": "unverified"},
+    {"id": "base_sams", "seconds": [230, 267], "behavior": "Hidden base discovery, defenses, aircraft loss and both SAM destructions", "owners": ["Test_DLS.cpp", "Test_Cinematic.cpp", "Test_DAY.cpp"], "native_acceptance": "unverified"},
+    {"id": "airstrike_ion", "seconds": [267, 302], "behavior": "Failed airstrike, command dialogue, Ion strike and whiteout", "owners": ["Test_DLS.cpp", "Test_Cinematic.cpp", "Test_DAY.cpp"], "native_acceptance": "unverified"},
+    {"id": "ending", "seconds": [302, 315], "behavior": "Finale camera, surviving actors and mission-accomplished presentation", "owners": ["Test_DLS.cpp", "Test_Cinematic.cpp", "Test_DAY.cpp"], "native_acceptance": "unverified"}
+  ],
+  "limits": ["Approximate reference times, not engine timing thresholds.", "One player route is not exhaustive optional-content coverage.", "Video ends with creator outro; score screen and normal next-mission transition are separate unverified requirements."]
+}

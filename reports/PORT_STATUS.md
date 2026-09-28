@@ -1,5 +1,61 @@
 # Renegade Vita port status
 
+The complete audit series, reproduction steps, unbuilt-source limitations and
+repository protection status are collected in the
+[content audit index](CONTENT_AUDIT_INDEX.md).
+
+2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
+mission-rank persistence, radio-input and round-transition gaps are confirmed;
+projector render targets remain unsupported. Nested W3D scan finds 14 unresolved
+texture names as leads, not confirmed asset defects. 81 Python checks pass,
+no build/launch or native acceptance. See [follow-up audit](DEEP_AUDIT_FOLLOWUP.md).
+
+2026-09-27 cross-system deep audit supersedes the narrower historical audit
+counts below. All nine requested areas reviewed across 17 maps: four original
+WW3D loader registrations missing (three owners unselected), five required
+script owners unselected, Options/death/failure UI gaps, unchecked save-write
+feedback, and multiplayer resource/event omissions. Mission11.cpp is confirmed
+for M01; its earlier M13-only lead remains distinct. 77 Python checks pass;
+the standalone coverage guard correctly reports INCOMPLETE (73 grouped
+findings). No compilation, launch or new native acceptance. Restore original
+owners and routes before claiming coverage. Details and reproduction:
+[cross-system deep audit](CROSS_SYSTEM_DEEP_AUDIT.md).
+
+Earlier audit snapshots follow; their counts are historical.
+
+Tutorial sweep: Test_DAK.cpp is missing from both source lists; its camera-
+shake death script is saved on four training buildings. Existing Dev207 also
+lacks two factories from already source-selected Toolkit/Toolkit_Objects.
+301 presets/27 scripts, 53 present persistence factories, 97 source-bound
+callbacks; conservative envelope 567 presets. 25 Python checks pass. No build
+or launch, no new native gate. Next: integrate Test_DAK and gate tutorial
+registry coverage. See [tutorial audit](M00_AGGRESSIVE_DISCOVERY.md).
+
+Aggressive M13 follow-up: 326 typed presets, 75 scripts, 149 physics records,
+43 present factory owners/Load methods and 102 source-bound callbacks.
+Conservative 1,118-preset envelope finds no fourth confirmed missing file;
+Mission11.cpp is an unconfirmed shared-table lookup lead. The three previously
+confirmed omissions remain unintegrated. 24 Python checks pass; no build or
+launch. Next: integrate the three owners and expand the old 62-script gate.
+Native reference acceptance remains 0/7. See [sweep](M13_AGGRESSIVE_DISCOVERY.md).
+
+M13 level/preset follow-up: three further original owners remain missing from
+both targets: Mission03.cpp, Test_RMV_Toolkit.cpp and Toolkit_Sounds.cpp.
+Decoded references cover both SAMs, six sound emitters and four building
+speakers. Expanded closure: 75 scripts/301 definitions; all 41 reached
+persistence-factory owners and Load methods are present. Audit only; no build
+or launch. See [additional owners](M13_ADDITIONAL_SOURCE_OWNERS.md).
+
+2026-09-27 video-driven correction: The Scorpion Hunters reference exposes a
+whole missing Area 2 owner plus shared cinematic/controller helpers. Existing
+Dev207 ARM and inspected host binaries each lack 15 of 62 required M13 factory
+methods. Five original files are now source-selected in both targets; they
+have not compiled or executed. New source/link gates and 28 Python checks pass;
+old binaries correctly fail the link gate. No builds, launches or deployment.
+Full sequence coverage and native acceptance remain open. See
+[video coverage audit](M13_VIDEO_COVERAGE_AUDIT.md). The video's M01 label maps
+to retail M13.mix; engine M01.mix is the following mission.
+
 Current source-only audit: 290 deterministic patches now stage successfully.
 Audio flush and enqueue now share the queue lock; destruction occurs outside
 it. Concurrent stress coverage is prepared but uncompiled/unexecuted.

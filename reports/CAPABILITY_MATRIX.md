@@ -1,5 +1,30 @@
 # Capability matrix
 
+2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
+mission-rank persistence, radio-input and round-transition gaps are confirmed;
+projector render targets remain unsupported. Nested W3D scan finds 14 unresolved
+texture names as leads, not confirmed asset defects. 81 Python checks pass,
+no build/launch or native acceptance. See [follow-up audit](DEEP_AUDIT_FOLLOWUP.md).
+
+2026-09-27 cross-system deep audit supersedes the narrower historical audit
+counts below. All nine requested areas reviewed across 17 maps: four original
+WW3D loader registrations missing (three owners unselected), five required
+script owners unselected, Options/death/failure UI gaps, unchecked save-write
+feedback, and multiplayer resource/event omissions. Mission11.cpp is confirmed
+for M01; its earlier M13-only lead remains distinct. 77 Python checks pass;
+the standalone coverage guard correctly reports INCOMPLETE (73 grouped
+findings). No compilation, launch or new native acceptance. Restore original
+owners and routes before claiming coverage. Details and reproduction:
+[cross-system deep audit](CROSS_SYSTEM_DEEP_AUDIT.md).
+
+Earlier audit snapshots follow; their counts are historical.
+
+2026-09-27 video audit supersedes implied M13 whole-mission coverage:
+Test_RAD/Toolkit/Toolkit_Objects/Test_DAY/mission08 were omitted; existing
+Dev207 ARM and inspected host lack 15 required factories. Both source lists
+are corrected but uncompiled. All seven reference mission segments require
+fresh native verification. See [coverage audit](M13_VIDEO_COVERAGE_AUDIT.md).
+
 2026-09-27 Dev204: original icon, LiveArea background/gate, and launch image
 are version-stamped and packaged. Fast build, Vita3K install/readback and
 bounded LiveArea capture pass. This is emulator title-presentation evidence,

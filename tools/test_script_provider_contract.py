@@ -128,13 +128,16 @@ class ScriptProviderContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
         self.assertIn("original script translation units", bridge)
-        self.assertRegex(
-            cmake,
-            r"\$\{RENEGADE_SCRIPT_SOURCE\}/MissionX0\.cpp\s*"
-            r"\$\{RENEGADE_SCRIPT_SOURCE\}/Test_DLS\.cpp\s*"
-            r"APPEND PROPERTY\s*COMPILE_OPTIONS\s*"
-            r"\"-include\$\{RENEGADE_COMPAT\}/renegade_script_call_defaults\.h\"",
-        )
+        blocks = re.findall(r"set_property\(SOURCE\s+([^)]*)\)", cmake)
+        shared = [block for block in blocks
+                  if 'renegade_script_call_defaults.h' in block]
+        self.assertEqual(len(shared), 1)
+        for owner in ("MissionX0.cpp", "Test_DLS.cpp", "Toolkit.cpp", "Toolkit_Objects.cpp"):
+            self.assertIn("${RENEGADE_SCRIPT_SOURCE}/" + owner, shared[0])
+        area2 = [block for block in blocks
+                 if 'renegade_m13_area2_script_defaults.h' in block]
+        self.assertEqual(len(area2), 1)
+        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Test_RAD.cpp", area2[0])
         self.assertIn(
             "Create_Explosion_At_Bone(explosion, object, bone, NULL)", bridge
         )

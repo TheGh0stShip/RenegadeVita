@@ -20,6 +20,20 @@ KINDS = (
 )
 
 
+def require_linked_scripts(scan: dict, linked_scripts: set[str]) -> set[str]:
+    # Text-only attachment lists omitted all of Area 2 and its helper owners.
+    # Refuse old inventories instead of silently accepting partial coverage.
+    dependencies = scan.get("script_dependency_inventory")
+    if not dependencies or dependencies["unresolved_literal_scripts"]:
+        raise ValueError("M13 requires a complete source script dependency inventory")
+    required = {row["name"].lower() for row in dependencies["required_scripts"]}
+    required.update(name.lower() for name in scan["text_inventory"]["referenced_scripts"])
+    missing = sorted(required - {name.lower() for name in linked_scripts})
+    if missing:
+        raise ValueError(f"M13 script factories absent from executable: {missing}")
+    return required
+
+
 def runtime_cycles(path: Path) -> list[dict[str, list[list[str]]]]:
     cycles = []
     current = {kind: [] for kind in KINDS}
@@ -79,11 +93,7 @@ def summarize(scan: dict, cycles: list[dict[str, list[list[str]]]]) -> dict:
     if any(row[1] == "0" for row in first["cinematic_preset"]):
         raise ValueError("M13 cinematic preset missing from original definitions")
     linked_scripts = {row[0].lower() for row in first["linked_script"]}
-    required_scripts = {name.lower() for name in scan["text_inventory"]["referenced_scripts"]}
-    required_scripts.add("mx0_missionstart_dme")
-    missing_scripts = sorted(required_scripts - linked_scripts)
-    if missing_scripts:
-        raise ValueError(f"M13 script factories absent from executable: {missing_scripts}")
+    required_scripts = require_linked_scripts(scan, linked_scripts)
     if not first["script_registry_summary"] or len(first["linked_script"]) != int(first["script_registry_summary"][0][0]):
         raise ValueError("M13 script registry summary disagrees with linked factories")
     if len(first["object"]) != int(first["inventory_summary"][0][0]):

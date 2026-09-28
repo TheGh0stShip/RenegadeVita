@@ -152,6 +152,15 @@ The force-included `renegade_target_abi.h` enforces the native target contract;
 
 ## Non-negotiable implementation rules
 
+Campaign coverage must name complete original mission sequences and their
+dependencies, including rescue/repair/vehicle handoffs and cinematic effects.
+Require original script source selection, defined linked factories, actual
+runtime registration/attachments, and matching visual progression evidence.
+An intro replay or map load cannot close a later sequence. The Scorpion
+Hunters baseline audit is `M13_VIDEO_COVERAGE_AUDIT.md`; its video M01 label
+maps to engine M13.mix. New source/link gates prevent the confirmed five-unit
+omission from silently passing another canonical or fast candidate build.
+
 Preserve original MIX/filesystem/W3D/WW3D/Combat/Commando/WWNet ownership;
 replace boundaries narrowly. No custom runtime worlds, physics, game loop, or
 retail redistribution. Do not deploy automatically. Every candidate preserves

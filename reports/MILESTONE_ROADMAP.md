@@ -1,5 +1,17 @@
 # Capability roadmap
 
+2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
+mission-rank persistence, radio-input and round-transition gaps are confirmed;
+projector render targets remain unsupported. Nested W3D scan finds 14 unresolved
+texture names as leads, not confirmed asset defects. 81 Python checks pass,
+no build/launch or native acceptance. See [follow-up audit](DEEP_AUDIT_FOLLOWUP.md).
+
+2026-09-27 priority correction: restore and verify the omitted original M13
+Area 2 and shared script dependencies before accepting campaign coverage or
+representative performance. Five original units are source-selected, not
+compiled; seven video-mapped segments remain natively unverified. See
+[coverage audit](M13_VIDEO_COVERAGE_AUDIT.md). Build/launch hold remains active.
+
 2026-09-27 checkpoint: Dev204 is the current published fast ARM/Vita3K title-
 presentation candidate. Its original icon and version-stamped LiveArea are
 visually verified in Vita3K, not on physical Vita. Dev202 remains the latest

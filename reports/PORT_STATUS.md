@@ -1,5 +1,9 @@
 # Renegade Vita port status
 
+The complete audit series, reproduction steps, unbuilt-source limitations and
+repository protection status are collected in the
+[content audit index](CONTENT_AUDIT_INDEX.md).
+
 2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
 mission-rank persistence, radio-input and round-transition gaps are confirmed;
 projector render targets remain unsupported. Nested W3D scan finds 14 unresolved

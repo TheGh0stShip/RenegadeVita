@@ -5,7 +5,8 @@
 Renegade Vita — v3.5 active
 `[░░░░░░░] 0/7 corrected-source reference segments natively accepted`
 
-Now: publish the audit series and reproducible tools for review.
+Now: synchronize the documented audit series and tools to main and the audit
+branch as requested. See [publication index](CONTENT_AUDIT_INDEX.md).
 Completed: original particle lifetime/LOD bootstrap omission, non-durable
 mission ranks, remote round-restart exit, excluded radio input, and unsupported
 projector render targets traced. Nested scan: 53,284 texture and 32,516 HLOD

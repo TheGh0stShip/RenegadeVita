@@ -1,5 +1,82 @@
 # Live engineering progress
 
+## Follow-up sweep — source findings retained
+
+Renegade Vita — v3.5 active
+`[░░░░░░░] 0/7 corrected-source reference segments natively accepted`
+
+Now: publish the audit series and reproducible tools for review.
+Completed: original particle lifetime/LOD bootstrap omission, non-durable
+mission ranks, remote round-restart exit, excluded radio input, and unsupported
+projector render targets traced. Nested scan: 53,284 texture and 32,516 HLOD
+references; 14 unresolved texture names retained as leads.
+Evidence: 81 Python checks pass; 3,330 W3D members parse without nested errors.
+Next: original-owner restoration and remaining dynamic/mission-chain discovery.
+Blocker: build/launch hold; no new native evidence. See
+[follow-up findings](DEEP_AUDIT_FOLLOWUP.md).
+
+## Cross-system deep discovery reconciled — findings open
+
+Renegade Vita — v3.5 active
+`[█████████] 9/9 requested static audit areas reviewed; no new native acceptance`
+
+Now: findings retained in [deep audit](CROSS_SYSTEM_DEEP_AUDIT.md), which
+supersedes the narrower historical counts below.
+Completed: 17 maps, 3,330 W3D entries, 17 saves and all nine requested areas;
+four missing loader registrations, five unselected script owners, Options and
+death/failure routing gaps, save feedback and multiplayer omissions identified.
+Evidence: 77 Python checks pass; coverage guard correctly fails with 73 grouped
+findings. Review completion is not a passed gameplay/evidence gate.
+Next: restore original WW3D bootstrap/owners, required scripts, frontend/save
+routes and multiplayer owners in that order, then native validation when allowed.
+Blocker: runtime verification remains held by the existing user restriction.
+
+Tutorial sweep: Test_DAK.cpp is missing from both source lists; its camera-
+shake death script is saved on four training buildings. Existing Dev207 also
+lacks two factories from already source-selected Toolkit/Toolkit_Objects.
+301 presets/27 scripts, 53 present persistence factories, 97 source-bound
+callbacks; conservative envelope 567 presets. 25 Python checks pass. No build
+or launch, no new native gate. Next: integrate Test_DAK and gate tutorial
+registry coverage. See [tutorial audit](M00_AGGRESSIVE_DISCOVERY.md).
+
+Aggressive M13 follow-up: 326 typed presets, 75 scripts, 149 physics records,
+43 present factory owners/Load methods and 102 source-bound callbacks.
+Conservative 1,118-preset envelope finds no fourth confirmed missing file;
+Mission11.cpp is an unconfirmed shared-table lookup lead. The three previously
+confirmed omissions remain unintegrated. 24 Python checks pass; no build or
+launch. Next: integrate the three owners and expand the old 62-script gate.
+Native reference acceptance remains 0/7. See [sweep](M13_AGGRESSIVE_DISCOVERY.md).
+
+## Additional M13 owner audit
+
+Now: three further missing original files identified, not yet integrated:
+Mission03.cpp, Test_RMV_Toolkit.cpp, Toolkit_Sounds.cpp.
+Completed: read-only LDD/LSD/preset traversal, 100 script bindings, 301
+reachable definitions and 75-script closure; 41 persistence-factory owners
+and defined Load methods checked. No additional non-script owner gap found
+within that scope. Seventeen Python audit tests pass; no C++ executed.
+Next: integrate the three owners, extend the candidate gate beyond its old
+62 roots, then compile and verify when the build restriction is lifted.
+Blocker: builds/launches held; 0/7 corrected-source reference segments natively
+accepted. Details: `M13_ADDITIONAL_SOURCE_OWNERS.md`.
+
+## Video reference: omitted M13 segment and dependency correction
+
+Renegade Vita — v3.5 active
+`[░░░░░░░] 0/7 reference mission segments natively verified on corrected source`
+
+Now: five omitted original script units source-selected; no compilation.
+Completed: sequential video/caption review, source/text dependency closure,
+and new source/link/runtime-inventory gates. Existing host and Dev207 ARM
+independently fail for the same 15 missing factories among 62 required.
+Evidence: 28 Python tests, shell syntax and diff checks pass; retail inventory
+and before/after source-selection receipts retained. No new physical gate.
+Next: after builds are allowed, compile original units and bridges, verify
+actual registry/preset attachment and the full rescue/repair/vehicle-to-ending
+route with matching evidence. Extend preset/dynamic coverage separately.
+Blocker: prior no-build/no-launch restriction; native content, freeze and
+performance correction unverified. See `M13_VIDEO_COVERAGE_AUDIT.md`.
+
 ## Source-Only Freeze Audit
 
 Verification blocked pending clarification of asset-free sanitizer compilation.

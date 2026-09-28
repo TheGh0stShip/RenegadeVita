@@ -13,6 +13,11 @@ from collections import Counter, defaultdict, deque
 from pathlib import Path
 from typing import Any
 
+if __package__:
+    from .check_m13_script_coverage import script_dependencies
+else:
+    from check_m13_script_coverage import script_dependencies
+
 
 DEFAULT_ARCHIVES = (
     Path("build/dev136-host/retail/Data/M13.mix"),
@@ -646,6 +651,9 @@ def mission_inventory(archive: MixArchive, root: Path) -> dict[str, Any]:
         "text_inventory": text_scan,
         "binary_inventory": binary_scan,
         "source_inventory": source_scan,
+        "script_dependency_inventory": script_dependencies(
+            root / "upstream/CnC_Renegade/Code/Scripts",
+            text_scan["referenced_scripts"]),
         "source_chunk_inventory": chunk_source_scan,
         "gaps": {
             "data_scripts_without_source_declare_name_match": canonical({

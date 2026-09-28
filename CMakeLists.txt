@@ -315,7 +315,12 @@ set(RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
 	)
 set(RENEGADE_CAMPAIGN_SCRIPT_SOURCES
   ${RENEGADE_SCRIPT_SOURCE}/MissionX0.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Test_RAD.cpp
   ${RENEGADE_SCRIPT_SOURCE}/Test_DLS.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Test_DAY.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Toolkit.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Objects.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/mission08.cpp
   ${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp)
 if(NOT RENEGADE_VITA_M00_DEMO)
   include(${RENEGADE_ROOT}/cmake/A35MultiplayerBuildingSources.cmake)
@@ -568,6 +573,9 @@ set_property(SOURCE
   ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   ${RENEGADE_SCRIPT_SOURCE}/MissionX0.cpp
   ${RENEGADE_SCRIPT_SOURCE}/Test_DLS.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Test_DAY.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Toolkit.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Objects.cpp
   APPEND PROPERTY
   COMPILE_OPTIONS
   "-include${RENEGADE_COMPAT}/renegade_script_call_defaults.h")
@@ -575,6 +583,14 @@ set_property(SOURCE
   ${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp
   APPEND PROPERTY COMPILE_OPTIONS
   "-include${RENEGADE_COMPAT}/renegade_m01_script_defaults.h")
+set_property(SOURCE
+  ${RENEGADE_SCRIPT_SOURCE}/Test_RAD.cpp
+  APPEND PROPERTY COMPILE_OPTIONS
+  "-include${RENEGADE_COMPAT}/renegade_m13_area2_script_defaults.h")
+set_property(SOURCE
+  ${RENEGADE_SCRIPT_SOURCE}/mission08.cpp
+  APPEND PROPERTY COMPILE_OPTIONS
+  "-include${RENEGADE_COMPAT}/renegade_m08_script_defaults.h")
 target_link_options(${PROJECT_NAME} PRIVATE
   -fshort-wchar
   -Wl,--gc-sections

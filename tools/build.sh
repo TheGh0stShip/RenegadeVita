@@ -187,6 +187,8 @@ else
 	echo "Local retail preflight: not required for retained host validation mode"
 fi
 
+python3 "$rv_root/tools/check_m13_script_coverage.py" --root "$rv_root" \
+	> "$rv_root/build/${rv_candidate_label}-m13-script-source-coverage.json"
 if [[ -n "${RENEGADE_REUSE_HOST_VALIDATION_LOG:-}" ]]; then
 	rv_reused_host_log=$(realpath -e -- "$RENEGADE_REUSE_HOST_VALIDATION_LOG")
 	echo "Reusing completed canonical host validation: $rv_reused_host_log"
@@ -257,6 +259,7 @@ require_host_line "world.render.unsupported_submissions=0"
 require_host_line "A3.0 original M00 world runtime: PASS"
 echo "Host semantic fingerprints: PASS"
 python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_identity \
+	tools.test_m13_script_coverage tools.test_m13_mission_inventory \
 	tools.test_integration_source_inventory \
 	tools.test_vita_sampler_cache tools.diagnostics.test_renegade_vita_performance_ledger \
 	tools.test_vita_material_cache tools.test_vita_index_preparation \
@@ -347,6 +350,8 @@ grep -q 'Class:.*ELF32' "$rv_elf_header"
 grep -q 'Data:.*little endian' "$rv_elf_header"
 grep -q 'Machine:.*ARM' "$rv_elf_header"
 "$rv_vitasdk/bin/arm-vita-eabi-nm" -C "$rv_elf" > "$rv_symbols"
+python3 "$rv_root/tools/check_m13_script_coverage.py" --root "$rv_root" --symbols "$rv_symbols" \
+	> "$rv_build/m13-script-link-coverage.json"
 "$rv_vitasdk/bin/arm-vita-eabi-objdump" -d "$rv_elf" > "$rv_disassembly"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"

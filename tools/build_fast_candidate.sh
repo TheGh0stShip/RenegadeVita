@@ -76,6 +76,8 @@ for rv_command in cmake ninja python3 git unzip sha256sum grep find tee wc ccach
 	require_command "$rv_command"
 done
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --count
+python3 "$rv_root/tools/check_m13_script_coverage.py" --root "$rv_root" \
+	> "$rv_root/build/${rv_candidate_label}-fast-m13-script-source-coverage.json"
 for rv_sdk_path in \
 	"$rv_vitasdk/bin/arm-vita-eabi-readelf" \
 	"$rv_vitasdk/bin/arm-vita-eabi-nm" \
@@ -123,6 +125,7 @@ fi
 if [[ "$rv_fast_tests" == "focused" ]]; then
 	echo "Running focused fast contracts..."
 	python3 -m unittest \
+		tools.test_m13_script_coverage tools.test_m13_mission_inventory \
 		tools.test_vita_text_readiness \
 		tools.test_wwui_resource_styles \
 		tools.test_vita_user_settings \
@@ -217,6 +220,8 @@ grep -q 'Class:.*ELF32' "$rv_elf_header"
 grep -q 'Data:.*little endian' "$rv_elf_header"
 grep -q 'Machine:.*ARM' "$rv_elf_header"
 "$rv_vitasdk/bin/arm-vita-eabi-nm" -C "$rv_elf" > "$rv_symbols"
+python3 "$rv_root/tools/check_m13_script_coverage.py" --root "$rv_root" --symbols "$rv_symbols" \
+	> "$rv_build/m13-script-link-coverage.json"
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'

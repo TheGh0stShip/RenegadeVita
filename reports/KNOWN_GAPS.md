@@ -1,5 +1,55 @@
 # Known gaps
 
+2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
+mission-rank persistence, radio-input and round-transition gaps are confirmed;
+projector render targets remain unsupported. Nested W3D scan finds 14 unresolved
+texture names as leads, not confirmed asset defects. 81 Python checks pass,
+no build/launch or native acceptance. See [follow-up audit](DEEP_AUDIT_FOLLOWUP.md).
+
+2026-09-27 cross-system deep audit supersedes the narrower historical audit
+counts below. All nine requested areas reviewed across 17 maps: four original
+WW3D loader registrations missing (three owners unselected), five required
+script owners unselected, Options/death/failure UI gaps, unchecked save-write
+feedback, and multiplayer resource/event omissions. Mission11.cpp is confirmed
+for M01; its earlier M13-only lead remains distinct. 77 Python checks pass;
+the standalone coverage guard correctly reports INCOMPLETE (73 grouped
+findings). No compilation, launch or new native acceptance. Restore original
+owners and routes before claiming coverage. Details and reproduction:
+[cross-system deep audit](CROSS_SYSTEM_DEEP_AUDIT.md).
+
+Earlier audit snapshots follow; their counts are historical.
+
+Tutorial sweep: Test_DAK.cpp is missing from both source lists; its camera-
+shake death script is saved on four training buildings. Existing Dev207 also
+lacks two factories from already source-selected Toolkit/Toolkit_Objects.
+301 presets/27 scripts, 53 present persistence factories, 97 source-bound
+callbacks; conservative envelope 567 presets. 25 Python checks pass. No build
+or launch, no new native gate. Next: integrate Test_DAK and gate tutorial
+registry coverage. See [tutorial audit](M00_AGGRESSIVE_DISCOVERY.md).
+
+Aggressive M13 follow-up: 326 typed presets, 75 scripts, 149 physics records,
+43 present factory owners/Load methods and 102 source-bound callbacks.
+Conservative 1,118-preset envelope finds no fourth confirmed missing file;
+Mission11.cpp is an unconfirmed shared-table lookup lead. The three previously
+confirmed omissions remain unintegrated. 24 Python checks pass; no build or
+launch. Next: integrate the three owners and expand the old 62-script gate.
+Native reference acceptance remains 0/7. See [sweep](M13_AGGRESSIVE_DISCOVERY.md).
+
+M13 binary/preset audit confirms three more missing script units:
+Mission03.cpp (SAM logic/destruction), Test_RMV_Toolkit.cpp (six environmental
+sound emitters), Toolkit_Sounds.cpp (four building-state speakers and their
+controller). These remain unintegrated. The earlier 62-script gate is not
+complete coverage; expanded closure requires 75. See
+[additional owners](M13_ADDITIONAL_SOURCE_OWNERS.md).
+
+2026-09-27 video audit: existing Dev207 ARM and inspected host binaries omit
+Test_RAD's entire M13 Area 2 script set plus required toolkit/cinematic
+helpers: 15 missing factory methods. Five original units are now source-
+selected but uncompiled. Rescue waves, engineer repair, tank handoff, later
+cinematics/dialogue and normal completion require fresh verification. Seven
+reference segments remain natively unverified. See
+[audit](M13_VIDEO_COVERAGE_AUDIT.md).
+
 2026-09-27: the omitted original sorting renderer is now selected by the full
 port; native visual/effect-capacity validation remains pending. Two full M13
 host intro cycles pass ASan/LSan and original rappel/camera/engineer checks,

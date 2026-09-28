@@ -673,7 +673,12 @@ add_executable(a31_interactive_runtime
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
   ${RV_SCRIPT_SOURCE}/MissionX0.cpp
   ${RV_SCRIPT_SOURCE}/Mission01.cpp
+  ${RV_SCRIPT_SOURCE}/Test_RAD.cpp
   ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DAY.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Objects.cpp
+  ${RV_SCRIPT_SOURCE}/mission08.cpp
   ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
   ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   ${RV_STAGE}/wwlib/pipe.cpp
@@ -879,7 +884,12 @@ set_source_files_properties(
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
   ${RV_SCRIPT_SOURCE}/MissionX0.cpp
   ${RV_SCRIPT_SOURCE}/Mission01.cpp
+  ${RV_SCRIPT_SOURCE}/Test_RAD.cpp
   ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DAY.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Objects.cpp
+  ${RV_SCRIPT_SOURCE}/mission08.cpp
   ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
   ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
@@ -889,6 +899,9 @@ set_property(SOURCE
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
   ${RV_SCRIPT_SOURCE}/MissionX0.cpp
   ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DAY.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Objects.cpp
   ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
   ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
   APPEND PROPERTY
@@ -898,6 +911,14 @@ set_property(SOURCE
   ${RV_SCRIPT_SOURCE}/Mission01.cpp
   APPEND PROPERTY COMPILE_OPTIONS
   "-include${RV_COMPAT}/renegade_m01_script_defaults.h")
+set_property(SOURCE
+  ${RV_SCRIPT_SOURCE}/Test_RAD.cpp
+  APPEND PROPERTY COMPILE_OPTIONS
+  "-include${RV_COMPAT}/renegade_m13_area2_script_defaults.h")
+set_property(SOURCE
+  ${RV_SCRIPT_SOURCE}/mission08.cpp
+  APPEND PROPERTY COMPILE_OPTIONS
+  "-include${RV_COMPAT}/renegade_m08_script_defaults.h")
 set_source_files_properties(
   ${RV_STAGE}/combat/scripts.cpp
   PROPERTIES

@@ -9,15 +9,17 @@ DETAIL = re.compile(r'instance=(\d+) conversation_id=(-?\d+) action=(-?\d+) rema
 MONITOR = re.compile(r'instance=(\d+) conversation_id=(-?\d+) action=(-?\d+) object_id=(-?\d+) observer_index=(-?\d+) reason=(-?\d+)')
 TIMER = re.compile(r'object_id=(-?\d+) observer_id=(-?\d+) timer_id=(-?\d+)')
 ACTION = re.compile(r'object_id=(-?\d+) observer_id=(-?\d+) action_id=(-?\d+) reason=(-?\d+)')
+LOGICAL = re.compile(r'sound_id=(-?\d+) type=(-?\d+) receiver_id=(-?\d+) creator_id=(-?\d+) observers_active=([01])')
 
 
 def analyze(events):
     rows, monitors, timer_misses, action_misses, findings, identities = [], [], [], [], [], set()
     zero, unknown, dropped = 0, 0, 0
+    logical_stimuli = []
     for index, event in enumerate(events):
         if not isinstance(event, dict):
             raise ValueError('event must be an object')
-        if event.get('category') not in ('conversation', 'script_timer', 'script_action'):
+        if event.get('category') not in ('conversation', 'script_timer', 'script_action', 'logical_stimulus'):
             continue
         identity = (event.get('candidate'), event.get('archive'), event.get('load_source'))
         if not all(isinstance(value, str) and value for value in identity):
@@ -26,6 +28,27 @@ def analyze(events):
         name, detail = event.get('name'), event.get('detail')
         if not isinstance(detail, str) or len(detail) > 223:
             raise ValueError('invalid bounded conversation detail')
+        if event.get('category') == 'logical_stimulus':
+            if name not in ('configured_before_scene_add', 'hearing_callback_entry'):
+                findings.append({'record': index, 'kind': 'unrecognized_logical_stimulus_event'})
+                continue
+            match = LOGICAL.fullmatch(detail)
+            if not match:
+                raise ValueError('malformed numeric logical stimulus')
+            values = list(map(int, match.groups()))
+            if any(not -2**31 <= value < 2**31 for value in values[:4]):
+                raise ValueError('logical stimulus numeric width exceeded')
+            if values[1] not in (400004, 400005):
+                raise ValueError('unsupported focused logical stimulus type')
+            if name == 'configured_before_scene_add' and (values[2] != 0 or values[4] != 0):
+                raise ValueError('creation record cannot claim receiver or observer activity')
+            logical_stimuli.append({'record': index, 'event': name, 'sound_id': values[0],
+                                    'type': values[1], 'receiver_id': values[2],
+                                    'creator_id': values[3], 'observers_active': bool(values[4]),
+                                    'observer_callback_delivery_proven': False})
+            if name == 'hearing_callback_entry' and not values[4]:
+                findings.append({'record': index, 'kind': 'observers_inactive_at_hearing_entry'})
+            continue
         if event.get('category') == 'script_action':
             if name != 'observer_absent_at_completion':
                 findings.append({'record': index, 'kind': 'unrecognized_action_event'})
@@ -104,13 +127,16 @@ def analyze(events):
     return {'schema': 1, 'identity': list(next(iter(identities))) if identities else None,
             'transitions': rows, 'monitor_events': monitors, 'timer_misses': timer_misses,
             'action_misses': action_misses,
+            'logical_stimuli': logical_stimuli,
             'findings': findings, 'queue_unretained': dropped,
             'nonpositive_remark_timers': zero, 'unknown_instance_records': unknown,
             'callback_delivery_verified': False, 'complete_progression_verified': False,
             'limits': ['One process capture only; tokens are reused across application launches.',
                        'Timer miss may reflect legitimate observer removal; it is not mission failure proof.',
                        'Action miss is not request rejection, callback delivery or mission failure proof.',
-                       'Overflow is shared across conversation, timer and action diagnostics and cannot be attributed by type.',
+                       'Overflow is shared across conversation, timer, action and logical diagnostics and cannot be attributed by type.',
+                       'Stimulus configuration precedes scene insertion; hearing entry is not prisoner observer callback delivery.',
+                       'Logical sound IDs are not paired across resets, loads or missing lifecycle evidence.',
                        'Owner finish is not observer callback delivery or success.',
                        'Missing transitions may reflect opt-out, queue loss or ring eviction.',
                        'No pairing across absent start, reset, load or lifecycle evidence.']}

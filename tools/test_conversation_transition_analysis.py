@@ -11,6 +11,46 @@ def event(name='remark_scheduled', detail=None, **extra):
 
 
 class TransitionAnalysis(unittest.TestCase):
+    def test_logical_configuration_and_hearing_are_distinct_not_delivery(self):
+        rows = [event('configured_before_scene_add', 'sound_id=8 type=400004 receiver_id=0 creator_id=100 observers_active=0', category='logical_stimulus'),
+                event('hearing_callback_entry', 'sound_id=8 type=400004 receiver_id=200 creator_id=100 observers_active=1', category='logical_stimulus')]
+        report = analyze(rows)
+        self.assertEqual(len(report['logical_stimuli']), 2)
+        self.assertEqual(report['logical_stimuli'][1]['receiver_id'], 200)
+        self.assertFalse(report['logical_stimuli'][1]['observer_callback_delivery_proven'])
+        self.assertFalse(report['callback_delivery_verified'])
+
+    def test_logical_malformed_width_type_boolean_and_creation_shape(self):
+        base = 'sound_id=8 type=400004 receiver_id=200 creator_id=100 observers_active=1'
+        invalid = ['bad', base + ' extra=1', 'x' * 224,
+                   base.replace('observers_active=1', 'observers_active=2'),
+                   base.replace('type=400004', 'type=77')]
+        for field, value in (('sound_id', 8), ('type', 400004), ('receiver_id', 200), ('creator_id', 100)):
+            for bad in (2147483648, -2147483649):
+                invalid.append(base.replace(f'{field}={value}', f'{field}={bad}'))
+        for detail in invalid:
+            with self.subTest(detail=detail), self.assertRaises(ValueError):
+                analyze([event('hearing_callback_entry', detail, category='logical_stimulus')])
+        with self.assertRaises(ValueError):
+            analyze([event('configured_before_scene_add', base, category='logical_stimulus')])
+
+    def test_logical_repetitions_inactive_observers_and_shared_loss_retained(self):
+        row = event('hearing_callback_entry', 'sound_id=8 type=400005 receiver_id=200 creator_id=0 observers_active=0', category='logical_stimulus')
+        report = analyze([row, row, event('queue_overflow', 'unretained=4')])
+        self.assertEqual(len(report['logical_stimuli']), 2)
+        self.assertEqual(report['queue_unretained'], 4)
+        self.assertEqual(report['findings'][0]['kind'], 'observers_inactive_at_hearing_entry')
+        self.assertFalse(report['complete_progression_verified'])
+
+    def test_logical_identity_and_future_events_do_not_create_false_pairs(self):
+        row = event('hearing_callback_entry', 'sound_id=8 type=400005 receiver_id=200 creator_id=0 observers_active=1', category='logical_stimulus')
+        for field in ('candidate', 'archive', 'load_source'):
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'mixed'):
+                analyze([event(), {**row, field: 'different'}])
+        report = analyze([event('future_event', 'unknown', category='logical_stimulus')])
+        self.assertEqual(report['logical_stimuli'], [])
+        self.assertEqual(report['findings'][0]['kind'], 'unrecognized_logical_stimulus_event')
+
     def test_action_miss_is_not_delivery_or_mission_failure(self):
         report = analyze([event('observer_absent_at_completion',
                                 'object_id=100 observer_id=9 action_id=-1 reason=3', category='script_action')])

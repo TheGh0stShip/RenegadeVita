@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Logical stimulus offline analysis — 2026-10-03
+
+Completed:typed configuration/hearing records added to offline analyzer with
+strict widths, event types, booleans, identity and creation-shape checks.
+Evidence:42 consumer/source/bundle tests. Repeated IDs and shared losses retained;
+entry records do not prove prisoner callback completion or mission progression.
+C++ hooks uncompiled; no build, launch or retail mutation; native gates0/10.
+
 ## Focused logical stimulus source diagnostics — 2026-10-03
 
 Completed:opt-in numeric M01 detention stimulus configuration/hearing-entry

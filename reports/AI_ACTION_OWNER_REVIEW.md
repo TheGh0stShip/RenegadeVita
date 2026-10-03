@@ -115,8 +115,18 @@ The existing opt-in, mutex-protected128-entry queue, owner-thread drain and
 saturating overflow counter are reused. Queue/ring loss prevents absence claims.
 No save fields or original listener scheduling change. Both source files have
 SHA-anchored zero-fuzz staging registration;302 patches are registered. Nine
-focused source checks pass; C++ compilation, typed offline analysis and native
-delivery remain open. Entry events never prove prisoner callback completion.
+focused source checks pass; C++ compilation and native delivery remain open.
+Entry events never prove prisoner callback completion.
+
+The offline analyzer now retains typed logical stimulus records separately from
+conversation, timer and action records. It checks bounded signed32-bit fields,
+the two focused event types, boolean observer activity, creation-record shape
+and shared candidate/archive/load identity. Repeated IDs are not paired or
+deduplicated. Unknown event names remain findings, and inactive observers are
+reported at hearing entry without inferring a failed mission. Shared overflow
+remains unattributed; resets, loads, ring eviction and opt-out prevent absence
+claims. Forty-two consumer/source/bundle checks pass. No synthetic fixture is
+treated as a native callback or prisoner-progression result.
 
 Original Create_Logical_Sound creates a single-shot scene stimulus with creator
 reference, type, position and radius; it does not require audible playback.

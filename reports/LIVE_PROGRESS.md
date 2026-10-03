@@ -2,6 +2,12 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+Renderer diagnostics batch: six mesh-debugger methods and two texture/sorting
+accounting hooks reviewed as empty compatibility methods. Original console,
+frame-update and macro references retained; native telemetry equivalence and
+gameplay dependence remain unverified. S1 totals: 39 stubs, one replaced
+boundary, six disabled guards, 3,485 unknown. Twenty-seven tests pass.
+
 Review validity batch: function classifications now bind surrounding build
 conditions as well as body/definition identity. A changed branch invalidates
 an unchanged body review. Inventory records generator and parser-input hashes.

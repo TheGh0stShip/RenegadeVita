@@ -2,9 +2,9 @@
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,531 records with 31 fallback/diagnostic functions reviewed as
+source contains 3,531 records with 39 fallback/diagnostic functions reviewed as
 `stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, 6
-guards as `disabled_by_port_guard`, and 3,493
+guards as `disabled_by_port_guard`, and 3,485
 records still `unknown`. All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -89,6 +89,13 @@ build/sweep-parser-venv/bin/python -m unittest discover -s tools -p test_audit_s
 build/sweep-parser-venv/bin/python -m unittest discover -s tools -p test_sweep_cpp_functions.py
 build/sweep-parser-venv/bin/python tools/audit_sweep_port_guards.py --include-functions --output reports/generated/sweeps/port_guards.json
 ```
+
+Six original mesh-debugger methods and two Debug_Statistics accounting methods
+are empty in the native boundary. Original console output, enable/disable
+commands and game-mode frame updates reference the debugger; statistics macros
+reference the counters. Exact macro/build reachability and equivalence with
+native telemetry remain open. These are diagnostic gaps, not established retail
+gameplay omissions or proven exclusions.
 
 Twenty-seven parser/review tests pass locally. Function reviews bind their
 preprocessor context, preventing an unchanged body moved into another build

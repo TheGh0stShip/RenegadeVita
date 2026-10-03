@@ -3694,7 +3694,7 @@
     "tools/stage_sources.sh": "54fd1a9a00645c71da6198b69e994aae18ac35b4fbf0b1b44d8fcb867a8eee22",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/port_guards.json": "d474c95576e9e32af8bce8aed618e4c21336b31db6908257f88cba6fc3ed06db",
+    "tools/sweep_reviews/port_guards.json": "1647cad45980eb865d23007b5e033d5565a9b771b35709a596ca2d4dc4fcb824",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -97184,6 +97184,7 @@
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8RendererDebugger::Get_String(StringClass &)",
       "definition_sha256": "89ecc67c92936486095439ce03b6118ffb63fd9220cafdb6e5223ec96c0f080d",
       "end_byte": 3576,
@@ -97198,18 +97199,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+        "callers": [
+          "staging/commando/console.cpp:805 Get_String",
+          "staging/commando/gamemode.cpp:228 Update",
+          "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+        ],
+        "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text"
+      },
       "row_id": "6235c9d08e1dd8c3962df1bf78eb8d4d1913449c708dbbc8baf932d0240bf942",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 3522,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8RendererDebugger::Update()",
       "definition_sha256": "8356d1cf7c7c98ca01233772ce58a29a9b4c140cb11e0ea70034232e0ebffeb1",
       "end_byte": 3614,
@@ -97224,18 +97239,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+        "callers": [
+          "staging/commando/console.cpp:805 Get_String",
+          "staging/commando/gamemode.cpp:228 Update",
+          "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+        ],
+        "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text"
+      },
       "row_id": "7c092175e083dc0d314d41db381ee279a1f00c068302cfcc5a1b10f6d4f87454",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 3577,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8RendererDebugger::Disable_Mesh(unsigned)",
       "definition_sha256": "5db6d058916f0142880f2cad1650d8675c4375944413d340f7cd6f65a2135199",
       "end_byte": 3666,
@@ -97250,18 +97279,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+        "callers": [
+          "staging/commando/console.cpp:805 Get_String",
+          "staging/commando/gamemode.cpp:228 Update",
+          "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+        ],
+        "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text"
+      },
       "row_id": "a4e4921575dc1a9b40ecefcfc6bf62023331a40bc27669356ef0436b6d8306ed",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 3615,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8RendererDebugger::Enable_Mesh(unsigned)",
       "definition_sha256": "d1ed70df82cc85514d9c474bd87e134482f7da54168bf8a58986b034fa815eec",
       "end_byte": 3717,
@@ -97276,18 +97319,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+        "callers": [
+          "staging/commando/console.cpp:805 Get_String",
+          "staging/commando/gamemode.cpp:228 Update",
+          "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+        ],
+        "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text"
+      },
       "row_id": "a949d9271e0183160132f1b50a61026a5cf8c9bffe7a957c9040e5e00944f7f0",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 3667,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8RendererDebugger::Disable_All()",
       "definition_sha256": "c7abe42124e2ae96d93d1cde61f4c5872a2a25427ce8593644c15ac803ae39f0",
       "end_byte": 3760,
@@ -97302,18 +97359,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+        "callers": [
+          "staging/commando/console.cpp:805 Get_String",
+          "staging/commando/gamemode.cpp:228 Update",
+          "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+        ],
+        "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text"
+      },
       "row_id": "1714ededc3fd263e0eb356da080fef51be616619b19983fe849bddf21f2beba4",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 3718,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8RendererDebugger::Enable_All()",
       "definition_sha256": "3d43ff2be5c4011ce5513a28bc4278fc8f443619c912c29c89b1dc3d2a86dfad",
       "end_byte": 3802,
@@ -97328,13 +97399,26 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+        "callers": [
+          "staging/commando/console.cpp:805 Get_String",
+          "staging/commando/gamemode.cpp:228 Update",
+          "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+        ],
+        "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text"
+      },
       "row_id": "36fa2ab43159bc8dace1f280d0ca6fbd4b506f61afcd025f278f9ddee025d151",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 3761,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -101657,6 +101741,7 @@
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "Record_Texture(TextureClass *)",
       "definition_sha256": "9fac1f5eea9044cd8697157ed00a1549b3485300e3f9f0579d384fde4d518583",
       "end_byte": 60253,
@@ -101671,18 +101756,31 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: does not update original texture memory/change accounting or sorting polygon/vertex counters. Alternative native telemetry exists but equivalence is unverified.",
+        "callers": [
+          "staging/ww3d2/statistics.h:72 DX8_RECORD_TEXTURE",
+          "staging/ww3d2/statistics.h:75 DX8_RECORD_SORTING_RENDER; macro expansion and build-mode reachability remain open"
+        ],
+        "original_owner": "Original Debug_Statistics texture and sorting counters"
+      },
       "row_id": "12449e3e7b7d51b380995044cc0c64621b3474bc852c474fc27e21a59d656480",
       "scope": "Debug_Statistics",
       "signals": [
         "empty_body"
       ],
       "start_byte": 60215,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "Record_Sorting_Polys_And_Vertices(int, int)",
       "definition_sha256": "0076d13acffe8c526f5a17ef3fe8d794987f4fd62af3684e1a5f32728f9da412",
       "end_byte": 60456,
@@ -101697,13 +101795,25 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
+        "affected_scope": [
+          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+        ],
+        "behavior": "Empty method: does not update original texture memory/change accounting or sorting polygon/vertex counters. Alternative native telemetry exists but equivalence is unverified.",
+        "callers": [
+          "staging/ww3d2/statistics.h:72 DX8_RECORD_TEXTURE",
+          "staging/ww3d2/statistics.h:75 DX8_RECORD_SORTING_RENDER; macro expansion and build-mode reachability remain open"
+        ],
+        "original_owner": "Original Debug_Statistics texture and sorting counters"
+      },
       "row_id": "f4b3e05873b0d42c4514ef4fcf2945d3b0cb884e785b8f0f2bdf7fd91f15029e",
       "scope": "Debug_Statistics",
       "signals": [
         "empty_body"
       ],
       "start_byte": 60405,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -127190,8 +127300,8 @@
     "by_status": {
       "boundary_replaced": 1,
       "disabled_by_port_guard": 6,
-      "stubbed_or_noop": 31,
-      "unknown": 3493
+      "stubbed_or_noop": 39,
+      "unknown": 3485
     },
     "patch_files": 310,
     "rows": 3531,

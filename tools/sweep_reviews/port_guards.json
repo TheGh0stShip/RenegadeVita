@@ -19,7 +19,14 @@
     "staging/combat/combatmaterialeffectmanager.cpp": "ce2b01c4e90f4a5b082c3177137bd70593b73b1d6138266738c0c08b518ad6f1",
     "staging/combat/physicalgameobj.cpp": "c6e69c617bd1e5b1e8152af8e82174c36612c541ff546c991e2860ae08e5fb94",
     "staging/combat/soldier.cpp": "3c251db6ab2d5ba6d31c9875f372eda959112f79ed289c90c9392aa7566c7a30",
-    "staging/combat/powerup.cpp": "f4d47f55cc0e2b5a331a1c6e2787df0d2a783837f00b038888291ff00e359306"
+    "staging/combat/powerup.cpp": "f4d47f55cc0e2b5a331a1c6e2787df0d2a783837f00b038888291ff00e359306",
+    "staging/ww3d2/dx8rendererdebugger.cpp": "9525c93c55ddca889a3ed10ae85380c243d2acba6140053aa5589899f53c766a",
+    "staging/ww3d2/statistics.cpp": "091c9021b0feebb0fc9fb8a1c85259f0d5ce4825b7b10cdd1d89f14b188e1972",
+    "staging/ww3d2/statistics.h": "e7674513e3b83f54da7e82d96e6626d8aff4148cef68aee57a0d1d7d829cc8ab",
+    "staging/commando/console.cpp": "91eb5ecf60bb9f5ef1f6a542652a59a9f179b221107cce342761c2c6991b5bad",
+    "staging/commando/consolefunction.cpp": "a686829dc324e66de19f3f86ca7689e19ef6f9af9ee0cf329c3ab1f9126e7cc0",
+    "staging/commando/gamemode.cpp": "011f8e5cd9941f8a901467a3ca49065ec166734ba7e12dec9525b8ebc6db582f",
+    "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50"
   },
   "reviews": [
     {
@@ -886,6 +893,156 @@
         "All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified."
       ],
       "acceptance_open": "Preserve original pass ownership, skin geometry, translucent filtering, deferred ordering and cull selection; restore native submission and verify representative effects physically. No runtime omission observation is claimed from this source review."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "DX8RendererDebugger::Get_String(StringClass &)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "89ecc67c92936486095439ce03b6118ffb63fd9220cafdb6e5223ec96c0f080d",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text",
+      "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+      "callers": [
+        "staging/commando/console.cpp:805 Get_String",
+        "staging/commando/gamemode.cpp:228 Update",
+        "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "DX8RendererDebugger::Update()",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "8356d1cf7c7c98ca01233772ce58a29a9b4c140cb11e0ea70034232e0ebffeb1",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text",
+      "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+      "callers": [
+        "staging/commando/console.cpp:805 Get_String",
+        "staging/commando/gamemode.cpp:228 Update",
+        "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "DX8RendererDebugger::Disable_Mesh(unsigned)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "5db6d058916f0142880f2cad1650d8675c4375944413d340f7cd6f65a2135199",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text",
+      "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+      "callers": [
+        "staging/commando/console.cpp:805 Get_String",
+        "staging/commando/gamemode.cpp:228 Update",
+        "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "DX8RendererDebugger::Enable_Mesh(unsigned)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "d1ed70df82cc85514d9c474bd87e134482f7da54168bf8a58986b034fa815eec",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text",
+      "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+      "callers": [
+        "staging/commando/console.cpp:805 Get_String",
+        "staging/commando/gamemode.cpp:228 Update",
+        "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "DX8RendererDebugger::Disable_All()",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "c7abe42124e2ae96d93d1cde61f4c5872a2a25427ce8593644c15ac803ae39f0",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text",
+      "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+      "callers": [
+        "staging/commando/console.cpp:805 Get_String",
+        "staging/commando/gamemode.cpp:228 Update",
+        "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "DX8RendererDebugger::Enable_All()",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "3d43ff2be5c4011ce5513a28bc4278fc8f443619c912c29c89b1dc3d2a86dfad",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original DX8RendererDebugger mesh hash, selection and diagnostic text",
+      "behavior": "Empty method: no mesh diagnostic output, tracking cleanup or per-mesh/all-mesh visibility mutation. The replacement does not maintain the original mesh hash.",
+      "callers": [
+        "staging/commando/console.cpp:805 Get_String",
+        "staging/commando/gamemode.cpp:228 Update",
+        "staging/commando/consolefunction.cpp:299-328 enable/disable commands; method-specific reference in this range"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "Record_Texture(TextureClass *)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "9fac1f5eea9044cd8697157ed00a1549b3485300e3f9f0579d384fde4d518583",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original Debug_Statistics texture and sorting counters",
+      "behavior": "Empty method: does not update original texture memory/change accounting or sorting polygon/vertex counters. Alternative native telemetry exists but equivalence is unverified.",
+      "callers": [
+        "staging/ww3d2/statistics.h:72 DX8_RECORD_TEXTURE",
+        "staging/ww3d2/statistics.h:75 DX8_RECORD_SORTING_RENDER; macro expansion and build-mode reachability remain open"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "Record_Sorting_Polys_And_Vertices(int, int)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "0076d13acffe8c526f5a17ef3fe8d794987f4fd62af3684e1a5f32728f9da412",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original Debug_Statistics texture and sorting counters",
+      "behavior": "Empty method: does not update original texture memory/change accounting or sorting polygon/vertex counters. Alternative native telemetry exists but equivalence is unverified.",
+      "callers": [
+        "staging/ww3d2/statistics.h:72 DX8_RECORD_TEXTURE",
+        "staging/ww3d2/statistics.h:75 DX8_RECORD_SORTING_RENDER; macro expansion and build-mode reachability remain open"
+      ],
+      "affected_scope": [
+        "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
+      ],
+      "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
     }
   ]
 }

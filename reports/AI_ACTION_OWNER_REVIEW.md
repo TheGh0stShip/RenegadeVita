@@ -349,6 +349,30 @@ does not cover every campaign preset or dynamic model. Private receipt:
 Next trace particle/dazzle rendering and their resource dependencies through
 the original owners; native visuals remain open under the build/launch hold.
 
+## Confirmed native dazzle presentation omission
+
+The retained ww3d2-a22-vita-boundaries patch makes original
+DazzleRenderObjClass::Render return immediately on RENEGADE_VITA_PORT. The
+original visibility/blink test and DazzleLayer visible-list participation are
+therefore skipped on this branch. Its older optional-presentation comment is
+not full-port completion evidence. The15 M01 helicopter light child records
+decoded above are concrete authored consumers of this unfinished boundary.
+Matching declaration names do not make these lights render. Physical impact
+has not been observed in this source-only review.
+
+Original DazzleLayer::Render calls Render_Dazzle for visible lists after camera
+application. A faithful completion must preserve original visibility, blinking,
+occlusion/layer ordering and render-object ownership while adapting DX8 geometry/
+state. No substitute effect or speculative renderer patch was introduced.
+
+Particle point/line groups are selected in original source lists and submit
+vertex/index buffers with Draw_Triangles through the existing native DX8 boundary.
+That route has no equivalent dazzle early return in the inspected functions;
+actual emitter texture, lifetime, blending, line modes and visual fidelity remain
+separate open gates. Private identities and affected records:
+`build/cinematic-dazzle-native-noop-owner-20261003.json`.
+No build, launch or native effect acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

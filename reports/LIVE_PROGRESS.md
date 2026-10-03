@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Confirmed native dazzle presentation omission — 2026-10-03
+
+Completed: original dazzle native early return traced to15 authored M01 helicopter
+light records; durable known gap recorded. Particle point/line submission traced
+separately through indexed boundary. Located assets do not close rendering.
+Evidence: original/staged patch/source and private affected-record hashes.
+Next: original dazzle layer visibility/state/geometry boundary completion.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Cinematic HLOD emitter/dazzle declarations — 2026-10-03
 
 Completed:15 embedded M01 dazzle names plus31 emitter fallback records located;

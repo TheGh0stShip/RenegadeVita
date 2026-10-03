@@ -52,6 +52,9 @@ def state_symbols(rows):
             references[row['symbol']].append({'file': row['file'], 'line': row['line'],
                                               'column': row['column']})
     return [{'kind': 'draw_state_symbol', 'symbol': symbol, 'references': refs,
+             'symbol_role': ('state_selector' if
+                             symbol.startswith(('D3DRS_', 'D3DTSS_', 'D3DSAMP_')) and
+                             not symbol.startswith('D3DTSS_TCI_') else 'value_or_layout_token'),
              'status': 'unknown', 'native_mapping': 'unreviewed',
              'evidence_class': 'source_token_aggregation'}
             for symbol, refs in sorted(references.items())]

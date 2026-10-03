@@ -1,5 +1,14 @@
 # S2 renderer features — inventory in progress
 
+Texture-stage selector closure adds four missing direct mappings: COLORARG0,
+ALPHAARG0, RESULTARG and MAXMIPLEVEL. Their references do not yet prove active
+retail requests. Aggregated symbols now distinguish state selectors from values
+and layout tokens: D3DTSS_TCI_* are TEXCOORDINDEX values, not additional states.
+A regression test protects that distinction. Current totals: 73 missing,
+28 boundary-replaced and 2,491 unknown across 2,592 rows. Nine tests and
+byte-for-byte regeneration pass. Coordinate generation values remain unknown
+pending value-specific verification, even though their parent state has a path.
+
 Direct-render-state handler review now covers the remaining 44 discovered
 render-state symbols: lighting/material sources, specular, point sprites/size/
 scale, color writes, blend operation, depth enable, wrapping, vertex blending,

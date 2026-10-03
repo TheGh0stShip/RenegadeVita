@@ -9,6 +9,14 @@ PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
 
 
 class RendererInventoryTest(unittest.TestCase):
+    def test_coordinate_generation_values_are_not_state_selectors(self):
+        rows = state_symbols([dict(r, kind='draw_state_reference', file='a.cpp')
+                              for r in state_references(
+                                  'D3DTSS_TEXCOORDINDEX; D3DTSS_TCI_PASSTHRU;')])
+        roles = {r['symbol']: r['symbol_role'] for r in rows}
+        self.assertEqual(roles['D3DTSS_TEXCOORDINDEX'], 'state_selector')
+        self.assertEqual(roles['D3DTSS_TCI_PASSTHRU'], 'value_or_layout_token')
+
     def test_value_domains_and_modifiers_are_retained(self):
         text = ('D3DTOP_BUMPENVMAP; D3DTA_COMPLEMENT | D3DTA_TEXTURE; '
                 'D3DTTFF_PROJECTED; D3DTADDRESS_MIRROR; D3DTEXF_ANISOTROPIC; '

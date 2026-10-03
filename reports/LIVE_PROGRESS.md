@@ -2,6 +2,10 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 texture-stage selector closure: four missing mappings recorded; symbol roles
+separate selectors from coordinate-generation values. Nine tests/reproduction
+pass. Totals 73 missing, 28 replaced, 2,491 unknown; retail use remains open.
+
 S2 direct-handler closure: remaining 44 render-state symbols lack direct cases.
 Independent rendering routes and active retail setters remain open; no whole
 feature absence is inferred. Totals 69 missing, 28 replaced, 2,495 unknown.

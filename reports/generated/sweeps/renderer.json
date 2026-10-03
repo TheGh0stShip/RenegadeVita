@@ -256,10 +256,10 @@
     "staging/ww3d2/ww3dids.h": "339d44b8752566409b4ae2cd742592cf65339358b0e4efbbd498b3159de44875",
     "staging/ww3d2/ww3dtrig.h": "0bf682e99ce8207ce9cbe0243e335b371695a56b512b7cf69cfc8e8a88245818",
     "tools/audit_sweep_port_guards.py": "f8eb8890c85ef4faba32631830698ef0bbcd075c4d1bd95852b87e5bd85e012b",
-    "tools/audit_sweep_renderer.py": "620d63f4a06a8d67764591f30d0dc20b4fa0efa8d0dc4f9520e1916282d0af74",
+    "tools/audit_sweep_renderer.py": "058e2470d48d69f61304dc7a53a8326f5df1b8f47fca80b59e32d771765c97f7",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/renderer.json": "8a321ccf1a88f4dcb7e42845d496702518ef80f931465d0f77a7886be4c41cb0"
+    "tools/sweep_reviews/renderer.json": "4a6de29d884257954f169a6af3202cc8959fac9f1bd6c746eea75aa2da7a7964"
   },
   "review_identity_issues": [],
   "rows": [
@@ -28217,7 +28217,8 @@
       ],
       "row_id": "b90d4923bcff6d14cec3b438ab3da939965eb0bf5ceb5baef83a4b3bf5cd4107",
       "status": "unknown",
-      "symbol": "D3DBLEND_BOTHINVSRCALPHA"
+      "symbol": "D3DBLEND_BOTHINVSRCALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28237,7 +28238,8 @@
       ],
       "row_id": "1a9075e260008cf9a69cb1843cadc867466837df61581b23eb457b9776203abd",
       "status": "unknown",
-      "symbol": "D3DBLEND_BOTHSRCALPHA"
+      "symbol": "D3DBLEND_BOTHSRCALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28262,7 +28264,8 @@
       ],
       "row_id": "5846629dd6aac72255545b99319786de78b618497f3cc54421230961da708ae2",
       "status": "unknown",
-      "symbol": "D3DBLEND_DESTALPHA"
+      "symbol": "D3DBLEND_DESTALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28287,7 +28290,8 @@
       ],
       "row_id": "770e356ba88d197d8fd0b00d3aab491cd1829668f8b2ab8ed792674cb12c7e3a",
       "status": "unknown",
-      "symbol": "D3DBLEND_DESTCOLOR"
+      "symbol": "D3DBLEND_DESTCOLOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28312,7 +28316,8 @@
       ],
       "row_id": "b1d72243e7ec6a6af46bf7f84587e7c0b3e72a1b3443a43032ebcd7103df62ce",
       "status": "unknown",
-      "symbol": "D3DBLEND_INVDESTALPHA"
+      "symbol": "D3DBLEND_INVDESTALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28337,7 +28342,8 @@
       ],
       "row_id": "859b8a88058bb0c7fe3f2b9e067f82b967fd2462d1ae9ed9cb7776e3ff7fdd9b",
       "status": "unknown",
-      "symbol": "D3DBLEND_INVDESTCOLOR"
+      "symbol": "D3DBLEND_INVDESTCOLOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28377,7 +28383,8 @@
       ],
       "row_id": "06fdec1e16e86b95b6da8e57d72d8c3437c13165297a6ac04c62ee113f18ce00",
       "status": "unknown",
-      "symbol": "D3DBLEND_INVSRCALPHA"
+      "symbol": "D3DBLEND_INVSRCALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28407,7 +28414,8 @@
       ],
       "row_id": "098ceb0f0b5c2748e8569371965acc2d51a26e9cef636f4192b9ff58af4f7a94",
       "status": "unknown",
-      "symbol": "D3DBLEND_INVSRCCOLOR"
+      "symbol": "D3DBLEND_INVSRCCOLOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28452,7 +28460,8 @@
       ],
       "row_id": "abb07b5e001685a91af83f26d10f4194104ae715e6bb357110cd8abb1c1134f2",
       "status": "unknown",
-      "symbol": "D3DBLEND_ONE"
+      "symbol": "D3DBLEND_ONE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28487,7 +28496,8 @@
       ],
       "row_id": "f8fcd0c4650f3d8a6b65f16ac4c687a48ccf3f11369f07cb3543caa9b30dc1be",
       "status": "unknown",
-      "symbol": "D3DBLEND_SRCALPHA"
+      "symbol": "D3DBLEND_SRCALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28512,7 +28522,8 @@
       ],
       "row_id": "b73fce4035f8553558c5da81f680fafacfaaef14f665251c855489e4d24ea817",
       "status": "unknown",
-      "symbol": "D3DBLEND_SRCALPHASAT"
+      "symbol": "D3DBLEND_SRCALPHASAT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28542,7 +28553,8 @@
       ],
       "row_id": "7c0b407c14c8b8c07c46b0ac62ae5becf3b49dea1c69fee18cc963e2ac34534f",
       "status": "unknown",
-      "symbol": "D3DBLEND_SRCCOLOR"
+      "symbol": "D3DBLEND_SRCCOLOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28587,7 +28599,8 @@
       ],
       "row_id": "dade6a6d34187525ac3ec76b6a6a2f59ab0c630f8628d2956857a8250eaa1a54",
       "status": "unknown",
-      "symbol": "D3DBLEND_ZERO"
+      "symbol": "D3DBLEND_ZERO",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28612,7 +28625,8 @@
       ],
       "row_id": "a7f70638a7eb925f2863363483667a8652255da71fa461166a6fb8301794c11d",
       "status": "unknown",
-      "symbol": "D3DCMP_ALWAYS"
+      "symbol": "D3DCMP_ALWAYS",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28637,7 +28651,8 @@
       ],
       "row_id": "4610d89c2aced22da3165aa595449600a5f991d2785b1e3bac43cfc320932855",
       "status": "unknown",
-      "symbol": "D3DCMP_EQUAL"
+      "symbol": "D3DCMP_EQUAL",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28662,7 +28677,8 @@
       ],
       "row_id": "1c30aa65cd890e2f881b89be707ccc61ee806131fb6ed8511e7d032a6aa266e9",
       "status": "unknown",
-      "symbol": "D3DCMP_GREATER"
+      "symbol": "D3DCMP_GREATER",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28692,7 +28708,8 @@
       ],
       "row_id": "825e799dae1ffe15606c833c927e1ad447e81c3b5af662580187c058b159411f",
       "status": "unknown",
-      "symbol": "D3DCMP_GREATEREQUAL"
+      "symbol": "D3DCMP_GREATEREQUAL",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28717,7 +28734,8 @@
       ],
       "row_id": "eece99423a3014d99de6bbd9f7f34e102db7b54b6e9678c9fb3040ffc44d4f31",
       "status": "unknown",
-      "symbol": "D3DCMP_LESS"
+      "symbol": "D3DCMP_LESS",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28747,7 +28765,8 @@
       ],
       "row_id": "0aa1f4a2071dec3254f1c25f85e19c549b34513ea1de21dd1d2519902418c9ac",
       "status": "unknown",
-      "symbol": "D3DCMP_LESSEQUAL"
+      "symbol": "D3DCMP_LESSEQUAL",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28772,7 +28791,8 @@
       ],
       "row_id": "f7806e2fc222c4d7f557435624d95c99e7e6341bd5989983061ab258795e1a92",
       "status": "unknown",
-      "symbol": "D3DCMP_NEVER"
+      "symbol": "D3DCMP_NEVER",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28797,7 +28817,8 @@
       ],
       "row_id": "4b5796a59bca1651e3ac443ea6ac849d0adf25f1ee8d7a8b20cbd3af328e2b3e",
       "status": "unknown",
-      "symbol": "D3DCMP_NOTEQUAL"
+      "symbol": "D3DCMP_NOTEQUAL",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28832,7 +28853,8 @@
       ],
       "row_id": "d530dff05796031bcbb9c57b2316da64b241148a6b6670ad35e9938bf428ee3e",
       "status": "unknown",
-      "symbol": "D3DCULL_CCW"
+      "symbol": "D3DCULL_CCW",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28862,7 +28884,8 @@
       ],
       "row_id": "3cf56d507a13bffdefb51921b4713eb82ccd679d6900092d35b76621d9c0abf8",
       "status": "unknown",
-      "symbol": "D3DCULL_CW"
+      "symbol": "D3DCULL_CW",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28892,7 +28915,8 @@
       ],
       "row_id": "b08765f3c44a3cc841e43bcb307b6a7720304ee7ee9c33454faf01e2b7b78486",
       "status": "unknown",
-      "symbol": "D3DCULL_NONE"
+      "symbol": "D3DCULL_NONE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28922,7 +28946,8 @@
       ],
       "row_id": "012f5b6b6a0165cda6ef4d9d3f80771b65365e4732e8963bcacafe27ec5e4658",
       "status": "unknown",
-      "symbol": "D3DFILL_POINT"
+      "symbol": "D3DFILL_POINT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28957,7 +28982,8 @@
       ],
       "row_id": "c8a73fa52d2a85ab8f597eac30ac9686fdb456b2d3b8c41b0d2ca70bdf2c68a4",
       "status": "unknown",
-      "symbol": "D3DFILL_SOLID"
+      "symbol": "D3DFILL_SOLID",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -28997,7 +29023,8 @@
       ],
       "row_id": "08fafb766e94e0ac160ba805a9c59a97c004263e10a0244e9eb43f6ab3e46e1b",
       "status": "unknown",
-      "symbol": "D3DFILL_WIREFRAME"
+      "symbol": "D3DFILL_WIREFRAME",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29077,7 +29104,8 @@
       ],
       "row_id": "9954d4e0ae20e29a9389728ad5e57bd618e38860036034e895f024ef7a398a96",
       "status": "unknown",
-      "symbol": "D3DFMT_A1R5G5B5"
+      "symbol": "D3DFMT_A1R5G5B5",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29107,7 +29135,8 @@
       ],
       "row_id": "d038979eddd82a4cea37f83d575b309105b041e67e733b30da47471b201af59c",
       "status": "unknown",
-      "symbol": "D3DFMT_A4L4"
+      "symbol": "D3DFMT_A4L4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29177,7 +29206,8 @@
       ],
       "row_id": "0c5b1638c734c53f364de29c40498f65d2e8e8447a20e5f46b4f8f3e12829dce",
       "status": "unknown",
-      "symbol": "D3DFMT_A4R4G4B4"
+      "symbol": "D3DFMT_A4R4G4B4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29242,7 +29272,8 @@
       ],
       "row_id": "c49bc61058534f241bc5c1e7e0dcf61c9d8b045bf92ccef36f3c3b071e7fe177",
       "status": "unknown",
-      "symbol": "D3DFMT_A8"
+      "symbol": "D3DFMT_A8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29277,7 +29308,8 @@
       ],
       "row_id": "24c833e3f1c1a57b13da95488fab45de06872ac95d47c8ca8e1ee19b83c538cb",
       "status": "unknown",
-      "symbol": "D3DFMT_A8L8"
+      "symbol": "D3DFMT_A8L8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29312,7 +29344,8 @@
       ],
       "row_id": "484d982e5445c890ca6f4dd544720422f5c49917b2e979488ebe2ff91c712387",
       "status": "unknown",
-      "symbol": "D3DFMT_A8P8"
+      "symbol": "D3DFMT_A8P8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29347,7 +29380,8 @@
       ],
       "row_id": "71c86ee178ad02bbbdadb8886b38e6b55400716ddb03c9dc2db5b972b20fe6b7",
       "status": "unknown",
-      "symbol": "D3DFMT_A8R3G3B2"
+      "symbol": "D3DFMT_A8R3G3B2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29462,7 +29496,8 @@
       ],
       "row_id": "52f7820d2912f872095170c398835d3714bb050581327369e6d39fa0a19276bf",
       "status": "unknown",
-      "symbol": "D3DFMT_A8R8G8B8"
+      "symbol": "D3DFMT_A8R8G8B8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29497,7 +29532,8 @@
       ],
       "row_id": "d1ffe7d9ec81098a33da27eee71a57ccbbf85e827a02e06aa9d0eef15f490328",
       "status": "unknown",
-      "symbol": "D3DFMT_D15S1"
+      "symbol": "D3DFMT_D15S1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29537,7 +29573,8 @@
       ],
       "row_id": "4a72ca75b63d7fb6406b8c0a09adc9cebd9c54efcc65a5cf4e2e33c4efbf87ce",
       "status": "unknown",
-      "symbol": "D3DFMT_D16"
+      "symbol": "D3DFMT_D16",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29557,7 +29594,8 @@
       ],
       "row_id": "00e0ea61f307c1d80a00a129046d518253445e3556955ae39439b2a310805af0",
       "status": "unknown",
-      "symbol": "D3DFMT_D16_LOCKABLE"
+      "symbol": "D3DFMT_D16_LOCKABLE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29597,7 +29635,8 @@
       ],
       "row_id": "6bd7eb57dde33ca2486534bff89395eaa32dccf9c1ec750cddaaa9200b84e60d",
       "status": "unknown",
-      "symbol": "D3DFMT_D24S8"
+      "symbol": "D3DFMT_D24S8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29632,7 +29671,8 @@
       ],
       "row_id": "b02a9290c636ddf9b754db98017fb28c98393bcf6e72d098e41a7ac67f6355f2",
       "status": "unknown",
-      "symbol": "D3DFMT_D24X4S4"
+      "symbol": "D3DFMT_D24X4S4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29667,7 +29707,8 @@
       ],
       "row_id": "4348da7c0c5dd19a24339e640c31df90a7a2fb3622e8809a26b1aad79d756f60",
       "status": "unknown",
-      "symbol": "D3DFMT_D24X8"
+      "symbol": "D3DFMT_D24X8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29707,7 +29748,8 @@
       ],
       "row_id": "4ff5e4d456723c9ed3f0805534a645cab43d85686948d2e819534d464211d6da",
       "status": "unknown",
-      "symbol": "D3DFMT_D32"
+      "symbol": "D3DFMT_D32",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29742,7 +29784,8 @@
       ],
       "row_id": "91c6ec3fed820622c0325a30e05c629247fce518a632c5ce58704b02f218a219",
       "status": "unknown",
-      "symbol": "D3DFMT_DXT1"
+      "symbol": "D3DFMT_DXT1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29777,7 +29820,8 @@
       ],
       "row_id": "ac15fda5f16898ad09ee79f024e4bea7721b162189e9ffa71f497ed12b8d36b0",
       "status": "unknown",
-      "symbol": "D3DFMT_DXT2"
+      "symbol": "D3DFMT_DXT2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29812,7 +29856,8 @@
       ],
       "row_id": "dd15d87bb6ae2f9337a28a65ebd0f380520b80a9e4e8c2142a30d0d1654f4b77",
       "status": "unknown",
-      "symbol": "D3DFMT_DXT3"
+      "symbol": "D3DFMT_DXT3",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29847,7 +29892,8 @@
       ],
       "row_id": "bf1e39caf28d9ec6c90ae49f6c7bd8f57e2fff4dec6d51fc40bc7407e6dc759c",
       "status": "unknown",
-      "symbol": "D3DFMT_DXT4"
+      "symbol": "D3DFMT_DXT4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29882,7 +29928,8 @@
       ],
       "row_id": "1e1d5e215b6d99334e2e2a0d5092e0aee6bf7476d13ddb6f00ba77286ff19478",
       "status": "unknown",
-      "symbol": "D3DFMT_DXT5"
+      "symbol": "D3DFMT_DXT5",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29902,7 +29949,8 @@
       ],
       "row_id": "e5337ff57d7dedc4361c7570209b74e0526966eea79b2c1c9925e76c3ee30045",
       "status": "unknown",
-      "symbol": "D3DFMT_INDEX16"
+      "symbol": "D3DFMT_INDEX16",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29932,7 +29980,8 @@
       ],
       "row_id": "c3b1f714d622cf98f088fd6bbae1329231aaa81ba6758902e609ccbcbbdbd394",
       "status": "unknown",
-      "symbol": "D3DFMT_L6V5U5"
+      "symbol": "D3DFMT_L6V5U5",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -29987,7 +30036,8 @@
       ],
       "row_id": "6f4c8ea415a034ca5d6737ca4b3acaeff57f3838a1b3cb61b039140a74c3a976",
       "status": "unknown",
-      "symbol": "D3DFMT_L8"
+      "symbol": "D3DFMT_L8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30037,7 +30087,8 @@
       ],
       "row_id": "1a7107a0e5095dfa8bfd8baed391776f6e3a12959f2ef5e9bcac67dc8a4973a6",
       "status": "unknown",
-      "symbol": "D3DFMT_P8"
+      "symbol": "D3DFMT_P8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30057,7 +30108,8 @@
       ],
       "row_id": "4780103b190e3db0dc98311fb0004ba592dde1da91ec9b2fd14961d88f7d4171",
       "status": "unknown",
-      "symbol": "D3DFMT_Q8W8V8U8"
+      "symbol": "D3DFMT_Q8W8V8U8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30087,7 +30139,8 @@
       ],
       "row_id": "7373ff2314539583ff017cb338833daa58be134359670200902ddcbb85bbaa86",
       "status": "unknown",
-      "symbol": "D3DFMT_R3G3B2"
+      "symbol": "D3DFMT_R3G3B2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30167,7 +30220,8 @@
       ],
       "row_id": "721514e057b9b2e00c1809d636bab41300baabcc86702d256f2b4f410ccc01cc",
       "status": "unknown",
-      "symbol": "D3DFMT_R5G6B5"
+      "symbol": "D3DFMT_R5G6B5",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30237,7 +30291,8 @@
       ],
       "row_id": "d8412fbc888c793f1741542c13a5eed95739106abbbd4573412cd22fc2ebe2b2",
       "status": "unknown",
-      "symbol": "D3DFMT_R8G8B8"
+      "symbol": "D3DFMT_R8G8B8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30287,7 +30342,8 @@
       ],
       "row_id": "e62951b8148e2e8efe30b4ff4b663aa332bbfcb0f34a1161d7d1e161f52ea7a7",
       "status": "unknown",
-      "symbol": "D3DFMT_UNKNOWN"
+      "symbol": "D3DFMT_UNKNOWN",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30307,7 +30363,8 @@
       ],
       "row_id": "c7d2fa66049fe61eaf3f0bead81491ebe59a1fa2397f2715b8c560f667934329",
       "status": "unknown",
-      "symbol": "D3DFMT_UYVY"
+      "symbol": "D3DFMT_UYVY",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30327,7 +30384,8 @@
       ],
       "row_id": "ce341f3b2e21a7839505ef86f5d6fd0aed25abdda00b3a942364685d338be107",
       "status": "unknown",
-      "symbol": "D3DFMT_V16U16"
+      "symbol": "D3DFMT_V16U16",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30357,7 +30415,8 @@
       ],
       "row_id": "fb30d9ae27c7a23eaa18b4db3034843de9a1b855d9c23ba211b2d3b5deb57a44",
       "status": "unknown",
-      "symbol": "D3DFMT_V8U8"
+      "symbol": "D3DFMT_V8U8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30377,7 +30436,8 @@
       ],
       "row_id": "018157ac31704ee496fbb235d4535c59c410fc39f1ffd0670b3a58b666ec1dcc",
       "status": "unknown",
-      "symbol": "D3DFMT_W11V11U10"
+      "symbol": "D3DFMT_W11V11U10",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30427,7 +30487,8 @@
       ],
       "row_id": "edc7f4e67da7152e96cc6a466f98f2c7a0323071e2526d0955f1beda6f0886cc",
       "status": "unknown",
-      "symbol": "D3DFMT_X1R5G5B5"
+      "symbol": "D3DFMT_X1R5G5B5",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30462,7 +30523,8 @@
       ],
       "row_id": "4e2bcb81089636cb06b347cb58878cbdb1d02fc6c83cc0f0f598d2a337746e27",
       "status": "unknown",
-      "symbol": "D3DFMT_X4R4G4B4"
+      "symbol": "D3DFMT_X4R4G4B4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30497,7 +30559,8 @@
       ],
       "row_id": "f85d5c287f19ef22dd729f66f4457903bd2d7dc2f21f5a74da91d81becb8f49a",
       "status": "unknown",
-      "symbol": "D3DFMT_X8L8V8U8"
+      "symbol": "D3DFMT_X8L8V8U8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30567,7 +30630,8 @@
       ],
       "row_id": "94d0b80fe804015a86b4f10256b4663f50a3a264fb829b089349b232ccb9966b",
       "status": "unknown",
-      "symbol": "D3DFMT_X8R8G8B8"
+      "symbol": "D3DFMT_X8R8G8B8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30587,7 +30651,8 @@
       ],
       "row_id": "4685db6a79c9afbff715bf99d39ec99f10a44317d0c0a3f95a6fe69816a0f70c",
       "status": "unknown",
-      "symbol": "D3DFMT_YUY2"
+      "symbol": "D3DFMT_YUY2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30607,7 +30672,8 @@
       ],
       "row_id": "6bf7403a55d1f050cce4760630387bb4d3bc4cf577759ebd7f73d0df9daf9934",
       "status": "unknown",
-      "symbol": "D3DFOG_EXP"
+      "symbol": "D3DFOG_EXP",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30627,7 +30693,8 @@
       ],
       "row_id": "5cd52333515595fd91f3e7e886684e67440a9f8e54188486582960c4d09c868a",
       "status": "unknown",
-      "symbol": "D3DFOG_EXP2"
+      "symbol": "D3DFOG_EXP2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30652,7 +30719,8 @@
       ],
       "row_id": "6f25368337c8c2706869ceb149f5b9cf5c84950dfcd0b43b26d47782db356311",
       "status": "unknown",
-      "symbol": "D3DFOG_LINEAR"
+      "symbol": "D3DFOG_LINEAR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30677,7 +30745,8 @@
       ],
       "row_id": "5838bbbb15cbb3557eea5de170bbf57378b06e0771fe266ba8a154fcadd50a20",
       "status": "unknown",
-      "symbol": "D3DFOG_NONE"
+      "symbol": "D3DFOG_NONE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30762,7 +30831,8 @@
       ],
       "row_id": "e8aa13a2a119ed439a2aa79a82ac31574bc4045bbe6e482588a631567391f1fa",
       "status": "unknown",
-      "symbol": "D3DFVF_DIFFUSE"
+      "symbol": "D3DFVF_DIFFUSE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30787,7 +30857,8 @@
       ],
       "row_id": "b221738a799f712445002a3fbe6e6a3e654e1f44c71ad834b2b81e6b97c8dca4",
       "status": "unknown",
-      "symbol": "D3DFVF_LASTBETA_UBYTE4"
+      "symbol": "D3DFVF_LASTBETA_UBYTE4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30877,7 +30948,8 @@
       ],
       "row_id": "6c2f141892f5dfdd8d40d150ba27c78b997ef03e1971093c1f6b6c32b305f972",
       "status": "unknown",
-      "symbol": "D3DFVF_NORMAL"
+      "symbol": "D3DFVF_NORMAL",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30897,7 +30969,8 @@
       ],
       "row_id": "c648ac6ae1f0999444703c9116781b3e814c5dff9815b6c5ef91a7cda827c61a",
       "status": "unknown",
-      "symbol": "D3DFVF_PSIZE"
+      "symbol": "D3DFVF_PSIZE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30942,7 +31015,8 @@
       ],
       "row_id": "626172791cca8bfbc9ff74910cc478b15cdea33d95f72ebf4a454da8df00b50a",
       "status": "unknown",
-      "symbol": "D3DFVF_SPECULAR"
+      "symbol": "D3DFVF_SPECULAR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -30957,7 +31031,8 @@
       ],
       "row_id": "bf8cfb83468189ad4cf1abb6cba48b7582d557bb61ba7762d3769ccc8c0aa8b5",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX0"
+      "symbol": "D3DFVF_TEX0",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31037,7 +31112,8 @@
       ],
       "row_id": "79a2023b79e08f23475d47a9bc2999c2eb16513c6bbb875c73eb2564c4e1ee1e",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX1"
+      "symbol": "D3DFVF_TEX1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31107,7 +31183,8 @@
       ],
       "row_id": "e81beaa062cacd7392c86f3629e0ec51d28baf3d667df379a79c15d41c0e1abe",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX2"
+      "symbol": "D3DFVF_TEX2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31147,7 +31224,8 @@
       ],
       "row_id": "84c916b22f989da259e612a35c9bf88c2f50b35b08f45f289bd58e5a6d77300f",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX3"
+      "symbol": "D3DFVF_TEX3",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31187,7 +31265,8 @@
       ],
       "row_id": "ae702b9f5646a098090356e54bdc70176a27f1c9ace2a7cd5568bc339d4522c8",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX4"
+      "symbol": "D3DFVF_TEX4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31227,7 +31306,8 @@
       ],
       "row_id": "e1978c8d32a45389737e30bcb1210bcba318a7b5f6ee9d688ed53f634bb1f507",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX5"
+      "symbol": "D3DFVF_TEX5",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31267,7 +31347,8 @@
       ],
       "row_id": "9dd5bd78a21edf909c646a19edcd01e3c08130022d2f7d2108046101c06b7f52",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX6"
+      "symbol": "D3DFVF_TEX6",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31307,7 +31388,8 @@
       ],
       "row_id": "69225917cb1ef962c208ce8b85f3e1542a8f38dc812464608bb6d021de5a4908",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX7"
+      "symbol": "D3DFVF_TEX7",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31347,7 +31429,8 @@
       ],
       "row_id": "6370e91ca16c80c5c4f39fc5820cfd519a1af15a812e6773f1a6c3fa006299ed",
       "status": "unknown",
-      "symbol": "D3DFVF_TEX8"
+      "symbol": "D3DFVF_TEX8",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31372,7 +31455,8 @@
       ],
       "row_id": "d2fee968cb7755467dee157f66b17f833fd2839a5696d4f0c52f7c00b962ace4",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXCOORDSIZE1"
+      "symbol": "D3DFVF_TEXCOORDSIZE1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31397,7 +31481,8 @@
       ],
       "row_id": "a05ad578adfa529044f863152fff2b1762bf7c91fa6bab3665f8dd87ffa20309",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXCOORDSIZE2"
+      "symbol": "D3DFVF_TEXCOORDSIZE2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31422,7 +31507,8 @@
       ],
       "row_id": "1fd7141c62e270e304bc221a812144b7d012a8525000919ef6dc20a0525978dc",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXCOORDSIZE3"
+      "symbol": "D3DFVF_TEXCOORDSIZE3",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31447,7 +31533,8 @@
       ],
       "row_id": "6318612754d80b89a16fc0cef5a7fbd4f1f0f2793582fb9a6728f4a79d49b3ef",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXCOORDSIZE4"
+      "symbol": "D3DFVF_TEXCOORDSIZE4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31472,7 +31559,8 @@
       ],
       "row_id": "b67b52ae3b96bd1cf5c5d9a426ddd88bf1ec3956abbbbcf5ce34e7189f096735",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXTUREFORMAT1"
+      "symbol": "D3DFVF_TEXTUREFORMAT1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31492,7 +31580,8 @@
       ],
       "row_id": "838a60a9a2eae6bac11bf1da773f417a3a5d0e451a7e126f832466142f8d6a4a",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXTUREFORMAT2"
+      "symbol": "D3DFVF_TEXTUREFORMAT2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31517,7 +31606,8 @@
       ],
       "row_id": "672517e6aa77187ef5d77e6d1fa4c53b3bae74573e1be78734a1f634dad93945",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXTUREFORMAT3"
+      "symbol": "D3DFVF_TEXTUREFORMAT3",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31542,7 +31632,8 @@
       ],
       "row_id": "2f342018739045915c4a9aaf36b131faee5dcbf346189731919991798766ad22",
       "status": "unknown",
-      "symbol": "D3DFVF_TEXTUREFORMAT4"
+      "symbol": "D3DFVF_TEXTUREFORMAT4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31657,7 +31748,8 @@
       ],
       "row_id": "4a7c2011eaf19c2754733ffc5a776b75227b8086f2245f8bf083fbe1d34dad5f",
       "status": "unknown",
-      "symbol": "D3DFVF_XYZ"
+      "symbol": "D3DFVF_XYZ",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31677,7 +31769,8 @@
       ],
       "row_id": "ac36e47255fb94cd066e95018bcbd5b70964be05d755d985f7f6efa947a77af2",
       "status": "unknown",
-      "symbol": "D3DFVF_XYZB1"
+      "symbol": "D3DFVF_XYZB1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31697,7 +31790,8 @@
       ],
       "row_id": "9fbff59d338e1beca97b6bad2740a1928388e41d6c492c424a60799e3d6f0226",
       "status": "unknown",
-      "symbol": "D3DFVF_XYZB2"
+      "symbol": "D3DFVF_XYZB2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31717,7 +31811,8 @@
       ],
       "row_id": "fd72fca26b530ebee64d7dc25aa9fde78eaa57009274b8c69d812cdc819d90b6",
       "status": "unknown",
-      "symbol": "D3DFVF_XYZB3"
+      "symbol": "D3DFVF_XYZB3",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31747,7 +31842,8 @@
       ],
       "row_id": "0f461c1a28a4940e176eac8355907739fe9f4f907d992710b5cdc3b8a6d6712b",
       "status": "unknown",
-      "symbol": "D3DFVF_XYZB4"
+      "symbol": "D3DFVF_XYZB4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31767,7 +31863,8 @@
       ],
       "row_id": "97de0559216ceaff0701da04c90cb4468b70934b87116a6a47191c37e39fed95",
       "status": "unknown",
-      "symbol": "D3DFVF_XYZB5"
+      "symbol": "D3DFVF_XYZB5",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -31787,7 +31884,8 @@
       ],
       "row_id": "3793d105b22a283592cb73280d434b4f6186e1467faaa66b059c570e37c7cfa2",
       "status": "unknown",
-      "symbol": "D3DFVF_XYZRHW"
+      "symbol": "D3DFVF_XYZRHW",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "classification_evidence_class": "source_review",
@@ -31850,7 +31948,8 @@
       },
       "row_id": "7f75ffd3f6091b36e381df46eec13b191482021a65efa6e1b7e0575cb3b49185",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_ALPHABLENDENABLE"
+      "symbol": "D3DRS_ALPHABLENDENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -31918,7 +32017,8 @@
       },
       "row_id": "01b7d9efdf689fe55feec8e8ad81fd163a9048414b6302a24939c20d741a1ca6",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_ALPHAFUNC"
+      "symbol": "D3DRS_ALPHAFUNC",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -31986,7 +32086,8 @@
       },
       "row_id": "ed6f80d70d3c40bbe3e9accc6a993d9fc07bf8556fd2635a59c74e9a33148597",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_ALPHAREF"
+      "symbol": "D3DRS_ALPHAREF",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32054,7 +32155,8 @@
       },
       "row_id": "677d37e2d93afa69aaa870daf2d29e75a68a63596b4231d951e6b01b2d9039c5",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_ALPHATESTENABLE"
+      "symbol": "D3DRS_ALPHATESTENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32117,7 +32219,8 @@
       },
       "row_id": "c51c564fd66a223cfc112f1127b484580411595a3c6713068728ff1b20212aaf",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_AMBIENT"
+      "symbol": "D3DRS_AMBIENT",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32175,7 +32278,8 @@
       },
       "row_id": "723933f6df8e165f3e7ec099359961c7063b6deb9af99dafb80e14af9ef584ab",
       "status": "missing",
-      "symbol": "D3DRS_AMBIENTMATERIALSOURCE"
+      "symbol": "D3DRS_AMBIENTMATERIALSOURCE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32218,7 +32322,8 @@
       },
       "row_id": "89aa8c635fd73d9ff35598339329c4d3557c2067ee8e960359296bb29744796f",
       "status": "missing",
-      "symbol": "D3DRS_BLENDOP"
+      "symbol": "D3DRS_BLENDOP",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32261,7 +32366,8 @@
       },
       "row_id": "c01cc2ae631f98a6bbf3a294d362b408516eb1b151e9539404db179d9e729cd3",
       "status": "missing",
-      "symbol": "D3DRS_CLIPPING"
+      "symbol": "D3DRS_CLIPPING",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32304,7 +32410,8 @@
       },
       "row_id": "a14c5cdb1f10d699eea7d338ebe1d1ec588e28e01896b9c4bf0e84f90f927a93",
       "status": "missing",
-      "symbol": "D3DRS_CLIPPLANEENABLE"
+      "symbol": "D3DRS_CLIPPLANEENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32352,7 +32459,8 @@
       },
       "row_id": "cbf856cc0c82d1ba0d4ae14d49f655c97bb8971380e7f740b41517f9c0a2d823",
       "status": "missing",
-      "symbol": "D3DRS_COLORVERTEX"
+      "symbol": "D3DRS_COLORVERTEX",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32395,7 +32503,8 @@
       },
       "row_id": "5cb259b88244c0a64370f1ecdf7d2508ddb3a934678a7033e196c9611b7586ba",
       "status": "missing",
-      "symbol": "D3DRS_COLORWRITEENABLE"
+      "symbol": "D3DRS_COLORWRITEENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32458,7 +32567,8 @@
       },
       "row_id": "e9113ec5d52bf37ceef50c2f1352bdc93faca0c51a374e710459a938a8eb993b",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_CULLMODE"
+      "symbol": "D3DRS_CULLMODE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32501,7 +32611,8 @@
       },
       "row_id": "db22eb59b134ad171fcc70bb5e2b9f8847528e78f6ca8c540172169108299f87",
       "status": "missing",
-      "symbol": "D3DRS_DEBUGMONITORTOKEN"
+      "symbol": "D3DRS_DEBUGMONITORTOKEN",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32564,7 +32675,8 @@
       },
       "row_id": "cd337e2b3729ed8a6762e27e091eb5c3730d0fa2c2b94e2dd8b5e9fb35137517",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_DESTBLEND"
+      "symbol": "D3DRS_DESTBLEND",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32622,7 +32734,8 @@
       },
       "row_id": "b154767c2bf1186557c971724ee783191a4a6f4a6e0395bec51081abf518c433",
       "status": "missing",
-      "symbol": "D3DRS_DIFFUSEMATERIALSOURCE"
+      "symbol": "D3DRS_DIFFUSEMATERIALSOURCE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32665,7 +32778,8 @@
       },
       "row_id": "a9a5de11fdad2ac75f778a5853bbc0442bf96e7aea4573bd687c5b8c4a7e86b6",
       "status": "missing",
-      "symbol": "D3DRS_DITHERENABLE"
+      "symbol": "D3DRS_DITHERENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32708,7 +32822,8 @@
       },
       "row_id": "98a8a9d70b42518b33ac7c55c1cd600f764a4cdc8d98765100cdd38601c65ba6",
       "status": "missing",
-      "symbol": "D3DRS_EDGEANTIALIAS"
+      "symbol": "D3DRS_EDGEANTIALIAS",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32766,7 +32881,8 @@
       },
       "row_id": "13739635cbcfd78cf4d0b9f1fec01717c11339fa07e00515d857e1706dd5f7c1",
       "status": "missing",
-      "symbol": "D3DRS_EMISSIVEMATERIALSOURCE"
+      "symbol": "D3DRS_EMISSIVEMATERIALSOURCE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32849,7 +32965,8 @@
       },
       "row_id": "51a513f124395b0f363e64b24e8a43578fcc4036695e145465cdbe69700fd51e",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_FILLMODE"
+      "symbol": "D3DRS_FILLMODE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32912,7 +33029,8 @@
       },
       "row_id": "d185b0225c05c89b5dea3ea621610d6ebf6b356bc8e53016a7ba7e1b0e03c5c2",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_FOGCOLOR"
+      "symbol": "D3DRS_FOGCOLOR",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -32955,7 +33073,8 @@
       },
       "row_id": "791834551642a7571dcf0476673917ae5c489d9c3da1805f0006b6dff93e1230",
       "status": "missing",
-      "symbol": "D3DRS_FOGDENSITY"
+      "symbol": "D3DRS_FOGDENSITY",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33023,7 +33142,8 @@
       },
       "row_id": "d76f7c319405d9bf4fa0429756015007b351faec81e2eac376c5cf88dab6fa0a",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_FOGENABLE"
+      "symbol": "D3DRS_FOGENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33086,7 +33206,8 @@
       },
       "row_id": "cef95acc36e8d65572e21d8be5561aef3c17b115bbbbd15465f7dfca01bc3bdc",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_FOGEND"
+      "symbol": "D3DRS_FOGEND",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33149,7 +33270,8 @@
       },
       "row_id": "fc068d1df7f1a2eb9fdae85eb819f4db0c3fdc71a82ea0887b5dcd065c3c450c",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_FOGSTART"
+      "symbol": "D3DRS_FOGSTART",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33197,7 +33319,8 @@
       },
       "row_id": "229fd0fb4862839c68e0fb8d9e078fec90ada4a5d5b61debe57c11728a4017a8",
       "status": "missing",
-      "symbol": "D3DRS_FOGTABLEMODE"
+      "symbol": "D3DRS_FOGTABLEMODE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33245,7 +33368,8 @@
       },
       "row_id": "e0cafabcd6271863699d995186f900c9e782c48fb5dd5ce9c76e8bdf71119538",
       "status": "missing",
-      "symbol": "D3DRS_FOGVERTEXMODE"
+      "symbol": "D3DRS_FOGVERTEXMODE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33288,7 +33412,8 @@
       },
       "row_id": "dbf12a40dc0d74fe08f26cac4876ac774a5993e710eba54e3ccde122231db85f",
       "status": "missing",
-      "symbol": "D3DRS_INDEXEDVERTEXBLENDENABLE"
+      "symbol": "D3DRS_INDEXEDVERTEXBLENDENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33331,7 +33456,8 @@
       },
       "row_id": "66122865c7b7d178974ac01149f2598a2147395db954df0ed60e73c6f5c18ffe",
       "status": "missing",
-      "symbol": "D3DRS_LASTPIXEL"
+      "symbol": "D3DRS_LASTPIXEL",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33389,7 +33515,8 @@
       },
       "row_id": "6b72fc90551cb0f80e3b4a7121b75ec79aeb6494f6e9e1e44807d7154e86d1b9",
       "status": "missing",
-      "symbol": "D3DRS_LIGHTING"
+      "symbol": "D3DRS_LIGHTING",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33432,7 +33559,8 @@
       },
       "row_id": "86c33772338a9743c5f131d5eed5514cd8bc074be39a2338ba84442db3a4eed7",
       "status": "missing",
-      "symbol": "D3DRS_LINEPATTERN"
+      "symbol": "D3DRS_LINEPATTERN",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33475,7 +33603,8 @@
       },
       "row_id": "07996e6288d16b30a4a10b7489a04c4fa1d8e211b5c4d95b0113cff62403a872",
       "status": "missing",
-      "symbol": "D3DRS_LOCALVIEWER"
+      "symbol": "D3DRS_LOCALVIEWER",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33518,7 +33647,8 @@
       },
       "row_id": "8b577036b30a7ff96f3810d023c460ad5bdd8debd2664a1abb6645caa9bcd841",
       "status": "missing",
-      "symbol": "D3DRS_MULTISAMPLEANTIALIAS"
+      "symbol": "D3DRS_MULTISAMPLEANTIALIAS",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33561,7 +33691,8 @@
       },
       "row_id": "031cbbcd5dc84c9939da6ab6135f3b3800f8cedd2250750e30811a938238f422",
       "status": "missing",
-      "symbol": "D3DRS_MULTISAMPLEMASK"
+      "symbol": "D3DRS_MULTISAMPLEMASK",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33604,7 +33735,8 @@
       },
       "row_id": "fcff8989843cdf33511cdbe80fc7eee63138988ebfb2b220dfd189b511feb253",
       "status": "missing",
-      "symbol": "D3DRS_NORMALIZENORMALS"
+      "symbol": "D3DRS_NORMALIZENORMALS",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33647,7 +33779,8 @@
       },
       "row_id": "91e6b8c41fed30743cea97efa551b4868771546a1c5d222b7872559d9922202a",
       "status": "missing",
-      "symbol": "D3DRS_PATCHEDGESTYLE"
+      "symbol": "D3DRS_PATCHEDGESTYLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33700,7 +33833,8 @@
       },
       "row_id": "a2339b1f554aec10f2924b174d3645b8287dbba9853401c907dbc5fefee8fc1e",
       "status": "missing",
-      "symbol": "D3DRS_PATCHSEGMENTS"
+      "symbol": "D3DRS_PATCHSEGMENTS",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33743,7 +33877,8 @@
       },
       "row_id": "865922f558c02ac2c8b9559555cf3b9fe6dfc315b0732cf54425f7e05090e80b",
       "status": "missing",
-      "symbol": "D3DRS_POINTSCALEENABLE"
+      "symbol": "D3DRS_POINTSCALEENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33786,7 +33921,8 @@
       },
       "row_id": "3cfde4c75853a9d421c1fe71d4ccae4dfc84f9880b73aae6fb35305ec5255c37",
       "status": "missing",
-      "symbol": "D3DRS_POINTSCALE_A"
+      "symbol": "D3DRS_POINTSCALE_A",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33829,7 +33965,8 @@
       },
       "row_id": "23f75c38384debbc7e439b2623205fe34eb9a00fff0bb62a74b3fd0190182811",
       "status": "missing",
-      "symbol": "D3DRS_POINTSCALE_B"
+      "symbol": "D3DRS_POINTSCALE_B",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33872,7 +34009,8 @@
       },
       "row_id": "03867ee28bc019e751b2a9b4b1808d73d66224270ad326c7a68d7d5c3a8c13d1",
       "status": "missing",
-      "symbol": "D3DRS_POINTSCALE_C"
+      "symbol": "D3DRS_POINTSCALE_C",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33915,7 +34053,8 @@
       },
       "row_id": "923f57afa9e4258e4c481d34126f202deeec1cfd0e2349b1a74ef9ee80c8e23e",
       "status": "missing",
-      "symbol": "D3DRS_POINTSIZE"
+      "symbol": "D3DRS_POINTSIZE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -33958,7 +34097,8 @@
       },
       "row_id": "d50f5b6609884b06bed3e24a19f8b182ac5f00a3539188102e9833b3fde87991",
       "status": "missing",
-      "symbol": "D3DRS_POINTSIZE_MAX"
+      "symbol": "D3DRS_POINTSIZE_MAX",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34001,7 +34141,8 @@
       },
       "row_id": "a994ed846db9a9c00af06960c83ba98c2b93cf31ade272d897c6532d25da9979",
       "status": "missing",
-      "symbol": "D3DRS_POINTSIZE_MIN"
+      "symbol": "D3DRS_POINTSIZE_MIN",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34044,7 +34185,8 @@
       },
       "row_id": "0c0122845939fc39bda2dd1e6bb657cdad1ff4413703989c59c643397d813656",
       "status": "missing",
-      "symbol": "D3DRS_POINTSPRITEENABLE"
+      "symbol": "D3DRS_POINTSPRITEENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34092,7 +34234,8 @@
       },
       "row_id": "4cdc91b27e9a10ae2827f828f9c3ffbd5d282118d4e74c64d6d526e8968ff35d",
       "status": "missing",
-      "symbol": "D3DRS_RANGEFOGENABLE"
+      "symbol": "D3DRS_RANGEFOGENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34135,7 +34278,8 @@
       },
       "row_id": "bc8cfa485e6aa9b53e0cc7eba9cc6a0c57155f9de0e6851efe0f4a1f200b5ab6",
       "status": "missing",
-      "symbol": "D3DRS_SHADEMODE"
+      "symbol": "D3DRS_SHADEMODE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34188,7 +34332,8 @@
       },
       "row_id": "543ab5a9c588b06cfaf6529931ec84c47d5c0a7ba058307daeadbc415142f121",
       "status": "missing",
-      "symbol": "D3DRS_SOFTWAREVERTEXPROCESSING"
+      "symbol": "D3DRS_SOFTWAREVERTEXPROCESSING",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34241,7 +34386,8 @@
       },
       "row_id": "cf7341269ac167a8c6c4316f804b22ce28aa765f4cfcdb250208f3fd8309bd11",
       "status": "missing",
-      "symbol": "D3DRS_SPECULARENABLE"
+      "symbol": "D3DRS_SPECULARENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34289,7 +34435,8 @@
       },
       "row_id": "98f7ec350b96b9b268fbee69d967f8843721f3d0fd508f144c20a583feb49685",
       "status": "missing",
-      "symbol": "D3DRS_SPECULARMATERIALSOURCE"
+      "symbol": "D3DRS_SPECULARMATERIALSOURCE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34352,7 +34499,8 @@
       },
       "row_id": "22f6104f5be51df8fb4aa4a76af283b952748b3d7d238c1ea56b6e729253c901",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_SRCBLEND"
+      "symbol": "D3DRS_SRCBLEND",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34395,7 +34543,8 @@
       },
       "row_id": "1f89b9afb6d73f20450a4c7586eb14b47e6d1e6c52a8a8ea6591abebaae92218",
       "status": "missing",
-      "symbol": "D3DRS_STENCILENABLE"
+      "symbol": "D3DRS_STENCILENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34438,7 +34587,8 @@
       },
       "row_id": "b9e0e78707b13ceca2679298de3f7b2711dafc404504d543795eeb145a01cb7b",
       "status": "missing",
-      "symbol": "D3DRS_STENCILFAIL"
+      "symbol": "D3DRS_STENCILFAIL",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34481,7 +34631,8 @@
       },
       "row_id": "d21b518b9a3913e9811d1cbb017cd93e6160fecbb69ed68a5611fa0985091380",
       "status": "missing",
-      "symbol": "D3DRS_STENCILFUNC"
+      "symbol": "D3DRS_STENCILFUNC",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34524,7 +34675,8 @@
       },
       "row_id": "3d8abc72687137d50b1400221321c2c1c005b5e5e64edf16e4e731d5f7e01ec8",
       "status": "missing",
-      "symbol": "D3DRS_STENCILMASK"
+      "symbol": "D3DRS_STENCILMASK",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34567,7 +34719,8 @@
       },
       "row_id": "125b696c0aa916d19e4f686cf84c4f8a61a3a2b995b9d9cd6415ad9d4eea75c5",
       "status": "missing",
-      "symbol": "D3DRS_STENCILPASS"
+      "symbol": "D3DRS_STENCILPASS",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34610,7 +34763,8 @@
       },
       "row_id": "1077fc33ce95e38a33c0884e0f00ed736af6e51cec9ade94af8681fa4065cb5a",
       "status": "missing",
-      "symbol": "D3DRS_STENCILREF"
+      "symbol": "D3DRS_STENCILREF",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34653,7 +34807,8 @@
       },
       "row_id": "15a33258e253f589d5d855921b1f064e5a425297df60ac560b25ddfc522bb722",
       "status": "missing",
-      "symbol": "D3DRS_STENCILWRITEMASK"
+      "symbol": "D3DRS_STENCILWRITEMASK",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34696,7 +34851,8 @@
       },
       "row_id": "4f3fd20e437d7a19ded5739439ae9e7a787c19b2c0fc6db3341cf98fee92325e",
       "status": "missing",
-      "symbol": "D3DRS_STENCILZFAIL"
+      "symbol": "D3DRS_STENCILZFAIL",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34739,7 +34895,8 @@
       },
       "row_id": "82591eaeae05d0ad9b9ce287e4a96f4ef4d8d73c0622a18c100eabf472b02582",
       "status": "missing",
-      "symbol": "D3DRS_TEXTUREFACTOR"
+      "symbol": "D3DRS_TEXTUREFACTOR",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34782,7 +34939,8 @@
       },
       "row_id": "1d72bd453716248fcd6ad5cc1eeeff714567c0f61c3bb4f9ba45e30b5f615ced",
       "status": "missing",
-      "symbol": "D3DRS_TWEENFACTOR"
+      "symbol": "D3DRS_TWEENFACTOR",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34825,7 +34983,8 @@
       },
       "row_id": "d9c523cf450f001b2c07f9caa650f4290ec116cb8d64302b1ccd41485859ba8c",
       "status": "missing",
-      "symbol": "D3DRS_VERTEXBLEND"
+      "symbol": "D3DRS_VERTEXBLEND",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34868,7 +35027,8 @@
       },
       "row_id": "29af81632069ca6b96ce568e66f9ad794beffdbd87618ecd9346f1f29af26621",
       "status": "missing",
-      "symbol": "D3DRS_WRAP0"
+      "symbol": "D3DRS_WRAP0",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34911,7 +35071,8 @@
       },
       "row_id": "1bbc3401c253c6ef498f229a1157961e3b8f27ac891b0075859b4f32c40961f0",
       "status": "missing",
-      "symbol": "D3DRS_WRAP1"
+      "symbol": "D3DRS_WRAP1",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34954,7 +35115,8 @@
       },
       "row_id": "d38ceca2c247a3fbb74f0f781ce418f78d7bbfde5c9c1c15e011a629f7b12743",
       "status": "missing",
-      "symbol": "D3DRS_WRAP2"
+      "symbol": "D3DRS_WRAP2",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -34997,7 +35159,8 @@
       },
       "row_id": "5e5d15ebee34df9edd187187725a48f6ffef0d2ab75b6f9d89f7df8d52787c78",
       "status": "missing",
-      "symbol": "D3DRS_WRAP3"
+      "symbol": "D3DRS_WRAP3",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35040,7 +35203,8 @@
       },
       "row_id": "5a8103b04feeb86b52d863475288bdf0c95fd7b5501183ac9fe5530d4b81d28f",
       "status": "missing",
-      "symbol": "D3DRS_WRAP4"
+      "symbol": "D3DRS_WRAP4",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35083,7 +35247,8 @@
       },
       "row_id": "37853a196ccb555c2502faa74182b6b53a66807f852fd3fc510df1438ad31621",
       "status": "missing",
-      "symbol": "D3DRS_WRAP5"
+      "symbol": "D3DRS_WRAP5",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35126,7 +35291,8 @@
       },
       "row_id": "6277ec33ed744cae7ab1ce64d7659ac2d26d04f73ffb1c348c62ea03a2d3f72f",
       "status": "missing",
-      "symbol": "D3DRS_WRAP6"
+      "symbol": "D3DRS_WRAP6",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35169,7 +35335,8 @@
       },
       "row_id": "4d97379e64fcffd4b50154173e199630192612d0dbc7bb2b957c4fd69f74d86f",
       "status": "missing",
-      "symbol": "D3DRS_WRAP7"
+      "symbol": "D3DRS_WRAP7",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35268,7 +35435,8 @@
       },
       "row_id": "96db816edabb9f55da280e8d35800e20ccddd40026604e07299b0754423fe85d",
       "status": "missing",
-      "symbol": "D3DRS_ZBIAS"
+      "symbol": "D3DRS_ZBIAS",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35311,7 +35479,8 @@
       },
       "row_id": "8f009e6842331bbef9e6a85ef53a5e7f58976294f33f0a499241b38eebacb905",
       "status": "missing",
-      "symbol": "D3DRS_ZENABLE"
+      "symbol": "D3DRS_ZENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35374,7 +35543,8 @@
       },
       "row_id": "1925df5f112e312b3e12363431890bd6c99e083d9440fb444b6e5e850fea07f2",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_ZFUNC"
+      "symbol": "D3DRS_ZFUNC",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35417,7 +35587,8 @@
       },
       "row_id": "63121d7d3f971aaad4a5bfe620fb466ee6f6cf9e3c50e56759f0388da0e067d5",
       "status": "missing",
-      "symbol": "D3DRS_ZVISIBLE"
+      "symbol": "D3DRS_ZVISIBLE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -35480,7 +35651,8 @@
       },
       "row_id": "27b71047340b49654058c5435db925c4a1a3238fc7210eccac59d334f49844f3",
       "status": "boundary_replaced",
-      "symbol": "D3DRS_ZWRITEENABLE"
+      "symbol": "D3DRS_ZWRITEENABLE",
+      "symbol_role": "state_selector"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35500,7 +35672,8 @@
       ],
       "row_id": "aa399aa01e65022dcda43dc6956cd7a3065663eea36b2fd049c3d5398ffa590d",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_DECR"
+      "symbol": "D3DSTENCILOP_DECR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35520,7 +35693,8 @@
       ],
       "row_id": "550787fb7c36743dd9a67e08a9d6ca3711b26a45cc9d8df4c2c1c2f59f730da9",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_DECRSAT"
+      "symbol": "D3DSTENCILOP_DECRSAT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35540,7 +35714,8 @@
       ],
       "row_id": "e10392b7e028478825431ff8c823cb9beb3c1d8e293f68f7c952f2e9782ab1fd",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_INCR"
+      "symbol": "D3DSTENCILOP_INCR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35560,7 +35735,8 @@
       ],
       "row_id": "22005752c4957c106ac67d23cc005cce98616855dff0c9c261f626d455b0750a",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_INCRSAT"
+      "symbol": "D3DSTENCILOP_INCRSAT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35580,7 +35756,8 @@
       ],
       "row_id": "c40bd5747001ca35467da88fedb485a4eeca21cb1686540b81e5d8ea07c8f4d4",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_INVERT"
+      "symbol": "D3DSTENCILOP_INVERT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35600,7 +35777,8 @@
       ],
       "row_id": "b68f911bee2ac9a5d2674f5a47285b2a80b9799f2edc664789757674ff04b7f9",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_KEEP"
+      "symbol": "D3DSTENCILOP_KEEP",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35620,7 +35798,8 @@
       ],
       "row_id": "1da8cd8d5ba781b93bc38e5b635d57af40eeb6ddb1769801c7c6c6ecacbe0b36",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_REPLACE"
+      "symbol": "D3DSTENCILOP_REPLACE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35640,7 +35819,8 @@
       ],
       "row_id": "daf8d179acce9a57c838382df18cdf2ff82a22f976c9d3fb1e04d19b829e8bb1",
       "status": "unknown",
-      "symbol": "D3DSTENCILOP_ZERO"
+      "symbol": "D3DSTENCILOP_ZERO",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35655,7 +35835,8 @@
       ],
       "row_id": "cc3bbbda2f3d35c467701f1ede05575a936c4687680fe96ea66a4b7c0d9ebe93",
       "status": "unknown",
-      "symbol": "D3DTADDRESS_BORDER"
+      "symbol": "D3DTADDRESS_BORDER",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35685,7 +35866,8 @@
       ],
       "row_id": "b4735eb86df5cd8088843159cd3221a2fb368918f9218044128f39f6e414e854",
       "status": "unknown",
-      "symbol": "D3DTADDRESS_CLAMP"
+      "symbol": "D3DTADDRESS_CLAMP",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35700,7 +35882,8 @@
       ],
       "row_id": "352c9eee01f0cbd3cc11d66540f7c0a1ff0291e6347441aa33c680777e329db6",
       "status": "unknown",
-      "symbol": "D3DTADDRESS_MIRROR"
+      "symbol": "D3DTADDRESS_MIRROR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35715,7 +35898,8 @@
       ],
       "row_id": "de3783634d82c0ab609ad5dbfb348356ab9641830417b8aa5d35a20ef9df426b",
       "status": "unknown",
-      "symbol": "D3DTADDRESS_MIRRORONCE"
+      "symbol": "D3DTADDRESS_MIRRORONCE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35765,7 +35949,8 @@
       ],
       "row_id": "d287608bb1e4927093bf490942049ee828abf6f27e1c2b988cdc6340f95a34ff",
       "status": "unknown",
-      "symbol": "D3DTADDRESS_WRAP"
+      "symbol": "D3DTADDRESS_WRAP",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35780,7 +35965,8 @@
       ],
       "row_id": "28a4c0c4cf1b38d4c1f4f0c00f78edc9ef1c0e4165f73b40eb651b41460d9063",
       "status": "unknown",
-      "symbol": "D3DTA_ALPHAREPLICATE"
+      "symbol": "D3DTA_ALPHAREPLICATE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35795,7 +35981,8 @@
       ],
       "row_id": "c3b77e04787f078b663684c9031fe0f9ee17f12792a9ccd78cd23265688bbe28",
       "status": "unknown",
-      "symbol": "D3DTA_COMPLEMENT"
+      "symbol": "D3DTA_COMPLEMENT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -35950,7 +36137,8 @@
       ],
       "row_id": "60d88b17d777506cea2f824b06db83153b2a9f37cb9acdd981cb9dc8eca6144e",
       "status": "unknown",
-      "symbol": "D3DTA_CURRENT"
+      "symbol": "D3DTA_CURRENT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36070,7 +36258,8 @@
       ],
       "row_id": "fcf9612cc89be7bd8eb8128dcbe212a7b8b30d7cbb96ac229bf5c328b54ad8a3",
       "status": "unknown",
-      "symbol": "D3DTA_DIFFUSE"
+      "symbol": "D3DTA_DIFFUSE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36085,7 +36274,8 @@
       ],
       "row_id": "38ffd0674c2e4f019e55b53073ccc8f96bbe4fd76718938376aa55e8bba6a20a",
       "status": "unknown",
-      "symbol": "D3DTA_SELECTMASK"
+      "symbol": "D3DTA_SELECTMASK",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36100,7 +36290,8 @@
       ],
       "row_id": "41751f748631a909ea75a69515bda34f23bb1c7f03c1db6a47d1a7360440e788",
       "status": "unknown",
-      "symbol": "D3DTA_SPECULAR"
+      "symbol": "D3DTA_SPECULAR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36115,7 +36306,8 @@
       ],
       "row_id": "beb4b067965a85694ab9eda1f5aa2fff04cd4be055d5bb1ffc0b6d63c00e3d2c",
       "status": "unknown",
-      "symbol": "D3DTA_TEMP"
+      "symbol": "D3DTA_TEMP",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36345,7 +36537,8 @@
       ],
       "row_id": "e6813bea5346f2ef472bea2628ca5cb73ca61eb15c90a28292cc5c0c3f38b640",
       "status": "unknown",
-      "symbol": "D3DTA_TEXTURE"
+      "symbol": "D3DTA_TEXTURE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36360,7 +36553,8 @@
       ],
       "row_id": "3268252549b490fae1f72fa3ab02830646868b66467bcf5b7af0e3438d6249c7",
       "status": "unknown",
-      "symbol": "D3DTA_TFACTOR"
+      "symbol": "D3DTA_TFACTOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36400,7 +36594,8 @@
       ],
       "row_id": "bde3064b7500d2f5437cd8226740e1f6d69e2204566603aaba6dc4463562bc35",
       "status": "unknown",
-      "symbol": "D3DTEXF_ANISOTROPIC"
+      "symbol": "D3DTEXF_ANISOTROPIC",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36415,7 +36610,8 @@
       ],
       "row_id": "b5941b3b33c7efa3d557bf177c0e68cc1cfb66afaa0251084454056568e0de98",
       "status": "unknown",
-      "symbol": "D3DTEXF_FLATCUBIC"
+      "symbol": "D3DTEXF_FLATCUBIC",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36430,7 +36626,8 @@
       ],
       "row_id": "442be961070d6b57d36614194916127424b643cd88762de473ef5c86d39c00fd",
       "status": "unknown",
-      "symbol": "D3DTEXF_GAUSSIANCUBIC"
+      "symbol": "D3DTEXF_GAUSSIANCUBIC",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36505,7 +36702,8 @@
       ],
       "row_id": "ee752a2d7003782494a81c59f2491918d1d48841a53871f04f8ae69af19972f6",
       "status": "unknown",
-      "symbol": "D3DTEXF_LINEAR"
+      "symbol": "D3DTEXF_LINEAR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36540,7 +36738,8 @@
       ],
       "row_id": "fe7b0fe2e7e132282969fbcc762bf2c74ca3173088963e928872998d639e17f0",
       "status": "unknown",
-      "symbol": "D3DTEXF_NONE"
+      "symbol": "D3DTEXF_NONE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36590,7 +36789,8 @@
       ],
       "row_id": "3fe6f72d260f6dee9d4f732ec647f741dd1bcb2c1dfeff3c7ae89bb9098da332",
       "status": "unknown",
-      "symbol": "D3DTEXF_POINT"
+      "symbol": "D3DTEXF_POINT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36645,7 +36845,8 @@
       ],
       "row_id": "6c1a0419b102c64a13d57ceb891ee018f1e68df2a86e20bd7aed03dbff1816cb",
       "status": "unknown",
-      "symbol": "D3DTOP_ADD"
+      "symbol": "D3DTOP_ADD",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36660,7 +36861,8 @@
       ],
       "row_id": "2bba7bdd4b9579dc9ce8364c0dee9d6c423170c3d4c3cd87bf54004fdb358694",
       "status": "unknown",
-      "symbol": "D3DTOP_ADDSIGNED"
+      "symbol": "D3DTOP_ADDSIGNED",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36675,7 +36877,8 @@
       ],
       "row_id": "952ec031914f17a58bde4de98a9a5be233347d9a6d6f76e010ae441c90a65986",
       "status": "unknown",
-      "symbol": "D3DTOP_ADDSIGNED2X"
+      "symbol": "D3DTOP_ADDSIGNED2X",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36725,7 +36928,8 @@
       ],
       "row_id": "f8d76c6eda54506f7d345a3777e459e1e6be9a0a72191ccb1282756a9699c9de",
       "status": "unknown",
-      "symbol": "D3DTOP_ADDSMOOTH"
+      "symbol": "D3DTOP_ADDSMOOTH",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36760,7 +36964,8 @@
       ],
       "row_id": "3517432f09d6a905089f23d6efce5b3da6bd3f478119cb5af46054ec3220789b",
       "status": "unknown",
-      "symbol": "D3DTOP_BLENDCURRENTALPHA"
+      "symbol": "D3DTOP_BLENDCURRENTALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36775,7 +36980,8 @@
       ],
       "row_id": "34bb0807eb55bb99f42df1a9b810a3c5ba92126dc15b86b5f0c953fe305ebb2d",
       "status": "unknown",
-      "symbol": "D3DTOP_BLENDDIFFUSEALPHA"
+      "symbol": "D3DTOP_BLENDDIFFUSEALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36790,7 +36996,8 @@
       ],
       "row_id": "c85e3b142a9aa15bd20aaa06bceb1666286c39d895df9fe74f940f651608a723",
       "status": "unknown",
-      "symbol": "D3DTOP_BLENDFACTORALPHA"
+      "symbol": "D3DTOP_BLENDFACTORALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36830,7 +37037,8 @@
       ],
       "row_id": "c639e974f1639ce33f9d80b6918525799e37214de8c80f382634d6a2124dc613",
       "status": "unknown",
-      "symbol": "D3DTOP_BLENDTEXTUREALPHA"
+      "symbol": "D3DTOP_BLENDTEXTUREALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36845,7 +37053,8 @@
       ],
       "row_id": "aa29fed3161ac0b7c76da8cb62ab24bad46b12e5df8e72e0923df68c3d94ea3d",
       "status": "unknown",
-      "symbol": "D3DTOP_BLENDTEXTUREALPHAPM"
+      "symbol": "D3DTOP_BLENDTEXTUREALPHAPM",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36870,7 +37079,8 @@
       ],
       "row_id": "847fb4874e19444c562a57cc4a826fcdafe9d8e1e5b82e592593943db87634a7",
       "status": "unknown",
-      "symbol": "D3DTOP_BUMPENVMAP"
+      "symbol": "D3DTOP_BUMPENVMAP",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -36895,7 +37105,8 @@
       ],
       "row_id": "e5fa32b7373f57221bd24b8ecf42b7898375b97ef61596935a5594855e164782",
       "status": "unknown",
-      "symbol": "D3DTOP_BUMPENVMAPLUMINANCE"
+      "symbol": "D3DTOP_BUMPENVMAPLUMINANCE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37000,7 +37211,8 @@
       ],
       "row_id": "58d2bf0e591a3a955d274f0329493ef8a6dfe4e5094fdc269856b1f0195bae8c",
       "status": "unknown",
-      "symbol": "D3DTOP_DISABLE"
+      "symbol": "D3DTOP_DISABLE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37025,7 +37237,8 @@
       ],
       "row_id": "d0f9a3303a775f9deea1cee3b4c139fec3a00b9885c9e35404a33954bfef6447",
       "status": "unknown",
-      "symbol": "D3DTOP_DOTPRODUCT3"
+      "symbol": "D3DTOP_DOTPRODUCT3",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37040,7 +37253,8 @@
       ],
       "row_id": "24215beed0ae577848d4a2d44c0a2d313e97c2da377d817cd247ba86b520ca2d",
       "status": "unknown",
-      "symbol": "D3DTOP_LERP"
+      "symbol": "D3DTOP_LERP",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37130,7 +37344,8 @@
       ],
       "row_id": "b867852e559a14469f6f5662d1d39ecd7792cb005e15b71017542716351c5a04",
       "status": "unknown",
-      "symbol": "D3DTOP_MODULATE"
+      "symbol": "D3DTOP_MODULATE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37145,7 +37360,8 @@
       ],
       "row_id": "3d6691fdf606318d4c73d061e5176c75e0469ebb220a63f68c7095bbf8b9371e",
       "status": "unknown",
-      "symbol": "D3DTOP_MODULATE2X"
+      "symbol": "D3DTOP_MODULATE2X",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37160,7 +37376,8 @@
       ],
       "row_id": "9cec1b24ff0dbebf2840264f04c3f65f711a00a8661e3f2dabc5e5c8f4b4a64e",
       "status": "unknown",
-      "symbol": "D3DTOP_MODULATE4X"
+      "symbol": "D3DTOP_MODULATE4X",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37175,7 +37392,8 @@
       ],
       "row_id": "db226b41555778b2ea609e2d0a7d6afc9461620e9f6cdc0bde2f9be249be3627",
       "status": "unknown",
-      "symbol": "D3DTOP_MODULATEALPHA_ADDCOLOR"
+      "symbol": "D3DTOP_MODULATEALPHA_ADDCOLOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37190,7 +37408,8 @@
       ],
       "row_id": "b2884e58e19a6bfb2405bbdce71e82f4384f0b08c3f0b0fdca6b58110da66cda",
       "status": "unknown",
-      "symbol": "D3DTOP_MODULATECOLOR_ADDALPHA"
+      "symbol": "D3DTOP_MODULATECOLOR_ADDALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37205,7 +37424,8 @@
       ],
       "row_id": "119c7d701ec09d92886070f38be306d089fc4fa69ca077372433a0a7a93483c6",
       "status": "unknown",
-      "symbol": "D3DTOP_MODULATEINVALPHA_ADDCOLOR"
+      "symbol": "D3DTOP_MODULATEINVALPHA_ADDCOLOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37220,7 +37440,8 @@
       ],
       "row_id": "86de562314ce004a7f3e0167722a5133f6c34b7a97648f6667a26af561016338",
       "status": "unknown",
-      "symbol": "D3DTOP_MODULATEINVCOLOR_ADDALPHA"
+      "symbol": "D3DTOP_MODULATEINVCOLOR_ADDALPHA",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37235,7 +37456,8 @@
       ],
       "row_id": "7d7a6b6549d727c35deec75a7bf68ae2b5b316ebe7077923603882bd61e342ae",
       "status": "unknown",
-      "symbol": "D3DTOP_MULTIPLYADD"
+      "symbol": "D3DTOP_MULTIPLYADD",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37250,7 +37472,8 @@
       ],
       "row_id": "ea964fa06aba889a38c03a438428591029324432ed6c295ab3e7ac83779da2f8",
       "status": "unknown",
-      "symbol": "D3DTOP_PREMODULATE"
+      "symbol": "D3DTOP_PREMODULATE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37340,7 +37563,8 @@
       ],
       "row_id": "1806769f3671ec245ee6b6cac1a89886db0aec61a578faa01779c453b27ab995",
       "status": "unknown",
-      "symbol": "D3DTOP_SELECTARG1"
+      "symbol": "D3DTOP_SELECTARG1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37390,7 +37614,8 @@
       ],
       "row_id": "0f7fa23e4f87b902c323c8c3a9bac11f7d3d39306efaf639ea0d10b2f66460c9",
       "status": "unknown",
-      "symbol": "D3DTOP_SELECTARG2"
+      "symbol": "D3DTOP_SELECTARG2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -37440,7 +37665,8 @@
       ],
       "row_id": "02037bc197b4b46b90a0ac3bce676c461f3d64b1f022fa43709a2338ce7fefcb",
       "status": "unknown",
-      "symbol": "D3DTOP_SUBTRACT"
+      "symbol": "D3DTOP_SUBTRACT",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37502,7 +37728,8 @@
       },
       "row_id": "a7fae93ca64200593195fb6d8957a54d17110e854f4785b6714d6211b17b0b15",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_ADDRESSU"
+      "symbol": "D3DTSS_ADDRESSU",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37564,7 +37791,8 @@
       },
       "row_id": "d7985a5c9f71a4e2616229a9e747de8bc98f14ae81d1ac3927a39359c187484d",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_ADDRESSV"
+      "symbol": "D3DTSS_ADDRESSV",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37611,12 +37839,14 @@
       },
       "row_id": "d6bc9475d0dce5fabbba6b22cc134f1e4a3656f8835cc28c9e0ba5d4d152fcb1",
       "status": "missing",
-      "symbol": "D3DTSS_ADDRESSW"
+      "symbol": "D3DTSS_ADDRESSW",
+      "symbol_role": "state_selector"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 7,
@@ -37629,9 +37859,30 @@
           "line": 3039
         }
       ],
+      "review": {
+        "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels.",
+        "affected_scope": [
+          "Native callers issuing this direct request; actual retail usage remains open."
+        ],
+        "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8Wrapper texture-stage request",
+        "status": "missing",
+        "symbol": "D3DTSS_ALPHAARG0"
+      },
       "row_id": "5f16dad42de22adfcd127949b0f1f616dfc87eafa56c35f5f16e16f292dc717e",
-      "status": "unknown",
-      "symbol": "D3DTSS_ALPHAARG0"
+      "status": "missing",
+      "symbol": "D3DTSS_ALPHAARG0",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37698,7 +37949,8 @@
       },
       "row_id": "2536c5c65377cbc3b16bca8c5fce7c5c8a6af85006dd52f2861a439985e080fd",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_ALPHAARG1"
+      "symbol": "D3DTSS_ALPHAARG1",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37765,7 +38017,8 @@
       },
       "row_id": "2a0595a01b914707c18d2fb96353c08eed8987c29ed137c58be841e8de1335bf",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_ALPHAARG2"
+      "symbol": "D3DTSS_ALPHAARG2",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37832,7 +38085,8 @@
       },
       "row_id": "2c4c8450a7b6f7181b3b718c4807339b8e7c9dc4d654d5b01fe6afe8fa1770f8",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_ALPHAOP"
+      "symbol": "D3DTSS_ALPHAOP",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37879,7 +38133,8 @@
       },
       "row_id": "1d3e13f89c5e0a4f161e462bc7e7ac68b38a373f945863c0bd6cb0818655d18c",
       "status": "missing",
-      "symbol": "D3DTSS_BORDERCOLOR"
+      "symbol": "D3DTSS_BORDERCOLOR",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37931,7 +38186,8 @@
       },
       "row_id": "197094d3a1a9afa7c2eb7edb820d2833f9b3cba73e01bb574998c6075d0e9adb",
       "status": "missing",
-      "symbol": "D3DTSS_BUMPENVLOFFSET"
+      "symbol": "D3DTSS_BUMPENVLOFFSET",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -37983,7 +38239,8 @@
       },
       "row_id": "216981850f90f27a2f5b2ad50cf13e6fefc074abe2bce4d591e114c726687b09",
       "status": "missing",
-      "symbol": "D3DTSS_BUMPENVLSCALE"
+      "symbol": "D3DTSS_BUMPENVLSCALE",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38045,7 +38302,8 @@
       },
       "row_id": "e26b7b970e3e4ca307482d1e5324bf639e72b3568ae84164d54bcb3226f75c67",
       "status": "missing",
-      "symbol": "D3DTSS_BUMPENVMAT00"
+      "symbol": "D3DTSS_BUMPENVMAT00",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38107,7 +38365,8 @@
       },
       "row_id": "edcc891338219d20d8126634c1e6db103c48f44d7dcb0f944cb8e4aed3b9ba7c",
       "status": "missing",
-      "symbol": "D3DTSS_BUMPENVMAT01"
+      "symbol": "D3DTSS_BUMPENVMAT01",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38169,7 +38428,8 @@
       },
       "row_id": "a2a456704c498e30dd977d449230d7def44828ddb3570d9d7bfe3e905a51f213",
       "status": "missing",
-      "symbol": "D3DTSS_BUMPENVMAT10"
+      "symbol": "D3DTSS_BUMPENVMAT10",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38231,12 +38491,14 @@
       },
       "row_id": "d4e02215d8e69f95cbaee4b7f3f571f793097e1e98216fc30d36314506734b46",
       "status": "missing",
-      "symbol": "D3DTSS_BUMPENVMAT11"
+      "symbol": "D3DTSS_BUMPENVMAT11",
+      "symbol_role": "state_selector"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 7,
@@ -38249,9 +38511,30 @@
           "line": 3036
         }
       ],
+      "review": {
+        "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels.",
+        "affected_scope": [
+          "Native callers issuing this direct request; actual retail usage remains open."
+        ],
+        "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8Wrapper texture-stage request",
+        "status": "missing",
+        "symbol": "D3DTSS_COLORARG0"
+      },
       "row_id": "7efca66d30e2847285c96571b39d2a55ca3ad8b73c5b990379b75419f5dcc59b",
-      "status": "unknown",
-      "symbol": "D3DTSS_COLORARG0"
+      "status": "missing",
+      "symbol": "D3DTSS_COLORARG0",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38318,7 +38601,8 @@
       },
       "row_id": "1912d9d5d5b7a2e6d87c30911c4d4b0b8bcc4fe862bbea914e8546e2851d5732",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_COLORARG1"
+      "symbol": "D3DTSS_COLORARG1",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38385,7 +38669,8 @@
       },
       "row_id": "5d94f745649ac39295588263ecd0e3d52e419b39c02123aed699ad11ac066999",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_COLORARG2"
+      "symbol": "D3DTSS_COLORARG2",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38452,7 +38737,8 @@
       },
       "row_id": "1e002c6c99ea741c9d6960c90e9ecd0b2c6afca37a93325c3e36be0711c323ab",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_COLOROP"
+      "symbol": "D3DTSS_COLOROP",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38509,7 +38795,8 @@
       },
       "row_id": "79e6f8b330b173c8e5b1e5406e2594f948b9cb0fa0020b66feef5d0df4e6f0a6",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_MAGFILTER"
+      "symbol": "D3DTSS_MAGFILTER",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38566,12 +38853,14 @@
       },
       "row_id": "c979995081c84fb98c4117930ae8241f7b07c9c20dde8756c998144e980ce4e2",
       "status": "missing",
-      "symbol": "D3DTSS_MAXANISOTROPY"
+      "symbol": "D3DTSS_MAXANISOTROPY",
+      "symbol_role": "state_selector"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 7,
@@ -38584,9 +38873,30 @@
           "line": 3088
         }
       ],
+      "review": {
+        "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels.",
+        "affected_scope": [
+          "Native callers issuing this direct request; actual retail usage remains open."
+        ],
+        "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8Wrapper texture-stage request",
+        "status": "missing",
+        "symbol": "D3DTSS_MAXMIPLEVEL"
+      },
       "row_id": "be97ee768013fb974122f30a0e090fe0235453694dede985f5dc8599b9d78249",
-      "status": "unknown",
-      "symbol": "D3DTSS_MAXMIPLEVEL"
+      "status": "missing",
+      "symbol": "D3DTSS_MAXMIPLEVEL",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38643,7 +38953,8 @@
       },
       "row_id": "4026fd3504dcff7acb7bb98ab1fa9188ce1f4945b44ccb2263faa30d355c9cdb",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_MINFILTER"
+      "symbol": "D3DTSS_MINFILTER",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38700,7 +39011,8 @@
       },
       "row_id": "46dc9f4b9ce2abf584648f76fa9cc261377f81142f5433196bbc7d13c1a17f02",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_MIPFILTER"
+      "symbol": "D3DTSS_MIPFILTER",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -38747,12 +39059,14 @@
       },
       "row_id": "4d157d2082429642c3d2ee16a081562308d80b301d0f5962358f5564d06a617e",
       "status": "missing",
-      "symbol": "D3DTSS_MIPMAPLODBIAS"
+      "symbol": "D3DTSS_MIPMAPLODBIAS",
+      "symbol_role": "state_selector"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 7,
@@ -38765,9 +39079,30 @@
           "line": 3042
         }
       ],
+      "review": {
+        "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels.",
+        "affected_scope": [
+          "Native callers issuing this direct request; actual retail usage remains open."
+        ],
+        "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8Wrapper texture-stage request",
+        "status": "missing",
+        "symbol": "D3DTSS_RESULTARG"
+      },
       "row_id": "6ea12db7aaab2f8157c6ec8bfa14c2e5f1e6b9e3ae8b85acb83c30b8f97f8eb7",
-      "status": "unknown",
-      "symbol": "D3DTSS_RESULTARG"
+      "status": "missing",
+      "symbol": "D3DTSS_RESULTARG",
+      "symbol_role": "state_selector"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -38827,7 +39162,8 @@
       ],
       "row_id": "0d0836202340633563d8c56fd8fed593c32216a86c53997d0ca13d0b90cd3331",
       "status": "unknown",
-      "symbol": "D3DTSS_TCI_CAMERASPACENORMAL"
+      "symbol": "D3DTSS_TCI_CAMERASPACENORMAL",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -38882,7 +39218,8 @@
       ],
       "row_id": "da30962a0552e40142952fcf9aaebd30bc5a3a4717e738203e75d16952b4f70f",
       "status": "unknown",
-      "symbol": "D3DTSS_TCI_CAMERASPACEPOSITION"
+      "symbol": "D3DTSS_TCI_CAMERASPACEPOSITION",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -38937,7 +39274,8 @@
       ],
       "row_id": "7dbf9d32fe589424055f97a95b6212909c93aa028906661a7aa8bfc256413373",
       "status": "unknown",
-      "symbol": "D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR"
+      "symbol": "D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -39062,7 +39400,8 @@
       ],
       "row_id": "7da699f0516d36fbf8bbaaf021eb49a09b962288a896908265cca4fbcb4bac42",
       "status": "unknown",
-      "symbol": "D3DTSS_TCI_PASSTHRU"
+      "symbol": "D3DTSS_TCI_PASSTHRU",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "classification_evidence_class": "source_review",
@@ -39244,7 +39583,8 @@
       },
       "row_id": "a44681b75f8d29609667819f16aa5de546f0cad9cc1d36d550e559696ce47d39",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_TEXCOORDINDEX"
+      "symbol": "D3DTSS_TEXCOORDINDEX",
+      "symbol_role": "state_selector"
     },
     {
       "classification_evidence_class": "source_review",
@@ -39421,7 +39761,8 @@
       },
       "row_id": "9ae7f58de98f363d109c46304c7ff7d895302903d5019efa7b3b0a9cc18ab58c",
       "status": "boundary_replaced",
-      "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS"
+      "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS",
+      "symbol_role": "state_selector"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -39541,7 +39882,8 @@
       ],
       "row_id": "89ba6872cf08dbd8b15852870911805f2f0643f275c63db33a0be79580268bcb",
       "status": "unknown",
-      "symbol": "D3DTS_PROJECTION"
+      "symbol": "D3DTS_PROJECTION",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -39681,7 +40023,8 @@
       ],
       "row_id": "9ea06839fef3037116d89b50b92787873fc8d4ddd8a199c1e9dd6e4b44183fb3",
       "status": "unknown",
-      "symbol": "D3DTS_TEXTURE0"
+      "symbol": "D3DTS_TEXTURE0",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -39856,7 +40199,8 @@
       ],
       "row_id": "66059cc5ecfdc390c3222a70095169404a8edcec954cc47a0aa8f15e4e0bfd32",
       "status": "unknown",
-      "symbol": "D3DTS_VIEW"
+      "symbol": "D3DTS_VIEW",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -40016,7 +40360,8 @@
       ],
       "row_id": "6f4b8033a5a66c63cff6957bcc95d5bdfc708841a0d8645f815d326be5d05ad6",
       "status": "unknown",
-      "symbol": "D3DTS_WORLD"
+      "symbol": "D3DTS_WORLD",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -40041,7 +40386,8 @@
       ],
       "row_id": "20d22b7f8159be54c878611d3a4e8fe7869a7374c2116e9bfb7dced1546d92bb",
       "status": "unknown",
-      "symbol": "D3DTTFF_COUNT1"
+      "symbol": "D3DTTFF_COUNT1",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -40161,7 +40507,8 @@
       ],
       "row_id": "0aa00780f6b8d7e1927f94d8ddb4207994dc3bd3d95166115f432d4a68e0c4ac",
       "status": "unknown",
-      "symbol": "D3DTTFF_COUNT2"
+      "symbol": "D3DTTFF_COUNT2",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -40191,7 +40538,8 @@
       ],
       "row_id": "7c4e8c7b7b4b66c3108f4c0952d825c052dae8c6a5f501d57edea341f4e4151d",
       "status": "unknown",
-      "symbol": "D3DTTFF_COUNT3"
+      "symbol": "D3DTTFF_COUNT3",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -40216,7 +40564,8 @@
       ],
       "row_id": "41433c8dcb6d8e31cc66c61c29dd6d64e205950f109cd02c19f317ec8f7ffcfc",
       "status": "unknown",
-      "symbol": "D3DTTFF_COUNT4"
+      "symbol": "D3DTTFF_COUNT4",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -40286,7 +40635,8 @@
       ],
       "row_id": "ab8f47dd41b46a6fadf60241753d8fdc16aa0cf6d4ae11ad824dabe5b313ed3f",
       "status": "unknown",
-      "symbol": "D3DTTFF_DISABLE"
+      "symbol": "D3DTTFF_DISABLE",
+      "symbol_role": "value_or_layout_token"
     },
     {
       "evidence_class": "source_token_aggregation",
@@ -40321,7 +40671,8 @@
       ],
       "row_id": "8164d432ce20f349a16fdf457c67c7a75667059fdfcfc8bf8d9c2c2d6c47af1c",
       "status": "unknown",
-      "symbol": "D3DTTFF_PROJECTED"
+      "symbol": "D3DTTFF_PROJECTED",
+      "symbol_role": "value_or_layout_token"
     }
   ],
   "schema_version": 1,
@@ -40336,8 +40687,8 @@
     },
     "by_status": {
       "boundary_replaced": 28,
-      "missing": 69,
-      "unknown": 2495
+      "missing": 73,
+      "unknown": 2491
     },
     "candidate_roles": {
       "prototype": 14,

@@ -2167,5 +2167,86 @@
     ],
     "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
   }
+    ,
+  {
+    "symbol": "D3DTSS_ALPHAARG0",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage request",
+    "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+    ],
+    "affected_scope": [
+      "Native callers issuing this direct request; actual retail usage remains open."
+    ],
+    "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels."
+  },
+  {
+    "symbol": "D3DTSS_COLORARG0",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage request",
+    "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+    ],
+    "affected_scope": [
+      "Native callers issuing this direct request; actual retail usage remains open."
+    ],
+    "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels."
+  },
+  {
+    "symbol": "D3DTSS_MAXMIPLEVEL",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage request",
+    "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+    ],
+    "affected_scope": [
+      "Native callers issuing this direct request; actual retail usage remains open."
+    ],
+    "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels."
+  },
+  {
+    "symbol": "D3DTSS_RESULTARG",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage request",
+    "behavior": "In-range native SetTextureStageState has no case for this state selector and returns success without retaining or applying its value. References include debug/state-validation cases and do not prove active runtime requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274"
+    ],
+    "affected_scope": [
+      "Native callers issuing this direct request; actual retail usage remains open."
+    ],
+    "acceptance_open": "Trace active setters, original operation dependencies and retail materials; implement required equivalent behavior and verify native pixels."
+  }
   ]
 }

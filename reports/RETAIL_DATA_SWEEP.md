@@ -1,8 +1,25 @@
 # S4 retail closure — all-map binding discovery in progress
 
-Six supplemental inventories are now included in the consolidated gap register:
+The nested W3D dependency census now covers all 31 archives and all 3,999 W3D
+index records. It finds 117,411 texture references and 50,186 HLOD subobject
+references with zero parser/archive errors. Fifteen unique texture names have
+298 occurrences without an exact filename or DDS sibling anywhere in supplied
+archive indices or loose-file names. Their first origin, hashes and all distinct
+parent paths are retained publicly; full resolved-reference provenance is local.
+These are unknown missing-name leads, not proven rendering defects. HLOD
+subobjects are internal names and require registry/header resolution.
+
+Nineteen focused/shared tests pass, including later-map inclusion, duplicate
+archive names, DDS sibling availability, aggregation and malformed child bounds.
+Reproduce with `python3 -m tools.audit_nested_w3d_references --data DATA --output OUTPUT --private-output LOCAL_RECEIPT`.
+The compact public inventory has 62 archive/kind rows; zero-reference rows are
+retained. It is the seventh supplement in the consolidated register. Runtime
+mount precedence, name selection and natural mission dependency closure remain
+open. No assets were changed or fabricated.
+
+Seven supplemental inventories are now included in the consolidated gap register:
 level chunks, spatial presence, visibility bounds, W3D chunks, W3D consumer
-candidates and DDS formats. Their nested status records retain original JSON
+candidates, DDS formats and nested W3D references. Their nested status records retain original JSON
 pointers and input hashes. Parent-inventory identity mismatches fail generation.
 Records overlap across evidence layers; they are not unique defects. All
 supplemental statuses remain unknown pending behavior/impact/acceptance review.

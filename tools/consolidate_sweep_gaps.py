@@ -10,7 +10,7 @@ SWEEPS = ('port_guards', 'renderer', 'link', 'retail', 'scripts', 'systems',
           'performance', 'external')
 ISSUES = dict(zip(SWEEPS, range(5, 13)))
 SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
-               'w3d_chunks', 'w3d_consumers', 'dds_formats')
+               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
@@ -66,6 +66,12 @@ def root_records(name, value):
     elif name=='dds_formats':
         if totals.get('dds_members')!=len(rows) or totals.get('by_format')!=dict(Counter(r['format'] for r in rows)):
             raise ValueError('DDS denominator mismatch')
+    elif name=='w3d_references':
+        measured=dict(Counter())
+        for row in rows:
+            measured[row['kind']]=measured.get(row['kind'],0)+row['reference_occurrences']
+        if value['total']!=len(rows) or measured!=value['reference_counts']:
+            raise ValueError('W3D reference denominator mismatch')
     return rows
 
 
@@ -134,7 +140,7 @@ def markdown(result):
         return str(value).replace('|', '\\|').replace('\n', ' ')
     lines = ['# Full port gap register', '',
              'Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`',
-             'status record in the eight sweeps and six supplements is retained, including nested records.',
+             'status record in the eight sweeps and seven supplements is retained, including nested records.',
              'Supplementary inventories overlap; their counts are not unique missing features.',
              'Rows count evidence records, not unique defects. Unknown impact is unclassified;',
              'it is not silently ranked as a confirmed crash or progression blocker.', '',

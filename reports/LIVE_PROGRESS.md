@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S4 all-archive nested W3D dependencies — 2026-10-03
+
+31 archives and 3,999 W3D records yield 117,411 texture and 50,186 HLOD references,
+with zero parse errors. Fifteen texture names (298 occurrences) lack filename/DDS
+candidates in supplied indices and loose names. Compact public counts/provenance
+and a full local receipt are retained. Nineteen focused/shared tests pass.
+Runtime selection and internal HLOD resolution remain open; no engine change.
+
 ## Consolidated supplemental evidence — 2026-10-03
 
 The gap register now includes six supplemental retail inventories with original

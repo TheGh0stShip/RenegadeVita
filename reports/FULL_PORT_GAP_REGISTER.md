@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and six supplements is retained, including nested records.
+status record in the eight sweeps and seven supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -26,6 +26,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | w3d_chunks | 31 | 6180 | False |
 | w3d_consumers | 97 | 97 | False |
 | dds_formats | 3463 | 3463 | False |
+| w3d_references | 62 | 77 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -39555,3 +39556,80 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | w3d_consumers /rows/94 | 0x00000a01 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/95 | 0x00000a02 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/96 | 0x03150809 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/0 | /rows/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/1 | /rows/1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/10 | /rows/10 | unknown | unclassified | C&C_Field.mix |
+| w3d_references /rows/11 | /rows/11 | unknown | unclassified | C&C_Field.mix |
+| w3d_references /rows/12 | /rows/12 | unknown | unclassified | C&C_Glacier_Flying.mix |
+| w3d_references /rows/13 | /rows/13 | unknown | unclassified | C&C_Glacier_Flying.mix |
+| w3d_references /rows/14 | /rows/14 | unknown | unclassified | C&C_Hourglass.mix |
+| w3d_references /rows/15 | /rows/15 | unknown | unclassified | C&C_Hourglass.mix |
+| w3d_references /rows/16 | /rows/16 | unknown | unclassified | C&C_Islands.mix |
+| w3d_references /rows/17 | /rows/17 | unknown | unclassified | C&C_Islands.mix |
+| w3d_references /rows/18 | /rows/18 | unknown | unclassified | C&C_Mesa.mix |
+| w3d_references /rows/19 | /rows/19 | unknown | unclassified | C&C_Mesa.mix |
+| w3d_references /rows/2 | /rows/2 | unknown | unclassified | C&C_Canyon.mix |
+| w3d_references /rows/20 | /rows/20 | unknown | unclassified | C&C_Under.mix |
+| w3d_references /rows/21 | /rows/21 | unknown | unclassified | C&C_Under.mix |
+| w3d_references /rows/22 | /rows/22 | unknown | unclassified | C&C_Volcano.mix |
+| w3d_references /rows/23 | /rows/23 | unknown | unclassified | C&C_Volcano.mix |
+| w3d_references /rows/24 | /rows/24 | unknown | unclassified | C&C_Walls.mix |
+| w3d_references /rows/25 | /rows/25 | unknown | unclassified | C&C_Walls.mix |
+| w3d_references /rows/26 | /rows/26 | unknown | unclassified | C&C_Walls_Flying.mix |
+| w3d_references /rows/27 | /rows/27 | unknown | unclassified | C&C_Walls_Flying.mix |
+| w3d_references /rows/28 | /rows/28 | unknown | unclassified | M00_Tutorial.mix |
+| w3d_references /rows/29 | /rows/29 | unknown | unclassified | M00_Tutorial.mix |
+| w3d_references /rows/3 | /rows/3 | unknown | unclassified | C&C_Canyon.mix |
+| w3d_references /rows/30 | /rows/30 | unknown | unclassified | M01.mix |
+| w3d_references /rows/31 | /rows/31 | unknown | unclassified | M01.mix |
+| w3d_references /rows/32 | /rows/32 | unknown | unclassified | M02.mix |
+| w3d_references /rows/33 | /rows/33 | unknown | unclassified | M02.mix |
+| w3d_references /rows/34 | /rows/34 | unknown | unclassified | M03.mix |
+| w3d_references /rows/34/unresolved_texture_names/0 | x3_ocean.w3d | unknown | unclassified | M03.mix |
+| w3d_references /rows/35 | /rows/35 | unknown | unclassified | M03.mix |
+| w3d_references /rows/36 | /rows/36 | unknown | unclassified | M04.mix |
+| w3d_references /rows/37 | /rows/37 | unknown | unclassified | M04.mix |
+| w3d_references /rows/38 | /rows/38 | unknown | unclassified | M05.mix |
+| w3d_references /rows/39 | /rows/39 | unknown | unclassified | M05.mix |
+| w3d_references /rows/4 | /rows/4 | unknown | unclassified | C&C_City.mix |
+| w3d_references /rows/40 | /rows/40 | unknown | unclassified | M06.mix |
+| w3d_references /rows/41 | /rows/41 | unknown | unclassified | M06.mix |
+| w3d_references /rows/42 | /rows/42 | unknown | unclassified | M07.mix |
+| w3d_references /rows/43 | /rows/43 | unknown | unclassified | M07.mix |
+| w3d_references /rows/44 | /rows/44 | unknown | unclassified | M08.mix |
+| w3d_references /rows/45 | /rows/45 | unknown | unclassified | M08.mix |
+| w3d_references /rows/46 | /rows/46 | unknown | unclassified | M09.mix |
+| w3d_references /rows/47 | /rows/47 | unknown | unclassified | M09.mix |
+| w3d_references /rows/48 | /rows/48 | unknown | unclassified | M10.mix |
+| w3d_references /rows/49 | /rows/49 | unknown | unclassified | M10.mix |
+| w3d_references /rows/5 | /rows/5 | unknown | unclassified | C&C_City.mix |
+| w3d_references /rows/50 | /rows/50 | unknown | unclassified | M11.mix |
+| w3d_references /rows/51 | /rows/51 | unknown | unclassified | M11.mix |
+| w3d_references /rows/52 | /rows/52 | unknown | unclassified | M13.mix |
+| w3d_references /rows/53 | /rows/53 | unknown | unclassified | M13.mix |
+| w3d_references /rows/54 | /rows/54 | unknown | unclassified | Skirmish00.mix |
+| w3d_references /rows/55 | /rows/55 | unknown | unclassified | Skirmish00.mix |
+| w3d_references /rows/56 | /rows/56 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/0 | w_chemtank1.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/1 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/10 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/11 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/12 | loadscrn1.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/13 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/2 | if_screen.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/3 | if_screen.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/4 | if_screen.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/5 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/6 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/7 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/8 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/56/unresolved_texture_names/9 | in_statictrans2.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/57 | /rows/57 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/58 | /rows/58 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/59 | /rows/59 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/6 | /rows/6 | unknown | unclassified | C&C_City_Flying.mix |
+| w3d_references /rows/60 | /rows/60 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/61 | /rows/61 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_references /rows/7 | /rows/7 | unknown | unclassified | C&C_City_Flying.mix |
+| w3d_references /rows/8 | /rows/8 | unknown | unclassified | C&C_Complex.mix |
+| w3d_references /rows/9 | /rows/9 | unknown | unclassified | C&C_Complex.mix |

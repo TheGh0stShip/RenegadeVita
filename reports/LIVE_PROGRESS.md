@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## M13 engineer destination state — 2026-10-03
+
+Completed: controller registration/check→authored LEAD→saved point_id→retry
+movement traced. Six binding pairs inspected; ordinary destinations are placed
+objects, count5's99 pair remains conditional with separate entry/send handling.
+Evidence: private archive/database/input-receipt identities and original source.
+Open: initial fixed movement does not update retry point_id; event order and
+save/reload behavior require native evidence. No speculative data correction.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Action request and engineer recovery query — 2026-10-03
 
 Completed: original request acceptance/callback ordering and void script wrapper

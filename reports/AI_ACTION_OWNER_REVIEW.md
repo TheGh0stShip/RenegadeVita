@@ -101,6 +101,36 @@ query in their inspected mission units. No behavior correction was applied.
 Private source identities: `build/action-request-and-engineer-query-20261003.json`.
 Source inspection only; no build, launch or new native acceptance.
 
+## Engineer destination state and authored routing
+
+Both engineer scripts initialize point_id to zero and save it as variable4.
+LEAD stores the incoming event parameter in point_id before requesting movement.
+RESEND_GOTO uses that saved value, priority96 and arrival distance1.0; it does
+not select or update a destination itself. Engineer1's initial POINT_ANIM movement
+and Engineer2's DOING_ANIMATION completion instead use fixed placed destinations
+without updating point_id. A retry before a delivered LEAD therefore has different
+state from a retry afterward. No occurrence or gameplay failure is established.
+
+The controller records engineer IDs from SET_ENGINEER in arrival order, broadcasts
+COUNT_UP after COUNTER, and responds to CHECK_ENGINEER by sending the requested
+stored ID back to the sender. MX0_Engineer_Goto/Goto2 then send LEAD with their
+authored GotoDest1/2 values. The source chain requires registration, correct sender
+identity, synchronous custom delivery and LEAD reception; merely locating the
+destination does not prove it executes.
+
+The retained M13 binding receipt has six routing bindings, with counts1,2,3,4,5,7.
+Every decoded destination for counts1,2,3,4,7 is a serialized game object. The
+count5 binding uses99 for both destinations, absent from decoded placed objects.
+Its Entered branch sends CROUCH_WANDER and event100006 instead of the ordinary
+check-engineer sequence; separate SEND_EM handling can request engineer checks.
+The99 values remain conditional leads, not proof of missing required objects.
+Do not replace them or infer that every authored parameter executes. Initial
+fixed destinations and controller are also present in serialized object metadata.
+
+Private receipt: `build/m13-engineer-destination-routes-20261003.json`, bound to
+the existing archive/database and input-receipt hashes. No retail mutation,
+compilation, launch or native progression acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

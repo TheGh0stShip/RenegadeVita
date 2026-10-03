@@ -143,6 +143,7 @@ FlightRecorder gRecorder;
 // Conversation producers never access gRecorder. Reset requires quiescent
 // old mission work, as does the existing flight-recorder session boundary.
 struct ConversationTransition {
+	uint32_t monitor_kind; // 0 transition, otherwise outcome+1
 	uint64_t instance;
 	int32_t conversation_id, action_id, remark, text_id, reason;
 	float next_seconds;
@@ -265,6 +266,18 @@ void Drain_Conversation_Queue()
 	for (uint32_t index = 0U; index < gConversationCount; ++index) {
 		const ConversationTransition &event = gConversationQueue[index];
 		char detail[224];
+		if (event.monitor_kind != 0U) {
+			static const char *names[] = {"monitor_inserted", "monitor_present",
+				"monitor_capacity_rejected", "observer_call_attempted"};
+			snprintf(detail, sizeof(detail),
+				"instance=%" PRIu64 " conversation_id=%" PRId32 " action=%" PRId32
+				" object_id=%" PRId32 " observer_index=%" PRId32 " reason=%" PRId32,
+				event.instance, event.conversation_id, event.action_id,
+				event.text_id, event.remark, event.reason);
+			Push_Event("conversation", names[event.monitor_kind - 1U],
+				0U, event.monotonic_us, detail);
+			continue;
+		}
 		snprintf(detail, sizeof(detail),
 			"instance=%" PRIu64 " conversation_id=%" PRId32 " action=%" PRId32 " remark=%" PRId32 " text_id=%" PRId32
 			" next_seconds=%.6g reason=%" PRId32,
@@ -572,8 +585,26 @@ void A35_Campaign_Flight_Conversation_Transition(bool completed, uint64_t instan
 	if (gConversationEnabled) {
 		if (gConversationCount < 128U) {
 			ConversationTransition &event = gConversationQueue[gConversationCount++];
-			event = {instance, conversation_id, action_id, remark, text_id, reason,
+			event = {0U, instance, conversation_id, action_id, remark, text_id, reason,
 				next_seconds, Monotonic_Us(), completed};
+		} else if (gConversationDropped != UINT32_MAX) {
+			++gConversationDropped;
+		}
+	}
+	pthread_mutex_unlock(&gConversationMutex);
+}
+
+void A35_Campaign_Flight_Conversation_Monitor(uint32_t outcome, uint64_t instance,
+	int32_t conversation_id, int32_t action_id, int32_t object_id,
+	int32_t observer_index, int32_t reason)
+{
+	if (outcome > 3U) return;
+	pthread_mutex_lock(&gConversationMutex);
+	if (gConversationEnabled) {
+		if (gConversationCount < 128U) {
+			gConversationQueue[gConversationCount++] = {outcome + 1U, instance,
+				conversation_id, action_id, observer_index, object_id, reason,
+				0.0F, Monotonic_Us(), false};
 		} else if (gConversationDropped != UINT32_MAX) {
 			++gConversationDropped;
 		}

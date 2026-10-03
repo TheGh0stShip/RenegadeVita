@@ -6,10 +6,11 @@ from pathlib import Path
 import re
 
 DETAIL = re.compile(r'instance=(\d+) conversation_id=(-?\d+) action=(-?\d+) remark=(-?\d+) text_id=(-?\d+) next_seconds=(\S+) reason=(-?\d+)')
+MONITOR = re.compile(r'instance=(\d+) conversation_id=(-?\d+) action=(-?\d+) object_id=(-?\d+) observer_index=(-?\d+) reason=(-?\d+)')
 
 
 def analyze(events):
-    rows, findings, identities = [], [], set()
+    rows, monitors, findings, identities = [], [], [], set()
     zero, unknown, dropped = 0, 0, 0
     for index, event in enumerate(events):
         if not isinstance(event, dict):
@@ -29,6 +30,21 @@ def analyze(events):
                 raise ValueError('invalid queue overflow count')
             dropped += int(match[1])
             findings.append({'record': index, 'kind': 'queue_loss', 'count': int(match[1])})
+            continue
+        if name in ('monitor_inserted', 'monitor_present', 'monitor_capacity_rejected', 'observer_call_attempted'):
+            match = MONITOR.fullmatch(detail)
+            if not match:
+                raise ValueError('malformed numeric monitor event')
+            values = list(map(int, match.groups()))
+            if values[0] > 0xffffffffffffffff or any(not -2**31 <= n < 2**31 for n in values[1:]):
+                raise ValueError('monitor numeric width exceeded')
+            monitors.append({'record': index, 'event': name, 'instance': values[0],
+                             'conversation_id': values[1], 'action_id': values[2],
+                             'object_id': values[3], 'observer_index': values[4], 'reason': values[5]})
+            if values[0] == 0:
+                unknown += 1
+            if name == 'monitor_capacity_rejected':
+                findings.append({'record': index, 'kind': 'monitor_capacity_rejected'})
             continue
         if name not in ('remark_scheduled', 'owner_finished'):
             findings.append({'record': index, 'kind': 'unrecognized_conversation_event'})
@@ -56,7 +72,7 @@ def analyze(events):
     if len(identities) > 1:
         raise ValueError('mixed conversation capture identities')
     return {'schema': 1, 'identity': list(next(iter(identities))) if identities else None,
-            'transitions': rows, 'findings': findings, 'queue_unretained': dropped,
+            'transitions': rows, 'monitor_events': monitors, 'findings': findings, 'queue_unretained': dropped,
             'nonpositive_remark_timers': zero, 'unknown_instance_records': unknown,
             'callback_delivery_verified': False, 'complete_progression_verified': False,
             'limits': ['One process capture only; tokens are reused across application launches.',

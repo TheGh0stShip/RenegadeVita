@@ -32,7 +32,31 @@
  		}
  
  	} else {
-@@ -1243,6 +1254,11 @@
+@@ -999,6 +1010,11 @@
+ 		}
+ 	}
+ 
++#if defined(RENEGADE_VITA_PORT)
++	A35_Campaign_Flight_Conversation_Monitor(found ? 1U : (empty_index != -1 ? 0U : 2U),
++		DiagnosticInstance, static_cast<int32_t>(Get_ID()), static_cast<int32_t>(ActionID),
++		game_obj != NULL ? static_cast<int32_t>(game_obj->Get_ID()) : 0, -1, 0);
++#endif
+ 	return ;
+ }
+ 
+@@ -1047,6 +1063,11 @@
+ 			const GameObjObserverList &observer_list = game_obj->Get_Observers ();
+ 			for (int observer_index = 0; observer_index < observer_list.Count (); observer_index ++) {
++#if defined(RENEGADE_VITA_PORT)
++				A35_Campaign_Flight_Conversation_Monitor(3U, DiagnosticInstance,
++					static_cast<int32_t>(Get_ID()), static_cast<int32_t>(ActionID),
++					static_cast<int32_t>(game_obj->Get_ID()), observer_index, static_cast<int32_t>(reason));
++#endif
+ 				observer_list[observer_index]->Action_Complete (game_obj, ActionID, reason);
+ 			}
+ 		}
+ 	}
+@@ -1243,6 +1264,11 @@
  	
  	Free_Orator_List ();
  

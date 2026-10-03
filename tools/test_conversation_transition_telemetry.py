@@ -22,7 +22,11 @@ class ConversationTransitions(unittest.TestCase):
             text = path.read_text()
             header = (Path(directory) / 'activeconversation.h').read_text()
         self.assertEqual(text.count('A35_Campaign_Flight_Conversation_Transition('), 2)
-        self.assertEqual(text.count('static_cast<int32_t>(Get_ID())'), 2)
+        self.assertEqual(text.count('static_cast<int32_t>(Get_ID())'), 4)
+        notify = text.split('ActiveConversationClass::Notify_Monitors_On_End', 1)[1].split(
+            'ActiveConversationClass::Notify_Monitors (', 1)[0]
+        self.assertLess(notify.index('A35_Campaign_Flight_Conversation_Monitor(3U'),
+                        notify.index('->Action_Complete (game_obj, ActionID, reason);'))
         self.assertIn('uint64_t DiagnosticInstance;', header)
         self.assertEqual(text.count('DiagnosticInstance ='), 1)
         save_load = text.split('ActiveConversationClass::Save', 1)[1].split('ActiveConversationClass::Register_Monitor', 1)[0]
@@ -77,6 +81,15 @@ class ConversationTransitions(unittest.TestCase):
         frame = text.split('void A35_Campaign_Flight_Record_Frame', 1)[1].split(
             'void A35_Campaign_Flight_Record_Mission', 1)[0]
         self.assertIn('Drain_Conversation_Queue();', frame)
+
+    def test_monitor_producer_rejects_invalid_kinds_and_has_no_recorder_access(self):
+        text = (ROOT / 'port/developer/a35_campaign_flight_recorder.cpp').read_text()
+        body = text.split('void A35_Campaign_Flight_Conversation_Monitor', 1)[1].split(
+            'void A35_Campaign_Flight_Record_Frame', 1)[0]
+        self.assertIn('if (outcome > 3U) return;', body)
+        self.assertNotIn('gRecorder', body)
+        self.assertIn('pthread_mutex_lock(&gConversationMutex)', body)
+        self.assertIn('gConversationCount < 128U', body)
 
 
 if __name__ == '__main__':

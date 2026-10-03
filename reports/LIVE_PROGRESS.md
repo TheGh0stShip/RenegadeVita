@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Monitor registration and observer attempts — 2026-10-03
+
+Completed: original registration outcomes and pre-call observer attempts now
+share the bounded opt-in collector; offline parsing keeps them separate.
+Evidence:34 focused Python/source checks pass; zero-fuzz replay preserves
+the original callback loop. Prepared C++ cases remain uncompiled.
+Next: candidate-bound native callback and gameplay evidence after the hold.
+Native/runtime gates remain0/10; no build, launch or device action occurred.
+
 ## Conversation transition collector — 2026-10-03
 
 Renegade Vita — v3.5 active

@@ -11,6 +11,23 @@ def event(name='remark_scheduled', detail=None, **extra):
 
 
 class TransitionAnalysis(unittest.TestCase):
+    def test_monitor_attempt_is_not_callback_delivery(self):
+        detail = 'instance=1 conversation_id=2 action=7 object_id=100 observer_index=0 reason=3'
+        report = analyze([event('observer_call_attempted', detail)])
+        self.assertEqual(report['monitor_events'][0]['object_id'], 100)
+        self.assertEqual(report['monitor_events'][0]['reason'], 3)
+        self.assertFalse(report['callback_delivery_verified'])
+
+    def test_capacity_rejection_is_explicit_finding(self):
+        detail = 'instance=1 conversation_id=2 action=7 object_id=100 observer_index=-1 reason=0'
+        report = analyze([event('monitor_capacity_rejected', detail)])
+        self.assertEqual(report['findings'][0]['kind'], 'monitor_capacity_rejected')
+
+    def test_monitor_bad_shape_and_numeric_width_rejected(self):
+        for detail in ('bad', 'instance=1 conversation_id=2 action=7 object_id=2147483648 observer_index=-1 reason=0'):
+            with self.assertRaises(ValueError):
+                analyze([event('monitor_inserted', detail)])
+
     def test_zero_duration_is_observation_not_callback_or_progression_proof(self):
         row = analyze([event(), event('owner_finished')])
         self.assertEqual(row['nonpositive_remark_timers'], 1)

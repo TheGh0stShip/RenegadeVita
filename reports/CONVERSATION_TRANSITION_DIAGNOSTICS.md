@@ -46,3 +46,16 @@ unknown instance tokens, nonfinite timers and explicit queue loss remain
 observations. Eight synthetic counterexamples pass; no current runtime capture
 has been assessed with the new collector. Detailed output stays in private
 candidate evidence, not a public asset or dialogue report.
+
+Monitor diagnostics now retain inserted, already-present and capacity-rejected
+registration outcomes, plus an observer-call attempt immediately before the
+original synchronous Action_Complete invocation. Object ID and observer-list
+index are numeric context; the index is not a stable script identity. A null
+registration reports object0 and cannot establish a real monitor. No hook
+reads an object after the callback, replaces a callback, or reports a returned
+or successful script action. Queue loss and ring eviction still apply.
+
+The offline reader parses monitor outcomes separately and reports capacity
+rejection explicitly. Twenty-eight focused source/Python checks pass. Prepared
+C++ cases cover numeric monitor encoding and invalid-kind rejection; they
+remain uncompiled and do not exercise the original observer callback path.

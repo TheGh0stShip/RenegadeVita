@@ -158,6 +158,15 @@ int main()
 		contents.find("owner_finished") != std::string::npos &&
 		contents.find("reason=3") != std::string::npos,
 		"completion reason retained after queue drain")) return 1;
+	for (uint32_t outcome = 0U; outcome < 5U; ++outcome)
+		A35_Campaign_Flight_Conversation_Monitor(outcome, second_instance, 1, 7, 100, 0, 3);
+	if (!Check(A35_Campaign_Flight_Flush("checkpoint"), "monitor outcomes flush")) return 1;
+	if (!Check(Read_File(events, contents) && Line_Count(contents) == 135U &&
+		contents.find("monitor_inserted") != std::string::npos &&
+		contents.find("monitor_present") != std::string::npos &&
+		contents.find("monitor_capacity_rejected") != std::string::npos &&
+		contents.find("observer_call_attempted") != std::string::npos,
+		"four monitor outcomes retained and invalid kind ignored")) return 1;
 	A35_Campaign_Flight_Shutdown();
 	remove(events.c_str());
 	remove(frames.c_str());

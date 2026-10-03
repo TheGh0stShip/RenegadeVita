@@ -1,5 +1,14 @@
 # S2 renderer features — inventory in progress
 
+DXT3 HUD reachability remains unresolved. A bounded literal-reference scan
+of all 18,651 supplied archive index records finds no occurrences of the four
+DXT3 icon basenames inside member payloads. Source searches likewise found no
+literal names. Results and archive hashes are retained in
+reports/generated/sweeps/dds_hud_references.json. Computed names, loose files,
+editor metadata and runtime lookup remain open; zero hits do not prove exclusion.
+The reusable scanner handles cross-block matches and member bounds and rejects
+truncated reads. Three authored tests pass. No content is removed or repaired.
+
 Retail DDS header scan using `tools/audit_dds_format_inventory.py` examined all
 30 supplied top-level MIX1 archives without archive errors. It counted 3,459
 named DDS members: 2,981 DXT1, 474 DXT5 and four DXT3. DXT3 members are

@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+DXT3 HUD reachability batch: 18,651 member payloads scanned for four icon
+basenames; zero literal hits. Hash-pinned negative evidence retained without
+excluding content. Three streaming-boundary tests pass; computed/runtime names
+remain open.
+
 DDS evidence batch: metadata-only JSON now retains 3,459 uniquely identified
 records, hashes for all 30 archives and scanner sources. Two scans reproduce
 byte-for-byte; four tests pass. Runtime statuses remain unknown; no payloads.

@@ -1,5 +1,20 @@
 # S4 retail closure — all-map binding discovery in progress
 
+The generalized W3D census scans all 31 supplied MIX/DAT/DBS archives, retaining
+3,999 W3D member index records, 1,294,901 chunk occurrences, 2,181 per-archive
+ancestry paths and 97 distinct chunk IDs. Zero members fail bounded parsing.
+Archive/member hashes and duplicate index records are retained; path aggregates
+include first-member/index/offset provenance without payload bytes. Fourteen
+focused/shared checks pass, including duplicate names, M11 inclusion, repeated
+children, parent context and malformed bounds. All coverage statuses remain
+unknown. No loader behavior or natural asset reachability is accepted.
+
+Reproduce with `python3 -m tools.audit_w3d_loader_coverage --data DATA --output OUTPUT`.
+The optional historical `--build` census still covers only four bootstrap
+loaders; it is not used to classify this full asset denominator. Loose W3D,
+nested archives, full staged-loader mapping, per-member nested-path provenance,
+mission dependency closure and consolidated-gap integration remain open.
+
 Optional host LZO2 safe decoding checks all 25,784 visibility tables across
 27 maps: zero decode errors and zero decoded-size mismatches. Expected sizes
 follow original `VisTableClass::Get_Long_Count` and `Get_Byte_Count`:

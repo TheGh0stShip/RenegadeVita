@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S4 all-archive W3D chunk denominator — 2026-10-03
+
+31 archives, 3,999 W3D index records, 1,294,901 chunk occurrences and 97 distinct
+IDs parse without bounds errors. 2,181 per-archive parent paths retain first
+occurrence provenance. Fourteen focused/shared checks pass. Loader mapping and
+mission asset reachability remain open; no engine change or runtime acceptance.
+
 ## S4 all-map visibility decompression — 2026-10-03
 
 Host liblzo2 safe decoding passes all 25,784 tables across 27 maps with zero

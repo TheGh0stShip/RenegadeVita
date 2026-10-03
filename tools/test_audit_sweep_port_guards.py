@@ -1,9 +1,34 @@
 import unittest
 
-from audit_sweep_port_guards import directives, patch_guards, stage_patch_selection, wrapper_references
+from audit_sweep_port_guards import apply_reviews, directives, patch_guards, stage_patch_selection, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_changed_caller_context_invalidates_review(self):
+        rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
+                 'body_sha256': 'same', 'status': 'unknown'}]
+        review = {'file': 'port/a.cpp', 'declarator': 'f()', 'body_sha256': 'same',
+                  'status': 'stubbed_or_noop'}
+        issues = apply_reviews(rows, [review], {'staging/caller.cpp': 'old'},
+                               {'staging/caller.cpp': 'new'})
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(rows[0]['status'], 'unknown')
+
+    def test_stale_review_cannot_classify_changed_body(self):
+        rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
+                 'body_sha256': 'new', 'status': 'unknown'}]
+        review = {'file': 'port/a.cpp', 'declarator': 'f()', 'body_sha256': 'old',
+                  'status': 'stubbed_or_noop'}
+        self.assertEqual(len(apply_reviews(rows, [review])), 1)
+        self.assertEqual(rows[0]['status'], 'unknown')
+
+    def test_review_requires_unique_identity(self):
+        row = {'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
+               'body_sha256': 'same', 'status': 'unknown'}
+        review = {key: row[key] for key in ('file', 'declarator', 'body_sha256')}
+        review['status'] = 'stubbed_or_noop'
+        self.assertEqual(len(apply_reviews([row.copy(), row.copy()], [review])), 1)
+
     def test_multiline_added_macro_with_context_directive(self):
         patch = ('--- a/test.cpp\n+++ b/test.cpp\n@@ -10,2 +10,3 @@\n'
                  ' #if defined(OTHER) || \\\n+                 +    defined(RENEGADE_VITA_PORT) || \\\n+                  defined(FINAL)\n')

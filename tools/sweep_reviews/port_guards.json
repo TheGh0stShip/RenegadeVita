@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "scope": "Initial source-reviewed entries only. S1 inventory and classification remain incomplete.",
+  "evidence_inputs_sha256": {
+    "staging/wwphys/pscene_projectors.cpp": "decdf3d42241facc03cc83af400cf3aa5bf66e063f0ba65f4a76bf90dc42508b",
+    "staging/ww3d2/mesh.cpp": "b655568bf2894992a2c6a2377d4d745bf154e053f8c5d9ce4b93d05ca6d0b949",
+    "staging/ww3d2/boxrobj.cpp": "10764f49c3d4b68d7d6071a6663a55a931c63affa85d0a0d3ae0acad1ae9e2d4",
+    "staging/ww3d2/decalmsh.cpp": "9cec0d5dcb333181a7f3acd6e61fa44c0b50013d4332c2526c20c3b245950161"
+  },
+  "reviews": [
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "*DX8Wrapper::Create_Render_Target(int width, int height,\n\tWW3DFormat format)",
+      "body_sha256": "97bbb69939b4669a8587382312ed6a722d3e2d0feb5e47e199f1a6155d0d84a4",
+      "status": "stubbed_or_noop",
+      "original_owner": "DX8Wrapper::Create_Render_Target; PhysicsSceneClass projector allocation",
+      "behavior": "Returns NULL for every size and format, with one native diagnostic. No offscreen target is allocated. The original fallback avoids submitting an offscreen draw but does not restore render-to-texture.",
+      "callers": ["staging/wwphys/pscene_projectors.cpp:173", "staging/wwphys/pscene_projectors.cpp:179"],
+      "affected_scope": ["All modes reaching original projector render-target allocation; per-map instances remain unverified"],
+      "acceptance_open": "Original target allocation, binding, projected shadows and rendered results on Vita/PSTV. Source caller evidence is not physical acceptance."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "declarator": "Submit_Unsupported(RenderObjClass *object)",
+      "body_sha256": "4c327cc86979dab074364d567dae3bdb848b2ede174c68cdcdab85f2a98eac81",
+      "status": "stubbed_or_noop",
+      "original_owner": "MeshClass additional material passes; AABoxRenderObjClass and OBBoxRenderObjClass rendering",
+      "behavior": "Increments diagnostic statistics and logs the first object; submits no geometry or material pass.",
+      "callers": ["staging/ww3d2/mesh.cpp:752", "staging/ww3d2/boxrobj.cpp:711", "staging/ww3d2/boxrobj.cpp:1104"],
+      "affected_scope": ["Modes reaching additional mesh passes or enabled box display masks; per-map instances and display-mask settings remain unverified"],
+      "acceptance_open": "Additional-pass and box submission ownership, build-profile reachability and native pixels. Box-display diagnostic use is not proof of retail exclusion."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "declarator": "Submit_Decals_Unsupported()",
+      "body_sha256": "e4b8e731c72f62969dd8ff719769a631160fe4806c54867992ceaf229f37c8f7",
+      "status": "stubbed_or_noop",
+      "original_owner": "RigidDecalMeshClass::Render and SkinDecalMeshClass::Render",
+      "behavior": "Diagnostic counter and first-operation logging only. Current staged callers are guarded by RENEGADE_VITA_PORT && !__vita__; their presence does not prove native decals are still skipped.",
+      "callers": ["staging/ww3d2/decalmsh.cpp:297", "staging/ww3d2/decalmsh.cpp:785"],
+      "affected_scope": ["Host port profiles taking the non-__vita__ decal guard; native decal restoration and depth-bias results remain separate open gates"],
+      "acceptance_open": "Native decal queue/body/flush execution and depth-bias presentation, plus explicit host profile selection. Do not classify the native path from this diagnostic helper alone."
+    }
+  ]
+}

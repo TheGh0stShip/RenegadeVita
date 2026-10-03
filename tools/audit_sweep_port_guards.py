@@ -15,6 +15,36 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 PORT_MACRO = re.compile(r'\b(?:RENEGADE_(?:VITA_\w*|A\w*|HOST_\w*)|_UNIX|VITA)\b')
 DIRECTIVE = re.compile(r'^\s*#\s*(if|ifdef|ifndef|elif)\b')
+STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
+            'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof', 'missing', 'unknown'}
+
+
+def apply_reviews(rows, reviews, expected_inputs=None, current_inputs=None):
+    """A reviewed body may be classified only while its syntax identity matches.
+
+    A stale review stays visible as a mismatch and leaves the row unknown.
+    Neither a source review nor an unchanged hash establishes runtime acceptance.
+    """
+    issues = [{'file': file, 'reason': 'review caller/context input absent or changed'}
+              for file, checksum in (expected_inputs or {}).items()
+              if (current_inputs or {}).get(file) != checksum]
+    if issues:
+        return issues
+    for review in reviews:
+        if review['status'] not in STATUSES:
+            raise ValueError('Invalid review status: ' + review['status'])
+        matches = [row for row in rows if row['kind'] == 'port_function' and
+                   row['file'] == review['file'] and row['declarator'] == review['declarator']]
+        if len(matches) != 1 or matches[0].get('body_sha256') != review['body_sha256']:
+            issues.append({'file': review['file'], 'declarator': review['declarator'],
+                           'reason': 'review identity absent, ambiguous or changed'})
+            continue
+        row = matches[0]
+        row['status'] = review['status']
+        row['review'] = {key: review[key] for key in
+                         ('original_owner', 'behavior', 'callers', 'affected_scope', 'acceptance_open')}
+        row['classification_evidence_class'] = 'source_review'
+    return issues
 
 
 def digest(path):
@@ -151,6 +181,13 @@ def audit(root=ROOT, include_functions=False):
             rows.append({'kind': 'link_wrapper_reference', 'file': relative,
                          'status': 'unknown', 'evidence_class': 'build_source', **row})
     inputs['tools/stage_sources.sh'] = digest(stage)
+    review_path = root / 'tools/sweep_reviews/port_guards.json'
+    review_issues = []
+    if include_functions and review_path.exists():
+        inputs[review_path.relative_to(root).as_posix()] = digest(review_path)
+        review_document = json.loads(review_path.read_text())
+        review_issues = apply_reviews(rows, review_document['reviews'],
+                                     review_document.get('evidence_inputs_sha256'), inputs)
     kinds = dict(sorted(Counter(row['kind'] for row in rows).items()))
     return {'schema_version': 1, 'sweep': 'S1', 'complete': False,
             'evidence_class': 'source_inventory',
@@ -160,6 +197,7 @@ def audit(root=ROOT, include_functions=False):
             'patch_inventory': patch_inventory,
             'function_files': function_files,
             'function_inventory_requested': include_functions,
+            'review_identity_issues': review_issues,
             'missing_selected_patches': sorted(selected - {p.relative_to(root).as_posix() for p in patches}),
             'inputs_sha256': inputs, 'rows': rows,
             'coverage_open': [

@@ -3,7 +3,8 @@
     "state": "BOUNDED_OPT_IN_SOURCE_HOOK_UNCOMPILED",
     "report": "reports/AI_ACTION_OWNER_REVIEW.md",
     "focused_source_checks_passed": 11,
-    "typed_offline_consumer_complete": false,
+    "typed_offline_consumer_complete": true,
+    "consumer_and_related_source_checks_passed": 46,
     "native_runtime_gates_closed": 0
   },
   "campaign_discovery_handoff_20261003": {

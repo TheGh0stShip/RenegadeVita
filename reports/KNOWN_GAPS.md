@@ -2,7 +2,8 @@
 
 2026-10-03 action callback review: absent numeric observers in original
 ActionClass completion now have an opt-in source queue hook, uncompiled; prior
-native logs cover Logan only. Typed offline interpretation remains pending.
+native logs cover Logan only. Typed offline parsing now retains action misses
+separately; native collection and request-outcome coverage remain unverified.
 LOW_PRIORITY can mean displaced or rejected action.
 Hibernation changes logical listener/path ownership; runtime delivery and
 mission continuation remain open. No behavior change or build/launch.

@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Typed action miss assessment — 2026-10-03
+
+Completed: separate offline action records, signed32/bounded parsing and mixed
+capture rejection; repeated IDs remain unpaired. C++ encoding case prepared
+but uncompiled; future build entry points select source checks, unexecuted.
+Evidence:46 focused Python/source checks pass; native collection is unverified.
+Next: whole-bundle validation and native action/mission significance after hold.
+Native/runtime gates0/10; no build, launch or device action.
+See [AI/action owner review](AI_ACTION_OWNER_REVIEW.md).
+
 ## Action observer miss source hook — 2026-10-03
 
 Completed: bounded opt-in original lookup-miss hook and typed owner-thread

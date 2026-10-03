@@ -173,6 +173,12 @@ int main()
 		contents.find("observer_absent_at_expiry") != std::string::npos &&
 		contents.find("object_id=100 observer_id=9 timer_id=-1") != std::string::npos,
 		"timer miss retains numeric identity")) return 1;
+	A35_Campaign_Flight_Action_Observer_Miss(100, 9, -1, 3);
+	if (!Check(A35_Campaign_Flight_Flush("checkpoint"), "action miss flush")) return 1;
+	if (!Check(Read_File(events, contents) && Line_Count(contents) == 137U &&
+		contents.find("observer_absent_at_completion") != std::string::npos &&
+		contents.find("object_id=100 observer_id=9 action_id=-1 reason=3") != std::string::npos,
+		"action miss retains numeric identity and reason")) return 1;
 	A35_Campaign_Flight_Shutdown();
 	remove(events.c_str());
 	remove(frames.c_str());

@@ -49,12 +49,22 @@ cannot be attributed to action alone. Collection is off by default.
 
 Eleven focused source checks pass, including zero-fuzz, zero-offset patch replay
 and original request-action body preservation. They do not compile or execute
-the collector. Existing conversation offline analysis does not interpret the
-new action category; retain raw flight records and add a typed consumer before
-using them to classify failures. Missing observers do not themselves establish
+the collector. Offline `analyze_conversation_transitions` now interprets the
+action category into separate `action_misses`, with strict bounded numeric
+parsing and shared capture identity checks. Five additional counterexamples
+cover malformed/oversized fields, all signed32 widths, mixed identities,
+unknown event names and repeated IDs without pairing or deduplication.
+Missing observers do not themselves establish
 a mission failure. Staging receipt intentionally remains stale under the hold.
 
-Next add typed offline interpretation and request-outcome coverage, preserving
+The C++ encoding fixture includes a prepared action-record case; it has not
+been compiled or run. Both future build entry points select the source hook
+checks; neither entry point was executed. The offline parser is for a single
+process capture and does not validate the whole flight bundle: run the existing
+bundle identity/sequence validator separately before interpreting events.
+Shared overflow is not attributable to this event type.
+
+Next verify native collection and add request-outcome coverage, preserving
 priority and synchronous callback semantics.
 Runtime evidence must distinguish scheduling, request acceptance, movement/
 attack execution, completion reason, observer delivery and subsequent mission

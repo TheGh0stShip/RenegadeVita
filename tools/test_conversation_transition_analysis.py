@@ -11,6 +11,43 @@ def event(name='remark_scheduled', detail=None, **extra):
 
 
 class TransitionAnalysis(unittest.TestCase):
+    def test_action_miss_is_not_delivery_or_mission_failure(self):
+        report = analyze([event('observer_absent_at_completion',
+                                'object_id=100 observer_id=9 action_id=-1 reason=3', category='script_action')])
+        self.assertEqual(report['action_misses'][0]['reason'], 3)
+        self.assertEqual(report['action_misses'][0]['action_id'], -1)
+        self.assertFalse(report['callback_delivery_verified'])
+        self.assertFalse(report['complete_progression_verified'])
+
+    def test_action_malformed_and_all_fields_width_checked(self):
+        base = 'object_id=100 observer_id=9 action_id=8 reason=3'
+        invalid = ['bad', base + ' extra=4', 'x' * 224]
+        for field, value in (('object_id', 100), ('observer_id', 9), ('action_id', 8), ('reason', 3)):
+            invalid.append(base.replace(f'{field}={value}', f'{field}=2147483648'))
+            invalid.append(base.replace(f'{field}={value}', f'{field}=-2147483649'))
+        for detail in invalid:
+            with self.subTest(detail=detail), self.assertRaises(ValueError):
+                analyze([event('observer_absent_at_completion', detail, category='script_action')])
+
+    def test_action_identity_must_match_other_types(self):
+        for changed in ('candidate', 'archive', 'load_source'):
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'mixed'):
+                analyze([event(), event('observer_absent_at_completion',
+                                       'object_id=1 observer_id=2 action_id=3 reason=4',
+                                       category='script_action', **{changed: 'different'})])
+
+    def test_action_unknown_event_not_interpreted_as_miss(self):
+        report = analyze([event('future_event', 'unknown', category='script_action')])
+        self.assertEqual(report['action_misses'], [])
+        self.assertEqual(report['findings'][0]['kind'], 'unrecognized_action_event')
+
+    def test_repeated_action_ids_are_not_paired_or_deduplicated(self):
+        row = event('observer_absent_at_completion', 'object_id=1 observer_id=2 action_id=3 reason=4',
+                    category='script_action')
+        report = analyze([row, row, event('queue_overflow', 'unretained=3')])
+        self.assertEqual(len(report['action_misses']), 2)
+        self.assertEqual(report['queue_unretained'], 3)
+
     def test_timer_miss_is_not_a_mission_failure_verdict(self):
         report = analyze([event('observer_absent_at_expiry',
                                 'object_id=100 observer_id=9 timer_id=-1', category='script_timer')])

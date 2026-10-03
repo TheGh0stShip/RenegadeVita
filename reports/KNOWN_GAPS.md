@@ -3,7 +3,8 @@
 2026-10-03 compile closure removes17 stale current compilation labels. Runtime
 gaps remain open; original textureloader.cpp compiles separately but remains
 outside the runtime graph. Canonical ASan trim overlap is repaired; the rebuilt
-M13 player-damage fixture passes. Packaging and corrected ARM CI remain pending.
+M13 player-damage and prewarmed fixtures pass. Verified WSL data avoids the host
+storage timeouts without an engine change. Canonical and corrected ARM CI are running.
 See [compile closure](COMPILE_CLOSURE.md).
 
 2026-10-03 procedural material review confirms spawn/death/healing/electrocution

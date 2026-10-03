@@ -1,6 +1,6 @@
 {
   "compile_closure_20261003": {
-    "state": "LOCAL_HOST_AND_ARM_PASS_CANONICAL_TRIM_REPAIRED_CI_ARM_RETRY_PENDING",
+    "state": "LOCAL_HOST_AND_ARM_PASS_M13_PREWARM_PASS_CANONICAL_AND_CLEAN_CI_RUNNING",
     "registered_staging_patches": 307,
     "staging_receipt_regenerated": true,
     "host_compilation_passed": true,

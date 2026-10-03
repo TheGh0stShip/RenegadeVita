@@ -1,5 +1,21 @@
 # Live engineering progress
 
+## Prewarmed retail validation and build prerequisites — 2026-10-03
+
+Completed: fast ARM link/artifact checks and all 473 focused contracts pass.
+M13 prewarmed destruction/teardown passes two ASan/LSan cycles in 3.25 seconds
+using a private WSL diagnostic root under the original 180-second limit.
+All 51 Data files plus two loose runtime fonts independently SHA-256 match;
+original retail installation is unchanged. The E: route timed out at 180/300
+seconds. Storage and loose-root directory contents differ in this comparison;
+no native performance improvement or engine change is claimed.
+Clean ARM CI exposed absent project-local HTTPS preparation after its RC tests
+passed. ARM CI and fast builds now invoke the pinned prerequisite builder.
+Evidence: [compile ledger](COMPILE_CLOSURE.md) and its generated JSON.
+Now: canonical validation with WSL retail root; clean host/ARM CI.
+Next: packaged artifact identity and install-only verification, then S1–S8.
+Native acceptance remains 0/10; no emulator launch or device mutation.
+
 ## Shared trim and clean CI validation batch — 2026-10-03
 
 Completed: inspected all three original trim bodies; repaired two remaining

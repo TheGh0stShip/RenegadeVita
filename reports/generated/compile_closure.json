@@ -2,7 +2,7 @@
   "evidence_class": "host tests and ARM compile/link; no native runtime acceptance",
   "row_denominator": 17,
   "native_compiled_translation_units": 652,
-  "native_elf_sha256": "b5364c0dbb888218153870895d0538e7943c493e6f0524bc3fcb6ee92357c8b7",
+  "native_elf_sha256": "bac90a66b9f396d2ec17530d4d5406cb8f7f43369f85b642fd671dd075166d81",
   "host_binary_denominator": 31,
   "asan_ubsan_invocations": 60,
   "asan_ubsan_passed": 60,
@@ -15,8 +15,8 @@
   "script_project_units": 45,
   "script_default_missing_bridges": 0,
   "script_invalid_active_arities": 0,
-  "canonical_state": "FAILED_ASAN_TRIM_OVERLAP_REPAIRED_RETRY_PENDING",
-  "remote_ci_state": "HOST_ASAN_UBSAN_TSAN_AND_PYTHON_PASS_ARM_RESOURCE_CLANG_DEPENDENCY_FIXED_RETRY_PENDING",
+  "canonical_state": "RUNNING_WITH_VERIFIED_WSL_RETAIL_ROOT",
+  "remote_ci_state": "HOST_PASS_ARM_HTTPS_PREREQUISITE_CORRECTED_CLEAN_RETRY_RUNNING",
   "rows": [
     {
       "state_field": "logical_stimulus_diagnostics_20261003.state",
@@ -96,7 +96,7 @@
           "source": "port/platform/vita/a31_vita_runtime.cpp",
           "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
           "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
-          "object_sha256": "8b65d4ca4e91dec1c686b5b2057ca6d0275085d086fc3cc1f170306c5a70f491"
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
         }
       ]
     },
@@ -258,7 +258,7 @@
           "source": "port/platform/vita/a31_vita_runtime.cpp",
           "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
           "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
-          "object_sha256": "8b65d4ca4e91dec1c686b5b2057ca6d0275085d086fc3cc1f170306c5a70f491"
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
         }
       ]
     },
@@ -278,7 +278,7 @@
           "source": "port/platform/vita/a31_vita_runtime.cpp",
           "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
           "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
-          "object_sha256": "8b65d4ca4e91dec1c686b5b2057ca6d0275085d086fc3cc1f170306c5a70f491"
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
         }
       ]
     },
@@ -292,7 +292,7 @@
           "source": "port/platform/vita/a31_vita_runtime.cpp",
           "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
           "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
-          "object_sha256": "8b65d4ca4e91dec1c686b5b2057ca6d0275085d086fc3cc1f170306c5a70f491"
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
         },
         {
           "source": "staging/scripts/scripts.cpp",
@@ -402,7 +402,7 @@
     "new_overlap_repairs": 2,
     "host_asan_ubsan_regression": "PASS",
     "m13_player_damage_two_cycles": "PASS",
-    "m13_prewarmed_repeat": "RUNNING",
+    "m13_prewarmed_repeat": "PASS_TWO_ASAN_LSAN_CYCLES",
     "preserved_semantics": [
       "original whitespace predicates",
       "case-insensitive parameter matching",
@@ -411,5 +411,21 @@
     ],
     "native_abi": "ELF32 little-endian ARMv7 VFP-register calling convention",
     "native_runtime_acceptance": "UNVERIFIED"
-  }
+  },
+  "host_storage_comparison": {
+    "evidence_class": "host only",
+    "windows_mount_timeout_seconds": [
+      180,
+      300
+    ],
+    "verified_data_files": 51,
+    "verified_loose_fonts": 2,
+    "wsl_same_binary_same_test_elapsed_seconds": 3.25,
+    "wsl_timeout_limit_seconds": 180,
+    "original_installation_unchanged": true,
+    "runtime_data_excluded_from_publication": true,
+    "native_performance_result": "UNVERIFIED",
+    "limitation": "This changes the host storage and loose-root directory contents together; it does not isolate a native engine bottleneck."
+  },
+  "fast_focused_contracts_passed": 473
 }

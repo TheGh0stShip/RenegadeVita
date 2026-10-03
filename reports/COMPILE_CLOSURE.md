@@ -32,7 +32,15 @@ ASan/UBSan cases pass again. Host and ARM rebuild/link pass; the current ELF is
 recorded in the generated ledger. The M13 damage smoke passes two in-process
 cycles using bounded player-attributed hits through the retail damage modifiers.
 The old fixture used unattributed damage and incorrectly expected one hit to
-destroy both differently configured SAMs. Prewarmed repeat is still running.
+destroy both differently configured SAMs. The prewarmed repeat also passes two
+ASan/LSan cycles. Across the Windows E: mount it hit both 180- and 300-second
+limits during the second cycle; against a verified WSL diagnostic root it passed
+in 3.25 seconds under the original 180-second limit. All 51 Data files and two
+loose runtime fonts independently match their source hashes. The Data-only copy
+first failed strict frontend font admission; both loose fonts were then included.
+The original installation is unchanged, and the private copy is never published.
+This comparison changes storage and loose-root directory contents together;
+it does not isolate a Vita bottleneck or establish native performance.
 These fixtures prove damage/teardown paths, not natural mission completion.
 
 Outputs now use the ignored WSL `local-builder/` folder.
@@ -45,7 +53,11 @@ The corrected main run passed host ASan/UBSan, TSan, all 793 Python tests and
 the excluded texture-worker compile. ARM preflight still required Clang for
 LLVM resource preprocessing; both CI dependency lists now install it. Eleven
 focused script/probe/install checks and seven RC checks pass locally.
-Canonical packaging and the next remote ARM run remain pending.
+The next clean ARM configuration exposed a missing project-local HTTPS build.
+Both ARM CI and full-port fast builds now prepare the pinned curl/mbedTLS stack,
+matching the canonical prerequisite set. Local fast compilation/link, artifact
+checks and all 473 focused contracts pass. Canonical validation is running with
+the verified WSL retail root; corrected clean ARM CI is also running.
 Phase 0 is still open. Native/runtime acceptance remains 0/10; complete mission progression,
 all-map inventories, projector targets, decal depth bias, procedural material
 passes and visual Dazzle acceptance remain open.

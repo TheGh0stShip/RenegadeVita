@@ -4,8 +4,9 @@
 31 host binaries,60 ASan/UBSan invocations,5 TSan probes and793 Python tests
 pass. Fast ARM links with652 source/object hash pairs;17 current state fields
 are reconciled. Shared trim overlap is repaired and rebuilt; M13 damage smoke
-passes two ASan cycles. Host CI passes; ARM CI needs the corrected Clang
-dependency. Canonical packaging awaits retry, and native acceptance
+and prewarmed smoke pass two ASan/LSan cycles. Host CI passes; ARM CI now prepares
+Clang and project-local HTTPS dependencies. Canonical validation with verified
+WSL retail data and clean ARM CI are running, and native acceptance
 remain open. See [compile closure](COMPILE_CLOSURE.md).
 
 2026-10-03 shared discovery regression:218 source/Python checks across16 modules

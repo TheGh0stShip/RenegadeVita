@@ -53,6 +53,31 @@ errors that statistics inspection does not examine. The wave/bounds suites
 pass29 source/Python checks. These results do not execute the C++ provider or
 prove a particular duration value at runtime. New receipts remain private.
 
+## Completion callbacks and progression
+
+Original Start_Conversation stores the script-provided action ID on the active
+conversation. Monitor_Conversation registers the script object independently.
+Stop_Conversation marks the instance finished, stops current speech and frees
+orators before notifying every observer on each registered monitor with that
+action ID and the completion reason. The finished-state guard prevents a
+second stop from notifying again. This is source ownership, not callback
+delivery evidence from a running mission.
+
+Tutorial instructor speech registers its monitor after starting the
+conversation. Its Action_Complete accepts ended, interrupted, and unable-to-
+initialize reasons; Logan's initial speech result opens the course gates.
+The M13 MX0_GDI_ORCA handler instead requires ended with action ID1 before
+creating the X0F_Harvester cinematic and scheduling harvester damage events.
+Thus callback outcome and remark timing must be captured separately from
+audible output. An audio failure does not by itself prove a stopped mission
+or establish which callback reason the original conversation owner emits.
+
+Monitor capacity is ten objects. Registration deduplicates objects and reports
+capacity exhaustion through Debug_Say; a further monitor is not inserted.
+The inspected source does not establish that a scoped mission reaches this
+capacity. A full runtime check must retain monitor registration, action ID,
+completion reason and actor/audience state without changing those semantics.
+
 The new boundary is uncompiled and untested at runtime under the existing
 build/launch hold. The eleven files' decode compatibility remains open.
 PCM/ADPCM sample reconstruction, audible presentation, logical sounds,

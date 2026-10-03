@@ -1,7 +1,7 @@
 import struct
 import unittest
 import hashlib
-from tools.audit_visibility_bounds import validate, audit_candidate, matching_chunks
+from tools.audit_visibility_bounds import validate, audit_candidate, matching_chunks, HostLzoDecoder
 from tools.audit_level_spatial_presence import SIGNATURES
 
 
@@ -10,6 +10,31 @@ def chunk(kind, data):
 
 
 class VisibilityBoundsTest(unittest.TestCase):
+    def test_safe_host_decoder_rejects_truncation_and_output_overrun(self):
+        try:
+            decoder = HostLzoDecoder()
+        except RuntimeError:
+            self.skipTest('Optional host liblzo2 unavailable')
+        literal = b'\x15abcd\x11\x00\x00'
+        self.assertEqual(decoder(literal, 4), 4)
+        for payload, size in ((literal[:-1], 4), (literal, 3), (literal, 17 * 1024 * 1024)):
+            with self.assertRaises(ValueError):
+                decoder(payload, size)
+
+    def test_decoded_width_uses_original_32_bit_word_rounding(self):
+        variables = b''.join(bytes((k, 4)) + struct.pack('<I', v)
+                             for k, v in ((0, 0x10001), (2, 33), (3, 1)))
+        table = chunk(0x34500002, chunk(1, struct.pack('<I', 3)) + chunk(3, b'abc'))
+        data = chunk(0x34500000, variables) + chunk(0x34500001, struct.pack('<I', 0)) + table
+        sizes = []
+        def decoder(payload, expected):
+            sizes.append(expected)
+            return 4
+        result = validate(data, decoder)
+        self.assertEqual(sizes, [8])
+        self.assertEqual(result['decoded_size_mismatches'], 1)
+        self.assertIn('decoded_size_mismatch', result['findings'])
+
     def test_repeated_chunks_and_parent_context_reconcile(self):
         variables = b''.join(bytes((k, 4)) + struct.pack('<I', v)
                              for k, v in ((0, 0x10001), (2, 64), (3, 2)))

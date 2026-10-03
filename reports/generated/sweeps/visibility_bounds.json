@@ -16,7 +16,11 @@
       "tables": 813,
       "compressed_bytes": 176095,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 612,
+      "decoded_tables": 813,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_City.mix",
@@ -32,7 +36,11 @@
       "tables": 933,
       "compressed_bytes": 237279,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 880,
+      "decoded_tables": 933,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_City_Flying.mix",
@@ -48,7 +56,11 @@
       "tables": 1658,
       "compressed_bytes": 372592,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 464,
+      "decoded_tables": 1658,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Complex.mix",
@@ -64,7 +76,11 @@
       "tables": 781,
       "compressed_bytes": 144297,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 548,
+      "decoded_tables": 781,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Field.mix",
@@ -80,7 +96,11 @@
       "tables": 504,
       "compressed_bytes": 93556,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 504,
+      "decoded_tables": 504,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Glacier_Flying.mix",
@@ -96,7 +116,11 @@
       "tables": 528,
       "compressed_bytes": 157588,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 852,
+      "decoded_tables": 528,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Hourglass.mix",
@@ -112,7 +136,11 @@
       "tables": 583,
       "compressed_bytes": 133612,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 660,
+      "decoded_tables": 583,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Islands.mix",
@@ -128,7 +156,11 @@
       "tables": 465,
       "compressed_bytes": 103825,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 504,
+      "decoded_tables": 465,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Mesa.mix",
@@ -144,7 +176,11 @@
       "tables": 517,
       "compressed_bytes": 134124,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 600,
+      "decoded_tables": 517,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Under.mix",
@@ -160,7 +196,11 @@
       "tables": 607,
       "compressed_bytes": 147705,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 748,
+      "decoded_tables": 607,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Volcano.mix",
@@ -176,7 +216,11 @@
       "tables": 589,
       "compressed_bytes": 142096,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 608,
+      "decoded_tables": 589,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Walls.mix",
@@ -192,7 +236,11 @@
       "tables": 554,
       "compressed_bytes": 131692,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 552,
+      "decoded_tables": 554,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "C&C_Walls_Flying.mix",
@@ -208,7 +256,11 @@
       "tables": 1296,
       "compressed_bytes": 522131,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 728,
+      "decoded_tables": 1296,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M00_Tutorial.mix",
@@ -224,7 +276,11 @@
       "tables": 345,
       "compressed_bytes": 37836,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 212,
+      "decoded_tables": 345,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M01.mix",
@@ -240,7 +296,11 @@
       "tables": 1660,
       "compressed_bytes": 631969,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 2332,
+      "decoded_tables": 1660,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M02.mix",
@@ -256,7 +316,11 @@
       "tables": 2260,
       "compressed_bytes": 570008,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 3760,
+      "decoded_tables": 2260,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M03.mix",
@@ -272,7 +336,11 @@
       "tables": 1469,
       "compressed_bytes": 339454,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 1240,
+      "decoded_tables": 1469,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M04.mix",
@@ -288,7 +356,11 @@
       "tables": 1348,
       "compressed_bytes": 227036,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 744,
+      "decoded_tables": 1348,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M05.mix",
@@ -304,7 +376,11 @@
       "tables": 1181,
       "compressed_bytes": 247161,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 1312,
+      "decoded_tables": 1181,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M06.mix",
@@ -320,7 +396,11 @@
       "tables": 387,
       "compressed_bytes": 56474,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 440,
+      "decoded_tables": 387,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M07.mix",
@@ -336,7 +416,11 @@
       "tables": 1185,
       "compressed_bytes": 266361,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 1324,
+      "decoded_tables": 1185,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M08.mix",
@@ -352,7 +436,11 @@
       "tables": 1091,
       "compressed_bytes": 199813,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 2640,
+      "decoded_tables": 1091,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M09.mix",
@@ -368,7 +456,11 @@
       "tables": 728,
       "compressed_bytes": 89473,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 1452,
+      "decoded_tables": 728,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M10.mix",
@@ -384,7 +476,11 @@
       "tables": 2281,
       "compressed_bytes": 414366,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 2144,
+      "decoded_tables": 2281,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M11.mix",
@@ -400,7 +496,11 @@
       "tables": 1267,
       "compressed_bytes": 190152,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 768,
+      "decoded_tables": 1267,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "M13.mix",
@@ -416,7 +516,11 @@
       "tables": 190,
       "compressed_bytes": 31240,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 336,
+      "decoded_tables": 190,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     },
     {
       "map": "Skirmish00.mix",
@@ -432,14 +536,18 @@
       "tables": 564,
       "compressed_bytes": 82668,
       "obsolete_version": false,
-      "findings": []
+      "findings": [],
+      "expected_decoded_bytes_per_table": 304,
+      "decoded_tables": 564,
+      "decode_errors": 0,
+      "decoded_size_mismatches": 0
     }
   ],
   "presence_sha256": "bcac878435086c8077c6510c019287b1ab4be4db6b28688a6126eaa1bf08103b",
   "parser_inputs": [
     {
       "source": "tools/audit_visibility_bounds.py",
-      "sha256": "f2af63b5bc4467e2a984ce95366942b27798e3de1a1ab33954b0b9f6394ef48f"
+      "sha256": "b6c3f7ac4904e87447709aeeb571eccf577b55a1abb14d255205a6bbf132104d"
     },
     {
       "source": "tools/audit_m13_level_owners.py",
@@ -452,10 +560,26 @@
     {
       "source": "tools/renegade_cinematic_dependency_scan.py",
       "sha256": "a743dd0a565097b14bb20ca8c96536fddefd0b2776028b066686b3684c7e273f"
+    },
+    {
+      "source": "staging/wwphys/vistable.cpp",
+      "sha256": "4430a74f9be72021b063b33d8955b06cdf0bd0eee648311f307fd18a5e2053b1"
+    },
+    {
+      "source": "staging/wwphys/vistablemgr.cpp",
+      "sha256": "ca870bdd3c41f6802bd540fe1663ba96d7116c50b3339dbfc0304d646307390b"
+    },
+    {
+      "source": "staging/wwlib/lzo.cpp",
+      "sha256": "29e3e17d05d21d897ae6ae1838edffb9a577d900504480e8bad6c46d2c4ea9f1"
     }
   ],
+  "decoder": {
+    "provider": "host_liblzo2_safe",
+    "version": 8352
+  },
   "limits": [
-    "No LZO decompression or visibility correctness proof",
+    "Host decode does not prove original ARM decoder or visibility correctness",
     "Only exact reviewed visibility ancestry; other data families remain open"
   ]
 }

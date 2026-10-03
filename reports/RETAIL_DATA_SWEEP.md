@@ -1,5 +1,18 @@
 # S4 retail closure — all-map binding discovery in progress
 
+Optional host LZO2 safe decoding checks all 25,784 visibility tables across
+27 maps: zero decode errors and zero decoded-size mismatches. Expected sizes
+follow original `VisTableClass::Get_Long_Count` and `Get_Byte_Count`:
+`((VisObjectCount + 31) / 32) * 4`. Original owner source hashes are retained.
+Eight focused tests pass, including malformed-stream/output-capacity rejection
+and the 33-object word-rounding case. No decoded asset bytes are published.
+Run the visibility command with `--decode-lzo` to reproduce this evidence.
+The optional provider is host liblzo2 2.10, using host-size `lzo_uint` as defined
+in its [public header](https://raw.githubusercontent.com/nemequ/lzo/master/include/lzo/lzoconf.h).
+It does not validate the original ARM decoder, object/sector linkage or visual
+culling. The audit allocation cap is 16 MiB per table; exceeding it is reported
+as decode rejection, not evidence of malformed retail data.
+
 Visibility bounds validation reports duplicate variable fields and unknown
 compressed-table children. It now checks every exact-ancestry occurrence,
 reconciling counts, first offsets and payload-size totals against the parent
@@ -7,7 +20,7 @@ inventory. Reads preserve archive index identity instead of collapsing duplicate
 member names. Parser source hashes are retained. Six focused parser tests pass,
 including repeated-chunk and wrong-parent fixtures; a fresh scan retains 27
 rows, zero parser errors and zero findings. This is serialized-bounds evidence
-only; decompression, linkage and runtime culling remain open.
+only; original ARM decompression, linkage and runtime culling remain open.
 
 The 19 missing cinematic names are also absent from an exact-name search of
 all 31 supplied archive indices (18,836 records, duplicates retained) and

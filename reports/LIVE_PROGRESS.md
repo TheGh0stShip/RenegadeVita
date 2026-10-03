@@ -1,12 +1,19 @@
 # Live engineering progress
 
+## S4 all-map visibility decompression — 2026-10-03
+
+Host liblzo2 safe decoding passes all 25,784 tables across 27 maps with zero
+decode errors or decoded-size mismatches against original 32-bit word rounding.
+Eight focused tests pass. ARM decoder, post-load linkage and visual culling
+remain unverified. No engine change or device access.
+
 ## S4 visibility serialization bounds — 2026-10-03
 
 27 visibility chunks pass variable/ID/pairing/compressed-size checks with zero
 parser errors or findings. Duplicate variables and unknown compressed-table
 children are explicitly reported; six focused parser checks pass. Every matching
 occurrence is checked and reconciled against the parent inventory, with archive
-index identity retained. Decompression, linkage and runtime culling remain
+index identity retained. Original ARM decompression, linkage and runtime culling remain
 unverified. No engine change.
 
 ## S4 spatial chunk owner reconciliation — 2026-10-03

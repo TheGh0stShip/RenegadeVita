@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Initial full-port gap consolidation — 2026-10-03
+
+Eight inventory root denominators/status counts reconcile. 16,986 non-original-
+compiled status records retained, including nested review/factory/unit records:
+16,672 unknown, 184 missing, 85 replaced boundaries, 39 stubs and six disabled
+guards. Counts are evidence records, not unique defects. Unknown severity and
+mission/mode impact remain explicit; sweep completion, issues and dependencies
+remain open. Two tests pass and both outputs reproduce; no runtime change.
+
 ## S8 pinned OpenW3D file denominator — 2026-10-03
 
 3,782 unknown rows compare pinned EA/OpenW3D trees: 2,830 different blobs,

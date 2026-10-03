@@ -1,5 +1,11 @@
 # Known gaps
 
+2026-10-03 Combat startup-script discovery now includes Tutorial's authored
+MTU_Commando_Startup and attached MTU_Commando; previous placed-binding closure
+omitted both. Original cGod lifecycle selects this script, and native source
+calls that owner.37 Python checks pass; runtime attachment, instructor control
+restoration and vehicles remain unverified. See [AI/action owner review](AI_ACTION_OWNER_REVIEW.md).
+
 2026-10-03 required level-load outcomes now propagate in native source for
 dynamic/static open/subsystem failure and absent required dynamic chunks.
 Optional definition calls remain nonfatal. A first-error latch stops world

@@ -99,8 +99,38 @@ def script_bindings(fields, name_kind, parameter_kind, offset):
             for i, name in enumerate(names)], issues
 
 
+def combat_script_bindings(nodes: list[Chunk]) -> list[dict]:
+    """CombatSaveLoad -> CombatManager variables -> cGod script selection."""
+    result = []
+    for subsystem in flatten(nodes):
+        if subsystem.kind != 0x40000:
+            continue
+        combat_chunks = [node for node in subsystem.children if node.kind == 916991655]
+        if len(combat_chunks) > 1:
+            raise ValueError('ambiguous CombatManager owner')
+        for combat in combat_chunks:
+            variables = [node for node in combat.children if node.kind == 916991715]
+            if len(variables) > 1:
+                raise ValueError('ambiguous CombatManager variables')
+            for node in variables:
+                fields = {}
+                for key, value in microchunks(node.data):
+                    if key in fields:
+                        raise ValueError('duplicate CombatManager field')
+                    fields[key] = value
+                for key, kind in ((4, 'combat_start_script'), (5, 'combat_respawn_script')):
+                    if key not in fields:
+                        continue
+                    name = string(fields[key])
+                    if name:
+                        result.append({'name': name, 'offset': node.offset,
+                                       'parameters': None, 'binding_kind': kind,
+                                       'owner_token': None})
+    return result
+
+
 def level_records(nodes: list[Chunk]) -> dict:
-    scripts = []
+    scripts = combat_script_bindings(nodes)
     objects = []
     factories = Counter()
     spawners = []

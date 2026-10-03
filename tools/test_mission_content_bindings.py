@@ -21,6 +21,11 @@ class MissionContentBindingsTests(unittest.TestCase):
         (scripts / 'Scripts.dsp').write_text('SOURCE=.\\Used.cpp\nSOURCE=.\\DLLmain.cpp\n')
         (scripts / 'Used.cpp').write_text(source)
         (scripts / 'NotShipped.cpp').write_text('DECLARE_SCRIPT(Unshipped, "") {};')
+        for name in ('Combat/combat.cpp', 'Combat/combatsaveload.cpp', 'Combat/combatchunkid.h',
+                     'wwsaveload/saveloadids.h', 'Commando/god.cpp'):
+            path = root / 'upstream/CnC_Renegade/Code' / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('// Synthetic provenance fixture; no engine execution.\n')
         return root
 
     def test_original_project_and_constant_false_blocks_limit_registrations(self):

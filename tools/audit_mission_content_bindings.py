@@ -229,6 +229,10 @@ def audit_map(root, data_root, map_name, scripts=None):
     return {"schema_version": 1, "evidence_class": "read-only authored metadata and literal source dependency leads",
             "map": map_name, "archive_sha256": hashlib.sha256(mission.path.read_bytes()).hexdigest(),
             "objects_ddb_sha256": database_hash, "definition_overlays": overlays,
+            "combat_script_source_sha256": {
+                name: hashlib.sha256((root / 'upstream/CnC_Renegade/Code' / name).read_bytes()).hexdigest()
+                for name in ('Combat/combat.cpp', 'Combat/combatsaveload.cpp',
+                             'Combat/combatchunkid.h', 'wwsaveload/saveloadids.h', 'Commando/god.cpp')},
             "members": members, "bindings": bindings, "discovered_definition_count": len(reached_defs),
             "discovered_definition_ids": sorted(reached_defs),
             "discovered_scripts": [{"name": scripts[k]['name'], "owner": scripts[k]['owner']} for k in sorted(reached_scripts)],

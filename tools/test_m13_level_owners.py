@@ -23,6 +23,39 @@ def definition(factory, identity, body):
 
 
 class M13LevelOwnersTests(unittest.TestCase):
+    def test_combat_start_and_respawn_are_script_roots_without_placed_owner(self):
+        variables = chunk(916991715, micro(4, b'MTU_Commando_Startup\0') +
+                          micro(5, b'MTU_Commando\0'))
+        combat = chunk(916991655, variables, True)
+        result = level_records(chunks(chunk(0x40000, combat, True)))
+        self.assertEqual([row['name'] for row in result['script_records']],
+                         ['MTU_Commando_Startup', 'MTU_Commando'])
+        self.assertEqual([row['binding_kind'] for row in result['script_records']],
+                         ['combat_start_script', 'combat_respawn_script'])
+        for row in result['script_records']:
+            self.assertIsNone(row['owner'])
+            self.assertIsNone(row['parameters'])
+
+    def test_unanchored_combat_variables_do_not_supply_roots(self):
+        variables = chunk(916991715, micro(4, b'MTU_Commando_Startup\0'))
+        for payload in (variables, chunk(916991655, variables, True),
+                        chunk(0x40000, chunk(99, variables, True), True)):
+            self.assertEqual(level_records(chunks(payload))['script_records'], [])
+
+    def test_empty_combat_script_is_not_an_unknown_registration(self):
+        combat = chunk(916991655, chunk(916991715, micro(4, b'\0')), True)
+        self.assertEqual(level_records(chunks(chunk(0x40000, combat, True)))['script_records'], [])
+
+    def test_ambiguous_combat_fields_or_variables_rejected(self):
+        duplicate = chunk(916991655, b'', True) + chunk(916991655, b'', True)
+        with self.assertRaises(ValueError):
+            level_records(chunks(chunk(0x40000, duplicate, True)))
+        for payload in (chunk(916991715, micro(4, b'A\0') + micro(4, b'B\0')),
+                        chunk(916991715, b'') + chunk(916991715, b''),
+                        chunk(916991715, micro(4, b'no terminator'))):
+            with self.assertRaises(ValueError):
+                level_records(chunks(chunk(0x40000, chunk(916991655, payload, True), True)))
+
     def test_physics_only_root_uses_definition_field_not_pointer_token(self):
         body = micro(0, integer(0xfedcba98)) + micro(6, integer(123))
         result = level_records(chunks(chunk(0x00660055, body)))

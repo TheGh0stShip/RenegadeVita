@@ -70,3 +70,37 @@ Runtime evidence must distinguish scheduling, request acceptance, movement/
 attack execution, completion reason, observer delivery and subsequent mission
 event. Native AI/pathfinding, logical-sound stimuli and area wake/sleep behavior
 remain unverified under the build/launch hold.
+
+## Tutorial startup and input-follow discovery
+
+The binding audit previously omitted CombatManager's serialized start/respawn
+script fields. These are consumed by original cGod lifecycle code, independently
+of placed-object or preset script attachments. The scanner now follows the
+CombatSaveLoad subsystem, direct CombatManager owner and direct variable chunk;
+it rejects ambiguous owners/variables, duplicate fields and malformed names.
+Empty names remain no attachment. Pointer tokens or a placed owner are not
+invented, and absent parameter strings remain unknown.
+
+A fresh Tutorial/M13/M01 scan retains original source and archive/member/global
+definition hashes. Tutorial gains MTU_Commando_Startup and MTU_Commando in the
+discovered dependency closure, increasing25 to27 scripts. The original startup
+Created callback attaches MTU_Commando. No nonempty additional Combat start or
+respawn root was found for M13 or M01. Detailed receipts remain private in
+`build/dev208-combat-script-roots-20261003/`; this is not runtime registration
+or reachability proof. Existing missing definition/media/object-ID leads remain
+open; a larger discovered closure does not establish mission completeness.
+
+Original cGod::Think creates the campaign commando and attaches Get_Start_Script.
+The native runtime calls that owner for a fresh local player. MTU_Commando's
+control-enable event re-enables Smart control and requests Action_Follow_Input
+at priority100. That original action reads Input functions into ControlClass;
+vehicle turn functions inherit movement/turn values in original Input. The
+vehicle copies its non-transitioning driver's controls and retains original
+target steering/gunner handling. Control generation and control application are
+separate owners; script registration alone proves neither. No replacement input
+action or vehicle controller was introduced.
+
+Thirty-seven focused Python checks pass, including valid start/respawn roots,
+unanchored bytes, empty names and ambiguous/malformed metadata counterexamples.
+Native instructor control restoration, vehicle entry/exit, action acceptance and
+save/load during training remain unverified. No build, launch or retail mutation.

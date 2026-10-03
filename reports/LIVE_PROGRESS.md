@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Combat startup script roots — 2026-10-03
+
+Completed: authored Combat start/respawn selection added to binding discovery;
+Tutorial now includes startup/commando scripts omitted by placed-binding scans.
+Evidence:37 Python checks; fresh matching archive/global/source identities;
+Tutorial discovered scripts25→27, M13/M01 unchanged by these roots.
+Original cGod/input-follow/vehicle owners traced, no replacement controller.
+No build, launch or retail mutation; native delivery gates0/10.
+See [AI/action owner review](AI_ACTION_OWNER_REVIEW.md).
+
 ## Required-load failure propagation — 2026-10-03
 
 Completed: native required dynamic/static open and subsystem failures, missing

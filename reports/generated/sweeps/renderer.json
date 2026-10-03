@@ -256,10 +256,12 @@
     "staging/ww3d2/ww3dids.h": "339d44b8752566409b4ae2cd742592cf65339358b0e4efbbd498b3159de44875",
     "staging/ww3d2/ww3dtrig.h": "0bf682e99ce8207ce9cbe0243e335b371695a56b512b7cf69cfc8e8a88245818",
     "tools/audit_sweep_port_guards.py": "f8eb8890c85ef4faba32631830698ef0bbcd075c4d1bd95852b87e5bd85e012b",
-    "tools/audit_sweep_renderer.py": "1a26787d851a30fcee4f36e2f99c051ce1638cc90587ac53cf8999e1835659c9",
+    "tools/audit_sweep_renderer.py": "85427852eeae52fc479e87c2e688d956d1fda6d69d4aa29de741e897e38e63a8",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
-    "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf"
+    "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
+    "tools/sweep_reviews/renderer.json": "efc3b5cf27e9044578433078c729985fac81258f6f015df0d2ff9b5bc37508d8"
   },
+  "review_identity_issues": [],
   "rows": [
     {
       "bases": [],
@@ -23706,6 +23708,6740 @@
       ],
       "row_id": "1a6543ba21a6450a9ed0b830a7f7337d7a7f3514643d56f161ad23ed92672a66",
       "status": "unknown"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 325
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 475
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 771
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1209
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 47
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 142
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 382
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 352
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 385
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 419
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 461
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 501
+        },
+        {
+          "column": 25,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1009
+        },
+        {
+          "column": 17,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1743
+        }
+      ],
+      "row_id": "9954d4e0ae20e29a9389728ad5e57bd618e38860036034e895f024ef7a398a96",
+      "status": "unknown",
+      "symbol": "D3DFMT_A1R5G5B5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 337
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 57
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 152
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 392
+        }
+      ],
+      "row_id": "d038979eddd82a4cea37f83d575b309105b041e67e733b30da47471b201af59c",
+      "status": "unknown",
+      "symbol": "D3DFMT_A4L4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 324
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 770
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 48
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 143
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 383
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 353
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 376
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 418
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 451
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 500
+        },
+        {
+          "column": 25,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1008
+        },
+        {
+          "column": 17,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1742
+        }
+      ],
+      "row_id": "0c5b1638c734c53f364de29c40498f65d2e8e8447a20e5f46b4f8f3e12829dce",
+      "status": "unknown",
+      "symbol": "D3DFMT_A4R4G4B4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 328
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 774
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 50
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 145
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 385
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 403
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 421
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 480
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 503
+        },
+        {
+          "column": 66,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1009
+        },
+        {
+          "column": 50,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1743
+        }
+      ],
+      "row_id": "c49bc61058534f241bc5c1e7e0dcf61c9d8b045bf92ccef36f3c3b071e7fe177",
+      "status": "unknown",
+      "symbol": "D3DFMT_A8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 336
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 56
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 151
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 391
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 357
+        }
+      ],
+      "row_id": "24c833e3f1c1a57b13da95488fab45de06872ac95d47c8ca8e1ee19b83c538cb",
+      "status": "unknown",
+      "symbol": "D3DFMT_A8L8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 335
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 53
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 148
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 388
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 356
+        }
+      ],
+      "row_id": "484d982e5445c890ca6f4dd544720422f5c49917b2e979488ebe2ff91c712387",
+      "status": "unknown",
+      "symbol": "D3DFMT_A8P8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 333
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 51
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 146
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 386
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 354
+        }
+      ],
+      "row_id": "71c86ee178ad02bbbdadb8886b38e6b55400716ddb03c9dc2db5b972b20fe6b7",
+      "status": "unknown",
+      "symbol": "D3DFMT_A8R3G3B2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 322
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 603
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 768
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1214
+        },
+        {
+          "column": 52,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2454
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 43
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 138
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 378
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 347
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 367
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 415
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 434
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 497
+        },
+        {
+          "column": 26,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 834
+        },
+        {
+          "column": 44,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1007
+        },
+        {
+          "column": 26,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1062
+        },
+        {
+          "column": 19,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1198
+        },
+        {
+          "column": 28,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1199
+        },
+        {
+          "column": 56,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1211
+        },
+        {
+          "column": 34,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1245
+        },
+        {
+          "column": 36,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1741
+        }
+      ],
+      "row_id": "52f7820d2912f872095170c398835d3714bb050581327369e6d39fa0a19276bf",
+      "status": "unknown",
+      "symbol": "D3DFMT_A8R8G8B8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 353
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1350
+        },
+        {
+          "column": 10,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1352
+        },
+        {
+          "column": 68,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1573
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 408
+        }
+      ],
+      "row_id": "d1ffe7d9ec81098a33da27eee71a57ccbbf85e827a02e06aa9d0eef15f490328",
+      "status": "unknown",
+      "symbol": "D3DFMT_D15S1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 355
+        },
+        {
+          "column": 47,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 480
+        },
+        {
+          "column": 46,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 891
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1343
+        },
+        {
+          "column": 10,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1345
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 410
+        }
+      ],
+      "row_id": "4a72ca75b63d7fb6406b8c0a09adc9cebd9c54efcc65a5cf4e2e33c4efbf87ce",
+      "status": "unknown",
+      "symbol": "D3DFMT_D16"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 351
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 406
+        }
+      ],
+      "row_id": "00e0ea61f307c1d80a00a129046d518253445e3556955ae39439b2a310805af0",
+      "status": "unknown",
+      "symbol": "D3DFMT_D16_LOCKABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 354
+        },
+        {
+          "column": 47,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 477
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1322
+        },
+        {
+          "column": 10,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1324
+        },
+        {
+          "column": 54,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1574
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 409
+        }
+      ],
+      "row_id": "6bd7eb57dde33ca2486534bff89395eaa32dccf9c1ec750cddaaa9200b84e60d",
+      "status": "unknown",
+      "symbol": "D3DFMT_D24S8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 357
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1336
+        },
+        {
+          "column": 10,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1338
+        },
+        {
+          "column": 54,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1575
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 412
+        }
+      ],
+      "row_id": "b02a9290c636ddf9b754db98017fb28c98393bcf6e72d098e41a7ac67f6355f2",
+      "status": "unknown",
+      "symbol": "D3DFMT_D24X4S4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 356
+        },
+        {
+          "column": 47,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 478
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1329
+        },
+        {
+          "column": 10,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1331
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 411
+        }
+      ],
+      "row_id": "4348da7c0c5dd19a24339e640c31df90a7a2fb3622e8809a26b1aad79d756f60",
+      "status": "unknown",
+      "symbol": "D3DFMT_D24X8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 352
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 476
+        },
+        {
+          "column": 46,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 888
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1315
+        },
+        {
+          "column": 10,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1317
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 407
+        }
+      ],
+      "row_id": "4ff5e4d456723c9ed3f0805534a645cab43d85686948d2e819534d464211d6da",
+      "status": "unknown",
+      "symbol": "D3DFMT_D32"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 346
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 61
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 116
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 401
+        },
+        {
+          "column": 19,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 513
+        }
+      ],
+      "row_id": "91c6ec3fed820622c0325a30e05c629247fce518a632c5ce58704b02f218a219",
+      "status": "unknown",
+      "symbol": "D3DFMT_DXT1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 347
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 62
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 117
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 402
+        },
+        {
+          "column": 44,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 513
+        }
+      ],
+      "row_id": "ac15fda5f16898ad09ee79f024e4bea7721b162189e9ffa71f497ed12b8d36b0",
+      "status": "unknown",
+      "symbol": "D3DFMT_DXT2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 348
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 63
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 118
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 403
+        },
+        {
+          "column": 13,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 514
+        }
+      ],
+      "row_id": "dd15d87bb6ae2f9337a28a65ebd0f380520b80a9e4e8c2142a30d0d1654f4b77",
+      "status": "unknown",
+      "symbol": "D3DFMT_DXT3"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 349
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 64
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 119
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 404
+        },
+        {
+          "column": 38,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 514
+        }
+      ],
+      "row_id": "bf1e39caf28d9ec6c90ae49f6c7bd8f57e2fff4dec6d51fc40bc7407e6dc759c",
+      "status": "unknown",
+      "symbol": "D3DFMT_DXT4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 350
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 65
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 120
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 405
+        },
+        {
+          "column": 13,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 515
+        }
+      ],
+      "row_id": "1e1d5e215b6d99334e2e2a0d5092e0aee6bf7476d13ddb6f00ba77286ff19478",
+      "status": "unknown",
+      "symbol": "D3DFMT_DXT5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8indexbuffer.cpp",
+          "line": 315
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8indexbuffer.cpp",
+          "line": 337
+        }
+      ],
+      "row_id": "e5337ff57d7dedc4361c7570209b74e0526966eea79b2c1c9925e76c3ee30045",
+      "status": "unknown",
+      "symbol": "D3DFMT_INDEX16"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 339
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 59
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 154
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 394
+        }
+      ],
+      "row_id": "c3b1f714d622cf98f088fd6bbae1329231aaa81ba6758902e609ccbcbbdbd394",
+      "status": "unknown",
+      "symbol": "D3DFMT_L6V5U5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 327
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 773
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 55
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 150
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 390
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 405
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 422
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 483
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 504
+        }
+      ],
+      "row_id": "6f4c8ea415a034ca5d6737ca4b3acaeff57f3838a1b3cb61b039140a74c3a976",
+      "status": "unknown",
+      "symbol": "D3DFMT_L8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 329
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 775
+        },
+        {
+          "column": 19,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2075
+        },
+        {
+          "column": 19,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2217
+        },
+        {
+          "column": 19,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2264
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 54
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 149
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 389
+        }
+      ],
+      "row_id": "1a7107a0e5095dfa8bfd8baed391776f6e3a12959f2ef5e9bcac67dc8a4973a6",
+      "status": "unknown",
+      "symbol": "D3DFMT_P8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 341
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 396
+        }
+      ],
+      "row_id": "4780103b190e3db0dc98311fb0004ba592dde1da91ec9b2fd14961d88f7d4171",
+      "status": "unknown",
+      "symbol": "D3DFMT_Q8W8V8U8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 332
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 49
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 144
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 384
+        }
+      ],
+      "row_id": "7373ff2314539583ff017cb338833daa58be134359670200902ddcbb85bbaa86",
+      "status": "unknown",
+      "symbol": "D3DFMT_R3G3B2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 326
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 473
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 606
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 772
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 792
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1207
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 45
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 140
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 380
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 350
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 394
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 420
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 471
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 502
+        }
+      ],
+      "row_id": "721514e057b9b2e00c1809d636bab41300baabcc86702d256f2b4f410ccc01cc",
+      "status": "unknown",
+      "symbol": "D3DFMT_R5G6B5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 323
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 602
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 769
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1216
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 42
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 137
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 377
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 349
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 373
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 417
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 446
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 499
+        }
+      ],
+      "row_id": "d8412fbc888c793f1741542c13a5eed95739106abbbd4573412cd22fc2ebe2b2",
+      "status": "unknown",
+      "symbol": "D3DFMT_R8G8B8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 48,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 794
+        },
+        {
+          "column": 47,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 798
+        },
+        {
+          "column": 49,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 886
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2201
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 41
+        },
+        {
+          "column": 10,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 106
+        },
+        {
+          "column": 24,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 22
+        },
+        {
+          "column": 20,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1722
+        }
+      ],
+      "row_id": "e62951b8148e2e8efe30b4ff4b663aa332bbfcb0f34a1161d7d1e161f52ea7a7",
+      "status": "unknown",
+      "symbol": "D3DFMT_UNKNOWN"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 344
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 399
+        }
+      ],
+      "row_id": "c7d2fa66049fe61eaf3f0bead81491ebe59a1fa2397f2715b8c560f667934329",
+      "status": "unknown",
+      "symbol": "D3DFMT_UYVY"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 342
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 397
+        }
+      ],
+      "row_id": "ce341f3b2e21a7839505ef86f5d6fd0aed25abdda00b3a942364685d338be107",
+      "status": "unknown",
+      "symbol": "D3DFMT_V16U16"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 338
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 58
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 153
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 393
+        }
+      ],
+      "row_id": "fb30d9ae27c7a23eaa18b4db3034843de9a1b855d9c23ba211b2d3b5deb57a44",
+      "status": "unknown",
+      "symbol": "D3DFMT_V8U8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 343
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 398
+        }
+      ],
+      "row_id": "018157ac31704ee496fbb235d4535c59c410fc39f1ffd0670b3a58b666ec1dcc",
+      "status": "unknown",
+      "symbol": "D3DFMT_W11V11U10"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 331
+        },
+        {
+          "column": 41,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 474
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 607
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1208
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 46
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 141
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 381
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 351
+        }
+      ],
+      "row_id": "edc7f4e67da7152e96cc6a466f98f2c7a0323071e2526d0955f1beda6f0886cc",
+      "status": "unknown",
+      "symbol": "D3DFMT_X1R5G5B5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 334
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 52
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 147
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 387
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 355
+        }
+      ],
+      "row_id": "4e2bcb81089636cb06b347cb58878cbdb1d02fc6c83cc0f0f598d2a337746e27",
+      "status": "unknown",
+      "symbol": "D3DFMT_X4R4G4B4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 340
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 60
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 101
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 155
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 395
+        }
+      ],
+      "row_id": "f85d5c287f19ef22dd729f66f4457903bd2d7dc2f21f5a74da91d81becb8f49a",
+      "status": "unknown",
+      "symbol": "D3DFMT_X8L8V8U8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 330
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 604
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 767
+        },
+        {
+          "column": 3,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 1215
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 44
+        },
+        {
+          "column": 39,
+          "file": "staging/ww3d2/formconv.cpp",
+          "line": 139
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 379
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 348
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 370
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 416
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 440
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 498
+        }
+      ],
+      "row_id": "94d0b80fe804015a86b4f10256b4663f50a3a264fb829b089349b232ccb9966b",
+      "status": "unknown",
+      "symbol": "D3DFMT_X8R8G8B8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 8,
+          "file": "staging/ww3d2/assetmgr.cpp",
+          "line": 345
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 400
+        }
+      ],
+      "row_id": "4685db6a79c9afbff715bf99d39ec99f10a44317d0c0a3f95a6fe69816a0f70c",
+      "status": "unknown",
+      "symbol": "D3DFMT_YUY2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 46
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 46
+        },
+        {
+          "column": 59,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 60
+        },
+        {
+          "column": 59,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 61
+        },
+        {
+          "column": 44,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 62
+        },
+        {
+          "column": 44,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 63
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 688
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1034
+        },
+        {
+          "column": 29,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1034
+        },
+        {
+          "column": 74,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 351
+        },
+        {
+          "column": 60,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 372
+        },
+        {
+          "column": 70,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 51
+        },
+        {
+          "column": 104,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 192
+        },
+        {
+          "column": 13,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 44
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 452
+        }
+      ],
+      "row_id": "e8aa13a2a119ed439a2aa79a82ac31574bc4045bbe6e482588a631567391f1fa",
+      "status": "unknown",
+      "symbol": "D3DFVF_DIFFUSE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 40
+        },
+        {
+          "column": 36,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 40
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 463
+        }
+      ],
+      "row_id": "b221738a799f712445002a3fbe6e6a3e654e1f44c71ad834b2b81e6b97c8dca4",
+      "status": "unknown",
+      "symbol": "D3DFVF_LASTBETA_UBYTE4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 43
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 43
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 57
+        },
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 58
+        },
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 59
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 60
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 61
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 712
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1030
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1030
+        },
+        {
+          "column": 60,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 330
+        },
+        {
+          "column": 60,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 351
+        },
+        {
+          "column": 44,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 51
+        },
+        {
+          "column": 78,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 192
+        },
+        {
+          "column": 13,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 42
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 450
+        }
+      ],
+      "row_id": "6c2f141892f5dfdd8d40d150ba27c78b997ef03e1971093c1f6b6c32b305f972",
+      "status": "unknown",
+      "symbol": "D3DFVF_NORMAL"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 13,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 43
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 451
+        }
+      ],
+      "row_id": "c648ac6ae1f0999444703c9116781b3e814c5dff9815b6c5ef91a7cda827c61a",
+      "status": "unknown",
+      "symbol": "D3DFVF_PSIZE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 49
+        },
+        {
+          "column": 29,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 49
+        },
+        {
+          "column": 8,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 691
+        },
+        {
+          "column": 12,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1042
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1042
+        },
+        {
+          "column": 13,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 45
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 453
+        }
+      ],
+      "row_id": "626172791cca8bfbc9ff74910cc478b15cdea33d95f72ebf4a454da8df00b50a",
+      "status": "unknown",
+      "symbol": "D3DFVF_SPECULAR"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 454
+        }
+      ],
+      "row_id": "bf8cfb83468189ad4cf1abb6cba48b7582d557bb61ba7762d3769ccc8c0aa8b5",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX0"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 46,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 58
+        },
+        {
+          "column": 47,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 60
+        },
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 62
+        },
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 64
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 411
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 411
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 698
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1058
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1058
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 330
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 351
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 372
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 391
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 455
+        }
+      ],
+      "row_id": "79a2023b79e08f23475d47a9bc2999c2eb16513c6bbb875c73eb2564c4e1ee1e",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 46,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 59
+        },
+        {
+          "column": 47,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 61
+        },
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 63
+        },
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 65
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 412
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 412
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 699
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1061
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1061
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 51
+        },
+        {
+          "column": 92,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 192
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 456
+        }
+      ],
+      "row_id": "e81beaa062cacd7392c86f3629e0ec51d28baf3d667df379a79c15d41c0e1abe",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 413
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 413
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 700
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1064
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1064
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 457
+        }
+      ],
+      "row_id": "84c916b22f989da259e612a35c9bf88c2f50b35b08f45f289bd58e5a6d77300f",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX3"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 414
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 414
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 701
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1067
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1067
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 458
+        }
+      ],
+      "row_id": "ae702b9f5646a098090356e54bdc70176a27f1c9ace2a7cd5568bc339d4522c8",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 415
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 415
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 702
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1070
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1070
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 459
+        }
+      ],
+      "row_id": "e1978c8d32a45389737e30bcb1210bcba318a7b5f6ee9d688ed53f634bb1f507",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 416
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 416
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 703
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1073
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1073
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 460
+        }
+      ],
+      "row_id": "9dd5bd78a21edf909c646a19edcd01e3c08130022d2f7d2108046101c06b7f52",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX6"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 417
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 417
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 704
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1076
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1076
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 461
+        }
+      ],
+      "row_id": "69225917cb1ef962c208ce8b85f3e1542a8f38dc812464608bb6d021de5a4908",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX7"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 418
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 418
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 705
+        },
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1079
+        },
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1079
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 462
+        }
+      ],
+      "row_id": "6370e91ca16c80c5c4f39fc5820cfd519a1af15a812e6773f1a6c3fa006299ed",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEX8"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 17,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 55
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 55
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 468
+        }
+      ],
+      "row_id": "d2fee968cb7755467dee157f66b17f833fd2839a5696d4f0c52f7c00b962ace4",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXCOORDSIZE1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 22,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 56
+        },
+        {
+          "column": 50,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 56
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 469
+        }
+      ],
+      "row_id": "a05ad578adfa529044f863152fff2b1762bf7c91fa6bab3665f8dd87ffa20309",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXCOORDSIZE2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 22,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 57
+        },
+        {
+          "column": 50,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 57
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 470
+        }
+      ],
+      "row_id": "1fd7141c62e270e304bc221a812144b7d012a8525000919ef6dc20a0525978dc",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXCOORDSIZE3"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 22,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 58
+        },
+        {
+          "column": 50,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 58
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 471
+        }
+      ],
+      "row_id": "6318612754d80b89a16fc0cef5a7fbd4f1f0f2793582fb9a6728f4a79d49b3ef",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXCOORDSIZE4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 42,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 50
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 464
+        },
+        {
+          "column": 38,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 468
+        }
+      ],
+      "row_id": "b67b52ae3b96bd1cf5c5d9a426ddd88bf1ec3956abbbbcf5ce34e7189f096735",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXTUREFORMAT1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 465
+        },
+        {
+          "column": 37,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 469
+        }
+      ],
+      "row_id": "838a60a9a2eae6bac11bf1da773f417a3a5d0e451a7e126f832466142f8d6a4a",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXTUREFORMAT2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 15,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 51
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 466
+        },
+        {
+          "column": 38,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 470
+        }
+      ],
+      "row_id": "672517e6aa77187ef5d77e6d1fa4c53b3bae74573e1be78734a1f634dad93945",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXTUREFORMAT3"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 15,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 52
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 467
+        },
+        {
+          "column": 38,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 471
+        }
+      ],
+      "row_id": "2f342018739045915c4a9aaf36b131faee5dcbf346189731919991798766ad22",
+      "status": "unknown",
+      "symbol": "D3DFVF_TEXTUREFORMAT4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 11,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 36
+        },
+        {
+          "column": 24,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 36
+        },
+        {
+          "column": 19,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 56
+        },
+        {
+          "column": 19,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 57
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 58
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 59
+        },
+        {
+          "column": 22,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 60
+        },
+        {
+          "column": 22,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 61
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 62
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 63
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 64
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 65
+        },
+        {
+          "column": 15,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 683
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 330
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 351
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 372
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 391
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 51
+        },
+        {
+          "column": 67,
+          "file": "staging/ww3d2/dx8vertexbuffer.h",
+          "line": 192
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 31
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 443
+        }
+      ],
+      "row_id": "4a7c2011eaf19c2754733ffc5a776b75227b8086f2245f8bf083fbe1d34dad5f",
+      "status": "unknown",
+      "symbol": "D3DFVF_XYZ"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 33
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 445
+        }
+      ],
+      "row_id": "ac36e47255fb94cd066e95018bcbd5b70964be05d755d985f7f6efa947a77af2",
+      "status": "unknown",
+      "symbol": "D3DFVF_XYZB1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 34
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 446
+        }
+      ],
+      "row_id": "9fbff59d338e1beca97b6bad2740a1928388e41d6c492c424a60799e3d6f0226",
+      "status": "unknown",
+      "symbol": "D3DFVF_XYZB2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 35
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 447
+        }
+      ],
+      "row_id": "fd72fca26b530ebee64d7dc25aa9fde78eaa57009274b8c69d812cdc819d90b6",
+      "status": "unknown",
+      "symbol": "D3DFVF_XYZB3"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 13,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 39
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 39
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 36
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 448
+        }
+      ],
+      "row_id": "0f461c1a28a4940e176eac8355907739fe9f4f907d992710b5cdc3b8a6d6712b",
+      "status": "unknown",
+      "symbol": "D3DFVF_XYZB4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 37
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 449
+        }
+      ],
+      "row_id": "97de0559216ceaff0701da04c90cb4468b70934b87116a6a47191c37e39fed95",
+      "status": "unknown",
+      "symbol": "D3DFVF_XYZB5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "port/renderer/vita/D3dx8core.h",
+          "line": 32
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 444
+        }
+      ],
+      "row_id": "3793d105b22a283592cb73280d434b4f6186e1467faaa66b059c570e37c7cfa2",
+      "status": "unknown",
+      "symbol": "D3DFVF_XYZRHW"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2780
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2911
+        },
+        {
+          "column": 36,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 463
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 265
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 966
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2675
+        }
+      ],
+      "row_id": "7f75ffd3f6091b36e381df46eec13b191482021a65efa6e1b7e0575cb3b49185",
+      "status": "unknown",
+      "symbol": "D3DRS_ALPHABLENDENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2778
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2940
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 474
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 479
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 264
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 965
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2708
+        }
+      ],
+      "row_id": "01b7d9efdf689fe55feec8e8ad81fd163a9048414b6302a24939c20d741a1ca6",
+      "status": "unknown",
+      "symbol": "D3DRS_ALPHAFUNC"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2777
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2897
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 473
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 478
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 263
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 964
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2702
+        }
+      ],
+      "row_id": "ed6f80d70d3c40bbe3e9accc6a993d9fc07bf8556fd2635a59c74e9a33148597",
+      "status": "unknown",
+      "symbol": "D3DRS_ALPHAREF"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2771
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2908
+        },
+        {
+          "column": 36,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 484
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 869
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 258
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 963
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2694
+        }
+      ],
+      "row_id": "677d37e2d93afa69aaa870daf2d29e75a68a63596b4231d951e6b01b2d9039c5",
+      "status": "unknown",
+      "symbol": "D3DRS_ALPHATESTENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 24,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2420
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2811
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2901
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/ww3d.cpp",
+          "line": 1021
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 251
+        },
+        {
+          "column": 22,
+          "file": "port/renderer/vita/ww3d_vita_render_state_contract.h",
+          "line": 96
+        }
+      ],
+      "row_id": "c51c564fd66a223cfc112f1127b484580411595a3c6713068728ff1b20212aaf",
+      "status": "unknown",
+      "symbol": "D3DRS_AMBIENT"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2818
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2995
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 874
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 904
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 269
+        }
+      ],
+      "row_id": "723933f6df8e165f3e7ec099359961c7063b6deb9af99dafb80e14af9ef584ab",
+      "status": "unknown",
+      "symbol": "D3DRS_AMBIENTMATERIALSOURCE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2839
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3019
+        }
+      ],
+      "row_id": "89aa8c635fd73d9ff35598339329c4d3557c2067ee8e960359296bb29744796f",
+      "status": "unknown",
+      "symbol": "D3DRS_BLENDOP"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2809
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2917
+        }
+      ],
+      "row_id": "c01cc2ae631f98a6bbf3a294d362b408516eb1b151e9539404db179d9e729cd3",
+      "status": "unknown",
+      "symbol": "D3DRS_CLIPPING"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2821
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2902
+        }
+      ],
+      "row_id": "a14c5cdb1f10d699eea7d338ebe1d1ec588e28e01896b9c4bf0e84f90f927a93",
+      "status": "unknown",
+      "symbol": "D3DRS_CLIPPLANEENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 359
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2813
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2919
+        }
+      ],
+      "row_id": "cbf856cc0c82d1ba0d4ae14d49f655c97bb8971380e7f740b41517f9c0a2d823",
+      "status": "unknown",
+      "symbol": "D3DRS_COLORVERTEX"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2837
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3012
+        }
+      ],
+      "row_id": "5cb259b88244c0a64370f1ecdf7d2508ddb3a934678a7033e196c9611b7586ba",
+      "status": "unknown",
+      "symbol": "D3DRS_COLORWRITEENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2775
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2935
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 859
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 261
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 971
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2721
+        }
+      ],
+      "row_id": "e9113ec5d52bf37ceef50c2f1352bdc93faca0c51a374e710459a938a8eb993b",
+      "status": "unknown",
+      "symbol": "D3DRS_CULLMODE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2834
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3008
+        }
+      ],
+      "row_id": "db22eb59b134ad171fcc70bb5e2b9f8847528e78f6ca8c540172169108299f87",
+      "status": "unknown",
+      "symbol": "D3DRS_DEBUGMONITORTOKEN"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2774
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2931
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 460
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 260
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 968
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2689
+        }
+      ],
+      "row_id": "cd337e2b3729ed8a6762e27e091eb5c3730d0fa2c2b94e2dd8b5e9fb35137517",
+      "status": "unknown",
+      "symbol": "D3DRS_DESTBLEND"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2816
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2993
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 875
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 905
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 268
+        }
+      ],
+      "row_id": "b154767c2bf1186557c971724ee783191a4a6f4a6e0395bec51081abf518c433",
+      "status": "unknown",
+      "symbol": "D3DRS_DIFFUSEMATERIALSOURCE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2779
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2910
+        }
+      ],
+      "row_id": "a9a5de11fdad2ac75f778a5853bbc0442bf96e7aea4573bd687c5b8c4a7e86b6",
+      "status": "unknown",
+      "symbol": "D3DRS_DITHERENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2789
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2916
+        }
+      ],
+      "row_id": "98a8a9d70b42518b33ac7c55c1cd600f764a4cdc8d98765100cdd38601c65ba6",
+      "status": "unknown",
+      "symbol": "D3DRS_EDGEANTIALIAS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2819
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2996
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 876
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 906
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 270
+        }
+      ],
+      "row_id": "13739635cbcfd78cf4d0b9f1fec01717c11339fa07e00515d857e1706dd5f7c1",
+      "status": "unknown",
+      "symbol": "D3DRS_EMISSIVEMATERIALSOURCE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2767
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2887
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/scene.cpp",
+          "line": 227
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/scene.cpp",
+          "line": 234
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/ww3d.cpp",
+          "line": 1008
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/ww3d.cpp",
+          "line": 1011
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/ww3d.cpp",
+          "line": 1014
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/ww3d.cpp",
+          "line": 1077
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 256
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2733
+        }
+      ],
+      "row_id": "51a513f124395b0f363e64b24e8a43578fcc4036695e145465cdbe69700fd51e",
+      "status": "unknown",
+      "symbol": "D3DRS_FILLMODE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2784
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2896
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 522
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 253
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_render_state_contract.h",
+          "line": 64
+        },
+        {
+          "column": 26,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 545
+        }
+      ],
+      "row_id": "d185b0225c05c89b5dea3ea621610d6ebf6b356bc8e53016a7ba7e1b0e03c5c2",
+      "status": "unknown",
+      "symbol": "D3DRS_FOGCOLOR"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2788
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2956
+        }
+      ],
+      "row_id": "791834551642a7571dcf0476673917ae5c489d9c3da1805f0006b6dff93e1230",
+      "status": "unknown",
+      "symbol": "D3DRS_FOGDENSITY"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2781
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2912
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 518
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 526
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 252
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_render_state_contract.h",
+          "line": 61
+        },
+        {
+          "column": 25,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 543
+        }
+      ],
+      "row_id": "d76f7c319405d9bf4fa0429756015007b351faec81e2eac376c5cf88dab6fa0a",
+      "status": "unknown",
+      "symbol": "D3DRS_FOGENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 23,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 614
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2787
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2955
+        },
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 614
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 255
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_render_state_contract.h",
+          "line": 70
+        }
+      ],
+      "row_id": "cef95acc36e8d65572e21d8be5561aef3c17b115bbbbd15465f7dfca01bc3bdc",
+      "status": "unknown",
+      "symbol": "D3DRS_FOGEND"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 23,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 613
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2786
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2954
+        },
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 613
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 254
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_render_state_contract.h",
+          "line": 67
+        }
+      ],
+      "row_id": "fc068d1df7f1a2eb9fdae85eb819f4db0c3fdc71a82ea0887b5dcd065c3c450c",
+      "status": "unknown",
+      "symbol": "D3DRS_FOGSTART"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 356
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2785
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2949
+        }
+      ],
+      "row_id": "229fd0fb4862839c68e0fb8d9e078fec90ada4a5d5b61debe57c11728a4017a8",
+      "status": "unknown",
+      "symbol": "D3DRS_FOGTABLEMODE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 357
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2812
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2950
+        }
+      ],
+      "row_id": "e0cafabcd6271863699d995186f900c9e782c48fb5dd5ce9c76e8bdf71119538",
+      "status": "unknown",
+      "symbol": "D3DRS_FOGVERTEXMODE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2836
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2926
+        }
+      ],
+      "row_id": "dbf12a40dc0d74fe08f26cac4876ac774a5993e710eba54e3ccde122231db85f",
+      "status": "unknown",
+      "symbol": "D3DRS_INDEXEDVERTEXBLENDENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2772
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2909
+        }
+      ],
+      "row_id": "66122865c7b7d178974ac01149f2598a2147395db954df0ed60e73c6f5c18ffe",
+      "status": "unknown",
+      "symbol": "D3DRS_LASTPIXEL"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2810
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2918
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 873
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 901
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 267
+        }
+      ],
+      "row_id": "6b72fc90551cb0f80e3b4a7121b75ec79aeb6494f6e9e1e44807d7154e86d1b9",
+      "status": "unknown",
+      "symbol": "D3DRS_LIGHTING"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2769
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2895
+        }
+      ],
+      "row_id": "86c33772338a9743c5f131d5eed5514cd8bc074be39a2338ba84442db3a4eed7",
+      "status": "unknown",
+      "symbol": "D3DRS_LINEPATTERN"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2814
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2920
+        }
+      ],
+      "row_id": "07996e6288d16b30a4a10b7489a04c4fa1d8e211b5c4d95b0113cff62403a872",
+      "status": "unknown",
+      "symbol": "D3DRS_LOCALVIEWER"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2830
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2925
+        }
+      ],
+      "row_id": "8b577036b30a7ff96f3810d023c460ad5bdd8debd2664a1abb6645caa9bcd841",
+      "status": "unknown",
+      "symbol": "D3DRS_MULTISAMPLEANTIALIAS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2831
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2903
+        }
+      ],
+      "row_id": "031cbbcd5dc84c9939da6ab6135f3b3800f8cedd2250750e30811a938238f422",
+      "status": "unknown",
+      "symbol": "D3DRS_MULTISAMPLEMASK"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2815
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2921
+        }
+      ],
+      "row_id": "fcff8989843cdf33511cdbe80fc7eee63138988ebfb2b220dfd189b511feb253",
+      "status": "unknown",
+      "symbol": "D3DRS_NORMALIZENORMALS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2832
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3004
+        }
+      ],
+      "row_id": "91e6b8c41fed30743cea97efa551b4868771546a1c5d222b7872559d9922202a",
+      "status": "unknown",
+      "symbol": "D3DRS_PATCHEDGESTYLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2833
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2962
+        },
+        {
+          "column": 36,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 865
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 271
+        }
+      ],
+      "row_id": "a2339b1f554aec10f2924b174d3645b8287dbba9853401c907dbc5fefee8fc1e",
+      "status": "unknown",
+      "symbol": "D3DRS_PATCHSEGMENTS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2826
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2924
+        }
+      ],
+      "row_id": "865922f558c02ac2c8b9559555cf3b9fe6dfc315b0732cf54425f7e05090e80b",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSCALEENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2827
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2959
+        }
+      ],
+      "row_id": "3cfde4c75853a9d421c1fe71d4ccae4dfc84f9880b73aae6fb35305ec5255c37",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSCALE_A"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2828
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2960
+        }
+      ],
+      "row_id": "23f75c38384debbc7e439b2623205fe34eb9a00fff0bb62a74b3fd0190182811",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSCALE_B"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2829
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2961
+        }
+      ],
+      "row_id": "03867ee28bc019e751b2a9b4b1808d73d66224270ad326c7a68d7d5c3a8c13d1",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSCALE_C"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2823
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2957
+        }
+      ],
+      "row_id": "923f57afa9e4258e4c481d34126f202deeec1cfd0e2349b1a74ef9ee80c8e23e",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSIZE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2835
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2963
+        }
+      ],
+      "row_id": "d50f5b6609884b06bed3e24a19f8b182ac5f00a3539188102e9833b3fde87991",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSIZE_MAX"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2824
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2958
+        }
+      ],
+      "row_id": "a994ed846db9a9c00af06960c83ba98c2b93cf31ade272d897c6532d25da9979",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSIZE_MIN"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2825
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2923
+        }
+      ],
+      "row_id": "0c0122845939fc39bda2dd1e6bb657cdad1ff4413703989c59c643397d813656",
+      "status": "unknown",
+      "symbol": "D3DRS_POINTSPRITEENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 355
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2791
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2915
+        }
+      ],
+      "row_id": "4cdc91b27e9a10ae2827f828f9c3ffbd5d282118d4e74c64d6d526e8968ff35d",
+      "status": "unknown",
+      "symbol": "D3DRS_RANGEFOGENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2768
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2891
+        }
+      ],
+      "row_id": "bc8cfa485e6aa9b53e0cc7eba9cc6a0c57155f9de0e6851efe0f4a1f200b5ab6",
+      "status": "unknown",
+      "symbol": "D3DRS_SHADEMODE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dx8caps.cpp",
+          "line": 501
+        },
+        {
+          "column": 29,
+          "file": "staging/ww3d2/dx8caps.cpp",
+          "line": 507
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2822
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2922
+        }
+      ],
+      "row_id": "543ab5a9c588b06cfaf6529931ec84c47d5c0a7ba058307daeadbc415142f121",
+      "status": "unknown",
+      "symbol": "D3DRS_SOFTWAREVERTEXPROCESSING"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2782
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2913
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 847
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 266
+        }
+      ],
+      "row_id": "cf7341269ac167a8c6c4316f804b22ce28aa765f4cfcdb250208f3fd8309bd11",
+      "status": "unknown",
+      "symbol": "D3DRS_SPECULARENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 358
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2817
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2994
+        }
+      ],
+      "row_id": "98f7ec350b96b9b268fbee69d967f8843721f3d0fd508f144c20a583feb49685",
+      "status": "unknown",
+      "symbol": "D3DRS_SPECULARMATERIALSOURCE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2773
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2930
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 459
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 259
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 967
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2684
+        }
+      ],
+      "row_id": "22f6104f5be51df8fb4aa4a76af283b952748b3d7d238c1ea56b6e729253c901",
+      "status": "unknown",
+      "symbol": "D3DRS_SRCBLEND"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2792
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2914
+        }
+      ],
+      "row_id": "1f89b9afb6d73f20450a4c7586eb14b47e6d1e6c52a8a8ea6591abebaae92218",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2793
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2973
+        }
+      ],
+      "row_id": "b9e0e78707b13ceca2679298de3f7b2711dafc404504d543795eeb145a01cb7b",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILFAIL"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2796
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2941
+        }
+      ],
+      "row_id": "d21b518b9a3913e9811d1cbb017cd93e6160fecbb69ed68a5611fa0985091380",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILFUNC"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2798
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2898
+        }
+      ],
+      "row_id": "3d8abc72687137d50b1400221321c2c1c005b5e5e64edf16e4e731d5f7e01ec8",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILMASK"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2795
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2975
+        }
+      ],
+      "row_id": "125b696c0aa916d19e4f686cf84c4f8a61a3a2b995b9d9cd6415ad9d4eea75c5",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILPASS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2797
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2969
+        }
+      ],
+      "row_id": "1077fc33ce95e38a33c0884e0f00ed736af6e51cec9ade94af8681fa4065cb5a",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILREF"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2799
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2899
+        }
+      ],
+      "row_id": "15a33258e253f589d5d855921b1f064e5a425297df60ac560b25ddfc522bb722",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILWRITEMASK"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2794
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2974
+        }
+      ],
+      "row_id": "4f3fd20e437d7a19ded5739439ae9e7a787c19b2c0fc6db3341cf98fee92325e",
+      "status": "unknown",
+      "symbol": "D3DRS_STENCILZFAIL"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2800
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2900
+        }
+      ],
+      "row_id": "82591eaeae05d0ad9b9ce287e4a96f4ef4d8d73c0622a18c100eabf472b02582",
+      "status": "unknown",
+      "symbol": "D3DRS_TEXTUREFACTOR"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2838
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2964
+        }
+      ],
+      "row_id": "1d72bd453716248fcd6ad5cc1eeeff714567c0f61c3bb4f9ba45e30b5f615ced",
+      "status": "unknown",
+      "symbol": "D3DRS_TWEENFACTOR"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2820
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3000
+        }
+      ],
+      "row_id": "d9c523cf450f001b2c07f9caa650f4290ec116cb8d64302b1ccd41485859ba8c",
+      "status": "unknown",
+      "symbol": "D3DRS_VERTEXBLEND"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2801
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2979
+        }
+      ],
+      "row_id": "29af81632069ca6b96ce568e66f9ad794beffdbd87618ecd9346f1f29af26621",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP0"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2802
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2980
+        }
+      ],
+      "row_id": "1bbc3401c253c6ef498f229a1157961e3b8f27ac891b0075859b4f32c40961f0",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2803
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2981
+        }
+      ],
+      "row_id": "d38ceca2c247a3fbb74f0f781ce418f78d7bbfde5c9c1c15e011a629f7b12743",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2804
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2982
+        }
+      ],
+      "row_id": "5e5d15ebee34df9edd187187725a48f6ffef0d2ab75b6f9d89f7df8d52787c78",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP3"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2805
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2983
+        }
+      ],
+      "row_id": "5a8103b04feeb86b52d863475288bdf0c95fd7b5501183ac9fe5530d4b81d28f",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP4"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2806
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2984
+        }
+      ],
+      "row_id": "37853a196ccb555c2502faa74182b6b53a66807f852fd3fc510df1438ad31621",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP5"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2807
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2985
+        }
+      ],
+      "row_id": "6277ec33ed744cae7ab1ce64d7659ac2d26d04f73ffb1c348c62ea03a2d3f72f",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP6"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2808
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2986
+        }
+      ],
+      "row_id": "4d97379e64fcffd4b50154173e199630192612d0dbc7bb2b957c4fd69f74d86f",
+      "status": "unknown",
+      "symbol": "D3DRS_WRAP7"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "missing",
+      "references": [
+        {
+          "column": 25,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1008
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 2037
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 2046
+        },
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 360
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2790
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2968
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1008
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/scene.cpp",
+          "line": 222
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/scene.cpp",
+          "line": 228
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/scene.cpp",
+          "line": 235
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 250
+        },
+        {
+          "column": 35,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 60
+        },
+        {
+          "column": 35,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 67
+        }
+      ],
+      "review": {
+        "acceptance_open": "Preserve original bias semantics and reset/state lifetime at native draw boundary; verify representative decals on Vita/PSTV. Source mapping evidence does not establish observed z-fighting.",
+        "affected_scope": [
+          "Native rigid/skinned decal rendering across all maps/modes reaching decal flush; actual per-map decals and physical appearance require S4 and runtime verification."
+        ],
+        "behavior": "The decal flush requests bias 8 then restores 0. Native SetRenderState forwards to Apply_DX8_Render_State; fog/ambient handlers do not handle ZBIAS and the native state switch falls through to a diagnostic and success without applying depth bias.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:60-67 and :2218",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103",
+          "staging/ww3d2/dx8wrapper.h:649-666"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "missing",
+        "original_owner": "Original DX8Wrapper state setter and DX8MeshRenderer decal depth bias",
+        "status": "missing",
+        "symbol": "D3DRS_ZBIAS"
+      },
+      "row_id": "96db816edabb9f55da280e8d35800e20ccddd40026604e07299b0754423fe85d",
+      "status": "missing",
+      "symbol": "D3DRS_ZBIAS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2766
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2883
+        }
+      ],
+      "row_id": "8f009e6842331bbef9e6a85ef53a5e7f58976294f33f0a499241b38eebacb905",
+      "status": "unknown",
+      "symbol": "D3DRS_ZENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2776
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2939
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 850
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 262
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 969
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2713
+        }
+      ],
+      "row_id": "1925df5f112e312b3e12363431890bd6c99e083d9440fb444b6e5e850fea07f2",
+      "status": "unknown",
+      "symbol": "D3DRS_ZFUNC"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2783
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2945
+        }
+      ],
+      "row_id": "63121d7d3f971aaad4a5bfe620fb466ee6f6cf9e3c50e56759f0388da0e067d5",
+      "status": "unknown",
+      "symbol": "D3DRS_ZVISIBLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2770
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2907
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 853
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 257
+        },
+        {
+          "column": 32,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 970
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 2717
+        }
+      ],
+      "row_id": "27b71047340b49654058c5435db925c4a1a3238fc7210eccac59d334f49844f3",
+      "status": "unknown",
+      "symbol": "D3DRS_ZWRITEENABLE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2860
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3046
+        },
+        {
+          "column": 51,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 668
+        },
+        {
+          "column": 51,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 672
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 283
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2241
+        }
+      ],
+      "row_id": "a7fae93ca64200593195fb6d8957a54d17110e854f4785b6714d6211b17b0b15",
+      "status": "unknown",
+      "symbol": "D3DTSS_ADDRESSU"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2861
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3047
+        },
+        {
+          "column": 51,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 680
+        },
+        {
+          "column": 51,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 684
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 284
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2242
+        }
+      ],
+      "row_id": "d7985a5c9f71a4e2616229a9e747de8bc98f14ae81d1ac3927a39359c187484d",
+      "status": "unknown",
+      "symbol": "D3DTSS_ADDRESSV"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2872
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3048
+        }
+      ],
+      "row_id": "d6bc9475d0dce5fabbba6b22cc134f1e4a3656f8835cc28c9e0ba5d4d152fcb1",
+      "status": "unknown",
+      "symbol": "D3DTSS_ADDRESSW"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2874
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3039
+        }
+      ],
+      "row_id": "5f16dad42de22adfcd127949b0f1f616dfc87eafa56c35f5f16e16f292dc717e",
+      "status": "unknown",
+      "symbol": "D3DTSS_ALPHAARG0"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2853
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3040
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 660
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 838
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 276
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2239
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2261
+        }
+      ],
+      "row_id": "2536c5c65377cbc3b16bca8c5fce7c5c8a6af85006dd52f2861a439985e080fd",
+      "status": "unknown",
+      "symbol": "D3DTSS_ALPHAARG1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2854
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3041
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 661
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 839
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 277
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2240
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2262
+        }
+      ],
+      "row_id": "2a0595a01b914707c18d2fb96353c08eed8987c29ed137c58be841e8de1335bf",
+      "status": "unknown",
+      "symbol": "D3DTSS_ALPHAARG2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2852
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3032
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 659
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 837
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 275
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2238
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2260
+        }
+      ],
+      "row_id": "2c4c8450a7b6f7181b3b718c4807339b8e7c9dc4d654d5b01fe6afe8fa1770f8",
+      "status": "unknown",
+      "symbol": "D3DTSS_ALPHAOP"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2862
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3093
+        }
+      ],
+      "row_id": "1d3e13f89c5e0a4f161e462bc7e7ac68b38a373f945863c0bd6cb0818655d18c",
+      "status": "unknown",
+      "symbol": "D3DTSS_BORDERCOLOR"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 362
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2870
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3068
+        }
+      ],
+      "row_id": "197094d3a1a9afa7c2eb7edb820d2833f9b3cba73e01bb574998c6075d0e9adb",
+      "status": "unknown",
+      "symbol": "D3DTSS_BUMPENVLOFFSET"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 361
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2869
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3067
+        }
+      ],
+      "row_id": "216981850f90f27a2f5b2ad50cf13e6fefc074abe2bce4d591e114c726687b09",
+      "status": "unknown",
+      "symbol": "D3DTSS_BUMPENVLSCALE"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 363
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2855
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3063
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 970
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 278
+        }
+      ],
+      "row_id": "e26b7b970e3e4ca307482d1e5324bf639e72b3568ae84164d54bcb3226f75c67",
+      "status": "unknown",
+      "symbol": "D3DTSS_BUMPENVMAT00"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 364
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2856
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3064
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 971
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 279
+        }
+      ],
+      "row_id": "edcc891338219d20d8126634c1e6db103c48f44d7dcb0f944cb8e4aed3b9ba7c",
+      "status": "unknown",
+      "symbol": "D3DTSS_BUMPENVMAT01"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 365
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2857
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3065
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 972
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 280
+        }
+      ],
+      "row_id": "a2a456704c498e30dd977d449230d7def44828ddb3570d9d7bfe3e905a51f213",
+      "status": "unknown",
+      "symbol": "D3DTSS_BUMPENVMAT10"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 366
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2858
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3066
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 973
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 281
+        }
+      ],
+      "row_id": "d4e02215d8e69f95cbaee4b7f3f571f793097e1e98216fc30d36314506734b46",
+      "status": "unknown",
+      "symbol": "D3DTSS_BUMPENVMAT11"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2873
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3036
+        }
+      ],
+      "row_id": "7efca66d30e2847285c96571b39d2a55ca3ad8b73c5b990379b75419f5dcc59b",
+      "status": "unknown",
+      "symbol": "D3DTSS_COLORARG0"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2850
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3037
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 657
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 781
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 273
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2236
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2258
+        }
+      ],
+      "row_id": "1912d9d5d5b7a2e6d87c30911c4d4b0b8bcc4fe862bbea914e8546e2851d5732",
+      "status": "unknown",
+      "symbol": "D3DTSS_COLORARG1"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2851
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3038
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 658
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 782
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 274
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2237
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2259
+        }
+      ],
+      "row_id": "5d94f745649ac39295588263ecd0e3d52e419b39c02123aed699ad11ac066999",
+      "status": "unknown",
+      "symbol": "D3DTSS_COLORARG2"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2849
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3031
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 656
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/shader.cpp",
+          "line": 780
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 272
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2235
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2257
+        }
+      ],
+      "row_id": "1e002c6c99ea741c9d6960c90e9ecd0b2c6afca37a93325c3e36be0711c323ab",
+      "status": "unknown",
+      "symbol": "D3DTSS_COLOROP"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2863
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3052
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 662
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 285
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2244
+        }
+      ],
+      "row_id": "79e6f8b330b173c8e5b1e5406e2594f948b9cb0fa0020b66feef5d0df4e6f0a6",
+      "status": "unknown",
+      "symbol": "D3DTSS_MAGFILTER"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2868
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3089
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 944
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 288
+        }
+      ],
+      "row_id": "c979995081c84fb98c4117930ae8241f7b07c9c20dde8756c998144e980ce4e2",
+      "status": "unknown",
+      "symbol": "D3DTSS_MAXANISOTROPY"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2867
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3088
+        }
+      ],
+      "row_id": "be97ee768013fb974122f30a0e090fe0235453694dede985f5dc8599b9d78249",
+      "status": "unknown",
+      "symbol": "D3DTSS_MAXMIPLEVEL"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2864
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3053
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 661
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 286
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2243
+        }
+      ],
+      "row_id": "4026fd3504dcff7acb7bb98ab1fa9188ce1f4945b44ccb2263faa30d355c9cdb",
+      "status": "unknown",
+      "symbol": "D3DTSS_MINFILTER"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2865
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3054
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/texture.cpp",
+          "line": 663
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 287
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2245
+        }
+      ],
+      "row_id": "46dc9f4b9ce2abf584648f76fa9cc261377f81142f5433196bbc7d13c1a17f02",
+      "status": "unknown",
+      "symbol": "D3DTSS_MIPFILTER"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2866
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3062
+        }
+      ],
+      "row_id": "4d157d2082429642c3d2ee16a081562308d80b301d0f5962358f5564d06a617e",
+      "status": "unknown",
+      "symbol": "D3DTSS_MIPMAPLODBIAS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2875
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3042
+        }
+      ],
+      "row_id": "6ea12db7aaab2f8157c6ec8bfa14c2e5f1e6b9e3ae8b85acb83c30b8f97f8eb7",
+      "status": "unknown",
+      "symbol": "D3DTSS_RESULTARG"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 27,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3073
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 605
+        },
+        {
+          "column": 70,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 684
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 717
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 807
+        },
+        {
+          "column": 79,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 256
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 423
+        },
+        {
+          "column": 17,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 589
+        },
+        {
+          "column": 21,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 719
+        },
+        {
+          "column": 21,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 846
+        }
+      ],
+      "row_id": "0d0836202340633563d8c56fd8fed593c32216a86c53997d0ca13d0b90cd3331",
+      "status": "unknown",
+      "symbol": "D3DTSS_TCI_CAMERASPACENORMAL"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3076
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 779
+        },
+        {
+          "column": 79,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 219
+        },
+        {
+          "column": 79,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 230
+        },
+        {
+          "column": 79,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 243
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 424
+        },
+        {
+          "column": 11,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 590
+        },
+        {
+          "column": 21,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 726
+        },
+        {
+          "column": 21,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 852
+        }
+      ],
+      "row_id": "da30962a0552e40142952fcf9aaebd30bc5a3a4717e738203e75d16952b4f70f",
+      "status": "unknown",
+      "symbol": "D3DTSS_TCI_CAMERASPACEPOSITION"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 32,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3079
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 625
+        },
+        {
+          "column": 70,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 682
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 745
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 837
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 425
+        },
+        {
+          "column": 11,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 591
+        },
+        {
+          "column": 21,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 732
+        },
+        {
+          "column": 21,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 858
+        }
+      ],
+      "row_id": "7dbf9d32fe589424055f97a95b6212909c93aa028906661a7aa8bfc256413373",
+      "status": "unknown",
+      "symbol": "D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 119
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 167
+        },
+        {
+          "column": 71,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 219
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 347
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 414
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 483
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 573
+        },
+        {
+          "column": 69,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 912
+        },
+        {
+          "column": 67,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 883
+        },
+        {
+          "column": 66,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 910
+        },
+        {
+          "column": 9,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 422
+        },
+        {
+          "column": 3,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 152
+        },
+        {
+          "column": 3,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 157
+        },
+        {
+          "column": 5,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1347
+        },
+        {
+          "column": 26,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 571
+        },
+        {
+          "column": 38,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 666
+        },
+        {
+          "column": 14,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 701
+        },
+        {
+          "column": 14,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 715
+        },
+        {
+          "column": 11,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 746
+        },
+        {
+          "column": 14,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 842
+        },
+        {
+          "column": 11,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 870
+        },
+        {
+          "column": 5,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 1234
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 3108
+        }
+      ],
+      "row_id": "7da699f0516d36fbf8bbaaf021eb49a09b962288a896908265cca4fbcb4bac42",
+      "status": "unknown",
+      "symbol": "D3DTSS_TCI_PASSTHRU"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2859
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3072
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 119
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 167
+        },
+        {
+          "column": 49,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 219
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 347
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 414
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 483
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 573
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 605
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 625
+        },
+        {
+          "column": 49,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 682
+        },
+        {
+          "column": 49,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 684
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 717
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 745
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 779
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 807
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 837
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 912
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 219
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 230
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 243
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 256
+        },
+        {
+          "column": 46,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 883
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 910
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 282
+        },
+        {
+          "column": 5,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1346
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2246
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2265
+        },
+        {
+          "column": 5,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 1233
+        }
+      ],
+      "row_id": "a44681b75f8d29609667819f16aa5de546f0cad9cc1d36d550e559696ce47d39",
+      "status": "unknown",
+      "symbol": "D3DTSS_TEXCOORDINDEX"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2871
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3058
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 122
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 170
+        },
+        {
+          "column": 49,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 222
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 350
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 417
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 486
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 576
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 608
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 628
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 687
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 720
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 748
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 782
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 810
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 840
+        },
+        {
+          "column": 48,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 915
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 220
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 231
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 244
+        },
+        {
+          "column": 58,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 257
+        },
+        {
+          "column": 46,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 884
+        },
+        {
+          "column": 45,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 911
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 289
+        },
+        {
+          "column": 5,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1349
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2247
+        },
+        {
+          "column": 7,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2266
+        },
+        {
+          "column": 5,
+          "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+          "line": 1236
+        }
+      ],
+      "row_id": "9ae7f58de98f363d109c46304c7ff7d895302903d5019efa7b3b0a9cc18ab58c",
+      "status": "unknown",
+      "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 24,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 970
+        },
+        {
+          "column": 24,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 973
+        },
+        {
+          "column": 23,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 989
+        },
+        {
+          "column": 24,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1005
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1025
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1030
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 934
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 1016
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 1207
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 1234
+        },
+        {
+          "column": 24,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 970
+        },
+        {
+          "column": 24,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 973
+        },
+        {
+          "column": 23,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 989
+        },
+        {
+          "column": 24,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1005
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1025
+        },
+        {
+          "column": 25,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1030
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 766
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/render2d.cpp",
+          "line": 562
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/render2d.cpp",
+          "line": 593
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/render2d.cpp",
+          "line": 628
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 247
+        },
+        {
+          "column": 59,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 1416
+        }
+      ],
+      "row_id": "89ba6872cf08dbd8b15852870911805f2f0643f275c63db33a0be79580268bcb",
+      "status": "unknown",
+      "symbol": "D3DTS_PROJECTION"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 116
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 164
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 216
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 344
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 411
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 480
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 570
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 602
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 622
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 678
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 714
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 742
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 776
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 804
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 834
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 909
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 218
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 229
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 242
+        },
+        {
+          "column": 53,
+          "file": "staging/ww3d2/matrixmapper.cpp",
+          "line": 255
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 249
+        },
+        {
+          "column": 53,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 233
+        },
+        {
+          "column": 46,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2156
+        },
+        {
+          "column": 16,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2173
+        },
+        {
+          "column": 47,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2174
+        },
+        {
+          "column": 51,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2175
+        }
+      ],
+      "row_id": "9ea06839fef3037116d89b50b92787873fc8d4ddd8a199c1e9dd6e4b44183fb3",
+      "status": "unknown",
+      "symbol": "D3DTS_TEXTURE0"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1020
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1050
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1096
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/camera.cpp",
+          "line": 732
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 933
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 1014
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 1235
+        },
+        {
+          "column": 22,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2007
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1020
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1050
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1096
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/linegrp.cpp",
+          "line": 283
+        },
+        {
+          "column": 29,
+          "file": "staging/ww3d2/linegrp.cpp",
+          "line": 298
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/linegrp.cpp",
+          "line": 478
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 708
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/mapper.cpp",
+          "line": 736
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/pointgr.cpp",
+          "line": 836
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/pointgr.cpp",
+          "line": 871
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/pointgr.cpp",
+          "line": 932
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/render2d.cpp",
+          "line": 561
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/render2d.cpp",
+          "line": 627
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/seglinerenderer.cpp",
+          "line": 210
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/seglinerenderer.cpp",
+          "line": 214
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/seglinerenderer.cpp",
+          "line": 1142
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 454
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 488
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 714
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 743
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/sphereobj.cpp",
+          "line": 652
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/sphereobj.cpp",
+          "line": 664
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/sphereobj.cpp",
+          "line": 666
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 246
+        },
+        {
+          "column": 22,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2454
+        }
+      ],
+      "row_id": "66059cc5ecfdc390c3222a70095169404a8edcec954cc47a0aa8f15e4e0bfd32",
+      "status": "unknown",
+      "symbol": "D3DTS_VIEW"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1015
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1045
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 1092
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/boxrobj.cpp",
+          "line": 716
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/boxrobj.cpp",
+          "line": 1107
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 1015
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/dazzle.cpp",
+          "line": 1236
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/decalmsh.cpp",
+          "line": 307
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/decalmsh.cpp",
+          "line": 802
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1756
+        },
+        {
+          "column": 22,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2003
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1015
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1045
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 1092
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/dynamesh.cpp",
+          "line": 431
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/line3d.cpp",
+          "line": 266
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/linegrp.cpp",
+          "line": 286
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/mesh.cpp",
+          "line": 963
+        },
+        {
+          "column": 29,
+          "file": "staging/ww3d2/mesh.cpp",
+          "line": 981
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/pointgr.cpp",
+          "line": 870
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/ringobj.cpp",
+          "line": 735
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/seglinerenderer.cpp",
+          "line": 213
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 453
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 487
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 715
+        },
+        {
+          "column": 28,
+          "file": "staging/ww3d2/sortingrenderer.cpp",
+          "line": 744
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/sphereobj.cpp",
+          "line": 663
+        },
+        {
+          "column": 30,
+          "file": "staging/ww3d2/sphereobj.cpp",
+          "line": 668
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 248
+        },
+        {
+          "column": 22,
+          "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+          "line": 2451
+        }
+      ],
+      "row_id": "6f4b8033a5a66c63cff6957bcc95d5bdfc708841a0d8645f815d326be5d05ad6",
+      "status": "unknown",
+      "symbol": "D3DTS_WORLD"
     }
   ],
   "schema_version": 1,
@@ -23714,18 +30450,20 @@
     "by_kind": {
       "class_definition": 467,
       "draw_state_reference": 990,
+      "draw_state_symbol": 176,
       "parse_unknown": 391,
       "required_feature": 28
     },
     "by_status": {
-      "unknown": 1876
+      "missing": 1,
+      "unknown": 2051
     },
     "candidate_roles": {
       "prototype": 14,
       "prototype_loader": 14,
       "render_object": 25
     },
-    "rows": 1876,
+    "rows": 2052,
     "unique_draw_state_symbols": 176
   },
   "upstream_files_missing_from_staging": [

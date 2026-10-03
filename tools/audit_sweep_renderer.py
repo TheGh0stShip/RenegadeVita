@@ -44,6 +44,34 @@ def feature_expectations(classes):
             for feature, seeds in FEATURE_OWNERS.items()]
 
 
+def state_symbols(rows):
+    references = defaultdict(list)
+    for row in rows:
+        if row['kind'] == 'draw_state_reference':
+            references[row['symbol']].append({'file': row['file'], 'line': row['line'],
+                                              'column': row['column']})
+    return [{'kind': 'draw_state_symbol', 'symbol': symbol, 'references': refs,
+             'status': 'unknown', 'native_mapping': 'unreviewed',
+             'evidence_class': 'source_token_aggregation'}
+            for symbol, refs in sorted(references.items())]
+
+
+def state_reviews(rows, reviews, inputs):
+    issues = []
+    for review in reviews:
+        pins = review.get('inputs_sha256', {})
+        matches = [r for r in rows if r['kind'] == 'draw_state_symbol' and
+                   r['symbol'] == review['symbol']]
+        if not pins or any(inputs.get(f) != checksum for f, checksum in pins.items()) or len(matches) != 1:
+            issues.append({'symbol': review['symbol'], 'reason': 'source evidence changed or absent'})
+            continue
+        if review['status'] not in ('missing', 'boundary_replaced', 'unknown'):
+            raise ValueError('Invalid renderer state review status')
+        matches[0].update(status=review['status'], native_mapping=review['native_mapping'],
+                          review=review, classification_evidence_class='source_review')
+    return issues
+
+
 def syntax(text, cpp_parser):
     data = text.encode()
     tree = cpp_parser.parse(data)
@@ -123,6 +151,12 @@ def audit(root):
     classes = [r for r in rows if r['kind'] == 'class_definition']
     ancestry(classes)
     rows.extend(feature_expectations(classes))
+    rows.extend(state_symbols(rows))
+    review_path = root / 'tools/sweep_reviews/renderer.json'
+    review_issues = []
+    if review_path.exists():
+        inputs['tools/sweep_reviews/renderer.json'] = hashlib.sha256(review_path.read_bytes()).hexdigest()
+        review_issues = state_reviews(rows, json.loads(review_path.read_text())['reviews'], inputs)
     for row in rows:
         identity = {key: row[key] for key in ('kind', 'file', 'line', 'column', 'start_byte',
                                              'end_byte', 'symbol', 'node_type', 'feature') if key in row}
@@ -147,6 +181,7 @@ def audit(root):
             aliases[(file.lower(), checksum)].append(file)
     case_aliases = [names for names in aliases.values() if len(names) > 1]
     return {'schema_version': 1, 'sweep': 'S2', 'complete': False, 'totals': totals,
+            'review_identity_issues': review_issues,
             'identical_case_alias_paths': case_aliases,
             'rows': rows, 'inputs_sha256': inputs, 'upstream_files_missing_from_staging': missing,
             'coverage_open': ['Active build branches and macro-generated declarations.',

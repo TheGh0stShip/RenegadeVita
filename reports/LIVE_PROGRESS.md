@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 state mapping batch: 176 per-symbol rows added alongside token references.
+Native decal ZBIAS is source-reviewed missing: unsupported handler reports
+success without applying bias. Four source hashes bind the review; runtime
+pixels remain open. S2 totals: one missing mapping, 2,051 unknown. Six tests pass.
+
 S2 coverage cross-check batch: 28 explicit feature rows preserve helper-owned
 rendering requirements outside RenderObj ancestry. Snapshot/streak ownership
 remains unresolved. Identical case-alias headers are recorded without merging

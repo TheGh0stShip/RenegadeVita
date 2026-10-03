@@ -1,7 +1,7 @@
 import importlib.util
 import unittest
 
-from audit_sweep_renderer import ancestry, feature_expectations, state_references, syntax
+from audit_sweep_renderer import ancestry, feature_expectations, state_references, state_reviews, state_symbols, syntax
 from sweep_cpp_functions import parser
 
 PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
@@ -9,6 +9,19 @@ PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
 
 
 class RendererInventoryTest(unittest.TestCase):
+    def test_state_aggregation_and_stale_review(self):
+        refs = [dict(r, kind='draw_state_reference', file='a.cpp')
+                for r in state_references('D3DRS_ZBIAS; D3DRS_ZBIAS;')]
+        rows = state_symbols(refs)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(len(rows[0]['references']), 2)
+        review = {'symbol': 'D3DRS_ZBIAS', 'status': 'missing', 'native_mapping': 'missing',
+                  'inputs_sha256': {'a.cpp': 'old'}}
+        self.assertEqual(len(state_reviews(rows, [review], {'a.cpp': 'changed'})), 1)
+        self.assertEqual(rows[0]['status'], 'unknown')
+        self.assertEqual(state_reviews(rows, [review], {'a.cpp': 'old'}), [])
+        self.assertEqual(rows[0]['status'], 'missing')
+
     def test_helper_and_absent_owner_are_never_silently_excluded(self):
         rows = feature_expectations([{'name': 'SkinDecalMeshClass', 'file': 'a.h', 'line': 2}])
         decal = next(r for r in rows if r['feature'] == 'skinned_decal')

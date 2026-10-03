@@ -1,7 +1,8 @@
 # S2 renderer features — inventory in progress
 
-This source denominator is incomplete as a feature matrix. All 1,876 records
-remain `unknown`; syntax discovery does not prove selection, linking, native
+This source denominator is incomplete as a feature matrix. Of 2,052 records,
+one state mapping is reviewed as `missing` and 2,051 remain `unknown`.
+Syntax discovery does not prove selection, linking, native
 submission, feature support or physical rendering. S1 classification continues.
 
 | Kind | Records |
@@ -10,12 +11,22 @@ submission, feature support or physical rendering. S1 classification continues.
 | Parse uncertainties | 391 |
 | Draw-state token references | 990 |
 | Required feature cross-checks | 28 |
+| Per-symbol state mappings | 176 |
 
 The references contain 176 distinct D3D render-state, texture-stage, sampler,
 FVF, format and transform symbols. Comments and literals are excluded while
 source positions are retained. References include declarations and queries;
 they are not automatically calls that set a state. All source files and the
 generator/parser inputs have SHA-256 identity. Rows have unique location IDs.
+
+Initial state mapping: `D3DRS_ZBIAS` is missing natively. Decal flush requests
+bias 8 and resets to 0. Original DX8Wrapper forwards to the native device;
+its render-state handler has no ZBIAS case in fog/ambient or draw-state handling,
+then logs an unsupported state and returns success without applying it. The
+review pins all four source inputs. A changed input invalidates the mapping.
+Original pseudo-ZBias projection handling is a separate route; it does not
+make this direct decal state request work. Per-map instances and physical
+z-fighting are unverified. No renderer repair is included in this batch.
 
 Candidate ancestry identifies 25 render-object definitions, 14 prototype-loader
 definitions and 14 prototype definitions. These counts include the base classes.
@@ -55,10 +66,11 @@ build/sweep-parser-venv/bin/python -m unittest discover -s tools -p test_audit_s
 build/sweep-parser-venv/bin/python tools/audit_sweep_renderer.py --output reports/generated/sweeps/renderer.json
 ```
 
-Five focused tests pass with the pinned parser. They cover transitive/multiple
+Six focused tests pass with the pinned parser. They cover transitive/multiple
 inheritance, cycles, namespace/template preservation, malformed syntax and
 comment/literal masking. General Python without the parser skips two AST tests;
-the explicit CI parser step installs the dependency and runs all five. CI retains
+the explicit CI parser step installs the dependency and runs all six. State
+aggregation and stale review invalidation are covered. CI retains
 the partial S2 JSON independently of the S1 artifact.
 
 Coverage question: what can exist outside this denominator? Open risks are

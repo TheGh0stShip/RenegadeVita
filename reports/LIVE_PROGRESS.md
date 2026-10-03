@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Dazzle shader state boundary — 2026-10-03
+
+Completed: original additive blending, separate dazzle/halo depth comparisons,
+disabled depth writes/culling/fog traced to native shader translation. Texture
+binding precedes original shader/combiner replay. Source hashes retained.
+Evidence: source inspection; no mismatch established in these mappings.
+Next: retail type/texture mount precedence and native visibility/draw evidence.
+See [dazzle owner review](DAZZLE_OWNER_REVIEW.md). No build or launch; gates0/10.
+
 ## Dazzle indexed geometry boundary — 2026-10-03
 
 Completed: original halo/dazzle/lensflare draws traced through dynamic buffer

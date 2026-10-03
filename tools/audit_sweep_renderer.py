@@ -1,0 +1,135 @@
+"""S2 unpreprocessed renderer denominator; never a feature-support verdict."""
+import argparse
+from collections import Counter, defaultdict
+import hashlib
+import json
+from pathlib import Path
+import re
+
+from audit_sweep_port_guards import mask_noncode
+from sweep_cpp_functions import parser, walk
+
+ROOT = Path(__file__).resolve().parents[1]
+STATE = re.compile(r'\bD3D(?:RS|TSS|SAMP|FVF|FMT|TS)_[A-Za-z0-9_]+\b')
+
+
+def syntax(text, cpp_parser):
+    data = text.encode()
+    tree = cpp_parser.parse(data)
+    classes, errors = [], []
+    for node in walk(tree.root_node):
+        if node.type in ('class_specifier', 'struct_specifier'):
+            name = node.child_by_field_name('name')
+            body = node.child_by_field_name('body')
+            if name is None or body is None:
+                continue  # Forward declarations are not definitions.
+            bases = next((c for c in node.named_children if c.type == 'base_class_clause'), None)
+            scopes = []
+            parent = node.parent
+            while parent:
+                if parent.type in ('namespace_definition', 'class_specifier', 'struct_specifier'):
+                    scope = parent.child_by_field_name('name')
+                    if scope:
+                        scopes.append(data[scope.start_byte:scope.end_byte].decode())
+                parent = parent.parent
+            base_names = [data[c.start_byte:c.end_byte].decode() for c in bases.named_children
+                          if c.type != 'access_specifier'] if bases else []
+            classes.append({'name': data[name.start_byte:name.end_byte].decode(),
+                            'scope': '::'.join(reversed(scopes)), 'bases': base_names,
+                            'line': node.start_point.row + 1,
+                            'end_line': node.end_point.row + 1,
+                            'start_byte': node.start_byte, 'end_byte': node.end_byte,
+                            'definition_sha256': hashlib.sha256(data[node.start_byte:node.end_byte]).hexdigest(),
+                            'parse_has_error': node.has_error})
+        if node.type == 'ERROR' or node.is_missing:
+            errors.append({'line': node.start_point.row + 1, 'start_byte': node.start_byte,
+                           'end_byte': node.end_byte, 'node_type': node.type,
+                           'missing': node.is_missing})
+    return classes, errors
+
+
+def state_references(text):
+    masked = mask_noncode(text)
+    return [{'symbol': m[0], 'line': masked.count('\n', 0, m.start()) + 1,
+             'column': m.start() - masked.rfind('\n', 0, m.start())}
+            for m in STATE.finditer(masked)]
+
+
+def ancestry(classes):
+    """Candidate graph only: namespaces, aliases and active branches unresolved."""
+    graph = defaultdict(set)
+    for row in classes:
+        graph[row['name']].update(row['bases'])
+    def reaches(name, target, seen):
+        if name == target:
+            return True
+        if name in seen:
+            return False
+        return any(reaches(base, target, seen | {name}) for base in graph[name])
+    for row in classes:
+        row['candidate_roles'] = [role for base, role in
+                                  (('RenderObjClass', 'render_object'),
+                                   ('PrototypeLoaderClass', 'prototype_loader'),
+                                   ('PrototypeClass', 'prototype'))
+                                  if reaches(row['name'], base, set())]
+
+
+def audit(root):
+    cpp_parser = parser()
+    rows, inputs = [], {}
+    for directory in ('staging/ww3d2', 'port/renderer'):
+        for path in sorted((root / directory).rglob('*')):
+            if not path.is_file() or path.suffix.lower() not in ('.cpp', '.c', '.h', '.hpp', '.inl'):
+                continue
+            relative = path.relative_to(root).as_posix()
+            inputs[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+            text = path.read_text(errors='replace')
+            classes, errors = syntax(text, cpp_parser)
+            for kind, records in (('class_definition', classes), ('parse_unknown', errors),
+                                  ('draw_state_reference', state_references(text))):
+                rows.extend(dict(r, kind=kind, file=relative, status='unknown',
+                                 evidence_class='unpreprocessed_source_syntax') for r in records)
+    classes = [r for r in rows if r['kind'] == 'class_definition']
+    ancestry(classes)
+    for row in rows:
+        identity = {key: row[key] for key in ('kind', 'file', 'line', 'column', 'start_byte',
+                                             'end_byte', 'symbol', 'node_type') if key in row}
+        row['row_id'] = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+    if len({r['row_id'] for r in rows}) != len(rows):
+        raise ValueError('Duplicate renderer inventory locations')
+    for name in ('audit_sweep_renderer.py', 'sweep_cpp_functions.py',
+                 'audit_sweep_port_guards.py', 'sweep-parser-requirements.txt'):
+        path = root / 'tools' / name
+        inputs['tools/' + name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    upstream = root / 'upstream/CnC_Renegade/Code/ww3d2'
+    missing = [p.relative_to(upstream).as_posix() for p in sorted(upstream.rglob('*'))
+               if p.is_file() and p.suffix.lower() in ('.cpp', '.h', '.inl')
+               and not (root / 'staging/ww3d2' / p.relative_to(upstream)).exists()]
+    totals = {'rows': len(rows), 'by_kind': dict(Counter(r['kind'] for r in rows)),
+              'by_status': dict(Counter(r['status'] for r in rows)),
+              'candidate_roles': dict(Counter(role for r in classes for role in r['candidate_roles'])),
+              'unique_draw_state_symbols': len({r['symbol'] for r in rows if 'symbol' in r})}
+    return {'schema_version': 1, 'sweep': 'S2', 'complete': False, 'totals': totals,
+            'rows': rows, 'inputs_sha256': inputs, 'upstream_files_missing_from_staging': missing,
+            'coverage_open': ['Active build branches and macro-generated declarations.',
+                              'Scoped/aliased/template inheritance and duplicate class names.',
+                              'State references are not proof that a state is set or supported.',
+                              'Numeric states, dynamically computed FVF and draw-state combinations.',
+                              'Selected/linked loaders, native submission paths and all-map effects.',
+                              'Classes outside WW3D/renderer trees and parse uncertainties.',
+                              'Render2D/text and non-RenderObj helper owners require explicit feature mapping.']}
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--root', type=Path, default=ROOT)
+    ap.add_argument('--output', type=Path, required=True)
+    args = ap.parse_args()
+    result = audit(args.root)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
+    print(json.dumps(result['totals']))
+
+
+if __name__ == '__main__':
+    main()

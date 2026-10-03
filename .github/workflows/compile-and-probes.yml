@@ -54,6 +54,8 @@ jobs:
           build/sweep-parser-venv/bin/python -m unittest discover -s tools -p 'test_audit_sweep_port_guards.py'
           build/sweep-parser-venv/bin/python -m unittest discover -s tools -p 'test_sweep_cpp_functions.py'
           build/sweep-parser-venv/bin/python tools/audit_sweep_port_guards.py --include-functions --output build/ci-s1-inventory-progress.json
+          build/sweep-parser-venv/bin/python -m unittest discover -s tools -p 'test_audit_sweep_renderer.py'
+          build/sweep-parser-venv/bin/python tools/audit_sweep_renderer.py --output build/ci-s2-inventory-progress.json
       - name: Sanitized retail-free host probes
         env:
           RV_SANITIZER: ${{ matrix.sanitizer }}
@@ -81,6 +83,7 @@ jobs:
             build/python-contract-summary.json
             build/ci-excluded-host*
             build/ci-s1-inventory-progress.json
+            build/ci-s2-inventory-progress.json
           if-no-files-found: warn
 
   arm:

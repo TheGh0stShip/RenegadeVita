@@ -2,6 +2,12 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 denominator batch: 1,848 source records, all unknown: 467 class definitions,
+391 parse uncertainties and 990 draw-state references (176 distinct symbols).
+Candidate ancestry includes 25 render-object, 14 loader and 14 prototype
+definitions including roots. Four pinned-parser tests pass. S2 feature mapping,
+all-map effects and S1 closure remain open; no new native gate closes.
+
 Renderer diagnostics batch: six mesh-debugger methods and two texture/sorting
 accounting hooks reviewed as empty compatibility methods. Original console,
 frame-update and macro references retained; native telemetry equivalence and

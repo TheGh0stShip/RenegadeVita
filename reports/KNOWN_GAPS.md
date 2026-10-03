@@ -2,7 +2,8 @@
 
 2026-10-03 timer dispatch review: original simulation time is paused/scaled
 and clamped to200 ms per ordinary frame. Hibernation, cinematic freeze and
-Post_Think eligibility gate timers. Missing observer expiry remains debug-only;
+Post_Think eligibility gate timers. Missing observer expiry has an opt-in
+source diagnostic hook, uncompiled; native collection remains unverified.
 schedule/delivery/save restoration are unverified. Preserve original semantics.
 See [timer dispatch coverage](SCRIPT_TIMER_DISPATCH_COVERAGE.md).
 

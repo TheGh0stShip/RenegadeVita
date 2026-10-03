@@ -11,6 +11,21 @@ def event(name='remark_scheduled', detail=None, **extra):
 
 
 class TransitionAnalysis(unittest.TestCase):
+    def test_timer_miss_is_not_a_mission_failure_verdict(self):
+        report = analyze([event('observer_absent_at_expiry',
+                                'object_id=100 observer_id=9 timer_id=-1', category='script_timer')])
+        self.assertEqual(report['timer_misses'][0]['timer_id'], -1)
+        self.assertFalse(report['complete_progression_verified'])
+
+    def test_timer_bad_shape_and_width_rejected(self):
+        for detail in ('bad', 'object_id=100 observer_id=9 timer_id=2147483648'):
+            with self.assertRaises(ValueError):
+                analyze([event('observer_absent_at_expiry', detail, category='script_timer')])
+
+    def test_timer_and_conversation_identity_must_match(self):
+        with self.assertRaisesRegex(ValueError, 'mixed'):
+            analyze([event(), event('observer_absent_at_expiry', 'object_id=1 observer_id=2 timer_id=3',
+                                   category='script_timer', candidate='different')])
     def test_monitor_attempt_is_not_callback_delivery(self):
         detail = 'instance=1 conversation_id=2 action=7 object_id=100 observer_index=0 reason=3'
         report = analyze([event('observer_call_attempted', detail)])

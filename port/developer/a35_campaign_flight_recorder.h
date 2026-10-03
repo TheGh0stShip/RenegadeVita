@@ -109,6 +109,8 @@ bool A35_Campaign_Flight_Flush(const char *reason);
 // Enabled with existing script coverage opt-in. Frame 0 means unavailable.
 // Instance tokens are process-local diagnostics, absent from save chunks.
 uint64_t A35_Campaign_Flight_Allocate_Conversation_Instance(void);
+void A35_Campaign_Flight_Observer_Timer_Miss(int32_t object_id,
+	int32_t observer_id, int32_t timer_id);
 // outcome: 0 inserted, 1 already present, 2 capacity rejected, 3 call attempted.
 void A35_Campaign_Flight_Conversation_Monitor(uint32_t outcome, uint64_t instance,
 	int32_t conversation_id, int32_t action_id, int32_t object_id,

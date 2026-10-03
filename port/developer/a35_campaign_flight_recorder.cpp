@@ -143,7 +143,7 @@ FlightRecorder gRecorder;
 // Conversation producers never access gRecorder. Reset requires quiescent
 // old mission work, as does the existing flight-recorder session boundary.
 struct ConversationTransition {
-	uint32_t monitor_kind; // 0 transition, otherwise outcome+1
+	uint32_t monitor_kind; // 0 transition, 1..4 monitor outcome, 5 observer timer miss
 	uint64_t instance;
 	int32_t conversation_id, action_id, remark, text_id, reason;
 	float next_seconds;
@@ -266,6 +266,14 @@ void Drain_Conversation_Queue()
 	for (uint32_t index = 0U; index < gConversationCount; ++index) {
 		const ConversationTransition &event = gConversationQueue[index];
 		char detail[224];
+		if (event.monitor_kind == 5U) {
+			snprintf(detail, sizeof(detail),
+				"object_id=%" PRId32 " observer_id=%" PRId32 " timer_id=%" PRId32,
+				event.action_id, event.remark, event.text_id);
+			Push_Event("script_timer", "observer_absent_at_expiry",
+				0U, event.monotonic_us, detail);
+			continue;
+		}
 		if (event.monitor_kind != 0U) {
 			static const char *names[] = {"monitor_inserted", "monitor_present",
 				"monitor_capacity_rejected", "observer_call_attempted"};
@@ -605,6 +613,23 @@ void A35_Campaign_Flight_Conversation_Monitor(uint32_t outcome, uint64_t instanc
 			gConversationQueue[gConversationCount++] = {outcome + 1U, instance,
 				conversation_id, action_id, observer_index, object_id, reason,
 				0.0F, Monotonic_Us(), false};
+		} else if (gConversationDropped != UINT32_MAX) {
+			++gConversationDropped;
+		}
+	}
+	pthread_mutex_unlock(&gConversationMutex);
+}
+
+// Timer miss shares the bounded opt-in queue. Internal payload reuses only
+// numeric slots; exported fields retain their timer-specific names.
+void A35_Campaign_Flight_Observer_Timer_Miss(int32_t object_id,
+	int32_t observer_id, int32_t timer_id)
+{
+	pthread_mutex_lock(&gConversationMutex);
+	if (gConversationEnabled) {
+		if (gConversationCount < 128U) {
+			gConversationQueue[gConversationCount++] = {5U, 0U, 0, object_id,
+				observer_id, timer_id, 0, 0.0F, Monotonic_Us(), false};
 		} else if (gConversationDropped != UINT32_MAX) {
 			++gConversationDropped;
 		}

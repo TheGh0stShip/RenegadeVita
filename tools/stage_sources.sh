@@ -1017,6 +1017,10 @@ test "$(sha256sum "$rv_stage/scripts/scripts.cpp" | cut -d' ' -f1)" = \
 	"ac9ffd308e636f6d715bedf20c34daccc113d0982eed31beda5dfc6cb496eca7"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-vector-parameter-initialization.patch"
+test "$(sha256sum "$rv_stage/combat/scriptablegameobj.cpp" | cut -d' ' -f1)" = \
+	"9503f9408bcc5941a624b13e0523e432ba3a4b04efb7b1c79ef31f5b170c0388"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-observer-timer-miss-telemetry.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

@@ -7,15 +7,16 @@ import re
 
 DETAIL = re.compile(r'instance=(\d+) conversation_id=(-?\d+) action=(-?\d+) remark=(-?\d+) text_id=(-?\d+) next_seconds=(\S+) reason=(-?\d+)')
 MONITOR = re.compile(r'instance=(\d+) conversation_id=(-?\d+) action=(-?\d+) object_id=(-?\d+) observer_index=(-?\d+) reason=(-?\d+)')
+TIMER = re.compile(r'object_id=(-?\d+) observer_id=(-?\d+) timer_id=(-?\d+)')
 
 
 def analyze(events):
-    rows, monitors, findings, identities = [], [], [], set()
+    rows, monitors, timer_misses, findings, identities = [], [], [], [], set()
     zero, unknown, dropped = 0, 0, 0
     for index, event in enumerate(events):
         if not isinstance(event, dict):
             raise ValueError('event must be an object')
-        if event.get('category') != 'conversation':
+        if event.get('category') not in ('conversation', 'script_timer'):
             continue
         identity = (event.get('candidate'), event.get('archive'), event.get('load_source'))
         if not all(isinstance(value, str) and value for value in identity):
@@ -24,6 +25,20 @@ def analyze(events):
         name, detail = event.get('name'), event.get('detail')
         if not isinstance(detail, str) or len(detail) > 223:
             raise ValueError('invalid bounded conversation detail')
+        if event.get('category') == 'script_timer':
+            if name != 'observer_absent_at_expiry':
+                findings.append({'record': index, 'kind': 'unrecognized_timer_event'})
+                continue
+            match = TIMER.fullmatch(detail)
+            if not match:
+                raise ValueError('malformed numeric timer miss')
+            values = list(map(int, match.groups()))
+            if any(not -2**31 <= value < 2**31 for value in values):
+                raise ValueError('timer numeric width exceeded')
+            timer_misses.append({'record': index, 'object_id': values[0],
+                                 'observer_id': values[1], 'timer_id': values[2]})
+            findings.append({'record': index, 'kind': 'observer_absent_at_expiry'})
+            continue
         if name == 'queue_overflow':
             match = re.fullmatch(r'unretained=(\d+)', detail)
             if not match or not 0 < int(match[1]) <= 0xffffffff:
@@ -72,10 +87,13 @@ def analyze(events):
     if len(identities) > 1:
         raise ValueError('mixed conversation capture identities')
     return {'schema': 1, 'identity': list(next(iter(identities))) if identities else None,
-            'transitions': rows, 'monitor_events': monitors, 'findings': findings, 'queue_unretained': dropped,
+            'transitions': rows, 'monitor_events': monitors, 'timer_misses': timer_misses,
+            'findings': findings, 'queue_unretained': dropped,
             'nonpositive_remark_timers': zero, 'unknown_instance_records': unknown,
             'callback_delivery_verified': False, 'complete_progression_verified': False,
             'limits': ['One process capture only; tokens are reused across application launches.',
+                       'Timer miss may reflect legitimate observer removal; it is not mission failure proof.',
+                       'Overflow is shared across conversation and timer diagnostics and cannot be attributed by type.',
                        'Owner finish is not observer callback delivery or success.',
                        'Missing transitions may reflect opt-out, queue loss or ring eviction.',
                        'No pairing across absent start, reset, load or lifecycle evidence.']}

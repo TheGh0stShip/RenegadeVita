@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Observer timer expiry diagnostics — 2026-10-03
+
+Completed: opt-in missing-observer expiry hook, bounded numeric collection,
+offline parsing and prepared C++ encoding case. Original removal and timer
+class save/update code remain unchanged.
+Evidence:33 focused source/Python checks pass; zero-fuzz replay succeeds.
+Next: native collection and mission significance after the build/launch hold.
+Native/runtime gates remain0/10; no build, launch or device action.
+
 ## Scoped parameter binding provenance — 2026-10-03
 
 Completed: authored bindings regenerated from unchanged retail data; source

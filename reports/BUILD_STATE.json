@@ -1,4 +1,12 @@
 {
+  "observer_timer_miss_diagnostics_20261003": {
+    "state": "OPT_IN_ORIGINAL_EXPIRY_HOOK_UNCOMPILED",
+    "report": "reports/SCRIPT_TIMER_DISPATCH_COVERAGE.md",
+    "queue_capacity_shared": 128,
+    "focused_source_python_tests_passed": 33,
+    "registered_staging_patches": 297,
+    "native_runtime_gates_closed": 0
+  },
   "script_parameter_parser_20261003": {
     "state": "VECTOR_INITIALIZATION_SOURCE_FIX_UNCOMPILED_BINDINGS_OPEN",
     "report": "reports/SCRIPT_PARAMETER_NAME_COVERAGE.md",

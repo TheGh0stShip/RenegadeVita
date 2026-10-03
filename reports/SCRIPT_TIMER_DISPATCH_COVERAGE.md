@@ -23,10 +23,26 @@ drops change nothing for timer sequencing is too broad: a long stall can
 advance simulation timers less than real time, and dispatch eligibility also
 matters. Preserve these original semantics.
 
-Existing instrumentation reports a bounded number of callbacks slower than
+Prior slow-callback instrumentation reports a bounded number of callbacks slower than
 500 ms. It does not retain timer scheduling, missing-observer expiry, complete
 custom dispatch or observer-list mutation history. Those remain diagnostic
 gaps. A source review confirms ownership and conditions only; it does not
 prove live Tutorial, M13 or M01 timer delivery, saved timer restoration, sender
 remapping or progression. No build, launch, device action or runtime gate was
 performed. Native mission/runtime gates remain0/10.
+
+The missing-observer expiry now has an opt-in source hook before original
+debug reporting and timer removal. Object, observer and timer IDs enter the
+existing fixed128-record mutex-protected diagnostic queue; only the recorder
+owner drains it. Timer fields are exported under a separate script_timer
+category. Collection uses the existing script-coverage opt-in and is disabled
+by default. Shared queue overflow cannot identify which event category lost
+records. No pointer, script text or retail payload is retained.
+
+The offline reader parses timer misses separately and requires consistent
+capture identity with conversation records. It reports misses as observations:
+legitimate observer removal can produce the same event. Thirty-three focused
+source/Python checks pass, including zero-fuzz replay, unchanged timer class
+code, queue boundaries, signed IDs and mixed-identity rejection. A prepared
+C++ recorder case checks encoding only and remains uncompiled. Actual timer
+delivery, gameplay significance and native collection behavior remain open.

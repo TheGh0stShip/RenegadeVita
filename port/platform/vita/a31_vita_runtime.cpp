@@ -39,6 +39,7 @@
 #include "chunkio.h"
 #include "combat.h"
 #include "combatgmode.h"
+#include "conversationmgr.h"
 #include "consolemode.h"
 #include "cnetwork.h"
 #include "d3d8.h"
@@ -272,6 +273,7 @@ const char *const kAlwaysDbsArchive = "Data\\always.dbs";
 const char *const kAlwaysArchive = "Data\\Always.dat";
 const char *const kM00Archive = "Data\\M00_Tutorial.mix";
 const char *const kStringsDatabase = "STRINGS.TDB";
+const char *const kGlobalConversationDatabase = "CONV10.CDB";
 const char *const kStyleManagerIni = "stylemgr.ini";
 const char *const kM00CacheIndex = "cache/m00-tutorial-mix-index-v1.txt";
 const char *const kStartupPrecacheReceiptPath =
@@ -1154,6 +1156,7 @@ bool Run_Visible_Startup_Precache_Phase(int startup_screen_result,
 		{ kAlwaysArchive, true, kStartupPrecacheRequiredReadBytes },
 		{ kM00Archive, true, kStartupPrecacheRequiredReadBytes },
 		{ kStringsDatabase, true, kStartupPrecacheRequiredReadBytes },
+		{ kGlobalConversationDatabase, true, kStartupPrecacheRequiredReadBytes },
 		{ kStyleManagerIni, true, kStartupPrecacheRequiredReadBytes },
 		{ "DEFAULT_INPUT.CFG", true, kStartupPrecacheRequiredReadBytes },
 		{ "if_lvl94load.w3d", true, kStartupPrecacheRequiredReadBytes },
@@ -3464,6 +3467,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	bool wwphys_initialized = false;
 	bool wwsaveload_initialized = false;
 	bool translatedb_initialized = false;
+	bool global_conversations_initialized = false;
 	bool stylemgr_initialized = false;
 		bool input_initialized = false;
 			bool combat_initialized = false;
@@ -3632,6 +3636,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				break;
 			}
 			translatedb_initialized = true;
+			uint32_t global_conversation_count = 0U;
+			global_conversations_initialized =
+				A31_Interactive_Load_Global_Conversations(factory_list, &global_conversation_count);
+			A30_Vita_Log("A3.5 conversations: global database load=%d name=CONV10.CDB records=%u\n",
+				global_conversations_initialized ? 1 : 0, global_conversation_count);
+			if (!global_conversations_initialized) break;
 			StyleMgrClass::Initialize_From_INI(kStyleManagerIni);
 			stylemgr_initialized = true;
 			if (StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT) == NULL ||
@@ -5031,6 +5041,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A30_Vita_Log("A3.5 loading screen: original StyleMgr shutdown complete\n");
 			}
 			if (translatedb_initialized) {
+				// Combat shutdown normally releases the original conversation lists.
+				// Startup can fail after the database load but before Combat init.
+				if (global_conversations_initialized && !combat_initialized) {
+					ConversationMgrClass::Shutdown();
+				}
+				global_conversations_initialized = false;
 				TranslateDBClass::Shutdown();
 				translatedb_initialized = false;
 				A30_Vita_Log("A3.5 loading screen: original TranslateDB shutdown complete\n");

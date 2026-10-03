@@ -2,6 +2,14 @@
 
 ## Current diagnostics work — 2026-10-03
 
+The conversation continuation found a missing process-level CONV10.CDB load,
+now restored through original owners in native and interactive host source,
+uncompiled. The metadata tool covers 3,606 global conversations and 65/570/89
+level records; authored level text/voice links resolve in both strings.tdb
+candidates. Global sound references, three literal-name leads and computed/
+helper routes remain open. 74 Python/source checks pass; no build, launch or
+new mission gate. See [conversation coverage](MISSION_CONVERSATION_COVERAGE.md).
+
 The read-only Tutorial/M13/M01 binding audit now retains actual script
 parameters and spawner IDs, follows cinematic script attachments and preserves
 unlocated ID leads even outside discovered bindings. M13 uses an M08 helper;

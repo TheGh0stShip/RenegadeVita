@@ -1,5 +1,12 @@
 # Capability matrix
 
+2026-10-03 conversation continuation restores the original global CONV10.CDB
+startup load in both bootstraps, uncompiled. Metadata links for authored
+Tutorial/M13/M01 conversations resolve, while global voice and source-name
+leads remain open. 74 Python/source checks pass; playback, native startup,
+save/reload and physical acceptance remain unverified. See
+[conversation coverage](MISSION_CONVERSATION_COVERAGE.md).
+
 2026-10-03 authored-binding audit adds parameter pairing, spawner IDs and
 cinematic script provenance for Tutorial/M13/M01. 55 Python/source checks pass.
 Reference gates and all new native mission/runtime gates remain incomplete;

@@ -1,5 +1,14 @@
 # Known gaps
 
+2026-10-03 conversation sweep confirms an omitted original CONV10.CDB startup
+operation, now restored in source but uncompiled. Authored level conversation
+text/voice links resolve for Tutorial/M13/M01. The global pool has 499 unresolved
+text-to-sound references involving 439 distinct sound-definition IDs, plus four
+voice files not located. Three literal source names and computed/helper routes
+remain review leads, including M13's conditional STAY_HERE conversation. No
+substitute content was introduced; no runtime gate closed. 74 Python/source
+checks pass. See [conversation coverage](MISSION_CONVERSATION_COVERAGE.md).
+
 2026-10-03 authored-binding audit: parameter lists decode without mismatches,
 and all discovered script names have shipped source owners. Typed definition
 references and literal object-ID lifetimes remain incomplete; M13 has a

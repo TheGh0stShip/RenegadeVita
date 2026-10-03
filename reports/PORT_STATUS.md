@@ -4,6 +4,14 @@ The complete audit series, reproduction steps, unbuilt-source limitations and
 repository protection status are collected in the
 [content audit index](CONTENT_AUDIT_INDEX.md).
 
+2026-10-03 conversation continuation: a missing CONV10.CDB startup load is
+restored in native and interactive host source through the original managers,
+uncompiled. The read-only sweep covers 3,606 global records and 65/570/89 level
+conversations for Tutorial/M13/M01. Authored level text/voice links resolve in
+both translation candidates; global sound and literal/computed-name leads
+remain open. 74 Python/source checks pass; no build, launch or physical
+acceptance. See [conversation coverage](MISSION_CONVERSATION_COVERAGE.md).
+
 2026-10-03 authored-binding continuation: Tutorial/M13/M01 parameters, spawner
 IDs and cinematic script provenance are now decoded. M13's ledge drop uses an
 M08 helper; M01's unresolved ConYard filename has an authored zone binding.

@@ -36,6 +36,10 @@
 #include "conversation.h"
 #include "conversationmgr.h"
 #include "conversationremark.h"
+#include "chunkio.h"
+#include "ffactory.h"
+#include "saveload.h"
+#include "wwfile.h"
 #include "definition.h"
 #include "definitionmgr.h"
 #include "hud.h"
@@ -74,6 +78,36 @@ extern void A31_Vita_Render_Demo_Ending_Overlay(void);
 // The application starts foregrounded; original Input::Update retains its
 // existing focus guard without changing action or control ownership.
 bool GameInFocus = true;
+
+bool A31_Interactive_Load_Global_Conversations(FileFactoryClass &factory,
+	uint32_t *loaded_count)
+{
+	if (loaded_count != NULL) *loaded_count = 0U;
+	// This is a startup operation, before any original conversation is active.
+	if (ConversationMgrClass::Get_Active_Conversation_Count() != 0) return false;
+	FileClass *file = factory.Get_File("CONV10.CDB");
+	if (file == NULL) return false;
+	bool loaded = false;
+	if (file->Open(FileClass::READ)) {
+		if (file->Is_Available()) {
+			ConversationMgrClass::Reset_Conversations(ConversationMgrClass::CATEGORY_GLOBAL);
+			ChunkLoadClass cload(file);
+			loaded = SaveLoadSystemClass::Load(cload) &&
+				ConversationMgrClass::Get_Conversation_Count(ConversationMgrClass::CATEGORY_GLOBAL) > 0;
+			if (!loaded) {
+				// No partially loaded globals survive a rejected startup database.
+				ConversationMgrClass::Reset_Conversations(ConversationMgrClass::CATEGORY_GLOBAL);
+			}
+		}
+		file->Close();
+	}
+	factory.Return_File(file);
+	if (loaded && loaded_count != NULL) {
+		*loaded_count = static_cast<uint32_t>(
+			ConversationMgrClass::Get_Conversation_Count(ConversationMgrClass::CATEGORY_GLOBAL));
+	}
+	return loaded;
+}
 
 // These legacy game-mode globals are observed by the original cNetwork
 // broken-connection and packet-dispatch paths.  The original MenuGameMode

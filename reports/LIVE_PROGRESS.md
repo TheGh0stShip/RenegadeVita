@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Global conversations and voice dependencies — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: document and publish the startup restoration and read-only conversation
+evidence; retain the build/launch hold.
+Completed: restored the original CONV10.CDB startup load in both bootstraps,
+including early-failure cleanup and required native file probing. Metadata
+tracing covers 3,606 global conversations and 65/570/89 level records. All
+authored level text/voice links resolve in both translation candidates.
+Evidence: 74 Python/source checks pass; C++ changes remain uncompiled.
+Next: trace global voice references, computed/helper conversations and direct
+HUD/objective text; compile/load/playback evidence only after the hold is lifted.
+Blocker: global/source-name leads and complete native mission evidence remain
+open. See [conversation coverage](MISSION_CONVERSATION_COVERAGE.md).
+
 ## Authored bindings and ID provenance — 2026-10-03
 
 Renegade Vita — v3.5 active

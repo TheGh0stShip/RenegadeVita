@@ -27,12 +27,67 @@ def raw_chunks(data, base=0):
         pos=end
 
 
-def conversations(nodes):
+def conversation_record(payload, offset, category, category_bytes):
+    """Decode only the original ConversationClass hierarchy, preserving ordinals."""
+    parsed=chunks(payload,offset+8)
+    identity=[n for n in parsed if n.kind==0x08090316]
+    if len(identity)!=1:
+        raise ValueError('missing/ambiguous conversation identity')
+    ordered=microchunks(identity[0].data)
+    fields=dict(ordered)
+    for key in (0,1,3,8):
+        if sum(k==key for k,_ in ordered)>1:
+            raise ValueError('duplicate conversation identity field')
+    if 8 in fields and u32(fields[8])!=category:
+        raise ValueError('conversation category differs from manager category')
+    orators=[]
+    remarks=[]
+    for node in parsed:
+        if node.kind==0x08090316:
+            for key,value in microchunks(node.data):
+                if key==2:
+                    if len(value)!=8:
+                        raise ValueError('invalid legacy inline remark width')
+                    remarks.append({'kind':'legacy_inline_remark', 'offset':node.offset,
+                                    'orator_index':signed32(value[:4]), 'text_id':u32(value[4:]),
+                                    'animation':''})
+        elif node.kind==0x08090317:  # ConversationClass::CHUNKID_ORATOR
+            variables=[n for n in node.children if n.kind==0x11060315]
+            if len(variables)!=1:
+                raise ValueError('missing/ambiguous orator variables')
+            values=dict(microchunks(variables[0].data))
+            orators.append({'index':len(orators), 'id':signed32(values[1]),
+                            'old_pointer_token':u32(values[2]) if 2 in values else None})
+        elif node.kind==0x08090318:  # ConversationClass::CHUNKID_REMARK
+            variables=[n for n in node.children if n.kind==0x01250307]
+            if len(variables)!=1:
+                raise ValueError('missing/ambiguous remark variables')
+            values=dict(microchunks(variables[0].data))
+            remarks.append({'kind':'scoped_remark', 'offset':node.offset,
+                            'orator_index':signed32(values[0]), 'text_id':u32(values[1]),
+                            'animation':string(values[2], 'latin1') if 2 in values else ''})
+    return {'category':category, 'category_bytes':category_bytes, 'offset':offset,
+            'name':string(fields[0]), 'id':u32(fields[1]),
+            'old_pointer_token':u32(fields[3]) if 3 in fields else None,
+            'orators':orators, 'remarks':remarks, 'remark_count':len(remarks),
+            'text_ids':[r['text_id'] for r in remarks]}
+
+
+def signed32(data):
+    if len(data)!=4:
+        raise ValueError('expected original signed 32-bit field')
+    return struct.unpack('<i',data)[0]
+
+
+def conversations(nodes, allow_legacy_category=True):
     records=[]
     for node in flatten(nodes):
         if node.kind != 0x40700:
             continue
         for kind,offset,data in raw_chunks(node.data,node.offset+8):
+            if kind==0x08090316:  # Manager's legacy conversation wrapper
+                records.append(conversation_record(data,offset,1,0))
+                continue
             if kind != 0x08090318:  # ConversationMgr::CHUNKID_CONVERSATION_CATEGORY
                 continue
             if not data or data[0] >= 2:
@@ -40,9 +95,9 @@ def conversations(nodes):
             # Match the already-staged original loader's bounded compatibility
             # for early Vita saves, whose enum occupied one byte.
             width=4
-            if len(data)==1:
+            if allow_legacy_category and len(data)==1:
                 width=1
-            elif len(data)>=9:
+            elif allow_legacy_category and len(data)>=9:
                 next_id,next_size=struct.unpack_from('<II',data,1)
                 if next_id==0x08090319 and (next_size&0x7fffffff)<=len(data)-9:
                     width=1
@@ -52,14 +107,7 @@ def conversations(nodes):
             for child,at,payload in raw_chunks(data[width:],offset+8+width):
                 if child != 0x08090319:
                     raise ValueError('unexpected conversation category child')
-                parsed=chunks(payload,at+8)
-                identity=[n for n in parsed if n.kind==0x08090316]
-                if len(identity)!=1:
-                    raise ValueError('missing/ambiguous conversation identity')
-                fields=dict(microchunks(identity[0].data))
-                remarks=[dict(microchunks(n.data)) for n in flatten(parsed) if n.kind==0x01250307]
-                records.append({'category':category,'category_bytes':width,'offset':at,'name':string(fields[0]),'id':u32(fields[1]),
-                                'remark_count':len(remarks),'text_ids':[u32(r[1]) for r in remarks]})
+                records.append(conversation_record(payload,at,category,width))
     return records
 
 

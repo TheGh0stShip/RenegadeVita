@@ -84,6 +84,7 @@ def source_scripts(root=ROOT):
             if key in result:
                 raise ValueError(f"duplicate shipped script registration: {match[1]}")
             result[key] = {"name": match[1], "owner": filename, "descriptor": descriptor,
+                           "body_start_line": source.count('\n', 0, match.end()) + 1,
                            "body": body, "lookups": lookups,
                            "attachments": sorted({m.lower() for m in ATTACH.findall(body)})}
     return result

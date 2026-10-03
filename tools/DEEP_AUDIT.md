@@ -1,5 +1,19 @@
 # Reproduce the cross-system static audit
 
+The [conversation audit](../reports/MISSION_CONVERSATION_COVERAGE.md) traces
+global and level conversation records through independent strings.tdb
+candidates, original sound/twiddler definitions and retail filename alternatives:
+
+```bash
+python3 -m tools.audit_mission_conversations --data /absolute/path/to/user-owned/retail/Data --output-directory build/dev208-conversations-20261003
+python3 -m unittest tools.test_mission_conversations tools.test_mission_content_bindings tools.test_m13_level_owners tools.test_deep_content_audit tools.test_requested_mission_owner_contract tools.test_m13_mission_inventory tools.test_m13_script_coverage tools.test_script_provider_contract
+```
+
+These 74 source/parser checks do not compile or run the game. Metadata output
+includes unresolved global voice/name leads and is restricted to ignored build/;
+subtitle text and audio payloads are not exported. Successful audit execution
+does not imply complete mission closure or playback correctness.
+
 The [authored-binding audit](../reports/AUTHORED_MISSION_BINDINGS.md) now retains
 script parameters, spawner instance IDs and cinematic-to-script provenance.
 It works without a configured build or executable:

@@ -4,6 +4,13 @@
 
 #include "a31_mission_completion_latch.h"
 
+class FileFactoryClass;
+
+/* Restore original Commando's process-level CONV10.CDB load before mission
+** scripts can request global conversations. Original Combat owns shutdown. */
+bool A31_Interactive_Load_Global_Conversations(FileFactoryClass &factory,
+	uint32_t *loaded_count);
+
 /*
 ** Shared A3.1 interactive-runtime policy.  Platform adapters may provide
 ** clocks, controller samples, presentation, and logging; they do not choose

@@ -24,6 +24,7 @@
 #include "chunkio.h"
 #include "combat.h"
 #include "combatgmode.h"
+#include "conversationmgr.h"
 #include "pscene.h"
 #include "cnetwork.h"
 #include "definitionfactorymgr.h"
@@ -1186,6 +1187,7 @@ int main(int argc, char **argv)
 	bool radar_initialized = false;
 		bool stylemgr_initialized = false;
 		bool translatedb_initialized = false;
+		bool global_conversations_initialized = false;
 		bool campaign_initialized = false;
 	bool session_initialized = false;
 	bool single_player_transport_initialized = false;
@@ -1259,6 +1261,13 @@ int main(int argc, char **argv)
 				Print_Number("strings_database_version", translatedb_version);
 				if (!translatedb_loaded) { passed = false; break; }
 				translatedb_initialized = true;
+				Stage("global_conversation_database_load");
+				uint32_t global_conversation_count = 0U;
+				global_conversations_initialized = A31_Interactive_Load_Global_Conversations(
+					factory_list, &global_conversation_count);
+				Print("global_conversation_database_loaded", global_conversations_initialized);
+				Print_Number("global_conversation_database_records", global_conversation_count);
+				if (!global_conversations_initialized) { passed = false; break; }
 				unsigned main_menu_translation_count = 0U;
 				const bool main_menu_translations =
 					Validate_Main_Menu_Translation_Table(&main_menu_translation_count);
@@ -2142,6 +2151,10 @@ int main(int argc, char **argv)
 						CampaignFlowDescriptions.Count() == 0);
 				}
 				if (translatedb_initialized) {
+					if (global_conversations_initialized && !combat_initialized) {
+						ConversationMgrClass::Shutdown();
+					}
+					global_conversations_initialized = false;
 					TranslateDBClass::Shutdown();
 					translatedb_initialized = false;
 				}

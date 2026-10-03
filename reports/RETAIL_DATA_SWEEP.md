@@ -75,3 +75,21 @@ frontend/global-only data, full factory numeric-ID reconciliation, runtime
 mount order and actual script registration. The existing dependency parser's
 structural findings remain review leads. This is the binding portion of S4;
 the complete sweep and full-game acceptance remain open.
+# All-map level chunk denominator
+
+The supplemental `level_chunks.json` inventory covers all 27 supplied maps and
+54 LSD/LDD member index records. It retains 12,687 distinct chunk-ancestry paths
+per member, with occurrence counts, first offsets, aggregate payload sizes and
+member/archive hashes. All 54 members parse without a bounds error. Every row
+remains unknown; chunk presence does not prove loader support or usable data.
+
+Reproduce with `python3 -m tools.audit_level_chunk_inventory --data DATA --output OUTPUT`.
+Two authored tests check little-endian parent context, repeated local IDs and
+truncated bounds; 26 checks pass including the existing level-owner reader tests.
+The existing reader deliberately leaves ConversationMgr's
+0x40700 subsystem opaque because its payload starts with a raw category field.
+No guessed recursion or raw payload is published. Parser input hashes are retained.
+
+Source-to-chunk owner reconciliation, pathfinding/visibility semantic validation,
+geometry dependencies and integration into the consolidated gap register remain
+open. This supplement does not close S4 or establish runtime level correctness.

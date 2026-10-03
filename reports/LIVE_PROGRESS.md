@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S4 all-map level chunk denominator — 2026-10-03
+
+27 maps and 54 LSD/LDD members scanned; 12,687 per-member chunk-ancestry paths
+retained with counts/offsets/sizes/hashes. No parser bounds errors. Two tests
+pass; all records remain unknown pending loader and content semantics. Raw
+payloads remain private; ConversationMgr stays deliberately opaque. No runtime
+change or visibility/pathfinding validity claim.
+
 ## S6 control-lock owner trace — 2026-10-03
 
 Original command forwards to SmartGameObj control flag; original Think resets

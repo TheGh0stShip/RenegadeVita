@@ -51,3 +51,32 @@ trigger resets, disabled/hibernating/frozen zones, actor removal without exit,
 and checkpoint reload inside a zone. Retain exact zone/actor IDs and candidate
 identity; distinguish overlap, callback attempts, resulting custom events and
 visible mission progression. No replacement trigger logic was introduced.
+
+## Authored metadata sweep
+
+The read-only `tools.audit_script_zones` scanner decodes original microchunk
+widths explicitly: one-byte booleans, signed32 zone type and15 little-endian
+float32 OBBox fields (basis, center, extent). It follows persisted factory
+containers, retains object/definition identities and applies level definition
+overlays over objects.ddb. Missing fields remain unknown; duplicate fields,
+incorrect widths and nonfinite bounds are rejected. Negative extents are
+retained as findings rather than silently corrected.
+
+| Map | Zone records | Star-only | All-smart | Unknown filters | Bounds findings |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Tutorial |31|31|0|0|0|
+| M13 / Scorpion Hunters |16|16|0|0|0|
+| M01 |138|130|8|0|0|
+
+These counts are serialized zone records, not executed callbacks or verified
+trigger coverage. The scanner does not test orthonormal basis validity, actual
+physics broadphase gathering, spawn positions or saved reference remapping.
+Zero bounds findings means no nonfinite values or negative extents in the
+decoded scope, not proof that a zone has valid placement or nonzero volume.
+
+Twenty-eight focused Python checks pass, including five new synthetic decoder
+counterexamples and existing level-owner/binding checks. Detailed rows remain
+private in `build/script-zones-20261003.json`, with map/member/global-definition
+and original source hashes. Reproduce with:
+`python3 -m tools.audit_script_zones --data <retail-Data> --output build/script-zones.json`.
+No data mutation, asset extraction for distribution, build or launch occurred.

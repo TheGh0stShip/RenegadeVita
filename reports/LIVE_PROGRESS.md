@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Authored zone metadata — 2026-10-03
+
+Completed: read-only definition/instance scanner with explicit native disk
+widths and private identity receipts. Tutorial31/M1316 all star-only; M01
+138 total,130 star-only/eight all-smart. No decoded bounds findings.
+Evidence:28 focused Python tests pass; metadata is not overlap/callback proof.
+Next: basis/placement and broadphase/runtime delivery after hold.
+Native/runtime gates0/10; no build, launch or retail mutation.
+See [script-zone owner review](SCRIPT_ZONE_OWNER_REVIEW.md).
+
 ## Script-zone membership review — 2026-10-03
 
 Completed: original source selection, oriented point overlap, gathering filters,

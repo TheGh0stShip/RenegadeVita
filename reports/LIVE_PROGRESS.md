@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Restricted integer discovery reconciliation — 2026-10-03
+
+Completed: integer-only restricted expression evaluator replaces eval;
+unsupported operators stay unresolved and division truncates toward zero.
+Evidence:46 focused checks; fresh three-map scans preserve prior data hashes,
+roots, closures and unresolved findings. No full C++ evaluator claim.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Source enum discovery uncertainty — 2026-10-03
 
 Completed: unknown initializer chains stay unresolved; unsupported punctuation

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
 import io
 import json
@@ -353,6 +354,8 @@ def parse_int_expression(expression: str, symbols: dict[str, int]) -> int | None
     expression = expression.strip()
     if not expression:
         return None
+    if re.search(r'\+\+|--|\*\*|//', expression):
+        return None
     tokens = re.findall(r"0x[0-9A-Fa-f]+|\d+|[A-Za-z_][A-Za-z0-9_]*|[()+\-*/]", expression)
     if ''.join(tokens) != re.sub(r'\s+', '', expression):
         return None  # Never silently discard unsupported operators or punctuation.
@@ -365,9 +368,27 @@ def parse_int_expression(expression: str, symbols: dict[str, int]) -> int | None
         else:
             return None
     safe_expression = " ".join(rebuilt)
+    def evaluate(node):
+        if isinstance(node, ast.Constant) and type(node.value) is int:
+            return node.value
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+            value = evaluate(node.operand)
+            return value if isinstance(node.op, ast.UAdd) else -value
+        if isinstance(node, ast.BinOp):
+            left, right = evaluate(node.left), evaluate(node.right)
+            if isinstance(node.op, ast.Add):
+                return left + right
+            if isinstance(node.op, ast.Sub):
+                return left - right
+            if isinstance(node.op, ast.Mult):
+                return left * right
+            if isinstance(node.op, ast.Div) and right != 0:
+                quotient = abs(left) // abs(right)
+                return -quotient if (left < 0) != (right < 0) else quotient
+        raise ValueError('unsupported integer expression')
     try:
-        value = eval(safe_expression, {"__builtins__": {}}, {})
-    except Exception:
+        value = evaluate(ast.parse(safe_expression, mode='eval').body)
+    except (SyntaxError, ValueError, RecursionError):
         return None
     if not isinstance(value, int):
         return None

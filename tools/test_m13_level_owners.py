@@ -43,6 +43,15 @@ class M13LevelOwnersTests(unittest.TestCase):
         self.assertIsNone(parse_int_expression('1,2', {}))
         self.assertEqual(parse_int_expression('(BASE + 2)', {'BASE': 0x40600}), 0x40602)
 
+    def test_integer_expression_division_and_non_cpp_operators(self):
+        self.assertEqual(parse_int_expression('7 / 3', {}), 2)
+        self.assertEqual(parse_int_expression('-7 / 3', {}), 0xfffffffe)
+        self.assertEqual(parse_int_expression('7 / -3', {}), 0xfffffffe)
+        self.assertEqual(parse_int_expression('-7 / -3', {}), 2)
+        self.assertEqual(parse_int_expression('NEG * 2', {'NEG': -3}), 0xfffffffa)
+        for expression in ('2**3', '7//3', '1--2', '1++2', '7/0'):
+            self.assertIsNone(parse_int_expression(expression, {}))
+
     def test_combat_start_and_respawn_are_script_roots_without_placed_owner(self):
         variables = chunk(916991715, micro(4, b'MTU_Commando_Startup\0') +
                           micro(5, b'MTU_Commando\0'))

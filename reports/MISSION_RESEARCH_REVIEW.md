@@ -1,5 +1,17 @@
 # Complete mission overview review — 2026-10-03
 
+Integer-expression discovery now uses a restricted syntax-tree evaluator rather
+than Python eval. It rejects unsupported nodes and Python-only power/floor
+division operators, retains unresolved values, and computes division using
+integer truncation toward zero without host floating-point conversion. The
+existing final uint32 token policy remains; this is not a full C++ type,
+promotion or signed-overflow evaluator. Forty-six focused checks pass.
+Fresh Tutorial/M13/M01 scans retain identical archive/database identities,
+global roots, definition/script closures and unresolved findings compared with
+the preceding HUD-settings receipts. The private comparison is
+`build/enum-discovery-reconciliation-20261003.json`; fresh receipts are under
+`build/dev208-verified-enum-roots-20261003/`. Native behavior remains unverified.
+
 The source enum discovery now preserves uncertainty after unsupported or
 unresolved initializers instead of assigning invented implicit values. It also
 rejects expressions whose punctuation would previously be discarded by the

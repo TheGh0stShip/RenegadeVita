@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Campaign handoff counterexamples — 2026-10-03
+
+Completed: fixed category enum, authored-ID discovery indexing and vector
+storage/length copy verified; inspected caller limits handoff to completed
+transitions and clears pending state. Fresh initialization replaces the copy.
+Evidence:11 focused source checks; no vector execution or native proof.
+Next: repeated natural transitions, fresh/load/reset behavior after hold.
+Native/runtime gates remain0/10; C++ correction remains uncompiled.
+See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
+
 ## Campaign encyclopedia handoff — 2026-10-03
 
 Completed: source-confirmed saved-discovery overwrite corrected at native

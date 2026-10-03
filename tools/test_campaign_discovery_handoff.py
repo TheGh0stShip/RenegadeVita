@@ -6,6 +6,29 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CampaignDiscoveryHandoffTests(unittest.TestCase):
+    def test_discovery_indices_are_authored_ids_not_enumeration_positions(self):
+        source = (ROOT / "staging/combat/encyclopediamgr.cpp").read_text()
+        header = (ROOT / "staging/combat/encyclopediamgr.h").read_text()
+        build = source.split("EncyclopediaMgrClass::Build_Bit_Vector (TYPE type)", 1)[1].split(
+            "EncyclopediaMgrClass::Reveal_Object", 1)[0]
+        self.assertIn('Get_Int (section->Section, "ID")', build)
+        self.assertIn("max_id = max (max_id, id);", build)
+        self.assertIn("Resize (max_id + 1)", build)
+        self.assertIn("KnownObjectVector[type][object_id] = true;", source)
+        self.assertIn("TYPE_CHARACTER\t\t= 0", header)
+        for category in ("TYPE_WEAPON", "TYPE_VEHICLE", "TYPE_BUILDING"):
+            self.assertIn(category, header)
+
+    def test_vector_assignment_restores_storage_and_length(self):
+        source = (ROOT / "staging/wwlib/vector.cpp").read_text()
+        assignment = source.split("BooleanVectorClass & BooleanVectorClass::operator =", 1)[1].split(
+            "return(*this);", 1)[0]
+        self.assertIn("BitArray = vector.BitArray;", assignment)
+        self.assertIn("BitCount = vector.BitCount;", assignment)
+        main = (ROOT / "port/platform/vita/a30_main.cpp").read_text()
+        self.assertIn("runtime_ok && interactive.campaign_handoff_completed", main)
+        self.assertIn("pending_campaign_source[0] = '\\0';", main)
+
     def test_restore_follows_validated_campaign_load(self):
         source = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
         load = source.index("const bool loaded = CampaignManager::Load(state_reader);")

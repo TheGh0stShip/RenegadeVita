@@ -126,10 +126,28 @@ is uncompiled and unverified on native hardware under the build/launch hold.
 Verify discoveries in each category across natural M13-to-M01 continuation,
 then fresh campaign/replay/load reset behavior and repeated session teardown.
 
-Nine focused source checks pass (`test_campaign_discovery_handoff`,
+Eleven focused source checks pass (`test_campaign_discovery_handoff`,
 `test_requested_mission_owner_contract`, `test_campaign_profile_defaults`).
-The three new lifecycle checks verify source selection/order and original
+The five lifecycle checks verify source selection/order and original
 copy ownership; they do not execute vector copying or mission progression.
+
+Further source verification confirms fixed category enum values (character,
+weapon, vehicle, building), with bits indexed by authored INI object IDs.
+Build_Bit_Vector sizes each category to its maximum ID plus one; INI section
+enumeration order is not the discovery index. BooleanVector assignment copies
+both BitArray and BitCount, so Restore_Data supplies the previous category
+length as well as its bits after Shutdown. This assumes unchanged retail
+encyclopedia definitions within the same process; live content changes are not
+a supported or validated handoff scenario.
+
+The inspected outer caller supplies campaign_source only after a successful
+runtime reports a completed handoff and clears pending source/state after each
+call. A failed initialization does not manufacture a continuation token. A fresh
+session calls Initialize and Store_Data, replacing the prior copy. Consecutive
+successful transitions still depend on original End_Game storage each time.
+Combat Init/Shutdown do not assign DifficultyLevel in the inspected source;
+per-level objectives, conversation instances and HUD have their own reset
+owners. No second carried-state reset defect was established by this pass.
 
 ## Remaining verification
 

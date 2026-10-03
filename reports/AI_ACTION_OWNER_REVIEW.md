@@ -131,6 +131,39 @@ Private receipt: `build/m13-engineer-destination-routes-20261003.json`, bound to
 the existing archive/database and input-receipt hashes. No retail mutation,
 compilation, launch or native progression acceptance.
 
+## Tutorial building power and vehicle station owners
+
+Four authored tutorial building presets use generic building factory0x40134,
+not the specialized multiplayer powerplant/refinery/factory classes. Original
+building.cpp is selected in the baseline native source list. MTU_POWERPLANT
+matches placed object450937 and the authored building-controller attachment.
+Petrova's speech completion sends power-off, starts the ending speech, and its
+completion sends power-on. These are conversation-dependent transitions, not
+an unconditional periodic power toggle.
+
+Set_Building_Power calls original BuildingGameObj::Enable_Power. When changing,
+that owner synchronously notifies observers before assigning IsPowerOn, then
+updates state and marks rare replication data dirty on the server. Observers
+querying power inside that notification can see the preceding value. Preserve
+this original ordering. Update_State selects aggregate state, interior/exterior
+alternate materials and power light lists, then invalidates physics lighting
+caches. Native MeshModel material selection retains CurMatDesc switching but
+omits DX8MeshRenderer invalidation under its platform guard. Actual native
+material/light changes remain unverified; owner presence is not visual proof.
+
+MTU_Building_Controller initializes can_be_damaged=false and has no registered
+save variables for that gate in the original source. Its destruction event
+enables the gate before applying damage. No save/load correction was invented.
+MTU_GDI_Vehicle does save entered_me; original VehicleGameObj sends entered
+custom events with seat ID and occupant sender after enabling its engine.
+The tutorial handler reacts once without an explicit player/seat filter,
+then sends the Hotwire/squishy/Logan events selected by Vehicle_ID. Preserve
+the original filter behavior; live entry and training progression remain open.
+
+Private definition/source hash receipt:
+`build/tutorial-building-power-owner-20261003.json`. No missing generic building
+implementation was established in this inspected scope. No build or launch.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

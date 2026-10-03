@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Tutorial building-power and vehicle station owners — 2026-10-03
+
+Completed: four generic building presets and original power/material/light owners
+checked; Petrova speech-dependent power transitions and vehicle-enter custom
+payload traced. Original damage-gate/save and entry-filter behavior retained.
+Evidence: read-only definition/source hash receipt; no omitted generic owner found.
+Open: native material-cache/light behavior, conversations and station progression.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## M13 engineer destination state — 2026-10-03
 
 Completed: controller registration/check→authored LEAD→saved point_id→retry

@@ -1,5 +1,19 @@
 # Cinematic callers and custom-event routing — 2026-10-03
 
+Primary-death source review distinguishes notification and parser reentrancy.
+The helper sets its saved custom_sent latch before dispatch in both Killed and
+Destroyed. The controller sets PrimaryKilled before calling Parse_Commands;
+that prevents repeated primary notifications, but is not a general parser
+entry guard. Zero-delay Send_Custom_Event dispatch is synchronous. An outer
+parser invokes each command before removing its current head, so nested
+callbacks can encounter the same list. A reachable same-controller chain is
+not established by these facts alone and remains a runtime/source-flow lead.
+Remove_Head_Control_Line guards null and advances before freeing, so a nested
+pass that drains the list does not by itself establish a double free. Likewise,
+Destroy_Object only marks deletion pending; immediate destruction must not be
+invented as a trigger. No parser scheduling or authored command changes were
+made. A source contract retains these distinctions for future investigation.
+
 The deeper Tutorial/M13/M01 sweep retains 1,140 original source event-call
 sites and 3,231 authored/unbound binding contexts. No resolved event type in
 this inspected scope is a cinematic slot-fill candidate. Five contexts remain

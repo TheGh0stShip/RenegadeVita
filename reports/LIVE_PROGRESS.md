@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Cinematic primary-death dispatch ownership — 2026-10-03
+
+Completed: original saved helper latch, synchronous custom dispatch, parser
+command/removal order, null-safe removal and deferred object deletion traced.
+Evidence:source-backed contract; reachable nested same-controller parsing
+remains unproved. No speculative parser rewrite or authored control changes.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Cinematic primary callback ID formatting — 2026-10-03
 
 Completed: original primary-death callback ID buffer expanded10→12 bytes,

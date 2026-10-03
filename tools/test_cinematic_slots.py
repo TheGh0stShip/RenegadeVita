@@ -138,6 +138,27 @@ class CinematicSlotsTests(unittest.TestCase):
         self.assertIn('int parameter = 0;', body)
         self.assertIn('Commands->Send_Custom_Event( Owner(), to, type, parameter );', body)
 
+    def test_primary_notification_and_parser_mutation_source_contract(self):
+        source = (ROOT / 'upstream/CnC_Renegade/Code/Scripts/Test_Cinematic.cpp').read_text()
+        helper_source = source.split('DECLARE_SCRIPT(Test_Cinematic,', 1)[0]
+        self.assertEqual(helper_source.count('if (!custom_sent)'), 2)
+        self.assertEqual(helper_source.count('custom_sent = true;'), 2)
+        self.assertIn('SAVE_VARIABLE( custom_sent, 1 );', helper_source)
+        parser = source.split('void\tParse_Commands(', 1)[1].split('void Created(', 1)[0]
+        self.assertIn('Controls->Time <= LAST_VALID_TIMESTAMP', parser)
+        self.assertLess(parser.index('Parse_Command( Controls->Command );'),
+                        parser.index('Remove_Head_Control_Line();', parser.index('Parse_Command( Controls->Command );')))
+        remover = source.split('void\tRemove_Head_Control_Line(', 1)[1].split('void\tDisplay_Control_Lines(', 1)[0]
+        self.assertIn('if ( Controls != NULL )', remover)
+        self.assertLess(remover.index('Controls = Controls->Next;'), remover.index('delete control;'))
+        commands = (ROOT / 'upstream/CnC_Renegade/Code/Combat/scriptcommands.cpp').read_text()
+        dispatch = commands.split('void\tSend_Custom_Event(', 1)[1].split('void\tSend_Damaged_Event(', 1)[0]
+        self.assertIn('if ( delay <= 0 )', dispatch)
+        self.assertIn('observer_list[ index ]->Custom( to, type, param, from );', dispatch)
+        destroy = commands.split('void\tDestroy_Object(', 1)[1].split('GameObject * Find_Object(', 1)[0]
+        self.assertIn('obj->Set_Delete_Pending();', destroy)
+        self.assertNotIn('delete obj', destroy)
+
     def test_integer_tokens_preserve_32_bit_semantics_and_unknown_spelling(self):
         self.assertEqual(integer('2147483647'), 0x7fffffff)
         self.assertEqual(integer('-2147483648'), -0x80000000)

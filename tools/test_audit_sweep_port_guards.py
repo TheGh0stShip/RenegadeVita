@@ -1,9 +1,23 @@
 import unittest
 
-from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, stage_patch_selection, validate_inventory, wrapper_references
+from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, row_identity, stage_patch_selection, validate_inventory, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_guard_review_requires_source_pin_and_exact_directive(self):
+        row = {'kind': 'current_source_guard', 'file': 'staging/a.cpp', 'line': 4,
+               'directive': '#if __vita__', 'status': 'unknown'}
+        review = dict(row, row_id=row_identity(row), status='disabled_by_port_guard',
+                      original_owner='render', behavior='skip', callers=[],
+                      affected_scope=['host'], acceptance_open='pixels')
+        self.assertEqual(len(apply_reviews([row], [review])), 1)
+        self.assertEqual(apply_reviews([row], [review], {'staging/a.cpp': 'hash'},
+                                      {'staging/a.cpp': 'hash'}), [])
+        row['directive'] = '#if OTHER'
+        row['status'] = 'unknown'
+        self.assertEqual(len(apply_reviews([row], [review], {'staging/a.cpp': 'hash'},
+                                          {'staging/a.cpp': 'hash'})), 1)
+
     def test_review_distinguishes_same_signature_in_alternative_branches(self):
         rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
                  'body_sha256': body, 'status': 'unknown'} for body in ('native', 'fallback')]

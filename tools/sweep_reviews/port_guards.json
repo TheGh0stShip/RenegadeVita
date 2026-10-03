@@ -12,7 +12,8 @@
     "port/platform/a31_gameplay_boundary.cpp": "f9dec496ee91feb2de21c59180268258b95d19fc86234a5525221828b72eff76",
     "staging/commando/movie.cpp": "57f5bbf0188a8fa8fd896c3e819681c354bc0107863f942723010c07bcf4524e",
     "staging/commando/dlgmovieoptions.cpp": "49032fb0849ec72e432d5c0780c477d46b93c52c2a57a8891897e5f68d7bea03",
-    "staging/combat/scriptcommands.cpp": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325"
+    "staging/combat/scriptcommands.cpp": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
+    "staging/ww3d2/dazzle.cpp": "d6feb4183fb7f2cec11394f573ab48847488cf563a8c56da69bb1d43ac9a0211"
   },
   "reviews": [
     {
@@ -543,6 +544,54 @@
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/dazzle.cpp",
+      "row_id": "6fed676b927f442490205818abae23e3db1ee4add069540e1524a5a75228b7e4",
+      "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)",
+      "status": "disabled_by_port_guard",
+      "original_owner": "DazzleRenderObjClass::Render",
+      "behavior": "RENEGADE_VITA_PORT without __vita__ returns before original rendering. Native __vita__ profile takes the original body in the alternative branch; this guard does not disable native rendering.",
+      "callers": [
+        "Original render-object traversal and decal mesh flush; exact per-map instances require S2/S4 closure."
+      ],
+      "affected_scope": [
+        "Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified."
+      ],
+      "acceptance_open": "Native body, traversal/flush, render state and physical effects; do not use this host guard as evidence of native omission."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/decalmsh.cpp",
+      "row_id": "5d7e0887a10acee25a212b4e80c64ea551022b82913c84b37bed0781a813bb23",
+      "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)",
+      "status": "disabled_by_port_guard",
+      "original_owner": "RigidDecalMeshClass::Render and SkinDecalMeshClass::Render",
+      "behavior": "RENEGADE_VITA_PORT without __vita__ returns before original rendering. Native __vita__ profile takes the original body in the alternative branch; this guard does not disable native rendering.",
+      "callers": [
+        "Original render-object traversal and decal mesh flush; exact per-map instances require S2/S4 closure."
+      ],
+      "affected_scope": [
+        "Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified."
+      ],
+      "acceptance_open": "Native body, traversal/flush, render state and physical effects; do not use this host guard as evidence of native omission."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/decalmsh.cpp",
+      "row_id": "8f5c1e811a0a9109b0116b6460469ddda9378711659543925faf4625707259b6",
+      "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)",
+      "status": "disabled_by_port_guard",
+      "original_owner": "RigidDecalMeshClass::Render and SkinDecalMeshClass::Render",
+      "behavior": "RENEGADE_VITA_PORT without __vita__ returns before original rendering. Native __vita__ profile takes the original body in the alternative branch; this guard does not disable native rendering.",
+      "callers": [
+        "Original render-object traversal and decal mesh flush; exact per-map instances require S2/S4 closure."
+      ],
+      "affected_scope": [
+        "Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified."
+      ],
+      "acceptance_open": "Native body, traversal/flush, render state and physical effects; do not use this host guard as evidence of native omission."
     }
   ]
 }

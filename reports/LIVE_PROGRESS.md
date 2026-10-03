@@ -2,6 +2,12 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+Dazzle/decal guard batch: three headless-host early returns classified with
+exact directive/location and whole-source hash binding. Native selects original
+bodies; queue execution, depth bias and pixels remain open. S1 reconciles at
+31 stubs, one replaced boundary, three disabled host guards and 3,496 unknown.
+Twenty-six tests pass, including guard-review invalidation.
+
 Audio fallback batch: 20 no-output methods reviewed, including four sound-scene
 serializers returning success without chunk I/O. Native original-audio selection
 excludes these bodies; exact callers and physical audio/save behavior remain

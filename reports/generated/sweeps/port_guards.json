@@ -3691,7 +3691,7 @@
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
     "tools/stage_sources.sh": "54fd1a9a00645c71da6198b69e994aae18ac35b4fbf0b1b44d8fcb867a8eee22",
-    "tools/sweep_reviews/port_guards.json": "0eeffe7f2fe52caa42af24c26093818a3ac4a96583c033e8f927b3fd41b260aa",
+    "tools/sweep_reviews/port_guards.json": "73505ff9d1d54d970d57332d1a3b5c15068f2fbec04d54e89e713aa075f74b74",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -124559,14 +124559,26 @@
       "status": "unknown"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)",
       "end_line": 898,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/dazzle.cpp",
       "kind": "current_source_guard",
       "line": 898,
+      "review": {
+        "acceptance_open": "Native body, traversal/flush, render state and physical effects; do not use this host guard as evidence of native omission.",
+        "affected_scope": [
+          "Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified."
+        ],
+        "behavior": "RENEGADE_VITA_PORT without __vita__ returns before original rendering. Native __vita__ profile takes the original body in the alternative branch; this guard does not disable native rendering.",
+        "callers": [
+          "Original render-object traversal and decal mesh flush; exact per-map instances require S2/S4 closure."
+        ],
+        "original_owner": "DazzleRenderObjClass::Render"
+      },
       "row_id": "6fed676b927f442490205818abae23e3db1ee4add069540e1524a5a75228b7e4",
-      "status": "unknown"
+      "status": "disabled_by_port_guard"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -124579,24 +124591,48 @@
       "status": "unknown"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)",
       "end_line": 296,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/decalmsh.cpp",
       "kind": "current_source_guard",
       "line": 296,
+      "review": {
+        "acceptance_open": "Native body, traversal/flush, render state and physical effects; do not use this host guard as evidence of native omission.",
+        "affected_scope": [
+          "Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified."
+        ],
+        "behavior": "RENEGADE_VITA_PORT without __vita__ returns before original rendering. Native __vita__ profile takes the original body in the alternative branch; this guard does not disable native rendering.",
+        "callers": [
+          "Original render-object traversal and decal mesh flush; exact per-map instances require S2/S4 closure."
+        ],
+        "original_owner": "RigidDecalMeshClass::Render and SkinDecalMeshClass::Render"
+      },
       "row_id": "5d7e0887a10acee25a212b4e80c64ea551022b82913c84b37bed0781a813bb23",
-      "status": "unknown"
+      "status": "disabled_by_port_guard"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)",
       "end_line": 784,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/decalmsh.cpp",
       "kind": "current_source_guard",
       "line": 784,
+      "review": {
+        "acceptance_open": "Native body, traversal/flush, render state and physical effects; do not use this host guard as evidence of native omission.",
+        "affected_scope": [
+          "Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified."
+        ],
+        "behavior": "RENEGADE_VITA_PORT without __vita__ returns before original rendering. Native __vita__ profile takes the original body in the alternative branch; this guard does not disable native rendering.",
+        "callers": [
+          "Original render-object traversal and decal mesh flush; exact per-map instances require S2/S4 closure."
+        ],
+        "original_owner": "RigidDecalMeshClass::Render and SkinDecalMeshClass::Render"
+      },
       "row_id": "8f5c1e811a0a9109b0116b6460469ddda9378711659543925faf4625707259b6",
-      "status": "unknown"
+      "status": "disabled_by_port_guard"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -127102,8 +127138,9 @@
     },
     "by_status": {
       "boundary_replaced": 1,
+      "disabled_by_port_guard": 3,
       "stubbed_or_noop": 31,
-      "unknown": 3499
+      "unknown": 3496
     },
     "patch_files": 310,
     "rows": 3531,

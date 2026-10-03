@@ -204,14 +204,14 @@ def reference_fields(root: Path) -> dict:
     for name, prefix, fields in specs:
         symbols = {}
         parse_enum_constants(root / "staging/combat" / name, symbols)
-        result[(symbols[prefix + "_PARENT"], symbols[prefix + "_VARIABLES"])] = {symbols[n] for n in fields}
+        result[(symbols[prefix + "_PARENT"], symbols[prefix + "_VARIABLES"])] = {symbols[n]: n for n in fields}
     # Original explosion.cpp uses a C++ octal literal, not decimal.
     source = (root / "staging/combat/explosion.cpp").read_text(encoding="latin1")
     match = re.search(r'CHUNKID_EXPLOSION_DEF_VARIABLES\s*=\s*(0[0-7]+)\s*,', source)
     if not match:
         raise ValueError("review changed original explosion chunk layout")
     variable = int(match[1], 8)
-    result[(variable + 1, variable)] = {1, 2}  # PhysDefID, SoundDefID
+    result[(variable + 1, variable)] = {1: 'PhysDefID', 2: 'SoundDefID'}
     return result
 
 
@@ -229,6 +229,7 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                 bindings = []
                 binding_issues = []
                 references = []
+                reference_provenance = []
                 for node in flatten(factory.children):
                     if node.kind == 0x100 and not node.children:
                         fields = dict(microchunks(node.data))
@@ -250,7 +251,13 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                         bindings.extend(rows)
                         binding_issues.extend(issues)
                         scripts.extend(row["name"] for row in rows)
-                        references.extend(u32(value) for kind, value in fields if kind in (1, 14))
+                        for kind, value in fields:
+                            if kind in (1, 14):
+                                target = u32(value)
+                                references.append(target)
+                                reference_provenance.append({'id': target, 'kind': 'spawner_field',
+                                                             'variable_chunk': node.kind,
+                                                             'field_id': kind, 'offset': node.offset})
                 # Twiddler::Save writes its alternative preset IDs in the
                 # direct OBJDATA variables, apart from its nested base ID.
                 if factory.kind == 0x102:
@@ -258,7 +265,13 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                         if body.kind == 0x100101:
                             for node in body.children:
                                 if node.kind == 0x100:
-                                    references.extend(u32(value) for kind, value in microchunks(node.data) if kind == 1)
+                                    for kind, value in microchunks(node.data):
+                                        if kind == 1:
+                                            target = u32(value)
+                                            references.append(target)
+                                            reference_provenance.append({'id': target, 'kind': 'twiddler_choice',
+                                                                         'variable_chunk': node.kind,
+                                                                         'field_id': kind, 'offset': node.offset})
                 for container in flatten([factory]):
                     sibling_ids = {node.kind for node in container.children}
                     for (parent, variables), fields in (reference_schema or {}).items():
@@ -266,7 +279,16 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                             continue
                         for node in container.children:
                             if node.kind == variables:
-                                references.extend(u32(value) for kind, value in microchunks(node.data) if kind in fields)
+                                for kind, value in microchunks(node.data):
+                                    if kind in fields:
+                                        target = u32(value)
+                                        references.append(target)
+                                        reference_provenance.append({'id': target, 'kind': 'typed_field',
+                                                                     'parent_chunk': parent,
+                                                                     'variable_chunk': variables,
+                                                                     'field_id': kind,
+                                                                     'field_name': fields.get(kind) if isinstance(fields, dict) else None,
+                                                                     'offset': node.offset})
                 if len(identity) != 1:
                     raise ValueError(f"ambiguous definition identity at {factory.offset}: {identity}")
                 key, name = identity[0]
@@ -275,6 +297,7 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                 result[key] = {"name": name, "scripts": scripts,
                                "script_bindings": bindings, "script_binding_issues": binding_issues,
                                "definition_references": sorted(set(references) - {0}),
+                               "definition_reference_provenance": reference_provenance,
                                "factory": f"0x{factory.kind:08x}", "offset": factory.offset}
     return result
 

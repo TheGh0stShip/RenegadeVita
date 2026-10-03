@@ -118,6 +118,15 @@ possible_b
         self.assertEqual(rows[1]['definition_id'], 42)
         self.assertIn({'kind': 'unknown_shipped_script', 'name': 'unknown'}, rows)
 
+    def test_missing_reference_keeps_owner_and_field_provenance(self):
+        defs = {42: {'name': 'SyntheticWeapon', 'script_binding_issues': [],
+                     'definition_reference_provenance': [
+                         {'id': 123, 'kind': 'typed_field', 'field_name': 'SyntheticMuzzleFlashDefID'}]}}
+        rows = structural_findings({}, {42}, defs, set(), {123})
+        self.assertEqual(rows[0]['referring_definitions'], [
+            {'definition_id': 42, 'name': 'SyntheticWeapon', 'id': 123,
+             'kind': 'typed_field', 'field_name': 'SyntheticMuzzleFlashDefID'}])
+
     def test_detailed_receipts_cannot_be_written_to_public_reports(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

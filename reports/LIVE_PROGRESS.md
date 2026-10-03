@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Unresolved definition provenance — 2026-10-03
+
+Completed: unresolved dependencies retain referring presets, named typed fields
+and twiddler choices; repeated/null choice provenance remains intact.
+Evidence:40 Python checks; fresh Tutorial/M13/M01 receipts. All11/20/14 missing
+IDs have inbound provenance, exclusively shell-eject/muzzle-flash/twiddler edges
+in this scope. Findings retained; original null-effect behavior is not visual proof.
+No build, launch or retail mutation; native/runtime gates0/10.
+See [mission research review](MISSION_RESEARCH_REVIEW.md).
+
 ## Combat startup script roots — 2026-10-03
 
 Completed: authored Combat start/respawn selection added to binding discovery;

@@ -231,6 +231,34 @@ required-failure cleanup, valid Tutorial/M13/M01 loading, optional-definition
 absence and checkpoint restoration need matching native runtime evidence.
 No build, launch, deployment or retail mutation occurred; native gates remain0/10.
 
+Follow-up definition-reference provenance now retains the referring definition,
+typed variable/parent chunk, named source field and byte offset for unresolved
+references. Spawner fields and repeated/null twiddler alternatives are retained
+separately; unique nonzero IDs still drive the dependency closure. The raw
+choice sequence is not collapsed into a falsely uniform random-selection set.
+
+| Scope | Unresolved IDs | Shell-eject references | Muzzle-flash references | Twiddler choices |
+| --- | ---: | ---: | ---: | ---: |
+| Tutorial |11|4|6|1|
+| M13 |20|6|10|4|
+| M01 |14|6|7|1|
+
+All unresolved IDs in this inspected closure have inbound provenance, and none
+originates as a placed physics-definition root. These are definition IDs, not
+missing numeric mission-object IDs or missing primary ammunition definitions.
+The report retains every finding and does not certify that another mounted
+database or runtime variant cannot resolve it. Private receipts are under
+`build/dev208-definition-reference-provenance-20261003/` with matching data hashes.
+
+Original WeaponClass tolerates null shell-eject/muzzle-flash definitions by
+skipping those dynamic effects; the dynamic muzzle-flash branch also excludes
+the player's first-person view. This does not prove visual correctness or
+equivalence of first-person effects. Twiddler chooses a listed definition and
+can return null; selection and actual sound/effect consequences remain runtime
+questions. No alternate presets were invented, no findings were suppressed and
+retail data was not changed. Forty focused Python checks pass. Native effect
+appearance, twiddler outcomes and mission gameplay remain unverified.
+
 The compiler target reports arm-vita-eabi; inspected libpthread attributes
 report ARMv7-A/Thumb-2 and VFP-register arguments. Native remains little-endian
 ARMv7-A/Cortex-A9 ILP32; host probes remain LP64 and separate evidence. Read-only

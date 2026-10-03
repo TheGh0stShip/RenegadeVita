@@ -125,6 +125,13 @@ def structural_findings(members, reached, defs, unknown, missing_definitions):
                   for issue in defs[key]['script_binding_issues'])
     result.extend({"kind": "unknown_shipped_script", "name": name} for name in sorted(unknown))
     result.extend({"kind": "definition_id_not_located", "id": key} for key in sorted(missing_definitions))
+    for finding in result:
+        if finding['kind'] == 'definition_id_not_located':
+            finding['referring_definitions'] = [
+                {'definition_id': owner, 'name': defs[owner]['name'], **reference}
+                for owner in sorted(reached)
+                for reference in defs[owner].get('definition_reference_provenance', [])
+                if reference['id'] == finding['id']]
     return result
 
 

@@ -94,6 +94,23 @@ class M13LevelOwnersTests(unittest.TestCase):
         body = chunk(0x100, micro(1, integer(44)) + micro(1, integer(55)))
         result = definitions(chunks(definition(0x102, 123, body)))
         self.assertEqual(result[123]["definition_references"], [44, 55])
+        self.assertEqual([r['id'] for r in result[123]['definition_reference_provenance']], [44, 55])
+
+    def test_reference_provenance_preserves_repeated_choices_and_null(self):
+        body = chunk(0x100, micro(1, integer(44)) + micro(1, integer(44)) + micro(1, integer(0)))
+        row = definitions(chunks(definition(0x102, 123, body)))[123]
+        self.assertEqual(row['definition_references'], [44])
+        self.assertEqual([r['id'] for r in row['definition_reference_provenance']], [44, 44, 0])
+
+    def test_named_typed_reference_retains_field_and_owner_container(self):
+        schema = {(500, 501): {1: 'SyntheticMuzzleFlashDefID'}}
+        body = chunk(500, b'', True) + chunk(501, micro(1, integer(777)))
+        row = definitions(chunks(definition(0x40123, 123, body)), schema)[123]
+        reference = row['definition_reference_provenance'][0]
+        self.assertEqual(reference['id'], 777)
+        self.assertEqual(reference['field_name'], 'SyntheticMuzzleFlashDefID')
+        self.assertEqual((reference['parent_chunk'], reference['variable_chunk'], reference['field_id']),
+                         (500, 501, 1))
 
     def test_typed_reference_requires_matching_sibling_parent(self):
         schema = {(500, 501): {1}}

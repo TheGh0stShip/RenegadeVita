@@ -1,5 +1,21 @@
 # Live engineering progress
 
+## Direct text, control hints and computed dialogue — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: source prompt restoration and deeper dialogue discovery are validated.
+Completed: eleven missing English M13/M01 hints use the existing Vita adapter;
+direct HUD/objective IDs and original DDS texture candidates resolve. Variable,
+array and cinematic-parameter tracing retains absent names and exact provenance.
+M13 intro HIT6 and Area 2 wrong-way names are newly retained data/branch leads.
+Evidence: 93 Python/source checks; C++ changes and extended hint test uncompiled.
+Next: trace remaining event/slot lifetimes, global voice references and voiced
+PC instruction timing; runtime validation after the build/launch hold is lifted.
+Blocker: native coverage remains unproven and source/data leads remain open.
+See [text and prompt coverage](MISSION_TEXT_AND_PROMPT_COVERAGE.md).
+
 ## Global conversations and voice dependencies — 2026-10-03
 
 Renegade Vita — v3.5 active

@@ -4,6 +4,14 @@ The complete audit series, reproduction steps, unbuilt-source limitations and
 repository protection status are collected in the
 [content audit index](CONTENT_AUDIT_INDEX.md).
 
+2026-10-03 text/prompt continuation: eleven missing English M13/M01 control
+hints now use the existing Vita adapter, uncompiled. The read-only scanner
+resolves direct HUD/objective IDs and original DDS image alternatives, and
+retains absent names from variable/array/cinematic parameters. M13 has six
+unlocated dialogue candidates, including Area 2 wrong-way cases and an opening
+cinematic bark. 93 Python/source checks pass; runtime and voiced PC guidance
+remain open. See [text and prompt coverage](MISSION_TEXT_AND_PROMPT_COVERAGE.md).
+
 2026-10-03 conversation continuation: a missing CONV10.CDB startup load is
 restored in native and interactive host source through the original managers,
 uncompiled. The read-only sweep covers 3,606 global records and 65/570/89 level

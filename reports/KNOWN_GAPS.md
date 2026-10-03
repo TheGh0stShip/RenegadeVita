@@ -1,5 +1,14 @@
 # Known gaps
 
+2026-10-03 text/prompt continuation: eleven English M13/M01 hint omissions are
+corrected in source, uncompiled; the expanded compiled hint test is not run.
+Direct HUD/objective IDs and DDS image alternatives resolve. M13 retains six
+absent conversation candidates, including three Area 2 wrong-way names, a
+default name, the prior engineer line and an intro cinematic bark. MSK primer
+and M01 unbound leads remain conditional. Global sound and voiced PC guidance
+gaps remain open. 93 Python/source checks pass; no native acceptance. See
+[text and prompt coverage](MISSION_TEXT_AND_PROMPT_COVERAGE.md).
+
 2026-10-03 conversation sweep confirms an omitted original CONV10.CDB startup
 operation, now restored in source but uncompiled. Authored level conversation
 text/voice links resolve for Tutorial/M13/M01. The global pool has 499 unresolved

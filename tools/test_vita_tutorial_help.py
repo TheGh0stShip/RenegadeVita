@@ -24,6 +24,19 @@ int main() {
     for (int id : {8373, 8375, 8287, 8290})
         assert(std::strstr(Renegade_Vita_Tutorial_Help(id, 0), "Triangle"));
     assert(std::strstr(Renegade_Vita_Tutorial_Help(8272, 0), "Start: EVA"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(MX0_HELPTEXT_01, 0), "right stick"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(MX0_HELPTEXT_02, 0), "left stick"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(MX0_HELPTEXT_03, 0), "Start"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(MX0_HELPTEXT_04, 0), "R to fire"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(IDS_M01DSGN_DSGN0516I1DSGN_TXT, 0), "Objectives"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(IDS_M01DSGN_DSGN0517I1DSGN_TXT, 0), "Map"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(IDS_M01DSGN_DSGN0520I1DSGN_TXT, 0), "D-pad Left/Right"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(IDS_M01DSGN_DSGN0521I1DSGN_TXT, 0), "Press L"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(IDS_M01DSGN_DSGN0522I1DSGN_TXT, 0), "D-pad Up/Down"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(IDS_M01DSGN_DSGN0523I1DSGN_TXT, 0), "Press R"));
+    assert(std::strstr(Renegade_Vita_Tutorial_Help(IDS_M01DSGN_DSGN0524I1DSGN_TXT, 0), "Press L"));
+    for (int id : {8576, 8577, 8578, 8579, 8273, 8274, 8277, 8279, 8280, 8281, 8282})
+        assert(!Renegade_Vita_Tutorial_Help(id, 1));
     const char *ladder = Renegade_Vita_Tutorial_Help(IDS_MTUDSGN_DSGN0049I1GCLS_TXT, 0);
     assert(ladder && std::strstr(ladder, "climb a ladder") && std::strstr(ladder, "Triangle"));
     assert(!std::strstr(ladder, "keyboard") && !std::strstr(ladder, "Action key"));

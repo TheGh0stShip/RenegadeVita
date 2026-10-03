@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Latest text/prompt work: [direct text and computed dialogue](MISSION_TEXT_AND_PROMPT_COVERAGE.md)
+restores eleven English M13/M01 control hints in source and checks HUD/objective
+IDs, original DDS lookup alternatives and cinematic script parameters. Absent
+M13 dialogue candidates remain open. 93 Python/source checks pass; C++ and
+physical behavior remain unverified.
+
 Latest conversation work: [global startup and voice dependencies](MISSION_CONVERSATION_COVERAGE.md)
 restores a missing original CONV10.CDB load in source and traces Tutorial,
 M13 and M01 conversation records through both translation candidates. 74
@@ -71,7 +77,7 @@ hidden pending their original owners and routes.
 
 No C++ build, game launch, installation, retail/save modification or new
 native acceptance occurred during this source-only continuation. The latest
-74 focused Python/source tests pass. Local asset-derived receipts remain under
+93 focused Python/source tests pass. Local asset-derived receipts remain under
 build/; published material contains source, tests and findings rather than
 retail assets or saves.
 

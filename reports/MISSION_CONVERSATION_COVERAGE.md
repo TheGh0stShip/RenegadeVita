@@ -1,5 +1,10 @@
 # Mission conversation coverage — 2026-10-03
 
+Follow-up: [direct text, control hints and computed dialogue](MISSION_TEXT_AND_PROMPT_COVERAGE.md)
+adds original HUD/objective lookup tracing, eleven missing prompt replacements
+and additional absent-name leads from variable/cinematic parameters. Counts
+below describe this earlier conversation-record sweep.
+
 The conversation sweep exposed a missing original startup operation: neither
 the native bootstrap nor the retained interactive host route loaded
 `CONV10.CDB`. The inspected retail database contains 3,606 global conversations.

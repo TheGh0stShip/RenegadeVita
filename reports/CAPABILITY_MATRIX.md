@@ -1,5 +1,12 @@
 # Capability matrix
 
+2026-10-03 text/prompt continuation adds eleven English control hints in the
+existing M13/M01 adapter, uncompiled. Direct HUD/objective IDs and image lookup
+candidates resolve; computed dialogue discovery retains additional absent
+M13 names and cinematic parameter provenance. 93 Python/source checks pass;
+rendered guidance, spoken controls and native progression remain unverified.
+See [text and prompt coverage](MISSION_TEXT_AND_PROMPT_COVERAGE.md).
+
 2026-10-03 conversation continuation restores the original global CONV10.CDB
 startup load in both bootstraps, uncompiled. Metadata links for authored
 Tutorial/M13/M01 conversations resolve, while global voice and source-name

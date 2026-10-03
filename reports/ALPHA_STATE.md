@@ -2,6 +2,13 @@
 
 ## Current diagnostics work — 2026-10-03
 
+The direct-text continuation restores eleven missing English M13/M01 hints
+in the existing adapter, uncompiled. Text IDs and original DDS image candidates
+resolve; variable/array/cinematic parameter discovery now retains six absent
+M13 dialogue candidates. 93 Python/source checks pass, while the expanded
+compiled hint test is unrun. No native gate closed. See
+[text and prompt coverage](MISSION_TEXT_AND_PROMPT_COVERAGE.md).
+
 The conversation continuation found a missing process-level CONV10.CDB load,
 now restored through original owners in native and interactive host source,
 uncompiled. The metadata tool covers 3,606 global conversations and 65/570/89

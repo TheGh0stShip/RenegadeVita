@@ -3,7 +3,7 @@
 
 #include "string_ids.h"
 
-// Presentation-only replacements for PC control hints used by original M00.
+// Presentation-only replacements for PC control hints used by M00/M13/M01.
 // Unknown messages and other languages retain TranslateDB ownership.
 inline const char *Renegade_Vita_Tutorial_Help(int string_id, unsigned language)
 {
@@ -73,6 +73,28 @@ inline const char *Renegade_Vita_Tutorial_Help(int string_id, unsigned language)
 		return "Move the left stick forward to accelerate, or back to brake and reverse.";
 	case IDS_M01DSGN_DSGN0515I1DSGN_TXT:
 		return "Left stick: move. Right stick: look. Start: EVA.";
+	case MX0_HELPTEXT_01:
+		return "Use the right stick to look around.";
+	case MX0_HELPTEXT_02:
+		return "Use the left stick to move.";
+	case MX0_HELPTEXT_03:
+		return "Press Start to open your EVA unit.";
+	case MX0_HELPTEXT_04:
+		return "Press R to fire your weapon.";
+	case IDS_M01DSGN_DSGN0516I1DSGN_TXT:
+		return "Press Start, then choose Objectives in your EVA unit.";
+	case IDS_M01DSGN_DSGN0517I1DSGN_TXT:
+		return "Press Start, then choose Map in your EVA unit.";
+	case IDS_M01DSGN_DSGN0520I1DSGN_TXT:
+		return "Use D-pad Left/Right to cycle weapons.";
+	case IDS_M01DSGN_DSGN0521I1DSGN_TXT:
+		return "Press L to activate or deactivate the sniper scope.";
+	case IDS_M01DSGN_DSGN0522I1DSGN_TXT:
+		return "Use D-pad Up/Down to zoom in and out.";
+	case IDS_M01DSGN_DSGN0523I1DSGN_TXT:
+		return "Press R to place C4.";
+	case IDS_M01DSGN_DSGN0524I1DSGN_TXT:
+		return "Press L to detonate Remote C4.";
 	case IDS_MTUDSGN_DSGN0382I1DSGN_TXT:
 		return "Press Circle to crouch.";
 	case IDS_MTUDSGN_DSGN0383I1DSGN_TXT:

@@ -1,5 +1,19 @@
 # Reproduce the cross-system static audit
 
+The [direct-text follow-up](../reports/MISSION_TEXT_AND_PROMPT_COVERAGE.md) adds
+typed HUD/objective arguments, original DDS/Targa lookup candidates and
+variable/array/cinematic parameter conversation leads:
+
+```bash
+python3 -m tools.audit_mission_text_routes --data /absolute/path/to/user-owned/retail/Data --output-directory build/dev208-text-routes-20261003
+python3 -m unittest tools.test_mission_text_routes tools.test_mission_conversations tools.test_mission_content_bindings tools.test_m13_level_owners tools.test_deep_content_audit tools.test_requested_mission_owner_contract tools.test_m13_mission_inventory tools.test_m13_script_coverage tools.test_script_provider_contract
+```
+
+These 93 Python/source checks do not compile C++. Candidate discovery retains
+unlocated names rather than filtering them through the known database. Every
+computed call remains open even when candidates resolve. Detailed receipts
+remain in ignored build/; the expanded compiled hint test is prepared, unrun.
+
 The [conversation audit](../reports/MISSION_CONVERSATION_COVERAGE.md) traces
 global and level conversation records through independent strings.tdb
 candidates, original sound/twiddler definitions and retail filename alternatives:

@@ -1,0 +1,255 @@
+{
+  "schema": 1,
+  "complete": false,
+  "evidence_class": "archive_index_and_loose_name_metadata",
+  "archives": [
+    {
+      "archive": "Always2.dat",
+      "sha256": "6cec7388c51b5b8591d8aa0cce974243621701990576574eda28dcd03c5e1611"
+    },
+    {
+      "archive": "C&C_Canyon.mix",
+      "sha256": "8045026fed95044666eeec1016bb78a9963c21601b7c45f69d4aa018aa4296ba"
+    },
+    {
+      "archive": "C&C_City.mix",
+      "sha256": "3a48c5b173629a71826e009d97bd13cff531315a2f256f02a6321c3b6ea4018e"
+    },
+    {
+      "archive": "C&C_City_Flying.mix",
+      "sha256": "c3a9c65c5a1f3d480941b29034f5ba57aed2391aea64461ef1afccd0fffda4c3"
+    },
+    {
+      "archive": "C&C_Complex.mix",
+      "sha256": "e63f94f76648be6cdcacb7727911350fff6a3733b614deb2f88c65b1413c4531"
+    },
+    {
+      "archive": "C&C_Field.mix",
+      "sha256": "ef8884b15a4c77e59f09d96dbf0885ea48cdfb9e58c9543a0b742820d8414c40"
+    },
+    {
+      "archive": "C&C_Glacier_Flying.mix",
+      "sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa"
+    },
+    {
+      "archive": "C&C_Hourglass.mix",
+      "sha256": "28c3fc1a26e6aba0f29886e9ca37954eec63ce8d6cd2d24ebffebe57075a47ee"
+    },
+    {
+      "archive": "C&C_Islands.mix",
+      "sha256": "d73959a3dd4a2dd9e292f3a8e4e2bce3a7ba4f5547aed323379f8c218e80d1fd"
+    },
+    {
+      "archive": "C&C_Mesa.mix",
+      "sha256": "400190c56b4763109070a901c9c57c2a5df1ffbd3a1e58e035b31b488994bb0c"
+    },
+    {
+      "archive": "C&C_Under.mix",
+      "sha256": "5c57d3206046a2906bd1dbe57c3c0fd4c67afa0d0d44625f250aa1695a2ac02a"
+    },
+    {
+      "archive": "C&C_Volcano.mix",
+      "sha256": "0bc5cb096bbd8431ed8ad5932467dbbe31f1b2301ec9c5889bbb432e180bbad4"
+    },
+    {
+      "archive": "C&C_Walls.mix",
+      "sha256": "72e960d37c39d2bb7f4dea979758b6c8e07106cfa2125d3f73496df1224b25d8"
+    },
+    {
+      "archive": "C&C_Walls_Flying.mix",
+      "sha256": "fda92665671f8c7951f258e32e72710d9e51df2870651b8c142e5fc04c4850df"
+    },
+    {
+      "archive": "M00_Tutorial.mix",
+      "sha256": "84f14f6267dd8a88563b3d31540bf857df0b8e111144944cb582edd246f2d438"
+    },
+    {
+      "archive": "M01.mix",
+      "sha256": "3d814a11fb306b425da74d40648f17053644e6a58ce521182d7c178683b354eb"
+    },
+    {
+      "archive": "M02.mix",
+      "sha256": "f098e9190802dba8c9b453e479cb393a0e4777c5f5b038c3bb0376010d64b3a1"
+    },
+    {
+      "archive": "M03.mix",
+      "sha256": "e49d5a6233635228ad91c73cd2614f3f33e09cbc37d0650eb79683f35aa47d79"
+    },
+    {
+      "archive": "M04.mix",
+      "sha256": "1d084c9088474c6664dcb30eb08cd7fc86a265e200fbfcebb606ac56e9530ffa"
+    },
+    {
+      "archive": "M05.mix",
+      "sha256": "d3b38752890e0d2102a5ba8f57d10c832b8b60749afc4d0512333ca3f64446ca"
+    },
+    {
+      "archive": "M06.mix",
+      "sha256": "cf98d879ac8cf23e60589407b61eb4c2a43c238c979b54485a25938f7679573a"
+    },
+    {
+      "archive": "M07.mix",
+      "sha256": "479f72c76ec145c0289f331a856201d0f4249fa86854a5d664c6e8d4edc08664"
+    },
+    {
+      "archive": "M08.mix",
+      "sha256": "b95c738add5ce7887ec386d839838d595986a05c2f5240b90fe2cebaa7075429"
+    },
+    {
+      "archive": "M09.mix",
+      "sha256": "3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7"
+    },
+    {
+      "archive": "M10.mix",
+      "sha256": "c9bdaa94686f29a69a16c148671c7a6c05c617f61694fb4aec01185e4c3720ec"
+    },
+    {
+      "archive": "M11.mix",
+      "sha256": "f29a8a4bf4e94d928b8e49c0d4eecade0d35f54ff683ec0fd5b2e4bedbac80eb"
+    },
+    {
+      "archive": "M13.mix",
+      "sha256": "54d41ea011bf7c4d273064422de961af76ccc38f32dd9b5368ebfbca365bbfc4"
+    },
+    {
+      "archive": "Skirmish00.mix",
+      "sha256": "1ac0110faceb596c2b66993ec5034051e9b116acdf5732fb4383e4e8d2984738"
+    },
+    {
+      "archive": "always.dat",
+      "sha256": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a"
+    },
+    {
+      "archive": "always.dbs",
+      "sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b"
+    },
+    {
+      "archive": "always3.dat",
+      "sha256": "8c84590dfb33b25243fa3252777b59b0b4c3a09bbd2b4d5a59444b79a1e08156"
+    }
+  ],
+  "archive_errors": [],
+  "index_records_scanned": 18836,
+  "rows": [
+    {
+      "name": "m06_xg_vehicledrop0.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "m06_xg_vehicledrop1.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "m06_xg_vehicledrop2.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "m09_xg_ev4.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x01_conyarddrop.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_apache_00.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_apache_01.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_apache_02.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_apache_03.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_apache_04.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_trnspt_00.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_trnspt_01.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_trnspt_02.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_trnspt_03.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x10a_trnspt_04.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x5c_wintroops09.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x5c_wintroops13.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x5c_wintroops19.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    },
+    {
+      "name": "x7b_apachestk.txt",
+      "archive_candidates": [],
+      "loose_candidates": [],
+      "status": "unknown"
+    }
+  ],
+  "limits": [
+    "Exact names only; computed aliases and other data roots remain open.",
+    "Missing names do not prove unreachable content or justify exclusion.",
+    "Presence does not establish runtime mount order or selected variant."
+  ],
+  "retail_inventory_sha256": "4cc7ebfc811129cb6bfcbcf9ca9a3ef68c1b6348b916d35dfc3cd85b0e611673"
+}

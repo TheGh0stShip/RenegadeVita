@@ -1,5 +1,18 @@
 # S4 retail closure — all-map binding discovery in progress
 
+The 19 missing cinematic names are also absent from an exact-name search of
+all 31 supplied archive indices (18,836 records, duplicates retained) and
+loose files below the diagnostic Data root. All archives parse without errors.
+Input archive hashes and the parent inventory hash are retained in
+reports/generated/sweeps/missing_cinematic_names.json; no payloads are emitted.
+Every name has an original quoted source reference: M01 17994; M05 4263,
+6473/6507/6513 and 7177; M06 4943–4945; M09 592/631; M10 3417–3427.
+Source line ranges locate leads, not proof that their branches execute.
+Other editions/roots, computed aliases, runtime selection and natural gameplay
+remain open. Do not fabricate replacements or exclude affected sequences.
+The reusable name resolver preserves duplicate index candidates and compares
+case-insensitively; its authored test covers loose-file and missing-name cases.
+
 All-map factory reconciliation compares level persist-factory counts and
 discovered-definition factory IDs with numeric template Load symbols retained
 in Dev209. There are 1,506 per-map requirement rows spanning 79 unique IDs;

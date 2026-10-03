@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S4 missing cinematic-name verification — 2026-10-03
+
+19 names absent from all 31 archive indices (18,836 records) and diagnostic
+loose files; zero archive parse errors. Every name has an original mission
+source reference. Hash-pinned metadata retained; runtime selection and other
+data editions remain open. No content replacement or exclusion adopted.
+
 ## S3/S4 numeric persist-factory reconciliation — 2026-10-03
 
 140 retained ARM Load methods now carry numeric chunk IDs. All 27 maps compare

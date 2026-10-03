@@ -1,5 +1,23 @@
 # S4 retail closure — all-map binding discovery in progress
 
+W3D consumer reconciliation retains all 97 observed IDs and their retail parent
+paths. 61 IDs have staged symbolic case-label candidates; six have no global
+symbolic source reference, including four absent from the global chunk enum.
+All four unnamed IDs resolve to reviewed sphere/ring local chunks or primitive
+animation variables through exact parent paths. Existing local case consumers
+are recorded with lines/hashes; this avoids false missing-loader findings from
+global numeric matching. Headers are not counted as selected translation units.
+Pivot fixups and obsolete HModel auxiliary data remain the two named IDs without
+symbolic references. Original loader skip behavior requires review before any
+missing-support verdict. Source candidates include saves and inactive branches;
+all 97 statuses remain unknown until dispatch, registration and runtime proof.
+
+Seventeen focused/shared checks pass. Reproduce with
+`python3 -m tools.audit_w3d_chunk_consumers --inventory reports/generated/sweeps/w3d_chunks.json --link-inventory reports/generated/sweeps/link.json --output OUTPUT`.
+Enum, input, generator and contributing source hashes are retained. Numeric
+dispatch beyond the reviewed primitive contexts, port-owned consumers, macro
+dispatch and full affected-mission reachability remain open.
+
 The generalized W3D census scans all 31 supplied MIX/DAT/DBS archives, retaining
 3,999 W3D member index records, 1,294,901 chunk occurrences, 2,181 per-archive
 ancestry paths and 97 distinct chunk IDs. Zero members fail bounded parsing.

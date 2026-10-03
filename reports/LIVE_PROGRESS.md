@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S4 W3D consumer candidates — 2026-10-03
+
+All 97 retail chunk IDs reconciled: 61 have symbolic case candidates; four
+globally unnamed IDs have exact-parent primitive-local consumers. Two named
+IDs lack symbolic references and need original skip-path review. Seventeen
+focused/shared checks pass. Registration/execution and visual proof remain
+open; all statuses stay unknown. No engine change or device access.
+
 ## S4 all-archive W3D chunk denominator — 2026-10-03
 
 31 archives, 3,999 W3D index records, 1,294,901 chunk occurrences and 97 distinct

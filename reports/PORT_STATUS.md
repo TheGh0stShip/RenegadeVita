@@ -4,6 +4,14 @@ The complete audit series, reproduction steps, unbuilt-source limitations and
 repository protection status are collected in the
 [content audit index](CONTENT_AUDIT_INDEX.md).
 
+2026-10-03 cinematic-lifetime continuation traces all 166 reached text
+candidates in original float32 order, with separate primary-death tails and
+external slot-fill uncertainty. It corrects the custom-event inventory's
+argument roles. Four normal no-producer slot leads, the conditional M13 HIT6
+damage/voice lifetime and two M01 finale audio-signature leads remain open.
+117 focused Python/source checks pass; no build, launch or native acceptance.
+See [cinematic slot lifetimes](CINEMATIC_SLOT_LIFETIMES.md).
+
 2026-10-03 text/prompt continuation: eleven missing English M13/M01 control
 hints now use the existing Vita adapter, uncompiled. The read-only scanner
 resolves direct HUD/objective IDs and original DDS image alternatives, and

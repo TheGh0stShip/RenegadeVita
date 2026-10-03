@@ -1,5 +1,18 @@
 # Reproduce the cross-system static audit
 
+The [cinematic follow-up](../reports/CINEMATIC_SLOT_LIFETIMES.md) traces original
+float32 ordering, slot producer attempts, typed event roles and separate
+primary-death snapshots from hash-matched authored-binding receipts:
+
+```bash
+python3 -m tools.audit_cinematic_slots --data /absolute/path/to/user-owned/retail/Data --bindings-directory build/dev208-authored-bindings-20261003 --output-directory build/dev208-cinematic-slots-20261003
+python3 -m unittest tools.test_cinematic_slots
+```
+
+These 24 Python counterexamples compile no C++. Four normal no-producer uses
+and conditional audio/lifetime leads remain open. External slot fills, create
+success, live ID membership and full inter-script execution need runtime evidence.
+
 The [direct-text follow-up](../reports/MISSION_TEXT_AND_PROMPT_COVERAGE.md) adds
 typed HUD/objective arguments, original DDS/Targa lookup candidates and
 variable/array/cinematic parameter conversation leads:

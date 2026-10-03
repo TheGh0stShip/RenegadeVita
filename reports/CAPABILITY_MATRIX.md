@@ -1,5 +1,11 @@
 # Capability matrix
 
+2026-10-03 cinematic tracer covers 166 reached candidates, original float32
+ordering, typed slot roles and separate unknown primary-death snapshots. The
+event-type inventory is corrected. Four normal producer, conditional M13 bark
+and two M01 audio-signature leads need runtime evidence. 117 Python/source checks
+pass; no native gate closed. See [slot lifetimes](CINEMATIC_SLOT_LIFETIMES.md).
+
 2026-10-03 text/prompt continuation adds eleven English control hints in the
 existing M13/M01 adapter, uncompiled. Direct HUD/objective IDs and image lookup
 candidates resolve; computed dialogue discovery retains additional absent

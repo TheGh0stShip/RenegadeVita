@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Cinematic command ordering and slot lifetimes — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: cinematic source/data tracing is validated and ready for publication.
+Completed: all 166 reached candidates traced with original float32 sorting,
+typed slot/custom roles and separate unknown primary-death snapshots. Corrected
+the custom-event inventory's parameter/type error. Four normal producer leads
+and two M01 audio-signature leads remain; M13 HIT6 follows Created damage.
+Evidence: 117 focused Python/source checks, including 24 new counterexamples;
+32 publication guards and 24-document validation. No C++ compilation or device action.
+Next: remaining event/slot external-fill and source callback lifetimes, then
+candidate-bound runtime evidence when the build/launch hold is lifted.
+Blocker: complete native registration, progression and physical coverage open.
+See [cinematic slot lifetimes](CINEMATIC_SLOT_LIFETIMES.md).
+
 ## Direct text, control hints and computed dialogue — 2026-10-03
 
 Renegade Vita — v3.5 active

@@ -101,6 +101,10 @@ The global 439 sound-definition IDs/four voice-file leads, missing M01 ConYard
 cinematic, and callback/object-ID lifetimes remain open. This sweep does not
 close those findings or the build/launch hold.
 
+The [cinematic lifetime follow-up](CINEMATIC_SLOT_LIFETIMES.md) narrows the
+M13 HIT6 bark: its actor receives an original Created damage script before
+the later conversation attachment. Runtime lifetime/playback remains open.
+
 ## Discovery rules and validation
 
 The scanner masks comments and quoted call examples while preserving offsets,

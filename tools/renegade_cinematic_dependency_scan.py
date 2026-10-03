@@ -256,9 +256,10 @@ def scan_all_text(archive: MixArchive) -> dict[str, Any]:
                 dependencies["scripts"].add(args[1])
                 combined_dependencies["scripts"].add(args[1])
             elif command == "send_custom" and len(args) >= 3:
-                custom_messages.add(args[2])
-                dependencies["custom_messages"].add(args[2])
-                combined_dependencies["custom_messages"].add(args[2])
+                # Command_Send_Custom reads destination, type, then parameter.
+                custom_messages.add(args[1])
+                dependencies["custom_messages"].add(args[1])
+                combined_dependencies["custom_messages"].add(args[1])
 
         per_file[name] = {
             "command_counts": dict(sorted(commands.items())),

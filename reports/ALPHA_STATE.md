@@ -2,6 +2,12 @@
 
 ## Current diagnostics work — 2026-10-03
 
+The cinematic continuation traces 166 candidates in original stored time
+order, corrects custom-event inventory roles and retains slot/lifetime leads
+without runtime claims. The M13 bark follows immediate Created damage; two
+M01 finale audio layouts need source/data comparison. 117 Python/source checks
+pass. Build/launch hold remains. See [slot lifetimes](CINEMATIC_SLOT_LIFETIMES.md).
+
 The direct-text continuation restores eleven missing English M13/M01 hints
 in the existing adapter, uncompiled. Text IDs and original DDS image candidates
 resolve; variable/array/cinematic parameter discovery now retains six absent

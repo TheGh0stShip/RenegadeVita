@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Latest cinematic work: [slot ordering and lifetimes](CINEMATIC_SLOT_LIFETIMES.md)
+traces all 166 reached text candidates, fixes event-type argument discovery and
+separates primary-death snapshots. Four normal producer and two M01 audio
+signature leads remain open; M13 HIT6 is narrowed to a damage/voice lifetime
+question. 117 Python/source tests pass; native progression remains unverified.
+
 Latest text/prompt work: [direct text and computed dialogue](MISSION_TEXT_AND_PROMPT_COVERAGE.md)
 restores eleven English M13/M01 control hints in source and checks HUD/objective
 IDs, original DDS lookup alternatives and cinematic script parameters. Absent
@@ -77,7 +83,7 @@ hidden pending their original owners and routes.
 
 No C++ build, game launch, installation, retail/save modification or new
 native acceptance occurred during this source-only continuation. The latest
-93 focused Python/source tests pass. Local asset-derived receipts remain under
+117 focused Python/source tests pass. Local asset-derived receipts remain under
 build/; published material contains source, tests and findings rather than
 retail assets or saves.
 

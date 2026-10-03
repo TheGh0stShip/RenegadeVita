@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 cinematic continuation retains four normal slot uses without a
+local producer, external-fill/lifetime uncertainty and 170 unknown death-tail
+references. The M13 HIT6 bark follows an original damage-script attachment;
+its execution remains conditional. Two M01 finale Play_Audio signatures request
+an unlocated preset name under original source rules. No invented aliases or
+retail/source behavior changes. 117 Python/source tests pass; no native acceptance.
+See [slot lifetimes](CINEMATIC_SLOT_LIFETIMES.md).
+
 2026-10-03 text/prompt continuation: eleven English M13/M01 hint omissions are
 corrected in source, uncompiled; the expanded compiled hint test is not run.
 Direct HUD/objective IDs and DDS image alternatives resolve. M13 retains six

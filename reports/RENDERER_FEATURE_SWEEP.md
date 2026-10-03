@@ -52,6 +52,16 @@ fog or stencil behavior through independent renderer routes. Exact active
 setters, retail requests and per-map effects remain unverified. Together with
 ZBIAS, 15 state rows are missing; no behavior changes are included here.
 
+Texture-stage follow-up identifies ten direct requests accepted without value
+application by `SetTextureStageState` (native boundary lines 2225–2274):
+`BUMPENVMAT00/01/10/11`, `BUMPENVLSCALE/LOFFSET`, `MAXANISOTROPY`,
+`MIPMAPLODBIAS`, `ADDRESSW` and `BORDERCOLOR`. Original bump mapper setters
+are at `mapper.cpp:970–973`, initialization at `dx8wrapper.cpp:361–366`, and
+anisotropy selection at `texture.cpp:944`. Other references include debug and
+validation cases; those alone do not prove active runtime requests. These ten
+leads still require source-pinned JSON classification, independent-route review
+and per-map material closure. They do not establish physical visual symptoms.
+
 Candidate ancestry identifies 25 render-object definitions, 14 prototype-loader
 definitions and 14 prototype definitions. These counts include the base classes.
 The graph follows transitive/multiple inheritance but does not resolve namespaces,

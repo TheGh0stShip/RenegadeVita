@@ -2,6 +2,10 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 surface gaps: five formats have byte-size handling but lack RGBA conversion
+and fail dimension-based allocation gates. Alternate loaders and retail usage
+remain open. Totals 78 missing, 36 replaced, 2,965 unknown; ten tests pass.
+
 S2 surface conversion batch: eight CPU decode/encode format paths pinned to
 source evidence. GPU upload and original value fidelity remain open. Totals
 73 missing, 36 replaced, 2,970 unknown; ten tests/reproduction pass.

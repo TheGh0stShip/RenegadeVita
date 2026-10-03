@@ -259,7 +259,7 @@
     "tools/audit_sweep_renderer.py": "3e341761d89459c176b580d622fdd881fb081a1b1e19b1dd7bdda32537c1eb3b",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/renderer.json": "8247b62de861143a74dccc5f5cc1d8ceeecaa34569426df51bbee6acb4762ccd"
+    "tools/sweep_reviews/renderer.json": "6fe16b56a7fa287b95552fcf00daaed37e3160b16a79d147b8a020057c3455fe"
   },
   "review_identity_issues": [],
   "rows": [
@@ -33952,9 +33952,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 8,
@@ -33982,15 +33983,37 @@
           "line": 357
         }
       ],
+      "review": {
+        "acceptance_open": "Trace original callers and format conversion requests, palette dependencies and alternate loaders; implement required original semantics and verify native content.",
+        "affected_scope": [
+          "Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open."
+        ],
+        "behavior": "Surface_Bytes_Per_Pixel returns two bytes for this format, but RGBA decode/encode capability gates and pixel converters omit it. Filtered copies and surface-to-RGBA conversion reject it. Dimension-based texture creation also rejects formats outside the conversion gate. Known byte size does not establish conversion support; independent file-loading routes remain unreviewed.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-623 and :782-790 and :1710-1727"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8 surface conversion and procedural texture allocation",
+        "status": "missing",
+        "symbol": "D3DFMT_A8L8"
+      },
       "row_id": "24c833e3f1c1a57b13da95488fab45de06872ac95d47c8ca8e1ee19b83c538cb",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_A8L8",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 8,
@@ -34018,15 +34041,37 @@
           "line": 356
         }
       ],
+      "review": {
+        "acceptance_open": "Trace original callers and format conversion requests, palette dependencies and alternate loaders; implement required original semantics and verify native content.",
+        "affected_scope": [
+          "Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open."
+        ],
+        "behavior": "Surface_Bytes_Per_Pixel returns two bytes for this format, but RGBA decode/encode capability gates and pixel converters omit it. Filtered copies and surface-to-RGBA conversion reject it. Dimension-based texture creation also rejects formats outside the conversion gate. Known byte size does not establish conversion support; independent file-loading routes remain unreviewed.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-623 and :782-790 and :1710-1727"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8 surface conversion and procedural texture allocation",
+        "status": "missing",
+        "symbol": "D3DFMT_A8P8"
+      },
       "row_id": "484d982e5445c890ca6f4dd544720422f5c49917b2e979488ebe2ff91c712387",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_A8P8",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 8,
@@ -34054,8 +34099,29 @@
           "line": 354
         }
       ],
+      "review": {
+        "acceptance_open": "Trace original callers and format conversion requests, palette dependencies and alternate loaders; implement required original semantics and verify native content.",
+        "affected_scope": [
+          "Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open."
+        ],
+        "behavior": "Surface_Bytes_Per_Pixel returns two bytes for this format, but RGBA decode/encode capability gates and pixel converters omit it. Filtered copies and surface-to-RGBA conversion reject it. Dimension-based texture creation also rejects formats outside the conversion gate. Known byte size does not establish conversion support; independent file-loading routes remain unreviewed.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-623 and :782-790 and :1710-1727"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8 surface conversion and procedural texture allocation",
+        "status": "missing",
+        "symbol": "D3DFMT_A8R3G3B2"
+      },
       "row_id": "71c86ee178ad02bbbdadb8886b38e6b55400716ddb03c9dc2db5b972b20fe6b7",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_A8R3G3B2",
       "symbol_role": "value_or_layout_token"
     },
@@ -35204,9 +35270,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 8,
@@ -35249,15 +35316,37 @@
           "line": 351
         }
       ],
+      "review": {
+        "acceptance_open": "Trace original callers and format conversion requests, palette dependencies and alternate loaders; implement required original semantics and verify native content.",
+        "affected_scope": [
+          "Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open."
+        ],
+        "behavior": "Surface_Bytes_Per_Pixel returns two bytes for this format, but RGBA decode/encode capability gates and pixel converters omit it. Filtered copies and surface-to-RGBA conversion reject it. Dimension-based texture creation also rejects formats outside the conversion gate. Known byte size does not establish conversion support; independent file-loading routes remain unreviewed.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-623 and :782-790 and :1710-1727"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8 surface conversion and procedural texture allocation",
+        "status": "missing",
+        "symbol": "D3DFMT_X1R5G5B5"
+      },
       "row_id": "edc7f4e67da7152e96cc6a466f98f2c7a0323071e2526d0955f1beda6f0886cc",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_X1R5G5B5",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
       "references": [
         {
           "column": 8,
@@ -35285,8 +35374,29 @@
           "line": 355
         }
       ],
+      "review": {
+        "acceptance_open": "Trace original callers and format conversion requests, palette dependencies and alternate loaders; implement required original semantics and verify native content.",
+        "affected_scope": [
+          "Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open."
+        ],
+        "behavior": "Surface_Bytes_Per_Pixel returns two bytes for this format, but RGBA decode/encode capability gates and pixel converters omit it. Filtered copies and surface-to-RGBA conversion reject it. Dimension-based texture creation also rejects formats outside the conversion gate. Known byte size does not establish conversion support; independent file-loading routes remain unreviewed.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-623 and :782-790 and :1710-1727"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
+        "original_owner": "Original DX8 surface conversion and procedural texture allocation",
+        "status": "missing",
+        "symbol": "D3DFMT_X4R4G4B4"
+      },
       "row_id": "4e2bcb81089636cb06b347cb58878cbdb1d02fc6c83cc0f0f598d2a337746e27",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_X4R4G4B4",
       "symbol_role": "value_or_layout_token"
     },
@@ -48064,8 +48174,8 @@
     },
     "by_status": {
       "boundary_replaced": 36,
-      "missing": 73,
-      "unknown": 2970
+      "missing": 78,
+      "unknown": 2965
     },
     "candidate_roles": {
       "prototype": 14,

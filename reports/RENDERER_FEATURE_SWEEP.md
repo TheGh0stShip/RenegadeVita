@@ -1,5 +1,13 @@
 # S2 renderer features — inventory in progress
 
+Five two-byte formats have size handling but lack CPU RGBA conversion:
+X1R5G5B5, A8R3G3B2, X4R4G4B4, A8P8 and A8L8. Pixel converters and
+capability gates reject them; filtered copies, surface-to-RGBA conversion and
+dimension-based texture allocation therefore lack these paths. Alternate file
+loaders and actual retail requests remain unverified. This is scoped missing
+conversion support, not proof that every use of these formats fails.
+Current totals: 78 missing, 36 replaced, 2,965 unknown across 3,079 rows.
+
 CPU surface conversion review covers eight formats: A8R8G8B8, X8R8G8B8,
 R8G8B8, A4R4G4B4, A1R5G5B5, R5G6B5, A8 and L8. Decode/encode helpers
 and capability gates accept these formats; packed 16-bit reads assemble bytes

@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Action request and engineer recovery query — 2026-10-03
+
+Completed: original request acceptance/callback ordering and void script wrapper
+traced. Existing pathfind query discards Is_Busy and returns false; two M13
+engineer handlers depend on its negation plus separate ID/reason conditions.
+Evidence: original/staged source inspection and private hash receipt.
+Decision: preserve shipped behavior; no speculative escort correction.
+Next: bounded request-outcome diagnostics and actual recovery delivery evidence.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Logical diagnostic ordered source replay — 2026-10-03
 
 Completed: pristine-upstream ordered replay for three affected source files,

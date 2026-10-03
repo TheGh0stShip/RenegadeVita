@@ -71,6 +71,36 @@ attack execution, completion reason, observer delivery and subsequent mission
 event. Native AI/pathfinding, logical-sound stimuli and area wake/sleep behavior
 remain unverified under the build/launch hold.
 
+## Action request outcome and M13 engineer query
+
+Original script Action_Goto returns void and discards ActionClass::Goto's bool.
+Get_Action_Params copies current stored parameters and resolves object references;
+it does not certify action execution. Request_Action installs accepted parameters
+and initializes the new code before notifying the previous observer synchronously.
+That callback precedes the true return. Acceptance therefore cannot establish
+that the same action remains current afterward; no concrete failing reentrant
+chain is claimed. Rejection also notifies synchronously before deleting the
+proposed code. Preserve this order when adding future request observations.
+
+Original Is_Performing_Pathfind_Action initializes retval=false and calls
+Is_Busy without assigning its result. Its normal return is always false in the
+inspected original and retained staged implementation. The original command
+table selects this function. This is an existing source defect, not a newly
+introduced platform omission. Preserving it is the project's compatibility
+decision; the source does not establish designer intent.
+
+MissionX0 has two calls, in MX0_Engineer1 and MX0_Engineer2 Action_Complete.
+Both require ENGINEER_GOTO, a different current action ID and the negated query;
+the first additionally requires LOW_PRIORITY, the second allows LOW_PRIORITY or
+PATH_BAD_DEST. They schedule RESEND_GOTO after five seconds. The constant false
+query makes its negation pass; it does not remove the other conditions. This
+review does not establish the full escort recovery mechanism or actual timer,
+pathfinding and observer delivery. Tutorial and M01 have no direct calls to this
+query in their inspected mission units. No behavior correction was applied.
+
+Private source identities: `build/action-request-and-engineer-query-20261003.json`.
+Source inspection only; no build, launch or new native acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

@@ -1,17 +1,17 @@
 {
   "schema": 1,
   "complete": false,
-  "total": 16852,
+  "total": 16879,
   "counts": {
     "boundary_replaced": 43,
     "disabled_by_port_guard": 6,
     "missing": 92,
     "stubbed_or_noop": 39,
-    "unknown": 16672
+    "unknown": 16699
   },
   "severity_counts": {
     "missing_behavior": 45,
-    "unclassified": 16715,
+    "unclassified": 16742,
     "visual": 92
   },
   "inputs": [
@@ -100,17 +100,18 @@
     },
     {
       "sweep": "systems",
-      "sha256": "808bacf3560e02eaa8d9d7b85b92aa0e104c0a3b384cb8cb823509ddecc38738",
+      "sha256": "0af699aa09883cc3a76296012f734aa0c355cc1433a986590e4d95a0240cabcb",
       "issue_url": "https://github.com/TheGh0stShip/RenegadeVita/issues/10",
       "root_rows": 112,
-      "retained_status_records": 112,
+      "retained_status_records": 139,
       "complete": false,
       "coverage_risks": [
         "Conditional resource branches and duplicate declarations",
         "Dynamic/numeric resource routing and other source directories",
         "Alternate resource providers",
         "Controls/styles and factory callback behavior",
-        "Remaining S6 gameplay/platform/audio/system owners"
+        "Owner patterns are candidate coverage, not complete caller or class closure",
+        "Platform replacement/provider paths and all Control_Enable locks"
       ]
     },
     {
@@ -303479,6 +303480,492 @@
       "acceptance_open": "requires caller, behavior and evidence-class review",
       "review_evidence_pointer": null,
       "evidence_class": "source_and_generated_resource_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "33eeeea9ff63302fc1cadb648885a0ffd81a59a66880ae7beac48f24dea3c37d",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/0",
+      "label": "innate_ai",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "cbfc81367084c70ff35ab0f9a598664287db334ad188161ee062e0825a4bfb5c",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/1",
+      "label": "actions",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "16fd8446eddc167d3eac7905f1b888e2a7991aadcc28998c7c9ada806762cef2",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/10",
+      "label": "elevators_doors_ladders",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "7eb6c269b8b5831f06264caa4b16c3e0be7e4ba198124832fc6903b4b18f0c1a",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/11",
+      "label": "weapons_damage",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "90906a7b553ff5f03533a0d1a2cc8a55f0d8251d11d1a28c543f09cca6c6cfb0",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/12",
+      "label": "c4_beacons",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "98b4e44133e32af33a5e83d68360bd8cb992015f5697e2068e8aacd461b0b7d7",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/13",
+      "label": "buildings_power_mct",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "2a1ff815fe439e57663fb751953d4415eacc671273b206ab3d5a9e796bd80df3",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/14",
+      "label": "cinematics",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "69219340e92315f64c6764998ce49490bb7c03d3d019fc08ae56ac0d1955b4c4",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/15",
+      "label": "conversations_visemes",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "c37c41db4805d3ac2d44eab5715263ac3882516c121bd4a43439c35dc2143212",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/16",
+      "label": "hud_radar_objectives",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "9ca58b35f7cc447ae66c3208e431781d8290522683c5a14e032d6754c732a496",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/17",
+      "label": "audio",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "d1d555c86e9bc8b03c3039952da095d20bf4d3be64626001ee7879b47b3ed6db",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/18",
+      "label": "input",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "8c5fe14e1840f8f747b6780f2678564724abee0b8006b6edd4513c07eb8e7ce3",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/19",
+      "label": "networking",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "e02d51725691c40f9d7903d79e006c05750550bc47a2541d797afb46e8443081",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/2",
+      "label": "pathfinding",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "fa9fb2fb53263766a493da9ebab16c1de46674eb06e78edd3a0bec84889d110d",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/20",
+      "label": "filesystem",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "96b7e93ca2c039cfc15d3d6c51f1647127dcb3d3b3ae3caa74f15b0c917b4f1e",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/21",
+      "label": "threads_timers_memory",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "b6b017515727cad2469d1059dc1c8c9ea86c8897b0ba850b5e47faefff7643b0",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/22",
+      "label": "game_modes",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "db6253f8eebdd73d13e3926016caada53a18f19eb13e5e153ce6112125668b3a",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/23",
+      "label": "frontend",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "844982ae92be406cfe50b7dbeff8cb1b0458b38923dfabcf8a224efd0fe657b9",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/24",
+      "label": "saves_campaign",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "2fa43552fd5fafaa693e4c4b9cb58b4b6e1b53e456e0948983cdecd3096dce69",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/25",
+      "label": "encyclopedia_score_credits",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "21baefb2bb0db6f09a5040ca641c0754cdaa581a122a469bdda12efced632505",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/26",
+      "label": "movies",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "ad83b4c8444d876b1b073fb1f577056e39adb94f87bf773a0c34e8d2785960ba",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/3",
+      "label": "vehicle_drivers",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "fb892c06825d1f4d8f4f56486e85ff719b314fb847abe569c8660f4f3ee37f46",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/4",
+      "label": "harvesters",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "23b89a394ce85c1925c4bf1c5da21e11e601fa2f163978a73d426f8961483343",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/5",
+      "label": "base_defenses",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "ba88443f129c6484584fb3cb7387704d768bf82754d253596374085cb6509e29",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/6",
+      "label": "hibernation",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "365f3dbcecbd963994ef26843257474a05b4066164c556df4ffabeee80b66d5a",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/7",
+      "label": "bosses",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "0dd3b9fd30bf75ab1183b4462fb5483c47b85049ad15acfeb6fecd5112ce7408",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/8",
+      "label": "petrova_scripts",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "ea6ec4b246170cc49ff55df88c7543f1b235c0bb0620d70693bdf457bbbe8775",
+      "sweep": "systems",
+      "inventory_pointer": "/system_rows/9",
+      "label": "vehicle_physics",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "source_and_build_metadata",
       "evidence_source": "reports/generated/sweeps/systems.json",
       "cluster": "systems"
     }

@@ -39,3 +39,10 @@ resource routes. Remaining S6 denominators cover gameplay modes, AI/actions,
 bosses, physics, combat, presentation, audio and platform systems. Conditional
 resources and duplicate declarations stay explicit risks. The full sweep and
 physical behavior acceptance remain incomplete.
+# Runtime owner groups added
+
+S6 now retains 27 explicit gameplay/platform/presentation owner groups alongside
+the 112 dialogs. Case-insensitive original path matching preserves source hashes,
+unmatched patterns and source keys for S3 reconciliation. These are investigation
+candidates, not proven complete caller closure or runtime acceptance. All groups
+remain unknown; platform replacements and Control_Enable locks need deeper tracing.

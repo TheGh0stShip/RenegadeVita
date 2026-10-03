@@ -11,6 +11,61 @@ import re
 from tools.audit_mission_content_bindings import masked
 from tools.generate_wwui_dialog_templates import macros, CAMPAIGN_IDS, MULTIPLAYER_IDS
 
+SYSTEM_OWNERS = {
+    'innate_ai': ('combat/soldierobserver.cpp',),
+    'actions': ('combat/action.cpp', 'combat/pathaction.cpp'),
+    'pathfinding': ('wwphys/pathfind*.cpp', 'wwphys/path.cpp', 'wwphys/pathobject.cpp'),
+    'vehicle_drivers': ('combat/vehicledriver.cpp',),
+    'harvesters': ('combat/harvester*.cpp',),
+    'base_defenses': ('combat/obelisk*.cpp', 'combat/turret*.cpp'),
+    'hibernation': ('combat/gameobjmanager.cpp', 'combat/smartgameobj.cpp'),
+    'bosses': ('combat/*bossgameobj.cpp',),
+    'petrova_scripts': ('scripts/mission11.cpp',),
+    'vehicle_physics': ('wwphys/*vehicle*.cpp',),
+    'elevators_doors_ladders': ('wwphys/*elevator*.cpp', 'wwphys/*door*.cpp', 'combat/transition*.cpp'),
+    'weapons_damage': ('combat/weapon*.cpp', 'combat/bullet.cpp', 'combat/damage.cpp', 'combat/explosion.cpp'),
+    'c4_beacons': ('combat/c4.cpp', 'combat/beacon*.cpp'),
+    'buildings_power_mct': ('combat/building*.cpp', 'combat/*factorygameobj.cpp', 'combat/airstripgameobj.cpp'),
+    'cinematics': ('scripts/test_cinematic.cpp', 'combat/cinematicgameobj.cpp', 'combat/ccamera.cpp'),
+    'conversations_visemes': ('combat/*conversation*.cpp', 'combat/viseme.cpp'),
+    'hud_radar_objectives': ('combat/hud*.cpp', 'combat/radar.cpp', 'combat/objectives.cpp'),
+    'audio': ('wwaudio/*.cpp',),
+    'input': ('combat/directinput.cpp', 'combat/input.cpp'),
+    'networking': ('wwnet/*.cpp', 'commando/cnetwork.cpp'),
+    'filesystem': ('wwlib/*file*.cpp', 'wwlib/*mix*.cpp'),
+    'threads_timers_memory': ('wwlib/*thread*.cpp', 'wwlib/*timer*.cpp', 'wwlib/*alloc*.cpp'),
+    'game_modes': ('commando/*gamemode*.cpp', 'commando/gamemode.cpp'),
+    'frontend': ('commando/dlg*.cpp', 'wwui/*.cpp'),
+    'saves_campaign': ('commando/*save*.cpp', 'commando/campaign.cpp'),
+    'encyclopedia_score_credits': ('combat/encyclopedia*.cpp', 'commando/*score*.cpp', 'commando/*credit*.cpp'),
+    'movies': ('commando/movie.cpp', 'binkmovie/*.cpp'),
+}
+
+
+def system_owners(root, link):
+    from fnmatch import fnmatchcase
+    indexed = {r['source']: r for r in link.get('upstream_rows', [])}
+    rows = []
+    directory = root / 'upstream/CnC_Renegade/Code'
+    files = sorted(p for p in directory.rglob('*') if p.is_file() and p.suffix.lower() == '.cpp')
+    for name, patterns in SYSTEM_OWNERS.items():
+        matches = []
+        missing = []
+        for pattern in patterns:
+            found = [p for p in files if fnmatchcase(p.relative_to(directory).as_posix().lower(), pattern)]
+            if not found:
+                missing.append(pattern)
+            for path in found:
+                source = path.relative_to(root).as_posix()
+                matches.append({'source': source, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                                'link_inventory_source_key': source if source in indexed else None,
+                                'matched_pattern': pattern})
+        rows.append({'id': hashlib.sha256(name.encode()).hexdigest(), 'name': name,
+                     'status': 'unknown', 'evidence_class': 'source_and_build_metadata',
+                     'owner_candidates': matches, 'unmatched_owner_patterns': missing,
+                     'acceptance_open': 'Caller/mode completeness, retained symbols, boundary behavior and runtime evidence'})
+    return rows
+
 
 def dialogs(code):
     clean = masked(code, strings=True)
@@ -65,7 +120,9 @@ def inventory(root, template_path, link=None):
             'open_risks': ['Conditional resource branches and duplicate declarations',
                            'Dynamic/numeric resource routing and other source directories',
                            'Alternate resource providers', 'Controls/styles and factory callback behavior',
-                           'Remaining S6 gameplay/platform/audio/system owners'], 'rows': rows}
+                           'Owner patterns are candidate coverage, not complete caller or class closure',
+                           'Platform replacement/provider paths and all Control_Enable locks'],
+            'system_rows': system_owners(root, link), 'rows': rows}
 
 
 def main():

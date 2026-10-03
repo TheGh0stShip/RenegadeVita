@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S6 gameplay and platform owner groups — 2026-10-03
+
+27 owner groups added beyond dialogs: AI/actions/pathfinding, bosses, physics,
+combat/buildings, cinematics/conversations, audio, frontend, input, networking,
+files/threads/timers/memory. Source hashes, unresolved patterns and S3 source keys
+retained. All unknown; candidate patterns do not prove complete system closure.
+Two existing parser tests pass; regenerated S6/register reproduce. No runtime change.
+
 ## Gap review deduplication and issue clusters — 2026-10-03
 
 134 embedded renderer review statuses merged with their parent findings;

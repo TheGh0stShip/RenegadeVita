@@ -16,7 +16,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | link | 837 | 4448 | False |
 | retail | 27 | 1533 | False |
 | scripts | 202 | 247 | False |
-| systems | 112 | 112 | False |
+| systems | 112 | 139 | False |
 | performance | 80 | 80 | False |
 | external | 3782 | 3782 | False |
 
@@ -16882,3 +16882,30 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | systems /rows/97 | IDD_CNC_BATTLE_INFO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | systems /rows/98 | IDD_MP_AUTO_RESTART_PROGRESS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | systems /rows/99 | IDD_MENU_CNC_REFERENCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/0 | innate_ai | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/1 | actions | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/10 | elevators_doors_ladders | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/11 | weapons_damage | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/12 | c4_beacons | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/13 | buildings_power_mct | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/14 | cinematics | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/15 | conversations_visemes | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/16 | hud_radar_objectives | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/17 | audio | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/18 | input | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/19 | networking | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/2 | pathfinding | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/20 | filesystem | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/21 | threads_timers_memory | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/22 | game_modes | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/23 | frontend | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/24 | saves_campaign | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/25 | encyclopedia_score_credits | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/26 | movies | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/3 | vehicle_drivers | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/4 | harvesters | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/5 | base_defenses | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/6 | hibernation | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/7 | bosses | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/8 | petrova_scripts | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /system_rows/9 | vehicle_physics | unknown | unclassified | unknown; callers and retail usage require reconciliation |

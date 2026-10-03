@@ -200,6 +200,11 @@ def trace_branch(records, branch, scripts, object_ids, spawner_ids):
                                 'camera_restore_fallback': 'original_camera_restore',
                                 'detach_fallback': 'original_bone_detach'}.get(guard,
                                   'unchecked_out_of_range' if guard == 'unchecked' else 'original_guard_skips_lookup')
+                if command == 'send_custom':
+                    # The original leaves its initialized value unchanged.
+                    # Invalid parameter slots do not suppress event delivery.
+                    use['original_custom_fallback_value'] = -1 if role == 'custom_destination' else 0
+                    use['event_delivery_proven'] = False
             else:
                 candidates = [copy.deepcopy(producers[key]) for key in slots[slot] if key is not None]
                 use.update({'state': 'text_producer_candidates' if candidates else 'no_prior_text_producer',

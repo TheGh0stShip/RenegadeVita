@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Cinematic custom-slot fallback distinction — 2026-10-03
+
+Completed: read-only tracer retains original invalid destination (-1) and
+parameter (0) fallbacks without claiming event delivery or suppression.
+Evidence:25 focused Python/source checks, including an original-handler
+counterexample. Four normal producer leads remain open. Prior ordered replay
+also passed21 selected patches across eight files; full staging/build unproved.
+No build, launch or retail mutation; native/runtime gates0/10.
+See [cinematic slot lifetimes](CINEMATIC_SLOT_LIFETIMES.md).
+
 ## M01 missing-control failure and diagnostics — 2026-10-03
 
 Completed: ConDrop's failed control-open/empty-parser disposal path traced;

@@ -124,6 +124,20 @@ class CinematicSlotsTests(unittest.TestCase):
         self.assertEqual([r['role'] for r in rows[2]['slot_uses']], ['custom_destination', 'custom_parameter'])
         self.assertTrue(all(r['external_slot_fill_and_runtime_lifetime_unverified'] for r in rows[2]['slot_uses']))
 
+    def test_invalid_custom_slots_retain_distinct_original_fallback_values(self):
+        rows = trace(b'0 Send_Custom, #40, 10001, #-1\n0 Send_Custom, 100, 77, #40\n', {}, [100])['branches']['normal']
+        destination, parameter = rows[0]['slot_uses']
+        self.assertEqual(destination['original_custom_fallback_value'], -1)
+        self.assertEqual(parameter['original_custom_fallback_value'], 0)
+        self.assertFalse(parameter['event_delivery_proven'])
+        self.assertEqual(rows[1]['literal_custom_destination']['classification'], 'serialized_game_object')
+        self.assertEqual(rows[1]['slot_uses'][0]['original_custom_fallback_value'], 0)
+        source = (ROOT / 'upstream/CnC_Renegade/Code/Scripts/Test_Cinematic.cpp').read_text()
+        body = source.split('void\tCommand_Send_Custom(', 1)[1].split('void\tCommand_Attach_To_Bone(', 1)[0]
+        self.assertIn('int to_id = -1;', body)
+        self.assertIn('int parameter = 0;', body)
+        self.assertIn('Commands->Send_Custom_Event( Owner(), to, type, parameter );', body)
+
     def test_integer_tokens_preserve_32_bit_semantics_and_unknown_spelling(self):
         self.assertEqual(integer('2147483647'), 0x7fffffff)
         self.assertEqual(integer('-2147483648'), -0x80000000)

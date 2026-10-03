@@ -68,6 +68,14 @@ are retained with source time, slot role and external-fill uncertainty:
 
 No external-fill path or runtime failure is established by these four leads.
 
+The source audit now distinguishes invalid Send_Custom slot fallbacks: an
+out-of-range destination retains -1, while an out-of-range parameter retains
+0. The original handler still attempts destination lookup and can send the
+event with parameter 0 when that destination resolves. A skipped slot lookup
+therefore does not prove suppressed event delivery. One additional source-backed
+counterexample covers both roles and a valid literal destination; all 25 focused
+cinematic tests pass. Original scripts and retail controls remain unchanged.
+
 ## Findings that change the next investigation
 
 The unlocated M13 MX0_GDITROOPER4_HIT6 conversation has a narrower lifetime

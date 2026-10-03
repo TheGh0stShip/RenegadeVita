@@ -37,8 +37,24 @@ Four connected omissions were found (first three now corrected in source):
 4. Original Render_Decal_Meshes sets D3DRS_ZBIAS to 8 and resets it to zero.
    Native Apply_DX8_Render_State has no matching case and its unsupported-state
    path returns true after a diagnostic. Successful return therefore does not
-   prove depth bias was applied. A measured, documented platform mapping and
-   reset/lifecycle handling are needed; arbitrary polygon offset is unverified.
+   prove depth bias was applied. Rigid Create_Decal already contains an original
+   capability-selected fallback: with Support_ZBias false, generator Z normal
+   is rotated into parent-local space, scaled by 0.01 and added to polygon
+   vertices before clipping. Native capabilities currently select this branch.
+   Skinned decals have no corresponding offset branch. This narrows the gap:
+   rigid depth placement has an original source fallback, while hardware bias
+   and skinned depth placement remain unverified. Do not enable SupportZBias
+   merely to suppress the fallback or add a second offset without evidence.
+
+The pinned VitaGL source exposes glPolygonOffset, but converts its factor and
+units to integers for sceGxmSetFrontDepthBias. A desktop float offset cannot
+be assumed equivalent; small fractional settings can truncate to zero.
+Original DX8Wrapper also contains capability-selected projection bias helpers
+with near/far scaling, distinct from this decal queue's direct state writes.
+Neither helper nor a guessed GL offset establishes decal parity by itself.
+Review of the source restoration found no additional confirmed queue defect;
+native base submission and list lifetime/state ordering still need execution
+evidence. Advisory pixel predictions are not observations.
 
 The existing decal release-range patch addresses storage lifetime separately
 and does not close these presentation dependencies. Dazzle restoration also

@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Original rigid decal depth fallback — 2026-10-03
+
+Completed: original rigid Create_Decal capability fallback located: parent-local
+generator-normal offset0.01; current native capabilities select it. Skinned
+generation has no corresponding branch. Pinned VitaGL polygon-offset inputs
+cast to integers before GXM; no desktop-equivalence assumption adopted.
+Evidence: original/staged/provider source inspection; no pixel prediction proven.
+Next: preserve rigid fallback and resolve skinned/native bias semantics with
+matching runtime evidence when build/launch hold ends. Gates0/10.
+
 ## Original decal submission source restoration — 2026-10-03
 
 Completed: traversal/distance gate, original list owner/flush/reset, and original

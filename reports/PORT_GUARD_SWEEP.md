@@ -2,8 +2,8 @@
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,531 records with 3 diagnostic-only functions reviewed as
-`stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, and 3,527
+source contains 3,531 records with 11 fallback/diagnostic functions reviewed as
+`stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, and 3,519
 records still `unknown`. All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -62,7 +62,7 @@ build/sweep-parser-venv/bin/python -m unittest discover -s tools -p test_sweep_c
 build/sweep-parser-venv/bin/python tools/audit_sweep_port_guards.py --include-functions --output reports/generated/sweeps/port_guards.json
 ```
 
-Twenty-four parser/review tests pass locally. CI includes the pinned parser
+Twenty-five parser/review tests pass locally. CI includes the pinned parser
 setup, these tests and an artifact of its partial inventory. Evidence remains
 source/tool validation; no additional physical gate is closed.
 

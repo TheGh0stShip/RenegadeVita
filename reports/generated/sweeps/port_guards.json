@@ -3691,7 +3691,7 @@
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
     "tools/stage_sources.sh": "54fd1a9a00645c71da6198b69e994aae18ac35b4fbf0b1b44d8fcb867a8eee22",
-    "tools/sweep_reviews/port_guards.json": "81c64e676d5c72c260718c79da78f886bcf9821eb05e3d81e6b049c6798eb812",
+    "tools/sweep_reviews/port_guards.json": "93f56da1a6377935a2bfd9316da85ce286942788cf885675f8a7cac537b664d1",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -62212,6 +62212,7 @@
           "line": 1393
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "Log_Unsupported_Playback(const char *filename)",
       "definition_sha256": "7b58968117732cd9a3bbcdcde107cbf459978abf0d03c5830d0aba44dd62bc2b",
       "end_byte": 52217,
@@ -62233,11 +62234,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "d409f1febe0221d8c7bb38559af521440486a61653404f93fed9f28cd0044e06",
       "scope": "",
       "signals": [],
       "start_byte": 51777,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -62249,6 +62263,7 @@
           "line": 1403
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "BINKMovie::Init()",
       "definition_sha256": "caeed68a365a05f096e0b64f14adc2c7889ff9de818d89a2e0105b5ed6f75e51",
       "end_byte": 52320,
@@ -62270,11 +62285,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "89501f0c6bf17139172eaa82eff17c1a0aa4956dafddacbbbb00c8dfc3ae3e01",
       "scope": "",
       "signals": [],
       "start_byte": 52234,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -62286,6 +62314,7 @@
           "line": 1409
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "BINKMovie::Shutdown()",
       "definition_sha256": "bf5c94670edf2b8ca336587b668a35ca0e8ee68368d2a113c8d77f851cef8fac",
       "end_byte": 52414,
@@ -62307,11 +62336,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "b62836dfea239745200a5778db63725e6ffd850fe6ce6b0a93bcc240bf69da15",
       "scope": "",
       "signals": [],
       "start_byte": 52322,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -62333,6 +62375,7 @@
           "line": 1416
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "BINKMovie::Play(const char *filename, const char *, FontCharsClass *)",
       "definition_sha256": "e08539ecbd81a01cd96eafee3f1864f7fb78c4b4d6cebd899e504695d2e7a6aa",
       "end_byte": 52613,
@@ -62359,18 +62402,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "5d53f2b8a0dc0d868db033ffa84bffe9b90567dcc99e3a00bea04be330ea7f0c",
       "scope": "",
       "signals": [
         "unsupported_or_todo_marker"
       ],
       "start_byte": 52416,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "BINKMovie::Stop()",
       "definition_sha256": "6f4881fb73b5992357a7fd7f81c974740f7b001cabee5bf00c19446fdfcb309d",
       "end_byte": 52640,
@@ -62392,18 +62449,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "c1a491a595db8f0a2b2e68476b0de89a2cabba70eddfa97e46b5e930c8d96fde",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 52615,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "BINKMovie::Update()",
       "definition_sha256": "3a11cfefd0dec374771f043b25675666c17dd70b6b174ca3b85df6053786b9fd",
       "end_byte": 52668,
@@ -62425,18 +62496,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "f5456c7056b3670424268aef1156578781e3e3df26a203041b378cf33daee00a",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 52641,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "BINKMovie::Render()",
       "definition_sha256": "16952b8715aeede89c83a95e175f6067660144a86eef49f2e5790ca86f735ab4",
       "end_byte": 52696,
@@ -62458,18 +62543,32 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "1678686b8a43d91c180a02007bd0554108d451a42ff602f8618e0764267b4690",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 52669,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "b48df3a0d50249a5a6977b8a461d1f0e024d031643d2223a4f834663b2690762",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "BINKMovie::Is_Complete()",
       "definition_sha256": "ce4234e3856fce776fb946736df41fe2067046f0f526cc05af54701b3e7f2563",
       "end_byte": 52743,
@@ -62496,13 +62595,26 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+        "affected_scope": [
+          "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        ],
+        "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+        "callers": [
+          "port/platform/a4_binkmovie_boundary.cpp:1415",
+          "staging/commando/movie.cpp:71-213",
+          "staging/commando/dlgmovieoptions.cpp:280-350"
+        ],
+        "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog"
+      },
       "row_id": "e5841aebd1c4a91bd8ec0be811e71bdfd05c0edea021e5f39b6e23b6d3b51a8a",
       "scope": "",
       "signals": [
         "literal_return"
       ],
       "start_byte": 52697,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "directive": "#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO",
@@ -126750,8 +126862,8 @@
     },
     "by_status": {
       "boundary_replaced": 1,
-      "stubbed_or_noop": 3,
-      "unknown": 3527
+      "stubbed_or_noop": 11,
+      "unknown": 3519
     },
     "patch_files": 310,
     "rows": 3531,

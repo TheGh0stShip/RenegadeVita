@@ -16,8 +16,12 @@
       "status": "boundary_replaced",
       "original_owner": "DX8Caps original Direct3D hardware enumeration and DX8Wrapper capability consumers",
       "behavior": "Replaces Windows device enumeration with a conservative fixed native description. Z bias, bump environment maps, anisotropic filtering, native shader versions and render-to-texture formats are advertised unavailable; only the listed texture operations are advertised. This classification does not establish that all needed renderer features are mapped.",
-      "callers": ["Global g_vita_caps construction and DX8Wrapper::CurrentCaps binding in the same native boundary"],
-      "affected_scope": ["All native modes using original DX8Wrapper capability queries; effects affected by unavailable features require S2 and all-map data closure"],
+      "callers": [
+        "Global g_vita_caps construction and DX8Wrapper::CurrentCaps binding in the same native boundary"
+      ],
+      "affected_scope": [
+        "All native modes using original DX8Wrapper capability queries; effects affected by unavailable features require S2 and all-map data closure"
+      ],
       "acceptance_open": "Reconcile every original queried capability with actual Vita submission support and physical effects. Native source selection and fixed capability flags do not prove feature completeness."
     },
     {
@@ -27,8 +31,13 @@
       "status": "stubbed_or_noop",
       "original_owner": "DX8Wrapper::Create_Render_Target; PhysicsSceneClass projector allocation",
       "behavior": "Returns NULL for every size and format, with one native diagnostic. No offscreen target is allocated. The original fallback avoids submitting an offscreen draw but does not restore render-to-texture.",
-      "callers": ["staging/wwphys/pscene_projectors.cpp:173", "staging/wwphys/pscene_projectors.cpp:179"],
-      "affected_scope": ["All modes reaching original projector render-target allocation; per-map instances remain unverified"],
+      "callers": [
+        "staging/wwphys/pscene_projectors.cpp:173",
+        "staging/wwphys/pscene_projectors.cpp:179"
+      ],
+      "affected_scope": [
+        "All modes reaching original projector render-target allocation; per-map instances remain unverified"
+      ],
       "acceptance_open": "Original target allocation, binding, projected shadows and rendered results on Vita/PSTV. Source caller evidence is not physical acceptance."
     },
     {
@@ -38,8 +47,14 @@
       "status": "stubbed_or_noop",
       "original_owner": "MeshClass additional material passes; AABoxRenderObjClass and OBBoxRenderObjClass rendering",
       "behavior": "Increments diagnostic statistics and logs the first object; submits no geometry or material pass.",
-      "callers": ["staging/ww3d2/mesh.cpp:752", "staging/ww3d2/boxrobj.cpp:711", "staging/ww3d2/boxrobj.cpp:1104"],
-      "affected_scope": ["Modes reaching additional mesh passes or enabled box display masks; per-map instances and display-mask settings remain unverified"],
+      "callers": [
+        "staging/ww3d2/mesh.cpp:752",
+        "staging/ww3d2/boxrobj.cpp:711",
+        "staging/ww3d2/boxrobj.cpp:1104"
+      ],
+      "affected_scope": [
+        "Modes reaching additional mesh passes or enabled box display masks; per-map instances and display-mask settings remain unverified"
+      ],
       "acceptance_open": "Additional-pass and box submission ownership, build-profile reachability and native pixels. Box-display diagnostic use is not proof of retail exclusion."
     },
     {
@@ -49,9 +64,158 @@
       "status": "stubbed_or_noop",
       "original_owner": "RigidDecalMeshClass::Render and SkinDecalMeshClass::Render",
       "behavior": "Diagnostic counter and first-operation logging only. Current staged callers are guarded by RENEGADE_VITA_PORT && !__vita__; their presence does not prove native decals are still skipped.",
-      "callers": ["staging/ww3d2/decalmsh.cpp:297", "staging/ww3d2/decalmsh.cpp:785"],
-      "affected_scope": ["Host port profiles taking the non-__vita__ decal guard; native decal restoration and depth-bias results remain separate open gates"],
+      "callers": [
+        "staging/ww3d2/decalmsh.cpp:297",
+        "staging/ww3d2/decalmsh.cpp:785"
+      ],
+      "affected_scope": [
+        "Host port profiles taking the non-__vita__ decal guard; native decal restoration and depth-bias results remain separate open gates"
+      ],
       "acceptance_open": "Native decal queue/body/flush execution and depth-bias presentation, plus explicit host profile selection. Do not classify the native path from this diagnostic helper alone."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "Log_Unsupported_Playback(const char *filename)",
+      "body_sha256": "afc7fa2cd08de02c07b3646028f8a06a1274a7059e9222dbb8c4f863d710af0f",
+      "definition_sha256": "7b58968117732cd9a3bbcdcde107cbf459978abf0d03c5830d0aba44dd62bc2b",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "BINKMovie::Init()",
+      "body_sha256": "f40ea9cc99cbe9e7d0168c320721996c397ca1472f2a81cf3426f895af4129bf",
+      "definition_sha256": "caeed68a365a05f096e0b64f14adc2c7889ff9de818d89a2e0105b5ed6f75e51",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "BINKMovie::Shutdown()",
+      "body_sha256": "9af05ec9b1bd5bf2014a1596a7bdea4621a26a6526594de20b04c406b7f5f413",
+      "definition_sha256": "bf5c94670edf2b8ca336587b668a35ca0e8ee68368d2a113c8d77f851cef8fac",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "BINKMovie::Play(const char *filename, const char *, FontCharsClass *)",
+      "body_sha256": "a40484f614487d5fdde18cbf2942253e4d4f7db0501b9ded9f988048978f0dd0",
+      "definition_sha256": "e08539ecbd81a01cd96eafee3f1864f7fb78c4b4d6cebd899e504695d2e7a6aa",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "BINKMovie::Stop()",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "6f4881fb73b5992357a7fd7f81c974740f7b001cabee5bf00c19446fdfcb309d",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "BINKMovie::Update()",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "3a11cfefd0dec374771f043b25675666c17dd70b6b174ca3b85df6053786b9fd",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "BINKMovie::Render()",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "16952b8715aeede89c83a95e175f6067660144a86eef49f2e5790ca86f735ab4",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a4_binkmovie_boundary.cpp",
+      "declarator": "BINKMovie::Is_Complete()",
+      "body_sha256": "b48df3a0d50249a5a6977b8a461d1f0e024d031643d2223a4f834663b2690762",
+      "definition_sha256": "ce4234e3856fce776fb946736df41fe2067046f0f526cc05af54701b3e7f2563",
+      "status": "stubbed_or_noop",
+      "original_owner": "BINKMovie playback provider beneath original MovieGameModeClass and movie-options dialog",
+      "behavior": "Fallback branch records lifecycle or skip diagnostics, returns immediate completion or performs no work; it does not decode or present movie audio/video. Current native FFmpeg profile selects the alternative branch.",
+      "callers": [
+        "port/platform/a4_binkmovie_boundary.cpp:1415",
+        "staging/commando/movie.cpp:71-213",
+        "staging/commando/dlgmovieoptions.cpp:280-350"
+      ],
+      "affected_scope": [
+        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+      ],
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     }
   ]
 }

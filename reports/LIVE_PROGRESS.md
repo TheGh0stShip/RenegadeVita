@@ -2,6 +2,12 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+Movie fallback review batch: eight additional functions (seven BINKMovie
+methods and their logging helper) classified as stubs for fallback profiles.
+Native FFmpeg profile selects the alternative branch; playback remains
+unverified. S1 now has 11 stubs, one replaced boundary and 3,519 unknown rows.
+Twenty-five tests validate hash-bound branch distinction and parser behavior.
+
 Returned canonical evidence: A3.5-dev209 passes ARM/package identity, retail
 exclusion, manifests and diagnostics checks. Vita3K installed and verified SELF
 56ae95dda1221d75563c0272eeb597905b0fc547a3713266cf580bf670ce0cb9;

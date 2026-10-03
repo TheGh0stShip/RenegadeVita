@@ -4,6 +4,14 @@ from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, 
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_review_distinguishes_same_signature_in_alternative_branches(self):
+        rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
+                 'body_sha256': body, 'status': 'unknown'} for body in ('native', 'fallback')]
+        review = {'file': 'port/a.cpp', 'declarator': 'f()', 'body_sha256': 'fallback',
+                  'status': 'stubbed_or_noop'}
+        self.assertEqual(apply_reviews(rows, [review]), [])
+        self.assertEqual([row['status'] for row in rows], ['unknown', 'stubbed_or_noop'])
+
     def test_reconciliation_rejects_missing_and_duplicate_rows(self):
         row = {'kind': 'port_function', 'file': 'a.cpp', 'line': 1,
                'status': 'unknown', 'evidence_class': 'source_syntax'}

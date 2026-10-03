@@ -118,6 +118,15 @@ SHA-anchored zero-fuzz staging registration;302 patches are registered. Nine
 focused source checks pass; C++ compilation and native delivery remain open.
 Entry events never prove prisoner callback completion.
 
+A focused ordered replay from pristine upstream also passes for scriptcommands,
+smartgameobj and Test_Cinematic:18 selected patches, three verified late input
+SHA-256 anchors and zero fuzz. The replay reproduces the staging-owned trailing
+newline transformation in temporary files. Historical patch offsets are retained
+in the private receipt; the new logical hooks and primary-ID buffer patch apply
+without offsets. This establishes composition for these three files only, not
+full staging or compilation. Active staging and its receipt remain unchanged.
+Receipt: `build/logical-diagnostic-source-patch-chain-20261003.json`.
+
 The offline analyzer now retains typed logical stimulus records separately from
 conversation, timer and action records. It checks bounded signed32-bit fields,
 the two focused event types, boolean observer activity, creation-record shape

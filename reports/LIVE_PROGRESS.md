@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Logical diagnostic ordered source replay — 2026-10-03
+
+Completed: pristine-upstream ordered replay for three affected source files,
+18 selected patches and three verified late input hashes; zero fuzz.
+Evidence: private hashed receipt includes staging-owned newline transformation
+and historical offsets; new hooks/buffer patch apply without offsets.
+Scope: focused composition only; active staging unchanged, C++ uncompiled.
+Next: remaining request-outcome and native callback/progression evidence.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Logical stimulus offline analysis — 2026-10-03
 
 Completed:typed configuration/hearing records added to offline analyzer with

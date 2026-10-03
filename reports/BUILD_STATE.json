@@ -8,6 +8,14 @@
     "prisoner_callback_delivery_proven": false,
     "typed_offline_consumer_complete": true,
     "consumer_and_related_source_checks_passed": 42,
+    "focused_ordered_source_replay": {
+      "result": "PASS",
+      "source_files": 3,
+      "selected_patches": 18,
+      "verified_input_hashes": 3,
+      "fuzz": 0,
+      "full_staging_proven": false
+    },
     "staging_receipt_regenerated": false,
     "build_or_launch_performed": false,
     "native_runtime_gates_closed": 0

@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S6 complete Commando dialog declaration denominator — 2026-10-03
+
+112 original dialogs retained; Dev209 templates contain 31 and omit 81.
+All statuses unknown pending providers/factories/actions/display evidence.
+Nine tests pass including 31-dialog/389-control equivalence; inventory
+reproduces exactly. No runtime/resource selection change or native gate closed.
+
 ## S4 missing cinematic-name verification — 2026-10-03
 
 19 names absent from all 31 archive indices (18,836 records) and diagnostic

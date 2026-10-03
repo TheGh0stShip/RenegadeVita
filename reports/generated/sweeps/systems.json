@@ -1,0 +1,2372 @@
+{
+  "schema": 1,
+  "sweep": "S6",
+  "complete": false,
+  "scope": "All original Commando/*.rc dialog declarations; staged Commando token references",
+  "inputs": [
+    {
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "sha256": "a1405eb94d34d819ab371cd0d63e42c83b9ef3f38c75b4043e3fc28d9a9327ff"
+    }
+  ],
+  "template_sha256": "dbc308722eb91c6cd60e9f773ed7dd407e9624cae4cdc6cbd183795fcd5311dc",
+  "total": 112,
+  "counts": {
+    "unknown": 112
+  },
+  "present_in_retained_templates": 31,
+  "absent_from_retained_templates": 81,
+  "open_risks": [
+    "Conditional resource branches and duplicate declarations",
+    "Dynamic/numeric resource routing and other source directories",
+    "Alternate resource providers",
+    "Controls/styles and factory callback behavior",
+    "Remaining S6 gameplay/platform/audio/system owners"
+  ],
+  "rows": [
+    {
+      "name": "IDD_MENU_OPTIONS",
+      "line": 68,
+      "id": "73dd8f6ae756e65b60e975f94f77667b92a11e2eeadc5895c7b450859e4e1c95",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 135,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 348
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 21
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_QUIT_TO_DESKTOP",
+      "line": 88,
+      "id": "6dba9326eb1e100782a054f3296f07b1c70c228d292b374cc14200d77c041e39",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 129,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 353
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 15
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_START_SP",
+      "line": 98,
+      "id": "8fe35449035a0a16ea373b76e962ee18cc4d59e04e71f8abe4824dff1dbdf2d7",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 130,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 851
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 16
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_DIFFICULTY",
+      "line": 114,
+      "id": "d2d07de27bb4be017436b7a0fbc1fd0bdaad6f9da9abf82ebeba8f0a3b075b0e",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 131,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 865
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 17
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_HIGH_SCORES",
+      "line": 151,
+      "id": "c567e8c47953fa858dc375a1a8a5a8900c532c85f78502914b29ef26dbab71bb",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 132,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 18
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_SCORE_CAMPAIGN_TAB",
+      "line": 162,
+      "id": "0dfcfff4e077df2665dbc327b00dd9009a434297e0514148c819e628a0f26a19",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 133,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 321
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 19
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_SCORE_MISSIONS_TAB",
+      "line": 171,
+      "id": "da8a7d71aa50f2111ba7db813d769aa836568c1c079c3138622d5aaed899e455",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 134,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 334
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 20
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_MAIN",
+      "line": 184,
+      "id": "ec21dfd0838175ddeb8e414ead569ca9805c7e8cc02e28d6dd644308921ec958",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 128,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmainmenu.cpp",
+          "line": 90
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 14
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_CONTROLS",
+      "line": 208,
+      "id": "6458e1a8dec974a23f7e27bd29c8d3aea7d29d3632fd0c3a39f5aebf6e15c0c7",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 136,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcontrols.cpp",
+          "line": 59
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 22
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONTROLS_BASIC_MOVMENT_TAB",
+      "line": 224,
+      "id": "9c325b60a5c6daaac3921f8eb877c78db6d915f0d15f38461e9588d8cfb14592",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 137,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcontroltabs.cpp",
+          "line": 56
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 23
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONTROLS_ATTACK_TAB",
+      "line": 304,
+      "id": "6ea8a8df23fe7705d1e57807d25d361e2e64f9e796188269ecf38a8f2e3fa428",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 139,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcontroltabs.cpp",
+          "line": 79
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 25
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONTROLS_WEAPONS_TAB",
+      "line": 359,
+      "id": "2d6adfd6257d00c7ff1c402811e7dbe79261f6446c5e0f1b147160d2614721e2",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 140,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcontroltabs.cpp",
+          "line": 157
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 26
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONTROLS_LOOK_TAB",
+      "line": 429,
+      "id": "f0dc0b1d7309f53b06ee878b1eb18064a5467c63ec6bf0e8cd986e268d534864",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 141,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcontroltabs.cpp",
+          "line": 179
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 27
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONTROLS_MISC_TAB",
+      "line": 465,
+      "id": "2a2bb2490a531e26cf925ae3637f4ad2ec60cd4bcaaf0efeef2106aca23854bb",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 142,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 28
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONTROLS_MULTIPLAYER_TAB",
+      "line": 487,
+      "id": "2707f24484d4b456e3c7771ee923dda2171e7f61095e682c7a68d962bfdb43ae",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 143,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcontroltabs.cpp",
+          "line": 320
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 29
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONTROLS_ADVANCED_TAB",
+      "line": 534,
+      "id": "3843b535383bb2786be5ac37b0119ce8154761fff8cc8e5fd4990593d9cadfc9",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 144,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 30
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_LOAD_SP_GAME",
+      "line": 561,
+      "id": "43e1c28e540536a01f366952e9a6bbdcc6ac6495acfd7237dcdf6f87730b3b51",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 145,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgloadspgame.h",
+          "line": 65
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 31
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_ENCYCLOPEDIA_OBJECTIVES_TAB",
+      "line": 577,
+      "id": "0f1c14abae4a9f6f8d33889a5cb6fb234e8a1c817294134c3cc6ce71e71e388b",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 146,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevaobjectivestab.cpp",
+          "line": 70
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 32
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_ENCYCLOPEDIA_MAP_TAB",
+      "line": 590,
+      "id": "91fc599e363a28c4ae731178368c5affd8de17937bd0c0e28496b81dab55e313",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 147,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevamaptab.h",
+          "line": 62
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 33
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_ENCYCLOPEDIA_DATA_TAB",
+      "line": 605,
+      "id": "7c5c70a4e4c93cfcbdc92bdd02796177780819c65bf380e4ae0704b2b31a3b14",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 148,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevadatatab.cpp",
+          "line": 57
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 34
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_ENCYCLOPEDIA_CHARACTERS_TAB",
+      "line": 698,
+      "id": "a352d0bb5f4d730db5cbe521d196cb8aaf5c2b7b74da6c495a32e85a2b789609",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 149,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevacharacterstab.h",
+          "line": 62
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 35
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_ENCYCLOPEDIA_WEAPONS_TAB",
+      "line": 711,
+      "id": "0e913e9de02d2ad724086dfdd1f07a2ec9d504384259e86075cc28060bd83c68",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 150,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevaweaponstab.h",
+          "line": 62
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 36
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_ENCYCLOPEDIA_VEHICLES_TAB",
+      "line": 723,
+      "id": "f444ec04d718b7faf0dde55c6f90c93f101f438830db73f4a346093bb1d03c44",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 151,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevavehiclestab.h",
+          "line": 62
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 37
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_ENCYCLOPEDIA_BUILDINGS_TAB",
+      "line": 736,
+      "id": "04902e3f41c67305ac314e2e4e703e9e08c33bafa6cd84166a6284e8d29d7062",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 152,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevabuildingstab.h",
+          "line": 62
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 38
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_EVA_ENCYCLOPEDIA",
+      "line": 748,
+      "id": "8168cf1a6b484b2c9d0e3f49ecd0cc27d3245be09dbdc73d6afb4142a010a99e",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 153,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgevaencyclopedia.cpp",
+          "line": 83
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 39
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_MAIN_MULTIPLAY",
+      "line": 776,
+      "id": "b7c214663cbb56d8c4bc3f9e1fca35419e9a21c38683adc754130933d91b58f0",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 154,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 760
+        },
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 393
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 40
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_CS_SEL",
+      "line": 790,
+      "id": "52062a4aaefae05d357affe5464a225f563a036a236526f65db5f76ade051e7e",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 155,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 408
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 41
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_GAME_TYPE",
+      "line": 807,
+      "id": "bec878c990b943e467480472d30f79fa197b0728aeba1c5aa8ad1d34ce6fd836",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 156,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 42
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_SERVER_CONFIG",
+      "line": 837,
+      "id": "895e0e1806059a8412f3047a06d207977c304fd3fb1bd9a2a2efa867b432cbf1",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 157,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 43
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_START_GAME",
+      "line": 889,
+      "id": "9a9a88cbddd207b60e9226fa5c66051378fac371da5d4513b8db36aaa9d79348",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 158,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 44
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_JOIN_GAME",
+      "line": 902,
+      "id": "8ce6eedeb42de094c1849119a80e8524dd24baa44c872cb9535d6f4aef5ba2e6",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 159,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 492
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 45
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_WWOL_CS_SEL",
+      "line": 917,
+      "id": "b388bb3fc243e50f1cac716b05ef7be30459b7eb01dc28a09fae15c4e85311a4",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 163,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 425
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 47
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_CONNECTING",
+      "line": 932,
+      "id": "900b8c10333f6727e65c9dcc402819a066fd02c212ba70d0c91a727f3236f35c",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 160,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgMPConnect.cpp",
+          "line": 99
+        },
+        {
+          "source": "staging/commando/cnetwork.cpp",
+          "line": 356
+        },
+        {
+          "source": "staging/commando/gameoptionsevent.cpp",
+          "line": 94
+        },
+        {
+          "source": "staging/commando/gameoptionsevent.cpp",
+          "line": 205
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 46
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_OPTIONS",
+      "line": 940,
+      "id": "ac889b95ee38db23155c1e3d44f69b864cc62cd129d6b9486cd2e6a169507c71",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 166,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmultiplayoptions.cpp",
+          "line": 59
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 50
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_OPTIONS_CHARACTER",
+      "line": 976,
+      "id": "9cd101b7c24c24fa0996ad625d267c151bb9ed77bcf0db4651b24904d50b5cc3",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 167,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcharacteroptions.cpp",
+          "line": 58
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 51
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_OPTIONS_CHEATS",
+      "line": 995,
+      "id": "d76dae497a7cf62a1206673ad835a03f7b817f05864f1d72be6f100b1e2c229c",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 168,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcheatoptions.cpp",
+          "line": 48
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 52
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_OPTIONS_TECH",
+      "line": 1014,
+      "id": "19b102e1304f68bc5399e40ea21edd271a00aecf69ca1ab3bbbdeaae7c919206",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 169,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgtechoptions.cpp",
+          "line": 51
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 53
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_OPTIONS_MOVIES",
+      "line": 1025,
+      "id": "e7a30fdf042fd7389669b2c9b27a1eda95125953e8458a8fa1efbae8dd6bb781",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 170,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmovieoptions.cpp",
+          "line": 53
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 54
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_OPTIONS_PREVIEW",
+      "line": 1039,
+      "id": "6ee7e7436a356ef3bc05e8e7bad236445bea03a5e3dd4aeaa7a0a79483eecab4",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 171,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgpreviewoptions.cpp",
+          "line": 47
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 55
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_OPTIONS_CREDITS",
+      "line": 1053,
+      "id": "64631e8c5dd82f52f1ebe7a57f608bc74ffd6aedfcebec521449fd17c192d582",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 172,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcredits.cpp",
+          "line": 48
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 56
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_GAME_LIST",
+      "line": 1065,
+      "id": "23f6d17a61f3540c2f92b893a571f074ca7872df88930ac37fd4698c2b53b543",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 174,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmplangamelist.cpp",
+          "line": 89
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 58
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_HOST_GAME",
+      "line": 1086,
+      "id": "33fa0f86255767d86e44961efd8a8f18756eff960fc0b8ba20a64ed3dc84d2e5",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 175,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 59
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_HOST_OPTIONS",
+      "line": 1101,
+      "id": "6075e7c97b0763aa6189c73be7fad9be3f679fab71068b4c3ff34f250aa13982",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 176,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmplanhostoptions.cpp",
+          "line": 73
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 60
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_HOST_OPTIONS_BASIC_TAB",
+      "line": 1117,
+      "id": "8b95de0e77f0b8bf1dc10bc28eb1563418c009a52a8f5d9daf5473de011d68a4",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 177,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmplanhostoptions.cpp",
+          "line": 319
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 61
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_HOST_OPTIONS_ADVANCED_TAB",
+      "line": 1143,
+      "id": "55349faa8067ec7ae3ab2ff82f9f2cebee83f6e9653c798588c01219f441745d",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 178,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmplanhostoptions.cpp",
+          "line": 621
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 62
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_HOST_OPTIONS_VICTORY_TAB",
+      "line": 1171,
+      "id": "97753e7f810055179b41d9a80f9160ec4bc0d0972279163aeb861472679de1b7",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 179,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmplanhostoptions.cpp",
+          "line": 1595
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 63
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_HOST_OPTIONS_MAP_TAB",
+      "line": 1182,
+      "id": "ac50eb7728a1bef018bff43d3b338a79a35a7e72634f8e9060ac08f21dae0834",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 180,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmplanhostoptions.cpp",
+          "line": 1007
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 64
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_JOIN_PASSWORD",
+      "line": 1208,
+      "id": "d523294db239de8e2aef9103a37978d0d5dbaa88da437675db190567e0a8fe3e",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 181,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgPasswordPrompt.cpp",
+          "line": 93
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 65
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_INVALID_PASSWORD",
+      "line": 1221,
+      "id": "8b9c6229b502352129e78ad2a1c3d6dc27dfe8f7759375099e30890c394cb7df",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 182,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 66
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_INVALID_SERVER_CONFIG",
+      "line": 1230,
+      "id": "80bafb8bb58ecf842db64347a01a777df98e29475aa34b9339f8b5dd6c3d8948",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 183,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgserversaveload.cpp",
+          "line": 312
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 67
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_LAN_HOST_OPTIONS_CNC_SETTINGS",
+      "line": 1239,
+      "id": "e2d6d1984bddcacfebeb3a9d21f43affdd5c48181facea3de589a2f55dad2a4a",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 188,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmplanhostoptions.h",
+          "line": 310
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 69
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_MAIN",
+      "line": 1262,
+      "id": "a2bdd90048ff86ae79df42172ddbd04b45613cd79a004c1ad75f01faf9ca9238",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 191,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolmain.cpp",
+          "line": 67
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 72
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_BUDDIES",
+      "line": 1286,
+      "id": "0ac6f85a1617eeaf0e503f12063dd0ed9d9a6cc4ff211663bef414fbe4977876",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 194,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolbuddies.cpp",
+          "line": 96
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 74
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_QUICKMATCH_OPTIONS",
+      "line": 1320,
+      "id": "812c0fc56f1aee25bf070b6c556b515446378da1416c9b0f0da22e79ef4522d9",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 195,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolquickmatchoptions.cpp",
+          "line": 56
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 75
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_GAME_LIST",
+      "line": 1356,
+      "id": "a0659f9e8d09c8d0fb53708b2db056f9541f4dc2288e0d33d92ec328aa77447b",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 198,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolgamelist.cpp",
+          "line": 152
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 78
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_PAGE_BUDDY",
+      "line": 1398,
+      "id": "a28f7921fcd6f8a268e26ce3c4a0ee653f1bc0ed3cb56e164cb687e229244854",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 199,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolpagebuddy.cpp",
+          "line": 53
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 79
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_BUDDY_LIST_POPUP",
+      "line": 1417,
+      "id": "f1eb463dd437ee6c754471253b1b66fe293799edeac0f92cf40f7f2937912fba",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 200,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolbuddylistpopup.cpp",
+          "line": 51
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 80
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_PAGE_REPLY",
+      "line": 1429,
+      "id": "b899af4d8251441c98247f68a0cefd821aafebfc9f8b6cffc05f3837243844a0",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 201,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolpagereply.cpp",
+          "line": 127
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 81
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_ADD_BUDDY",
+      "line": 1448,
+      "id": "15199964df6046214739eba74f6621e7886f37b4c7f37db76fafb696dea18c47",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 202,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwoladdbuddy.cpp",
+          "line": 53
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 82
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_DELETE_BUDDY",
+      "line": 1461,
+      "id": "ccfe0a07335f19d59af2c7fe69f483d045ec732d7d8a56c323cf520ea59a5aaa",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 203,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwoldeletebuddy.cpp",
+          "line": 48
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 83
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_IGNORE_LIST",
+      "line": 1473,
+      "id": "3a536865d5ab60cd3a9464c93bede9aba8c283d3bbf2c3f6d5496df8c662f7d5",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 204,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolignorelist.cpp",
+          "line": 50
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 84
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_ADD_IGNORE_ENTRY",
+      "line": 1485,
+      "id": "2619331adb8f2584fa84ac8816309f7f593453496ddcf928fb7174a9d3e5e0e9",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 205,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwoladdignoreentry.cpp",
+          "line": 63
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 85
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_CHAT",
+      "line": 1498,
+      "id": "4a2f589e0c23b2bd7ee04423fabfa44c6cc80911aa0a2982f9a2d94e3173b57a",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 206,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolchat.cpp",
+          "line": 75
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 86
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_DEATH_OPTIONS",
+      "line": 1528,
+      "id": "107c5761a9cfcd3824aaa3c6abd19c00c0e9d159cf306d15037eeb6c828c6fbe",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 196,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 514
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 76
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_FAILED_OPTIONS",
+      "line": 1538,
+      "id": "b9513dbc1c42bfa42120c0eb3fe24f36dec845100df935367f5f6520baa76a48",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 197,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 533
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 77
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_WEBPAGE",
+      "line": 1549,
+      "id": "0e7ecc6600bdacb82c9d921dfa1a3c60dcc377730d8c34348603fe2fa218f8e1",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 207,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgWebPage.cpp",
+          "line": 124
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 87
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MESSAGEBOX_OK",
+      "line": 1555,
+      "id": "e04adbc2afe005f3d091359ce807eb5f8c7bfd8dc79f93b2e18afa9fa0d44776",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 210,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgMessageBox.cpp",
+          "line": 134
+        },
+        {
+          "source": "staging/commando/DlgMessageBox.cpp",
+          "line": 181
+        },
+        {
+          "source": "staging/commando/DlgRestart.cpp",
+          "line": 91
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 90
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MESSAGEBOX_YESNO",
+      "line": 1563,
+      "id": "5f0a3f4048cd08464f7d5f183845c705e94af18b8b9f462e6aecd8a91135eda0",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 209,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgMessageBox.cpp",
+          "line": 182
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 89
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_SAVE_GAME",
+      "line": 1572,
+      "id": "7f72d88283eef14ac0cd47bea22b18d878480bc096211b5af682270d3fd369a6",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 211,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgsavegame.h",
+          "line": 65
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 91
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_DELETE_IGNORE_ENTRY",
+      "line": 1591,
+      "id": "9d2d4354961a6e30ac9ea2a8073f12e72942092a2e300a13efa0a9c24f9844b4",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 212,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwoldeleteignoreentry.cpp",
+          "line": 48
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 92
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_INVITATION_REPLY",
+      "line": 1603,
+      "id": "0d8cbef973611739efd6596998a988e75d365abf01b2ed4d726bb40bfe36c61f",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 213,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolinvitation.cpp",
+          "line": 50
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 93
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_QUICKMATCH_CONNECT",
+      "line": 1614,
+      "id": "8a6bcca0dd6b0c5ba6c26649e3e2b8f44bfe54e4a0bd69cddc89f5c2fc683d39",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 214,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgQuickmatch.cpp",
+          "line": 113
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 94
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_WOL_WAIT",
+      "line": 1627,
+      "id": "918758ca6949929079b83e77954e62155a6237249b148ced6618dbdafebb764a",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 215,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgWOLWait.cpp",
+          "line": 193
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 95
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_CONTROL_SAVELOAD",
+      "line": 1635,
+      "id": "e8094794c2b13c2064826ceb75be9f19190fdf8867c2eed68ecd4f11740b35aa",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 216,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcontrolsaveload.cpp",
+          "line": 62
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 96
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_WOL_LOGON",
+      "line": 1656,
+      "id": "d264d692094448de10f87c4be4f81a46fd19ec8dc673c1f73f3aaf931748890d",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 218,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgWOLLogon.cpp",
+          "line": 108
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 97
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_WOL_SETTINGS",
+      "line": 1682,
+      "id": "a29dac5c0d7a68e8a5db2c62990f12d349db8c115b7865fd2875fe0ac1cfd76f",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 219,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgWOLSettings.cpp",
+          "line": 110
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 98
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CNC_PURCHASE_SCREEN",
+      "line": 1729,
+      "id": "a3e83f66f522fa7c08b4fdcb554a78aeff273221002e3535875d8d26cee94aed",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 220,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcncpurchasemenu.cpp",
+          "line": 98
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 99
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CNC_PURCHASE_MAIN_SCREEN",
+      "line": 1781,
+      "id": "ff5ec62b24b9009dd2f0661c2a93fae09a9cdca9d5dd815082fb9d6be87288a8",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 221,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcncpurchasemainmenu.cpp",
+          "line": 86
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 101
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_SIDEBAR_HELP_POPUP",
+      "line": 1822,
+      "id": "cb48ed158a1e648ebd8df497b0c293e6ae298fe934d6b22b5c43dfcb4309e29c",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 224,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgsidebarhelp.cpp",
+          "line": 48
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 103
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_AUTO_LOGIN_PROMPT",
+      "line": 1833,
+      "id": "6af4af75656cf19247dd0ce14b98100387e1ca60b3ab1ce92c031fb2c238bc9a",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 225,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolautologinprompt.cpp",
+          "line": 48
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 104
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_MOTD",
+      "line": 1845,
+      "id": "23c1e089e16adac28610726d1c7e93d96a50a549eb809fa1fa318f7e71705669",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 226,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwolmotd.cpp",
+          "line": 49
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 105
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_OPTIONS_INTERNET",
+      "line": 1856,
+      "id": "3953fda631f4a2e09a9ef252b453f563ee32ec2d2fdc08958db65f2b74bfafda",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 227,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlginternetoptions.cpp",
+          "line": 50
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 106
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_LOCALE_NAG",
+      "line": 1879,
+      "id": "734e10f3ddcbd7bedb2d8d800dc30d21c68168da59d4b04b7e37fe77a4e7033c",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 228,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpwollocalenag.cpp",
+          "line": 49
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 107
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_INGAME_CHAT",
+      "line": 1892,
+      "id": "eb2a875c11bfad5830d98b71461db198fdb66c750fb48dae247371eb5d9b8ac4",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 229,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpingamechat.cpp",
+          "line": 736
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 108
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CNC_PURCHASE_ACCESS_DENIED",
+      "line": 1898,
+      "id": "b3c56a8430c2a59cef714138ded456054b34b035bc931975b85b9d99fbd0ffae",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 230,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/renegadeplayerterminal.cpp",
+          "line": 134
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 109
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONFIG_AUDIO",
+      "line": 1906,
+      "id": "12200150392420c753db01913e36e1c485f5e51064ce8f6002018ff814dbdf0c",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 231,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgconfigaudiotab.cpp",
+          "line": 69
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 110
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONFIG_PERFORMANCE",
+      "line": 1951,
+      "id": "838ff950394919745fa79f3b3d727d65f6b18130ef7f8d03c1e106f2730b8eb1",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 232,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgconfigperformancetab.cpp",
+          "line": 142
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 111
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CONFIG_VIDEO",
+      "line": 2010,
+      "id": "aa41dc352a04b4c604f1f2d098f74ae2f70df44aefa43734c3f48ff898d08e0f",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 233,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgconfigvideotab.cpp",
+          "line": 61
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 112
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CDVERIFY",
+      "line": 2047,
+      "id": "1698f136d58179977ee4e5ccf4f0aa7779f4258e06df3656c046ba1aee36c2ab",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 1,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/cdverify.cpp",
+          "line": 63
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 5
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_EDIT_WHEELED_VEHICLE",
+      "line": 2057,
+      "id": "b94840f42aae2845e91f8e3ead86dea2fff7eafe05be5aa82800c16469270ade",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 234,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 1727
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 113
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_EDIT_TRACKED_VEHICLE",
+      "line": 2124,
+      "id": "343a5ca7de3ee79563e8f823a043f810fd0c87c90dec885890047f7e186878ca",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 235,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 1847
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 114
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_INGAME_TEAM_CHAT",
+      "line": 2175,
+      "id": "21440f3cd68e2bcba61173d4daf1c59dd083a136bc55c892f60b816e21663e84",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 237,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpingameteamchat.h",
+          "line": 57
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 116
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_WOL_DOWNLOAD",
+      "line": 2183,
+      "id": "f8d4743b277f53a06ad527d9afaab96e5aa6abe58e1bee048dac156f73bb32b9",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 238,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgDownload.cpp",
+          "line": 125
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 117
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CHAT_MODULE",
+      "line": 2195,
+      "id": "ee23fc4a8517011ca30aecd8f77e45ef65a5d31a43fbd6f325e7bd39de270501",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 236,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpingamechat.cpp",
+          "line": 68
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 115
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_SCORE_SCREEN",
+      "line": 2205,
+      "id": "1322ba7f25a1cf44ff35b70a1f7c7482711dbb33344e05812321ff6d596b0f05",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 239,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/resource.h",
+          "line": 118
+        },
+        {
+          "source": "staging/commando/scorescreen.cpp",
+          "line": 153
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_HELP_SCREEN",
+      "line": 2308,
+      "id": "4ef40509d552bf3c678257b9f32607c692b38398bb528e804fb0a3b43bff16f2",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 243,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlghelpscreen.cpp",
+          "line": 65
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 122
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CNC_TEAM_INFO",
+      "line": 2399,
+      "id": "78f8de77cd6af422ebe7465f75d5aa555b624c4d971dd1f7ac4b07d36bb85a4a",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 240,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcncteaminfo.cpp",
+          "line": 83
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 119
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CNC_BATTLE_INFO",
+      "line": 2430,
+      "id": "bc1425b0e94e9af7e1070b9a4366ea256d1918fd63e2ef9e25bd7dba210941be",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 242,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcncbattleinfo.cpp",
+          "line": 140
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 121
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_AUTO_RESTART_PROGRESS",
+      "line": 2493,
+      "id": "ee8e44e95ec669b40df1070a4a956dede09f05b89d21cdd176abc2c7ac880fe9",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 244,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgWOLAutoStart.cpp",
+          "line": 62
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 123
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_CNC_REFERENCE",
+      "line": 2503,
+      "id": "9ddd96ec50fde6be21f3379dc8a563cd50076b9fac1de60ab06bc552b2aa4ff4",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 245,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcncreference.cpp",
+          "line": 78
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 124
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_WOL_SLAVESERVER",
+      "line": 2558,
+      "id": "d8af423525dbf1bbeca93d44616a8d508d9b93ba61c1a3fdb006303bed3f43b7",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 247,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpslaveservers.cpp",
+          "line": 130
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 126
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_TEAM_SELECT",
+      "line": 2660,
+      "id": "7020a5371200e127d4948c495ecb7306d514316a477b1044f46c16190ec1dcfa",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 246,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgMPTeamSelect.cpp",
+          "line": 139
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 125
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CNC_WINSCREEN",
+      "line": 2699,
+      "id": "e28d138304514f5d4ac9bd6678a9d034ddcf812dcf791280e7cb4509c657dd05",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 248,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcncwinscreen.cpp",
+          "line": 89
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 127
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_CNC_SERVER_INFO",
+      "line": 2723,
+      "id": "c862abfe3278abdcfe9dd8e00985bb4e8134adcca39082faa2a7ea208160e0d4",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 249,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgcncserverinfo.cpp",
+          "line": 80
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 128
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_SERVER_SETTINGS_SAVELOAD",
+      "line": 2732,
+      "id": "7670021a6ede6fd05264160ff8682b105c03ce6722e451d51934700b542f1a1a",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 250,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgserversaveload.cpp",
+          "line": 65
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 129
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_OPTION_MAIN_MULTIPLAY",
+      "line": 2754,
+      "id": "aca64113951b8079c489bb8d2c26f46fd5932dd3b2f607416919b6844a2de91c",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 251,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.h",
+          "line": 301
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 130
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MP_CHANGE_LAN_NICKNAME",
+      "line": 2768,
+      "id": "635470c7d6d8d12daa038411b3177d61ea69be61f1f740184b0c10e6015618a9",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 252,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dlgmpchangelannickname.cpp",
+          "line": 63
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 131
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_GAMESPY_MAIN",
+      "line": 2779,
+      "id": "7a3b7ce140400ecfb81f44f43318c613ccfddb032bb87fbe9238b54d5a77b90b",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 253,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 411
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 132
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_GAMESPY_OPTIONS",
+      "line": 2796,
+      "id": "1598b87e68906488c43ff2dffa18d4369fdb01bee50e9df1497ae8229cab73bf",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 254,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 596
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 133
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_SPLASH1",
+      "line": 2819,
+      "id": "cebaa6fc772a6a7b2ac68056b60b47f567b574b2b10dc626834a766eb23890ee",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 255,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 149
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 135
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MENU_SPLASH2",
+      "line": 2829,
+      "id": "a7f86b90f9dd17dccee83ecb23abe35194c2c5389a13fac991300e5f0f62aa31",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 256,
+      "selected_by_full_port_generator": true,
+      "present_in_retained_templates": true,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 244
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 136
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    },
+    {
+      "name": "IDD_MULTIPLAY_CONNECTION_REFUSED",
+      "line": 2843,
+      "id": "c668015739e026c362e4c81dd98d7ccc6c41d46b9e7298dde6d35d60e15adf1a",
+      "source": "upstream/CnC_Renegade/Code/Commando/chat.rc",
+      "resource_id": 257,
+      "selected_by_full_port_generator": false,
+      "present_in_retained_templates": false,
+      "source_reference_candidates": [
+        {
+          "source": "staging/commando/DlgMPConnectionRefused.cpp",
+          "line": 85
+        },
+        {
+          "source": "staging/commando/resource.h",
+          "line": 137
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "source_and_generated_resource_metadata"
+    }
+  ]
+}

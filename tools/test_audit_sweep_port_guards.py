@@ -1,9 +1,19 @@
 import unittest
 
-from audit_sweep_port_guards import apply_reviews, directives, mask_noncode, patch_guards, stage_patch_selection, wrapper_references
+from audit_sweep_port_guards import apply_reviews, directives, macro_definitions, mask_noncode, patch_guards, stage_patch_selection, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_macro_function_body_is_not_lost_from_denominator(self):
+        text = '#define STUB(name) \\\n+          int name() { return 0; }\n#define CONSTANT (0)\n/* #define HIDDEN() {} */'
+        rows = macro_definitions(text)
+        self.assertEqual([r['name'] for r in rows], ['STUB', 'CONSTANT'])
+        self.assertTrue(rows[0]['function_like'])
+        self.assertTrue(rows[0]['contains_return_token'])
+        self.assertTrue(rows[0]['contains_brace'])
+        self.assertEqual(rows[0]['end_line'], 2)
+        self.assertFalse(rows[1]['function_like'])
+
     def test_changed_initializer_invalidates_definition_review(self):
         rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'X()',
                  'body_sha256': 'same', 'definition_sha256': 'new', 'status': 'unknown'}]

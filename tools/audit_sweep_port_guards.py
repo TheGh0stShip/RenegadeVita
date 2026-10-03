@@ -145,6 +145,28 @@ def wrapper_references(text):
             for match in re.finditer(r'--wrap(?:=|,)([A-Za-z_][A-Za-z_0-9]*)', text)]
 
 
+def macro_definitions(text):
+    """Enumerate macros too: syntax parsers cannot see expanded function bodies."""
+    lines = text.splitlines()
+    masked = mask_noncode(text).splitlines()
+    result = []
+    i = 0
+    while i < len(lines):
+        first = i
+        match = re.match(r'\s*#\s*define\s+([A-Za-z_][A-Za-z_0-9]*)(.*)', masked[i])
+        while lines[i].rstrip().endswith('\\') and i + 1 < len(lines):
+            i += 1
+        if match:
+            code = '\n'.join(masked[first:i + 1])
+            result.append({'line': first + 1, 'end_line': i + 1,
+                           'name': match[1], 'function_like': match[2].startswith('('),
+                           'contains_return_token': bool(re.search(r'\breturn\b', code)),
+                           'contains_brace': '{' in code or '}' in code,
+                           'directive': '\n'.join(lines[first:i + 1])})
+        i += 1
+    return result
+
+
 def audit(root=ROOT, include_functions=False):
     stage = root / 'tools/stage_sources.sh'
     selection = stage_patch_selection(stage.read_text())
@@ -166,7 +188,8 @@ def audit(root=ROOT, include_functions=False):
                          'status': 'unknown', 'evidence_class': 'source_patch', **row})
     for directory in ('port', 'staging'):
         for path in sorted((root / directory).rglob('*')):
-            if not path.is_file() or path.suffix.lower() not in ('.c', '.cpp', '.h', '.hpp', '.inl'):
+            if not path.is_file() or path.suffix.lower() not in (
+                    '.c', '.cc', '.cpp', '.cxx', '.h', '.hh', '.hpp', '.hxx', '.inl', '.inc', '.ipp'):
                 continue
             relative = path.relative_to(root).as_posix()
             text = path.read_text(errors='replace')
@@ -176,6 +199,10 @@ def audit(root=ROOT, include_functions=False):
                              'line': first + 1, 'end_line': last + 1,
                              'directive': value, 'status': 'unknown',
                              'evidence_class': 'current_source'})
+            if directory == 'port':
+                for row in macro_definitions(text):
+                    rows.append({'kind': 'port_macro_definition', 'file': relative,
+                                 'status': 'unknown', 'evidence_class': 'current_source', **row})
             if directory == 'port' and include_functions:
                 inventory = function_inventory(text, cpp_parser)
                 function_files.append({'file': relative,
@@ -190,6 +217,7 @@ def audit(root=ROOT, include_functions=False):
                                  'status': 'unknown', 'evidence_class': 'source_syntax', **row})
     build_files = [root / 'CMakeLists.txt', root / 'tools/host_a30_definitions/CMakeLists.txt']
     build_files += sorted((root / 'cmake').rglob('*.cmake'))
+    build_files += sorted((root / 'tools').glob('*.sh'))
     for path in build_files:
         relative = path.relative_to(root).as_posix()
         inputs[relative] = digest(path)
@@ -224,7 +252,7 @@ def audit(root=ROOT, include_functions=False):
                 'Classify current guards; conditions have not been evaluated for a build profile.',
                 'Match patch history to final staged source; hunk lines are historical coordinates.',
                 'Patch hunks can begin inside omitted lexical context; current-source guards are separate evidence.',
-                'Macro-generated conditions/functions and non-CMake link flags need denominators.',
+                'Macro expansion and generated source outside the scanned trees remain unverified; shell wrap references are retained.',
                 'Literal stage references do not prove selected patches applied successfully.',
                 'Source selection does not prove compilation, linkage, behavior or pixels.']}
 

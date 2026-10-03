@@ -153,3 +153,30 @@ and diff checks pass; 32 publication guards and 24-document validation pass.
 
 No C++ build, package, installation, launch, device action or retail/save
 modification occurred. All native mission/runtime evidence gates remain open.
+# HUD help, objective and map ownership follow-up — 2026-10-03
+
+Original scriptcommands Set_HUD_Help_Text clears on ID0 or translates the
+requested ID and stores text/color through HUDInfo. The setter marks the text
+dirty. Original HUD rendering rebuilds the sentence when dirty, displays for
+two frame-time seconds, then fades for two frame-time seconds before clearing.
+The timer decrements in HUD_Help_Text_Render, rather than an independent
+wall-clock task. Hidden HUD or suppressed Combat rendering therefore cannot be
+treated as a rendered/expired instruction merely because its script ran.
+
+CombatGameMode renders Combat only with an active mode, client role, valid
+camera and inactive menu. CombatManager then invokes original HUDClass::Render
+inside the existing native HUD presentation scope. HUD rendering requires an
+enabled HUD and a living, non-destroyed star; help, objective and radar rendering
+share this gate. The native pause loop suspends Combat and renders original
+menu modes. No replacement mission HUD owner was found in this inspected path.
+This traces source calls only; it does not prove pixels, glyphs or prompt timing.
+
+Clear_Map_Cell, world-position, region and pixel-position variants delegate to
+their original MapMgr cloud operations and call HUDClass::Add_Map_Reveal.
+Add_Objective and radar-blip setters delegate to ObjectiveManager. Existing
+UTF16 patches replace empty wide literals without changing the help dispatch.
+Map cloud persistence, live objective selection, native coordinate/glyph
+rendering and all tutorial instructions remain separate verification needs.
+Source identities are retained privately in
+`build/mission-hud-owner-flow-20261003.json`. No game build, launch or retail
+mutation occurred.

@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Mission HUD help and map ownership — 2026-10-03
+
+Completed: original command→HUDInfo→sentence rendering, objective/radar owners
+and map cloud/reveal notifications traced through native presentation scope.
+Evidence:hashed source-owner receipt; help duration advances during HUD render,
+so script logs do not establish visible instructions. Pixel/timing and live
+objective/map persistence remain open. No source behavior change.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Primary actor delayed damage callbacks — 2026-10-03
 
 Completed: M13 helicopter23-second observer timer and M01 hovercraft5–8-second

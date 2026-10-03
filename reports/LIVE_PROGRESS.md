@@ -1,5 +1,25 @@
 # Live engineering progress
 
+## Clean CI and S1 inventory foundation — 2026-10-03
+
+Returned canonical evidence: A3.5-dev209 passes ARM/package identity, retail
+exclusion, manifests and diagnostics checks. Vita3K installed and verified SELF
+56ae95dda1221d75563c0272eeb597905b0fc547a3713266cf580bf670ce0cb9;
+no emulator launch or physical deployment occurred. Build gates pass; native
+mission/runtime acceptance remains 0/10.
+
+Completed: clean-checkout CI 37156208052 passed ARM compile/link, 60 ASan/UBSan
+cases, five TSan cases and 793 Python tests. All 88 returned artifacts are
+retained with hashes. S1 tooling enumerates 3,531 records: three reviewed stubs,
+one replaced capability boundary and 3,527 unknown records. Twenty-four parser
+tests pass; row totals and unique source locations reconcile. Macro definitions,
+native guards, branch context and review identity are retained.
+Evidence: [compile ledger](COMPILE_CLOSURE.md), [partial S1 ledger](PORT_GUARD_SWEEP.md)
+and its generated JSON. S1 is not complete; owner/caller/mode classification and
+remaining coverage risks are explicit. Canonical build remains live.
+Next: canonical packaging and install-only identity, then finish S1 and S2–S8.
+Native acceptance remains 0/10; no emulator launch or physical-device mutation.
+
 ## Prewarmed retail validation and build prerequisites — 2026-10-03
 
 Completed: fast ARM link/artifact checks and all 473 focused contracts pass.

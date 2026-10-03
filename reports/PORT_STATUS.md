@@ -4,10 +4,10 @@
 31 host binaries,60 ASan/UBSan invocations,5 TSan probes and793 Python tests
 pass. Fast ARM links with652 source/object hash pairs;17 current state fields
 are reconciled. Shared trim overlap is repaired and rebuilt; M13 damage smoke
-and prewarmed smoke pass two ASan/LSan cycles. Host CI passes; ARM CI now prepares
-Clang and project-local HTTPS dependencies. Canonical validation with verified
-WSL retail data and clean ARM CI are running, and native acceptance
-remain open. See [compile closure](COMPILE_CLOSURE.md).
+and prewarmed smoke pass two ASan/LSan cycles. Clean CI 37156208052 passes host
+and ARM. Canonical A3.5-dev209 passes package validation and Vita3K install-only
+SELF verification. Native acceptance remains open; no launch or physical
+deployment occurred. See [compile closure](COMPILE_CLOSURE.md).
 
 2026-10-03 shared discovery regression:218 source/Python checks across16 modules
 pass after global general/HUD settings and default-loiter roots, factory-scoped

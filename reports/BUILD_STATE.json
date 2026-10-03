@@ -1,6 +1,10 @@
 {
   "compile_closure_20261003": {
-    "state": "LOCAL_HOST_AND_ARM_PASS_M13_PREWARM_PASS_CANONICAL_AND_CLEAN_CI_RUNNING",
+    "state": "HOST_ARM_CANONICAL_PACKAGE_AND_CLEAN_CI_PASS_NATIVE_RUNTIME_UNVERIFIED",
+    "canonical_candidate": "A3.5-dev209",
+    "canonical_package_passed": true,
+    "vita3k_install": "INSTALLED_NOT_LAUNCHED_SELF_HASH_VERIFIED",
+    "clean_ci_run": 37156208052,
     "registered_staging_patches": 307,
     "staging_receipt_regenerated": true,
     "host_compilation_passed": true,

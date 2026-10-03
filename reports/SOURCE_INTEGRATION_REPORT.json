@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev205",
+  "milestone": "A3.5-dev209",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 533,
+  "original_source_files_compiled": 572,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -192,15 +192,50 @@
     "Code/Commando/teammanager.cpp",
     "Code/Commando/textdisplay.cpp",
     "Code/Commando/winevent.cpp",
+    "Code/Scripts/DPrint.cpp",
+    "Code/Scripts/DrMobius.cpp",
     "Code/Scripts/Mission00.cpp",
     "Code/Scripts/Mission01.cpp",
+    "Code/Scripts/Mission02.cpp",
+    "Code/Scripts/Mission03.cpp",
+    "Code/Scripts/Mission04.cpp",
+    "Code/Scripts/Mission05.cpp",
+    "Code/Scripts/Mission06.cpp",
+    "Code/Scripts/Mission07.cpp",
+    "Code/Scripts/Mission09.cpp",
+    "Code/Scripts/Mission10.cpp",
+    "Code/Scripts/Mission11.cpp",
+    "Code/Scripts/MissionDemo.cpp",
     "Code/Scripts/MissionX0.cpp",
     "Code/Scripts/ScriptFactory.cpp",
     "Code/Scripts/ScriptRegistrar.cpp",
+    "Code/Scripts/Test_BMG.cpp",
     "Code/Scripts/Test_Cinematic.cpp",
+    "Code/Scripts/Test_DAK.cpp",
+    "Code/Scripts/Test_DAY.cpp",
     "Code/Scripts/Test_DLS.cpp",
+    "Code/Scripts/Test_DME.cpp",
+    "Code/Scripts/Test_GTH.cpp",
+    "Code/Scripts/Test_JDG_EVA.cpp",
+    "Code/Scripts/Test_PDS.cpp",
+    "Code/Scripts/Test_RAD.cpp",
+    "Code/Scripts/Test_RMV.cpp",
+    "Code/Scripts/Test_RMV_Toolkit.cpp",
+    "Code/Scripts/Toolkit.cpp",
+    "Code/Scripts/Toolkit_Actions.cpp",
+    "Code/Scripts/Toolkit_Animations.cpp",
+    "Code/Scripts/Toolkit_Broadcaster.cpp",
+    "Code/Scripts/Toolkit_Explosions.cpp",
+    "Code/Scripts/Toolkit_Objectives.cpp",
+    "Code/Scripts/Toolkit_Objects.cpp",
     "Code/Scripts/Toolkit_Powerup.cpp",
+    "Code/Scripts/Toolkit_Siege.cpp",
+    "Code/Scripts/Toolkit_Sounds.cpp",
+    "Code/Scripts/Toolkit_Spawners.cpp",
+    "Code/Scripts/Toolkit_Triggers.cpp",
+    "Code/Scripts/mission08.cpp",
     "Code/Scripts/scripts.cpp",
+    "Code/Scripts/strtrim.cpp",
     "Code/WWAudio/AudibleSound.cpp",
     "Code/WWAudio/AudioEvents.cpp",
     "Code/WWAudio/AudioSaveLoad.cpp",
@@ -319,12 +354,16 @@
     "Code/ww3d2/renderobjectrecycler.cpp",
     "Code/ww3d2/rendobj.cpp",
     "Code/ww3d2/rinfo.cpp",
+    "Code/ww3d2/ringobj.cpp",
     "Code/ww3d2/scene.cpp",
     "Code/ww3d2/segline.cpp",
     "Code/ww3d2/seglinerenderer.cpp",
     "Code/ww3d2/shader.cpp",
     "Code/ww3d2/shattersystem.cpp",
     "Code/ww3d2/snappts.cpp",
+    "Code/ww3d2/sortingrenderer.cpp",
+    "Code/ww3d2/soundrobj.cpp",
+    "Code/ww3d2/sphereobj.cpp",
     "Code/ww3d2/texproject.cpp",
     "Code/ww3d2/texture.cpp",
     "Code/ww3d2/vertmaterial.cpp",
@@ -545,10 +584,11 @@
   "staged_original_owner_paths": [
     "staging/commando/loadingscreen.cpp"
   ],
-  "vita_platform_renderer_validation_files": 34,
+  "vita_platform_renderer_validation_files": 36,
   "vita_translation_units": [
     "port/developer/a31_capture_telemetry.cpp",
     "port/developer/a35_campaign_flight_recorder.cpp",
+    "port/developer/a35_script_lookup_telemetry.cpp",
     "port/audio/vita/renegade_miles_provider.cpp",
     "port/audio/vita/renegade_wave_decoder.cpp",
     "port/filesystem/renegade_cache_health.cpp",
@@ -573,6 +613,7 @@
     "port/platform/vita/renegade_vita_text_entry.cpp",
     "port/platform/vita/a30_vita_runtime.cpp",
     "port/platform/vita/a31_vita_runtime.cpp",
+    "port/platform/vita/a35_level_load_status.cpp",
     "port/platform/a31_gameplay_boundary.cpp",
     "port/platform/a31_miscutil_boundary.cpp",
     "port/platform/a31_network_options_boundary.cpp",
@@ -592,7 +633,7 @@
     "port/platform/a4_binkmovie_boundary.cpp"
   ],
   "sdk_framebuffer_helper_files": 1,
-  "compatibility_headers": 58,
+  "compatibility_headers": 61,
   "compatibility_header_paths": [
     "port/compatibility/include/DialogControl.h",
     "port/compatibility/include/GameMode.h",
@@ -640,7 +681,10 @@
     "port/compatibility/include/mutex.h",
     "port/compatibility/include/new.h",
     "port/compatibility/include/osdep.h",
+    "port/compatibility/include/renegade_campaign_script_defaults.h",
     "port/compatibility/include/renegade_m01_script_defaults.h",
+    "port/compatibility/include/renegade_m08_script_defaults.h",
+    "port/compatibility/include/renegade_m13_area2_script_defaults.h",
     "port/compatibility/include/renegade_optional_network_modes.h",
     "port/compatibility/include/renegade_script_call_defaults.h",
     "port/compatibility/include/renegade_server_config.h",
@@ -653,8 +697,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 268,
-  "mechanically_patched_upstream_files": 356,
+  "patch_count": 307,
+  "mechanically_patched_upstream_files": 391,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -696,6 +740,7 @@
     "Code/Combat/messagewindow.cpp",
     "Code/Combat/objectives.cpp",
     "Code/Combat/objectivesviewer.cpp",
+    "Code/Combat/pathaction.cpp",
     "Code/Combat/persistentgameobjobserver.cpp",
     "Code/Combat/physicalgameobj.cpp",
     "Code/Combat/physicalgameobj.h",
@@ -707,6 +752,7 @@
     "Code/Combat/reflist.h",
     "Code/Combat/sakurabossgameobj.cpp",
     "Code/Combat/savegame.cpp",
+    "Code/Combat/savegame.h",
     "Code/Combat/scriptablegameobj.cpp",
     "Code/Combat/scriptablegameobj.h",
     "Code/Combat/scriptcommands.cpp",
@@ -727,6 +773,7 @@
     "Code/Combat/transition.cpp",
     "Code/Combat/vehicle.cpp",
     "Code/Combat/vehicle.h",
+    "Code/Combat/vehicledriver.cpp",
     "Code/Combat/weaponbag.cpp",
     "Code/Combat/weaponbag.h",
     "Code/Combat/weaponmanager.cpp",
@@ -807,18 +854,29 @@
     "Code/Commando/textdisplay.h",
     "Code/Commando/vendor.cpp",
     "Code/Commando/winevent.cpp",
+    "Code/WWAudio/AudibleSound.cpp",
     "Code/WWAudio/AudibleSound.h",
     "Code/WWAudio/AudioEvents.h",
     "Code/WWAudio/AudioSaveLoad.cpp",
+    "Code/WWAudio/Listener.cpp",
+    "Code/WWAudio/LogicalSound.cpp",
     "Code/WWAudio/PriorityVector.h",
+    "Code/WWAudio/Sound3D.cpp",
     "Code/WWAudio/SoundBuffer.cpp",
     "Code/WWAudio/SoundBuffer.h",
+    "Code/WWAudio/SoundScene.cpp",
     "Code/WWAudio/SoundScene.h",
     "Code/WWAudio/SoundSceneObj.h",
     "Code/WWAudio/Threads.cpp",
     "Code/WWAudio/WWAudio.cpp",
     "Code/WWAudio/WWAudio.h",
+    "Code/WWAudio/sound2dhandle.cpp",
+    "Code/WWAudio/sound2dhandle.h",
+    "Code/WWAudio/sound3dhandle.cpp",
+    "Code/WWAudio/sound3dhandle.h",
+    "Code/WWAudio/soundhandle.h",
     "Code/WWAudio/soundstreamhandle.cpp",
+    "Code/WWAudio/soundstreamhandle.h",
     "Code/WWMath/aabox.h",
     "Code/WWMath/gridcull.cpp",
     "Code/WWMath/gridcull.h",
@@ -860,6 +918,7 @@
     "Code/ww3d2/part_emt.h",
     "Code/ww3d2/part_ldr.cpp",
     "Code/ww3d2/pointgr.cpp",
+    "Code/ww3d2/prim_anim.h",
     "Code/ww3d2/rddesc.h",
     "Code/ww3d2/render2d.cpp",
     "Code/ww3d2/render2dsentence.cpp",
@@ -867,6 +926,7 @@
     "Code/ww3d2/rendobj.h",
     "Code/ww3d2/scene.cpp",
     "Code/ww3d2/segline.h",
+    "Code/ww3d2/sphereobj.cpp",
     "Code/ww3d2/texture.cpp",
     "Code/ww3d2/texture.h",
     "Code/ww3d2/textureloader.h",
@@ -906,6 +966,7 @@
     "Code/wwlib/refcount.h",
     "Code/wwlib/simplevec.h",
     "Code/wwlib/thread.cpp",
+    "Code/wwlib/thread.h",
     "Code/wwlib/trim.cpp",
     "Code/wwlib/vector.h",
     "Code/wwlib/widestring.cpp",
@@ -922,10 +983,12 @@
     "Code/wwphys/Path.cpp",
     "Code/wwphys/Pathfind.cpp",
     "Code/wwphys/PathfindPortal.cpp",
+    "Code/wwphys/animcollisionmanager.cpp",
     "Code/wwphys/camerashakesystem.h",
     "Code/wwphys/dynamicshadowmanager.cpp",
     "Code/wwphys/dyntexproject.cpp",
     "Code/wwphys/dyntexproject.h",
+    "Code/wwphys/humanphys.cpp",
     "Code/wwphys/motorvehicle.cpp",
     "Code/wwphys/movephys.cpp",
     "Code/wwphys/pathmgr.cpp",
@@ -1003,13 +1066,29 @@
     "patch-target/dev168-m13-loader-summary.patch/scripts/Test_Cinematic.cpp",
     "patch-target/dev168-m13-loader-summary.patch/ww3d2/agg_def.cpp",
     "patch-target/dev168-m13-loader-summary.patch/ww3d2/assetmgr.cpp",
+    "patch-target/scripts-a35-cinematic-camera-save.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-cinematic-command-timing.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-cinematic-control-lifetime.patch/Test_Cinematic.cpp",
+    "patch-target/scripts-a35-cinematic-filename-diagnostics.patch/Test_Cinematic.cpp",
+    "patch-target/scripts-a35-cinematic-primary-id-buffer.patch/Test_Cinematic.cpp",
+    "patch-target/scripts-a35-cinematic-time-budget-only.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-m01-duncan-beacon-handoff.patch/Mission01.cpp",
     "patch-target/scripts-a35-m13-slot19-phases.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp",
+    "patch-target/scripts-a35-trim-overlap.patch/strtrim.cpp",
+    "patch-target/scripts-a35-vector-parameter-initialization.patch/scripts.cpp",
     "patch-target/scripts-a37-mx0-default-arguments.patch/MissionX0.cpp",
     "patch-target/scripts-a45-m13-intro-camera-trace.patch/Test_Cinematic.cpp",
+    "patch-target/ww3d-a35-decal-release-range.patch/decalmsh.cpp",
+    "patch-target/ww3d-a35-original-dazzle-lifecycle.patch/dazzle.cpp",
+    "patch-target/ww3d-a35-original-dazzle-lifecycle.patch/ww3d.cpp",
+    "patch-target/ww3d-a35-original-decal-submission.patch/decalmsh.cpp",
+    "patch-target/ww3d-a35-original-decal-submission.patch/mesh.cpp",
+    "patch-target/ww3d-a35-original-decal-submission.patch/ww3d.cpp",
+    "patch-target/ww3d-a35-original-sorting-lifecycle.patch/ww3d.cpp",
+    "patch-target/ww3d-a35-original-sorting-port.patch/sortingrenderer.cpp",
+    "patch-target/ww3d-a35-raw-animation-frame-floor.patch/hrawanim.cpp",
+    "patch-target/ww3d-a35-texture-worker-cancellation.patch/textureloader.cpp",
     "patch-target/wwui-a35-chat-utf16-boundary.patch/commando/dlgmpingamechat.cpp",
     "patch-target/wwui-a35-chat-utf16-boundary.patch/wwui/editctrl.cpp"
   ],
@@ -1128,7 +1207,7 @@
     {
       "path": "port/patches/wwlib-a31-trim-overlap.patch",
       "stage_directory": "wwlib",
-      "sha256": "804fdec5c02e7130ef15db9f0427d4f2ef22eaffe1612ca8be21930807934dd4",
+      "sha256": "befb354aca2b1bd293760ee5f7eb0bd0ff94a4e371062a8d66360f76da439875",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "trim.cpp"
@@ -1204,6 +1283,15 @@
       "path": "port/patches/wwmath-a35-valid-float-layout.patch",
       "stage_directory": "wwmath",
       "sha256": "b3d84d96a6292ee60f2b405a8c04990598133349ebc8e06478f2266dc179878c",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "wwmath.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwmath-a35-portable-int-conversion.patch",
+      "stage_directory": "wwmath",
+      "sha256": "1c1368cebb22dee67eaef0ff03bb9e0448b6ee26d7a3bcd057d13220d5a88266",
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "wwmath.h"
@@ -2396,6 +2484,107 @@
       ]
     },
     {
+      "path": "port/patches/wwaudio-a35-user-data-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "b37aef4af414d69cfa7f28c011b35ea451dc0d93f45af1921b2c912ddc99ddec",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Listener.cpp",
+        "AudibleSound.cpp",
+        "Sound3D.cpp",
+        "soundhandle.h",
+        "sound2dhandle.h",
+        "sound3dhandle.h",
+        "soundstreamhandle.h",
+        "sound2dhandle.cpp",
+        "sound3dhandle.cpp",
+        "soundstreamhandle.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-event-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "a0899c101b2fd4025d0eaa31565b6faf38ee639e459f04e654e7ea93f3d6878e",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "SoundSceneObj.h",
+        "SoundScene.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-file-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "5e1853330b82a464112b77c39f1b74306b1797431767351cb81e2ee4d2c7fef5",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "WWAudio.h",
+        "WWAudio.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-release-lock-order.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "2b6c443118d7a610b546baf9719d31fdf7a7746480d877c1013159e3c00cf1a8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Threads.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-sample-pointer-width.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "3b66f8c33438e4cde886be925fd33ddabed06c783203d396a6a9cd46b39b7057",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AudibleSound.h",
+        "soundhandle.h",
+        "sound2dhandle.h",
+        "sound3dhandle.h",
+        "soundstreamhandle.h",
+        "sound2dhandle.cpp",
+        "sound3dhandle.cpp",
+        "soundstreamhandle.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-logical-removal-lifetime.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "73d9907c89e0e794d07483c6dd462c53340a544c6b9b5ced820e4ded27122047",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "LogicalSound.cpp",
+        "SoundScene.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-audible-removal-lifetime.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "7a31847d43eb1ebc2e4eaade56e2a6ff6a624abfb08027aac1bc3f0088d11ae7",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "AudibleSound.cpp",
+        "Sound3D.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-completed-sound-uniqueness.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "2bb8df0d88a35fceb65a26f653e345f8de39a7c0a5a4e8def68b95f7cf000da5",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "WWAudio.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-flush-enqueue-order.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "b4a157a340fae36337718099db8cb5dca6b19adb5d693457ccc657111620151a",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Threads.cpp"
+      ]
+    },
+    {
       "path": "port/patches/wwnet-a30-gcc15.patch",
       "stage_directory": "wwnet",
       "sha256": "f413890b7a2d8dab753ec8ad37352753cd04ba5a42d7fa5d62dbe16abe69d338",
@@ -3001,6 +3190,78 @@
       "upstream_targets": [
         "trackedvehicle.cpp",
         "trackedvehicle.h"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a35-trackedvehicle-repeat-render.patch",
+      "stage_directory": "wwphys",
+      "sha256": "9e617a99dd347a3a586aa17c1dd2d5b7839455d75e71fe1a4e1db1cba33e00fd",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "trackedvehicle.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a35-human-jump-finite.patch",
+      "stage_directory": "wwphys",
+      "sha256": "3eecd0e3cd6348fb4dfce9de8570972bd4af896c32e0ca4a7579278db1d8e1cf",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "humanphys.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a35-zero-length-path.patch",
+      "stage_directory": "wwphys",
+      "sha256": "514102812e7086d25b06b67fd2910287359cd5b55e40e4e49b216bcf0ffe361f",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Path.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwphys-a35-prev-animation-load-ref.patch",
+      "stage_directory": "wwphys",
+      "sha256": "3afab42f854873011c3be235b489d04bdfe66911123fd6874b78f8fb8a8e6f15",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "animcollisionmanager.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-raw-animation-frame-floor.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "ccc4e8917d1340b674ba0867b6e8189bdace1f92ba24aa7da49a823b49510615",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "hrawanim.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-pathaction-borrowed-remap.patch",
+      "stage_directory": "combat",
+      "sha256": "d8cc36cb76ede248a09d5b5137df2b348fa7f929c2320970a18fc03e4b4e540f",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "pathaction.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-vehicledriver-borrowed-remap.patch",
+      "stage_directory": "combat",
+      "sha256": "34791eb540f8095c04ba44ee18fba3b1539691020ed8f6205baf99bdcee83b11",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "vehicledriver.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-decal-release-range.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "aa3c77599d06681131243f862c56bffd3dc0aa972445ce6c6a72c87864802743",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "decalmsh.cpp"
       ]
     },
     {
@@ -3686,6 +3947,204 @@
         "sakurabossgameobj.cpp",
         "statemachine.h"
       ]
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-time-budget-only.patch",
+      "stage_directory": "scripts",
+      "sha256": "dc904cab25938f1bc384e368e1f58adbabe45f1a530d2922ff5c095a7a1de7c7",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Test_Cinematic.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-camera-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "4e86faf55954d4c67d77a6c96a3e51baadfd8a1391ea7da2592841d36a6c19c8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Test_Cinematic.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-sorting-port.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "18dc2f9c451d9eafcfdace1a9a9b95bb53125e0b033fa7980fd2e076c8b136cc",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "sortingrenderer.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-sorting-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "eea4162324e51c7261780c9a0f77159aba5d413af6a926706050b029f94c1119",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-script-lookup-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "81adef8442e9eb0f63023522023f9405490235a4ebf66307905aa5d3cb7081c8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scriptcommands.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwlib-a35-thread-completion-acquire.patch",
+      "stage_directory": "wwlib",
+      "sha256": "d9a903ec34276a3da0251be96caacbbbfa79649417ea934dbfa769dcbd5b7aa6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "thread.cpp",
+        "thread.h"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-texture-worker-cancellation.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "a6d3fb9861e4ef30b7111516983584836d2cc953e04c1d1e6d3a38f4a8e6a086",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "textureloader.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/wwaudio-a35-bounded-3d-sample.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "2d29425b40b5c897bbc2c70dd6b83e2cee324a5657cbc65671ef7f663f6cadb8",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "sound3dhandle.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-conversation-transition-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "a9d6b7c74ea2c6c4803bd158bec845b8ab6acd7b97fb5697be28e0816d74a1d1",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "activeconversation.cpp",
+        "activeconversation.h"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-vector-parameter-initialization.patch",
+      "stage_directory": "scripts",
+      "sha256": "fe9cb8e07ca64d74cbfd8da81dd88742a067ba09bc600c0ade4a88c86f9ab33e",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scripts.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-observer-timer-miss-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "cc12a3ec1f994c172165a54df05eca9a3065e772127670a484832114952ff536",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scriptablegameobj.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-action-observer-miss-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "a353bc91eccc0d789dd13d01ce6a852ddb02d34bbf8435bc8f2d2e343c3a31d6",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "action.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-required-level-load-failure.patch",
+      "stage_directory": "combat",
+      "sha256": "b92add2f3139c92634345f8b27ac75b194023acae09a3fbf30724d53e09c80ea",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "savegame.cpp",
+        "savegame.h"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-filename-diagnostics.patch",
+      "stage_directory": "scripts",
+      "sha256": "2c26a16c461bca615951961ef94cdf2a5be184842bf75996ac569bae927b3481",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Test_Cinematic.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/combat-a35-logical-stimulus-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "ff3e4a83a8b5ba89b662ad84cabfcacd011ac68be90bf0de3f8be1bc78d908d1",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scriptcommands.cpp",
+        "smartgameobj.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-primary-id-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "0aa0532dd3b9ffe79c78870e51f881e40a1fd6f1c66324cc0ff5c94f303837dc",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Test_Cinematic.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dazzle.cpp",
+        "ww3d.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-decal-submission.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "aea7db40c16a9e86ad00e3125d675b3ff43022103b09847062fe2784cf763102",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ww3d.cpp",
+        "decalmsh.cpp",
+        "mesh.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a37-prim-anim-sphere-gcc15.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "5c31179abe21e31fe2ed953a340b1b59beb741ddef0bf06b5dcccb0819c52c76",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "prim_anim.h",
+        "sphereobj.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/commando-a35-options-staging-closure.patch",
+      "stage_directory": "commando",
+      "sha256": "7f8d5b6d947fd7f354ada6c4f6524d58edb5cf044a965416bcc1745ceeb5191c",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dialogtests.cpp",
+        "dialogtests.h"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-trim-overlap.patch",
+      "stage_directory": "scripts",
+      "sha256": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "strtrim.cpp"
+      ]
     }
   ],
   "upstream_files_modified_in_place": 0,
@@ -3742,7 +4201,7 @@
     },
     "ww3d2": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 76,
+      "compiled": 80,
       "total": 105
     },
     "Combat": {
@@ -3756,8 +4215,8 @@
       "total": 213
     },
     "Scripts": {
-      "status": "native-static-m00-provider-with-direct-dependencies",
-      "compiled": 9,
+      "status": "native-static-original-dsp-inventory",
+      "compiled": 44,
       "total": 54
     },
     "WWAudio": {

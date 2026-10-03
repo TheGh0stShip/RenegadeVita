@@ -15,8 +15,11 @@
   "script_project_units": 45,
   "script_default_missing_bridges": 0,
   "script_invalid_active_arities": 0,
-  "canonical_state": "RUNNING_WITH_VERIFIED_WSL_RETAIL_ROOT",
-  "remote_ci_state": "HOST_PASS_ARM_HTTPS_PREREQUISITE_CORRECTED_CLEAN_RETRY_RUNNING",
+  "canonical_state": "PASS_A3.5-dev209_PACKAGE_AND_VITA3K_INSTALL_ONLY",
+  "canonical_elf_sha256": "e9ff7b7ca94ddd12b9d4ed8394e6d540e445786ab1e3cec9ca0255e0a0244605",
+  "canonical_self_sha256": "56ae95dda1221d75563c0272eeb597905b0fc547a3713266cf580bf670ce0cb9",
+  "canonical_vpk_sha256": "33688af89a85f1358325b3de3e1d6d0dff8585b334438f338fbc5d2531351310",
+  "remote_ci_state": "PASS_CLEAN_CHECKOUT_6b3b793_RUN_37156208052_LATER_SWEEP_CI_SEPARATE",
   "rows": [
     {
       "state_field": "logical_stimulus_diagnostics_20261003.state",
@@ -391,7 +394,7 @@
   ],
   "open_risks": [
     "Original textureloader.cpp compiles separately but is excluded from runtime graphs; integration remains open.",
-    "Canonical packaging and clean-checkout CI are not yet established.",
+    "Canonical package and clean-checkout compile CI pass; native runtime acceptance remains unverified.",
     "Dazzle visual output, decal depth bias, projectors and procedural material passes remain unverified or incomplete.",
     "Complete all-map inventories and mission acceptance remain open."
   ],

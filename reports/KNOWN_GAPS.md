@@ -4,7 +4,8 @@
 gaps remain open; original textureloader.cpp compiles separately but remains
 outside the runtime graph. Canonical ASan trim overlap is repaired; the rebuilt
 M13 player-damage and prewarmed fixtures pass. Verified WSL data avoids the host
-storage timeouts without an engine change. Canonical and corrected ARM CI are running.
+storage timeouts without an engine change. Canonical packaging, Vita3K install-only
+hash verification and clean ARM CI pass; runtime and full sweeps remain open.
 See [compile closure](COMPILE_CLOSURE.md).
 
 2026-10-03 procedural material review confirms spawn/death/healing/electrocution

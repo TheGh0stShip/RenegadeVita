@@ -56,9 +56,17 @@ focused script/probe/install checks and seven RC checks pass locally.
 The next clean ARM configuration exposed a missing project-local HTTPS build.
 Both ARM CI and full-port fast builds now prepare the pinned curl/mbedTLS stack,
 matching the canonical prerequisite set. Local fast compilation/link, artifact
-checks and all 473 focused contracts pass. Canonical validation is running with
-the verified WSL retail root; corrected clean ARM CI is also running.
-Phase 0 is still open. Native/runtime acceptance remains 0/10; complete mission progression,
+checks and all 473 focused contracts pass. Canonical validation passed with
+the verified WSL retail root. Clean-checkout CI run 37156208052 passed ARM
+compile/link, all 60 ASan/UBSan cases, five TSan cases and 793 Python tests
+with one optional fixture skip, covered separately by the original-owner suite.
+Its 88 returned artifacts and matching hashes are retained privately. The ARM
+CI report explicitly excludes SELF/VPK packaging. Canonical A3.5-dev209 passed
+ARM, ELF/SELF/VPK identity, archive, retail exclusion, manifests and diagnostic
+bundle checks. Vita3K installed the package and verified its SELF hash without
+launching. Later S1 tooling has its own CI
+runs and retained local tests. See the [partial S1 ledger](PORT_GUARD_SWEEP.md).
+Phase 0 build gates now pass. Native/runtime acceptance remains 0/10; complete mission progression,
 all-map inventories, projector targets, decal depth bias, procedural material
 passes and visual Dazzle acceptance remain open.
 

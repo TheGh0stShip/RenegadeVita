@@ -1,5 +1,18 @@
 # Complete mission overview review — 2026-10-03
 
+The global-settings audio follow-up traces preset chains to retail audio members
+for all three maps, including each map's definition overlays. EVA-objective audio
+resolves; the global death twiddler has fifteen located leaves and one unresolved
+choice pointing to the already-known definition ID3413. Inspected located WAVs
+have no header or block findings under the existing read-only inspector. These
+are structural findings, not successful decode or audible playback evidence.
+HUD-help and radar sound IDs are0. Original soldier death behavior uses the
+global sound only when its own DeathSoundPresetID is0; original objectives
+viewer requests the EVA sound when displayed. The missing death choice is
+retained without inventing a replacement. Hashed member metadata is private in
+`build/global-settings-audio-members-20261003.json`. No build/launch or retail
+mutation occurred.
+
 Integer-expression discovery now uses a restricted syntax-tree evaluator rather
 than Python eval. It rejects unsupported nodes and Python-only power/floor
 division operators, retains unresolved values, and computes division using

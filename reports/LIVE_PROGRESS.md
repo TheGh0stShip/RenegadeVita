@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Global audio preset-to-member routes — 2026-10-03
+
+Completed: three-map global sound chains and WAV structures inspected; original
+soldier fallback and objective-viewer callers traced. EVA sound resolves; death
+twiddler15 located leaves plus unresolved3413 choice. Help/radar IDs0.
+Evidence:private archive/database/member identities; no WAV header/block findings
+on located leaves. Decode/playback and branch outcomes remain unverified.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Restricted integer discovery reconciliation — 2026-10-03
 
 Completed: integer-only restricted expression evaluator replaces eval;

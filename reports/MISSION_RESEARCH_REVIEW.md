@@ -259,6 +259,26 @@ questions. No alternate presets were invented, no findings were suppressed and
 retail data was not changed. Forty focused Python checks pass. Native effect
 appearance, twiddler outcomes and mission gameplay remain unverified.
 
+The alternate-database follow-up inspects30 top-level local Data candidates
+with MIX/DAT/DBS/loose-DDB extensions and decodes both located definition members.
+None contains any of the27 distinct unresolved IDs across the three scopes.
+The private receipt `build/definition-alternate-database-search-20261003.json`
+retains archive inventory, definition-member hashes and searched IDs. This is
+a bounded search of the installed local Data directory, not every possible
+mod, save, remote data source or physical-device installation.
+
+No loose definition override was present in that directory. Always3 contains
+no DDB; original Commando initialization explicitly mounts Always2, Always.dbs
+and Always, then enumerates MIX archives. Native source preserves those core
+archive owners. The presence of an optional Always3 file does not by itself
+authorize inventing a new mandatory database provider or replacement presets.
+Original Find_Definition searches exact definition IDs and can twiddle a found
+definition; it does not synthesize an absent ID or dynamically scan databases.
+The findings therefore remain dangling references in this inspected installed
+data, with effect/sound consequences unverified. Preserve original null handling
+and compare candidate-bound visual/audio behavior before attributing them to
+port omissions. No build, launch or data mutation occurred.
+
 The compiler target reports arm-vita-eabi; inspected libpthread attributes
 report ARMv7-A/Thumb-2 and VFP-register arguments. Native remains little-endian
 ARMv7-A/Cortex-A9 ILP32; host probes remain LP64 and separate evidence. Read-only

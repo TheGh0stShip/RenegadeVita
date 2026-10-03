@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Alternate definition databases — 2026-10-03
+
+Completed:30 top-level local archive/loose-file candidates inspected; both
+definition members contain none of the27 distinct unresolved IDs. No loose
+definition override present; optional Always3 contains no DDB.
+Evidence:private inventory/member-hash receipt and original archive/ID lookup
+owners. Findings remain installed-data references, not proved port omissions.
+Visual/audio comparison remains open; no build, launch or retail mutation.
+Native/runtime gates0/10.
+See [mission research review](MISSION_RESEARCH_REVIEW.md).
+
 ## Unresolved definition provenance — 2026-10-03
 
 Completed: unresolved dependencies retain referring presets, named typed fields

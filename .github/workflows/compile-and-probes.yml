@@ -25,16 +25,27 @@ jobs:
       - name: Install host dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build g++ ccache pkg-config libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg imagemagick python3-yaml
+          sudo apt-get install -y cmake ninja-build g++ ccache pkg-config libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg imagemagick python3-yaml llvm
+      - name: Prepare native SDK and pinned renderer test inputs
+        if: matrix.sanitizer == 'asan-ubsan'
+        run: |
+          rv_sdk_image=vitasdk/vitasdk:2026.08-20260813@sha256:1d949171694d63336abf6d4b591c2a87a5be54f62627bdbc244d7529e9de65d8
+          rv_sdk_container=$(docker create "$rv_sdk_image")
+          trap 'docker rm "$rv_sdk_container" >/dev/null' EXIT
+          docker cp "$rv_sdk_container:/usr/local/vitasdk" /tmp/renegade-ci-vitasdk
+          /tmp/renegade-ci-vitasdk/bin/arm-vita-eabi-g++ --version
+          echo 'VITASDK=/tmp/renegade-ci-vitasdk' >> "$GITHUB_ENV"
+          mkdir -p build/deps/vitagl-demo
+          curl --fail --location --retry 2 --max-time 120 \
+            https://codeload.github.com/Rinnegatamante/vitaGL/tar.gz/6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5 \
+            -o build/deps/vitagl-demo/source.tar.gz
+          echo '4a254941d416fa4091f1b6b569c4bf7e61402c8ca41898c1445c5c3087526cf6  build/deps/vitagl-demo/source.tar.gz' | sha256sum -c -
       - name: Stage original source and audit script calls
         run: |
           mkdir -p build
           bash tools/stage_sources.sh
           python3 tools/audit_script_call_defaults.py --strict
           python3 -m unittest tools.test_script_call_defaults
-      - name: Python contracts
-        if: matrix.sanitizer == 'asan-ubsan'
-        run: python3 tools/run_python_contracts.py
       - name: Sanitized retail-free host probes
         env:
           RV_SANITIZER: ${{ matrix.sanitizer }}
@@ -44,6 +55,11 @@ jobs:
           else
             python3 tools/run_host_probes.py --build-dir build/ci-host-asan --sanitizer asan-ubsan --jobs 2
           fi
+      - name: Python contracts
+        if: matrix.sanitizer == 'asan-ubsan'
+        env:
+          RENEGADE_HOST_RUNTIME: ${{ github.workspace }}/build/ci-host-asan/a31_m00_interactive_runtime
+        run: python3 tools/run_python_contracts.py
       - name: Compile changed original texture worker
         if: matrix.sanitizer == 'asan-ubsan'
         run: python3 tools/check_excluded_original_sources.py --build-dir build/ci-host-asan --target a31_interactive_runtime --report build/ci-excluded-host.json
@@ -67,7 +83,7 @@ jobs:
       - name: Install host build helpers
         run: |
           apt-get update
-          apt-get install -y ccache unzip imagemagick libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg
+          apt-get install -y ccache unzip imagemagick libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg llvm
       - uses: actions/checkout@v4
         with:
           submodules: recursive

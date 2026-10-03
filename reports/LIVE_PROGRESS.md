@@ -8,8 +8,10 @@ Full Python suite passes793 tests;21 publication-focused checks also pass.
 All45 script-project units pass strict call auditing. Seventeen current build
 states now record compiled evidence, with runtime acceptance still unverified.
 Evidence: [compile ledger](COMPILE_CLOSURE.md) and its generated JSON.
-Now: publish the compiled cluster on the current branch, without a PR as
-requested. Push CI covers that branch. Canonical packaging is still running.
+Published: compiled cluster committed; work now continues on main as requested,
+without a PR. First clean-checkout TSan CI passed; host contracts exposed missing
+runner prerequisites. Their setup and ordering are corrected for the next run.
+Canonical packaging is still running.
 Next: clean-checkout CI, canonical artifact identity, then S1 inventory.
 Native acceptance remains0/10.
 

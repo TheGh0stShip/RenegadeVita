@@ -13,7 +13,7 @@ class MpegDecodeTests(unittest.TestCase):
     def test_generated_music_and_invalid_input(self):
         with tempfile.TemporaryDirectory(prefix="renegade-mpeg-") as folder:
             work = Path(folder)
-            sdk = Path.home() / ".local/vitasdk/arm-vita-eabi/include"
+            sdk = Path(os.environ.get("VITASDK", "/usr/local/vitasdk")) / "arm-vita-eabi/include"
             for header in ("mpg123.h", "fmt123.h"):
                 shutil.copy2(sdk / header, work / header)
             source = work / "probe.cpp"

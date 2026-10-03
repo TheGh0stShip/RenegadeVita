@@ -1,4 +1,16 @@
 {
+  "compile_closure_20261003": {
+    "state": "LOCAL_HOST_AND_ARM_PASS_CANONICAL_AND_CI_PENDING",
+    "registered_staging_patches": 306,
+    "staging_receipt_regenerated": true,
+    "host_compilation_passed": true,
+    "arm_compilation_and_link_passed": true,
+    "native_launch_performed": false,
+    "native_acceptance_gates_closed": 0,
+    "reconciled_state_fields": 17,
+    "evidence": "reports/generated/compile_closure.json",
+    "source_review_metadata_policy": "Earlier patch counts and source-review flags describe their original review dates; current compilation is recorded here."
+  },
   "logical_stimulus_diagnostics_20261003": {
     "state": "FOCUSED_OPT_IN_SOURCE_HOOKS_COMPILED_PASS",
     "focused_source_checks_passed": 9,

@@ -16,7 +16,7 @@
   "script_default_missing_bridges": 0,
   "script_invalid_active_arities": 0,
   "canonical_state": "RUNNING",
-  "remote_ci_state": "NOT_RUN",
+  "remote_ci_state": "FIRST_RUN_TSAN_PASS_HOST_AND_ARM_CONTRACT_PREREQUISITES_FAILED_RETRY_PENDING",
   "rows": [
     {
       "state_field": "logical_stimulus_diagnostics_20261003.state",

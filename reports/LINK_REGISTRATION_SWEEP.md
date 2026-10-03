@@ -1,5 +1,11 @@
 # S3 link and registration closure — inventory in progress
 
+The retained ARM symbol inventory now includes 140 numeric persist Load
+methods, with class, chunk ID, symbol/address/type evidence. This supports
+all-map retail chunk-ID reconciliation without evaluating symbolic constants
+from source or mistaking source declarations for linked methods. Function
+presence still does not prove factory initialization or runtime registration.
+
 Definition/network macro expansion adds 57 definition and 28 network object
 symbol matches, bringing defined-symbol candidate matches to 1,861. The
 unmatched ShakeableStaticPhys definition registration at source line 80 is

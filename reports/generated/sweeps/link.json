@@ -16,6 +16,1828 @@
   "map_sha256": "e780521ab82b685783e2a3ac6118eed1c9fb0d5f52e1a84e0994a1d1345559a4",
   "total": 837,
   "symbols_sha256": "85de2fa8b32944d522f208ff4ee7c1901206ba8d92996459de281e5ad3c64bf1",
+  "persist_load_methods": [
+    {
+      "class": "AccessiblePhysClass",
+      "chunk_id": 131348,
+      "symbol": "SimplePersistFactoryClass<AccessiblePhysClass, 131348>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8107b640",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "AccessiblePhysDefClass",
+      "chunk_id": 132369,
+      "symbol": "SimplePersistFactoryClass<AccessiblePhysDefClass, 132369>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8107b6b0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "AirStripGameObj",
+      "chunk_id": 262463,
+      "symbol": "SimplePersistFactoryClass<AirStripGameObj, 262463>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811dab30",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "AirStripGameObjDef",
+      "chunk_id": 262464,
+      "symbol": "SimplePersistFactoryClass<AirStripGameObjDef, 262464>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811da840",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "AmmoDefinitionClass",
+      "chunk_id": 262440,
+      "symbol": "SimplePersistFactoryClass<AmmoDefinitionClass, 262440>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81119ec4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "AttackActionCodeClass",
+      "chunk_id": 263429,
+      "symbol": "SimplePersistFactoryClass<AttackActionCodeClass, 263429>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81108c58",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "AudibleSoundClass",
+      "chunk_id": 196609,
+      "symbol": "SimplePersistFactoryClass<AudibleSoundClass, 196609>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81172384",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "AudibleSoundDefinitionClass",
+      "chunk_id": 196608,
+      "symbol": "SimplePersistFactoryClass<AudibleSoundDefinitionClass, 196608>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81172750",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "BeaconGameObj",
+      "chunk_id": 262453,
+      "symbol": "SimplePersistFactoryClass<BeaconGameObj, 262453>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8115924c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "BeaconGameObjDef",
+      "chunk_id": 262454,
+      "symbol": "SimplePersistFactoryClass<BeaconGameObjDef, 262454>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811593c8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "BuildingAggregateClass",
+      "chunk_id": 133635,
+      "symbol": "SimplePersistFactoryClass<BuildingAggregateClass, 133635>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810bf0c0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "BuildingAggregateDefClass",
+      "chunk_id": 134147,
+      "symbol": "SimplePersistFactoryClass<BuildingAggregateDefClass, 134147>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810bf30c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "BuildingGameObj",
+      "chunk_id": 262451,
+      "symbol": "SimplePersistFactoryClass<BuildingGameObj, 262451>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811034ac",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "BuildingGameObjDef",
+      "chunk_id": 262452,
+      "symbol": "SimplePersistFactoryClass<BuildingGameObjDef, 262452>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81102430",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "C4GameObj",
+      "chunk_id": 262402,
+      "symbol": "SimplePersistFactoryClass<C4GameObj, 262402>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8115b488",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "C4GameObjDef",
+      "chunk_id": 262403,
+      "symbol": "SimplePersistFactoryClass<C4GameObjDef, 262403>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8115b174",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CNCModeSettingsDef",
+      "chunk_id": 263689,
+      "symbol": "SimplePersistFactoryClass<CNCModeSettingsDef, 263689>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8115e83c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CardinalSpline1DClass",
+      "chunk_id": 524291,
+      "symbol": "SimplePersistFactoryClass<CardinalSpline1DClass, 524291>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c6090",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CardinalSpline3DClass",
+      "chunk_id": 524547,
+      "symbol": "SimplePersistFactoryClass<CardinalSpline3DClass, 524547>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c5ff0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CatmullRomSpline1DClass",
+      "chunk_id": 524290,
+      "symbol": "SimplePersistFactoryClass<CatmullRomSpline1DClass, 524290>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c6da0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CatmullRomSpline3DClass",
+      "chunk_id": 524546,
+      "symbol": "SimplePersistFactoryClass<CatmullRomSpline3DClass, 524546>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c6e60",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CharacterClassSettingsDefClass",
+      "chunk_id": 263685,
+      "symbol": "SimplePersistFactoryClass<CharacterClassSettingsDefClass, 263685>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811f7340",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CinematicGameObj",
+      "chunk_id": 262443,
+      "symbol": "SimplePersistFactoryClass<CinematicGameObj, 262443>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8133de88",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "CinematicGameObjDef",
+      "chunk_id": 262444,
+      "symbol": "SimplePersistFactoryClass<CinematicGameObjDef, 262444>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8133d934",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ComCenterGameObj",
+      "chunk_id": 262467,
+      "symbol": "SimplePersistFactoryClass<ComCenterGameObj, 262467>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811dbb74",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ComCenterGameObjDef",
+      "chunk_id": 262468,
+      "symbol": "SimplePersistFactoryClass<ComCenterGameObjDef, 262468>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811dbb18",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ConversationActionCodeClass",
+      "chunk_id": 263433,
+      "symbol": "SimplePersistFactoryClass<ConversationActionCodeClass, 263433>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81108ddc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DamageZoneGameObj",
+      "chunk_id": 262445,
+      "symbol": "SimplePersistFactoryClass<DamageZoneGameObj, 262445>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811df9f8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DamageZoneGameObjDef",
+      "chunk_id": 262446,
+      "symbol": "SimplePersistFactoryClass<DamageZoneGameObjDef, 262446>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811df938",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DamageableStaticPhysClass",
+      "chunk_id": 133634,
+      "symbol": "SimplePersistFactoryClass<DamageableStaticPhysClass, 133634>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810bec2c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DamageableStaticPhysDefClass",
+      "chunk_id": 134146,
+      "symbol": "SimplePersistFactoryClass<DamageableStaticPhysDefClass, 134146>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810be888",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DecorationPhysClass",
+      "chunk_id": 131328,
+      "symbol": "SimplePersistFactoryClass<DecorationPhysClass, 131328>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8107e708",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DecorationPhysDefClass",
+      "chunk_id": 132352,
+      "symbol": "SimplePersistFactoryClass<DecorationPhysDefClass, 132352>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8107e53c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DiveActionCodeClass",
+      "chunk_id": 263432,
+      "symbol": "SimplePersistFactoryClass<DiveActionCodeClass, 263432>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811086cc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DockActionCodeClass",
+      "chunk_id": 263434,
+      "symbol": "SimplePersistFactoryClass<DockActionCodeClass, 263434>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81108b48",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DoorPhysClass",
+      "chunk_id": 133632,
+      "symbol": "SimplePersistFactoryClass<DoorPhysClass, 133632>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810bb874",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DoorPhysDefClass",
+      "chunk_id": 134144,
+      "symbol": "SimplePersistFactoryClass<DoorPhysDefClass, 134144>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810bbcb0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DynamicAnimPhysClass",
+      "chunk_id": 131346,
+      "symbol": "SimplePersistFactoryClass<DynamicAnimPhysClass, 131346>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8107ff84",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "DynamicAnimPhysDefClass",
+      "chunk_id": 132367,
+      "symbol": "SimplePersistFactoryClass<DynamicAnimPhysDefClass, 132367>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8107fcac",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ElevatorPhysClass",
+      "chunk_id": 133633,
+      "symbol": "SimplePersistFactoryClass<ElevatorPhysClass, 133633>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810bcbd8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ElevatorPhysDefClass",
+      "chunk_id": 134145,
+      "symbol": "SimplePersistFactoryClass<ElevatorPhysDefClass, 134145>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810bcd30",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "EnterExitActionCodeClass",
+      "chunk_id": 263428,
+      "symbol": "SimplePersistFactoryClass<EnterExitActionCodeClass, 263428>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81108588",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "EvaSettingsDefClass",
+      "chunk_id": 263684,
+      "symbol": "SimplePersistFactoryClass<EvaSettingsDefClass, 263684>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81160520",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ExplosionDefinitionClass",
+      "chunk_id": 262442,
+      "symbol": "SimplePersistFactoryClass<ExplosionDefinitionClass, 262442>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8111a654",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "FaceLocationActionCodeClass",
+      "chunk_id": 263431,
+      "symbol": "SimplePersistFactoryClass<FaceLocationActionCodeClass, 263431>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811080d8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "FilteredSoundClass",
+      "chunk_id": 196610,
+      "symbol": "SimplePersistFactoryClass<FilteredSoundClass, 196610>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81173374",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "FollowInputActionCodeClass",
+      "chunk_id": 263425,
+      "symbol": "SimplePersistFactoryClass<FollowInputActionCodeClass, 263425>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81106a74",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "GlobalSettingsDef",
+      "chunk_id": 263682,
+      "symbol": "SimplePersistFactoryClass<GlobalSettingsDef, 263682>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81162e1c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "GotoActionCodeClass",
+      "chunk_id": 263427,
+      "symbol": "SimplePersistFactoryClass<GotoActionCodeClass, 263427>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81106c9c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "HUDGlobalSettingsDef",
+      "chunk_id": 263683,
+      "symbol": "SimplePersistFactoryClass<HUDGlobalSettingsDef, 263683>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8116375c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "HermiteSpline1DClass",
+      "chunk_id": 524289,
+      "symbol": "SimplePersistFactoryClass<HermiteSpline1DClass, 524289>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c9c80",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "HermiteSpline3DClass",
+      "chunk_id": 524545,
+      "symbol": "SimplePersistFactoryClass<HermiteSpline3DClass, 524545>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c9bf8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "HumanAnimOverrideDef",
+      "chunk_id": 263686,
+      "symbol": "SimplePersistFactoryClass<HumanAnimOverrideDef, 263686>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811638a8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "HumanLoiterGlobalSettingsDef",
+      "chunk_id": 263681,
+      "symbol": "SimplePersistFactoryClass<HumanLoiterGlobalSettingsDef, 263681>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81162290",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "HumanPhysClass",
+      "chunk_id": 131329,
+      "symbol": "SimplePersistFactoryClass<HumanPhysClass, 131329>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810815ac",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "HumanPhysDefClass",
+      "chunk_id": 132353,
+      "symbol": "SimplePersistFactoryClass<HumanPhysDefClass, 132353>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81081634",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "LightClass",
+      "chunk_id": 65537,
+      "symbol": "SimplePersistFactoryClass<LightClass, 65537>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810cf4b0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "LightPhysClass",
+      "chunk_id": 131330,
+      "symbol": "SimplePersistFactoryClass<LightPhysClass, 131330>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810822bc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "LinearCurve1DClass",
+      "chunk_id": 524288,
+      "symbol": "SimplePersistFactoryClass<LinearCurve1DClass, 524288>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c7dc8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "LinearCurve3DClass",
+      "chunk_id": 524544,
+      "symbol": "SimplePersistFactoryClass<LinearCurve3DClass, 524544>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810c7fe8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "LogicalListenerClass",
+      "chunk_id": 196616,
+      "symbol": "SimplePersistFactoryClass<LogicalListenerClass, 196616>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811564b4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "LogicalSoundClass",
+      "chunk_id": 196615,
+      "symbol": "SimplePersistFactoryClass<LogicalSoundClass, 196615>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811569d8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "MendozaBossGameObjClass",
+      "chunk_id": 262473,
+      "symbol": "SimplePersistFactoryClass<MendozaBossGameObjClass, 262473>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811eb0d4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "MendozaBossGameObjDefClass",
+      "chunk_id": 262474,
+      "symbol": "SimplePersistFactoryClass<MendozaBossGameObjDefClass, 262474>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811e4918",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "MotorVehicleDefClass",
+      "chunk_id": 132356,
+      "symbol": "SimplePersistFactoryClass<MotorVehicleDefClass, 132356>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810833cc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "MotorcycleClass",
+      "chunk_id": 131331,
+      "symbol": "SimplePersistFactoryClass<MotorcycleClass, 131331>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81082b80",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "MotorcycleDefClass",
+      "chunk_id": 132355,
+      "symbol": "SimplePersistFactoryClass<MotorcycleDefClass, 132355>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81082c10",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "Phys3Class",
+      "chunk_id": 131333,
+      "symbol": "SimplePersistFactoryClass<Phys3Class, 131333>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810906f4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "Phys3DefClass",
+      "chunk_id": 132357,
+      "symbol": "SimplePersistFactoryClass<Phys3DefClass, 132357>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8108f7e8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "PlayAnimationActionCodeClass",
+      "chunk_id": 263430,
+      "symbol": "SimplePersistFactoryClass<PlayAnimationActionCodeClass, 263430>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81106bdc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "PowerPlantGameObj",
+      "chunk_id": 262457,
+      "symbol": "SimplePersistFactoryClass<PowerPlantGameObj, 262457>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d8c34",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "PowerPlantGameObjDef",
+      "chunk_id": 262458,
+      "symbol": "SimplePersistFactoryClass<PowerPlantGameObjDef, 262458>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d8bd8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "PowerUpGameObj",
+      "chunk_id": 262406,
+      "symbol": "SimplePersistFactoryClass<PowerUpGameObj, 262406>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810feadc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "PowerUpGameObjDef",
+      "chunk_id": 262407,
+      "symbol": "SimplePersistFactoryClass<PowerUpGameObjDef, 262407>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810ff3e0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ProjectileClass",
+      "chunk_id": 131334,
+      "symbol": "SimplePersistFactoryClass<ProjectileClass, 131334>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81095738",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ProjectileDefClass",
+      "chunk_id": 132358,
+      "symbol": "SimplePersistFactoryClass<ProjectileDefClass, 132358>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81095640",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "PurchaseSettingsDefClass",
+      "chunk_id": 263687,
+      "symbol": "SimplePersistFactoryClass<PurchaseSettingsDefClass, 263687>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811f8e48",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RaveshawBossGameObjClass",
+      "chunk_id": 262475,
+      "symbol": "SimplePersistFactoryClass<RaveshawBossGameObjClass, 262475>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811f4ed0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RaveshawBossGameObjDefClass",
+      "chunk_id": 262476,
+      "symbol": "SimplePersistFactoryClass<RaveshawBossGameObjDefClass, 262476>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811ed2fc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RefineryGameObj",
+      "chunk_id": 262455,
+      "symbol": "SimplePersistFactoryClass<RefineryGameObj, 262455>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d7f04",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RefineryGameObjDef",
+      "chunk_id": 262456,
+      "symbol": "SimplePersistFactoryClass<RefineryGameObjDef, 262456>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d7b28",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RenderObjPhysClass",
+      "chunk_id": 131335,
+      "symbol": "SimplePersistFactoryClass<RenderObjPhysClass, 131335>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a2554",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RenegadeTerrainPatchClass",
+      "chunk_id": 65539,
+      "symbol": "SimplePersistFactoryClass<RenegadeTerrainPatchClass, 65539>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a5570",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RepairBayGameObj",
+      "chunk_id": 262469,
+      "symbol": "SimplePersistFactoryClass<RepairBayGameObj, 262469>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811dc56c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RepairBayGameObjDef",
+      "chunk_id": 262470,
+      "symbol": "SimplePersistFactoryClass<RepairBayGameObjDef, 262470>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811dc114",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RigidBodyClass",
+      "chunk_id": 131336,
+      "symbol": "SimplePersistFactoryClass<RigidBodyClass, 131336>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8109f09c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "RigidBodyDefClass",
+      "chunk_id": 132359,
+      "symbol": "SimplePersistFactoryClass<RigidBodyDefClass, 132359>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8109d9f8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SAMSiteGameObj",
+      "chunk_id": 262408,
+      "symbol": "SimplePersistFactoryClass<SAMSiteGameObj, 262408>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811debdc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SAMSiteGameObjDef",
+      "chunk_id": 262409,
+      "symbol": "SimplePersistFactoryClass<SAMSiteGameObjDef, 262409>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811dec60",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SakuraBossGameObj",
+      "chunk_id": 262449,
+      "symbol": "SimplePersistFactoryClass<SakuraBossGameObj, 262449>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811e2f30",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SakuraBossGameObjDef",
+      "chunk_id": 262450,
+      "symbol": "SimplePersistFactoryClass<SakuraBossGameObjDef, 262450>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811dff7c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ScriptZoneGameObj",
+      "chunk_id": 262434,
+      "symbol": "SimplePersistFactoryClass<ScriptZoneGameObj, 262434>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810fd9cc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ScriptZoneGameObjDef",
+      "chunk_id": 262435,
+      "symbol": "SimplePersistFactoryClass<ScriptZoneGameObjDef, 262435>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810fd948",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ShakeableStaticPhysClass",
+      "chunk_id": 131347,
+      "symbol": "SimplePersistFactoryClass<ShakeableStaticPhysClass, 131347>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a6bd0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "ShakeableStaticPhysDefClass",
+      "chunk_id": 132368,
+      "symbol": "SimplePersistFactoryClass<ShakeableStaticPhysDefClass, 132368>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a6a74",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SimpleGameObj",
+      "chunk_id": 262410,
+      "symbol": "SimplePersistFactoryClass<SimpleGameObj, 262410>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81100f04",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SimpleGameObjDef",
+      "chunk_id": 262411,
+      "symbol": "SimplePersistFactoryClass<SimpleGameObjDef, 262411>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81100c08",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SoldierFactoryGameObj",
+      "chunk_id": 262459,
+      "symbol": "SimplePersistFactoryClass<SoldierFactoryGameObj, 262459>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d9238",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SoldierFactoryGameObjDef",
+      "chunk_id": 262460,
+      "symbol": "SimplePersistFactoryClass<SoldierFactoryGameObjDef, 262460>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d91dc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SoldierGameObj",
+      "chunk_id": 262414,
+      "symbol": "SimplePersistFactoryClass<SoldierGameObj, 262414>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810f5724",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SoldierGameObjDef",
+      "chunk_id": 262415,
+      "symbol": "SimplePersistFactoryClass<SoldierGameObjDef, 262415>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810f549c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SoldierObserverClass",
+      "chunk_id": 262657,
+      "symbol": "SimplePersistFactoryClass<SoldierObserverClass, 262657>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81168954",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "Sound3DClass",
+      "chunk_id": 196611,
+      "symbol": "SimplePersistFactoryClass<Sound3DClass, 196611>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81173f64",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SoundPseudo3DClass",
+      "chunk_id": 196612,
+      "symbol": "SimplePersistFactoryClass<SoundPseudo3DClass, 196612>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811752fc",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SpawnerClass",
+      "chunk_id": 262432,
+      "symbol": "SimplePersistFactoryClass<SpawnerClass, 262432>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8111fd94",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SpawnerDefClass",
+      "chunk_id": 262433,
+      "symbol": "SimplePersistFactoryClass<SpawnerDefClass, 262433>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "8111fbf0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SpecialEffectsGameObj",
+      "chunk_id": 262447,
+      "symbol": "SimplePersistFactoryClass<SpecialEffectsGameObj, 262447>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811de12c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "SpecialEffectsGameObjDef",
+      "chunk_id": 262448,
+      "symbol": "SimplePersistFactoryClass<SpecialEffectsGameObjDef, 262448>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811de3e8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "StandActionCodeClass",
+      "chunk_id": 263426,
+      "symbol": "SimplePersistFactoryClass<StandActionCodeClass, 263426>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81106b28",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "StaticAnimPhysClass",
+      "chunk_id": 131339,
+      "symbol": "SimplePersistFactoryClass<StaticAnimPhysClass, 131339>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a7974",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "StaticAnimPhysDefClass",
+      "chunk_id": 132362,
+      "symbol": "SimplePersistFactoryClass<StaticAnimPhysDefClass, 132362>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a78d8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "StaticPhysClass",
+      "chunk_id": 131337,
+      "symbol": "SimplePersistFactoryClass<StaticPhysClass, 131337>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a838c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "StaticPhysDefClass",
+      "chunk_id": 132360,
+      "symbol": "SimplePersistFactoryClass<StaticPhysDefClass, 132360>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a8184",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "StringTwiddlerClass",
+      "chunk_id": 589827,
+      "symbol": "SimplePersistFactoryClass<StringTwiddlerClass, 589827>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81155748",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TCBSpline3DClass",
+      "chunk_id": 524548,
+      "symbol": "SimplePersistFactoryClass<TCBSpline3DClass, 524548>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810cb710",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TDBCategoryClass",
+      "chunk_id": 589826,
+      "symbol": "SimplePersistFactoryClass<TDBCategoryClass, 589826>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811535c4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TDBObjClass",
+      "chunk_id": 589825,
+      "symbol": "SimplePersistFactoryClass<TDBObjClass, 589825>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81153f68",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TeamPurchaseSettingsDefClass",
+      "chunk_id": 263688,
+      "symbol": "SimplePersistFactoryClass<TeamPurchaseSettingsDefClass, 263688>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811f9634",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TimedDecorationPhysClass",
+      "chunk_id": 131340,
+      "symbol": "SimplePersistFactoryClass<TimedDecorationPhysClass, 131340>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a9af8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TimedDecorationPhysDefClass",
+      "chunk_id": 132363,
+      "symbol": "SimplePersistFactoryClass<TimedDecorationPhysDefClass, 132363>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a9b6c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TrackedVehicleClass",
+      "chunk_id": 131342,
+      "symbol": "SimplePersistFactoryClass<TrackedVehicleClass, 131342>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810aab28",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TrackedVehicleDefClass",
+      "chunk_id": 132365,
+      "symbol": "SimplePersistFactoryClass<TrackedVehicleDefClass, 132365>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810a9ef0",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TransitionGameObj",
+      "chunk_id": 262436,
+      "symbol": "SimplePersistFactoryClass<TransitionGameObj, 262436>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81101358",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TransitionGameObjDef",
+      "chunk_id": 262437,
+      "symbol": "SimplePersistFactoryClass<TransitionGameObjDef, 262437>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81101218",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "TwiddlerClass",
+      "chunk_id": 258,
+      "symbol": "SimplePersistFactoryClass<TwiddlerClass, 258>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810b3b08",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VTOLVehicleClass",
+      "chunk_id": 131343,
+      "symbol": "SimplePersistFactoryClass<VTOLVehicleClass, 131343>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810ae9a4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VTOLVehicleDefClass",
+      "chunk_id": 132366,
+      "symbol": "SimplePersistFactoryClass<VTOLVehicleDefClass, 132366>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810ae0a8",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VehicleCurveClass",
+      "chunk_id": 524549,
+      "symbol": "SimplePersistFactoryClass<VehicleCurveClass, 524549>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810cc068",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VehicleFactoryGameObj",
+      "chunk_id": 262461,
+      "symbol": "SimplePersistFactoryClass<VehicleFactoryGameObj, 262461>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d9e80",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VehicleFactoryGameObjDef",
+      "chunk_id": 262462,
+      "symbol": "SimplePersistFactoryClass<VehicleFactoryGameObjDef, 262462>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811d9898",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VehicleGameObj",
+      "chunk_id": 262416,
+      "symbol": "SimplePersistFactoryClass<VehicleGameObj, 262416>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810e8db4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VehicleGameObjDef",
+      "chunk_id": 262441,
+      "symbol": "SimplePersistFactoryClass<VehicleGameObjDef, 262441>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810e8784",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "VehiclePhysDefClass",
+      "chunk_id": 132364,
+      "symbol": "SimplePersistFactoryClass<VehiclePhysDefClass, 132364>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810abe48",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "WarFactoryGameObj",
+      "chunk_id": 262465,
+      "symbol": "SimplePersistFactoryClass<WarFactoryGameObj, 262465>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811db2a4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "WarFactoryGameObjDef",
+      "chunk_id": 262466,
+      "symbol": "SimplePersistFactoryClass<WarFactoryGameObjDef, 262466>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "811db18c",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "WaypathClass",
+      "chunk_id": 131344,
+      "symbol": "SimplePersistFactoryClass<WaypathClass, 131344>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810af238",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "WaypointClass",
+      "chunk_id": 131345,
+      "symbol": "SimplePersistFactoryClass<WaypointClass, 131345>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810af950",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "WeaponDefinitionClass",
+      "chunk_id": 262439,
+      "symbol": "SimplePersistFactoryClass<WeaponDefinitionClass, 262439>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "81119bd4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "WheeledVehicleClass",
+      "chunk_id": 131338,
+      "symbol": "SimplePersistFactoryClass<WheeledVehicleClass, 131338>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810b1c58",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    },
+    {
+      "class": "WheeledVehicleDefClass",
+      "chunk_id": 132361,
+      "symbol": "SimplePersistFactoryClass<WheeledVehicleDefClass, 132361>::Load(ChunkLoadClass&) const",
+      "defined_symbol_matches": [
+        {
+          "address": "810b1cd4",
+          "type": "W"
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "arm_symbols"
+    }
+  ],
   "selected": 604,
   "map_mentioned": 604,
   "counts": {

@@ -1,5 +1,18 @@
 # S4 retail closure — all-map binding discovery in progress
 
+All-map factory reconciliation compares level persist-factory counts and
+discovered-definition factory IDs with numeric template Load symbols retained
+in Dev209. There are 1,506 per-map requirement rows spanning 79 unique IDs;
+all 79 have a matching Load method. There are 346 cinematic-control candidates
+and 19 missing-name leads summed across maps, not unique global totals.
+These per-map requirements keep unknown status even when a method
+matches: section/storage initialization and runtime registration remain open.
+The driver also retains candidate cinematic-control counts and missing-name
+leads from the existing dependency parser. Shared driver/parser validation
+passes 44 tests. Conversation and other deliberately unparsed subsystems,
+unreached definitions, computed dependencies and the remaining S4 asset
+classes are outside this partial factory denominator.
+
 M09 input recovery supersedes the first-scan missing-input row below. Three
 local backup copies match archive SHA-256
 3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7;

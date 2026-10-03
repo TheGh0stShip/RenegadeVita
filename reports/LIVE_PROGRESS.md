@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## S3/S4 numeric persist-factory reconciliation — 2026-10-03
+
+140 retained ARM Load methods now carry numeric chunk IDs. All 27 maps compare
+their level and discovered-definition factory requirements against these IDs;
+1,506 requirements span 79 IDs, all matched to Load methods.
+matching methods do not prove initialization or registration execution.
+44 driver/shared-parser tests pass. Cinematic candidate counts retained;
+remaining asset classes and deliberately unparsed subsystems stay open.
+
 ## S4 M09 coverage and unresolved-name provenance — 2026-10-03
 
 All 27 maps scanned after private hash-verified M09 input recovery; edition

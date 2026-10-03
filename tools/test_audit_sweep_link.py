@@ -12,6 +12,14 @@ class LinkInventoryTests(unittest.TestCase):
         self.assertNotIn('_Absent2', result)
         self.assertIn('a function()', result)
 
+    def test_numeric_persist_load_symbol_inventory(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            result = inventory(root, [], 'native', b'',
+                               b'81000000 W SimplePersistFactoryClass<Thing, 123>::Load(ChunkLoadClass&)\n')
+            self.assertEqual(result['persist_load_methods'][0]['chunk_id'], 123)
+            self.assertEqual(result['persist_load_methods'][0]['class'], 'Thing')
+
     def test_registrar_symbol_presence_does_not_prove_registration(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

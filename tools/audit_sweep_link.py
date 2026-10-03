@@ -109,6 +109,12 @@ def inventory(root, database, target, map_bytes, symbol_bytes=b''):
                            'Selected sources may differ from the retained build inputs'],
             'map_sha256': digest(map_bytes), 'total': len(rows),
             'symbols_sha256': digest(symbol_bytes) if symbol_bytes else None,
+            'persist_load_methods': [
+                {'class': match[1], 'chunk_id': int(match[2]),
+                 'symbol': symbol, 'defined_symbol_matches': matches,
+                 'status': 'unknown', 'evidence_class': 'arm_symbols'}
+                for symbol, matches in sorted(symbols.items())
+                if (match := re.match(r'SimplePersistFactoryClass<([^,]+),\s*(\d+)>::Load\(', symbol))],
             'selected': sum(r['selected_for_target'] for r in rows),
             'map_mentioned': sum(r['map_mentions_object'] for r in rows),
             'counts': {'unknown': len(rows)}, 'rows': rows,

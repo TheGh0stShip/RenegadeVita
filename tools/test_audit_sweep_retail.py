@@ -35,3 +35,17 @@ class RetailSweepTests(unittest.TestCase):
         self.assertEqual(row['unmatched_serialized_binding_provenance'],
                          [{'name': 'Absent', 'member': 'test.ldd', 'offset': 123}])
         self.assertFalse(row['runtime_registration_verified'])
+
+    def test_factory_ids_match_numeric_load_methods_without_acceptance(self):
+        receipt = {'map': 'test.mix', 'archive_sha256': 'a', 'objects_ddb_sha256': 'b',
+                   'discovered_scripts': [], 'members': {'test.ldd': {'persist_factory_counts': {'0x0000007b': 3}}},
+                   'discovered_definition_factory_counts': {'0x0000007c': 2},
+                   'summary': {'unknown_shipped_scripts': [], 'level_bindings': 0,
+                               'all_discovered_bindings': 0, 'structural_findings': 0,
+                               'not_located_definition_ids': []}}
+        row = summarize(receipt, {'registration_candidates': [], 'persist_load_methods': [{'chunk_id': 123}]})
+        requirements = row['persist_factory_requirements']
+        self.assertEqual([r['defined_persist_load_method'] for r in requirements], [True, False])
+        self.assertEqual(requirements[0]['level_instances'], 3)
+        self.assertEqual(requirements[1]['discovered_definitions'], 2)
+        self.assertTrue(all(r['status'] == 'unknown' for r in requirements))

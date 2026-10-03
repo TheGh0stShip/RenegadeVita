@@ -5,6 +5,7 @@ Detailed level metadata stays private; public output contains counts and hashes.
 This is the binding/registration portion of S4, not complete asset closure.
 """
 import argparse
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -28,6 +29,16 @@ def summarize(receipt, link):
     names.update(name.lower() for name in receipt['summary']['unknown_shipped_scripts'])
     unmatched = sorted(name for name in names if not any(
         row['defined_symbol_matches'] for row in candidates.get(name, [])))
+    level_factories = Counter()
+    for member in receipt.get('members', {}).values():
+        level_factories.update(member.get('persist_factory_counts', {}))
+    definition_factories = receipt.get('discovered_definition_factory_counts', {})
+    load_ids = {row['chunk_id'] for row in link.get('persist_load_methods', [])}
+    factory_rows = [{'chunk_id': kind, 'level_instances': level_factories.get(kind, 0),
+                     'discovered_definitions': definition_factories.get(kind, 0),
+                     'defined_persist_load_method': int(kind, 16) in load_ids,
+                     'status': 'unknown', 'evidence_class': 'retail_metadata_and_arm_symbols'}
+                    for kind in sorted(level_factories.keys() | definition_factories.keys())]
     return {'map': receipt['map'], 'archive_sha256': receipt['archive_sha256'],
             'objects_ddb_sha256': receipt['objects_ddb_sha256'],
             'status': 'unknown', 'evidence_class': 'retail_metadata_and_arm_symbols',
@@ -44,6 +55,9 @@ def summarize(receipt, link):
                 if edge['script'].lower() in unmatched],
             'structural_findings': receipt['summary']['structural_findings'],
             'not_located_definition_count': len(receipt['summary']['not_located_definition_ids']),
+            'persist_factory_requirements': factory_rows,
+            'cinematic_control_candidates': len(receipt.get('media', {}).get('text_members', [])),
+            'missing_cinematic_control_candidates': receipt.get('media', {}).get('missing_text_names', []),
             'runtime_registration_verified': False}
 
 

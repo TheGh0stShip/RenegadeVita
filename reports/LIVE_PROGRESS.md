@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Three-map archive-local prelit sweep — 2026-10-03
+
+Completed:196 W3D members and2,709 mesh headers inspected across Tutorial/M13/M01.
+Evidence: private scanner/archive/member hashes; no parse/selected-wrapper findings.
+Repeated-material candidates:111/0/62 for each hypothetical supported mode.
+Limits: narrow predicate and local archives only; shared/dynamic dependencies,
+actual load/association and native pixels remain open. No completeness claim.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Prelit representation discovery — 2026-10-03
 
 Completed: reusable read-only header-mode/pass scanner with conservative missing

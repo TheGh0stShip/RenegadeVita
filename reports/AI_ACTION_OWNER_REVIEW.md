@@ -224,6 +224,29 @@ can change Prelit_Mode; the active runtime value is not established here.
 Private mode-specific results: `build/tutorial-powerplant-prelit-mode-candidates-20261003.json`.
 No build, loader execution, launch or rendered acceptance.
 
+## Three-map archive-local prelit sweep
+
+The scanner inspected all W3D members in the three named mission archives:
+
+| Archive | W3D members | Mesh headers | Repeated material-field candidates |
+| --- | ---: | ---: | ---: |
+| Tutorial |31|639|111|
+| M13 |62|487|0|
+| M01 |103|1583|62|
+
+All three hypothetical requested modes have the same candidate counts in this
+scope. No parse errors or selected-wrapper findings were observed. Counts cover
+archive-local membership, not actual runtime reachability, original registration,
+building association or rendering. The candidate predicate is repeated vertex-
+material ID fields only: it does not enumerate every alternate color, shader,
+texture or UV route. M13's zero is not proof of absent alternate materials in
+shared dependencies. Shared archives and dynamic model dependencies remain
+outside this particular sweep.
+
+Private receipt `build/three-map-prelit-candidates-20261003.json` retains scanner,
+archive and member hashes plus per-mode structural rows. No retail mutation,
+build, launch or native visual acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

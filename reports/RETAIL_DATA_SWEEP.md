@@ -1,11 +1,28 @@
 # S4 retail closure — all-map binding discovery in progress
 
+Owner-based root traversal supersedes the earlier flag-only W3D totals. Original
+mesh, hierarchy and raw-animation loaders open children independently of root
+nesting flags. All 31 archives contain 106 such flag-clear roots (one mesh,
+103 hierarchies, two raw animations). Reviewed traversal exposes 354 additional
+child chunks: the current inventory has 1,295,255 occurrences, 2,185 per-archive
+paths and 98 distinct IDs, with zero parser errors. Override provenance and
+original owner hashes are retained. Fixed-structure box roots remain opaque.
+
+The newly located `W3D_CHUNK_DEFORM` occurs in `v_hover_x.w3d` at offset 34579.
+Staged `meshmdlio.cpp:534` retains an original obsolete-chunk logging/skip case;
+this is a source finding, not a newly missing port feature or runtime proof.
+Consumer/reference/HLOD inventories and the consolidated register were refreshed
+together. Texture/HLOD counts and unresolved-name totals are unchanged.
+Other root and nested-container overrides require original-owner review.
+Thirty-five focused/shared checks pass, including flag-clear owner traversal
+and fixed-structure leaf preservation. The all-archive inventory reproduces.
+
 All-archive HLOD header reconciliation now inspects 3,999 W3D member records.
 The owner-based parser opens mesh header chunks even with a clear outer nesting
 flag, matching original `meshmdlio.cpp:243`; retail `v_hover_x.w3d` exposed the
-previous parser omission. Its authored regression passes. General flag-driven
-chunk/reference inventories may omit such unmarked children; they remain lower
-bounds until owner-based traversal is reconciled across root types.
+previous parser omission. Its authored regression passes. The general inventory
+now has reviewed mesh/hierarchy/raw-animation root overrides as described above;
+other owner-specific traversal remains an explicit coverage limit.
 
 49,071 HLOD LOD/aggregate child occurrences are compared against mesh, box,
 emitter, dazzle, HLOD, named-null, sphere/ring, HModel, LOD-model, collection,

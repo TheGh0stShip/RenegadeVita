@@ -12,6 +12,14 @@ def chunk(kind, payload, nested=False):
 
 
 class W3dInventoryTest(unittest.TestCase):
+    def test_original_root_owners_open_flag_clear_children(self):
+        leaf=chunk(0x1f,b'header')
+        for kind in (0,0x100,0x200):
+            self.assertEqual([r[0] for r in chunk_paths(chunk(kind,leaf))],
+                             [(kind,),(kind,0x1f)])
+        # Box data is a fixed structure; never speculate that it contains chunks.
+        self.assertEqual([r[0] for r in chunk_paths(chunk(0x740,leaf))],[(0x740,)])
+
     def test_parent_context_repetition_and_bounds(self):
         leaf = chunk(7, b'x')
         data = chunk(1, leaf * 2, True) + chunk(2, leaf, True)

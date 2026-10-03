@@ -23,8 +23,8 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | level_chunks | 27 | 12768 | False |
 | spatial_presence | 81 | 81 | False |
 | visibility_bounds | 27 | 27 | False |
-| w3d_chunks | 31 | 6180 | False |
-| w3d_consumers | 97 | 97 | False |
+| w3d_chunks | 31 | 6184 | False |
+| w3d_consumers | 98 | 98 | False |
 | dds_formats | 3463 | 3463 | False |
 | w3d_references | 62 | 77 | False |
 | hlod_names | 31 | 98 | False |
@@ -35843,42 +35843,43 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | w3d_chunks /archives/28/chunk_paths/0 | ['0x00000000'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/1 | ['0x00000000', '0x00000002'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/10 | ['0x00000000', '0x00000024', '0x00000029'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/100 | ['0x00000700', '0x00000706'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/101 | ['0x00000700', '0x00000706', '0x00000703'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/102 | ['0x00000700', '0x00000706', '0x00000704'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/103 | ['0x00000740'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/104 | ['0x00000741'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/105 | ['0x00000741', '0x00000001'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/106 | ['0x00000741', '0x00000002'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/107 | ['0x00000741', '0x00000002', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/108 | ['0x00000741', '0x00000003'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/109 | ['0x00000741', '0x00000003', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/100 | ['0x00000700', '0x00000705', '0x00000704'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/101 | ['0x00000700', '0x00000706'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/102 | ['0x00000700', '0x00000706', '0x00000703'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/103 | ['0x00000700', '0x00000706', '0x00000704'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/104 | ['0x00000740'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/105 | ['0x00000741'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/106 | ['0x00000741', '0x00000001'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/107 | ['0x00000741', '0x00000002'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/108 | ['0x00000741', '0x00000002', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/109 | ['0x00000741', '0x00000003'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/11 | ['0x00000000', '0x00000024', '0x0000002a'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/110 | ['0x00000741', '0x00000004'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/111 | ['0x00000741', '0x00000004', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/112 | ['0x00000741', '0x00000005'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/113 | ['0x00000741', '0x00000005', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/114 | ['0x00000742'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/115 | ['0x00000742', '0x00000001'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/116 | ['0x00000742', '0x00000002'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/117 | ['0x00000742', '0x00000002', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/118 | ['0x00000742', '0x00000003'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/119 | ['0x00000742', '0x00000003', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/110 | ['0x00000741', '0x00000003', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/111 | ['0x00000741', '0x00000004'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/112 | ['0x00000741', '0x00000004', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/113 | ['0x00000741', '0x00000005'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/114 | ['0x00000741', '0x00000005', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/115 | ['0x00000742'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/116 | ['0x00000742', '0x00000001'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/117 | ['0x00000742', '0x00000002'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/118 | ['0x00000742', '0x00000002', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/119 | ['0x00000742', '0x00000003'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/12 | ['0x00000000', '0x00000024', '0x00000030'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/120 | ['0x00000742', '0x00000004'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/121 | ['0x00000742', '0x00000004', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/122 | ['0x00000742', '0x00000005'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/123 | ['0x00000742', '0x00000005', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/124 | ['0x00000900'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/125 | ['0x00000900', '0x00000901'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/126 | ['0x00000900', '0x00000902'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/127 | ['0x00000a00'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/128 | ['0x00000a00', '0x00000a01'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/129 | ['0x00000a00', '0x00000a02'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/120 | ['0x00000742', '0x00000003', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/121 | ['0x00000742', '0x00000004'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/122 | ['0x00000742', '0x00000004', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/123 | ['0x00000742', '0x00000005'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/124 | ['0x00000742', '0x00000005', '0x03150809'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/125 | ['0x00000900'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/126 | ['0x00000900', '0x00000901'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/127 | ['0x00000900', '0x00000902'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/128 | ['0x00000a00'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/129 | ['0x00000a00', '0x00000a01'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/13 | ['0x00000000', '0x00000024', '0x00000030', '0x00000031'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/130 | ['0x00000a00', '0x00000a02', '0x00000100'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/131 | ['0x00000a00', '0x00000a02', '0x00000200'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/132 | ['0x00000a00', '0x00000a02', '0x00000200', '0x00000100'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/130 | ['0x00000a00', '0x00000a02'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/131 | ['0x00000a00', '0x00000a02', '0x00000100'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/132 | ['0x00000a00', '0x00000a02', '0x00000200'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/133 | ['0x00000a00', '0x00000a02', '0x00000200', '0x00000100'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/14 | ['0x00000000', '0x00000024', '0x00000030', '0x00000031', '0x00000032'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/15 | ['0x00000000', '0x00000024', '0x00000038'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/16 | ['0x00000000', '0x00000025'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -35922,57 +35923,57 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | w3d_chunks /archives/28/chunk_paths/50 | ['0x00000000', '0x00000038', '0x00000048'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/51 | ['0x00000000', '0x00000038', '0x00000048', '0x00000049'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/52 | ['0x00000000', '0x00000038', '0x00000048', '0x0000004a'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/53 | ['0x00000000', '0x00000090'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/54 | ['0x00000000', '0x00000090', '0x00000091'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/55 | ['0x00000000', '0x00000090', '0x00000092'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/56 | ['0x00000000', '0x00000090', '0x00000093'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/57 | ['0x00000100'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/58 | ['0x00000100', '0x00000101'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/59 | ['0x00000100', '0x00000102'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/53 | ['0x00000000', '0x00000058'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/54 | ['0x00000000', '0x00000090'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/55 | ['0x00000000', '0x00000090', '0x00000091'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/56 | ['0x00000000', '0x00000090', '0x00000092'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/57 | ['0x00000000', '0x00000090', '0x00000093'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/58 | ['0x00000100'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/59 | ['0x00000100', '0x00000101'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/6 | ['0x00000000', '0x00000020'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/60 | ['0x00000100', '0x00000103'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/61 | ['0x00000200'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/62 | ['0x00000200', '0x00000201'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/63 | ['0x00000200', '0x00000202'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/64 | ['0x00000200', '0x00000203'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/65 | ['0x00000280'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/66 | ['0x00000280', '0x00000281'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/67 | ['0x00000280', '0x00000282'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/68 | ['0x00000280', '0x00000283'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/69 | ['0x00000300'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/60 | ['0x00000100', '0x00000102'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/61 | ['0x00000100', '0x00000103'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/62 | ['0x00000200'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/63 | ['0x00000200', '0x00000201'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/64 | ['0x00000200', '0x00000202'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/65 | ['0x00000200', '0x00000203'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/66 | ['0x00000280'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/67 | ['0x00000280', '0x00000281'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/68 | ['0x00000280', '0x00000282'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/69 | ['0x00000280', '0x00000283'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/7 | ['0x00000000', '0x00000022'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/70 | ['0x00000300', '0x00000301'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/71 | ['0x00000300', '0x00000302'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/72 | ['0x00000300', '0x00000303'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/73 | ['0x00000300', '0x00000304'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/74 | ['0x00000300', '0x00000305'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/75 | ['0x00000420'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/76 | ['0x00000420', '0x00000421'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/77 | ['0x00000420', '0x00000422'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/78 | ['0x00000500'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/79 | ['0x00000500', '0x00000501'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/70 | ['0x00000300'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/71 | ['0x00000300', '0x00000301'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/72 | ['0x00000300', '0x00000302'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/73 | ['0x00000300', '0x00000303'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/74 | ['0x00000300', '0x00000304'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/75 | ['0x00000300', '0x00000305'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/76 | ['0x00000420'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/77 | ['0x00000420', '0x00000421'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/78 | ['0x00000420', '0x00000422'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/79 | ['0x00000500'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/8 | ['0x00000000', '0x00000024'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/80 | ['0x00000500', '0x00000502'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/81 | ['0x00000500', '0x00000503'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/82 | ['0x00000500', '0x00000504'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/83 | ['0x00000500', '0x00000505'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/84 | ['0x00000500', '0x0000050a'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/85 | ['0x00000500', '0x0000050b'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/86 | ['0x00000500', '0x0000050c'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/87 | ['0x00000600'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/88 | ['0x00000600', '0x00000601'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/89 | ['0x00000600', '0x00000602'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/80 | ['0x00000500', '0x00000501'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/81 | ['0x00000500', '0x00000502'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/82 | ['0x00000500', '0x00000503'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/83 | ['0x00000500', '0x00000504'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/84 | ['0x00000500', '0x00000505'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/85 | ['0x00000500', '0x0000050a'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/86 | ['0x00000500', '0x0000050b'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/87 | ['0x00000500', '0x0000050c'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/88 | ['0x00000600'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/89 | ['0x00000600', '0x00000601'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/chunk_paths/9 | ['0x00000000', '0x00000024', '0x00000028'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/90 | ['0x00000600', '0x00000603'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/91 | ['0x00000600', '0x00000604'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/92 | ['0x00000700'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/93 | ['0x00000700', '0x00000701'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/94 | ['0x00000700', '0x00000702'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/95 | ['0x00000700', '0x00000702', '0x00000703'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/96 | ['0x00000700', '0x00000702', '0x00000704'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/97 | ['0x00000700', '0x00000705'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/98 | ['0x00000700', '0x00000705', '0x00000703'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_chunks /archives/28/chunk_paths/99 | ['0x00000700', '0x00000705', '0x00000704'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/90 | ['0x00000600', '0x00000602'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/91 | ['0x00000600', '0x00000603'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/92 | ['0x00000600', '0x00000604'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/93 | ['0x00000700'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/94 | ['0x00000700', '0x00000701'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/95 | ['0x00000700', '0x00000702'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/96 | ['0x00000700', '0x00000702', '0x00000703'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/97 | ['0x00000700', '0x00000702', '0x00000704'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/98 | ['0x00000700', '0x00000705'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_chunks /archives/28/chunk_paths/99 | ['0x00000700', '0x00000705', '0x00000703'] | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/members/0 | dsp_o2tank.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/members/1 | f_ga_snip_enter.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_chunks /archives/28/members/10 | dsp_sink.w3d | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -39544,16 +39545,19 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | w3d_chunks /archives/9/chunk_paths/48 | ['0x00000000', '0x00000090', '0x00000093'] | unknown | unclassified | C&C_Mesa.mix |
 | w3d_chunks /archives/9/chunk_paths/49 | ['0x00000100'] | unknown | unclassified | C&C_Mesa.mix |
 | w3d_chunks /archives/9/chunk_paths/5 | ['0x00000000', '0x00000020'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/50 | ['0x00000700'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/51 | ['0x00000700', '0x00000701'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/52 | ['0x00000700', '0x00000702'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/53 | ['0x00000700', '0x00000702', '0x00000703'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/54 | ['0x00000700', '0x00000702', '0x00000704'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/55 | ['0x00000700', '0x00000706'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/56 | ['0x00000900'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/57 | ['0x00000900', '0x00000901'] | unknown | unclassified | C&C_Mesa.mix |
-| w3d_chunks /archives/9/chunk_paths/58 | ['0x00000900', '0x00000902'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/50 | ['0x00000100', '0x00000101'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/51 | ['0x00000100', '0x00000102'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/52 | ['0x00000100', '0x00000103'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/53 | ['0x00000700'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/54 | ['0x00000700', '0x00000701'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/55 | ['0x00000700', '0x00000702'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/56 | ['0x00000700', '0x00000702', '0x00000703'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/57 | ['0x00000700', '0x00000702', '0x00000704'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/58 | ['0x00000700', '0x00000706'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/59 | ['0x00000900'] | unknown | unclassified | C&C_Mesa.mix |
 | w3d_chunks /archives/9/chunk_paths/6 | ['0x00000000', '0x00000022'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/60 | ['0x00000900', '0x00000901'] | unknown | unclassified | C&C_Mesa.mix |
+| w3d_chunks /archives/9/chunk_paths/61 | ['0x00000900', '0x00000902'] | unknown | unclassified | C&C_Mesa.mix |
 | w3d_chunks /archives/9/chunk_paths/7 | ['0x00000000', '0x00000024'] | unknown | unclassified | C&C_Mesa.mix |
 | w3d_chunks /archives/9/chunk_paths/8 | ['0x00000000', '0x00000024', '0x00000028'] | unknown | unclassified | C&C_Mesa.mix |
 | w3d_chunks /archives/9/chunk_paths/9 | ['0x00000000', '0x00000024', '0x00000029'] | unknown | unclassified | C&C_Mesa.mix |
@@ -39586,75 +39590,76 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | w3d_consumers /rows/31 | 0x00000048 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/32 | 0x00000049 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/33 | 0x0000004a | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/34 | 0x00000090 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/35 | 0x00000091 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/36 | 0x00000092 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/37 | 0x00000093 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/38 | 0x00000100 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/39 | 0x00000101 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/34 | 0x00000058 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/35 | 0x00000090 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/36 | 0x00000091 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/37 | 0x00000092 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/38 | 0x00000093 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/39 | 0x00000100 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/4 | 0x00000004 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/40 | 0x00000102 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/41 | 0x00000103 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/42 | 0x00000200 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/43 | 0x00000201 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/44 | 0x00000202 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/45 | 0x00000203 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/46 | 0x00000280 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/47 | 0x00000281 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/48 | 0x00000282 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/49 | 0x00000283 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/40 | 0x00000101 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/41 | 0x00000102 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/42 | 0x00000103 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/43 | 0x00000200 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/44 | 0x00000201 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/45 | 0x00000202 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/46 | 0x00000203 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/47 | 0x00000280 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/48 | 0x00000281 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/49 | 0x00000282 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/5 | 0x00000005 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/50 | 0x000002c0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/51 | 0x000002c1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/52 | 0x000002c2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/53 | 0x000002c3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/54 | 0x000002c4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/55 | 0x000002c5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/56 | 0x00000300 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/57 | 0x00000301 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/58 | 0x00000302 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/59 | 0x00000303 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/50 | 0x00000283 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/51 | 0x000002c0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/52 | 0x000002c1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/53 | 0x000002c2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/54 | 0x000002c3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/55 | 0x000002c4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/56 | 0x000002c5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/57 | 0x00000300 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/58 | 0x00000301 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/59 | 0x00000302 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/6 | 0x0000000c | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/60 | 0x00000304 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/61 | 0x00000305 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/62 | 0x00000420 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/63 | 0x00000421 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/64 | 0x00000422 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/65 | 0x00000423 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/66 | 0x00000500 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/67 | 0x00000501 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/68 | 0x00000502 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/69 | 0x00000503 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/60 | 0x00000303 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/61 | 0x00000304 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/62 | 0x00000305 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/63 | 0x00000420 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/64 | 0x00000421 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/65 | 0x00000422 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/66 | 0x00000423 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/67 | 0x00000500 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/68 | 0x00000501 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/69 | 0x00000502 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/7 | 0x0000000e | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/70 | 0x00000504 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/71 | 0x00000505 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/72 | 0x0000050a | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/73 | 0x0000050b | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/74 | 0x0000050c | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/75 | 0x00000600 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/76 | 0x00000601 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/77 | 0x00000602 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/78 | 0x00000603 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/79 | 0x00000604 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/70 | 0x00000503 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/71 | 0x00000504 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/72 | 0x00000505 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/73 | 0x0000050a | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/74 | 0x0000050b | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/75 | 0x0000050c | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/76 | 0x00000600 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/77 | 0x00000601 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/78 | 0x00000602 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/79 | 0x00000603 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/8 | 0x0000001f | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/80 | 0x00000700 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/81 | 0x00000701 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/82 | 0x00000702 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/83 | 0x00000703 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/84 | 0x00000704 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/85 | 0x00000705 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/86 | 0x00000706 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/87 | 0x00000740 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/88 | 0x00000741 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/89 | 0x00000742 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/80 | 0x00000604 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/81 | 0x00000700 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/82 | 0x00000701 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/83 | 0x00000702 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/84 | 0x00000703 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/85 | 0x00000704 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/86 | 0x00000705 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/87 | 0x00000706 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/88 | 0x00000740 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/89 | 0x00000741 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_consumers /rows/9 | 0x00000020 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/90 | 0x00000900 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/91 | 0x00000901 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/92 | 0x00000902 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/93 | 0x00000a00 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/94 | 0x00000a01 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/95 | 0x00000a02 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| w3d_consumers /rows/96 | 0x03150809 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/90 | 0x00000742 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/91 | 0x00000900 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/92 | 0x00000901 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/93 | 0x00000902 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/94 | 0x00000a00 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/95 | 0x00000a01 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/96 | 0x00000a02 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| w3d_consumers /rows/97 | 0x03150809 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_references /rows/0 | /rows/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_references /rows/1 | /rows/1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | w3d_references /rows/10 | /rows/10 | unknown | unclassified | C&C_Field.mix |

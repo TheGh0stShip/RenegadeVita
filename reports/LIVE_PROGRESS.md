@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## S4 original-owner root traversal batch — 2026-10-03
+
+106 clear nesting flags across mesh/hierarchy/raw-animation roots hid 354 child
+chunks. Reviewed original-owner traversal now inventories 1,295,255 occurrences
+and 98 distinct IDs without parser errors. New DEFORM metadata matches an
+original obsolete logging/skip case. All dependent inventories and the register
+were refreshed together. Other owner overrides and runtime behavior remain open.
+Thirty-five focused/shared tests pass; all-archive chunk output reproduces.
+
 ## S4 all-archive HLOD name reconciliation — 2026-10-03
 
 49,071 child occurrences across 3,999 W3D records are compared with reviewed

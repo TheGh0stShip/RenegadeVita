@@ -1411,7 +1411,7 @@
     },
     {
       "source": "tools/audit_w3d_loader_coverage.py",
-      "sha256": "9a245ce2d4f2c4ec44e781049aad96ed76e1d281d4947a9bb1bd3d6abc351a33"
+      "sha256": "259b2b866bcdbcb808616447c2b637bd39c10818c6bf5cdea660eab3fcaa3748"
     },
     {
       "source": "tools/renegade_cinematic_dependency_scan.py",

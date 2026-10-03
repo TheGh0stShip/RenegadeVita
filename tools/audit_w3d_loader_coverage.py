@@ -19,6 +19,12 @@ LOADERS={0x500:('ParticleEmitterLoaderClass','part_ldr.cpp'),
          0x742:('RingLoaderClass','ringobj.cpp'),
          0xa00:('SoundRenderObjLoaderClass','soundrobj.cpp')}
 
+# These original owners open child headers independently of the root nesting
+# flag. Other flag-clear roots remain opaque until their owners are reviewed.
+ROOT_CHILD_OWNERS={0x0:'staging/ww3d2/meshmdlio.cpp',
+                  0x100:'staging/ww3d2/htree.cpp',
+                  0x200:'staging/ww3d2/hrawanim.cpp'}
+
 
 def registrations(build):
     db=json.loads(subprocess.check_output(['ninja','-C',str(build),'-t','compdb'],text=True))
@@ -67,7 +73,7 @@ def chunk_paths(data, ancestry=(), base=0, depth=0):
             raise ValueError('W3D chunk exceeds parent')
         path = ancestry + (kind,)
         rows.append((path, base + pos, end - pos - 8))
-        if size & 0x80000000:
+        if size & 0x80000000 or (not ancestry and kind in ROOT_CHILD_OWNERS):
             rows.extend(chunk_paths(data[pos+8:end], path, base+pos+8, depth+1))
         pos = end
     return rows
@@ -97,6 +103,12 @@ def scan(directory):
                     occurrences = chunk_paths(data)
                     member['chunk_count'] = len(occurrences)
                     member['root_chunks'] = [f'0x{k:08x}' for k in kinds]
+                    member['root_nesting_overrides'] = [
+                        {'chunk_id':f'0x{path[0]:08x}','offset':chunk_offset,
+                         'owner':ROOT_CHILD_OWNERS[path[0]]}
+                        for path,chunk_offset,_ in occurrences
+                        if len(path)==1 and path[0] in ROOT_CHILD_OWNERS and
+                        not struct.unpack_from('<I',data,chunk_offset+4)[0]&0x80000000]
                     for path, chunk_offset, payload_size in occurrences:
                         entry = grouped.setdefault(path, {'chunk_path': [f'0x{k:08x}' for k in path],
                                                           'count': 0, 'first_offset': chunk_offset,
@@ -125,9 +137,11 @@ def scan(directory):
             'scope':'Every named W3D index record in all supplied MIX/DAT/DBS archives; not runtime reachability',
             'parser_inputs': [{'source': source, 'sha256': hashlib.sha256((ROOT/source).read_bytes()).hexdigest()}
                               for source in ('tools/audit_w3d_loader_coverage.py',
-                                             'tools/renegade_cinematic_dependency_scan.py')],
+                                             'tools/renegade_cinematic_dependency_scan.py',
+                                             *ROOT_CHILD_OWNERS.values())],
             'limits':['Loose W3D files and nested archives remain outside this denominator',
                       'Chunk metadata does not establish loader support, runtime mounts or visible effects',
+                      'Only mesh, hierarchy and raw-animation roots have reviewed nesting-flag overrides',
                       'Archive path aggregates retain first-occurrence provenance; per-member nested paths are not emitted',
                       'Bootstrap loader census covers four historical classes only; full loader mapping remains open'],
             'loader_owners':{f'0x{k:08x}':{'class':v[0],'owner':v[1]} for k,v in LOADERS.items()},'archives':rows}

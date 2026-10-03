@@ -375,7 +375,7 @@
       "names": [
         "W3D_CHUNK_VERTICES"
       ],
-      "occurrences": 43106,
+      "occurrences": 43107,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -669,7 +669,7 @@
             "0x00000000",
             "0x00000002"
           ],
-          "count": 13445,
+          "count": 13446,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 3660
@@ -767,7 +767,7 @@
       "names": [
         "W3D_CHUNK_VERTEX_NORMALS"
       ],
-      "occurrences": 43106,
+      "occurrences": 43107,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -1061,7 +1061,7 @@
             "0x00000000",
             "0x00000003"
           ],
-          "count": 13445,
+          "count": 13446,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 4388
@@ -1714,7 +1714,7 @@
       "names": [
         "W3D_CHUNK_MESH_HEADER3"
       ],
-      "occurrences": 43098,
+      "occurrences": 43099,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -2008,7 +2008,7 @@
             "0x00000000",
             "0x0000001f"
           ],
-          "count": 13445,
+          "count": 13446,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 3536
@@ -2069,7 +2069,7 @@
       "names": [
         "W3D_CHUNK_TRIANGLES"
       ],
-      "occurrences": 43098,
+      "occurrences": 43099,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -2363,7 +2363,7 @@
             "0x00000000",
             "0x00000020"
           ],
-          "count": 13445,
+          "count": 13446,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 5116
@@ -2416,7 +2416,7 @@
       "names": [
         "W3D_CHUNK_VERTEX_SHADE_INDICES"
       ],
-      "occurrences": 43098,
+      "occurrences": 43099,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -2710,7 +2710,7 @@
             "0x00000000",
             "0x00000022"
           ],
-          "count": 13445,
+          "count": 13446,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 7172
@@ -3819,7 +3819,7 @@
       "names": [
         "W3D_CHUNK_MATERIAL_INFO"
       ],
-      "occurrences": 68391,
+      "occurrences": 68392,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -5121,7 +5121,7 @@
             "0x00000000",
             "0x00000028"
           ],
-          "count": 12322,
+          "count": 12323,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 7420
@@ -5174,7 +5174,7 @@
       "names": [
         "W3D_CHUNK_SHADERS"
       ],
-      "occurrences": 68391,
+      "occurrences": 68392,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -6476,7 +6476,7 @@
             "0x00000000",
             "0x00000029"
           ],
-          "count": 12322,
+          "count": 12323,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 7520
@@ -6529,7 +6529,7 @@
       "names": [
         "W3D_CHUNK_VERTEX_MATERIALS"
       ],
-      "occurrences": 68391,
+      "occurrences": 68392,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -7831,7 +7831,7 @@
             "0x00000000",
             "0x0000002a"
           ],
-          "count": 12322,
+          "count": 12323,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 7444
@@ -9396,7 +9396,7 @@
       "names": [
         "W3D_CHUNK_TEXTURES"
       ],
-      "occurrences": 51513,
+      "occurrences": 51514,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -10686,7 +10686,7 @@
             "0x00000000",
             "0x00000030"
           ],
-          "count": 8051,
+          "count": 8052,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 7544
@@ -14771,7 +14771,7 @@
       "names": [
         "W3D_CHUNK_MATERIAL_PASS"
       ],
-      "occurrences": 85888,
+      "occurrences": 85889,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -16073,7 +16073,7 @@
             "0x00000000",
             "0x00000038"
           ],
-          "count": 12861,
+          "count": 12862,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 7614
@@ -18294,6 +18294,40 @@
       "reviewed_local_consumer_candidates": []
     },
     {
+      "chunk_id": "0x00000058",
+      "names": [
+        "W3D_CHUNK_DEFORM"
+      ],
+      "occurrences": 1,
+      "retail_paths": [
+        {
+          "archive": "always.dat",
+          "chunk_path": [
+            "0x00000000",
+            "0x00000058"
+          ],
+          "count": 1,
+          "member": "v_hover_x.w3d",
+          "index_record": 6119,
+          "offset": 34579
+        }
+      ],
+      "source_candidates": [
+        {
+          "name": "W3D_CHUNK_DEFORM",
+          "line": 534,
+          "reference_kind": "case_label",
+          "source": "staging/ww3d2/meshmdlio.cpp",
+          "selected_translation_unit": true,
+          "map_mentions_object": true
+        }
+      ],
+      "has_case_candidate": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_and_source_candidates",
+      "reviewed_local_consumer_candidates": []
+    },
+    {
       "chunk_id": "0x00000090",
       "names": [
         "W3D_CHUNK_AABTREE"
@@ -20124,7 +20158,7 @@
       "names": [
         "W3D_CHUNK_HIERARCHY_HEADER"
       ],
-      "occurrences": 1562,
+      "occurrences": 1665,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -20132,7 +20166,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 14,
+          "count": 16,
           "member": "v_gdi_apc_m.w3d",
           "index_record": 3,
           "offset": 8
@@ -20143,7 +20177,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_canyon_emis.w3d",
           "index_record": 5,
           "offset": 8
@@ -20154,7 +20188,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_city_emis.w3d",
           "index_record": 1,
           "offset": 8
@@ -20165,7 +20199,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mpcity_airfix.w3d",
           "index_record": 5,
           "offset": 8
@@ -20176,7 +20210,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 2,
+          "count": 3,
           "member": "xsp_torture_wal.w3d",
           "index_record": 0,
           "offset": 8
@@ -20187,9 +20221,9 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 1,
-          "member": "mp_field_emis.w3d",
-          "index_record": 47,
+          "count": 2,
+          "member": "mp_field.w3d",
+          "index_record": 3,
           "offset": 8
         },
         {
@@ -20209,7 +20243,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_hrglas_emis.w3d",
           "index_record": 23,
           "offset": 8
@@ -20220,9 +20254,20 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 1,
+          "count": 3,
           "member": "mp_islands_vis.w3d",
           "index_record": 19,
+          "offset": 8
+        },
+        {
+          "archive": "C&C_Mesa.mix",
+          "chunk_path": [
+            "0x00000100",
+            "0x00000101"
+          ],
+          "count": 1,
+          "member": "mp_mesa_lm.w3d",
+          "index_record": 1,
           "offset": 8
         },
         {
@@ -20231,7 +20276,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mp_volcano_emis.w3d",
           "index_record": 40,
           "offset": 8
@@ -20242,7 +20287,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_walls_emis.w3d",
           "index_record": 6,
           "offset": 8
@@ -20253,7 +20298,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mpwalls_airfix.w3d",
           "index_record": 6,
           "offset": 8
@@ -20264,7 +20309,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 25,
+          "count": 31,
           "member": "mgagd_tv.w3d",
           "index_record": 5,
           "offset": 8
@@ -20275,7 +20320,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 46,
+          "count": 58,
           "member": "o_bilboard_02.w3d",
           "index_record": 0,
           "offset": 8
@@ -20286,7 +20331,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 29,
+          "count": 33,
           "member": "pine_dsno.w3d",
           "index_record": 9,
           "offset": 8
@@ -20297,7 +20342,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 53,
+          "count": 55,
           "member": "l03basegate_b.w3d",
           "index_record": 0,
           "offset": 8
@@ -20308,7 +20353,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 33,
+          "count": 54,
           "member": "l4_water.w3d",
           "index_record": 7,
           "offset": 8
@@ -20319,7 +20364,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 14,
+          "count": 16,
           "member": "x5m_camera.w3d",
           "index_record": 9,
           "offset": 8
@@ -20330,7 +20375,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 125,
+          "count": 130,
           "member": "l6_floorfire06.w3d",
           "index_record": 8,
           "offset": 8
@@ -20341,7 +20386,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 6,
+          "count": 8,
           "member": "v_nod_radar.w3d",
           "index_record": 4,
           "offset": 8
@@ -20352,7 +20397,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 18,
+          "count": 25,
           "member": "x8b_trnspt_03.w3d",
           "index_record": 3,
           "offset": 8
@@ -20363,7 +20408,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 19,
+          "count": 25,
           "member": "door_a.w3d",
           "index_record": 5,
           "offset": 8
@@ -20374,7 +20419,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 20,
+          "count": 23,
           "member": "con_ag_ext1.w3d",
           "index_record": 3,
           "offset": 8
@@ -20385,7 +20430,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 16,
+          "count": 17,
           "member": "miss_elev4.w3d",
           "index_record": 17,
           "offset": 8
@@ -20396,7 +20441,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 43,
+          "count": 44,
           "member": "x00_apc_traj.w3d",
           "index_record": 7,
           "offset": 8
@@ -20407,7 +20452,7 @@
             "0x00000100",
             "0x00000101"
           ],
-          "count": 1069,
+          "count": 1086,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 8
@@ -20444,7 +20489,7 @@
       "names": [
         "W3D_CHUNK_PIVOTS"
       ],
-      "occurrences": 1562,
+      "occurrences": 1665,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -20452,7 +20497,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 14,
+          "count": 16,
           "member": "v_gdi_apc_m.w3d",
           "index_record": 3,
           "offset": 52
@@ -20463,7 +20508,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_canyon_emis.w3d",
           "index_record": 5,
           "offset": 52
@@ -20474,7 +20519,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_city_emis.w3d",
           "index_record": 1,
           "offset": 52
@@ -20485,7 +20530,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mpcity_airfix.w3d",
           "index_record": 5,
           "offset": 52
@@ -20496,7 +20541,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 2,
+          "count": 3,
           "member": "xsp_torture_wal.w3d",
           "index_record": 0,
           "offset": 52
@@ -20507,9 +20552,9 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 1,
-          "member": "mp_field_emis.w3d",
-          "index_record": 47,
+          "count": 2,
+          "member": "mp_field.w3d",
+          "index_record": 3,
           "offset": 52
         },
         {
@@ -20529,7 +20574,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_hrglas_emis.w3d",
           "index_record": 23,
           "offset": 52
@@ -20540,9 +20585,20 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 1,
+          "count": 3,
           "member": "mp_islands_vis.w3d",
           "index_record": 19,
+          "offset": 52
+        },
+        {
+          "archive": "C&C_Mesa.mix",
+          "chunk_path": [
+            "0x00000100",
+            "0x00000102"
+          ],
+          "count": 1,
+          "member": "mp_mesa_lm.w3d",
+          "index_record": 1,
           "offset": 52
         },
         {
@@ -20551,7 +20607,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mp_volcano_emis.w3d",
           "index_record": 40,
           "offset": 52
@@ -20562,7 +20618,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_walls_emis.w3d",
           "index_record": 6,
           "offset": 52
@@ -20573,7 +20629,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mpwalls_airfix.w3d",
           "index_record": 6,
           "offset": 52
@@ -20584,7 +20640,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 25,
+          "count": 31,
           "member": "mgagd_tv.w3d",
           "index_record": 5,
           "offset": 52
@@ -20595,7 +20651,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 46,
+          "count": 58,
           "member": "o_bilboard_02.w3d",
           "index_record": 0,
           "offset": 52
@@ -20606,7 +20662,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 29,
+          "count": 33,
           "member": "pine_dsno.w3d",
           "index_record": 9,
           "offset": 52
@@ -20617,7 +20673,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 53,
+          "count": 55,
           "member": "l03basegate_b.w3d",
           "index_record": 0,
           "offset": 52
@@ -20628,7 +20684,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 33,
+          "count": 54,
           "member": "l4_water.w3d",
           "index_record": 7,
           "offset": 52
@@ -20639,7 +20695,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 14,
+          "count": 16,
           "member": "x5m_camera.w3d",
           "index_record": 9,
           "offset": 52
@@ -20650,7 +20706,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 125,
+          "count": 130,
           "member": "l6_floorfire06.w3d",
           "index_record": 8,
           "offset": 52
@@ -20661,7 +20717,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 6,
+          "count": 8,
           "member": "v_nod_radar.w3d",
           "index_record": 4,
           "offset": 52
@@ -20672,7 +20728,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 18,
+          "count": 25,
           "member": "x8b_trnspt_03.w3d",
           "index_record": 3,
           "offset": 52
@@ -20683,7 +20739,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 19,
+          "count": 25,
           "member": "door_a.w3d",
           "index_record": 5,
           "offset": 52
@@ -20694,7 +20750,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 20,
+          "count": 23,
           "member": "con_ag_ext1.w3d",
           "index_record": 3,
           "offset": 52
@@ -20705,7 +20761,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 16,
+          "count": 17,
           "member": "miss_elev4.w3d",
           "index_record": 17,
           "offset": 52
@@ -20716,7 +20772,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 43,
+          "count": 44,
           "member": "x00_apc_traj.w3d",
           "index_record": 7,
           "offset": 52
@@ -20727,7 +20783,7 @@
             "0x00000100",
             "0x00000102"
           ],
-          "count": 1069,
+          "count": 1086,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 52
@@ -20764,7 +20820,7 @@
       "names": [
         "W3D_CHUNK_PIVOT_FIXUPS"
       ],
-      "occurrences": 1562,
+      "occurrences": 1665,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -20772,7 +20828,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 14,
+          "count": 16,
           "member": "v_gdi_apc_m.w3d",
           "index_record": 3,
           "offset": 1680
@@ -20783,7 +20839,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_canyon_emis.w3d",
           "index_record": 5,
           "offset": 120
@@ -20794,7 +20850,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_city_emis.w3d",
           "index_record": 1,
           "offset": 120
@@ -20805,7 +20861,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mpcity_airfix.w3d",
           "index_record": 5,
           "offset": 120
@@ -20816,7 +20872,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 2,
+          "count": 3,
           "member": "xsp_torture_wal.w3d",
           "index_record": 0,
           "offset": 240
@@ -20827,10 +20883,10 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 1,
-          "member": "mp_field_emis.w3d",
-          "index_record": 47,
-          "offset": 4260
+          "count": 2,
+          "member": "mp_field.w3d",
+          "index_record": 3,
+          "offset": 120
         },
         {
           "archive": "C&C_Glacier_Flying.mix",
@@ -20849,7 +20905,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_hrglas_emis.w3d",
           "index_record": 23,
           "offset": 600
@@ -20860,10 +20916,21 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 1,
+          "count": 3,
           "member": "mp_islands_vis.w3d",
           "index_record": 19,
           "offset": 120
+        },
+        {
+          "archive": "C&C_Mesa.mix",
+          "chunk_path": [
+            "0x00000100",
+            "0x00000103"
+          ],
+          "count": 1,
+          "member": "mp_mesa_lm.w3d",
+          "index_record": 1,
+          "offset": 4740
         },
         {
           "archive": "C&C_Volcano.mix",
@@ -20871,7 +20938,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mp_volcano_emis.w3d",
           "index_record": 40,
           "offset": 180
@@ -20882,7 +20949,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 1,
+          "count": 2,
           "member": "mp_walls_emis.w3d",
           "index_record": 6,
           "offset": 120
@@ -20893,7 +20960,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 2,
+          "count": 3,
           "member": "mpwalls_airfix.w3d",
           "index_record": 6,
           "offset": 120
@@ -20904,7 +20971,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 25,
+          "count": 31,
           "member": "mgagd_tv.w3d",
           "index_record": 5,
           "offset": 300
@@ -20915,7 +20982,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 46,
+          "count": 58,
           "member": "o_bilboard_02.w3d",
           "index_record": 0,
           "offset": 120
@@ -20926,7 +20993,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 29,
+          "count": 33,
           "member": "pine_dsno.w3d",
           "index_record": 9,
           "offset": 180
@@ -20937,7 +21004,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 53,
+          "count": 55,
           "member": "l03basegate_b.w3d",
           "index_record": 0,
           "offset": 180
@@ -20948,7 +21015,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 33,
+          "count": 54,
           "member": "l4_water.w3d",
           "index_record": 7,
           "offset": 120
@@ -20959,7 +21026,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 14,
+          "count": 16,
           "member": "x5m_camera.w3d",
           "index_record": 9,
           "offset": 180
@@ -20970,7 +21037,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 125,
+          "count": 130,
           "member": "l6_floorfire06.w3d",
           "index_record": 8,
           "offset": 180
@@ -20981,7 +21048,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 6,
+          "count": 8,
           "member": "v_nod_radar.w3d",
           "index_record": 4,
           "offset": 180
@@ -20992,7 +21059,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 18,
+          "count": 25,
           "member": "x8b_trnspt_03.w3d",
           "index_record": 3,
           "offset": 180
@@ -21003,7 +21070,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 19,
+          "count": 25,
           "member": "door_a.w3d",
           "index_record": 5,
           "offset": 420
@@ -21014,7 +21081,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 20,
+          "count": 23,
           "member": "con_ag_ext1.w3d",
           "index_record": 3,
           "offset": 780
@@ -21025,7 +21092,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 16,
+          "count": 17,
           "member": "miss_elev4.w3d",
           "index_record": 17,
           "offset": 300
@@ -21036,7 +21103,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 43,
+          "count": 44,
           "member": "x00_apc_traj.w3d",
           "index_record": 7,
           "offset": 180
@@ -21047,7 +21114,7 @@
             "0x00000100",
             "0x00000103"
           ],
-          "count": 1069,
+          "count": 1086,
           "member": "dsp_o2tank.w3d",
           "index_record": 0,
           "offset": 720
@@ -21320,7 +21387,7 @@
       "names": [
         "W3D_CHUNK_ANIMATION_HEADER"
       ],
-      "occurrences": 2137,
+      "occurrences": 2139,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -21416,7 +21483,7 @@
             "0x00000200",
             "0x00000201"
           ],
-          "count": 59,
+          "count": 61,
           "member": "h_b_x6b_sak2.w3d",
           "index_record": 4,
           "offset": 8
@@ -21546,7 +21613,7 @@
       "names": [
         "W3D_CHUNK_ANIMATION_CHANNEL"
       ],
-      "occurrences": 46167,
+      "occurrences": 46191,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -21642,7 +21709,7 @@
             "0x00000200",
             "0x00000202"
           ],
-          "count": 1269,
+          "count": 1293,
           "member": "h_b_x6b_sak2.w3d",
           "index_record": 4,
           "offset": 60
@@ -21756,7 +21823,7 @@
       "names": [
         "W3D_CHUNK_BIT_CHANNEL"
       ],
-      "occurrences": 4512,
+      "occurrences": 4520,
       "retail_paths": [
         {
           "archive": "Always2.dat",
@@ -21852,7 +21919,7 @@
             "0x00000200",
             "0x00000203"
           ],
-          "count": 50,
+          "count": 58,
           "member": "l6_floorfire06.w3d",
           "index_record": 8,
           "offset": 344
@@ -28733,8 +28800,8 @@
       ]
     }
   ],
-  "total": 97,
-  "inventory_sha256": "ba3d4cad731bb6eccee41f705dce1aa235756e55eea5311b292a44781e9fc73c",
+  "total": 98,
+  "inventory_sha256": "329eb865c518db0bb8ea59adcdd90c95ae566dbd568636654a5bbd70c1083cf3",
   "link_inventory_sha256": "4d7965995cd92e95b6efc4f1b20bba571f76dbaed73596d926412729c148f87a",
   "enum_sha256": "0fd903f12ff5fefe1511dada2f4295c0cf4744087b1965ccfe9435c3725dc34c",
   "generator_sha256": "30409a2f8ac70a37250b1100e202a58a7b7a4b84a6d74f94fabcb62d7701a004",
@@ -28885,7 +28952,7 @@
     }
   ],
   "counts": {
-    "with_case_candidate": 61,
+    "with_case_candidate": 62,
     "without_symbol_candidate": 6,
     "unnamed_in_staged_enum": 4
   },

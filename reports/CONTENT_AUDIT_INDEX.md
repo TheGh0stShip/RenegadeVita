@@ -1,5 +1,10 @@
 # Content coverage audit index
 
+Command assignment sweep: [original script table coverage](SCRIPT_COMMAND_TABLE_COVERAGE.md)
+finds no missing assignments among118 focus mission commands or179 across
+selected declared-script bodies. Five parser counterexamples pass; indirect/
+outside-body calls and native linkage/behavior remain outside this source gate.
+
 Completion linkage: [original campaign and objective owners](MISSION_COMPLETION_OWNER_REVIEW.md)
 traces the M13 helper success callback through the native latch, original score/
 movie routing and bounded campaign-state handoff. No dropped success forwarding

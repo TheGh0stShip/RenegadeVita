@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Original command assignment sweep — 2026-10-03
+
+Completed: source command/table audit with owner provenance and SHA identities.
+Evidence:118 focus mission /179 selected declared-script commands; no missing
+or unresolved table assignments. Five counterexample tests pass. Guarded movie/
+headless compatibility stubs are not selected by the full-port source graph.
+Next: native subsystem behavior and calls outside declared script bodies.
+Native/runtime gates remain0/10; no build, launch or device action.
+See [command table coverage](SCRIPT_COMMAND_TABLE_COVERAGE.md).
+
 ## M01 finale success producer — 2026-10-03
 
 Completed: direct type0/parameter0 success producer located in original finale

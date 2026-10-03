@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Required level members and load outcome — 2026-10-03
+
+Completed: Tutorial/M13/M01 authored dynamic-to-static member links verified
+read-only with archive/member/source hashes; each has one info/data chunk.
+Evidence: required static members present; original loader return/open handling
+traced. Worker completion is not load success; failure propagation remains open.
+No build, launch or retail mutation; native/runtime gates0/10.
+See [mission research review](MISSION_RESEARCH_REVIEW.md).
+
 ## Zone saved-reference ownership — 2026-10-03
 
 Completed: original referenceable token registration, pointer remapping and

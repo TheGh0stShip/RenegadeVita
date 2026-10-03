@@ -181,6 +181,24 @@ start/stop API. Finite non-cooperative loader work still runs to completion.
 Creation failure still needs original caller-level handling; this patch does
 not turn an idle marker into proof that a level loaded successfully.
 
+Follow-up loader failure classification: the registered Vita load boundary calls
+the original loader routine synchronously; thread-creation failure is therefore
+not the active native path. Original Load_Game and Load_Level return void. Their
+file Open results and nested SaveLoadSystem Load results are ignored. RawFile
+Open can return false on an invalid handle despite older success-only comments.
+SaveLoadSystem's false argument disables automatic post-load callbacks; it does
+not establish optional parsing or best-effort success. Its bool aggregates
+recognized subsystem Load results and does not certify required chunks exist.
+
+A fresh read-only check confirms Tutorial/M13/M01 dynamic members each contain
+one retail level-info and one level-data chunk, and their authored static LSD
+target exists in the same archive. Archive/member/source hashes remain in private
+`build/level-load-required-members-20261003.json`. This rules out a missing static
+member in that inspected scope, not native file-open, parsing, subsystem load or
+mission success. Optional definition lookups must be distinguished from required
+dynamic/static level files before adding failure gates. Failure propagation is
+still open; no unsupported fatal gate or replacement loader was introduced.
+
 The compiler target reports arm-vita-eabi; inspected libpthread attributes
 report ARMv7-A/Thumb-2 and VFP-register arguments. Native remains little-endian
 ARMv7-A/Cortex-A9 ILP32; host probes remain LP64 and separate evidence. Read-only

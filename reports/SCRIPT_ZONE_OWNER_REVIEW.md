@@ -69,14 +69,32 @@ retained as findings rather than silently corrected.
 | M01 |138|130|8|0|0|
 
 These counts are serialized zone records, not executed callbacks or verified
-trigger coverage. The scanner does not test orthonormal basis validity, actual
+trigger coverage. The scanner records basis dot-product error leads at
+tolerance0.001; it does not prove orthonormal basis validity, actual
 physics broadphase gathering, spawn positions or saved reference remapping.
 Zero bounds findings means no nonfinite values or negative extents in the
 decoded scope, not proof that a zone has valid placement or nonzero volume.
 
-Twenty-eight focused Python checks pass, including five new synthetic decoder
+Thirty-one focused Python checks pass, including eight synthetic decoder/container
 counterexamples and existing level-owner/binding checks. Detailed rows remain
 private in `build/script-zones-20261003.json`, with map/member/global-definition
 and original source hashes. Reproduce with:
 `python3 -m tools.audit_script_zones --data <retail-Data> --output build/script-zones.json`.
 No data mutation, asset extraction for distribution, build or launch occurred.
+
+The deeper scan adds zero-extent and basis orthogonality leads without changing
+retail bounds. All three maps retain zero findings at the declared0.001 dot
+error tolerance and have no zero extents. Maximum observed dot error is about
+0.000061. This is not a runtime collision accuracy measurement. Synthetic
+tests reject ambiguous factory variables and ignore unanchored variable bytes
+outside a persisted factory.
+
+M01's eight all-smart zone records resolve to seven attached script names (the
+barn exit script appears twice). Map/global definition hashes match the authored
+binding receipt used for that linkage. Original source shows vehicle identity
+gates in tunnel/tank-blocking cases and NPC identity gates in GDI-base/barn exits;
+warroom/MCT cases involve escort state and named actors. Preserve all-smart
+collection rather than globally forcing star-only gathering. The gunboat
+hovercraft-zone script's callbacks are commented out in original source; an
+attached name alone is not an active Entered handler or evidence of a lost port
+callback. No commented retail behavior was re-enabled.

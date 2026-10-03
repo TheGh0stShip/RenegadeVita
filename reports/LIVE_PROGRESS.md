@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Zone basis and all-smart owners — 2026-10-03
+
+Completed: zero-extent/basis-quality leads and factory-container counterexamples;
+M01's eight all-smart records linked to seven original script names. Preserve
+vehicle/NPC collection; a commented gunboat handler is not a port omission.
+Evidence:31 Python checks; matching map/global-definition binding identities.
+No geometry findings at declared tolerance; no native overlap/delivery proof.
+Native/runtime gates0/10; no build, launch or retail mutation.
+See [script-zone owner review](SCRIPT_ZONE_OWNER_REVIEW.md).
+
 ## Authored zone metadata — 2026-10-03
 
 Completed: read-only definition/instance scanner with explicit native disk

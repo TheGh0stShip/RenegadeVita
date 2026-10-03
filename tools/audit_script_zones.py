@@ -45,8 +45,16 @@ def decode_bounds(data):
         raise ValueError('nonfinite zone bounds')
     if any(value < 0 for value in values[12:15]):
         findings.append('negative_extent')
+    if any(value == 0 for value in values[12:15]):
+        findings.append('zero_extent')
+    rows = [values[i:i + 3] for i in (0, 3, 6)]
+    error = max(abs(sum(a * b for a, b in zip(rows[i], rows[j])) - (1 if i == j else 0))
+                for i in range(3) for j in range(3))
+    if error > 0.001:
+        findings.append('basis_orthogonality_lead')
     return {'basis': list(values[:9]), 'center': list(values[9:12]),
-            'extent': list(values[12:15]), 'findings': findings}
+            'extent': list(values[12:15]), 'basis_max_dot_error': error,
+            'findings': findings}
 
 
 def scan(payload, definitions=False):

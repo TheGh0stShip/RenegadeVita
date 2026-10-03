@@ -1,4 +1,11 @@
 {
+  "action_observer_miss_20261003": {
+    "state": "BOUNDED_OPT_IN_SOURCE_HOOK_UNCOMPILED",
+    "report": "reports/AI_ACTION_OWNER_REVIEW.md",
+    "focused_source_checks_passed": 11,
+    "typed_offline_consumer_complete": false,
+    "native_runtime_gates_closed": 0
+  },
   "campaign_discovery_handoff_20261003": {
     "state": "ORIGINAL_DISCOVERY_COPY_RESTORED_IN_SOURCE_UNCOMPILED",
     "report": "reports/MISSION_COMPLETION_OWNER_REVIEW.md",

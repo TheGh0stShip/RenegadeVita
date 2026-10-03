@@ -1,8 +1,9 @@
 # Known gaps
 
 2026-10-03 action callback review: absent numeric observers in original
-ActionClass completion have no general retained diagnostic; existing native
-logs cover Logan only. LOW_PRIORITY can mean displaced or rejected action.
+ActionClass completion now have an opt-in source queue hook, uncompiled; prior
+native logs cover Logan only. Typed offline interpretation remains pending.
+LOW_PRIORITY can mean displaced or rejected action.
 Hibernation changes logical listener/path ownership; runtime delivery and
 mission continuation remain open. No behavior change or build/launch.
 See [AI/action owner review](AI_ACTION_OWNER_REVIEW.md).

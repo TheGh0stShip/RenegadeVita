@@ -37,8 +37,25 @@ diagnostic setup, not ordinary mission wake-up or natural Area3 progression
 evidence. Runs using it cannot prove the preceding conversation/zone chain.
 No diagnostic request was created or consumed during this review.
 
-Next extend bounded original action observations with request outcome and absent
-observer provenance, preserving priority and synchronous callback semantics.
+The absent-observer branch now has an opt-in source hook, uncompiled. A
+SHA-anchored staging patch marks matches before original callbacks and queues a
+miss only when no callback matched. ObserverID0 still skips notification. It
+does not read actors after delivered callbacks or change Request_Action.
+The existing mutex-protected128-record queue exports category `script_action`,
+event `observer_absent_at_completion`, with signed32 object/observer/action/reason
+IDs. Owner-thread draining handles this kind before conversation monitor-name
+indexing. Queue overflow remains shared with conversation/timer events and
+cannot be attributed to action alone. Collection is off by default.
+
+Eleven focused source checks pass, including zero-fuzz, zero-offset patch replay
+and original request-action body preservation. They do not compile or execute
+the collector. Existing conversation offline analysis does not interpret the
+new action category; retain raw flight records and add a typed consumer before
+using them to classify failures. Missing observers do not themselves establish
+a mission failure. Staging receipt intentionally remains stale under the hold.
+
+Next add typed offline interpretation and request-outcome coverage, preserving
+priority and synchronous callback semantics.
 Runtime evidence must distinguish scheduling, request acceptance, movement/
 attack execution, completion reason, observer delivery and subsequent mission
 event. Native AI/pathfinding, logical-sound stimuli and area wake/sleep behavior

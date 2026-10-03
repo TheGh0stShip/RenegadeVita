@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Action observer miss source hook — 2026-10-03
+
+Completed: bounded opt-in original lookup-miss hook and typed owner-thread
+flight export. Callback order, observer0 and Request_Action remain unchanged.
+Evidence:11 focused source checks; zero-fuzz/zero-offset replay passes.
+Next: typed offline consumer and native collection after hold. Shared overflow
+is not action-specific; C++ remains uncompiled. Native/runtime gates0/10.
+See [AI/action owner review](AI_ACTION_OWNER_REVIEW.md).
+
 ## AI/action callback review — 2026-10-03
 
 Completed: original listener/path hibernation ownership and action priority/

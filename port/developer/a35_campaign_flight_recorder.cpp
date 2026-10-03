@@ -266,6 +266,14 @@ void Drain_Conversation_Queue()
 	for (uint32_t index = 0U; index < gConversationCount; ++index) {
 		const ConversationTransition &event = gConversationQueue[index];
 		char detail[224];
+		if (event.monitor_kind == 6U) {
+			snprintf(detail, sizeof(detail),
+				"object_id=%" PRId32 " observer_id=%" PRId32 " action_id=%" PRId32 " reason=%" PRId32,
+				event.action_id, event.remark, event.text_id, event.reason);
+			Push_Event("script_action", "observer_absent_at_completion",
+				0U, event.monotonic_us, detail);
+			continue;
+		}
 		if (event.monitor_kind == 5U) {
 			snprintf(detail, sizeof(detail),
 				"object_id=%" PRId32 " observer_id=%" PRId32 " timer_id=%" PRId32,
@@ -630,6 +638,21 @@ void A35_Campaign_Flight_Observer_Timer_Miss(int32_t object_id,
 		if (gConversationCount < 128U) {
 			gConversationQueue[gConversationCount++] = {5U, 0U, 0, object_id,
 				observer_id, timer_id, 0, 0.0F, Monotonic_Us(), false};
+		} else if (gConversationDropped != UINT32_MAX) {
+			++gConversationDropped;
+		}
+	}
+	pthread_mutex_unlock(&gConversationMutex);
+}
+
+void A35_Campaign_Flight_Action_Observer_Miss(int32_t object_id,
+	int32_t observer_id, int32_t action_id, int32_t reason)
+{
+	pthread_mutex_lock(&gConversationMutex);
+	if (gConversationEnabled) {
+		if (gConversationCount < 128U) {
+			gConversationQueue[gConversationCount++] = {6U, 0U, 0, object_id,
+				observer_id, action_id, reason, 0.0F, Monotonic_Us(), false};
 		} else if (gConversationDropped != UINT32_MAX) {
 			++gConversationDropped;
 		}

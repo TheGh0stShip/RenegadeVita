@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S3 upstream and registration denominators — 2026-10-03
+
+Inventory expanded to 1,490 original C/C++ units, including editor/tools;
+654 lack staged candidates. Source candidates: 1,744 script, 140 persist,
+58 definition and 39 network registrations. All remain unknown pending
+runtime/tool classification, branch/section retention and retail-ID checks.
+Three tests pass; no runtime code, build or physical gate changed.
+
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
 DXT3 HUD reachability batch: 18,651 member payloads scanned for four icon

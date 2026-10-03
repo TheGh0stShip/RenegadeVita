@@ -1,10 +1,38 @@
 import tempfile
 from pathlib import Path
 import unittest
-from tools.audit_sweep_link import inventory
+from tools.audit_sweep_link import inventory, registration_candidates
 
 
 class LinkInventoryTests(unittest.TestCase):
+    def test_registration_candidates_mask_comments_and_literals(self):
+        code = '''// DECLARE_SCRIPT(Fake, "")
+const char *s = "DECLARE_SCRIPT(Fake2, x)";
+DECLARE_SCRIPT(Actual, "parameters")
+SimplePersistFactoryClass<Thing, CHUNK_THING> _factory;
+DECLARE_DEFINITION_FACTORY(Thing, CLASS_THING, "Thing") _def;
+DECLARE_NETWORKOBJECT_FACTORY(Event, NET_EVENT);
+'''
+        rows = registration_candidates(code)
+        self.assertEqual([r['kind'] for r in rows], ['script', 'persist', 'definition', 'network'])
+        self.assertEqual(rows[0]['arguments'], ['Actual'])
+        self.assertEqual(rows[0]['line'], 3)
+
+    def test_upstream_case_mapping_retains_unstaged_units(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'staging/scripts').mkdir(parents=True)
+            (root / 'staging/scripts/mission08.cpp').write_text('')
+            upstream = root / 'upstream/CnC_Renegade/Code/Scripts'
+            upstream.mkdir(parents=True)
+            (upstream / 'Mission08.cpp').write_text('')
+            (upstream / 'Missing.cpp').write_text('')
+            result = inventory(root, [], 'native', b'')
+            self.assertEqual(result['upstream_total'], 2)
+            self.assertEqual(result['upstream_without_staged_candidate'], 1)
+            mapped = next(r for r in result['upstream_rows'] if r['source'].endswith('Mission08.cpp'))
+            self.assertEqual(mapped['staged_candidates'], ['staging/scripts/mission08.cpp'])
+
     def test_target_selection_and_map_mentions_are_separate(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

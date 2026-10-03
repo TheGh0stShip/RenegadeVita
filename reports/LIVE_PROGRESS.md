@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## S4 all-archive WAV metadata batch — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: 31 archive rows enumerate 10,241 WAV index entries; strict checks
+flag 264 RIFF length mismatches and one chunk overrun, all in always.dat.
+Evidence: 28 focused metadata/parser tests pass; no decoding or playback proof.
+Next: consolidated-register reconciliation and original decoder behavior probes.
+Blocker: none for host discovery; runtime acceptance remains open.
+See [all-archive WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 ## S4 original-owner root traversal batch — 2026-10-03
 
 106 clear nesting flags across mesh/hierarchy/raw-animation roots hid 354 child

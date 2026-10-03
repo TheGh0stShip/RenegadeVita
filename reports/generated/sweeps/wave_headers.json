@@ -1,0 +1,3827 @@
+{
+  "schema": 1,
+  "complete": false,
+  "rows": [
+    {
+      "archive": "Always2.dat",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Canyon.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_City.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_City_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Complex.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Field.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Glacier_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Hourglass.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Islands.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Mesa.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Under.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Volcano.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Walls.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "C&C_Walls_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M00_Tutorial.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M01.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M02.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M03.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 53,
+      "formats": [
+        {
+          "format": [
+            1,
+            1,
+            22050,
+            16
+          ],
+          "members": 26
+        },
+        {
+          "format": [
+            1,
+            1,
+            22050,
+            8
+          ],
+          "members": 27
+        }
+      ],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M04.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M05.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M06.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 9,
+      "formats": [
+        {
+          "format": [
+            1,
+            1,
+            22050,
+            8
+          ],
+          "members": 9
+        }
+      ],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M07.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 56,
+      "formats": [
+        {
+          "format": [
+            1,
+            1,
+            22050,
+            8
+          ],
+          "members": 56
+        }
+      ],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M08.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M09.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M10.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M11.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "M13.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "Skirmish00.mix",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "always.dat",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 10100,
+      "formats": [
+        {
+          "format": [
+            1,
+            1,
+            11025,
+            16
+          ],
+          "members": 6
+        },
+        {
+          "format": [
+            1,
+            1,
+            11025,
+            8
+          ],
+          "members": 6
+        },
+        {
+          "format": [
+            1,
+            1,
+            22050,
+            16
+          ],
+          "members": 739
+        },
+        {
+          "format": [
+            1,
+            1,
+            22050,
+            8
+          ],
+          "members": 397
+        },
+        {
+          "format": [
+            1,
+            1,
+            22222,
+            16
+          ],
+          "members": 1
+        },
+        {
+          "format": [
+            1,
+            1,
+            44100,
+            16
+          ],
+          "members": 23
+        },
+        {
+          "format": [
+            1,
+            1,
+            44100,
+            8
+          ],
+          "members": 7
+        },
+        {
+          "format": [
+            1,
+            1,
+            8000,
+            8
+          ],
+          "members": 1
+        },
+        {
+          "format": [
+            1,
+            2,
+            22050,
+            16
+          ],
+          "members": 5
+        },
+        {
+          "format": [
+            17,
+            1,
+            11025,
+            4
+          ],
+          "members": 8
+        },
+        {
+          "format": [
+            17,
+            1,
+            22050,
+            4
+          ],
+          "members": 8508
+        },
+        {
+          "format": [
+            17,
+            1,
+            44100,
+            4
+          ],
+          "members": 93
+        },
+        {
+          "format": [
+            17,
+            2,
+            22050,
+            4
+          ],
+          "members": 42
+        },
+        {
+          "format": null,
+          "members": 264
+        }
+      ],
+      "header_finding_members": 265,
+      "block_finding_members": 0,
+      "findings": [
+        {
+          "member": "m00gnod_gcon0007r3nomg_snd.wav",
+          "index_record": 232,
+          "offset": 6891560,
+          "bytes": 34870,
+          "sha256": "d3d936063dc4fadadc1969a64c15d6ab4a4011a476ef814f37e7e8358fe1f480",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0006i3nomg_snd.wav",
+          "index_record": 258,
+          "offset": 7323944,
+          "bytes": 26358,
+          "sha256": "55b12fba1410cf7919cc32b1e931603da7060e2f034da4746e8db3e7fd5eadea",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m10dsgn_dsgn0051i1eval_snd.wav",
+          "index_record": 292,
+          "offset": 8150976,
+          "bytes": 39012,
+          "sha256": "c6d7221f1daf1a34edcda515a291de7115d2c958bbd6d6c6653f03f995092640",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0020a3nomg_snd.wav",
+          "index_record": 342,
+          "offset": 9115120,
+          "bytes": 29712,
+          "sha256": "8cd806293126ec0f4be6747e30145a46e8467e5dd9552a14469a4909e5884ac6",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0027r2nomg_snd.wav",
+          "index_record": 434,
+          "offset": 15087400,
+          "bytes": 15676,
+          "sha256": "52b109b755d2be69df16c1afaabe4c52c4ae289a616ecac16923ce98ba292af5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0029r1nomg_snd.wav",
+          "index_record": 570,
+          "offset": 22184504,
+          "bytes": 62446,
+          "sha256": "affa5f293834150e595878fee1d6c48b11ccc92f67612028e5bde9ed7a8f101c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0081i1nomg_snd.wav",
+          "index_record": 614,
+          "offset": 23284960,
+          "bytes": 12898,
+          "sha256": "7a97b1854009d9bbc7e8959d40642b9139e3e8099666085db26b93c684eecd09",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0002r3ners_snd.wav",
+          "index_record": 636,
+          "offset": 23747432,
+          "bytes": 16768,
+          "sha256": "7d97b053b3421c727f8dc72d60b0c7e652a668c281fbd4c7e7b068ef29d62632",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kiov0009i1ners_snd.wav",
+          "index_record": 668,
+          "offset": 24694864,
+          "bytes": 23138,
+          "sha256": "49f08271ec50c45be06f53bec4baef36c5e7188ba605139172df6b23640db284",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0006i1nomg_snd.wav",
+          "index_record": 735,
+          "offset": 26360640,
+          "bytes": 13160,
+          "sha256": "e1b07a04db67a151ae3752ec8953d4b9ce02edd4858461ba4e6e2204ad317ee2",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0093i1nomg_snd.wav",
+          "index_record": 783,
+          "offset": 27429072,
+          "bytes": 8772,
+          "sha256": "534ee22043e9b704821be4d06d6526f078033a875979c0604ca1aacc92366766",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0018i2nomg_snd.wav",
+          "index_record": 800,
+          "offset": 27658904,
+          "bytes": 18122,
+          "sha256": "bf2afcec5eb7c2239763041adf57e3a1094f083971bed9cd887dc43692a91c2c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0010a2nomg_snd.wav",
+          "index_record": 855,
+          "offset": 29708272,
+          "bytes": 21470,
+          "sha256": "f57119da70bdf5790fb10aaef29b3ea0df0641e8bc13a467003aa1b038062eb8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0008i1nomg_snd.wav",
+          "index_record": 921,
+          "offset": 36672088,
+          "bytes": 17348,
+          "sha256": "da5f4c645bc0acb9a7a3ef335909045a46c5eaad5f466c49865710ab2dddd03c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0006i2nomg_snd.wav",
+          "index_record": 1006,
+          "offset": 39058272,
+          "bytes": 22232,
+          "sha256": "3da0a22761b118fa723c33262fc244264f91bb768571325efd939004e78cf4fd",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0009r3nomg_snd.wav",
+          "index_record": 1028,
+          "offset": 39617664,
+          "bytes": 22362,
+          "sha256": "0c2ec0061daeb2eeec4d19db81463fbac0bdfab3b247a5929e6ad46d8c65b138",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0019r3ners_snd.wav",
+          "index_record": 1081,
+          "offset": 41341712,
+          "bytes": 46216,
+          "sha256": "f14638795c1423c85e58494a1834c555f76996474b68fbf49b622a9d490f52d5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0027r3nomg_snd.wav",
+          "index_record": 1161,
+          "offset": 43609256,
+          "bytes": 29346,
+          "sha256": "b69083845de962ac4337c0f387dea9b83cbb2241807fe6d1a3ee98010840bc0d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0026i3nomg_snd.wav",
+          "index_record": 1200,
+          "offset": 44831896,
+          "bytes": 38038,
+          "sha256": "71448a98f765f10c57a86c7189fd2364af81b36f29920e933b4909a34ab41b7c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0049r1nomg_snd.wav",
+          "index_record": 1211,
+          "offset": 45134088,
+          "bytes": 77910,
+          "sha256": "03998885d4b0ef097cdaab1e2cfbeab2cd3952efd0423cd8b08a417ebe025da2",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0023i1ners_snd.wav",
+          "index_record": 1239,
+          "offset": 45903456,
+          "bytes": 33724,
+          "sha256": "448d242d837c10d567b2a054a470c928f50e24fd5c29739d449c8b1ecd391219",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00vnst_kill0021i1ners_snd.wav",
+          "index_record": 1282,
+          "offset": 47055488,
+          "bytes": 10556,
+          "sha256": "49ea870ec84d0c37b35242f729d1143d21a5ebac1b9aedd2322c539a0cdaf39e",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kiov0010i1nomg_snd.wav",
+          "index_record": 1401,
+          "offset": 49399728,
+          "bytes": 22108,
+          "sha256": "a869e8a5f0f7ad63bf1e14b2b2dbef428b4b560059d18fe3d3d7cfacf835a7c5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0009r1nomg_snd.wav",
+          "index_record": 1486,
+          "offset": 51268712,
+          "bytes": 13858,
+          "sha256": "b70c4fe2f3d10ce3e334679acedee5f4dac906d6f95f388149b02dc1e167bc93",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m09dsgn_dsgn0011aeval_snd.wav",
+          "index_record": 1593,
+          "offset": 54409864,
+          "bytes": 35332,
+          "sha256": "81331345ccceee0312018d2ca1824375776b6df66938135da95d177144c7b352",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0044r2nomg_snd.wav",
+          "index_record": 1615,
+          "offset": 55144520,
+          "bytes": 34358,
+          "sha256": "5091433b62f716179fffa44f73f4c43bc60401217bb421831ff6d3443dccea1c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0031i3ners_snd.wav",
+          "index_record": 1649,
+          "offset": 57416328,
+          "bytes": 22378,
+          "sha256": "71af0ff1d59289e2a0eee6c22d71422c996f0bcbe44c6d6a538e48d458eeb972",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0008i1nomg_snd.wav",
+          "index_record": 1836,
+          "offset": 62078920,
+          "bytes": 21736,
+          "sha256": "54dac8537857bc145f148f21a045f5bb49c9b4348db9a7135970d9ee6a34544d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0008i3nomg_snd.wav",
+          "index_record": 1929,
+          "offset": 65101112,
+          "bytes": 24952,
+          "sha256": "311c4aa67afee79dd629756b12cdcd6234cde15872ea3f785d8c0cd6058f8358",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0007r2nomg_snd.wav",
+          "index_record": 2025,
+          "offset": 67342728,
+          "bytes": 36644,
+          "sha256": "2f73ed36fe6ca5d892a19ca0dd6b8ab77ccfe35e0c77c2c5100bc40b5421a405",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kitb0009i1ners_snd.wav",
+          "index_record": 2062,
+          "offset": 71267352,
+          "bytes": 21338,
+          "sha256": "4bc3d873272031668cfda55c377e25c36fd2cbbd350027777e9f840ecbd8a766",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00asqr_kill0023i1ners_snd.wav",
+          "index_record": 2100,
+          "offset": 72503808,
+          "bytes": 18770,
+          "sha256": "e55a48c19eb703d83ecc6539f425183904f3d0fcf9b462ea3da71e4c731b6950",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0041i3nomg_snd.wav",
+          "index_record": 2111,
+          "offset": 73015008,
+          "bytes": 27702,
+          "sha256": "0ab11f7da12fb4de64a97e03637be68b4773e20173f95aff8b664787412713d1",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0029r2nomg_snd.wav",
+          "index_record": 2112,
+          "offset": 73042712,
+          "bytes": 18940,
+          "sha256": "de6a21ff99199d3247562359fc3a04eb625c7947100b14a643cd8bb8c0e4f238",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0118i1nomg_snd.wav",
+          "index_record": 2305,
+          "offset": 78432264,
+          "bytes": 12706,
+          "sha256": "d65bb039f3e9bc6b34e5fa21c1ac18629448c9d08a226259afe054f594ed121c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0018i1nomg_snd.wav",
+          "index_record": 2339,
+          "offset": 86906680,
+          "bytes": 27904,
+          "sha256": "fc2ea44bd52daba96e71d26adccefb996662a31bf5b59885be3b8898a0698e19",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0020a2nomg_snd.wav",
+          "index_record": 2380,
+          "offset": 87886096,
+          "bytes": 28546,
+          "sha256": "1b174ce7be15c2a70066946f860435450e35e9bb0ac49f484169a2a96b84d7c5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0030a2nomg_snd.wav",
+          "index_record": 2427,
+          "offset": 89447112,
+          "bytes": 23066,
+          "sha256": "3ed261ca48313096a463b3e3b9cd119ccb929a1cda8934410f58bcf8beec17c5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0002r2ners_snd.wav",
+          "index_record": 2438,
+          "offset": 89676952,
+          "bytes": 19830,
+          "sha256": "8261288b6bc22501c9ebde9415d2657b78173c22bec4f469f0e7ed5ad738fec8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0061i1nomg_snd.wav",
+          "index_record": 2546,
+          "offset": 92948176,
+          "bytes": 31778,
+          "sha256": "c06a2b32c42faf99500dd47637e822e44a33a02acb1f441b4fe495010dbe6bfc",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0043i3nomg_snd.wav",
+          "index_record": 2561,
+          "offset": 94747736,
+          "bytes": 14302,
+          "sha256": "e508b204f1d90f17cbdc89051a07e497ef86c49bec8937fe1f2485510c31087b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0041i1nomg_snd.wav",
+          "index_record": 2582,
+          "offset": 95489832,
+          "bytes": 15270,
+          "sha256": "5b7aa663f66e9d4acbabb5e6bc5f40768480a62ec4f637cf8eedd12b5ef408e6",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0010a3nomg_snd.wav",
+          "index_record": 2649,
+          "offset": 97963584,
+          "bytes": 49566,
+          "sha256": "cb79feee64993dc667a69485d84ab8242628061ff801f3a1068561f6cdf042e6",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0037i1nomg_snd.wav",
+          "index_record": 2721,
+          "offset": 99620640,
+          "bytes": 21042,
+          "sha256": "3bf1896906297fddabd8eee7dbb0263a0779d043eb550a9dd87dc21eb514ba03",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0017r2nomg_snd.wav",
+          "index_record": 2803,
+          "offset": 102246784,
+          "bytes": 10752,
+          "sha256": "4d24c12f40d3f16ddfdbc73ee6e8e2805c288cca0941c26c617a57b9fffe50cd",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01vggb_dsgn0048r1eval_snd.wav",
+          "index_record": 2832,
+          "offset": 103110312,
+          "bytes": 20044,
+          "sha256": "56e6266c3efccec9568e7707151df4d5823efcdadc458693924059f3fd33b0d7",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0045a2nomg_snd.wav",
+          "index_record": 2864,
+          "offset": 103719688,
+          "bytes": 35134,
+          "sha256": "614eff5ec19113e9480207f291676e8b951befc8d7d2179fc9c8d54e2537414f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0109i1nomg_snd.wav",
+          "index_record": 2934,
+          "offset": 109847600,
+          "bytes": 13984,
+          "sha256": "8acddc4850c6570995122289f3ab392b9fdef8d43e2c5c702b54222e62aff229",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0017r1nomg_snd.wav",
+          "index_record": 2989,
+          "offset": 111046624,
+          "bytes": 34122,
+          "sha256": "819dcd48858dfe0053c6ffeebff2017ef35a62bd41230ec446847796529ae3a8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0009r2nomg_snd.wav",
+          "index_record": 3037,
+          "offset": 112625312,
+          "bytes": 39894,
+          "sha256": "1aa403f2b1eb365fc7e2898a029497dfe7f03652a4944c77e860b1130269f0f6",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0008i2nomg_snd.wav",
+          "index_record": 3128,
+          "offset": 114885224,
+          "bytes": 15022,
+          "sha256": "452aec3cead06a0b276fde95b5e97b12cef21f07b37b03a6b223548e340c008b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0026i2nomg_snd.wav",
+          "index_record": 3224,
+          "offset": 117294352,
+          "bytes": 20144,
+          "sha256": "ecea295d0913a1ab4c5730761fc4da97ee60582519c71f77e7cb6844c170589c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00avis_kifi0011i1nomg_snd.wav",
+          "index_record": 3228,
+          "offset": 117358736,
+          "bytes": 29332,
+          "sha256": "b9a3273ecc71fdfd9a2c1d481d78db8def9c603fa133368cf9001723b2eebc81",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0020a1ners_snd.wav",
+          "index_record": 3268,
+          "offset": 118527760,
+          "bytes": 15300,
+          "sha256": "06497a90a970f5552bd36501a7ef4fdd73d57937e7bd0367edfc64c90024cd34",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0042r2nomg_snd.wav",
+          "index_record": 3416,
+          "offset": 122859808,
+          "bytes": 56646,
+          "sha256": "f1404cb842190b710fc449b59f9b46fc6da652fd93b4a089bad16d8ec4a61720",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0017r3nomg_snd.wav",
+          "index_record": 3447,
+          "offset": 124998824,
+          "bytes": 34682,
+          "sha256": "6e2682a502c4969fa5ed227f9349d69fab38387897f20a44aba7b22bf529d015",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0070i1nomg_snd.wav",
+          "index_record": 3591,
+          "offset": 129152152,
+          "bytes": 9004,
+          "sha256": "1928f32520199e7321e3fb1ba9b034ba46faaecd54a00ec2636caa1f3085d830",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0007r1nomg_snd.wav",
+          "index_record": 3609,
+          "offset": 129782696,
+          "bytes": 17340,
+          "sha256": "9639357838de9babd0c8fb85cdc9e13f367b257903abe8bd01cb1f6b31409718",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0043i2nomg_snd.wav",
+          "index_record": 3670,
+          "offset": 131056088,
+          "bytes": 30654,
+          "sha256": "4015d571bef5e88cf4c64dae3de49fa85167124d4f58f62d528621dded48dd1b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0005a2ners_snd.wav",
+          "index_record": 3686,
+          "offset": 131513888,
+          "bytes": 27928,
+          "sha256": "567fc7cd2b4e7b24c80770e3b342ed527991f488a8daedc36c4714d71a92b948",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kitb0010i1nomg_snd.wav",
+          "index_record": 3710,
+          "offset": 132107560,
+          "bytes": 13454,
+          "sha256": "234591f861307b16582630a01bac201cfcda7cd0100cade552f0d0f161f11a59",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0046r1nomg_snd.wav",
+          "index_record": 3755,
+          "offset": 133240896,
+          "bytes": 59530,
+          "sha256": "e067a2b06f7560024adafd130faa42053417a1011d7a5e9997328073865be7d9",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0008i1nomg_snd.wav",
+          "index_record": 3787,
+          "offset": 133810944,
+          "bytes": 25970,
+          "sha256": "cca088821efa924db26d3f87137f9e48f5c931bcffaf445f13240b2cbf23cffa",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0004r3ners_snd.wav",
+          "index_record": 3789,
+          "offset": 133865224,
+          "bytes": 30096,
+          "sha256": "5cf8623261d55b1d310c2a82f2f2e8cdb077625869992903b7e4211f9892e316",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0032i1nomg_snd.wav",
+          "index_record": 3865,
+          "offset": 136106912,
+          "bytes": 15686,
+          "sha256": "2762f4c2c3e512e3dd6006395707d5c8a79e87c551ba7cfd17b1be01aaa61c74",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m08dsgn_dsgn0040i1nomg_snd.wav",
+          "index_record": 3877,
+          "offset": 136369464,
+          "bytes": 106018,
+          "sha256": "178fff6648db36ba5461279c1760a2dc9ee985fdd19a1d389f2c590a8a873aac",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "correction.wav",
+          "index_record": 3956,
+          "offset": 138146184,
+          "bytes": 4620,
+          "sha256": "ca3e6788e5846c1ddaadba969756e4f4765d8f21c3672a99ff644e5e78d20207",
+          "header_findings": [
+            "chunk_outside_riff"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0041i1nomg_snd.wav",
+          "index_record": 3983,
+          "offset": 138798360,
+          "bytes": 18196,
+          "sha256": "5833074f82ec27335d6e937046946088e6b99aa56d84e2c48ed882d3116d34f0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0044r2nomg_snd.wav",
+          "index_record": 4129,
+          "offset": 145752792,
+          "bytes": 17376,
+          "sha256": "7ee603e84e5fc4d9b5f988e21cda957b3e1df7e892f0a6f0a772316e787be9a0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0018i3nomg_snd.wav",
+          "index_record": 4220,
+          "offset": 148056864,
+          "bytes": 28868,
+          "sha256": "06938fcdd7c2150d86e6fb39290d292a14d7a6a2cc914ea48bf5d014819269d3",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m04dsgn_dsgn0061a1nomg_snd.wav",
+          "index_record": 4244,
+          "offset": 148521080,
+          "bytes": 27702,
+          "sha256": "3bab4d07fb27b96a16b621772f1bdb5c5a3ffa89614e960f117ff5295f7ab2e9",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0045a2nomg_snd.wav",
+          "index_record": 4248,
+          "offset": 148632880,
+          "bytes": 21080,
+          "sha256": "5edbeaffe50306082ea0a8660c0988d18df8c67231ad5922bb3aba6769db68e4",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0007r2nomg_snd.wav",
+          "index_record": 4363,
+          "offset": 151283544,
+          "bytes": 23262,
+          "sha256": "aa8d814c4657cf9b40916abd9c7a6f28efbdc4ef31abdde5e785f2d555c7b63a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0005a1ners_snd.wav",
+          "index_record": 4379,
+          "offset": 151721384,
+          "bytes": 29840,
+          "sha256": "7f7781acfd02a41995c5abc3bf9647947875f74df521b4dfbbd6421c35edf329",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0043i1nomg_snd.wav",
+          "index_record": 4416,
+          "offset": 152407808,
+          "bytes": 9092,
+          "sha256": "a1cac7d6b4fd38a97e25a8c66045fdbaa61bf83e8c6f9552df6783a9694f465d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0010a1nomg_snd.wav",
+          "index_record": 4502,
+          "offset": 155611752,
+          "bytes": 36952,
+          "sha256": "65fe4b9c3f49a82c2d5a5cda034dde31c541f5d95b25ca7add33a30c514a39c5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0016i1nomg_snd.wav",
+          "index_record": 4520,
+          "offset": 156295488,
+          "bytes": 9602,
+          "sha256": "f51bcbd14e0893ec9bb2d087ca3d71fb4ce53bcb7f249d69855fb1a2a8c28f19",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0018i1nomg_snd.wav",
+          "index_record": 4679,
+          "offset": 161213496,
+          "bytes": 19786,
+          "sha256": "b8b40b41c9aac2007517c6ede7219b0f2346cbf08de7101d8fbcb30879509f76",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0057a1nomg_snd.wav",
+          "index_record": 4709,
+          "offset": 161863960,
+          "bytes": 9924,
+          "sha256": "3acba3cbc3ad2f9c9ed75e4b1e1f93bc2d55d4b8fa4e4718e66ae56e251e7f1b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0024r3ners_snd.wav",
+          "index_record": 4743,
+          "offset": 166474496,
+          "bytes": 45010,
+          "sha256": "0ab580642a04a0f29437b194fc6ea6b41dd5f168882eb5f15bc1a9dda58dd62b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0031i1nomg_snd.wav",
+          "index_record": 4792,
+          "offset": 168174232,
+          "bytes": 20244,
+          "sha256": "4e916bb68235e9832f0423c1e06b1b7edd2f6d50f525b408861ddbf3c8ef2c85",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0018i2nomg_snd.wav",
+          "index_record": 4975,
+          "offset": 172957824,
+          "bytes": 15916,
+          "sha256": "eecfd38251566a8b7cb5baed3f474797ed9df4397ce2f24d5c957c98878dba2b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0023i1nomg_snd.wav",
+          "index_record": 5106,
+          "offset": 180405872,
+          "bytes": 23218,
+          "sha256": "995f9f50bce892fcf319d982d8379d511fdee942cd85790e6f499d3e0994d84d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0043i2nomg_snd.wav",
+          "index_record": 5130,
+          "offset": 181431320,
+          "bytes": 26410,
+          "sha256": "3a157833ed0b7d9b4cc8197ad8e5844f9918cd4d80c4c0277f23c657ce2cefa9",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0019r2ners_snd.wav",
+          "index_record": 5258,
+          "offset": 184872544,
+          "bytes": 51112,
+          "sha256": "5469f764c24c0a73e4f7cb9e9afed574bb6740f344b055f3768d92c02277b5e3",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0017r1nomg_snd.wav",
+          "index_record": 5353,
+          "offset": 187495728,
+          "bytes": 18960,
+          "sha256": "81e4bea95825dcbd250beb0e6eef8b484b026266d53af49f8cb011d84cc683bc",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0008i2nomg_snd.wav",
+          "index_record": 5505,
+          "offset": 192163224,
+          "bytes": 39758,
+          "sha256": "bbfca1a128cba6a51ddbf162a90ed1fcc5a66b6088d770d780fbe67e4f066b95",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0068i1nomg_snd.wav",
+          "index_record": 5515,
+          "offset": 192309360,
+          "bytes": 21206,
+          "sha256": "01f27e17e260457c3c139f04be51bc3b2e1f2c85cd778eeabad8f3f2310ca9c7",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0051i1nomg_snd.wav",
+          "index_record": 5519,
+          "offset": 192381968,
+          "bytes": 87982,
+          "sha256": "ccf070d10cb0ef2c2bfe565a3bbb806fb62d010e56af58b822408cd939aaa246",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0032r2ners_snd.wav",
+          "index_record": 5694,
+          "offset": 197277552,
+          "bytes": 18564,
+          "sha256": "9471d8b4a68c1da8aa07385ba698b2693096ab24e75a64dddac18394abf17f03",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0090i1nomg_snd.wav",
+          "index_record": 5827,
+          "offset": 201602632,
+          "bytes": 23144,
+          "sha256": "8551efe3793974fbf5124636f69535e5f61ca342c8456dd808d6076eb1dd5f48",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0002r3ners_snd.wav",
+          "index_record": 5861,
+          "offset": 202704256,
+          "bytes": 24034,
+          "sha256": "87fadbe9646a967c14a86573e29a042d5d91dcae47f85aa42d0d3bcc07959e43",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0034i1nomg_snd.wav",
+          "index_record": 5919,
+          "offset": 204072064,
+          "bytes": 16114,
+          "sha256": "50eebd919d626da52f5c01d10bf90c95c17bfa90649c0e8307ce83f6b971b1d3",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0007r1nomg_snd.wav",
+          "index_record": 5937,
+          "offset": 204707896,
+          "bytes": 33596,
+          "sha256": "fd7b74cb415610672386b9b84ca440f76905e858887109ebd21601badbe71b3c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0006i1nomg_snd.wav",
+          "index_record": 5960,
+          "offset": 205330304,
+          "bytes": 18378,
+          "sha256": "20f485ac40e1aee3135fb7c8f6b09e8767927cd503926aa82672256e35ebf549",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01evag_dsgn0195a1eval_snd.wav",
+          "index_record": 5965,
+          "offset": 205391512,
+          "bytes": 62388,
+          "sha256": "fb54f7603b1549f0c7687c67ff83d7439761bb563db330198e547885782f44f8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0106i1nomg_snd.wav",
+          "index_record": 6042,
+          "offset": 207437872,
+          "bytes": 10154,
+          "sha256": "dd2c2f4a3b9ece5cf996dad5c4c9191266cb2ddc904a70d930634a358bcb3b55",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m09dsgn_dsgn0012aeval_snd.wav",
+          "index_record": 6101,
+          "offset": 209117696,
+          "bytes": 59762,
+          "sha256": "8952edfc7296d2754ffe97022980d19e35601e9374021630fe1f9978457b38c3",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0042r2nomg_snd.wav",
+          "index_record": 6126,
+          "offset": 209900200,
+          "bytes": 18564,
+          "sha256": "0c4575aa694c6e0d88dd8d21bb3394c6e4554af27467a0a9424e0dcc4e48368f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0122i1nomg_snd.wav",
+          "index_record": 6205,
+          "offset": 215330760,
+          "bytes": 12860,
+          "sha256": "c9b238e55623edda4562f6ed139395a42b511b670a5cffb124a161bab610b65a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0043a1nomg_snd.wav",
+          "index_record": 6265,
+          "offset": 216978304,
+          "bytes": 26356,
+          "sha256": "f1494a0daa5c2762f1cb185f828a6f323a00e106d386bb7139fd8a339baf5e76",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01vggb_dsgn0044r1eval_snd.wav",
+          "index_record": 6344,
+          "offset": 219120832,
+          "bytes": 42946,
+          "sha256": "9b806b3ecfc937ffe2d7ccbf94bdc893c4567b97e87b88e65ff9d97282f20c74",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0099i1nomg_snd.wav",
+          "index_record": 6428,
+          "offset": 221192224,
+          "bytes": 25202,
+          "sha256": "2f6d20bd8d2566c33463ac063b36081377743fbb86b966c582b89a8e4c035f86",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0006i3nomg_snd.wav",
+          "index_record": 6468,
+          "offset": 222366152,
+          "bytes": 16564,
+          "sha256": "27705dbf7ddfc84439f5adf80b51a53232671f8cc84b903b0bf59ffe8b5fb79c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0009r2nomg_snd.wav",
+          "index_record": 6561,
+          "offset": 226117792,
+          "bytes": 23892,
+          "sha256": "0428defc3f10e5ef7de1dcf7298ff282ea09e17d038638a32dcd50dee34b3db0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kisq0010i1nomg_snd.wav",
+          "index_record": 6568,
+          "offset": 226388912,
+          "bytes": 24616,
+          "sha256": "5046b49dce9c9d6c966b1abfb400e207dcfd4e6beb8cdc0a128f724bce5613a5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0028i3nomg_snd.wav",
+          "index_record": 6594,
+          "offset": 227152160,
+          "bytes": 28454,
+          "sha256": "5892cad301812cff9648bfcbf91d3b7e81c488baceb9159855cbf57524ba2a78",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0010i1nomg_snd.wav",
+          "index_record": 6600,
+          "offset": 227244040,
+          "bytes": 22010,
+          "sha256": "f50b16fe399af89197935b65e57713875f0e3cd31ad134c6cb6bbf16dcbfc380",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0130i1nomg_snd.wav",
+          "index_record": 6601,
+          "offset": 227266056,
+          "bytes": 16086,
+          "sha256": "f9b7a4be2901dd1c342c3ac1d2482aa884adcbc7f8885cc1c0c674badefba718",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0017r2nomg_snd.wav",
+          "index_record": 6681,
+          "offset": 230124048,
+          "bytes": 45322,
+          "sha256": "829675668699d0e38e6375f4d718932ccc42e3226dc797bd844c125d91724e8b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0009r1nomg_snd.wav",
+          "index_record": 6739,
+          "offset": 231682864,
+          "bytes": 11972,
+          "sha256": "75f7d5312a8c2a1a89f925c59e500a6db67c1b0127302f8bd4c5d55f15b2ea26",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0024r2ners_snd.wav",
+          "index_record": 6817,
+          "offset": 233518520,
+          "bytes": 20580,
+          "sha256": "c9274995a59c451e6e401540809a5f815e1c95029ebb48b5f65579159966351a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0010a3nomg_snd.wav",
+          "index_record": 6846,
+          "offset": 234173808,
+          "bytes": 24824,
+          "sha256": "c2fa9228551a942a11862990da6ef4f75bfbc9185a9306fdd23185f2dc019516",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kisq0009i1ners_snd.wav",
+          "index_record": 6876,
+          "offset": 235030712,
+          "bytes": 15020,
+          "sha256": "eaa1b518431ab263bb42b3f243b464a9f4ced8cb9332fb159d96adc61209c577",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0031i3ners_snd.wav",
+          "index_record": 6909,
+          "offset": 235838304,
+          "bytes": 22382,
+          "sha256": "03668c3ecb24b229dd7792d3a408b6a2a0fb7e9915f1ec877f8322f10ef9f63c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0027r1nomg_snd.wav",
+          "index_record": 6918,
+          "offset": 235960560,
+          "bytes": 38482,
+          "sha256": "78c5c6a09484706278baad0e1cad556746be08225d20a4342f1e799f7fa6b9c0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0026i1nomg_snd.wav",
+          "index_record": 6946,
+          "offset": 236585552,
+          "bytes": 54480,
+          "sha256": "2eb754f41940afd95bebcbbe30a8882fd2caed971ac87ad14d5099198cfc9e25",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0045i1nomg_snd.wav",
+          "index_record": 7200,
+          "offset": 244074000,
+          "bytes": 13252,
+          "sha256": "52525b43f060724832c82629a8c038b9c912a855fb73ec2b68ac58be1710a300",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0121i1nomg_snd.wav",
+          "index_record": 7215,
+          "offset": 244520496,
+          "bytes": 24174,
+          "sha256": "16d31561a2d99fa5642b8e04b3f4ead1d538034a768ba34228b2cc866112dc8f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0203i1nomg_snd.wav",
+          "index_record": 7252,
+          "offset": 245362944,
+          "bytes": 15506,
+          "sha256": "450157f68064d7c4ba25a5d603c312c35c892f87b58cc78fd9ca97efa858f16c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0019r3ners_snd.wav",
+          "index_record": 7268,
+          "offset": 245829840,
+          "bytes": 25508,
+          "sha256": "fabd9b5b4c5daa85bf10c10145c6a694cdc96e4cc9428894243e91660f780f54",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0028i2nomg_snd.wav",
+          "index_record": 7270,
+          "offset": 245855352,
+          "bytes": 25102,
+          "sha256": "b3d4b7bd003fa7c9aff18a1a35740a3184a3bcf78378fc13d6ec8a582a0b95cb",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0088i1nomg_snd.wav",
+          "index_record": 7403,
+          "offset": 252114296,
+          "bytes": 15162,
+          "sha256": "bb753fa1cef6316b22e4b6d75ad9f447a9ec9c0400568b5d9fe81e6ee09b95a1",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00asqr_kill0024i1nomg_snd.wav",
+          "index_record": 7441,
+          "offset": 252896008,
+          "bytes": 21854,
+          "sha256": "fb3d8959f9db334543e483358c5c0b0c875381805ef596f61caf2d6bbcdc480f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0008i3nomg_snd.wav",
+          "index_record": 7564,
+          "offset": 257036456,
+          "bytes": 30096,
+          "sha256": "08d497e7a07183cad18eb462c3d88281007a33fba485a0a307f2fb6fdcb78bb2",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m04dsgn_dsgn0057i1nomg_snd.wav",
+          "index_record": 7604,
+          "offset": 258102032,
+          "bytes": 19396,
+          "sha256": "7f88f4fdfdd92b9c361d9b5542e1cf98d0200f681bd096e12c5f3329175a68f8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0013i1nomg_snd.wav",
+          "index_record": 7612,
+          "offset": 258200288,
+          "bytes": 18714,
+          "sha256": "4ff0766794084e04914253fbf5cf384956f6483c69d16883bce381a6ab42a1af",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0085i1nomg_snd.wav",
+          "index_record": 7642,
+          "offset": 259190552,
+          "bytes": 18492,
+          "sha256": "6320bf610811d2fb1bcd1cea95ef395131bdd2cd7c8d6729317d855bde8c591a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0007r2nomg_snd.wav",
+          "index_record": 7664,
+          "offset": 259918320,
+          "bytes": 6454,
+          "sha256": "01ad7bfb1e4dfafe9bd55fb3d4ce0b74821611f37045affae180de1016facbcf",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0063i1nomg_snd.wav",
+          "index_record": 7758,
+          "offset": 263033592,
+          "bytes": 19460,
+          "sha256": "e408192a5e83bfd8c24b2c53889e971f52e4b12fcb6d955ecb791bbe5dfebcf3",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01dsgn_dsgn0282r1eval_snd.wav",
+          "index_record": 7844,
+          "offset": 265350240,
+          "bytes": 54804,
+          "sha256": "10ff158bf3b816fc111df10c811d9ea8cef205f56144716839ca27330491f2ef",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0042r1nomg_snd.wav",
+          "index_record": 7847,
+          "offset": 265418936,
+          "bytes": 24696,
+          "sha256": "af47fdbf0503a03582b795eb2d72f3c83209bb6ce2c389e3820b2d72648931fc",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0071i1nomg_snd.wav",
+          "index_record": 7886,
+          "offset": 266427456,
+          "bytes": 18930,
+          "sha256": "ec77ea97d96702c145e336abb7c2cab82f5658047ff98be0b44d4fe246d12009",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0048i1nomg_snd.wav",
+          "index_record": 7898,
+          "offset": 266706288,
+          "bytes": 58576,
+          "sha256": "2a20b5fb13a40ce09be70878c831c11ad218e3bb6b165c31960fb08700515fd8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0035i1nomg_snd.wav",
+          "index_record": 7900,
+          "offset": 266764864,
+          "bytes": 82550,
+          "sha256": "a9b0564f36974476fff2107f83bf500ccf95966aa83a3bd261dba71a23f46e19",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0048i1nomg_snd.wav",
+          "index_record": 7982,
+          "offset": 268176520,
+          "bytes": 62024,
+          "sha256": "4a9eb8c0f427851f63ae909d1a6819c1f4df86b22062bc21a72ab0f8e58ac25a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00avis_kill0036i1ners_snd.wav",
+          "index_record": 7998,
+          "offset": 268758440,
+          "bytes": 20566,
+          "sha256": "5323815f01187a91a34dd986a64e00e03c7bffb5279c2d6d2e59ee944aed0b80",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0001i2ners_snd.wav",
+          "index_record": 8090,
+          "offset": 271284064,
+          "bytes": 24682,
+          "sha256": "2981ff66150ed5a79624bc6dbeea53ba564b6fda820176a0ebb46e883d7c7726",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00bmsf_kill0024i1nomg_snd.wav",
+          "index_record": 8111,
+          "offset": 271627136,
+          "bytes": 14208,
+          "sha256": "296075e9b5f92cb74029e85dab095a82014b0a02e3215c87208557c54aef55af",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0004r3ners_snd.wav",
+          "index_record": 8185,
+          "offset": 273722936,
+          "bytes": 11752,
+          "sha256": "dfa190329f7dfc34940eaf5b07b28aad4fd4df6258bb205caf3f84ade727ca79",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0026i1nomg_snd.wav",
+          "index_record": 8320,
+          "offset": 276621768,
+          "bytes": 15470,
+          "sha256": "de7ab56071da8a9d6c0c146433fc7309dbb7a08f3a73e7814c16b4f90711682b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m11dsgn_dsgn0056r1nomg_snd.wav",
+          "index_record": 8323,
+          "offset": 276654888,
+          "bytes": 34346,
+          "sha256": "37c51a72d68a397e5f74a9b95d8049d5e39b81dceeef27517e1e3b265f507aa1",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0018i3nomg_snd.wav",
+          "index_record": 8474,
+          "offset": 280696760,
+          "bytes": 22370,
+          "sha256": "22ce42b147d906c77e91485eb39543c5f965e72ceba2c887a9080f39067e3c7e",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0017r2nomg_snd.wav",
+          "index_record": 8565,
+          "offset": 283242352,
+          "bytes": 22560,
+          "sha256": "151fcdf327537b2f85e05a70a4c80e7b1f66675d76c3bd75014f63b7770fb1f0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0086i1nomg_snd.wav",
+          "index_record": 8630,
+          "offset": 285109384,
+          "bytes": 18518,
+          "sha256": "eca3c883d96fae90b53de5aa3b1c03c687c294376149cfd88c9945191ba12bf8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0045a1nomg_snd.wav",
+          "index_record": 8693,
+          "offset": 286810504,
+          "bytes": 37200,
+          "sha256": "d9fb3ca0460032e7b6939be9191bae5be5b736ea23f2074823cfe0af5fea2790",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0003i1ners_snd.wav",
+          "index_record": 8735,
+          "offset": 291068528,
+          "bytes": 24222,
+          "sha256": "cc4333c464bd393ebf45a1f6c61ba82d4634d7b43f0bff496a1ed6c9938901fc",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0017r1nomg_snd.wav",
+          "index_record": 8763,
+          "offset": 291827832,
+          "bytes": 14886,
+          "sha256": "0a63b2cbf9ed713380b7b88a4858f209000b4aa3d1e15d08b6e51adbd8113b72",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00bntu_kill0024i1nomg_snd.wav",
+          "index_record": 8777,
+          "offset": 292268664,
+          "bytes": 20570,
+          "sha256": "9414a7fff7cae00498d790968c2568646d85db9710c16c92c72b0d6b3434e8a8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0006i3nomg_snd.wav",
+          "index_record": 8795,
+          "offset": 292671216,
+          "bytes": 32952,
+          "sha256": "473801c3deddecfd67d53f0d787dbfa398c30e5335a30823c11cb60d4883b652",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0036i1nomg_snd.wav",
+          "index_record": 8835,
+          "offset": 293453752,
+          "bytes": 40024,
+          "sha256": "48c70385dadd3940cf744d310788394e8983ed7df179c50fc1d36bffb823fc4e",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0029r3nomg_snd.wav",
+          "index_record": 8966,
+          "offset": 298416072,
+          "bytes": 34040,
+          "sha256": "ddb0590fc37a70fe20bf55b3e23b520c11c8d2515218ef16275a25fb848b3e42",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0041i2nomg_snd.wav",
+          "index_record": 8967,
+          "offset": 298450112,
+          "bytes": 19654,
+          "sha256": "4e1bc88e1e97c3af3c0d8070a07fca2dbaa8904a7caef5b020e0cadbb7e3a20d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0056i1nomg_snd.wav",
+          "index_record": 9043,
+          "offset": 300801608,
+          "bytes": 30800,
+          "sha256": "bd8be96f8f076121c75d6dc9411ada18fe8b7cb92a20160a6a8939b1947d657a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0044r3nomg_snd.wav",
+          "index_record": 9044,
+          "offset": 300832408,
+          "bytes": 17866,
+          "sha256": "f50700303d3945181b217515280c16e0bfb9bf91b41189335f1401176701200d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00avis_kick0038i1nomg_snd.wav",
+          "index_record": 9059,
+          "offset": 301501968,
+          "bytes": 24576,
+          "sha256": "e60a1d3021bab19e1a00875cfa68132fc4a2e92e052b47e30b8794986fd02f76",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0020a1nomg_snd.wav",
+          "index_record": 9131,
+          "offset": 303382792,
+          "bytes": 15008,
+          "sha256": "dccc52dbfe69966208006e837622e3b232bb2466eb2bdd9a1f3bb5ef5bfe8550",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0045a3nomg_snd.wav",
+          "index_record": 9137,
+          "offset": 303475528,
+          "bytes": 32606,
+          "sha256": "0df63f92fc784f4ae61fcbd2593d63436d15d22d3a6223b449a4ef789e1070ff",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0003i3ners_snd.wav",
+          "index_record": 9179,
+          "offset": 304403584,
+          "bytes": 15676,
+          "sha256": "f728962ec3a55016612f3d4e01c62426aa51f7aff3bbd83f3e51eaafa114f54a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0007r1nomg_snd.wav",
+          "index_record": 9256,
+          "offset": 307080976,
+          "bytes": 30770,
+          "sha256": "30e25b8b672d05a63a907d883bf4fd2da7eb61f38c94706c60cf2202f1229003",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0034r1ners_snd.wav",
+          "index_record": 9347,
+          "offset": 312377000,
+          "bytes": 11202,
+          "sha256": "8022cfd9c180b2dd75203ca8cc6f7d8771c156ff047d8e2bd8847c93a31079af",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0020a3ners_snd.wav",
+          "index_record": 9369,
+          "offset": 312986840,
+          "bytes": 37222,
+          "sha256": "84c134b14475ae69f9449a5b3b775229ef2e9edb43b292389c3853e7288e527e",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0044i1nomg_snd.wav",
+          "index_record": 9375,
+          "offset": 313242584,
+          "bytes": 8042,
+          "sha256": "e94929c3d407a8c2a19b4ea0e29f7a394e68d80a01f22d56d17de26b56c7e912",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0029r1nomg_snd.wav",
+          "index_record": 9385,
+          "offset": 313412352,
+          "bytes": 11406,
+          "sha256": "3ec0b935f7560fbd3d23f1b4d53c33a28b42e752a4651384f94f3eb72479ceb4",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m04dsgn_dsgn0059a1nomg_snd.wav",
+          "index_record": 9540,
+          "offset": 321310688,
+          "bytes": 77156,
+          "sha256": "7955a93ac6e5e5523ce4befeabe9ffb55e1e29d82490a5c956fb9e95cce8fc3c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kibv0010i1nomg_snd.wav",
+          "index_record": 9542,
+          "offset": 321387848,
+          "bytes": 13212,
+          "sha256": "adbdb22c5f0219db4d91d6f5a8b47a727595e015abc1a483c4627ab52f9fe327",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0035a3ners_snd.wav",
+          "index_record": 9603,
+          "offset": 323079032,
+          "bytes": 29974,
+          "sha256": "3e4dae9d1b7e44cc394caefa3086885ed86fab743412cfaf73dec899dba410d2",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0059a1nomg_snd.wav",
+          "index_record": 9633,
+          "offset": 323810720,
+          "bytes": 18640,
+          "sha256": "1877e3c934ba496452c49f7ac83be9c679470a4ed6e0c983962a921bb08a2d72",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0009r2nomg_snd.wav",
+          "index_record": 9720,
+          "offset": 326031152,
+          "bytes": 22332,
+          "sha256": "fe95d32ff0d97e4f549853fbf8adee00372b0c31122b9904a429a49d2217bfdc",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0033i1nomg_snd.wav",
+          "index_record": 9746,
+          "offset": 326856216,
+          "bytes": 23634,
+          "sha256": "0dfcf5660e13fbae859df2185374d71345104a3b9075fe95df7e5b50a14a4a4a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0016i3ners_snd.wav",
+          "index_record": 9808,
+          "offset": 328176464,
+          "bytes": 17842,
+          "sha256": "53e45d137c034263465026d0a8ab6dda755f7ea2af97e361aa8628bd41dd8aee",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0044r1nomg_snd.wav",
+          "index_record": 9847,
+          "offset": 329812920,
+          "bytes": 27990,
+          "sha256": "7490c7f38d28fd34b6fb19443176716404a436aff3ceb9a603df15806ba637ed",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0002r3ners_snd.wav",
+          "index_record": 10107,
+          "offset": 337673168,
+          "bytes": 25206,
+          "sha256": "68521d489e16b068d70d590047d4e531c291fa9543345d93e0057081b5ad06bb",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01ncxk_dsgn0217a1nomg_snd.wav",
+          "index_record": 10152,
+          "offset": 338676960,
+          "bytes": 9594,
+          "sha256": "6d05554199da4eacce2776d061440a8b4add2de4d8bac1fae76b8a8c1b511a18",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00pwvr_aqob0024i1ners_snd.wav",
+          "index_record": 10304,
+          "offset": 347027832,
+          "bytes": 12700,
+          "sha256": "ced03eac638d0259738c48700c7bd625e697efbd83f89dfe89dbd7d90137775e",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0010a2nomg_snd.wav",
+          "index_record": 10320,
+          "offset": 347344296,
+          "bytes": 32438,
+          "sha256": "8dc5512be74144125db7a5dd5bbf7d8d85eb1edc9c02241467df67d2b51841ae",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0018i1nomg_snd.wav",
+          "index_record": 10416,
+          "offset": 349877048,
+          "bytes": 37330,
+          "sha256": "dc159bc6a8dee194062a3026b2e24081757214033f503b458716b5f1f62c9fd5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0066i1nomg_snd.wav",
+          "index_record": 10462,
+          "offset": 350731760,
+          "bytes": 23918,
+          "sha256": "9a596d1b1c40ac5772c3c520434d589941a57abae991fa27193edf970ea2d887",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01eval_dsgn0252i1eval_snd.wav",
+          "index_record": 10532,
+          "offset": 353320696,
+          "bytes": 41160,
+          "sha256": "4aae4a488bad9ad36a5c56e64f4c4dd7521f8025186cd41e397c494585867a0f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0028i2nomg_snd.wav",
+          "index_record": 10550,
+          "offset": 353781496,
+          "bytes": 19646,
+          "sha256": "10f6ca6497a37f3efd79d9540fd75cca73d86bd8d4b9b53d6a52b6e027b0acd2",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0010a1nomg_snd.wav",
+          "index_record": 10592,
+          "offset": 354773136,
+          "bytes": 42090,
+          "sha256": "b02d2f84a617a13571b454bc93327e35adbc73d4d040b11b3c7ef12931072f9c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0035a1nomg_snd.wav",
+          "index_record": 10644,
+          "offset": 356017648,
+          "bytes": 32780,
+          "sha256": "1596b55aca7a6d55a5f66097ea609904f9590030fb60c112ae44118e984f64a0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0029r2nomg_snd.wav",
+          "index_record": 10653,
+          "offset": 356153984,
+          "bytes": 23414,
+          "sha256": "acbde2fd1e0a57b97663ff3fce82f5981a91020aa583e4762de6e6506b98e4f0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0021i3ners_snd.wav",
+          "index_record": 10725,
+          "offset": 357829736,
+          "bytes": 35384,
+          "sha256": "0e747e94f42f1314c003e46e5724f68f00470d0d053d01ef404ae5226edf37af",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gsrs_kiam0010i1nomg_snd.wav",
+          "index_record": 10841,
+          "offset": 362446088,
+          "bytes": 16946,
+          "sha256": "6747dad8629773fb7b955f595d5fcdfa30d7c0f21756dfc352f4b9db60ad12c5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0004r1ners_snd.wav",
+          "index_record": 10866,
+          "offset": 363071264,
+          "bytes": 58360,
+          "sha256": "b2104338ab96435afb61f31aee424539f88329dd4c28cd504a2efd0471c5ce0b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0003i2ners_snd.wav",
+          "index_record": 10910,
+          "offset": 364720616,
+          "bytes": 61030,
+          "sha256": "ab08b81ebe15aede1813da2ba51b0aad8b0d01651c51f0328837b828390b5209",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0042r3nomg_snd.wav",
+          "index_record": 11026,
+          "offset": 367854176,
+          "bytes": 16302,
+          "sha256": "c03ba163ac53ecef4d81333f60483146b5fdafd75316e7a586315da6979fc215",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0027r1nomg_snd.wav",
+          "index_record": 11043,
+          "offset": 368442256,
+          "bytes": 20706,
+          "sha256": "809d5474b4781ba7be7181bbab7aa206e6f19c53d2233d6b6a1b52dc161e58e1",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0019r1ners_snd.wav",
+          "index_record": 11078,
+          "offset": 369159224,
+          "bytes": 22932,
+          "sha256": "c14c000c6e053aa59f4b3cb29309825d4890b96ac46b6d3592f17a68cdbcdc0d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0033i1ners_snd.wav",
+          "index_record": 11083,
+          "offset": 369300264,
+          "bytes": 26498,
+          "sha256": "1dd6951f2de7cc2eadac6cde8b8cae65867e77e85893d56d4ccb660cfc7e98a7",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0010a3nomg_snd.wav",
+          "index_record": 11100,
+          "offset": 369564576,
+          "bytes": 24270,
+          "sha256": "ef6e60a1f8f87e37003b014fd9d0872542c2ef4d44fbb28daaac8494310705c8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m10dsgn_dsgn0042i1eval_snd.wav",
+          "index_record": 11113,
+          "offset": 369837320,
+          "bytes": 31438,
+          "sha256": "c4e5a914f85268a22d7d8e6572460645c45f5ead3d03884b53d78f342e870c75",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0023i3ners_snd.wav",
+          "index_record": 11151,
+          "offset": 370700272,
+          "bytes": 38600,
+          "sha256": "25f3cfa6b9df34317f4527087db668364385a8c94d4b4944ff2c2fa543f4f2f7",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0158a1nomg_snd.wav",
+          "index_record": 11219,
+          "offset": 376287112,
+          "bytes": 22424,
+          "sha256": "c1216f9666cf9b287072c4eab7c574d599c99c2860e7cf564d0aab997bc7e7c0",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0042i1nomg_snd.wav",
+          "index_record": 11361,
+          "offset": 383204136,
+          "bytes": 23168,
+          "sha256": "bd1b26dc7aa45c1808fb3997da5ec7f62e84bd16536507b71d0060ba3303f1c9",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0202i1nomg_snd.wav",
+          "index_record": 11365,
+          "offset": 383262048,
+          "bytes": 24812,
+          "sha256": "d277c72a9e763dd11415c08aaf7ad499f54fd63046d3cf87f3f28dbd2b30452a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0120i1nomg_snd.wav",
+          "index_record": 11402,
+          "offset": 384638120,
+          "bytes": 12320,
+          "sha256": "234fe776a78e274bd88747237f3bc16fb12c830cf82b38369208b473caf9f6ea",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0034r1ners_snd.wav",
+          "index_record": 11413,
+          "offset": 385265184,
+          "bytes": 26120,
+          "sha256": "ff8536183caf3d0b22005c8bd4b913af8fea96bc15fffe3fdacaa740bf2eda34",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0044i1nomg_snd.wav",
+          "index_record": 11420,
+          "offset": 385503552,
+          "bytes": 484202,
+          "sha256": "95cd860a1cb4d17cee9e0219bf38d30cd1ed0f8a61d9f3fe63e546efe756e8c8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0041a1nomg_snd.wav",
+          "index_record": 11471,
+          "offset": 387005112,
+          "bytes": 71556,
+          "sha256": "a4f53c993bd39ecbdff4107d01f34581a578b2f42ff7d4e2d573a4546c907612",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00vnst_kill0022i1nomg_snd.wav",
+          "index_record": 11473,
+          "offset": 387076672,
+          "bytes": 14374,
+          "sha256": "c799c3094d92daad2d900ffc192a0871382cf86416fc60d1edc6acea493a5cbd",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0044r3nomg_snd.wav",
+          "index_record": 11764,
+          "offset": 395823368,
+          "bytes": 28038,
+          "sha256": "a29a96b67d5c53d28c79282a8795bfe411b6c4a9f5e4bb9315d66cc4e822aa7e",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0053a1nomg_snd.wav",
+          "index_record": 11809,
+          "offset": 397896648,
+          "bytes": 28300,
+          "sha256": "c610515f1e31113839f418ea19e3ca476cda577eff212cedbf135d818f0952b4",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0028i1nomg_snd.wav",
+          "index_record": 11838,
+          "offset": 398717952,
+          "bytes": 19042,
+          "sha256": "11d397e4d4cac2a7615460ae280f90ea2ab78de9c044e0aabd22420cb2800f30",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0024r3ners_snd.wav",
+          "index_record": 11841,
+          "offset": 398853552,
+          "bytes": 24420,
+          "sha256": "e66ffe7d2ed6890af04e032276159a2152436dfaf551d15ca4d6d7607d352d5c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0026i2nomg_snd.wav",
+          "index_record": 11935,
+          "offset": 406568928,
+          "bytes": 49832,
+          "sha256": "9e1e0d720c5a8c2fd0f0e718419f22c3938b890e0e38e4d49c40c14c86b13bf3",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0035a3ners_snd.wav",
+          "index_record": 11987,
+          "offset": 408188976,
+          "bytes": 38538,
+          "sha256": "f323ec84c3795986c47829ca018a2d9867430e48eb645f1fe5d53f44a3d82bdc",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0154i1nomg_snd.wav",
+          "index_record": 12022,
+          "offset": 412970104,
+          "bytes": 38800,
+          "sha256": "a3193dc8572673599f77a80faae5838cd0385edd771427120d4d90e2e6ffe005",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m10dsgn_dsgn0059i1eval_snd.wav",
+          "index_record": 12031,
+          "offset": 413209048,
+          "bytes": 33368,
+          "sha256": "332611989b6ccce9969e8ca7d9713d649179eb3dd54b2f5150d3e465ab8b5b74",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0104i1nomg_snd.wav",
+          "index_record": 12149,
+          "offset": 416666032,
+          "bytes": 12766,
+          "sha256": "96dfef4231499868420d4b91d361ac14f8cedc6fdccd9e75b226cfb3e309b5d5",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0006i3nomg_snd.wav",
+          "index_record": 12165,
+          "offset": 416927576,
+          "bytes": 10724,
+          "sha256": "c9dd315c060e111cde50377009bddfd73cd18017c9e6128fd6a4f7bfbd5ecfac",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0025a1ners_snd.wav",
+          "index_record": 12183,
+          "offset": 417194856,
+          "bytes": 14962,
+          "sha256": "31c148d2c9e53c05719831c225e6daf254f02400c58e6856bf73a861c09f049d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0001i3ners_snd.wav",
+          "index_record": 12190,
+          "offset": 417355376,
+          "bytes": 26524,
+          "sha256": "e8f15e7aaffa729ff93cad5ac001d509d0ddeff1d5b52878b8dd199bf4624a7b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0017r1nomg_snd.wav",
+          "index_record": 12200,
+          "offset": 417573672,
+          "bytes": 77994,
+          "sha256": "f48bbf71eda149d58356026ca00935a3a175d617a0fb5740b3fee7eb42f5afd3",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0027r2nomg_snd.wav",
+          "index_record": 12211,
+          "offset": 418252200,
+          "bytes": 17552,
+          "sha256": "df80b86ad9d646fce98e9e73d056aa50360c87a0840b834aede058340cf92264",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0009r1nomg_snd.wav",
+          "index_record": 12345,
+          "offset": 421766936,
+          "bytes": 17370,
+          "sha256": "706166dd7a413e1f84bb6c87bcdde7c15c93856b17abc1215d4e644cff7ca49e",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0041i1nomg_snd.wav",
+          "index_record": 12434,
+          "offset": 423748992,
+          "bytes": 27578,
+          "sha256": "a0ed355825eb441b93383b2bd478821c0afe56f4d055c57402b5a1230126a129",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0123i1nomg_snd.wav",
+          "index_record": 12453,
+          "offset": 424109184,
+          "bytes": 19148,
+          "sha256": "bcb52757a5d948ba3db493aea6515957eca3706ff2c47364ba0483d0b2945602",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00pwvr_aqob0025i1nomg_snd.wav",
+          "index_record": 12471,
+          "offset": 424557248,
+          "bytes": 17358,
+          "sha256": "9614f767d5a0930db073e6480714a2c28ca0e30b78d11ae5021e9213cb9e5e35",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0098i1nomg_snd.wav",
+          "index_record": 12475,
+          "offset": 424638960,
+          "bytes": 4960,
+          "sha256": "be539f8edeed56310d2e2483e4aea90c720c4c046a8c4b89132546627af4e842",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0033i1ners_snd.wav",
+          "index_record": 12545,
+          "offset": 427129944,
+          "bytes": 12060,
+          "sha256": "25c5f7507b239251ee97776ca09920a8911e160740cc56372b3166d83008ecbf",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0010a3nomg_snd.wav",
+          "index_record": 12557,
+          "offset": 427424936,
+          "bytes": 38852,
+          "sha256": "6a6e8169a15369832ed1ba50a2aa75a0e23d747240e9e70e5996797c44e9cf7f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0050a1nomg_snd.wav",
+          "index_record": 12619,
+          "offset": 429319648,
+          "bytes": 113966,
+          "sha256": "a090972cb32d4d9a052158f230cc95f3d4e32122d86f0bf9ee185145afa1bd64",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00bmsf_kill0023i1ners_snd.wav",
+          "index_record": 12706,
+          "offset": 433577504,
+          "bytes": 16984,
+          "sha256": "a0ff30ef61cfd3389129bc09b179af1ef3b8d04e7bd58b86170095069e72af9b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0050a1nomg_snd.wav",
+          "index_record": 12719,
+          "offset": 433999800,
+          "bytes": 67636,
+          "sha256": "24311e20ac2d482941260df02db3224a8cd3ea70c5890466bd89ab58d84ab851",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0011i1nomg_snd.wav",
+          "index_record": 12779,
+          "offset": 436717368,
+          "bytes": 18402,
+          "sha256": "97866bbaf5c6733ba065314c2b1d74b4478b257df74cde751b8be1182520009a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0020a2nomg_snd.wav",
+          "index_record": 12822,
+          "offset": 437464832,
+          "bytes": 21658,
+          "sha256": "2102608205be627ef9c79cd2b7911fe648c672ad6c0667450c57992364e73b1b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0016i2ners_snd.wav",
+          "index_record": 12963,
+          "offset": 445514200,
+          "bytes": 15530,
+          "sha256": "a9533804ccea6bba7388e0be7b124c114e11721c52b9f856aa4052b08697b420",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0027r3nomg_snd.wav",
+          "index_record": 12964,
+          "offset": 445529736,
+          "bytes": 37452,
+          "sha256": "da46e997005deeb7745960ec967b68e7a1e7fb766fdb01c02c9266cba00497ba",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0010a1nomg_snd.wav",
+          "index_record": 13030,
+          "offset": 447027576,
+          "bytes": 24708,
+          "sha256": "c130151a3f9b1d3e1c0a2bf6408e12b13f9481e82d66845aa30c0ca561ca7cee",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0107i1nomg_snd.wav",
+          "index_record": 13061,
+          "offset": 447688992,
+          "bytes": 20512,
+          "sha256": "01563d95ad0c72273798a8e9e749e57afc6d321f587449c3cbaffcba48b12421",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0032r3ners_snd.wav",
+          "index_record": 13067,
+          "offset": 447786224,
+          "bytes": 43850,
+          "sha256": "b64eaa914f119537865aaaee70a1b0bfdd52170e3ae84eb4fb6a3aff8c6ba940",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0053r1nomg_snd.wav",
+          "index_record": 13213,
+          "offset": 453305552,
+          "bytes": 23434,
+          "sha256": "c89cc30de6006caff63fca6d08a190ad570afd98690e9aaf973bfabac137ab14",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0008i1nomg_snd.wav",
+          "index_record": 13350,
+          "offset": 456605432,
+          "bytes": 28230,
+          "sha256": "f5c5c89f9eeb39c5cc8ce912e8b8e3b45310309de3c8adf526bd101457dda558",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0204i1nomg_snd.wav",
+          "index_record": 13443,
+          "offset": 459240480,
+          "bytes": 24426,
+          "sha256": "eab5c426dbdd854c1d49ed17c0ba23a3029dccbccbf2311fcafc4dd6af8d750a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0047a1nomg_snd.wav",
+          "index_record": 13459,
+          "offset": 459476328,
+          "bytes": 77916,
+          "sha256": "15b2ce72c51cbf559c4e2f3ea25d5f4055d39286f8b0dbb7a2b86e9517ed7594",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0043i3nomg_snd.wav",
+          "index_record": 13498,
+          "offset": 460079480,
+          "bytes": 30162,
+          "sha256": "7d463c90c4557281a75281e5cbf5f6d263cb138b11f71becd95614577d8ca978",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0003i2ners_snd.wav",
+          "index_record": 13638,
+          "offset": 463509200,
+          "bytes": 21780,
+          "sha256": "897075fc560ae4b880b66c59579090ed86514432ff0e6b284a80751ba54aad49",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01eval_dsgn0018a1eval_snd.wav",
+          "index_record": 13645,
+          "offset": 463651864,
+          "bytes": 62960,
+          "sha256": "4b08499640d58ca8e97ea7b7cf3329c7db5026ef38d7d09ecf20fa68f65aa984",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m06dsgn_dsgn0055a1nomg_snd.wav",
+          "index_record": 13677,
+          "offset": 464733400,
+          "bytes": 51102,
+          "sha256": "33c1adf41c2d8292d6d147e4b56ebe5b01a32923caa832c7660c4568b6b1e630",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0030i1nomg_snd.wav",
+          "index_record": 13803,
+          "offset": 468190008,
+          "bytes": 20900,
+          "sha256": "b9357d8c02ab19d2b2852c9a195d06f56f84ea9eb50af44f1401110c79b05950",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0008i3nomg_snd.wav",
+          "index_record": 13812,
+          "offset": 468271648,
+          "bytes": 10788,
+          "sha256": "a089e96d70d33b06fcc92f34e4b548ae6b7f86791038a5aa39371e1025f65b28",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0043i1nomg_snd.wav",
+          "index_record": 13951,
+          "offset": 471429112,
+          "bytes": 28296,
+          "sha256": "9ac5543c50f25efa42afa36e536a32a30a2f84e17f55179ed9109e5a7ada00eb",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0018i1nomg_snd.wav",
+          "index_record": 14084,
+          "offset": 478260256,
+          "bytes": 17678,
+          "sha256": "6d418e9acc77186c5b7a512d1b89cf80d5d0d9defb25563417919d365e963c61",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0009r3nomg_snd.wav",
+          "index_record": 14119,
+          "offset": 478871416,
+          "bytes": 31782,
+          "sha256": "999a5bd9a695ce12a5e0aedc48e53b7b1f909721ca0e871c61ff6cd1d125191d",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0001i2ners_snd.wav",
+          "index_record": 14195,
+          "offset": 480491312,
+          "bytes": 35564,
+          "sha256": "e67560013da5654405b5fcc3ed2d4a566be33aa6bfdeac78fd814ef8f8b5f100",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0010a2nomg_snd.wav",
+          "index_record": 14309,
+          "offset": 484304064,
+          "bytes": 39508,
+          "sha256": "885d5f37be03b4a11ec83436d80a98c0f30f6dbbf46ce74e32d0251f21c641ba",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0018i2nomg_snd.wav",
+          "index_record": 14379,
+          "offset": 486586000,
+          "bytes": 38732,
+          "sha256": "c762269e81fc1856e4d0c9cc04ae2ef7b1ab66489a7bbc1cbede1632e8a5ad7b",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0001i1ners_snd.wav",
+          "index_record": 14391,
+          "offset": 486799888,
+          "bytes": 14768,
+          "sha256": "ad87a51e12bbd207c3659c0525908820ed2cc949c02b97a45c922f4d8e5d3940",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "mxxdsgn_dsgn0005i1nomg_snd.wav",
+          "index_record": 14396,
+          "offset": 486942168,
+          "bytes": 28806,
+          "sha256": "fea2af198446d7a0248c18a56b63a67ee8bb2ab1f7491df5a5a4d9ed19e24f52",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m05dsgn_dsgn0039a1nomg_snd.wav",
+          "index_record": 14420,
+          "offset": 487355776,
+          "bytes": 46516,
+          "sha256": "100eb5aa557a73b6f5f2b5f55477b1b86fd8cbe401ed3bd7720402f0f06b78e9",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00vcc1_aqob0022i1nomg_snd.wav",
+          "index_record": 14422,
+          "offset": 487488456,
+          "bytes": 10180,
+          "sha256": "5c1f0e651d84127da49a79777737c62e611b7d55cd1f890f785fed42725106a6",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0006i1nomg_snd.wav",
+          "index_record": 14429,
+          "offset": 487722864,
+          "bytes": 28934,
+          "sha256": "40316c9759348858b05a45adca4bb0abc85a53c7272e9d736706fc0e630a03f2",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_hesx0007r1nomg_snd.wav",
+          "index_record": 14461,
+          "offset": 488653736,
+          "bytes": 21794,
+          "sha256": "e39d2839eb9a29c278ff4a72abf2f13d4614fbb3edf1aaccee999af944fc537f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0030a3nomg_snd.wav",
+          "index_record": 14505,
+          "offset": 493451600,
+          "bytes": 9520,
+          "sha256": "cd6c4326504ec1ee670cb2ebd819f22f7a74089538edc7ecea567d791a666ba7",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0004r2ners_snd.wav",
+          "index_record": 14555,
+          "offset": 495275328,
+          "bytes": 15218,
+          "sha256": "811e1c7edb6eada73d8d55f3b2f47ad03733da54e67750d6f06680364574642a",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0029r1nomg_snd.wav",
+          "index_record": 14609,
+          "offset": 496717944,
+          "bytes": 46472,
+          "sha256": "cc9731aba25871781eb89a48f2ec9d354842f012aa672f6788f05ee3fc53e94c",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_secx0043i2nomg_snd.wav",
+          "index_record": 14653,
+          "offset": 498415304,
+          "bytes": 12324,
+          "sha256": "8161f0952de3db87058d28ba67db9acd154f55336d469cccf89f4d6f44b2046f",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m08dsgn_dsgn0041i1nomg_snd.wav",
+          "index_record": 14695,
+          "offset": 499968280,
+          "bytes": 116590,
+          "sha256": "24229d05175718deee12ab42bb4ea15ecb3bf13037ddf5558937ebd41e2bc1ac",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_gcon0016i3ners_snd.wav",
+          "index_record": 14731,
+          "offset": 504102960,
+          "bytes": 74446,
+          "sha256": "f2c55bd0a1f71625b1f024352da33adc8d699496be10043d9e121dd56c58b3ab",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m01nomg_dsgn0092a1nomg_snd.wav",
+          "index_record": 14805,
+          "offset": 506848848,
+          "bytes": 37314,
+          "sha256": "2fd1b468fb49a4d84288d33ef8cb3fc70846f03388b23cef9bf4ace5878bfaee",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00avis_kill0037i1nomg_snd.wav",
+          "index_record": 14843,
+          "offset": 508101056,
+          "bytes": 14248,
+          "sha256": "de24a9cabc24b99b4615ab1bf518fe533d7fa3f71167f21332ab2cda2ee37f50",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00gnod_kill0041i2nomg_snd.wav",
+          "index_record": 15092,
+          "offset": 520387040,
+          "bytes": 29708,
+          "sha256": "ea11dcdfec894526385495badb38daf5ba9e9b0ed27f599c794df0c28f008725",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        },
+        {
+          "member": "m00vct2_kill0022i1nomg_snd.wav",
+          "index_record": 15106,
+          "offset": 520658624,
+          "bytes": 10986,
+          "sha256": "bda0da7b83a626c1345d8ad3d4bafedee7c04bfd896dc5612c1ebe304443a1e8",
+          "header_findings": [
+            "riff_length_outside_source"
+          ],
+          "block_findings": [],
+          "status": "unknown"
+        }
+      ]
+    },
+    {
+      "archive": "always.dbs",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 0,
+      "formats": [],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    },
+    {
+      "archive": "always3.dat",
+      "status": "unknown",
+      "evidence_class": "retail_wave_metadata",
+      "wave_members": 23,
+      "formats": [
+        {
+          "format": [
+            1,
+            1,
+            22050,
+            16
+          ],
+          "members": 23
+        }
+      ],
+      "header_finding_members": 0,
+      "block_finding_members": 0,
+      "findings": []
+    }
+  ],
+  "total": 31,
+  "counts": {
+    "unknown": 31
+  },
+  "archives": [
+    {
+      "archive": "Always2.dat",
+      "sha256": "6cec7388c51b5b8591d8aa0cce974243621701990576574eda28dcd03c5e1611"
+    },
+    {
+      "archive": "C&C_Canyon.mix",
+      "sha256": "8045026fed95044666eeec1016bb78a9963c21601b7c45f69d4aa018aa4296ba"
+    },
+    {
+      "archive": "C&C_City.mix",
+      "sha256": "3a48c5b173629a71826e009d97bd13cff531315a2f256f02a6321c3b6ea4018e"
+    },
+    {
+      "archive": "C&C_City_Flying.mix",
+      "sha256": "c3a9c65c5a1f3d480941b29034f5ba57aed2391aea64461ef1afccd0fffda4c3"
+    },
+    {
+      "archive": "C&C_Complex.mix",
+      "sha256": "e63f94f76648be6cdcacb7727911350fff6a3733b614deb2f88c65b1413c4531"
+    },
+    {
+      "archive": "C&C_Field.mix",
+      "sha256": "ef8884b15a4c77e59f09d96dbf0885ea48cdfb9e58c9543a0b742820d8414c40"
+    },
+    {
+      "archive": "C&C_Glacier_Flying.mix",
+      "sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa"
+    },
+    {
+      "archive": "C&C_Hourglass.mix",
+      "sha256": "28c3fc1a26e6aba0f29886e9ca37954eec63ce8d6cd2d24ebffebe57075a47ee"
+    },
+    {
+      "archive": "C&C_Islands.mix",
+      "sha256": "d73959a3dd4a2dd9e292f3a8e4e2bce3a7ba4f5547aed323379f8c218e80d1fd"
+    },
+    {
+      "archive": "C&C_Mesa.mix",
+      "sha256": "400190c56b4763109070a901c9c57c2a5df1ffbd3a1e58e035b31b488994bb0c"
+    },
+    {
+      "archive": "C&C_Under.mix",
+      "sha256": "5c57d3206046a2906bd1dbe57c3c0fd4c67afa0d0d44625f250aa1695a2ac02a"
+    },
+    {
+      "archive": "C&C_Volcano.mix",
+      "sha256": "0bc5cb096bbd8431ed8ad5932467dbbe31f1b2301ec9c5889bbb432e180bbad4"
+    },
+    {
+      "archive": "C&C_Walls.mix",
+      "sha256": "72e960d37c39d2bb7f4dea979758b6c8e07106cfa2125d3f73496df1224b25d8"
+    },
+    {
+      "archive": "C&C_Walls_Flying.mix",
+      "sha256": "fda92665671f8c7951f258e32e72710d9e51df2870651b8c142e5fc04c4850df"
+    },
+    {
+      "archive": "M00_Tutorial.mix",
+      "sha256": "84f14f6267dd8a88563b3d31540bf857df0b8e111144944cb582edd246f2d438"
+    },
+    {
+      "archive": "M01.mix",
+      "sha256": "3d814a11fb306b425da74d40648f17053644e6a58ce521182d7c178683b354eb"
+    },
+    {
+      "archive": "M02.mix",
+      "sha256": "f098e9190802dba8c9b453e479cb393a0e4777c5f5b038c3bb0376010d64b3a1"
+    },
+    {
+      "archive": "M03.mix",
+      "sha256": "e49d5a6233635228ad91c73cd2614f3f33e09cbc37d0650eb79683f35aa47d79"
+    },
+    {
+      "archive": "M04.mix",
+      "sha256": "1d084c9088474c6664dcb30eb08cd7fc86a265e200fbfcebb606ac56e9530ffa"
+    },
+    {
+      "archive": "M05.mix",
+      "sha256": "d3b38752890e0d2102a5ba8f57d10c832b8b60749afc4d0512333ca3f64446ca"
+    },
+    {
+      "archive": "M06.mix",
+      "sha256": "cf98d879ac8cf23e60589407b61eb4c2a43c238c979b54485a25938f7679573a"
+    },
+    {
+      "archive": "M07.mix",
+      "sha256": "479f72c76ec145c0289f331a856201d0f4249fa86854a5d664c6e8d4edc08664"
+    },
+    {
+      "archive": "M08.mix",
+      "sha256": "b95c738add5ce7887ec386d839838d595986a05c2f5240b90fe2cebaa7075429"
+    },
+    {
+      "archive": "M09.mix",
+      "sha256": "3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7"
+    },
+    {
+      "archive": "M10.mix",
+      "sha256": "c9bdaa94686f29a69a16c148671c7a6c05c617f61694fb4aec01185e4c3720ec"
+    },
+    {
+      "archive": "M11.mix",
+      "sha256": "f29a8a4bf4e94d928b8e49c0d4eecade0d35f54ff683ec0fd5b2e4bedbac80eb"
+    },
+    {
+      "archive": "M13.mix",
+      "sha256": "54d41ea011bf7c4d273064422de961af76ccc38f32dd9b5368ebfbca365bbfc4"
+    },
+    {
+      "archive": "Skirmish00.mix",
+      "sha256": "1ac0110faceb596c2b66993ec5034051e9b116acdf5732fb4383e4e8d2984738"
+    },
+    {
+      "archive": "always.dat",
+      "sha256": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a"
+    },
+    {
+      "archive": "always.dbs",
+      "sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b"
+    },
+    {
+      "archive": "always3.dat",
+      "sha256": "8c84590dfb33b25243fa3252777b59b0b4c3a09bbd2b4d5a59444b79a1e08156"
+    }
+  ],
+  "totals": {
+    "wave_members": 10241,
+    "header_finding_members": 265,
+    "block_finding_members": 0
+  },
+  "parser_inputs": [
+    {
+      "source": "tools/audit_all_wave_headers.py",
+      "sha256": "d89e39e069cd7b6c7c10462b2d6e023e5cff3791fadda7d79c489b68770ca57f"
+    },
+    {
+      "source": "tools/audit_mission_wave_headers.py",
+      "sha256": "111bb015b18bc21df1bc1a32d91eb0a68068682f319a00847b96fefce696d6e5"
+    },
+    {
+      "source": "tools/renegade_cinematic_dependency_scan.py",
+      "sha256": "a743dd0a565097b14bb20ca8c96536fddefd0b2776028b066686b3684c7e273f"
+    },
+    {
+      "source": "port/audio/vita/renegade_wave_decoder.cpp",
+      "sha256": "909a860cabf2e605c985f41c2243dcc2356bc8add68882bfa8d8f4a11431e31c"
+    }
+  ],
+  "limits": [
+    "Every archive index WAV occurrence is counted, including duplicate names.",
+    "Loose WAVs, music and movie streams are separate denominators.",
+    "Strict RIFF failures may prevent format identification; these are not unknown-codec verdicts.",
+    "Metadata checks prove no PCM decode, runtime selection, playback or physical acceptance."
+  ]
+}

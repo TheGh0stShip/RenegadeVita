@@ -21,6 +21,24 @@ def hlod(arrays, count=1):
 
 
 class HlodDependencies(unittest.TestCase):
+    def test_other_prototype_header_names_keep_original_offsets(self):
+        data=chunk(0x750,bytes(16)+name('RIG.HIDDEN',32))
+        data+=chunk(0x741,chunk(1,bytes(8)+name('SHOCK',32)))
+        data+=chunk(0x742,chunk(1,bytes(8)+name('RING',32)))
+        for kind in (0x300,0x400,0x420,0x600,0xa00):
+            data+=chunk(kind,chunk(kind+1,bytes(4)+name('MODEL',16)))
+        rows=declared_render_names(data)
+        self.assertEqual([r['kind'] for r in rows],
+            ['null','sphere','ring','hmodel','lodmodel','collection','aggregate','sound'])
+        self.assertEqual(rows[0]['name'],'RIG.HIDDEN')
+        with self.assertRaises(ValueError):
+            declared_render_names(chunk(0x750,bytes(47)))
+
+    def test_mesh_owner_opens_headers_without_outer_nesting_flag(self):
+        header=struct.pack('<II',0x40002,0)+name('BODY',16)+name('RIG',16)
+        self.assertEqual(declared_render_names(chunk(0,chunk(0x1f,header),False)),
+                         [{'name':'RIG.BODY','kind':'mesh'}])
+
     def test_lods_aggregates_and_repeated_names_preserved(self):
         data = hlod(array(0x702, ['RIG.BODY', 'RIG.BODY']) +
                     array(0x702, ['RIG.LOW']) + array(0x705, ['ATTACH']) +

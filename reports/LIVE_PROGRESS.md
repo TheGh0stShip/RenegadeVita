@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S4 all-archive HLOD name reconciliation — 2026-10-03
+
+49,071 child occurrences across 3,999 W3D records are compared with reviewed
+original prototype-header name fields. Seventy lack candidates; full schema
+validation and runtime loading remain open. Retail clear nesting flags exposed
+a parser omission; explicit mesh-owner traversal fixes it. Twelve focused
+checks pass and all members parse. No engine behavior or device state changed.
+
 ## S4 all-archive nested W3D dependencies — 2026-10-03
 
 31 archives and 3,999 W3D records yield 117,411 texture and 50,186 HLOD references,

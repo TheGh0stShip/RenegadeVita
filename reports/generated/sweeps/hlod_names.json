@@ -1,0 +1,1448 @@
+{
+  "schema": 1,
+  "complete": false,
+  "rows": [
+    {
+      "archive": "Always2.dat",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 21,
+      "parser_errors": 0,
+      "declared_prototypes": 1925,
+      "child_occurrences": 1983,
+      "header_candidate_matches": 1983,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 1627,
+      "only_other_archive_candidates": 77,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Canyon.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 2,
+      "parser_errors": 0,
+      "declared_prototypes": 1113,
+      "child_occurrences": 1111,
+      "header_candidate_matches": 1111,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_City.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 2,
+      "parser_errors": 0,
+      "declared_prototypes": 854,
+      "child_occurrences": 852,
+      "header_candidate_matches": 852,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 852,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_City_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 3,
+      "parser_errors": 0,
+      "declared_prototypes": 998,
+      "child_occurrences": 995,
+      "header_candidate_matches": 995,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Complex.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 3,
+      "parser_errors": 0,
+      "declared_prototypes": 748,
+      "child_occurrences": 745,
+      "header_candidate_matches": 745,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Field.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 2,
+      "parser_errors": 0,
+      "declared_prototypes": 507,
+      "child_occurrences": 505,
+      "header_candidate_matches": 505,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Glacier_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 11,
+      "parser_errors": 0,
+      "declared_prototypes": 817,
+      "child_occurrences": 814,
+      "header_candidate_matches": 814,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 31,
+      "only_other_archive_candidates": 8,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Hourglass.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 2,
+      "parser_errors": 0,
+      "declared_prototypes": 497,
+      "child_occurrences": 495,
+      "header_candidate_matches": 495,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Islands.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 3,
+      "parser_errors": 0,
+      "declared_prototypes": 480,
+      "child_occurrences": 477,
+      "header_candidate_matches": 477,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Mesa.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 1,
+      "parser_errors": 0,
+      "declared_prototypes": 566,
+      "child_occurrences": 565,
+      "header_candidate_matches": 565,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Under.mix",
+      "status": "unknown",
+      "w3d_members": 0,
+      "child_occurrences": 0,
+      "header_candidate_matches": 0,
+      "builtin_null_names": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Volcano.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 3,
+      "parser_errors": 0,
+      "declared_prototypes": 589,
+      "child_occurrences": 594,
+      "header_candidate_matches": 594,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 8,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Walls.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 2,
+      "parser_errors": 0,
+      "declared_prototypes": 538,
+      "child_occurrences": 536,
+      "header_candidate_matches": 536,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 536,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "C&C_Walls_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 3,
+      "parser_errors": 0,
+      "declared_prototypes": 922,
+      "child_occurrences": 919,
+      "header_candidate_matches": 919,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M00_Tutorial.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 31,
+      "parser_errors": 0,
+      "declared_prototypes": 680,
+      "child_occurrences": 716,
+      "header_candidate_matches": 716,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 67,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M01.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 103,
+      "parser_errors": 0,
+      "declared_prototypes": 1687,
+      "child_occurrences": 1637,
+      "header_candidate_matches": 1637,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 27,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M02.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 70,
+      "parser_errors": 0,
+      "declared_prototypes": 2796,
+      "child_occurrences": 2756,
+      "header_candidate_matches": 2756,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 2,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M03.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 129,
+      "parser_errors": 0,
+      "declared_prototypes": 1522,
+      "child_occurrences": 1372,
+      "header_candidate_matches": 1372,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 2,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M04.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 68,
+      "parser_errors": 0,
+      "declared_prototypes": 2262,
+      "child_occurrences": 2232,
+      "header_candidate_matches": 2232,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 4,
+      "only_other_archive_candidates": 24,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M05.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 41,
+      "parser_errors": 0,
+      "declared_prototypes": 1914,
+      "child_occurrences": 1886,
+      "header_candidate_matches": 1886,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M06.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 215,
+      "parser_errors": 0,
+      "declared_prototypes": 1246,
+      "child_occurrences": 1157,
+      "header_candidate_matches": 1152,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 80,
+      "unresolved_occurrences": 5,
+      "unresolved_names": [
+        {
+          "name": "BOOK_DR3.BOUNDINGBOX",
+          "occurrences": 1,
+          "member": "book_dr3.w3d",
+          "index_record": 292,
+          "member_sha256": "bcb5019ffa610bff8c07e406718a5dbea05a7e795a0a73011ded249a1e8a23e3",
+          "hlod": "BOOK_DR3",
+          "array_kind": "lod",
+          "bone_index": 3,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "CHT_INT008.HIDE000",
+          "occurrences": 1,
+          "member": "cht_int008.w3d",
+          "index_record": 303,
+          "member_sha256": "ee28989ccdd18932f4b3e7a6b91ffdb2c1e626177b2740c098a38528a92b8d6f",
+          "hlod": "CHT_INT008",
+          "array_kind": "lod",
+          "bone_index": 25,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "CHT_INT008.HIDE001",
+          "occurrences": 1,
+          "member": "cht_int008.w3d",
+          "index_record": 303,
+          "member_sha256": "ee28989ccdd18932f4b3e7a6b91ffdb2c1e626177b2740c098a38528a92b8d6f",
+          "hlod": "CHT_INT008",
+          "array_kind": "lod",
+          "bone_index": 24,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "CHT_INT008.HIDE002",
+          "occurrences": 1,
+          "member": "cht_int008.w3d",
+          "index_record": 303,
+          "member_sha256": "ee28989ccdd18932f4b3e7a6b91ffdb2c1e626177b2740c098a38528a92b8d6f",
+          "hlod": "CHT_INT008",
+          "array_kind": "lod",
+          "bone_index": 23,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "CHT_INT008.HIDE003",
+          "occurrences": 1,
+          "member": "cht_int008.w3d",
+          "index_record": 303,
+          "member_sha256": "ee28989ccdd18932f4b3e7a6b91ffdb2c1e626177b2740c098a38528a92b8d6f",
+          "hlod": "CHT_INT008",
+          "array_kind": "lod",
+          "bone_index": 22,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        }
+      ]
+    },
+    {
+      "archive": "M07.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 8,
+      "parser_errors": 0,
+      "declared_prototypes": 1747,
+      "child_occurrences": 1736,
+      "header_candidate_matches": 1736,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M08.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 41,
+      "parser_errors": 0,
+      "declared_prototypes": 1379,
+      "child_occurrences": 1354,
+      "header_candidate_matches": 1354,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 7,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M09.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 32,
+      "parser_errors": 0,
+      "declared_prototypes": 1255,
+      "child_occurrences": 1230,
+      "header_candidate_matches": 1230,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 422,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M10.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 24,
+      "parser_errors": 0,
+      "declared_prototypes": 1339,
+      "child_occurrences": 1365,
+      "header_candidate_matches": 1361,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 45,
+      "unresolved_occurrences": 4,
+      "unresolved_names": [
+        {
+          "name": "E_19_NEWSMK03",
+          "occurrences": 1,
+          "member": "con_ag_ext1.w3d",
+          "index_record": 3,
+          "member_sha256": "ec5934715c30fefb5c26e20344d52df53c43ba4f920b2ce42ff1425cbf392675",
+          "hlod": "CON_AG_EXT1",
+          "array_kind": "aggregate",
+          "bone_index": 11,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_FLARE06",
+          "occurrences": 1,
+          "member": "con_ag_ext1.w3d",
+          "index_record": 3,
+          "member_sha256": "ec5934715c30fefb5c26e20344d52df53c43ba4f920b2ce42ff1425cbf392675",
+          "hlod": "CON_AG_EXT1",
+          "array_kind": "aggregate",
+          "bone_index": 10,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_FLARE07",
+          "occurrences": 1,
+          "member": "con_ag_ext1.w3d",
+          "index_record": 3,
+          "member_sha256": "ec5934715c30fefb5c26e20344d52df53c43ba4f920b2ce42ff1425cbf392675",
+          "hlod": "CON_AG_EXT1",
+          "array_kind": "aggregate",
+          "bone_index": 11,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_SMOLDER02",
+          "occurrences": 1,
+          "member": "con_ag_ext1.w3d",
+          "index_record": 3,
+          "member_sha256": "ec5934715c30fefb5c26e20344d52df53c43ba4f920b2ce42ff1425cbf392675",
+          "hlod": "CON_AG_EXT1",
+          "array_kind": "aggregate",
+          "bone_index": 10,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        }
+      ]
+    },
+    {
+      "archive": "M11.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 41,
+      "parser_errors": 0,
+      "declared_prototypes": 1903,
+      "child_occurrences": 1886,
+      "header_candidate_matches": 1886,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "M13.mix",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 62,
+      "parser_errors": 0,
+      "declared_prototypes": 553,
+      "child_occurrences": 535,
+      "header_candidate_matches": 535,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 0,
+      "only_other_archive_candidates": 30,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "Skirmish00.mix",
+      "status": "unknown",
+      "w3d_members": 0,
+      "child_occurrences": 0,
+      "header_candidate_matches": 0,
+      "builtin_null_names": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "always.dat",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 3069,
+      "parser_errors": 0,
+      "declared_prototypes": 16471,
+      "child_occurrences": 18573,
+      "header_candidate_matches": 18506,
+      "builtin_null_names": 6,
+      "ambiguous_provider_occurrences": 675,
+      "only_other_archive_candidates": 0,
+      "unresolved_occurrences": 61,
+      "unresolved_names": [
+        {
+          "name": "AG_EXPLODE2",
+          "occurrences": 1,
+          "member": "dsp_l1drumstak.w3d",
+          "index_record": 4066,
+          "member_sha256": "dcf0632f86a7c0f0cbf865968c17e3df7b7b6ba357e2f6bf8cb4a2cb22304237",
+          "hlod": "DSP_L1DRUMSTAK",
+          "array_kind": "aggregate",
+          "bone_index": 8,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "AG_SPARKS1",
+          "occurrences": 1,
+          "member": "dsp_wiredangle.w3d",
+          "index_record": 6989,
+          "member_sha256": "4a465c7edea97e5422e9eb8aae93757bec0ef90bac80150d319ca7909657483c",
+          "hlod": "DSP_WIREDANGLE",
+          "array_kind": "aggregate",
+          "bone_index": 12,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.BOUNDINGBOX",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 1,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.C_SHADOWMESH",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_ABDOMEN",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 2,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_CHEST",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 3,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_HEAD",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 5,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_L CALF",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 17,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_L FOOT",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 18,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_L FOREARM",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 8,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_L HAND",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 9,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_L THIGH",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 16,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_L UPPERARM",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 7,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_NECK",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 4,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_PELVIS",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 1,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_R CALF",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 20,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_R FOOT",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 21,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_R FOREARM",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 12,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_R HAND",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 13,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_R THIGH",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 19,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.K_R UPPERARM",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 11,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_GDI_MOBI_L1.WORLDBOX",
+          "occurrences": 1,
+          "member": "c_gdi_mobi_.w3d",
+          "index_record": 5321,
+          "member_sha256": "9f1d89e8f7de9549c2135d8dda51225612a453675055c6e02a8a416a96f75a58",
+          "hlod": "C_GDI_MOBI_",
+          "array_kind": "lod",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_ABDOMEN",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 2,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_CHEST",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 3,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_HEAD",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 5,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_L CALF",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 17,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_L FOOT",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 18,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_L FOREARM",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 8,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_L HAND",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 9,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_L THIGH",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 16,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_L UPPERARM",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 7,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_NECK",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 4,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_PELVIS",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 1,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_R CALF",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 20,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_R FOOT",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 21,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_R FOREARM",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 12,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_R HAND",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 13,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_R THIGH",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 19,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "C_NOD_SNIPER_L1.K_R UPPERARM",
+          "occurrences": 1,
+          "member": "c_nod_sniper_.w3d",
+          "index_record": 7912,
+          "member_sha256": "24b2dedbc7e2e4efade5def7e50c08aca20c3b8c317939e0d01623f79424412b",
+          "hlod": "C_NOD_SNIPER_",
+          "array_kind": "lod",
+          "bone_index": 11,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_19_REDSPRK",
+          "occurrences": 2,
+          "member": "hnd_ag_exp.w3d",
+          "index_record": 1522,
+          "member_sha256": "068cc30bb2aaa9f1c6228963bb612811f36735369afdac2656bfc093c87b7df1",
+          "hlod": "HND_AG_EXP",
+          "array_kind": "aggregate",
+          "bone_index": 19,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_19_REFSPRK",
+          "occurrences": 1,
+          "member": "obl_ag_exp.w3d",
+          "index_record": 13322,
+          "member_sha256": "97e9e31a203aba3abef4205f711197a80fbb8eca9b223b8d72105db4098f759e",
+          "hlod": "OBL_AG_EXP",
+          "array_kind": "aggregate",
+          "bone_index": 18,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_FLAME2",
+          "occurrences": 1,
+          "member": "hnd_ag_exp.w3d",
+          "index_record": 1522,
+          "member_sha256": "068cc30bb2aaa9f1c6228963bb612811f36735369afdac2656bfc093c87b7df1",
+          "hlod": "HND_AG_EXP",
+          "array_kind": "aggregate",
+          "bone_index": 17,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_FLAME4",
+          "occurrences": 1,
+          "member": "hnd_ag_ext.w3d",
+          "index_record": 13976,
+          "member_sha256": "9d7bc634e01035cb0d6ace1b5e7cfacd12fc5dd002ccd5146db1a0367076523b",
+          "hlod": "HND_AG_EXT",
+          "array_kind": "aggregate",
+          "bone_index": 135,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_RING01",
+          "occurrences": 1,
+          "member": "ag_hvrcft_exp1.w3d",
+          "index_record": 8794,
+          "member_sha256": "8024a5a63aec7742075152677ca08348506ad92a1481ece01e42fb62521e9153",
+          "hlod": "AG_HVRCFT_EXP1",
+          "array_kind": "aggregate",
+          "bone_index": 19,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_SMOLDER2",
+          "occurrences": 2,
+          "member": "dsp_l4_giantt2.w3d",
+          "index_record": 5710,
+          "member_sha256": "e7b71de590f8cd201acabd871a857484b4e2bdda3df2f2951c5e4e534473d19d",
+          "hlod": "DSP_L4_GIANTT2",
+          "array_kind": "aggregate",
+          "bone_index": 10,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "E_SMOLDER4",
+          "occurrences": 2,
+          "member": "dsp_l4_giantt2.w3d",
+          "index_record": 5710,
+          "member_sha256": "e7b71de590f8cd201acabd871a857484b4e2bdda3df2f2951c5e4e534473d19d",
+          "hlod": "DSP_L4_GIANTT2",
+          "array_kind": "aggregate",
+          "bone_index": 11,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "HND_INT_LM005.HIDE_CRAP",
+          "occurrences": 1,
+          "member": "hnd_int_lm005.w3d",
+          "index_record": 12160,
+          "member_sha256": "a68074c35a6ce72287fa8e8bba3896a07ac2f1d73043eeeccc29641f38875c1e",
+          "hlod": "HND_INT_LM005",
+          "array_kind": "lod",
+          "bone_index": 1,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "MZ_B_SAMSITE",
+          "occurrences": 1,
+          "member": "b_samsite.w3d",
+          "index_record": 7763,
+          "member_sha256": "91c7c9f7e3e215c35f2d76ec12ee64de67751e00f9a2b4cae66b5e2df36dd319",
+          "hlod": "B_SAMSITE",
+          "array_kind": "aggregate",
+          "bone_index": 13,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "REF_BARSND00",
+          "occurrences": 1,
+          "member": "ref_barrels.w3d",
+          "index_record": 6589,
+          "member_sha256": "88dfeb9f00fdf25f48265f11f2d6f3b16d8418d4b13eb1c2f2015753b9842eab",
+          "hlod": "REF_BARRELS",
+          "array_kind": "aggregate",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "REF_BARSND01",
+          "occurrences": 1,
+          "member": "ref_barrels.w3d",
+          "index_record": 6589,
+          "member_sha256": "88dfeb9f00fdf25f48265f11f2d6f3b16d8418d4b13eb1c2f2015753b9842eab",
+          "hlod": "REF_BARRELS",
+          "array_kind": "aggregate",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "REF_BARSND02",
+          "occurrences": 1,
+          "member": "ref_barrels.w3d",
+          "index_record": 6589,
+          "member_sha256": "88dfeb9f00fdf25f48265f11f2d6f3b16d8418d4b13eb1c2f2015753b9842eab",
+          "hlod": "REF_BARRELS",
+          "array_kind": "aggregate",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "REF_BARSND03",
+          "occurrences": 1,
+          "member": "ref_barrels.w3d",
+          "index_record": 6589,
+          "member_sha256": "88dfeb9f00fdf25f48265f11f2d6f3b16d8418d4b13eb1c2f2015753b9842eab",
+          "hlod": "REF_BARRELS",
+          "array_kind": "aggregate",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "REF_BARSND04",
+          "occurrences": 1,
+          "member": "ref_barrels.w3d",
+          "index_record": 6589,
+          "member_sha256": "88dfeb9f00fdf25f48265f11f2d6f3b16d8418d4b13eb1c2f2015753b9842eab",
+          "hlod": "REF_BARRELS",
+          "array_kind": "aggregate",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "V_GDI_MEDTNK.V_TRACK_L.",
+          "occurrences": 1,
+          "member": "v_gdi_medtnk.w3d",
+          "index_record": 7689,
+          "member_sha256": "a4df685094ef8f0e8c2d73299519a8aa5aad47b51b42b259c992bb7b73881822",
+          "hlod": "V_GDI_MEDTNK",
+          "array_kind": "lod",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "V_NOD_BUGGY.V_SUSP2.",
+          "occurrences": 1,
+          "member": "v_nod_buggy.w3d",
+          "index_record": 11765,
+          "member_sha256": "abf7df25421a9262d079a62f311759f2cdb8a76b39eba134e7703eb5844b3147",
+          "hlod": "V_NOD_BUGGY",
+          "array_kind": "lod",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "V_NOD_HRVSTR.TAILLIGHT.011",
+          "occurrences": 1,
+          "member": "v_nod_hrvstr.w3d",
+          "index_record": 4512,
+          "member_sha256": "8905f699f4b429a9a851b268066c79d0ffea9791fd30f4d309960d8464722503",
+          "hlod": "V_NOD_HRVSTR",
+          "array_kind": "lod",
+          "bone_index": 11,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "VDC_GDI_MEDTNK.V_TRACK_L.",
+          "occurrences": 1,
+          "member": "vdc_gdi_medtnk.w3d",
+          "index_record": 2085,
+          "member_sha256": "ee79c372c57d67b8e18a9e4bf328770d35613de17cf744218e6715a898299fc3",
+          "hlod": "VDC_GDI_MEDTNK",
+          "array_kind": "lod",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        },
+        {
+          "name": "VDC_NOD_BUGGY.V_SUSP2.",
+          "occurrences": 1,
+          "member": "vdc_nod_buggy.w3d",
+          "index_record": 10880,
+          "member_sha256": "47e683114b9cc84424227a7fecb0baf060e7e0c924e0bcba5818f84ba7d44b2f",
+          "hlod": "VDC_NOD_BUGGY",
+          "array_kind": "lod",
+          "bone_index": 0,
+          "status": "unknown",
+          "evidence_class": "retail_name_and_header_candidates"
+        }
+      ]
+    },
+    {
+      "archive": "always.dbs",
+      "status": "unknown",
+      "w3d_members": 0,
+      "child_occurrences": 0,
+      "header_candidate_matches": 0,
+      "builtin_null_names": 0,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    },
+    {
+      "archive": "always3.dat",
+      "status": "unknown",
+      "evidence_class": "retail_name_and_header_candidates",
+      "w3d_members": 7,
+      "parser_errors": 0,
+      "declared_prototypes": 43,
+      "child_occurrences": 45,
+      "header_candidate_matches": 45,
+      "builtin_null_names": 0,
+      "ambiguous_provider_occurrences": 40,
+      "only_other_archive_candidates": 5,
+      "unresolved_occurrences": 0,
+      "unresolved_names": []
+    }
+  ],
+  "total": 31,
+  "counts": {
+    "unknown": 31
+  },
+  "archives": [
+    {
+      "archive": "Always2.dat",
+      "sha256": "6cec7388c51b5b8591d8aa0cce974243621701990576574eda28dcd03c5e1611"
+    },
+    {
+      "archive": "C&C_Canyon.mix",
+      "sha256": "8045026fed95044666eeec1016bb78a9963c21601b7c45f69d4aa018aa4296ba"
+    },
+    {
+      "archive": "C&C_City.mix",
+      "sha256": "3a48c5b173629a71826e009d97bd13cff531315a2f256f02a6321c3b6ea4018e"
+    },
+    {
+      "archive": "C&C_City_Flying.mix",
+      "sha256": "c3a9c65c5a1f3d480941b29034f5ba57aed2391aea64461ef1afccd0fffda4c3"
+    },
+    {
+      "archive": "C&C_Complex.mix",
+      "sha256": "e63f94f76648be6cdcacb7727911350fff6a3733b614deb2f88c65b1413c4531"
+    },
+    {
+      "archive": "C&C_Field.mix",
+      "sha256": "ef8884b15a4c77e59f09d96dbf0885ea48cdfb9e58c9543a0b742820d8414c40"
+    },
+    {
+      "archive": "C&C_Glacier_Flying.mix",
+      "sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa"
+    },
+    {
+      "archive": "C&C_Hourglass.mix",
+      "sha256": "28c3fc1a26e6aba0f29886e9ca37954eec63ce8d6cd2d24ebffebe57075a47ee"
+    },
+    {
+      "archive": "C&C_Islands.mix",
+      "sha256": "d73959a3dd4a2dd9e292f3a8e4e2bce3a7ba4f5547aed323379f8c218e80d1fd"
+    },
+    {
+      "archive": "C&C_Mesa.mix",
+      "sha256": "400190c56b4763109070a901c9c57c2a5df1ffbd3a1e58e035b31b488994bb0c"
+    },
+    {
+      "archive": "C&C_Under.mix",
+      "sha256": "5c57d3206046a2906bd1dbe57c3c0fd4c67afa0d0d44625f250aa1695a2ac02a"
+    },
+    {
+      "archive": "C&C_Volcano.mix",
+      "sha256": "0bc5cb096bbd8431ed8ad5932467dbbe31f1b2301ec9c5889bbb432e180bbad4"
+    },
+    {
+      "archive": "C&C_Walls.mix",
+      "sha256": "72e960d37c39d2bb7f4dea979758b6c8e07106cfa2125d3f73496df1224b25d8"
+    },
+    {
+      "archive": "C&C_Walls_Flying.mix",
+      "sha256": "fda92665671f8c7951f258e32e72710d9e51df2870651b8c142e5fc04c4850df"
+    },
+    {
+      "archive": "M00_Tutorial.mix",
+      "sha256": "84f14f6267dd8a88563b3d31540bf857df0b8e111144944cb582edd246f2d438"
+    },
+    {
+      "archive": "M01.mix",
+      "sha256": "3d814a11fb306b425da74d40648f17053644e6a58ce521182d7c178683b354eb"
+    },
+    {
+      "archive": "M02.mix",
+      "sha256": "f098e9190802dba8c9b453e479cb393a0e4777c5f5b038c3bb0376010d64b3a1"
+    },
+    {
+      "archive": "M03.mix",
+      "sha256": "e49d5a6233635228ad91c73cd2614f3f33e09cbc37d0650eb79683f35aa47d79"
+    },
+    {
+      "archive": "M04.mix",
+      "sha256": "1d084c9088474c6664dcb30eb08cd7fc86a265e200fbfcebb606ac56e9530ffa"
+    },
+    {
+      "archive": "M05.mix",
+      "sha256": "d3b38752890e0d2102a5ba8f57d10c832b8b60749afc4d0512333ca3f64446ca"
+    },
+    {
+      "archive": "M06.mix",
+      "sha256": "cf98d879ac8cf23e60589407b61eb4c2a43c238c979b54485a25938f7679573a"
+    },
+    {
+      "archive": "M07.mix",
+      "sha256": "479f72c76ec145c0289f331a856201d0f4249fa86854a5d664c6e8d4edc08664"
+    },
+    {
+      "archive": "M08.mix",
+      "sha256": "b95c738add5ce7887ec386d839838d595986a05c2f5240b90fe2cebaa7075429"
+    },
+    {
+      "archive": "M09.mix",
+      "sha256": "3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7"
+    },
+    {
+      "archive": "M10.mix",
+      "sha256": "c9bdaa94686f29a69a16c148671c7a6c05c617f61694fb4aec01185e4c3720ec"
+    },
+    {
+      "archive": "M11.mix",
+      "sha256": "f29a8a4bf4e94d928b8e49c0d4eecade0d35f54ff683ec0fd5b2e4bedbac80eb"
+    },
+    {
+      "archive": "M13.mix",
+      "sha256": "54d41ea011bf7c4d273064422de961af76ccc38f32dd9b5368ebfbca365bbfc4"
+    },
+    {
+      "archive": "Skirmish00.mix",
+      "sha256": "1ac0110faceb596c2b66993ec5034051e9b116acdf5732fb4383e4e8d2984738"
+    },
+    {
+      "archive": "always.dat",
+      "sha256": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a"
+    },
+    {
+      "archive": "always.dbs",
+      "sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b"
+    },
+    {
+      "archive": "always3.dat",
+      "sha256": "8c84590dfb33b25243fa3252777b59b0b4c3a09bbd2b4d5a59444b79a1e08156"
+    }
+  ],
+  "totals": {
+    "w3d_members": 3999,
+    "child_occurrences": 49071,
+    "unresolved_occurrences": 70,
+    "parser_errors": 0
+  },
+  "parser_inputs": [
+    {
+      "source": "tools/audit_all_hlod_names.py",
+      "sha256": "04b4304494621ca44a3c3847418c49946e00b4e2b8ed7e60111fde8380e452af"
+    },
+    {
+      "source": "tools/audit_hlod_dependencies.py",
+      "sha256": "3d98814987faad8d94051467954d420c552c1afee1b90d1f354d3e5703237a6b"
+    },
+    {
+      "source": "tools/audit_m13_level_owners.py",
+      "sha256": "0d2f4d70a0dfd49a0aa82ba3607b5754675914501f3ddccfb283102ea9525448"
+    },
+    {
+      "source": "tools/audit_w3d_loader_coverage.py",
+      "sha256": "9a245ce2d4f2c4ec44e781049aad96ed76e1d281d4947a9bb1bd3d6abc351a33"
+    },
+    {
+      "source": "tools/renegade_cinematic_dependency_scan.py",
+      "sha256": "a743dd0a565097b14bb20ca8c96536fddefd0b2776028b066686b3684c7e273f"
+    },
+    {
+      "source": "staging/ww3d2/assetmgr.cpp",
+      "sha256": "4c515c364a0f2d0f6c9d1117b7b265d2d739bc1929d1da18f507130903c2f970"
+    },
+    {
+      "source": "staging/ww3d2/w3d_file.h",
+      "sha256": "0fd903f12ff5fefe1511dada2f4295c0cf4744087b1965ccfe9435c3725dc34c"
+    },
+    {
+      "source": "staging/ww3d2/sphereobj.h",
+      "sha256": "0d00f9f6e3d254fd6cd35bcd49778b8b277cf8029ca2edc06730975e5c249e3b"
+    },
+    {
+      "source": "staging/ww3d2/ringobj.h",
+      "sha256": "8b75050c2acf29923e675663ee805c13512a4414bbe53d7da77da145df59e23f"
+    },
+    {
+      "source": "staging/ww3d2/meshmdlio.cpp",
+      "sha256": "94b4b49d5397bc27eba3b590bc2fd4bdd14367738be281bb3410acd4c58f89a7"
+    }
+  ],
+  "limits": [
+    "Declarations cover reviewed prototype name fields; full schema and content validation remain open",
+    "Global header candidates do not prove mount order, load-on-demand filename choice or registration",
+    "NULL is the original built-in prototype name; runtime initialization remains unverified",
+    "HLOD proxy arrays are application data and excluded from child dependency counts",
+    "Loose model contents and missing-name runtime selection remain open"
+  ]
+}

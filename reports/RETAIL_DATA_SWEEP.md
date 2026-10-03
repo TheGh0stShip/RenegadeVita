@@ -1,5 +1,27 @@
 # S4 retail closure — all-map binding discovery in progress
 
+All-archive HLOD header reconciliation now inspects 3,999 W3D member records.
+The owner-based parser opens mesh header chunks even with a clear outer nesting
+flag, matching original `meshmdlio.cpp:243`; retail `v_hover_x.w3d` exposed the
+previous parser omission. Its authored regression passes. General flag-driven
+chunk/reference inventories may omit such unmarked children; they remain lower
+bounds until owner-based traversal is reconciled across root types.
+
+49,071 HLOD LOD/aggregate child occurrences are compared against mesh, box,
+emitter, dazzle, HLOD, named-null, sphere/ring, HModel, LOD-model, collection,
+aggregate and sound declared names across every supplied archive, including
+the original built-in NULL name. Seventy occurrences lack candidates in these
+reviewed name fields: five in M06, four in M10 and 61 in always.dat. Full schema
+validation, aliases and runtime selection remain open, so these are unknown
+resolution leads, not confirmed missing assets. Proxy arrays are application
+data and excluded. Twelve focused checks pass, including consolidation;
+all members parse after the owner-based correction.
+Public counts/unresolved provenance and a full local header receipt are retained.
+
+Reproduce with `python3 -m tools.audit_all_hlod_names --data DATA --output OUTPUT --private-output LOCAL_RECEIPT`.
+The eighth supplement is included in the consolidated register. Cross-archive
+matches and duplicate providers do not prove mount precedence or loader execution.
+
 The nested W3D dependency census now covers all 31 archives and all 3,999 W3D
 index records. It finds 117,411 texture references and 50,186 HLOD subobject
 references with zero parser/archive errors. Fifteen unique texture names have
@@ -17,9 +39,10 @@ retained. It is the seventh supplement in the consolidated register. Runtime
 mount precedence, name selection and natural mission dependency closure remain
 open. No assets were changed or fabricated.
 
-Seven supplemental inventories are now included in the consolidated gap register:
+Eight supplemental inventories are now included in the consolidated gap register:
 level chunks, spatial presence, visibility bounds, W3D chunks, W3D consumer
-candidates, DDS formats and nested W3D references. Their nested status records retain original JSON
+candidates, DDS formats, nested W3D references and HLOD name reconciliation.
+Their nested status records retain original JSON
 pointers and input hashes. Parent-inventory identity mismatches fail generation.
 Records overlap across evidence layers; they are not unique defects. All
 supplemental statuses remain unknown pending behavior/impact/acceptance review.

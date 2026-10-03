@@ -54,7 +54,9 @@ def declared_render_names(data):
     names = []
     for node in chunks(data):
         if node.kind == 0:
-            headers = [n for n in node.children if n.kind == 0x1f]
+            # MeshModelClass::Load_W3D opens header chunks even when the outer
+            # writer omitted the nesting flag (observed in retail v_hover_x).
+            headers = [n for n in chunks(node.data) if n.kind == 0x1f]
             if len(headers) != 1 or len(headers[0].data) < 40:
                 raise ValueError('invalid mesh name header')
             header = headers[0].data
@@ -76,5 +78,22 @@ def declared_render_names(data):
             if len(headers) != 1:
                 raise ValueError('missing or ambiguous dazzle name')
             names.append({'name': fixed_name(headers[0].data), 'kind': 'dazzle'})
+        elif node.kind == 0x750:
+            if len(node.data) < 48:
+                raise ValueError('short null object name header')
+            names.append({'name':fixed_name(node.data[16:48]),'kind':'null'})
+        elif node.kind in (0x741,0x742):
+            headers=[n for n in chunks(node.data) if n.kind==1]
+            if len(headers)!=1 or len(headers[0].data)<40:
+                raise ValueError('invalid primitive name header')
+            names.append({'name':fixed_name(headers[0].data[8:40]),
+                          'kind':'sphere' if node.kind==0x741 else 'ring'})
+        elif node.kind in (0x300,0x400,0x420,0x600,0xa00):
+            headers=[n for n in chunks(node.data) if n.kind==node.kind+1]
+            if len(headers)!=1 or len(headers[0].data)<20:
+                raise ValueError('invalid prototype name header')
+            names.append({'name':fixed_name(headers[0].data[4:20]),
+                          'kind':{0x300:'hmodel',0x400:'lodmodel',0x420:'collection',
+                                  0x600:'aggregate',0xa00:'sound'}[node.kind]})
     names.extend({'name': row['name'], 'kind': 'hlod'} for row in inspect_hlod(data))
     return names

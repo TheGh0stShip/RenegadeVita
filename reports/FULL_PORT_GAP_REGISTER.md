@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and seven supplements is retained, including nested records.
+status record in the eight sweeps and eight supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -27,6 +27,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | w3d_consumers | 97 | 97 | False |
 | dds_formats | 3463 | 3463 | False |
 | w3d_references | 62 | 77 | False |
+| hlod_names | 31 | 98 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -7420,6 +7421,104 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | external /rows/997 | Code/Tests/MeshTest/shutdown.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | external /rows/998 | Code/Tests/PhysTest/DataView.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | external /rows/999 | Code/Tests/PhysTest/DataView.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/0 | /rows/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/1 | /rows/1 | unknown | unclassified | C&C_Canyon.mix |
+| hlod_names /rows/10 | /rows/10 | unknown | unclassified | C&C_Under.mix |
+| hlod_names /rows/11 | /rows/11 | unknown | unclassified | C&C_Volcano.mix |
+| hlod_names /rows/12 | /rows/12 | unknown | unclassified | C&C_Walls.mix |
+| hlod_names /rows/13 | /rows/13 | unknown | unclassified | C&C_Walls_Flying.mix |
+| hlod_names /rows/14 | /rows/14 | unknown | unclassified | M00_Tutorial.mix |
+| hlod_names /rows/15 | /rows/15 | unknown | unclassified | M01.mix |
+| hlod_names /rows/16 | /rows/16 | unknown | unclassified | M02.mix |
+| hlod_names /rows/17 | /rows/17 | unknown | unclassified | M03.mix |
+| hlod_names /rows/18 | /rows/18 | unknown | unclassified | M04.mix |
+| hlod_names /rows/19 | /rows/19 | unknown | unclassified | M05.mix |
+| hlod_names /rows/2 | /rows/2 | unknown | unclassified | C&C_City.mix |
+| hlod_names /rows/20 | /rows/20 | unknown | unclassified | M06.mix |
+| hlod_names /rows/20/unresolved_names/0 | BOOK_DR3.BOUNDINGBOX | unknown | unclassified | M06.mix |
+| hlod_names /rows/20/unresolved_names/1 | CHT_INT008.HIDE000 | unknown | unclassified | M06.mix |
+| hlod_names /rows/20/unresolved_names/2 | CHT_INT008.HIDE001 | unknown | unclassified | M06.mix |
+| hlod_names /rows/20/unresolved_names/3 | CHT_INT008.HIDE002 | unknown | unclassified | M06.mix |
+| hlod_names /rows/20/unresolved_names/4 | CHT_INT008.HIDE003 | unknown | unclassified | M06.mix |
+| hlod_names /rows/21 | /rows/21 | unknown | unclassified | M07.mix |
+| hlod_names /rows/22 | /rows/22 | unknown | unclassified | M08.mix |
+| hlod_names /rows/23 | /rows/23 | unknown | unclassified | M09.mix |
+| hlod_names /rows/24 | /rows/24 | unknown | unclassified | M10.mix |
+| hlod_names /rows/24/unresolved_names/0 | E_19_NEWSMK03 | unknown | unclassified | M10.mix |
+| hlod_names /rows/24/unresolved_names/1 | E_FLARE06 | unknown | unclassified | M10.mix |
+| hlod_names /rows/24/unresolved_names/2 | E_FLARE07 | unknown | unclassified | M10.mix |
+| hlod_names /rows/24/unresolved_names/3 | E_SMOLDER02 | unknown | unclassified | M10.mix |
+| hlod_names /rows/25 | /rows/25 | unknown | unclassified | M11.mix |
+| hlod_names /rows/26 | /rows/26 | unknown | unclassified | M13.mix |
+| hlod_names /rows/27 | /rows/27 | unknown | unclassified | Skirmish00.mix |
+| hlod_names /rows/28 | /rows/28 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/0 | AG_EXPLODE2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/1 | AG_SPARKS1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/10 | C_GDI_MOBI_L1.K_L HAND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/11 | C_GDI_MOBI_L1.K_L THIGH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/12 | C_GDI_MOBI_L1.K_L UPPERARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/13 | C_GDI_MOBI_L1.K_NECK | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/14 | C_GDI_MOBI_L1.K_PELVIS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/15 | C_GDI_MOBI_L1.K_R CALF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/16 | C_GDI_MOBI_L1.K_R FOOT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/17 | C_GDI_MOBI_L1.K_R FOREARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/18 | C_GDI_MOBI_L1.K_R HAND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/19 | C_GDI_MOBI_L1.K_R THIGH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/2 | C_GDI_MOBI_L1.BOUNDINGBOX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/20 | C_GDI_MOBI_L1.K_R UPPERARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/21 | C_GDI_MOBI_L1.WORLDBOX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/22 | C_NOD_SNIPER_L1.K_ABDOMEN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/23 | C_NOD_SNIPER_L1.K_CHEST | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/24 | C_NOD_SNIPER_L1.K_HEAD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/25 | C_NOD_SNIPER_L1.K_L CALF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/26 | C_NOD_SNIPER_L1.K_L FOOT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/27 | C_NOD_SNIPER_L1.K_L FOREARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/28 | C_NOD_SNIPER_L1.K_L HAND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/29 | C_NOD_SNIPER_L1.K_L THIGH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/3 | C_GDI_MOBI_L1.C_SHADOWMESH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/30 | C_NOD_SNIPER_L1.K_L UPPERARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/31 | C_NOD_SNIPER_L1.K_NECK | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/32 | C_NOD_SNIPER_L1.K_PELVIS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/33 | C_NOD_SNIPER_L1.K_R CALF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/34 | C_NOD_SNIPER_L1.K_R FOOT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/35 | C_NOD_SNIPER_L1.K_R FOREARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/36 | C_NOD_SNIPER_L1.K_R HAND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/37 | C_NOD_SNIPER_L1.K_R THIGH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/38 | C_NOD_SNIPER_L1.K_R UPPERARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/39 | E_19_REDSPRK | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/4 | C_GDI_MOBI_L1.K_ABDOMEN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/40 | E_19_REFSPRK | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/41 | E_FLAME2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/42 | E_FLAME4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/43 | E_RING01 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/44 | E_SMOLDER2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/45 | E_SMOLDER4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/46 | HND_INT_LM005.HIDE_CRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/47 | MZ_B_SAMSITE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/48 | REF_BARSND00 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/49 | REF_BARSND01 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/5 | C_GDI_MOBI_L1.K_CHEST | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/50 | REF_BARSND02 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/51 | REF_BARSND03 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/52 | REF_BARSND04 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/53 | V_GDI_MEDTNK.V_TRACK_L. | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/54 | V_NOD_BUGGY.V_SUSP2. | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/55 | V_NOD_HRVSTR.TAILLIGHT.011 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/56 | VDC_GDI_MEDTNK.V_TRACK_L. | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/57 | VDC_NOD_BUGGY.V_SUSP2. | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/6 | C_GDI_MOBI_L1.K_HEAD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/7 | C_GDI_MOBI_L1.K_L CALF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/8 | C_GDI_MOBI_L1.K_L FOOT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/28/unresolved_names/9 | C_GDI_MOBI_L1.K_L FOREARM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/29 | /rows/29 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/3 | /rows/3 | unknown | unclassified | C&C_City_Flying.mix |
+| hlod_names /rows/30 | /rows/30 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| hlod_names /rows/4 | /rows/4 | unknown | unclassified | C&C_Complex.mix |
+| hlod_names /rows/5 | /rows/5 | unknown | unclassified | C&C_Field.mix |
+| hlod_names /rows/6 | /rows/6 | unknown | unclassified | C&C_Glacier_Flying.mix |
+| hlod_names /rows/7 | /rows/7 | unknown | unclassified | C&C_Hourglass.mix |
+| hlod_names /rows/8 | /rows/8 | unknown | unclassified | C&C_Islands.mix |
+| hlod_names /rows/9 | /rows/9 | unknown | unclassified | C&C_Mesa.mix |
 | level_chunks /rows/0 | C&C_Canyon.mix | unknown | unclassified | C&C_Canyon.mix |
 | level_chunks /rows/0/members/0 | C&C_Canyon.ldd | unknown | unclassified | C&C_Canyon.mix |
 | level_chunks /rows/0/members/0/chunk_paths/0 | ['0x3C51C460'] | unknown | unclassified | C&C_Canyon.mix |

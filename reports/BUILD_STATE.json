@@ -1,7 +1,7 @@
 {
   "compile_closure_20261003": {
-    "state": "LOCAL_HOST_AND_ARM_PASS_CANONICAL_AND_CI_PENDING",
-    "registered_staging_patches": 306,
+    "state": "LOCAL_HOST_AND_ARM_PASS_CANONICAL_TRIM_REPAIRED_CI_ARM_RETRY_PENDING",
+    "registered_staging_patches": 307,
     "staging_receipt_regenerated": true,
     "host_compilation_passed": true,
     "arm_compilation_and_link_passed": true,

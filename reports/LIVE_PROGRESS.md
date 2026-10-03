@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Shared trim and clean CI validation batch — 2026-10-03
+
+Completed: inspected all three original trim bodies; repaired two remaining
+overlapping moves while preserving whitespace and parameter-name quirks.
+Original-owner regression, 60 refreshed ASan/UBSan cases, host compilation,
+and ARM compilation/link pass. All 652 native source/object pairs are retained.
+M13 damage/destruction/teardown passes two ASan cycles through bounded player
+hits; the fixture now respects the two distinct retail damage modifiers.
+Remote main host ASan/UBSan, TSan, 793 Python tests and excluded-owner compile
+pass. ARM resource preprocessing needs Clang; workflow dependencies corrected.
+Evidence: [compile ledger](COMPILE_CLOSURE.md) and generated hash receipts.
+Next: prewarmed M13 return, canonical packaging retry and clean ARM CI, then S1.
+Native acceptance remains 0/10; no emulator launch or device mutation.
+
 ## Compile closure publication — 2026-10-03
 
 Completed: current sources match all652 retained ARM source/object hashes;

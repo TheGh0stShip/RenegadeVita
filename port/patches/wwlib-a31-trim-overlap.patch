@@ -3,3 +3,6 @@
 @@ -71 +71 @@
 -			strcpy(buffer, source);
 +			memmove(buffer, source, strlen(source) + 1U);
+@@ -99 +99 @@
+-			wcscpy(buffer, source);
++			memmove(buffer, source, (wcslen(source) + 1U) * sizeof(*source));

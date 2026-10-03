@@ -109,7 +109,8 @@ target_compile_options(a35_winsock_descriptor_selftest PRIVATE -UNDEBUG)
 set_property(SOURCE
   ${RV_ROOT}/tools/host_original_script_vector_parser_test.cpp
   ${RV_ROOT}/tools/host_cinematic_save_test.cpp
-  APPEND PROPERTY COMPILE_OPTIONS -fpermissive)
+  APPEND PROPERTY COMPILE_OPTIONS -fpermissive
+    "-include${RV_COMPAT}/renegade_script_call_defaults.h")
 foreach(rv_script_probe IN ITEMS vector_parser cinematic_save)
   if(rv_script_probe STREQUAL "vector_parser")
     set(rv_script_probe_source ${RV_ROOT}/tools/host_original_script_vector_parser_test.cpp)
@@ -122,13 +123,15 @@ foreach(rv_script_probe IN ITEMS vector_parser cinematic_save)
     ${RV_STAGE}/scripts/ScriptFactory.cpp
     ${RV_STAGE}/scripts/ScriptRegistrar.cpp
     ${RV_STAGE}/scripts/strtrim.cpp)
+  if(rv_script_probe STREQUAL "vector_parser")
+    target_sources(a35_vector_parser_selftest PRIVATE ${RV_STAGE}/wwlib/trim.cpp)
+  endif()
   target_include_directories(a35_${rv_script_probe}_selftest PRIVATE
     ${RV_COMPAT} ${RV_STAGE}/scripts ${RV_STAGE}/wwmath ${RV_STAGE}/wwlib)
   target_compile_definitions(a35_${rv_script_probe}_selftest PRIVATE
     _UNIX=1 RENEGADE_VITA_PORT=1 RENEGADE_HOST_ABI_TEST=1)
   target_compile_options(a35_${rv_script_probe}_selftest PRIVATE -UNDEBUG
-    "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
-    "SHELL:-include ${RV_COMPAT}/renegade_script_call_defaults.h")
+    "SHELL:-include ${RV_COMPAT}/msvc_compat.h")
 endforeach()
 
 add_executable(a35_raw_animation_selftest

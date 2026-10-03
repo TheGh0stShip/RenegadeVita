@@ -2066,7 +2066,12 @@ int main(int argc, char **argv)
 					printf("a31.m13_sam_damage_smoke_id=%d health_before=%.1f\n",
 						sam_id, sam->Get_Defense_Object()->Get_Health());
 					fflush(stdout);
-					OffenseObjectClass damage(50000.0f, steel);
+					// Retail SAM bindings exempt player damage but protect against
+					// unattributed/non-player damage until the controller disables
+					// their modifier. Exercise the player destruction path here.
+					SoldierGameObj *attacker = CombatManager::Get_The_Star();
+					if (attacker == NULL) { passed = false; break; }
+					OffenseObjectClass damage(50000.0f, steel, attacker);
 					const bool profile_sam = cycle == 1U && sam_id ==
 						(m13_sam_prewarm_smoke ? 1500015 : 1500016);
 					if (profile_sam) {
@@ -2091,8 +2096,26 @@ int main(int argc, char **argv)
 					}
 					object = GameObjManager::Find_ScriptableGameObj(sam_id);
 					sam = object != NULL ? object->As_DamageableGameObj() : NULL;
-					const float remaining_health = sam != NULL ?
+					float remaining_health = sam != NULL ?
 						sam->Get_Defense_Object()->Get_Health() : 0.0f;
+					// The second retail SAM scales player damage to 10 percent
+					// and accumulates damage across callbacks. One lethal offense
+					// therefore does not destroy it. Keep a bounded player route
+					// through those callbacks rather than bypassing the modifier.
+					unsigned hits = 1U;
+					while (remaining_health > 0.0f && hits < 16U) {
+						sam->Apply_Damage(damage);
+						++hits;
+						for (unsigned settle = 0U; settle < 2U; ++settle) {
+							A31_Interactive_Run_Simulation_Frame();
+							A31_Interactive_Run_Render_Frame();
+						}
+						object = GameObjManager::Find_ScriptableGameObj(sam_id);
+						sam = object != NULL ? object->As_DamageableGameObj() : NULL;
+						remaining_health = sam != NULL ?
+							sam->Get_Defense_Object()->Get_Health() : 0.0f;
+					}
+					printf("a31.m13_sam_damage_smoke_id=%d player_hits=%u\n", sam_id, hits);
 					printf("a31.m13_sam_damage_smoke_id=%d health_after=%.1f\n",
 						sam_id, remaining_health);
 					if (remaining_health > 0.0f) { passed = false; break; }

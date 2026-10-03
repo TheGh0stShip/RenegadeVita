@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "e91a093483233467c30026c089ee6e7459c888108ea46383ba6bea30611e1dc3",
-  "patch_count": 306,
+  "stage_script_sha256": "54fd1a9a00645c71da6198b69e994aae18ac35b4fbf0b1b44d8fcb867a8eee22",
+  "patch_count": 307,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -57,7 +57,7 @@
     {
       "path": "port/patches/wwlib-a31-trim-overlap.patch",
       "stage_directory": "wwlib",
-      "sha256": "804fdec5c02e7130ef15db9f0427d4f2ef22eaffe1612ca8be21930807934dd4"
+      "sha256": "befb354aca2b1bd293760ee5f7eb0bd0ff94a4e371062a8d66360f76da439875"
     },
     {
       "path": "port/patches/wwlib-a31-buffer-array-delete.patch",
@@ -1533,7 +1533,12 @@
       "path": "port/patches/commando-a35-options-staging-closure.patch",
       "stage_directory": "commando",
       "sha256": "7f8d5b6d947fd7f354ada6c4f6524d58edb5cf044a965416bcc1745ceeb5191c"
+    },
+    {
+      "path": "port/patches/scripts-a35-trim-overlap.patch",
+      "stage_directory": "scripts",
+      "sha256": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701"
     }
   ],
-  "registry_sha256": "9e2a923b9592d12f9d13ee736edd67230ddf598dbea49a38ff7fe281e5cd5360"
+  "registry_sha256": "89399cbccad2777a222868529f979dcff76be8252aea0aa4a50792401761bd44"
 }

@@ -96,7 +96,7 @@ wchar_t* wcstrim(wchar_t* buffer)
 		}
 		
 		if (source != buffer) {
-			wcscpy(buffer, source);
+			memmove(buffer, source, (wcslen(source) + 1U) * sizeof(*source));
 		}
 
 		/* Clip trailing white space from the string. */

@@ -4,12 +4,14 @@ set -Eeuo pipefail
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 rv_candidate=${1:?usage: install_vita3k_candidate.sh CANDIDATE VPK}
 rv_vpk=${2:?usage: install_vita3k_candidate.sh CANDIDATE VPK}
-rv_vfs=${RENEGADE_VITA3K_VFS:?Set RENEGADE_VITA3K_VFS to the existing Vita3K filesystem root}
+# Admit the existing Windows profile when the caller does not supply a VFS.
+# The directory check below fails closed; never create a guessed emulator tree.
+rv_vfs=${RENEGADE_VITA3K_VFS:-"/mnt/c/Users/${USER}/AppData/Roaming/Vita3K/Vita3K"}
 rv_exe=${RENEGADE_VITA3K_EXE:-/mnt/d/Vita3K/Vita3K.exe}
 rv_receipts="$rv_root/build/vita3k-backups"
 
 if [[ ! -d "$rv_vfs" ]]; then
-	echo "Vita3K VFS not found: $rv_vfs" >&2
+	echo "Vita3K VFS not found: $rv_vfs; set RENEGADE_VITA3K_VFS to an existing filesystem root" >&2
 	exit 2
 fi
 if [[ ! -f "$rv_exe" ]]; then

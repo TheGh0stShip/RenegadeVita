@@ -1068,6 +1068,8 @@ test "$(sha256sum "$rv_stage/commando/dialogtests.h" | cut -d' ' -f1)" = \
 	"55cd200d7bda5d0adc422df3cd2db9d44baca690464fa4c2da386aa2279bce67"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-options-staging-closure.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-trim-overlap.patch"
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()
 	for rv_dir in "${rv_managed_stage_dirs[@]}"; do

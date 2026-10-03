@@ -26,9 +26,17 @@ class RequestedMissionOwnerContract(unittest.TestCase):
             blocks = re.findall(r'set_property\(SOURCE\s+([^)]*)\)', cmake, re.S)
             shared = [b for b in blocks if f'${{{prefix}_COMPAT}}/renegade_script_call_defaults.h' in b]
             m01 = [b for b in blocks if f'${{{prefix}_COMPAT}}/renegade_m01_script_defaults.h' in b]
-            self.assertEqual(len(shared), 1)
+            production = [b for b in shared if '${RENEGADE_SCRIPT_DSP_SOURCES}' in b]
+            self.assertEqual(len(production), 1)
+            if prefix == 'RV':
+                probes = [b for b in shared if b not in production]
+                self.assertEqual(len(probes), 1)
+                self.assertIn('host_original_script_vector_parser_test.cpp', probes[0])
+                self.assertIn('host_cinematic_save_test.cpp', probes[0])
+                self.assertNotIn('trim.cpp', probes[0])
+            else:
+                self.assertEqual(len(shared), 1)
             self.assertEqual(len(m01), 2)
-            self.assertIn('${RENEGADE_SCRIPT_DSP_SOURCES}', shared[0])
             self.assertEqual(sum('Mission11.cpp' in block for block in m01), 1)
 
     def test_original_w3d_loader_owners_are_selected(self):

@@ -140,6 +140,31 @@ struct FlightRecorder
 
 FlightRecorder gRecorder;
 
+// Conversation producers never access gRecorder. Reset requires quiescent
+// old mission work, as does the existing flight-recorder session boundary.
+struct ConversationTransition {
+	uint64_t instance;
+	int32_t conversation_id, action_id, remark, text_id, reason;
+	float next_seconds;
+	uint64_t monotonic_us;
+	bool completed;
+};
+pthread_mutex_t gConversationMutex = PTHREAD_MUTEX_INITIALIZER;
+ConversationTransition gConversationQueue[128];
+uint32_t gConversationCount = 0U;
+uint32_t gConversationDropped = 0U;
+bool gConversationEnabled = false;
+uint64_t gNextConversationInstance = 0U; // process lifetime, never session-reset
+
+void Reset_Conversation_Queue(bool enabled)
+{
+	pthread_mutex_lock(&gConversationMutex);
+	gConversationCount = 0U;
+	gConversationDropped = 0U;
+	gConversationEnabled = enabled;
+	pthread_mutex_unlock(&gConversationMutex);
+}
+
 uint64_t Monotonic_Us()
 {
 	struct timespec now = {};
@@ -231,6 +256,31 @@ void Push_Event(const char *category, const char *name, uint32_t frame,
 		(gRecorder.event_cursor + 1U) % kFlightEventCapacity;
 	if (gRecorder.event_count < kFlightEventCapacity) ++gRecorder.event_count;
 	++gRecorder.event_sequence;
+}
+
+void Drain_Conversation_Queue()
+{
+	if (!pthread_equal(pthread_self(), gRecorder.main_thread)) return;
+	if (pthread_mutex_trylock(&gConversationMutex) != 0) return;
+	for (uint32_t index = 0U; index < gConversationCount; ++index) {
+		const ConversationTransition &event = gConversationQueue[index];
+		char detail[224];
+		snprintf(detail, sizeof(detail),
+			"instance=%" PRIu64 " conversation_id=%" PRId32 " action=%" PRId32 " remark=%" PRId32 " text_id=%" PRId32
+			" next_seconds=%.6g reason=%" PRId32,
+			event.instance, event.conversation_id, event.action_id, event.remark, event.text_id,
+			static_cast<double>(event.next_seconds), event.reason);
+		Push_Event("conversation", event.completed ? "owner_finished" : "remark_scheduled",
+			0U, event.monotonic_us, detail);
+	}
+	if (gConversationDropped != 0U) {
+		char detail[64];
+		snprintf(detail, sizeof(detail), "unretained=%" PRIu32, gConversationDropped);
+		Push_Event("conversation", "queue_overflow", 0U, Monotonic_Us(), detail);
+	}
+	gConversationCount = 0U;
+	gConversationDropped = 0U;
+	pthread_mutex_unlock(&gConversationMutex);
 }
 
 uint64_t Ring_First_Sequence(uint64_t sequence, uint32_t capacity)
@@ -455,6 +505,7 @@ void A35_Campaign_Flight_Reset(const char *candidate, const char *capture_root,
 	bool script_lookup_enabled)
 {
 	A35_Script_Lookup_Reset(script_lookup_enabled);
+	Reset_Conversation_Queue(script_lookup_enabled);
 	memset(&gRecorder, 0, sizeof(gRecorder));
 	gRecorder.active = true;
 	gRecorder.main_thread = pthread_self();
@@ -478,6 +529,7 @@ void A35_Campaign_Flight_Shutdown(void)
 		A35_Campaign_Flight_Flush("shutdown");
 	}
 	gRecorder.active = false;
+	Reset_Conversation_Queue(false);
 }
 
 void A35_Campaign_Flight_Record_Log_Line(const char *line, unsigned length)
@@ -502,11 +554,39 @@ void A35_Campaign_Flight_Record_Event(const char *category, const char *name,
 	Push_Event(category, name, frame, monotonic_us, detail);
 }
 
+uint64_t A35_Campaign_Flight_Allocate_Conversation_Instance(void)
+{
+	pthread_mutex_lock(&gConversationMutex);
+	const uint64_t instance = gNextConversationInstance != UINT64_MAX
+		? ++gNextConversationInstance : 0U; // exhausted means unknown, never reuse
+	pthread_mutex_unlock(&gConversationMutex);
+	return instance;
+}
+
+void A35_Campaign_Flight_Conversation_Transition(bool completed, uint64_t instance,
+	int32_t conversation_id,
+	int32_t action_id, int32_t remark, int32_t text_id,
+	float next_seconds, int32_t reason)
+{
+	pthread_mutex_lock(&gConversationMutex);
+	if (gConversationEnabled) {
+		if (gConversationCount < 128U) {
+			ConversationTransition &event = gConversationQueue[gConversationCount++];
+			event = {instance, conversation_id, action_id, remark, text_id, reason,
+				next_seconds, Monotonic_Us(), completed};
+		} else if (gConversationDropped != UINT32_MAX) {
+			++gConversationDropped;
+		}
+	}
+	pthread_mutex_unlock(&gConversationMutex);
+}
+
 void A35_Campaign_Flight_Record_Frame(const A31FrameTelemetry &frame,
 	const A35CampaignFlightRenderState &render,
 	const A35CampaignFlightAudioState &audio)
 {
 	if (!gRecorder.active) return;
+	Drain_Conversation_Queue();
 	FlightFrameSample &sample = gRecorder.frames[gRecorder.frame_cursor];
 	memset(&sample, 0, sizeof(sample));
 	sample.frame = frame.frame_index;
@@ -586,6 +666,7 @@ void A35_Campaign_Flight_Record_Mission(
 	const A35CampaignFlightMissionState &state)
 {
 	if (!gRecorder.active) return;
+	Drain_Conversation_Queue();
 	gRecorder.mission.state = state;
 	Copy_String(gRecorder.mission.archive, sizeof(gRecorder.mission.archive),
 		state.archive);
@@ -641,6 +722,7 @@ void A35_Campaign_Flight_Record_Resource_Snapshot(uint32_t frame,
 bool A35_Campaign_Flight_Flush(const char *reason)
 {
 	if (!gRecorder.active) return false;
+	Drain_Conversation_Queue();
 	const bool full_snapshot = reason != NULL &&
 		(strcmp(reason, "shutdown") == 0 ||
 		 strcmp(reason, "pre-clean-exit") == 0 ||

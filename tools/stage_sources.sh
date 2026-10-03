@@ -1007,6 +1007,12 @@ test "$(sha256sum "$rv_stage/wwaudio/sound3dhandle.cpp" | cut -d' ' -f1)" = \
 	"11b6c2b0edc90c897083bd8241b08264dd9b8cbf9375171b53af2ce79720df97"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-bounded-3d-sample.patch"
+test "$(sha256sum "$rv_stage/combat/activeconversation.cpp" | cut -d' ' -f1)" = \
+	"2d6b71e85dff3fb3b49be20e4749915143e2dabe74f3f9291f2008e0fc872704"
+test "$(sha256sum "$rv_stage/combat/activeconversation.h" | cut -d' ' -f1)" = \
+	"c8d0c60aa32eaa222d6a584dae8ddc6a5a99102401ea81c1c4e8fdf007788938"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-conversation-transition-telemetry.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

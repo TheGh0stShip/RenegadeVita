@@ -271,6 +271,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_mission_event_routes \
 	tools.test_mission_voice_routes \
 	tools.test_mission_wave_headers \
+	tools.test_conversation_transition_telemetry \
 	tools.test_vita_mission_ranks \
 	tools.test_integration_source_inventory \
 	tools.test_vita_sampler_cache tools.diagnostics.test_renegade_vita_performance_ledger \

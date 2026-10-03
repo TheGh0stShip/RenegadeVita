@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Conversation transition collector — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: opt-in fixed128 queue, original remark/owner-completion hooks,
+process-local instance identity absent from save chunks and explicit overflow.
+Evidence:6 source contracts and10 bundle tests pass; zero-fuzz replay succeeds.
+Next: uncompiled concurrency probe and candidate-bound runtime validation when
+the hold is lifted; monitor registration/delivery diagnostics remain open.
+Blocker: no C++ build or native evidence under the existing build/launch hold.
+See [transition diagnostics](CONVERSATION_TRANSITION_DIAGNOSTICS.md).
+
 ## Separate voice statistics admission — 2026-10-03
 
 Renegade Vita — v3.5 active

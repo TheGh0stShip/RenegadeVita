@@ -105,3 +105,11 @@ void A35_Campaign_Flight_Record_Resource_Snapshot(uint32_t frame,
 	uint32_t availability_failures, uint32_t read_calls, uint32_t read_bytes,
 	uint32_t write_calls, uint32_t write_bytes);
 bool A35_Campaign_Flight_Flush(const char *reason);
+// Bounded thread-safe transition collection; owner-thread drain only.
+// Enabled with existing script coverage opt-in. Frame 0 means unavailable.
+// Instance tokens are process-local diagnostics, absent from save chunks.
+uint64_t A35_Campaign_Flight_Allocate_Conversation_Instance(void);
+void A35_Campaign_Flight_Conversation_Transition(bool completed, uint64_t instance,
+	int32_t conversation_id,
+	int32_t action_id, int32_t remark, int32_t text_id,
+	float next_seconds, int32_t reason);

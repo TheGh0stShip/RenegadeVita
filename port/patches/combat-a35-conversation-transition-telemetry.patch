@@ -1,0 +1,67 @@
+--- a/activeconversation.cpp
++++ b/activeconversation.cpp
+@@ -36,6 +36,9 @@
+ 
+ 
+ #include "activeconversation.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "a35_campaign_flight_recorder.h"
++#endif
+ #include "soldier.h"
+ #include "chunkio.h"
+ #include "actionparams.h"
+@@ -108,6 +111,9 @@
+ 	CurrentSound (NULL)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	DiagnosticInstance = A35_Campaign_Flight_Allocate_Conversation_Instance();
++#endif
+ 	return ;
+ }
+ 
+ 
+@@ -535,6 +541,11 @@
+ 			//	Determine when we should switch to the next remark
+ 			//
+ 			NextRemarkTimer = duration;
++#if defined(RENEGADE_VITA_PORT)
++			A35_Campaign_Flight_Conversation_Transition(false, DiagnosticInstance, static_cast<int32_t>(Get_ID()),
++				static_cast<int32_t>(ActionID), static_cast<int32_t>(CurrentRemark),
++				static_cast<int32_t>(text_id), duration, 0);
++#endif
+ 		}
+ 
+ 	} else {
+@@ -1243,6 +1254,11 @@
+ 	
+ 	Free_Orator_List ();
+ 
++#if defined(RENEGADE_VITA_PORT)
++	A35_Campaign_Flight_Conversation_Transition(true, DiagnosticInstance, static_cast<int32_t>(Get_ID()),
++		static_cast<int32_t>(ActionID), static_cast<int32_t>(CurrentRemark),
++		0, NextRemarkTimer, static_cast<int32_t>(reason));
++#endif
+ 	Notify_Monitors_On_End (reason);
+ 
+ 	return ;
+--- a/activeconversation.h
++++ b/activeconversation.h
+@@ -44,6 +44,9 @@
+ #include "refcount.h"
++#if defined(RENEGADE_VITA_PORT)
++#include <stdint.h>
++#endif
+ #include "conversation.h"
+ #include "vector.h"
+ #include "vector3.h"
+ #include "gameobjref.h"
+ 
+@@ -204,4 +207,8 @@
+ 	float												MaxDist;
+ 	bool												IsInterruptable;
++#if defined(RENEGADE_VITA_PORT)
++	// Diagnostic identity only; deliberately absent from save/load chunks.
++	uint64_t DiagnosticInstance;
++#endif
+ };
+ 

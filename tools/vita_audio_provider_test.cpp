@@ -471,6 +471,21 @@ int main()
 		stats.active_stream_position_ms == 0 &&
 		stats.active_stream_loop_count == 0,
 		"provider start stats differ");
+	// Exact-size malformed allocations exercise the bounded API under ASan.
+	sample3d = AIL_allocate_3D_sample_handle(1);
+	passed &= Require(sample3d != nullptr &&
+		AIL_set_3D_sample_file_bounded(sample3d, pcm.data(), pcm.size()) != 0,
+		"bounded 3D PCM load failed");
+	std::vector<uint8_t> oversized_riff = pcm;
+	for (size_t index = 4; index < 8; ++index) oversized_riff[index] = 0xff;
+	passed &= Require(AIL_set_3D_sample_file_bounded(sample3d,
+		oversized_riff.data(), oversized_riff.size()) == 0,
+		"bounded 3D accepted an oversized declared RIFF");
+	const uint8_t short_header[4] = {'R', 'I', 'F', 'F'};
+	passed &= Require(AIL_set_3D_sample_file_bounded(sample3d,
+		short_header, sizeof(short_header)) == 0,
+		"bounded 3D accepted an undersized header");
+	AIL_release_3D_sample_handle(sample3d);
 	// Continuous effects must stop immediately and must not contaminate a
 	// subsequently allocated voice after a level/save transition.
 	sample3d = AIL_allocate_3D_sample_handle(1);

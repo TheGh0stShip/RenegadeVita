@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Authored WAV bounds — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: retain audio bounds findings and validate the provider correction.
+Completed: metadata-only WAV audit and bounded original 3D sample call patch.
+Evidence: 245 focused Python/source tests pass; temporary zero-fuzz patch replay,
+shell syntax and whitespace checks pass. No compilation or launch.
+Next: refresh private receipts after the provider edit, broaden source checks,
+update publication state and publish the reviewed unit to both branches.
+Blocker: eleven M01 WAV compatibility questions and native proof remain open.
+See [audio bounds coverage](MISSION_WAVE_HEADER_COVERAGE.md).
+
 ## Soldier dialogue and voice-event provenance — 2026-10-03
 
 Renegade Vita — v3.5 active

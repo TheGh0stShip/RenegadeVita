@@ -1,5 +1,11 @@
 # Renegade Vita port status
 
+2026-10-03 authored audio audit: Tutorial221/M13566 candidate WAV headers
+admitted; M01 has111 admitted and11 oversized RIFF declarations. Original
+3D sample loading now forwards actual allocation length through a bounded
+provider API in source. Compatibility and runtime proof remain open; no build
+or launch. See [audio bounds coverage](MISSION_WAVE_HEADER_COVERAGE.md).
+
 2026-10-03 voice continuation links unresolved global references to 8,111
 soldier preset options and separate Tutorial/M13/M01 serialized dialogue.
 Most affected options are DIE tables; original death audio has a different

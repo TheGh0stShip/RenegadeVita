@@ -1,5 +1,10 @@
 # Known gaps
 
+2026-10-03 eleven authored M01 WAV candidates have oversized RIFF declarations
+and raw trailers. Actual buffer length forwarding is corrected in source,
+uncompiled; strict decoder compatibility and audible playback remain open.
+See [audio bounds coverage](MISSION_WAVE_HEADER_COVERAGE.md).
+
 2026-10-03 soldier voice audit finds 244 global conversations with voice
 findings referenced by 1,231 options in 92 presets. Tutorial/M13 serialized
 findings are confined to DIE tables with no direct Combat caller; original

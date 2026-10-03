@@ -866,7 +866,11 @@ void AIL_release_3D_sample_handle(H3DSAMPLE sample)
 
 U32 AIL_set_3D_sample_file(H3DSAMPLE sample, const void *data)
 {
-	const size_t bytes = Declared_Wave_Bytes(data);
+	return AIL_set_3D_sample_file_bounded(sample, data, Declared_Wave_Bytes(data));
+}
+
+U32 AIL_set_3D_sample_file_bounded(H3DSAMPLE sample, const void *data, size_t bytes)
+{
 	AIL_lock();
 	++g_stats.sample_3d_file_load_attempts;
 	const bool decoded = bytes != 0 && Decode_Into_Sample(sample, data, bytes);

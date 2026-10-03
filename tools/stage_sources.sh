@@ -1003,6 +1003,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-thread-completion-acquire.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-texture-worker-cancellation.patch"
+test "$(sha256sum "$rv_stage/wwaudio/sound3dhandle.cpp" | cut -d' ' -f1)" = \
+	"11b6c2b0edc90c897083bd8241b08264dd9b8cbf9375171b53af2ce79720df97"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-bounded-3d-sample.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

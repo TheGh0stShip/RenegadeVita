@@ -1,4 +1,17 @@
 {
+  "mission_wave_bounds_20261003": {
+    "state": "BOUNDED_3D_SAMPLE_SOURCE_CORRECTION_UNCOMPILED_COMPATIBILITY_OPEN",
+    "report": "reports/MISSION_WAVE_HEADER_COVERAGE.md",
+    "candidate_wavs": [221, 566, 122],
+    "complete_header_admitted": [221, 566, 111],
+    "m01_oversized_riff_candidates": 11,
+    "focused_source_python_tests_passed": 245,
+    "publication_and_future_entry_tests_passed": 38,
+    "registered_staging_patches": 294,
+    "current_staging_receipt_matches_registry": false,
+    "build_or_launch_performed": false,
+    "native_runtime_gates_closed": 0
+  },
   "mission_voice_routes_20261003": {
     "state": "READ_ONLY_ORIGINAL_SOLDIER_DIALOGUE_OPTIONS_AND_EVENT_CALLERS_TRACED_RUNTIME_OPEN",
     "report": "reports/MISSION_VOICE_ROUTE_COVERAGE.md",

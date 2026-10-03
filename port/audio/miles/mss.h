@@ -140,6 +140,7 @@ void AIL_set_3D_speaker_type(HPROVIDER provider, S32 speaker_type);
 H3DSAMPLE AIL_allocate_3D_sample_handle(HPROVIDER provider);
 void AIL_release_3D_sample_handle(H3DSAMPLE sample);
 U32 AIL_set_3D_sample_file(H3DSAMPLE sample, const void *data);
+U32 AIL_set_3D_sample_file_bounded(H3DSAMPLE sample, const void *data, size_t bytes);
 void AIL_start_3D_sample(H3DSAMPLE sample);
 void AIL_stop_3D_sample(H3DSAMPLE sample);
 void AIL_resume_3D_sample(H3DSAMPLE sample);

@@ -245,7 +245,7 @@ def conversation_leads(scripts, binding_audit, known_names=()):
 def resource_context(data):
     archives = [MixArchive(p) for p in sorted(data.iterdir()) if p.name.lower().startswith('always')
                 and p.suffix.lower() in ('.dat', '.dbs', '.mix')]
-    string_candidates, global_candidates, defs = [], [], {}
+    string_candidates, global_candidates, definition_candidates, defs = [], [], [], {}
     for archive in archives:
         if 'strings.tdb' in archive.entries:
             payload = archive.read_binary('strings.tdb')
@@ -258,11 +258,16 @@ def resource_context(data):
             global_candidates.append({'archive': archive.path.name, 'member': 'conv10.cdb',
                                       'sha256': digest(payload), 'rows': rows})
         if 'objects.ddb' in archive.entries:
-            defs.update(sound_definitions(chunks(archive.read_binary('objects.ddb'))))
+            payload = archive.read_binary('objects.ddb')
+            additions = sound_definitions(chunks(payload))
+            definition_candidates.append({'archive': archive.path.name, 'member': 'objects.ddb',
+                                          'sha256': digest(payload), 'bytes': len(payload),
+                                          'definitions': len(additions)})
+            defs.update(additions)
     if not string_candidates or not global_candidates or not defs:
         raise ValueError('missing strings, global conversation or definition database')
     return {'archives': archives, 'strings': string_candidates, 'globals': global_candidates,
-            'definitions': defs, 'files': RetailFiles(data, archives)}
+            'definitions': defs, 'definition_databases': definition_candidates, 'files': RetailFiles(data, archives)}
 
 
 def audit(root, data, map_name, context=None, scripts=None):
@@ -271,6 +276,7 @@ def audit(root, data, map_name, context=None, scripts=None):
     bindings = audit_map(root, data, map_name, scripts)
     mission = MixArchive(data / map_name)
     level, members, defs = [], [], dict(context['definitions'])
+    definition_databases = list(context.get('definition_databases', []))
     for name in sorted(mission.entries):
         if name.endswith(('.ldd', '.lsd')):
             payload = mission.read_binary(name)
@@ -278,7 +284,11 @@ def audit(root, data, map_name, context=None, scripts=None):
             level.extend({**row, 'archive': map_name, 'member': name} for row in rows)
             members.append({'archive': map_name, 'member': name, 'sha256': digest(payload), 'records': len(rows)})
         elif name.endswith('.ddb'):
-            defs.update(sound_definitions(chunks(mission.read_binary(name))))
+            payload = mission.read_binary(name)
+            additions = sound_definitions(chunks(payload))
+            definition_databases.append({'archive': map_name, 'member': name, 'sha256': digest(payload),
+                                         'bytes': len(payload), 'definitions': len(additions)})
+            defs.update(additions)
     global_rows = [{**row, 'archive': candidate['archive'], 'member': candidate['member']}
                    for candidate in context['globals'] for row in candidate['rows']]
     all_rows = global_rows + level
@@ -331,6 +341,7 @@ def audit(root, data, map_name, context=None, scripts=None):
                        if not 0 <= r['orator_index'] < len(row['orators'])]
     return {'schema_version': 1, 'evidence_class': 'read-only authored conversation and media metadata',
             'map': map_name, 'archive_sha256': bindings['archive_sha256'], 'level_members': members,
+            'definition_databases': definition_databases,
             'global_databases': [{k: v for k, v in c.items() if k != 'rows'} | {'records': len(c['rows'])}
                                  for c in context['globals']],
             'level_conversations': level, 'source_name_leads': leads, 'computed_source_calls': computed,

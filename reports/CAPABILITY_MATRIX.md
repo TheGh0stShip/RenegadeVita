@@ -1,5 +1,10 @@
 # Capability matrix
 
+2026-10-03 authored WAV bounds: metadata checks and an actual-length 3D audio
+provider boundary are implemented. 245 source/Python checks pass; C++ and
+eleven M01 file compatibility questions remain unverified. Native gates0/10.
+See [audio bounds coverage](MISSION_WAVE_HEADER_COVERAGE.md).
+
 2026-10-03 voice audit adds original soldier preset/serialized dialogue,
 weighted option provenance, event callers and distinct speech/duration sentinel
 semantics. Partial binding scope and zero IDs do not prove live playback.

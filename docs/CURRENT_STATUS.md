@@ -2,6 +2,12 @@
 
 Updated: 2026-09-27
 
+Source audit update, 2026-10-03: authored Tutorial/M13/M01 WAV bounds now
+retain archive and database provenance. Eleven M01 candidates declare lengths
+beyond their actual buffers. The original 3D audio caller is patched to pass
+the actual size; this correction is uncompiled and playback compatibility
+remains open. See [audio bounds coverage](../reports/MISSION_WAVE_HEADER_COVERAGE.md).
+
 ## Archived campaign packages
 
 Retained [Dev205](releases/A3.5-dev205.md), [Dev206](releases/A3.5-dev206.md)

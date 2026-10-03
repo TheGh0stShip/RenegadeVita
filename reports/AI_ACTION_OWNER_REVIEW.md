@@ -279,6 +279,30 @@ The earlier root-pass omission is corrected. Legacy root vertex-color effects,
 material-array/index validity, full error/short-read flow and native loading
 remain outside this structural model. No full loader or visual acceptance claim.
 
+## Cinematic shared-model candidate boundary
+
+Original cinematic Create_Object creates Generic_Cinematic then sets its model;
+Create_Real_Object names a preset and is a different dependency route. Reached
+control-file hashes were checked before decoding Create_Object model arguments.
+Filename candidates were located across each mission archive and the inspected
+core always.dat/Always2.dat alternatives, without asserting runtime mount order.
+
+| Scope | Model filename candidates | Located shared members | Members without root mesh headers |
+| --- | ---: | ---: | ---: |
+| Tutorial |6|6|4|
+| M13 |48|11|38|
+| M01 |65|48|57|
+
+Every filename candidate has a located member in this inspected set. No parse
+finding was observed, but empty mesh rows are not a dependency pass: these files
+require separate hierarchy/child-model interpretation. None of the inspected
+root meshes adds an alternate-field candidate in vertex mode. That observation
+does not cover HLOD children, presets, dynamic Set_Model names or all shared
+resources. Private receipt:
+`build/cinematic-shared-model-prelit-candidates-20261003.json`.
+Next follow original hierarchy aggregate child resolution. No retail mutation,
+build, launch or native acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

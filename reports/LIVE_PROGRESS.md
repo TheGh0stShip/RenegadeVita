@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Cinematic shared-model candidates — 2026-10-03
+
+Completed: reached control hashes checked;6/48/65 Create_Object filename candidates
+located across inspected mission/core archives. Shared member counts6/11/48.
+Evidence: private member/control identities; no parse findings.
+Gap:4/38/57 members lack root mesh headers; hierarchy children remain uninspected,
+so empty rows are not a pass. Next: original hierarchy child-model resolution.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Ordered root/prelit pass discovery — 2026-10-03
 
 Completed: root passes included in file order with selected wrapper passes;

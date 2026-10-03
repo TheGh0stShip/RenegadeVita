@@ -9,6 +9,18 @@ PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
 
 
 class RendererInventoryTest(unittest.TestCase):
+    def test_value_domains_and_modifiers_are_retained(self):
+        text = ('D3DTOP_BUMPENVMAP; D3DTA_COMPLEMENT | D3DTA_TEXTURE; '
+                'D3DTTFF_PROJECTED; D3DTADDRESS_MIRROR; D3DTEXF_ANISOTROPIC; '
+                'D3DBLEND_SRCALPHA; D3DCMP_LESS; D3DSTENCILOP_KEEP; '
+                '"D3DTOP_ADD"; /* D3DTA_DIFFUSE */')
+        symbols = [r['symbol'] for r in state_references(text)]
+        self.assertEqual(symbols, ['D3DTOP_BUMPENVMAP', 'D3DTA_COMPLEMENT',
+                                  'D3DTA_TEXTURE', 'D3DTTFF_PROJECTED',
+                                  'D3DTADDRESS_MIRROR', 'D3DTEXF_ANISOTROPIC',
+                                  'D3DBLEND_SRCALPHA', 'D3DCMP_LESS',
+                                  'D3DSTENCILOP_KEEP'])
+
     def test_duplicate_reviews_cannot_overwrite_classification(self):
         rows = state_symbols([dict(r, kind='draw_state_reference', file='a.cpp')
                               for r in state_references('D3DTSS_ADDRESSW;')])

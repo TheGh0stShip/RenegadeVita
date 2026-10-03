@@ -10,7 +10,8 @@ from audit_sweep_port_guards import mask_noncode
 from sweep_cpp_functions import parser, walk
 
 ROOT = Path(__file__).resolve().parents[1]
-STATE = re.compile(r'\bD3D(?:RS|TSS|SAMP|FVF|FMT|TS)_[A-Za-z0-9_]+\b')
+STATE = re.compile(
+    r'\bD3D(?:RS|TSS|SAMP|FVF|FMT|TS|TOP|TA|TTFF|TADDRESS|TEXF|BLEND|CMP|CULL|FILL|FOG|STENCILOP)_[A-Za-z0-9_]+\b')
 FEATURE_OWNERS = {
     'rigid_mesh': ['MeshClass'], 'skinned_mesh': ['MeshClass', 'MeshModelClass'],
     'hlod': ['HLodClass'], 'aggregate': ['AggregateLoaderClass', 'AggregateDefClass'],

@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 value-domain expansion: 91 more distinct symbols and 449 references now
+enumerated, including operations, modifiers and address/filter values. New
+discovery rows remain unknown. Denominator 2,592; 25 missing, 28 replaced,
+2,539 unknown. Eight tests and byte-for-byte reproduction pass.
+
 S2 texture-coordinate batch: two retained-state/CPU-emulation paths reviewed.
 Projected/count domains, indexed UV fallback and matrix route ownership remain
 open. Totals: 25 missing, 28 replaced, 1,999 unknown. No native behavior changed.

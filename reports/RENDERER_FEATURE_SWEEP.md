@@ -1,5 +1,16 @@
 # S2 renderer features — inventory in progress
 
+Value-domain expansion adds texture operations, arguments and modifiers,
+transform flags, addressing/filter values, blend/comparison/cull/fill/fog and
+stencil-operation constants. This exposes 91 additional distinct symbols and
+449 references previously omitted by the state-name-only token pattern.
+All new rows remain unknown; declarations and references do not prove active
+requests or defects. Current denominator is 2,592 rows: 467 class definitions,
+391 parse uncertainties, 1,439 token references, 28 required features and 267
+aggregated symbols. Statuses reconcile at 25 missing, 28 boundary-replaced and
+2,539 unknown. Eight tests pass and generation reproduces byte-for-byte.
+Numeric/dynamic values and cross-state combinations remain open coverage risks.
+
 This source denominator is incomplete as a feature matrix. Of 2,052 records,
 15 direct state mappings are reviewed as `missing`, 15 as `boundary_replaced`,
 and 2,022 remain `unknown`.

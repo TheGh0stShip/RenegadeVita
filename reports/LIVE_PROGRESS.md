@@ -2,6 +2,10 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+DDS evidence batch: metadata-only JSON now retains 3,459 uniquely identified
+records, hashes for all 30 archives and scanner sources. Two scans reproduce
+byte-for-byte; four tests pass. Runtime statuses remain unknown; no payloads.
+
 DDS denominator hardening: duplicate archive records retained and CRC/name
 identity checked. Retail rescan unchanged at 3,459 DDS records. Four scanner
 tests plus 145 shared-reader tests pass. Retail payloads remain local.

@@ -13,6 +13,14 @@ import zlib
 from renegade_cinematic_dependency_scan import MixArchive
 
 
+def file_sha256(path):
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def inspect_header(data):
     if len(data) != 128 or data[:4] != b'DDS ':
         raise ValueError('short or invalid DDS header')
@@ -39,6 +47,7 @@ def audit(directory):
             continue
         archives.append({'archive': path.name, 'members': len(archive.entry_records),
                          'unique_names': len(archive.entries),
+                         'sha256': file_sha256(path),
                          'bytes': path.stat().st_size})
         with path.open('rb') as stream:
             for index, (name, crc, offset, size) in enumerate(archive.entry_records):
@@ -54,7 +63,15 @@ def audit(directory):
                 except ValueError as error:
                     row.update(format='invalid', error=str(error))
                 rows.append(row)
+    inputs = {name: file_sha256(Path(__file__).parent / name)
+              for name in ('audit_dds_format_inventory.py', 'renegade_cinematic_dependency_scan.py')}
+    for row in rows:
+        row['status'] = 'unknown'
+        row['evidence_class'] = 'retail_header_metadata'
+        identity = [row['archive'], row['index_record'], row['member'], row['offset'], row['bytes']]
+        row['row_id'] = hashlib.sha256(json.dumps(identity).encode()).hexdigest()
     return {'schema_version': 1, 'complete': False, 'archives': archives,
+            'inputs_sha256': inputs,
             'archive_errors': errors, 'rows': rows,
             'totals': {'dds_members': len(rows), 'by_format': dict(Counter(r['format'] for r in rows))},
             'limits': ['Named archive index records only; duplicate names retained separately.',

@@ -8,12 +8,16 @@ named DDS members: 2,981 DXT1, 474 DXT5 and four DXT3. DXT3 members are
 retail content candidates. Runtime selection/display remains unverified.
 No DXT2/4 named members were found in this scope. Loose files, nested archives
 and payload validity remain open; absence is not a global
-exclusion claim. Detailed metadata stays in ignored build/dds-format-inventory.json;
+exclusion claim. Metadata is retained in reports/generated/sweeps/dds_formats.json;
 no retail bytes were published. Four authored header/archive tests pass.
 The reader retains every index record alongside its existing name lookup, and
 the DDS scan counts duplicates separately and verifies CRC/name identity. The
 retail rescan preserves the same totals. All 145 shared-reader dependent tests
 pass; no runtime archive lookup semantics changed.
+The report pins all 30 archives by SHA-256 plus both scanner-source identities.
+All 3,459 records have unique IDs, header metadata and unknown runtime status.
+Two full scans reproduce byte-for-byte. Names, dimensions, offsets and hashes
+are metadata; the report includes no retail payload bytes or local root paths.
 
 DDS route review finds DXT2/3/4 accepted by the native loader but decoded
 through original Get_Pixel cases returning opaque white (ddsfile.cpp:401–406).

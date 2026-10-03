@@ -23,6 +23,9 @@ class DDSHeaderTest(unittest.TestCase):
         self.assertEqual(result['totals']['dds_members'], 2)
         self.assertEqual([r['index_record'] for r in result['rows']], [0, 1])
         self.assertEqual(result['archives'][0]['unique_names'], 1)
+        self.assertEqual(len({r['row_id'] for r in result['rows']}), 2)
+        self.assertEqual(len(result['archives'][0]['sha256']), 64)
+        self.assertEqual(result['rows'][0]['status'], 'unknown')
 
     def test_archive_scan_retains_invalid_members_and_archive_errors(self):
         with tempfile.TemporaryDirectory() as directory:

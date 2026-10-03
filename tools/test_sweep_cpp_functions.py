@@ -7,6 +7,12 @@ from sweep_cpp_functions import function_inventory
 @unittest.skipUnless(importlib.util.find_spec('tree_sitter') and
                      importlib.util.find_spec('tree_sitter_cpp'), 'Pinned sweep parser not installed')
 class CppFunctionInventoryTest(unittest.TestCase):
+    def test_initializer_is_part_of_definition_identity(self):
+        first = function_inventory('struct X { int n; X():n(0) {} };')['functions'][0]
+        second = function_inventory('struct X { int n; X():n(1) {} };')['functions'][0]
+        self.assertEqual(first['body_sha256'], second['body_sha256'])
+        self.assertNotEqual(first['definition_sha256'], second['definition_sha256'])
+
     def test_constructors_inline_templates_operators(self):
         text = ('namespace N { struct X { X() {} ~X() {} '
                 'int operator()(int x) const { return x; } }; '

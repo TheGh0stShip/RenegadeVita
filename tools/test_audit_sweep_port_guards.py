@@ -4,6 +4,14 @@ from audit_sweep_port_guards import apply_reviews, directives, mask_noncode, pat
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_changed_initializer_invalidates_definition_review(self):
+        rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'X()',
+                 'body_sha256': 'same', 'definition_sha256': 'new', 'status': 'unknown'}]
+        review = {'file': 'port/a.cpp', 'declarator': 'X()', 'body_sha256': 'same',
+                  'definition_sha256': 'old', 'status': 'boundary_replaced'}
+        self.assertEqual(len(apply_reviews(rows, [review])), 1)
+        self.assertEqual(rows[0]['status'], 'unknown')
+
     def test_literal_comment_and_raw_string_directives_are_not_guards(self):
         lines = ['/*', '#ifdef VITA', '*/', 'const char *s=R"tag(',
                  '#if __vita__', ')tag";', '#if OTHER // RENEGADE_VITA_PORT',

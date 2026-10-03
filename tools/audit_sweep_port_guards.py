@@ -45,7 +45,9 @@ def apply_reviews(rows, reviews, expected_inputs=None, current_inputs=None):
             raise ValueError('Invalid review status: ' + review['status'])
         matches = [row for row in rows if row['kind'] == 'port_function' and
                    row['file'] == review['file'] and row['declarator'] == review['declarator']]
-        if len(matches) != 1 or matches[0].get('body_sha256') != review['body_sha256']:
+        if (len(matches) != 1 or matches[0].get('body_sha256') != review['body_sha256'] or
+                ('definition_sha256' in review and matches[0].get('definition_sha256') !=
+                 review['definition_sha256'])):
             issues.append({'file': review['file'], 'declarator': review['declarator'],
                            'reason': 'review identity absent, ambiguous or changed'})
             continue

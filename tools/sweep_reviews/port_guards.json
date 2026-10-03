@@ -10,6 +10,18 @@
   "reviews": [
     {
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "declarator": "DX8Caps::DX8Caps(IDirect3D8 *direct3d, const D3DCAPS8 &caps,\n\tWW3DFormat display_format, const D3DADAPTER_IDENTIFIER8 &adapter_id)",
+      "body_sha256": "601ea34d41e7ce6c0574312bf70e172ca0fc06847e80899802aa51c06e108bd5",
+      "definition_sha256": "f88cd7b48e660c82f5540eafbc4149ebf6586c1f85a54224b1365ef281544a11",
+      "status": "boundary_replaced",
+      "original_owner": "DX8Caps original Direct3D hardware enumeration and DX8Wrapper capability consumers",
+      "behavior": "Replaces Windows device enumeration with a conservative fixed native description. Z bias, bump environment maps, anisotropic filtering, native shader versions and render-to-texture formats are advertised unavailable; only the listed texture operations are advertised. This classification does not establish that all needed renderer features are mapped.",
+      "callers": ["Global g_vita_caps construction and DX8Wrapper::CurrentCaps binding in the same native boundary"],
+      "affected_scope": ["All native modes using original DX8Wrapper capability queries; effects affected by unavailable features require S2 and all-map data closure"],
+      "acceptance_open": "Reconcile every original queried capability with actual Vita submission support and physical effects. Native source selection and fixed capability flags do not prove feature completeness."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "declarator": "*DX8Wrapper::Create_Render_Target(int width, int height,\n\tWW3DFormat format)",
       "body_sha256": "97bbb69939b4669a8587382312ed6a722d3e2d0feb5e47e199f1a6155d0d84a4",
       "status": "stubbed_or_noop",

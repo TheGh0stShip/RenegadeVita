@@ -61,6 +61,8 @@ def function_inventory(text, cpp_parser=None):
                                   'node_type': node.type, 'body_kind': clause,
                                   'scope': '::'.join(reversed(scopes)),
                                   'declarator': value(declarator) if declarator else '<unknown>',
+                                  'definition_sha256': hashlib.sha256(
+                                      source[node.start_byte:node.end_byte]).hexdigest(),
                                   'signals': [], 'literal_returns': [],
                                   'nonfinal_return_lines': [], 'markers': [], 'calls': [],
                                   'parse_has_error': node.has_error})
@@ -111,6 +113,8 @@ def function_inventory(text, cpp_parser=None):
                           'node_type': node.type,
                           'scope': '::'.join(reversed(scopes)),
                           'declarator': value(declarator) if declarator else '<lambda>',
+                          'definition_sha256': hashlib.sha256(
+                              source[node.start_byte:node.end_byte]).hexdigest(),
                           'body_kind': 'compound_statement',
                           'body_sha256': hashlib.sha256(
                               source[body.start_byte:body.end_byte]).hexdigest(),

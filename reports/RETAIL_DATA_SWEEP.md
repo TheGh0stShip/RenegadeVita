@@ -77,6 +77,27 @@ structural findings remain review leads. This is the binding portion of S4;
 the complete sweep and full-game acceptance remain open.
 # All-map level chunk denominator
 
+## Spatial owner context reconciliation
+
+Three reviewed chunk paths identify visibility tables, static-object culling
+and the pathfind database under the original physics static-data subsystem.
+All 81 map/family pairs across 27 maps have matching candidates. Reused leaf
+IDs under other parents do not match. Member hashes, offsets/counts and reviewed
+source hashes are retained in `spatial_presence.json`.
+
+The owner chain is `saveloadids.h:60` -> `wwphysids.h:55` ->
+`physstaticsavesystem.h:80` -> `PhysStaticDataSaveSystemClass::Load`:
+scene data goes to `PhysicsSceneClass::Load_Level_Static_Data`; pathfind data
+goes to `PathfindClass::Load`. Visibility/culling cases are in
+`pscene_saveload.cpp:231` and `:243`; the pathfind database enum starts at
+`Pathfind.cpp:83`. These are source locations, not runtime execution evidence.
+
+Run `python3 -m tools.audit_level_spatial_presence --chunks reports/generated/sweeps/level_chunks.json --output OUTPUT`.
+Three focused tests pass including rejection of a matching leaf under the wrong
+parent. Output reproduces. All statuses remain unknown until semantic bounds,
+post-load linkage and runtime navigation/culling are verified. Numeric signatures
+are reviewed constants; source changes require re-review. No runtime fix made.
+
 The supplemental `level_chunks.json` inventory covers all 27 supplied maps and
 54 LSD/LDD member index records. It retains 12,687 distinct chunk-ancestry paths
 per member, with occurrence counts, first offsets, aggregate payload sizes and

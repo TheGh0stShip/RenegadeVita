@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S4 spatial chunk owner reconciliation — 2026-10-03
+
+81/81 map/family pairs locate original-context visibility, static culling and
+pathfind database chunks. Parent-sensitive signatures reject unrelated local
+IDs. Member/source hashes and offsets retained; three tests pass and output
+reproduces. All unknown pending semantic/runtime validation. No runtime change.
+
 ## S4 all-map level chunk denominator — 2026-10-03
 
 27 maps and 54 LSD/LDD members scanned; 12,687 per-member chunk-ancestry paths

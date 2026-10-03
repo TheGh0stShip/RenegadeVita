@@ -1,0 +1,2306 @@
+{
+  "schema": 1,
+  "complete": false,
+  "rows": [
+    {
+      "map": "C&C_Canyon.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Canyon.lsd",
+          "member_sha256": "91a3991949b3a826dc03f7b5a5f227151aa995aa9f409896c9164a85a2900a3b",
+          "index_record": 54,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 228479,
+          "count": 1,
+          "payload_bytes_sum": 208641
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Canyon.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Canyon.lsd",
+          "member_sha256": "91a3991949b3a826dc03f7b5a5f227151aa995aa9f409896c9164a85a2900a3b",
+          "index_record": 54,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 93800
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Canyon.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Canyon.lsd",
+          "member_sha256": "91a3991949b3a826dc03f7b5a5f227151aa995aa9f409896c9164a85a2900a3b",
+          "index_record": 54,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 437194,
+          "count": 1,
+          "payload_bytes_sum": 754574
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_City.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_City.lsd",
+          "member_sha256": "d38c68ee9a1c99c7a581f3182a2e2124879728d2419aa5e7277cbe9d3bc4bdeb",
+          "index_record": 47,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 375119,
+          "count": 1,
+          "payload_bytes_sum": 274625
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_City.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_City.lsd",
+          "member_sha256": "d38c68ee9a1c99c7a581f3182a2e2124879728d2419aa5e7277cbe9d3bc4bdeb",
+          "index_record": 47,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 84320
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_City.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_City.lsd",
+          "member_sha256": "d38c68ee9a1c99c7a581f3182a2e2124879728d2419aa5e7277cbe9d3bc4bdeb",
+          "index_record": 47,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 649818,
+          "count": 1,
+          "payload_bytes_sum": 1396548
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_City_Flying.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_City_Flying.lsd",
+          "member_sha256": "10b0eeeb541577ed1095d47afa8d96394b1f0209509647ff041c25815323605e",
+          "index_record": 14,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 363959,
+          "count": 1,
+          "payload_bytes_sum": 438938
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_City_Flying.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_City_Flying.lsd",
+          "member_sha256": "10b0eeeb541577ed1095d47afa8d96394b1f0209509647ff041c25815323605e",
+          "index_record": 14,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 151160
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_City_Flying.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_City_Flying.lsd",
+          "member_sha256": "10b0eeeb541577ed1095d47afa8d96394b1f0209509647ff041c25815323605e",
+          "index_record": 14,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 802971,
+          "count": 1,
+          "payload_bytes_sum": 1663110
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Complex.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Complex.lsd",
+          "member_sha256": "721c02d256c1a5f24ad4c126f004f3e674fee4d38b112d6747cd423f7f567d20",
+          "index_record": 8,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 224999,
+          "count": 1,
+          "payload_bytes_sum": 175563
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Complex.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Complex.lsd",
+          "member_sha256": "721c02d256c1a5f24ad4c126f004f3e674fee4d38b112d6747cd423f7f567d20",
+          "index_record": 8,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 67520
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Complex.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Complex.lsd",
+          "member_sha256": "721c02d256c1a5f24ad4c126f004f3e674fee4d38b112d6747cd423f7f567d20",
+          "index_record": 8,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 400636,
+          "count": 1,
+          "payload_bytes_sum": 564708
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Field.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Field.lsd",
+          "member_sha256": "f29c7334ff73a4dd0a44e4466951e2ab0e00955210727016f16dba802d792599",
+          "index_record": 29,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 206519,
+          "count": 1,
+          "payload_bytes_sum": 113742
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Field.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Field.lsd",
+          "member_sha256": "f29c7334ff73a4dd0a44e4466951e2ab0e00955210727016f16dba802d792599",
+          "index_record": 29,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 53120
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Field.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Field.lsd",
+          "member_sha256": "f29c7334ff73a4dd0a44e4466951e2ab0e00955210727016f16dba802d792599",
+          "index_record": 29,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 320335,
+          "count": 1,
+          "payload_bytes_sum": 721794
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Glacier_Flying.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Glacier_Flying.lsd",
+          "member_sha256": "d493bf7e81d431ad1875055c0719c9629987da0ec8ed76cf3e1207b35644aeb3",
+          "index_record": 5,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 352679,
+          "count": 1,
+          "payload_bytes_sum": 178734
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Glacier_Flying.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Glacier_Flying.lsd",
+          "member_sha256": "d493bf7e81d431ad1875055c0719c9629987da0ec8ed76cf3e1207b35644aeb3",
+          "index_record": 5,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 76520
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Glacier_Flying.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Glacier_Flying.lsd",
+          "member_sha256": "d493bf7e81d431ad1875055c0719c9629987da0ec8ed76cf3e1207b35644aeb3",
+          "index_record": 5,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 531487,
+          "count": 1,
+          "payload_bytes_sum": 1529826
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Hourglass.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Hourglass.lsd",
+          "member_sha256": "93ec05656a913ee37d53b6ba536f266c35bbf3400fc39c08088481ac1c2100dc",
+          "index_record": 16,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 278519,
+          "count": 1,
+          "payload_bytes_sum": 156958
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Hourglass.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Hourglass.lsd",
+          "member_sha256": "93ec05656a913ee37d53b6ba536f266c35bbf3400fc39c08088481ac1c2100dc",
+          "index_record": 16,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 60200
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Hourglass.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Hourglass.lsd",
+          "member_sha256": "93ec05656a913ee37d53b6ba536f266c35bbf3400fc39c08088481ac1c2100dc",
+          "index_record": 16,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 435551,
+          "count": 1,
+          "payload_bytes_sum": 693204
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Islands.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Islands.lsd",
+          "member_sha256": "8cefd5683f6334450aeaebe2921283adb2658bf34e9d28ac66990acebdbd58ad",
+          "index_record": 62,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 207599,
+          "count": 1,
+          "payload_bytes_sum": 122451
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Islands.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Islands.lsd",
+          "member_sha256": "8cefd5683f6334450aeaebe2921283adb2658bf34e9d28ac66990acebdbd58ad",
+          "index_record": 62,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 49280
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Islands.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Islands.lsd",
+          "member_sha256": "8cefd5683f6334450aeaebe2921283adb2658bf34e9d28ac66990acebdbd58ad",
+          "index_record": 62,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 330124,
+          "count": 1,
+          "payload_bytes_sum": 705154
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Mesa.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Mesa.lsd",
+          "member_sha256": "a1668911f548ead920cd1aec2fa6137220f1e158b2d8265f0bd1f99e5f4bc121",
+          "index_record": 9,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 241439,
+          "count": 1,
+          "payload_bytes_sum": 154830
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Mesa.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Mesa.lsd",
+          "member_sha256": "a1668911f548ead920cd1aec2fa6137220f1e158b2d8265f0bd1f99e5f4bc121",
+          "index_record": 9,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 61880
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Mesa.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Mesa.lsd",
+          "member_sha256": "a1668911f548ead920cd1aec2fa6137220f1e158b2d8265f0bd1f99e5f4bc121",
+          "index_record": 9,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 396343,
+          "count": 1,
+          "payload_bytes_sum": 957494
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Under.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Under.lsd",
+          "member_sha256": "32afce4d086cb746644666abf7a64fd6e608f6437882ba75994d723d5ce7deb8",
+          "index_record": 2,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 311039,
+          "count": 1,
+          "payload_bytes_sum": 172011
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Under.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Under.lsd",
+          "member_sha256": "32afce4d086cb746644666abf7a64fd6e608f6437882ba75994d723d5ce7deb8",
+          "index_record": 2,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 68960
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Under.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Under.lsd",
+          "member_sha256": "32afce4d086cb746644666abf7a64fd6e608f6437882ba75994d723d5ce7deb8",
+          "index_record": 2,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 483124,
+          "count": 1,
+          "payload_bytes_sum": 1047102
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Volcano.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Volcano.lsd",
+          "member_sha256": "4aea06d3feaa085530c47277749eccba114497c41d05ca722ce00b446fc8eead",
+          "index_record": 59,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 250919,
+          "count": 1,
+          "payload_bytes_sum": 165682
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Volcano.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Volcano.lsd",
+          "member_sha256": "4aea06d3feaa085530c47277749eccba114497c41d05ca722ce00b446fc8eead",
+          "index_record": 59,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 63080
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Volcano.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Volcano.lsd",
+          "member_sha256": "4aea06d3feaa085530c47277749eccba114497c41d05ca722ce00b446fc8eead",
+          "index_record": 59,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 416675,
+          "count": 1,
+          "payload_bytes_sum": 804070
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Walls.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Walls.lsd",
+          "member_sha256": "d4f72fcda645316c332fc14406f8b19f14e7844ee9d0577be5bcd5dacd0bc1e0",
+          "index_record": 19,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 222479,
+          "count": 1,
+          "payload_bytes_sum": 153878
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Walls.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Walls.lsd",
+          "member_sha256": "d4f72fcda645316c332fc14406f8b19f14e7844ee9d0577be5bcd5dacd0bc1e0",
+          "index_record": 19,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 59720
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Walls.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Walls.lsd",
+          "member_sha256": "d4f72fcda645316c332fc14406f8b19f14e7844ee9d0577be5bcd5dacd0bc1e0",
+          "index_record": 19,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 376431,
+          "count": 1,
+          "payload_bytes_sum": 716464
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Walls_Flying.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Walls_Flying.lsd",
+          "member_sha256": "fc9a6257de00f2d4c2204a3cb09d28d46f7938cc6a24f938c248310dc6a749d0",
+          "index_record": 5,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 258059,
+          "count": 1,
+          "payload_bytes_sum": 573997
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Walls_Flying.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Walls_Flying.lsd",
+          "member_sha256": "fc9a6257de00f2d4c2204a3cb09d28d46f7938cc6a24f938c248310dc6a749d0",
+          "index_record": 5,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 124760
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "C&C_Walls_Flying.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "C&C_Walls_Flying.lsd",
+          "member_sha256": "fc9a6257de00f2d4c2204a3cb09d28d46f7938cc6a24f938c248310dc6a749d0",
+          "index_record": 5,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 832130,
+          "count": 1,
+          "payload_bytes_sum": 897906
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M00_Tutorial.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m00_tutorial.lsd",
+          "member_sha256": "c47298657bba3d2d598768a8b47f692d845442fa213bde932cc812065a16854c",
+          "index_record": 16,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 78119,
+          "count": 1,
+          "payload_bytes_sum": 51662
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M00_Tutorial.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m00_tutorial.lsd",
+          "member_sha256": "c47298657bba3d2d598768a8b47f692d845442fa213bde932cc812065a16854c",
+          "index_record": 16,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 35720
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M00_Tutorial.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m00_tutorial.lsd",
+          "member_sha256": "c47298657bba3d2d598768a8b47f692d845442fa213bde932cc812065a16854c",
+          "index_record": 16,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 129855,
+          "count": 1,
+          "payload_bytes_sum": 207028
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M01.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m01.lsd",
+          "member_sha256": "0f353b5c8453370fc3e4bd94dbcfa1e493736cdd6891e3bfb808f414802b2280",
+          "index_record": 226,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 1000559,
+          "count": 1,
+          "payload_bytes_sum": 698395
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M01.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m01.lsd",
+          "member_sha256": "0f353b5c8453370fc3e4bd94dbcfa1e493736cdd6891e3bfb808f414802b2280",
+          "index_record": 226,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 169520
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M01.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m01.lsd",
+          "member_sha256": "0f353b5c8453370fc3e4bd94dbcfa1e493736cdd6891e3bfb808f414802b2280",
+          "index_record": 226,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 1699028,
+          "count": 1,
+          "payload_bytes_sum": 2237124
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M02.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m02.lsd",
+          "member_sha256": "520bebdc73ed98f78b737e915516c490e9f9e07980b49c72da09a60a0cac25fb",
+          "index_record": 230,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 1638479,
+          "count": 1,
+          "payload_bytes_sum": 660434
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M02.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m02.lsd",
+          "member_sha256": "520bebdc73ed98f78b737e915516c490e9f9e07980b49c72da09a60a0cac25fb",
+          "index_record": 230,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 242360
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M02.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m02.lsd",
+          "member_sha256": "520bebdc73ed98f78b737e915516c490e9f9e07980b49c72da09a60a0cac25fb",
+          "index_record": 230,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 2298987,
+          "count": 1,
+          "payload_bytes_sum": 3671054
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M03.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m03.lsd",
+          "member_sha256": "cb8fea411c70f2b72e95cb898a87bb80d26af81086f50b94b63f7dc19a122290",
+          "index_record": 168,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 489599,
+          "count": 1,
+          "payload_bytes_sum": 398240
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M03.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m03.lsd",
+          "member_sha256": "cb8fea411c70f2b72e95cb898a87bb80d26af81086f50b94b63f7dc19a122290",
+          "index_record": 168,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 160520
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M03.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m03.lsd",
+          "member_sha256": "cb8fea411c70f2b72e95cb898a87bb80d26af81086f50b94b63f7dc19a122290",
+          "index_record": 168,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 887913,
+          "count": 1,
+          "payload_bytes_sum": 1414580
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M04.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m04.lsd",
+          "member_sha256": "433c4706575540a77a2b7ac1e661415e0b286e8a2daf281152717fec65fe58e2",
+          "index_record": 34,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 243239,
+          "count": 1,
+          "payload_bytes_sum": 280982
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M04.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m04.lsd",
+          "member_sha256": "433c4706575540a77a2b7ac1e661415e0b286e8a2daf281152717fec65fe58e2",
+          "index_record": 34,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 155840
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M04.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m04.lsd",
+          "member_sha256": "433c4706575540a77a2b7ac1e661415e0b286e8a2daf281152717fec65fe58e2",
+          "index_record": 34,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 524295,
+          "count": 1,
+          "payload_bytes_sum": 491306
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M05.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m05.lsd",
+          "member_sha256": "f798ed2af1181f15de415f8c1f41651f6ec09e4f11193241bf2ea48b40068efe",
+          "index_record": 12,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 529799,
+          "count": 1,
+          "payload_bytes_sum": 294427
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M05.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m05.lsd",
+          "member_sha256": "f798ed2af1181f15de415f8c1f41651f6ec09e4f11193241bf2ea48b40068efe",
+          "index_record": 12,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 132920
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M05.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m05.lsd",
+          "member_sha256": "f798ed2af1181f15de415f8c1f41651f6ec09e4f11193241bf2ea48b40068efe",
+          "index_record": 12,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 824300,
+          "count": 1,
+          "payload_bytes_sum": 1300828
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M06.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m06.lsd",
+          "member_sha256": "b0b39fb9201d1f320857545cdab55b674483d00a68e2b0ec498ce5edfd56813c",
+          "index_record": 93,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 159359,
+          "count": 1,
+          "payload_bytes_sum": 71980
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M06.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m06.lsd",
+          "member_sha256": "b0b39fb9201d1f320857545cdab55b674483d00a68e2b0ec498ce5edfd56813c",
+          "index_record": 93,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 69440
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M06.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m06.lsd",
+          "member_sha256": "b0b39fb9201d1f320857545cdab55b674483d00a68e2b0ec498ce5edfd56813c",
+          "index_record": 93,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 231413,
+          "count": 1,
+          "payload_bytes_sum": 414106
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M07.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m07.lsd",
+          "member_sha256": "370a69eabbfaea41a30c016d9068680d4c8a4eb9c50d8fcdbfed85006ccb46d7",
+          "index_record": 90,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 534119,
+          "count": 1,
+          "payload_bytes_sum": 313787
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M07.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m07.lsd",
+          "member_sha256": "370a69eabbfaea41a30c016d9068680d4c8a4eb9c50d8fcdbfed85006ccb46d7",
+          "index_record": 90,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 134480
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M07.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m07.lsd",
+          "member_sha256": "370a69eabbfaea41a30c016d9068680d4c8a4eb9c50d8fcdbfed85006ccb46d7",
+          "index_record": 90,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 847980,
+          "count": 1,
+          "payload_bytes_sum": 1347748
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M08.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m08.lsd",
+          "member_sha256": "e424ae7b16ea891e18d5be6503076207d14f9743d5e7e21c4f27e16ac80deaf4",
+          "index_record": 278,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 1195199,
+          "count": 1,
+          "payload_bytes_sum": 243479
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M08.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m08.lsd",
+          "member_sha256": "e424ae7b16ea891e18d5be6503076207d14f9743d5e7e21c4f27e16ac80deaf4",
+          "index_record": 278,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 131480
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M08.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m08.lsd",
+          "member_sha256": "e424ae7b16ea891e18d5be6503076207d14f9743d5e7e21c4f27e16ac80deaf4",
+          "index_record": 278,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 1438752,
+          "count": 1,
+          "payload_bytes_sum": 2228376
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M09.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m09.lsd",
+          "member_sha256": "77fa1e7cff81073b5d2a6cb0066e1392a7ffdec4f5a52307b883fff6c25546ff",
+          "index_record": 141,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 648959,
+          "count": 1,
+          "payload_bytes_sum": 118619
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M09.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m09.lsd",
+          "member_sha256": "77fa1e7cff81073b5d2a6cb0066e1392a7ffdec4f5a52307b883fff6c25546ff",
+          "index_record": 141,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 87080
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M09.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m09.lsd",
+          "member_sha256": "77fa1e7cff81073b5d2a6cb0066e1392a7ffdec4f5a52307b883fff6c25546ff",
+          "index_record": 141,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 767652,
+          "count": 1,
+          "payload_bytes_sum": 1026590
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M10.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m10.lsd",
+          "member_sha256": "89971d1a7658d8c72458e96203c7793b6fbe35bda79dbd6684f49620c5f74b53",
+          "index_record": 13,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 921959,
+          "count": 1,
+          "payload_bytes_sum": 505632
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M10.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m10.lsd",
+          "member_sha256": "89971d1a7658d8c72458e96203c7793b6fbe35bda79dbd6684f49620c5f74b53",
+          "index_record": 13,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 179960
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M10.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m10.lsd",
+          "member_sha256": "89971d1a7658d8c72458e96203c7793b6fbe35bda79dbd6684f49620c5f74b53",
+          "index_record": 13,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 1427665,
+          "count": 1,
+          "payload_bytes_sum": 1736652
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M11.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m11.lsd",
+          "member_sha256": "bebc1899c22143fec403296b7da06617ed0a43c55ecf0ef5dfc44ef3c8894b5d",
+          "index_record": 29,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 279479,
+          "count": 1,
+          "payload_bytes_sum": 240858
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M11.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m11.lsd",
+          "member_sha256": "bebc1899c22143fec403296b7da06617ed0a43c55ecf0ef5dfc44ef3c8894b5d",
+          "index_record": 29,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 138800
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M11.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m11.lsd",
+          "member_sha256": "bebc1899c22143fec403296b7da06617ed0a43c55ecf0ef5dfc44ef3c8894b5d",
+          "index_record": 29,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 520411,
+          "count": 1,
+          "payload_bytes_sum": 593556
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M13.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "m13.lsd",
+          "member_sha256": "cc826a623957de3a656f4814ed275e1332403ac497d9e31c9081d71b972909d0",
+          "index_record": 46,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 136799,
+          "count": 1,
+          "payload_bytes_sum": 38866
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M13.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "m13.lsd",
+          "member_sha256": "cc826a623957de3a656f4814ed275e1332403ac497d9e31c9081d71b972909d0",
+          "index_record": 46,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 29960
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "M13.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "m13.lsd",
+          "member_sha256": "cc826a623957de3a656f4814ed275e1332403ac497d9e31c9081d71b972909d0",
+          "index_record": 46,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 175739,
+          "count": 1,
+          "payload_bytes_sum": 601088
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "Skirmish00.mix",
+      "name": "visibility_tables",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004700"
+      ],
+      "candidates": [
+        {
+          "member": "skirmish00.lsd",
+          "member_sha256": "e829d4e4d35523bc243a0c749198ba95dedf6358f335797fa81e81d3aeed6ba3",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004700"
+          ],
+          "first_offset": 195899,
+          "count": 1,
+          "payload_bytes_sum": 105254
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "Skirmish00.mix",
+      "name": "static_object_culling",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433220",
+        "0x00004500"
+      ],
+      "candidates": [
+        {
+          "member": "skirmish00.lsd",
+          "member_sha256": "e829d4e4d35523bc243a0c749198ba95dedf6358f335797fa81e81d3aeed6ba3",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433220",
+            "0x00004500"
+          ],
+          "first_offset": 81,
+          "count": 1,
+          "payload_bytes_sum": 69560
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    },
+    {
+      "map": "Skirmish00.mix",
+      "name": "pathfind_database",
+      "expected_chunk_path": [
+        "0x00020000",
+        "0x04433221",
+        "0x01060635"
+      ],
+      "candidates": [
+        {
+          "member": "skirmish00.lsd",
+          "member_sha256": "e829d4e4d35523bc243a0c749198ba95dedf6358f335797fa81e81d3aeed6ba3",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00020000",
+            "0x04433221",
+            "0x01060635"
+          ],
+          "first_offset": 301227,
+          "count": 1,
+          "payload_bytes_sum": 1008386
+        }
+      ],
+      "located": true,
+      "status": "unknown",
+      "evidence_class": "retail_chunk_and_source_review",
+      "acceptance_open": "Loader execution, leaf bounds/semantics, post-load linkage and runtime navigation/culling"
+    }
+  ],
+  "chunk_inventory_sha256": "6d86b4e4317d2197c530ce5aa98986b87b15d63a96b129d1b577525eb73dc56c",
+  "reviewed_owner_sources": [
+    {
+      "source": "staging/wwsaveload/saveloadids.h",
+      "sha256": "fe5f3f815625ec3f8f58f799e7d4ad1d2d13e1032df3cb61f232a15971b0f75e"
+    },
+    {
+      "source": "staging/wwphys/wwphysids.h",
+      "sha256": "71480c642f22b3e0d95f53e8af86e13285a90c7c2358e116bfdc3c6cef0a1079"
+    },
+    {
+      "source": "staging/wwphys/physstaticsavesystem.h",
+      "sha256": "20c029651f4109b33db416e369ecaf33a7df77516a2f6bb02bb6730faea7675a"
+    },
+    {
+      "source": "staging/wwphys/physstaticsavesystem.cpp",
+      "sha256": "34161488fb45c2cfa8b57bc6eb151c7c6e7f843146772034c27b08286d68b341"
+    },
+    {
+      "source": "staging/wwphys/pscene_saveload.cpp",
+      "sha256": "d3ba06be861148071a7dff51ed077e7036dc5d77257f03b1f1216067efdb05f4"
+    },
+    {
+      "source": "staging/wwphys/Pathfind.cpp",
+      "sha256": "84b2bcd36e913e78657c8bdf7e4ec43479e8ef577f8cc9a9e0014e09f2297f27"
+    }
+  ],
+  "limits": [
+    "Reviewed numeric paths require re-review if source definitions change",
+    "Presence does not prove semantic validity or runtime loader support",
+    "Only three spatial data families; other geometry/visibility/pathfind content remains open"
+  ]
+}

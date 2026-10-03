@@ -1,28 +1,16 @@
 """Source-only temporary patch replay; does not compile or execute renderer."""
 from pathlib import Path
-import hashlib
-import subprocess
 import tempfile
 import unittest
+from tools.original_effect_source_replay import replay
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class OriginalDecalSubmission(unittest.TestCase):
     def test_anchored_connected_replay(self):
-        anchors = {'ww3d.cpp': 'a6880363b1bcf43e65d69ace09b3f29248da5483c9d80258ddbad630066ebeb3',
-                   'decalmsh.cpp': 'a235a5a53c279f59d92099b1efb7ccaa039ba83cec176b9162ede5c7e1d64d4b',
-                   'mesh.cpp': '628232c017e9ffe25ec68d4732e133b31f13094c2653322c95a5e06319d137ca'}
         with tempfile.TemporaryDirectory() as directory:
-            for name in (*anchors, 'dazzle.cpp'):
-                Path(directory, name).write_bytes((ROOT / 'staging/ww3d2' / name).read_bytes())
-            args = ['patch', '--batch', '--forward', '--fuzz=0', '--no-backup-if-mismatch', '-p1', '-d', directory]
-            for patch in ('ww3d-a35-original-dazzle-lifecycle.patch', 'ww3d-a35-original-decal-submission.patch'):
-                if 'decal-submission' in patch:
-                    for name, digest in anchors.items():
-                        self.assertEqual(hashlib.sha256(Path(directory, name).read_bytes()).hexdigest(), digest)
-                result = subprocess.run(args, input=(ROOT / 'port/patches' / patch).read_bytes(), capture_output=True, check=True)
-                self.assertNotIn(b'offset', result.stdout)
+            replay(directory)
             mesh = Path(directory, 'mesh.cpp').read_text()
             native = mesh.split('RenegadeVitaRenderer::Submit_Mesh(*this, rinfo);', 1)[1].split('#else', 1)[0]
             self.assertIn('RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY', native)

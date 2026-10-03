@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Effect restoration checks independent of active staging — 2026-10-03
+
+Completed: retained dazzle/decal source tests now replay four pristine original
+files through the ordered touching patches, verify5 input anchors and require
+both restorations with zero fuzz/no offset. They no longer require stale staging
+to remain unchanged. Temporary tree only; staging script is parsed, not executed.
+Evidence:13 combined source checks pass. Procedural pass restoration remains open.
+Next: original additional-pass geometry/state and delayed owner integration.
+No build or launch; gates0/10.
+
 ## Required procedural effect omissions — 2026-10-03
 
 Completed: transition omission linked to original spawn/death/healing/shock;

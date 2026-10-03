@@ -1,5 +1,11 @@
 # S4 retail closure — all-map binding discovery in progress
 
+Visibility bounds validation now reports duplicate variable fields and unknown
+compressed-table children rather than silently accepting them. Five focused
+parser tests pass; a fresh scan retains 27 rows, zero parser errors and zero
+findings. This is serialized-bounds evidence only; decompression, repeated
+occurrences and runtime culling remain open.
+
 The 19 missing cinematic names are also absent from an exact-name search of
 all 31 supplied archive indices (18,836 records, duplicates retained) and
 loose files below the diagnostic Data root. All archives parse without errors.

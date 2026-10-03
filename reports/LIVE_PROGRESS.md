@@ -3,7 +3,8 @@
 ## S4 visibility serialization bounds — 2026-10-03
 
 27 visibility chunks pass variable/ID/pairing/compressed-size checks with zero
-parser errors or findings. Fixture passes; output reproduces. Decompression,
+parser errors or findings. Duplicate variables and unknown compressed-table
+children are explicitly reported; five focused parser checks pass. Decompression,
 repeated chunks, linkage and runtime culling remain unverified. No engine change.
 
 ## S4 spatial chunk owner reconciliation — 2026-10-03

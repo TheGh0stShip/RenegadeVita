@@ -13,13 +13,17 @@ def validate(data):
     nodes = chunks(data)
     if not nodes or nodes[0].kind != 0x34500000:
         raise ValueError('Missing first visibility variables chunk')
-    fields = dict(microchunks(nodes[0].data))
+    entries = list(microchunks(nodes[0].data))
+    fields = dict(entries)
+    findings = []
+    if len(fields) != len(entries):
+        findings.append('duplicate_visibility_variable')
     def number(key):
         if len(fields.get(key, b'')) != 4:
             raise ValueError('Missing or wrong-width visibility variable')
         return struct.unpack('<I', fields[key])[0]
     version, objects, sectors = number(0), number(2), number(3)
-    findings, ids = [], set()
+    ids = set()
     pending = None
     tables = compressed = 0
     for node in nodes[1:]:
@@ -40,6 +44,8 @@ def validate(data):
                 raise ValueError('Missing compressed byte count')
             declared = struct.unpack('<I', children[0].data)[0]
             payloads = [n for n in children[1:] if n.kind in (2, 3)]
+            if any(n.kind not in (2, 3) for n in children[1:]):
+                findings.append('unknown_compressed_table_chunk')
             if len(payloads) != 1 or len(payloads[0].data) != declared:
                 findings.append('compressed_size_mismatch')
             if any(n.kind == 2 for n in payloads):

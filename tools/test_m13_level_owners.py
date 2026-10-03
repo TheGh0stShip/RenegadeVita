@@ -119,6 +119,10 @@ class M13LevelOwnersTests(unittest.TestCase):
         hud = definitions(chunks(definition(1235, 2, body)), schema)[2]
         self.assertEqual(general['definition_references'], [44])
         self.assertEqual(hud['definition_references'], [])
+        both_schema = {**schema, (1235, 900, 901): {2: 'RadarSound'}}
+        hud = definitions(chunks(definition(1235, 2, body)), both_schema)[2]
+        self.assertEqual(hud['definition_references'], [44])
+        self.assertEqual(hud['definition_reference_provenance'][0]['field_name'], 'RadarSound')
 
     def test_typed_reference_requires_matching_sibling_parent(self):
         schema = {(500, 501): {1}}

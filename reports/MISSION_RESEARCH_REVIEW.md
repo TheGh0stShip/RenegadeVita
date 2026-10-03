@@ -1,5 +1,16 @@
 # Complete mission overview review — 2026-10-03
 
+HUD settings are now a second factory-qualified dependency root, with named
+radar on/off sound fields. Fresh three-map receipts add one resolved HUD
+definition per map relative to the general-settings scan. Both authored radar
+sound IDs are0 in the inspected database. Original RadarManager::Set_Hidden
+plays a sound only when hidden state changes and the selected ID is nonzero;
+zero is retained as an intentional no-sound value, not reported as a missing
+definition. General and HUD factory schemas remain distinct despite reused
+chunk IDs. Private metadata is in `build/dev208-hud-settings-roots-20261003/`.
+This validates discovery and authored values, not runtime HUD selection,
+radar visibility or audio. No build, launch or retail mutation occurred.
+
 The authored dependency scan now includes the original general-settings
 definition as a root and its death, EVA-objective and HUD-help sound references.
 General/HUD settings reuse local chunk IDs, so the new edges are qualified by

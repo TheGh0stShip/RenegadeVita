@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## HUD settings and radar sound roots — 2026-10-03
+
+Completed: HUD settings root and factory-scoped radar sound fields added.
+Evidence:fresh three-map receipts add one resolved definition per map; both
+authored sound IDs0, matching original conditional no-sound handling. Reused
+general/HUD field layouts remain separate. Native visibility/playback open.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## General-settings sound dependency roots — 2026-10-03
 
 Completed: original global settings and three named sound fields added to

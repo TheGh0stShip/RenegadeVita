@@ -220,6 +220,10 @@ def reference_fields(root: Path) -> dict:
                       'MICROCHUNKID_DEF_HELP_TXT_SOUND')
     result[(0x40602, general_symbols['CHUNKID_DEF_PARENT'], general_symbols['CHUNKID_DEF_VARIABLES'])] = {
         general_symbols[name]: name for name in general_fields}
+    hud_fields = ('MICROCHUNKID_HUD_DEF_RADAR_ON_SOUND_ID',
+                  'MICROCHUNKID_HUD_DEF_RADAR_OFF_SOUND_ID')
+    result[(0x40603, general_symbols['CHUNKID_HUD_DEF_PARENT'], general_symbols['CHUNKID_HUD_DEF_VARIABLES'])] = {
+        general_symbols[name]: name for name in hud_fields}
     return result
 
 

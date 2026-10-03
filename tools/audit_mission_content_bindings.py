@@ -156,7 +156,7 @@ def audit_map(root, data_root, map_name, scripts=None):
     spawners = []
     pending_defs = set()
     global_settings_roots = sorted(key for key, row in defs.items()
-                                   if row['factory'] == '0x00040602')
+                                   if row['factory'] in ('0x00040602', '0x00040603'))
     pending_defs.update(global_settings_roots)
     for member in sorted(mission.entries):
         if member.endswith(('.ldd', '.lsd')):

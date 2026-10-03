@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Separate voice statistics admission — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: separate header-only statistics metadata mode and three boundary
+counterexamples; same11 M01 candidates fail both admission modes.
+Evidence:29 wave/bounds Python/source checks pass; receipts retained privately.
+Next: original-provider compatibility and live duration/callback evidence.
+Blocker: runtime validation remains under the build/launch hold.
+
 ## Authored WAV bounds — 2026-10-03
 
 Renegade Vita — v3.5 active

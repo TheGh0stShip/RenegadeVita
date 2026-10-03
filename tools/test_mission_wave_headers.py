@@ -43,6 +43,28 @@ def fmt(tag=1, channels=1, rate=22050, align=2, bits=16, spb=9, count=1):
 
 
 class MissionWaveHeadersTests(unittest.TestCase):
+    def test_statistics_admits_truncated_data_header_only(self):
+        data = wave(fmt(), wave_chunk(b'data', b'\0' * 8))[:-6]
+        row = inspect_wave(data, statistics_header_only=True)
+        self.assertTrue(row['header_conditions_satisfied'])
+        self.assertTrue(row['truncated_data_header_admitted'])
+        self.assertNotIn('adpcm_blocks_inspected', row)
+        self.assertFalse(row['runtime_decode_or_playback_verified'])
+        self.assertIn('riff_length_outside_source', inspect_wave(data)['header_findings'])
+
+    def test_statistics_rejects_non_data_trailer_overrun(self):
+        data = wave(fmt(), wave_chunk(b'data', b'\0' * 8), b'junk' + struct.pack('<I', 400))
+        row = inspect_wave(data, statistics_header_only=True)
+        self.assertIn('chunk_outside_riff', row['header_findings'])
+        self.assertNotIn('header_conditions_satisfied', row)
+
+    def test_statistics_does_not_inspect_adpcm_sample_headers(self):
+        data = wave(fmt(tag=17, align=8, bits=4), wave_chunk(b'data', b'\0\0\xff\0\0\0\0\0'))
+        self.assertTrue(inspect_wave(data)['block_findings'])
+        row = inspect_wave(data, statistics_header_only=True)
+        self.assertTrue(row['header_conditions_satisfied'])
+        self.assertEqual(row['block_findings'], [])
+
     def test_supported_pcm_metadata_is_not_a_decode_or_playback_pass(self):
         row = inspect_wave(wave(fmt(), wave_chunk(b'data', b'\0' * 8)))
         self.assertEqual(row['estimated_frames'], 4)

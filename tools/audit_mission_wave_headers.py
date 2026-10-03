@@ -21,7 +21,7 @@ from tools.audit_mission_conversations import digest, file_digest
 from tools.renegade_cinematic_dependency_scan import MixArchive
 
 
-def inspect_wave(data):
+def inspect_wave(data, statistics_header_only=False):
     result = {'header_findings': [], 'block_findings': [], 'chunk_counts': {},
               'runtime_decode_or_playback_verified': False}
     findings = result['header_findings']
@@ -30,15 +30,20 @@ def inspect_wave(data):
         return result
     declared = struct.unpack_from('<I', data, 4)[0] + 8
     result.update(source_bytes=len(data), declared_bytes=declared, trailing_source_bytes=max(0, len(data) - declared))
-    if declared < 12 or declared > len(data):
+    if declared < 12 or (declared > len(data) and not statistics_header_only):
         findings.append('riff_length_outside_source')
         return result
+    scan_bytes = min(declared, len(data))
     offset, fmt, data_range, fact, counts = 12, None, None, 0, Counter()
-    while offset + 8 <= declared:
+    while offset + 8 <= scan_bytes:
         kind, size = struct.unpack_from('<4sI', data, offset)
         start = offset + 8
         counts[kind.hex()] += 1
-        if size > declared - start:
+        if size > scan_bytes - start:
+            if statistics_header_only and kind == b'data':
+                data_range = start, size
+                result['truncated_data_header_admitted'] = True
+                break
             findings.append('chunk_outside_riff')
             break
         if kind == b'fmt ':
@@ -82,18 +87,22 @@ def inspect_wave(data):
         padded = size + (size & 1)
         # Current Inspect_Wave stops here if a final odd chunk lacks padding.
         # Retain that condition without inventing a stricter decoder verdict.
-        if padded > declared - start:
+        if padded > scan_bytes - start:
             result['final_odd_chunk_padding_absent'] = True
             offset = start + size
             break
         offset = start + padded
-    result.update(chunk_counts=dict(sorted(counts.items())), unparsed_riff_bytes=declared - offset,
+    result.update(chunk_counts=dict(sorted(counts.items())), unparsed_riff_bytes=scan_bytes - offset,
                   format=fmt, fact_frames=fact)
     if fmt is None:
         findings.append('format_absent')
     if data_range is None:
         findings.append('data_absent')
     if findings:
+        return result
+    if statistics_header_only:
+        result.update(header_conditions_satisfied=True, data_bytes=data_range[1],
+                      statistics_header_only=True)
         return result
     start, size = data_range
     result.update(data_bytes=size, complete_block_count=size // fmt['block_align'],
@@ -183,7 +192,8 @@ def audit(root, data, receipt, cache=None, archives=None):
                     key = candidate['archive'], candidate['member']
                     if key not in cache:
                         payload = candidate_bytes(data, candidate, archives)
-                        cache[key] = {'identity': candidate, 'metadata': inspect_wave(payload)}
+                        cache[key] = {'identity': candidate, 'metadata': inspect_wave(payload),
+                                      'statistics_header_metadata': inspect_wave(payload, statistics_header_only=True)}
                     elif cache[key]['identity'] != candidate:
                         raise ValueError('conflicting identity for shared voice candidate')
                     unique.add(key)
@@ -199,6 +209,7 @@ def audit(root, data, receipt, cache=None, archives=None):
                          'summary': {'candidate_references': len(references), 'unique_candidates': len(files),
                                      'authored_reference_findings': sum(r.get('text_id') in text_ids for r in variant['findings']),
                                      'header_finding_files': sum(bool(row['metadata']['header_findings']) for row in files),
+                                     'statistics_header_finding_files': sum(bool(row['statistics_header_metadata']['header_findings']) for row in files),
                                      'block_finding_files': sum(bool(row['metadata']['block_findings']) for row in files),
                                      'formats': [{'tag': k[0], 'channels': k[1], 'sample_rate': k[2], 'bits': k[3], 'files': v}
                                                  for k, v in sorted(formats.items())]}})

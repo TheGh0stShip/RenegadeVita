@@ -44,6 +44,15 @@ before claiming that a particular conversation or callback advances early.
 Get_Conversation_Time separately falls back to two seconds when the summed
 duration is nonpositive; that fallback does not clamp each spoken remark.
 
+The independent metadata scan now retains statistics-header mode separately
+from strict playback-header mode. The same eleven M01 candidates fail both;
+Tutorial221 and M13566 have no header findings in either mode for either
+strings-database alternative. Three new synthetic counterexamples distinguish
+admissible truncated data headers, rejected non-data trailers, and ADPCM block
+errors that statistics inspection does not examine. The wave/bounds suites
+pass29 source/Python checks. These results do not execute the C++ provider or
+prove a particular duration value at runtime. New receipts remain private.
+
 The new boundary is uncompiled and untested at runtime under the existing
 build/launch hold. The eleven files' decode compatibility remains open.
 PCM/ADPCM sample reconstruction, audible presentation, logical sounds,

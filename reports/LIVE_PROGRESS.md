@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Dazzle indexed geometry boundary — 2026-10-03
+
+Completed: original halo/dazzle/lensflare draws traced through dynamic buffer
+offsets and indexed submission. Native boundary accepts the original TEX2
+44-byte layout; relative indices are checked with base offsets against backing
+capacity. Identity projection still receives D3D 0..W to GL -W..W depth mapping.
+Original dazzle restores world/view/projection after its draws.
+Evidence: source inspection only; no buffer/state mismatch established here.
+Next: shader blend/depth/fog ownership and retail type/texture selection.
+No build or launch; visible effects and native runtime gates remain open.
+
 ## Original dazzle lifecycle restoration — 2026-10-03
 
 Completed: anchored source patch restores original Vita dazzle visibility/render

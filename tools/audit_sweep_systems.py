@@ -17,12 +17,12 @@ SYSTEM_OWNERS = {
     'pathfinding': ('wwphys/pathfind*.cpp', 'wwphys/path.cpp', 'wwphys/pathobject.cpp'),
     'vehicle_drivers': ('combat/vehicledriver.cpp',),
     'harvesters': ('combat/harvester*.cpp',),
-    'base_defenses': ('combat/obelisk*.cpp', 'combat/turret*.cpp'),
+    'base_defenses': ('scripts/toolkit.cpp', 'scripts/mission10.cpp'),
     'hibernation': ('combat/gameobjmanager.cpp', 'combat/smartgameobj.cpp'),
     'bosses': ('combat/*bossgameobj.cpp',),
     'petrova_scripts': ('scripts/mission11.cpp',),
     'vehicle_physics': ('wwphys/*vehicle*.cpp',),
-    'elevators_doors_ladders': ('wwphys/*elevator*.cpp', 'wwphys/*door*.cpp', 'combat/transition*.cpp'),
+    'elevators_doors_ladders': ('combat/elevator.cpp', 'combat/doors.cpp', 'combat/transition*.cpp'),
     'weapons_damage': ('combat/weapon*.cpp', 'combat/bullet.cpp', 'combat/damage.cpp', 'combat/explosion.cpp'),
     'c4_beacons': ('combat/c4.cpp', 'combat/beacon*.cpp'),
     'buildings_power_mct': ('combat/building*.cpp', 'combat/*factorygameobj.cpp', 'combat/airstripgameobj.cpp'),
@@ -45,6 +45,7 @@ SYSTEM_OWNERS = {
 def system_owners(root, link):
     from fnmatch import fnmatchcase
     indexed = {r['source']: r for r in link.get('upstream_rows', [])}
+    staged = {r['source']: r for r in link.get('rows', [])}
     rows = []
     directory = root / 'upstream/CnC_Renegade/Code'
     files = sorted(p for p in directory.rglob('*') if p.is_file() and p.suffix.lower() == '.cpp')
@@ -57,8 +58,14 @@ def system_owners(root, link):
                 missing.append(pattern)
             for path in found:
                 source = path.relative_to(root).as_posix()
+                candidates = indexed.get(source, {}).get('staged_candidates', [])
                 matches.append({'source': source, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
                                 'link_inventory_source_key': source if source in indexed else None,
+                                'staged_candidates': [
+                                    {'source': candidate,
+                                     'selected_for_arm_target': staged.get(candidate, {}).get('selected_for_target'),
+                                     'map_mentions_object': staged.get(candidate, {}).get('map_mentions_object')}
+                                    for candidate in candidates],
                                 'matched_pattern': pattern})
         rows.append({'id': hashlib.sha256(name.encode()).hexdigest(), 'name': name,
                      'status': 'unknown', 'evidence_class': 'source_and_build_metadata',

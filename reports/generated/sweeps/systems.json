@@ -35,6 +35,13 @@
           "source": "upstream/CnC_Renegade/Code/Combat/soldierobserver.cpp",
           "sha256": "7188ce3ce7563ba176bbb5d39adf4b0a90c19c519588cfb5b20bfab1b76cb7ab",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/soldierobserver.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/soldierobserver.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/soldierobserver.cpp"
         }
       ],
@@ -51,12 +58,26 @@
           "source": "upstream/CnC_Renegade/Code/Combat/action.cpp",
           "sha256": "2945f6d23a5fd6bed22dbdc90029fccb5ff84f0fbb8edb1d9d7f7787ed039024",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/action.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/action.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/action.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/pathaction.cpp",
           "sha256": "239633e2c55ed42f7d15b27419de92443b359379915ae16eb9128a9f47443263",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/pathaction.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/pathaction.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/pathaction.cpp"
         }
       ],
@@ -73,42 +94,91 @@
           "source": "upstream/CnC_Renegade/Code/wwphys/Pathfind.cpp",
           "sha256": "df1a26b351f685dd50876e859d69f395dcced4f9a2f887e3073f5b57a9090738",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/Pathfind.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/Pathfind.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/pathfind*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/PathfindPortal.cpp",
           "sha256": "2d4795807024bd0e6190962245cd56631d46fd1adeb2363d6af2b9b115429c0d",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/PathfindPortal.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/PathfindPortal.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/pathfind*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/PathfindSector.cpp",
           "sha256": "00d95718ad1ffb8a28e7c3408d6b80776d6e23723f6474e0ee5e4e73d564c30a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/PathfindSector.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/PathfindSector.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/pathfind*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/PathfindSectorBuilder.cpp",
           "sha256": "288d338d530133d7be26d91173b68e62dbec673941a6d17dd331f2c84f22e7e8",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/PathfindSectorBuilder.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/PathfindSectorBuilder.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwphys/pathfind*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/pathfindbox.cpp",
           "sha256": "b6a12a658b3729c45ee1d0732c21a7fa5420dd63af9c3987cd3343291640d355",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/pathfindbox.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/pathfindbox.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/pathfind*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/Path.cpp",
           "sha256": "63dcbe027a86840b2f2c198de013594b6cb4ed23f0da0d5bc6147bcfc7509ab5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/Path.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/Path.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/path.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/PathObject.cpp",
           "sha256": "28bf4f9af650ee5184b6895d01ea6e62b795d1c9a4ac4ef8b69f2fde0c51fa43",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/PathObject.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/PathObject.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/pathobject.cpp"
         }
       ],
@@ -125,6 +195,13 @@
           "source": "upstream/CnC_Renegade/Code/Combat/vehicledriver.cpp",
           "sha256": "31f65d6648671fa7d959f36b6fa4a44b627cfbaa8f0fe634229677cf27d79fc1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/vehicledriver.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/vehicledriver.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/vehicledriver.cpp"
         }
       ],
@@ -141,6 +218,13 @@
           "source": "upstream/CnC_Renegade/Code/Combat/harvester.cpp",
           "sha256": "5853c6dc83c0209c8754c249e34c55f6da07562f99321371ca9de6daaca1480e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/harvester.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/harvester.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/harvester*.cpp"
         }
       ],
@@ -152,11 +236,35 @@
       "name": "base_defenses",
       "status": "unknown",
       "evidence_class": "source_and_build_metadata",
-      "owner_candidates": [],
-      "unmatched_owner_patterns": [
-        "combat/obelisk*.cpp",
-        "combat/turret*.cpp"
+      "owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/Scripts/Toolkit.cpp",
+          "sha256": "5dae4242f086d558623a9f6423770e7181eb1366057b40036c00c2e30335946b",
+          "link_inventory_source_key": "upstream/CnC_Renegade/Code/Scripts/Toolkit.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/scripts/Toolkit.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
+          "matched_pattern": "scripts/toolkit.cpp"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/Scripts/Mission10.cpp",
+          "sha256": "43914b8899442aff649c5f383503d4b5bcbcde6a8391a8698215adbdf878ed2f",
+          "link_inventory_source_key": "upstream/CnC_Renegade/Code/Scripts/Mission10.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/scripts/Mission10.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
+          "matched_pattern": "scripts/mission10.cpp"
+        }
       ],
+      "unmatched_owner_patterns": [],
       "acceptance_open": "Caller/mode completeness, retained symbols, boundary behavior and runtime evidence"
     },
     {
@@ -169,12 +277,26 @@
           "source": "upstream/CnC_Renegade/Code/Combat/gameobjmanager.cpp",
           "sha256": "250547fbcbc427282f0266d65480cb2c656427b14fe3ba440cdafb2b40f5aa0b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/gameobjmanager.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/gameobjmanager.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/gameobjmanager.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/smartgameobj.cpp",
           "sha256": "4810407e15f31e12152e58f70f8480c14964b07dff532149b7bcdcb1b2f055de",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/smartgameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/smartgameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/smartgameobj.cpp"
         }
       ],
@@ -191,18 +313,39 @@
           "source": "upstream/CnC_Renegade/Code/Combat/mendozabossgameobj.cpp",
           "sha256": "f82bd7b57782b9f0b830539093799f0667e2a2aee584ef55b2b985b59fdfeb76",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/mendozabossgameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/mendozabossgameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*bossgameobj.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/raveshawbossgameobj.cpp",
           "sha256": "ae3b00d5e7f24f942801b3e983eb579b440fb5802f04c8bca9e222d6c748dc8a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/raveshawbossgameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/raveshawbossgameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*bossgameobj.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/sakurabossgameobj.cpp",
           "sha256": "b1bd6a127896bb48ea6f50047112263070f3b3120c9b5880ddf4739e76814c63",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/sakurabossgameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/sakurabossgameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*bossgameobj.cpp"
         }
       ],
@@ -219,6 +362,13 @@
           "source": "upstream/CnC_Renegade/Code/Scripts/Mission11.cpp",
           "sha256": "8bc76b128c280985f90c5ab5da9847ff4697725fe86e1975d9129139e912d462",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Scripts/Mission11.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/scripts/Mission11.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "scripts/mission11.cpp"
         }
       ],
@@ -235,36 +385,78 @@
           "source": "upstream/CnC_Renegade/Code/wwphys/motorvehicle.cpp",
           "sha256": "879cd2dffb219d6012c4baf74f50b15353a6e0f35286638decc64795451aa6fc",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/motorvehicle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/motorvehicle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/*vehicle*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/trackedvehicle.cpp",
           "sha256": "c414a11697da26a7e21fc2e481cf59383c065473481642f19a921b20765d962a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/trackedvehicle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/trackedvehicle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/*vehicle*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/vehicledazzle.cpp",
           "sha256": "ca08945d31a9c8a79340ff4e78bd84f11d9f593e214e1766e992c3889f506031",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/vehicledazzle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/vehicledazzle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/*vehicle*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/vehiclephys.cpp",
           "sha256": "4bc69404f671567642b08b41b10f63f4484c722e286d964e77528981dccc640b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/vehiclephys.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/vehiclephys.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/*vehicle*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/vtolvehicle.cpp",
           "sha256": "0912016c3bf6437e9cc029faa218a9f93a003a22295529244a13aaf7be2c017f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/vtolvehicle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/vtolvehicle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/*vehicle*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwphys/wheelvehicle.cpp",
           "sha256": "dac2bd1bf5d38ce78e7959ffd7669b0c7d0110664e29a678694370a7229782e3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwphys/wheelvehicle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwphys/wheelvehicle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwphys/*vehicle*.cpp"
         }
       ],
@@ -278,22 +470,59 @@
       "evidence_class": "source_and_build_metadata",
       "owner_candidates": [
         {
+          "source": "upstream/CnC_Renegade/Code/Combat/elevator.cpp",
+          "sha256": "bef678c083212cd2aadd94b7c08dc767cb2a48e26166eded63b7a588b8576791",
+          "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/elevator.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/elevator.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
+          "matched_pattern": "combat/elevator.cpp"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/Combat/doors.cpp",
+          "sha256": "93149ddec3f622301c4b3a67910586d7717cf87c9661822c041b5bff0b704091",
+          "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/doors.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/doors.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
+          "matched_pattern": "combat/doors.cpp"
+        },
+        {
           "source": "upstream/CnC_Renegade/Code/Combat/transition.cpp",
           "sha256": "10834ff101b0cbc82e8b015d4d40a123cf6f961feff2453f2ea1e6b6707efbc0",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/transition.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/transition.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/transition*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/transitiongameobj.cpp",
           "sha256": "8fa45ed85e8d939569b2a30f0e40a3acbdde6dd5f94c9cfd7485fb40cb83b71e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/transitiongameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/transitiongameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/transition*.cpp"
         }
       ],
-      "unmatched_owner_patterns": [
-        "wwphys/*elevator*.cpp",
-        "wwphys/*door*.cpp"
-      ],
+      "unmatched_owner_patterns": [],
       "acceptance_open": "Caller/mode completeness, retained symbols, boundary behavior and runtime evidence"
     },
     {
@@ -306,42 +535,91 @@
           "source": "upstream/CnC_Renegade/Code/Combat/weaponbag.cpp",
           "sha256": "00f56fe8289a9d98a05375af5bdf8b57ee0ffa4f84ae276872154c3877e5f39d",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/weaponbag.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/weaponbag.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/weapon*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/weaponmanager.cpp",
           "sha256": "064d8f1141271b68fe72940cca73979937a07622acc4f44295d64919a3e00d01",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/weaponmanager.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/weaponmanager.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/weapon*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/weapons.cpp",
           "sha256": "ee59b18bc3d400764bfcc0d71d23a30bec722652772f6aed0d40c4fc50c442ac",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/weapons.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/weapons.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/weapon*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/weaponview.cpp",
           "sha256": "4a03361a77b98447b42bfca358e25f0e7beae091ba74e74e5ea262d60507a8e5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/weaponview.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/weaponview.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/weapon*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/bullet.cpp",
           "sha256": "729a71c5f878688df9880a059b1eae1e48adbb94fc95262a5dbed965d53e4fff",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/bullet.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/bullet.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/bullet.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/damage.cpp",
           "sha256": "7ec895870d9823936cc7309cfb9f87fd34c92e73950a128f5926b6b148a841b4",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/damage.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/damage.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/damage.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/explosion.cpp",
           "sha256": "82caadc29bf8e126576604b24ff6e01f60173023bd212af3e0294435ad142947",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/explosion.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/explosion.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/explosion.cpp"
         }
       ],
@@ -358,12 +636,26 @@
           "source": "upstream/CnC_Renegade/Code/Combat/c4.cpp",
           "sha256": "ceb72ef77a73d293ba619c37d8aa8f7bdc1777278c63944e8706f78a04b8170f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/c4.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/c4.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/c4.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/beacongameobj.cpp",
           "sha256": "937d92325078e0b9b4a1d5938b055f4678009387af18bb7390341264e11f6ca5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/beacongameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/beacongameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/beacon*.cpp"
         }
       ],
@@ -380,48 +672,104 @@
           "source": "upstream/CnC_Renegade/Code/Combat/building.cpp",
           "sha256": "ada3dfe32078c31b7c7f3d22ed1929cfaec6c207e5b859e1fbdf1f1514347f43",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/building.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/building.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/building*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/buildingaggregate.cpp",
           "sha256": "60d442dcb972e3622abe4024ecaec556d272fed6a0c8e8b30733e4e3f72cb363",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/buildingaggregate.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/buildingaggregate.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/building*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/buildingmonitor.cpp",
           "sha256": "88a78f9b83f0bda211e1434c6ada5b001c4207d8084daf83935feba1a0af3c3b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/buildingmonitor.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/buildingmonitor.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/building*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/buildingstate.cpp",
           "sha256": "e61a973f3110d9eccb39652ff3f55bef54cec4ac8a716b5b7248d9c633d33a69",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/buildingstate.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/buildingstate.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/building*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/soldierfactorygameobj.cpp",
           "sha256": "695b67f0dc02de163561e3b5c82a856074eefb1f7491c593cfc6ef39ee738747",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/soldierfactorygameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/soldierfactorygameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*factorygameobj.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/vehiclefactorygameobj.cpp",
           "sha256": "68d90af88c0796752455db74b6d5348bb2d3e53e4a9bf4122b72d3f3466c4aa3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/vehiclefactorygameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/vehiclefactorygameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*factorygameobj.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/warfactorygameobj.cpp",
           "sha256": "4694e426ca3b05d802a246bfa1202eaa7ee34b8e24d13d9d2b4359bd350648b5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/warfactorygameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/warfactorygameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*factorygameobj.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/airstripgameobj.cpp",
           "sha256": "3987420a972a9c37e139c7faae77c7483e55a83655c19e1738c85e6295da247e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/airstripgameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/airstripgameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/airstripgameobj.cpp"
         }
       ],
@@ -438,18 +786,39 @@
           "source": "upstream/CnC_Renegade/Code/Scripts/Test_Cinematic.cpp",
           "sha256": "40c5538ed77202f342ee2a3f9325ce22abcf25861147bfb3c814f49f410a845c",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Scripts/Test_Cinematic.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/scripts/Test_Cinematic.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "scripts/test_cinematic.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/cinematicgameobj.cpp",
           "sha256": "04ab87c3a237e28b898706247030927e08d9e494bbd6c1c4b7ed94bf403b4ede",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/cinematicgameobj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/cinematicgameobj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/cinematicgameobj.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/ccamera.cpp",
           "sha256": "b514d0b6ed21e351d39486e3de9b83ae32afa67ca6b79fae388bde4089362f11",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/ccamera.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/ccamera.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/ccamera.cpp"
         }
       ],
@@ -466,30 +835,65 @@
           "source": "upstream/CnC_Renegade/Code/Combat/activeconversation.cpp",
           "sha256": "886dfe1673aba921b9e5ac920fda91a313b3c9d9d0db1e16ae763d2ecd28049d",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/activeconversation.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/activeconversation.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*conversation*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/conversation.cpp",
           "sha256": "58af09ecbc63ddddc5aad95f9c4ba39bac21354cfc56a5ad1c5c32f88de735b5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/conversation.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/conversation.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*conversation*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/conversationmgr.cpp",
           "sha256": "f25a68fca4233bd3d1d30888bc6abc8fc164493aca4aabfa466b82c4d5888405",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/conversationmgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/conversationmgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*conversation*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/conversationremark.cpp",
           "sha256": "499ab664badd3c52753b77ac6815b3509a34f713dd9903d286b79aea95e8a3ad",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/conversationremark.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/conversationremark.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/*conversation*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/viseme.cpp",
           "sha256": "6d1b3f1d337fc48f952d29cdc0b1e94d5baa6eab08ae131620bad43530aec816",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/viseme.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/viseme.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/viseme.cpp"
         }
       ],
@@ -506,24 +910,52 @@
           "source": "upstream/CnC_Renegade/Code/Combat/hud.cpp",
           "sha256": "fa39f4a590465a9ea61ce400ba2b349bac8c13dfe6092dba5a23f6376d66abde",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/hud.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/hud.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/hud*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/hudinfo.cpp",
           "sha256": "050817e076d90a8f630aa7fc54b84553a672d1a437a1e3c5d879eb992706b2b0",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/hudinfo.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/hudinfo.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/hud*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/radar.cpp",
           "sha256": "a24e8d15f85c68ae5f391deef05e321d19fac9969cba1d88bec63bd47b3b3fad",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/radar.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/radar.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/radar.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/objectives.cpp",
           "sha256": "7888ddedd7dfb51038a0c8cec3c29605f986200eec99fe543461d6887f305d99",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/objectives.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/objectives.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/objectives.cpp"
         }
       ],
@@ -540,120 +972,260 @@
           "source": "upstream/CnC_Renegade/Code/WWAudio/AudibleSound.cpp",
           "sha256": "07328b0c31a606f7ea18c7b271d84dc2276acccb80828adaf8710255e57cbee1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/AudibleSound.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/AudibleSound.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/AudioEvents.cpp",
           "sha256": "83861f87a8039084d4277ac94d552cac94bc5c9990a0fd87d22f816993f6a154",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/AudioEvents.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/AudioEvents.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/AudioSaveLoad.cpp",
           "sha256": "85105f73074678beb750381273495a631d580f2c3f1fcc7e1cf36fdc1378c278",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/AudioSaveLoad.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/AudioSaveLoad.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/FilteredSound.cpp",
           "sha256": "a66d37b7ce1bd3505310d04fee57b6f99d5afabf74dcee0fe98654a3280291a0",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/FilteredSound.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/FilteredSound.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/Listener.cpp",
           "sha256": "99c459d0b776a49c7138cf41056c6ad3e6a8e7af72945b4e6832b823decd5e90",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/Listener.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/Listener.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/LogicalListener.cpp",
           "sha256": "91f9b0f5ef2eadde80173a7dc288a457e627c142353c7621ea13cbafa58a80ca",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/LogicalListener.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/LogicalListener.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/LogicalSound.cpp",
           "sha256": "b44365dd084eed82a992fc90a02d032c6c125a6e09de34576c960a4518ccc070",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/LogicalSound.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/LogicalSound.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/Sound3D.cpp",
           "sha256": "1028cf3c572ebeb23495a197ae1ef74d7afbe447035297eabecd095a092dc81b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/Sound3D.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/Sound3D.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/SoundBuffer.cpp",
           "sha256": "16c206582d343b57aa10860bc2563a35e83690474f924ba9e3063ab9d42a7fce",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/SoundBuffer.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/SoundBuffer.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/SoundPseudo3D.cpp",
           "sha256": "e9c2084b301286efc35b31199b1900a3b6bce009e546196756ada7dc1d833a19",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/SoundPseudo3D.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/SoundPseudo3D.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/SoundScene.cpp",
           "sha256": "1264dc72a7ba83b02a9793e0b3221e054c94bd60416e9d4fa7911f8594b489f7",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/SoundScene.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/SoundScene.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/SoundSceneObj.cpp",
           "sha256": "6e0834625a017a6fe359b9721e87b0eb16272b0dddea116f2776c15fdbd585a3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/SoundSceneObj.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/SoundSceneObj.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/Threads.cpp",
           "sha256": "f7dcf05634c9f9075df84757c5473de1945237fdd9b433643f43ba63db2a2ec1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/Threads.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/Threads.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/Utils.cpp",
           "sha256": "4772e0342c965845a8dd0b361396d08404b82913b7dedacd6fe0b7242c2fc027",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/Utils.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/Utils.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/WWAudio.cpp",
           "sha256": "58c94640093565774b5dddc1a2571d6c03a848900dcfeb321219a742deb20b8a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/WWAudio.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/WWAudio.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/listenerhandle.cpp",
           "sha256": "941370954a9f8800f09113ebafde073a6f38a03da4e7ef6b2c5d1a822124e5fc",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/listenerhandle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/listenerhandle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/sound2dhandle.cpp",
           "sha256": "484f73bd1caf16adfd08741940f31bfd98e2a6840559ed879c71104fff5dc1dc",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/sound2dhandle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/sound2dhandle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/sound3dhandle.cpp",
           "sha256": "fdd8c917c5c1d4f456ee564b0e1d77c7d3fd4975a87a7ef81fc112ed91766b68",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/sound3dhandle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/sound3dhandle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/soundhandle.cpp",
           "sha256": "9b63ba6e857f8817642ed64af481262f69f465305f9deaf557611f85e279b5a3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/soundhandle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/soundhandle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/WWAudio/soundstreamhandle.cpp",
           "sha256": "9be6c8d3801657bd19d05559a8ae811626fc76c8aec80135a17eb6439f2388a8",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/WWAudio/soundstreamhandle.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwaudio/soundstreamhandle.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwaudio/*.cpp"
         }
       ],
@@ -670,12 +1242,26 @@
           "source": "upstream/CnC_Renegade/Code/Combat/directinput.cpp",
           "sha256": "f6feaafd18806fd143d85a9b17a4a634f8fd2ef0ce0535c0d846aef11443ff8c",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/directinput.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/directinput.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "combat/directinput.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Combat/input.cpp",
           "sha256": "42a0e65d984dd2f7dd084483d06ca80758b44c333a758f4068132d3e44d26a10",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/input.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/input.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/input.cpp"
         }
       ],
@@ -692,102 +1278,221 @@
           "source": "upstream/CnC_Renegade/Code/wwnet/BWBalance.cpp",
           "sha256": "45592b7de7e04811283b197cad4744d83e7712d8beebc28f9ad8b4e27591d517",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/BWBalance.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/BWBalance.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/connect.cpp",
           "sha256": "f5a34a9841ae012b7e8186477e06f7f249361851e0ec00e6d6e33817e6b4e8ee",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/connect.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/connect.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/lan.cpp",
           "sha256": "90798396c84e9c8aaff8820f384332ee74301282a95b83d669daab5fd6583235",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/lan.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/lan.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/msgstat.cpp",
           "sha256": "c41e32ee9ef83f70a8b6b3d9124be97f5e0c21bf5df3056ce43f7b2202b8c58f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/msgstat.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/msgstat.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/msgstatlist.cpp",
           "sha256": "0523d99a15feb1f88a08688a96d20192965c9ea25bdb110c57d5b9e0f71f7a23",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/msgstatlist.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/msgstatlist.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/msgstatlistgroup.cpp",
           "sha256": "14f8863109886939a3b475dca35a51e7dc0c14f89af4eef2b483bf3205122cc3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/msgstatlistgroup.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/msgstatlistgroup.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/netstats.cpp",
           "sha256": "0cc5dbc10b22e3da4926618bda6566ccdc835b3895d662868285eb5935797b7b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/netstats.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/netstats.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/netutil.cpp",
           "sha256": "c49a6e705a1b4c0667acc00576bc8cff6f793eab7fa95a41eb2d6a710476c73b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/netutil.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/netutil.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/networkobject.cpp",
           "sha256": "c27b6b7658a2e1b704f895129d5a04bec7e7c667a49faed912edf97adf600558",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/networkobject.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/networkobject.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/networkobjectfactory.cpp",
           "sha256": "f7595bbf207cd803e11c357a3f0ffbdddfad654e97ef4fc66e03cb652f138ddd",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/networkobjectfactory.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/networkobjectfactory.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/networkobjectfactorymgr.cpp",
           "sha256": "8288776981944a611badcd4c1f2099d25a91b325490cb94b414744be8f1c81b1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/networkobjectfactorymgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/networkobjectfactorymgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/networkobjectmgr.cpp",
           "sha256": "ea351f430ffe1616c2160c3feb594f274a3016904c82b6de6c68dfe59d145c7b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/networkobjectmgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/networkobjectmgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/packetmgr.cpp",
           "sha256": "7d44dc04d0ed996266774c9de2a1a11523aa49d300e6b11a13257198e5126ca6",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/packetmgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/packetmgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/rhost.cpp",
           "sha256": "86ddcba9c29727ef3eabb12eaee0ef5c69b50d93a22272bbb35d801d66fa7c45",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/rhost.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/rhost.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/singlepl.cpp",
           "sha256": "06c026a05aff084e69aa62da69b063bd946e9181dff24a0b9c38d77172494f69",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/singlepl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/singlepl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwnet/wwpacket.cpp",
           "sha256": "505635756c1a7f8651cb8513ccdd6f27e238842d59fa3c0bbf8aec04fa41177e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwnet/wwpacket.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwnet/wwpacket.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwnet/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/cnetwork.cpp",
           "sha256": "54353b2cee454e7ac82b8ecf90869b788c94cda1e8a70da6c9f8b1ed8fe803fe",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/cnetwork.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/cnetwork.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/cnetwork.cpp"
         }
       ],
@@ -804,48 +1509,104 @@
           "source": "upstream/CnC_Renegade/Code/wwlib/bufffile.cpp",
           "sha256": "2aaab2e8a05745b6003b0514fa991b6d293b2910c2ed9bd422a5fe8c01c1053b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/bufffile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/bufffile.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*file*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/mixfile.cpp",
           "sha256": "0fc03da703b7fa8156c392d796470c05fb3c3a41e60f3f0ae179d5eacaece5f5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/mixfile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/mixfile.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*file*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/ramfile.cpp",
           "sha256": "f090932653962997a2c75e1b8cadfa953e6d8f3d44fc1ba77fa883d78c59e64f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/ramfile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/ramfile.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*file*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/rawfile.cpp",
           "sha256": "624656d05bf498dfd900478c69482f5169145879f19670279602c391b82c5442",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/rawfile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/rawfile.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*file*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/rcfile.cpp",
           "sha256": "e0c2e43409fe71e0d66e809bddd086cfc0aaaa93be40661ed488dbb437360636",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/rcfile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/rcfile.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwlib/*file*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/textfile.cpp",
           "sha256": "ace2fec5c6a082622f1e208826d184b06386b493aeffacf23654b61653da29ba",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/textfile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/textfile.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwlib/*file*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/wwfile.cpp",
           "sha256": "d942e00f1a6d46afbf92a685dec775db5cefb37718a3a3ca33b3d55d345273e3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/wwfile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/wwfile.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*file*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/mixfile.cpp",
           "sha256": "0fc03da703b7fa8156c392d796470c05fb3c3a41e60f3f0ae179d5eacaece5f5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/mixfile.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/mixfile.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*mix*.cpp"
         }
       ],
@@ -862,30 +1623,65 @@
           "source": "upstream/CnC_Renegade/Code/wwlib/thread.cpp",
           "sha256": "ddd771d5c5de5f6d41f44d0302f0890e1799cbf49db769af1232c4fb0d299b1a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/thread.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/thread.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*thread*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/_timer.cpp",
           "sha256": "1cc3ce1d4605a4adfb0059933a65ba8074ffac350cf10310d0545c8bf0fd00ba",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/_timer.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/_timer.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwlib/*timer*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/stimer.cpp",
           "sha256": "8f0b7867d5126d22d83be257143cd4ec2673c340df5b76f0391e29d98fcaaef7",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/stimer.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/stimer.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwlib/*timer*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/systimer.cpp",
           "sha256": "9fa2dd2055a49eb857a30f36713872d06d95c16418eaca6f00a01d34650118ab",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/systimer.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/systimer.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*timer*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwlib/FastAllocator.cpp",
           "sha256": "6b785f21be9c67ec71b1c2b149db03adc6fb69991d2eb96710a89c535d9f0426",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwlib/FastAllocator.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwlib/FastAllocator.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwlib/*alloc*.cpp"
         }
       ],
@@ -902,12 +1698,26 @@
           "source": "upstream/CnC_Renegade/Code/Commando/gamemode.cpp",
           "sha256": "ee8935c95147ca478ffb032d8883e66d3a70c8b563bcb15fffb95aadf59efcf3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/gamemode.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/gamemode.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/*gamemode*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/gamemode.cpp",
           "sha256": "ee8935c95147ca478ffb032d8883e66d3a70c8b563bcb15fffb95aadf59efcf3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/gamemode.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/gamemode.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/gamemode.cpp"
         }
       ],
@@ -924,708 +1734,1534 @@
           "source": "upstream/CnC_Renegade/Code/Commando/DlgDownload.cpp",
           "sha256": "4de863a3f37c90121885c853403060407d00879d721dafaa6eb3b678998a9053",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgDownload.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgDownload.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgMPConnect.cpp",
           "sha256": "e771a6944f5a4e61b2f9dfa1e9aa19ad50d9ccf9afa89eef6d54273cffeb68be",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgMPConnect.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgMPConnect.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgMPConnectionRefused.cpp",
           "sha256": "e0ee3565833f982dc19a5c4346b3d35b8c98e03ab362680689c3d746de4896d3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgMPConnectionRefused.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgMPConnectionRefused.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgMPTeamSelect.cpp",
           "sha256": "5f382e074b219a8bdafeb7a654bd8cb47d209291020c889f1380e2b3ab817a4a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgMPTeamSelect.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgMPTeamSelect.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgMessageBox.cpp",
           "sha256": "e18a24ebdb886441babc22209d3602d9b0736b54269c9ead36f0ad20fe5d6f58",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgMessageBox.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgMessageBox.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgPasswordPrompt.cpp",
           "sha256": "90072033390c232fd30436aa661f56d6f7eb7a090cb0278b0996e41e594dbff8",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgPasswordPrompt.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgPasswordPrompt.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgQuickmatch.cpp",
           "sha256": "a326c116a7c3a9597a38e771eec9d4af06a7b021c77c6efaa6bacc74f0dda37e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgQuickmatch.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgQuickmatch.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgRestart.cpp",
           "sha256": "3d1546b63ab6a7bae28d0830df814b180d7c9a350ad7095f30467ca302132053",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgRestart.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgRestart.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgWOLAutoStart.cpp",
           "sha256": "ae426010fe93566fda741e504d22933b0bb319ccaec7dc46d870824d3dcfc84c",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgWOLAutoStart.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgWOLAutoStart.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgWOLLogon.cpp",
           "sha256": "f54a5d42acca89dab0949fa28f59b5a4c2b5b978faf20069be0f992bb939cd20",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgWOLLogon.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgWOLLogon.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgWOLSettings.cpp",
           "sha256": "08af50db0dff401d56d034fdc50ba5f34dee35b1943534fd419ca5f4b7eb4a7d",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgWOLSettings.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgWOLSettings.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgWOLWait.cpp",
           "sha256": "da1e4b318e2a96ae35250a829b72282ae1ee34d16c7ca625623d3fd105e359aa",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgWOLWait.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgWOLWait.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/DlgWebPage.cpp",
           "sha256": "8a8fd6db8f306dce1f91d34b9f03036105f4c16857f2f6236f6729c0a1d7bfb7",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/DlgWebPage.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/DlgWebPage.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcharacteroptions.cpp",
           "sha256": "8f8e3302d76e7a80f106f780393088ea5982fa7daf5a7b198b039e3ccf4df059",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcharacteroptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcharacteroptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcheatoptions.cpp",
           "sha256": "f174f0be822bdb3ac518ea82e5a7614ab1022a5a274315ce1d7f6ef3e4ab84b2",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcheatoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcheatoptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcncbattleinfo.cpp",
           "sha256": "5ecd384427568c1696bf13b2a961d39b7918909042f6169565878cc392ab490c",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcncbattleinfo.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcncbattleinfo.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcncpurchasemainmenu.cpp",
           "sha256": "754ade5e683c650585521387fa72ea9ef2ce5eeee1e4e09b6054555f5b7a75da",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcncpurchasemainmenu.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcncpurchasemainmenu.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcncpurchasemenu.cpp",
           "sha256": "b80afafbea522695842e070d90c5bf59ff593e6d166522246662064f6985bd0f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcncpurchasemenu.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcncpurchasemenu.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcncreference.cpp",
           "sha256": "b32831d244a7d0041ee9395d01bceb77048d60c6d0aa6f9e0200ca51c4c6d0f5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcncreference.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcncreference.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcncserverinfo.cpp",
           "sha256": "70b909de0aae94399de4ba89d697d75ca99c9dce326d529cbf237aeaaccf209e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcncserverinfo.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcncserverinfo.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcncteaminfo.cpp",
           "sha256": "763f6b7b95aa64733f4e1be6c7b57e23d245b367a8c5e477c7b6d8f68157a4db",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcncteaminfo.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcncteaminfo.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcncwinscreen.cpp",
           "sha256": "48e32efa4588271c038548716c8a718b585447f0bfcfee5d8196792f90d98fdc",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcncwinscreen.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcncwinscreen.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgconfigaudiotab.cpp",
           "sha256": "015ad31210f0a782be8970546611f6f540343c398b2137b4ebc24662dfbdbdb9",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgconfigaudiotab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgconfigaudiotab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgconfigperformancetab.cpp",
           "sha256": "c66896bf6dcd7059023d2134d011b787db260afa105ef4bbdb77c622c84a54b8",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgconfigperformancetab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgconfigperformancetab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgconfigvideotab.cpp",
           "sha256": "9dc8b5ed70bd0dacb7f8856b6306aff16d2c254e69d778cacfbe03523220a121",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgconfigvideotab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgconfigvideotab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcontrols.cpp",
           "sha256": "47ec5b82294122acefc0a3ded10105243f3cd1f38d78d5cf63dbb5ae987ad50d",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcontrols.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcontrols.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcontrolsaveload.cpp",
           "sha256": "dd7ff035be6aadf451a4b56be2f5e49da9f89d94012ea4846ac95f8c46715441",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcontrolsaveload.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcontrolsaveload.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcontrolslisttab.cpp",
           "sha256": "84b3932464f7448e2979a1fc3521d22fcce8d02141b42a2b0febb9bd90643ea4",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcontrolslisttab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcontrolslisttab.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcontroltabs.cpp",
           "sha256": "6f62b62617ad396b144a402ba57e8aed65b5cfe6df05134c552fa37c44ed9472",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcontroltabs.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcontroltabs.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcredits.cpp",
           "sha256": "21235a4034e32821076107c5c7a99e4366c1bb187e7b8e9867026ebb21902fb1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcredits.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcredits.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevabuildingstab.cpp",
           "sha256": "4a2b68e2fa6dcc5fead3619d5d0b06aa3e8036a9389ef4a176146bcafed9abe7",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevabuildingstab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevabuildingstab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevacharacterstab.cpp",
           "sha256": "b8d2ef84785db8fae973f9f232b1f7d6159e6a55e063420c133b0cfa1e03d25f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevacharacterstab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevacharacterstab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevadatatab.cpp",
           "sha256": "3aaf324982f16c22ee39610970a5176fe6328302f718acff9da7125d0e8d2369",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevadatatab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevadatatab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevaencyclopedia.cpp",
           "sha256": "7740e6d87d2c950c21731a3f82b626b4df32e6a2e629025c8272115c4ef83d43",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevaencyclopedia.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevaencyclopedia.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevamaptab.cpp",
           "sha256": "976770c960f94254c5ad4af6dbde7d0f3ea34638aa35c0f8296d882dc4bd23a3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevamaptab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevamaptab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevaobjectivestab.cpp",
           "sha256": "af50c1220c02d1e92ff7d3069ddb43d5bad1ea24552da622a87d91450c5cd3ed",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevaobjectivestab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevaobjectivestab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevavehiclestab.cpp",
           "sha256": "6d499b8b35ca1808ec2712a03536a233ebdb8ff73bdcf1b6bf3bf867aaa2385e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevavehiclestab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevavehiclestab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevaviewertab.cpp",
           "sha256": "84644a2aaebee5cf4963979746af7b84369599e41a8de78d1adf875bf695def4",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevaviewertab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevaviewertab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgevaweaponstab.cpp",
           "sha256": "6ffe545d73e2ffe14162e9297675742f6620dc331abaf31c3312454c2b9e9da2",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgevaweaponstab.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgevaweaponstab.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlghelpscreen.cpp",
           "sha256": "2edd4eebb19ac461432ee69a7eb8d62eccf3fc4914408d0c098c7ee368bcadeb",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlghelpscreen.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlghelpscreen.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlginternetoptions.cpp",
           "sha256": "a7e24c70670a869326837e021071e69cefa755073a330d515cb9b8b12b24781a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlginternetoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlginternetoptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgloadspgame.cpp",
           "sha256": "1c5e1e672f19585131c0b1f3ac3734912153c4fd7bbe953daecabf5bcb4c7fa1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgloadspgame.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgloadspgame.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmainmenu.cpp",
           "sha256": "c72369efed8d819e98b5fae61728aaa9e3e9a026368527cc2731ff3b745751df",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmainmenu.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmainmenu.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmovieoptions.cpp",
           "sha256": "49032fb0849ec72e432d5c0780c477d46b93c52c2a57a8891897e5f68d7bea03",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmovieoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmovieoptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpchangelannickname.cpp",
           "sha256": "475fc3ca99ef3dd8bb92d358e0b3f593239f93ae755f5df1b224ab5a15de5052",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpchangelannickname.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpchangelannickname.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpingamechat.cpp",
           "sha256": "bb8d6b666f8a8858709afcf8229abf22e90b954a5dc83296be229507346be461",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpingamechat.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpingamechat.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpingameteamchat.cpp",
           "sha256": "91e4398d654515e86bf30c07a467949c17c65511c52bd25443031e80ab79be24",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpingameteamchat.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpingameteamchat.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmplangamelist.cpp",
           "sha256": "1bb3aba648bd1e7fdc33f72d821ae7f53340edba608164d49a767eea329900e7",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmplangamelist.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmplangamelist.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmplanhostoptions.cpp",
           "sha256": "38e366f9d045797a992bf4d86f64d80ddd0c5aed9cd6c9581a001b40876111d8",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmplanhostoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmplanhostoptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpslaveservers.cpp",
           "sha256": "333c2e91f81cd6ef1d0cf37f81c607ed2356fb37ccf2227c8ae07475c05ea307",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpslaveservers.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpslaveservers.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwoladdbuddy.cpp",
           "sha256": "6e0163d69b4e71ab78a1dc286253ab1eaf60c9228ba375779d31c584fb66cfad",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwoladdbuddy.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwoladdbuddy.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwoladdignoreentry.cpp",
           "sha256": "07d0b84ef73813e5aba3e4312dbe328694ce17d49f92af370b0caa9f52bbb408",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwoladdignoreentry.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwoladdignoreentry.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolautologinprompt.cpp",
           "sha256": "484a820caaea05c14cce3bb8d3640345eacef9ad71f731d7dea7c341aac24d93",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolautologinprompt.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolautologinprompt.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolbuddies.cpp",
           "sha256": "591d3d770d520c84cfc526b4a217eaebb2097ad3c7bc213252f613ca8229d7ef",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolbuddies.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolbuddies.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolbuddylistpopup.cpp",
           "sha256": "39171fdb3e960db4cb8400d627c8914fd6ab4b18ba3b8d7263fa4edc19dfcef1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolbuddylistpopup.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolbuddylistpopup.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolchat.cpp",
           "sha256": "96b6198be8e9687bc9992b06e043984e0513ea4d1addc76344e848db7878c0d6",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolchat.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolchat.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwoldeletebuddy.cpp",
           "sha256": "1d84273d688d0e877e052f0bec8d64a93ae994ac64ccd9bd97eb3a326b299330",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwoldeletebuddy.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwoldeletebuddy.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwoldeleteignoreentry.cpp",
           "sha256": "86c9fb312865e1f0e6c9c55bdfab1b914789949baabdf3c6075541547b14d7b9",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwoldeleteignoreentry.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwoldeleteignoreentry.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolgamelist.cpp",
           "sha256": "ecc93dd61e9f748a7b0c4de1df74587f1f07cb8565f81c5eb55066f44a0e5929",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolgamelist.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolgamelist.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolgoodies.cpp",
           "sha256": "6d0f7497ca6016cd5dcc81c119a740a7509a0c9807dec3b7b03c775423b465ec",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolgoodies.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolgoodies.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolhostchatlobby.cpp",
           "sha256": "581bce8b80d3180a4d1dd93beb30e07172c5fd370ddf0bae754e9e54c8c12851",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolhostchatlobby.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolhostchatlobby.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolignorelist.cpp",
           "sha256": "b7698763c1ece1eed6785a7140eaf669ec36e2bfcde877352dc375c6125d9e9c",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolignorelist.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolignorelist.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolinvitation.cpp",
           "sha256": "691592f257a45a6ad6985462275cba7456f2c9cbe63b637754eaf44c57dbaac3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolinvitation.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolinvitation.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwollocalenag.cpp",
           "sha256": "0435901b11741310749121f8c22a1f78c1b5877b3c948d78598d20ec9faafe7c",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwollocalenag.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwollocalenag.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolmain.cpp",
           "sha256": "a0fedddaa00b5db00316f1c24b35413ee91fe00927479672eab3105b128f2182",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolmain.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolmain.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolmotd.cpp",
           "sha256": "0740a5af4f81e597e58a86e3fd664dda8fd5a3e31c1efb2643297c62956d32ba",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolmotd.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolmotd.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolpagebuddy.cpp",
           "sha256": "da1fd7a247b53f60d057980987cd7a21f2a045b4a71037c354636fe4854a7bf4",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolpagebuddy.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolpagebuddy.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolpagereply.cpp",
           "sha256": "7762aabd0e519417806bbfb0934d2d5e19b430ceec39b6da01fb9fc3600dfe86",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolpagereply.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolpagereply.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolquickmatch.cpp",
           "sha256": "fc1dc0f2265abc1234d5bf5575e66f577600a44bc5ca1082636fa2f2b9c749d4",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolquickmatch.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolquickmatch.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmpwolquickmatchoptions.cpp",
           "sha256": "886485ff198cb6b53cc7461ab81d2cddedde8ef06a6e2d39d0be005965aaca07",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmpwolquickmatchoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmpwolquickmatchoptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgmultiplayoptions.cpp",
           "sha256": "b6760ab5f28c884a75d057b8b6b119e775ceafa608a1143ba9ae4588e6a48494",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgmultiplayoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgmultiplayoptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgpreviewoptions.cpp",
           "sha256": "925c837dfdff84736f8463d1d9d462311d7c0108e2415ecdce734d61cb51327e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgpreviewoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgpreviewoptions.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgsavegame.cpp",
           "sha256": "9dd70c09987e8b49391e56dfde9f7e5dbce68e6eb6e773a3a97932383027750a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgsavegame.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgsavegame.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgserversaveload.cpp",
           "sha256": "6438e46e2252a66871c7b3cf3121c7dc9f3d0a0cbf9fa5a8283c10b7053edb4f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgserversaveload.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgserversaveload.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgsidebarhelp.cpp",
           "sha256": "c7ce9991b4d6464fbcdd568310b7a6c008043d1306a0ddcf8dc6dc44031f76ee",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgsidebarhelp.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgsidebarhelp.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgtechoptions.cpp",
           "sha256": "640add8a01a665ccc2834f6e01598b39295128d716cdde5d40f48560d9cf55ff",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgtechoptions.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgtechoptions.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/dlg*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/IMECandidate.cpp",
           "sha256": "8d64ee7bafde4337230e6b3f5e4a049987e7bb9c4e68b0d7dc0229dff1a8c5c5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/IMECandidate.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/IMECandidate.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/IMECandidateCtrl.cpp",
           "sha256": "bad3ef262e733b9aa23e91c9d90684f2c813a4db8f8eb72697cb321b3340653d",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/IMECandidateCtrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/IMECandidateCtrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/IMEManager.cpp",
           "sha256": "517484cf3df556afa9ca39f266731d7cfba6a55dd4c772216e17fe2b158f4556",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/IMEManager.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/IMEManager.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/ProgressCtrl.cpp",
           "sha256": "18cc7f95a05fdab8248a4ea8f0ebec5a1225ad65d70e64c3b3d9826ec07e7f3f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/ProgressCtrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/ProgressCtrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/buttonctrl.cpp",
           "sha256": "7331634d4586f2332163540b16c4af755c2f605adc5382057170d862966b453a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/buttonctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/buttonctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/checkboxctrl.cpp",
           "sha256": "78c2d200f6d6dfe187b1f4ea44c98f17dc12dc96fcf54a1444d2f971eafd52f5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/checkboxctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/checkboxctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/childdialog.cpp",
           "sha256": "053e4f7767eec18ecdd970485c3ca9d2eb41a701331ffb0d855a55ccaa032b66",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/childdialog.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/childdialog.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/comboboxctrl.cpp",
           "sha256": "494669624e6528faa94eddbfa620c4f6324a552f7abf147b015785d3fae1fa4b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/comboboxctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/comboboxctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dialogbase.cpp",
           "sha256": "8ae27ce7f04cb4785fbc90258bf448a5263815c30ca10d5eb2ffffec714c13f3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dialogbase.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dialogbase.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dialogbutton.cpp",
           "sha256": "3b3880fbb000691c83d7535dee2286eec6a35779ba98ac441f037626819d32c0",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dialogbutton.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dialogbutton.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dialogcontrol.cpp",
           "sha256": "d8eb4e178cde8682acd8062d65098558fa3ce2b678f61d4de628cbe93508fdc9",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dialogcontrol.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dialogcontrol.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dialogmgr.cpp",
           "sha256": "a37b6b9c0d64a04ca407e8a285f3b095d93101f8e6fd7253da744600942c3949",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dialogmgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dialogmgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dialogparser.cpp",
           "sha256": "526fe69d114cd9df414f143fccf44ebfe09cb8ff4bf41dc81fc4c94eaf88d1ff",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dialogparser.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dialogparser.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dialogtext.cpp",
           "sha256": "bc81da8973411ef05a058616024372738a964f26fa264624120c59734cff07d4",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dialogtext.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dialogtext.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dialogtransition.cpp",
           "sha256": "3d217e5907e125e439d92e9502728090e6a7f6af8a3718676948388e1c320af3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dialogtransition.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dialogtransition.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/dropdownctrl.cpp",
           "sha256": "a55a8ca7e64cf750c8dc05bbc244d6f5d98276eeaa817ab8c0d0c664eeca81f3",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/dropdownctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/dropdownctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/editctrl.cpp",
           "sha256": "941498d9feb277881798d9f234a090f3e75439106909e543a17e96c2722b9b05",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/editctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/editctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/healthbarctrl.cpp",
           "sha256": "4300569cf1e1a297e441511b5739d7cf424524efe79bc03c1f1361c8611fe941",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/healthbarctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/healthbarctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/imagectrl.cpp",
           "sha256": "385ab507f9fb8ee298956718e61236ee2fd23494cf185b4ade3d520e21d2f256",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/imagectrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/imagectrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/inputctrl.cpp",
           "sha256": "1d12621aeb0d2f5017fcca19c56cbbe1476a515ada578743966d06c56d24ed94",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/inputctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/inputctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/listctrl.cpp",
           "sha256": "e6aaf717c222b3b334e3e4bf81c893fef5792298dbda1b73c8fdef7a055a7bb4",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/listctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/listctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/listiconmgr.cpp",
           "sha256": "b26d48801087fdb3d2c2cbff537a31aa807fbc3296af588e6f68b00cd4812ad7",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/listiconmgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/listiconmgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/mapctrl.cpp",
           "sha256": "57d375411df090ed39968f0f55232fee41887f73ed3ee21f1128711736afd149",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/mapctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/mapctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/menubackdrop.cpp",
           "sha256": "82c702b8786dddbe75cdaec32931dae77c03fee5b79863ca79e7f6392bb06200",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/menubackdrop.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/menubackdrop.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/menudialog.cpp",
           "sha256": "48471a9b65b90060728cfb27cf1496479b9a71fc5ebecd025921fdce1f25638c",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/menudialog.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/menudialog.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/menuentryctrl.cpp",
           "sha256": "5b058713536fe9ccde58e3b71fa79e58cb33d4c42a27abc36380b92b3c36c6d5",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/menuentryctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/menuentryctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/merchandisectrl.cpp",
           "sha256": "b292bc012303fb98b9caf43c7d788a0ddcbd02a56826f02248c4b54c82b77fee",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/merchandisectrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/merchandisectrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/mousemgr.cpp",
           "sha256": "01c77a1048dab033e20a17dad1eb0cfa3125dd8eb4c06837432bc4883e67f7ac",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/mousemgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/mousemgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/multilinetextctrl.cpp",
           "sha256": "36b14bac0abf29f7bc9ee60827d9ff10e00590be9c5bb22f2e65f6e4da11e5eb",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/multilinetextctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/multilinetextctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/popupdialog.cpp",
           "sha256": "80dded0bbc05f2dcbc26a9e97710652193f2e931887b6d09f9918dd91439762b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/popupdialog.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/popupdialog.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/screencursor.cpp",
           "sha256": "af43bfbbef1dadadbf9c3ab62c3a3f45e75483f0eb0619f10375167ba92f03b9",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/screencursor.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/screencursor.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/scrollbarctrl.cpp",
           "sha256": "86cd441f3ed469e10d4ac8a1862c5fabe15e08226105feb47b07a8ba5c454bba",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/scrollbarctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/scrollbarctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/shortcutbarctrl.cpp",
           "sha256": "4b261a42a28e1e6f85e71756b7b508c0f97ae9497b0a23b40ba9873ee81b2dea",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/shortcutbarctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/shortcutbarctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/sliderctrl.cpp",
           "sha256": "99422d4b7bb09dbc07d66f3a2b3faf2f63c2ab1935334a1fe03b7f6c972b06f9",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/sliderctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/sliderctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/stylemgr.cpp",
           "sha256": "a2e6d6d01c9a85e51fa4b0a630fd1935fdb0c2dc08c5b4a3a3c03e25213cbd43",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/stylemgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/stylemgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/tabctrl.cpp",
           "sha256": "e8970482d544ed94435b61eb118ff5754f0f09040d2d181da975a90cf7ec2fa8",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/tabctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/tabctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/textmarqueectrl.cpp",
           "sha256": "0c3419dd52ead320c80c8038fa297aea95e0ae93e55e141d54c0bea5a17f02fc",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/textmarqueectrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/textmarqueectrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/tooltip.cpp",
           "sha256": "dfcddaba7706ff647323403fb9e045f2ff3d974f09ee5dae2ebf1a37608a3384",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/tooltip.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/tooltip.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/tooltipmgr.cpp",
           "sha256": "33bd79649e98d96ff47a779d90232a649edb0da09c88fb1b199af6c411880e39",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/tooltipmgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/tooltipmgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/treectrl.cpp",
           "sha256": "b3f7c15405e6a73cf973a299cd2b0b5f99db2764140533593aac6823c5472211",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/treectrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/treectrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/viewerctrl.cpp",
           "sha256": "f68cb87aec7a97c6993cadad8a4e6dd51351f9bcbf27d63b70688461dd27c0c6",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/viewerctrl.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/viewerctrl.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/wwui/wwuiinput.cpp",
           "sha256": "a6256e22f829eee6d583abbf4090ff6843d316a54835c5f4ae15599445910b30",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/wwui/wwuiinput.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/wwui/wwuiinput.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "wwui/*.cpp"
         }
       ],
@@ -1642,30 +3278,65 @@
           "source": "upstream/CnC_Renegade/Code/Commando/commandosaveload.cpp",
           "sha256": "3f44f3e6c85434201a5bceaaf78d505105c1104ce19a16da8f92a7937329687d",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/commandosaveload.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/commandosaveload.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/*save*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcontrolsaveload.cpp",
           "sha256": "dd7ff035be6aadf451a4b56be2f5e49da9f89d94012ea4846ac95f8c46715441",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcontrolsaveload.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcontrolsaveload.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/*save*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgsavegame.cpp",
           "sha256": "9dd70c09987e8b49391e56dfde9f7e5dbce68e6eb6e773a3a97932383027750a",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgsavegame.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgsavegame.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/*save*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgserversaveload.cpp",
           "sha256": "6438e46e2252a66871c7b3cf3121c7dc9f3d0a0cbf9fa5a8283c10b7053edb4f",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgserversaveload.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgserversaveload.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/*save*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/campaign.cpp",
           "sha256": "4b85107dc3e538ec6863f01c8c03fc6ef9825a06a74f9ff89bee6b21abb8f726",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/campaign.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/campaign.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/campaign.cpp"
         }
       ],
@@ -1682,24 +3353,52 @@
           "source": "upstream/CnC_Renegade/Code/Combat/encyclopediamgr.cpp",
           "sha256": "3ad6c8aa048270fda7901ff478084d1c7c55a4ac7a028ec72f9e15edb02053bc",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Combat/encyclopediamgr.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/combat/encyclopediamgr.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "combat/encyclopedia*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/scoreevent.cpp",
           "sha256": "ff1e744347a1ccfdb81acc427bff65bb5b323ffd30ccfbe0fa58a3dd2ec8a0ee",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/scoreevent.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/scoreevent.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/*score*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/scorescreen.cpp",
           "sha256": "01b0119207511bbb1bec2a66ac72b37d2a5cf68ff4514a6bb347309b34abac20",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/scorescreen.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/scorescreen.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/*score*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/Commando/dlgcredits.cpp",
           "sha256": "21235a4034e32821076107c5c7a99e4366c1bb187e7b8e9867026ebb21902fb1",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/dlgcredits.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/dlgcredits.cpp",
+              "selected_for_arm_target": false,
+              "map_mentions_object": false
+            }
+          ],
           "matched_pattern": "commando/*credit*.cpp"
         }
       ],
@@ -1716,30 +3415,41 @@
           "source": "upstream/CnC_Renegade/Code/Commando/movie.cpp",
           "sha256": "5b2f895a716211adcce418e206f7b4959b6fa8e99f4a8c0eccb114562da1081e",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/Commando/movie.cpp",
+          "staged_candidates": [
+            {
+              "source": "staging/commando/movie.cpp",
+              "selected_for_arm_target": true,
+              "map_mentions_object": true
+            }
+          ],
           "matched_pattern": "commando/movie.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/BinkMovie/BINKMovie.cpp",
           "sha256": "3f48805d2dd8976f8fe2019aab6390dbc170631bab7688c47c20668d7d859ae0",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/BinkMovie/BINKMovie.cpp",
+          "staged_candidates": [],
           "matched_pattern": "binkmovie/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/BinkMovie/subtitle.cpp",
           "sha256": "1eb65cb062f577eaf03bcc031b2ccd371c0874f62e8e5e3babf32c9e367fca34",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/BinkMovie/subtitle.cpp",
+          "staged_candidates": [],
           "matched_pattern": "binkmovie/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/BinkMovie/subtitlemanager.cpp",
           "sha256": "846ae8cca67e2e21e296576bde48002e954a0ddce99b2e3ac5efc989b9521dcb",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/BinkMovie/subtitlemanager.cpp",
+          "staged_candidates": [],
           "matched_pattern": "binkmovie/*.cpp"
         },
         {
           "source": "upstream/CnC_Renegade/Code/BinkMovie/subtitleparser.cpp",
           "sha256": "d7cd0d10421fae827dd104a739c515abc02146aea75d662c0bf6b8e3c424e34b",
           "link_inventory_source_key": "upstream/CnC_Renegade/Code/BinkMovie/subtitleparser.cpp",
+          "staged_candidates": [],
           "matched_pattern": "binkmovie/*.cpp"
         }
       ],

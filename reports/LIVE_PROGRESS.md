@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S6 original-owner and ARM selection reconciliation — 2026-10-03
+
+Corrected base-defense candidates to original Toolkit/M10 script owners and
+elevator/door candidates to Combat. Candidate staged selection and map mentions
+are retained separately via S3; neither proves behavior. Three tests pass,
+including case-sensitive host paths and independent selection/map evidence.
+All 27 system groups remain unknown. No runtime change.
+
 ## S6 gameplay and platform owner groups — 2026-10-03
 
 27 owner groups added beyond dialogs: AI/actions/pathfinding, bosses, physics,

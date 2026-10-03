@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 engine-format expansion: 26 previously omitted WW3D_FORMAT_* symbols and
+461 references added, including sentinels. Conversion/upload support remains
+unclassified. Totals 3,079 rows: 73 missing, 28 replaced, 2,978 unknown.
+Ten tests and reproducibility pass; no native behavior changed.
+
 S2 texture-stage selector closure: four missing mappings recorded; symbol roles
 separate selectors from coordinate-generation values. Nine tests/reproduction
 pass. Totals 73 missing, 28 replaced, 2,491 unknown; retail use remains open.

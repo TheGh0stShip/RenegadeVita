@@ -1,5 +1,14 @@
 # S2 renderer features — inventory in progress
 
+Engine-format discovery now includes WW3D_FORMAT_* alongside DirectX format
+tokens. It adds 26 symbols and 461 references, including bump formats and
+UNKNOWN/COUNT sentinels; this is not a count of supported texture formats.
+Original format conversion, CPU surface conversion, compressed uploads and
+fallback paths require separate review. Current totals: 3,079 rows comprising
+467 classes, 391 parse uncertainties, 1,900 references, 28 required features and
+293 aggregated symbols; 73 missing, 28 boundary-replaced and 2,978 unknown.
+Ten tests pass and regenerated output matches byte-for-byte.
+
 Texture-stage selector closure adds four missing direct mappings: COLORARG0,
 ALPHAARG0, RESULTARG and MAXMIPLEVEL. Their references do not yet prove active
 retail requests. Aggregated symbols now distinguish state selectors from values

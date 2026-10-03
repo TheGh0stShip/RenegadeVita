@@ -3993,6 +3993,7 @@
   "original_dsp_source_count": 45,
   "schema_version": 1,
   "script_command_table_entries": 202,
+  "script_strtrim_symbol_isolation_configured": true,
   "staged_dsp_source_missing": [],
   "static_original_dsp_source_count": 44,
   "static_source_gate_passed": true

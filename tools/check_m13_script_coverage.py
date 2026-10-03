@@ -75,7 +75,10 @@ def selected_owners(root: Path) -> dict[str, set[str]]:
     native = re.sub(r'#[^\n]*', '', (root / "CMakeLists.txt").read_text())
     host = re.sub(r'#[^\n]*', '', (root / "tools/host_a30_definitions/CMakeLists.txt").read_text())
     native_blocks = cmake_block(native, "set", "RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES")
-    native_blocks += cmake_block(native, "set", "RENEGADE_CAMPAIGN_SCRIPT_SOURCES")
+    native_blocks += "\n".join(re.findall(
+        r'\blist\s*\(\s*APPEND\s+RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\b([^)]*)\)', native))
+    if "${RENEGADE_CAMPAIGN_SCRIPT_SOURCES}" in native_blocks:
+        native_blocks += cmake_block(native, "set", "RENEGADE_CAMPAIGN_SCRIPT_SOURCES")
     host_block = cmake_block(host, "add_executable", "a31_interactive_runtime")
     explicit = {
         "vita": set(re.findall(r'\$\{RENEGADE_SCRIPT_SOURCE\}/([\w.]+\.cpp)', native_blocks)),
@@ -87,11 +90,9 @@ def selected_owners(root: Path) -> dict[str, set[str]]:
     manifest_names = re.findall(r'^SOURCE=\.\\([\w.-]+\.cpp)\s*$',
                                 (root / "upstream/CnC_Renegade/Code/Scripts/Scripts.dsp")
                                 .read_text(encoding="latin1"), re.MULTILINE)
-    native_source_graph = native_blocks + native
-    host_source_graph = host_block + host
-    if "RENEGADE_SCRIPT_DSP_SOURCES" in native_source_graph and "DLLmain.cpp" in helper:
+    if "${RENEGADE_SCRIPT_DSP_SOURCES}" in native_blocks and "DLLmain.cpp" in helper:
         explicit["vita"].update(set(manifest_names) - {"DLLmain.cpp"})
-    if "RENEGADE_SCRIPT_DSP_SOURCES" in host_source_graph and "DLLmain.cpp" in helper:
+    if "${RENEGADE_SCRIPT_DSP_SOURCES}" in host_block and "DLLmain.cpp" in helper:
         explicit["host"].update(set(manifest_names) - {"DLLmain.cpp"})
     return explicit
 

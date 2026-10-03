@@ -11,11 +11,13 @@
 #include "audio_release_probe.h"
 #endif
 #include "renegade_find_files.h"
+#include "renegade_mission_ranks.h"
 #include "renegade_vita_options.h"
 #include "a31_interactive_runtime_policy.h"
 #include "a4_frontend_lifecycle_boundary.h"
 
 #include "assetmgr.h"
+#include "_globals.h"
 #include "campaign.h"
 #include "scorescreen.h"
 #include "encyclopediamgr.h"
@@ -36,6 +38,7 @@
 #include "directinput.h"
 #include "hud_bitmap_atlas_probe.h"
 #include "m13_runtime_inventory.h"
+#include "mission_rank_probe.h"
 #include "wwnet_packet_probe.h"
 #include "local_session_probe.h"
 #include "ttfs_factory_probe.h"
@@ -1046,6 +1049,8 @@ int main(int argc, char **argv)
 #endif
 	if (argc == 2 && strcmp(argv[1], "--local-session-selftest") == 0)
 		return Validate_Local_Session_Boundaries();
+	if (argc == 2 && strcmp(argv[1], "--mission-ranks-selftest") == 0)
+		return MissionRankProbe::Run();
 	if (argc == 3 && strcmp(argv[1], "--ttfs-cache-selftest") == 0)
 		return Validate_TTFS_Fixture_Factory(argv[2]);
 	const unsigned cycle = ++interactive_cycle;
@@ -1141,6 +1146,15 @@ int main(int argc, char **argv)
 	Print_Number("hardware_equivalent_cycle", cycle);
 
 	const RenegadePathRoots roots = { argv[1], argv[2], argv[3], argv[4] };
+	const RenegadeResolvedPath ranks_path = Renegade_Resolve_Path(
+		roots, "user/config/mission-ranks-v1.cfg", RENEGADE_PATH_WRITE);
+	const char *ranks_key = Build_Registry_Location_String(
+		const_cast<char *>(APP_SUB_KEY), NULL, const_cast<char *>("Ranks"));
+	const bool ranks_loaded = RenegadeMissionRanks::Configure(
+		ranks_path.success ? ranks_path.physical : NULL, ranks_key);
+	const RenegadeMissionRanks::Status ranks_status = RenegadeMissionRanks::Get_Status();
+	printf("a31.mission_ranks_loaded=%s,count=%u,error=%d\n",
+		ranks_loaded ? "true" : "false", ranks_status.count, ranks_status.error);
 	Renegade_Set_Find_Roots(roots);
 	RenegadeRootedFileFactoryClass root_factory(roots);
 	MixFileFactoryClass always2_factory(kAlways2Archive, &root_factory);

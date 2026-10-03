@@ -1,5 +1,10 @@
 # Content coverage audit index
 
+Latest integration follow-up: [static linkage and mission ranks](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md)
+records the original trim-symbol collision, strengthened target-selection
+checks and rank-specific user storage. 41 static/diagnostic checks pass; the
+C++ changes and prepared restart/sanitizer probes remain uncompiled/unrun.
+
 Latest 2026-10-03 work: [campaign source map reconciliation](CAMPAIGN_SOURCE_MAP_RECONCILIATION.md)
 adds a source-derived 13-mission inventory and closes seven omitted mission
 translation units in native/host source selection. It records static evidence
@@ -35,7 +40,11 @@ Python checks. The broader standalone coverage guard remains INCOMPLETE with
 
 ## Source and runtime status
 
-The latest source-only sweep selected five additional required script units
+The October 3 campaign sweep now selects all 44 original Scripts.dsp code
+units, including every campaign mission, with a static provider replacing the
+DLL entrypoint. The integration follow-up isolates the two original trim
+symbols and adds mission-rank storage beneath RegistryClass. Earlier source
+work selected five additional required script units
 (Mission03.cpp, Mission11.cpp, Test_DAK.cpp, Test_RMV_Toolkit.cpp and
 Toolkit_Sounds.cpp), plus the sphere, ring and sound-render-object owners. The
 native runtime now registers the four original prototype loaders and applies
@@ -51,7 +60,7 @@ hidden pending their original owners and routes.
 
 No C++ build, game launch, installation, retail/save modification or new
 native acceptance occurred during this source-only continuation. The latest
-36 focused static tests pass. Local asset-derived receipts remain under
+41 focused static/diagnostic tests pass. Local asset-derived receipts remain under
 build/; published material contains source, tests and findings rather than
 retail assets or saves.
 

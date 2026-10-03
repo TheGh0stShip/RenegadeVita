@@ -38,6 +38,24 @@ class IntegrationSourceInventoryTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             read_world_manifest(self.root)
 
+    def test_dsp_expansion_reports_helpers_and_only_actual_source_use(self):
+        dsp = self.root / "upstream/CnC_Renegade/Code/Scripts/Scripts.dsp"
+        dsp.parent.mkdir(parents=True)
+        dsp.write_text("SOURCE=.\\DLLmain.cpp\nSOURCE=.\\strtrim.cpp\n"
+                       "SOURCE=.\\Test_Cinematic.cpp\nSOURCE=.\\MissionX0.cpp\n")
+        self.write_cmake('set(RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\n'
+                         ' ${RENEGADE_STAGE}/commando/first.cpp\n)\n'
+                         'list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\n'
+                         ' ${RENEGADE_SCRIPT_DSP_SOURCES}\n)\n')
+        self.assertEqual(read_world_manifest(self.root), ["Code/Commando/first.cpp",
+                         "Code/Scripts/MissionX0.cpp", "Code/Scripts/Test_Cinematic.cpp",
+                         "Code/Scripts/strtrim.cpp"])
+        self.write_cmake('set(RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\n'
+                         ' ${RENEGADE_STAGE}/commando/first.cpp\n)\n'
+                         'set_source_files_properties(${RENEGADE_SCRIPT_DSP_SOURCES}\n'
+                         ' PROPERTIES COMPILE_OPTIONS "-fpermissive")\n')
+        self.assertEqual(read_world_manifest(self.root), ["Code/Commando/first.cpp"])
+
     def native_fixture(self, base):
         self.write_cmake(
             '  set ( RENEGADE_A30_PORT_SOURCES\r\n' + base + '\r\n )\n'

@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from tools.check_m13_script_coverage import DECLARE, without_comments
+from tools.check_m13_script_coverage import DECLARE, selected_owners, without_comments
 
 MISSIONS = [
     ("M00 tutorial", "Mission00.cpp", ("MTU_", "MSK_")),
@@ -75,6 +75,7 @@ def audit(root: Path = ROOT) -> dict:
     cmake_source = (root / "cmake/RenegadeScriptSources.cmake").read_text()
     native_cmake = (root / "CMakeLists.txt").read_text()
     host_cmake = (root / "tools/host_a30_definitions/CMakeLists.txt").read_text()
+    selected = selected_owners(root)
     rows = []
     all_commands: set[str] = set()
     total_find_calls = 0
@@ -83,9 +84,7 @@ def audit(root: Path = ROOT) -> dict:
         metrics["area"] = area
         metrics["script_prefixes"] = list(prefixes)
         metrics["selected_by_dsp_static_source_function"] = (
-            "DLLmain.cpp" not in filename and "RENEGADE_SCRIPT_DSP_SOURCES" in native_cmake
-            and "RENEGADE_SCRIPT_DSP_SOURCES" in host_cmake
-            and "DLLmain.cpp" in cmake_source and "continue()" in cmake_source)
+            filename in selected["vita"] and filename in selected["host"])
         metrics["expected_declaration_count"] = EXPECTED_DECLARATIONS[filename]
         metrics["declaration_count_matches_reference"] = (
             metrics["declared_scripts"] == EXPECTED_DECLARATIONS[filename])
@@ -103,9 +102,15 @@ def audit(root: Path = ROOT) -> dict:
                                  and not (root / "staging/scripts" / name).is_file())
     expected_campaign_names = {row[1] for row in MISSIONS}
     native_hooks = ("renegade_collect_script_dsp_sources(" in native_cmake
-                    and "${RENEGADE_SCRIPT_DSP_SOURCES}" in native_cmake)
+                    and set(dsp) - {"DLLmain.cpp"} <= selected["vita"])
     host_hooks = ("renegade_collect_script_dsp_sources(" in host_cmake
-                  and "${RENEGADE_SCRIPT_DSP_SOURCES}" in host_cmake)
+                  and set(dsp) - {"DLLmain.cpp"} <= selected["host"])
+    trim_isolation = (
+        'renegade_configure_script_static_helpers("${RENEGADE_SCRIPT_SOURCE}")' in native_cmake
+        and 'renegade_configure_script_static_helpers("${RV_SCRIPT_SOURCE}")' in host_cmake
+        and '"${staged_script_dir}/scripts.cpp"' in cmake_source
+        and '"${staged_script_dir}/strtrim.cpp"' in cmake_source
+        and 'COMPILE_DEFINITIONS "strtrim=Renegade_Script_strtrim"' in cmake_source)
     return {
         "schema_version": 1,
         "evidence_class": "original source and build-manifest static analysis",
@@ -127,6 +132,7 @@ def audit(root: Path = ROOT) -> dict:
         "staged_dsp_source_missing": missing_stage_files,
         "native_target_uses_dsp_manifest": native_hooks,
         "host_target_uses_dsp_manifest": host_hooks,
+        "script_strtrim_symbol_isolation_configured": trim_isolation,
         "missing_mission_source_units": sorted(
             name for name in expected_campaign_names
             if not (root / "staging/scripts" / name).is_file()),
@@ -135,7 +141,7 @@ def audit(root: Path = ROOT) -> dict:
             len(rows) == 13 and all(row["declaration_count_matches_reference"] for row in rows)
             and not set(all_commands) - set(command_table)
             and len(dsp) == 45 and not missing_stage_files
-            and native_hooks and host_hooks
+            and native_hooks and host_hooks and trim_isolation
             and "DLLmain.cpp" in dsp
             and "renegade_script_static_provider.cpp" in native_cmake
             and "renegade_script_static_provider.cpp" in host_cmake),

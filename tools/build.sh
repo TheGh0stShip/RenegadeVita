@@ -260,6 +260,9 @@ require_host_line "A3.0 original M00 world runtime: PASS"
 echo "Host semantic fingerprints: PASS"
 python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_identity \
 	tools.test_m13_script_coverage tools.test_m13_mission_inventory \
+	tools.test_audit_campaign_source_surface tools.test_renegade_script_dsp_cmake \
+	tools.test_requested_mission_owner_contract \
+	tools.test_vita_mission_ranks \
 	tools.test_integration_source_inventory \
 	tools.test_vita_sampler_cache tools.diagnostics.test_renegade_vita_performance_ledger \
 	tools.test_vita_material_cache tools.test_vita_index_preparation \

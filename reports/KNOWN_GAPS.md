@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-10-03 integration follow-up: mission-rank user-file storage and isolation
+of the original static-link `strtrim` collision are implemented in source,
+uncompiled and untested in C++. Actual-target manifest and diagnostic checks
+pass (41 checks), but linked registrations, restart persistence and native
+mission progression remain open. Other registry persistence is outside this
+rank-specific fix. See [integration report](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md).
+
 2026-10-03 campaign source-map review: all 13 mission files and the original
 44 statically linked Scripts.dsp code units are selected in both CMake graphs;
 seven missing mission units were added. This is uncompiled source closure, not

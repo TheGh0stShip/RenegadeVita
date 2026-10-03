@@ -16,6 +16,7 @@
 #include "renegade_cache_health.h"
 #include "renegade_file_factory.h"
 #include "renegade_find_files.h"
+#include "renegade_mission_ranks.h"
 #include "renegade_vita_options.h"
 #include "renegade_miles_runtime_stats.h"
 #include "renegade_vita_input_telemetry.h"
@@ -23,6 +24,7 @@
 #include "ww3d_vita_renderer.h"
 
 #include "assetmgr.h"
+#include "_globals.h"
 #include "assetdep.h"
 #include "assets.h"
 #include "part_ldr.h"
@@ -3507,6 +3509,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		application_audio.Initialize();
 		const bool options_loaded = RenegadeVitaUserSettings::Configure(
 			"ux0:data/renegade/user/config/options-v1.cfg");
+		const RenegadeResolvedPath ranks_path = Renegade_Resolve_Path(
+			kVitaRoots, "user/config/mission-ranks-v1.cfg", RENEGADE_PATH_WRITE);
+		const char *ranks_key = Build_Registry_Location_String(
+			const_cast<char *>(APP_SUB_KEY), NULL, const_cast<char *>("Ranks"));
+		const bool ranks_loaded = RenegadeMissionRanks::Configure(
+			ranks_path.success ? ranks_path.physical : NULL, ranks_key);
+		const RenegadeMissionRanks::Status ranks_status = RenegadeMissionRanks::Get_Status();
+		A30_Vita_Log("A3.5 mission ranks: load=%d entries=%u error=%d user_config=1 original_score_replay_owner=1\n",
+			ranks_loaded ? 1 : 0, ranks_status.count, ranks_status.error);
 		RenegadeVitaOptions::Apply_Audio(application_audio);
 		A30_Vita_Log("A3.5 options: user preferences load=%d sections=%u native_fixed_provider=1\n",
 			options_loaded ? 1 : 0, RenegadeVitaUserSettings::State().record.value[0]);

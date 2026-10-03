@@ -2,6 +2,8 @@ import re
 import unittest
 from pathlib import Path
 
+from tools.check_m13_script_coverage import selected_owners
+
 
 ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM = ROOT / "upstream" / "CnC_Renegade" / "Code"
@@ -102,19 +104,18 @@ class ScriptProviderContractTests(unittest.TestCase):
         self.assertIn("Get_Script_Commands()", combat_patch)
         self.assertIn("Set_Script_Commands(&commands)", combat_patch)
         self.assertIn("ScriptCreateFunct = &::Create_Script", combat_patch)
-        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Mission00.cpp", cmake)
-        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Test_Cinematic.cpp", cmake)
-        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Toolkit_Powerup.cpp", cmake)
-        self.assertNotIn("${RENEGADE_SCRIPT_SOURCE}/strtrim.cpp", cmake)
+        for target, owners in selected_owners(ROOT).items():
+            self.assertTrue({"Mission00.cpp", "Test_Cinematic.cpp", "Toolkit_Powerup.cpp",
+                             "Mission01.cpp", "MissionX0.cpp", "Test_DLS.cpp", "strtrim.cpp"}
+                            <= owners, target)
         self.assertIn("${RENEGADE_STAGE}/wwlib/trim.cpp", original_sources)
         self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp", cmake)
         self.assertIn("${RENEGADE_SCRIPT_SOURCE}/MissionX0.cpp", cmake)
-        self.assertIn("${RENEGADE_SCRIPT_SOURCE}/Test_DLS.cpp", cmake)
         self.assertIn("${RENEGADE_STAGE}/combat/cinematicgameobj.cpp", cmake)
         self.assertRegex(
             cmake,
             r"list\(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES[^)]*"
-            r"\$\{RENEGADE_CAMPAIGN_SCRIPT_SOURCES\}\s*"
+            r"\$\{RENEGADE_SCRIPT_DSP_SOURCES\}\s*"
             r"\$\{RENEGADE_STAGE\}/combat/cinematicgameobj\.cpp",
         )
 
@@ -132,20 +133,11 @@ class ScriptProviderContractTests(unittest.TestCase):
         shared = [block for block in blocks
                   if 'renegade_script_call_defaults.h' in block]
         self.assertEqual(len(shared), 1)
-        for owner in ("MissionX0.cpp", "Test_DLS.cpp", "Toolkit.cpp", "Toolkit_Objects.cpp"):
-            self.assertIn("${RENEGADE_SCRIPT_SOURCE}/" + owner, shared[0])
-        for owner in ("Mission03.cpp", "Test_DAK.cpp", "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"):
-            self.assertIn("${RENEGADE_SCRIPT_SOURCE}/" + owner, shared[0])
-        campaign_block = re.search(
-            r"set\(RENEGADE_CAMPAIGN_SCRIPT_SOURCES\s+(.*?)\)", cmake, re.S
-        ).group(1)
-        for owner in ("Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp",
-                      "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"):
-            self.assertIn("${RENEGADE_SCRIPT_SOURCE}/" + owner, campaign_block)
-        host = (ROOT / "tools/host_a30_definitions/CMakeLists.txt").read_text(encoding="utf-8")
-        for owner in ("Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp",
-                      "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"):
-            self.assertIn("${RV_SCRIPT_SOURCE}/" + owner, host)
+        self.assertIn("${RENEGADE_SCRIPT_DSP_SOURCES}", shared[0])
+        for target, owners in selected_owners(ROOT).items():
+            self.assertTrue({"MissionX0.cpp", "Test_DLS.cpp", "Toolkit.cpp", "Toolkit_Objects.cpp",
+                             "Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp",
+                             "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"} <= owners, target)
         area2 = [block for block in blocks
                  if 'renegade_m13_area2_script_defaults.h' in block]
         self.assertEqual(len(area2), 1)

@@ -59,6 +59,7 @@ for rv_sorting_case in basic nodes vertices indices zero index-limit vertex-limi
 	timeout 30s "$rv_build/a31_m00_interactive_runtime" --sorting-selftest "$rv_sorting_case"
 done
 "$rv_build/a31_m00_interactive_runtime" --local-session-selftest
+timeout 30s "$rv_build/a31_m00_interactive_runtime" --mission-ranks-selftest
 timeout 45s "$rv_build/a31_m00_interactive_runtime" --direct-client-selftest
 timeout 45s "$rv_build/a31_m00_interactive_runtime" --client-options-selftest
 "$rv_build/a31_m00_interactive_runtime" --tt-server-info-selftest
@@ -156,6 +157,8 @@ ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 45s \
 	"$rv_interactive_build/a31_m00_interactive_runtime" --direct-client-selftest
 ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 45s \
 	"$rv_interactive_build/a31_m00_interactive_runtime" --client-options-selftest
+ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 30s \
+	"$rv_interactive_build/a31_m00_interactive_runtime" --mission-ranks-selftest
 ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 90s \
 	"$rv_interactive_build/a31_m00_interactive_runtime" --connection-timeout-selftest
 ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' \

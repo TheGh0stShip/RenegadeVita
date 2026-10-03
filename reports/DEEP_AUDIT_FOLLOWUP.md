@@ -1,5 +1,11 @@
 # Further missing-content sweep — 2026-09-27
 
+October 3 source status: particle startup defaults are restored in source and
+mission-rank user storage is now implemented beneath original RegistryClass
+calls. Both remain uncompiled under the build hold. The findings below retain
+the original discovery evidence; [current integration](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md)
+records rank-storage behavior, prepared probes and remaining limitations.
+
 This extends [the cross-system audit](CROSS_SYSTEM_DEEP_AUDIT.md). It is a
 source/data investigation, not a repair or native acceptance. No C++ build,
 game launch, server interaction, device action or retail/save write occurred.

@@ -1,5 +1,10 @@
 # Campaign source map reconciliation
 
+Follow-up: [static linkage and mission ranks](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md)
+documents the trim-symbol collision exposed by joining the DLL code, stronger
+actual-target selection checks and integration-report expansion. These changes
+remain uncompiled.
+
 ## Result
 
 The supplied mission map was checked against the checked-out
@@ -63,8 +68,9 @@ original project entries.
 - `Combat/scripts.cpp` loads `scripts.dll` using the Windows loader API, while
   the Vita graph uses the static provider. `Commando/campaign.cpp` names
   `campaign.ini` and contains the M13 autosave exception. The exact retail
-  campaign sequence and the asserted M13 map identity still require
-  verification against the user's retail data; no retail assets were copied.
+  campaign sequence and M13 opener identity were subsequently confirmed
+  against the user's retail campaign.ini, as recorded below. No retail
+  payloads were copied into the repository.
 
 ## Systems implied by the map
 

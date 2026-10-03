@@ -165,6 +165,7 @@ renegade_collect_script_dsp_sources(
   "${RENEGADE_UPSTREAM}/Code/Scripts"
   "${RENEGADE_SCRIPT_SOURCE}"
   RENEGADE_SCRIPT_DSP_SOURCES)
+renegade_configure_script_static_helpers("${RENEGADE_SCRIPT_SOURCE}")
 set(RENEGADE_SCRIPT_ALIAS_INCLUDE
   "${RENEGADE_GENERATED_INCLUDE}/scripts-case-aliases")
 file(MAKE_DIRECTORY "${RENEGADE_SCRIPT_ALIAS_INCLUDE}")

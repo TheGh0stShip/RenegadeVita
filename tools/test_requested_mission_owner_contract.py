@@ -3,6 +3,8 @@ import re
 import unittest
 from pathlib import Path
 
+from tools.check_m13_script_coverage import selected_owners
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -16,10 +18,8 @@ class RequestedMissionOwnerContract(unittest.TestCase):
     def test_required_original_scripts_selected_for_vita_and_host(self):
         scripts = ('Mission03.cpp', 'Mission11.cpp', 'Test_DAK.cpp',
                    'Test_RMV_Toolkit.cpp', 'Toolkit_Sounds.cpp')
-        native = re.search(r'set\(RENEGADE_CAMPAIGN_SCRIPT_SOURCES\s+(.*?)\)', self.native, re.S).group(1)
-        for owner in scripts:
-            self.assertIn('${RENEGADE_SCRIPT_SOURCE}/' + owner, native)
-            self.assertIn('${RV_SCRIPT_SOURCE}/' + owner, self.host)
+        for target, owners in selected_owners(ROOT).items():
+            self.assertTrue(set(scripts) <= owners, (target, set(scripts) - owners))
 
     def test_unselected_script_call_defaults_are_scoped(self):
         for cmake, prefix in ((self.native, 'RENEGADE'), (self.host, 'RV')):
@@ -28,8 +28,7 @@ class RequestedMissionOwnerContract(unittest.TestCase):
             m01 = [b for b in blocks if f'${{{prefix}_COMPAT}}/renegade_m01_script_defaults.h' in b]
             self.assertEqual(len(shared), 1)
             self.assertEqual(len(m01), 2)
-            for owner in ('Mission03.cpp', 'Test_DAK.cpp', 'Test_RMV_Toolkit.cpp', 'Toolkit_Sounds.cpp'):
-                self.assertIn(owner, shared[0])
+            self.assertIn('${RENEGADE_SCRIPT_DSP_SOURCES}', shared[0])
             self.assertEqual(sum('Mission11.cpp' in block for block in m01), 1)
 
     def test_original_w3d_loader_owners_are_selected(self):

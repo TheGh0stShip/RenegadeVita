@@ -126,6 +126,9 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 	echo "Running focused fast contracts..."
 	python3 -m unittest \
 		tools.test_m13_script_coverage tools.test_m13_mission_inventory \
+		tools.test_audit_campaign_source_surface tools.test_renegade_script_dsp_cmake \
+		tools.test_requested_mission_owner_contract \
+		tools.test_vita_mission_ranks \
 		tools.test_vita_text_readiness \
 		tools.test_wwui_resource_styles \
 		tools.test_vita_user_settings \

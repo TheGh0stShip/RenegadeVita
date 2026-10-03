@@ -1,5 +1,11 @@
 # Capability matrix
 
+2026-10-03 integration follow-up: all original campaign DSP code units are
+source-selected; Scripts trim-symbol isolation and original-owner mission-rank
+storage are implemented but uncompiled. 41 static/diagnostic checks pass.
+Restart persistence, runtime registration, complete mission routes and physical
+acceptance remain open. See [integration report](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md).
+
 2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
 mission-rank persistence, radio-input and round-transition gaps are confirmed;
 projector render targets remain unsupported. Nested W3D scan finds 14 unresolved

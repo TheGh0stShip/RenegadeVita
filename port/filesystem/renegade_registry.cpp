@@ -1,12 +1,15 @@
 // POSIX/Vita replacement for the original Win32 Registry boundary.
 //
 // Combat and Commando retain RegistryClass as their configuration API.  Vita
-// has no registry, so this process-local store deliberately preserves the
-// original API and keeps all writable state above the retail data tree.  The
-// launcher/runtime owns durable user-config serialization; this boundary never
-// touches retail files or invokes Win32 registry services.
+// has no registry, so this store preserves the original API. The lifecycle
+// configures durable mission-rank storage below user/config; other native
+// preference providers keep their existing persistence ownership.
 
 #include "registry.h"
+#include "renegade_mission_ranks.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,11 +42,11 @@ char *Build_Registry_Location_String(char *base, char *modifier, char *sub)
 		whole_registry_string[sizeof(whole_registry_string) - 1U] = 0;
 	}
 	if (modifier != NULL && *modifier != 0) {
-		strncat(whole_registry_string, "\\\\", sizeof(whole_registry_string) - strlen(whole_registry_string) - 1U);
+		strncat(whole_registry_string, "\\", sizeof(whole_registry_string) - strlen(whole_registry_string) - 1U);
 		strncat(whole_registry_string, modifier, sizeof(whole_registry_string) - strlen(whole_registry_string) - 1U);
 	}
 	if (*sub != 0) {
-		strncat(whole_registry_string, "\\\\", sizeof(whole_registry_string) - strlen(whole_registry_string) - 1U);
+		strncat(whole_registry_string, "\\", sizeof(whole_registry_string) - strlen(whole_registry_string) - 1U);
 		strncat(whole_registry_string, sub, sizeof(whole_registry_string) - strlen(whole_registry_string) - 1U);
 	}
 	return whole_registry_string;
@@ -72,6 +75,25 @@ struct RegistryStore {
 
 RegistryStore g_registry[MAX_REGISTRY_KEYS] = {};
 int g_registry_count = 0;
+
+bool Is_Mission_Rank_Key(int key)
+{
+	return key >= 0 && key < g_registry_count &&
+		RenegadeMissionRanks::Matches_Key(g_registry[key].path);
+}
+
+void Report_Mission_Rank_Write(bool ok)
+{
+	const RenegadeMissionRanks::Status status = RenegadeMissionRanks::Get_Status();
+#if defined(__vita__)
+	A30_Vita_Log("A3.5 mission ranks: write=%d entries=%u error=%d original_registry=1\n",
+		ok ? 1 : 0, status.count, status.error);
+#else
+	if (!ok) {
+		fprintf(stderr, "Renegade mission ranks: user-config write failed error=%d\n", status.error);
+	}
+#endif
+}
 
 int Find_Key(const char *path, bool create)
 {
@@ -164,6 +186,7 @@ RegistryClass::~RegistryClass(void)
 
 int RegistryClass::Get_Int(const char *name, int def_value)
 {
+	if (Is_Mission_Rank_Key(Key)) return RenegadeMissionRanks::Get(name, def_value);
 	RegistryValue *value = Find_Value(Key, name, false);
 	return value == NULL ? def_value : (int)strtol(value->value, NULL, 10);
 }
@@ -171,6 +194,10 @@ int RegistryClass::Get_Int(const char *name, int def_value)
 void RegistryClass::Set_Int(const char *name, int value)
 {
 	if (!IsLocked) {
+		if (Is_Mission_Rank_Key(Key)) {
+			Report_Mission_Rank_Write(RenegadeMissionRanks::Set(name, value));
+			return;
+		}
 		RegistryValue *entry = Find_Value(Key, name, true);
 		if (entry != NULL) snprintf(entry->value, sizeof(entry->value), "%d", value);
 	}
@@ -281,6 +308,12 @@ void RegistryClass::Set_Bin(const char *name, const void *buffer, int buffer_siz
 
 void RegistryClass::Get_Value_List(DynamicVectorClass<StringClass> &list)
 {
+	if (Is_Mission_Rank_Key(Key)) {
+		char name[RenegadeMissionRanks::NameBytes];
+		for (unsigned i = 0; RenegadeMissionRanks::Get_Name(i, name, sizeof(name)); ++i)
+			list.Add(StringClass(name));
+		return;
+	}
 	if (Key < 0 || Key >= g_registry_count) return;
 	RegistryStore &store = g_registry[Key];
 	for (int index = 0; index < store.value_count; ++index) {
@@ -291,6 +324,10 @@ void RegistryClass::Get_Value_List(DynamicVectorClass<StringClass> &list)
 void RegistryClass::Delete_Value(const char *name)
 {
 	if (IsLocked || Key < 0 || Key >= g_registry_count || name == NULL) return;
+	if (Is_Mission_Rank_Key(Key)) {
+		Report_Mission_Rank_Write(RenegadeMissionRanks::Delete(name));
+		return;
+	}
 	RegistryStore &store = g_registry[Key];
 	for (int index = 0; index < store.value_count; ++index) {
 		if (strcmp(store.values[index].name, name) == 0) {
@@ -302,6 +339,10 @@ void RegistryClass::Delete_Value(const char *name)
 
 void RegistryClass::Deleta_All_Values(void)
 {
+	if (!IsLocked && Is_Mission_Rank_Key(Key)) {
+		Report_Mission_Rank_Write(RenegadeMissionRanks::Clear());
+		return;
+	}
 	if (!IsLocked && Key >= 0 && Key < g_registry_count) g_registry[Key].value_count = 0;
 }
 

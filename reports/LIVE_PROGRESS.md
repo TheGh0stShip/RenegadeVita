@@ -1,5 +1,24 @@
 # Live engineering progress
 
+## Static script integration and mission ranks — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: publish source changes and retain the build/launch hold.
+Completed: isolated the original Scripts/WWLib `strtrim` symbol collision;
+strengthened actual-target manifest checks and integration inventory; added
+mission-rank user-file storage beneath original score/replay RegistryClass
+calls. Format validation rejects structurally malformed or truncated files;
+failed writes retain old in-memory data. Original-owner and sanitizer probes
+are prepared, not compiled or run.
+Evidence: 41 source/CMake/diagnostic checks, shell/Python syntax and diff checks
+pass. Read-only toolchain/library metadata agrees on ARMv7 VFP-register ABI.
+Next: classify retail object IDs, level-attached parameters and unresolved
+media; after build work is permitted, compile/link and run the prepared probes.
+Blocker: compiled/runtime storage behavior and complete native mission evidence
+remain open. See [integration report](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md).
+
 ## Campaign source map reconciled — 2026-10-03
 
 Renegade Vita — v3.5 active

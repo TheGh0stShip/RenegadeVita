@@ -86,6 +86,17 @@ def read_world_manifest(root: pathlib.Path) -> list[str]:
                 r"\$\{RENEGADE_SCRIPT_SOURCE\}/([^\s\)\"#]+\.cpp)",
                 text, re.IGNORECASE):
             entries.append(f"Code/Scripts/{filename}")
+        source_blocks = re.findall(
+            r'\bset\s*\(\s*RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\b([^)]*)\)', text)
+        source_blocks += re.findall(
+            r'\blist\s*\(\s*APPEND\s+RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES\b([^)]*)\)', text)
+        if any("${RENEGADE_SCRIPT_DSP_SOURCES}" in block for block in source_blocks):
+            dsp = root / "upstream/CnC_Renegade/Code/Scripts/Scripts.dsp"
+            names = re.findall(r'^SOURCE=\.\\([\w.-]+\.cpp)\s*$',
+                               dsp.read_text(encoding="latin1"), re.MULTILINE)
+            if not names or len(names) != len(set(names)):
+                raise RuntimeError("Missing or duplicate original Scripts.dsp sources")
+            entries.extend(f"Code/Scripts/{name}" for name in names if name != "DLLmain.cpp")
     entries = sorted(set(entries) - set(STAGED_ORIGINAL_OWNER_SOURCES))
     if not entries:
         raise RuntimeError("Original source manifests contain no translation units")
@@ -194,7 +205,7 @@ def main() -> None:
     module_status["WWAudio"]["status"] = (
         "original-runtime-over-vita-native-miles-compatible-provider"
     )
-    module_status["Scripts"]["status"] = "native-static-m00-provider-with-direct-dependencies"
+    module_status["Scripts"]["status"] = "native-static-original-dsp-inventory"
     module_status["WWOnline"]["status"] = "excluded-initially"
     module_status["wolapi"]["status"] = "excluded-initially"
 

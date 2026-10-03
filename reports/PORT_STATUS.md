@@ -4,6 +4,15 @@ The complete audit series, reproduction steps, unbuilt-source limitations and
 repository protection status are collected in the
 [content audit index](CONTENT_AUDIT_INDEX.md).
 
+2026-10-03 integration follow-up: the full Scripts manifest exposes duplicate
+original `strtrim` definitions. A source-local rename preserves both original
+implementations. Target-attachment negative controls and integration inventory
+now cover the manifest expansion. Mission ranks gain user-file persistence
+beneath original RegistryClass score/replay calls; prepared C++ storage and
+original-owner tests remain uncompiled/unrun. 41 static/diagnostic checks pass;
+no build, launch or new native acceptance. See
+[static linkage and mission ranks](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md).
+
 2026-10-03 campaign closure review: reconciled the supplied mission inventory
 against upstream source. All 13 campaign units are now selected through the
 original 45-entry Scripts.dsp manifest in native and host graphs (44 code

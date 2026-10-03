@@ -1,4 +1,24 @@
 {
+  "static_script_link_and_mission_ranks_20261003": {
+    "state": "SOURCE_LINK_COLLISION_ISOLATED_RANK_STORAGE_IMPLEMENTED_UNCOMPILED",
+    "report": "reports/STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md",
+    "script_trim_collision": "Scripts/strtrim.cpp and wwlib/trim.cpp both define strtrim(char*)",
+    "source_local_trim_rename": ["Scripts/scripts.cpp", "Scripts/strtrim.cpp"],
+    "actual_target_manifest_attachment_negative_controls": "PASS",
+    "compiler_free_source_property_negative_controls": "PASS",
+    "integration_inventory_expands_dsp_sources": true,
+    "mission_rank_storage": "ux0:data/renegade/user/config/mission-ranks-v1.cfg",
+    "mission_rank_owner": "original ScoreScreen and LoadSPGameMenuClass via RegistryClass",
+    "mission_rank_cpp_tests": "PREPARED_NOT_COMPILED_OR_RUN",
+    "focused_static_diagnostic_tests_passed": 41,
+    "publication_guard_tests_passed": 32,
+    "public_document_validation": "PASS_24_DOCUMENTS",
+    "repository_hygiene": "PASS_NO_VIOLATIONS",
+    "native_or_host_cpp_build_performed": false,
+    "device_action_performed": false,
+    "physical_mission_gates_closed": 0,
+    "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
+  },
   "campaign_source_map_20261003": {
     "state": "STATIC_SOURCE_MAP_RECONCILED_ALL_13_CAMPAIGN_UNITS_SELECTED_UNCOMPILED",
     "report": "reports/CAMPAIGN_SOURCE_MAP_RECONCILIATION.md",

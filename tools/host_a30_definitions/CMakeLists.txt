@@ -17,6 +17,7 @@ renegade_collect_script_dsp_sources(
   "${RV_UPSTREAM}/Code/Scripts"
   "${RV_SCRIPT_SOURCE}"
   RENEGADE_SCRIPT_DSP_SOURCES)
+renegade_configure_script_static_helpers("${RV_SCRIPT_SOURCE}")
 
 # The original AssetManager and WW3D shutdown paths retain Font3D/Render2D
 # references even in the retained A3.0/A3.1 world probes.  Keep one explicit

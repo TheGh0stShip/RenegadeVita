@@ -1,5 +1,11 @@
 # Runtime gap diagnostics
 
+2026-10-03: [script lookup diagnostics](SCRIPT_LOOKUP_DIAGNOSTICS.md) now have
+source hooks for factory, object, conversation-name and text-file availability
+observations during original threaded loading and gameplay. Opt-in bounded
+collection and a load-only analyzer are implemented but uncompiled; neither
+lookup success nor absence proves a complete route. Native gates remain open.
+
 These tools pair source/data coverage reports with bounded original-runtime
 evidence. They report which route milestones the retained evidence proves and
 which it does not observe. “Not observed” means evidence is absent for that

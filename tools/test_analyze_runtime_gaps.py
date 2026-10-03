@@ -49,6 +49,30 @@ class RuntimeGapAnalyzerTests(unittest.TestCase):
         self.assertEqual(report["route_milestones"][0]["status"], "observed")
         self.assertEqual(report["route_milestones"][0]["evidence_frames"], [1])
 
+    def test_lookup_observation_does_not_become_route_marker(self):
+        from tools.test_script_lookup_telemetry import capture, sample
+        path = self.root / 'campaign-flight-summary.json'
+        summary = json.loads(path.read_text())
+        data = capture()['lookup_diagnostics']
+        data['kinds'][1].update(attempts=1, absent=1, samples=[sample()])
+        summary['lookup_diagnostics'] = data
+        path.write_text(json.dumps(summary))
+        report = make_report(self.root, expected_candidate='A3.5-dev999', archive='M13.mix',
+                             reference=self.reference)
+        self.assertEqual(report['lookup_observations']['status'], 'captured')
+        self.assertEqual(report['unobserved_route_milestones'], ['intro', 'ending'])
+
+    def test_malformed_lookup_counters_fail_even_with_valid_frame_sidecars(self):
+        from tools.test_script_lookup_telemetry import capture
+        path = self.root / 'campaign-flight-summary.json'
+        summary = json.loads(path.read_text())
+        data = capture()['lookup_diagnostics']
+        data['kinds'][0]['attempts'] = 1
+        summary['lookup_diagnostics'] = data
+        path.write_text(json.dumps(summary))
+        with self.assertRaisesRegex(ValueError, 'reconcile'):
+            make_report(self.root, expected_candidate='A3.5-dev999', archive='M13.mix')
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,11 @@
 # Capability matrix
 
+2026-10-03 lookup diagnostics: bounded worker-safe collection and original
+factory/object/conversation/text-file source hooks are implemented, uncompiled.
+Recorder reset now precedes loading; load-only analysis cannot close timing or
+route gates. 157 focused Python/source checks pass; native evidence remains
+0/10. See [script lookup diagnostics](SCRIPT_LOOKUP_DIAGNOSTICS.md).
+
 2026-10-03 cinematic tracer covers 166 reached candidates, original float32
 ordering, typed slot roles and separate unknown primary-death snapshots. The
 event-type inventory is corrected. Four normal producer, conditional M13 bark

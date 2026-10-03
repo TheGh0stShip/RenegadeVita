@@ -1,4 +1,5 @@
 #include "a35_campaign_flight_recorder.h"
+#include "a35_script_lookup_telemetry.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,8 +54,17 @@ int main()
 	const std::string summary = root + "/campaign-flight-summary.json";
 	std::string contents;
 
-	A35_Campaign_Flight_Reset("candidate-A", directory, "", "M13.mix", "M13.mix");
+	A35_Campaign_Flight_Reset("candidate-A", directory, "", "M13.mix", "M13.mix", true);
+	std::thread loader([]() {
+		A35_Script_Lookup_Record(A35_LOOKUP_OBJECT, NULL, 100389, false);
+	});
+	loader.join();
 	if (!Check(A35_Campaign_Flight_Flush("checkpoint"), "first checkpoint")) return 1;
+	if (!Check(Read_File(summary, contents) &&
+		contents.find("\"frames_recorded\":0") != std::string::npos &&
+		contents.find("\"object_id\":100389") != std::string::npos &&
+		contents.find("\"phase\":\"level_load\"") != std::string::npos,
+		"load-only worker observation serialized")) return 1;
 	if (!Check(Read_File(events, contents) && Line_Count(contents) == 1U &&
 		contents.find("candidate-A") != std::string::npos, "first event")) return 1;
 	A31FrameTelemetry frame = {};
@@ -94,7 +104,9 @@ int main()
 		"stale frame removal")) return 1;
 	if (!Check(Read_File(summary, contents) &&
 		contents.find("candidate-B") != std::string::npos &&
-		contents.find("candidate-A") == std::string::npos,
+		contents.find("candidate-A") == std::string::npos &&
+		contents.find("\"object_id\":100389") == std::string::npos &&
+		contents.find("\"enabled\":false") != std::string::npos,
 		"stale summary removal")) return 1;
 
 	for (unsigned index = 0U; index < 769U; ++index) {

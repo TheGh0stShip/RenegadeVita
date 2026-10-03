@@ -1,0 +1,42 @@
+--- a/scriptcommands.cpp
++++ b/scriptcommands.cpp
+@@ -37,4 +37,7 @@
+ #include "scriptcommands.h"
++#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
++#include "a35_script_lookup_telemetry.h"
++#endif
+ #if defined(RENEGADE_VITA_PORT)
+ #include "renegade_vita_tutorial_help.h"
+ #endif
+@@ -427,6 +430,11 @@
+ GameObject * Find_Object( int obj_id )
+ {
+-	return GameObjManager::Find_ScriptableGameObj( obj_id );
++	GameObject *object = GameObjManager::Find_ScriptableGameObj( obj_id );
++#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
++	A35_Script_Lookup_Record(A35_LOOKUP_OBJECT, NULL,
++		static_cast<int32_t>(obj_id), object != NULL);
++#endif
++	return object;
+ }
+ 
+ int	Get_ID( GameObject * obj )
+@@ -2434,4 +2442,8 @@
+ 	//
+ 	ConversationClass *conversation = ConversationMgrClass::Find_Conversation( conversation_name );
++#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
++	A35_Script_Lookup_Record(A35_LOOKUP_CONVERSATION, conversation_name,
++		0, conversation != NULL);
++#endif
+ 	if ( conversation != NULL ) {
+ 
+@@ -3072,5 +3084,9 @@
+ 		}
+ 	}
++#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
++	A35_Script_Lookup_Record(A35_LOOKUP_TEXT_FILE, filename,
++		0, file != NULL);
++#endif
+ #if defined(RENEGADE_HOST_ABI_TEST)
+ 	return static_cast<int>(Renegade_Ui_Pointer_To_Token(file));
+ #else

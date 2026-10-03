@@ -1,5 +1,12 @@
 # Renegade Vita port status
 
+2026-10-03 lookup continuation moves the recorder reset before level load and
+adds opt-in bounded factory/object/conversation/text-file observations through
+original owners. A load-only analyzer preserves strict timing and route gates.
+157 focused Python/source checks pass; C++ worker/serialization probes remain
+uncompiled under the build/launch hold. See
+[script lookup diagnostics](SCRIPT_LOOKUP_DIAGNOSTICS.md).
+
 The complete audit series, reproduction steps, unbuilt-source limitations and
 repository protection status are collected in the
 [content audit index](CONTENT_AUDIT_INDEX.md).

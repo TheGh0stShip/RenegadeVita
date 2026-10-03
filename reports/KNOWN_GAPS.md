@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 diagnostic blind spot corrected in source: flight reset previously
+discarded all level-load script failures. Reset now precedes original loading,
+and bounded opt-in hooks retain lookup attempts/misses. C++ and loader/runtime
+integration remain uncompiled/unverified; absent values can be expected retail
+queries and returned values do not prove behavior. No semantic route markers
+or native gates were inferred. 157 Python/source checks pass. See
+[script lookup diagnostics](SCRIPT_LOOKUP_DIAGNOSTICS.md).
+
 2026-10-03 cinematic continuation retains four normal slot uses without a
 local producer, external-fill/lifetime uncertainty and 170 unknown death-tail
 references. The M13 HIT6 bark follows an original damage-script attachment;

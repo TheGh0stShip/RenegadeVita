@@ -1,4 +1,5 @@
 #include "a35_campaign_flight_recorder.h"
+#include "a35_script_lookup_telemetry.h"
 
 #include <errno.h>
 #include <inttypes.h>
@@ -134,6 +135,7 @@ struct FlightRecorder
 	uint32_t last_read_bytes;
 	uint32_t last_write_calls;
 	uint32_t last_write_bytes;
+	A35ScriptLookupSnapshot lookup_snapshot; // static storage, not a large stack copy
 };
 
 FlightRecorder gRecorder;
@@ -400,11 +402,59 @@ void Write_Mission(FILE *file)
 		static_cast<double>(state.player_z));
 }
 
+void Write_Lookups(FILE *file)
+{
+	const int status = A35_Script_Lookup_Try_Snapshot(gRecorder.lookup_snapshot);
+	fprintf(file, ",\n  \"lookup_diagnostics\":{\"schema\":%u,\"snapshot_available\":%s",
+		A35_SCRIPT_LOOKUP_SCHEMA, status == 0 ? "true" : "false");
+	if (status != 0) {
+		fputs(",\"snapshot_status\":", file);
+		Json_String(file, status == EBUSY ? "busy" : "error");
+		fputs("}", file);
+		return;
+	}
+	const A35ScriptLookupSnapshot &snapshot = gRecorder.lookup_snapshot;
+	fprintf(file, ",\"enabled\":%s,\"collection_active\":%s,\"frame\":%u,\"phase\":",
+		snapshot.enabled ? "true" : "false",
+		snapshot.collection_active ? "true" : "false", snapshot.frame);
+	Json_String(file, A35_Script_Lookup_Phase_Name(snapshot.phase));
+	fprintf(file, ",\"capacity_per_kind\":%u,\"name_capacity\":%u,\"retention\":\"first_samples\",\"kinds\":[",
+		A35_SCRIPT_LOOKUP_SAMPLE_CAPACITY, A35_SCRIPT_LOOKUP_NAME_CAPACITY);
+	for (uint32_t kind = 0U; kind < A35_LOOKUP_KIND_COUNT; ++kind) {
+		if (kind != 0U) fputc(',', file);
+		const A35ScriptLookupCounters &counter = snapshot.kinds[kind];
+		fputs("{\"kind\":", file);
+		Json_String(file, A35_Script_Lookup_Kind_Name(kind));
+		fprintf(file, ",\"attempts\":%u,\"returned\":%u,\"absent\":%u,"
+			"\"sentinel_absent\":%u,\"unretained_absent\":%u,\"lossy_absent\":%u,"
+			"\"saturated\":%s,\"samples\":[",
+			counter.attempts, counter.returned, counter.absent,
+			counter.sentinel_absent, counter.unretained_absent, counter.lossy_absent,
+			counter.saturated ? "true" : "false");
+		for (uint32_t i = 0U; i < counter.sample_count; ++i) {
+			if (i != 0U) fputc(',', file);
+			const A35ScriptLookupSample &sample = counter.samples[i];
+			fprintf(file, "{\"object_id\":%" PRId32 ",\"name\":", sample.object_id);
+			Json_String(file, sample.name);
+			fprintf(file, ",\"count\":%u,\"first_frame\":%u,\"last_frame\":%u,\"first_phase\":",
+				sample.count, sample.first_frame, sample.last_frame);
+			Json_String(file, A35_Script_Lookup_Phase_Name(sample.first_phase));
+			fputs(",\"last_phase\":", file);
+			Json_String(file, A35_Script_Lookup_Phase_Name(sample.last_phase));
+			fprintf(file, ",\"key_lossy\":%s}", sample.key_lossy ? "true" : "false");
+		}
+		fputs("]}", file);
+	}
+	fputs("]}", file);
+}
+
 } // namespace
 
 void A35_Campaign_Flight_Reset(const char *candidate, const char *capture_root,
-	const char *runtime_log_path, const char *archive, const char *load_source)
+	const char *runtime_log_path, const char *archive, const char *load_source,
+	bool script_lookup_enabled)
 {
+	A35_Script_Lookup_Reset(script_lookup_enabled);
 	memset(&gRecorder, 0, sizeof(gRecorder));
 	gRecorder.active = true;
 	gRecorder.main_thread = pthread_self();
@@ -423,6 +473,7 @@ void A35_Campaign_Flight_Reset(const char *candidate, const char *capture_root,
 
 void A35_Campaign_Flight_Shutdown(void)
 {
+	A35_Script_Lookup_Disable();
 	if (gRecorder.active) {
 		A35_Campaign_Flight_Flush("shutdown");
 	}
@@ -697,6 +748,7 @@ bool A35_Campaign_Flight_Flush(const char *reason)
 				gRecorder.last_read_bytes, gRecorder.last_write_calls,
 				gRecorder.last_write_bytes);
 			Write_Mission(file);
+			Write_Lookups(file);
 			fputs("\n}\n", file);
 			ok = fclose(file) == 0 && ok;
 		} else {

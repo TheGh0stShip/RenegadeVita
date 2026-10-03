@@ -59,11 +59,19 @@ add_custom_target(a4_dialog_templates DEPENDS "${RV_A4_DIALOG_GENERATED}")
 add_executable(a35_campaign_flight_recorder_selftest
   ${RV_ROOT}/tools/host_a35_campaign_flight_recorder_test.cpp
   ${RV_ROOT}/port/developer/a35_campaign_flight_recorder.cpp
+  ${RV_ROOT}/port/developer/a35_script_lookup_telemetry.cpp
 )
 target_include_directories(a35_campaign_flight_recorder_selftest PRIVATE
   ${RV_ROOT}/port/developer
 )
 target_link_libraries(a35_campaign_flight_recorder_selftest PRIVATE pthread)
+
+add_executable(a35_script_lookup_selftest
+  ${RV_ROOT}/tools/host_a35_script_lookup_test.cpp
+  ${RV_ROOT}/port/developer/a35_script_lookup_telemetry.cpp
+)
+target_include_directories(a35_script_lookup_selftest PRIVATE ${RV_ROOT}/port/developer)
+target_link_libraries(a35_script_lookup_selftest PRIVATE pthread)
 
 add_executable(a35_wwmath_validity_selftest
   ${RV_ROOT}/tools/host_a35_wwmath_validity_test.cpp
@@ -778,6 +786,7 @@ add_executable(a31_interactive_runtime
   ${RV_ROOT}/port/platform/a31_gameplay_boundary.cpp
   ${RV_ROOT}/port/platform/a31_miscutil_boundary.cpp
   ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
+  ${RV_ROOT}/port/developer/a35_script_lookup_telemetry.cpp
   ${RV_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp
   ${RV_ROOT}/port/renderer/vita/ww3d_dx8_boundary.cpp
   ${RV_ROOT}/port/renderer/vita/surface_boundary.cpp
@@ -805,6 +814,7 @@ if(RENEGADE_HOST_ORIGINAL_AUDIO)
 endif()
 target_include_directories(a31_interactive_runtime PRIVATE
   ${RV_COMPAT}
+  ${RV_ROOT}/port/developer
   ${RV_A4_DIALOG_GENERATED_DIR}
   ${RV_ROOT}/port/renderer/vita
   /usr/local/vitasdk/arm-vita-eabi/include/freetype2

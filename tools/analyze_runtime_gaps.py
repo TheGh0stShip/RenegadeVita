@@ -18,6 +18,7 @@ import sys
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from tools.validate_campaign_flight_bundle import BundleError, validate_bundle
+from tools.analyze_script_lookups import analyze_lookups
 
 
 def read_events(path: Path, candidate: str, archive: str) -> list[dict]:
@@ -175,6 +176,8 @@ def make_report(bundle: Path, *, expected_candidate: str, archive: str,
                                                  default=mission.get("objective_count")),
                      "sidecar_mission_snapshot": mission if mission else None},
         "candidate_log_observations_not_session_merged": runtime_log_summary,
+        "lookup_observations": analyze_lookups(summary, expected_candidate=expected_candidate,
+                                              archive=archive),
         "route_milestones": milestones,
         "unobserved_route_milestones": [row["id"] for row in milestones
                                         if row["status"] == "not_observed"],

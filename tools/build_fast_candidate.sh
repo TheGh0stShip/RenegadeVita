@@ -132,6 +132,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_mission_conversations \
 		tools.test_mission_text_routes \
 		tools.test_cinematic_slots \
+		tools.test_script_lookup_telemetry \
 		tools.test_vita_mission_ranks \
 		tools.test_vita_text_readiness \
 		tools.test_wwui_resource_styles \

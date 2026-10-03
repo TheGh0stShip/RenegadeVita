@@ -89,7 +89,8 @@ struct A35CampaignFlightAudioState
 };
 
 void A35_Campaign_Flight_Reset(const char *candidate, const char *capture_root,
-	const char *runtime_log_path, const char *archive, const char *load_source);
+	const char *runtime_log_path, const char *archive, const char *load_source,
+	bool script_lookup_enabled = false);
 void A35_Campaign_Flight_Shutdown(void);
 void A35_Campaign_Flight_Record_Log_Line(const char *line, unsigned length);
 void A35_Campaign_Flight_Record_Event(const char *category, const char *name,

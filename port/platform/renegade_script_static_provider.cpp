@@ -2,17 +2,20 @@
 ** Native binding for the original EA/Westwood script provider.
 **
 ** The retail game loaded these entry points from SCRIPTS.DLL.  Vita links the
-** same GPL-released registrar, ScriptImpClass implementation, Mission00
-** translation unit, and Mission00's direct cinematic/powerup dependencies
+** same GPL-released registrar, ScriptImpClass implementation, and original
+** Scripts.dsp code units (with this provider replacing DLLmain)
 ** into the application and binds them below the original ScriptManager
 ** boundary.  Mission logic and object ownership remain unchanged.
 */
 #include "../../upstream/CnC_Renegade/Code/Scripts/scripts.h"
 #include "../../upstream/CnC_Renegade/Code/Scripts/ScriptRegistrar.h"
+#include "../developer/a35_script_lookup_telemetry.h"
 
 ScriptClass *Create_Script(const char *name)
 {
-	return ScriptRegistrar::CreateScript(name);
+	ScriptClass *script = ScriptRegistrar::CreateScript(name);
+	A35_Script_Lookup_Record(A35_LOOKUP_SCRIPT_FACTORY, name, 0, script != NULL);
+	return script;
 }
 
 void Destroy_Script(ScriptClass *script)

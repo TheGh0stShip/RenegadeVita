@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Original script lookup diagnostics — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: publish the bounded diagnostics implementation and source checks.
+Completed: recorder starts before original threaded loading; opt-in factory,
+object, conversation-name and text-file hooks retain original results. Bounded
+worker collection, main-thread snapshots and load-only analysis preserve strict
+timing and route gates. Microsecond ready-event timestamp corrected.
+Evidence: 157 focused Python/source checks, four legacy flight contracts and
+five incremental-stage contracts. C++ worker/serialization probes uncompiled.
+Next: candidate-bound lookup and semantic callback evidence after the hold;
+continue unresolved cinematic and mission dependency classification meanwhile.
+Blocker: build/launch hold; complete native mission coverage remains unproven.
+See [script lookup diagnostics](SCRIPT_LOOKUP_DIAGNOSTICS.md).
+
 ## Cinematic command ordering and slot lifetimes — 2026-10-03
 
 Renegade Vita — v3.5 active

@@ -1,5 +1,10 @@
 # Content coverage audit index
 
+Latest diagnostics: [script lookup observations](SCRIPT_LOOKUP_DIAGNOSTICS.md)
+start before original threaded loading and preserve exact engine results.
+Opt-in bounded collection and load-only analysis are implemented, uncompiled;
+157 Python/source checks pass. Native route and physical evidence remain open.
+
 Latest cinematic work: [slot ordering and lifetimes](CINEMATIC_SLOT_LIFETIMES.md)
 traces all 166 reached text candidates, fixes event-type argument discovery and
 separates primary-death snapshots. Four normal producer and two M01 audio

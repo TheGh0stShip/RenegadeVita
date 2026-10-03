@@ -5,6 +5,7 @@
 #include "a31_capture_telemetry.h"
 #include "a31_demo_ending.h"
 #include "a35_campaign_flight_recorder.h"
+#include "a35_script_lookup_telemetry.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "a4_frontend_lifecycle_boundary.h"
 #include "a31_development_checkpoint.h"
@@ -3899,6 +3900,19 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				A31VitaScopedLoadingPresenterCallback loading_callback(
 					loading_presenter);
+				FILE *lookup_request = fopen(
+					"ux0:data/renegade/user/config/script-coverage.flag", "rb");
+				const bool lookup_enabled = lookup_request != NULL;
+				if (lookup_request != NULL) fclose(lookup_request);
+				A35_Campaign_Flight_Reset(RENEGADE_BUILD_CANDIDATE_LABEL,
+					RENEGADE_BUILD_CAPTURE_ROOT, RENEGADE_BUILD_RUNTIME_LOG_PATH,
+#if RENEGADE_VITA_M00_DEMO
+					"M00_Tutorial.mix",
+#else
+					selected_archive,
+#endif
+					load_source, lookup_enabled);
+				A35_Campaign_Flight_Flush("level-load-begin");
 				loading_presenter.Render_Original_Progress("before_pre_load");
 			CombatGameModeClass::Vita_Begin_Level_Load(
 				loading_presenter.Peek_Screen(), true);
@@ -3944,6 +3958,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			StringClass last_load_sub_status;
 			const uint64_t load_started_us = sceKernelGetProcessTimeWide();
 			uint64_t last_load_log_us = load_started_us;
+			uint64_t last_lookup_flush_us = load_started_us;
 			while (!CombatManager::Is_Load_Level_Complete()) {
 				/* Original ThreadClass performs the level work; this preserves the
 				** established CombatManager polling contract. Report only progress
@@ -3969,6 +3984,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					last_load_sub_status = load_sub_status;
 					last_load_log_us = now_us;
 				}
+				if (lookup_enabled && now_us - last_lookup_flush_us >= 5000000ULL) {
+					A35_Campaign_Flight_Flush("level-load-heartbeat");
+					last_lookup_flush_us = now_us;
+				}
 				sceKernelDelayThread(50000);
 			}
 			loading_presenter.Render_Original_Progress("threaded_load_complete");
@@ -3982,6 +4001,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			A30_Vita_Log("A3.5 texture loader: continued before post-load processing\n");
 			loading_presenter.Render_Original_Progress("post_load_processing");
 			SaveLoadSystemClass::Post_Load_Processing(NULL);
+			A35_Campaign_Flight_Flush("level-load-post-process");
 				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
 				loading_presenter.Render_Original_Progress("post_load_level");
 				CombatManager::Post_Load_Level();
@@ -4381,11 +4401,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					capture_pixels = static_cast<uint8_t *>(malloc(kCaptureBytes));
 				}
 				const uint64_t sync_origin = sceKernelGetProcessTimeWide() / 1000ULL;
-				A35_Campaign_Flight_Reset(RENEGADE_BUILD_CANDIDATE_LABEL,
-					RENEGADE_BUILD_CAPTURE_ROOT, RENEGADE_BUILD_RUNTIME_LOG_PATH,
-					selected_archive, load_source);
 				A35_Campaign_Flight_Record_Event("lifecycle",
-					"interactive_session_ready", result.frames, sync_origin,
+					"interactive_session_ready", result.frames, sceKernelGetProcessTimeWide(),
 					"original player/session ready; entering campaign frame loop");
 #if !RENEGADE_VITA_M00_DEMO
 				if (remote_client) {
@@ -4503,6 +4520,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					A30_Vita_Log("A3.1 breadcrumb: first original input frame\n");
 				}
 				const bool was_suspended = combat_mode->Is_Suspended();
+				A35_Script_Lookup_Set_Context(A35_LOOKUP_GAMEPLAY, result.frames + 1U);
 				A31_Interactive_Run_Simulation_Frame();
 #if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 				if (diagnostic_m13_a03_field_pending && result.frames >= 180U) {

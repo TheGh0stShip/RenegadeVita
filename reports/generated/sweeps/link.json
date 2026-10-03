@@ -21990,7 +21990,9 @@
     }
   ],
   "registration_candidate_total": 1981,
-  "registration_candidates_with_defined_symbol": 1776,
+  "registration_candidates_with_defined_symbol": 1861,
+  "unmatched_selected_script_candidates": 49,
+  "unmatched_unselected_script_candidates": 59,
   "registration_candidates": [
     {
       "kind": "persist",
@@ -22018,7 +22020,8 @@
       "kind": "definition",
       "arguments": [
         "CNCModeSettingsDef",
-        "CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE"
+        "CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE",
+        "_CNCModeSettingsDefDefFactory"
       ],
       "line": 34,
       "status": "unknown",
@@ -22026,8 +22029,13 @@
       "source": "staging/combat/CNCModeSettings.cpp",
       "id": "17e6f13a66365975c7e453c82e25df7434d311815530a00bd6ff2161059fdafd",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_CNCModeSettingsDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a40d0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22298,7 +22306,8 @@
       "kind": "definition",
       "arguments": [
         "AirStripGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_AIRSTRIP"
+        "CLASSID_GAME_OBJECT_DEF_AIRSTRIP",
+        "_AirStripGameObjDefDefFactory"
       ],
       "line": 63,
       "status": "unknown",
@@ -22306,8 +22315,13 @@
       "source": "staging/combat/airstripgameobj.cpp",
       "id": "761d413b245d511822a60e679ebfad5f0813400bd235107a4af66a8657b360f3",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_AirStripGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a94b0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22358,7 +22372,8 @@
       "kind": "definition",
       "arguments": [
         "BeaconGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_BEACON"
+        "CLASSID_GAME_OBJECT_DEF_BEACON",
+        "_BeaconGameObjDefDefFactory"
       ],
       "line": 82,
       "status": "unknown",
@@ -22366,8 +22381,13 @@
       "source": "staging/combat/beacongameobj.cpp",
       "id": "2523e1008004b6e83d7a160d549cfdd5aff60b208fa7a40da9551bc379e381c0",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_BeaconGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a4070",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22396,7 +22416,8 @@
       "kind": "definition",
       "arguments": [
         "BuildingGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_BUILDING"
+        "CLASSID_GAME_OBJECT_DEF_BUILDING",
+        "_BuildingGameObjDefDefFactory"
       ],
       "line": 107,
       "status": "unknown",
@@ -22404,8 +22425,13 @@
       "source": "staging/combat/building.cpp",
       "id": "17f63fbe2325302d1f13b48ada3a618176f66c2a619e1146a53f382244cae5fb",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_BuildingGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a1624",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22478,7 +22504,8 @@
       "kind": "definition",
       "arguments": [
         "BuildingAggregateDefClass",
-        "CLASSID_BUILDINGAGGREGATEDEF"
+        "CLASSID_BUILDINGAGGREGATEDEF",
+        "_BuildingAggregateDefDefFactory"
       ],
       "line": 472,
       "status": "unknown",
@@ -22486,8 +22513,13 @@
       "source": "staging/combat/buildingaggregate.cpp",
       "id": "721036f24e4a15a8b6de0f8cf7602aac762fbcf05597f57c3d196a22c4b72816",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_BuildingAggregateDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81782090",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22516,7 +22548,8 @@
       "kind": "definition",
       "arguments": [
         "C4GameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_C4"
+        "CLASSID_GAME_OBJECT_DEF_C4",
+        "_C4GameObjDefDefFactory"
       ],
       "line": 74,
       "status": "unknown",
@@ -22524,8 +22557,13 @@
       "source": "staging/combat/c4.cpp",
       "id": "90c7e8976d7ca5667180de907bfdb9ba1b0d1cee2bf84845a70e71ba4586111a",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_C4GameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a40b4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22576,7 +22614,8 @@
       "kind": "definition",
       "arguments": [
         "CharacterClassSettingsDefClass",
-        "CLASSID_GLOBAL_SETTINGS_DEF_CHAR_CLASS"
+        "CLASSID_GLOBAL_SETTINGS_DEF_CHAR_CLASS",
+        "_CharClassDefDefFactory"
       ],
       "line": 59,
       "status": "unknown",
@@ -22584,8 +22623,13 @@
       "source": "staging/combat/characterclasssettings.cpp",
       "id": "7a9f821a96329b3aa43175b41ec7b892fbf6bcf4c097e2025ea49ad9886c8169",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_CharClassDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9674",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22614,7 +22658,8 @@
       "kind": "definition",
       "arguments": [
         "CinematicGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_CINEMATIC"
+        "CLASSID_GAME_OBJECT_DEF_CINEMATIC",
+        "_CinematicGameObjDefDefFactory"
       ],
       "line": 68,
       "status": "unknown",
@@ -22622,8 +22667,13 @@
       "source": "staging/combat/cinematicgameobj.cpp",
       "id": "75560f6028e5496949a7b0c19eb19f71014880aab6efae3d33cb364789f5b229",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_CinematicGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817b0ac8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22660,8 +22710,13 @@
       "source": "staging/combat/clientcontrol.cpp",
       "id": "a6eb0dcf4b356e05f76d636743a87ca9fe1e184ff1aedcd620fdbd05fd9a8eb0",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "CClientControlFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a17a0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22712,7 +22767,8 @@
       "kind": "definition",
       "arguments": [
         "ComCenterGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_COMCENTER"
+        "CLASSID_GAME_OBJECT_DEF_COMCENTER",
+        "_ComCenterGameObjDefDefFactory"
       ],
       "line": 60,
       "status": "unknown",
@@ -22720,8 +22776,13 @@
       "source": "staging/combat/comcentergameobj.cpp",
       "id": "56f54eb14726de565a79c8ee210005f1357e34230d8d3f6c6b625d36c05f855e",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_ComCenterGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a94f0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22736,8 +22797,13 @@
       "source": "staging/combat/csdamageevent.cpp",
       "id": "da83a5445ff74150e89d3ed52b8255ce11a33fd3c16d0b83f27c21dcb9c3b6c3",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cCsDamageEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a40ec",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22766,7 +22832,8 @@
       "kind": "definition",
       "arguments": [
         "DamageableStaticPhysDefClass",
-        "CLASSID_DAMAGEABLESTATICPHYSDEF"
+        "CLASSID_DAMAGEABLESTATICPHYSDEF",
+        "_DamageableStaticPhysDefDefFactory"
       ],
       "line": 96,
       "status": "unknown",
@@ -22774,8 +22841,13 @@
       "source": "staging/combat/damageablestaticphys.cpp",
       "id": "b3d8d0b1266006d4de10af386f1cb8b34edac453ae9389ce9d1200b997de723a",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_DamageableStaticPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81782078",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22826,7 +22898,8 @@
       "kind": "definition",
       "arguments": [
         "DamageZoneGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_DAMAGE_ZONE"
+        "CLASSID_GAME_OBJECT_DEF_DAMAGE_ZONE",
+        "_DamageZoneGameObjDefDefFactory"
       ],
       "line": 55,
       "status": "unknown",
@@ -22834,8 +22907,13 @@
       "source": "staging/combat/damagezone.cpp",
       "id": "66bde8b30b41548dab440bfe08699926e0b76b4d9711eac2e4f4cd30bbe2b704",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_DamageZoneGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9578",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22886,7 +22964,8 @@
       "kind": "definition",
       "arguments": [
         "DoorPhysDefClass",
-        "CLASSID_DOORPHYSDEF"
+        "CLASSID_DOORPHYSDEF",
+        "_DoorPhysDefDefFactory"
       ],
       "line": 62,
       "status": "unknown",
@@ -22894,8 +22973,13 @@
       "source": "staging/combat/doors.cpp",
       "id": "7ff8a2a2e3fa7bfbd8647a172def93e3e981350917e4f53c2db241991077054b",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_DoorPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81782038",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -22946,7 +23030,8 @@
       "kind": "definition",
       "arguments": [
         "ElevatorPhysDefClass",
-        "CLASSID_ELEVATORPHYSDEF"
+        "CLASSID_ELEVATORPHYSDEF",
+        "_ElevatorPhysDefDefFactory"
       ],
       "line": 76,
       "status": "unknown",
@@ -22954,8 +23039,13 @@
       "source": "staging/combat/elevator.cpp",
       "id": "2496cffeec2f8ebd4d30f1c1f0e3d17f1bff3f0d1ce089ef0d2942e48d2c858d",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_ElevatorPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81782058",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23006,7 +23096,8 @@
       "kind": "definition",
       "arguments": [
         "EvaSettingsDefClass",
-        "CLASSID_GLOBAL_SETTINGS_DEF_EVA"
+        "CLASSID_GLOBAL_SETTINGS_DEF_EVA",
+        "_EvaSettingsDefDefFactory"
       ],
       "line": 61,
       "status": "unknown",
@@ -23014,8 +23105,13 @@
       "source": "staging/combat/evasettings.cpp",
       "id": "987cb9174ff3d234f865c0f8f2559309380163f9a05999c345846fcf4c70adcb",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_EvaSettingsDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a4288",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23044,7 +23140,8 @@
       "kind": "definition",
       "arguments": [
         "ExplosionDefinitionClass",
-        "CLASSID_DEF_EXPLOSION"
+        "CLASSID_DEF_EXPLOSION",
+        "_ExplosionDefDefFactory"
       ],
       "line": 64,
       "status": "unknown",
@@ -23052,8 +23149,13 @@
       "source": "staging/combat/explosion.cpp",
       "id": "5bf831900a410101e08846250c44eb2a2e5b6b992b2993ae9be2867fd4edba14",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_ExplosionDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a1784",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23082,7 +23184,8 @@
       "kind": "definition",
       "arguments": [
         "GlobalSettingsDef",
-        "CLASSID_GLOBAL_SETTINGS_DEF_GENERAL"
+        "CLASSID_GLOBAL_SETTINGS_DEF_GENERAL",
+        "_GlobalSettingsDefDefFactory"
       ],
       "line": 55,
       "status": "unknown",
@@ -23090,8 +23193,13 @@
       "source": "staging/combat/globalsettings.cpp",
       "id": "eb12ae9c85439ee0e4f491a7b3ef3d4873ad1996d4108baea4062c577edff21d",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_GlobalSettingsDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a4304",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23120,7 +23228,8 @@
       "kind": "definition",
       "arguments": [
         "HumanLoiterGlobalSettingsDef",
-        "CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_LOITER"
+        "CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_LOITER",
+        "_HumanLoiterGlobalSettingsDefDefFactory"
       ],
       "line": 309,
       "status": "unknown",
@@ -23128,8 +23237,13 @@
       "source": "staging/combat/globalsettings.cpp",
       "id": "c7651fbe5bafb598b04de02c534b9b366c737c5aaec043d04d9ba05bb2dce05a",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_HumanLoiterGlobalSettingsDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a42e8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23158,7 +23272,8 @@
       "kind": "definition",
       "arguments": [
         "HUDGlobalSettingsDef",
-        "CLASSID_GLOBAL_SETTINGS_DEF_HUD"
+        "CLASSID_GLOBAL_SETTINGS_DEF_HUD",
+        "_HUDGlobalSettingsDefDefFactory"
       ],
       "line": 471,
       "status": "unknown",
@@ -23166,8 +23281,13 @@
       "source": "staging/combat/globalsettings.cpp",
       "id": "84ffbd841cb2aa3e5301d709b05fb2afa689b931bd50a7e404b6f6c13cd9d7cf",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_HUDGlobalSettingsDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a42c0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23196,7 +23316,8 @@
       "kind": "definition",
       "arguments": [
         "HumanAnimOverrideDef",
-        "CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE"
+        "CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE",
+        "_HumanAnimOverrideDefDefFactory"
       ],
       "line": 1127,
       "status": "unknown",
@@ -23204,8 +23325,13 @@
       "source": "staging/combat/globalsettings.cpp",
       "id": "c598b6e4a1bd060df0602b53d99a8f5d2c82c2ac6d1d35d74354b5c9482c378d",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_HumanAnimOverrideDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a42a8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23256,7 +23382,8 @@
       "kind": "definition",
       "arguments": [
         "MendozaBossGameObjDefClass",
-        "CLASSID_GAME_OBJECT_DEF_MENDOZA_BOSS"
+        "CLASSID_GAME_OBJECT_DEF_MENDOZA_BOSS",
+        "_MendozaBossGameObjDefDefFactory"
       ],
       "line": 177,
       "status": "unknown",
@@ -23264,8 +23391,13 @@
       "source": "staging/combat/mendozabossgameobj.cpp",
       "id": "f8ca23991181ddbf6a673ab5804dd637e8f94eef669355c7cec8aa2066eb030e",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_MendozaBossGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a95b0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23316,7 +23448,8 @@
       "kind": "definition",
       "arguments": [
         "PowerPlantGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_POWERPLANT"
+        "CLASSID_GAME_OBJECT_DEF_POWERPLANT",
+        "_PowerPlantGameObjDefDefFactory"
       ],
       "line": 59,
       "status": "unknown",
@@ -23324,8 +23457,13 @@
       "source": "staging/combat/powerplantgameobj.cpp",
       "id": "91eb5883cbdce48fc7ff28738a5022d9600a7f417c8fa60cc3f0ee049070b28b",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_PowerPlantGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9450",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23354,7 +23492,8 @@
       "kind": "definition",
       "arguments": [
         "PowerUpGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_POWERUP"
+        "CLASSID_GAME_OBJECT_DEF_POWERUP",
+        "_PowerUpGameObjDefDefFactory"
       ],
       "line": 82,
       "status": "unknown",
@@ -23362,8 +23501,13 @@
       "source": "staging/combat/powerup.cpp",
       "id": "47712cbc6ec011306da3b3e8249cf402461f926493c731fb3a8a3039ca7524fb",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_PowerUpGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a15c4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23414,7 +23558,8 @@
       "kind": "definition",
       "arguments": [
         "PurchaseSettingsDefClass",
-        "CLASSID_GLOBAL_SETTINGS_DEF_PURCHASE"
+        "CLASSID_GLOBAL_SETTINGS_DEF_PURCHASE",
+        "_PurchaseDefDefFactory"
       ],
       "line": 58,
       "status": "unknown",
@@ -23422,8 +23567,13 @@
       "source": "staging/combat/purchasesettings.cpp",
       "id": "655c76a1ce99c89469b5f91bb23e2dd7d43b7f28a462a3c6aa30611ce8d01d40",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_PurchaseDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9750",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23474,7 +23624,8 @@
       "kind": "definition",
       "arguments": [
         "RaveshawBossGameObjDefClass",
-        "CLASSID_GAME_OBJECT_DEF_RAVESHAW_BOSS"
+        "CLASSID_GAME_OBJECT_DEF_RAVESHAW_BOSS",
+        "_RaveshawBossGameObjDefDefFactory"
       ],
       "line": 248,
       "status": "unknown",
@@ -23482,8 +23633,13 @@
       "source": "staging/combat/raveshawbossgameobj.cpp",
       "id": "139af591c97966ce70c272a7d973af060b71aa6aa1bf57498ba7c83a573192a9",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_RaveshawBossGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9648",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23534,7 +23690,8 @@
       "kind": "definition",
       "arguments": [
         "RefineryGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_REFINERY"
+        "CLASSID_GAME_OBJECT_DEF_REFINERY",
+        "_RefineryGameObjDefDefFactory"
       ],
       "line": 67,
       "status": "unknown",
@@ -23542,8 +23699,13 @@
       "source": "staging/combat/refinerygameobj.cpp",
       "id": "36f49e453f18c630e4b162b8ad896e6a6b0500175eddd1784c0786bb16452365",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_RefineryGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9430",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23594,7 +23756,8 @@
       "kind": "definition",
       "arguments": [
         "RepairBayGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_REPAIR_BAY"
+        "CLASSID_GAME_OBJECT_DEF_REPAIR_BAY",
+        "_RepairBayGameObjDefDefFactory"
       ],
       "line": 92,
       "status": "unknown",
@@ -23602,8 +23765,13 @@
       "source": "staging/combat/repairbaygameobj.cpp",
       "id": "f54a67f604bcbb4c3cd93798de3d4301c897c7bdd16c48f58e648d6386e762b9",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_RepairBayGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9510",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23654,7 +23822,8 @@
       "kind": "definition",
       "arguments": [
         "SakuraBossGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_SAKURA_BOSS"
+        "CLASSID_GAME_OBJECT_DEF_SAKURA_BOSS",
+        "_SakuraBossGameObjDefDefFactory"
       ],
       "line": 247,
       "status": "unknown",
@@ -23662,8 +23831,13 @@
       "source": "staging/combat/sakurabossgameobj.cpp",
       "id": "782c05d67e10777d2a793cddd390052f11a7eaceb411482e104c2fbe4df35c12",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SakuraBossGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9590",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23692,7 +23866,8 @@
       "kind": "definition",
       "arguments": [
         "SAMSiteGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_SAMSITE"
+        "CLASSID_GAME_OBJECT_DEF_SAMSITE",
+        "_SAMSiteGameObjDefDefFactory"
       ],
       "line": 59,
       "status": "unknown",
@@ -23700,8 +23875,13 @@
       "source": "staging/combat/samsite.cpp",
       "id": "3b97c719418df38d4aafda1cf666beeea28cc01668114a8ac30eb40059c3a307",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SAMSiteGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9558",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23738,8 +23918,13 @@
       "source": "staging/combat/scexplosionevent.cpp",
       "id": "39c9a92be9fc2a98f57234cc7d3d928cef33b1fa5342db028b23a8a3c6d35346",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cScExplosionEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a4ad8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23754,8 +23939,13 @@
       "source": "staging/combat/scobeliskevent.cpp",
       "id": "67c8a51f819ef38e89886138987a6626dfe863fc391a56b070203eea503d89a8",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cScObeliskEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9690",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23784,7 +23974,8 @@
       "kind": "definition",
       "arguments": [
         "ScriptZoneGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_SCRIPT_ZONE"
+        "CLASSID_GAME_OBJECT_DEF_SCRIPT_ZONE",
+        "_ScriptZoneGameObjDefDefFactory"
       ],
       "line": 85,
       "status": "unknown",
@@ -23792,8 +23983,13 @@
       "source": "staging/combat/scriptzone.cpp",
       "id": "97fcf42f8273c2e54b0386c20893d737c0b4c3dbe73c45b9abf044d5bb5f7e99",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_ScriptZoneGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a15a4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23844,7 +24040,8 @@
       "kind": "definition",
       "arguments": [
         "SimpleGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_SIMPLE"
+        "CLASSID_GAME_OBJECT_DEF_SIMPLE",
+        "_SimpleGameObjDefDefFactory"
       ],
       "line": 57,
       "status": "unknown",
@@ -23852,8 +24049,13 @@
       "source": "staging/combat/simplegameobj.cpp",
       "id": "2149ea1ca57557fbec9657afc70fce015b2f4f9b8511c66c8a65bf3117a346ed",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SimpleGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a15e4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23904,7 +24106,8 @@
       "kind": "definition",
       "arguments": [
         "SoldierGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_SOLDIER"
+        "CLASSID_GAME_OBJECT_DEF_SOLDIER",
+        "_SoldierGameObjDefDefFactory"
       ],
       "line": 122,
       "status": "unknown",
@@ -23912,8 +24115,13 @@
       "source": "staging/combat/soldier.cpp",
       "id": "fe57a7411a99219c1d1941ec7dd1638c8e76c7bd969df210850752445bcdcd51",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SoldierGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a1584",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -23986,7 +24194,8 @@
       "kind": "definition",
       "arguments": [
         "SoldierFactoryGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_SOLDIER_FACTORY"
+        "CLASSID_GAME_OBJECT_DEF_SOLDIER_FACTORY",
+        "_SoldierFactoryGameObjDefDefFactory"
       ],
       "line": 59,
       "status": "unknown",
@@ -23994,8 +24203,13 @@
       "source": "staging/combat/soldierfactorygameobj.cpp",
       "id": "c6e3a8a803913badfd05c0f7f0abaf9f730a1ada2e13434a6c4368db82c98ee4",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SoldierFactoryGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9470",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24046,7 +24260,8 @@
       "kind": "definition",
       "arguments": [
         "SpawnerDefClass",
-        "CLASSID_SPAWNER_DEF"
+        "CLASSID_SPAWNER_DEF",
+        "_SpawnerDefDefFactory"
       ],
       "line": 77,
       "status": "unknown",
@@ -24054,8 +24269,13 @@
       "source": "staging/combat/spawn.cpp",
       "id": "0c8f5439c75b767da2719ba6e8ae9bfcea03c87be7c10e461e9b6e47e9c7b72e",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SpawnerDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a1870",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24128,7 +24348,8 @@
       "kind": "definition",
       "arguments": [
         "SpecialEffectsGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_SPECIAL_EFFECTS"
+        "CLASSID_GAME_OBJECT_DEF_SPECIAL_EFFECTS",
+        "_SpecialEffectsGameObjDefDefFactory"
       ],
       "line": 63,
       "status": "unknown",
@@ -24136,8 +24357,13 @@
       "source": "staging/combat/specialeffectsgameobj.cpp",
       "id": "66b0f0e3df16c9f7deadd16acbc9cda6468e5bbfe2a0e0d1b424b8e5d94c35d3",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SpecialEffectsGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9530",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24166,7 +24392,8 @@
       "kind": "definition",
       "arguments": [
         "TeamPurchaseSettingsDefClass",
-        "CLASSID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE"
+        "CLASSID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE",
+        "_TeamPurchaseDefDefFactory"
       ],
       "line": 57,
       "status": "unknown",
@@ -24174,8 +24401,13 @@
       "source": "staging/combat/teampurchasesettings.cpp",
       "id": "d4c33f8c16fef5895df86f6a0409cee23eaff55dc1739b6df8fe949d4f85040e",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_TeamPurchaseDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9770",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24204,7 +24436,8 @@
       "kind": "definition",
       "arguments": [
         "TransitionGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_TRANSITION"
+        "CLASSID_GAME_OBJECT_DEF_TRANSITION",
+        "_TransitionGameObjDefDefFactory"
       ],
       "line": 55,
       "status": "unknown",
@@ -24212,8 +24445,13 @@
       "source": "staging/combat/transitiongameobj.cpp",
       "id": "482fc119f3b048fe48bcce0f92d00002af8cbb0af63933c28742637cb2c8f71a",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_TransitionGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a1604",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24264,7 +24502,8 @@
       "kind": "definition",
       "arguments": [
         "VehicleGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_VEHICLE"
+        "CLASSID_GAME_OBJECT_DEF_VEHICLE",
+        "_VehicleGameObjDefDefFactory"
       ],
       "line": 161,
       "status": "unknown",
@@ -24272,8 +24511,13 @@
       "source": "staging/combat/vehicle.cpp",
       "id": "7788f8a4dcff180cd09ff17a2cef0d895e6c737bb574be02a36a13525168def0",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_VehicleGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a14f0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24346,7 +24590,8 @@
       "kind": "definition",
       "arguments": [
         "VehicleFactoryGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_VEHICLE_FACTORY"
+        "CLASSID_GAME_OBJECT_DEF_VEHICLE_FACTORY",
+        "_VehicleFactoryGameObjDefDefFactory"
       ],
       "line": 72,
       "status": "unknown",
@@ -24354,8 +24599,13 @@
       "source": "staging/combat/vehiclefactorygameobj.cpp",
       "id": "a547e821f70751c1d8b431d23b2f1a07ccb493b80259633a64a137ca515db104",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_VehicleFactoryGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9490",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24406,7 +24656,8 @@
       "kind": "definition",
       "arguments": [
         "WarFactoryGameObjDef",
-        "CLASSID_GAME_OBJECT_DEF_WARFACTORY"
+        "CLASSID_GAME_OBJECT_DEF_WARFACTORY",
+        "_WarFactoryGameObjDefDefFactory"
       ],
       "line": 62,
       "status": "unknown",
@@ -24414,8 +24665,13 @@
       "source": "staging/combat/warfactorygameobj.cpp",
       "id": "d79007e725437dd539c89fee151aa2ce55c67eb6ceac6df74bf1691cec5cbdb9",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_WarFactoryGameObjDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a94d0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24444,7 +24700,8 @@
       "kind": "definition",
       "arguments": [
         "WeaponDefinitionClass",
-        "CLASSID_DEF_WEAPON"
+        "CLASSID_DEF_WEAPON",
+        "_WeaponDefDefFactory"
       ],
       "line": 69,
       "status": "unknown",
@@ -24452,8 +24709,13 @@
       "source": "staging/combat/weaponmanager.cpp",
       "id": "a1c8618d17704da49364b5b1e5324ab0e3d4d69b66afc35e3a6e71ba15dd7e90",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_WeaponDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a1738",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24482,7 +24744,8 @@
       "kind": "definition",
       "arguments": [
         "AmmoDefinitionClass",
-        "CLASSID_DEF_AMMO"
+        "CLASSID_DEF_AMMO",
+        "_AmmoDefDefFactory"
       ],
       "line": 322,
       "status": "unknown",
@@ -24490,8 +24753,13 @@
       "source": "staging/combat/weaponmanager.cpp",
       "id": "c4150d3c1da91bd24c88e18f2df801a26b7e8bd2cbf1fa29f84bea44e1f83fe2",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_AmmoDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a1720",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24506,8 +24774,13 @@
       "source": "staging/commando/AnnounceEvent.cpp",
       "id": "d5a676a2c0dc10f63193ef5671b469bdf6778bafb90337965a1be8b415def3a2",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "CSAnnouncementFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a96a8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24522,8 +24795,13 @@
       "source": "staging/commando/AnnounceEvent.cpp",
       "id": "45342487fcd7400423b56fde39559dff8471f8329a82f621ac0eeaa27d2ee996",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "SCAnnouncementFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a969c",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24538,8 +24816,13 @@
       "source": "staging/commando/bioevent.cpp",
       "id": "7598b19a81ff70004dc564e55cf38941f45f6ccaa917fb086ab46c9e476f2051",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cBioEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a93f0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24554,8 +24837,13 @@
       "source": "staging/commando/changeteamevent.cpp",
       "id": "e897345c9d563c5a348c58a4e04d346bf86dfbdf3c0400e0a847cf4e48ef194c",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cChangeTeamEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a82dc",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24570,7 +24858,7 @@
       "source": "staging/commando/clientbboevent.cpp",
       "id": "b28cf974fc7072b63c87bbced2fb53cf6fe4c9f5556383104f7786f153465447",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cClientBboEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24586,8 +24874,13 @@
       "source": "staging/commando/clientfps.cpp",
       "id": "2947862776809038e68580048a5e7a871fecdf1a070457cee24e557c97b7f554",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "CClientFpsFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7cec",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24602,8 +24895,13 @@
       "source": "staging/commando/clientgoodbyeevent.cpp",
       "id": "5c36681065364841a219522534acf2d20a9c3d0584ea8541e7da09d851818b2d",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cClientGoodbyeEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7cd0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24618,7 +24916,7 @@
       "source": "staging/commando/consolecommandevent.cpp",
       "id": "eb3a1a177d759d84f86532b4cea20f58fe6a155a0df67f4aa9ad4fc1107a69c8",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cConsoleCommandEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24634,7 +24932,7 @@
       "source": "staging/commando/csconsolecommandevent.cpp",
       "id": "ac8d9fab8d31efcd3af957fe7d17b30ab1e349cfe110a4bb19060c60acc14013",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cCsConsoleCommandEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24650,8 +24948,13 @@
       "source": "staging/commando/cshint.cpp",
       "id": "8990e6715a1481747f047e1c04c5ab436ce3d87517dbd57611ca08e9756cdd17",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cCsHintFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7cc4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24666,8 +24969,13 @@
       "source": "staging/commando/cspingrequestevent.cpp",
       "id": "d9241014befbe6e909eed10c2175d5aa9c8842bc8d20f8f9cb77de1b26e0a312",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cCsPingRequestEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7ca8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24682,8 +24990,13 @@
       "source": "staging/commando/cstextobj.cpp",
       "id": "d0bb7123375817c9d504c2ca8e3ea27873c942cc7f9f401ea9e6d771f9256af3",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cCsTextObjFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a96c8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24698,7 +25011,7 @@
       "source": "staging/commando/donateevent.cpp",
       "id": "36653ff119346f85d058add6a629fcd7cdca421d929cf793dc5703ac91a729af",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cDonateEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24714,8 +25027,13 @@
       "source": "staging/commando/evictionevent.cpp",
       "id": "b255a8530ff49df1337a712bf84107d0bc971ae1ca9b1a242a21c14d9c38ef1c",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cEvictionEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7c7c",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24730,8 +25048,13 @@
       "source": "staging/commando/gamedataupdateevent.cpp",
       "id": "d502b0722c970ef7e6be48014860a48884b530933be04dbef1ea5a41fe847c21",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cGameDataUpdateEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a73ac",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24746,8 +25069,13 @@
       "source": "staging/commando/gameoptionsevent.cpp",
       "id": "2bba5159ef55df4f4061711c768f2bcb398d528f2c882857678b5b6f425a10fd",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cGameOptionsEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7c70",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24762,8 +25090,13 @@
       "source": "staging/commando/gamespycschallengeresponseevent.cpp",
       "id": "716052a1f61c21c691e9633c002f15fc5258a82ce885193592dfde0b3dd3fede",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cGameSpyCsChallengeResponseEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81e1d2d0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24778,8 +25111,13 @@
       "source": "staging/commando/gamespyscchallengeevent.cpp",
       "id": "a371ad8b6f840b39d072672acfb650df762423dad6b8f5d1e13504702e34bc40",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cGameSpyScChallengeEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81e1d2c4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24794,7 +25132,7 @@
       "source": "staging/commando/godmodeevent.cpp",
       "id": "498b54fa0c942d706eb8d7f048f7e39e549f85cda00e25459c1dd13a6cdde02b",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cGodModeEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24810,8 +25148,13 @@
       "source": "staging/commando/loadingevent.cpp",
       "id": "0b9fa378b67d83d5d24b49851158b0bc4acbab433b6c9eeb8c9623dae0a6b954",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cLoadingEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a96d4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24826,7 +25169,7 @@
       "source": "staging/commando/moneyevent.cpp",
       "id": "57e4181bf69dd23829ed772d52dcea697923325fb802b40eba4731af56d2e2dd",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cMoneyEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24842,8 +25185,13 @@
       "source": "staging/commando/player.cpp",
       "id": "4cdf7c655d5f93dde4d33a18fa552555a4d5236899cd7ec0a72f91f222395a26",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cPlayerFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a5e6c",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24858,8 +25206,13 @@
       "source": "staging/commando/playerkill.cpp",
       "id": "e18975fb701fcc8eb0f6b6cc5dc67935540a70142d7f425fb80e537be2d7c1e3",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cPlayerKillFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7cdc",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24874,8 +25227,13 @@
       "source": "staging/commando/purchaserequestevent.cpp",
       "id": "33d27c088a141fd5224ba78fa973ce3751cd904b93f2f6a7b344b26452c738c9",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cPurchaseRequestEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9788",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24890,8 +25248,13 @@
       "source": "staging/commando/purchaseresponseevent.cpp",
       "id": "81babae6dc1ffa696057f805afc9e655c4f9e27818cfb60cce1edeba2f3521bd",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cPurchaseResponseEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a9794",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24906,7 +25269,7 @@
       "source": "staging/commando/requestkillevent.cpp",
       "id": "448aa8df91510d9988fcb1e308cb775b0bf4e0a94ca570f05028710e0e92683a",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cRequestKillEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24922,7 +25285,7 @@
       "source": "staging/commando/scoreevent.cpp",
       "id": "cd01b315eba55a1aa30d5192790572cba5df5f87bd81a0ba9c2ae11eed4106d4",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cScoreEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24938,8 +25301,13 @@
       "source": "staging/commando/scpingresponseevent.cpp",
       "id": "0d79b3993655e28333d155eabcc2fb13c099fb535559ce3dbda5fe409e09ae65",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cScPingResponseEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7cb4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24954,8 +25322,13 @@
       "source": "staging/commando/sctextobj.cpp",
       "id": "740c8e565bc565a6bc6e7fe169628af5d580f4286bc51fab462009f4d90826e3",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cScTextObjFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a73b8",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -24970,7 +25343,7 @@
       "source": "staging/commando/suicideevent.cpp",
       "id": "cbd3b6ab899108c4120861ce01380a203f6e2b13c5ae9b9e92a4977258b5010a",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cSuicideEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -24986,8 +25359,13 @@
       "source": "staging/commando/svrgoodbyeevent.cpp",
       "id": "b259598663ed365a19c3834412055a52e01538acbbb41bf6b419ad79684bae40",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cSvrGoodbyeEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a93fc",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -25002,8 +25380,13 @@
       "source": "staging/commando/team.cpp",
       "id": "6ec27b943c487620cab8c86df30a584b0bb103ceabe15779db1b79caeb206a4c",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cTeamFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a7350",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -25018,7 +25401,7 @@
       "source": "staging/commando/vipmodeevent.cpp",
       "id": "93db545f721105f86bfe01e7744acbcc4f31ceafd54f998f27c71ea2c5581499",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cVipModeEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -25034,7 +25417,7 @@
       "source": "staging/commando/warpevent.cpp",
       "id": "7828f1b1079401c4cf3efca087783041ebbbf1fccbb4575a54469e1992027f32",
       "selected_for_target": false,
-      "expected_symbol": null,
+      "expected_symbol": "cWarpEventFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -25050,8 +25433,13 @@
       "source": "staging/commando/winevent.cpp",
       "id": "52925c141c3e625378018f340b6db1d8876e72e1725947367244c0862d133c92",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "cWinEventFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a5e50",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -59420,7 +59808,8 @@
       "kind": "definition",
       "arguments": [
         "AudibleSoundDefinitionClass",
-        "CLASSID_SOUND_DEF"
+        "CLASSID_SOUND_DEF",
+        "_SoundDefFactory"
       ],
       "line": 60,
       "status": "unknown",
@@ -59428,8 +59817,13 @@
       "source": "staging/wwaudio/AudibleSound.cpp",
       "id": "f82868a9dfcd366e32e83fc4a83422ff3fc3f445928c419835bd77f4e0afdb6c",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_SoundDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817a5b08",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -59854,7 +60248,8 @@
       "kind": "definition",
       "arguments": [
         "AccessiblePhysDefClass",
-        "CLASSID_ACCESSIBLEPHYSDEF"
+        "CLASSID_ACCESSIBLEPHYSDEF",
+        "_AccessiblePhysDefDefFactory"
       ],
       "line": 48,
       "status": "unknown",
@@ -59862,8 +60257,13 @@
       "source": "staging/wwphys/accessiblephys.cpp",
       "id": "94d1425eb1792fd7dd3ca57c0df57ba532422f582b8f50f6a34e3eba7eb1044c",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_AccessiblePhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781050",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -59914,7 +60314,8 @@
       "kind": "definition",
       "arguments": [
         "DecorationPhysDefClass",
-        "CLASSID_DECOPHYSDEF"
+        "CLASSID_DECOPHYSDEF",
+        "_DecorationPhysDefDefFactory"
       ],
       "line": 256,
       "status": "unknown",
@@ -59922,8 +60323,13 @@
       "source": "staging/wwphys/decophys.cpp",
       "id": "2437ccbc68f1fca9cfa3456b86788e6b370f8e777046ab9f45a7e93313555f10",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_DecorationPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817810ac",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -59974,7 +60380,8 @@
       "kind": "definition",
       "arguments": [
         "DynamicAnimPhysDefClass",
-        "CLASSID_DYNAMICANIMPHYSDEF"
+        "CLASSID_DYNAMICANIMPHYSDEF",
+        "_DynamicAnimPhysDefDefFactory"
       ],
       "line": 230,
       "status": "unknown",
@@ -59982,8 +60389,13 @@
       "source": "staging/wwphys/dynamicanimphys.cpp",
       "id": "72bbf26ee964cfdc3b938af5f2c880ef3abee4aa595f893bd720dff4678e22b5",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_DynamicAnimPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817810cc",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60034,7 +60446,8 @@
       "kind": "definition",
       "arguments": [
         "HumanPhysDefClass",
-        "CLASSID_HUMANPHYSDEF"
+        "CLASSID_HUMANPHYSDEF",
+        "_HumanPhysDefDefFactory"
       ],
       "line": 730,
       "status": "unknown",
@@ -60042,8 +60455,13 @@
       "source": "staging/wwphys/humanphys.cpp",
       "id": "91b24f679f3a4f912fb6e72280dcfbce77fce4551b20bae544103cd153dd557b",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_HumanPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781118",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60116,7 +60534,8 @@
       "kind": "definition",
       "arguments": [
         "MotorcycleDefClass",
-        "CLASSID_MOTORCYCLEDEF"
+        "CLASSID_MOTORCYCLEDEF",
+        "_MotorcycleDefDefFactory"
       ],
       "line": 223,
       "status": "unknown",
@@ -60124,8 +60543,13 @@
       "source": "staging/wwphys/motorcycle.cpp",
       "id": "0d6900027c5edcb4301d7236806c32381424619df414de443e94ba64ec2191c2",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_MotorcycleDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "817811e0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60176,7 +60600,8 @@
       "kind": "definition",
       "arguments": [
         "Phys3DefClass",
-        "CLASSID_PHYS3DEF"
+        "CLASSID_PHYS3DEF",
+        "_Phys3DefDefFactory"
       ],
       "line": 394,
       "status": "unknown",
@@ -60184,8 +60609,13 @@
       "source": "staging/wwphys/phys3.cpp",
       "id": "48bb9b2d16a1b37d2cbdcfab198167f0a8c7c4e391a2a95677c815767f0ac1e9",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_Phys3DefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "8178132c",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60258,7 +60688,8 @@
       "kind": "definition",
       "arguments": [
         "ProjectileDefClass",
-        "CLASSID_PROJECTILEDEF"
+        "CLASSID_PROJECTILEDEF",
+        "_ProjectileDefDefFactory"
       ],
       "line": 522,
       "status": "unknown",
@@ -60266,8 +60697,13 @@
       "source": "staging/wwphys/projectile.cpp",
       "id": "bce706b8b347543229c871b228aa99deed4c04d56f5f4b896b444eca0bfe80ef",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_ProjectileDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781694",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60318,7 +60754,8 @@
       "kind": "definition",
       "arguments": [
         "RigidBodyDefClass",
-        "CLASSID_RIGIDBODYDEF"
+        "CLASSID_RIGIDBODYDEF",
+        "_RigidBodyDefDefFactory"
       ],
       "line": 2189,
       "status": "unknown",
@@ -60326,8 +60763,13 @@
       "source": "staging/wwphys/rbody.cpp",
       "id": "48286f6f95d09553b7478725d73716ec584181495909a0f2a0534f1ed84942bd",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_RigidBodyDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781a4c",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60400,7 +60842,8 @@
       "kind": "definition",
       "arguments": [
         "ShakeableStaticPhysDefClass",
-        "CLASSID_SHAKEABLESTATICPHYSDEF"
+        "CLASSID_SHAKEABLESTATICPHYSDEF",
+        "_ShakeableStaticPhysDefDefFactory"
       ],
       "line": 80,
       "status": "unknown",
@@ -60408,7 +60851,7 @@
       "source": "staging/wwphys/shakeablestaticphys.cpp",
       "id": "ac26bcdb48f8d1b1e5773f155b18b4b89e3e9210c2cfde38c247ed85ac66905a",
       "selected_for_target": true,
-      "expected_symbol": null,
+      "expected_symbol": "_ShakeableStaticPhysDefDefFactory",
       "defined_symbol_matches": [],
       "registration_verified": false
     },
@@ -60482,7 +60925,8 @@
       "kind": "definition",
       "arguments": [
         "StaticAnimPhysDefClass",
-        "CLASSID_STATICANIMPHYSDEF"
+        "CLASSID_STATICANIMPHYSDEF",
+        "_StaticAnimPhysDefDefFactory"
       ],
       "line": 447,
       "status": "unknown",
@@ -60490,8 +60934,13 @@
       "source": "staging/wwphys/staticanimphys.cpp",
       "id": "ed24d2ef12b4497b1cd06879809c5859b2815c92b0f91d6e99d06e091e8f4429",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_StaticAnimPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781ac0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60542,7 +60991,8 @@
       "kind": "definition",
       "arguments": [
         "StaticPhysDefClass",
-        "CLASSID_STATICPHYSDEF"
+        "CLASSID_STATICPHYSDEF",
+        "_StaticPhysDefDefFactory"
       ],
       "line": 725,
       "status": "unknown",
@@ -60550,8 +61000,13 @@
       "source": "staging/wwphys/staticphys.cpp",
       "id": "bb39f07bfda0187c9ed3b8aa4439d425fadd4f8d77007f58efa92f4b3bc7fea9",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_StaticPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781ae0",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60602,7 +61057,8 @@
       "kind": "definition",
       "arguments": [
         "TimedDecorationPhysDefClass",
-        "CLASSID_TIMEDDECOPHYSDEF"
+        "CLASSID_TIMEDDECOPHYSDEF",
+        "_TimedDecorationPhysDefDefFactory"
       ],
       "line": 180,
       "status": "unknown",
@@ -60610,8 +61066,13 @@
       "source": "staging/wwphys/timeddecophys.cpp",
       "id": "fcab82bcda253749d6f9c62d76f2dc05766286f4902b0358b2b1f1f548904953",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_TimedDecorationPhysDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781b18",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60662,7 +61123,8 @@
       "kind": "definition",
       "arguments": [
         "TrackedVehicleDefClass",
-        "CLASSID_TRACKEDVEHICLEDEF"
+        "CLASSID_TRACKEDVEHICLEDEF",
+        "_TrackedVehicleDefDefFactory"
       ],
       "line": 472,
       "status": "unknown",
@@ -60670,8 +61132,13 @@
       "source": "staging/wwphys/trackedvehicle.cpp",
       "id": "111ea41bc67011b4038f8de82dea91afd87fac68b2e6a4357ef7eea63eb729c4",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_TrackedVehicleDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781b38",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60744,7 +61211,8 @@
       "kind": "definition",
       "arguments": [
         "VTOLVehicleDefClass",
-        "CLASSID_VTOLVEHICLEDEF"
+        "CLASSID_VTOLVEHICLEDEF",
+        "_VTOLVehicleDefDefFactory"
       ],
       "line": 442,
       "status": "unknown",
@@ -60752,8 +61220,13 @@
       "source": "staging/wwphys/vtolvehicle.cpp",
       "id": "301c36cd570aece4aa5680a4489991b4ba3aa74c139c551d2f5aa0848cea6f57",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_VTOLVehicleDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781d00",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
@@ -60848,7 +61321,8 @@
       "kind": "definition",
       "arguments": [
         "WheeledVehicleDefClass",
-        "CLASSID_WHEELEDVEHICLEDEF"
+        "CLASSID_WHEELEDVEHICLEDEF",
+        "_WheeledVehicleDefDefFactory"
       ],
       "line": 254,
       "status": "unknown",
@@ -60856,15 +61330,21 @@
       "source": "staging/wwphys/wheelvehicle.cpp",
       "id": "8b42743d477b61ba2a3aa42bc100ec806111349561af0d331acc9912146aeea9",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_WheeledVehicleDefDefFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781d30",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {
       "kind": "definition",
       "arguments": [
         "TwiddlerClass",
-        "CLASSID_TWIDDLERS"
+        "CLASSID_TWIDDLERS",
+        "_TwiddlerFactory"
       ],
       "line": 71,
       "status": "unknown",
@@ -60872,8 +61352,13 @@
       "source": "staging/wwsaveload/twiddler.cpp",
       "id": "5c85fcd0752fefb76136d6e1fa9c876719bd94cdadf50832723da91c3297f04a",
       "selected_for_target": true,
-      "expected_symbol": null,
-      "defined_symbol_matches": [],
+      "expected_symbol": "_TwiddlerFactory",
+      "defined_symbol_matches": [
+        {
+          "address": "81781da4",
+          "type": "B"
+        }
+      ],
       "registration_verified": false
     },
     {

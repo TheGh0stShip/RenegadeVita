@@ -16,9 +16,9 @@ class LinkInventoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             (root / 'staging').mkdir()
-            (root / 'staging/test.cpp').write_text('DECLARE_SCRIPT(Example, "")\nSimplePersistFactoryClass<X, CHUNK_X> _Factory;')
-            result = inventory(root, [], 'native', b'', b'81700000 B _ExampleRegistrant\n81700004 b _Factory\n')
-            self.assertEqual(result['registration_candidates_with_defined_symbol'], 2)
+            (root / 'staging/test.cpp').write_text('DECLARE_SCRIPT(Example, "")\nSimplePersistFactoryClass<X, CHUNK_X> _Factory;\nDECLARE_DEFINITION_FACTORY(X, CLASS_X, "X") _DifferentDefName;\nDECLARE_NETWORKOBJECT_FACTORY(Event, NET_EVENT);')
+            result = inventory(root, [], 'native', b'', b'81700000 B _ExampleRegistrant\n81700004 b _Factory\n81700008 B _DifferentDefName\n8170000c B EventFactory\n')
+            self.assertEqual(result['registration_candidates_with_defined_symbol'], 4)
             self.assertTrue(all(not r['registration_verified'] for r in result['registration_candidates']))
             self.assertTrue(all(r['status'] == 'unknown' for r in result['registration_candidates']))
 

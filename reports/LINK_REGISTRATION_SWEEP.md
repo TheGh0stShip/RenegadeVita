@@ -1,5 +1,23 @@
 # S3 link and registration closure — inventory in progress
 
+Definition/network macro expansion adds 57 definition and 28 network object
+symbol matches, bringing defined-symbol candidate matches to 1,861. The
+unmatched ShakeableStaticPhys definition registration at source line 80 is
+inside original `#if 0`; its persist factories have retained symbols.
+Eleven unmatched network candidates are all in unselected Commando units:
+clientbboevent, consolecommandevent, csconsolecommandevent, donateevent,
+godmodeevent, moneyevent, requestkillevent, scoreevent, suicideevent,
+vipmodeevent and warpevent. Runtime callers and mode/retail requirements remain
+open; these are closure leads, not approved exclusions or compatibility proof.
+
+Of 108 unmatched script candidates, 49 occur in selected units: 44 Test_BMG,
+four Toolkit and one Test_GTH. Source inspection places them inside original
+`#if 0` regions (Test_BMG 80–1156, Toolkit 151–301, Test_GTH 261–368).
+The other 59 occur in unselected units. No port-induced script omission is
+established by these selected-unit misses. Retail binding reconciliation is
+still required; original disabled code is not blanket proof of irrelevance.
+Five tests pass with custom definition-variable and network-macro name cases.
+
 Retained Dev209 symbol evidence now matches 1,636 script registrar objects
 and all 140 persist-factory candidates. Expected script names follow the
 original REGISTER_SCRIPT macro (`_ClassRegistrant`); persist names come from

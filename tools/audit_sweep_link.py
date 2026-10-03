@@ -23,7 +23,7 @@ def registration_candidates(code):
                     code, flags=re.S)
     expressions = {
         'script': r'\bDECLARE_SCRIPT\s*\(\s*(\w+)',
-        'definition': r'\bDECLARE_DEFINITION_FACTORY\s*\(\s*(\w+)\s*,\s*(\w+)',
+        'definition': r'\bDECLARE_DEFINITION_FACTORY\s*\(\s*(\w+)\s*,\s*(\w+)\s*,[^)]*\)\s*(\w+)',
         'network': r'\bDECLARE_NETWORKOBJECT_FACTORY\s*\(\s*(\w+)\s*,\s*(\w+)',
         'persist': r'\bSimplePersistFactoryClass\s*<\s*(\w+)\s*,\s*(\w+)\s*>\s*(\w+)\s*[;(]',
     }
@@ -69,6 +69,10 @@ def inventory(root, database, target, map_bytes, symbol_bytes=b''):
                 expected = '_' + candidate['arguments'][0] + 'Registrant'
             elif candidate['kind'] == 'persist':
                 expected = candidate['arguments'][2]
+            elif candidate['kind'] == 'definition':
+                expected = candidate['arguments'][2]
+            elif candidate['kind'] == 'network':
+                expected = candidate['arguments'][0] + 'Factory'
             registrars.append(dict(candidate, source=name,
                                    id=digest(f'{name}:{candidate["line"]}:{candidate["kind"]}'.encode()),
                                    selected_for_target=obj is not None,
@@ -113,6 +117,10 @@ def inventory(root, database, target, map_bytes, symbol_bytes=b''):
             'upstream_rows': upstream_rows,
             'registration_candidate_total': len(registrars),
             'registration_candidates_with_defined_symbol': sum(bool(r['defined_symbol_matches']) for r in registrars),
+            'unmatched_selected_script_candidates': sum(r['kind'] == 'script' and
+                r['selected_for_target'] and not r['defined_symbol_matches'] for r in registrars),
+            'unmatched_unselected_script_candidates': sum(r['kind'] == 'script' and
+                not r['selected_for_target'] and not r['defined_symbol_matches'] for r in registrars),
             'registration_candidates': registrars}
 
 

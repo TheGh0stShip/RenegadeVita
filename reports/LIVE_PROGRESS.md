@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S3 factory and unmatched-script classification — 2026-10-03
+
+Defined-symbol matches now total 1,861: 1,636 script, 140 persist, 57 definition,
+28 network. The 49 selected-unit unmatched scripts lie in original #if0 regions;
+59 are in unselected units. Eleven unselected network factories remain leads.
+Five tests pass; no behavior exclusion or runtime acceptance is claimed.
+
 ## S3 retained registrar symbols — 2026-10-03
 
 Dev209 symbols match 1,636 script and 140 persist registrar candidates.

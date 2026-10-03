@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Decal queue and depth placement dependencies — 2026-10-03
+
+Completed: source restoration prerequisites traced beyond early returns: native
+WW3D flush omits the decal owner; compatibility mesh renderer lacks queue/flush;
+D3DRS_ZBIAS is unhandled despite returning success. Original queue order,
+distance gate, skin deformation and material-run owners retained in review.
+Next: connected original-owner restoration with verified platform depth mapping.
+See [decal owner review](DECAL_OWNER_REVIEW.md). No build/launch; gates0/10.
+
 ## Native decal omissions found — 2026-10-03
 
 Completed: traced explosion decal creation to original mesh ownership and found

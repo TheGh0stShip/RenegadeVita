@@ -27,6 +27,8 @@
       "discovered_bindings": 64,
       "discovered_script_names": 7,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 7,
       "not_located_definition_count": 7,
       "runtime_registration_verified": false
@@ -41,6 +43,8 @@
       "discovered_bindings": 142,
       "discovered_script_names": 14,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 10,
       "not_located_definition_count": 10,
       "runtime_registration_verified": false
@@ -55,6 +59,8 @@
       "discovered_bindings": 169,
       "discovered_script_names": 14,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 10,
       "not_located_definition_count": 10,
       "runtime_registration_verified": false
@@ -69,6 +75,8 @@
       "discovered_bindings": 77,
       "discovered_script_names": 7,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 7,
       "not_located_definition_count": 7,
       "runtime_registration_verified": false
@@ -83,6 +91,8 @@
       "discovered_bindings": 118,
       "discovered_script_names": 15,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 10,
       "not_located_definition_count": 10,
       "runtime_registration_verified": false
@@ -97,6 +107,8 @@
       "discovered_bindings": 115,
       "discovered_script_names": 12,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 9,
       "not_located_definition_count": 9,
       "runtime_registration_verified": false
@@ -111,6 +123,8 @@
       "discovered_bindings": 64,
       "discovered_script_names": 12,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 10,
       "not_located_definition_count": 10,
       "runtime_registration_verified": false
@@ -125,6 +139,8 @@
       "discovered_bindings": 58,
       "discovered_script_names": 7,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 7,
       "not_located_definition_count": 7,
       "runtime_registration_verified": false
@@ -139,6 +155,8 @@
       "discovered_bindings": 137,
       "discovered_script_names": 14,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 10,
       "not_located_definition_count": 10,
       "runtime_registration_verified": false
@@ -153,6 +171,8 @@
       "discovered_bindings": 139,
       "discovered_script_names": 14,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 10,
       "not_located_definition_count": 10,
       "runtime_registration_verified": false
@@ -167,6 +187,8 @@
       "discovered_bindings": 108,
       "discovered_script_names": 7,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 7,
       "not_located_definition_count": 7,
       "runtime_registration_verified": false
@@ -181,6 +203,8 @@
       "discovered_bindings": 114,
       "discovered_script_names": 8,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 7,
       "not_located_definition_count": 7,
       "runtime_registration_verified": false
@@ -195,6 +219,8 @@
       "discovered_bindings": 114,
       "discovered_script_names": 8,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 7,
       "not_located_definition_count": 7,
       "runtime_registration_verified": false
@@ -209,6 +235,8 @@
       "discovered_bindings": 73,
       "discovered_script_names": 27,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 11,
       "not_located_definition_count": 11,
       "runtime_registration_verified": false
@@ -223,6 +251,8 @@
       "discovered_bindings": 573,
       "discovered_script_names": 275,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 14,
       "not_located_definition_count": 14,
       "runtime_registration_verified": false
@@ -237,6 +267,8 @@
       "discovered_bindings": 740,
       "discovered_script_names": 51,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 24,
       "not_located_definition_count": 24,
       "runtime_registration_verified": false
@@ -251,6 +283,8 @@
       "discovered_bindings": 549,
       "discovered_script_names": 109,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 14,
       "not_located_definition_count": 14,
       "runtime_registration_verified": false
@@ -267,6 +301,8 @@
       "script_names_without_defined_registrar": [
         "m04_foredeck_reinforcement_03_jdg"
       ],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 14,
       "not_located_definition_count": 13,
       "runtime_registration_verified": false
@@ -284,6 +320,45 @@
         "m05_inn_reinforcements",
         "m05_park_unit"
       ],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [
+        {
+          "archive": "always.dat",
+          "member": "x5d_chtroopdrop6.txt",
+          "line": 72,
+          "script": "M05_Inn_Reinforcements"
+        },
+        {
+          "archive": "always.dat",
+          "member": "x5d_chtroopdrop6.txt",
+          "line": 79,
+          "script": "M05_Inn_Reinforcements"
+        },
+        {
+          "archive": "always.dat",
+          "member": "x5d_chtroopdrop5.txt",
+          "line": 72,
+          "script": "M05_Inn_Reinforcements"
+        },
+        {
+          "archive": "always.dat",
+          "member": "x5d_chtroopdrop5.txt",
+          "line": 79,
+          "script": "M05_Inn_Reinforcements"
+        },
+        {
+          "archive": "always.dat",
+          "member": "x5d_c130troopdrop7.txt",
+          "line": 71,
+          "script": "M05_Park_Unit"
+        },
+        {
+          "archive": "always.dat",
+          "member": "x5d_c130troopdrop7.txt",
+          "line": 78,
+          "script": "M05_Park_Unit"
+        }
+      ],
       "structural_findings": 20,
       "not_located_definition_count": 18,
       "runtime_registration_verified": false
@@ -298,6 +373,8 @@
       "discovered_bindings": 644,
       "discovered_script_names": 99,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 23,
       "not_located_definition_count": 23,
       "runtime_registration_verified": false
@@ -312,6 +389,8 @@
       "discovered_bindings": 567,
       "discovered_script_names": 124,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 22,
       "not_located_definition_count": 22,
       "runtime_registration_verified": false
@@ -326,15 +405,27 @@
       "discovered_bindings": 766,
       "discovered_script_names": 96,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 19,
       "not_located_definition_count": 19,
       "runtime_registration_verified": false
     },
     {
       "map": "M09.mix",
+      "archive_sha256": "3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
       "status": "unknown",
-      "evidence_class": "input_inventory",
-      "input_missing": true
+      "evidence_class": "retail_metadata_and_arm_symbols",
+      "level_bindings": 533,
+      "discovered_bindings": 574,
+      "discovered_script_names": 66,
+      "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
+      "structural_findings": 15,
+      "not_located_definition_count": 15,
+      "runtime_registration_verified": false
     },
     {
       "map": "M10.mix",
@@ -346,6 +437,8 @@
       "discovered_bindings": 690,
       "discovered_script_names": 92,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 21,
       "not_located_definition_count": 21,
       "runtime_registration_verified": false
@@ -364,6 +457,27 @@
         "m11_obeliskwall_fodderguy02_jdg",
         "m11_templeroof_fodderguy02_jdg"
       ],
+      "unmatched_serialized_binding_provenance": [
+        {
+          "name": "M11_ObeliskWall_FodderGuy01_JDG",
+          "member": "m11.ldd",
+          "offset": 650090,
+          "binding_kind": "spawner_script"
+        },
+        {
+          "name": "M11_ObeliskWall_FodderGuy02_JDG",
+          "member": "m11.ldd",
+          "offset": 650279,
+          "binding_kind": "spawner_script"
+        },
+        {
+          "name": "M11_TempleRoof_FodderGuy02_JDG",
+          "member": "m11.ldd",
+          "offset": 650468,
+          "binding_kind": "spawner_script"
+        }
+      ],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 24,
       "not_located_definition_count": 21,
       "runtime_registration_verified": false
@@ -378,6 +492,8 @@
       "discovered_bindings": 144,
       "discovered_script_names": 67,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 20,
       "not_located_definition_count": 20,
       "runtime_registration_verified": false
@@ -392,6 +508,8 @@
       "discovered_bindings": 269,
       "discovered_script_names": 19,
       "script_names_without_defined_registrar": [],
+      "unmatched_serialized_binding_provenance": [],
+      "unmatched_cinematic_binding_provenance": [],
       "structural_findings": 6,
       "not_located_definition_count": 6,
       "runtime_registration_verified": false

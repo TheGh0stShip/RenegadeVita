@@ -35,6 +35,13 @@ def summarize(receipt, link):
             'discovered_bindings': receipt['summary']['all_discovered_bindings'],
             'discovered_script_names': len(names),
             'script_names_without_defined_registrar': unmatched,
+            'unmatched_serialized_binding_provenance': [
+                {key: binding[key] for key in ('name', 'member', 'offset', 'binding_kind') if key in binding}
+                for binding in receipt.get('bindings', []) if binding['name'].lower() in unmatched],
+            'unmatched_cinematic_binding_provenance': [
+                {key: edge[key] for key in ('archive', 'member', 'line', 'script') if key in edge}
+                for edge in receipt.get('media', {}).get('script_binding_edges', [])
+                if edge['script'].lower() in unmatched],
             'structural_findings': receipt['summary']['structural_findings'],
             'not_located_definition_count': len(receipt['summary']['not_located_definition_ids']),
             'runtime_registration_verified': False}

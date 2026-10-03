@@ -1,5 +1,24 @@
 # S4 retail closure — all-map binding discovery in progress
 
+M09 input recovery supersedes the first-scan missing-input row below. Three
+local backup copies match archive SHA-256
+3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7;
+a fourth differs in both LDD and LSD members. The matching input was copied
+without overwriting an existing file into the ignored diagnostic Data folder,
+with a private hash receipt. Retail-edition provenance remains unverified.
+All 27 maps now have binding scans: 13 campaign/tutorial, 13 multiplayer and
+Skirmish00. M09 adds 533 level bindings, 574 discovered bindings and 66 script
+names with matching registrar symbols; its 15 unresolved definition-ID leads
+remain unverified. Total level bindings now 7,456.
+
+Provenance separates the six missing-name leads: three M11 names occur in
+m11.ldd; M05_Inn_Reinforcements occurs in x5d_chtroopdrop5/6.txt at lines
+72 and 79, and M05_Park_Unit in x5d_c130troopdrop7.txt at lines 71 and 78,
+all in always.dat. M04_BH_MessHall_Guy_JDG attaches the M04 name in original
+Mission04.cpp:5352. Public summaries retain binding member/offset/kind and
+cinematic archive/member/line provenance without parameter payloads.
+Thirteen driver and shared-parser tests pass. No behavior fix is adopted.
+
 The all-map driver enumerates every supplied MIX filename plus all expected
 campaign maps. The first scan retains 27 rows: 26 supplied maps audited and
 one missing input, M09. This includes 12 campaign/tutorial maps, 13 C&C

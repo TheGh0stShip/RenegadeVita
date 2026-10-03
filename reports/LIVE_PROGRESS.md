@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S4 M09 coverage and unresolved-name provenance — 2026-10-03
+
+All 27 maps scanned after private hash-verified M09 input recovery; edition
+provenance remains unverified. Level bindings total 7,456. Six missing-name
+leads traced to three M11 serialized bindings, two M05 cinematic controls and
+one original M04 attachment. Thirteen tests pass; no retail payload published,
+runtime change or native acceptance. Next: full asset/factory coverage.
+
 ## S4 first all-map binding reconciliation — 2026-10-03
 
 26 supplied maps audited: 12 campaign/tutorial, 13 multiplayer and Skirmish00.

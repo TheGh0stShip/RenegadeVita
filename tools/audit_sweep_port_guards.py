@@ -13,7 +13,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-PORT_MACRO = re.compile(r'\b(?:RENEGADE_(?:VITA_\w*|A\w*|HOST_\w*)|_UNIX|VITA)\b')
+PORT_MACRO = re.compile(r'\b(?:RENEGADE_(?:VITA_\w*|A\w*|HOST_\w*)|_UNIX|VITA|__vita__|__VITA__)\b')
 DIRECTIVE = re.compile(r'^\s*#\s*(if|ifdef|ifndef|elif)\b')
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof', 'missing', 'unknown'}

@@ -52,8 +52,9 @@ class PortGuardInventoryTest(unittest.TestCase):
     def test_macro_families_and_token_boundaries(self):
         lines = ['#if RENEGADE_A4_ORIGINAL_FRONTEND', '#ifndef _UNIX',
                  '#elif RENEGADE_HOST_AUDIO', '#if MY_VITA_EXTENSION',
-                 '#define VITA 1', '#ifdef OTHER']
-        self.assertEqual([r[0] for r in directives(lines)], [0, 1, 2])
+                 '#define VITA 1', '#ifdef OTHER', '#if defined(__vita__)',
+                 '#ifndef __VITA__']
+        self.assertEqual([r[0] for r in directives(lines)], [0, 1, 2, 6, 7])
 
     def test_selection_and_both_wrapper_forms(self):
         self.assertEqual(stage_patch_selection('< "$rv_root/port/patches/one.patch"'),

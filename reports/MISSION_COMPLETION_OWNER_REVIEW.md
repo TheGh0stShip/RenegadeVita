@@ -53,10 +53,51 @@ not prove all objectives were added, changed, rendered or restored. The new
 observer-timer diagnostics do not cover absent objective IDs. These are
 diagnostic coverage gaps, not confirmed retail or port gameplay defects.
 
+## Tutorial and M01 natural producers
+
+The tutorial completion producer is `MTU_Tutorial_Controller::Timer_Expired`
+for `MTU_TIMER_ENDGAME`. Its scheduling route is not simply destruction of an
+MCT. The lieutenant's completed MCT speech moves the player, requests barracks
+destruction, restores control and sends `MTU_TYPE_MOCK_INVASION`. That controller
+event creates two officers, each with `MTU_Nod_Soldier` parameter `2`. Their
+Killed callbacks resolve the controller and send `MTU_TYPE_COUNT_OFFICERS`.
+After the counter exceeds one, the controller marks objective06 accomplished,
+sets the final HUD help text and starts a three-second endgame timer. Missing
+officer creation, script attachment, death delivery, controller lookup or timer
+dispatch could prevent success. None is proven operational by source presence.
+The source counter does not deduplicate sender IDs; preserve retail behavior
+rather than adding a new counting policy from this review.
+
+M01's controller handles custom type0, parameter
+`M01_DO_END_MISSION_CHECK_JDG`. Its executable condition is
+`commcenter_sam_objective_active != true && prisoners_are_freed == true`, not
+a scan of every primary objective suggested by the nearby comment. A one-shot
+`final_conv_played` guard then changes weather, removes detention actors,
+repositions the player, creates an invisible cinematic controller and attaches
+`Test_Cinematic` with `X1Z_Finale.txt`. It separately schedules
+`M01_END_MISSION_PASS_JDG` after20 seconds. That consumer stops the propaganda
+controller when found and calls mission success. Completion is timer-driven;
+this route does not wait for a cinematic-finished callback. Original simulation
+timer scaling/pause/clamping still applies.
+
+Two additional source success entrances exist in the same M01 controller:
+type0/parameter0 directly reports success, and an `endMission_conv` observer
+completion schedules the end-mission parameter after three seconds. The latter
+appears under `ACTION_COMPLETE_CONVERSATION_ENDED`. No assignment to
+`endMission_conv` was located in the inspected file; do not count it as a
+proven reachable alternative or treat a matching variable name as runtime
+evidence. The direct parameter0 entrance likewise needs producer provenance.
+
+The M01 failure calls in prisoner/death-related scripts remain separate from
+these success producers. Source completion does not establish whether the
+finale renders, plays all media, retains actors for its duration or reaches the
+score/movie/next-map flow.
+
 ## Remaining verification
 
-- Trace natural tutorial and M01 ending producers, including cinematic/helper
-  commands; the M13 consumer above does not establish their completion routes.
+- Verify the tutorial officer/death/counter/timer chain and M01 prisoner/SAM/
+  cinematic/delayed-event chain above with matching runtime evidence. Trace
+  producers for the additional M01 success entrances before counting them.
 - Observe natural M13 success, score statistics, movie completion/skip, next
   map selection and restored campaign state with matching candidate identity.
 - Verify inventory preservation through the clean session handoff. Original

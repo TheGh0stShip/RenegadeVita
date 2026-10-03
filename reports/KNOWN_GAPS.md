@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 ending-producer review: tutorial completion requires the mock
+invasion's two officer death notifications and a three-second timer after the
+MCT demonstration. M01's natural finale checks prisoner/SAM state, launches
+X1Z_Finale and separately schedules success after20 seconds. Direct parameter0
+and an unproven conversation entrance are not runtime alternatives. Complete
+delivery, visual/media finish and next-session restoration remain open.
+See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
+
 2026-10-03 timer dispatch review: original simulation time is paused/scaled
 and clamped to200 ms per ordinary frame. Hibernation, cinematic freeze and
 Post_Think eligibility gate timers. Missing observer expiry has an opt-in

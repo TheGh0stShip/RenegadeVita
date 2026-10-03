@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Tutorial and M01 ending producers — 2026-10-03
+
+Completed: original tutorial officer death/counter/endgame timer route and
+M01 prisoner/SAM one-shot cinematic/delayed-success route traced in source.
+Evidence: source inspection; no build, launch, callback or visual proof.
+Next: additional M01 success producer provenance and original inventory lifecycle.
+Native/runtime gates remain0/10; build/launch hold remains active.
+See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
+
 ## Observer timer expiry diagnostics — 2026-10-03
 
 Completed: opt-in missing-observer expiry hook, bounded numeric collection,

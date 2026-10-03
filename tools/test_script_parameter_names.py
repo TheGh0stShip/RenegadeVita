@@ -2,12 +2,23 @@ import unittest
 import subprocess
 import tempfile
 from pathlib import Path
-from tools.audit_script_parameter_names import audit, parameter_index
+from tools.audit_script_parameter_names import audit, parameter_index, scoped_findings
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class ParameterNames(unittest.TestCase):
+    def test_scoped_bindings_and_source_closure_are_distinct(self):
+        report = {'literal_calls': [{'script': 'Bound', 'finding': True},
+                                    {'script': 'Lead', 'finding': True}, {'script': 'Absent', 'finding': True}]}
+        binding = {'map': 'test', 'archive_sha256': 'archive', 'objects_ddb_sha256': 'ddb',
+                   'definition_overlays': [], 'members': {'test.ldd': {'sha256': 'level'}},
+                   'bindings': [{'name': 'BOUND'}, {'name': 'Bound'}], 'discovered_scripts': [{'name': 'Lead'}]}
+        result = scoped_findings(report, binding)
+        self.assertEqual(len(result['findings']), 2)
+        self.assertEqual(result['findings'][0]['authored_binding_count'], 2)
+        self.assertFalse(result['findings'][1]['authored_binding_present'])
+        self.assertFalse(result['runtime_execution_verified'])
     def test_non_ascii_locale_is_unresolved(self):
         self.assertIsNone(parameter_index('Náme:int', 'náme'))
     def test_original_vector_parser_patch_replays_and_preserves_scan(self):

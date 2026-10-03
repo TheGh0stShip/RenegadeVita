@@ -27,3 +27,16 @@ deterministic zero values. Nine source/Python counterexamples pass, including
 temporary patch replay. This correction is uncompiled. Compiled parser tests,
 authored binding provenance and actual mission behavior remain open. Native
 mission/runtime evidence gates remain0/10 under the build/launch hold.
+
+Read-only authored bindings were regenerated directly from the current retail
+archives with source dependency discovery. Archive, level-member, definitions
+and overlay hashes remain in private receipts. No old receipt was accepted
+merely because its filename matched the level.
+
+Within that discovery scope, Tutorial has no bound mismatch finding. M13 has
+nine bindings for M00_Play_Sound_Object_Bone_DAY's absent Offset and four for
+M00_Damage_Modifier_DME's existing underscore mismatch. M01 has23 bindings for
+the sound script. The601-byte M00_Action descriptor is not in this scoped
+binding/dependency closure. Ten focused source/Python checks pass. Authored
+binding counts are not executed callback counts, and this scope excludes
+dynamic scripts that literal discovery cannot establish.

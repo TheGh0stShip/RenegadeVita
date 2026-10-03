@@ -5,7 +5,12 @@
     "literal_name_calls": 1166,
     "numeric_or_unsupported_calls": 35,
     "lookup_mismatch_sites": 20,
-    "focused_tests_passed": 9,
+    "focused_tests_passed": 10,
+    "authored_bindings_regenerated_read_only": true,
+    "tutorial_bound_mismatch_findings": 0,
+    "m13_sound_offset_binding_count": 9,
+    "m13_damage_modifier_binding_count": 4,
+    "m01_sound_offset_binding_count": 23,
     "registered_staging_patches": 296,
     "native_runtime_gates_closed": 0
   },

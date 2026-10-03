@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Scoped parameter binding provenance — 2026-10-03
+
+Completed: authored bindings regenerated from unchanged retail data; source
+and archive/database/member hashes retained privately. M13 links9 sound
+Offset bindings and4 original damage-modifier bindings; M01 links23 sound
+bindings. Tutorial has no finding in the current discovery scope.
+Evidence:10 focused source/Python checks pass. No native callback proof.
+Next: compiled original parser regression and mission progression after hold.
+Native/runtime gates remain0/10; no build, launch or retail mutation.
+
 ## Vector parameter initialization — 2026-10-03
 
 Completed: deterministic initialization before the original vector scan;

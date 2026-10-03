@@ -279,6 +279,26 @@ data, with effect/sound consequences unverified. Preserve original null handling
 and compare candidate-bound visual/audio behavior before attributing them to
 port omissions. No build, launch or data mutation occurred.
 
+M01 construction-yard follow-up confirms the authored ConDrop zone requests
+the unresolved control filename on an Invisible_Object controller, then destroys
+the trigger. Original Test_Cinematic initializes Controls to null; failed
+Text_File_Open returns without adding commands, and Created immediately parses
+that empty list. Original Parse_Commands requests controller destruction when
+no controls remain. This traces the source failure path, not actual zone entry
+or a physical observation of the missing sequence. No installed control filename
+containing conyard/condrop was found in the renewed archive-index search. No
+alternate sequence was substituted and the unresolved content finding remains.
+
+The300th registered patch removes the unused80-byte DATA-path diagnostic buffer
+and pointer-to-int casts from Load_Control_File. The original file-open argument
+remains the supplied filename; the failure log retains its DATA prefix through
+formatting. This avoids an unnecessary fixed-size path construction and preserves
+real host pointer width in these two variadic diagnostic arguments. It does not
+fix all host script ABI issues or create missing content. Fifteen focused source
+checks pass, including anchored zero-fuzz/no-offset replay and byte preservation
+outside the affected routine. C++ is uncompiled; stage/build scripts received
+syntax checks only, and the staging receipt remains unchanged. Native gates0/10.
+
 The compiler target reports arm-vita-eabi; inspected libpthread attributes
 report ARMv7-A/Thumb-2 and VFP-register arguments. Native remains little-endian
 ARMv7-A/Cortex-A9 ILP32; host probes remain LP64 and separate evidence. Read-only

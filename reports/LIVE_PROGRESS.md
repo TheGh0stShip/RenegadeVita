@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## M01 missing-control failure and diagnostics — 2026-10-03
+
+Completed: ConDrop's failed control-open/empty-parser disposal path traced;
+unused80-byte diagnostic path and pointer-to-int casts removed in source.
+Evidence:15 source/Python checks; anchored zero-fuzz/no-offset patch replay;
+300 registered patches. Missing control content remains unresolved; no alias.
+C++/native behavior unverified, staging receipt unchanged under the hold.
+No build, launch or retail mutation; native/runtime gates0/10.
+See [mission research review](MISSION_RESEARCH_REVIEW.md).
+
 ## Alternate definition databases — 2026-10-03
 
 Completed:30 top-level local archive/loose-file candidates inspected; both

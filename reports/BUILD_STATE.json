@@ -1,4 +1,12 @@
 {
+  "cinematic_filename_diagnostics_20261003": {
+    "state": "SOURCE_DIAGNOSTIC_BUFFER_REMOVAL_UNCOMPILED",
+    "focused_source_python_checks_passed": 15,
+    "registered_staging_patches": 300,
+    "staging_receipt_regenerated": false,
+    "missing_m01_control_file_resolved": false,
+    "native_runtime_gates_closed": 0
+  },
   "required_level_load_failure_20261003": {
     "state": "NATIVE_REQUIRED_FAILURE_PROPAGATION_SOURCE_UNCOMPILED",
     "report": "reports/MISSION_RESEARCH_REVIEW.md",

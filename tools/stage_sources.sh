@@ -1031,6 +1031,10 @@ test "$(sha256sum "$rv_stage/combat/savegame.h" | cut -d' ' -f1)" = \
 	"a380d7e66a3f000c03a7bb2db2019cbaa659f25ee868efb84d02d3cf37f23e07"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-required-level-load-failure.patch"
+test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
+	"32e962cf48da38f2c37afb05129fea3a9608e84ddd27bf037c7f2ad7d576b008"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-filename-diagnostics.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

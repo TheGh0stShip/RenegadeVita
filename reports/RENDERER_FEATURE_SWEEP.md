@@ -59,8 +59,11 @@ application by `SetTextureStageState` (native boundary lines 2225–2274):
 are at `mapper.cpp:970–973`, initialization at `dx8wrapper.cpp:361–366`, and
 anisotropy selection at `texture.cpp:944`. Other references include debug and
 validation cases; those alone do not prove active runtime requests. These ten
-leads still require source-pinned JSON classification, independent-route review
-and per-map material closure. They do not establish physical visual symptoms.
+requests now have source-pinned JSON classifications; independent-route review
+and per-map material closure remain open. They do not establish physical visual
+symptoms. Totals are 25 missing, 15 boundary-replaced and 2,012 unknown across
+2,052 rows. Duplicate symbol reviews are rejected rather than silently allowing
+the last review to overwrite an earlier classification. Seven tests pass.
 
 Candidate ancestry identifies 25 render-object definitions, 14 prototype-loader
 definitions and 14 prototype definitions. These counts include the base classes.

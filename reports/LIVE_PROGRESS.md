@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 texture-stage batch: ten unapplied direct requests now carry source-pinned
+JSON evidence, including bump matrices and anisotropy. Duplicate classifications
+are rejected. Seven tests pass; totals reconcile at 25 missing, 15 replaced and
+2,012 unknown. Per-map reachability and native pixels remain open.
+
 S2 direct-state batch: 15 native GL translation paths source-reviewed as replaced
 boundaries. Fourteen additional fog/stencil/clip requests lack direct mappings;
 independent rendering routes and actual retail use remain open. Including ZBIAS,

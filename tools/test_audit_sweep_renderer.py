@@ -9,6 +9,16 @@ PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
 
 
 class RendererInventoryTest(unittest.TestCase):
+    def test_duplicate_reviews_cannot_overwrite_classification(self):
+        rows = state_symbols([dict(r, kind='draw_state_reference', file='a.cpp')
+                              for r in state_references('D3DTSS_ADDRESSW;')])
+        review = {'symbol': 'D3DTSS_ADDRESSW', 'status': 'missing',
+                  'native_mapping': 'missing', 'inputs_sha256': {'a.cpp': 'hash'}}
+        conflicting = dict(review, status='boundary_replaced')
+        issues = state_reviews(rows, [review, conflicting], {'a.cpp': 'hash'})
+        self.assertEqual(len(issues), 2)
+        self.assertEqual(rows[0]['status'], 'unknown')
+
     def test_state_aggregation_and_stale_review(self):
         refs = [dict(r, kind='draw_state_reference', file='a.cpp')
                 for r in state_references('D3DRS_ZBIAS; D3DRS_ZBIAS;')]

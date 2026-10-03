@@ -58,7 +58,12 @@ def state_symbols(rows):
 
 def state_reviews(rows, reviews, inputs):
     issues = []
+    symbols = [review['symbol'] for review in reviews]
+    duplicates = {symbol for symbol in symbols if symbols.count(symbol) > 1}
     for review in reviews:
+        if review['symbol'] in duplicates:
+            issues.append({'symbol': review['symbol'], 'reason': 'duplicate state review'})
+            continue
         pins = review.get('inputs_sha256', {})
         matches = [r for r in rows if r['kind'] == 'draw_state_symbol' and
                    r['symbol'] == review['symbol']]

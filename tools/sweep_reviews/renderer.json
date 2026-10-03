@@ -662,5 +662,266 @@
       ],
       "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
     }
+    ,
+  {
+    "symbol": "D3DTSS_BUMPENVMAT00",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_BUMPENVMAT01",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_BUMPENVMAT10",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_BUMPENVMAT11",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_BUMPENVLSCALE",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_BUMPENVLOFFSET",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_MAXANISOTROPY",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_MIPMAPLODBIAS",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_ADDRESSW",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_BORDERCOLOR",
+    "status": "missing",
+    "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
+      "staging/ww3d2/texture.cpp": "839063dbb077c84df3ef5c2d1321d6d5fbf2969b020a65efff96aecf70b6a4b0",
+      "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "The in-range SetTextureStageState switch has no case for this request. Its default records unsupported-stage telemetry and returns D3D_OK without retaining or applying the value. Bump matrices and anisotropy have original setters; debug references alone do not prove active requests.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2225-2274",
+      "staging/ww3d2/mapper.cpp:970-973",
+      "staging/ww3d2/dx8wrapper.cpp:361-366 and :3048-3093",
+      "staging/ww3d2/texture.cpp:944"
+    ],
+    "affected_scope": [
+      "Native modes issuing this request; per-map effects remain unverified."
+    ],
+    "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
+  }
   ]
 }

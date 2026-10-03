@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Latest 2026-10-03 work: [campaign source map reconciliation](CAMPAIGN_SOURCE_MAP_RECONCILIATION.md)
+adds a source-derived 13-mission inventory and closes seven omitted mission
+translation units in native/host source selection. It records static evidence
+and open retail/runtime checks. [Runtime gap diagnostics](RUNTIME_GAP_DIAGNOSTICS.md)
+documents the PSTV VDB collector and candidate-scoped flight evidence.
+
 The September 27, 2026 audit series covers Tutorial, Multiplayer Practice,
 main menu, load/save, pause, multiplayer, options, Scorpion Hunters and M01.
 Scorpion Hunters is retail M13; the engine's M01 is the following mission.

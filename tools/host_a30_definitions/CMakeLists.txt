@@ -12,6 +12,11 @@ set(RV_STAGE "${RV_ROOT}/staging")
 set(RV_UPSTREAM "${RV_ROOT}/upstream/CnC_Renegade")
 set(RV_COMPAT "${RV_ROOT}/port/compatibility/include")
 set(RV_SCRIPT_SOURCE "${RV_STAGE}/scripts")
+include("${RV_ROOT}/cmake/RenegadeScriptSources.cmake")
+renegade_collect_script_dsp_sources(
+  "${RV_UPSTREAM}/Code/Scripts"
+  "${RV_SCRIPT_SOURCE}"
+  RENEGADE_SCRIPT_DSP_SOURCES)
 
 # The original AssetManager and WW3D shutdown paths retain Font3D/Render2D
 # references even in the retained A3.0/A3.1 world probes.  Keep one explicit
@@ -667,25 +672,7 @@ add_executable(a31_interactive_runtime
   ${RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCES}
   ${RV_A4_FRONTEND_RUNTIME_LINK_SOURCES}
   ${RV_STAGE}/combat/cinematicgameobj.cpp
-  ${RV_SCRIPT_SOURCE}/ScriptFactory.cpp
-  ${RV_SCRIPT_SOURCE}/ScriptRegistrar.cpp
-  ${RV_SCRIPT_SOURCE}/scripts.cpp
-  ${RV_SCRIPT_SOURCE}/Mission00.cpp
-  ${RV_SCRIPT_SOURCE}/MissionX0.cpp
-  ${RV_SCRIPT_SOURCE}/Mission03.cpp
-  ${RV_SCRIPT_SOURCE}/Mission11.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DAK.cpp
-  ${RV_SCRIPT_SOURCE}/Test_RMV_Toolkit.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Sounds.cpp
-  ${RV_SCRIPT_SOURCE}/Mission01.cpp
-  ${RV_SCRIPT_SOURCE}/Test_RAD.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DAY.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Objects.cpp
-  ${RV_SCRIPT_SOURCE}/mission08.cpp
-  ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
+  ${RENEGADE_SCRIPT_DSP_SOURCES}
   ${RV_STAGE}/wwlib/pipe.cpp
   ${RV_STAGE}/wwlib/base64.cpp
   ${RV_STAGE}/wwlib/xpipe.cpp
@@ -887,36 +874,11 @@ target_compile_options(a31_interactive_runtime PRIVATE
   "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
 )
 set_source_files_properties(
-  ${RV_SCRIPT_SOURCE}/ScriptFactory.cpp
-  ${RV_SCRIPT_SOURCE}/ScriptRegistrar.cpp
-  ${RV_SCRIPT_SOURCE}/scripts.cpp
-  ${RV_SCRIPT_SOURCE}/Mission00.cpp
-  ${RV_SCRIPT_SOURCE}/MissionX0.cpp
-  ${RV_SCRIPT_SOURCE}/Mission01.cpp
-  ${RV_SCRIPT_SOURCE}/Test_RAD.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DAY.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Objects.cpp
-  ${RV_SCRIPT_SOURCE}/mission08.cpp
-  ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
+  ${RENEGADE_SCRIPT_DSP_SOURCES}
   ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
   PROPERTIES COMPILE_OPTIONS "-fpermissive"
 )
-set_property(SOURCE
-  ${RV_SCRIPT_SOURCE}/Mission00.cpp
-  ${RV_SCRIPT_SOURCE}/MissionX0.cpp
-  ${RV_SCRIPT_SOURCE}/Mission03.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DAK.cpp
-  ${RV_SCRIPT_SOURCE}/Test_RMV_Toolkit.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Sounds.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
-  ${RV_SCRIPT_SOURCE}/Test_DAY.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Objects.cpp
-  ${RV_SCRIPT_SOURCE}/Test_Cinematic.cpp
-  ${RV_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
+set_property(SOURCE ${RENEGADE_SCRIPT_DSP_SOURCES}
   APPEND PROPERTY
   COMPILE_OPTIONS
   "-include${RV_COMPAT}/renegade_script_call_defaults.h")

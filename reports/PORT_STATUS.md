@@ -4,6 +4,28 @@ The complete audit series, reproduction steps, unbuilt-source limitations and
 repository protection status are collected in the
 [content audit index](CONTENT_AUDIT_INDEX.md).
 
+2026-10-03 campaign closure review: reconciled the supplied mission inventory
+against upstream source. All 13 campaign units are now selected through the
+original 45-entry Scripts.dsp manifest in native and host graphs (44 code
+units plus the static provider replacing DLLmain). Seven previously omitted
+mission files are included. 21 focused static/Python checks pass. These source
+changes are uncompiled; retail ID-to-owner classification, level-attached
+script parameters, and mission runtime remain unverified. Read-only E: data
+inspection confirmed campaign.ini's 36 entries from M13 through M11 and the
+source report records per-archive hashes plus ID differences needing
+call-site classification. The source parser counts 3,480 Find_Object calls
+versus 3,478 in the supplied summary. See
+[campaign source map reconciliation](CAMPAIGN_SOURCE_MAP_RECONCILIATION.md).
+
+2026-10-03 diagnostics follow-up: a candidate-bound runtime gap analyzer and
+read-only VDB1 PSTV collector are implemented. Dev197 PSTV identity and
+installed SELF hash were verified; its four flight sidecars and persistent
+runtime log were pulled with matching device/local hashes. The active M01
+sidecars show six frames and the original opening conversation. A later M13
+completion marker exists in the persistent log, separate from the retained
+15-frame M13 save-reload sidecars. No native mission-coverage gate was closed.
+See [runtime gap diagnostics](RUNTIME_GAP_DIAGNOSTICS.md).
+
 2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
 mission-rank persistence, radio-input and round-transition gaps are confirmed;
 projector render targets remain unsupported. Nested W3D scan finds 14 unresolved

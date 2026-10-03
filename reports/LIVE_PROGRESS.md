@@ -1,5 +1,32 @@
 # Live engineering progress
 
+## Campaign source map reconciled — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: resolve retail-data references and validate campaign script closure after
+the no-build hold is lifted.
+Completed: reconciled the supplied source map against all 13 upstream mission
+units (101,508 lines, 1,370 registrations, 143 of 202 script commands). Added
+all 44 original `Scripts.dsp` code units to native and host target source
+graphs, replacing DLL entrypoints with the existing static provider. This
+selects seven previously omitted whole missions. Read-only E: retail inspection
+confirmed the actual 36-entry campaign.ini flow from M13 through M11 and
+hashed every available mission archive. The source report records the
+3,480-versus-3,478 `Find_Object` discrepancy and apparent object-ID differences
+that still require classification.
+Evidence: 21 focused source/CMake/PSTV-diagnostics checks pass. PSTV Dev197
+read-only collection verified device hashes; runtime evidence remains short
+and candidate-specific. No native or host C++ build was run, no app launched,
+and no mission gate closed.
+Next: inspect retail campaign.ini, level object IDs and level-attached script
+parameters; then compile and verify all static registrations when build work
+is authorized by the active project direction.
+Blocker: retail map/data closure and compiled/runtime mission coverage remain
+open. See [source reconciliation](CAMPAIGN_SOURCE_MAP_RECONCILIATION.md) and
+[runtime diagnostics](RUNTIME_GAP_DIAGNOSTICS.md).
+
 ## Source gaps narrowed; runtime evidence still open
 
 Renegade Vita — v3.5 active

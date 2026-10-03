@@ -77,10 +77,23 @@ def selected_owners(root: Path) -> dict[str, set[str]]:
     native_blocks = cmake_block(native, "set", "RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES")
     native_blocks += cmake_block(native, "set", "RENEGADE_CAMPAIGN_SCRIPT_SOURCES")
     host_block = cmake_block(host, "add_executable", "a31_interactive_runtime")
-    return {
+    explicit = {
         "vita": set(re.findall(r'\$\{RENEGADE_SCRIPT_SOURCE\}/([\w.]+\.cpp)', native_blocks)),
         "host": set(re.findall(r'\$\{RV_SCRIPT_SOURCE\}/([\w.]+\.cpp)', host_block)),
     }
+    # The full original project list is now expanded by the shared CMake
+    # manifest helper rather than duplicated as explicit paths in both targets.
+    helper = (root / "cmake/RenegadeScriptSources.cmake").read_text()
+    manifest_names = re.findall(r'^SOURCE=\.\\([\w.-]+\.cpp)\s*$',
+                                (root / "upstream/CnC_Renegade/Code/Scripts/Scripts.dsp")
+                                .read_text(encoding="latin1"), re.MULTILINE)
+    native_source_graph = native_blocks + native
+    host_source_graph = host_block + host
+    if "RENEGADE_SCRIPT_DSP_SOURCES" in native_source_graph and "DLLmain.cpp" in helper:
+        explicit["vita"].update(set(manifest_names) - {"DLLmain.cpp"})
+    if "RENEGADE_SCRIPT_DSP_SOURCES" in host_source_graph and "DLLmain.cpp" in helper:
+        explicit["host"].update(set(manifest_names) - {"DLLmain.cpp"})
+    return explicit
 
 
 def audit(root: Path) -> dict:

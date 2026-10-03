@@ -160,6 +160,11 @@ endif()
 # The original Scripts project is staged deterministically so its Windows
 # include casing and narrow portability corrections never modify upstream.
 set(RENEGADE_SCRIPT_SOURCE "${RENEGADE_STAGE}/scripts")
+include("${RENEGADE_ROOT}/cmake/RenegadeScriptSources.cmake")
+renegade_collect_script_dsp_sources(
+  "${RENEGADE_UPSTREAM}/Code/Scripts"
+  "${RENEGADE_SCRIPT_SOURCE}"
+  RENEGADE_SCRIPT_DSP_SOURCES)
 set(RENEGADE_SCRIPT_ALIAS_INCLUDE
   "${RENEGADE_GENERATED_INCLUDE}/scripts-case-aliases")
 file(MAKE_DIRECTORY "${RENEGADE_SCRIPT_ALIAS_INCLUDE}")
@@ -305,28 +310,28 @@ set(RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
 	${RENEGADE_STAGE}/commando/textdisplay.cpp
   ${RENEGADE_STAGE}/commando/gamedata.cpp ${RENEGADE_STAGE}/commando/gdsingleplayer.cpp ${RENEGADE_STAGE}/commando/gdcnc.cpp ${RENEGADE_STAGE}/commando/campaign.cpp ${RENEGADE_STAGE}/commando/winevent.cpp ${RENEGADE_STAGE}/commando/renegadecheatmgr.cpp ${RENEGADE_STAGE}/commando/player.cpp ${RENEGADE_STAGE}/commando/playermanager.cpp ${RENEGADE_STAGE}/commando/god.cpp ${RENEGADE_STAGE}/commando/team.cpp ${RENEGADE_STAGE}/commando/teammanager.cpp ${RENEGADE_STAGE}/commando/gamedataupdateevent.cpp ${RENEGADE_STAGE}/commando/sctextobj.cpp ${RENEGADE_STAGE}/commando/netinterface.cpp ${RENEGADE_STAGE}/commando/netevent.cpp ${RENEGADE_STAGE}/commando/cnetwork.cpp ${RENEGADE_STAGE}/commando/comnetrcvinst.cpp ${RENEGADE_STAGE}/commando/nethandler.cpp ${RENEGADE_STAGE}/commando/buildnum.cpp ${RENEGADE_STAGE}/commando/gameinitmgr.cpp ${RENEGADE_STAGE}/commando/pkthandlers.cpp ${RENEGADE_STAGE}/commando/apppacketstats.cpp ${RENEGADE_STAGE}/commando/sbbomanager.cpp ${RENEGADE_STAGE}/commando/gameoptionsevent.cpp ${RENEGADE_STAGE}/commando/evictionevent.cpp ${RENEGADE_STAGE}/commando/clientpingmanager.cpp ${RENEGADE_STAGE}/commando/cspingrequestevent.cpp ${RENEGADE_STAGE}/commando/scpingresponseevent.cpp ${RENEGADE_STAGE}/commando/clienthintmanager.cpp ${RENEGADE_STAGE}/commando/cshint.cpp ${RENEGADE_STAGE}/commando/clientgoodbyeevent.cpp ${RENEGADE_STAGE}/commando/playerkill.cpp ${RENEGADE_STAGE}/commando/serverfps.cpp ${RENEGADE_STAGE}/commando/clientfps.cpp ${RENEGADE_STAGE}/commando/priority.cpp ${RENEGADE_STAGE}/commando/regint.cpp ${RENEGADE_STAGE}/commando/regbool.cpp ${RENEGADE_STAGE}/commando/regfloat.cpp
   ${RENEGADE_STAGE}/wwnet/connect.cpp ${RENEGADE_STAGE}/wwnet/rhost.cpp ${RENEGADE_STAGE}/wwnet/netutil.cpp ${RENEGADE_STAGE}/wwnet/netstats.cpp ${RENEGADE_STAGE}/wwnet/msgstat.cpp ${RENEGADE_STAGE}/wwnet/msgstatlist.cpp ${RENEGADE_STAGE}/wwnet/msgstatlistgroup.cpp ${RENEGADE_STAGE}/wwnet/BWBalance.cpp ${RENEGADE_STAGE}/wwnet/packetmgr.cpp ${RENEGADE_STAGE}/wwnet/singlepl.cpp ${RENEGADE_STAGE}/commando/messages.cpp ${RENEGADE_STAGE}/commando/changeteamevent.cpp ${RENEGADE_STAGE}/combat/inventory.cpp ${RENEGADE_STAGE}/combat/colors.cpp
-	${RENEGADE_SCRIPT_SOURCE}/ScriptFactory.cpp
-	${RENEGADE_SCRIPT_SOURCE}/ScriptRegistrar.cpp
-	${RENEGADE_SCRIPT_SOURCE}/scripts.cpp
-	${RENEGADE_SCRIPT_SOURCE}/Mission00.cpp
-	${RENEGADE_SCRIPT_SOURCE}/Test_Cinematic.cpp
-	${RENEGADE_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
 	${RENEGADE_A4_FRONTEND_ORIGINAL_SOURCES}
 	)
 set(RENEGADE_CAMPAIGN_SCRIPT_SOURCES
+  ${RENEGADE_SCRIPT_SOURCE}/Mission00.cpp
   ${RENEGADE_SCRIPT_SOURCE}/MissionX0.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission02.cpp
   ${RENEGADE_SCRIPT_SOURCE}/Mission03.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Mission11.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_DAK.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_RMV_Toolkit.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Sounds.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_RAD.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_DLS.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_DAY.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Objects.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission04.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission05.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission06.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission07.cpp
   ${RENEGADE_SCRIPT_SOURCE}/mission08.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Mission01.cpp)
+  ${RENEGADE_SCRIPT_SOURCE}/Mission09.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission10.cpp
+  ${RENEGADE_SCRIPT_SOURCE}/Mission11.cpp
+)
+list(LENGTH RENEGADE_CAMPAIGN_SCRIPT_SOURCES RENEGADE_CAMPAIGN_SCRIPT_SOURCE_COUNT)
+if(NOT RENEGADE_CAMPAIGN_SCRIPT_SOURCE_COUNT EQUAL 13)
+  message(FATAL_ERROR
+    "Complete campaign script source inventory changed: ${RENEGADE_CAMPAIGN_SCRIPT_SOURCE_COUNT}")
+endif()
 if(NOT RENEGADE_VITA_M00_DEMO)
   include(${RENEGADE_ROOT}/cmake/A35MultiplayerBuildingSources.cmake)
   list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
@@ -339,7 +344,7 @@ list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
   ${RENEGADE_STAGE}/ww3d2/sphereobj.cpp
   ${RENEGADE_STAGE}/ww3d2/ringobj.cpp
   ${RENEGADE_STAGE}/ww3d2/soundrobj.cpp
-  ${RENEGADE_CAMPAIGN_SCRIPT_SOURCES}
+  ${RENEGADE_SCRIPT_DSP_SOURCES}
   ${RENEGADE_STAGE}/combat/cinematicgameobj.cpp
   ${RENEGADE_STAGE}/wwlib/ramfile.cpp
   ${RENEGADE_STAGE}/commando/scorescreen.cpp)
@@ -566,28 +571,10 @@ set_source_files_properties(
   COMPILE_OPTIONS "-fpermissive"
 )
 set_source_files_properties(
-  ${RENEGADE_SCRIPT_SOURCE}/ScriptFactory.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/ScriptRegistrar.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/scripts.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Mission00.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_Cinematic.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
-  ${RENEGADE_CAMPAIGN_SCRIPT_SOURCES}
+  ${RENEGADE_SCRIPT_DSP_SOURCES}
   PROPERTIES COMPILE_OPTIONS "-fpermissive"
 )
-set_property(SOURCE
-  ${RENEGADE_SCRIPT_SOURCE}/Mission00.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_Cinematic.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Powerup.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/MissionX0.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Mission03.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_DAK.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_RMV_Toolkit.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Sounds.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_DLS.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Test_DAY.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit.cpp
-  ${RENEGADE_SCRIPT_SOURCE}/Toolkit_Objects.cpp
+set_property(SOURCE ${RENEGADE_SCRIPT_DSP_SOURCES}
   APPEND PROPERTY
   COMPILE_OPTIONS
   "-include${RENEGADE_COMPAT}/renegade_script_call_defaults.h")

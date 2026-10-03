@@ -1,5 +1,14 @@
 # Known gaps
 
+2026-10-03 campaign source-map review: all 13 mission files and the original
+44 statically linked Scripts.dsp code units are selected in both CMake graphs;
+seven missing mission units were added. This is uncompiled source closure, not
+runtime coverage. Retail campaign.ini and archive presence were inspected,
+but LDD ID differences need owner classification; level-side script parameters
+and archive asset references remain unaudited.
+Source scan counts 3,480 Find_Object expressions while the supplied overview
+reports 3,478. See [campaign source map reconciliation](CAMPAIGN_SOURCE_MAP_RECONCILIATION.md).
+
 2026-09-27 follow-up: additional startup particle lifetime/LOD defaults,
 mission-rank persistence, radio-input and round-transition gaps are confirmed;
 projector render targets remain unsupported. Nested W3D scan finds 14 unresolved

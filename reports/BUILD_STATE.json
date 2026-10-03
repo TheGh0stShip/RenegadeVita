@@ -1,4 +1,55 @@
 {
+  "campaign_source_map_20261003": {
+    "state": "STATIC_SOURCE_MAP_RECONCILED_ALL_13_CAMPAIGN_UNITS_SELECTED_UNCOMPILED",
+    "report": "reports/CAMPAIGN_SOURCE_MAP_RECONCILIATION.md",
+    "generated_inventory": "reports/generated/campaign_mission_source_surface.json",
+    "upstream_campaign_units": 13,
+    "source_lines": 101508,
+    "declared_scripts": 1370,
+    "distinct_script_commands_used": 143,
+    "script_command_table_entries": 202,
+    "source_find_object_calls": 3480,
+    "supplied_find_object_call_count": 3478,
+    "find_object_total_discrepancy": 2,
+    "original_scripts_dsp_cpp_entries": 45,
+    "statically_selected_dsp_units": 44,
+    "dllmain_replaced_by_static_provider": true,
+    "newly_selected_mission_units": ["Mission02.cpp", "Mission04.cpp", "Mission05.cpp", "Mission06.cpp", "Mission07.cpp", "Mission09.cpp", "Mission10.cpp"],
+    "cpp_files_outside_dsp": ["Common.cpp", "Group.cpp", "GroupControl.cpp", "GroupScript.cpp", "MissionS04.cpp", "PRDemo.cpp", "Test_DEL.cpp", "Test_DLS_M03.cpp", "unitcombat.cpp"],
+    "retail_campaign_ini": {
+      "source": "user-owned Steam E:/Command & Conquer Renegade/Data/always.dat:campaign.ini",
+      "always_dat_sha256": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a",
+      "flow_entries": 36,
+      "campaign_maps": ["M13.mix", "M01.mix", "M02.mix", "M03.mix", "M04.mix", "M05.mix", "M06.mix", "M07.mix", "M08.mix", "M09.mix", "M10.mix", "M11.mix"],
+      "M09_source": "Steam backup snapshot; archive hash is in reconciliation report"
+    },
+    "level_object_id_comparison": "read-only LDD/LSD instance IDs compared with literal mission Find_Object IDs; apparent differences need dynamic/spawner/call-site classification and are not asserted missing",
+    "focused_tests": "21 tests across source audit, DSP CMake parser, M13 source guard, PSTV collector, flight analyzer and bundle validator",
+    "native_or_host_cpp_build_performed": false,
+    "physical_mission_gates_closed": 0
+  },
+  "runtime_gap_diagnostics_20261003": {
+    "state": "PSTV_VDB_COLLECTION_AND_OFFLINE_GAP_ANALYSIS_VERIFIED",
+    "report": "reports/RUNTIME_GAP_DIAGNOSTICS.md",
+    "candidate": "A3.5-dev197",
+    "device_model": "pstv",
+    "reported_firmware": "3.74",
+    "installed_eboot_sha256": "4d81003ab8fcf4dbe8a958623e83600ce4b8ac468f22971e907b65a723bde831",
+    "runtime_log_sha256": "29280d85dd7cc9398b8098d898c765b70db357fff7afb649cfacf32d1bec68f6",
+    "flight_sidecars": {
+      "campaign-flight-summary.json": "52bc99c3a96941591e62b5924f71fb4a06b7924814ad780e0855fc6b355ef876",
+      "campaign-flight-events.jsonl": "61453ce3ec766485c05fc51a21a43c6d2c8ebbecb01abb7ac8502862406eb4a3",
+      "campaign-flight-frames.csv": "f2d0e62b65cdd8f7cca723928de3ed38c874aa2655af53abbd034e6a0bfbbe38",
+      "campaign-flight-log-tail.txt": "b9ae908b16b9f92f822dcd776581b3e3fb4da4b86b0e4f085f89277a44f555ba"
+    },
+    "m01_sidecar_scope": "6 frames, 8 events, original M01_Press_F1_Conversation observed; no objective progression or explicit subsequent route marker",
+    "m13_log_observation": "persistent candidate log contains success=1 at frame 249; intentionally not merged into the separate 15-frame M13 pre-Ion checkpoint sidecars",
+    "focused_tests": "tools.test_analyze_runtime_gaps, tools.test_collect_pstv_runtime_log, tools.test_validate_campaign_flight_bundle",
+    "vdb_actions_read_only": true,
+    "application_mutated_or_launched": false,
+    "mission_acceptance_gates_closed": 0,
+    "raw_dump_collected": false
+  },
   "deep_audit_followup": {
     "state": "ADDITIONAL_SOURCE_GAPS_CONFIRMED_NOT_REPAIRED",
     "report": "reports/DEEP_AUDIT_FOLLOWUP.md",

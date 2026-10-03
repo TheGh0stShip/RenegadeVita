@@ -1,5 +1,30 @@
 # First-mission alpha state
 
+## Current diagnostics work — 2026-10-03
+
+The supplied campaign map was reconciled with upstream mission sources and
+both native/host CMake graphs. This exposed seven omitted mission translation
+units, now included through the original Scripts.dsp-derived static source
+list (44 code units; DLLmain replaced by the static provider). Static audit
+and focused tests pass, but the changed source set has not been compiled or
+linked. See [campaign reconciliation](CAMPAIGN_SOURCE_MAP_RECONCILIATION.md).
+
+The current source branch has a candidate-bound runtime gap analyzer and a
+read-only PSTV VDB1 collector for the Renegade runtime log and four flight
+sidecars. The connected model was PSTV; installed Dev197 SELF hash matches the
+expected package identity. All pulled files match the remote hashes. The live
+M01 sidecar session contains six frames and the original opening conversation.
+The persistent log contains an M13 completion marker at frame 249, but it is a
+multi-session file and is intentionally not merged into the separate 15-frame
+M13 save-reload sidecar bundle. No mission-completion, renderer, or performance
+acceptance is claimed from these findings.
+
+Next automatic action: instrument semantic milestones at the actual original
+M13/M01 trigger and objective owners, retain candidate/archive/session identity
+with each event, then collect and analyze a bounded PSTV route. Focused tests:
+`tools.test_analyze_runtime_gaps`, `tools.test_collect_pstv_runtime_log`, and
+`tools.test_validate_campaign_flight_bundle`.
+
 Current release-support issue (2026-09-21): the published Dev134 demo setup
 omitted loose `Data/stylemgr.ini` and `Data/WWAudio.ini`, both required by the
 startup retail probes, and truncated the verified Steam `always.dat` SHA-256 by

@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-10-03 event/callback continuation finds no resolved slot-fill candidate
+among inspected Tutorial/M13/M01 source/data contexts, but does not establish
+absence of all external writers. Five parser contexts, four normal slot leads,
+M13 damage/voice lifetime and M01 audio-signature leads remain open. Definition
+hash checks prevent stale parameters being accepted. 191 focused source/Python
+tests pass; native gates remain 0/10. See [event audit](CINEMATIC_EVENT_ROUTES.md).
+
 2026-10-03 review closes section-accounting gaps, not complete-content gates.
 Find_Object and Send_Custom_Event totals differ from the supplied overview;
 six aggregate media/assembly counts remain uncertified. A POSIX completion

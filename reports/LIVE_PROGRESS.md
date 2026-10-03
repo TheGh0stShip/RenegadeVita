@@ -1,5 +1,25 @@
 # Live engineering progress
 
+## Cinematic event routing and callback provenance — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: publish validated event candidates and original callback lifetime findings.
+Completed: read-only caller/event audit retains authored parameter contexts,
+unbound mission scripts, cinematic tail contexts and unresolved forwarding.
+Numeric enums/macros are derived without trusting index comments; custom type
+and parameter roles remain separate. Original Created/custom synchronous
+dispatch, corpse membership and conversation interruption paths inspected.
+Evidence: 21 new counterexamples and 191 focused Python/source checks pass.
+Definition database, map and all 166 candidate text hashes checked. Source
+sites 147/242/751; binding contexts 1834/508/889; unresolved type contexts 1/3/1.
+No resolved slot-fill candidate in this scope; no C++ build or game launch.
+Next: global voice/command behavior and candidate-bound lifetime evidence
+after the hold. Complete event delivery/lifetime and native gates stay open.
+Blocker: runtime proof awaits the existing build/launch hold.
+See [event/callback audit](CINEMATIC_EVENT_ROUTES.md).
+
 ## Full mission overview and loader publication — 2026-10-03
 
 Renegade Vita — v3.5 active

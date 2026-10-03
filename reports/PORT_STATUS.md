@@ -1,5 +1,12 @@
 # Renegade Vita port status
 
+2026-10-03 event/callback continuation traces 1,140 source call sites and
+3,231 binding contexts across Tutorial/M13/M01. No resolved slot-fill candidate
+is found in this scope; five parser contexts and the four previous slot leads
+remain open. Definition-database identity is now checked before using authored
+parameters. 191 focused Python/source tests pass; no build/launch/native gate.
+See [cinematic event routing](CINEMATIC_EVENT_ROUTES.md).
+
 2026-10-03 full-overview review accounts for every supplied section, all
 16 system groups and 13 mission sources. Two source-count discrepancies and
 uncertified media/runtime claims remain explicit. POSIX completion polling,

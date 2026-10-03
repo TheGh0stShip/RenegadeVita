@@ -2,6 +2,13 @@
 
 ## Current diagnostics work — 2026-10-03
 
+The event/callback sweep adds source caller and parameter provenance for
+1,140 custom-event sites across Tutorial/M13/M01, including unbound mission
+scripts and actual header links. Five parser contexts and four prior slot
+leads remain open; original synchronous callbacks and corpse/voice rules are
+retained. Definition/map/control hashes checked; 191 focused tests pass.
+No build or launch. See [event routes](CINEMATIC_EVENT_ROUTES.md).
+
 The full-overview review records every supplied section and source-owner group,
 retaining count discrepancies and unverified runtime/media recommendations.
 POSIX acquire polling, final completion publication and selected texture-worker

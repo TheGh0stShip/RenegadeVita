@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Deeper cinematic event work: [caller and callback provenance](CINEMATIC_EVENT_ROUTES.md)
+retains 1,140 source event sites, 3,231 parameter contexts and five unresolved
+parser contexts. Source callback/actor rules narrow the prior slot and voice
+leads without proving delivery. Definition/map/control identities are checked;
+191 focused Python/source checks pass and all native gates remain open.
+
 Full supplied-overview review: [all sections, linkages and decisions](MISSION_RESEARCH_REVIEW.md)
 accounts for 16 systems, 13 missions, assets, checklist, profiling and caveats.
 Counts and source presence remain separate from behavior proof. POSIX thread

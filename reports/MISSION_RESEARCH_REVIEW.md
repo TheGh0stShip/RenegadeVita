@@ -15,6 +15,12 @@ and report actual canonical paths; build paths still require their exact case.
 Every nominated system owner is located. Presence does not prove target
 selection, successful linkage or runtime registration.
 
+The subsequent [event/callback sweep](CINEMATIC_EVENT_ROUTES.md) traces source
+callers, actual header constants and parameter contexts for Tutorial/M13/M01.
+It retains four slot leads and native/runtime uncertainty; the focused suite
+now has 191 passing source/Python tests. It does not certify the remaining
+command, media or gameplay requirements listed below.
+
 ## Architecture and count claims
 
 The [campaign reconciliation](CAMPAIGN_SOURCE_MAP_RECONCILIATION.md) confirms

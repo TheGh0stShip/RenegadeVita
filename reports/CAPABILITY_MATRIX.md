@@ -1,5 +1,11 @@
 # Capability matrix
 
+2026-10-03 event audit retains source callers, actual header constants, authored
+parameter contexts and unbound mission scripts without claiming runtime flow.
+Objects.ddb/map/control hashes are checked. 1,140 call sites, five unresolved
+type contexts and four open slot leads; 191 Python/source checks pass. No native
+gate closed. See [event/callback provenance](CINEMATIC_EVENT_ROUTES.md).
+
 2026-10-03 complete-overview review records all supplied sections and located
 source owners without certifying every asset or behavior. Original loader/
 texture-worker completion and cancellation boundaries gain source corrections,

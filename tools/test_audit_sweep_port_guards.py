@@ -8,7 +8,9 @@ class PortGuardInventoryTest(unittest.TestCase):
         rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
                  'body_sha256': body, 'status': 'unknown'} for body in ('native', 'fallback')]
         review = {'file': 'port/a.cpp', 'declarator': 'f()', 'body_sha256': 'fallback',
-                  'status': 'stubbed_or_noop'}
+                  'status': 'stubbed_or_noop', 'original_owner': 'movie',
+                  'behavior': 'skip', 'callers': [], 'affected_scope': [],
+                  'acceptance_open': 'runtime'}
         self.assertEqual(apply_reviews(rows, [review]), [])
         self.assertEqual([row['status'] for row in rows], ['unknown', 'stubbed_or_noop'])
 

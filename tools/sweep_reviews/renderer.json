@@ -1198,5 +1198,974 @@
     ],
     "acceptance_open": "Verify UV source domains, matrix/count/projected semantics, normals under scaling, divisor handling, cache invalidation and route ownership; compare Vita/PSTV environment/projected texture pixels."
   }
+    ,
+  {
+    "symbol": "D3DRS_AMBIENTMATERIALSOURCE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_BLENDOP",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_COLORVERTEX",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_COLORWRITEENABLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_DEBUGMONITORTOKEN",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_DIFFUSEMATERIALSOURCE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_DITHERENABLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_EDGEANTIALIAS",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_EMISSIVEMATERIALSOURCE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_INDEXEDVERTEXBLENDENABLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_LASTPIXEL",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_LIGHTING",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_LINEPATTERN",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_LOCALVIEWER",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_MULTISAMPLEANTIALIAS",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_MULTISAMPLEMASK",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_NORMALIZENORMALS",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_PATCHEDGESTYLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_PATCHSEGMENTS",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSCALEENABLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSCALE_A",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSCALE_B",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSCALE_C",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSIZE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSIZE_MAX",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSIZE_MIN",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_POINTSPRITEENABLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_SHADEMODE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_SOFTWAREVERTEXPROCESSING",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_SPECULARENABLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_SPECULARMATERIALSOURCE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_TEXTUREFACTOR",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_TWEENFACTOR",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_VERTEXBLEND",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP0",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP1",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP2",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP3",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP4",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP5",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP6",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_WRAP7",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_ZENABLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  },
+  {
+    "symbol": "D3DRS_ZVISIBLE",
+    "status": "missing",
+    "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper direct render-state request",
+    "behavior": "Neither fog/ambient helpers nor the native direct render-state switch consume this symbol. Before initialization the request returns success without application; after initialization it reaches the unsupported diagnostic and returns success. Independent shader, CPU lighting, geometry, color-mask or other rendering routes may implement related behavior and are not covered by this direct-state finding.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:2646-2777",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+    ],
+    "affected_scope": [
+      "Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open."
+    ],
+    "acceptance_open": "Trace active setters and value domains, cross-check independent renderer routes for equivalent semantics, and verify affected content on Vita/PSTV. Do not infer missing whole features solely from this entry-point gap."
+  }
   ]
 }

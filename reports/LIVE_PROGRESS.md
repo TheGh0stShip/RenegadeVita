@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 direct-handler closure: remaining 44 render-state symbols lack direct cases.
+Independent rendering routes and active retail setters remain open; no whole
+feature absence is inferred. Totals 69 missing, 28 replaced, 2,495 unknown.
+Eight tests/reproduction pass. Latest CI runs 37159145790/37159145719 queued.
+
 S2 value-domain expansion: 91 more distinct symbols and 449 references now
 enumerated, including operations, modifiers and address/filter values. New
 discovery rows remain unknown. Denominator 2,592; 25 missing, 28 replaced,

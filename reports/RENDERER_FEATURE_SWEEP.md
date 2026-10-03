@@ -1,5 +1,17 @@
 # S2 renderer features — inventory in progress
 
+Direct-render-state handler review now covers the remaining 44 discovered
+render-state symbols: lighting/material sources, specular, point sprites/size/
+scale, color writes, blend operation, depth enable, wrapping, vertex blending,
+multisample and other legacy/debug states. None has a case in the direct native
+handler or its fog/ambient helpers. Before initialization it returns success;
+after initialization it logs the first unsupported request and returns success.
+These are missing direct mappings, not proof of missing whole features: original
+shader, CPU lighting, geometry and color-mask routes require separate comparison.
+References may be debug names rather than active setters. Current totals are
+69 missing, 28 boundary-replaced and 2,495 unknown across 2,592 rows. Eight
+tests and repeated generation pass. Latest publication CI remains queued.
+
 Value-domain expansion adds texture operations, arguments and modifiers,
 transform flags, addressing/filter values, blend/comparison/cull/fill/fog and
 stencil-operation constants. This exposes 91 additional distinct symbols and

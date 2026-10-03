@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Fixed HUD texture members — 2026-10-03
+
+Completed:six original HUD/radar/weapon/objective/sniper fixed texture dependencies
+checked across all three maps; each has a located DXT5 DDS member. Original
+suffix selection/fallback and native DXT5 path traced.
+Evidence:private hashed member/source receipt; file presence does not establish
+upload, UV, alpha or rendered correctness. Dynamic image dependencies remain open.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Global audio preset-to-member routes — 2026-10-03
 
 Completed: three-map global sound chains and WAV structures inspected; original

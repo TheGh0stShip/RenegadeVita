@@ -155,6 +155,18 @@ No C++ build, package, installation, launch, device action or retail/save
 modification occurred. All native mission/runtime evidence gates remain open.
 # HUD help, objective and map ownership follow-up — 2026-10-03
 
+Fixed HUD texture follow-up: information/radar, powerup chat box, default weapon
+sheet, objective arrow, objective star and sniper overlays use six original
+source texture names. HUD settings supply sizes/UVs rather than these filenames.
+All six have located DXT5 DDS alternatives in the inspected core/mission archive
+scope for Tutorial/M13/M01. Original DDSFile converts the requested suffix to
+dds; TextureLoadTask tries compressed loading when allowed, then uncompressed
+fallback. The native renderer includes a DXT5 upload path. This rules out absent
+files for these fixed dependencies, not incorrect UVs, alpha, upload or native
+pixels. Dynamic weapon icons and objective images remain separate dependencies.
+Private archive/member and source hashes are retained in
+`build/mission-fixed-hud-textures-20261003.json`. No retail content is published.
+
 Original scriptcommands Set_HUD_Help_Text clears on ID0 or translates the
 requested ID and stores text/color through HUDInfo. The setter marks the text
 dirty. Original HUD rendering rebuilds the sentence when dirty, displays for

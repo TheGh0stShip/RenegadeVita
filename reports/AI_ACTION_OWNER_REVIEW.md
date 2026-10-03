@@ -187,6 +187,27 @@ asset and runtime evidence. No renderer rewrite or speculative invalidation was
 introduced. Six source identities are retained privately in
 `build/tutorial-alternate-material-native-owner-20261003.json`.
 
+## Tutorial powerplant alternate payload candidates
+
+Read-only inspection of the tutorial archive's powerplant interior member finds
+23 mesh headers. All23 contain repeated vertex-material ID fields within at
+least one prelit material pass. Original read_vertex_material_ids selects the
+alternate description when that pass already has material data; final loading
+installs an alternate description only when its context is nonempty. This
+connects actual authored payload candidates to the original alternate owner,
+without claiming loader execution or rendered power changes.
+
+Prelit wrappers are selected by the original loader's PrelitChunkID; their
+presence does not mean every representation loads. Material-pass payloads were
+parsed explicitly as bounded little-endian chunk streams because these containers
+do not necessarily advertise children through the serialized high-bit flag.
+No runtime-format conversion was made. The member/archive hashes, mesh headers,
+wrapper kinds and field counts remain private in
+`build/tutorial-powerplant-alternate-payload-20261003.json`.
+Actual selected representation, material indices, alternate installation,
+building mesh association, texture delivery and native power-toggle pixels
+remain open. This inspection covers the powerplant interior member only.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

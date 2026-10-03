@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Tutorial powerplant alternate payload candidates — 2026-10-03
+
+Completed: retail powerplant interior inspected read-only;23 meshes contain
+repeated vertex-material fields in prelit passes, matching original alternate
+material routing. Explicit bounded pass parsing handles unflagged containers.
+Evidence: private archive/member hashes and structural field counts.
+Open: selected prelit representation, actual installation/association and pixels.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Native tutorial alternate-material consumption — 2026-10-03
 
 Completed: MeshClass submission→current-description getters→per-triangle native

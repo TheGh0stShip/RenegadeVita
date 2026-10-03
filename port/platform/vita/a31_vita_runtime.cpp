@@ -3615,7 +3615,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					"Starting vitaGL renderer",
 					"visible status remains until vitaGL replaces the framebuffer");
 				A30_Vita_Log("A3.5 startup: retaining bootstrap framebuffer through WW3D::Init to avoid black display handoff\n");
-				ww3d_initialized = WW3D::Init(NULL, NULL, true) == WW3D_ERROR_OK;
+				// Interactive rendering requires original dazzle type/lensflare setup.
+				ww3d_initialized = WW3D::Init(NULL, NULL, false) == WW3D_ERROR_OK;
 				if (!ww3d_initialized) {
 					A30_Vita_Log("A3.1 interactive: WW3D init FAIL\n");
 					break;

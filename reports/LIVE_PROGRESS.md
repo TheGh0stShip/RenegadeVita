@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Original dazzle lifecycle restoration — 2026-10-03
+
+Completed: anchored source patch restores original Vita dazzle visibility/render
+body and WW3D type initialization/teardown; interactive runtime requests full
+initialization. Existing Combat layer creation/flush ownership is retained.
+Evidence: eleven source-only checks, zero-fuzz temporary replay, shell syntax.
+Retail inspection: both core archives contain DAZZLE.INI with vehicle/blinking
+types; member hashes retained privately. Contents differ; live mount precedence
+and type/texture loading remain unverified. Cleanup tolerates empty type tables.
+Next: verify retail type initialization and native draw/state boundaries.
+Uncompiled; no active staging, build, launch or retail mutation. Gates0/10.
+
 ## Confirmed native dazzle presentation omission — 2026-10-03
 
 Completed: original dazzle native early return traced to15 authored M01 helicopter

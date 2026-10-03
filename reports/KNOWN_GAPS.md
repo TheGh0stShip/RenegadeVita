@@ -1,9 +1,12 @@
 # Known gaps
 
 2026-10-03 cinematic HLOD review connects15 M01 helicopter light child records
-to the retained native DazzleRenderObjClass::Render early return. Assets are
-declared, but their original visibility/blink/layer rendering is skipped under
-RENEGADE_VITA_PORT. This is unfinished full-port presentation, not asset closure.
+to the native DazzleRenderObjClass::Render early return. A source correction
+restores the unchanged original body on Vita, original DAZZLE.INI initialization
+and teardown, and interactive full-mode initialization. Headless host validation
+retains its explicit rendering skip. Eleven source-only checks pass; the patch
+is uncompiled and native type loading, visibility and pixels remain unverified.
+This is unfinished full-port presentation, not asset closure.
 Original particle point/line groups reach indexed draw submission separately;
 neither native effect fidelity nor physical pixels are accepted. See
 [effect owner review](AI_ACTION_OWNER_REVIEW.md). No build or launch.

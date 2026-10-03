@@ -1,0 +1,45 @@
+--- a/dazzle.cpp
++++ b/dazzle.cpp
+@@ -895,12 +895,9 @@
+ // ----------------------------------------------------------------------------
+ void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
+ {
+-#if defined(RENEGADE_VITA_PORT)
+-	/* The original Dazzle renderer delegates lens-flare geometry to a DX8
+-	** DazzleLayer that the Vita boundary does not yet provide.  Retaining the
+-	** BackgroundMgr-owned object is still required for authentic sky
+-	** construction, but an absent optional presentation layer is a bounded
+-	** no-op rather than an unsupported world submission. */
++#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
++	/* Headless host validation has no native dazzle framebuffer.
++	** Physical Vita executes the original visibility and layer path below. */
+ 	(void)rinfo;
+ 	return;
+ #else
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -286,6 +286,14 @@
+ 	Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
+ 		RenegadeVitaRenderer::DISPLAY_WIDTH, RenegadeVitaRenderer::DISPLAY_HEIGHT));
+ 	VertexMaterialClass::Init();
++	if (!lite) {
++		FileClass * dazzle_ini_file = _TheFileFactory->Get_File(DAZZLE_INI_FILENAME);
++		if (dazzle_ini_file) {
++			INIClass dazzle_ini(*dazzle_ini_file);
++			DazzleRenderObjClass::Init_From_INI(&dazzle_ini);
++			_TheFileFactory->Return_File(dazzle_ini_file);
++		}
++	}
+ 
+ 	IsInitted = true;
+ 	return WW3D_ERROR_OK;
+@@ -359,6 +367,9 @@
+ #if defined(RENEGADE_ORIGINAL_SORTING)
+ 	SortingRendererClass::Deinit();
+ #endif
++	if (!Lite) {
++		DazzleRenderObjClass::Deinit();
++	}
+ 	if (WW3DAssetManager::Get_Instance()) {
+ 		WW3DAssetManager::Get_Instance()->Free_Assets();
+ 	}

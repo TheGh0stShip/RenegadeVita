@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from tools.original_owner_source_replay import replay_to_patch
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -11,13 +12,9 @@ class ConversationTransitions(unittest.TestCase):
     def test_zero_fuzz_owner_hooks_preserve_callback_order(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'activeconversation.cpp'
-            path.write_bytes((ROOT / 'staging/combat/activeconversation.cpp').read_bytes())
-            (Path(directory) / 'activeconversation.h').write_bytes(
-                (ROOT / 'staging/combat/activeconversation.h').read_bytes())
-            result = subprocess.run(['patch', '--batch', '--forward', '--fuzz=0',
-                                     '--no-backup-if-mismatch', '-p1', '-d', directory],
-                                    input=(ROOT / 'port/patches/combat-a35-conversation-transition-telemetry.patch').read_bytes(),
-                                    capture_output=True, check=True)
+            before, result = replay_to_patch(directory, 'combat',
+                ('activeconversation.cpp', 'activeconversation.h'),
+                'combat-a35-conversation-transition-telemetry.patch')
             self.assertNotIn(b'offset', result.stdout)
             text = path.read_text()
             header = (Path(directory) / 'activeconversation.h').read_text()
@@ -31,7 +28,7 @@ class ConversationTransitions(unittest.TestCase):
         self.assertEqual(text.count('DiagnosticInstance ='), 1)
         save_load = text.split('ActiveConversationClass::Save', 1)[1].split('ActiveConversationClass::Register_Monitor', 1)[0]
         self.assertNotIn('DiagnosticInstance', save_load)
-        original = (ROOT / 'staging/combat/activeconversation.cpp').read_text()
+        original = before['activeconversation.cpp']
         for signature in ('ActiveConversationClass::Save (', 'ActiveConversationClass::Load (',
                           'ActiveConversationClass::Load_Variables ('):
             original_body = original.split(signature, 1)[1].split('\n}\n', 1)[0]

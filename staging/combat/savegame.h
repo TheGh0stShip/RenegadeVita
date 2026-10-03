@@ -81,7 +81,7 @@ public:
 	static void	Load_Definitions( const char * filename = DefaultDefinitionFilename );
 
 	// Generic SaveLoadSubSystem Access
-	static void	Load_Save_Load_System( const char * filename, bool auto_post_load );
+	static void	Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_level = false );
 	static void _cdecl Save_Save_Load_System( const char * filename, ... );
 
 protected:

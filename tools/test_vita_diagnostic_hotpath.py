@@ -11,9 +11,16 @@ ROOT = Path(__file__).resolve().parents[1]
 class DiagnosticHotpathTests(unittest.TestCase):
     def test_latched_diagnostics_do_not_scan_each_vertex_texture(self):
         source = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
-        guards = re.findall(r'if \((!g_logged_first_passthrough_texture_v_preserved\s*&&[\s\S]*?)\) \{', source)
-        self.assertEqual(len(guards), 2)  # mesh and indexed paths
-        for guard in guards:
+        guards = list(re.finditer(r'if \((!g_logged_first_passthrough_texture_v_preserved\s*&&[\s\S]*?)\) \{', source))
+        self.assertEqual(len(guards), 3)  # mesh fast, mesh transformed, indexed
+        for match in guards:
+            guard = match.group(1)
+            if 'mode == D3DTSS_TCI_PASSTHRU' not in guard:
+                # The fast path checks mode before reaching its inner latch.
+                context = source[max(0, match.start() - 220):match.start()]
+                self.assertIn('mode == D3DTSS_TCI_PASSTHRU', context)
+                self.assertIn('state.texture_transform_flags == D3DTTFF_DISABLE', context)
+                guard = '(mode == D3DTSS_TCI_PASSTHRU && (' + guard + '))'
             program = r'''
 #include <cstring>
 #include <cassert>

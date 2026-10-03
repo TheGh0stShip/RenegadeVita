@@ -1,5 +1,9 @@
 # Capability matrix
 
+2026-10-03 compile evidence now covers the restored graph: host and fast ARM
+compile/link pass, including original Dazzle. Behavior, pixels and complete
+mission acceptance remain unverified. See [compile closure](COMPILE_CLOSURE.md).
+
 2026-10-03 authored WAV bounds: metadata checks and an actual-length 3D audio
 provider boundary are implemented. 245 source/Python checks pass; C++ and
 eleven M01 file compatibility questions remain unverified. Native gates0/10.

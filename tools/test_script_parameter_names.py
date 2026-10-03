@@ -2,6 +2,7 @@ import unittest
 import subprocess
 import tempfile
 from pathlib import Path
+from tools.original_owner_source_replay import replay_to_patch
 from tools.audit_script_parameter_names import audit, parameter_index, scoped_findings
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,11 +25,8 @@ class ParameterNames(unittest.TestCase):
     def test_original_vector_parser_patch_replays_and_preserves_scan(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'scripts.cpp'
-            path.write_bytes((ROOT / 'staging/scripts/scripts.cpp').read_bytes())
-            result = subprocess.run(['patch', '--batch', '--forward', '--fuzz=0',
-                                     '--no-backup-if-mismatch', '-p1', '-d', directory],
-                                    input=(ROOT / 'port/patches/scripts-a35-vector-parameter-initialization.patch').read_bytes(),
-                                    capture_output=True, check=True)
+            _, result = replay_to_patch(directory, 'scripts', ('scripts.cpp',),
+                'scripts-a35-vector-parameter-initialization.patch')
             self.assertNotIn(b'offset', result.stdout)
             body = path.read_text().split('Vector3 ScriptImpClass::Get_Vector3_Parameter( int index )', 1)[1].split('\n}', 1)[0]
         self.assertIn('x = 0.0f, y = 0.0f, z = 0.0f', body)

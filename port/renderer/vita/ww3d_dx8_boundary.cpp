@@ -34,6 +34,9 @@ extern "C" GLboolean vglRenegadeUploadDXTChain(GLuint id, GLenum format,
 #endif
 
 bool DX8Wrapper::_EnableTriangleDraw = true;
+// Original DX8Wrapper state queried by Dazzle. The default framebuffer starts
+// outside texture rendering; native render-target switching remains incomplete.
+bool DX8Wrapper::IsRenderToTexture = false;
 // Native WW3D submits base meshes directly and retains the original decal
 // list owner here, without constructing the desktop category renderer.
 DX8MeshRendererClass TheDX8MeshRenderer;

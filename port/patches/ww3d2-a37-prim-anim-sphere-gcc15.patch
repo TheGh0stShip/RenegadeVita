@@ -1,0 +1,33 @@
+--- a/prim_anim.h
++++ b/prim_anim.h
+@@ -161,6 +161,9 @@
+ class LERPAnimationChannelClass : public PrimitiveAnimationChannelClass<T>
+ {
+ public:
++	using typename PrimitiveAnimationChannelClass<T>::KeyClass;
++	using PrimitiveAnimationChannelClass<T>::m_Data;
++	using PrimitiveAnimationChannelClass<T>::m_LastIndex;
+ 
+ 	/////////////////////////////////////////////////////////
+ 	//	Public methods
+@@ -182,7 +185,7 @@
+ //	Set_Key_Value
+ /////////////////////////////////////////////////////////
+ template<class T>
+-const PrimitiveAnimationChannelClass<T>::KeyClass &PrimitiveAnimationChannelClass<T>::Get_Key (int index) const
++const typename PrimitiveAnimationChannelClass<T>::KeyClass &PrimitiveAnimationChannelClass<T>::Get_Key (int index) const
+ {
+ 	return m_Data[index];
+ }
+--- a/sphereobj.cpp
++++ b/sphereobj.cpp
+@@ -1454,7 +1454,8 @@
+ 	fans = new int[fan_size * fan_ct];
+ 	
+ 	// Do Fan #1
+-	for (int ct = 0; ct < fan_size; ct++) {
++	int ct;
++	for (ct = 0; ct < fan_size; ct++) {
+ 		fans[ct] = ct;
+ 	}
+ 	//fans[ct] = 1;

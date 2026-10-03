@@ -1,4 +1,4 @@
-// Prepared runtime counterexamples; not executed under the build/launch hold.
+// Original level-load failure latch counterexamples; host evidence only.
 #include "a35_level_load_status.h"
 #include <cassert>
 

@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"}
+rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"$rv_root/local-builder"}
 if [ -d "$rv_managed_builder_root" ] && [ -w "$rv_managed_builder_root" ]; then
 	rv_builder_root=$rv_managed_builder_root
 else
@@ -100,7 +100,7 @@ bash "$rv_root/tools/build_ffmpeg_bink_vita.sh"
 bash "$rv_root/tools/build_vitagl_demo.sh"
 
 rv_upstream="$rv_root/upstream/CnC_Renegade"
-test -d "$rv_upstream/.git"
+test "$(git -C "$rv_upstream" rev-parse --show-toplevel)" = "$rv_upstream"
 if [[ -n "$(git -C "$rv_upstream" status --porcelain)" ]]; then
 	echo "Canonical upstream checkout is dirty; refusing fast candidate build." >&2
 	git -C "$rv_upstream" status --short >&2

@@ -15,7 +15,7 @@ validator=$project_root/tools/validate_vita_input_route.py
 loading_validator=$project_root/tools/validate_vita_loading_capture.py
 default_builder_root=${RENEGADE_BUILDER_ROOT:-}
 if [[ -z "$default_builder_root" ]]; then
-	managed_builder_root="/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"
+	managed_builder_root="$project_root/local-builder"
 	if [[ -d "$managed_builder_root" && -w "$managed_builder_root" ]]; then
 		default_builder_root=$managed_builder_root
 	else

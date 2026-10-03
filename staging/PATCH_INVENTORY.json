@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "bf61f89235c34a235711510bb0a140ae2c899ed6c47a0ecd84fdf5be1863d0bc",
-  "patch_count": 290,
+  "stage_script_sha256": "e91a093483233467c30026c089ee6e7459c888108ea46383ba6bea30611e1dc3",
+  "patch_count": 306,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1453,7 +1453,87 @@
       "path": "port/patches/ww3d-a35-original-sorting-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "eea4162324e51c7261780c9a0f77159aba5d413af6a926706050b029f94c1119"
+    },
+    {
+      "path": "port/patches/combat-a35-script-lookup-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "81adef8442e9eb0f63023522023f9405490235a4ebf66307905aa5d3cb7081c8"
+    },
+    {
+      "path": "port/patches/wwlib-a35-thread-completion-acquire.patch",
+      "stage_directory": "wwlib",
+      "sha256": "d9a903ec34276a3da0251be96caacbbbfa79649417ea934dbfa769dcbd5b7aa6"
+    },
+    {
+      "path": "port/patches/ww3d-a35-texture-worker-cancellation.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "a6d3fb9861e4ef30b7111516983584836d2cc953e04c1d1e6d3a38f4a8e6a086"
+    },
+    {
+      "path": "port/patches/wwaudio-a35-bounded-3d-sample.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "2d29425b40b5c897bbc2c70dd6b83e2cee324a5657cbc65671ef7f663f6cadb8"
+    },
+    {
+      "path": "port/patches/combat-a35-conversation-transition-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "a9d6b7c74ea2c6c4803bd158bec845b8ab6acd7b97fb5697be28e0816d74a1d1"
+    },
+    {
+      "path": "port/patches/scripts-a35-vector-parameter-initialization.patch",
+      "stage_directory": "scripts",
+      "sha256": "fe9cb8e07ca64d74cbfd8da81dd88742a067ba09bc600c0ade4a88c86f9ab33e"
+    },
+    {
+      "path": "port/patches/combat-a35-observer-timer-miss-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "cc12a3ec1f994c172165a54df05eca9a3065e772127670a484832114952ff536"
+    },
+    {
+      "path": "port/patches/combat-a35-action-observer-miss-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "a353bc91eccc0d789dd13d01ce6a852ddb02d34bbf8435bc8f2d2e343c3a31d6"
+    },
+    {
+      "path": "port/patches/combat-a35-required-level-load-failure.patch",
+      "stage_directory": "combat",
+      "sha256": "b92add2f3139c92634345f8b27ac75b194023acae09a3fbf30724d53e09c80ea"
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-filename-diagnostics.patch",
+      "stage_directory": "scripts",
+      "sha256": "2c26a16c461bca615951961ef94cdf2a5be184842bf75996ac569bae927b3481"
+    },
+    {
+      "path": "port/patches/combat-a35-logical-stimulus-telemetry.patch",
+      "stage_directory": "combat",
+      "sha256": "ff3e4a83a8b5ba89b662ad84cabfcacd011ac68be90bf0de3f8be1bc78d908d1"
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-primary-id-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "0aa0532dd3b9ffe79c78870e51f881e40a1fd6f1c66324cc0ff5c94f303837dc"
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-decal-submission.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "aea7db40c16a9e86ad00e3125d675b3ff43022103b09847062fe2784cf763102"
+    },
+    {
+      "path": "port/patches/ww3d2-a37-prim-anim-sphere-gcc15.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "5c31179abe21e31fe2ed953a340b1b59beb741ddef0bf06b5dcccb0819c52c76"
+    },
+    {
+      "path": "port/patches/commando-a35-options-staging-closure.patch",
+      "stage_directory": "commando",
+      "sha256": "7f8d5b6d947fd7f354ada6c4f6524d58edb5cf044a965416bcc1745ceeb5191c"
     }
   ],
-  "registry_sha256": "a8603b2be7d65bf63d588ef860705262dc44069caf5bb75af038a31ec930bd98"
+  "registry_sha256": "9e2a923b9592d12f9d13ee736edd67230ddf598dbea49a38ff7fe281e5cd5360"
 }

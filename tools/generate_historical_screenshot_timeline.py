@@ -598,6 +598,7 @@ def write_inventory() -> None:
         ("active_device_evidence", ROOT / "build" / "device-evidence", "build/device-evidence"),
         ("active_logs", ROOT / "logs", "logs"),
         ("active_dist", ROOT / "dist", "dist"),
+        ("migrated_local_builder", ROOT / "local-builder", MANAGED_BUILDER_LABEL),
         ("vita3k_user_appdata", Path("/mnt/c/Users/steve/AppData/Roaming/Vita3K/Vita3K/ux0/data/renegade/user"), VITA3K_USER_LABEL),
         ("missing_c_local_builder_root", Path("/mnt/c/Users/steve/AppData/Local/RenegadeVitaBuilder"), MANAGED_BUILDER_LABEL),
         ("e_vita_logs", Path("/mnt/e/Projects/RenegadeVitaBuilder/Vita Logs"), HISTORICAL_VITA_LOGS_LABEL),

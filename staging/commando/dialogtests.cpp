@@ -104,7 +104,7 @@ bool	SplashIntroMenuDialogClass::IsComplete = false;
 
 #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 ////////////////////////////////////////////////////////////////
-//	OptionsMenuClass — expose only the original Vita-supported route.
+//	OptionsMenuClass: preserve the established technical-settings route.
 ////////////////////////////////////////////////////////////////
 void
 OptionsMenuClass::On_Init_Dialog (void)

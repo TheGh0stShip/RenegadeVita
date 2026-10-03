@@ -2,12 +2,9 @@
 set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-# Candidates must be reachable from Windows.  The Linux-tree fallback is for
-# standalone development only; managed Windows builds always publish here.
-# Optional managed output root.  When unset, retain the historical Windows
-# location only when the current WSL username maps to that Windows profile;
-# otherwise use the checkout itself.  This keeps forks self-contained.
-rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"}
+# Keep managed artifacts in WSL after the Windows builder migration.
+# RENEGADE_BUILDER_ROOT still permits an explicit output destination.
+rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"$rv_root/local-builder"}
 if [ -d "$rv_managed_builder_root" ] && [ -w "$rv_managed_builder_root" ]; then
 	rv_builder_root=$rv_managed_builder_root
 else
@@ -138,7 +135,7 @@ fi
 ccache --zero-stats
 echo "ccache statistics reset; native-ext4 CMake launchers are required."
 
-test -d "$rv_upstream/.git"
+test "$(git -C "$rv_upstream" rev-parse --show-toplevel)" = "$rv_upstream"
 if [[ -n "$(git -C "$rv_upstream" status --porcelain)" ]]; then
 	echo "Canonical upstream checkout is dirty; refusing to overwrite it." >&2
 	git -C "$rv_upstream" status --short >&2
@@ -202,6 +199,7 @@ fi
 echo "Running lightweight current host contracts..."
 cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_root/build/host-a30-definitions" -G Ninja \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	-DRENEGADE_HOST_ORIGINAL_AUDIO=ON \
 	-DRENEGADE_USE_CCACHE=ON
 cmake --build "$rv_root/build/host-a30-definitions" \
 	--target a31_capture_telemetry_selftest \

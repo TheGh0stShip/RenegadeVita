@@ -5,10 +5,31 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(RENEGADE_HOST_ORIGINAL_AUDIO "Run original WWAudio over the manual host mixer" OFF)
+find_package(Freetype QUIET)
+if(NOT Freetype_FOUND)
+  find_program(RV_HOST_BREW brew)
+  if(RV_HOST_BREW)
+    execute_process(COMMAND "${RV_HOST_BREW}" --prefix freetype
+      OUTPUT_VARIABLE RV_HOST_FREETYPE_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE
+      RESULT_VARIABLE RV_HOST_FREETYPE_PREFIX_RESULT)
+    if(RV_HOST_FREETYPE_PREFIX_RESULT EQUAL 0)
+      set(RV_SAVED_PREFIX_PATH "${CMAKE_PREFIX_PATH}")
+      list(APPEND CMAKE_PREFIX_PATH "${RV_HOST_FREETYPE_PREFIX}")
+      find_package(Freetype REQUIRED)
+      set(CMAKE_PREFIX_PATH "${RV_SAVED_PREFIX_PATH}")
+    endif()
+  endif()
+endif()
+if(NOT Freetype_FOUND)
+  message(FATAL_ERROR "Host FreeType development headers and library are required")
+endif()
 
 get_filename_component(RV_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 include("${RV_ROOT}/cmake/RenegadeCcache.cmake")
 set(RV_STAGE "${RV_ROOT}/staging")
+# The original random generator requires 32-bit two's-complement wrap.
+# Scoped to this owner; the retained vectors cover signed index rollover.
+set_property(SOURCE ${RV_STAGE}/wwlib/random.cpp APPEND PROPERTY COMPILE_OPTIONS -fwrapv)
 set(RV_UPSTREAM "${RV_ROOT}/upstream/CnC_Renegade")
 set(RV_COMPAT "${RV_ROOT}/port/compatibility/include")
 set(RV_SCRIPT_SOURCE "${RV_STAGE}/scripts")
@@ -33,7 +54,7 @@ set(RV_WORLD_FONT_RENDERER_CLOSURE_SOURCES
   ${RV_ROOT}/port/renderer/vita/surface_boundary.cpp
   ${RV_ROOT}/port/renderer/vita/renegade_freetype_font_provider.cpp
 )
-set(RV_WORLD_HOST_FREETYPE "/usr/lib/x86_64-linux-gnu/libfreetype.so.6")
+set(RV_WORLD_HOST_FREETYPE "${FREETYPE_LIBRARIES}")
 if(NOT EXISTS "${RV_WORLD_HOST_FREETYPE}")
   message(FATAL_ERROR "Host FreeType runtime library is required for world-runtime regression targets")
 endif()
@@ -73,7 +94,81 @@ add_executable(a35_script_lookup_selftest
 target_include_directories(a35_script_lookup_selftest PRIVATE ${RV_ROOT}/port/developer)
 target_link_libraries(a35_script_lookup_selftest PRIVATE pthread)
 
-# Original ThreadClass probe; compiling it remains subject to the build hold.
+add_executable(a35_level_load_status_selftest
+  ${RV_ROOT}/tools/host_a35_level_load_status_test.cpp
+  ${RV_ROOT}/port/platform/vita/a35_level_load_status.cpp)
+target_include_directories(a35_level_load_status_selftest PRIVATE ${RV_ROOT}/port/platform/vita)
+target_compile_options(a35_level_load_status_selftest PRIVATE -UNDEBUG)
+
+add_executable(a35_winsock_descriptor_selftest
+  ${RV_ROOT}/tools/host_a35_winsock_descriptor_test.cpp)
+target_include_directories(a35_winsock_descriptor_selftest PRIVATE ${RV_COMPAT})
+target_compile_options(a35_winsock_descriptor_selftest PRIVATE -UNDEBUG)
+
+# Include standalone original-owner regressions in the same sanitizer graph.
+set_property(SOURCE
+  ${RV_ROOT}/tools/host_original_script_vector_parser_test.cpp
+  ${RV_ROOT}/tools/host_cinematic_save_test.cpp
+  APPEND PROPERTY COMPILE_OPTIONS -fpermissive)
+foreach(rv_script_probe IN ITEMS vector_parser cinematic_save)
+  if(rv_script_probe STREQUAL "vector_parser")
+    set(rv_script_probe_source ${RV_ROOT}/tools/host_original_script_vector_parser_test.cpp)
+  else()
+    set(rv_script_probe_source ${RV_ROOT}/tools/host_cinematic_save_test.cpp)
+  endif()
+  add_executable(a35_${rv_script_probe}_selftest
+    ${rv_script_probe_source}
+    ${RV_STAGE}/scripts/scripts.cpp
+    ${RV_STAGE}/scripts/ScriptFactory.cpp
+    ${RV_STAGE}/scripts/ScriptRegistrar.cpp
+    ${RV_STAGE}/scripts/strtrim.cpp)
+  target_include_directories(a35_${rv_script_probe}_selftest PRIVATE
+    ${RV_COMPAT} ${RV_STAGE}/scripts ${RV_STAGE}/wwmath ${RV_STAGE}/wwlib)
+  target_compile_definitions(a35_${rv_script_probe}_selftest PRIVATE
+    _UNIX=1 RENEGADE_VITA_PORT=1 RENEGADE_HOST_ABI_TEST=1)
+  target_compile_options(a35_${rv_script_probe}_selftest PRIVATE -UNDEBUG
+    "SHELL:-include ${RV_COMPAT}/msvc_compat.h"
+    "SHELL:-include ${RV_COMPAT}/renegade_script_call_defaults.h")
+endforeach()
+
+add_executable(a35_raw_animation_selftest
+  ${RV_ROOT}/tools/host_raw_animation_test.cpp
+  ${RV_STAGE}/ww3d2/motchan.cpp
+  ${RV_STAGE}/wwmath/wwmath.cpp
+  ${RV_STAGE}/wwmath/quat.cpp
+  ${RV_STAGE}/wwmath/matrix3d.cpp)
+target_include_directories(a35_raw_animation_selftest PRIVATE
+  ${RV_COMPAT} ${RV_STAGE}/ww3d2 ${RV_STAGE}/wwmath ${RV_STAGE}/wwlib
+  ${RV_STAGE}/wwsaveload ${RV_UPSTREAM}/Code/wwdebug)
+target_compile_definitions(a35_raw_animation_selftest PRIVATE
+  _UNIX=1 NDEBUG=1 RENEGADE_VITA_PORT=1 RENEGADE_HOST_ABI_TEST=1)
+target_compile_options(a35_raw_animation_selftest PRIVATE
+  -fno-rtti -ffunction-sections -fdata-sections "SHELL:-include ${RV_COMPAT}/msvc_compat.h")
+target_link_options(a35_raw_animation_selftest PRIVATE -Wl,--gc-sections)
+
+set(rv_track_probe ${CMAKE_CURRENT_BINARY_DIR}/generated/trackedvehicle_probe.cpp)
+add_custom_command(OUTPUT ${rv_track_probe}
+  COMMAND ${Python3_EXECUTABLE} ${RV_ROOT}/tools/generate_trackedvehicle_probe.py
+    --source ${RV_STAGE}/wwphys/trackedvehicle.cpp
+    --fixture ${RV_ROOT}/tools/host_trackedvehicle_repeat_render_test.cpp
+    --output ${rv_track_probe}
+  DEPENDS ${RV_STAGE}/wwphys/trackedvehicle.cpp
+    ${RV_ROOT}/tools/host_trackedvehicle_repeat_render_test.cpp
+    ${RV_ROOT}/tools/generate_trackedvehicle_probe.py
+  VERBATIM)
+add_executable(a35_trackedvehicle_repeat_selftest ${rv_track_probe})
+target_compile_options(a35_trackedvehicle_repeat_selftest PRIVATE -UNDEBUG)
+
+add_executable(a35_random_wrap_selftest
+  ${RV_ROOT}/tools/host_a35_random_wrap_test.cpp ${RV_STAGE}/wwlib/random.cpp)
+target_include_directories(a35_random_wrap_selftest PRIVATE
+  ${RV_COMPAT} ${RV_STAGE}/wwlib ${RV_STAGE}/wwmath ${RV_UPSTREAM}/Code/wwdebug)
+target_compile_definitions(a35_random_wrap_selftest PRIVATE
+  NDEBUG=1 _UNIX=1 RENEGADE_VITA_PORT=1 RENEGADE_HOST_ABI_TEST=1)
+target_compile_options(a35_random_wrap_selftest PRIVATE
+  "SHELL:-include ${RV_COMPAT}/msvc_compat.h")
+
+# Original ThreadClass completion/publication probe.
 add_executable(a35_thread_publication_selftest
   ${RV_ROOT}/tools/host_a35_thread_publication_test.cpp
   ${RV_STAGE}/wwlib/thread.cpp
@@ -367,7 +462,7 @@ target_include_directories(a35_loading_backdrop_contract PRIVATE
   ${RV_COMPAT}
   ${RV_ROOT}/port/filesystem
   ${RV_ROOT}/port/renderer/vita
-  /usr/local/vitasdk/arm-vita-eabi/include/freetype2
+  ${FREETYPE_INCLUDE_DIRS}
   ${RV_STAGE}/wwbitpack
   ${RV_STAGE}/wwlib
   ${RV_STAGE}/wwmath
@@ -422,7 +517,7 @@ set_target_properties(a30_wwphys_definition_runtime PROPERTIES
 target_include_directories(a30_wwphys_definition_runtime PRIVATE
   ${RV_COMPAT}
   ${RV_ROOT}/port/renderer/vita
-  /usr/local/vitasdk/arm-vita-eabi/include/freetype2
+  ${FREETYPE_INCLUDE_DIRS}
   ${RV_ROOT}/port/audio/miles
   ${RV_ROOT}/port/filesystem
   ${RV_ROOT}/port/platform
@@ -482,6 +577,8 @@ target_link_libraries(a30_wwphys_definition_runtime PRIVATE m pthread "${RV_WORL
 # source ownership and exposes the genuine link closure before the dynamic LDD
 # route is switched on.
 add_executable(a31_gameplay_seed_runtime
+  ${RV_ROOT}/port/developer/a35_campaign_flight_recorder.cpp
+  ${RV_ROOT}/port/developer/a35_script_lookup_telemetry.cpp
   ${RENEGADE_A31_GAMEPLAY_SEED_ORIGINAL_SOURCES}
 	${RV_STAGE}/ww3d2/ddsfile.cpp
 	${RV_STAGE}/ww3d2/formconv.cpp
@@ -507,9 +604,10 @@ set_target_properties(a31_gameplay_seed_runtime PROPERTIES
   OUTPUT_NAME a31_m00_gameplay_seed_runtime
 )
 target_include_directories(a31_gameplay_seed_runtime PRIVATE
+  ${RV_ROOT}/port/developer
   ${RV_COMPAT}
   ${RV_ROOT}/port/renderer/vita
-  /usr/local/vitasdk/arm-vita-eabi/include/freetype2
+  ${FREETYPE_INCLUDE_DIRS}
   ${RV_ROOT}/port/audio/miles
   ${RV_ROOT}/port/filesystem
   ${RV_ROOT}/port/platform
@@ -686,6 +784,7 @@ else()
     pthread z SceNet_stub SceNetCtl_stub SceLibKernel_stub SceRtc_stub)
 endif()
 add_executable(a31_interactive_runtime
+  ${RV_ROOT}/port/developer/a35_campaign_flight_recorder.cpp
   ${RV_STAGE}/wwlib/ramfile.cpp
   ${RENEGADE_A35_MULTIPLAYER_BUILDING_SOURCES}
   ${RV_ROOT}/port/filesystem/renegade_ttfs.cpp
@@ -830,7 +929,7 @@ target_include_directories(a31_interactive_runtime PRIVATE
   ${RV_ROOT}/port/developer
   ${RV_A4_DIALOG_GENERATED_DIR}
   ${RV_ROOT}/port/renderer/vita
-  /usr/local/vitasdk/arm-vita-eabi/include/freetype2
+  ${FREETYPE_INCLUDE_DIRS}
   ${RV_ROOT}/port/audio/miles
   ${RV_ROOT}/port/filesystem
   ${RV_ROOT}/port/platform
@@ -922,6 +1021,13 @@ set_property(SOURCE
   ${RV_SCRIPT_SOURCE}/mission08.cpp
   APPEND PROPERTY COMPILE_OPTIONS
   "-include${RV_COMPAT}/renegade_m08_script_defaults.h")
+foreach(rv_campaign_default_unit IN ITEMS
+    Mission02.cpp Mission03.cpp Mission05.cpp Mission06.cpp Mission07.cpp
+    Mission09.cpp Mission10.cpp MissionDemo.cpp Test_PDS.cpp Toolkit_Objectives.cpp)
+  set_property(SOURCE ${RV_SCRIPT_SOURCE}/${rv_campaign_default_unit}
+    APPEND PROPERTY COMPILE_OPTIONS
+    "-include${RV_COMPAT}/renegade_campaign_script_defaults.h")
+endforeach()
 set_source_files_properties(
   ${RV_STAGE}/combat/scripts.cpp
   PROPERTIES
@@ -1001,7 +1107,7 @@ if(CMAKE_CROSSCOMPILING)
     pthread
   )
 else()
-  set(RV_HOST_FREETYPE "/usr/lib/x86_64-linux-gnu/libfreetype.so.6")
+  set(RV_HOST_FREETYPE "${FREETYPE_LIBRARIES}")
   if(NOT EXISTS "${RV_HOST_FREETYPE}")
     message(FATAL_ERROR "Host FreeType runtime library is required for the frontend glyph contract")
   endif()

@@ -82,6 +82,8 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(RENEGADE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 set(RENEGADE_UPSTREAM "${RENEGADE_ROOT}/upstream/CnC_Renegade")
 set(RENEGADE_STAGE "${RENEGADE_ROOT}/staging")
+# Preserve the original generator's two's-complement arithmetic on this TU.
+set_property(SOURCE ${RENEGADE_STAGE}/wwlib/random.cpp APPEND PROPERTY COMPILE_OPTIONS -fwrapv)
 set(RENEGADE_COMPAT "${RENEGADE_ROOT}/port/compatibility/include")
 
 # Compile the HTTP boundary separately until a current TLS backend and trust
@@ -598,6 +600,13 @@ set_property(SOURCE
   ${RENEGADE_SCRIPT_SOURCE}/mission08.cpp
   APPEND PROPERTY COMPILE_OPTIONS
   "-include${RENEGADE_COMPAT}/renegade_m08_script_defaults.h")
+foreach(rv_campaign_default_unit IN ITEMS
+    Mission02.cpp Mission03.cpp Mission05.cpp Mission06.cpp Mission07.cpp
+    Mission09.cpp Mission10.cpp MissionDemo.cpp Test_PDS.cpp Toolkit_Objectives.cpp)
+  set_property(SOURCE ${RENEGADE_SCRIPT_SOURCE}/${rv_campaign_default_unit}
+    APPEND PROPERTY COMPILE_OPTIONS
+    "-include${RENEGADE_COMPAT}/renegade_campaign_script_defaults.h")
+endforeach()
 target_link_options(${PROJECT_NAME} PRIVATE
   -fshort-wchar
   -Wl,--gc-sections

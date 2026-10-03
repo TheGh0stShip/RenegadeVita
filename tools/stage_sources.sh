@@ -1060,6 +1060,14 @@ test "$(sha256sum "$rv_stage/ww3d2/mesh.cpp" | cut -d' ' -f1)" = \
 	"628232c017e9ffe25ec68d4732e133b31f13094c2653322c95a5e06319d137ca"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-original-decal-submission.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a37-prim-anim-sphere-gcc15.patch"
+test "$(sha256sum "$rv_stage/commando/dialogtests.cpp" | cut -d' ' -f1)" = \
+	"6addde867fc812575af68d3afd5ecf2bc407abad3fcd20a0880f963d453d5acc"
+test "$(sha256sum "$rv_stage/commando/dialogtests.h" | cut -d' ' -f1)" = \
+	"55cd200d7bda5d0adc422df3cd2db9d44baca690464fa4c2da386aa2279bce67"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-options-staging-closure.patch"
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()
 	for rv_dir in "${rv_managed_stage_dirs[@]}"; do

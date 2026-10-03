@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from tools.original_owner_source_replay import replay_to_patch
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -12,16 +13,12 @@ class BoundedAudioContract(unittest.TestCase):
         original = ROOT / 'staging/wwaudio/sound3dhandle.cpp'
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / original.name
-            target.write_bytes(original.read_bytes())
-            result = subprocess.run(
-                ['patch', '--batch', '--forward', '--fuzz=0',
-                 '--no-backup-if-mismatch', '-p1', '-d', directory],
-                input=(ROOT / 'port/patches/wwaudio-a35-bounded-3d-sample.patch').read_bytes(),
-                capture_output=True, check=True)
+            _, result = replay_to_patch(directory, 'wwaudio', ('sound3dhandle.cpp',),
+                                       'wwaudio-a35-bounded-3d-sample.patch')
             self.assertNotIn(b'offset', result.stdout)
             text = target.read_text()
             self.assertIn('::AIL_set_3D_sample_file_bounded', text)
-            self.assertIn('static_cast<size_t>(Buffer->Get_Length ())', text)
+            self.assertIn('static_cast<size_t>(Buffer->Get_Raw_Length ())', text)
             self.assertNotIn('::AIL_set_3D_sample_file (', text)
             self.assertEqual(list(Path(directory).glob('*.rej')), [])
 

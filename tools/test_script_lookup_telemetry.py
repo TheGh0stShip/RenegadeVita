@@ -8,6 +8,7 @@ from pathlib import Path
 
 from tools.analyze_script_lookups import KINDS, analyze_lookups
 from tools.renegade_patch_inventory import load_inventory
+from tools.original_owner_source_replay import replay_to_patch
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -197,24 +198,12 @@ class LookupSourceBoundaryTests(unittest.TestCase):
         self.assertIn('combat-a35-script-lookup-telemetry.patch', str(inventory))
 
     def test_staged_hook_dry_run_is_zero_fuzz_and_preserves_owners(self):
-        # Source-only staging receipt; no compiler/build/stage script invocation.
-        original = ROOT / 'staging/combat/scriptcommands.cpp'
-        if not original.exists():
-            self.skipTest('preexisting staged Combat source not available')
-        text = original.read_text()
+        # Replay pristine owners in registry order; never reverse active staging.
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / 'scriptcommands.cpp'
-            target.write_text(text)
-            patch = (ROOT / 'port/patches/combat-a35-script-lookup-telemetry.patch').read_bytes()
-            if '#include "a35_script_lookup_telemetry.h"' in text:
-                reverse = subprocess.run(['patch', '--batch', '--reverse', '--fuzz=0',
-                                          '--no-backup-if-mismatch', '-d', directory, '-p1'],
-                                         input=patch, capture_output=True)
-                self.assertEqual(reverse.returncode, 0, reverse.stdout + reverse.stderr)
-                text = target.read_text()
-            result = subprocess.run(['patch', '--batch', '--forward', '--fuzz=0',
-                                     '--no-backup-if-mismatch', '-d', directory, '-p1'],
-                                    input=patch, capture_output=True)
+            before, result = replay_to_patch(directory, 'combat', ('scriptcommands.cpp',),
+                'combat-a35-script-lookup-telemetry.patch')
+            text = before['scriptcommands.cpp']
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             patched = target.read_text()
             self.assertIn('return object;', patched)

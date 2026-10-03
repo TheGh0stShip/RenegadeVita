@@ -1,5 +1,11 @@
 # Renegade Vita port status
 
+2026-10-03 compile closure supersedes historical uncompiled statements below:
+31 host binaries,60 ASan/UBSan invocations,5 TSan probes and793 Python tests
+pass. Fast ARM links with652 source/object hash pairs;17 current state fields
+are reconciled. Canonical packaging is running; remote CI and native acceptance
+remain open. See [compile closure](COMPILE_CLOSURE.md).
+
 2026-10-03 shared discovery regression:218 source/Python checks across16 modules
 pass after global general/HUD settings and default-loiter roots, factory-scoped
 sound references, ordered loiter entries and conservative enum evaluation.

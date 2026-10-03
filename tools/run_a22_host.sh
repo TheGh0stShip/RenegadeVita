@@ -2,9 +2,8 @@
 set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-# Keep the native-ext4 active checkout self-contained when the Windows managed
-# root is not mounted/writable in this execution environment.
-rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"}
+# Keep host evidence in the migrated WSL builder folder when available.
+rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"$rv_root/local-builder"}
 if [ -d "$rv_managed_builder_root" ] && [ -w "$rv_managed_builder_root" ]; then
 	rv_builder_root=$rv_managed_builder_root
 else

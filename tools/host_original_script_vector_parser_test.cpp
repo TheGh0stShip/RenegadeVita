@@ -1,4 +1,4 @@
-// Prepared original-owner regression. Not compiled under the build hold.
+// Retail-free original-owner regression, included in the host probe graph.
 // Link original scripts.cpp, ScriptFactory and ScriptRegistrar plus the
 // established compatibility/provider dependencies; do not substitute a parser.
 #include "scripts.h"

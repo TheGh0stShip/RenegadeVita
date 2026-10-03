@@ -1,6 +1,6 @@
 {
   "logical_stimulus_diagnostics_20261003": {
-    "state": "FOCUSED_OPT_IN_SOURCE_HOOKS_UNCOMPILED",
+    "state": "FOCUSED_OPT_IN_SOURCE_HOOKS_COMPILED_PASS",
     "focused_source_checks_passed": 9,
     "registered_staging_patches": 302,
     "shared_queue_capacity": 128,
@@ -34,7 +34,7 @@
     "report": "reports/MISSION_RESEARCH_REVIEW.md"
   },
   "cinematic_filename_diagnostics_20261003": {
-    "state": "SOURCE_DIAGNOSTIC_BUFFER_REMOVAL_UNCOMPILED",
+    "state": "SOURCE_DIAGNOSTIC_BUFFER_REMOVAL_COMPILED_PASS",
     "focused_source_python_checks_passed": 15,
     "registered_staging_patches": 300,
     "staging_receipt_regenerated": false,
@@ -42,7 +42,7 @@
     "native_runtime_gates_closed": 0
   },
   "required_level_load_failure_20261003": {
-    "state": "NATIVE_REQUIRED_FAILURE_PROPAGATION_SOURCE_UNCOMPILED",
+    "state": "NATIVE_REQUIRED_FAILURE_PROPAGATION_SOURCE_COMPILED_PASS",
     "report": "reports/MISSION_RESEARCH_REVIEW.md",
     "focused_source_python_checks_passed": 30,
     "registered_staging_patches": 299,
@@ -51,7 +51,7 @@
     "native_runtime_gates_closed": 0
   },
   "action_observer_miss_20261003": {
-    "state": "BOUNDED_OPT_IN_SOURCE_HOOK_UNCOMPILED",
+    "state": "BOUNDED_OPT_IN_SOURCE_HOOK_COMPILED_PASS",
     "report": "reports/AI_ACTION_OWNER_REVIEW.md",
     "focused_source_checks_passed": 11,
     "typed_offline_consumer_complete": true,
@@ -59,14 +59,14 @@
     "native_runtime_gates_closed": 0
   },
   "campaign_discovery_handoff_20261003": {
-    "state": "ORIGINAL_DISCOVERY_COPY_RESTORED_IN_SOURCE_UNCOMPILED",
+    "state": "ORIGINAL_DISCOVERY_COPY_RESTORED_IN_SOURCE_COMPILED_PASS",
     "report": "reports/MISSION_COMPLETION_OWNER_REVIEW.md",
     "focused_source_tests_passed": 11,
     "build_or_launch_performed": false,
     "native_runtime_gates_closed": 0
   },
   "observer_timer_miss_diagnostics_20261003": {
-    "state": "OPT_IN_ORIGINAL_EXPIRY_HOOK_UNCOMPILED",
+    "state": "OPT_IN_ORIGINAL_EXPIRY_HOOK_COMPILED_PASS",
     "report": "reports/SCRIPT_TIMER_DISPATCH_COVERAGE.md",
     "queue_capacity_shared": 128,
     "focused_source_python_tests_passed": 33,
@@ -74,7 +74,7 @@
     "native_runtime_gates_closed": 0
   },
   "script_parameter_parser_20261003": {
-    "state": "VECTOR_INITIALIZATION_SOURCE_FIX_UNCOMPILED_BINDINGS_OPEN",
+    "state": "VECTOR_INITIALIZATION_SOURCE_FIX_COMPILED_PASS_BINDINGS_OPEN",
     "report": "reports/SCRIPT_PARAMETER_NAME_COVERAGE.md",
     "literal_name_calls": 1166,
     "numeric_or_unsupported_calls": 35,
@@ -89,7 +89,7 @@
     "native_runtime_gates_closed": 0
   },
   "conversation_transition_diagnostics_20261003": {
-    "state": "OPT_IN_BOUNDED_ORIGINAL_OWNER_HOOKS_UNCOMPILED",
+    "state": "OPT_IN_BOUNDED_ORIGINAL_OWNER_HOOKS_COMPILED_PASS",
     "report": "reports/CONVERSATION_TRANSITION_DIAGNOSTICS.md",
     "queue_capacity": 128,
     "source_contract_tests_passed": 7,
@@ -101,7 +101,7 @@
     "registered_staging_patches": 295
   },
   "mission_wave_bounds_20261003": {
-    "state": "BOUNDED_3D_SAMPLE_SOURCE_CORRECTION_UNCOMPILED_COMPATIBILITY_OPEN",
+    "state": "BOUNDED_3D_SAMPLE_SOURCE_CORRECTION_COMPILED_PASS_COMPATIBILITY_OPEN",
     "report": "reports/MISSION_WAVE_HEADER_COVERAGE.md",
     "candidate_wavs": [221, 566, 122],
     "complete_header_admitted": [221, 566, 111],
@@ -181,7 +181,7 @@
     "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
   },
   "full_mission_research_review_20261003": {
-    "state": "ALL_SUPPLIED_SECTIONS_ACCOUNTED_SOURCE_LINKS_REVIEWED_THREAD_BOUNDARY_FIXED_UNCOMPILED",
+    "state": "ALL_SUPPLIED_SECTIONS_ACCOUNTED_SOURCE_LINKS_REVIEWED_THREAD_BOUNDARY_FIXED_COMPILED_PASS",
     "report": "reports/MISSION_RESEARCH_REVIEW.md",
     "system_groups_reviewed": 16,
     "mission_source_sections_reviewed": 13,
@@ -193,7 +193,7 @@
     "source_count_discrepancies": {"Find_Object": [3478, 3480], "Send_Custom_Event": [2991, 2994]},
     "uncertified_aggregate_claims": ["conversation_keys", "string_ids", "objective_images", "preset_names", "sound_names", "assembly_files"],
     "thread_boundary_changes": ["acquire_completion_poll", "completion_published_last", "parent_owned_run_request", "atomic_texture_cancellation", "create_failure_flag_cleanup"],
-    "thread_cpp_probe": "ORIGINAL_THREADCLASS_GATED_START_VISIBILITY_REUSE_FAILURE_PREPARED_UNCOMPILED_UNRUN",
+    "thread_cpp_probe": "ORIGINAL_THREADCLASS_GATED_START_VISIBILITY_REUSE_FAILURE_COMPILED_PASS",
     "new_python_source_checks_passed": 13,
     "focused_python_source_tests_passed": 170,
     "ordered_staging_patches": 293,
@@ -210,7 +210,7 @@
     "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
   },
   "script_lookup_diagnostics_20261003": {
-    "state": "BOUNDED_ORIGINAL_OWNER_LOOKUP_HOOKS_AND_LOAD_BOUNDARY_RECORDER_IMPLEMENTED_UNCOMPILED",
+    "state": "BOUNDED_ORIGINAL_OWNER_LOOKUP_HOOKS_AND_LOAD_BOUNDARY_RECORDER_IMPLEMENTED_COMPILED_PASS",
     "report": "reports/SCRIPT_LOOKUP_DIAGNOSTICS.md",
     "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
     "channels": ["script_factory", "object", "conversation_name", "text_file_available"],
@@ -225,7 +225,7 @@
     "focused_python_source_tests_passed": 157,
     "legacy_flight_source_contract_functions_passed": 4,
     "incremental_staging_contracts_passed": 5,
-    "cpp_worker_and_serialization_probes": "PREPARED_UNCOMPILED_UNRUN",
+    "cpp_worker_and_serialization_probes": "COMPILED_PASS",
     "ordered_staging_patches": 291,
     "retained_dev197_m01_lookup_evidence": "NOT_RECORDED_LEGACY_CAPTURE",
     "publication_guard_tests_passed": 32,
@@ -265,7 +265,7 @@
     "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
   },
   "mission_text_prompt_coverage_20261003": {
-    "state": "ELEVEN_PROMPT_HINTS_RESTORED_UNCOMPILED_COMPUTED_DIALOGUE_CANDIDATES_AUDITED",
+    "state": "ELEVEN_PROMPT_HINTS_RESTORED_COMPILED_PASS_COMPUTED_DIALOGUE_CANDIDATES_AUDITED",
     "report": "reports/MISSION_TEXT_AND_PROMPT_COVERAGE.md",
     "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
     "new_english_hint_ids": [8576, 8577, 8578, 8579, 8273, 8274, 8277, 8279, 8280, 8281, 8282],
@@ -294,7 +294,7 @@
     "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
   },
   "mission_conversation_coverage_20261003": {
-    "state": "GLOBAL_DATABASE_STARTUP_RESTORED_UNCOMPILED_METADATA_AUDIT_INCOMPLETE",
+    "state": "GLOBAL_DATABASE_STARTUP_RESTORED_COMPILED_PASS_METADATA_AUDIT_INCOMPLETE",
     "report": "reports/MISSION_CONVERSATION_COVERAGE.md",
     "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
     "global_conversations": 3606,
@@ -349,7 +349,7 @@
     "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
   },
   "static_script_link_and_mission_ranks_20261003": {
-    "state": "SOURCE_LINK_COLLISION_ISOLATED_RANK_STORAGE_IMPLEMENTED_UNCOMPILED",
+    "state": "SOURCE_LINK_COLLISION_ISOLATED_RANK_STORAGE_IMPLEMENTED_COMPILED_PASS",
     "report": "reports/STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md",
     "script_trim_collision": "Scripts/strtrim.cpp and wwlib/trim.cpp both define strtrim(char*)",
     "source_local_trim_rename": ["Scripts/scripts.cpp", "Scripts/strtrim.cpp"],
@@ -369,7 +369,7 @@
     "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
   },
   "campaign_source_map_20261003": {
-    "state": "STATIC_SOURCE_MAP_RECONCILED_ALL_13_CAMPAIGN_UNITS_SELECTED_UNCOMPILED",
+    "state": "STATIC_SOURCE_MAP_RECONCILED_ALL_13_CAMPAIGN_UNITS_SELECTED_COMPILED_PASS",
     "report": "reports/CAMPAIGN_SOURCE_MAP_RECONCILIATION.md",
     "generated_inventory": "reports/generated/campaign_mission_source_surface.json",
     "upstream_campaign_units": 13,

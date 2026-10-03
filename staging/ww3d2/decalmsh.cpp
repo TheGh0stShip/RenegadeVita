@@ -293,7 +293,7 @@ RigidDecalMeshClass::~RigidDecalMeshClass(void)
  *=============================================================================================*/
 void RigidDecalMeshClass::Render(void)
 {
-#if defined(RENEGADE_VITA_PORT)
+#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
 	RenegadeVitaRenderer::Submit_Decals_Unsupported();
 	return;
 #else
@@ -781,7 +781,7 @@ SkinDecalMeshClass::~SkinDecalMeshClass(void)
  *=============================================================================================*/
 void SkinDecalMeshClass::Render(void)
 {
-#if defined(RENEGADE_VITA_PORT)
+#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
 	RenegadeVitaRenderer::Submit_Decals_Unsupported();
 	return;
 #else

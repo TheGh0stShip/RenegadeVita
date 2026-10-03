@@ -99,7 +99,7 @@ class RuntimeLogContractTest(unittest.TestCase):
         )
         self.assertLess(
             interactive.index('"Starting vitaGL renderer"'),
-            interactive.index("ww3d_initialized = WW3D::Init(NULL, NULL, true)"),
+            interactive.index("ww3d_initialized = WW3D::Init(NULL, NULL, false)"),
         )
         self.assertNotIn("psvDebugScreenFinish();", interactive)
         self.assertIn("first original Combat update", interactive)

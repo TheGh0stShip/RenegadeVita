@@ -286,6 +286,14 @@ WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 	Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
 		RenegadeVitaRenderer::DISPLAY_WIDTH, RenegadeVitaRenderer::DISPLAY_HEIGHT));
 	VertexMaterialClass::Init();
+	if (!lite) {
+		FileClass * dazzle_ini_file = _TheFileFactory->Get_File(DAZZLE_INI_FILENAME);
+		if (dazzle_ini_file) {
+			INIClass dazzle_ini(*dazzle_ini_file);
+			DazzleRenderObjClass::Init_From_INI(&dazzle_ini);
+			_TheFileFactory->Return_File(dazzle_ini_file);
+		}
+	}
 
 	IsInitted = true;
 	return WW3D_ERROR_OK;
@@ -359,6 +367,9 @@ WW3DErrorType WW3D::Shutdown(void)
 #if defined(RENEGADE_ORIGINAL_SORTING)
 	SortingRendererClass::Deinit();
 #endif
+	if (!Lite) {
+		DazzleRenderObjClass::Deinit();
+	}
 	if (WW3DAssetManager::Get_Instance()) {
 		WW3DAssetManager::Get_Instance()->Free_Assets();
 	}
@@ -1103,6 +1114,8 @@ WW3DErrorType WW3D::Render(
 void WW3D::Flush(RenderInfoClass & rinfo)
 {
 #if defined(RENEGADE_VITA_PORT)
+	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
+	TheDX8MeshRenderer.Flush();
 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
 #if defined(RENEGADE_ORIGINAL_SORTING)
 	SortingRendererClass::Flush();

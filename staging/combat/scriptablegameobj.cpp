@@ -38,6 +38,9 @@
 #include "damage.h"
 #include "scripts.h"
 #include "debug.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "a35_campaign_flight_recorder.h"
+#endif
 #include "explosion.h"
 #include "assets.h"
 #include "combatsound.h"
@@ -674,6 +677,10 @@ void	ScriptableGameObj::Post_Think( void )
 			}
 
 			if ( !found ) {
+#if defined(RENEGADE_VITA_PORT)
+				A35_Campaign_Flight_Observer_Timer_Miss(static_cast<int32_t>(Get_ID()),
+					static_cast<int32_t>(ObserverTimerList[i]->ObserverID), static_cast<int32_t>(ObserverTimerList[i]->TimerID));
+#endif
 				Debug_Say(( "Failed to find observer id %d for timer expired....\n", ObserverTimerList[i]->ObserverID ));
 
 				const GameObjObserverList & observer_list = Get_Observers();

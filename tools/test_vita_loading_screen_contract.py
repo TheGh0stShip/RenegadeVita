@@ -179,7 +179,7 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         )
         self.assertLess(
             runtime.index('"Starting vitaGL renderer"'),
-            runtime.index("ww3d_initialized = WW3D::Init(NULL, NULL, true)"),
+            runtime.index("ww3d_initialized = WW3D::Init(NULL, NULL, false)"),
         )
         self.assertNotIn("psvDebugScreenFinish();", runtime)
         self.assertIn("{ kAlwaysArchive, true, kStartupPrecacheRequiredReadBytes }", runtime)

@@ -3,20 +3,18 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from tools.original_owner_source_replay import replay_to_patch
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class ObserverTimerMiss(unittest.TestCase):
     def test_patch_replays_and_records_only_failed_lookup_before_removal(self):
-        original = (ROOT / 'staging/combat/scriptablegameobj.cpp').read_text()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'scriptablegameobj.cpp'
-            path.write_text(original)
-            result = subprocess.run(['patch', '--batch', '--forward', '--fuzz=0',
-                                     '--no-backup-if-mismatch', '-p1', '-d', directory],
-                                    input=(ROOT / 'port/patches/combat-a35-observer-timer-miss-telemetry.patch').read_bytes(),
-                                    capture_output=True, check=True)
+            before, result = replay_to_patch(directory, 'combat', ('scriptablegameobj.cpp',),
+                'combat-a35-observer-timer-miss-telemetry.patch')
+            original = before['scriptablegameobj.cpp']
             self.assertNotIn(b'offset', result.stdout)
             text = path.read_text()
         self.assertEqual(text.count('A35_Campaign_Flight_Observer_Timer_Miss('), 1)

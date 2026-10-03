@@ -36,6 +36,12 @@
 
 #include "scriptcommands.h"
 #if defined(RENEGADE_VITA_PORT)
+#include "a35_campaign_flight_recorder.h"
+#endif
+#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
+#include "a35_script_lookup_telemetry.h"
+#endif
+#if defined(RENEGADE_VITA_PORT)
 #include "renegade_vita_tutorial_help.h"
 #endif
 #include "debug.h"
@@ -426,7 +432,12 @@ void	Destroy_Object( GameObject * obj )
 
 GameObject * Find_Object( int obj_id )
 {
-	return GameObjManager::Find_ScriptableGameObj( obj_id );
+	GameObject *object = GameObjManager::Find_ScriptableGameObj( obj_id );
+#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
+	A35_Script_Lookup_Record(A35_LOOKUP_OBJECT, NULL,
+		static_cast<int32_t>(obj_id), object != NULL);
+#endif
+	return object;
 }
 
 int	Get_ID( GameObject * obj )
@@ -1058,6 +1069,11 @@ int Create_Logical_Sound( GameObject * creator, int type, const Vector3 & positi
 			sound->Set_Single_Shot( true );
 			sound->Set_DropOff_Radius( radius );
 			sound->Set_Position( position );
+
+#if defined(RENEGADE_VITA_PORT)
+			A35_Campaign_Flight_Logical_Stimulus(false, sound_id, type, 0,
+				creator ? static_cast<int32_t>(creator->Get_ID()) : 0, false);
+#endif
 			sound->Add_To_Scene ();
 			sound->Release_Ref();
 		}
@@ -2433,6 +2449,10 @@ int	Create_Conversation( const char *conversation_name, int priority, float max_
 	//	Try to find the requested conversation
 	//
 	ConversationClass *conversation = ConversationMgrClass::Find_Conversation( conversation_name );
+#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
+	A35_Script_Lookup_Record(A35_LOOKUP_CONVERSATION, conversation_name,
+		0, conversation != NULL);
+#endif
 	if ( conversation != NULL ) {
 
 		//
@@ -3071,6 +3091,10 @@ int	Text_File_Open( const char * filename )
 			file = NULL;
 		}
 	}
+#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
+	A35_Script_Lookup_Record(A35_LOOKUP_TEXT_FILE, filename,
+		0, file != NULL);
+#endif
 #if defined(RENEGADE_HOST_ABI_TEST)
 	return static_cast<int>(Renegade_Ui_Pointer_To_Token(file));
 #else

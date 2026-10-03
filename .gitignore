@@ -15,6 +15,7 @@ source-cache/
 # User-provided retail assets and migration backups are not source provenance.
 retail-pc
 migration-backups/
+local-builder/
 
 # Editor and Python transient files.
 __pycache__/

@@ -1,5 +1,33 @@
 # Live engineering progress
 
+## Compile closure publication — 2026-10-03
+
+Completed: current sources match all652 retained ARM source/object hashes;
+31 host binaries compile,60 ASan/UBSan invocations and5 TSan probes pass.
+Full Python suite passes793 tests;21 publication-focused checks also pass.
+All45 script-project units pass strict call auditing. Seventeen current build
+states now record compiled evidence, with runtime acceptance still unverified.
+Evidence: [compile ledger](COMPILE_CLOSURE.md) and its generated JSON.
+Now: publish the compiled cluster on the current branch, without a PR as
+requested. Push CI covers that branch. Canonical packaging is still running.
+Next: clean-checkout CI, canonical artifact identity, then S1 inventory.
+Native acceptance remains0/10.
+
+## Windows builder storage migration — 2026-10-03
+
+Completed: entire former Windows Local builder moved into ignored
+`local-builder/` under the active WSL project. All4210 files independently
+SHA-256 matched (8834123579 bytes);676 directories and one symlink matched.
+Internal absolute symlink rebased to its copied target. Verified Windows source
+deleted; C: recovered approximately8.23GiB. Future build/diagnostic defaults
+and historical evidence discovery now use the WSL location. Shell syntax and
+diff checks pass. No migrated content published or committed.
+Evidence: ignored build/windows-builder-migration-verification.json.
+Now: canonical validation restarted with WSL output paths; editing its running
+shell script during path
+migration caused EOF after successful fresh ASan M00 checks. Failure retained.
+Native acceptance gates remain0/10.
+
 ## Procedural task lifetime and skin ordering — 2026-10-03
 
 Completed: original task ref ownership verified for mesh and MaterialPass;

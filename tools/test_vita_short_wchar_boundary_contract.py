@@ -40,10 +40,10 @@ class VitaShortWcharBoundaryContractTests(unittest.TestCase):
 
     def test_original_frontend_wide_text_callers_are_not_left_to_libc(self):
         caller_files = {
-            "staging/wwui/dialogparser.cpp": ("::wcsstr", "::wcscpy"),
+            "staging/wwui/dialogparser.cpp": ("rv_utf16_strstr", "rv_utf16_copy"),
             "staging/wwui/textmarqueectrl.cpp": ("wcsncpy", "::wcschr"),
             "staging/commando/renegadedialogmgr.cpp": ("::wcsncpy",),
-            "staging/commando/dlgmpingamechat.cpp": ("::wcschr",),
+            "staging/commando/dlgmpingamechat.cpp": ("rv_utf16_chr",),
             "staging/commando/WOLBuddyMgr.cpp": ("wcsncmp", "wcsstr"),
         }
         for relative, needles in caller_files.items():

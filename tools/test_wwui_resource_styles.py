@@ -5,6 +5,7 @@ import struct
 import subprocess
 import tempfile
 import unittest
+from tools.original_owner_source_replay import replay_to_patch
 
 from tools import generate_wwui_dialog_templates as generator
 
@@ -56,7 +57,10 @@ class ResourceStyleTests(unittest.TestCase):
         for name in required:
             self.assertIn(definitions[name] & 0xffff, present, name)
 
-        source = (ROOT/'staging/commando/dialogtests.cpp').read_text(encoding='latin1')
+        with tempfile.TemporaryDirectory() as directory:
+            replay_to_patch(directory, 'commando', ('dialogtests.cpp', 'dialogtests.h'),
+                            'commando-a35-options-staging-closure.patch')
+            source = (Path(directory)/'dialogtests.cpp').read_text(encoding='latin1')
         vita_route = source.split('OptionsMenuClass::On_Init_Dialog (void)', 1)[1]
         vita_route = vita_route.split('#endif', 1)[0]
         for name in ('IDC_MENU_CONTROLS_BUTTON', 'IDC_MENU_MOVIES_BUTTON',

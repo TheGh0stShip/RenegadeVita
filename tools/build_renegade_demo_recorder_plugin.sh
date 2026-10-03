@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"}
+rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"$rv_root/local-builder"}
 if [ -d "$rv_managed_builder_root" ] && [ -w "$rv_managed_builder_root" ]; then
 	rv_builder_root=$rv_managed_builder_root
 else

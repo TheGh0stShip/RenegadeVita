@@ -147,6 +147,11 @@ add_executable(a22_asset_selftest
   ${RV_STAGE}/wwlib/TARGA.CPP
   ${RV_STAGE}/ww3d2/bitmaphandler.cpp
   ${RV_STAGE}/ww3d2/ww3dformat.cpp
+  # Shared DX8 state retains original buffer reference ownership even in
+  # headless validation. Keep those original owners in the link closure.
+  ${RV_STAGE}/ww3d2/dx8vertexbuffer.cpp
+  ${RV_STAGE}/ww3d2/dx8indexbuffer.cpp
+  ${RV_STAGE}/ww3d2/dx8fvf.cpp
   ${RV_ROOT}/port/filesystem/renegade_paths.cpp
   ${RV_ROOT}/port/filesystem/renegade_file_factory.cpp
   ${RV_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp

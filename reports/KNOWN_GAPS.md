@@ -1,5 +1,10 @@
 # Known gaps
 
+2026-10-03 compile closure removes17 stale current compilation labels. Runtime
+gaps remain open; original textureloader.cpp compiles separately but remains
+outside the runtime graph. Canonical packaging and remote CI are pending.
+See [compile closure](COMPILE_CLOSURE.md).
+
 2026-10-03 procedural material review confirms spawn/death/healing/electrocution
 transition push/pop are skipped natively. Stealth still pushes a pass and can
 suppress base rendering, while native mesh rejects added passes. Original

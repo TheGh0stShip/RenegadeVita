@@ -3,20 +3,18 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from tools.original_owner_source_replay import replay_to_patch
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class ActionObserverMissTests(unittest.TestCase):
     def test_zero_fuzz_hook_only_when_no_callback_matched(self):
-        original = (ROOT / 'staging/combat/action.cpp').read_text()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'action.cpp'
-            path.write_text(original)
-            result = subprocess.run(['patch', '--batch', '--forward', '--fuzz=0',
-                                     '--no-backup-if-mismatch', '-p1', '-d', directory],
-                                    input=(ROOT / 'port/patches/combat-a35-action-observer-miss-telemetry.patch').read_bytes(),
-                                    capture_output=True, check=True)
+            before, result = replay_to_patch(directory, 'combat', ('action.cpp',),
+                'combat-a35-action-observer-miss-telemetry.patch')
+            original = before['action.cpp']
             self.assertNotIn(b'offset', result.stdout)
             patched = path.read_text()
         body = patched.split('void\tActionClass::Notify_Completed', 1)[1].split('bool\tActionClass::Request_Action', 1)[0]

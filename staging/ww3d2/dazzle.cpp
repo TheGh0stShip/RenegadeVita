@@ -895,12 +895,9 @@ RenderObjClass* DazzleRenderObjClass::Clone(void) const
 // ----------------------------------------------------------------------------
 void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
 {
-#if defined(RENEGADE_VITA_PORT)
-	/* The original Dazzle renderer delegates lens-flare geometry to a DX8
-	** DazzleLayer that the Vita boundary does not yet provide.  Retaining the
-	** BackgroundMgr-owned object is still required for authentic sky
-	** construction, but an absent optional presentation layer is a bounded
-	** no-op rather than an unsupported world submission. */
+#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
+	/* Headless host validation has no native dazzle framebuffer.
+	** Physical Vita executes the original visibility and layer path below. */
 	(void)rinfo;
 	return;
 #else

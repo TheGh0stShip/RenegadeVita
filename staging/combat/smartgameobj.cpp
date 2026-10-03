@@ -39,6 +39,9 @@
 **	Includes
 */
 #include "smartgameobj.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "a35_campaign_flight_recorder.h"
+#endif
 #include "renegade_client_effects.h"
 #include "gameobjmanager.h"
 #include "weapons.h"
@@ -898,6 +901,12 @@ void	SmartGameObj::On_Logical_Heard (LogicalListenerClass *listener, LogicalSoun
 		sound.Creator = NULL;
 	}
 
+#if defined(RENEGADE_VITA_PORT)
+	A35_Campaign_Flight_Logical_Stimulus(true, static_cast<int32_t>(sound_obj->Get_ID()),
+		static_cast<int32_t>(sound.Type), static_cast<int32_t>(Get_ID()),
+		sound.Creator ? static_cast<int32_t>(sound.Creator->Get_ID()) : 0,
+		CombatManager::Are_Observers_Active());
+#endif
 	// Notify observers
 	if (CombatManager::Are_Observers_Active()) {
 		const GameObjObserverList & observer_list = Get_Observers();

@@ -1,0 +1,398 @@
+{
+  "evidence_class": "host tests and ARM compile/link; no native runtime acceptance",
+  "row_denominator": 17,
+  "native_compiled_translation_units": 652,
+  "native_elf_sha256": "af5ff964f0fbe69aacf413fc7aec1390ab8f90cd38260c2b6b4d01436da4eff9",
+  "host_binary_denominator": 31,
+  "asan_ubsan_invocations": 60,
+  "asan_ubsan_passed": 60,
+  "tsan_invocations": 5,
+  "tsan_passed": 5,
+  "tsan_process_aslr_disabled": true,
+  "python_tests": 793,
+  "python_modules": 149,
+  "python_optional_skips": 1,
+  "script_project_units": 45,
+  "script_default_missing_bridges": 0,
+  "script_invalid_active_arities": 0,
+  "canonical_state": "RUNNING",
+  "remote_ci_state": "NOT_RUN",
+  "rows": [
+    {
+      "state_field": "logical_stimulus_diagnostics_20261003.state",
+      "state": "FOCUSED_OPT_IN_SOURCE_HOOKS_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/combatsound.cpp",
+          "source_sha256": "cfc4b2bbbc9ef7130091bb561a438cf66c8097426f82eff8b48885045b9c33f2",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/combatsound.cpp.obj",
+          "object_sha256": "8ed61fe013190d0ab03c1a9c68a124f9cb32942ff97477c071ad02a97ce3bbd1"
+        },
+        {
+          "source": "staging/combat/soldierobserver.cpp",
+          "source_sha256": "7188ce3ce7563ba176bbb5d39adf4b0a90c19c519588cfb5b20bfab1b76cb7ab",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/soldierobserver.cpp.obj",
+          "object_sha256": "30f0cdb8a56fb29bbcdb7d54414cff18bcfbe618db8bd868fd82b59001afa8c9"
+        },
+        {
+          "source": "port/developer/a35_campaign_flight_recorder.cpp",
+          "source_sha256": "4bcc1ec0a8c35abd6e312df6ec735567d9ed735c943fb57ea5dfd11fe5279262",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/developer/a35_campaign_flight_recorder.cpp.obj",
+          "object_sha256": "86eda89007389ee9d423a729b40ca77338b3fd8370b9f00933fcfdcd8485209b"
+        }
+      ]
+    },
+    {
+      "state_field": "cinematic_filename_diagnostics_20261003.state",
+      "state": "SOURCE_DIAGNOSTIC_BUFFER_REMOVAL_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/scripts/Test_Cinematic.cpp",
+          "source_sha256": "27d313ac1704b6e3e6f38b9e9bd8b6e7714f3202d0d09d69e75bd46cf8a2023c",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Test_Cinematic.cpp.obj",
+          "object_sha256": "ce53abdb2d7103c6aac481aeee3773c9e9f03ecdb34632ee591e5d2254070cc2"
+        }
+      ]
+    },
+    {
+      "state_field": "required_level_load_failure_20261003.state",
+      "state": "NATIVE_REQUIRED_FAILURE_PROPAGATION_SOURCE_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/savegame.cpp",
+          "source_sha256": "b04accf1964a54920eae7cbacc53cbc90ef7255513ef8bee270171b8d0048ac2",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/savegame.cpp.obj",
+          "object_sha256": "388a0800679afed6e353357806bcab9606dc89df2928d293f09181e313cc6337"
+        }
+      ]
+    },
+    {
+      "state_field": "action_observer_miss_20261003.state",
+      "state": "BOUNDED_OPT_IN_SOURCE_HOOK_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/action.cpp",
+          "source_sha256": "c6d911fc7ea150278e383b1f94ab98e3dcae4471a6b33850eac92e91a3fe9d3e",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/action.cpp.obj",
+          "object_sha256": "a70a7f3fba1d5f7b323d390c22bf5ff92eacb31f5009bd5758a9f7524be2c0e5"
+        }
+      ]
+    },
+    {
+      "state_field": "campaign_discovery_handoff_20261003.state",
+      "state": "ORIGINAL_DISCOVERY_COPY_RESTORED_IN_SOURCE_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "port/platform/vita/a31_vita_runtime.cpp",
+          "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
+        }
+      ]
+    },
+    {
+      "state_field": "observer_timer_miss_diagnostics_20261003.state",
+      "state": "OPT_IN_ORIGINAL_EXPIRY_HOOK_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/smartgameobj.cpp",
+          "source_sha256": "36f64c8776efef428e30becfc5f41eb3dbc9246d4abac6f2a150ecaaaf6c05f2",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/smartgameobj.cpp.obj",
+          "object_sha256": "b9e34f9b4a6708105c35d6595cad9c6671aaa7d16f69be9a60c4bb6c99270815"
+        }
+      ]
+    },
+    {
+      "state_field": "script_parameter_parser_20261003.state",
+      "state": "VECTOR_INITIALIZATION_SOURCE_FIX_COMPILED_PASS_BINDINGS_OPEN",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/scripts/scripts.cpp",
+          "source_sha256": "22558a594370767c103e90490d1ec9c9c174e8371c8e4d958af402ee4cf398b0",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/scripts.cpp.obj",
+          "object_sha256": "da9e68e60f84dbb295464292f30cdfbb574d0613734892f215b8f19b36894eb3"
+        }
+      ]
+    },
+    {
+      "state_field": "conversation_transition_diagnostics_20261003.state",
+      "state": "OPT_IN_BOUNDED_ORIGINAL_OWNER_HOOKS_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/activeconversation.cpp",
+          "source_sha256": "2c881affb42057856b8604982b591ee7addf9106a29935cabda8257d867f7638",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/activeconversation.cpp.obj",
+          "object_sha256": "66d4df026f190f9ab16e239eacc5fc872d82992767c29840d467a54f29d7fad1"
+        }
+      ]
+    },
+    {
+      "state_field": "mission_wave_bounds_20261003.state",
+      "state": "BOUNDED_3D_SAMPLE_SOURCE_CORRECTION_COMPILED_PASS_COMPATIBILITY_OPEN",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/wwaudio/sound3dhandle.cpp",
+          "source_sha256": "84e330adeb814f38bf709e60563e0a1565ac53e9867719ec3bf99f27cb4c9bb0",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/wwaudio/sound3dhandle.cpp.obj",
+          "object_sha256": "902183f7e9959fe13137221a61d9d2fbe37b720dca89e0c5640839539cca0763"
+        }
+      ]
+    },
+    {
+      "state_field": "full_mission_research_review_20261003.state",
+      "state": "ALL_SUPPLIED_SECTIONS_ACCOUNTED_SOURCE_LINKS_REVIEWED_THREAD_BOUNDARY_FIXED_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/wwlib/thread.cpp",
+          "source_sha256": "bb5f2b8193ecd050cc557631c4848744f1e700baa82c107bd1fc69df4844192b",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/wwlib/thread.cpp.obj",
+          "object_sha256": "affefcf7f36b9e2309243054ce321df5599e5db75290a7693ecd3412108c4800"
+        },
+        {
+          "source": "staging/ww3d2/textureloader.cpp",
+          "source_sha256": "e920476ce0921728bbf3b2e30a9f0c64de894b95096bcafb6019cbbfaba18ee3",
+          "object": "build/phase0-excluded-arm-objects/textureloader.o",
+          "object_sha256": "dfde9d6c08b623ec723b02c78a1694dabba9e5e94997e3f089f69ea336579c19",
+          "compile_only": true,
+          "linked": false,
+          "runtime_status": "excluded from current runtime graph; integration remains open"
+        }
+      ]
+    },
+    {
+      "state_field": "full_mission_research_review_20261003.thread_cpp_probe",
+      "state": "ORIGINAL_THREADCLASS_GATED_START_VISIBILITY_REUSE_FAILURE_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/wwlib/thread.cpp",
+          "source_sha256": "bb5f2b8193ecd050cc557631c4848744f1e700baa82c107bd1fc69df4844192b",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/wwlib/thread.cpp.obj",
+          "object_sha256": "affefcf7f36b9e2309243054ce321df5599e5db75290a7693ecd3412108c4800"
+        },
+        {
+          "source": "staging/ww3d2/textureloader.cpp",
+          "source_sha256": "e920476ce0921728bbf3b2e30a9f0c64de894b95096bcafb6019cbbfaba18ee3",
+          "object": "build/phase0-excluded-arm-objects/textureloader.o",
+          "object_sha256": "dfde9d6c08b623ec723b02c78a1694dabba9e5e94997e3f089f69ea336579c19",
+          "compile_only": true,
+          "linked": false,
+          "runtime_status": "excluded from current runtime graph; integration remains open"
+        }
+      ]
+    },
+    {
+      "state_field": "script_lookup_diagnostics_20261003.state",
+      "state": "BOUNDED_ORIGINAL_OWNER_LOOKUP_HOOKS_AND_LOAD_BOUNDARY_RECORDER_IMPLEMENTED_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/scriptcommands.cpp",
+          "source_sha256": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/scriptcommands.cpp.obj",
+          "object_sha256": "95e6083504a97d4d6c37e48bf487c9bf067993a919712e27fb557405624db3c8"
+        },
+        {
+          "source": "port/developer/a35_script_lookup_telemetry.cpp",
+          "source_sha256": "c5846930df81797d92871416601ddba55cfa652c1750704cdf2ccc5c394d501c",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/developer/a35_script_lookup_telemetry.cpp.obj",
+          "object_sha256": "91e1e7121bd5d4da43e230899f5dcb1e18dda3d29ecfed2ad525234f58333e1d"
+        }
+      ]
+    },
+    {
+      "state_field": "script_lookup_diagnostics_20261003.cpp_worker_and_serialization_probes",
+      "state": "COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/scriptcommands.cpp",
+          "source_sha256": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/scriptcommands.cpp.obj",
+          "object_sha256": "95e6083504a97d4d6c37e48bf487c9bf067993a919712e27fb557405624db3c8"
+        },
+        {
+          "source": "port/developer/a35_script_lookup_telemetry.cpp",
+          "source_sha256": "c5846930df81797d92871416601ddba55cfa652c1750704cdf2ccc5c394d501c",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/developer/a35_script_lookup_telemetry.cpp.obj",
+          "object_sha256": "91e1e7121bd5d4da43e230899f5dcb1e18dda3d29ecfed2ad525234f58333e1d"
+        }
+      ]
+    },
+    {
+      "state_field": "mission_text_prompt_coverage_20261003.state",
+      "state": "ELEVEN_PROMPT_HINTS_RESTORED_COMPILED_PASS_COMPUTED_DIALOGUE_CANDIDATES_AUDITED",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/combat/scriptcommands.cpp",
+          "source_sha256": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/combat/scriptcommands.cpp.obj",
+          "object_sha256": "95e6083504a97d4d6c37e48bf487c9bf067993a919712e27fb557405624db3c8"
+        },
+        {
+          "source": "port/platform/vita/a31_vita_runtime.cpp",
+          "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
+        }
+      ]
+    },
+    {
+      "state_field": "mission_conversation_coverage_20261003.state",
+      "state": "GLOBAL_DATABASE_STARTUP_RESTORED_COMPILED_PASS_METADATA_AUDIT_INCOMPLETE",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "port/platform/a31_gameplay_boundary.cpp",
+          "source_sha256": "f9dec496ee91feb2de21c59180268258b95d19fc86234a5525221828b72eff76",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/a31_gameplay_boundary.cpp.obj",
+          "object_sha256": "555b781c1b62249396839ef1276417304ee198d7b3ed0af0d320ee85d49cb9e3"
+        },
+        {
+          "source": "port/platform/vita/a31_vita_runtime.cpp",
+          "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
+        }
+      ]
+    },
+    {
+      "state_field": "static_script_link_and_mission_ranks_20261003.state",
+      "state": "SOURCE_LINK_COLLISION_ISOLATED_RANK_STORAGE_IMPLEMENTED_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "port/platform/vita/a31_vita_runtime.cpp",
+          "source_sha256": "5b30d6fc33a0f5c6f338a75a94095985a032858b2c01bcd369ab45cc09ced573",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/port/platform/vita/a31_vita_runtime.cpp.obj",
+          "object_sha256": "45a28edf821f92b4a93d8081eebd8b93e678d0483faedbd6f70195fe5c7c9c47"
+        },
+        {
+          "source": "staging/scripts/scripts.cpp",
+          "source_sha256": "22558a594370767c103e90490d1ec9c9c174e8371c8e4d958af402ee4cf398b0",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/scripts.cpp.obj",
+          "object_sha256": "da9e68e60f84dbb295464292f30cdfbb574d0613734892f215b8f19b36894eb3"
+        }
+      ]
+    },
+    {
+      "state_field": "campaign_source_map_20261003.state",
+      "state": "STATIC_SOURCE_MAP_RECONCILED_ALL_13_CAMPAIGN_UNITS_SELECTED_COMPILED_PASS",
+      "compile_result": "PASS",
+      "native_runtime_result": "UNVERIFIED",
+      "compiled_owners": [
+        {
+          "source": "staging/scripts/Mission00.cpp",
+          "source_sha256": "704c72f791dd2baf7cfad41cc1f188e604fe67f7cb41bd4aa7ea82654fe63de7",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission00.cpp.obj",
+          "object_sha256": "571d024b2ef0ce854167668b112c1b8490c25f5a81dd4628824fc9acb76b02a8"
+        },
+        {
+          "source": "staging/scripts/MissionX0.cpp",
+          "source_sha256": "06bfdbb9d1fc04b62fe2a7a7c77ab0476cc99172cbd2d0a344dacf17e902ea11",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/MissionX0.cpp.obj",
+          "object_sha256": "c6f9c85280f7e99b34aaa8f046eebfd4a7e7a75671512037e15e3bac3c39c222"
+        },
+        {
+          "source": "staging/scripts/Mission01.cpp",
+          "source_sha256": "9c28882b6476c6631c3eec5fadeb8383af46e668c9fc1b198c017d4b474cb901",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission01.cpp.obj",
+          "object_sha256": "dc7d3b2efca1570c19dd9db6a60cbf3112e37401ea6bfa11193dc3dab719c514"
+        },
+        {
+          "source": "staging/scripts/Mission02.cpp",
+          "source_sha256": "e9779feff38fd4b8aa00a80cc1d8537c2f51ae99f27d7b9f29d06a7a13b13f20",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission02.cpp.obj",
+          "object_sha256": "b804f8723c0d27ebb60d1d00f0f48b102b64f8d86e398c66517bf7576902740e"
+        },
+        {
+          "source": "staging/scripts/Mission03.cpp",
+          "source_sha256": "55cbb02352268af68437387ed75daac299d08d31be0f286c6f0769c4d793ac41",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission03.cpp.obj",
+          "object_sha256": "9d6a3fbce75f7f1c9ec869f15540a7c8b10900ecc06ad92823f0c88ea05a94ea"
+        },
+        {
+          "source": "staging/scripts/Mission04.cpp",
+          "source_sha256": "a065ab27dcd288b55f1fcab506d6badf3b35f1725c52444f32522d0fa3774657",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission04.cpp.obj",
+          "object_sha256": "5970d2bf3ef1610062a3d1aa73702b607805dac96417ee9960cbe7f57e9549f2"
+        },
+        {
+          "source": "staging/scripts/Mission05.cpp",
+          "source_sha256": "7a5864f158dc8bab09619f06f0e763ff50149a40613c0e781cef31aa966c2a9f",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission05.cpp.obj",
+          "object_sha256": "fc51aa559b01b79e13ebb2a4bbdaa3fa2f75ab7fe3147897bd2e41dca7e9eb57"
+        },
+        {
+          "source": "staging/scripts/Mission06.cpp",
+          "source_sha256": "0cb75ea11d0a75828e1f981625c5cf1108c18f625150ed7bf5e9e284c2f2a063",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission06.cpp.obj",
+          "object_sha256": "c11fa83cab02889bf76cc1a3fb99ed5ddb59eaceb025ef89e1135d7b09a8dfd4"
+        },
+        {
+          "source": "staging/scripts/Mission07.cpp",
+          "source_sha256": "c20fc975b32bc8daf1cb6de3c4a6051bcbd16247a13288439728361c03dc10cd",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission07.cpp.obj",
+          "object_sha256": "43bb4a1949563d5cea2e30c62b1abdc5a2be551a3d6fa56e095de055ac8bf980"
+        },
+        {
+          "source": "staging/scripts/Mission09.cpp",
+          "source_sha256": "d84a63190a795ae41d57ebc21e997544980971ad42c063dbc014ca147bb6e9cf",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission09.cpp.obj",
+          "object_sha256": "1937495565a1939e9ae00d29b58f4daa0ec215ef454459e6c9170544ac8eebe9"
+        },
+        {
+          "source": "staging/scripts/Mission10.cpp",
+          "source_sha256": "43914b8899442aff649c5f383503d4b5bcbcde6a8391a8698215adbdf878ed2f",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission10.cpp.obj",
+          "object_sha256": "6ecb885e019b0602ffc6b85b1e884d1cba642b056889d126d5c5ba90c7058874"
+        },
+        {
+          "source": "staging/scripts/Mission11.cpp",
+          "source_sha256": "8bc76b128c280985f90c5ab5da9847ff4697725fe86e1975d9129139e912d462",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/Mission11.cpp.obj",
+          "object_sha256": "024550abaa15a5d038c3834841fab5447bdb83d9c04c70abecfe65757b8ba760"
+        },
+        {
+          "source": "staging/scripts/mission08.cpp",
+          "source_sha256": "1384b63c785e8aedf2aa77e57473ee3e60466ac202dfc0dbd716179d3cdeec53",
+          "object": "build/vita-fast-candidate/CMakeFiles/RenegadeVitaA31.dir/staging/scripts/mission08.cpp.obj",
+          "object_sha256": "a2b25a829100158d1d76ee9791e291776f9c3dce5a720e32afd09ffafc5be341"
+        }
+      ]
+    }
+  ],
+  "open_risks": [
+    "Original textureloader.cpp compiles separately but is excluded from runtime graphs; integration remains open.",
+    "Canonical packaging and clean-checkout CI are not yet established.",
+    "Dazzle visual output, decal depth bias, projectors and procedural material passes remain unverified or incomplete.",
+    "Complete all-map inventories and mission acceptance remain open."
+  ]
+}

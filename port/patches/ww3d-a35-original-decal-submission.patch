@@ -40,7 +40,7 @@
 -			** unsupported draw; an actual decal remains explicit. */
 -			if (rinfo.Additional_Pass_Count() > 0 ||
 -				(DecalMesh != NULL && DecalMesh->Decal_Count() > 0)) {
-+			if (	(DecalMesh != NULL) && 
++			if (	(DecalMesh != NULL) &&
 +					((rinfo.Current_Override_Flags() & RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY) == 0))
 +			{
 +				const SphereClass & ws_sphere = Get_Bounding_Sphere();

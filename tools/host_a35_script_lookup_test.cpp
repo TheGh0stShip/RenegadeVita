@@ -1,4 +1,4 @@
-// Prepared source probe; compiling/running it requires lifting the build hold.
+// Retail-free probe of bounded lookup recording and concurrent publication.
 #include "a35_script_lookup_telemetry.h"
 
 #include <stdio.h>

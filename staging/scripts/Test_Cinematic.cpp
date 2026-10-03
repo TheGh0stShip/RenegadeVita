@@ -208,14 +208,11 @@ public:
 	*/
 	void	Load_Control_File( const char * filename ) 
 	{
-		Commands->Debug_Message( "Loading Control File %s\n", (int)filename );
+		Commands->Debug_Message( "Loading Control File %s\n", filename );
 
-		char full_filename[80];
-		sprintf( full_filename, "DATA\\%s", filename );
-//		FILE * in = fopen( full_filename, "rt" );
 		int handle = Commands->Text_File_Open( filename );
 		if ( handle == 0 ) {
-			Commands->Debug_Message( "Failed to open %s\n", (int)full_filename );
+			Commands->Debug_Message( "Failed to open DATA\\%s\n", filename );
 			return;
 		}
 
@@ -854,7 +851,7 @@ public:
 			GameObject * obj = Commands->Find_Object( id );
 			if ( obj ) {
 				Commands->Enable_Hibernation( obj, false );
-				char id[10];
+				char id[12]; // signed 32-bit decimal ID, sign and terminator
 				sprintf( id, "%d", MyID );
 				Commands->Attach_Script( obj, "Test_Cinematic_Primary_Killed", id );
 			} else {

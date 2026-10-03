@@ -2,10 +2,8 @@
 set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-# In the normal Windows-managed checkout logs live beside workspace/A2.0.
-# This active native-ext4 checkout is deliberately writable only at rv_root,
-# so never select an existing but unwritable parent as the log destination.
-rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"/mnt/c/Users/${USER}/AppData/Local/RenegadeVitaBuilder"}
+# Prefer the migrated WSL builder folder when it is writable.
+rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"$rv_root/local-builder"}
 if [ -d "$rv_managed_builder_root" ] && [ -w "$rv_managed_builder_root" ]; then
 	rv_builder_root=$rv_managed_builder_root
 else
@@ -39,6 +37,7 @@ test -f "$rv_retail_root/Data/always.dat"
 
 cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_build" -G Ninja \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	-DRENEGADE_HOST_ORIGINAL_AUDIO=ON \
 	-DRENEGADE_USE_CCACHE=ON
 grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
 cmake --build "$rv_build" --target a30_wwphys_definition_runtime \
@@ -141,6 +140,7 @@ python3 "$rv_root/tools/renegade_asset_cache_verify.py" "$rv_runtime/cache" \
 # pointer-token compatibility paths; ASan gives a deterministic lifetime
 # check without treating that non-target ABI as a Vita verdict.
 cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_interactive_build" -G Ninja \
+	-DRENEGADE_HOST_ORIGINAL_AUDIO=ON \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DCMAKE_CXX_FLAGS="-fsanitize=address -fno-omit-frame-pointer" \
 	-DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
@@ -217,6 +217,7 @@ ASAN_OPTIONS='abort_on_error=1:detect_leaks=1:halt_on_error=1' timeout 180s \
 # those diagnostics are excluded explicitly rather than being misreported as a
 # Vita verdict.  All remaining undefined behavior is a candidate blocker.
 cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_interactive_ubsan_build" -G Ninja \
+	-DRENEGADE_HOST_ORIGINAL_AUDIO=ON \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer -fno-sanitize=alignment,signed-integer-overflow,shift" \
 	-DCMAKE_EXE_LINKER_FLAGS="-fsanitize=undefined" \

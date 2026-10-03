@@ -38,6 +38,9 @@
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
 #endif
+#if defined(RENEGADE_VITA_PORT)
+#include "a35_campaign_flight_recorder.h"
+#endif
 #include "input.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
@@ -3251,11 +3254,24 @@ void	ActionClass::Notify_Completed( int observer_id, int action_id, int reason )
 		// Find the observer and notify
 		SmartGameObj *	obj = Get_Action_Obj();
 		const GameObjObserverList & observer_list = obj->Get_Observers();
+#if defined(RENEGADE_VITA_PORT)
+		bool observer_found = false;
+#endif
 		for( int index = 0; index < observer_list.Count(); index++ ) {
 			if ( observer_list[ index ]->Get_ID() == observer_id ) {
+#if defined(RENEGADE_VITA_PORT)
+				observer_found = true;
+#endif
 				observer_list[ index ]->Action_Complete( obj, action_id, (ActionCompleteReason)reason );
 			}
 		}
+#if defined(RENEGADE_VITA_PORT)
+		if (!observer_found) {
+			// No callbacks ran on this path; do not inspect actors after delivery.
+			A35_Campaign_Flight_Action_Observer_Miss(static_cast<int32_t>(obj->Get_ID()),
+				static_cast<int32_t>(observer_id), static_cast<int32_t>(action_id), static_cast<int32_t>(reason));
+		}
+#endif
 	}
 }
 

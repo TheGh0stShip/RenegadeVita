@@ -22,6 +22,7 @@ struct SceneOwnedSound : Base {
 	unsigned &destroyed;
 	explicit SceneOwnedSound(unsigned &count) : destroyed(count) {}
 	~SceneOwnedSound() override { ++destroyed; }
+	auto Probe_Cullable_Wrapper() const { return this->Peek_Cullable_Wrapper(); }
 };
 
 inline int Run_Audible_Removal() {
@@ -42,7 +43,10 @@ inline int Run_Audible_Removal() {
 		// No sample or play-list reference: the scene must be the final owner.
 		sound->Set_Position(Vector3(10000.0f, 0.0f, 0.0f));
 		sound->Add_To_Scene(false);
-		if (sound->Peek_Cullable_Wrapper() == nullptr) {
+		const bool wrapper_present = kind == 0 ?
+			static_cast<SceneOwnedSound<AudibleSoundClass> *>(sound)->Probe_Cullable_Wrapper() != nullptr :
+			static_cast<SceneOwnedSound<Sound3DClass> *>(sound)->Probe_Cullable_Wrapper() != nullptr;
+		if (!wrapper_present) {
 			sound->Release_Ref();
 			return 2;
 		}

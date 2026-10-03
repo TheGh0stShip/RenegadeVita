@@ -738,11 +738,17 @@ void MeshClass::Render(RenderInfoClass & rinfo)
 			if (render_base_passes) {
 				RenegadeVitaRenderer::Submit_Mesh(*this, rinfo);
 			}
-			/* A retained but empty decal mesh is a no-op in the original
-			** DecalMeshClass::Render path.  Do not classify that no-op as an
-			** unsupported draw; an actual decal remains explicit. */
-			if (rinfo.Additional_Pass_Count() > 0 ||
-				(DecalMesh != NULL && DecalMesh->Decal_Count() > 0)) {
+			if (	(DecalMesh != NULL) &&
+					((rinfo.Current_Override_Flags() & RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY) == 0))
+			{
+				const SphereClass & ws_sphere = Get_Bounding_Sphere();
+				Vector3 cam_space_sphere_center;
+				rinfo.Camera.Transform_To_View_Space(cam_space_sphere_center,ws_sphere.Center);
+				if (-cam_space_sphere_center.Z - ws_sphere.Radius < WW3D::Get_Decal_Rejection_Distance()) {
+					TheDX8MeshRenderer.Add_To_Render_List(DecalMesh);
+				}
+			}
+			if (rinfo.Additional_Pass_Count() > 0) {
 				RenegadeVitaRenderer::Submit_Unsupported(this);
 			}
 #else

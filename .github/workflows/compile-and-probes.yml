@@ -83,11 +83,16 @@ jobs:
       - name: Install host build helpers
         run: |
           apt-get update
-          apt-get install -y ccache unzip imagemagick libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg llvm clang
+          apt-get install -y ccache unzip imagemagick libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg llvm clang ripgrep
       - uses: actions/checkout@v4
         with:
           submodules: recursive
           persist-credentials: false
+      - name: Prepare project-local HTTPS dependencies
+        env:
+          VITASDK: /usr/local/vitasdk
+          RENEGADE_DEPENDENCY_JOBS: '2'
+        run: bash tools/build_ttfs_https_vita.sh
       - name: Compile and link native ARM candidate
         env:
           RENEGADE_FAST_SCOPE: compile

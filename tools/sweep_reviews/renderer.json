@@ -23,6 +23,644 @@
         "Native rigid/skinned decal rendering across all maps/modes reaching decal flush; actual per-map decals and physical appearance require S4 and runtime verification."
       ],
       "acceptance_open": "Preserve original bias semantics and reset/state lifetime at native draw boundary; verify representative decals on Vita/PSTV. Source mapping evidence does not establish observed z-fighting."
+    },
+    {
+      "symbol": "D3DRS_ALPHABLENDENABLE",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "glEnable/glDisable(GL_BLEND), retained source/destination factors. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_SRCBLEND",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "DX8 blend factor translation and glBlendFunc. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_DESTBLEND",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "DX8 blend factor translation and glBlendFunc. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_ALPHATESTENABLE",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "glEnable/glDisable(GL_ALPHA_TEST). Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_ALPHAREF",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "low 8-bit reference divided by 255 and glAlphaFunc. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_ALPHAFUNC",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "DX8 comparison translation and glAlphaFunc. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_ZFUNC",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "DX8 comparison translation and glDepthFunc. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_ZWRITEENABLE",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "glDepthMask. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_CULLMODE",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "GL cull enable and CW/CCW discard-side selection. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_FILLMODE",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "point/line/fill translation and glPolygonMode. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_FOGENABLE",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "retained fog enable and GL_LINEAR application. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_FOGCOLOR",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "packed RGB decode and glFogfv. Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_FOGSTART",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "DWORD float decode and glFogf(GL_FOG_START). Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_FOGEND",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "DWORD float decode and glFogf(GL_FOG_END). Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_AMBIENT",
+      "status": "boundary_replaced",
+      "native_mapping": "source_path_present_values_and_pixels_unverified",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper render-state owner through native IDirect3DDevice8 boundary",
+      "behavior": "packed RGB decode and glLightModelfv(GL_LIGHT_MODEL_AMBIENT). Native cache and original ShaderClass cache invalidation are part of the inspected path; initialization and state-combination behavior remain unverified.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:382-515 and :2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure."
+      ],
+      "acceptance_open": "Check legal value domains, fallback translations, initialization/cache coherence, shader overlap and Vita/PSTV pixels. Source path presence is not complete feature support."
+    },
+    {
+      "symbol": "D3DRS_FOGDENSITY",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_FOGTABLEMODE",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_FOGVERTEXMODE",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_RANGEFOGENABLE",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILENABLE",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILFAIL",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILFUNC",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILMASK",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILPASS",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILREF",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILWRITEMASK",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_STENCILZFAIL",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_CLIPPING",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
+    },
+    {
+      "symbol": "D3DRS_CLIPPLANEENABLE",
+      "status": "missing",
+      "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
+      "inputs_sha256": {
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+        "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+      },
+      "original_owner": "Original DX8Wrapper direct render-state request",
+      "behavior": "Fog/ambient helpers and the native state switch do not consume this symbol. After initialization the direct call reaches the unsupported branch, logs once and returns success without state application. This does not establish absence of clipping or other effects through independent rendering routes.",
+      "evidence": [
+        "port/renderer/vita/ww3d_dx8_boundary.cpp:2218",
+        "port/renderer/vita/ww3d_vita_renderer.cpp:2637-2765",
+        "port/renderer/vita/ww3d_vita_render_state_contract.h:57-103"
+      ],
+      "affected_scope": [
+        "Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms."
+      ],
+      "acceptance_open": "Trace active setters, legal values and independent renderer routes; implement or prove equivalent original behavior where required, and verify affected effects on Vita/PSTV."
     }
   ]
 }

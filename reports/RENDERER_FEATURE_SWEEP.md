@@ -1,7 +1,8 @@
 # S2 renderer features — inventory in progress
 
 This source denominator is incomplete as a feature matrix. Of 2,052 records,
-one state mapping is reviewed as `missing` and 2,051 remain `unknown`.
+15 direct state mappings are reviewed as `missing`, 15 as `boundary_replaced`,
+and 2,022 remain `unknown`.
 Syntax discovery does not prove selection, linking, native
 submission, feature support or physical rendering. S1 classification continues.
 
@@ -27,6 +28,29 @@ review pins all four source inputs. A changed input invalidates the mapping.
 Original pseudo-ZBias projection handling is a separate route; it does not
 make this direct decal state request work. Per-map instances and physical
 z-fighting are unverified. No renderer repair is included in this batch.
+
+The next direct-state review covers the complete inspected handler cases:
+
+| Source path present | Translation |
+| --- | --- |
+| Blend enable, source/destination factors | GL blend state and factor translation |
+| Alpha enable, reference, comparison | GL alpha test, 8-bit reference and comparison |
+| Depth comparison and write enable | GL depth function and mask |
+| Cull and fill modes | GL cull side and polygon mode |
+| Fog enable, color, start and end | Retained values applied as linear GL fog |
+| Ambient color | Packed RGB to GL light-model ambient |
+
+These 15 rows are `boundary_replaced`, not feature acceptance. Legal value
+domains, default factor/comparison fallbacks, initialization, cache coherence,
+shader-state overlap and physical combinations remain open.
+
+Fourteen further direct mappings are `missing`: fog density, table/vertex mode,
+range fog; stencil enable/fail/function/mask/pass/reference/write-mask/Z-fail;
+clipping and clip-plane enable. The inspected handler returns success without
+applying them. This proves a gap in this entry point, not absence of all clipping,
+fog or stencil behavior through independent renderer routes. Exact active
+setters, retail requests and per-map effects remain unverified. Together with
+ZBIAS, 15 state rows are missing; no behavior changes are included here.
 
 Candidate ancestry identifies 25 render-object definitions, 14 prototype-loader
 definitions and 14 prototype definitions. These counts include the base classes.

@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 direct-state batch: 15 native GL translation paths source-reviewed as replaced
+boundaries. Fourteen additional fog/stencil/clip requests lack direct mappings;
+independent rendering routes and actual retail use remain open. Including ZBIAS,
+S2 totals are 15 missing, 15 boundary-replaced and 2,022 unknown. Six tests pass.
+
 S2 state mapping batch: 176 per-symbol rows added alongside token references.
 Native decal ZBIAS is source-reviewed missing: unsupported handler reports
 success without applying bias. Four source hashes bind the review; runtime

@@ -59,3 +59,14 @@ The offline reader parses monitor outcomes separately and reports capacity
 rejection explicitly. Twenty-eight focused source/Python checks pass. Prepared
 C++ cases cover numeric monitor encoding and invalid-kind rejection; they
 remain uncompiled and do not exercise the original observer callback path.
+
+Save-boundary review compares the patched original Save, Load and
+Load_Variables bodies byte-for-byte with their original source and finds no
+change. This establishes source exclusion of the diagnostic member, not a
+native save round trip. Original pointer-remap microchunks remain pointer-sized:
+four bytes on native Vita ILP32. The host compatibility reader accepts32-bit
+tokens, but the generic host writer still uses sizeof(pointer), normally eight
+bytes on Linux x86-64. Host-generated saves are therefore not retail-format
+proof. Do not truncate live host pointers or globally pack classes to conceal
+that host-only limitation. Original native save/load and monitor remapping
+still require compiled, candidate-bound validation.

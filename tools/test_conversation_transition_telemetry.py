@@ -31,6 +31,12 @@ class ConversationTransitions(unittest.TestCase):
         self.assertEqual(text.count('DiagnosticInstance ='), 1)
         save_load = text.split('ActiveConversationClass::Save', 1)[1].split('ActiveConversationClass::Register_Monitor', 1)[0]
         self.assertNotIn('DiagnosticInstance', save_load)
+        original = (ROOT / 'staging/combat/activeconversation.cpp').read_text()
+        for signature in ('ActiveConversationClass::Save (', 'ActiveConversationClass::Load (',
+                          'ActiveConversationClass::Load_Variables ('):
+            original_body = original.split(signature, 1)[1].split('\n}\n', 1)[0]
+            patched_body = text.split(signature, 1)[1].split('\n}\n', 1)[0]
+            self.assertEqual(patched_body, original_body, signature)
         self.assertLess(text.index('NextRemarkTimer = duration;'), text.index('Transition(false,'))
         stop = text.split('ActiveConversationClass::Stop_Conversation (ActionCompleteReason reason)', 1)[1]
         self.assertLess(stop.index('State = STATE_FINISHED;'), stop.index('Transition(true,'))

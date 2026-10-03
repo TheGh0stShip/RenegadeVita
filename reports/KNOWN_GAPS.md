@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-10-03 conversation save-boundary review: new diagnostic identity is
+excluded from unchanged Save/Load/Load_Variables bodies. Generic host save
+macro still writes pointer-sized remap tokens, eight bytes on Linux LP64;
+host reading32-bit tokens does not establish compatible host writes. This
+is a host-test limitation, not a demonstrated native Vita defect. See
+[conversation diagnostics](CONVERSATION_TRANSITION_DIAGNOSTICS.md).
+
 2026-10-03 audio timing follow-up: a created speech object with zero statistics
 duration overrides the normal dynamic-dialogue pause and can advance the
 next-remark timer on the next update. Whole-conversation duration has a

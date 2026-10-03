@@ -27,6 +27,21 @@ tails and actual reentrant delivery remain open. Input receipt hashes and
 joined metadata stay private in
 `build/cinematic-primary-actor-routes-20261003.json`; no retail files changed.
 
+The two damage-bearing primary helpers were then traced through their actual
+callbacks. M13's helicopter attachment supplies ActorID=1, which queues a
+23-second observer timer; Apply_Damage is in Timer_Expired, not Created.
+M01's hovercraft attachment precedes Set_Primary. Its immediate registration
+message records the sender ID in the controller and queues turret notifications
+with one-second delays. Its damage path uses a delayed self-event after a random
+5–8 seconds and requires either turret lookup to resolve. Neither inspected
+attachment path establishes synchronous primary death during that command.
+The original DamageableGameObj damage owner does dispatch Killed synchronously
+when resulting health is nonpositive, after Damaged notifications; successful
+damage, primary registration and actual callbacks remain unproved. Source hashes
+and the bounded findings are retained privately in
+`build/cinematic-primary-delayed-damage-20261003.json`. No speculative parser
+fix or retail control change follows from this review.
+
 The deeper Tutorial/M13/M01 sweep retains 1,140 original source event-call
 sites and 3,231 authored/unbound binding contexts. No resolved event type in
 this inspected scope is a cinematic slot-fill candidate. Five contexts remain

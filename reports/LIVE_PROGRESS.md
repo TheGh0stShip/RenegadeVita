@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Primary actor delayed damage callbacks — 2026-10-03
+
+Completed: M13 helicopter23-second observer timer and M01 hovercraft5–8-second
+self-event damage paths traced; immediate M01 registration queues turret events.
+Evidence:original source hashes and retained authored ordering; neither inspected
+attachment establishes immediate primary death. Actual timer/damage/observer
+delivery and unrelated callback chains remain open. No source behavior change.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Authored cinematic primary actor routes — 2026-10-03
 
 Completed: primary selections joined to script attachments by possible creation

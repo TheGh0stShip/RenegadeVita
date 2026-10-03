@@ -1,7 +1,7 @@
 import struct
 import unittest
 
-from tools.audit_hlod_dependencies import inspect_hlod
+from tools.audit_hlod_dependencies import declared_render_names, inspect_hlod
 from tools.test_prelit_material_candidates import chunk
 
 
@@ -43,3 +43,15 @@ class HlodDependencies(unittest.TestCase):
             inspect_hlod(hlod(chunk(0x702, chunk(0x703, struct.pack('<If', 1, 1.0)) +
                               chunk(0x704, bytes(4) + b'X' * 32))))
         self.assertEqual(inspect_hlod(chunk(0x200, b'not an HLOD')), [])
+
+    def test_embedded_names_do_not_become_external_filenames(self):
+        header = struct.pack('<II', 0x40002, 0) + name('BODY', 16) + name('RIG', 16)
+        data = (chunk(0, chunk(0x1f, header), True) +
+                chunk(0x740, bytes(8) + name('RIG.BOX', 32)) +
+                hlod(array(0x702, ['RIG.BODY'])))
+        self.assertEqual(declared_render_names(data),
+                         [{'name': 'RIG.BODY', 'kind': 'mesh'},
+                          {'name': 'RIG.BOX', 'kind': 'box'},
+                          {'name': 'RIG', 'kind': 'hlod'}])
+        with self.assertRaises(ValueError):
+            declared_render_names(chunk(0x740, bytes(39)))

@@ -321,6 +321,17 @@ Child names require original asset-cache resolution before load-on-demand filena
 fallback; treating every child as a separate file would create false missing
 dependencies. That resolution remains the next open discovery step.
 
+The decoder now exposes mesh names using original container-dot-mesh composition,
+box names and HLOD header names. Eight combined tests pass, including embedded
+names and short headers. Same-member declaration matching covers3/3 Tutorial,
+64/93 M13 and87/104 M01 child records. The remaining29 M13 and17 M01 records
+are other-name leads, not missing-file findings: other prototype types, prior
+cache contents and original filename fallback still need inspection.
+Declared names do not prove prototypes registered successfully or were available
+at child construction time. Private hashed member receipt:
+`build/cinematic-hlod-same-member-names-20261003.json`.
+No build, launch or native geometry acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

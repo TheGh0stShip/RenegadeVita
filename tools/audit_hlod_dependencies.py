@@ -47,3 +47,24 @@ def inspect_hlod(data):
                      'hierarchy_name': fixed_name(header[24:40]),
                      'arrays': arrays, 'runtime_resolution_proven': False})
     return rows
+
+
+def declared_render_names(data):
+    """Selected original prototype header names, not a live registration claim."""
+    names = []
+    for node in chunks(data):
+        if node.kind == 0:
+            headers = [n for n in node.children if n.kind == 0x1f]
+            if len(headers) != 1 or len(headers[0].data) < 40:
+                raise ValueError('invalid mesh name header')
+            header = headers[0].data
+            mesh = fixed_name(header[8:24])
+            container = fixed_name(header[24:40])
+            names.append({'name': container + '.' + mesh if container else mesh,
+                          'kind': 'mesh'})
+        elif node.kind == 0x740:
+            if len(node.data) < 40:
+                raise ValueError('short box name header')
+            names.append({'name': fixed_name(node.data[8:40]), 'kind': 'box'})
+    names.extend({'name': row['name'], 'kind': 'hlod'} for row in inspect_hlod(data))
+    return names

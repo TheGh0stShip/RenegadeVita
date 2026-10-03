@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Same-member HLOD child names — 2026-10-03
+
+Completed: mesh container/name, box and HLOD declarations matched before external
+filename assumptions.154 of200 child records have same-member name candidates.
+Evidence: eight combined tests and unchanged member hashes.
+Open:29 M13/17 M01 other-name leads, prototype types/cache/order/fallback.
+Declarations are not runtime registration or geometry proof.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Cinematic HLOD child discovery — 2026-10-03
 
 Completed: read-only fixed-width/count-checked LOD/aggregate decoder; proxy names

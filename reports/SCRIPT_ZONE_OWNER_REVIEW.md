@@ -105,3 +105,37 @@ the complete scanner route. Duplicate base-object identity fields are rejected
 before the shared inventory reader can silently select the last value. A fresh
 read-only retail scan retains the counts and zero findings above. These checks
 validate metadata interpretation, not native loading or callback execution.
+
+## Saved membership reference ownership
+
+`GameObjReference` is the original `ReferencerClass`, not a numeric level-object
+ID wrapper. Its saved target is the old pointer token for the object's
+`ReferenceableClass<ScriptableGameObj>` base. That base registers its old token
+against the newly loaded base address. Referencer Load requests pointer remapping
+and registers a post-load callback. After remapping, On_Post_Load obtains the
+ScriptableGameObj and uses the original assignment operator to relink the
+referencer into the target's reference list. Object destruction clears that list's
+references; this explains a later null membership without a guaranteed Exited.
+
+SaveLoadSystem Load processes and resets pointer-remap tables before optional
+post-load callbacks. A missing token mapping sets the requested pointer to null;
+the callback then leaves it null. Zone Think removes that null reference without
+Exited. Missing remapping can therefore remove restored membership and permit a
+later fresh Entered, while a correctly restored member suppresses duplicate entry.
+Neither outcome is established by serialized zone bounds alone.
+
+The native runtime waits for the original threaded load, resumes texture loading,
+calls original Post_Load_Processing, and then Post_Load_Level/finalizes the level.
+Original Referencer and PointerRemap source units remain selected through the
+A31/A30 source chain. The registered combat pointer-token patch writes/reads
+explicit uint32 targets and referenceable tokens while retaining remap requests
+and post-load relinking. No missing relink step was found in this source review.
+
+These tokens are separate from mission Find_Object IDs and must not be replaced
+with those IDs. On native ARMv7 ILP32 a pointer token is four bytes. The current
+save-side cast from an actual pointer to uint32 does not establish a safe LP64
+host save identity: distinct host pointers can lose high bits and collide.
+Host-only serialization limitations remain open; do not globally truncate live
+pointers or treat host save success as native compatibility proof. Physical
+checkpoint validation must retain matching artifacts and verify actor identity,
+reference relinking, callback behavior and subsequent mission progression.

@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Zone saved-reference ownership — 2026-10-03
+
+Completed: original referenceable token registration, pointer remapping and
+post-load relinking traced through native load finalization. Missing mappings
+clear references and do not guarantee Exited; pointer tokens are not object IDs.
+Evidence: source inspection; no omitted relink step found. LP64 save identity
+and physical checkpoint/mission progression remain open. No build or launch.
+Native/runtime gates0/10.
+See [script-zone owner review](SCRIPT_ZONE_OWNER_REVIEW.md).
+
 ## Zone identity ambiguity — 2026-10-03
 
 Completed: duplicate base-object fields rejected before metadata identity lookup;

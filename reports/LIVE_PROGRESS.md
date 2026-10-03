@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Dazzle/decal pristine source composition — 2026-10-03
+
+Completed: four original files replayed through11 ordered touching patches in
+private temporary tree. All5 restoration input anchors match; both new patches
+apply zero-fuzz/no-offset. Two historical offsets retained separately.
+Evidence: private patch/input/output identities and4 focused source checks.
+Next: native bias/resource semantics and other required rendering omissions.
+No stage-script execution, active staging, build or launch; gates0/10.
+
 ## Original rigid decal depth fallback — 2026-10-03
 
 Completed: original rigid Create_Decal capability fallback located: parent-local

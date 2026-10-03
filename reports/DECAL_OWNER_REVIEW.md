@@ -17,6 +17,14 @@ Four combined restoration checks pass, including exact original decal draw-body
 comparisons. Active staging, compilation and native execution are unchanged.
 The depth-bias dependency below remains unresolved; effect closure is not claimed.
 
+Independent source composition check: all 11 ordered patches touching dazzle,
+decal mesh, mesh and WW3D replayed from pristine upstream in a private temporary
+directory. Five input SHA-256 anchors for the two restorations matched the
+ordered chain; both restorations applied with zero fuzz and no offsets. Two
+historical patch offsets were recorded separately. Output/source identities are
+retained privately. The staging script was read but not executed, and active
+staging was not altered. Four focused source restoration checks also pass.
+
 Four connected omissions were found (first three now corrected in source):
 
 1. Native MeshClass::Render reports populated decal meshes unsupported instead

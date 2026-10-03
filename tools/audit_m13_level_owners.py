@@ -212,6 +212,14 @@ def reference_fields(root: Path) -> dict:
         raise ValueError("review changed original explosion chunk layout")
     variable = int(match[1], 8)
     result[(variable + 1, variable)] = {1: 'PhysDefID', 2: 'SoundDefID'}
+    # General and HUD settings reuse these local chunk IDs with different
+    # layouts. Scope general sound fields to its original persist factory.
+    general_symbols = {}
+    parse_enum_constants(root / 'staging/combat/globalsettings.cpp', general_symbols)
+    general_fields = ('MICROCHUNKID_DEF_DEATH_SOUND', 'MICROCHUNKID_DEF_EVA_MO_SOUND',
+                      'MICROCHUNKID_DEF_HELP_TXT_SOUND')
+    result[(0x40602, general_symbols['CHUNKID_DEF_PARENT'], general_symbols['CHUNKID_DEF_VARIABLES'])] = {
+        general_symbols[name]: name for name in general_fields}
     return result
 
 
@@ -274,7 +282,13 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                                                                          'field_id': kind, 'offset': node.offset})
                 for container in flatten([factory]):
                     sibling_ids = {node.kind for node in container.children}
-                    for (parent, variables), fields in (reference_schema or {}).items():
+                    for owner_key, fields in (reference_schema or {}).items():
+                        if len(owner_key) == 3:
+                            owner_factory, parent, variables = owner_key
+                            if factory.kind != owner_factory:
+                                continue
+                        else:
+                            parent, variables = owner_key
                         if parent not in sibling_ids:
                             continue
                         for node in container.children:

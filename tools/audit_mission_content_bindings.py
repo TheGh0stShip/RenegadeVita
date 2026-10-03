@@ -155,6 +155,9 @@ def audit_map(root, data_root, map_name, scripts=None):
     objects = []
     spawners = []
     pending_defs = set()
+    global_settings_roots = sorted(key for key, row in defs.items()
+                                   if row['factory'] == '0x00040602')
+    pending_defs.update(global_settings_roots)
     for member in sorted(mission.entries):
         if member.endswith(('.ldd', '.lsd')):
             data = mission.read_binary(member)
@@ -236,6 +239,7 @@ def audit_map(root, data_root, map_name, scripts=None):
     return {"schema_version": 1, "evidence_class": "read-only authored metadata and literal source dependency leads",
             "map": map_name, "archive_sha256": hashlib.sha256(mission.path.read_bytes()).hexdigest(),
             "objects_ddb_sha256": database_hash, "definition_overlays": overlays,
+            "global_settings_definition_roots": global_settings_roots,
             "combat_script_source_sha256": {
                 name: hashlib.sha256((root / 'upstream/CnC_Renegade/Code' / name).read_bytes()).hexdigest()
                 for name in ('Combat/combat.cpp', 'Combat/combatsaveload.cpp',

@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## General-settings sound dependency roots — 2026-10-03
+
+Completed: original global settings and three named sound fields added to
+authored dependency discovery, qualified by factory to avoid reused HUD layouts.
+Evidence:31 focused Python checks; fresh three-map retail metadata receipts add
+two resolved definitions per map. Existing unresolved findings remain intact.
+Sound waveform/playback and runtime settings selection unverified.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Mission HUD help and map ownership — 2026-10-03
 
 Completed: original command→HUDInfo→sentence rendering, objective/radar owners

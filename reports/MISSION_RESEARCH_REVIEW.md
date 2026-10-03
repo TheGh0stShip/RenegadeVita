@@ -1,5 +1,16 @@
 # Complete mission overview review — 2026-10-03
 
+The authored dependency scan now includes the original general-settings
+definition as a root and its death, EVA-objective and HUD-help sound references.
+General/HUD settings reuse local chunk IDs, so the new edges are qualified by
+persist factory; an asset-free counterexample prevents reading HUD fields as
+general sound IDs. Fresh retail metadata receipts for Tutorial/M13/M01 add two
+previously unreached definitions per map, without changing script counts or
+existing unresolved IDs. The new global root and one sound definition resolve.
+This closes a discovery gap, not an observed playback omission; waveform
+availability, settings selection and native sound behavior remain unverified.
+Detailed receipts stay in `build/dev208-global-settings-roots-20261003/`.
+
 Original Test_Cinematic::Command_Set_Primary used a ten-byte buffer for
 sprintf("%d", MyID). A signed32-bit minimum needs eleven visible characters
 and a terminator; the maximum also exceeds the old capacity with its terminator.

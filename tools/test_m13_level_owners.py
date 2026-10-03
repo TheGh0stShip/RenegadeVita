@@ -112,6 +112,14 @@ class M13LevelOwnersTests(unittest.TestCase):
         self.assertEqual((reference['parent_chunk'], reference['variable_chunk'], reference['field_id']),
                          (500, 501, 1))
 
+    def test_typed_reference_factory_scope_prevents_reused_layout_confusion(self):
+        body = chunk(900, b'') + chunk(901, micro(2, integer(44)))
+        schema = {(1234, 900, 901): {2: 'GeneralSound'}}
+        general = definitions(chunks(definition(1234, 1, body)), schema)[1]
+        hud = definitions(chunks(definition(1235, 2, body)), schema)[2]
+        self.assertEqual(general['definition_references'], [44])
+        self.assertEqual(hud['definition_references'], [])
+
     def test_typed_reference_requires_matching_sibling_parent(self):
         schema = {(500, 501): {1}}
         body = chunk(500, b"", True) + chunk(501, micro(1, integer(777)))

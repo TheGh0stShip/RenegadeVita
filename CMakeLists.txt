@@ -432,6 +432,7 @@ set(RENEGADE_A30_PORT_SOURCES
   ${RENEGADE_ROOT}/port/platform/vita/renegade_vita_text_entry.cpp
   ${RENEGADE_ROOT}/port/platform/vita/a30_vita_runtime.cpp
 	${RENEGADE_ROOT}/port/platform/vita/a31_vita_runtime.cpp
+	${RENEGADE_ROOT}/port/platform/vita/a35_level_load_status.cpp
   ${RENEGADE_ROOT}/port/platform/a31_gameplay_boundary.cpp
   ${RENEGADE_ROOT}/port/platform/a31_miscutil_boundary.cpp
 	${RENEGADE_ROOT}/port/platform/a31_network_options_boundary.cpp

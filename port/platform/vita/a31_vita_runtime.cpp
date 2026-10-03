@@ -6,6 +6,7 @@
 #include "a31_demo_ending.h"
 #include "a35_campaign_flight_recorder.h"
 #include "a35_script_lookup_telemetry.h"
+#include "a35_level_load_status.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "a4_frontend_lifecycle_boundary.h"
 #include "a31_development_checkpoint.h"
@@ -3963,6 +3964,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 			A30_Vita_Log("A3.5 level load: original source=%s checkpoint=%d preload_always=0 campaign_mission_dep=%d\n",
 				load_source, loading_checkpoint ? 1 : 0, !RENEGADE_VITA_M00_DEMO);
+			A35_Level_Load_Reset_Failure();
 			CombatManager::Load_Level_Threaded(load_source, false);
 			int last_load_progress = -1;
 			int last_load_status_count = -1;
@@ -4013,6 +4015,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			loading_presenter.Render_Original_Progress("post_load_processing");
 			SaveLoadSystemClass::Post_Load_Processing(NULL);
 			A35_Campaign_Flight_Flush("level-load-post-process");
+			// Preserve original reference relinking before partial-world teardown.
+			const A35LevelLoadFailure load_failure = A35_Level_Load_Get_Failure();
+			if (load_failure != A35_LOAD_NO_FAILURE) {
+				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
+				result.render_error = true;
+				A30_Vita_Log("A3.5 level load: required load failed code=%u; finalization skipped\n",
+					static_cast<unsigned>(load_failure));
+				A35_Campaign_Flight_Flush("level-load-failed");
+				break;
+			}
 				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
 				loading_presenter.Render_Original_Progress("post_load_level");
 				CombatManager::Post_Load_Level();

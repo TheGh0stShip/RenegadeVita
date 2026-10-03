@@ -1,4 +1,13 @@
 {
+  "required_level_load_failure_20261003": {
+    "state": "NATIVE_REQUIRED_FAILURE_PROPAGATION_SOURCE_UNCOMPILED",
+    "report": "reports/MISSION_RESEARCH_REVIEW.md",
+    "focused_source_python_checks_passed": 30,
+    "registered_staging_patches": 299,
+    "staging_receipt_regenerated": false,
+    "cpp_latch_test_executed": false,
+    "native_runtime_gates_closed": 0
+  },
   "action_observer_miss_20261003": {
     "state": "BOUNDED_OPT_IN_SOURCE_HOOK_UNCOMPILED",
     "report": "reports/AI_ACTION_OWNER_REVIEW.md",

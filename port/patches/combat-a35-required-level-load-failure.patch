@@ -1,0 +1,133 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -60,6 +60,9 @@
+ #include "wwprofile.h"
+ #include <stdlib.h>
+ #include "specialbuilds.h"
++#if defined(__vita__)
++#include "a35_level_load_status.h"
++#endif
+ 
+ /*
+ **
+@@ -244,15 +247,35 @@
+ 	CurrentGameFilename = filename;
+ 
+ 	FileClass * file = _TheFileFactory->Get_File( filename );
++#if defined(__vita__)
++	if (file == NULL) {
++		A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_UNAVAILABLE);
++		return;
++	}
++	if (!file->Open(FileClass::READ)) {
++		A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_OPEN_FAILED);
++		file->Close();
++		_TheFileFactory->Return_File(file);
++		return;
++	}
++#else
+ 	WWASSERT( file );
+ 	file->Open( FileClass::READ );
++#endif
+ 	ChunkLoadClass cload(file);
++#if defined(__vita__)
++	bool level_info_found = false;
++	bool level_data_found = false;
++#endif
+ 
+ 	WWLOG_INTERMEDIATE("Open file");
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_LEVEL_INFO:
++#if defined(__vita__)
++				level_info_found = true;
++#endif
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+ 						
+@@ -285,8 +308,17 @@
+ 				break;
+ 								
+ 			case CHUNKID_LEVEL_DATA:
++#if defined(__vita__)
++				level_data_found = true;
++#endif
+ 				if (CombatManager::I_Am_Server()) {
++#if defined(__vita__)
++					if (!SaveLoadSystemClass::Load(cload, false)) {
++						A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_SUBSYSTEM_FAILED);
++					}
++#else
+ 					SaveLoadSystemClass::Load( cload, false );
++#endif
+ 				}
+ 				WWLOG_INTERMEDIATE("Load");
+ 				break;
+@@ -299,6 +331,12 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
++#if defined(__vita__)
++	if (!level_info_found) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
++	if (CombatManager::I_Am_Server() && !level_data_found) {
++		A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_DATA_MISSING);
++	}
++#endif
+ 	file->Close();
+ 	_TheFileFactory->Return_File(file);
+ 	WWLOG_INTERMEDIATE("Rest of the stuff");
+@@ -493,7 +531,7 @@
+ void	SaveGameManager::Load_Level( void )
+ {
+ 	Debug_Say(( "Load Level %s\n", MapFilename ));
+-	Load_Save_Load_System( MapFilename, false );	// false = no automatic post load processing (needs to be called explicitly)
++	Load_Save_Load_System( MapFilename, false, true );	// false = no automatic post load processing (needs to be called explicitly)
+ }
+ 
+ /*
+@@ -539,16 +577,32 @@
+ 	_TheWritingFileFactory->Return_File(file);
+ }
+ 
+-void	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_post_load )
++void	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_level )
+ {
+ 	FileClass * file = _TheFileFactory->Get_File( filename );
+ 	if ( file != NULL ) {
++#if defined(__vita__)
++		if (!file->Open(FileClass::READ)) {
++			if (required_level) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_OPEN_FAILED);
++			file->Close();
++			_TheFileFactory->Return_File(file);
++			return;
++		}
++		ChunkLoadClass cload(file);
++		if (!SaveLoadSystemClass::Load(cload, auto_post_load) && required_level) {
++			A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
++		}
++#else
+ 		file->Open( FileClass::READ );
+ 		ChunkLoadClass cload(file);
+ 		SaveLoadSystemClass::Load( cload, auto_post_load );
++#endif
+ 		file->Close();
+ 		_TheFileFactory->Return_File(file);
+ 	} else {
++#if defined(__vita__)
++		if (required_level) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_UNAVAILABLE);
++#endif
+ 		Debug_Say(( "Failed to load file %s\n", filename ));
+ //		WWASSERT( file );
+ 	}
+--- a/savegame.h
++++ b/savegame.h
+@@ -81,7 +81,7 @@
+ 	static void	Load_Definitions( const char * filename = DefaultDefinitionFilename );
+ 
+ 	// Generic SaveLoadSubSystem Access
+-	static void	Load_Save_Load_System( const char * filename, bool auto_post_load );
++	static void	Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_level = false );
+ 	static void _cdecl Save_Save_Load_System( const char * filename, ... );
+ 
+ protected:

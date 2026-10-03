@@ -1025,6 +1025,12 @@ test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
 	"a8cc3e7149aeb6dcdf01bb87e7df176b2175aa8b5880888fa2ec25ffd91ce816"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-action-observer-miss-telemetry.patch"
+test "$(sha256sum "$rv_stage/combat/savegame.cpp" | cut -d' ' -f1)" = \
+	"8589a02e13ce7de0c505f0d4d0250c82233160b92524e54e59849f8be0726564"
+test "$(sha256sum "$rv_stage/combat/savegame.h" | cut -d' ' -f1)" = \
+	"a380d7e66a3f000c03a7bb2db2019cbaa659f25ee868efb84d02d3cf37f23e07"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-required-level-load-failure.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

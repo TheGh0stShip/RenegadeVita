@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-10-03 required level-load outcomes now propagate in native source for
+dynamic/static open/subsystem failure and absent required dynamic chunks.
+Optional definition calls remain nonfatal. A first-error latch stops world
+finalization after original reference relinking. Source/Python checks pass;
+partial-world cleanup, valid loading and malformed-but-present content remain
+unverified. No build or launch. See [mission research review](MISSION_RESEARCH_REVIEW.md).
+
 2026-10-03 script-zone review: original owners selected; position-point overlap,
 inclusive boundaries, callbacks-before-membership-change and saved inside-list
 semantics traced. Removed references do not guarantee Exited, and loaded inside

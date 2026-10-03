@@ -197,7 +197,39 @@ target exists in the same archive. Archive/member/source hashes remain in privat
 member in that inspected scope, not native file-open, parsing, subsystem load or
 mission success. Optional definition lookups must be distinguished from required
 dynamic/static level files before adding failure gates. Failure propagation is
-still open; no unsupported fatal gate or replacement loader was introduced.
+now implemented in source for the confirmed outcomes below, uncompiled.
+
+The299th registered staging patch adds native-only required dynamic/static file
+open and subsystem-load outcome propagation. Load_Level explicitly marks its
+static input required; the helper's existing definition calls default to optional.
+The dynamic loader also records missing level-info or missing server level-data
+chunks, matching original Save_Game's output and the inspected retail members.
+Failed opens close/return the file before returning. No serialized fields,
+factory ownership, mission scripts or valid-file parsing order were replaced.
+
+A fixed uint32 atomic latch retains the first failure without heap allocation,
+file names or coverage opt-in. Startup resets it before the original level load.
+After original pointer remapping and post-load reference relinking, a recorded
+failure clears the level-loading flag and exits through initialized-component
+teardown before Post_Load_Level, world finalization or player creation. The
+existing runtime error result carries this failure; its generic render_error
+field does not mean a renderer defect. The log's numeric load code distinguishes
+the actual cause. Reference relinking remains necessary before partial-world
+destruction; skipping all post-load callbacks was not adopted.
+
+Thirty focused Python/source checks pass, including zero-fuzz/no-offset
+patch replay, required/optional call separation, file-return branches and native
+reference-closure/finalization ordering. Stage/build entrypoints were checked for
+shell syntax only. A C++ latch counterexample test is prepared but uncompiled and
+unrun. The staging receipt remains unchanged under the hold;299 is the registered
+patch count, not evidence of a newly staged or built candidate.
+
+No recorded failure is not a success certificate. Malformed required members
+with superficially present chunks, unknown/missing subsystem data, truncated
+parsing and post-load callback failures remain incompletely classified. Actual
+required-failure cleanup, valid Tutorial/M13/M01 loading, optional-definition
+absence and checkpoint restoration need matching native runtime evidence.
+No build, launch, deployment or retail mutation occurred; native gates remain0/10.
 
 The compiler target reports arm-vita-eabi; inspected libpthread attributes
 report ARMv7-A/Thumb-2 and VFP-register arguments. Native remains little-endian

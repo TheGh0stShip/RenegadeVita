@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Required-load failure propagation — 2026-10-03
+
+Completed: native required dynamic/static open and subsystem failures, missing
+required dynamic chunks, first-error latch and pre-finalization failure exit in
+source. Optional definition lookups stay outside the fatal required-file policy.
+Evidence:30 source/Python checks; zero-fuzz/no-offset replay;299 registered patches.
+C++ latch test prepared, unrun. Partial-world cleanup and valid-file behavior
+remain unverified; staging receipt unchanged. No build, launch or retail mutation.
+Native/runtime gates0/10.
+See [mission research review](MISSION_RESEARCH_REVIEW.md).
+
 ## Required level members and load outcome — 2026-10-03
 
 Completed: Tutorial/M13/M01 authored dynamic-to-static member links verified

@@ -1,5 +1,16 @@
 # Complete mission overview review — 2026-10-03
 
+Focused ordered source replay on 2026-10-03 passed for eight original files:
+SaveGame source/header, Action, ScriptableGameObj, ActiveConversation
+source/header, script parameter parsing and Test_Cinematic. The replay applied
+21 selected patches in their registered order from pristine upstream, with
+zero fuzz, and reproduced the staging script's explicit trailing-newline
+transformation. It retained original/final hashes and patch identities in the
+private receipt `build/focused-source-patch-chain-20261003.json`. Historical
+patch offsets are recorded rather than hidden. This establishes focused source
+composition only; it does not establish all 300 patches, compilation, linkage,
+registration or native gameplay. Active staging and its receipt were unchanged.
+
 Every section of the supplied overview is accounted for below. This closes a
 review-accounting gap; it does not certify every numeric claim, asset linkage,
 behavior or recommendation. The previous reconciliation checked the mission

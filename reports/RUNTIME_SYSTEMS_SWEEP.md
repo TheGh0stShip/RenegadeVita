@@ -41,6 +41,38 @@ resources and duplicate declarations stay explicit risks. The full sweep and
 physical behavior acceptance remain incomplete.
 # Runtime owner groups added
 
+## Input-lock owner trace
+
+Source review locates the command-to-owner chain:
+`staging/combat/scriptcommands.cpp:1505` forwards to SmartGameObj's
+`Control_Enable`; `smartgameobj.h:130` stores the original ControlEnabled flag.
+Original `smartgameobj.cpp:708` and staged `smartgameobj.cpp:731` gate Apply_Control
+in Think. The disabled branch resets the controller and clears weapon triggers.
+Original `ccamera.cpp:1443` and staged `ccamera.cpp:1448` return before ordinary
+camera movement when the player's control flag is false. Save/load preserves
+the flag in original microchunks. These are source findings, not execution proof.
+
+The Vita input provider's `gameplay_input_active` at
+`port/platform/renegade_directinput.cpp:609` distinguishes dialog navigation;
+it does not itself inspect the mission control flag. Front touch feeds the
+original left-mouse button at line 653, while back touch feeds the F binding
+at line 650. Gameplay enforcement therefore requires the original control/action
+and camera owners; a blanket provider shutdown would also affect frontend input.
+Action-key side effects, menu access and cinematic camera paths still require
+individual caller review. Do not infer that every input is suppressed by one gate.
+
+The native `Control_Enable(true)` occurrence at
+`port/platform/vita/a31_vita_runtime.cpp:2880` belongs to the bounded development
+M13 A03 field setup. Its caller at line 4552 is guarded by development-checkpoint
+configuration and a pending diagnostic route. It is not evidence of an ordinary
+per-frame unlock. Diagnostic-route activation and natural mission routes must
+remain separate in acceptance evidence.
+
+Next evidence: host replay of original script lock/unlock, action and weapon
+effects; balanced restoration across save/load and cinematic termination; then
+authorized Vita/PSTV input replay with controller and touch. No runtime patch was
+made because this trace does not establish a missing owner gate.
+
 The input-lock denominator retains 23 `Control_Enable(...)` token occurrences
 across staged and port C++/headers, including 17 Commands-member candidates.
 Declarations and inactive branches remain visible; source lines/hashes and direct

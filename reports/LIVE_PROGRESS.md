@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## S6 control-lock owner trace — 2026-10-03
+
+Original command forwards to SmartGameObj control flag; original Think resets
+controller/weapon triggers when disabled, and camera movement checks the flag.
+Vita touch feeds original mouse/key bindings; dialog gating is separate. Native
+explicit unlock belongs to guarded M13 development field setup. Source evidence
+does not close balanced restoration, action side effects or physical input gates.
+No speculative provider-wide input suppression or runtime behavior change.
+
 ## S6 input-lock occurrence denominator — 2026-10-03
 
 23 Control_Enable occurrences retained across staged/port sources, including

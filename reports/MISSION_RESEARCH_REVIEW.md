@@ -1,5 +1,19 @@
 # Complete mission overview review — 2026-10-03
 
+The authored scan now includes the active HumanState default Loiter definition
+as a named/factory-qualified root and retains reached collections' ordered
+animation entries. Repeated and empty entries remain visible rather than being
+deduplicated as object IDs. Fresh Tutorial/M13/M01 receipts add one resolved
+definition per map and one animation entry. Original HumanState uses a per-actor
+collection when present, otherwise the default; its weapon/weaponless selection
+block is disabled and is not treated as an active dependency. Loiter activation
+also depends on upright state, permission, substate, delay and skeleton handling.
+Forty-five focused checks pass, including reused-factory layout and entry-order
+controls. Animation availability, selection, playback and native idle behavior
+remain unverified. Private receipts are in
+`build/dev208-loiter-settings-roots-20261003/`; no source gameplay change or
+retail mutation occurred.
+
 The global-settings audio follow-up traces preset chains to retail audio members
 for all three maps, including each map's definition overlays. EVA-objective audio
 resolves; the global death twiddler has fifteen located leaves and one unresolved

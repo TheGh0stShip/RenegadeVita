@@ -245,6 +245,7 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                 binding_issues = []
                 references = []
                 reference_provenance = []
+                loiter_entries = []
                 for node in flatten(factory.children):
                     if node.kind == 0x100 and not node.children:
                         fields = dict(microchunks(node.data))
@@ -289,6 +290,12 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                                                                          'field_id': kind, 'offset': node.offset})
                 for container in flatten([factory]):
                     sibling_ids = {node.kind for node in container.children}
+                    if factory.kind == 0x40601 and 803001812 in sibling_ids:
+                        for node in container.children:
+                            if node.kind == 803001813:
+                                loiter_entries.extend({'name': string(value, 'latin1'),
+                                                       'field_id': kind, 'offset': node.offset}
+                                                      for kind, value in microchunks(node.data) if kind == 3)
                     for owner_key, fields in (reference_schema or {}).items():
                         if len(owner_key) == 3:
                             owner_factory, parent, variables = owner_key
@@ -319,6 +326,7 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                                "script_bindings": bindings, "script_binding_issues": binding_issues,
                                "definition_references": sorted(set(references) - {0}),
                                "definition_reference_provenance": reference_provenance,
+                               "loiter_animation_entries": loiter_entries,
                                "factory": f"0x{factory.kind:08x}", "offset": factory.offset}
     return result
 

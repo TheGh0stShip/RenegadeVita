@@ -156,7 +156,8 @@ def audit_map(root, data_root, map_name, scripts=None):
     spawners = []
     pending_defs = set()
     global_settings_roots = sorted(key for key, row in defs.items()
-                                   if row['factory'] in ('0x00040602', '0x00040603'))
+                                   if row['factory'] in ('0x00040602', '0x00040603') or
+                                   (row['factory'] == '0x00040601' and row['name'].lower() == 'loiter'))
     pending_defs.update(global_settings_roots)
     for member in sorted(mission.entries):
         if member.endswith(('.ldd', '.lsd')):
@@ -240,6 +241,11 @@ def audit_map(root, data_root, map_name, scripts=None):
             "map": map_name, "archive_sha256": hashlib.sha256(mission.path.read_bytes()).hexdigest(),
             "objects_ddb_sha256": database_hash, "definition_overlays": overlays,
             "global_settings_definition_roots": global_settings_roots,
+            "loiter_animation_candidates": [
+                {'definition_id': key, 'definition_name': defs[key]['name'],
+                 'entries': defs[key].get('loiter_animation_entries', []),
+                 'runtime_selection_or_animation_proven': False}
+                for key in sorted(reached_defs) if defs[key]['factory'] == '0x00040601'],
             "combat_script_source_sha256": {
                 name: hashlib.sha256((root / 'upstream/CnC_Renegade/Code' / name).read_bytes()).hexdigest()
                 for name in ('Combat/combat.cpp', 'Combat/combatsaveload.cpp',

@@ -26,6 +26,14 @@ def definition(factory, identity, body):
 
 
 class M13LevelOwnersTests(unittest.TestCase):
+    def test_loiter_animation_entries_preserve_order_duplicates_and_factory_scope(self):
+        body = chunk(803001812, b'', True) + chunk(803001813,
+            micro(3, b'anim.w3d\0') + micro(3, b'anim.w3d\0') + micro(3, b'\0'))
+        row = definitions(chunks(definition(0x40601, 1, body)))[1]
+        self.assertEqual([x['name'] for x in row['loiter_animation_entries']], ['anim.w3d', 'anim.w3d', ''])
+        other = definitions(chunks(definition(0x40603, 2, body)))[2]
+        self.assertEqual(other['loiter_animation_entries'], [])
+
     def test_unknown_enum_initializer_does_not_fabricate_implicit_ids(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'ids.h'

@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Default soldier loiter dependency — 2026-10-03
+
+Completed: active default Loiter root and ordered animation entries added to
+authored discovery. Disabled weapon/weaponless alternatives remain excluded.
+Evidence:45 focused checks; fresh three-map receipts add one resolved definition
+and one animation entry per map. Native idle state/animation playback open.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Fixed HUD texture members — 2026-10-03
 
 Completed:six original HUD/radar/weapon/objective/sniper fixed texture dependencies

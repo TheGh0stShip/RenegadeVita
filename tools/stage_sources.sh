@@ -999,6 +999,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-original-sorting-lifecycle.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-script-lookup-telemetry.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-thread-completion-acquire.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-texture-worker-cancellation.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Full supplied-overview review: [all sections, linkages and decisions](MISSION_RESEARCH_REVIEW.md)
+accounts for 16 systems, 13 missions, assets, checklist, profiling and caveats.
+Counts and source presence remain separate from behavior proof. POSIX thread
+publication/cancellation corrections are uncompiled; 170 source/Python checks
+pass and native mission gates remain open.
+
 Latest diagnostics: [script lookup observations](SCRIPT_LOOKUP_DIAGNOSTICS.md)
 start before original threaded loading and preserve exact engine results.
 Opt-in bounded collection and load-only analysis are implemented, uncompiled;

@@ -1,5 +1,23 @@
 # Live engineering progress
 
+## Full mission overview and loader publication — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: publish the full supplied-overview assessment and thread-boundary correction.
+Completed: all sections accounted for, 16 system-owner groups and 13 mission
+units checked. Recommendations are adopted, retained as requirements or deferred
+explicitly; count discrepancies remain open. Original POSIX thread completion
+polling and terminal publication, late-start cancellation and texture-worker
+flag reads corrected in source. Original-owner C++ probe prepared, unrun.
+Evidence: 170 focused Python/source checks; source-only zero-fuzz replays and
+read-only ARM/pthread attributes. No build, launch, device or retail action.
+Next: callback/external-slot lifetimes, count differences and global voice;
+compiled/sanitizer and physical verification only after the existing hold.
+Blocker: complete native mission/runtime coverage remains unproven.
+See [full review](MISSION_RESEARCH_REVIEW.md).
+
 ## Original script lookup diagnostics — 2026-10-03
 
 Renegade Vita — v3.5 active

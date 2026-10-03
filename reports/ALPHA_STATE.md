@@ -2,6 +2,12 @@
 
 ## Current diagnostics work — 2026-10-03
 
+The full-overview review records every supplied section and source-owner group,
+retaining count discrepancies and unverified runtime/media recommendations.
+POSIX acquire polling, final completion publication and selected texture-worker
+cancellation are corrected in source, uncompiled. 170 focused checks pass;
+native gates remain 0/10. See [review](MISSION_RESEARCH_REVIEW.md).
+
 The cinematic continuation traces 166 candidates in original stored time
 order, corrects custom-event inventory roles and retains slot/lifetime leads
 without runtime claims. The M13 bark follows immediate Created damage; two

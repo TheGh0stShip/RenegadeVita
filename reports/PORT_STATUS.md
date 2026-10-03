@@ -1,5 +1,12 @@
 # Renegade Vita port status
 
+2026-10-03 full-overview review accounts for every supplied section, all
+16 system groups and 13 mission sources. Two source-count discrepancies and
+uncertified media/runtime claims remain explicit. POSIX completion polling,
+terminal publication and texture-worker cancellation are corrected in source,
+uncompiled. 170 focused Python/source checks pass. See
+[complete mission overview review](MISSION_RESEARCH_REVIEW.md).
+
 2026-10-03 lookup continuation moves the recorder reset before level load and
 adds opt-in bounded factory/object/conversation/text-file observations through
 original owners. A load-only analyzer preserves strict timing and route gates.

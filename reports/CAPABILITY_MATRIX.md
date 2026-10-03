@@ -1,5 +1,11 @@
 # Capability matrix
 
+2026-10-03 complete-overview review records all supplied sections and located
+source owners without certifying every asset or behavior. Original loader/
+texture-worker completion and cancellation boundaries gain source corrections,
+uncompiled. 170 Python/source checks pass; native gates remain 0/10. See
+[mission overview review](MISSION_RESEARCH_REVIEW.md).
+
 2026-10-03 lookup diagnostics: bounded worker-safe collection and original
 factory/object/conversation/text-file source hooks are implemented, uncompiled.
 Recorder reset now precedes loading; load-only analysis cannot close timing or

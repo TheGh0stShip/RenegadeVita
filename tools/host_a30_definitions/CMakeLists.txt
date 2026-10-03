@@ -73,6 +73,19 @@ add_executable(a35_script_lookup_selftest
 target_include_directories(a35_script_lookup_selftest PRIVATE ${RV_ROOT}/port/developer)
 target_link_libraries(a35_script_lookup_selftest PRIVATE pthread)
 
+# Original ThreadClass probe; compiling it remains subject to the build hold.
+add_executable(a35_thread_publication_selftest
+  ${RV_ROOT}/tools/host_a35_thread_publication_test.cpp
+  ${RV_STAGE}/wwlib/thread.cpp
+)
+target_include_directories(a35_thread_publication_selftest PRIVATE
+  ${RV_COMPAT} ${RV_STAGE}/wwlib ${RV_STAGE}/wwdebug ${RV_STAGE}/wwmath)
+target_compile_definitions(a35_thread_publication_selftest PRIVATE _UNIX=1 NDEBUG=1)
+target_compile_options(a35_thread_publication_selftest PRIVATE
+  -O1 -g -fno-exceptions -fno-rtti "SHELL:-include ${RV_COMPAT}/msvc_compat.h")
+target_link_options(a35_thread_publication_selftest PRIVATE -Wl,--wrap=pthread_create)
+target_link_libraries(a35_thread_publication_selftest PRIVATE pthread)
+
 add_executable(a35_wwmath_validity_selftest
   ${RV_ROOT}/tools/host_a35_wwmath_validity_test.cpp
 )

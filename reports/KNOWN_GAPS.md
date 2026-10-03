@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 review closes section-accounting gaps, not complete-content gates.
+Find_Object and Send_Custom_Event totals differ from the supplied overview;
+six aggregate media/assembly counts remain uncertified. A POSIX completion
+acquire/terminal-write/startup-stop defect is corrected in source, with atomic
+texture cancellation. The original-owner C++ probe is prepared but unrun;
+loader success/failure and physical behavior remain unverified. 170 focused
+Python/source checks pass. See [full review](MISSION_RESEARCH_REVIEW.md).
+
 2026-10-03 diagnostic blind spot corrected in source: flight reset previously
 discarded all level-load script failures. Reset now precedes original loading,
 and bounded opt-in hooks retain lookup attempts/misses. C++ and loader/runtime

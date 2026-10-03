@@ -1,0 +1,4769 @@
+{
+  "schema": 1,
+  "sweep": "S5",
+  "complete": false,
+  "total": 202,
+  "counts": {
+    "unknown": 202
+  },
+  "rows": [
+    {
+      "name": "Debug_Message",
+      "line": 128,
+      "id": "084f651ba45f97ced8e47f5db2992d1b454d57543fadb7f4ee3dd59f5040ceeb",
+      "original_assignment_candidates": [
+        "Debug_Message"
+      ],
+      "staged_assignment_candidates": [
+        "Debug_Message"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_BMG.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "Toolkit_Sounds.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Reset",
+      "line": 131,
+      "id": "db4766ce7787eee94d84abcb80902b240666cfb24b3375ff3dd4a2b9bbb49004",
+      "original_assignment_candidates": [
+        "Action_Reset"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Reset"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Actions.cpp",
+        "Toolkit_Animations.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Goto",
+      "line": 132,
+      "id": "4a6dc11c7f83c6e48d540832603b5658c9a2e02d248cd0b01cc5e92858d8e9a1",
+      "original_assignment_candidates": [
+        "Action_Goto"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Goto"
+      ],
+      "original_script_owner_candidates": [
+        "DrMobius.cpp",
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DAK.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit_Actions.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Attack",
+      "line": 133,
+      "id": "20913c7ab95edebc19c0f1c832490cf0a5dbc325a04be2a397d817bda3abb1b6",
+      "original_assignment_candidates": [
+        "Action_Attack"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Attack"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Actions.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Play_Animation",
+      "line": 134,
+      "id": "489ff051f851e6a5f83b1c89cc889bb9be5c91b3d742b6ae802a24bb40fc8d1f",
+      "original_assignment_candidates": [
+        "Action_Play_Animation"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Play_Animation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit_Objects.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Enter_Exit",
+      "line": 135,
+      "id": "8b344c32a43f8c888ffc8320ced93e19def1a4ba3dbf337c712df7317ae9d4f6",
+      "original_assignment_candidates": [
+        "Action_Enter_Exit"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Enter_Exit"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Face_Location",
+      "line": 136,
+      "id": "f0e13ee62fc6b5a87a5bbac28fc0d66e02e833222f269b584c6a854f86283b6b",
+      "original_assignment_candidates": [
+        "Action_Face_Location"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Face_Location"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission11.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Dock",
+      "line": 137,
+      "id": "d0a7800976353e76eb1b62135a820c28ea021e1abc36072883bedc0613f49355",
+      "original_assignment_candidates": [
+        "Action_Dock"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Dock"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Test_PDS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Action_Follow_Input",
+      "line": 138,
+      "id": "e215a80fd5427a46353d19494fbac8502b5a1df346b14e670605bbddd1dd098d",
+      "original_assignment_candidates": [
+        "Action_Follow_Input"
+      ],
+      "staged_assignment_candidates": [
+        "Action_Follow_Input"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission02.cpp",
+        "Test_GTH.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Modify_Action",
+      "line": 140,
+      "id": "d116c5d8ef812a0223aa4a285390c02306c958c1501bd79ff05943948c62535b",
+      "original_assignment_candidates": [
+        "Modify_Action"
+      ],
+      "staged_assignment_candidates": [
+        "Modify_Action"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_PDS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Action_ID",
+      "line": 143,
+      "id": "73a4ddc6a5f4c0713d786c80f865366dea5b410ccbd643e5e6762ae01db2faea",
+      "original_assignment_candidates": [
+        "Get_Action_ID"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Action_ID"
+      ],
+      "original_script_owner_candidates": [
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission09.cpp",
+        "MissionX0.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Action_Params",
+      "line": 144,
+      "id": "1d178fb12a768d095e0e7cc5ef24ba1c36a43720e81dd8187585325d33dd8fff",
+      "original_assignment_candidates": [
+        "Get_Action_Params"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Action_Params"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Is_Performing_Pathfind_Action",
+      "line": 145,
+      "id": "018492dfa4f9e8f2b4f535deffcacb50629bd8381d9af01e267c87ffb8defcc3",
+      "original_assignment_candidates": [
+        "Is_Performing_Pathfind_Action"
+      ],
+      "staged_assignment_candidates": [
+        "Is_Performing_Pathfind_Action"
+      ],
+      "original_script_owner_candidates": [
+        "Mission02.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission09.cpp",
+        "MissionX0.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Position",
+      "line": 148,
+      "id": "27f81a9e12ce181730fe5813cb9d7be160f284596cda8954ffb792b7c0cb3070",
+      "original_assignment_candidates": [
+        "Set_Position"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Position"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "Test_GTH.cpp",
+        "Test_PDS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Position",
+      "line": 149,
+      "id": "6ec3904ccc41c85bbb43f2b49ec8993e9ae7de421410897b63dff76c2d5fb915",
+      "original_assignment_candidates": [
+        "Get_Position"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Position"
+      ],
+      "original_script_owner_candidates": [
+        "DrMobius.cpp",
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Actions.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "Toolkit_Siege.cpp",
+        "Toolkit_Sounds.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Bone_Position",
+      "line": 150,
+      "id": "12aaf7aa46a78f5d9f0cd5cae6fc529c9c05ce8258d6b124c6973d74745bfd3a",
+      "original_assignment_candidates": [
+        "Get_Bone_Position"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Bone_Position"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp",
+        "Test_RMV.cpp",
+        "Toolkit_Sounds.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Facing",
+      "line": 151,
+      "id": "c8c9b4bebb5faad9b498adf73f36e3c35d7f436e89faa760972ad5645e1add02",
+      "original_assignment_candidates": [
+        "Get_Facing"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Facing"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Facing",
+      "line": 152,
+      "id": "42e3ebb2087e8445fc08365f262c5ce6f78d7116aac8cf31631ce9d9b73d6cef",
+      "original_assignment_candidates": [
+        "Set_Facing"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Facing"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Objects.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Disable_All_Collisions",
+      "line": 155,
+      "id": "4d454720c35ea66d1eaf8a7259016158d33a854ce6fabcb05e2123bb503bbe8b",
+      "original_assignment_candidates": [
+        "Disable_All_Collisions"
+      ],
+      "staged_assignment_candidates": [
+        "Disable_All_Collisions"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission06.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_PDS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Disable_Physical_Collisions",
+      "line": 156,
+      "id": "41af0dbd8fce1542c5c7e61eca6d70f4a30568e7d0da9b62ddae512472a61baa",
+      "original_assignment_candidates": [
+        "Disable_Physical_Collisions"
+      ],
+      "staged_assignment_candidates": [
+        "Disable_Physical_Collisions"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "MissionDemo.cpp",
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Collisions",
+      "line": 157,
+      "id": "90017ce580206b7dcc1783c4ed1d0ee94b357887e344da06e29d7975beacf77f",
+      "original_assignment_candidates": [
+        "Enable_Collisions"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Collisions"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission04.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Destroy_Object",
+      "line": 160,
+      "id": "1dc5a738f4aad671e2892a1c43b46a42b6193fcbfe4d416a00f8f10c00393ecd",
+      "original_assignment_candidates": [
+        "Destroy_Object"
+      ],
+      "staged_assignment_candidates": [
+        "Destroy_Object"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Objects.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Find_Object",
+      "line": 161,
+      "id": "1de2635166cb71a535a112829421220d6280605960f8508a2304572084ac357e",
+      "original_assignment_candidates": [
+        "Find_Object"
+      ],
+      "staged_assignment_candidates": [
+        "Find_Object"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Actions.cpp",
+        "Toolkit_Broadcaster.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Objectives.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Siege.cpp",
+        "Toolkit_Sounds.cpp",
+        "Toolkit_Spawners.cpp",
+        "Toolkit_Triggers.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_Object",
+      "line": 162,
+      "id": "16d60eb9d63f0be58a65f9d76cf68aab99a1d669f5aa984eca00ab64db204c3a",
+      "original_assignment_candidates": [
+        "Create_Object"
+      ],
+      "staged_assignment_candidates": [
+        "Create_Object"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_Object_At_Bone",
+      "line": 163,
+      "id": "87cd4a55aad47a6a22561afc6af47abfd574c9d16a2a9822a2fd06322a217839",
+      "original_assignment_candidates": [
+        "Create_Object_At_Bone"
+      ],
+      "staged_assignment_candidates": [
+        "Create_Object_At_Bone"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Animations.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_ID",
+      "line": 164,
+      "id": "9719976946878f13bd1603f9320491eebbc3d0487e1da3bc47da64cbea36046f",
+      "original_assignment_candidates": [
+        "Get_ID"
+      ],
+      "staged_assignment_candidates": [
+        "Get_ID"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Broadcaster.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Siege.cpp",
+        "Toolkit_Sounds.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Preset_ID",
+      "line": 165,
+      "id": "4e646245e6f6264f45e3f94e28110e724fe059b792b4285053c387f8e2a9f222",
+      "original_assignment_candidates": [
+        "Get_Preset_ID"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Preset_ID"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Preset_Name",
+      "line": 166,
+      "id": "edfe9572fbe3790e2d35b67577e5da19aa85a36ce226747c7f20f1133e746792",
+      "original_assignment_candidates": [
+        "Get_Preset_Name"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Preset_Name"
+      ],
+      "original_script_owner_candidates": [
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Test_DLS.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Attach_Script",
+      "line": 167,
+      "id": "4226f7b6d0bf29358cc77f1b90dd5d47b5aa5b2b2dadaf5ed42011ac83a4d69c",
+      "original_assignment_candidates": [
+        "Attach_Script"
+      ],
+      "staged_assignment_candidates": [
+        "Attach_Script"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAK.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Animations.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "Toolkit_Sounds.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Add_To_Dirty_Cull_List",
+      "line": 168,
+      "id": "5b69aa61d85b09cfd3068efbd5dda2298c84b99373eb52d6d51cd7bff87d309d",
+      "original_assignment_candidates": [
+        "Add_To_Dirty_Cull_List"
+      ],
+      "staged_assignment_candidates": [
+        "Add_To_Dirty_Cull_List"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Start_Timer",
+      "line": 171,
+      "id": "e93513324675fdd57a97ceba6cda59351a1fc573f07796c495c87b0c4dd5be93",
+      "original_assignment_candidates": [
+        "Start_Timer"
+      ],
+      "staged_assignment_candidates": [
+        "Start_Timer"
+      ],
+      "original_script_owner_candidates": [
+        "DrMobius.cpp",
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_BMG.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Actions.cpp",
+        "Toolkit_Broadcaster.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Powerup.cpp",
+        "Toolkit_Siege.cpp",
+        "Toolkit_Sounds.cpp",
+        "Toolkit_Triggers.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Trigger_Weapon",
+      "line": 174,
+      "id": "5f5201dddd295136bec78b3488825668457917268ee024a63edf250fe7464e9f",
+      "original_assignment_candidates": [
+        "Trigger_Weapon"
+      ],
+      "staged_assignment_candidates": [
+        "Trigger_Weapon"
+      ],
+      "original_script_owner_candidates": [
+        "Test_RAD.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Select_Weapon",
+      "line": 175,
+      "id": "3009fb325e74a54fa9d42fd5296f70be7a3cc7c430943c3654c4e8f16633312a",
+      "original_assignment_candidates": [
+        "Select_Weapon"
+      ],
+      "staged_assignment_candidates": [
+        "Select_Weapon"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_BMG.cpp",
+        "Test_DLS.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Send_Custom_Event",
+      "line": 178,
+      "id": "27af5077d9c8d15c989ae0a4f56ff3520848b311407cc9895b10e70eb91b1a0d",
+      "original_assignment_candidates": [
+        "Send_Custom_Event"
+      ],
+      "staged_assignment_candidates": [
+        "Send_Custom_Event"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Broadcaster.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "Toolkit_Siege.cpp",
+        "Toolkit_Sounds.cpp",
+        "Toolkit_Triggers.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Send_Damaged_Event",
+      "line": 179,
+      "id": "91ad31bdb0b2e44232b18538ca6e519e7c593d9e768e5a50be6546831193b7bc",
+      "original_assignment_candidates": [
+        "Send_Damaged_Event"
+      ],
+      "staged_assignment_candidates": [
+        "Send_Damaged_Event"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Random",
+      "line": 182,
+      "id": "d6c672d795e89dcb3360948c34d09a9cb40f1bf7b73f29bee94954ff1b20fa63",
+      "original_assignment_candidates": [
+        "Get_Random"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Random"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_GTH.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Broadcaster.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Siege.cpp",
+        "Toolkit_Sounds.cpp",
+        "Toolkit_Triggers.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Random_Int",
+      "line": 183,
+      "id": "b58d271c538a560cb92b8a065e49eb4807b8855ce46cbc7cf21c2bf23dc75085",
+      "original_assignment_candidates": [
+        "Get_Random_Int"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Random_Int"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_GTH.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Find_Random_Simple_Object",
+      "line": 186,
+      "id": "542c80d79d6ef0cf2156f16f09cabd7946e6ef709f636dcc53746c6157120f56",
+      "original_assignment_candidates": [
+        "Find_Random_Simple_Object"
+      ],
+      "staged_assignment_candidates": [
+        "Find_Random_Simple_Object"
+      ],
+      "original_script_owner_candidates": [
+        "Test_RMV_Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Model",
+      "line": 189,
+      "id": "ab974d5dddc60940d55ab7025d1864c1d8c38894098e45bb7785da9fe650df1b",
+      "original_assignment_candidates": [
+        "Set_Model"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Model"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Explosions.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Animation",
+      "line": 190,
+      "id": "af6ff2bf9997035bd1af77010a79a56075faac6c92dec7b6c1c8116cdbd6f4cb",
+      "original_assignment_candidates": [
+        "Set_Animation"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Animation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Animation_Frame",
+      "line": 191,
+      "id": "2e4502bc72a26fc0076b55a02e5e20c26ea2882bd061698aba6d9ca4749fa2ca",
+      "original_assignment_candidates": [
+        "Set_Animation_Frame"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Animation_Frame"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission11.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_Sound",
+      "line": 195,
+      "id": "ecb0513f41a7eefb01c39c81fbb3ea75d34c0a735024f65bc8a5313d9c452c33",
+      "original_assignment_candidates": [
+        "Create_Sound"
+      ],
+      "staged_assignment_candidates": [
+        "Create_Sound"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Sounds.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_2D_Sound",
+      "line": 196,
+      "id": "5ecaec34b89094b0a540c0a3be970cdff11e78ef0e0355b15c3823da1e5ffef5",
+      "original_assignment_candidates": [
+        "Create_2D_Sound"
+      ],
+      "staged_assignment_candidates": [
+        "Create_2D_Sound"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission07.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit_Sounds.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_2D_WAV_Sound",
+      "line": 197,
+      "id": "6eac7ba2c8cb0f9799355566b2f7af20ce14561688076ff915f4951294ea05b9",
+      "original_assignment_candidates": [
+        "Create_2D_WAV_Sound"
+      ],
+      "staged_assignment_candidates": [
+        "Create_2D_WAV_Sound"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit_Sounds.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_3D_WAV_Sound_At_Bone",
+      "line": 198,
+      "id": "cadb6e52d8c8264195272955353bea7e8d8623d426a45358191e9427ae9ffcd9",
+      "original_assignment_candidates": [
+        "Create_3D_WAV_Sound_At_Bone"
+      ],
+      "staged_assignment_candidates": [
+        "Create_3D_WAV_Sound_At_Bone"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit_Sounds.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_3D_Sound_At_Bone",
+      "line": 199,
+      "id": "2e5a8254f3f0d2189172e1c329ea048b8d5f9d66de38b4ab1421268140b22dc7",
+      "original_assignment_candidates": [
+        "Create_3D_Sound_At_Bone"
+      ],
+      "staged_assignment_candidates": [
+        "Create_3D_Sound_At_Bone"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RMV.cpp",
+        "Toolkit_Explosions.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_Logical_Sound",
+      "line": 200,
+      "id": "61f2f7314975a95f6cbd4b86d0c25a5de1d0cdb117d276010cd8b52dee1158c1",
+      "original_assignment_candidates": [
+        "Create_Logical_Sound"
+      ],
+      "staged_assignment_candidates": [
+        "Create_Logical_Sound"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit_Siege.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Start_Sound",
+      "line": 201,
+      "id": "b6543e3475e8e079103d750bab3866ef2b251a6c1c9fc7bddb5d6de539b49075",
+      "original_assignment_candidates": [
+        "Start_Sound"
+      ],
+      "staged_assignment_candidates": [
+        "Start_Sound"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission11.cpp",
+        "Test_PDS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Stop_Sound",
+      "line": 202,
+      "id": "08f1e5ca4d102d4f86468ba01d84af2e49190ff1b673474faa8a7d362a9ca163",
+      "original_assignment_candidates": [
+        "Stop_Sound"
+      ],
+      "staged_assignment_candidates": [
+        "Stop_Sound"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_DLS.cpp",
+        "Test_PDS.cpp",
+        "Test_RMV.cpp",
+        "Toolkit_Sounds.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Monitor_Sound",
+      "line": 203,
+      "id": "9beee0efdd2492641166c47f7f9affb8b765f2c20ac9e8614628e4df4a9c07da",
+      "original_assignment_candidates": [
+        "Monitor_Sound"
+      ],
+      "staged_assignment_candidates": [
+        "Monitor_Sound"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DAY.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit_Sounds.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Background_Music",
+      "line": 204,
+      "id": "9883849503d7d7ffe9572cdd0f99c18e7b7d596716de407685fc7c38aff247fe",
+      "original_assignment_candidates": [
+        "Set_Background_Music"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Background_Music"
+      ],
+      "original_script_owner_candidates": [
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "MissionX0.cpp",
+        "Test_DAY.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Fade_Background_Music",
+      "line": 205,
+      "id": "063781ec279eec86c71a6d7f372509225c9ad2ee8a886e24f29acdb299f52a05",
+      "original_assignment_candidates": [
+        "Fade_Background_Music"
+      ],
+      "staged_assignment_candidates": [
+        "Fade_Background_Music"
+      ],
+      "original_script_owner_candidates": [
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_RAD.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Stop_Background_Music",
+      "line": 206,
+      "id": "3cc8d72610615ac85aded9c94829708062790bda65834c22a7149935aeb40464",
+      "original_assignment_candidates": [
+        "Stop_Background_Music"
+      ],
+      "staged_assignment_candidates": [
+        "Stop_Background_Music"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Health",
+      "line": 209,
+      "id": "288cb9e423b1f18f63825ade84040240997a4ad83afa53aed7517c4bdb8a6db4",
+      "original_assignment_candidates": [
+        "Get_Health"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Health"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DAK.cpp",
+        "Test_DLS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Max_Health",
+      "line": 210,
+      "id": "a184aa7eb1df1452ff649ea48308bbc273e5c29d07ec3d801d29eda14a307719",
+      "original_assignment_candidates": [
+        "Get_Max_Health"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Max_Health"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_DAK.cpp",
+        "Test_DLS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Health",
+      "line": 211,
+      "id": "e5bc473457ab530b159bc3a993f4208dbb2f589163e68ce5618dc8c377265f2a",
+      "original_assignment_candidates": [
+        "Set_Health"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Health"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Objects.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Shield_Strength",
+      "line": 212,
+      "id": "4b02bec4dd18434299a3888419355c7a3e857f13819f2d23156e7eb13fa88cb6",
+      "original_assignment_candidates": [
+        "Get_Shield_Strength"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Shield_Strength"
+      ],
+      "original_script_owner_candidates": [
+        "Mission02.cpp",
+        "Mission07.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Max_Shield_Strength",
+      "line": 213,
+      "id": "88afacb54f40e156e493b5ce1be4350f938c68ca97d0e985b1b8ad5b20354596",
+      "original_assignment_candidates": [
+        "Get_Max_Shield_Strength"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Max_Shield_Strength"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission07.cpp",
+        "Mission11.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Shield_Strength",
+      "line": 214,
+      "id": "5d9c9ae2349be6e7349edaf748fda7c459736565c5957a5a5a4bdf4879389405",
+      "original_assignment_candidates": [
+        "Set_Shield_Strength"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Shield_Strength"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Shield_Type",
+      "line": 215,
+      "id": "47f67adbf7f715ce3be084502e2204d7a79cc0b9af039725c2319ca84ad49a5a",
+      "original_assignment_candidates": [
+        "Set_Shield_Type"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Shield_Type"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission06.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Player_Type",
+      "line": 216,
+      "id": "c0571ab82c17e4738091c543781fe60067622a5b4cf719d3166af7012acb2bad",
+      "original_assignment_candidates": [
+        "Get_Player_Type"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Player_Type"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "MissionDemo.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Player_Type",
+      "line": 217,
+      "id": "785c213abd959d1c6864491ed4b5de0b33278cba79b6fca9584243b9d494c3af",
+      "original_assignment_candidates": [
+        "Set_Player_Type"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Player_Type"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Distance",
+      "line": 220,
+      "id": "978cacf9f080b192cc53dc471b99a6454fee59009e30bba29acbe9354dd3a18c",
+      "original_assignment_candidates": [
+        "Get_Distance"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Distance"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "MissionDemo.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Camera_Host",
+      "line": 223,
+      "id": "83eea01e6bf46b0bfdfbe1c412be77df656fb1ec05b9e8b42b68ff99ac4904e1",
+      "original_assignment_candidates": [
+        "Set_Camera_Host"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Camera_Host"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Force_Camera_Look",
+      "line": 224,
+      "id": "032fc8d87bb7d8063bfa93c40ec8cdd41b676af3bc053d895364c368bf967676",
+      "original_assignment_candidates": [
+        "Force_Camera_Look"
+      ],
+      "staged_assignment_candidates": [
+        "Force_Camera_Look"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_The_Star",
+      "line": 227,
+      "id": "b201e9ed372dda7a0b203a0f685f3edea04584210b736693db3388657aceeb2f",
+      "original_assignment_candidates": [
+        "Get_The_Star"
+      ],
+      "staged_assignment_candidates": [
+        "Get_The_Star"
+      ],
+      "original_script_owner_candidates": [
+        "Test_BMG.cpp",
+        "Test_Cinematic.cpp",
+        "Test_PDS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_A_Star",
+      "line": 228,
+      "id": "b49f69dc54249e8737b91e2e48785ff76a9d5e86a8f8291ae9080e5fde1045b2",
+      "original_assignment_candidates": [
+        "Get_A_Star"
+      ],
+      "staged_assignment_candidates": [
+        "Get_A_Star"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "MissionDemo.cpp",
+        "Test_DLS.cpp",
+        "Test_GTH.cpp",
+        "Test_RMV.cpp",
+        "Toolkit_Actions.cpp",
+        "Toolkit_Sounds.cpp",
+        "Toolkit_Triggers.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Find_Closest_Soldier",
+      "line": 229,
+      "id": "4e4a398f075528ecc3f892cb330d504a3bbf22a421686981385067075c66d05f",
+      "original_assignment_candidates": [
+        "Find_Closest_Soldier"
+      ],
+      "staged_assignment_candidates": [
+        "Find_Closest_Soldier"
+      ],
+      "original_script_owner_candidates": [
+        "DrMobius.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Is_A_Star",
+      "line": 230,
+      "id": "435fc416f54380bdead1ed9e884fd54fa7cee0df1b02b399ddb577c9c912a274",
+      "original_assignment_candidates": [
+        "Is_A_Star"
+      ],
+      "staged_assignment_candidates": [
+        "Is_A_Star"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Test_DAK.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Test_RMV_Toolkit.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Control_Enable",
+      "line": 233,
+      "id": "f5f0a7852d7711516ff6df8c2f609570a4290e33c39c5ace19a6f06a124bd470",
+      "original_assignment_candidates": [
+        "Control_Enable"
+      ],
+      "staged_assignment_candidates": [
+        "Control_Enable"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Damage_Bone_Name",
+      "line": 236,
+      "id": "a18048507c53f2e632d7165789552bf9d3f16ded1d6a8d1e069986d36fa8001c",
+      "original_assignment_candidates": [
+        "Get_Damage_Bone_Name"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Damage_Bone_Name"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Damage_Bone_Direction",
+      "line": 237,
+      "id": "6c58718406ff97ea3b32927e2f61851bedb8bdc07bcf3563eef8a97dcad688e5",
+      "original_assignment_candidates": [
+        "Get_Damage_Bone_Direction"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Damage_Bone_Direction"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Is_Object_Visible",
+      "line": 240,
+      "id": "99b2a39f8338f055741b7eeb293a5c11ac7820b1fa8004bfdcdbadd8f9f929f7",
+      "original_assignment_candidates": [
+        "Is_Object_Visible"
+      ],
+      "staged_assignment_candidates": [
+        "Is_Object_Visible"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Test_RMV.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Enemy_Seen",
+      "line": 241,
+      "id": "1f813e367f735af83b7e5aa597fcad9dbbb137f07d769ae3e1be274b94b014f2",
+      "original_assignment_candidates": [
+        "Enable_Enemy_Seen"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Enemy_Seen"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "MissionDemo.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Display_Color",
+      "line": 244,
+      "id": "7b111abd28b98ab6c0fc9c5150ec6c952e63f37c8a19bc60ffb34e72a2089f56",
+      "original_assignment_candidates": [
+        "Set_Display_Color"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Display_Color"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_Text",
+      "line": 245,
+      "id": "6777505b967106f3a35d206bdecd6ccc30d181e80e6a3f53f77de17383b20839",
+      "original_assignment_candidates": [
+        "Display_Text"
+      ],
+      "staged_assignment_candidates": [
+        "Display_Text"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_Float",
+      "line": 246,
+      "id": "98394d8a2fa2b7ca1bdd2939d89e8a63044f157f7d0460bafc6e15ce23ef77b4",
+      "original_assignment_candidates": [
+        "Display_Float"
+      ],
+      "staged_assignment_candidates": [
+        "Display_Float"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_Int",
+      "line": 247,
+      "id": "7a4e1a6ffc98aad0efba48298804e87e27c54e011ae91b42182cf53c4bdfa67e",
+      "original_assignment_candidates": [
+        "Display_Int"
+      ],
+      "staged_assignment_candidates": [
+        "Display_Int"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Save_Data",
+      "line": 250,
+      "id": "d97398410e4191bf8c1c10793c4ae4c4060fc39a505c5983391cb698d70a408b",
+      "original_assignment_candidates": [
+        "Save_Data"
+      ],
+      "staged_assignment_candidates": [
+        "Save_Data"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Save_Pointer",
+      "line": 251,
+      "id": "ccd0ec629ed3a0cd9370f438e45bf6c8226243eff218bd270ba7739858c03084",
+      "original_assignment_candidates": [
+        "Save_Pointer"
+      ],
+      "staged_assignment_candidates": [
+        "Save_Pointer"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Load_Begin",
+      "line": 252,
+      "id": "55c06b51b7bc79f07c434ccc6f5e2dd0fb8faad804055cc488d91e75d4ed980f",
+      "original_assignment_candidates": [
+        "Load_Begin"
+      ],
+      "staged_assignment_candidates": [
+        "Load_Begin"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Load_Data",
+      "line": 253,
+      "id": "da4ecdf2d286e80c3a2f618537cb5964db802e1c217cf9598a31e3891382fbbf",
+      "original_assignment_candidates": [
+        "Load_Data"
+      ],
+      "staged_assignment_candidates": [
+        "Load_Data"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Load_Pointer",
+      "line": 254,
+      "id": "105031da88c1a497a038805aec84619daac1ff7d52110f9d3885d4ea0d187ef3",
+      "original_assignment_candidates": [
+        "Load_Pointer"
+      ],
+      "staged_assignment_candidates": [
+        "Load_Pointer"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Load_End",
+      "line": 255,
+      "id": "b2d0f151f6441f3e5cc05302e3cd362b9a2387ccd23353f20a1304cf835c5fdf",
+      "original_assignment_candidates": [
+        "Load_End"
+      ],
+      "staged_assignment_candidates": [
+        "Load_End"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Begin_Chunk",
+      "line": 257,
+      "id": "2254f2b34a777bcf3c709f645b346f314b1f6a82aca251aa362ac901bcaf8e30",
+      "original_assignment_candidates": [
+        "Begin_Chunk"
+      ],
+      "staged_assignment_candidates": [
+        "Begin_Chunk"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "End_Chunk",
+      "line": 258,
+      "id": "5dd386485afe87d84b920b4d33dff3d671c344291c53f95952f6838289ce2a32",
+      "original_assignment_candidates": [
+        "End_Chunk"
+      ],
+      "staged_assignment_candidates": [
+        "End_Chunk"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Open_Chunk",
+      "line": 259,
+      "id": "d763937cabdcf55e3ac1ef33dd2ebb80e687cbe08c02cc7151b031374a20dc88",
+      "original_assignment_candidates": [
+        "Open_Chunk"
+      ],
+      "staged_assignment_candidates": [
+        "Open_Chunk"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Close_Chunk",
+      "line": 260,
+      "id": "f311cc152a99b76f2be8ea029e9d49b31f6177035a8bca64e0ed77a735f909e5",
+      "original_assignment_candidates": [
+        "Close_Chunk"
+      ],
+      "staged_assignment_candidates": [
+        "Close_Chunk"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Clear_Radar_Markers",
+      "line": 263,
+      "id": "060b6274061a9ff8d1eb5ed869d41b0df82f7558f1f347628ef45d7920a7cd2a",
+      "original_assignment_candidates": [
+        "Clear_Radar_Markers"
+      ],
+      "staged_assignment_candidates": [
+        "Clear_Radar_Markers"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Clear_Radar_Marker",
+      "line": 264,
+      "id": "f916abcfb6ebda1bb904be377a1d05146cb31f0368ebf8f0f38d9366943b4115",
+      "original_assignment_candidates": [
+        "Clear_Radar_Marker"
+      ],
+      "staged_assignment_candidates": [
+        "Clear_Radar_Marker"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Add_Radar_Marker",
+      "line": 265,
+      "id": "10e5af2ed0902073b74b01e1b10e7803fbdcf32e63c89b9cc38e2861dd0fb7ee",
+      "original_assignment_candidates": [
+        "Add_Radar_Marker"
+      ],
+      "staged_assignment_candidates": [
+        "Add_Radar_Marker"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission04.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Obj_Radar_Blip_Shape",
+      "line": 266,
+      "id": "b6f0e6641457994139df0a316467c1dea2987062f7abb2dd4ee32dec0e9ad851",
+      "original_assignment_candidates": [
+        "Set_Obj_Radar_Blip_Shape"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Obj_Radar_Blip_Shape"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission04.cpp",
+        "Mission11.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Obj_Radar_Blip_Color",
+      "line": 267,
+      "id": "0fe893db13f6d982fa6539753991bae558f3939ff88255ea72589d0813fb2631",
+      "original_assignment_candidates": [
+        "Set_Obj_Radar_Blip_Color"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Obj_Radar_Blip_Color"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission11.cpp",
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Radar",
+      "line": 268,
+      "id": "ba1f2830a6da9fac9e5fcc12c64c329d33ebde6c1434415d4bd251bd7edddd4a",
+      "original_assignment_candidates": [
+        "Enable_Radar"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Radar"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission10.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Clear_Map_Cell",
+      "line": 273,
+      "id": "c389c5ecbcf17593a33b8bd1cabb4b3847c6105b87891997963b7eb8c0c6eeac",
+      "original_assignment_candidates": [
+        "Clear_Map_Cell"
+      ],
+      "staged_assignment_candidates": [
+        "Clear_Map_Cell"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Test_PDS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Clear_Map_Cell_By_Pos",
+      "line": 274,
+      "id": "8c77e6b1306e2b09ea8d85692f4b492b7e8345f15ad8b93d56650b94ebc3b084",
+      "original_assignment_candidates": [
+        "Clear_Map_Cell_By_Pos"
+      ],
+      "staged_assignment_candidates": [
+        "Clear_Map_Cell_By_Pos"
+      ],
+      "original_script_owner_candidates": [
+        "Test_PDS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Clear_Map_Cell_By_Pixel_Pos",
+      "line": 275,
+      "id": "159c4b8f249224e455609bf537c78996777c4a2365dae1552ca3cc3ef0c6d4ad",
+      "original_assignment_candidates": [
+        "Clear_Map_Cell_By_Pixel_Pos"
+      ],
+      "staged_assignment_candidates": [
+        "Clear_Map_Cell_By_Pixel_Pos"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Clear_Map_Region_By_Pos",
+      "line": 276,
+      "id": "84c3212243a474fdf8b247730cb4ced4cd4055f0818dbf24cf86146737c3a1da",
+      "original_assignment_candidates": [
+        "Clear_Map_Region_By_Pos"
+      ],
+      "staged_assignment_candidates": [
+        "Clear_Map_Region_By_Pos"
+      ],
+      "original_script_owner_candidates": [
+        "Mission02.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Reveal_Map",
+      "line": 277,
+      "id": "3d1b7154727d051a0977d8dd85447939b44990255c92787f17796a72409f23d2",
+      "original_assignment_candidates": [
+        "Reveal_Map"
+      ],
+      "staged_assignment_candidates": [
+        "Reveal_Map"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission11.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Shroud_Map",
+      "line": 278,
+      "id": "3f61742e767a84d09a47451ed0dfb013ff391e54035db6e36e053804463407a7",
+      "original_assignment_candidates": [
+        "Shroud_Map"
+      ],
+      "staged_assignment_candidates": [
+        "Shroud_Map"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Show_Player_Map_Marker",
+      "line": 279,
+      "id": "b73dab619cc59aec4649fc85884c2b83428e61161b129ec6fb9d8ceaa0f55fe8",
+      "original_assignment_candidates": [
+        "Show_Player_Map_Marker"
+      ],
+      "staged_assignment_candidates": [
+        "Show_Player_Map_Marker"
+      ],
+      "original_script_owner_candidates": [
+        "Mission11.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Safe_Flight_Height",
+      "line": 284,
+      "id": "87f8143cc238ff72a965ca557992755afa00e7e8f5a87c913c7fe35698c7f2ea",
+      "original_assignment_candidates": [
+        "Get_Safe_Flight_Height"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Safe_Flight_Height"
+      ],
+      "original_script_owner_candidates": [
+        "Mission10.cpp",
+        "Test_DAY.cpp",
+        "Test_PDS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_Explosion",
+      "line": 287,
+      "id": "2b4684f2327eb1577361bbe9d6a652b0e2a27eb34edb39d01e20e57fc4ea2905",
+      "original_assignment_candidates": [
+        "Create_Explosion"
+      ],
+      "staged_assignment_candidates": [
+        "Create_Explosion"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Explosions.cpp",
+        "Toolkit_Sounds.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_Explosion_At_Bone",
+      "line": 288,
+      "id": "1df5f310bfce7e4c99353b9db84fe2a2a33c7550398d2c84f52abb3085146480",
+      "original_assignment_candidates": [
+        "Create_Explosion_At_Bone"
+      ],
+      "staged_assignment_candidates": [
+        "Create_Explosion_At_Bone"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Test_Cinematic.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Explosions.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_HUD",
+      "line": 291,
+      "id": "bf61ad16b707ac2e11c229edef1c7a9ff7ab51f778d2e8693c652ed8c52102a0",
+      "original_assignment_candidates": [
+        "Enable_HUD"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_HUD"
+      ],
+      "original_script_owner_candidates": [
+        "MissionDemo.cpp",
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Mission_Complete",
+      "line": 292,
+      "id": "1a8766a6d0d678ecf09509906d5a1d1762c493f4b8e545150d5133e80fec4d49",
+      "original_assignment_candidates": [
+        "Mission_Complete"
+      ],
+      "staged_assignment_candidates": [
+        "Mission_Complete"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_GTH.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Give_PowerUp",
+      "line": 294,
+      "id": "d1c75dea581b20aa6de971e24e4cd8a5445812ae364e6836b0fbefc0bd70425d",
+      "original_assignment_candidates": [
+        "Give_PowerUp"
+      ],
+      "staged_assignment_candidates": [
+        "Give_PowerUp"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "MissionX0.cpp",
+        "Test_BMG.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Disable",
+      "line": 297,
+      "id": "25e0a8d4a3f52ad4efb4b9028e2a24259c2c0db25b6ec70ebf7cb3d63a2046b9",
+      "original_assignment_candidates": [
+        "Innate_Disable"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Disable"
+      ],
+      "original_script_owner_candidates": [
+        "DrMobius.cpp",
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Enable",
+      "line": 298,
+      "id": "31f20b256f69e11e33555a54c27766f65103de66f6d485d336a0541303249ea9",
+      "original_assignment_candidates": [
+        "Innate_Enable"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Enable"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_GTH.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Soldier_Enable_Enemy_Seen",
+      "line": 301,
+      "id": "4416a031232185eb1cdd3f9622cf81777a145a696846c8aa9de8af3969169868",
+      "original_assignment_candidates": [
+        "Innate_Soldier_Enable_Enemy_Seen"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Soldier_Enable_Enemy_Seen"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Test_DAY.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Soldier_Enable_Gunshot_Heard",
+      "line": 302,
+      "id": "bab0697303d27820f360b4d0f392363be6a9d25bf0141031cb7e314af1ec6a52",
+      "original_assignment_candidates": [
+        "Innate_Soldier_Enable_Gunshot_Heard"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Soldier_Enable_Gunshot_Heard"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Test_DAY.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Soldier_Enable_Footsteps_Heard",
+      "line": 303,
+      "id": "aaa5490d0e11de33f0016e68c51810b56f32db30f76201f1a4b8c95cc6d5722b",
+      "original_assignment_candidates": [
+        "Innate_Soldier_Enable_Footsteps_Heard"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Soldier_Enable_Footsteps_Heard"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission06.cpp",
+        "Test_DAY.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Soldier_Enable_Bullet_Heard",
+      "line": 304,
+      "id": "625efc09a31ccdb48e451820721f740540677e125d12ecdb4efa09ece0485011",
+      "original_assignment_candidates": [
+        "Innate_Soldier_Enable_Bullet_Heard"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Soldier_Enable_Bullet_Heard"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Test_DAY.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Soldier_Enable_Actions",
+      "line": 305,
+      "id": "2ee0f27f94a5a1fb06997c89ce97c64c975eb8a22650d68a59c7b3aea722316e",
+      "original_assignment_candidates": [
+        "Innate_Soldier_Enable_Actions"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Soldier_Enable_Actions"
+      ],
+      "original_script_owner_candidates": [
+        "Test_DAY.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Innate_Soldier_Home_Location",
+      "line": 306,
+      "id": "b2a09044b9a21cae5d89d2b8369a22628850e74c2d179ba745d510ff5da64672",
+      "original_assignment_candidates": [
+        "Set_Innate_Soldier_Home_Location"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Innate_Soldier_Home_Location"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_RMV.cpp",
+        "Toolkit_Actions.cpp",
+        "Toolkit_Siege.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Innate_Aggressiveness",
+      "line": 307,
+      "id": "9153f44da82fe8f5d6cf51375f16633a22acb8220db9613519db1f5abfedcefc",
+      "original_assignment_candidates": [
+        "Set_Innate_Aggressiveness"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Innate_Aggressiveness"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Innate_Take_Cover_Probability",
+      "line": 308,
+      "id": "db2a2e892b1db1c5b4c4833ce61df6e9575c152520f2d0cfe6eaf8a272fe62ec",
+      "original_assignment_candidates": [
+        "Set_Innate_Take_Cover_Probability"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Innate_Take_Cover_Probability"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Innate_Is_Stationary",
+      "line": 309,
+      "id": "d47570d704e6134dbe883b50fba60763ef10065bf47c104b636e7962394464f9",
+      "original_assignment_candidates": [
+        "Set_Innate_Is_Stationary"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Innate_Is_Stationary"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Force_State_Bullet_Heard",
+      "line": 311,
+      "id": "0b5753ed17bfc27c8544392ec81b5c0a6948ab6f6fd736260e1b272ad3ee6f6c",
+      "original_assignment_candidates": [
+        "Innate_Force_State_Bullet_Heard"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Force_State_Bullet_Heard"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Test_DLS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Force_State_Footsteps_Heard",
+      "line": 312,
+      "id": "ba6eaca335a2ef1555bc86fe3ab84f7d4f162cc7a63e5b54b7cc321e02e9047d",
+      "original_assignment_candidates": [
+        "Innate_Force_State_Footsteps_Heard"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Force_State_Footsteps_Heard"
+      ],
+      "original_script_owner_candidates": [
+        "Test_DLS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Force_State_Gunshots_Heard",
+      "line": 313,
+      "id": "8ad600d37a220d25e86b9c644169c06c55e4806548588d22922be3ce306b71b3",
+      "original_assignment_candidates": [
+        "Innate_Force_State_Gunshots_Heard"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Force_State_Gunshots_Heard"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission06.cpp",
+        "Test_DLS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Innate_Force_State_Enemy_Seen",
+      "line": 314,
+      "id": "e0d46cdcfadfb7b764e10aecf473de71ffd0954c3a09f8060d6d440ae341b4ab",
+      "original_assignment_candidates": [
+        "Innate_Force_State_Enemy_Seen"
+      ],
+      "staged_assignment_candidates": [
+        "Innate_Force_State_Enemy_Seen"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Test_DLS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Static_Anim_Phys_Goto_Frame",
+      "line": 317,
+      "id": "60666896fc5cb5b03db630bac2c1dc46c34c0521243bac00b1f7e3b177783ae1",
+      "original_assignment_candidates": [
+        "Static_Anim_Phys_Goto_Frame"
+      ],
+      "staged_assignment_candidates": [
+        "Static_Anim_Phys_Goto_Frame"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission06.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Static_Anim_Phys_Goto_Last_Frame",
+      "line": 318,
+      "id": "cc5ae3aef083489381b70d5b4806f23147a3def50aa3ab38f46bbecf145ced83",
+      "original_assignment_candidates": [
+        "Static_Anim_Phys_Goto_Last_Frame"
+      ],
+      "staged_assignment_candidates": [
+        "Static_Anim_Phys_Goto_Last_Frame"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission06.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Sync_Time",
+      "line": 321,
+      "id": "6dadf09db1cf82e33884fd9458c78f9b49444a2df3f6273c1a5856e9539601fd",
+      "original_assignment_candidates": [
+        "Get_Sync_Time"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Sync_Time"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp",
+        "Test_GTH.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Add_Objective",
+      "line": 324,
+      "id": "150da052f9391fa608f23b3efc3cbe24c3f9662d8bb653255947aeb524437d2c",
+      "original_assignment_candidates": [
+        "Add_Objective"
+      ],
+      "staged_assignment_candidates": [
+        "Add_Objective"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_GTH.cpp",
+        "Toolkit_Objectives.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Remove_Objective",
+      "line": 325,
+      "id": "3347d4b7e9455c76d5350a37b3ebb8a839278bc8a9f3003c5120733bec0bc3b9",
+      "original_assignment_candidates": [
+        "Remove_Objective"
+      ],
+      "staged_assignment_candidates": [
+        "Remove_Objective"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit_Objectives.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Objective_Status",
+      "line": 326,
+      "id": "3f06bddf929cfe3ccec63329549557b7d692c05493998a18d2d50b027be46e38",
+      "original_assignment_candidates": [
+        "Set_Objective_Status"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Objective_Status"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_GTH.cpp",
+        "Toolkit_Objectives.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Change_Objective_Type",
+      "line": 327,
+      "id": "ccfbb39167984ed5d45df4bf1d44ca0bf91c62ead40e5f093d0af3bb1a75e713",
+      "original_assignment_candidates": [
+        "Change_Objective_Type"
+      ],
+      "staged_assignment_candidates": [
+        "Change_Objective_Type"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit_Objectives.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Objective_Radar_Blip",
+      "line": 328,
+      "id": "f63b1227726c6019861a1941499d6d01f2f6f9630dadcbb30c0e45d9d7cbdd76",
+      "original_assignment_candidates": [
+        "Set_Objective_Radar_Blip"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Objective_Radar_Blip"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Test_GTH.cpp",
+        "Toolkit_Objectives.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Objective_Radar_Blip_Object",
+      "line": 329,
+      "id": "626d01d6c0ed59a441410f8b2c733763c28a16a1c383b416bf87a4323c438428",
+      "original_assignment_candidates": [
+        "Set_Objective_Radar_Blip_Object"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Objective_Radar_Blip_Object"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Toolkit_Objectives.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Objective_HUD_Info",
+      "line": 330,
+      "id": "552899c0807d60f80510790dd877c4d2e7b55f448c6037b1f2cd60c31d9c1a46",
+      "original_assignment_candidates": [
+        "Set_Objective_HUD_Info"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Objective_HUD_Info"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Objective_HUD_Info_Position",
+      "line": 331,
+      "id": "33804bea651f942391902748915fdf755103bd4d638b421a90858bb3637c0908",
+      "original_assignment_candidates": [
+        "Set_Objective_HUD_Info_Position"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Objective_HUD_Info_Position"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_GTH.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Shake_Camera",
+      "line": 334,
+      "id": "07201b39ea6d825d9854f51678ba52a96f89f2c808f16dfbbef89074a3f9da7b",
+      "original_assignment_candidates": [
+        "Shake_Camera"
+      ],
+      "staged_assignment_candidates": [
+        "Shake_Camera"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission06.cpp",
+        "Mission11.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DAK.cpp",
+        "Toolkit_Explosions.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Spawner",
+      "line": 337,
+      "id": "9553488d794cd3cdcaca3c24b3dcb097065a50ff8e73184cd55969a8063fdaf9",
+      "original_assignment_candidates": [
+        "Enable_Spawner"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Spawner"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_DLS.cpp",
+        "Test_GTH.cpp",
+        "Toolkit_Spawners.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Trigger_Spawner",
+      "line": 338,
+      "id": "21b944b60520e849e80acd6a8e97bb78e2857faae2a81de51195b9e3f6089a6c",
+      "original_assignment_candidates": [
+        "Trigger_Spawner"
+      ],
+      "staged_assignment_candidates": [
+        "Trigger_Spawner"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Test_DME.cpp",
+        "Test_RAD.cpp",
+        "Toolkit_Spawners.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Engine",
+      "line": 341,
+      "id": "90d6db230a948ff5eb853426620e26623978864482ab517fe20a74826a2e6269",
+      "original_assignment_candidates": [
+        "Enable_Engine"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Engine"
+      ],
+      "original_script_owner_candidates": [
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission06.cpp",
+        "Mission10.cpp",
+        "MissionDemo.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_PDS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Difficulty_Level",
+      "line": 344,
+      "id": "daa5b04d39686e2a2f765506bdabe7cd77e013f23dacb1043c1dc9d46dee6f59",
+      "original_assignment_candidates": [
+        "Get_Difficulty_Level"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Difficulty_Level"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission06.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Grant_Key",
+      "line": 347,
+      "id": "c77600022d6e11c99ac2a910d9a67cfc311b545eb23dd2818721504d78f850a8",
+      "original_assignment_candidates": [
+        "Grant_Key"
+      ],
+      "staged_assignment_candidates": [
+        "Grant_Key"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission06.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Test_PDS.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Has_Key",
+      "line": 348,
+      "id": "c66aa6a98057ceae162c59a75588ee9b3758abe685d9311e650b9e0b51d9bd59",
+      "original_assignment_candidates": [
+        "Has_Key"
+      ],
+      "staged_assignment_candidates": [
+        "Has_Key"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission10.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Hibernation",
+      "line": 351,
+      "id": "f324cf68597ef589e58969673ede138905b2da1b40ab50051dc5adcecd6fa968",
+      "original_assignment_candidates": [
+        "Enable_Hibernation"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Hibernation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_GTH.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Attach_To_Object_Bone",
+      "line": 353,
+      "id": "f6adb412ea4d154a6d345506598abe610084680c45b822bf6826b76bce6b8aa2",
+      "original_assignment_candidates": [
+        "Attach_To_Object_Bone"
+      ],
+      "staged_assignment_candidates": [
+        "Attach_To_Object_Bone"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_GTH.cpp",
+        "Test_RMV.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Create_Conversation",
+      "line": 356,
+      "id": "c25aa9be0d34fcf13f0094ecc42b1069ae80ac185765b644ca66c2f4231212a7",
+      "original_assignment_candidates": [
+        "Create_Conversation"
+      ],
+      "staged_assignment_candidates": [
+        "Create_Conversation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Join_Conversation",
+      "line": 357,
+      "id": "7f7cc2863c64ce0289204818017aac61d93bac660c7985edb192b0dd89b12983",
+      "original_assignment_candidates": [
+        "Join_Conversation"
+      ],
+      "staged_assignment_candidates": [
+        "Join_Conversation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Join_Conversation_Facing",
+      "line": 358,
+      "id": "e447138156e8fc2c6a9ffa218710cc39904f0a84609e6b52833c8307bf5594c7",
+      "original_assignment_candidates": [
+        "Join_Conversation_Facing"
+      ],
+      "staged_assignment_candidates": [
+        "Join_Conversation_Facing"
+      ],
+      "original_script_owner_candidates": [
+        "Mission10.cpp",
+        "MissionX0.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Start_Conversation",
+      "line": 359,
+      "id": "9f34567b87a0041a3422ce5a4aba40c2e80a3873e0e1dcaa8467879cef6c8bde",
+      "original_assignment_candidates": [
+        "Start_Conversation"
+      ],
+      "staged_assignment_candidates": [
+        "Start_Conversation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_DME.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Monitor_Conversation",
+      "line": 360,
+      "id": "c2be798fdae7d11232d804de05ffb3cbae4d27f1d8b2f1d79fa89b05d70e4a88",
+      "original_assignment_candidates": [
+        "Monitor_Conversation"
+      ],
+      "staged_assignment_candidates": [
+        "Monitor_Conversation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Test_PDS.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Start_Random_Conversation",
+      "line": 361,
+      "id": "8e8fc955d228d27f270b45604535dc1602c11f8d4912420464bea6e95b1516c6",
+      "original_assignment_candidates": [
+        "Start_Random_Conversation"
+      ],
+      "staged_assignment_candidates": [
+        "Start_Random_Conversation"
+      ],
+      "original_script_owner_candidates": [
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Stop_Conversation",
+      "line": 362,
+      "id": "15b01cb3ea080b55d1d6465225cd5e43ccc682ddef32a468d5786386e64cd255",
+      "original_assignment_candidates": [
+        "Stop_Conversation"
+      ],
+      "staged_assignment_candidates": [
+        "Stop_Conversation"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission11.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Stop_All_Conversations",
+      "line": 363,
+      "id": "1e39015023abfbb84eadc2bd8f485cf3de8b2717429a25410e37de8f410569bb",
+      "original_assignment_candidates": [
+        "Stop_All_Conversations"
+      ],
+      "staged_assignment_candidates": [
+        "Stop_All_Conversations"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission02.cpp",
+        "Test_RAD.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Lock_Soldier_Facing",
+      "line": 366,
+      "id": "5df8e041529b82fdcd8124ef3f5e3a2324c21526cd55872318c1c152428f1e02",
+      "original_assignment_candidates": [
+        "Lock_Soldier_Facing"
+      ],
+      "staged_assignment_candidates": [
+        "Lock_Soldier_Facing"
+      ],
+      "original_script_owner_candidates": [
+        "MissionX0.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Unlock_Soldier_Facing",
+      "line": 367,
+      "id": "1db5e004bf2d3a75978706cf49b319f37f8a78b34dfe264320c821f5660b4140",
+      "original_assignment_candidates": [
+        "Unlock_Soldier_Facing"
+      ],
+      "staged_assignment_candidates": [
+        "Unlock_Soldier_Facing"
+      ],
+      "original_script_owner_candidates": [
+        "MissionX0.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Apply_Damage",
+      "line": 370,
+      "id": "f61d4a12e65ce1627bae3b2f7d5c8c7f0aa769419844aeae333a0da991561fd5",
+      "original_assignment_candidates": [
+        "Apply_Damage"
+      ],
+      "staged_assignment_candidates": [
+        "Apply_Damage"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionDemo.cpp",
+        "MissionX0.cpp",
+        "Test_DAK.cpp",
+        "Test_DAY.cpp",
+        "Test_DLS.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "Toolkit_Objects.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Loiters_Allowed",
+      "line": 373,
+      "id": "1af56c284103a40855f91ed348f2667203c474af4ec2a17705f672ebdc8cb4ef",
+      "original_assignment_candidates": [
+        "Set_Loiters_Allowed"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Loiters_Allowed"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission06.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_DAY.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Is_Visible",
+      "line": 375,
+      "id": "7cc9f6cfb31909e6c52ebc9eb4246388e40e55f4e10a7d70ad871b02afff0906",
+      "original_assignment_candidates": [
+        "Set_Is_Visible"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Is_Visible"
+      ],
+      "original_script_owner_candidates": [
+        "Mission11.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Is_Rendered",
+      "line": 376,
+      "id": "8b25b9756e335312fc9c437bc15a8a0b909aeea5bf0548a4fc0684d9590f9981",
+      "original_assignment_candidates": [
+        "Set_Is_Rendered"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Is_Rendered"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_DLS.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Points",
+      "line": 379,
+      "id": "b01c6774ad33c71927f74722703df5124e53688e6f857ff3f1841a17bb7b7735",
+      "original_assignment_candidates": [
+        "Get_Points"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Points"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Give_Points",
+      "line": 380,
+      "id": "234370f2aed239c5978fd392d645a5e0f0bd6112a8fe768387d96df348ce8a55",
+      "original_assignment_candidates": [
+        "Give_Points"
+      ],
+      "staged_assignment_candidates": [
+        "Give_Points"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Money",
+      "line": 383,
+      "id": "e6d7d0c3421030e4aaee5b1d670ec980ff50dc8726684d7c562d465ffb5eca34",
+      "original_assignment_candidates": [
+        "Get_Money"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Money"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Give_Money",
+      "line": 384,
+      "id": "9f8e01abd0f50e0db18833f9f4ba0a04a44d4b73bf055e576f458068a65db94f",
+      "original_assignment_candidates": [
+        "Give_Money"
+      ],
+      "staged_assignment_candidates": [
+        "Give_Money"
+      ],
+      "original_script_owner_candidates": [
+        "Test_GTH.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Get_Building_Power",
+      "line": 387,
+      "id": "93a32e89aeeef3c9c7ce163db9c208be69fb9b82364b199421f70ef174bf6b40",
+      "original_assignment_candidates": [
+        "Get_Building_Power"
+      ],
+      "staged_assignment_candidates": [
+        "Get_Building_Power"
+      ],
+      "original_script_owner_candidates": [
+        "Mission02.cpp",
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Building_Power",
+      "line": 388,
+      "id": "9508f22afe5c976ce5f654f3d91fd2912d3ec96281da7bad4a4953f9df80df1d",
+      "original_assignment_candidates": [
+        "Set_Building_Power"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Building_Power"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission10.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Play_Building_Announcement",
+      "line": 389,
+      "id": "df09eefd214e3198faad435e751d9be98a25b7d3ac9efd14918a188f15eacb50",
+      "original_assignment_candidates": [
+        "Play_Building_Announcement"
+      ],
+      "staged_assignment_candidates": [
+        "Play_Building_Announcement"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Find_Nearest_Building_To_Pos",
+      "line": 390,
+      "id": "ce06c4a9e204fcff33c7f8aaeb1a2b07399b56cd0251f2c981627d0bfb8d3c46",
+      "original_assignment_candidates": [
+        "Find_Nearest_Building_To_Pos"
+      ],
+      "staged_assignment_candidates": [
+        "Find_Nearest_Building_To_Pos"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Find_Nearest_Building",
+      "line": 391,
+      "id": "67320e82a1cf697642fe67b7ecf1b988d3a02ce914c498fae51e02b62f34b5c3",
+      "original_assignment_candidates": [
+        "Find_Nearest_Building"
+      ],
+      "staged_assignment_candidates": [
+        "Find_Nearest_Building"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Team_Members_In_Zone",
+      "line": 394,
+      "id": "b598e6423d410cc127e1c0a94029e3bef296ce2726b3e4eeaa128445b94e65b1",
+      "original_assignment_candidates": [
+        "Team_Members_In_Zone"
+      ],
+      "staged_assignment_candidates": [
+        "Team_Members_In_Zone"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Clouds",
+      "line": 397,
+      "id": "bd55f2e5cbccea72ca74d22838ab1caf431dc2f0dd6e3382ce04174b06cd0635",
+      "original_assignment_candidates": [
+        "Set_Clouds"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Clouds"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission07.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Lightning",
+      "line": 398,
+      "id": "5cc0eb5569de14691b1fbdd94e85ef18e0aa989168f510b7cc8bd092a4e6b561",
+      "original_assignment_candidates": [
+        "Set_Lightning"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Lightning"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission09.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_War_Blitz",
+      "line": 399,
+      "id": "c230a7f489960c2c846c5463d39b314f573afba57326a2504a1d95d1a847f700",
+      "original_assignment_candidates": [
+        "Set_War_Blitz"
+      ],
+      "staged_assignment_candidates": [
+        "Set_War_Blitz"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Wind",
+      "line": 402,
+      "id": "b5a57af20ac44a1d6507d005c42f457c4b8d3b3dcf3dd3c1e2da86331be3afe4",
+      "original_assignment_candidates": [
+        "Set_Wind"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Wind"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission07.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Rain",
+      "line": 403,
+      "id": "d8b2508682b5488fb782eb658d1849558f59ed7b04339d9d0961b39feac88338",
+      "original_assignment_candidates": [
+        "Set_Rain"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Rain"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission09.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Snow",
+      "line": 404,
+      "id": "7c5fa21a90a3220d6097d88720d68ca60fef209316fe6d9989314eaff293ed2f",
+      "original_assignment_candidates": [
+        "Set_Snow"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Snow"
+      ],
+      "original_script_owner_candidates": [],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Ash",
+      "line": 405,
+      "id": "fc65fdb68dcd558d05ef0f781426070142fe2adb8994d4a941310d8a1eaa2c8d",
+      "original_assignment_candidates": [
+        "Set_Ash"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Ash"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission07.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Fog_Enable",
+      "line": 406,
+      "id": "2845487b360383a2e828a8cb09dc4aed9c1ebf4e0ba2a9d8526276a7909d0495",
+      "original_assignment_candidates": [
+        "Set_Fog_Enable"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Fog_Enable"
+      ],
+      "original_script_owner_candidates": [
+        "Mission09.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Fog_Range",
+      "line": 407,
+      "id": "9d263ed09b15cc458d358cd76acea1f026e3f361636ce89b766455641e99b7b7",
+      "original_assignment_candidates": [
+        "Set_Fog_Range"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Fog_Range"
+      ],
+      "original_script_owner_candidates": [
+        "Mission09.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Stealth",
+      "line": 410,
+      "id": "e92d727e0cab79e3cda020adf967d7cccdcb77a70a33f57226b9d78b7daf8bfa",
+      "original_assignment_candidates": [
+        "Enable_Stealth"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Stealth"
+      ],
+      "original_script_owner_candidates": [
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_RMV.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Cinematic_Sniper_Control",
+      "line": 413,
+      "id": "83def4561fd3593d8b1f513f96fbfdd59fe878971ae4126afde5aca6b8826acf",
+      "original_assignment_candidates": [
+        "Cinematic_Sniper_Control"
+      ],
+      "staged_assignment_candidates": [
+        "Cinematic_Sniper_Control"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Text_File_Open",
+      "line": 416,
+      "id": "4581644a550bf76158b0811393e8f770d310a189f083642b595ac4f218b7fc6f",
+      "original_assignment_candidates": [
+        "Text_File_Open"
+      ],
+      "staged_assignment_candidates": [
+        "Text_File_Open"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Text_File_Get_String",
+      "line": 417,
+      "id": "590b2f8ed02238cda90b5f69de7e98b781ff7eef3cd8e894dfc6b20560acb77a",
+      "original_assignment_candidates": [
+        "Text_File_Get_String"
+      ],
+      "staged_assignment_candidates": [
+        "Text_File_Get_String"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Text_File_Close",
+      "line": 418,
+      "id": "cfb72f6af7483cc9a065d3cb07a12ef378c00c5ab5cc1db9782167cf41fc9af5",
+      "original_assignment_candidates": [
+        "Text_File_Close"
+      ],
+      "staged_assignment_candidates": [
+        "Text_File_Close"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Vehicle_Transitions",
+      "line": 421,
+      "id": "6f1d66a395790c325b87ce77b3ed5dadd19302484e12a67c8c8db79fad252382",
+      "original_assignment_candidates": [
+        "Enable_Vehicle_Transitions"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Vehicle_Transitions"
+      ],
+      "original_script_owner_candidates": [
+        "Mission02.cpp",
+        "Toolkit_Objects.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_GDI_Player_Terminal",
+      "line": 424,
+      "id": "3b2a770ca3a0dde35f2a3abb9871f4b5ffe0805869f0feaac6ada24bee904562",
+      "original_assignment_candidates": [
+        "Display_GDI_Player_Terminal"
+      ],
+      "staged_assignment_candidates": [
+        "Display_GDI_Player_Terminal"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_NOD_Player_Terminal",
+      "line": 425,
+      "id": "3dfff02abe75b1306cef4ebb933d995858a84f2a561887870ecf3011a0061477",
+      "original_assignment_candidates": [
+        "Display_NOD_Player_Terminal"
+      ],
+      "staged_assignment_candidates": [
+        "Display_NOD_Player_Terminal"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_Mutant_Player_Terminal",
+      "line": 426,
+      "id": "804f80ebaf8b160231aaf28d66dfafc717f7a7971ec977d7a3924232c6819b25",
+      "original_assignment_candidates": [
+        "Display_Mutant_Player_Terminal"
+      ],
+      "staged_assignment_candidates": [
+        "Display_Mutant_Player_Terminal"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Reveal_Encyclopedia_Character",
+      "line": 429,
+      "id": "d0bc9db91145d3d5cfc25aba4ae9b8f12ccff8983bf561768431af10673ac936",
+      "original_assignment_candidates": [
+        "Reveal_Encyclopedia_Character"
+      ],
+      "staged_assignment_candidates": [
+        "Reveal_Encyclopedia_Character"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "MissionX0.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Reveal_Encyclopedia_Weapon",
+      "line": 430,
+      "id": "fb78877b987f71bb9930c8e9258e8de64fd768020a309a8f3f82fcc09479c48a",
+      "original_assignment_candidates": [
+        "Reveal_Encyclopedia_Weapon"
+      ],
+      "staged_assignment_candidates": [
+        "Reveal_Encyclopedia_Weapon"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Reveal_Encyclopedia_Vehicle",
+      "line": 431,
+      "id": "3bb1914c356de3dfee482ad7205909f5900a7f7dbd10efdb7fc3687e19bf8b48",
+      "original_assignment_candidates": [
+        "Reveal_Encyclopedia_Vehicle"
+      ],
+      "staged_assignment_candidates": [
+        "Reveal_Encyclopedia_Vehicle"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission07.cpp",
+        "Toolkit_Powerup.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Reveal_Encyclopedia_Building",
+      "line": 432,
+      "id": "9c0986c10406fc20d7c19959e27c37284b706247994e99976426664d164b9c69",
+      "original_assignment_candidates": [
+        "Reveal_Encyclopedia_Building"
+      ],
+      "staged_assignment_candidates": [
+        "Reveal_Encyclopedia_Building"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_Encyclopedia_Event_UI",
+      "line": 433,
+      "id": "36b232e3e7850e955242229efe4a29d8c26a4e6b46b4384c59108ad17ab931b4",
+      "original_assignment_candidates": [
+        "Display_Encyclopedia_Event_UI"
+      ],
+      "staged_assignment_candidates": [
+        "Display_Encyclopedia_Event_UI"
+      ],
+      "original_script_owner_candidates": [
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "MissionX0.cpp",
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Scale_AI_Awareness",
+      "line": 435,
+      "id": "a8c756c640f0696c2f5295fedec7529cfd1920c78dea5950ffd47c63ed69ce16",
+      "original_assignment_candidates": [
+        "Scale_AI_Awareness"
+      ],
+      "staged_assignment_candidates": [
+        "Scale_AI_Awareness"
+      ],
+      "original_script_owner_candidates": [
+        "MissionX0.cpp",
+        "Test_DLS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Cinematic_Freeze",
+      "line": 438,
+      "id": "bde930f85719eba44eb2eccead53889cc773013d6f5528f2e5fccd48d49a92ee",
+      "original_assignment_candidates": [
+        "Enable_Cinematic_Freeze"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Cinematic_Freeze"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission03.cpp",
+        "Mission11.cpp",
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Expire_Powerup",
+      "line": 440,
+      "id": "7ba64dd76c976bde99c8e7552e413b294897474d3993d6f983f4b66bacdbf423",
+      "original_assignment_candidates": [
+        "Expire_Powerup"
+      ],
+      "staged_assignment_candidates": [
+        "Expire_Powerup"
+      ],
+      "original_script_owner_candidates": [
+        "Toolkit_Powerup.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_HUD_Help_Text",
+      "line": 443,
+      "id": "8dfdbc6cef860d10c815ef4332540ae83ec76581ae63d394b872bb33a65c2b48",
+      "original_assignment_candidates": [
+        "Set_HUD_Help_Text"
+      ],
+      "staged_assignment_candidates": [
+        "Set_HUD_Help_Text"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp",
+        "Mission01.cpp",
+        "Mission02.cpp",
+        "Mission03.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission09.cpp",
+        "Mission11.cpp",
+        "MissionX0.cpp",
+        "Test_RAD.cpp",
+        "Toolkit.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_HUD_Pokable_Indicator",
+      "line": 444,
+      "id": "8614408776d67a06ae68bb3a737036c40250825fb45269eda29b9e35bf791160",
+      "original_assignment_candidates": [
+        "Enable_HUD_Pokable_Indicator"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_HUD_Pokable_Indicator"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Mission04.cpp",
+        "Mission05.cpp",
+        "Mission06.cpp",
+        "Mission07.cpp",
+        "Mission10.cpp",
+        "Mission11.cpp",
+        "Test_DAK.cpp",
+        "Toolkit_Objects.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Innate_Conversations",
+      "line": 446,
+      "id": "343ce2f80e49ae214f3fb112bf03016ba5b9b197a9d13e3189b5ae41325f7ff8",
+      "original_assignment_candidates": [
+        "Enable_Innate_Conversations"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Innate_Conversations"
+      ],
+      "original_script_owner_candidates": [
+        "Mission00.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Display_Health_Bar",
+      "line": 448,
+      "id": "fb982845c787c6f8f6a1dfaad876d87213c33af0c6efdbc3b2b60d222df45660",
+      "original_assignment_candidates": [
+        "Display_Health_Bar"
+      ],
+      "staged_assignment_candidates": [
+        "Display_Health_Bar"
+      ],
+      "original_script_owner_candidates": [
+        "Mission01.cpp",
+        "Toolkit_Objects.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Shadow",
+      "line": 452,
+      "id": "984fe493c0cd69fe88c91cc9eabf438414cc7c0964d4815246fa217e44a4cc83",
+      "original_assignment_candidates": [
+        "Enable_Shadow"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Shadow"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Clear_Weapons",
+      "line": 454,
+      "id": "0f530fca98ba50ab263e95b5adf21d95a6822b47d72c5b405882110aa6464847",
+      "original_assignment_candidates": [
+        "Clear_Weapons"
+      ],
+      "staged_assignment_candidates": [
+        "Clear_Weapons"
+      ],
+      "original_script_owner_candidates": [
+        "Test_BMG.cpp",
+        "mission08.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Num_Tertiary_Objectives",
+      "line": 456,
+      "id": "8a7277f72db22f1021c47a53d27aec6b8a6c4a5454b546c77bbbe2bb92df546c",
+      "original_assignment_candidates": [
+        "Set_Num_Tertiary_Objectives"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Num_Tertiary_Objectives"
+      ],
+      "original_script_owner_candidates": [
+        "Mission03.cpp",
+        "Mission09.cpp",
+        "Mission10.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Enable_Letterbox",
+      "line": 459,
+      "id": "7fc8027781480d4a970dc263406139ff04b8b2cdf38177b3cae4314cf1c25479",
+      "original_assignment_candidates": [
+        "Enable_Letterbox"
+      ],
+      "staged_assignment_candidates": [
+        "Enable_Letterbox"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Screen_Fade_Color",
+      "line": 460,
+      "id": "0fa0349097d177a00e829a272973e5294536a9b82b7ac5e6272c904d7e208f5f",
+      "original_assignment_candidates": [
+        "Set_Screen_Fade_Color"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Screen_Fade_Color"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    },
+    {
+      "name": "Set_Screen_Fade_Opacity",
+      "line": 461,
+      "id": "6eec521ceb75c9c4cd71a15f965d0052e5ef59081d7599c5f6ef6e1795f02210",
+      "original_assignment_candidates": [
+        "Set_Screen_Fade_Opacity"
+      ],
+      "staged_assignment_candidates": [
+        "Set_Screen_Fade_Opacity"
+      ],
+      "original_script_owner_candidates": [
+        "Test_Cinematic.cpp",
+        "Test_DLS.cpp"
+      ],
+      "status": "unknown",
+      "evidence_class": "source_metadata"
+    }
+  ],
+  "script_units": [
+    {
+      "source": "staging/scripts/DLLmain.cpp",
+      "selected_for_arm_target": false,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/DPrint.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/DrMobius.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission00.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission01.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission02.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission03.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission04.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission05.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission06.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission07.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission09.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission10.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Mission11.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/MissionDemo.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/MissionX0.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/ScriptFactory.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/ScriptRegistrar.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_BMG.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_Cinematic.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_DAK.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_DAY.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_DLS.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_DME.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_GTH.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_JDG_EVA.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_PDS.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_RAD.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_RMV.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Test_RMV_Toolkit.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Actions.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Animations.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Broadcaster.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Explosions.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Objectives.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Objects.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Powerup.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Siege.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Sounds.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Spawners.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/Toolkit_Triggers.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/mission08.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/scripts.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    },
+    {
+      "source": "staging/scripts/strtrim.cpp",
+      "selected_for_arm_target": true,
+      "status": "unknown",
+      "evidence_class": "source_and_build_metadata"
+    }
+  ],
+  "script_unit_total": 45,
+  "selected_script_units": 44,
+  "inputs": [
+    {
+      "source": "upstream/CnC_Renegade/Code/Scripts/scriptcommands.h",
+      "sha256": "53bb6d91e00e90a5ccc8bca6c5f7c67a6df47c99cd5762c9b895be4711cf04b3"
+    },
+    {
+      "source": "upstream/CnC_Renegade/Code/Combat/scriptcommands.cpp",
+      "sha256": "5eabc047306bc9826b13029413dbc0fe500ebf2faa39914fe6efbd2007cd2632"
+    },
+    {
+      "source": "staging/combat/scriptcommands.cpp",
+      "sha256": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325"
+    },
+    {
+      "source": "upstream/CnC_Renegade/Code/Scripts/Scripts.dsp",
+      "sha256": "04323c97d93059a62a5e172c3489e1fc6b08513058e6ef498c7ec09f6debbbb6"
+    }
+  ],
+  "open_risks": [
+    "Lexical assignments do not evaluate platform branches or function bodies",
+    "Indirect commands and helper/global calls",
+    "Slot ABI layout and initialization",
+    "Retail parameter matching and MSVC semantic differences",
+    "Behavior/stub classification and runtime registration"
+  ],
+  "scope": "Every function-pointer slot in original ScriptCommands and every Scripts.dsp C++ unit",
+  "link_inventory_sha256": "4d7965995cd92e95b6efc4f1b20bba571f76dbaed73596d926412729c148f87a"
+}

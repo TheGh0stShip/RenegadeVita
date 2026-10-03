@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S5 complete script command and project-unit denominator — 2026-10-03
+
+202 command slots retained with one staged assignment each; 179 directly used
+by declared shipped-script bodies. 45 project units enumerated, 44 selected,
+DLLmain unselected. All statuses unknown pending behavior/initialization/ABI
+and parameter checks. Seven tests pass; no engine behavior changed.
+
 ## S6 dialog reference and build-selection reconciliation — 2026-10-03
 
 Resource-ID definitions separated from source uses. Seven of 81 absent-template

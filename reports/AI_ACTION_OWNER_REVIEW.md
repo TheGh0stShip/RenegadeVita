@@ -208,6 +208,22 @@ Actual selected representation, material indices, alternate installation,
 building mesh association, texture delivery and native power-toggle pixels
 remain open. This inspection covers the powerplant interior member only.
 
+The reusable read-only `audit_prelit_material_candidates` scanner now applies
+the original header mode fallthrough before inspecting pass fields. Higher
+representations are never selected as fallback from a lower requested mode.
+Missing advertised fallback or missing/ambiguous selected wrappers remain
+findings; unknown requested modes and truncated streams are rejected.
+Three synthetic counterexample tests cover selection, unflagged containers,
+selected-wrapper isolation, ambiguity and truncation. This is a metadata model,
+not a complete original W3D loader or material-index validator.
+
+For the inspected powerplant interior, all three supported requested modes
+retain alternate-material candidates in all23 meshes without selected-wrapper
+findings. Original WW3D initializes multi-pass, while original system settings
+can change Prelit_Mode; the active runtime value is not established here.
+Private mode-specific results: `build/tutorial-powerplant-prelit-mode-candidates-20261003.json`.
+No build, loader execution, launch or rendered acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

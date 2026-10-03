@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Prelit representation discovery — 2026-10-03
+
+Completed: reusable read-only header-mode/pass scanner with conservative missing
+fallback/wrapper handling. Three counterexample tests pass. All three supported
+requested modes retain alternate candidates in23 tutorial powerplant meshes.
+Evidence: private mode/member receipt; default multi-pass and setting owner traced.
+Open: actual runtime selection, original loader execution and visual correctness.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Tutorial powerplant alternate payload candidates — 2026-10-03
 
 Completed: retail powerplant interior inspected read-only;23 meshes contain

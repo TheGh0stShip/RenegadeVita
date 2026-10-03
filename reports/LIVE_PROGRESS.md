@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 coverage cross-check batch: 28 explicit feature rows preserve helper-owned
+rendering requirements outside RenderObj ancestry. Snapshot/streak ownership
+remains unresolved. Identical case-alias headers are recorded without merging
+provenance. S2 now has 1,876 unknown rows; five pinned-parser tests pass.
+
 S2 denominator batch: 1,848 source records, all unknown: 467 class definitions,
 391 parse uncertainties and 990 draw-state references (176 distinct symbols).
 Candidate ancestry includes 25 render-object, 14 loader and 14 prototype

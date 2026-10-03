@@ -11,6 +11,37 @@ from sweep_cpp_functions import parser, walk
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE = re.compile(r'\bD3D(?:RS|TSS|SAMP|FVF|FMT|TS)_[A-Za-z0-9_]+\b')
+FEATURE_OWNERS = {
+    'rigid_mesh': ['MeshClass'], 'skinned_mesh': ['MeshClass', 'MeshModelClass'],
+    'hlod': ['HLodClass'], 'aggregate': ['AggregateLoaderClass', 'AggregateDefClass'],
+    'collection': ['CollectionClass'], 'rigid_decal': ['RigidDecalMeshClass'],
+    'skinned_decal': ['SkinDecalMeshClass'], 'dazzle_halo': ['DazzleRenderObjClass'],
+    'lensflare': ['LensflareTypeClass', 'LensflareInitClass'],
+    'particle_emitter': ['ParticleEmitterClass'], 'point_group': ['PointGroupClass'],
+    'line_group': ['LineGroupClass'], 'segmented_line': ['SegmentedLineClass'],
+    'line3d': ['Line3DClass'], 'streak': ['StreakClass'],
+    'sphere': ['SphereRenderObjClass'], 'ring': ['RingRenderObjClass'],
+    'box': ['AABoxRenderObjClass', 'OBBoxRenderObjClass'], 'shatter': ['ShatterSystem'],
+    'texture_projector': ['TexProjectClass'], 'shadow_projector': ['TexProjectClass'],
+    'render_to_texture': ['DX8Wrapper'], 'distance_lod': ['DistLODClass'],
+    'snapshot': ['SnapshotActivated', 'Is_Snapshot_Activated'],
+    'sound_render_object': ['SoundRenderObjClass'], 'bitmap': ['Bitmap2DObjClass'],
+    'sentence': ['Render2DSentenceClass'], 'render2d_text': ['Render2DClass', 'Render2DTextClass'],
+}
+
+
+def feature_expectations(classes):
+    """Required helper owners remain visible even outside RenderObj ancestry.
+
+    Names are source-discovery seeds, not authoritative ownership or a missing
+    feature verdict. Snapshot and absent streak seeds require independent trace.
+    """
+    return [{'kind': 'required_feature', 'feature': feature, 'owner_seeds': seeds,
+             'candidate_definitions': [{'file': row['file'], 'line': row['line'],
+                                        'name': row['name']} for row in classes
+                                       if row['name'] in seeds],
+             'status': 'unknown', 'evidence_class': 'requirement_source_crosscheck'}
+            for feature, seeds in FEATURE_OWNERS.items()]
 
 
 def syntax(text, cpp_parser):
@@ -91,9 +122,10 @@ def audit(root):
                                  evidence_class='unpreprocessed_source_syntax') for r in records)
     classes = [r for r in rows if r['kind'] == 'class_definition']
     ancestry(classes)
+    rows.extend(feature_expectations(classes))
     for row in rows:
         identity = {key: row[key] for key in ('kind', 'file', 'line', 'column', 'start_byte',
-                                             'end_byte', 'symbol', 'node_type') if key in row}
+                                             'end_byte', 'symbol', 'node_type', 'feature') if key in row}
         row['row_id'] = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
     if len({r['row_id'] for r in rows}) != len(rows):
         raise ValueError('Duplicate renderer inventory locations')
@@ -109,7 +141,13 @@ def audit(root):
               'by_status': dict(Counter(r['status'] for r in rows)),
               'candidate_roles': dict(Counter(role for r in classes for role in r['candidate_roles'])),
               'unique_draw_state_symbols': len({r['symbol'] for r in rows if 'symbol' in r})}
+    aliases = defaultdict(list)
+    for file, checksum in inputs.items():
+        if file.startswith('staging/'):
+            aliases[(file.lower(), checksum)].append(file)
+    case_aliases = [names for names in aliases.values() if len(names) > 1]
     return {'schema_version': 1, 'sweep': 'S2', 'complete': False, 'totals': totals,
+            'identical_case_alias_paths': case_aliases,
             'rows': rows, 'inputs_sha256': inputs, 'upstream_files_missing_from_staging': missing,
             'coverage_open': ['Active build branches and macro-generated declarations.',
                               'Scoped/aliased/template inheritance and duplicate class names.',

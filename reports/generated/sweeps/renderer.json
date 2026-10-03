@@ -9,6 +9,12 @@
     "Classes outside WW3D/renderer trees and parse uncertainties.",
     "Render2D/text and non-RenderObj helper owners require explicit feature mapping."
   ],
+  "identical_case_alias_paths": [
+    [
+      "staging/ww3d2/Dx8Wrapper.h",
+      "staging/ww3d2/dx8wrapper.h"
+    ]
+  ],
   "inputs_sha256": {
     "port/renderer/vita/D3dx8core.h": "db06de140206c8564ff8d00c3dc0a529c12439210e2f4ac56367771d4be480e1",
     "port/renderer/vita/D3dx8tex.h": "34680c431c1abe4cb66e4a9634fbdf7406042901b2dc8aeaedc2a7fa6007e6b2",
@@ -250,7 +256,7 @@
     "staging/ww3d2/ww3dids.h": "339d44b8752566409b4ae2cd742592cf65339358b0e4efbbd498b3159de44875",
     "staging/ww3d2/ww3dtrig.h": "0bf682e99ce8207ce9cbe0243e335b371695a56b512b7cf69cfc8e8a88245818",
     "tools/audit_sweep_port_guards.py": "f8eb8890c85ef4faba32631830698ef0bbcd075c4d1bd95852b87e5bd85e012b",
-    "tools/audit_sweep_renderer.py": "97c4098b3a8fb419fe777070e07b6054e6ad3498a7f90862831e4e7c83ecb212",
+    "tools/audit_sweep_renderer.py": "1a26787d851a30fcee4f36e2f99c051ce1638cc90587ac53cf8999e1835659c9",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf"
   },
@@ -23200,6 +23206,506 @@
       "row_id": "4b62f45e67fb79bfd3f741e3c4e41976824aba10eccf506b657e86f120281f16",
       "start_byte": 4576,
       "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/mesh.h",
+          "line": 76,
+          "name": "MeshClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "rigid_mesh",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "MeshClass"
+      ],
+      "row_id": "387308eb9ab6ccac8186edf53392ca13c3d99658692678ff72825a9221f34bd1",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/mesh.h",
+          "line": 76,
+          "name": "MeshClass"
+        },
+        {
+          "file": "staging/ww3d2/meshmdl.h",
+          "line": 120,
+          "name": "MeshModelClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "skinned_mesh",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "MeshClass",
+        "MeshModelClass"
+      ],
+      "row_id": "0e7cd3790a9dbb4f7ff6ab95e52af88606607d83c161c68f477f5cc1bfc5db04",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/hlod.h",
+          "line": 85,
+          "name": "HLodClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "hlod",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "HLodClass"
+      ],
+      "row_id": "8579209971b0f07462cdc95541094ffef7c8e65891090c5d27141d4cc4f79eac",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/agg_def.h",
+          "line": 86,
+          "name": "AggregateDefClass"
+        },
+        {
+          "file": "staging/ww3d2/agg_def.h",
+          "line": 239,
+          "name": "AggregateLoaderClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "aggregate",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "AggregateLoaderClass",
+        "AggregateDefClass"
+      ],
+      "row_id": "c1155487ea53d81448bf48a3051639c0a8aefad8b699dc5d443b1fd4c887b3f1",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/collect.h",
+          "line": 60,
+          "name": "CollectionClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "collection",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "CollectionClass"
+      ],
+      "row_id": "03e7a3e316bb38ec63666e95f22a0697e314d9e9decad0da8cb0481919befc26",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/decalmsh.h",
+          "line": 124,
+          "name": "RigidDecalMeshClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "rigid_decal",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "RigidDecalMeshClass"
+      ],
+      "row_id": "4ecda9f7954e22db23f7429b3b9bf38380cbb1788df541a6c22b8459f0b2a901",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/decalmsh.h",
+          "line": 189,
+          "name": "SkinDecalMeshClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "skinned_decal",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "SkinDecalMeshClass"
+      ],
+      "row_id": "f0783fd6724f9960656272f51fc39c7d9d70293f964ef68509f4689f0e08dc6e",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/dazzle.h",
+          "line": 235,
+          "name": "DazzleRenderObjClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "dazzle_halo",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "DazzleRenderObjClass"
+      ],
+      "row_id": "3b3cee1b77b98831737be22bde579a8ddc4e0ff312feb2005bee10c8889a1222",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/dazzle.h",
+          "line": 71,
+          "name": "LensflareInitClass"
+        },
+        {
+          "file": "staging/ww3d2/dazzle.h",
+          "line": 201,
+          "name": "LensflareTypeClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "lensflare",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "LensflareTypeClass",
+        "LensflareInitClass"
+      ],
+      "row_id": "50acfa6ebc3d431bddd79016efb3cbebb02a99745d12730c01b46fc441c8b865",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/part_emt.h",
+          "line": 110,
+          "name": "ParticleEmitterClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "particle_emitter",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "ParticleEmitterClass"
+      ],
+      "row_id": "1a5dd93cad36c65f1eee21e1b6e9216bc027abe6559267a439979804bddb4149",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/pointgr.h",
+          "line": 65,
+          "name": "PointGroupClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "point_group",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "PointGroupClass"
+      ],
+      "row_id": "8513693a88559c04f5e26756093b536720cdbc4871c652f86623768fbdff673b",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/linegrp.h",
+          "line": 60,
+          "name": "LineGroupClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "line_group",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "LineGroupClass"
+      ],
+      "row_id": "c1e941cef92fe484c14514588cf9fc326cf9a69aa61a4b49a025405e97eae6e0",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/segline.h",
+          "line": 55,
+          "name": "SegmentedLineClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "segmented_line",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "SegmentedLineClass"
+      ],
+      "row_id": "97d800bc008f7aa96087fa47d4faf1c5297558d6a88d971759b65fb3c0adb0d0",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/line3d.h",
+          "line": 60,
+          "name": "Line3DClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "line3d",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "Line3DClass"
+      ],
+      "row_id": "f9b6158ee8d36078d887c6adc9124f7cb65fdfe6112486fbabb242caa8ef8e8c",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "streak",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "StreakClass"
+      ],
+      "row_id": "3eba1451137734f07e6cc8d6399f60826a3c5ade6fa48a4e271b2358a56aafa0",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/sphereobj.h",
+          "line": 224,
+          "name": "SphereRenderObjClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "sphere",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "SphereRenderObjClass"
+      ],
+      "row_id": "7bb10eab4e4ad1830c87efc8b1dba7949259cca2f0608fee759f2d2024209f4c",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/ringobj.h",
+          "line": 100,
+          "name": "RingRenderObjClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "ring",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "RingRenderObjClass"
+      ],
+      "row_id": "4ccddda6d05eca52e863f6f3412f1eec55bfe26576e4e0df2f158b0daf372b51",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/boxrobj.h",
+          "line": 137,
+          "name": "AABoxRenderObjClass"
+        },
+        {
+          "file": "staging/ww3d2/boxrobj.h",
+          "line": 187,
+          "name": "OBBoxRenderObjClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "box",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "AABoxRenderObjClass",
+        "OBBoxRenderObjClass"
+      ],
+      "row_id": "eeb299197f90a24749992b024506f874adbf2bb75d1f800cd9a0f8493d464c2a",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/shattersystem.h",
+          "line": 62,
+          "name": "ShatterSystem"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "shatter",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "ShatterSystem"
+      ],
+      "row_id": "215359cb904236abca9e8e37c014e6d377072e75eccf9417ae12c57f88b3a218",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/texproject.h",
+          "line": 101,
+          "name": "TexProjectClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "texture_projector",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "TexProjectClass"
+      ],
+      "row_id": "213f6a4c79c43590047b69cb40c62f13f00d7a97e3a3f5d2a48c3dcde90ab462",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/texproject.h",
+          "line": 101,
+          "name": "TexProjectClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "shadow_projector",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "TexProjectClass"
+      ],
+      "row_id": "e5966a5597dde815d5ce3db4596b27e6e2c75b639d3b3245984a5614a1146e9f",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/Dx8Wrapper.h",
+          "line": 161,
+          "name": "DX8Wrapper"
+        },
+        {
+          "file": "staging/ww3d2/dx8wrapper.h",
+          "line": 161,
+          "name": "DX8Wrapper"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "render_to_texture",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "DX8Wrapper"
+      ],
+      "row_id": "bb87b424d73368fa4e3b13511e3c39b00d3cae9c8385300c0a3fe21d5ab96697",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/distlod.h",
+          "line": 67,
+          "name": "DistLODClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "distance_lod",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "DistLODClass"
+      ],
+      "row_id": "a4ce16615d1a305ecf4588f59043442bfc8555e52568eaf4097acc19d4b4e76c",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "snapshot",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "SnapshotActivated",
+        "Is_Snapshot_Activated"
+      ],
+      "row_id": "70af67654bb87532a8907ffc8fe522ac27a7b20a65a0ff0f093e2af604d7b15e",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/soundrobj.h",
+          "line": 71,
+          "name": "SoundRenderObjClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "sound_render_object",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "SoundRenderObjClass"
+      ],
+      "row_id": "d8088ea2de2e99120e29e80ee9f1956923c78f8a1860d2ae38f840ae01bf0e98",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/bmp2d.h",
+          "line": 46,
+          "name": "Bitmap2DObjClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "bitmap",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "Bitmap2DObjClass"
+      ],
+      "row_id": "97c5f37bbe7b148697fcc2c60c4bc7d54c38272daf7dbf956fe62df907921fde",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/render2dsentence.h",
+          "line": 121,
+          "name": "Render2DSentenceClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "sentence",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "Render2DSentenceClass"
+      ],
+      "row_id": "d4675b78191989c7f71d8c718c242fab9627962752802a1391e5131999c9e2d1",
+      "status": "unknown"
+    },
+    {
+      "candidate_definitions": [
+        {
+          "file": "staging/ww3d2/render2d.h",
+          "line": 100,
+          "name": "Render2DClass"
+        },
+        {
+          "file": "staging/ww3d2/render2d.h",
+          "line": 196,
+          "name": "Render2DTextClass"
+        }
+      ],
+      "evidence_class": "requirement_source_crosscheck",
+      "feature": "render2d_text",
+      "kind": "required_feature",
+      "owner_seeds": [
+        "Render2DClass",
+        "Render2DTextClass"
+      ],
+      "row_id": "1a6543ba21a6450a9ed0b830a7f7337d7a7f3514643d56f161ad23ed92672a66",
+      "status": "unknown"
     }
   ],
   "schema_version": 1,
@@ -23208,17 +23714,18 @@
     "by_kind": {
       "class_definition": 467,
       "draw_state_reference": 990,
-      "parse_unknown": 391
+      "parse_unknown": 391,
+      "required_feature": 28
     },
     "by_status": {
-      "unknown": 1848
+      "unknown": 1876
     },
     "candidate_roles": {
       "prototype": 14,
       "prototype_loader": 14,
       "render_object": 25
     },
-    "rows": 1848,
+    "rows": 1876,
     "unique_draw_state_symbols": 176
   },
   "upstream_files_missing_from_staging": [

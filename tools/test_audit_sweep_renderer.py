@@ -1,7 +1,7 @@
 import importlib.util
 import unittest
 
-from audit_sweep_renderer import ancestry, state_references, syntax
+from audit_sweep_renderer import ancestry, feature_expectations, state_references, syntax
 from sweep_cpp_functions import parser
 
 PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
@@ -9,6 +9,15 @@ PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
 
 
 class RendererInventoryTest(unittest.TestCase):
+    def test_helper_and_absent_owner_are_never_silently_excluded(self):
+        rows = feature_expectations([{'name': 'SkinDecalMeshClass', 'file': 'a.h', 'line': 2}])
+        decal = next(r for r in rows if r['feature'] == 'skinned_decal')
+        streak = next(r for r in rows if r['feature'] == 'streak')
+        self.assertEqual(decal['candidate_definitions'][0]['line'], 2)
+        self.assertEqual(streak['candidate_definitions'], [])
+        self.assertEqual(streak['status'], 'unknown')
+        self.assertEqual(len({r['feature'] for r in rows}), len(rows))
+
     @unittest.skipUnless(PARSER_AVAILABLE, 'Pinned sweep parser not installed')
     def test_transitive_and_multiple_inheritance_retained(self):
         text = ('class RenderObjClass {}; class Animated: public RenderObjClass {};'

@@ -1,6 +1,6 @@
 # S2 renderer features — inventory in progress
 
-This source denominator is incomplete as a feature matrix. All 1,848 records
+This source denominator is incomplete as a feature matrix. All 1,876 records
 remain `unknown`; syntax discovery does not prove selection, linking, native
 submission, feature support or physical rendering. S1 classification continues.
 
@@ -9,6 +9,7 @@ submission, feature support or physical rendering. S1 classification continues.
 | Class/struct definitions | 467 |
 | Parse uncertainties | 391 |
 | Draw-state token references | 990 |
+| Required feature cross-checks | 28 |
 
 The references contain 176 distinct D3D render-state, texture-stage, sampler,
 FVF, format and transform symbols. Comments and literals are excluded while
@@ -22,6 +23,16 @@ The graph follows transitive/multiple inheritance but does not resolve namespace
 aliases, template substitutions, preprocessing or duplicate names. Each definition
 retains its bases, scope, byte positions, definition hash and syntax-error flag.
 Every parsed class is retained so helpers outside these ancestries remain visible.
+Twenty-eight explicit required-feature rows cross-check discovery seeds against
+the class definitions. They include skin/decal, point/line groups, shatter,
+projectors, Render2D/sentence and other helpers even without RenderObj ancestry.
+These rows remain unknown until ownership, native submission and support are
+reviewed. Snapshot is state/macro evidence rather than a parsed class; no StreakClass
+definition was discovered. Neither observation proves a missing retail feature.
+
+Dx8Wrapper.h and dx8wrapper.h are identical case-alias paths. Their source
+records remain separate provenance, including 131 parse uncertainties each.
+Counts are source locations, not unique semantic types or distinct parser bugs.
 
 Render-object candidates include mesh and dynamic meshes, HLOD, collections,
 composite/animated bases, bitmap, Dazzle, distance LOD, line/segmented line,
@@ -44,10 +55,10 @@ build/sweep-parser-venv/bin/python -m unittest discover -s tools -p test_audit_s
 build/sweep-parser-venv/bin/python tools/audit_sweep_renderer.py --output reports/generated/sweeps/renderer.json
 ```
 
-Four focused tests pass with the pinned parser. They cover transitive/multiple
+Five focused tests pass with the pinned parser. They cover transitive/multiple
 inheritance, cycles, namespace/template preservation, malformed syntax and
 comment/literal masking. General Python without the parser skips two AST tests;
-the explicit CI parser step installs the dependency and runs all four. CI retains
+the explicit CI parser step installs the dependency and runs all five. CI retains
 the partial S2 JSON independently of the S1 artifact.
 
 Coverage question: what can exist outside this denominator? Open risks are

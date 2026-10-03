@@ -32,6 +32,18 @@ light types, but the members differ. Archive precedence, actual loaded types,
 texture residency, visibility delivery, blend/depth execution and physical
 pixels remain unverified. Source/member hashes are retained privately.
 
+Further read-only inspection: each core definition version has 27 nonempty
+dazzle/halo/lensflare texture references. All have filename candidates in the
+two inspected core archives, including DDS/TGA extension candidates; these
+are discovery matches rather than demonstrated loader choices. Private metadata
+retains repeated type references and hashes without exporting texture bytes.
+The interactive factory list is root, Data, Always2.dat, Always.dbs, Always.dat,
+then tutorial. Original lookup tries its temporary factory, search-start entry,
+then remaining entries in insertion order. Constructor defaults are no temporary
+factory and search index zero; selected mission archives are appended after
+WW3D initialization. Thus core lookup prefers Always2 over Always when no loose
+override is available. Actual physical files and successful loading remain open.
+
 Validation: 11 combined source-only tests for restoration replay, HLOD
 declarations and prelit discovery pass. Restoration replay uses fixed input
 hashes and zero fuzz and compares the native rendering body against upstream.

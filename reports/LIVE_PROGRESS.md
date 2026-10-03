@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Dazzle retail definition and texture candidates — 2026-10-03
+
+Completed: both core INI versions inspected; 27 texture references each have
+core archive candidates. Original factory order traced: loose overrides before
+Always2, then other core factories; mission append follows WW3D initialization.
+Evidence: read-only bounded archive metadata and member/source identities.
+Next: native type loading, actual texture selection/residency and visibility.
+Candidate presence is not loader or pixel proof. No build/launch; gates0/10.
+
 ## Dazzle shader state boundary — 2026-10-03
 
 Completed: original additive blending, separate dazzle/halo depth comparisons,

@@ -247,6 +247,22 @@ Private receipt `build/three-map-prelit-candidates-20261003.json` retains scanne
 archive and member hashes plus per-mode structural rows. No retail mutation,
 build, launch or native visual acceptance.
 
+The scanner now separates repeated shader/diffuse-color fields, illumination
+after its first selected-wrapper occurrence, and repeated texture/UV fields
+within each original texture stage. Illumination tracking spans selected passes;
+texture stages remain separate. Both legacy texcoords0x05 and stage texcoords0x4a
+contribute to a stage's UV candidate. Specular-color repetition is excluded
+because the original read_scg is a no-op. These remain structural candidates,
+not validation of array lengths, indices, empty-value behavior or full load state.
+Root material fields and state accumulated outside the selected wrapper are not
+modeled; shared model dependencies also remain open.
+
+Four synthetic tests pass, including cross-pass illumination, mixed UV aliases,
+stage isolation and no-op specular counterexamples. A fresh196-member scan with
+the expanded fields retains111/0/62 candidate meshes for Tutorial/M13/M01 in
+each hypothetical mode, with no parse findings. Private receipt:
+`build/three-map-prelit-expanded-fields-20261003.json`. No native acceptance.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

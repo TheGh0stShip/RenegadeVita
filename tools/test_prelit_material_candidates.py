@@ -42,6 +42,21 @@ class PrelitCandidates(unittest.TestCase):
         with self.assertRaises(ValueError):
             inspect_prelit(mesh(0x02000000, chunk(0x24, chunk(0x38, b'bad'))), 0)
 
+    def test_alternate_fields_preserve_pass_and_stage_ownership(self):
+        word = struct.pack('<I', 0)
+        field = lambda kind: chunk(kind, word)
+        stage = chunk(0x48, field(0x49) * 2 + field(0x4a) + field(0x05))
+        first = chunk(0x38, field(0x3a) * 2 + field(0x3b) * 2 +
+                      field(0x3c) + field(0x3e) * 2 + stage)
+        second = chunk(0x38, field(0x3c) + chunk(0x48, field(0x49)))
+        rows = inspect_prelit(mesh(0x02000000, chunk(0x24, first + second)), 0)
+        passes = rows[0]['passes']
+        self.assertEqual(passes[0]['alternate_field_candidates'], ['shader', 'diffuse_color'])
+        self.assertEqual(passes[1]['alternate_field_candidates'], ['diffuse_illumination'])
+        self.assertEqual(passes[0]['texture_stages'][0]['alternate_field_candidates'], ['texture', 'uv'])
+        self.assertEqual(passes[1]['texture_stages'][0]['alternate_field_candidates'], [])
+        self.assertFalse(passes[0]['alternate_material_candidate'])
+
 
 if __name__ == '__main__':
     unittest.main()

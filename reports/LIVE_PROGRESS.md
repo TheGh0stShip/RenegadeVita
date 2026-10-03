@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Expanded alternate-material field discovery — 2026-10-03
+
+Completed: shader/color/illumination and stage-owned texture/UV candidates added;
+legacy UV aliases and cross-pass illumination retained, no-op specular excluded.
+Evidence: four counterexample tests; fresh196-member scan retains111/0/62 mesh
+candidates by map in each requested mode, no parse findings.
+Open: root/cross-container loader state, shared models, indices and native pixels.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Three-map archive-local prelit sweep — 2026-10-03
 
 Completed:196 W3D members and2,709 mesh headers inspected across Tutorial/M13/M01.

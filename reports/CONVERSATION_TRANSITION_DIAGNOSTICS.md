@@ -29,3 +29,9 @@ Six focused source checks pass, including zero-fuzz replay, numeric identity,
 save exclusion, mutex/owner boundaries, overflow and default opt-in. C++
 concurrency, native layout, performance and actual callback outcomes remain
 unverified under the build/launch hold. Native mission/runtime gates remain0/10.
+
+The existing C++ recorder regression now includes concurrent producers sharing
+engine/action IDs but using different instance tokens, exact queue capacity,
+overflow count, completion after draining, default-disabled collection and
+token survival across resets. These cases are prepared only: they have not
+been compiled or run. Source checks cannot establish their runtime result.

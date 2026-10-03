@@ -117,6 +117,48 @@ int main()
 		contents.find("candidate-B") != std::string::npos,
 		"bounded event snapshot")) return 1;
 	A35_Campaign_Flight_Shutdown();
+
+	// Prepared regression only: execute when compilation is permitted.
+	const uint64_t first_instance = A35_Campaign_Flight_Allocate_Conversation_Instance();
+	A35_Campaign_Flight_Reset("conversation-off", directory, "", "M13.mix", "M13.mix");
+	A35_Campaign_Flight_Conversation_Transition(false, first_instance, 1, 7, 0, 100, 0.0F, 0);
+	if (!Check(A35_Campaign_Flight_Flush("checkpoint"), "disabled conversation flush")) return 1;
+	if (!Check(Read_File(events, contents) && Line_Count(contents) == 1U &&
+		contents.find("remark_scheduled") == std::string::npos,
+		"conversation collection is disabled by default")) return 1;
+	A35_Campaign_Flight_Shutdown();
+	A35_Campaign_Flight_Reset("conversation-on", directory, "", "M13.mix", "M13.mix", true);
+	const uint64_t second_instance = A35_Campaign_Flight_Allocate_Conversation_Instance();
+	if (!Check(first_instance != 0U && second_instance > first_instance,
+		"instance token survives session reset")) return 1;
+	std::thread producer_one([first_instance]() {
+		for (int32_t remark = 0; remark < 64; ++remark)
+			A35_Campaign_Flight_Conversation_Transition(false, first_instance, 1, 7,
+				remark, 100, 0.0F, 0);
+	});
+	std::thread producer_two([second_instance]() {
+		for (int32_t remark = 0; remark < 64; ++remark)
+			A35_Campaign_Flight_Conversation_Transition(false, second_instance, 1, 7,
+				remark, 100, 1.0F, 0);
+	});
+	producer_one.join();
+	producer_two.join();
+	A35_Campaign_Flight_Conversation_Transition(true, second_instance, 1, 7, 64, 0, 0.0F, 3);
+	if (!Check(A35_Campaign_Flight_Flush("checkpoint"), "concurrent conversation flush")) return 1;
+	if (!Check(Read_File(events, contents) && Line_Count(contents) == 130U &&
+		contents.find("queue_overflow") != std::string::npos &&
+		contents.find("unretained=1") != std::string::npos &&
+		contents.find("instance=" + std::to_string(first_instance)) != std::string::npos &&
+		contents.find("instance=" + std::to_string(second_instance)) != std::string::npos &&
+		contents.find("event_sequence") != std::string::npos,
+		"concurrent producers retain128 transitions and report overflow")) return 1;
+	A35_Campaign_Flight_Conversation_Transition(true, second_instance, 1, 7, 64, 0, 0.0F, 3);
+	if (!Check(A35_Campaign_Flight_Flush("checkpoint"), "completion after drain")) return 1;
+	if (!Check(Read_File(events, contents) && Line_Count(contents) == 131U &&
+		contents.find("owner_finished") != std::string::npos &&
+		contents.find("reason=3") != std::string::npos,
+		"completion reason retained after queue drain")) return 1;
+	A35_Campaign_Flight_Shutdown();
 	remove(events.c_str());
 	remove(frames.c_str());
 	remove(log_tail.c_str());

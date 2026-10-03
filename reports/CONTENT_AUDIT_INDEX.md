@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Completion linkage: [original campaign and objective owners](MISSION_COMPLETION_OWNER_REVIEW.md)
+traces the M13 helper success callback through the native latch, original score/
+movie routing and bounded campaign-state handoff. No dropped success forwarding
+was established. Natural ending delivery, inventory restoration, objective
+coverage and failure/restart behavior remain unverified; no build or launch.
+
 Deeper voice work: [soldier dialogue and original event routes](MISSION_VOICE_ROUTE_COVERAGE.md)
 links global voice findings to preset/serialized options without assuming
 playback. Most candidates are DIE tables with no direct Combat caller;

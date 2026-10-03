@@ -2,6 +2,10 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 surface conversion batch: eight CPU decode/encode format paths pinned to
+source evidence. GPU upload and original value fidelity remain open. Totals
+73 missing, 36 replaced, 2,970 unknown; ten tests/reproduction pass.
+
 S2 engine-format expansion: 26 previously omitted WW3D_FORMAT_* symbols and
 461 references added, including sentinels. Conversion/upload support remains
 unclassified. Totals 3,079 rows: 73 missing, 28 replaced, 2,978 unknown.

@@ -1,5 +1,14 @@
 # S2 renderer features — inventory in progress
 
+CPU surface conversion review covers eight formats: A8R8G8B8, X8R8G8B8,
+R8G8B8, A4R4G4B4, A1R5G5B5, R5G6B5, A8 and L8. Decode/encode helpers
+and capability gates accept these formats; packed 16-bit reads assemble bytes
+explicitly in little-endian order. These rows describe CPU conversion paths,
+not complete texture/GPU support. Channel order, quantization, alpha thresholds,
+luminance weighting, pitch/mip bounds and upload semantics still need validation.
+Totals: 73 missing, 36 boundary-replaced, 2,970 unknown across 3,079 rows.
+Ten inventory tests and repeated generation pass; no C++ behavior changed.
+
 Engine-format discovery now includes WW3D_FORMAT_* alongside DirectX format
 tokens. It adds 26 symbols and 461 references, including bump formats and
 UNKNOWN/COUNT sentinels; this is not a count of supported texture formats.

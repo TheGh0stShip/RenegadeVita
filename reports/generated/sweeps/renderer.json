@@ -259,7 +259,7 @@
     "tools/audit_sweep_renderer.py": "3e341761d89459c176b580d622fdd881fb081a1b1e19b1dd7bdda32537c1eb3b",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/renderer.json": "4a6de29d884257954f169a6af3202cc8959fac9f1bd6c746eea75aa2da7a7964"
+    "tools/sweep_reviews/renderer.json": "8247b62de861143a74dccc5f5cc1d8ceeecaa34569426df51bbee6acb4762ccd"
   },
   "review_identity_issues": [],
   "rows": [
@@ -33637,9 +33637,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -33712,8 +33713,29 @@
           "line": 1743
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_A1R5G5B5"
+      },
       "row_id": "9954d4e0ae20e29a9389728ad5e57bd618e38860036034e895f024ef7a398a96",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_A1R5G5B5",
       "symbol_role": "value_or_layout_token"
     },
@@ -33749,9 +33771,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -33814,15 +33837,37 @@
           "line": 1742
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_A4R4G4B4"
+      },
       "row_id": "0c5b1638c734c53f364de29c40498f65d2e8e8447a20e5f46b4f8f3e12829dce",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_A4R4G4B4",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -33880,8 +33925,29 @@
           "line": 1743
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_A8"
+      },
       "row_id": "c49bc61058534f241bc5c1e7e0dcf61c9d8b045bf92ccef36f3c3b071e7fe177",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_A8",
       "symbol_role": "value_or_layout_token"
     },
@@ -33994,9 +34060,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -34104,8 +34171,29 @@
           "line": 1741
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_A8R8G8B8"
+      },
       "row_id": "52f7820d2912f872095170c398835d3714bb050581327369e6d39fa0a19276bf",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_A8R8G8B8",
       "symbol_role": "value_or_layout_token"
     },
@@ -34594,9 +34682,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -34644,8 +34733,29 @@
           "line": 504
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_L8"
+      },
       "row_id": "6f4c8ea415a034ca5d6737ca4b3acaeff57f3838a1b3cb61b039140a74c3a976",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_L8",
       "symbol_role": "value_or_layout_token"
     },
@@ -34753,9 +34863,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -34828,15 +34939,37 @@
           "line": 502
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_R5G6B5"
+      },
       "row_id": "721514e057b9b2e00c1809d636bab41300baabcc86702d256f2b4f410ccc01cc",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_R5G6B5",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -34899,8 +35032,29 @@
           "line": 499
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_R8G8B8"
+      },
       "row_id": "d8412fbc888c793f1741542c13a5eed95739106abbbd4573412cd22fc2ebe2b2",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_R8G8B8",
       "symbol_role": "value_or_layout_token"
     },
@@ -35173,9 +35327,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
       "references": [
         {
           "column": 8,
@@ -35238,8 +35393,29 @@
           "line": 498
         }
       ],
+      "review": {
+        "acceptance_open": "Compare channel order, quantization, alpha/luminance semantics and pitch/mip bounds against original behavior; verify upload path and representative Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified."
+        ],
+        "behavior": "CPU surface pixel decode and encode helpers contain this format, and conversion capability gates accept it. Packed 16-bit formats use explicit little-endian byte assembly. Conversion includes quantization, alpha thresholds or luminance weighting where applicable. This review covers CPU conversion only; it does not prove complete texture allocation, mip upload, compressed loading, GPU format or retail content support.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:344-510",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:621-690 and :782-805"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
+        "original_owner": "Original DX8 surface copy/texture boundary",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_X8R8G8B8"
+      },
       "row_id": "94d0b80fe804015a86b4f10256b4663f50a3a264fb829b089349b232ccb9966b",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_X8R8G8B8",
       "symbol_role": "value_or_layout_token"
     },
@@ -47887,9 +48063,9 @@
       "required_feature": 28
     },
     "by_status": {
-      "boundary_replaced": 28,
+      "boundary_replaced": 36,
       "missing": 73,
-      "unknown": 2978
+      "unknown": 2970
     },
     "candidate_roles": {
       "prototype": 14,

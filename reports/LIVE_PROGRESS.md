@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Default loiter internal animation identity — 2026-10-03
+
+Completed:authored path→basename→skeleton prefix→WW3D load-on-demand route traced;
+default file header matches skeleton-A name,31 frames at15Hz.
+Evidence:private member/header/source-hash receipt. Other skeletons, per-actor
+collection selection and live animation playback remain open.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Default soldier loiter dependency — 2026-10-03
 
 Completed: active default Loiter root and ordered animation entries added to

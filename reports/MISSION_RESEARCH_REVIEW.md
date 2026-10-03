@@ -1,5 +1,16 @@
 # Complete mission overview review — 2026-10-03
 
+Default loiter lookup now has a narrower asset identity check. The authored
+entry's basename resolves in always.dat; its original W3D animation header has
+31 frames at15Hz and internal name S_A_HUMAN.H_A_A0A0. Original HumanState
+strips the authoring path and w3d suffix; HumanAnimControl supplies the skeleton
+prefix, and WW3D Get_HAnim derives the load-on-demand filename from the suffix
+after the dot. This matches the skeleton-A default route. Other skeletons,
+per-actor collections, actual cache/mount selection and animation playback
+remain unverified. File presence is not proof for every soldier model. The
+private receipt `build/default-loiter-animation-owner-20261003.json` retains
+member and original source hashes. No gameplay or retail changes occurred.
+
 The authored scan now includes the active HumanState default Loiter definition
 as a named/factory-qualified root and retains reached collections' ordered
 animation entries. Repeated and empty entries remain visible rather than being

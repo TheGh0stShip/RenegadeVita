@@ -55,3 +55,14 @@ class HlodDependencies(unittest.TestCase):
                           {'name': 'RIG', 'kind': 'hlod'}])
         with self.assertRaises(ValueError):
             declared_render_names(chunk(0x740, bytes(39)))
+
+    def test_emitter_and_dazzle_prototypes_keep_their_names(self):
+        data = (chunk(0x500, chunk(0x501, bytes(4) + name('SMOKE', 16))) +
+                chunk(0x900, chunk(0x901, b'RIG.HEADLIGHT\0')))
+        self.assertEqual(declared_render_names(data),
+                         [{'name': 'SMOKE', 'kind': 'emitter'},
+                          {'name': 'RIG.HEADLIGHT', 'kind': 'dazzle'}])
+        with self.assertRaises(ValueError):
+            declared_render_names(chunk(0x500, chunk(0x501, bytes(19))))
+        with self.assertRaises(ValueError):
+            declared_render_names(chunk(0x900, chunk(0x901, b'NO_TERMINATOR')))

@@ -66,5 +66,15 @@ def declared_render_names(data):
             if len(node.data) < 40:
                 raise ValueError('short box name header')
             names.append({'name': fixed_name(node.data[8:40]), 'kind': 'box'})
+        elif node.kind == 0x500:
+            headers = [n for n in chunks(node.data) if n.kind == 0x501]
+            if len(headers) != 1 or len(headers[0].data) != 20:
+                raise ValueError('invalid emitter name header')
+            names.append({'name': fixed_name(headers[0].data[4:20]), 'kind': 'emitter'})
+        elif node.kind == 0x900:
+            headers = [n for n in chunks(node.data) if n.kind == 0x901]
+            if len(headers) != 1:
+                raise ValueError('missing or ambiguous dazzle name')
+            names.append({'name': fixed_name(headers[0].data), 'kind': 'dazzle'})
     names.extend({'name': row['name'], 'kind': 'hlod'} for row in inspect_hlod(data))
     return names

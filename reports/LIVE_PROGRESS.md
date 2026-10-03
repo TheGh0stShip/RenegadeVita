@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Cinematic HLOD emitter/dazzle declarations — 2026-10-03
+
+Completed:15 embedded M01 dazzle names plus31 emitter fallback records located;
+all200 inspected child records have declaration candidates, repeated rows retained.
+Evidence: nine combined tests and private member/declaration receipt.
+Limits: bounded cinematic set, not registration/mount/particle/dazzle proof.
+Next: original particle/dazzle resource and native rendering owners.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Same-member HLOD child names — 2026-10-03
 
 Completed: mesh container/name, box and HLOD declarations matched before external

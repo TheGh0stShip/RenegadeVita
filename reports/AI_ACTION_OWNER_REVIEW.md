@@ -332,6 +332,23 @@ at child construction time. Private hashed member receipt:
 `build/cinematic-hlod-same-member-names-20261003.json`.
 No build, launch or native geometry acceptance.
 
+Emitter and dazzle declaration names are now included from their original
+headers. Nine combined tests pass, including short emitter headers and
+unterminated dazzle names. The15 remaining embedded M01 light names match
+dazzle declarations. The29 M13 and two M01 external child records match emitter
+declarations in located filename candidates using original prefix-before-first-
+dot fallback. Repeated child records are retained; counts are not unique assets.
+
+All200 child records in this inspected cinematic set therefore have either a
+same-member declaration candidate (169) or a fallback declaration candidate (31).
+No unresolved child name remains in this bounded set. This does not establish
+prototype registration, mounted archive selection, successful particle/dazzle
+construction, hierarchy attachment, texture delivery or native rendering. It
+does not cover every campaign preset or dynamic model. Private receipt:
+`build/cinematic-hlod-child-fallback-candidates-20261003.json`.
+Next trace particle/dazzle rendering and their resource dependencies through
+the original owners; native visuals remain open under the build/launch hold.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

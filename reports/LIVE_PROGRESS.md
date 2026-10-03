@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S6 dialog reference and build-selection reconciliation — 2026-10-03
+
+Resource-ID definitions separated from source uses. Seven of 81 absent-template
+dialogs have uses in selected Commando units; branches/providers remain open,
+as do included headers and dynamic routes. Source hashes and parent link
+identity retained. Two authored tests pass; no frontend behavior changed.
+
 ## S6 complete Commando dialog declaration denominator — 2026-10-03
 
 112 original dialogs retained; Dev209 templates contain 31 and omit 81.

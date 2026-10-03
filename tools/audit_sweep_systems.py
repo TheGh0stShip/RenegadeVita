@@ -20,7 +20,9 @@ def dialogs(code):
     return rows
 
 
-def inventory(root, template_path):
+def inventory(root, template_path, link=None):
+    link = link or {'rows': []}
+    selected = {row['source'] for row in link['rows'] if row['selected_for_target']}
     original = root / 'upstream/CnC_Renegade/Code/Commando'
     ids = macros((original / 'resource.h', original / 'dialogresource.h'))
     template_bytes = template_path.read_bytes()
@@ -31,9 +33,14 @@ def inventory(root, template_path):
             continue
         code = masked(source.read_text(encoding='latin1'), strings=True)
         for match in re.finditer(r'\bIDD_\w+\b', code):
+            line_start = code.rfind('\n', 0, match.start()) + 1
+            declaration = bool(re.match(r'[ \t]*#[ \t]*define[ \t]+$', code[line_start:match.start()]))
             references.setdefault(match[0], []).append(
                 {'source': source.relative_to(root).as_posix(),
-                 'line': code.count('\n', 0, match.start()) + 1})
+                 'line': code.count('\n', 0, match.start()) + 1,
+                 'reference_kind': 'resource_definition' if declaration else 'source_use',
+                 'source_selected_for_arm_target': source.relative_to(root).as_posix() in selected,
+                 'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest()})
     rows, inputs = [], []
     for resource in sorted(original.glob('*.rc')):
         source = resource.relative_to(root).as_posix()
@@ -46,6 +53,8 @@ def inventory(root, template_path):
                 selected_by_full_port_generator=numeric in CAMPAIGN_IDS | MULTIPLAYER_IDS,
                 present_in_retained_templates=numeric in present,
                 source_reference_candidates=references.get(declaration['name'], []),
+                selected_source_use_candidates=[ref for ref in references.get(declaration['name'], [])
+                    if ref['reference_kind'] == 'source_use' and ref['source_selected_for_arm_target']],
                 status='unknown', evidence_class='source_and_generated_resource_metadata'))
     return {'schema': 1, 'sweep': 'S6', 'complete': False,
             'scope': 'All original Commando/*.rc dialog declarations; staged Commando token references',
@@ -63,8 +72,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--templates', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--link-inventory', type=Path, required=True)
     args = parser.parse_args()
-    result = inventory(Path(__file__).resolve().parents[1], args.templates)
+    link_bytes = args.link_inventory.read_bytes()
+    result = inventory(Path(__file__).resolve().parents[1], args.templates, json.loads(link_bytes))
+    result['link_inventory_sha256'] = hashlib.sha256(link_bytes).hexdigest()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({key: result[key] for key in ('total', 'present_in_retained_templates', 'absent_from_retained_templates')}))

@@ -1,5 +1,16 @@
 # S6 runtime systems — frontend denominator in progress
 
+Reference evidence now distinguishes `#define IDD_*` declarations from source
+uses and cross-checks translation-unit selection against the retained S3 build
+inventory. Seven absent-template resources have uses in selected Commando
+translation units: quit-to-desktop, main multiplayer, multiplayer connecting,
+wheeled/tracked vehicle settings and GameSpy main/options. Selected source uses
+may still be inactive branches or legacy provider routes. Included headers,
+numeric/dynamic routes and other directories remain open, so seven is not a
+complete runtime-need count. Resource definitions alone establish no caller.
+Each reference has its source hash; the report pins the parent link inventory.
+Two authored tests cover definition/use distinction and selected-unit matching.
+
 The initial denominator enumerates all 112 dialog declarations in original
 Commando/*.rc, with source lines, unique identities, resolved IDs and source
 token-reference candidates. Dev209's retained generated template file contains
@@ -18,7 +29,8 @@ Two authored inventory tests and seven existing style/resource tests pass,
 including original frontend equivalence for 31 dialogs and 389 controls.
 No runtime code or resource-selection set changed.
 
-Reproduce with `python3 -m tools.audit_sweep_systems --templates
+Reproduce with `python3 -m tools.audit_sweep_systems --link-inventory
+reports/generated/sweeps/link.json --templates
 <matching-generated-template-file> --output <inventory.json>`.
 
 Next: owner/factory/callback graph and linked symbols; controls/styles and

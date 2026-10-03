@@ -35,13 +35,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 348
+          "line": 348,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 21
+          "line": 21,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -56,11 +63,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 353
+          "line": 353,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 15
+          "line": 15,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 353,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -77,11 +99,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 851
+          "line": 851,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 16
+          "line": 16,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 851,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -98,11 +135,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 865
+          "line": 865,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 17
+          "line": 17,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 865,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -119,9 +171,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 18
+          "line": 18,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -136,13 +192,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 321
+          "line": 321,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 19
+          "line": 19,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -157,13 +220,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 334
+          "line": 334,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 20
+          "line": 20,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -178,11 +248,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmainmenu.cpp",
-          "line": 90
+          "line": 90,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "390a600603e3e8443dd152f84fff11c6566f22e32bb988516f751322f2d92f93"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 14
+          "line": 14,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgmainmenu.cpp",
+          "line": 90,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "390a600603e3e8443dd152f84fff11c6566f22e32bb988516f751322f2d92f93"
         }
       ],
       "status": "unknown",
@@ -199,13 +284,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcontrols.cpp",
-          "line": 59
+          "line": 59,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "47ec5b82294122acefc0a3ded10105243f3cd1f38d78d5cf63dbb5ae987ad50d"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 22
+          "line": 22,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -220,13 +312,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcontroltabs.cpp",
-          "line": 56
+          "line": 56,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6f62b62617ad396b144a402ba57e8aed65b5cfe6df05134c552fa37c44ed9472"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 23
+          "line": 23,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -241,13 +340,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcontroltabs.cpp",
-          "line": 79
+          "line": 79,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6f62b62617ad396b144a402ba57e8aed65b5cfe6df05134c552fa37c44ed9472"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 25
+          "line": 25,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -262,13 +368,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcontroltabs.cpp",
-          "line": 157
+          "line": 157,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6f62b62617ad396b144a402ba57e8aed65b5cfe6df05134c552fa37c44ed9472"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 26
+          "line": 26,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -283,13 +396,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcontroltabs.cpp",
-          "line": 179
+          "line": 179,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6f62b62617ad396b144a402ba57e8aed65b5cfe6df05134c552fa37c44ed9472"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 27
+          "line": 27,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -304,9 +424,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 28
+          "line": 28,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -321,13 +445,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcontroltabs.cpp",
-          "line": 320
+          "line": 320,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6f62b62617ad396b144a402ba57e8aed65b5cfe6df05134c552fa37c44ed9472"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 29
+          "line": 29,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -342,9 +473,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 30
+          "line": 30,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -359,13 +494,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgloadspgame.h",
-          "line": 65
+          "line": 65,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "7e6b1ed14dc1270a8d15861ffc1f4a192664ae62394f84386a60e2c127b98dfd"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 31
+          "line": 31,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -380,11 +522,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevaobjectivestab.cpp",
-          "line": 70
+          "line": 70,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "af50c1220c02d1e92ff7d3069ddb43d5bad1ea24552da622a87d91450c5cd3ed"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 32
+          "line": 32,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgevaobjectivestab.cpp",
+          "line": 70,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "af50c1220c02d1e92ff7d3069ddb43d5bad1ea24552da622a87d91450c5cd3ed"
         }
       ],
       "status": "unknown",
@@ -401,13 +558,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevamaptab.h",
-          "line": 62
+          "line": 62,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "2a12deec61a839d6fc260d08a08cb69cc539a9ef07b3d477f239d2814311f77c"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 33
+          "line": 33,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -422,11 +586,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevadatatab.cpp",
-          "line": 57
+          "line": 57,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "3aaf324982f16c22ee39610970a5176fe6328302f718acff9da7125d0e8d2369"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 34
+          "line": 34,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgevadatatab.cpp",
+          "line": 57,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "3aaf324982f16c22ee39610970a5176fe6328302f718acff9da7125d0e8d2369"
         }
       ],
       "status": "unknown",
@@ -443,13 +622,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevacharacterstab.h",
-          "line": 62
+          "line": 62,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "627e4fe3ab7bab48e68231b68c8f452e20882fdfd33ee8041494fd382f7fcf37"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 35
+          "line": 35,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -464,13 +650,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevaweaponstab.h",
-          "line": 62
+          "line": 62,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "1c38b7eb8daa353cf523fb96bb256a7d6b5556ff12a5482c4a2f3acda02f8536"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 36
+          "line": 36,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -485,13 +678,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevavehiclestab.h",
-          "line": 62
+          "line": 62,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "120a6f91888db2460d63eb9a815809c812f42ce69cebb33c4539047d24bf1d3a"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 37
+          "line": 37,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -506,13 +706,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevabuildingstab.h",
-          "line": 62
+          "line": 62,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "60f74f21c6e8b4a7d5c17969ebc48c0f76e2a900412585c74b0af628d98582c6"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 38
+          "line": 38,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -527,11 +734,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgevaencyclopedia.cpp",
-          "line": 83
+          "line": 83,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "490662fe75909df33c749f565eada3fbd71cf940e990787133e3f41a9b9e761e"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 39
+          "line": 39,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgevaencyclopedia.cpp",
+          "line": 83,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "490662fe75909df33c749f565eada3fbd71cf940e990787133e3f41a9b9e761e"
         }
       ],
       "status": "unknown",
@@ -548,15 +770,33 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 760
+          "line": 760,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 393
+          "line": 393,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 40
+          "line": 40,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 760,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -573,13 +813,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 408
+          "line": 408,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 41
+          "line": 41,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -594,9 +841,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 42
+          "line": 42,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -611,9 +862,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 43
+          "line": 43,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -628,9 +883,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 44
+          "line": 44,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -645,13 +904,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 492
+          "line": 492,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 45
+          "line": 45,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -666,13 +932,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 425
+          "line": 425,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 47
+          "line": 47,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -687,23 +960,61 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgMPConnect.cpp",
-          "line": 99
+          "line": 99,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "e771a6944f5a4e61b2f9dfa1e9aa19ad50d9ccf9afa89eef6d54273cffeb68be"
         },
         {
           "source": "staging/commando/cnetwork.cpp",
-          "line": 356
+          "line": 356,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "1f6daad482d64d828f0dfbd7c7e19d8a8c28ee4fc043eef1c9d1e3909b77e723"
         },
         {
           "source": "staging/commando/gameoptionsevent.cpp",
-          "line": 94
+          "line": 94,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "bb1d7a26cd29c378a37610383158fbd5a3444b6d70008c77e9a1ba5b4dbf26a1"
         },
         {
           "source": "staging/commando/gameoptionsevent.cpp",
-          "line": 205
+          "line": 205,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "bb1d7a26cd29c378a37610383158fbd5a3444b6d70008c77e9a1ba5b4dbf26a1"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 46
+          "line": 46,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/cnetwork.cpp",
+          "line": 356,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "1f6daad482d64d828f0dfbd7c7e19d8a8c28ee4fc043eef1c9d1e3909b77e723"
+        },
+        {
+          "source": "staging/commando/gameoptionsevent.cpp",
+          "line": 94,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "bb1d7a26cd29c378a37610383158fbd5a3444b6d70008c77e9a1ba5b4dbf26a1"
+        },
+        {
+          "source": "staging/commando/gameoptionsevent.cpp",
+          "line": 205,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "bb1d7a26cd29c378a37610383158fbd5a3444b6d70008c77e9a1ba5b4dbf26a1"
         }
       ],
       "status": "unknown",
@@ -720,13 +1031,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmultiplayoptions.cpp",
-          "line": 59
+          "line": 59,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "b6760ab5f28c884a75d057b8b6b119e775ceafa608a1143ba9ae4588e6a48494"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 50
+          "line": 50,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -741,13 +1059,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcharacteroptions.cpp",
-          "line": 58
+          "line": 58,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "8f8e3302d76e7a80f106f780393088ea5982fa7daf5a7b198b039e3ccf4df059"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 51
+          "line": 51,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -762,13 +1087,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcheatoptions.cpp",
-          "line": 48
+          "line": 48,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "f174f0be822bdb3ac518ea82e5a7614ab1022a5a274315ce1d7f6ef3e4ab84b2"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 52
+          "line": 52,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -783,11 +1115,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgtechoptions.cpp",
-          "line": 51
+          "line": 51,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "640add8a01a665ccc2834f6e01598b39295128d716cdde5d40f48560d9cf55ff"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 53
+          "line": 53,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgtechoptions.cpp",
+          "line": 51,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "640add8a01a665ccc2834f6e01598b39295128d716cdde5d40f48560d9cf55ff"
         }
       ],
       "status": "unknown",
@@ -804,13 +1151,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmovieoptions.cpp",
-          "line": 53
+          "line": 53,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "49032fb0849ec72e432d5c0780c477d46b93c52c2a57a8891897e5f68d7bea03"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 54
+          "line": 54,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -825,13 +1179,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgpreviewoptions.cpp",
-          "line": 47
+          "line": 47,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "925c837dfdff84736f8463d1d9d462311d7c0108e2415ecdce734d61cb51327e"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 55
+          "line": 55,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -846,13 +1207,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcredits.cpp",
-          "line": 48
+          "line": 48,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "21235a4034e32821076107c5c7a99e4366c1bb187e7b8e9867026ebb21902fb1"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 56
+          "line": 56,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -867,13 +1235,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmplangamelist.cpp",
-          "line": 89
+          "line": 89,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "1bb3aba648bd1e7fdc33f72d821ae7f53340edba608164d49a767eea329900e7"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 58
+          "line": 58,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -888,9 +1263,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 59
+          "line": 59,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -905,13 +1284,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmplanhostoptions.cpp",
-          "line": 73
+          "line": 73,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "38e366f9d045797a992bf4d86f64d80ddd0c5aed9cd6c9581a001b40876111d8"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 60
+          "line": 60,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -926,13 +1312,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmplanhostoptions.cpp",
-          "line": 319
+          "line": 319,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "38e366f9d045797a992bf4d86f64d80ddd0c5aed9cd6c9581a001b40876111d8"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 61
+          "line": 61,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -947,13 +1340,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmplanhostoptions.cpp",
-          "line": 621
+          "line": 621,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "38e366f9d045797a992bf4d86f64d80ddd0c5aed9cd6c9581a001b40876111d8"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 62
+          "line": 62,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -968,13 +1368,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmplanhostoptions.cpp",
-          "line": 1595
+          "line": 1595,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "38e366f9d045797a992bf4d86f64d80ddd0c5aed9cd6c9581a001b40876111d8"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 63
+          "line": 63,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -989,13 +1396,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmplanhostoptions.cpp",
-          "line": 1007
+          "line": 1007,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "38e366f9d045797a992bf4d86f64d80ddd0c5aed9cd6c9581a001b40876111d8"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 64
+          "line": 64,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1010,13 +1424,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgPasswordPrompt.cpp",
-          "line": 93
+          "line": 93,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "90072033390c232fd30436aa661f56d6f7eb7a090cb0278b0996e41e594dbff8"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 65
+          "line": 65,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1031,9 +1452,13 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 66
+          "line": 66,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1048,13 +1473,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgserversaveload.cpp",
-          "line": 312
+          "line": 312,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6438e46e2252a66871c7b3cf3121c7dc9f3d0a0cbf9fa5a8283c10b7053edb4f"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 67
+          "line": 67,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1069,13 +1501,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmplanhostoptions.h",
-          "line": 310
+          "line": 310,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6586f98b239110d64bf46b0611fe922518399a06fff8545ebfc2facc73535ebb"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 69
+          "line": 69,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1090,13 +1529,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolmain.cpp",
-          "line": 67
+          "line": 67,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "a0fedddaa00b5db00316f1c24b35413ee91fe00927479672eab3105b128f2182"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 72
+          "line": 72,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1111,13 +1557,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolbuddies.cpp",
-          "line": 96
+          "line": 96,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "591d3d770d520c84cfc526b4a217eaebb2097ad3c7bc213252f613ca8229d7ef"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 74
+          "line": 74,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1132,13 +1585,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolquickmatchoptions.cpp",
-          "line": 56
+          "line": 56,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "886485ff198cb6b53cc7461ab81d2cddedde8ef06a6e2d39d0be005965aaca07"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 75
+          "line": 75,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1153,13 +1613,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolgamelist.cpp",
-          "line": 152
+          "line": 152,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ecc93dd61e9f748a7b0c4de1df74587f1f07cb8565f81c5eb55066f44a0e5929"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 78
+          "line": 78,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1174,13 +1641,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolpagebuddy.cpp",
-          "line": 53
+          "line": 53,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "da1fd7a247b53f60d057980987cd7a21f2a045b4a71037c354636fe4854a7bf4"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 79
+          "line": 79,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1195,13 +1669,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolbuddylistpopup.cpp",
-          "line": 51
+          "line": 51,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "39171fdb3e960db4cb8400d627c8914fd6ab4b18ba3b8d7263fa4edc19dfcef1"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 80
+          "line": 80,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1216,13 +1697,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolpagereply.cpp",
-          "line": 127
+          "line": 127,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "7762aabd0e519417806bbfb0934d2d5e19b430ceec39b6da01fb9fc3600dfe86"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 81
+          "line": 81,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1237,13 +1725,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwoladdbuddy.cpp",
-          "line": 53
+          "line": 53,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6e0163d69b4e71ab78a1dc286253ab1eaf60c9228ba375779d31c584fb66cfad"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 82
+          "line": 82,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1258,13 +1753,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwoldeletebuddy.cpp",
-          "line": 48
+          "line": 48,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "1d84273d688d0e877e052f0bec8d64a93ae994ac64ccd9bd97eb3a326b299330"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 83
+          "line": 83,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1279,13 +1781,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolignorelist.cpp",
-          "line": 50
+          "line": 50,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "b7698763c1ece1eed6785a7140eaf669ec36e2bfcde877352dc375c6125d9e9c"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 84
+          "line": 84,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1300,13 +1809,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwoladdignoreentry.cpp",
-          "line": 63
+          "line": 63,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "07d0b84ef73813e5aba3e4312dbe328694ce17d49f92af370b0caa9f52bbb408"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 85
+          "line": 85,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1321,13 +1837,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolchat.cpp",
-          "line": 75
+          "line": 75,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "96b6198be8e9687bc9992b06e043984e0513ea4d1addc76344e848db7878c0d6"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 86
+          "line": 86,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1342,13 +1865,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 514
+          "line": 514,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 76
+          "line": 76,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1363,13 +1893,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 533
+          "line": 533,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 77
+          "line": 77,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1384,13 +1921,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgWebPage.cpp",
-          "line": 124
+          "line": 124,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "8a8fd6db8f306dce1f91d34b9f03036105f4c16857f2f6236f6729c0a1d7bfb7"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 87
+          "line": 87,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1405,19 +1949,47 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgMessageBox.cpp",
-          "line": 134
+          "line": 134,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "4f94faee9eee7035e9f7f3fbb46b4d5d6feea536bfab8db326a8d19c38b68199"
         },
         {
           "source": "staging/commando/DlgMessageBox.cpp",
-          "line": 181
+          "line": 181,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "4f94faee9eee7035e9f7f3fbb46b4d5d6feea536bfab8db326a8d19c38b68199"
         },
         {
           "source": "staging/commando/DlgRestart.cpp",
-          "line": 91
+          "line": 91,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "3d1546b63ab6a7bae28d0830df814b180d7c9a350ad7095f30467ca302132053"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 90
+          "line": 90,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/DlgMessageBox.cpp",
+          "line": 134,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "4f94faee9eee7035e9f7f3fbb46b4d5d6feea536bfab8db326a8d19c38b68199"
+        },
+        {
+          "source": "staging/commando/DlgMessageBox.cpp",
+          "line": 181,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "4f94faee9eee7035e9f7f3fbb46b4d5d6feea536bfab8db326a8d19c38b68199"
         }
       ],
       "status": "unknown",
@@ -1434,11 +2006,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgMessageBox.cpp",
-          "line": 182
+          "line": 182,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "4f94faee9eee7035e9f7f3fbb46b4d5d6feea536bfab8db326a8d19c38b68199"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 89
+          "line": 89,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/DlgMessageBox.cpp",
+          "line": 182,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "4f94faee9eee7035e9f7f3fbb46b4d5d6feea536bfab8db326a8d19c38b68199"
         }
       ],
       "status": "unknown",
@@ -1455,13 +2042,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgsavegame.h",
-          "line": 65
+          "line": 65,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "80c4846f0ea99368fe0bab510631ebbc466139ff9a8a31cb71d459e3db1ba829"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 91
+          "line": 91,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1476,13 +2070,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwoldeleteignoreentry.cpp",
-          "line": 48
+          "line": 48,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "86c9fb312865e1f0e6c9c55bdfab1b914789949baabdf3c6075541547b14d7b9"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 92
+          "line": 92,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1497,13 +2098,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolinvitation.cpp",
-          "line": 50
+          "line": 50,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "691592f257a45a6ad6985462275cba7456f2c9cbe63b637754eaf44c57dbaac3"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 93
+          "line": 93,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1518,13 +2126,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgQuickmatch.cpp",
-          "line": 113
+          "line": 113,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "a326c116a7c3a9597a38e771eec9d4af06a7b021c77c6efaa6bacc74f0dda37e"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 94
+          "line": 94,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1539,13 +2154,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgWOLWait.cpp",
-          "line": 193
+          "line": 193,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "da1e4b318e2a96ae35250a829b72282ae1ee34d16c7ca625623d3fd105e359aa"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 95
+          "line": 95,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1560,13 +2182,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcontrolsaveload.cpp",
-          "line": 62
+          "line": 62,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "dd7ff035be6aadf451a4b56be2f5e49da9f89d94012ea4846ac95f8c46715441"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 96
+          "line": 96,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1581,13 +2210,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgWOLLogon.cpp",
-          "line": 108
+          "line": 108,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "f54a5d42acca89dab0949fa28f59b5a4c2b5b978faf20069be0f992bb939cd20"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 97
+          "line": 97,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1602,13 +2238,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgWOLSettings.cpp",
-          "line": 110
+          "line": 110,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "08af50db0dff401d56d034fdc50ba5f34dee35b1943534fd419ca5f4b7eb4a7d"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 98
+          "line": 98,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1623,11 +2266,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcncpurchasemenu.cpp",
-          "line": 98
+          "line": 98,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "11ebe151a32c034115696e9c8e65f63c408b2d422be433a929c8280725f38168"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 99
+          "line": 99,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgcncpurchasemenu.cpp",
+          "line": 98,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "11ebe151a32c034115696e9c8e65f63c408b2d422be433a929c8280725f38168"
         }
       ],
       "status": "unknown",
@@ -1644,11 +2302,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcncpurchasemainmenu.cpp",
-          "line": 86
+          "line": 86,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "aefa0d791a8b31811e164a4d3f30c2aa682882009427f849f75838367b54438a"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 101
+          "line": 101,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgcncpurchasemainmenu.cpp",
+          "line": 86,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "aefa0d791a8b31811e164a4d3f30c2aa682882009427f849f75838367b54438a"
         }
       ],
       "status": "unknown",
@@ -1665,13 +2338,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgsidebarhelp.cpp",
-          "line": 48
+          "line": 48,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "c7ce9991b4d6464fbcdd568310b7a6c008043d1306a0ddcf8dc6dc44031f76ee"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 103
+          "line": 103,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1686,13 +2366,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolautologinprompt.cpp",
-          "line": 48
+          "line": 48,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "484a820caaea05c14cce3bb8d3640345eacef9ad71f731d7dea7c341aac24d93"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 104
+          "line": 104,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1707,13 +2394,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwolmotd.cpp",
-          "line": 49
+          "line": 49,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "0740a5af4f81e597e58a86e3fd664dda8fd5a3e31c1efb2643297c62956d32ba"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 105
+          "line": 105,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1728,13 +2422,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlginternetoptions.cpp",
-          "line": 50
+          "line": 50,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "a7e24c70670a869326837e021071e69cefa755073a330d515cb9b8b12b24781a"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 106
+          "line": 106,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1749,13 +2450,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpwollocalenag.cpp",
-          "line": 49
+          "line": 49,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "0435901b11741310749121f8c22a1f78c1b5877b3c948d78598d20ec9faafe7c"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 107
+          "line": 107,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1770,11 +2478,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpingamechat.cpp",
-          "line": 736
+          "line": 736,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "cedb159b835045863684ce1e8ce8d271650d7a2bc050e48aaaf7547ef09f71ee"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 108
+          "line": 108,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgmpingamechat.cpp",
+          "line": 736,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "cedb159b835045863684ce1e8ce8d271650d7a2bc050e48aaaf7547ef09f71ee"
         }
       ],
       "status": "unknown",
@@ -1791,11 +2514,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/renegadeplayerterminal.cpp",
-          "line": 134
+          "line": 134,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "6bbc764c5e190045ab6b842533c9b86865eb53bc5fcc7d36221c7fe88358fc29"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 109
+          "line": 109,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/renegadeplayerterminal.cpp",
+          "line": 134,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "6bbc764c5e190045ab6b842533c9b86865eb53bc5fcc7d36221c7fe88358fc29"
         }
       ],
       "status": "unknown",
@@ -1812,11 +2550,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgconfigaudiotab.cpp",
-          "line": 69
+          "line": 69,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "a50060034f3aeab2d48d2f816654030c98a5d44a84a48c7af130c043062a1023"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 110
+          "line": 110,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgconfigaudiotab.cpp",
+          "line": 69,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "a50060034f3aeab2d48d2f816654030c98a5d44a84a48c7af130c043062a1023"
         }
       ],
       "status": "unknown",
@@ -1833,11 +2586,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgconfigperformancetab.cpp",
-          "line": 142
+          "line": 142,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "b7d21a89127b15dc49febdebf15372bed250f269c363897c64959ca586d243a5"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 111
+          "line": 111,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgconfigperformancetab.cpp",
+          "line": 142,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "b7d21a89127b15dc49febdebf15372bed250f269c363897c64959ca586d243a5"
         }
       ],
       "status": "unknown",
@@ -1854,11 +2622,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgconfigvideotab.cpp",
-          "line": 61
+          "line": 61,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "db5b35c1fa8bdf906ec66717e594fb9b6dfa83917e3f11d646ce488201194cdf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 112
+          "line": 112,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgconfigvideotab.cpp",
+          "line": 61,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "db5b35c1fa8bdf906ec66717e594fb9b6dfa83917e3f11d646ce488201194cdf"
         }
       ],
       "status": "unknown",
@@ -1875,13 +2658,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/cdverify.cpp",
-          "line": 63
+          "line": 63,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "4b3c939b1f13c3b2fd36a3b0cb8e7e20ca1c259335b4534c507596a788a212fd"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 5
+          "line": 5,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1896,11 +2686,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 1727
+          "line": 1727,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 113
+          "line": 113,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 1727,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -1917,11 +2722,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 1847
+          "line": 1847,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 114
+          "line": 114,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 1847,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -1938,13 +2758,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpingameteamchat.h",
-          "line": 57
+          "line": 57,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "cea75139a0890776076ba4048f569da2393e1372e901edd38efb366bdcd6b435"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 116
+          "line": 116,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1959,13 +2786,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgDownload.cpp",
-          "line": 125
+          "line": 125,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "4de863a3f37c90121885c853403060407d00879d721dafaa6eb3b678998a9053"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 117
+          "line": 117,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -1980,11 +2814,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpingamechat.cpp",
-          "line": 68
+          "line": 68,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "cedb159b835045863684ce1e8ce8d271650d7a2bc050e48aaaf7547ef09f71ee"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 115
+          "line": 115,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlgmpingamechat.cpp",
+          "line": 68,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "cedb159b835045863684ce1e8ce8d271650d7a2bc050e48aaaf7547ef09f71ee"
         }
       ],
       "status": "unknown",
@@ -2001,11 +2850,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/resource.h",
-          "line": 118
+          "line": 118,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         },
         {
           "source": "staging/commando/scorescreen.cpp",
-          "line": 153
+          "line": 153,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "01b0119207511bbb1bec2a66ac72b37d2a5cf68ff4514a6bb347309b34abac20"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/scorescreen.cpp",
+          "line": 153,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "01b0119207511bbb1bec2a66ac72b37d2a5cf68ff4514a6bb347309b34abac20"
         }
       ],
       "status": "unknown",
@@ -2022,11 +2886,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlghelpscreen.cpp",
-          "line": 65
+          "line": 65,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "58da62a1fe2649887e6c4151adbc7604dd6d0d504cb20457bee83c7ec81dec6d"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 122
+          "line": 122,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dlghelpscreen.cpp",
+          "line": 65,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "58da62a1fe2649887e6c4151adbc7604dd6d0d504cb20457bee83c7ec81dec6d"
         }
       ],
       "status": "unknown",
@@ -2043,13 +2922,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcncteaminfo.cpp",
-          "line": 83
+          "line": 83,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "763f6b7b95aa64733f4e1be6c7b57e23d245b367a8c5e477c7b6d8f68157a4db"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 119
+          "line": 119,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2064,13 +2950,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcncbattleinfo.cpp",
-          "line": 140
+          "line": 140,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "5ecd384427568c1696bf13b2a961d39b7918909042f6169565878cc392ab490c"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 121
+          "line": 121,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2085,13 +2978,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgWOLAutoStart.cpp",
-          "line": 62
+          "line": 62,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ae426010fe93566fda741e504d22933b0bb319ccaec7dc46d870824d3dcfc84c"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 123
+          "line": 123,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2106,13 +3006,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcncreference.cpp",
-          "line": 78
+          "line": 78,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "b32831d244a7d0041ee9395d01bceb77048d60c6d0aa6f9e0200ca51c4c6d0f5"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 124
+          "line": 124,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2127,13 +3034,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpslaveservers.cpp",
-          "line": 130
+          "line": 130,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "333c2e91f81cd6ef1d0cf37f81c607ed2356fb37ccf2227c8ae07475c05ea307"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 126
+          "line": 126,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2148,13 +3062,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgMPTeamSelect.cpp",
-          "line": 139
+          "line": 139,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "5f382e074b219a8bdafeb7a654bd8cb47d209291020c889f1380e2b3ab817a4a"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 125
+          "line": 125,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2169,13 +3090,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcncwinscreen.cpp",
-          "line": 89
+          "line": 89,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "48e32efa4588271c038548716c8a718b585447f0bfcfee5d8196792f90d98fdc"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 127
+          "line": 127,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2190,13 +3118,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgcncserverinfo.cpp",
-          "line": 80
+          "line": 80,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "70b909de0aae94399de4ba89d697d75ca99c9dce326d529cbf237aeaaccf209e"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 128
+          "line": 128,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2211,13 +3146,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgserversaveload.cpp",
-          "line": 65
+          "line": 65,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "6438e46e2252a66871c7b3cf3121c7dc9f3d0a0cbf9fa5a8283c10b7053edb4f"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 129
+          "line": 129,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2232,13 +3174,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.h",
-          "line": 301
+          "line": 301,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "ceea5a2c1e7530bceb6476916cd7ab259066f4d22548e88aead8cb2765fdfccf"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 130
+          "line": 130,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2253,13 +3202,20 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dlgmpchangelannickname.cpp",
-          "line": 63
+          "line": 63,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "475fc3ca99ef3dd8bb92d358e0b3f593239f93ae755f5df1b224ab5a15de5052"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 131
+          "line": 131,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     },
@@ -2274,11 +3230,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 411
+          "line": 411,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 132
+          "line": 132,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 411,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -2295,11 +3266,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 596
+          "line": 596,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 133
+          "line": 133,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 596,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -2316,11 +3302,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 149
+          "line": 149,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 135
+          "line": 135,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 149,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -2337,11 +3338,26 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/dialogtests.cpp",
-          "line": 244
+          "line": 244,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 136
+          "line": 136,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
+        }
+      ],
+      "selected_source_use_candidates": [
+        {
+          "source": "staging/commando/dialogtests.cpp",
+          "line": 244,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": true,
+          "source_sha256": "f814f2958a9bc6da4fff7fe34024ad744e588bcbe95cb5ba51200b38d0a2cf24"
         }
       ],
       "status": "unknown",
@@ -2358,15 +3374,23 @@
       "source_reference_candidates": [
         {
           "source": "staging/commando/DlgMPConnectionRefused.cpp",
-          "line": 85
+          "line": 85,
+          "reference_kind": "source_use",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "e0ee3565833f982dc19a5c4346b3d35b8c98e03ab362680689c3d746de4896d3"
         },
         {
           "source": "staging/commando/resource.h",
-          "line": 137
+          "line": 137,
+          "reference_kind": "resource_definition",
+          "source_selected_for_arm_target": false,
+          "source_sha256": "241721cde7c5b568e3686fe7dd2a3fe915d6c6a7431703e68f563a29ac9b93ea"
         }
       ],
+      "selected_source_use_candidates": [],
       "status": "unknown",
       "evidence_class": "source_and_generated_resource_metadata"
     }
-  ]
+  ],
+  "link_inventory_sha256": "4d7965995cd92e95b6efc4f1b20bba571f76dbaed73596d926412729c148f87a"
 }

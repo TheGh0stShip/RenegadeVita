@@ -20,12 +20,15 @@ class SystemsSweepTests(unittest.TestCase):
             (original / 'test.rc').write_text('IDD_ONE DIALOG 0,0,1,1\nIDD_TWO DIALOG 0,0,1,1\n')
             staged = root / 'staging/commando'
             staged.mkdir(parents=True)
-            (staged / 'test.cpp').write_text('make(IDD_ONE); // IDD_TWO\n')
+            (staged / 'test.cpp').write_text('make(IDD_ONE); // IDD_TWO\n#define IDD_TWO 101\n')
             templates = root / 'templates.inc'
             templates.write_text('static const unsigned char kDialog100[] = {};')
             result = inventory(root, templates)
             self.assertEqual((result['total'], result['present_in_retained_templates'], result['absent_from_retained_templates']), (2, 1, 1))
             self.assertEqual(len(result['rows'][0]['source_reference_candidates']), 1)
-            self.assertEqual(result['rows'][1]['source_reference_candidates'], [])
+            self.assertEqual(result['rows'][1]['source_reference_candidates'][0]['reference_kind'], 'resource_definition')
+            linked = inventory(root, templates, {'rows': [{'source': 'staging/commando/test.cpp', 'selected_for_target': True}]})
+            self.assertEqual(len(linked['rows'][0]['selected_source_use_candidates']), 1)
+            self.assertEqual(linked['rows'][1]['selected_source_use_candidates'], [])
             self.assertTrue(all(r['status'] == 'unknown' for r in result['rows']))
             self.assertEqual(result, inventory(root, templates))

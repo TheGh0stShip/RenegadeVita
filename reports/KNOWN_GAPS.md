@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 authored-binding audit: parameter lists decode without mismatches,
+and all discovered script names have shipped source owners. Typed definition
+references and literal object-ID lifetimes remain incomplete; M13 has a
+cross-mission M08 callback targeting unlocated ID100389. M01 ConDrop zone119825
+references the still-unlocated X01_ConYardDrop.txt. These are retained review
+leads, not proof of native mission failure. 55 Python/source checks pass; no
+build or launch. See [binding audit](AUTHORED_MISSION_BINDINGS.md).
+
 2026-10-03 integration follow-up: mission-rank user-file storage and isolation
 of the original static-link `strtrim` collision are implemented in source,
 uncompiled and untested in C++. Actual-target manifest and diagnostic checks

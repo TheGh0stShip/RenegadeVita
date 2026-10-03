@@ -86,6 +86,40 @@ class M13LevelOwnersTests(unittest.TestCase):
         self.assertEqual(result["script_records"][0]["owner"],
                          {"instance_id": 1500015, "definition_id": 82080057})
 
+    def test_parameters_and_spawner_ids_do_not_replace_owner_tokens(self):
+        script = chunk(131001135, micro(1, b"Bound\0") + micro(2, b"100,sequence.txt,\0") +
+                       micro(4, integer(0xffffffff)))
+        spawner = chunk(1014991054, micro(1, integer(0xfedcba98)) + micro(3, integer(73)) +
+                        micro(10, b"First\0") + micro(10, b"Second\0") +
+                        micro(11, b"a.txt\0") + micro(11, b"b.txt\0"))
+        result = level_records(chunks(script + spawner))
+        self.assertEqual(result["script_records"][0]["parameters"], "100,sequence.txt,")
+        self.assertEqual(result["script_records"][0]["owner_token"], 0xffffffff)
+        self.assertEqual(result["spawners"][0]["instance_id"], 0xfedcba98)
+        self.assertEqual([r["parameters"] for r in result["script_records"][1:]], ["a.txt", "b.txt"])
+        self.assertEqual(result["script_binding_issues"], [])
+
+    def test_mismatched_parallel_lists_retain_unpaired_values_and_block_closure(self):
+        for body, unpaired in [(micro(10, b"First\0"), []),
+                              (micro(11, b"orphan.txt\0"), ["orphan.txt"])]:
+            data = chunk(1014991054, micro(1, integer(7)) + micro(3, integer(73)) + body)
+            result = level_records(chunks(data))
+            self.assertEqual(len(result["script_binding_issues"]), 1)
+            self.assertEqual(result["script_binding_issues"][0]["unpaired_parameters"], unpaired)
+
+    def test_definition_pairing_uses_loader_ordinals_and_keeps_empty_values(self):
+        body = chunk(627001057, micro(2, b"First\0") + micro(3, b"\0") +
+                     micro(2, b"Second\0") + micro(3, b"a,b,c\0"))
+        result = definitions(chunks(definition(0x40123, 123, body)))[123]
+        self.assertEqual(result["script_bindings"], [{"name": "First", "parameters": ""},
+                         {"name": "Second", "parameters": "a,b,c"}])
+        self.assertEqual(result["script_binding_issues"], [])
+
+    def test_spawner_id_must_have_original_four_byte_width(self):
+        data = chunk(1014991054, micro(1, b"12345678") + micro(3, integer(73)))
+        with self.assertRaises(ValueError):
+            level_records(chunks(data))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,31 @@
 {
+  "authored_mission_bindings_20261003": {
+    "state": "PARAMETERS_AND_ID_PROVENANCE_AUDITED_REFERENCE_GATES_INCOMPLETE",
+    "report": "reports/AUTHORED_MISSION_BINDINGS.md",
+    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
+    "level_bindings": [60, 100, 528],
+    "bindings_with_reached_definitions": [72, 144, 573],
+    "discovered_scripts": [25, 67, 275],
+    "cinematic_candidates": [1, 18, 147],
+    "unlocated_definition_reference_ids": [11, 20, 14],
+    "unlocated_definition_reference_categories": {
+      "shell_eject_physics": [4, 6, 6],
+      "muzzle_flash_physics": [6, 10, 7],
+      "sound_twiddler_alternatives": [1, 4, 1]
+    },
+    "binding_decode_findings": 0,
+    "unknown_discovered_shipped_script_names": 0,
+    "m13_cross_mission_helper": "mx0_a03_nod_ledgedrop.txt attaches M08_Petra_C_Helo; callback ID100389 not located in M13 serialized IDs",
+    "m01_unresolved_cinematic": "X01_ConYardDrop.txt; M01_ConDropZone_JDG serialized on119825",
+    "focused_python_source_tests_passed": 55,
+    "publication_guard_tests_passed": 32,
+    "public_document_validation": "PASS_24_DOCUMENTS",
+    "repository_hygiene": "PASS_NO_VIOLATIONS",
+    "native_or_host_cpp_build_performed": false,
+    "retail_modified": false,
+    "runtime_or_physical_acceptance": false,
+    "execution_restriction": "PRIOR_NO_BUILD_NO_LAUNCH_REMAINS"
+  },
   "static_script_link_and_mission_ranks_20261003": {
     "state": "SOURCE_LINK_COLLISION_ISOLATED_RANK_STORAGE_IMPLEMENTED_UNCOMPILED",
     "report": "reports/STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md",

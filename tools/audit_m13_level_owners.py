@@ -74,10 +74,10 @@ def microchunks(data: bytes) -> list[tuple[int, bytes]]:
     return result
 
 
-def string(data: bytes) -> str:
+def string(data: bytes, encoding: str = "ascii") -> str:
     if not data.endswith(b"\0") or b"\0" in data[:-1]:
         raise ValueError("invalid serialized string")
-    return data[:-1].decode("ascii")
+    return data[:-1].decode(encoding)
 
 
 def u32(data: bytes) -> int:
@@ -86,12 +86,26 @@ def u32(data: bytes) -> int:
     return struct.unpack("<I", data)[0]
 
 
+def script_bindings(fields, name_kind, parameter_kind, offset):
+    """Original loaders append parallel vectors; never collapse repeated IDs."""
+    names = [string(value) for kind, value in fields if kind == name_kind]
+    parameters = [string(value, "latin1") for kind, value in fields if kind == parameter_kind]
+    issues = []
+    if len(names) != len(parameters):
+        issues.append({"kind": "script_parameter_count_mismatch", "offset": offset,
+                       "name_count": len(names), "parameter_count": len(parameters),
+                       "unpaired_parameters": parameters[len(names):]})
+    return [{"name": name, "parameters": parameters[i] if i < len(parameters) else None}
+            for i, name in enumerate(names)], issues
+
+
 def level_records(nodes: list[Chunk]) -> dict:
     scripts = []
     objects = []
     factories = Counter()
     spawners = []
     physics = []
+    binding_issues = []
     object_tokens = {}
     for node in flatten(nodes):
         # Original SimplePersistFactory object's two child chunks identify a
@@ -110,19 +124,32 @@ def level_records(nodes: list[Chunk]) -> dict:
         if node.kind == 131001135:  # ScriptManager::CHUNKID_SCRIPT_HEADER
             fields = dict(microchunks(node.data))
             scripts.append({"name": string(fields[1]), "offset": node.offset,
+                            "parameters": string(fields[2], "latin1") if 2 in fields else None,
+                            "binding_kind": "persisted_script",
                             "owner_token": u32(fields[4]) if 4 in fields else None})
+            if 2 not in fields:
+                binding_issues.append({"kind": "missing_persisted_script_parameters", "offset": node.offset})
         elif node.kind == 910991407:  # BaseGameObj::CHUNKID_VARIABLES
             fields = dict(microchunks(node.data))
             objects.append({"definition_id": u32(fields[2]),
                             "instance_id": u32(fields[3]), "offset": node.offset})
         elif node.kind == 1014991054:  # SpawnerClass::CHUNKID_VARIABLES
             fields = microchunks(node.data)
-            spawners.append({"definition_id": u32(dict(fields)[3]), "offset": node.offset})
-            scripts.extend({"name": string(value), "offset": node.offset, "owner_token": None}
-                           for kind, value in fields if kind == 10)
+            identity = dict(fields)
+            spawner_id = u32(identity[1]) if 1 in identity else None
+            spawners.append({"definition_id": u32(identity[3]), "instance_id": spawner_id,
+                             "offset": node.offset})
+            if spawner_id is None:
+                binding_issues.append({"kind": "missing_spawner_instance_id", "offset": node.offset})
+            bindings, issues = script_bindings(fields, 10, 11, node.offset)
+            binding_issues.extend(issues)
+            scripts.extend({**binding, "offset": node.offset, "owner_token": None,
+                            "binding_kind": "spawner_script", "spawner_id": spawner_id}
+                           for binding in bindings)
     for script in scripts:
         script["owner"] = object_tokens.get(script["owner_token"])
     return {"script_records": scripts, "objects": objects, "spawners": spawners, "physics": physics,
+            "script_binding_issues": binding_issues,
             "persist_factory_counts": {f"0x{k:08x}": v for k, v in sorted(factories.items())},
             "skipped_subsystems": [{"id": "0x00040700", "offset": n.offset}
                                    for n in flatten(nodes) if n.kind == 0x40700]}
@@ -169,6 +196,8 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
             for factory in group.children:
                 identity = []
                 scripts = []
+                bindings = []
+                binding_issues = []
                 references = []
                 for node in flatten(factory.children):
                     if node.kind == 0x100 and not node.children:
@@ -181,10 +210,16 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                                 continue
                             identity.append((u32(fields[1]), name))
                     elif node.kind == 627001057:
-                        scripts.extend(string(value) for kind, value in microchunks(node.data) if kind == 2)
+                        rows, issues = script_bindings(microchunks(node.data), 2, 3, node.offset)
+                        bindings.extend(rows)
+                        binding_issues.extend(issues)
+                        scripts.extend(row["name"] for row in rows)
                     elif node.kind == 1013991543:  # SpawnerDef variables
                         fields = microchunks(node.data)
-                        scripts.extend(string(value) for kind, value in fields if kind == 18)
+                        rows, issues = script_bindings(fields, 18, 19, node.offset)
+                        bindings.extend(rows)
+                        binding_issues.extend(issues)
+                        scripts.extend(row["name"] for row in rows)
                         references.extend(u32(value) for kind, value in fields if kind in (1, 14))
                 # Twiddler::Save writes its alternative preset IDs in the
                 # direct OBJDATA variables, apart from its nested base ID.
@@ -208,6 +243,7 @@ def definitions(nodes: list[Chunk], reference_schema=None) -> dict[int, dict]:
                 if key in result:
                     raise ValueError(f"duplicate definition ID {key}")
                 result[key] = {"name": name, "scripts": scripts,
+                               "script_bindings": bindings, "script_binding_issues": binding_issues,
                                "definition_references": sorted(set(references) - {0}),
                                "factory": f"0x{factory.kind:08x}", "offset": factory.offset}
     return result

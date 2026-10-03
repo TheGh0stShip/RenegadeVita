@@ -1,5 +1,10 @@
 # Capability matrix
 
+2026-10-03 authored-binding audit adds parameter pairing, spawner IDs and
+cinematic script provenance for Tutorial/M13/M01. 55 Python/source checks pass.
+Reference gates and all new native mission/runtime gates remain incomplete;
+no build or launch. See [binding audit](AUTHORED_MISSION_BINDINGS.md).
+
 2026-10-03 integration follow-up: all original campaign DSP code units are
 source-selected; Scripts trim-symbol isolation and original-owner mission-rank
 storage are implemented but uncompiled. 41 static/diagnostic checks pass.

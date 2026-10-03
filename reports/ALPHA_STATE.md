@@ -2,6 +2,14 @@
 
 ## Current diagnostics work — 2026-10-03
 
+The read-only Tutorial/M13/M01 binding audit now retains actual script
+parameters and spawner IDs, follows cinematic script attachments and preserves
+unlocated ID leads even outside discovered bindings. M13 uses an M08 helper;
+M01's missing ConYard text reference is tied to an authored zone. Unlocated
+definition fields are conditional shell/muzzle effects and sound-twiddler
+alternatives. 55 Python/source checks pass; all reference and native mission
+gates remain incomplete. See [binding audit](AUTHORED_MISSION_BINDINGS.md).
+
 The supplied campaign map was reconciled with upstream mission sources and
 both native/host CMake graphs. This exposed seven omitted mission translation
 units, now included through the original Scripts.dsp-derived static source
@@ -19,9 +27,11 @@ multi-session file and is intentionally not merged into the separate 15-frame
 M13 save-reload sidecar bundle. No mission-completion, renderer, or performance
 acceptance is claimed from these findings.
 
-Next automatic action: instrument semantic milestones at the actual original
-M13/M01 trigger and objective owners, retain candidate/archive/session identity
-with each event, then collect and analyze a bounded PSTV route. Focused tests:
+Next source action: classify original callback lifetimes and conditional
+presentation effects, then prepare semantic milestones at the actual M13/M01
+trigger and objective owners with candidate/archive/session identity. The
+existing build/launch hold remains active; bounded runtime collection belongs
+to a later authorized test, not the current automatic action. Focused tests:
 `tools.test_analyze_runtime_gaps`, `tools.test_collect_pstv_runtime_log`, and
 `tools.test_validate_campaign_flight_bundle`.
 

@@ -29,12 +29,25 @@ class DeepContentDependencies:
         self.records = []
         self.missing = set()
         self.edges = []
+        self.script_edges = []
 
     def from_source(self, source, script):
         presets = literal_presets(source)
         names = set(re.findall(r'"([^"\n]+\.txt)"', source, re.I))
+        created, scripts = self.from_text_names(names, script)
+        return presets | created, scripts
+
+    def from_parameters(self, parameters, origin):
+        # The original runtime splits on commas, without CSV quote handling.
+        # Filename-looking parameters are dependency leads, not execution proof.
+        names = {part.strip().strip('"') for part in parameters.split(',')
+                 if part.strip().strip('"').lower().endswith('.txt')}
+        return self.from_text_names(names, origin)
+
+    def from_text_names(self, names, origin):
+        presets = set()
         scripts = set()
-        pending = [(n.lower(), script) for n in sorted(names)]
+        pending = [(n.lower(), origin) for n in sorted(names)]
         while pending:
             name, origin = pending.pop()
             self.edges.append({'from': origin, 'text': name})
@@ -48,7 +61,7 @@ class DeepContentDependencies:
                 self.visited.add(key)
                 data = archive.read_binary(name)
                 count = 0
-                for line in data.decode('latin1').splitlines():
+                for line_number, line in enumerate(data.decode('latin1').splitlines(), 1):
                     parsed = parse_command(line)
                     if parsed is None:
                         continue
@@ -58,6 +71,8 @@ class DeepContentDependencies:
                         presets.add(args[1])
                     if command == 'attach_script' and len(args) >= 2:
                         scripts.add(args[1])
+                        self.script_edges.append({'archive': archive.path.name, 'member': name,
+                                                  'line': line_number, 'script': args[1]})
                     for arg in args:
                         if arg.lower().endswith('.txt'):
                             pending.append((arg.lower(), name))
@@ -67,5 +82,6 @@ class DeepContentDependencies:
 
     def receipt(self):
         return {'text_members': self.records, 'missing_text_names': sorted(self.missing),
+                'script_binding_edges': self.script_edges,
                 'text_edges': [dict(zip(('from', 'text'), e)) for e in sorted({(e['from'], e['text']) for e in self.edges})],
                 'limit': 'Literal calls and text references; collision candidates included conservatively, mount order not asserted.'}

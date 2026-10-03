@@ -1,5 +1,10 @@
 # Content coverage audit index
 
+Latest authored-data work: [mission bindings and ID leads](AUTHORED_MISSION_BINDINGS.md)
+retains parameters, spawner IDs and cinematic script provenance for Tutorial,
+M13 and M01. 55 Python/source checks pass; unresolved reference/route evidence
+remains open. Detailed retail-derived parameter tables stay private.
+
 Latest integration follow-up: [static linkage and mission ranks](STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md)
 records the original trim-symbol collision, strengthened target-selection
 checks and rank-specific user storage. 41 static/diagnostic checks pass; the

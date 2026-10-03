@@ -262,6 +262,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_m13_script_coverage tools.test_m13_mission_inventory \
 	tools.test_audit_campaign_source_surface tools.test_renegade_script_dsp_cmake \
 	tools.test_requested_mission_owner_contract \
+	tools.test_mission_content_bindings tools.test_m13_level_owners tools.test_deep_content_audit \
 	tools.test_vita_mission_ranks \
 	tools.test_integration_source_inventory \
 	tools.test_vita_sampler_cache tools.diagnostics.test_renegade_vita_performance_ledger \

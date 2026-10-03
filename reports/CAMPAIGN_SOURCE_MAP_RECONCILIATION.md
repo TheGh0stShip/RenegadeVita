@@ -5,6 +5,11 @@ documents the trim-symbol collision exposed by joining the DLL code, stronger
 actual-target selection checks and integration-report expansion. These changes
 remain uncompiled.
 
+[Authored mission bindings](AUTHORED_MISSION_BINDINGS.md) follows Tutorial,
+M13 and M01 level parameters, spawner IDs and cinematic attachments. It records
+cross-mission helpers, unresolved lookup lifetimes and named effect/audio
+definition leads without claiming compiled or runtime coverage.
+
 ## Result
 
 The supplied mission map was checked against the checked-out
@@ -129,6 +134,41 @@ payloads were copied to the repository. Mission archive hashes:
 | M09.mix (Steam backup snapshot) | `059fc7de0c06c31e2aa69e1ab7768de81f3377e18c971ba8f98f41e15f1705c1` |
 | M10.mix | `c9bdaa94686f29a69a16c148671c7a6c05c617f61694fb4aec01185e4c3720ec` |
 | M11.mix | `f29a8a4bf4e94d928b8e49c0d4eecade0d35f54ff683ec0fd5b2e4bedbac80eb` |
+
+## How the supplied recommendations apply here
+
+The source inventory is useful dependency evidence. Its implementation and
+performance suggestions still need comparison with the existing port:
+
+- Preserve the retail `M00_Damage_Modifier_DME` parameter mismatch:
+  `Toolkit.cpp:1824` declares `Killable_by_NotStar`, while line 1849 reads
+  `Killable_ByNotStar`. Case-insensitive lookup does not erase underscores.
+  Other serialized misspellings, including `Aggessiveness`, remain exact.
+- Original `Combat/scriptcommands.cpp:108` already guards `Debug_Message`
+  with `WWDEBUG`. Do not delete mission calls as a new portability change.
+  Candidate diagnostics retain their existing bounded recording policy.
+- The movie boundary already uses FFmpeg to decode unchanged retail BINK data
+  (`port/platform/a4_binkmovie_boundary.cpp`). The suggested MP4 conversion
+  does not become a new retail-data requirement or campaign-flow rewrite.
+- The current renderer's compressed DDS upload branch explicitly admits
+  DXT1/DXT5 (`port/renderer/vita/ww3d_dx8_boundary.cpp:1114`). The broad DXT1/3/5
+  statement is not proof that every format uses that path or renders correctly
+  on hardware; keep format/fallback and visual checks separate.
+- Time-slicing pathfinding, trimming visibility data, limiting flyovers or
+  particles, changing aim behavior and suppressing voiced keyboard prompts
+  require their own correctness and measured-impact evidence. The mission map
+  alone does not justify changing original semantics or removing content.
+- Conversation keys resolve through `ConversationMgrClass`; conversation
+  remarks then resolve translation objects and sound-definition IDs. The
+  level parser intentionally skips the category-prefixed conversation
+  subsystem rather than guessing its chunk layout. Complete conversation,
+  string, voice, animation and objective-image closure remains separate work.
+
+The overview's remaining aggregate conversation/string/image/preset counts
+have not been independently certified by this source-manifest audit. Literal
+counts are discovery bounds; authored parameters and runtime-generated names
+require additional tracing. Floating-point differences also need correctness
+checks where they can alter gameplay, persistence or networking.
 
 ## Validation and open evidence
 

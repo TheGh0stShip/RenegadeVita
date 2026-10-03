@@ -1,5 +1,25 @@
 # Live engineering progress
 
+## Authored bindings and ID provenance — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: publish the read-only binding tools and continue unresolved reference review.
+Completed: parameters and spawner IDs retained; discovery begins at actual
+attachments; cinematic-to-script provenance and fractional timing parsed.
+M13 ledge drop directly uses an M08 helper. M01's missing ConYard text reference
+is tied to an authored zone. No unpaired parameter vectors or unknown discovered
+shipped script names; definition/object-ID leads still require classification.
+Evidence: 55 Python/source checks and three hash-matched retail metadata scans.
+No C++ compilation, launch, device action or retail modification.
+Named definition-reference review classifies the unlocated IDs as conditional
+shell/muzzle effects and sound-twiddler alternatives; runtime impact is open.
+Next: callback-lifetime and conditional-effect review; candidate-bound
+semantic lookup evidence when the build/launch hold is lifted.
+Blocker: all reference gates and native/runtime mission coverage remain open.
+See [authored bindings](AUTHORED_MISSION_BINDINGS.md).
+
 ## Static script integration and mission ranks — 2026-10-03
 
 Renegade Vita — v3.5 active

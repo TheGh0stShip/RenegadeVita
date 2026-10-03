@@ -11,6 +11,7 @@ from tools.test_m13_level_owners import chunk, micro, integer
 from tools.check_m13_script_coverage import script_dependencies
 from tools.check_deep_audit_receipts import blockers
 from tools.audit_w3d_loader_coverage import root_types
+from tools.renegade_cinematic_dependency_scan import parse_command, timing_metadata
 
 
 class FakeArchive:
@@ -64,6 +65,18 @@ class DeepContentAuditTests(unittest.TestCase):
             scanner.from_source('"missing.txt"','Root')
             self.assertEqual(scanner.receipt()['missing_text_names'],['missing.txt'])
 
+    def test_serialized_parameters_follow_all_collision_candidates(self):
+        with tempfile.TemporaryDirectory() as temp:
+            scanner = DeepContentDependencies(Path(temp), FakeArchive('M.mix', {
+                'root.txt': '0 Attach_Script, 1, "MissionHelper"'}))
+            scanner.archives.append(FakeArchive('always.dat', {
+                'root.txt': '0 Attach_Script, 1, "GlobalHelper"'}))
+            presets, scripts = scanner.from_parameters('42,root.txt,missing.txt,', 'LevelBinding')
+            self.assertEqual(scripts, {'MissionHelper', 'GlobalHelper'})
+            self.assertEqual(len(scanner.receipt()['text_members']), 2)
+            self.assertEqual([e['script'] for e in scanner.receipt()['script_binding_edges']], ['MissionHelper', 'GlobalHelper'])
+            self.assertEqual(scanner.receipt()['missing_text_names'], ['missing.txt'])
+
     def test_multiplayer_without_prefix_does_not_seed_other_missions(self):
         with tempfile.TemporaryDirectory() as temp:
             p=Path(temp);(p/'Scripts.cpp').write_text('DECLARE_SCRIPT(MX0_Start, "") {}; DECLARE_SCRIPT(Base, "") {};')
@@ -90,6 +103,16 @@ class DeepContentAuditTests(unittest.TestCase):
         for value in [b'abc',struct.pack('<II',1,100)]:
             with self.assertRaises(ValueError):
                 list(raw_chunks(value))
+
+    def test_cinematic_fractional_seconds_and_negative_frame_tokens_are_retained(self):
+        self.assertEqual(parse_command('1.5 Attach_Script, 1, "Helper"'), (1.5, 'attach_script', ['1', 'Helper']))
+        self.assertEqual(parse_command('-.5 Create_Real_Object, 2, "Trooper"'), (-.5, 'create_real_object', ['2', 'Trooper']))
+        self.assertEqual(parse_command('+1e2 Play_Audio, "Sound"')[0], 100)
+        self.assertEqual(timing_metadata(1.5)['time_units'], 'seconds')
+        self.assertEqual(timing_metadata(-30)['time_units'], 'frames_at_30_hz')
+        for text in ('; comment', 'nan Attach_Script, 1, "Helper"', '1e999 Attach_Script, 1, "Helper"',
+                     '9' * 400 + ' Attach_Script, 1, "Helper"'):
+            self.assertIsNone(parse_command(text))
 
 
 if __name__=='__main__':

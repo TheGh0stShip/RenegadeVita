@@ -6,6 +6,7 @@ import argparse
 import csv
 import io
 import json
+import math
 import re
 import struct
 import zlib
@@ -81,14 +82,21 @@ class MixArchive:
         return payload
 
 
-def parse_command(line: str) -> tuple[int, str, list[str]] | None:
+def parse_command(line: str) -> tuple[int | float, str, list[str]] | None:
     stripped = line.strip()
     if not stripped or stripped.startswith(";"):
         return None
-    match = re.match(r"^(-?\d+)\s+(.+)$", stripped)
+    match = re.match(r"^([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)\s+(.+)$", stripped)
     if match is None:
         return None
-    frame = int(match.group(1))
+    timing = match.group(1)
+    try:
+        frame = int(timing) if re.fullmatch(r'[+-]?\d+', timing) else float(timing)
+        finite = math.isfinite(frame)
+    except (ValueError, OverflowError):
+        return None
+    if not finite:
+        return None
     try:
         row = next(csv.reader([match.group(2)], skipinitialspace=True))
     except csv.Error:
@@ -98,6 +106,12 @@ def parse_command(line: str) -> tuple[int, str, list[str]] | None:
     command = row[0].strip().lower()
     args = [item.strip().strip('"') for item in row[1:]]
     return frame, command, args
+
+
+def timing_metadata(value: int | float) -> dict:
+    # Test_Cinematic treats positive tokens as seconds and negative as frames
+    # at 30 Hz. Keep the legacy "frame" field as the raw token value only.
+    return {"time_token_value": value, "time_units": "frames_at_30_hz" if value < 0 else "seconds"}
 
 
 def canonical(values: set[str]) -> list[str]:
@@ -133,6 +147,7 @@ def scan(archive: MixArchive, entry: str) -> dict[str, Any]:
                 "file": current,
                 "line": line_number,
                 "frame": frame,
+                **timing_metadata(frame),
                 "command": command,
                 "args": args,
             })
@@ -219,6 +234,7 @@ def scan_all_text(archive: MixArchive) -> dict[str, Any]:
             record = {
                 "line": line_number,
                 "frame": frame,
+                **timing_metadata(frame),
                 "command": command,
                 "args": args,
             }

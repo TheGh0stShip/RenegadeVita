@@ -1,5 +1,17 @@
 # Reproduce the cross-system static audit
 
+The [authored-binding audit](../reports/AUTHORED_MISSION_BINDINGS.md) now retains
+script parameters, spawner instance IDs and cinematic-to-script provenance.
+It works without a configured build or executable:
+
+```bash
+python3 -m tools.audit_mission_content_bindings --data /absolute/path/to/user-owned/retail/Data --output-directory build/dev208-authored-bindings-20261003
+python3 -m unittest tools.test_mission_content_bindings tools.test_m13_level_owners tools.test_deep_content_audit
+```
+
+Detailed receipts are restricted to build/. Tool execution does not pass a
+mission gate; malformed bindings and unlocated references remain explicit.
+
 The [follow-up sweep](../reports/DEEP_AUDIT_FOLLOWUP.md) adds nested W3D
 reference discovery and source-traced bootstrap, progression and round-flow
 findings. Run `python3 -m unittest tools.test_nested_w3d_references` for its

@@ -4,6 +4,13 @@ The complete audit series, reproduction steps, unbuilt-source limitations and
 repository protection status are collected in the
 [content audit index](CONTENT_AUDIT_INDEX.md).
 
+2026-10-03 authored-binding continuation: Tutorial/M13/M01 parameters, spawner
+IDs and cinematic script provenance are now decoded. M13's ledge drop uses an
+M08 helper; M01's unresolved ConYard filename has an authored zone binding.
+55 Python/source checks pass. All reference gates remain incomplete: unresolved
+ID/definition lifetimes and dynamic content need further investigation. No
+build, launch or physical acceptance. See [binding audit](AUTHORED_MISSION_BINDINGS.md).
+
 2026-10-03 integration follow-up: the full Scripts manifest exposes duplicate
 original `strtrim` definitions. A source-local rename preserves both original
 implementations. Target-attachment negative controls and integration inventory

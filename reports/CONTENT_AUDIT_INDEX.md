@@ -1,5 +1,10 @@
 # Content coverage audit index
 
+Zone ownership: [original membership and callbacks](SCRIPT_ZONE_OWNER_REVIEW.md)
+traces point-in-oriented-box checks, star/all-smart gathering, callback ordering
+and saved membership. Disappearing actors do not receive guaranteed Exited;
+reload does not unconditionally replay Entered. Native delivery remains open.
+
 AI/action ownership: [hibernation and callback review](AI_ACTION_OWNER_REVIEW.md)
 traces listener removal/re-addition, movement path release and priority-driven
 callback rules. Missing action observers remain a diagnostic blind spot outside

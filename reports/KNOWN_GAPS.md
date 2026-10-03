@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-10-03 script-zone review: original owners selected; position-point overlap,
+inclusive boundaries, callbacks-before-membership-change and saved inside-list
+semantics traced. Removed references do not guarantee Exited, and loaded inside
+members do not unconditionally re-enter. Existing diagnostics do not establish
+zone delivery. Native overlap/remap/trigger progression remain unverified.
+See [script-zone owner review](SCRIPT_ZONE_OWNER_REVIEW.md).
+
 2026-10-03 action callback review: absent numeric observers in original
 ActionClass completion now have an opt-in source queue hook, uncompiled; prior
 native logs cover Logan only. Typed offline parsing now retains action misses

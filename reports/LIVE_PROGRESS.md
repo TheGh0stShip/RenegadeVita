@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Script-zone membership review — 2026-10-03
+
+Completed: original source selection, oriented point overlap, gathering filters,
+entry/exit ordering and saved membership traced. No missing zone owner found.
+Evidence: source inspection only; callback/runtime progression remains open.
+Next: authored zone definitions and candidate-bound delivery after hold.
+Native/runtime gates0/10; no build, launch or device action.
+See [script-zone owner review](SCRIPT_ZONE_OWNER_REVIEW.md).
+
 ## Typed action miss assessment — 2026-10-03
 
 Completed: separate offline action records, signed32/bounded parsing and mixed

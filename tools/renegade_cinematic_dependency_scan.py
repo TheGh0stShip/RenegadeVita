@@ -31,6 +31,9 @@ class MixArchive:
     def __init__(self, path: Path) -> None:
         self.path = path
         self.entries: dict[str, tuple[int, int, int]] = {}
+        # Preserve every index record for denominator audits, including duplicate
+        # names. Existing name lookup semantics remain unchanged.
+        self.entry_records: list[tuple[str, int, int, int]] = []
         self._load_index()
 
     def _load_index(self) -> None:
@@ -64,6 +67,7 @@ class MixArchive:
                 if offset < 12 or bytes_ < 0 or offset + bytes_ > size:
                     raise ValueError(f"{self.path}: invalid payload bounds for {name}")
                 self.entries[name.lower()] = (crc, offset, bytes_)
+                self.entry_records.append((name, crc, offset, bytes_))
 
     def read_text(self, name: str) -> str:
         payload = self.read_binary(name)

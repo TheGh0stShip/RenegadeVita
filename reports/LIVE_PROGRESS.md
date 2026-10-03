@@ -2,6 +2,10 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+DDS denominator hardening: duplicate archive records retained and CRC/name
+identity checked. Retail rescan unchanged at 3,459 DDS records. Four scanner
+tests plus 145 shared-reader tests pass. Retail payloads remain local.
+
 Retail DDS batch: all 30 supplied archives scanned, 3,459 DDS headers counted.
 Four DXT3 HUD icons in always3.dat are candidates for the white-decoding defect;
 runtime display remains unverified. Three authored tests pass. No retail bytes

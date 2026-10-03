@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+import zlib
 
 from renegade_cinematic_dependency_scan import MixArchive
 
@@ -36,15 +37,19 @@ def audit(directory):
         except (ValueError, OSError, struct.error, UnicodeError) as error:
             errors.append({'archive': path.name, 'error_type': type(error).__name__})
             continue
-        archives.append({'archive': path.name, 'members': len(archive.entries),
+        archives.append({'archive': path.name, 'members': len(archive.entry_records),
+                         'unique_names': len(archive.entries),
                          'bytes': path.stat().st_size})
         with path.open('rb') as stream:
-            for name, (_, offset, size) in sorted(archive.entries.items()):
-                if not name.endswith('.dds'):
+            for index, (name, crc, offset, size) in enumerate(archive.entry_records):
+                if not name.lower().endswith('.dds'):
                     continue
-                row = {'archive': path.name, 'member': name, 'offset': offset, 'bytes': size}
+                row = {'archive': path.name, 'member': name, 'index_record': index,
+                       'offset': offset, 'bytes': size}
                 stream.seek(offset)
                 try:
+                    if crc != zlib.crc32(name.upper().encode('ascii')):
+                        raise ValueError('CRC/name mismatch')
                     row.update(inspect_header(stream.read(min(size, 128))))
                 except ValueError as error:
                     row.update(format='invalid', error=str(error))
@@ -52,7 +57,7 @@ def audit(directory):
     return {'schema_version': 1, 'complete': False, 'archives': archives,
             'archive_errors': errors, 'rows': rows,
             'totals': {'dds_members': len(rows), 'by_format': dict(Counter(r['format'] for r in rows))},
-            'limits': ['Named archive members only; duplicate index names may be collapsed by the existing reader.',
+            'limits': ['Named archive index records only; duplicate names retained separately.',
                        'Loose DDS files and nested archives are not enumerated.',
                        'Headers only; payload validity, mount precedence and runtime usage unverified.']}
 

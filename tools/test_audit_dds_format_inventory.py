@@ -8,6 +8,22 @@ from make_ttfs_fixture import make_mix
 
 
 class DDSHeaderTest(unittest.TestCase):
+    def test_duplicate_names_keep_both_index_records(self):
+        # A valid authored MIX with two same-name records and different payloads.
+        import zlib
+        name = b'duplicate.dds\0'
+        crc = zlib.crc32(name[:-1].upper())
+        index = struct.pack('<I', 2) + struct.pack('<III', crc, 12, 4) + struct.pack('<III', crc, 16, 4)
+        names = struct.pack('<I', 2) + bytes([len(name)]) + name + bytes([len(name)]) + name
+        data = struct.pack('<4sII', b'MIX1', 20, 48) + b'DDS DDS ' + index + names
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'duplicate.mix').write_bytes(data)
+            result = audit(root)
+        self.assertEqual(result['totals']['dds_members'], 2)
+        self.assertEqual([r['index_record'] for r in result['rows']], [0, 1])
+        self.assertEqual(result['archives'][0]['unique_names'], 1)
+
     def test_archive_scan_retains_invalid_members_and_archive_errors(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

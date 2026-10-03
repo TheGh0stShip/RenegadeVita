@@ -2523,5 +2523,236 @@
     ],
     "acceptance_open": "Trace original callers and format conversion requests, palette dependencies and alternate loaders; implement required original semantics and verify native content."
   }
+    ,
+  {
+    "symbol": "DX8_FVF_XYZ",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZN",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZNUV1",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZNUV2",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZNDUV1",
+    "status": "boundary_replaced",
+    "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "Indexed native gate accepts exactly FVF 0x152 with stride 36 and 0x252 with stride 44. This named layout matches one of those values; matching stride and data bounds remain required.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZNDUV2",
+    "status": "boundary_replaced",
+    "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "Indexed native gate accepts exactly FVF 0x152 with stride 36 and 0x252 with stride 44. This named layout matches one of those values; matching stride and data bounds remain required.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZDUV1",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZDUV2",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZUV1",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  },
+  {
+    "symbol": "DX8_FVF_XYZUV2",
+    "status": "missing",
+    "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
+      "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
+    },
+    "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+    "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+    "evidence": [
+      "staging/ww3d2/dx8fvf.h:56-65",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+    ],
+    "affected_scope": [
+      "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+    ],
+    "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content."
+  }
   ]
 }

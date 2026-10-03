@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 indexed-layout batch: ten original named layouts reviewed; two match accepted
+FVF/stride pairs and eight fail that gate. Other submission routes remain open.
+Compound tokens added to discovery. Eleven tests/reproduction pass; totals
+3,119 rows: 86 missing, 38 replaced, 2,995 unknown.
+
 S2 surface gaps: five formats have byte-size handling but lack RGBA conversion
 and fail dimension-based allocation gates. Alternate loaders and retail usage
 remain open. Totals 78 missing, 36 replaced, 2,965 unknown; ten tests pass.

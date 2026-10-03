@@ -1,5 +1,14 @@
 # S2 renderer features — inventory in progress
 
+Compound DX8_FVF_* discovery adds 11 symbols and 29 references; one symbol
+is the header guard, not a vertex layout. Ten original named layouts are now
+reviewed against the indexed native gate, which accepts only 0x152/stride36
+and 0x252/stride44 (XYZNDUV1/2). Eight other named layouts are rejected there.
+This does not establish missing whole render objects: alternate mesh, immediate
+and sorting submission routes and actual callers remain open. Dynamic FVF
+combinations still require enumeration. Eleven tests/reproduction pass.
+Current totals: 3,119 rows; 86 missing, 38 replaced, 2,995 unknown.
+
 Five two-byte formats have size handling but lack CPU RGBA conversion:
 X1R5G5B5, A8R3G3B2, X4R4G4B4, A8P8 and A8L8. Pixel converters and
 capability gates reject them; filtered copies, surface-to-RGBA conversion and

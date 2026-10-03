@@ -9,6 +9,11 @@ PARSER_AVAILABLE = bool(importlib.util.find_spec('tree_sitter') and
 
 
 class RendererInventoryTest(unittest.TestCase):
+    def test_original_compound_vertex_layout_names_are_discovered(self):
+        self.assertEqual([r['symbol'] for r in state_references(
+            'DX8_FVF_XYZNDUV1; DX8_FVF_XYZUV2; "DX8_FVF_XYZ";')],
+            ['DX8_FVF_XYZNDUV1', 'DX8_FVF_XYZUV2'])
+
     def test_engine_format_names_are_retained_with_directx_names(self):
         refs = state_references('WW3D_FORMAT_U8V8; D3DFMT_U8V8; '
                                 '"WW3D_FORMAT_DXT1"; // WW3D_FORMAT_COUNT')

@@ -256,10 +256,10 @@
     "staging/ww3d2/ww3dids.h": "339d44b8752566409b4ae2cd742592cf65339358b0e4efbbd498b3159de44875",
     "staging/ww3d2/ww3dtrig.h": "0bf682e99ce8207ce9cbe0243e335b371695a56b512b7cf69cfc8e8a88245818",
     "tools/audit_sweep_port_guards.py": "f8eb8890c85ef4faba32631830698ef0bbcd075c4d1bd95852b87e5bd85e012b",
-    "tools/audit_sweep_renderer.py": "3e341761d89459c176b580d622fdd881fb081a1b1e19b1dd7bdda32537c1eb3b",
+    "tools/audit_sweep_renderer.py": "a0112c5ce5bb4fd9f6e9c4fbc017a0e2674d8ba03500e3b23df85793750a9908",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/renderer.json": "6fe16b56a7fa287b95552fcf00daaed37e3160b16a79d147b8a020057c3455fe"
+    "tools/sweep_reviews/renderer.json": "7f25d5d445fcd18129d59ca392e4388a2053b67bee653aa6482620885b68021c"
   },
   "review_identity_issues": [],
   "rows": [
@@ -5736,6 +5736,106 @@
       "symbol": "D3DFVF_TEXCOORDSIZE4"
     },
     {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 65,
+      "row_id": "ad81dbe669e60718adda5103429f3406adb7033dd6550f130b173921e28c6f1e",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZ"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 66,
+      "row_id": "3aef878eb5241273f687dc587473fe741a37d0a0fcf195d48f36cad5e2a2bdc7",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZN"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 67,
+      "row_id": "12c3435f0b829b2cac10f46199f427c700161c569bc4d84bd457b81a0f70b9c3",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNUV1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 68,
+      "row_id": "23ab50275a3ba0afe62adaf94d8fc625036e0911cad09de2569a320d8a938f2e",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNUV2"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 69,
+      "row_id": "eb688dbda4ff62026ce4d48085f8b75c2b4a35b75dd3b1ed1f73a6d96c33cfe0",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNDUV1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 70,
+      "row_id": "07d8526e75d8f5442cd0bcef036ceaf17e97c10371994b2f0a545a9a65c4e892",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNDUV2"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 71,
+      "row_id": "4c6fdfad2f5087760ce9d0e8e55101a9c2f4f7fa336af88a3ba25168b4ddd18e",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZDUV1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 72,
+      "row_id": "609df25e1e482df2d3a6983c9c62f44de3f2e2cf366d360493129b40c70fac44",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZDUV2"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 73,
+      "row_id": "49a7f69d0147895d9f83911faaf36297b9cda9c2b75e1500dbba262272826589",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZUV1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.cpp",
+      "kind": "draw_state_reference",
+      "line": 74,
+      "row_id": "4d2bba18f34861e83a41ff22eef54c065edf1f59d7cbc29a7354ec0ca8b5717d",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZUV2"
+    },
+    {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "b44f8d6ee7ee34760bec7ee4b035a7d5d31d8347fc423e7f41315c1cfb7f2b13",
@@ -5923,6 +6023,36 @@
       "status": "unknown"
     },
     {
+      "column": 9,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 44,
+      "row_id": "e73baa5e4b8b92521bc9d71bd68d8b2287f6a8eae236e56d1ef8bdbceb29276c",
+      "status": "unknown",
+      "symbol": "DX8_FVF_H"
+    },
+    {
+      "column": 9,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 45,
+      "row_id": "8696b2ac249c1d8f66ad8e40809db0f529e9f8b2805a1eeda3ee73c55e85f27f",
+      "status": "unknown",
+      "symbol": "DX8_FVF_H"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 56,
+      "row_id": "5045667bb2f18496d609b80aee4f64c5e9343df6be1fd837d71d139b75504c7b",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZ"
+    },
+    {
       "column": 19,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8fvf.h",
@@ -5931,6 +6061,16 @@
       "row_id": "017d157acebed4215e3fb93d5c4a02d27c87812e4c39c26964b83e6cfdc257ea",
       "status": "unknown",
       "symbol": "D3DFVF_XYZ"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 57,
+      "row_id": "c3c7d85bb8c32aaeba91f5bf561e978fd817a99bf54125413b54a973f3ebdbf1",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZN"
     },
     {
       "column": 19,
@@ -5951,6 +6091,16 @@
       "row_id": "b988cab177b1984653a43bb8786e7636fce703a26f06a47dae5c380d94226020",
       "status": "unknown",
       "symbol": "D3DFVF_NORMAL"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 58,
+      "row_id": "b9717992ad1599fe2167a178c1634c84125b2d544592ce4905d91c2ef995b4dc",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNUV1"
     },
     {
       "column": 21,
@@ -5983,6 +6133,16 @@
       "symbol": "D3DFVF_TEX1"
     },
     {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 59,
+      "row_id": "180395834970ef4be0b657753989e02fd157804bb622f8ad052993646bfb5d02",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNUV2"
+    },
+    {
       "column": 21,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8fvf.h",
@@ -6011,6 +6171,16 @@
       "row_id": "81ec8c3cf14b06271d5f4902cef1ee8055bac2e3411b4acaa652c507830c3ab2",
       "status": "unknown",
       "symbol": "D3DFVF_TEX2"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 60,
+      "row_id": "5c875fc4e3cd6208936ec1ca292d9eadea80fc22237931a2998d7cf714a7690a",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNDUV1"
     },
     {
       "column": 22,
@@ -6053,6 +6223,16 @@
       "symbol": "D3DFVF_DIFFUSE"
     },
     {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 61,
+      "row_id": "8018c9d11e855f7ea026b129c130a7ef58334a36a0b25eebc1136b43db371b08",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNDUV2"
+    },
+    {
       "column": 22,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8fvf.h",
@@ -6093,6 +6273,16 @@
       "symbol": "D3DFVF_DIFFUSE"
     },
     {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 62,
+      "row_id": "eb7ba46f9574899bc0717b5c642106e2810c014f08c0ac8f28bd710ece04cc75",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZDUV1"
+    },
+    {
       "column": 21,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8fvf.h",
@@ -6121,6 +6311,16 @@
       "row_id": "caf62ae1fa95024e812d65fb352fd5056a5cb3682fc16e843a2c0d255f3bf7ed",
       "status": "unknown",
       "symbol": "D3DFVF_DIFFUSE"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 63,
+      "row_id": "4cdd4c14d2c4ab3406ae89012741a85c40bb6ec60aa800c647ff4218c6dfdcbd",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZDUV2"
     },
     {
       "column": 21,
@@ -6153,6 +6353,16 @@
       "symbol": "D3DFVF_DIFFUSE"
     },
     {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 64,
+      "row_id": "f3b2b73c2003138d3ce32353c125d0bd997bc2eed8bc471523fb97207904c8ec",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZUV1"
+    },
+    {
       "column": 21,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8fvf.h",
@@ -6171,6 +6381,16 @@
       "row_id": "cf4ffb4a8a1ee20583a97d28ae12b53d5e98dc2c14f063c83157e222f7e53900",
       "status": "unknown",
       "symbol": "D3DFVF_TEX1"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8fvf.h",
+      "kind": "draw_state_reference",
+      "line": 65,
+      "row_id": "41858a37559e42fbffef965ba33bf39649f52de75e67230debdfb81ed9ea29e2",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZUV2"
     },
     {
       "column": 21,
@@ -7020,6 +7240,16 @@
       "symbol": "D3DFVF_TEX8"
     },
     {
+      "column": 26,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8renderer.cpp",
+      "kind": "draw_state_reference",
+      "line": 1239,
+      "row_id": "11da0c7eb49c9d5d08c63c92d154e9a4af3c05364514da985c2cf29634be7fc8",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNUV1"
+    },
+    {
       "column": 30,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8renderer.cpp",
@@ -7343,6 +7573,66 @@
       "row_id": "a3e02432f6cda061ef00486ddde267b0477d294fd66aa3a1abcf9cf8fc49fb6f",
       "status": "unknown",
       "symbol": "D3DFVF_TEX1"
+    },
+    {
+      "column": 33,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+      "kind": "draw_state_reference",
+      "line": 503,
+      "row_id": "d1b14048594aea46f78a556d99bb4374d113501d809a4b1d6273aa032cc79a37",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNUV1"
+    },
+    {
+      "column": 33,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+      "kind": "draw_state_reference",
+      "line": 541,
+      "row_id": "086bd13b89abfa9be8863361c91caf4612267fb252dbb291e69e5d681f228c70",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZ"
+    },
+    {
+      "column": 33,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+      "kind": "draw_state_reference",
+      "line": 571,
+      "row_id": "1b9e2bde0ff5046f2d45af5f6a1200a4747397a4672f4f7198577bfbd63d1c25",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZUV1"
+    },
+    {
+      "column": 33,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+      "kind": "draw_state_reference",
+      "line": 604,
+      "row_id": "2b371187a846865e0edd4f60ffce1820c70594b3c3436a6b91986298dec76731",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZN"
+    },
+    {
+      "column": 33,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+      "kind": "draw_state_reference",
+      "line": 641,
+      "row_id": "66e4ae24cc6c5b7aa7bdabbbf7e0bb90a35de342db5c7512582e6379c47496a5",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZNDUV1"
+    },
+    {
+      "column": 33,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+      "kind": "draw_state_reference",
+      "line": 683,
+      "row_id": "16112212dad61668535aec532776ab474a054d47531e40fad54937295034d954",
+      "status": "unknown",
+      "symbol": "DX8_FVF_XYZDUV1"
     },
     {
       "bases": [],
@@ -45576,6 +45866,512 @@
       "native_mapping": "unreviewed",
       "references": [
         {
+          "column": 9,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 44
+        },
+        {
+          "column": 9,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 45
+        }
+      ],
+      "row_id": "910934003883eb794c109cd88e4044e9d69491c07e1456db71636c61d34848c2",
+      "status": "unknown",
+      "symbol": "DX8_FVF_H",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 65
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 56
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 541
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZ"
+      },
+      "row_id": "814d10c16c1d0a17b9b95534f991c4b34c4bb54da4194d8627f3d877963ba95f",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZ",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 71
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 62
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 683
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZDUV1"
+      },
+      "row_id": "736f8d5ebdc79b46cebfb687611ffde4e78115731b46fdb994245b9e7e2247ef",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZDUV1",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 72
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 63
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZDUV2"
+      },
+      "row_id": "b197bcd41ec84d6760d55da434b08d5183d26a6e5a4260408734beeaeae59189",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZDUV2",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 66
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 57
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 604
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZN"
+      },
+      "row_id": "2185f84005c51ab99f183ec033b320c6f8223124e128e099c2096c5b3b4caf1d",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZN",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 69
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 60
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 641
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "Indexed native gate accepts exactly FVF 0x152 with stride 36 and 0x252 with stride 44. This named layout matches one of those values; matching stride and data bounds remain required.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "boundary_replaced",
+        "symbol": "DX8_FVF_XYZNDUV1"
+      },
+      "row_id": "dc11c6c872354659f9451c5ffbae76e977ef196c395fb31ea168c540eecbab11",
+      "status": "boundary_replaced",
+      "symbol": "DX8_FVF_XYZNDUV1",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 70
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 61
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "Indexed native gate accepts exactly FVF 0x152 with stride 36 and 0x252 with stride 44. This named layout matches one of those values; matching stride and data bounds remain required.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "boundary_replaced",
+        "symbol": "DX8_FVF_XYZNDUV2"
+      },
+      "row_id": "194aa7fd298d3dba94225659a4b91e4027c1b322a2fd492273875b3acceb13a4",
+      "status": "boundary_replaced",
+      "symbol": "DX8_FVF_XYZNDUV2",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 67
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 58
+        },
+        {
+          "column": 26,
+          "file": "staging/ww3d2/dx8renderer.cpp",
+          "line": 1239
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 503
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZNUV1"
+      },
+      "row_id": "c58adf13c57e51eb42be0ae21c73e83e6224f7fc8d46d1fec82185f706915f7c",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZNUV1",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 68
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 59
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZNUV2"
+      },
+      "row_id": "1051f813f665a394c817307df4d34f94b68a8069029dbdf3583b6d97fac7487b",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZNUV2",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 73
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 64
+        },
+        {
+          "column": 33,
+          "file": "staging/ww3d2/dx8vertexbuffer.cpp",
+          "line": 571
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZUV1"
+      },
+      "row_id": "214e397cc2e8776c4bacb75ccc4fc0b4ea4a7c6a34374b37599b0ef69f26955c",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZUV1",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "classification_evidence_class": "source_review",
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8fvf.cpp",
+          "line": 74
+        },
+        {
+          "column": 2,
+          "file": "staging/ww3d2/dx8fvf.h",
+          "line": 65
+        }
+      ],
+      "review": {
+        "acceptance_open": "Trace active buffer layouts and stride/field semantics, including sorting and alternate submission routes; preserve required originals and verify Vita/PSTV content.",
+        "affected_scope": [
+          "Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified."
+        ],
+        "behavior": "This original named FVF differs from both accepted indexed layout values. Native gate returns INDEXED_SUBMISSION_UNSUPPORTED_FVF. Other mesh/immediate/sorting paths may submit equivalent content and remain outside this scoped finding.",
+        "evidence": [
+          "staging/ww3d2/dx8fvf.h:56-65",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:3217-3252",
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:1354-1405"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
+        "original_owner": "Original DX8 FVF layout and bound indexed triangle submission",
+        "status": "missing",
+        "symbol": "DX8_FVF_XYZUV2"
+      },
+      "row_id": "ce4acd99537e0a1d884c096a88328a31a86d4c75d5f9ca4baee693d7f68794df",
+      "status": "missing",
+      "symbol": "DX8_FVF_XYZUV2",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
           "column": 7,
           "file": "staging/ww3d2/bitmaphandler.h",
           "line": 158
@@ -48167,23 +48963,23 @@
   "totals": {
     "by_kind": {
       "class_definition": 467,
-      "draw_state_reference": 1900,
-      "draw_state_symbol": 293,
+      "draw_state_reference": 1929,
+      "draw_state_symbol": 304,
       "parse_unknown": 391,
       "required_feature": 28
     },
     "by_status": {
-      "boundary_replaced": 36,
-      "missing": 78,
-      "unknown": 2965
+      "boundary_replaced": 38,
+      "missing": 86,
+      "unknown": 2995
     },
     "candidate_roles": {
       "prototype": 14,
       "prototype_loader": 14,
       "render_object": 25
     },
-    "rows": 3079,
-    "unique_draw_state_symbols": 293
+    "rows": 3119,
+    "unique_draw_state_symbols": 304
   },
   "upstream_files_missing_from_staging": [
     "hueshift/enbassetmgr.cpp",

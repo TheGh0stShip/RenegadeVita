@@ -65,6 +65,18 @@ symptoms. Totals are 25 missing, 15 boundary-replaced and 2,012 unknown across
 2,052 rows. Duplicate symbol reviews are rejected rather than silently allowing
 the last review to overwrite an earlier classification. Seven tests pass.
 
+Eleven combiner/sampler rows now have partial native mappings recorded:
+color/alpha operation and two arguments each; U/V addressing and min/mag/mip
+filters. Sampler translation recognizes clamp value 3 and repeats other address
+values, maps point to nearest and other min/mag values to linear. Mip values
+1 and 2/3 choose nearest/linear mip interpolation. This does not preserve mirror,
+border or anisotropic semantics. Combiner arguments recognize exact texture,
+diffuse and current values; modifiers are not decoded and other arguments become
+previous. Unsupported RGB operations pass through previous. These are
+`boundary_replaced` with explicitly partial value domains, not feature acceptance.
+Source references, retail value reachability, independent routes and pixels
+remain open. Current totals: 25 missing, 26 boundary-replaced, 2,001 unknown.
+
 Candidate ancestry identifies 25 render-object definitions, 14 prototype-loader
 definitions and 14 prototype definitions. These counts include the base classes.
 The graph follows transitive/multiple inheritance but does not resolve namespaces,

@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 combiner/sampler batch: eleven partial native mappings source-reviewed.
+Address/filter and argument/operation fallbacks are explicit risks, not support
+claims. Totals reconcile at 25 missing, 26 replaced and 2,001 unknown; seven
+inventory tests pass. Required retail value domains and native pixels remain open.
+
 S2 texture-stage batch: ten unapplied direct requests now carry source-pinned
 JSON evidence, including bump matrices and anisotropy. Duplicate classifications
 are rejected. Seven tests pass; totals reconcile at 25 missing, 15 replaced and

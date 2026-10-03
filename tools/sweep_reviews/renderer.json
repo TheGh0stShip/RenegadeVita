@@ -923,5 +923,237 @@
     ],
     "acceptance_open": "Trace active setters, retail materials and independent native routes; implement equivalent required behavior and verify Vita/PSTV pixels."
   }
+    ,
+  {
+    "symbol": "D3DTSS_COLOROP",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Combiner values are retained and passed to GL texture-env helpers. Argument translation recognizes exact TEXTURE, DIFFUSE and CURRENT, otherwise PREVIOUS; modifiers are not decoded. RGB helper handles select, modulate, add, add-smooth, subtract and texture/current-alpha blends, while its default passes through previous. A present entry does not establish full operation/value support.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_COLORARG1",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Combiner values are retained and passed to GL texture-env helpers. Argument translation recognizes exact TEXTURE, DIFFUSE and CURRENT, otherwise PREVIOUS; modifiers are not decoded. RGB helper handles select, modulate, add, add-smooth, subtract and texture/current-alpha blends, while its default passes through previous. A present entry does not establish full operation/value support.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_COLORARG2",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Combiner values are retained and passed to GL texture-env helpers. Argument translation recognizes exact TEXTURE, DIFFUSE and CURRENT, otherwise PREVIOUS; modifiers are not decoded. RGB helper handles select, modulate, add, add-smooth, subtract and texture/current-alpha blends, while its default passes through previous. A present entry does not establish full operation/value support.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_ALPHAOP",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Combiner values are retained and passed to GL texture-env helpers. Argument translation recognizes exact TEXTURE, DIFFUSE and CURRENT, otherwise PREVIOUS; modifiers are not decoded. RGB helper handles select, modulate, add, add-smooth, subtract and texture/current-alpha blends, while its default passes through previous. A present entry does not establish full operation/value support.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_ALPHAARG1",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Combiner values are retained and passed to GL texture-env helpers. Argument translation recognizes exact TEXTURE, DIFFUSE and CURRENT, otherwise PREVIOUS; modifiers are not decoded. RGB helper handles select, modulate, add, add-smooth, subtract and texture/current-alpha blends, while its default passes through previous. A present entry does not establish full operation/value support.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_ALPHAARG2",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Combiner values are retained and passed to GL texture-env helpers. Argument translation recognizes exact TEXTURE, DIFFUSE and CURRENT, otherwise PREVIOUS; modifiers are not decoded. RGB helper handles select, modulate, add, add-smooth, subtract and texture/current-alpha blends, while its default passes through previous. A present entry does not establish full operation/value support.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_ADDRESSU",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Sampler values are retained then applied on a valid bound 2D texture. Address value 3 maps to clamp-to-edge, every other address maps to repeat. Point min/mag maps to nearest, other values to linear; mip 1 maps to nearest-mip and 2/3 to linear-mip. Mirror/border addressing and anisotropic filtering are not preserved by this translation.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_ADDRESSV",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Sampler values are retained then applied on a valid bound 2D texture. Address value 3 maps to clamp-to-edge, every other address maps to repeat. Point min/mag maps to nearest, other values to linear; mip 1 maps to nearest-mip and 2/3 to linear-mip. Mirror/border addressing and anisotropic filtering are not preserved by this translation.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_MINFILTER",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Sampler values are retained then applied on a valid bound 2D texture. Address value 3 maps to clamp-to-edge, every other address maps to repeat. Point min/mag maps to nearest, other values to linear; mip 1 maps to nearest-mip and 2/3 to linear-mip. Mirror/border addressing and anisotropic filtering are not preserved by this translation.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_MAGFILTER",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Sampler values are retained then applied on a valid bound 2D texture. Address value 3 maps to clamp-to-edge, every other address maps to repeat. Point min/mag maps to nearest, other values to linear; mip 1 maps to nearest-mip and 2/3 to linear-mip. Mirror/border addressing and anisotropic filtering are not preserved by this translation.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  },
+  {
+    "symbol": "D3DTSS_MIPFILTER",
+    "status": "boundary_replaced",
+    "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-stage state owner",
+    "behavior": "Sampler values are retained then applied on a valid bound 2D texture. Address value 3 maps to clamp-to-edge, every other address maps to repeat. Point min/mag maps to nearest, other values to linear; mip 1 maps to nearest-mip and 2/3 to linear-mip. Mirror/border addressing and anisotropic filtering are not preserved by this translation.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:205-226 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:978-1148 and :2467-2625"
+    ],
+    "affected_scope": [
+      "Native materials issuing these states; per-map requests and visual consequences remain unverified."
+    ],
+    "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
+  }
   ]
 }

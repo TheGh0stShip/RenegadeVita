@@ -1,5 +1,11 @@
 # Known gaps
 
+2026-10-03 timer dispatch review: original simulation time is paused/scaled
+and clamped to200 ms per ordinary frame. Hibernation, cinematic freeze and
+Post_Think eligibility gate timers. Missing observer expiry remains debug-only;
+schedule/delivery/save restoration are unverified. Preserve original semantics.
+See [timer dispatch coverage](SCRIPT_TIMER_DISPATCH_COVERAGE.md).
+
 2026-10-03 conversation save-boundary review: new diagnostic identity is
 excluded from unchanged Save/Load/Load_Variables bodies. Generic host save
 macro still writes pointer-sized remap tokens, eight bytes on Linux LP64;

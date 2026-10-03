@@ -4,6 +4,19 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_review_is_provenance_and_conflicts_fail(self):
+        data = {'total': 1, 'counts': {'missing': 1}, 'rows': [
+            {'status': 'missing', 'symbol': 'D3DRS_ZBIAS', 'review': {
+                'status': 'missing', 'original_owner': 'DX8Wrapper',
+                'affected_scope': ['decals'], 'acceptance_open': 'native depth check'}}]}
+        result = consolidate([('renderer', json.dumps(data).encode())])
+        self.assertEqual(result['total'], 1)
+        self.assertEqual(result['rows'][0]['original_owner'], 'DX8Wrapper')
+        self.assertEqual(result['rows'][0]['review_evidence_pointer'], '/rows/0/review')
+        data['rows'][0]['review']['status'] = 'unknown'
+        with self.assertRaises(ValueError):
+            consolidate([('renderer', json.dumps(data).encode())])
+
     def test_nested_unknown_and_original_filter(self):
         data = {'total': 2, 'counts': {'unknown': 1, 'original_compiled': 1},
                 'rows': [{'status': 'unknown', 'map': 'M09',

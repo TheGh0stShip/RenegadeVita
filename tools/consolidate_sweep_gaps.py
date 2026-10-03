@@ -8,6 +8,7 @@ from pathlib import Path
 
 SWEEPS = ('port_guards', 'renderer', 'link', 'retail', 'scripts', 'systems',
           'performance', 'external')
+ISSUES = dict(zip(SWEEPS, range(5, 13)))
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -21,6 +22,11 @@ def status_records(value, pointer='', inherited_map=None):
                 raise ValueError(f'Unexpected status at {pointer}')
             yield pointer, value, mission
         for key, child in value.items():
+            if key == 'review' and isinstance(child, dict) and 'status' in value and 'status' in child:
+                if value['status'] != child['status']:
+                    raise ValueError(f'Review status disagrees with parent at {pointer}')
+                # This is provenance for the same finding, not a second gap.
+                continue
             escaped = key.replace('~', '~0').replace('/', '~1')
             yield from status_records(child, pointer + '/' + escaped, mission)
     elif isinstance(value, list):
@@ -51,16 +57,21 @@ def consolidate(inputs):
                         else 'unclassified')
             label = next((record[k] for k in ('name', 'label', 'symbol', 'source', 'file', 'map', 'chunk_id')
                           if k in record), pointer)
+            review = record.get('review', {})
             rows.append({'id': hashlib.sha256((name + pointer).encode()).hexdigest(),
                          'sweep': name, 'inventory_pointer': pointer,
                          'label': str(label), 'status': status, 'severity': severity,
                          'severity_basis': 'scoped inventory finding' if severity != 'unclassified' else 'requires impact review',
-                         'affected_missions_modes': [mission] if mission else ['unknown; callers and retail usage require reconciliation'],
+                         'affected_missions_modes': [mission] if mission else review.get('affected_scope', ['unknown; callers and retail usage require reconciliation']),
+                         'original_owner': review.get('original_owner', 'requires original-owner review'),
+                         'acceptance_open': review.get('acceptance_open', 'requires caller, behavior and evidence-class review'),
+                         'review_evidence_pointer': pointer + '/review' if review else None,
                          'evidence_class': record.get('evidence_class', 'parent_inventory_metadata'),
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
                          'cluster': name})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),
+                         'issue_url': f'https://github.com/TheGh0stShip/RenegadeVita/issues/{ISSUES[name]}' if name in ISSUES else None,
                          'root_rows': len(root_rows), 'retained_status_records': count,
                          'complete': value.get('complete', False),
                          'coverage_risks': value.get('open_risks', value.get('coverage_open', []))})
@@ -72,7 +83,7 @@ def consolidate(inputs):
             'severity_counts': dict(sorted(Counter(r['severity'] for r in rows).items())),
             'inputs': receipts, 'rows': rows,
             'limitations': ['Counts are evidence records, not unique defects',
-                            'Nested status records retained separately from root denominators',
+                            'Nested status records retained separately; matching review statuses merged with parent findings',
                             'Unclassified rows have no established impact severity',
                             'Excluded and replaced records remain for proof/acceptance review',
                             'Sweep incompleteness and unclassified caller/mode impact prevent Phase 1 exit']}
@@ -93,7 +104,9 @@ def markdown(result):
         lines.append(f"| {item['sweep']} | {item['root_rows']} | {item['retained_status_records']} | {item['complete']} |")
     lines += ['', 'Original owners and detailed evidence remain at the inventory JSON pointers.',
               'Clusters require caller/mode review and required evidence classes before fixes.',
-              'Issue tracking, severity escalation and per-gap dependencies remain open.', '',
+              'Sweep clusters are tracked in issues [5–12](https://github.com/TheGh0stShip/RenegadeVita/issues).',
+              'Matching embedded reviews are provenance for their parent findings; their status',
+              'is not counted twice. Severity escalation and per-gap dependencies remain open.', '',
               '## Retained records', '', '| Sweep / JSON pointer | Label | Status | Severity | Affected missions/modes |',
               '| --- | --- | --- | --- | --- |']
     for row in result['rows']:

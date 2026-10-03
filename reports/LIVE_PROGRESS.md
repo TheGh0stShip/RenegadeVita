@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Gap review deduplication and issue clusters — 2026-10-03
+
+134 embedded renderer review statuses merged with their parent findings;
+16,852 records remain: 16,672 unknown, 92 missing, 43 replaced boundaries,
+39 stubs and six disabled guards. Review owners, affected scope and acceptance
+requirements are retained. Three tests pass; outputs reproduce. Eight sweep
+clusters tracked in GitHub issues 5–12 with owners, evidence, acceptance and
+dependencies. Per-gap severity/impact and inventory completion remain open.
+
 ## Initial full-port gap consolidation — 2026-10-03
 
 Eight inventory root denominators/status counts reconcile. 16,986 non-original-

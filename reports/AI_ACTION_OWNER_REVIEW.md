@@ -104,3 +104,24 @@ Thirty-seven focused Python checks pass, including valid start/respawn roots,
 unanchored bytes, empty names and ambiguous/malformed metadata counterexamples.
 Native instructor control restoration, vehicle entry/exit, action acceptance and
 save/load during training remain unverified. No build, launch or retail mutation.
+# Logical hearing and M01 prisoner progression — 2026-10-03
+
+Original Create_Logical_Sound creates a single-shot scene stimulus with creator
+reference, type, position and radius; it does not require audible playback.
+Original WWAudio collects logical sounds on its primary sound page. SoundScene
+processes up to four queued listeners per frame and performs scaled-radius
+checks before notification. SmartGameObj converts the event to CombatSound and
+notifies all observers when observers are active; SoldierObserver separately
+applies hibernation and innate-hearing conditions. LogicalSound, LogicalListener
+and SoundScene are selected in the native original-source list. Existing removal
+lifetime corrections remain distinct from proving callback delivery.
+
+M01's three direct logical-sound calls use mission event types400004/400005 for
+detention gate/SAM state. GDI and civilian prisoner Sound_Heard handlers consume
+them, update gate/SAM flags, reset actions and issue evacuation approach moves.
+These are mission callbacks, not audible sound IDs or only innate reactions.
+No substitution with audible playback or a generic AI state change is valid.
+The private source-hash/binding receipt is
+`build/m01-prisoner-logical-stimulus-owner-20261003.json`. Eventual listener
+delivery, radius/position, single-shot lifetime, action completion and full
+rescue progression remain native runtime gates. No build/launch occurred.

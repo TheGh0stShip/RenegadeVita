@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Logical hearing and prisoner rescue ownership — 2026-10-03
+
+Completed:original logical stimulus→four-listener scene budget→SmartGameObj
+observer chain traced. M01 gate/SAM sounds drive GDI/civilian prisoner actions,
+independently of audible playback and innate reaction switches.
+Evidence:selected original source owners and private hashed binding receipt.
+Actual listener/event/action delivery and rescue progression remain unverified.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Shared source discovery regression — 2026-10-03
 
 Completed:218 source/Python tests across16 modules pass after the recent shared

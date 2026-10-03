@@ -1036,6 +1036,10 @@ test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-filename-diagnostics.patch"
 # Compare final patched contents, never an intermediate source revision.
+test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
+	"4196cdbae396e06dd4a5e1d5946509be01191f75735274763c223aea50c64d97"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-primary-id-buffer.patch"
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()
 	for rv_dir in "${rv_managed_stage_dirs[@]}"; do

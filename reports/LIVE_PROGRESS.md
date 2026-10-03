@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Cinematic primary callback ID formatting — 2026-10-03
+
+Completed: original primary-death callback ID buffer expanded10→12 bytes,
+covering signed32-bit decimal IDs including terminator. No callback/save changes.
+Evidence:anchored zero-fuzz/no-offset replay and3 focused source tests;
+301 registered patches. Original buffer insufficient at signed32-bit extremes;
+no actual mission overflow observed. C++/native validation remains open.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Cinematic custom-slot fallback distinction — 2026-10-03
 
 Completed: read-only tracer retains original invalid destination (-1) and

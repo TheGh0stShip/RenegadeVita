@@ -9,6 +9,27 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CinematicFilenameDiagnosticsTests(unittest.TestCase):
+    def test_primary_callback_buffer_covers_signed_32_bit_ids(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'Test_Cinematic.cpp'
+            path.write_bytes((ROOT / 'staging/scripts/Test_Cinematic.cpp').read_bytes())
+            args = ['patch', '--batch', '--fuzz=0', '--no-backup-if-mismatch', '-p1', '-d', directory]
+            filename_patch = (ROOT / 'port/patches/scripts-a35-cinematic-filename-diagnostics.patch').read_bytes()
+            primary_patch = (ROOT / 'port/patches/scripts-a35-cinematic-primary-id-buffer.patch').read_bytes()
+            if 'char id[12]' in path.read_text():
+                subprocess.run(args + ['--reverse'], input=primary_patch, capture_output=True, check=True)
+            if 'Failed to open DATA\\\\%s' not in path.read_text():
+                subprocess.run(args + ['--forward'], input=filename_patch, capture_output=True, check=True)
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),
+                             '4196cdbae396e06dd4a5e1d5946509be01191f75735274763c223aea50c64d97')
+            before = path.read_text()
+            result = subprocess.run(args + ['--forward'], input=primary_patch, capture_output=True, check=True)
+            self.assertNotIn(b'offset', result.stdout)
+            self.assertEqual(path.read_text(), before.replace('char id[10];',
+                             'char id[12]; // signed 32-bit decimal ID, sign and terminator', 1))
+        for value in (-2147483648, -1, 0, 2147483647):
+            self.assertLessEqual(len(str(value).encode('ascii')) + 1, 12)
+
     def test_replay_removes_unused_bounded_path_without_changing_parser(self):
         patch = (ROOT / 'port/patches/scripts-a35-cinematic-filename-diagnostics.patch').read_bytes()
         with tempfile.TemporaryDirectory() as directory:
@@ -16,6 +37,9 @@ class CinematicFilenameDiagnosticsTests(unittest.TestCase):
             path.write_bytes((ROOT / 'staging/scripts/Test_Cinematic.cpp').read_bytes())
             args = ['patch', '--batch', '--fuzz=0', '--no-backup-if-mismatch', '-p1', '-d', directory]
             if 'Failed to open DATA\\\\%s' in path.read_text():
+                if 'char id[12]' in path.read_text():
+                    primary = (ROOT / 'port/patches/scripts-a35-cinematic-primary-id-buffer.patch').read_bytes()
+                    subprocess.run(args + ['--reverse'], input=primary, capture_output=True, check=True)
                 reverse = subprocess.run(args + ['--reverse'], input=patch,
                                          capture_output=True, check=True)
                 self.assertNotIn(b'offset', reverse.stdout)

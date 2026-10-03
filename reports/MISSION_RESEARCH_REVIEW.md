@@ -1,5 +1,15 @@
 # Complete mission overview review — 2026-10-03
 
+Original Test_Cinematic::Command_Set_Primary used a ten-byte buffer for
+sprintf("%d", MyID). A signed32-bit minimum needs eleven visible characters
+and a terminator; the maximum also exceeds the old capacity with its terminator.
+The new SHA-anchored staging patch expands only that buffer to twelve bytes,
+preserving the original callback parameter, attachment, numeric ID and save
+layout. Three source-only tests pass, including zero-fuzz/no-offset replay and
+byte preservation outside the capacity change. There are301 registered patches.
+This is a demonstrated source capacity defect, not an observed Tutorial/M13/M01
+overflow; actual native execution remains unverified under the hold.
+
 Focused ordered source replay on 2026-10-03 passed for eight original files:
 SaveGame source/header, Action, ScriptableGameObj, ActiveConversation
 source/header, script parameter parsing and Test_Cinematic. The replay applied

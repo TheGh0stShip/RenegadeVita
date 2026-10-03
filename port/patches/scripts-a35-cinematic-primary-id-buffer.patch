@@ -1,0 +1,7 @@
+--- a/Test_Cinematic.cpp
++++ b/Test_Cinematic.cpp
+@@ -854,3 +854,3 @@
+-				char id[10];
++				char id[12]; // signed 32-bit decimal ID, sign and terminator
+ 				sprintf( id, "%d", MyID );
+ 				Commands->Attach_Script( obj, "Test_Cinematic_Primary_Killed", id );

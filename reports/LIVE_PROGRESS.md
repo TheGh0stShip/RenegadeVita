@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Authored cinematic primary actor routes — 2026-10-03
+
+Completed: primary selections joined to script attachments by possible creation
+producer, preserving chronology and identity uncertainty. Retained receipts
+contain1/10/10 Tutorial/M13/M01 routes; one post-primary attachment, no direct
+Created-damage candidate in that join. Later/external callbacks remain open.
+Evidence:27 focused cinematic Python checks; private hashed-input join receipt.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Cinematic primary-death dispatch ownership — 2026-10-03
 
 Completed: original saved helper latch, synchronous custom dispatch, parser

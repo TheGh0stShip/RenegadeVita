@@ -14,6 +14,19 @@ Destroy_Object only marks deletion pending; immediate destruction must not be
 invented as a trigger. No parser scheduling or authored command changes were
 made. A source contract retains these distinctions for future investigation.
 
+The read-only tracer now joins normal Set_Primary and Attach_Script records by
+their possible creation producers, retaining before/after ordering and explicit
+live-identity uncertainty. Reanalysis of the retained authored chronology
+receipts found1/10/10 primary routes for Tutorial/M13/M01. Only M13 has an
+attachment after primary selection sharing a creation candidate: its helicopter
+helper has no direct Apply_Damage call in Created. M01's hovercraft helper is
+attached before primary selection. Thus this narrow join finds no immediate
+Created-damage attachment on an already-selected primary candidate. Later
+callbacks, external actor references, failed/reused creations, primary-death
+tails and actual reentrant delivery remain open. Input receipt hashes and
+joined metadata stay private in
+`build/cinematic-primary-actor-routes-20261003.json`; no retail files changed.
+
 The deeper Tutorial/M13/M01 sweep retains 1,140 original source event-call
 sites and 3,231 authored/unbound binding contexts. No resolved event type in
 this inspected scope is a cinematic slot-fill candidate. Five contexts remain

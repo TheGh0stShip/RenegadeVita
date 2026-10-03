@@ -268,6 +268,29 @@ def trace_branch(records, branch, scripts, object_ids, spawner_ids):
     return output, findings
 
 
+def primary_actor_routes(rows):
+    """Join primary and attachment producer candidates without proving identity."""
+    routes = []
+    for primary_index, primary in enumerate(rows):
+        if primary['command'] != 'set_primary':
+            continue
+        candidates = {c['creation_line'] for use in primary['slot_uses']
+                      for c in use.get('producer_candidates', [])}
+        attachments = []
+        for row_index, row in enumerate(rows):
+            if row['command'] != 'attach_script' or 'script_source' not in row:
+                continue
+            shared = candidates & {c['creation_line'] for use in row['slot_uses']
+                                   for c in use.get('producer_candidates', [])}
+            if shared:
+                attachments.append({'line': row['line'], 'shared_creation_candidates': sorted(shared),
+                                    'relation': 'before_primary' if row_index < primary_index else 'after_primary',
+                                    'source': copy.deepcopy(row['script_source'])})
+        routes.append({'primary_line': primary['line'], 'creation_candidates': sorted(candidates),
+                       'attachments': attachments, 'live_identity_or_reentrant_delivery_proven': False})
+    return routes
+
+
 def trace(payload, scripts, object_ids=(), spawner_ids=()):
     records, findings = control_records(payload)
     branches = {}
@@ -278,6 +301,7 @@ def trace(payload, scripts, object_ids=(), spawner_ids=()):
         findings.extend(issues)
     branches['boundary'] = [r for r in records if r['branch'] == 'boundary']
     return {'branches': branches, 'findings': findings,
+            'normal_primary_actor_routes': primary_actor_routes(branches['normal']),
             'command_count': len(records), 'command_counts': dict(sorted(Counter(r['command'] for r in records).items()))}
 
 

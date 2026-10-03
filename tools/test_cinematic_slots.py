@@ -159,6 +159,16 @@ class CinematicSlotsTests(unittest.TestCase):
         self.assertIn('obj->Set_Delete_Pending();', destroy)
         self.assertNotIn('delete obj', destroy)
 
+    def test_primary_routes_retain_attachment_order_and_distinct_producers(self):
+        scripts = helper('void Created(GameObject* obj) { Commands->Apply_Damage(obj, 1, "W", 0); }')
+        result = trace(b'0 Create_Object, 1, Actor\n0 Attach_Script, 1, Helper\n0 Set_Primary, 1\n1 Attach_Script, 1, Helper\n2 Create_Object, 2, Other\n2 Attach_Script, 2, Helper\n', scripts)
+        route = result['normal_primary_actor_routes'][0]
+        self.assertEqual(route['creation_candidates'], [1])
+        self.assertEqual([x['relation'] for x in route['attachments']], ['before_primary', 'after_primary'])
+        self.assertEqual([x['line'] for x in route['attachments']], [2, 4])
+        self.assertFalse(route['live_identity_or_reentrant_delivery_proven'])
+        self.assertEqual(route['attachments'][1]['source']['created_possible_effect_commands'], ['Apply_Damage'])
+
     def test_integer_tokens_preserve_32_bit_semantics_and_unknown_spelling(self):
         self.assertEqual(integer('2147483647'), 0x7fffffff)
         self.assertEqual(integer('-2147483648'), -0x80000000)

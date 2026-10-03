@@ -36,7 +36,17 @@ def registration_candidates(code):
     return sorted(found, key=lambda r: (r['line'], r['kind']))
 
 
-def inventory(root, database, target, map_bytes):
+def defined_symbols(data):
+    result = {}
+    for line in data.decode('utf-8', errors='replace').splitlines():
+        match = re.fullmatch(r'([0-9a-fA-F]+)\s+([A-Za-z])\s+(\S.*)', line)
+        if match and match[2].upper() != 'U':
+            result.setdefault(match[3], []).append({'address': match[1].lower(),
+                                                    'type': match[2]})
+    return result
+
+
+def inventory(root, database, target, map_bytes, symbol_bytes=b''):
     prefix = f'CMakeFiles/{target}.dir/'
     selected = {}
     for entry in database:
@@ -45,6 +55,7 @@ def inventory(root, database, target, map_bytes):
         source = (Path(entry['directory']) / entry['file']).resolve()
         selected[source] = entry['output']
     map_text = map_bytes.decode('utf-8', errors='replace')
+    symbols = defined_symbols(symbol_bytes)
     rows = []
     registrars = []
     for source in sorted((root / 'staging').rglob('*')):
@@ -53,9 +64,17 @@ def inventory(root, database, target, map_bytes):
         name = source.relative_to(root).as_posix()
         obj = selected.get(source.resolve())
         for candidate in registration_candidates(source.read_text(errors='replace')):
+            expected = None
+            if candidate['kind'] == 'script':
+                expected = '_' + candidate['arguments'][0] + 'Registrant'
+            elif candidate['kind'] == 'persist':
+                expected = candidate['arguments'][2]
             registrars.append(dict(candidate, source=name,
                                    id=digest(f'{name}:{candidate["line"]}:{candidate["kind"]}'.encode()),
-                                   selected_for_target=obj is not None))
+                                   selected_for_target=obj is not None,
+                                   expected_symbol=expected,
+                                   defined_symbol_matches=symbols.get(expected, []),
+                                   registration_verified=False))
         rows.append({'id': digest(name.encode()), 'source': name,
                      'source_sha256': digest(source.read_bytes()),
                      'selected_for_target': obj is not None,
@@ -85,6 +104,7 @@ def inventory(root, database, target, map_bytes):
                            'Discarded versus retained sections', 'Retail factory IDs',
                            'Selected sources may differ from the retained build inputs'],
             'map_sha256': digest(map_bytes), 'total': len(rows),
+            'symbols_sha256': digest(symbol_bytes) if symbol_bytes else None,
             'selected': sum(r['selected_for_target'] for r in rows),
             'map_mentioned': sum(r['map_mentions_object'] for r in rows),
             'counts': {'unknown': len(rows)}, 'rows': rows,
@@ -92,6 +112,7 @@ def inventory(root, database, target, map_bytes):
             'upstream_without_staged_candidate': sum(not r['staged_candidates'] for r in upstream_rows),
             'upstream_rows': upstream_rows,
             'registration_candidate_total': len(registrars),
+            'registration_candidates_with_defined_symbol': sum(bool(r['defined_symbol_matches']) for r in registrars),
             'registration_candidates': registrars}
 
 
@@ -100,12 +121,13 @@ def main():
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--map', type=Path, required=True)
     parser.add_argument('--target', required=True)
+    parser.add_argument('--symbols', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     database = json.loads(subprocess.check_output(
         ['ninja', '-C', str(args.build), '-t', 'compdb'], text=True, timeout=30))
-    result = inventory(root, database, args.target, args.map.read_bytes())
+    result = inventory(root, database, args.target, args.map.read_bytes(), args.symbols.read_bytes())
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({k: result[k] for k in ('total', 'selected', 'map_mentioned', 'counts')}))

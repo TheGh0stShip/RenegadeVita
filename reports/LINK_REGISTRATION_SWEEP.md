@@ -1,5 +1,15 @@
 # S3 link and registration closure — inventory in progress
 
+Retained Dev209 symbol evidence now matches 1,636 script registrar objects
+and all 140 persist-factory candidates. Expected script names follow the
+original REGISTER_SCRIPT macro (`_ClassRegistrant`); persist names come from
+the declared variable. Of 1,744 script candidates, 108 lack these exact symbol
+matches and require classification. Defined storage does not establish executed
+initialization, registration success or gameplay. All statuses remain unknown.
+Definition/network symbol expansion and discarded-section analysis remain open.
+The symbols file is hash-pinned. Five tests pass, including undefined-symbol
+rejection and preservation of uncertainty despite defined registrar storage.
+
 The staged-source denominator contains 837 C/C++ translation units. The
 retained Dev209 Ninja target selects 604; its link map mentions all 604 object
 files. The remaining 233 units require classification, including potential
@@ -26,7 +36,7 @@ map hash without publishing the raw map or private build paths. Current source
 hashes do not establish that they match the original Dev209 build inputs.
 
 Reproduce with `tools/audit_sweep_link.py --build <configured-build> --map
-<matching-map> --target RenegadeVitaA31 --output <output.json>`. The authored
+<matching-map> --symbols <matching-symbols> --target RenegadeVitaA31 --output <output.json>`. The authored
 test separates target membership from map mentions, retains discarded-section
 mentions as uncertain, and verifies deterministic rows and unique identities.
 

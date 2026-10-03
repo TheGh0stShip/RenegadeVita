@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S3 retained registrar symbols — 2026-10-03
+
+Dev209 symbols match 1,636 script and 140 persist registrar candidates.
+108 script candidates lack exact expected symbols; classification remains open.
+Defined storage is not runtime registration proof. Five tests pass; original
+runtime behavior is unchanged and native acceptance remains unverified.
+
 ## S3 upstream and registration denominators — 2026-10-03
 
 Inventory expanded to 1,490 original C/C++ units, including editor/tools;

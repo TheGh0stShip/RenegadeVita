@@ -259,7 +259,7 @@
     "tools/audit_sweep_renderer.py": "a0112c5ce5bb4fd9f6e9c4fbc017a0e2674d8ba03500e3b23df85793750a9908",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/renderer.json": "7f25d5d445fcd18129d59ca392e4388a2053b67bee653aa6482620885b68021c"
+    "tools/sweep_reviews/renderer.json": "ebeab05d2f820f4a0f4364ba068e5154ea0b84f1d5d8e4e0635a3de7f9bdb15b"
   },
   "review_identity_issues": [],
   "rows": [
@@ -34806,9 +34806,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
       "references": [
         {
           "column": 8,
@@ -34836,15 +34837,38 @@
           "line": 513
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Original DDS pixel/block decode supplies retained ARGB surfaces converted to RGBA. Eligible power-of-two chains at most 2048 pixels and ten levels, each at least 4x4, can use native compressed upload. Ineligible or failed compressed allocation uses RGBA. Pixel fidelity, alpha metadata, mip sizing and lifetime remain unverified.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_DXT1"
+      },
       "row_id": "91c6ec3fed820622c0325a30e05c629247fce518a632c5ce58704b02f218a219",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_DXT1",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
       "references": [
         {
           "column": 8,
@@ -34872,15 +34896,38 @@
           "line": 513
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Native loader accepts this DDS format but excludes it from block-decode and direct-compressed-upload eligibility. It calls DDSFileClass::Get_Pixel per pixel; original DXT2/3/4 cases return 0xffffffff. The resulting retained surface and RGBA upload contain opaque white instead of decoded texture content. Other original DDS methods remain outside this route review.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "missing",
+        "symbol": "D3DFMT_DXT2"
+      },
       "row_id": "ac15fda5f16898ad09ee79f024e4bea7721b162189e9ffa71f497ed12b8d36b0",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_DXT2",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
       "references": [
         {
           "column": 8,
@@ -34908,15 +34955,38 @@
           "line": 514
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Native loader accepts this DDS format but excludes it from block-decode and direct-compressed-upload eligibility. It calls DDSFileClass::Get_Pixel per pixel; original DXT2/3/4 cases return 0xffffffff. The resulting retained surface and RGBA upload contain opaque white instead of decoded texture content. Other original DDS methods remain outside this route review.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "missing",
+        "symbol": "D3DFMT_DXT3"
+      },
       "row_id": "dd15d87bb6ae2f9337a28a65ebd0f380520b80a9e4e8c2142a30d0d1654f4b77",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_DXT3",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
       "references": [
         {
           "column": 8,
@@ -34944,15 +35014,38 @@
           "line": 514
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Native loader accepts this DDS format but excludes it from block-decode and direct-compressed-upload eligibility. It calls DDSFileClass::Get_Pixel per pixel; original DXT2/3/4 cases return 0xffffffff. The resulting retained surface and RGBA upload contain opaque white instead of decoded texture content. Other original DDS methods remain outside this route review.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "missing",
+        "symbol": "D3DFMT_DXT4"
+      },
       "row_id": "bf1e39caf28d9ec6c90ae49f6c7bd8f57e2fff4dec6d51fc40bc7407e6dc759c",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "D3DFMT_DXT4",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
       "references": [
         {
           "column": 8,
@@ -34980,8 +35073,30 @@
           "line": 515
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Original DDS pixel/block decode supplies retained ARGB surfaces converted to RGBA. Eligible power-of-two chains at most 2048 pixels and ten levels, each at least 4x4, can use native compressed upload. Ineligible or failed compressed allocation uses RGBA. Pixel fidelity, alpha metadata, mip sizing and lifetime remain unverified.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "boundary_replaced",
+        "symbol": "D3DFMT_DXT5"
+      },
       "row_id": "1e1d5e215b6d99334e2e2a0d5092e0aee6bf7476d13ddb6f00ba77286ff19478",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DFMT_DXT5",
       "symbol_role": "value_or_layout_token"
     },
@@ -47211,9 +47326,10 @@
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
       "references": [
         {
           "column": 7,
@@ -47366,15 +47482,38 @@
           "line": 1213
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Original DDS pixel/block decode supplies retained ARGB surfaces converted to RGBA. Eligible power-of-two chains at most 2048 pixels and ten levels, each at least 4x4, can use native compressed upload. Ineligible or failed compressed allocation uses RGBA. Pixel fidelity, alpha metadata, mip sizing and lifetime remain unverified.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "boundary_replaced",
+        "symbol": "WW3D_FORMAT_DXT1"
+      },
       "row_id": "7312f8d94deb0f45dee552cf7a3368ae4b64e6fa12320b2183d12a0195ba2143",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "WW3D_FORMAT_DXT1",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
       "references": [
         {
           "column": 7,
@@ -47512,15 +47651,38 @@
           "line": 285
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Native loader accepts this DDS format but excludes it from block-decode and direct-compressed-upload eligibility. It calls DDSFileClass::Get_Pixel per pixel; original DXT2/3/4 cases return 0xffffffff. The resulting retained surface and RGBA upload contain opaque white instead of decoded texture content. Other original DDS methods remain outside this route review.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "missing",
+        "symbol": "WW3D_FORMAT_DXT2"
+      },
       "row_id": "4334ae2668ca5977d261f5de54a4b11c04a9fadf85a3c7fb93b48ef9f6be70f9",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "WW3D_FORMAT_DXT2",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
       "references": [
         {
           "column": 7,
@@ -47643,15 +47805,38 @@
           "line": 286
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Native loader accepts this DDS format but excludes it from block-decode and direct-compressed-upload eligibility. It calls DDSFileClass::Get_Pixel per pixel; original DXT2/3/4 cases return 0xffffffff. The resulting retained surface and RGBA upload contain opaque white instead of decoded texture content. Other original DDS methods remain outside this route review.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "missing",
+        "symbol": "WW3D_FORMAT_DXT3"
+      },
       "row_id": "471ee446930992ab9fe26ee673f7c1469eb6dc48ec777aba04da983412f7a4ed",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "WW3D_FORMAT_DXT3",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
       "references": [
         {
           "column": 7,
@@ -47774,15 +47959,38 @@
           "line": 286
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Native loader accepts this DDS format but excludes it from block-decode and direct-compressed-upload eligibility. It calls DDSFileClass::Get_Pixel per pixel; original DXT2/3/4 cases return 0xffffffff. The resulting retained surface and RGBA upload contain opaque white instead of decoded texture content. Other original DDS methods remain outside this route review.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "missing",
+        "symbol": "WW3D_FORMAT_DXT4"
+      },
       "row_id": "6af2c8a305427cb896fc632c75bb40bb6ef8c675f6ea107474455d5da7859f52",
-      "status": "unknown",
+      "status": "missing",
       "symbol": "WW3D_FORMAT_DXT4",
       "symbol_role": "value_or_layout_token"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
       "references": [
         {
           "column": 7,
@@ -47915,8 +48123,30 @@
           "line": 1213
         }
       ],
+      "review": {
+        "acceptance_open": "Inventory actual retail DDS formats; verify original decode alternatives and premultiplied-alpha behavior, preserve content and test authored format fixtures plus Vita/PSTV pixels.",
+        "affected_scope": [
+          "Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects."
+        ],
+        "behavior": "Original DDS pixel/block decode supplies retained ARGB surfaces converted to RGBA. Eligible power-of-two chains at most 2048 pixels and ten levels, each at least 4x4, can use native compressed upload. Ineligible or failed compressed allocation uses RGBA. Pixel fidelity, alpha metadata, mip sizing and lifetime remain unverified.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:283-287 and :1099-1285",
+          "staging/ww3d2/ddsfile.cpp:401-407"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
+        "original_owner": "Original DDSFileClass through native DDS texture loader",
+        "status": "boundary_replaced",
+        "symbol": "WW3D_FORMAT_DXT5"
+      },
       "row_id": "83e4a9b1297eaf241dcf402d1611ec4a691b8833c4a2228db73e2f0caf27ed37",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "WW3D_FORMAT_DXT5",
       "symbol_role": "value_or_layout_token"
     },
@@ -48969,9 +49199,9 @@
       "required_feature": 28
     },
     "by_status": {
-      "boundary_replaced": 38,
-      "missing": 86,
-      "unknown": 2995
+      "boundary_replaced": 42,
+      "missing": 92,
+      "unknown": 2985
     },
     "candidate_roles": {
       "prototype": 14,

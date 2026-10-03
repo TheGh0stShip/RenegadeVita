@@ -1,5 +1,15 @@
 # S2 renderer features — inventory in progress
 
+DDS route review finds DXT2/3/4 accepted by the native loader but decoded
+through original Get_Pixel cases returning opaque white (ddsfile.cpp:401–406).
+They are excluded from both fast block decode and native compressed eligibility.
+The retained surface and RGBA upload therefore receive white content on this
+route. Actual retail usage and alternate DDS methods remain open. DXT1/5 have
+decode paths and eligible native compressed upload, with RGBA fallback; neither
+is physically accepted. Ten symbol rows cover both enum namespaces, representing
+five format routes rather than ten independent defects. Current totals:
+92 missing, 42 replaced, 2,985 unknown across 3,119 rows. Eleven tests pass.
+
 Compound DX8_FVF_* discovery adds 11 symbols and 29 references; one symbol
 is the header guard, not a vertex layout. Ten original named layouts are now
 reviewed against the indexed native gate, which accepts only 0x152/stride36

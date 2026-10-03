@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 DDS batch: accepted DXT2/3/4 reach original per-pixel branches returning
+opaque white. DXT1/5 decode/compressed upload paths exist. Retail format usage
+and pixels remain open. Both enum namespaces reviewed; totals 92 missing,
+42 replaced, 2,985 unknown. Eleven tests/reproduction pass.
+
 S2 indexed-layout batch: ten original named layouts reviewed; two match accepted
 FVF/stride pairs and eight fail that gate. Other submission routes remain open.
 Compound tokens added to discovery. Eleven tests/reproduction pass; totals

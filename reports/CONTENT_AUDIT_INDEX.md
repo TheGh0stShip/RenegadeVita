@@ -1,5 +1,10 @@
 # Content coverage audit index
 
+AI/action ownership: [hibernation and callback review](AI_ACTION_OWNER_REVIEW.md)
+traces listener removal/re-addition, movement path release and priority-driven
+callback rules. Missing action observers remain a diagnostic blind spot outside
+Logan; timer/conversation observations do not cover this path. Runtime is open.
+
 Command assignment sweep: [original script table coverage](SCRIPT_COMMAND_TABLE_COVERAGE.md)
 finds no missing assignments among118 focus mission commands or179 across
 selected declared-script bodies. Five parser counterexamples pass; indirect/

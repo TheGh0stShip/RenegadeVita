@@ -1,5 +1,16 @@
 # S2 renderer features — inventory in progress
 
+Retail DDS header scan using `tools/audit_dds_format_inventory.py` examined all
+30 supplied top-level MIX1 archives without archive errors. It counted 3,459
+named DDS members: 2,981 DXT1, 474 DXT5 and four DXT3. DXT3 members are
+`hud_c&c_g_comm.dds`, `hud_c&c_g_conyard.dds`, `hud_c&c_n_comm.dds` and
+`hud_c&c_n_conyard.dds`, all in always3.dat. Thus the white-decoding route has
+retail content candidates. Runtime selection/display remains unverified.
+No DXT2/4 named members were found in this scope. Loose files, nested archives,
+duplicate index names and payload validity remain open; absence is not a global
+exclusion claim. Detailed metadata stays in ignored build/dds-format-inventory.json;
+no retail bytes were published. Three authored header/archive tests pass.
+
 DDS route review finds DXT2/3/4 accepted by the native loader but decoded
 through original Get_Pixel cases returning opaque white (ddsfile.cpp:401–406).
 They are excluded from both fast block decode and native compressed eligibility.

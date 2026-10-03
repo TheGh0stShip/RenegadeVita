@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+Retail DDS batch: all 30 supplied archives scanned, 3,459 DDS headers counted.
+Four DXT3 HUD icons in always3.dat are candidates for the white-decoding defect;
+runtime display remains unverified. Three authored tests pass. No retail bytes
+published; detailed metadata retained locally.
+
 S2 DDS batch: accepted DXT2/3/4 reach original per-pixel branches returning
 opaque white. DXT1/5 decode/compressed upload paths exist. Retail format usage
 and pixels remain open. Both enum namespaces reviewed; totals 92 missing,

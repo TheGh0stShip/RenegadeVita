@@ -2,6 +2,12 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+Audio fallback batch: 20 no-output methods reviewed, including four sound-scene
+serializers returning success without chunk I/O. Native original-audio selection
+excludes these bodies; exact callers and physical audio/save behavior remain
+open. S1 totals reconcile at 31 stubs, one replaced boundary and 3,499 unknown.
+Movie reviews now bind build/caller input hashes as well as function identity.
+
 Movie fallback review batch: eight additional functions (seven BINKMovie
 methods and their logging helper) classified as stubs for fallback profiles.
 Native FFmpeg profile selects the alternative branch; playback remains

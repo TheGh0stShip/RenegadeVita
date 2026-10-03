@@ -5,7 +5,14 @@
     "staging/wwphys/pscene_projectors.cpp": "decdf3d42241facc03cc83af400cf3aa5bf66e063f0ba65f4a76bf90dc42508b",
     "staging/ww3d2/mesh.cpp": "b655568bf2894992a2c6a2377d4d745bf154e053f8c5d9ce4b93d05ca6d0b949",
     "staging/ww3d2/boxrobj.cpp": "10764f49c3d4b68d7d6071a6663a55a931c63affa85d0a0d3ae0acad1ae9e2d4",
-    "staging/ww3d2/decalmsh.cpp": "9cec0d5dcb333181a7f3acd6e61fa44c0b50013d4332c2526c20c3b245950161"
+    "staging/ww3d2/decalmsh.cpp": "9cec0d5dcb333181a7f3acd6e61fa44c0b50013d4332c2526c20c3b245950161",
+    "CMakeLists.txt": "0757dd0c364282eaccc45c422ac22d97359244a8bf42bc401c170c8ee17260f6",
+    "tools/host_a30_definitions/CMakeLists.txt": "37a948d345a0862c9b768bfe9b48f2d167bc844b55083437ea29a602d2dac495",
+    "port/platform/a4_binkmovie_boundary.cpp": "6558583666f34a25eaa2e7f3b4511e8d4e87e5bb8cff1dcbb0b6ee9dc63da6a3",
+    "port/platform/a31_gameplay_boundary.cpp": "f9dec496ee91feb2de21c59180268258b95d19fc86234a5525221828b72eff76",
+    "staging/commando/movie.cpp": "57f5bbf0188a8fa8fd896c3e819681c354bc0107863f942723010c07bcf4524e",
+    "staging/commando/dlgmovieoptions.cpp": "49032fb0849ec72e432d5c0780c477d46b93c52c2a57a8891897e5f68d7bea03",
+    "staging/combat/scriptcommands.cpp": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325"
   },
   "reviews": [
     {
@@ -87,7 +94,7 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     },
@@ -105,7 +112,7 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     },
@@ -123,7 +130,7 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     },
@@ -141,7 +148,7 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     },
@@ -159,7 +166,7 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     },
@@ -177,7 +184,7 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     },
@@ -195,7 +202,7 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
     },
@@ -213,9 +220,329 @@
         "staging/commando/dlgmovieoptions.cpp:280-350"
       ],
       "affected_scope": [
-        "Host and native configurations lacking both __vita__ and RENEGADE_A4_BINK_FFMPEG; frontend and campaign movie routes. Full native FFmpeg profile excludes this branch; physical playback remains unverified."
+        "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
       "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Initialize(bool, int, int)",
+      "body_sha256": "8eb95bcbc154530931e15fc418c8b1fe991095671409552099ea1aa596999ede",
+      "definition_sha256": "93cd641b0cc67dd669ef782777fd38d03cc77c8ca7984ded9b30dce0976e19bf",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Initialize(const char *)",
+      "body_sha256": "8eb95bcbc154530931e15fc418c8b1fe991095671409552099ea1aa596999ede",
+      "definition_sha256": "31a03658ab8ce0ad20a20557c038dea0e7d4495d95fe62892dfc34c178d79e33",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Shutdown(void)",
+      "body_sha256": "8eb95bcbc154530931e15fc418c8b1fe991095671409552099ea1aa596999ede",
+      "definition_sha256": "2131e88bbbb39d7f343bc9d03da913f03171c57c43254f86948112f2f17212ab",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Open_2D_Device(bool, int, int)",
+      "body_sha256": "259a62a9683aea5da982135b665c3b1a5a97b4e24132998b336e426e86f100cb",
+      "definition_sha256": "bfffb1de6843f9c92d5b21af02ef1d89ef888a318a1c02b8ad05c4a7238b13ed",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Select_3D_Device(const char *)",
+      "body_sha256": "6515cbe0195080720546558819d43f8dcaea6f3cda1ba59a8e54ba493e896606",
+      "definition_sha256": "fac6b867bb46604e86418e4d6e7447e55a335dbba90c0198101506c88bec553a",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Save_To_Registry(const char *, const StringClass &, bool,\n\tint, int, bool, bool, bool, bool, float, float, float, float, int)",
+      "body_sha256": "f03d07a146c06a0d9130e0d139c087adfc250d2aa99e4fea9aeab03c8bc29218",
+      "definition_sha256": "686a92cd875f160105ee0a629dbab8137f961c66965b3f471a94b50085f4fc4b",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "*WWAudioClass::Create_Sound_Effect(const char *)",
+      "body_sha256": "c298206afd23af2457d02337fb7c8bd5527377df6c91f2ac33490f76f64be9a6",
+      "definition_sha256": "2fc1409f96acf2480be350226b6319678e0999273d2374ff478ad8c3c7983c3b",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::On_Frame_Update(unsigned int)",
+      "body_sha256": "2364e2c33b15c61beceb8ca5995f525f2e709f92de52662f780bb567cae6e58d",
+      "definition_sha256": "23d93453def62e35ce890bd8ba8695e8301722fbc29ffd34771445e833b67f7a",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Simple_Play_2D_Sound_Effect(const char *, float, float)",
+      "body_sha256": "3074db59790598090e6806da63d95b2d9e0db815d0347874b4f0f5f10495de16",
+      "definition_sha256": "d3b678020da8c09737c401ef3c0cf5a4b0ce5022df1c4b9bd900877f4cf6d4c9",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "SoundSceneClass::Save_Static(ChunkSaveClass &)",
+      "body_sha256": "74b586a0f16f5910e26ddfac30050ca179b906ff57da260af7337f4c1c020b24",
+      "definition_sha256": "15d1fcdc1403f7ab0e91f9d6716a7124a0f04ebbd55c81590560d15ae31c8dd3",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Returns success without reading or writing sound-scene chunks.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "SoundSceneClass::Load_Static(ChunkLoadClass &)",
+      "body_sha256": "74b586a0f16f5910e26ddfac30050ca179b906ff57da260af7337f4c1c020b24",
+      "definition_sha256": "888b0aff1135814060664dcb72334217c42ae4eeac0adf6bef51133f484228b2",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Returns success without reading or writing sound-scene chunks.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "SoundSceneClass::Save_Dynamic(ChunkSaveClass &)",
+      "body_sha256": "74b586a0f16f5910e26ddfac30050ca179b906ff57da260af7337f4c1c020b24",
+      "definition_sha256": "e03f33d819895204fa3cd493276e74a24ca964031a66dbeaed8b7c2825f1495e",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Returns success without reading or writing sound-scene chunks.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "SoundSceneClass::Load_Dynamic(ChunkLoadClass &)",
+      "body_sha256": "74b586a0f16f5910e26ddfac30050ca179b906ff57da260af7337f4c1c020b24",
+      "definition_sha256": "9b9fa641e5e95777611c26b6b9c4a393d5f21faa5550d3fbce76007286f20f5d",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Returns success without reading or writing sound-scene chunks.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "*WWAudioClass::Create_3D_Sound(const char *, int)",
+      "body_sha256": "5268655cafa6efc00a38d74e41859b26e9256edebb0eca19dfc3c642aadc4903",
+      "definition_sha256": "096667b5529cedbf8d2999a55c2fe7fd2ec577b97b7e04a76155fe00fc087405",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "*WWAudioClass::Create_Sound(int definition_id,\n\tRefCountClass *, uint32, int)",
+      "body_sha256": "6d45c70299ceeb0e55933bdcfb1a351cbc3bbe4ff82954f5b88805edf4e3c94d",
+      "definition_sha256": "aead02f89adad4a30bbfb10ad1a28a63b1b83cd8993b77bc2be32d68361bf6df",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "*WWAudioClass::Create_Sound(const char *, RefCountClass *,\n\tuint32, int)",
+      "body_sha256": "42d5f45a05090272a4cc105a107e4c7e274e4c3fa838684be8515ce38cbf3e7b",
+      "definition_sha256": "8c296cdabdda6d482e2eaec9df88abefada49476363789436a2431a85bc46db0",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Create_Instant_Sound(int definition_id, const Matrix3D &,\n\tRefCountClass *, uint32, int)",
+      "body_sha256": "6010883e21de9f1cdfe285eb1c31ad177cb1b3ed5eedf5993e2f4ddfe6317d19",
+      "definition_sha256": "bec1ba9ce59000a142474521f9fb877ef4c87dcbeff4523a17ab7c87228d4696",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "*WWAudioClass::Create_Continuous_Sound(int definition_id,\n\tRefCountClass *, uint32, int)",
+      "body_sha256": "69359543de7eeb4977f015155aeaf7acddb9b55de87f20fb29763f6afa8a89c2",
+      "definition_sha256": "7616f0e1cb9a0a7138283d624ee35fae872d3ddb14ac7aee602ebb8f8dad253f",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "WWAudioClass::Create_Instant_Sound(const char *, const Matrix3D &,\n\tRefCountClass *, uint32, int)",
+      "body_sha256": "df56cc654508d9fe9917d734d34c521a5453111b938c2f9b35b72625d6b95ba5",
+      "definition_sha256": "6ca07fb028373211fd1952f4ee7ba0daf14e30ba3db67a3be9476357fe716d8c",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "*WWAudioClass::Create_Continuous_Sound(const char *,\n\tRefCountClass *, uint32, int)",
+      "body_sha256": "5552c7c34288412327379f6050801185b1fda1d2e6f5c8f86e1d21a7b9c5c0ba",
+      "definition_sha256": "58deeb236c366cd567579422dfa2f0966f09cb728bb7ee69bba1e9231020837f",
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudioClass/SoundSceneClass device, playback and serialization methods",
+      "behavior": "Empty implementation or fixed failure/null/zero result with optional diagnostic; performs no device playback or settings persistence.",
+      "callers": [
+        "Original Combat scriptcommands audio command consumers, Commando MenuGameMode and audio lifecycle; overload-specific and indirect reachability remains unresolved."
+      ],
+      "affected_scope": [
+        "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
+      ],
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
     }
   ]
 }

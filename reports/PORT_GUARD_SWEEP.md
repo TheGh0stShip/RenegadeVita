@@ -2,8 +2,8 @@
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,531 records with 11 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, and 3,519
+source contains 3,531 records with 31 fallback/diagnostic functions reviewed as
+`stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, and 3,499
 records still `unknown`. All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -46,6 +46,19 @@ Reviewed entries and risks:
 - Native-profile preprocessing and configured graph evidence select original
   audio and seven nonempty movie-provider methods. Header parse uncertainties
   prevent treating syntax absence alone as complete exclusion or playback proof.
+- Twenty no-output audio methods are source-reviewed stubs: initialization,
+  shutdown, device selection, settings persistence, frame update, playback
+  creation and four sound-scene serializers. The serializers return success
+  without consuming or emitting chunks. The current full native configuration
+  defines `RENEGADE_A35_ORIGINAL_WWAUDIO` and excludes these fallback bodies.
+  Logical listener/sound creation and stateful settings methods remain separate
+  unclassified rows; they were not labeled stubs from the enclosing guard.
+  Exact overload and indirect caller resolution remains open. Original command
+  references include `scriptcommands.cpp:935`, `:950`, `:995` and `:1029`.
+
+Movie reviews now also pin current build definitions and original movie/dialog
+caller sources. A matching method signature in another preprocessor branch
+cannot inherit a review: the body and optional definition hash must match.
 
 Reviews invalidate when their recorded function or caller/context identity
 changes. Constructor initializers belong to definition identity. The tool

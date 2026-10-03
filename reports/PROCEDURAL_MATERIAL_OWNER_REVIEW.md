@@ -33,5 +33,17 @@ using the established native buffer/draw boundary. It must not replace effects
 with opaque base meshes or a separate scene renderer. Compare actual tutorial,
 M13 and M01 effect instances and matching native captures before acceptance.
 
+Further queue/lifetime trace: original MatPassTaskClass adds references to both
+MaterialPass and Mesh on construction and releases both on deletion after the
+draw. Visible procedural tasks append FIFO within their FVF category. Rigid
+suppressed-base tasks append to a separate delayed FIFO; its flush binds the
+category vertex/index buffers, draws and clears head/tail. The skin container's
+delayed entry point delegates to its ordinary queue. Skin rendering deforms
+vertices, fills both UV sets and diffuse colors, sets each mesh's base offset,
+binds the dynamic buffer, draws categories and procedural tasks, then clears
+visible skin state. Native Submit_Mesh instead reads only model base passes.
+Do not replace these rules with borrowed pointers, one global delayed queue,
+or an unregistered polygon-renderer call.
+
 Evidence is source inspection only. No correction or native acceptance is
 claimed in this review, and no build or launch was performed.

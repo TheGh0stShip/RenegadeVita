@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Procedural task lifetime and skin ordering — 2026-10-03
+
+Completed: original task ref ownership verified for mesh and MaterialPass;
+FIFO category queues and separate delayed rigid queue traced. Skin delayed
+entry delegates to ordinary queue after original dynamic deformation/UV/color
+buffer construction. Native Submit_Mesh consumes model base passes only.
+Evidence: source inspection; no procedural rendering closure claimed.
+Next: retain these original owners while integrating native geometry/state.
+No build or launch; gates0/10.
+
 ## Effect restoration checks independent of active staging — 2026-10-03
 
 Completed: retained dazzle/decal source tests now replay four pristine original

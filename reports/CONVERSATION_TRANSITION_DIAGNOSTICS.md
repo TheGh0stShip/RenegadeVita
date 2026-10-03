@@ -35,3 +35,14 @@ engine/action IDs but using different instance tokens, exact queue capacity,
 overflow count, completion after draining, default-disabled collection and
 token survival across resets. These cases are prepared only: they have not
 been compiled or run. Source checks cannot establish their runtime result.
+
+Offline assessment is available through
+`python3 tools/analyze_conversation_transitions.py <events.jsonl>`.
+Validate the complete matching flight bundle first with the existing bundle
+validator. Supply one process capture; the reader does not infer launch or
+session identity from reused candidate names. It preserves transitions rather
+than pairing through missing reset/load evidence. Nonpositive remark timers,
+unknown instance tokens, nonfinite timers and explicit queue loss remain
+observations. Eight synthetic counterexamples pass; no current runtime capture
+has been assessed with the new collector. Detailed output stays in private
+candidate evidence, not a public asset or dialogue report.

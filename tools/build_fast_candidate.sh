@@ -138,6 +138,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_mission_voice_routes \
 		tools.test_mission_wave_headers \
 		tools.test_conversation_transition_telemetry \
+		tools.test_conversation_transition_analysis \
 		tools.test_vita_mission_ranks \
 		tools.test_vita_text_readiness \
 		tools.test_wwui_resource_styles \

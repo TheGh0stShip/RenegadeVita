@@ -1,5 +1,11 @@
 # Live engineering progress
 
+## S4 visibility serialization bounds — 2026-10-03
+
+27 visibility chunks pass variable/ID/pairing/compressed-size checks with zero
+parser errors or findings. Fixture passes; output reproduces. Decompression,
+repeated chunks, linkage and runtime culling remain unverified. No engine change.
+
 ## S4 spatial chunk owner reconciliation — 2026-10-03
 
 81/81 map/family pairs locate original-context visibility, static culling and

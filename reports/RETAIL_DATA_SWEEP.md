@@ -77,6 +77,21 @@ structural findings remain review leads. This is the binding portion of S4;
 the complete sweep and full-game acceptance remain open.
 # All-map level chunk denominator
 
+## Visibility serialization bounds
+
+All 27 first located visibility chunks pass manager-variable widths, table ID
+sector bounds, compressed byte-count matching and ID/data pairing checks, with
+zero parser errors or findings. `visibility_bounds.json` retains counts and
+member hashes only. Original owner layouts are in `vistablemgr.cpp:186` and
+`:417`, and `vistable.cpp:399`. One authored fixture checks valid pairing,
+out-of-range IDs and wrong-width IDs. Reproduction matches byte for byte.
+
+Run `python3 -m tools.audit_visibility_bounds --data DATA --presence reports/generated/sweeps/spatial_presence.json --output OUTPUT`.
+No LZO decompression, reference linkage or runtime visibility result is proved.
+Only each candidate's first offset is validated; repeated chunks need review.
+All statuses remain unknown. Latest compile/hygiene CI for 6707976 is queued;
+earlier 629bf76 hygiene passed. No queued job was restarted or treated as failed.
+
 ## Spatial owner context reconciliation
 
 Three reviewed chunk paths identify visibility tables, static-object culling

@@ -16,7 +16,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | link | 837 | 4448 | False |
 | retail | 27 | 1533 | False |
 | scripts | 202 | 247 | False |
-| systems | 112 | 139 | False |
+| systems | 112 | 162 | False |
 | performance | 80 | 80 | False |
 | external | 3782 | 3782 | False |
 
@@ -16770,6 +16770,29 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | scripts /script_units/7 | staging/scripts/Mission04.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | scripts /script_units/8 | staging/scripts/Mission05.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | scripts /script_units/9 | staging/scripts/Mission06.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/0 | port/platform/vita/a31_vita_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/1 | staging/combat/raveshawbossgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/10 | staging/scripts/Mission04.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/11 | staging/scripts/Mission04.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/12 | staging/scripts/Mission11.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/13 | staging/scripts/Mission11.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/14 | staging/scripts/Mission11.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/15 | staging/scripts/Mission11.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/16 | staging/scripts/MissionDemo.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/17 | staging/scripts/PRDemo.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/18 | staging/scripts/PRDemo.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/19 | staging/scripts/PRDemo.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/2 | staging/combat/raveshawbossgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/20 | staging/scripts/Test_BMG.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/21 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/22 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/3 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/4 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/5 | staging/combat/smartgameobj.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/6 | staging/scripts/Mission00.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/7 | staging/scripts/Mission00.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/8 | staging/scripts/Mission02.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| systems /control_lock_rows/9 | staging/scripts/Mission02.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | systems /rows/0 | IDD_MENU_OPTIONS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | systems /rows/1 | IDD_QUIT_TO_DESKTOP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | systems /rows/10 | IDD_CONTROLS_ATTACK_TAB | unknown | unclassified | unknown; callers and retail usage require reconciliation |

@@ -1,10 +1,16 @@
 import tempfile
 from pathlib import Path
 import unittest
-from tools.audit_sweep_systems import dialogs, inventory, system_owners
+from tools.audit_sweep_systems import dialogs, inventory, system_owners, control_lock_references
 
 
 class SystemsSweepTests(unittest.TestCase):
+    def test_control_lock_tokens_preserve_lines_without_comment_or_string_hits(self):
+        source = '// Control_Enable(false);\n"Control_Enable(true)";\nCommands -> Control_Enable(false);\nvoid Control_Enable(bool value);\n'
+        refs = control_lock_references(source)
+        self.assertEqual([r['line'] for r in refs], [3, 4])
+        self.assertEqual([r['commands_member_candidate'] for r in refs], [True, False])
+
     def test_owner_case_and_selection_are_independent_of_map_mentions(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

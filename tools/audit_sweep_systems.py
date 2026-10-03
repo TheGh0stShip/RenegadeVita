@@ -82,6 +82,34 @@ def dialogs(code):
     return rows
 
 
+def control_lock_references(code):
+    clean = masked(code, strings=True)
+    return [{'line': clean.count('\n', 0, match.start()) + 1,
+             'column': match.start() - clean.rfind('\n', 0, match.start()),
+             'commands_member_candidate': bool(re.search(r'Commands\s*->\s*$', clean[max(0, match.start()-80):match.start()]))}
+            for match in re.finditer(r'\bControl_Enable\s*\(', clean)]
+
+
+def control_locks(root, link):
+    selected = {r['source'] for r in link.get('rows', []) if r['selected_for_target']}
+    rows = []
+    paths = list((root / 'staging').rglob('*')) + list((root / 'port').rglob('*'))
+    for path in sorted(paths):
+        if not path.is_file() or path.suffix.lower() not in ('.cpp', '.h', '.hpp', '.cc', '.cxx'):
+            continue
+        data = path.read_bytes()
+        refs = control_lock_references(data.decode('latin1'))
+        source = path.relative_to(root).as_posix()
+        digest = hashlib.sha256(data).hexdigest()
+        for ref in refs:
+            rows.append(dict(ref, source=source, source_sha256=digest,
+                             id=hashlib.sha256(f'{source}:{ref["line"]}:{ref["column"]}'.encode()).hexdigest(),
+                             directly_selected_translation_unit=source in selected,
+                             status='unknown', evidence_class='unpreprocessed_source_syntax',
+                             acceptance_open='Resolve branch/caller, lock lifetime, restoration and controller/touch enforcement'))
+    return rows
+
+
 def inventory(root, template_path, link=None):
     link = link or {'rows': []}
     selected = {row['source'] for row in link['rows'] if row['selected_for_target']}
@@ -129,7 +157,10 @@ def inventory(root, template_path, link=None):
                            'Alternate resource providers', 'Controls/styles and factory callback behavior',
                            'Owner patterns are candidate coverage, not complete caller or class closure',
                            'Platform replacement/provider paths and all Control_Enable locks'],
-            'system_rows': system_owners(root, link), 'rows': rows}
+            'system_rows': system_owners(root, link),
+            'control_lock_rows': control_locks(root, link),
+            'control_lock_scope': 'Every Control_Enable(...) token occurrence in staged and port C++/headers, including declarations and inactive branches; header inclusion and runtime execution not inferred',
+            'rows': rows}
 
 
 def main():

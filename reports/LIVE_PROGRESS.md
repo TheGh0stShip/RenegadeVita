@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S6 input-lock occurrence denominator — 2026-10-03
+
+23 Control_Enable occurrences retained across staged/port sources, including
+17 Commands-member candidates and native restoration. Line/hash/selection
+evidence preserved; declarations and inactive branches are not execution proof.
+Four S6 tests pass; 13 combined sweep tests passed before this extension.
+Balanced locks, controller/touch enforcement and affected scenarios remain open.
+
 ## S6 original-owner and ARM selection reconciliation — 2026-10-03
 
 Corrected base-defense candidates to original Toolkit/M10 script owners and

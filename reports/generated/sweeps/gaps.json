@@ -1,17 +1,17 @@
 {
   "schema": 1,
   "complete": false,
-  "total": 16879,
+  "total": 16902,
   "counts": {
     "boundary_replaced": 43,
     "disabled_by_port_guard": 6,
     "missing": 92,
     "stubbed_or_noop": 39,
-    "unknown": 16699
+    "unknown": 16722
   },
   "severity_counts": {
     "missing_behavior": 45,
-    "unclassified": 16742,
+    "unclassified": 16765,
     "visual": 92
   },
   "inputs": [
@@ -100,10 +100,10 @@
     },
     {
       "sweep": "systems",
-      "sha256": "b5f7694adb14941e2e8c07bb01935208695e57e6abbe0105064c007b82ade620",
+      "sha256": "f4fd8b0436d18fe2116f2a0c6943cc4b9aa78f76355b56556866829d92def93f",
       "issue_url": "https://github.com/TheGh0stShip/RenegadeVita/issues/10",
       "root_rows": 112,
-      "retained_status_records": 139,
+      "retained_status_records": 162,
       "complete": false,
       "coverage_risks": [
         "Conditional resource branches and duplicate declarations",
@@ -301466,6 +301466,420 @@
       "evidence_class": "source_and_build_metadata",
       "evidence_source": "reports/generated/sweeps/scripts.json",
       "cluster": "scripts"
+    },
+    {
+      "id": "dc66d9af3721f743652cb25d4d9abe117b110d9c27115735ca4a4f280eb196d2",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/0",
+      "label": "port/platform/vita/a31_vita_runtime.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "4256f71ef51577e9444fcb524cf462ad467d0536dfce379e6aad793303b1533c",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/1",
+      "label": "staging/combat/raveshawbossgameobj.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "2459c3f49a0526ff0d8b0f223ebf894a5afe9870e549dc97fbf37b274efc7f69",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/10",
+      "label": "staging/scripts/Mission04.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "42caf062ea6332e30d564bae29e29e049145a9b94eae98f4a0427c5e7c52da37",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/11",
+      "label": "staging/scripts/Mission04.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "1559de296d8a7f12821132af1a51ed493050003c69c0210a09bcacd96355cb6a",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/12",
+      "label": "staging/scripts/Mission11.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "331dd6f5076715b8d3dbbacb9c9b21fd84d103c28d22f41d9aa52253419e1e8f",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/13",
+      "label": "staging/scripts/Mission11.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "3cb047809a47968f9e63c1880524d1170eb055717d9e1e58c3682d6838b69350",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/14",
+      "label": "staging/scripts/Mission11.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "d0209361a05f7caa72814d637c7d612c9e0d0c2645960139d2416c0e11ce9804",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/15",
+      "label": "staging/scripts/Mission11.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "2672ab6ca22b9c03f28b469eff1ac714e4df036c35e0bb8a78c515e0b4f6caac",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/16",
+      "label": "staging/scripts/MissionDemo.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "165970b5ac74825ab2cb53a3f343107ec58526527c1143f21a8abc2f7eae1176",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/17",
+      "label": "staging/scripts/PRDemo.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "fb1061ac3442dde1a7408b638a265bb77ffa47dd35c78aa8349979eea39f2d96",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/18",
+      "label": "staging/scripts/PRDemo.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "e78798c5f5331363942e74e35be0957d9ed07caf507ec80d37d60d85bd6a76d6",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/19",
+      "label": "staging/scripts/PRDemo.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "82c3efd9fd0c700991c1cae3156907d44dbee725cef16eb1b9a8c77ea0bb1bd5",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/2",
+      "label": "staging/combat/raveshawbossgameobj.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "cd391b9438377106aee6e77f269b6530b16ef82d29607d48e750e9e12461b7b7",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/20",
+      "label": "staging/scripts/Test_BMG.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "24ed514b75d49bc373849063cc1a70911ff22d3e6e05c8c9cf01be1921998264",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/21",
+      "label": "staging/scripts/Test_Cinematic.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "5b6d01d22c05a9680ef96a5439db83ad991cefb46ef7e0db437a6298c3d74563",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/22",
+      "label": "staging/scripts/Test_Cinematic.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "5bdcc3cfe56c88eedbce21771ca1d28d1eab7e8d65663baa53946abfd4dc4a2c",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/3",
+      "label": "staging/combat/scriptcommands.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "8f6e44767ad430b6c321f9c22ddb43bf7561e14d7e4e657758df9f082080d208",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/4",
+      "label": "staging/combat/scriptcommands.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "caa2c2b06ea64c31c709d1758273163a91cd6373736175d20314ee71bd02b6ea",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/5",
+      "label": "staging/combat/smartgameobj.h",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "ecf821088e96028b2578f55f58728d72fa0d5e4f0b4d42a986e141216e4c6fbb",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/6",
+      "label": "staging/scripts/Mission00.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "456f25d8d19401fda45ac0885b6604ccf8688ad205f0ce9a37e16d48bc02f519",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/7",
+      "label": "staging/scripts/Mission00.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "bc1956bef328c33e4771e176f07d8483a02ad5bd2d04c2558f984e86966ea246",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/8",
+      "label": "staging/scripts/Mission02.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
+    },
+    {
+      "id": "62f97b3d97556c6f8205db8cd2760cabce0f7f5e89e86817386cddff09f75c3a",
+      "sweep": "systems",
+      "inventory_pointer": "/control_lock_rows/9",
+      "label": "staging/scripts/Mission02.cpp",
+      "status": "unknown",
+      "severity": "unclassified",
+      "severity_basis": "requires impact review",
+      "affected_missions_modes": [
+        "unknown; callers and retail usage require reconciliation"
+      ],
+      "original_owner": "requires original-owner review",
+      "acceptance_open": "requires caller, behavior and evidence-class review",
+      "review_evidence_pointer": null,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "evidence_source": "reports/generated/sweeps/systems.json",
+      "cluster": "systems"
     },
     {
       "id": "3f079885ba75310a92281f059dac59274de95fea863c3215b1fbe2c2b3e0018c",

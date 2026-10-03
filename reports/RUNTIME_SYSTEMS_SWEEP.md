@@ -41,6 +41,13 @@ resources and duplicate declarations stay explicit risks. The full sweep and
 physical behavior acceptance remain incomplete.
 # Runtime owner groups added
 
+The input-lock denominator retains 23 `Control_Enable(...)` token occurrences
+across staged and port C++/headers, including 17 Commands-member candidates.
+Declarations and inactive branches remain visible; source lines/hashes and direct
+translation-unit selection are recorded. Native restoration in the runtime is
+included. Controller/touch enforcement and balanced lock/unlock paths remain open.
+Four parser tests pass, including comment/string rejection and declaration retention.
+
 S6 now retains 27 explicit gameplay/platform/presentation owner groups alongside
 the 112 dialogs. Case-insensitive original path matching preserves source hashes,
 unmatched patterns and source keys for S3 reconciliation. These are investigation

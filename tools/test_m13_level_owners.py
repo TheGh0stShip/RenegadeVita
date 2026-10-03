@@ -1,7 +1,10 @@
 import struct
 import unittest
+import tempfile
+from pathlib import Path
 
 from tools.audit_m13_level_owners import chunks, definitions, level_records, microchunks, u32
+from tools.renegade_cinematic_dependency_scan import parse_enum_constants, parse_int_expression
 
 
 def chunk(kind, payload, children=False):
@@ -23,6 +26,23 @@ def definition(factory, identity, body):
 
 
 class M13LevelOwnersTests(unittest.TestCase):
+    def test_unknown_enum_initializer_does_not_fabricate_implicit_ids(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'ids.h'
+            path.write_text('enum { Unknown = Missing + 0x600, Following, Known = 7, Next };')
+            symbols = {}
+            parse_enum_constants(path, symbols)
+            self.assertEqual(symbols, {'Known': 7, 'Next': 8})
+            symbols = {'Missing': 0x40000}
+            parse_enum_constants(path, symbols)
+            self.assertEqual(symbols['Following'], 0x40601)
+
+    def test_expression_parser_refuses_discarded_punctuation(self):
+        self.assertIsNone(parse_int_expression('1 << 2', {}))
+        self.assertIsNone(parse_int_expression('1 | 2', {}))
+        self.assertIsNone(parse_int_expression('1,2', {}))
+        self.assertEqual(parse_int_expression('(BASE + 2)', {'BASE': 0x40600}), 0x40602)
+
     def test_combat_start_and_respawn_are_script_roots_without_placed_owner(self):
         variables = chunk(916991715, micro(4, b'MTU_Commando_Startup\0') +
                           micro(5, b'MTU_Commando\0'))

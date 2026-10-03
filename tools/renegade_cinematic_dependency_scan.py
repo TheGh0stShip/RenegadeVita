@@ -354,6 +354,8 @@ def parse_int_expression(expression: str, symbols: dict[str, int]) -> int | None
     if not expression:
         return None
     tokens = re.findall(r"0x[0-9A-Fa-f]+|\d+|[A-Za-z_][A-Za-z0-9_]*|[()+\-*/]", expression)
+    if ''.join(tokens) != re.sub(r'\s+', '', expression):
+        return None  # Never silently discard unsupported operators or punctuation.
     rebuilt: list[str] = []
     for token in tokens:
         if re.fullmatch(r"0x[0-9A-Fa-f]+|\d+|[()+\-*/]", token):
@@ -391,10 +393,13 @@ def parse_enum_constants(path: Path, symbols: dict[str, int]) -> list[dict[str, 
             name = match.group("name")
             expr = match.group("expr")
             if expr is None:
+                if next_value is None:
+                    continue
                 value = next_value
             else:
                 parsed = parse_int_expression(expr, symbols)
                 if parsed is None:
+                    next_value = None  # Following implicit values depend on this unknown initializer.
                     continue
                 value = parsed
             symbols[name] = value
@@ -414,7 +419,7 @@ def collect_chunk_symbols(root: Path) -> dict[str, Any]:
         "staging/ww3d2/ww3dids.h",
         "staging/wwphys/wwphysids.h",
         "staging/wwaudio/soundchunkids.h",
-        "staging/combat/CombatChunkID.h",
+        "staging/combat/combatchunkid.h",
         "staging/combat/savegame.cpp",
     ]
     symbols: dict[str, int] = {}

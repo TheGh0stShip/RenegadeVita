@@ -1,5 +1,16 @@
 # Complete mission overview review — 2026-10-03
 
+The source enum discovery now preserves uncertainty after unsupported or
+unresolved initializers instead of assigning invented implicit values. It also
+rejects expressions whose punctuation would previously be discarded by the
+tokenizer. Known explicit initializers resume discovery. Global settings factory
+IDs now derive from seeded original save/load and Combat headers, yielding
+0x40602/0x40603. The chunk inventory's Combat header path now uses its actual
+lowercase staging filename. Forty-five focused Python/source checks pass,
+including missing-base, explicit recovery and unsupported-operator controls.
+These fixes strengthen dependency discovery; they do not implement missing
+runtime content or establish compiled/native behavior.
+
 HUD settings are now a second factory-qualified dependency root, with named
 radar on/off sound fields. Fresh three-map receipts add one resolved HUD
 definition per map relative to the general-settings scan. Both authored radar

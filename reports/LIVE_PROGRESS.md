@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Source enum discovery uncertainty — 2026-10-03
+
+Completed: unknown initializer chains stay unresolved; unsupported punctuation
+is rejected; global factory IDs derive from seeded original headers. Combat
+chunk inventory uses actual lowercase filename. Evidence:45 focused Python
+checks; correct0x40602/0x40603 derivation. Native/runtime gates remain0/10.
+No build, launch or retail mutation.
+
 ## HUD settings and radar sound roots — 2026-10-03
 
 Completed: HUD settings root and factory-scoped radar sound fields added.

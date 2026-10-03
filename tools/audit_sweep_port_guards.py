@@ -17,6 +17,16 @@ PORT_MACRO = re.compile(r'\b(?:RENEGADE_(?:VITA_\w*|A\w*|HOST_\w*)|_UNIX|VITA|__
 DIRECTIVE = re.compile(r'^\s*#\s*(if|ifdef|ifndef|elif)\b')
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof', 'missing', 'unknown'}
+LEXICAL_NONCODE = re.compile(
+    r'(?:u8|u|U|L)?R"(?P<delimiter>[^\s()\\]{0,16})\([\s\S]*?\)(?P=delimiter)"'
+    r'|(?:u8|u|U|L)?"(?:\\[\s\S]|[^"\\])*"'
+    r"|(?<![A-Za-z_0-9])(?:u8|u|U|L)?'(?:\\[^\n]|[^'\\\n]){1,8}'"
+    r'|//(?:\\\r?\n|[^\n])*|/\*[\s\S]*?\*/')
+
+
+def mask_noncode(text):
+    """Keep physical offsets/lines while hiding comments and literal contents."""
+    return LEXICAL_NONCODE.sub(lambda match: re.sub(r'[^\r\n]', ' ', match[0]), text)
 
 
 def apply_reviews(rows, reviews, expected_inputs=None, current_inputs=None):
@@ -54,15 +64,19 @@ def digest(path):
 def directives(lines):
     """Read logical preprocessor lines, retaining every physical source line."""
     result = []
+    masked_lines = mask_noncode('\n'.join(lines)).split('\n')
     i = 0
     while i < len(lines):
         first = i
         parts = [lines[i]]
+        masked_parts = [masked_lines[i]]
         while parts[-1].rstrip().endswith('\\') and i + 1 < len(lines):
             i += 1
             parts.append(lines[i])
+            masked_parts.append(masked_lines[i])
         value = '\n'.join(parts)
-        if DIRECTIVE.match(value) and PORT_MACRO.search(value):
+        masked_value = '\n'.join(masked_parts)
+        if DIRECTIVE.match(masked_value) and PORT_MACRO.search(masked_value):
             result.append((first, i, value))
         i += 1
     return result
@@ -207,7 +221,7 @@ def audit(root=ROOT, include_functions=False):
                 'Review each original owner, reachable callers and affected missions/modes.',
                 'Classify current guards; conditions have not been evaluated for a build profile.',
                 'Match patch history to final staged source; hunk lines are historical coordinates.',
-                'Comments or raw strings can resemble directives; lexical verification remains open.',
+                'Patch hunks can begin inside omitted lexical context; current-source guards are separate evidence.',
                 'Macro-generated conditions/functions and non-CMake link flags need denominators.',
                 'Literal stage references do not prove selected patches applied successfully.',
                 'Source selection does not prove compilation, linkage, behavior or pixels.']}

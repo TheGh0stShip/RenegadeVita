@@ -1,9 +1,27 @@
 import unittest
 
-from audit_sweep_port_guards import apply_reviews, directives, patch_guards, stage_patch_selection, wrapper_references
+from audit_sweep_port_guards import apply_reviews, directives, mask_noncode, patch_guards, stage_patch_selection, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_literal_comment_and_raw_string_directives_are_not_guards(self):
+        lines = ['/*', '#ifdef VITA', '*/', 'const char *s=R"tag(',
+                 '#if __vita__', ')tag";', '#if OTHER // RENEGADE_VITA_PORT',
+                 '#ifdef RENEGADE_HOST_AUDIO']
+        self.assertEqual([r[0] for r in directives(lines)], [7])
+
+    def test_continued_line_comment_hides_next_physical_line(self):
+        lines = ['// continued \\', '#ifdef VITA', '#ifdef __vita__']
+        self.assertEqual([r[0] for r in directives(lines)], [2])
+
+    def test_mask_preserves_offsets_and_numeric_separators(self):
+        text = 'int n=1\'000 + 2\'000; /* comment */\nconst char *s="\\\" VITA";'
+        masked = mask_noncode(text)
+        self.assertEqual(len(masked), len(text))
+        self.assertEqual(masked.count('\n'), text.count('\n'))
+        self.assertIn("1'000 + 2'000", masked)
+        self.assertNotIn('VITA', masked)
+
     def test_changed_caller_context_invalidates_review(self):
         rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
                  'body_sha256': 'same', 'status': 'unknown'}]

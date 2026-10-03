@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## M01 finale success producer — 2026-10-03
+
+Completed: direct type0/parameter0 success producer located in original finale
+control metadata, addressed to authored controller100376 at frame618 (~20.6s).
+It coexists with the controller's independent20-second delayed success event.
+Evidence: current map, control member, original source and binding receipt
+hashes verified; controller's authored script binding confirmed.
+Next: actual event order, complete finale presentation and handoff after hold.
+Native/runtime gates remain0/10; no build, launch or retail mutation.
+See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
+
 ## Campaign handoff counterexamples — 2026-10-03
 
 Completed: fixed category enum, authored-ID discovery indexing and vector

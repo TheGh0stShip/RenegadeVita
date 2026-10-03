@@ -10,8 +10,10 @@ See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
 2026-10-03 ending-producer review: tutorial completion requires the mock
 invasion's two officer death notifications and a three-second timer after the
 MCT demonstration. M01's natural finale checks prisoner/SAM state, launches
-X1Z_Finale and separately schedules success after20 seconds. Direct parameter0
-and an unproven conversation entrance are not runtime alternatives. Complete
+X1Z_Finale and separately schedules success after20 seconds. Its control file
+also sends direct type0/parameter0 success at authored frame618 (~20.6 seconds),
+verified by matching archive/member/source hashes. Delivery order and an
+unproven conversation entrance remain open. Complete
 delivery, visual/media finish and next-session restoration remain open.
 See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
 

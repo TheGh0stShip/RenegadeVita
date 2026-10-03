@@ -86,7 +86,26 @@ completion schedules the end-mission parameter after three seconds. The latter
 appears under `ACTION_COMPLETE_CONVERSATION_ENDED`. No assignment to
 `endMission_conv` was located in the inspected file; do not count it as a
 proven reachable alternative or treat a matching variable name as runtime
-evidence. The direct parameter0 entrance likewise needs producer provenance.
+evidence.
+
+The direct parameter0 entrance now has verified authored producer provenance:
+`X1Z_Finale.txt` sends type0/parameter0 to controller object100376 at authored
+frame618 (approximately20.6 seconds). Original Test_Cinematic converts negative
+frame timestamps at30 frames/second, treats the destination as a numeric object
+ID, resolves it through Find_Object and sends only when the object exists.
+The event audit receipt's original source hashes, M01 archive hash, binding
+receipt hash and this control member hash were rechecked against current files.
+Control member SHA-256:
+`62821a4434bd705be36b1ce6f3478d59d0278971e6fac6d891cb9903b28d8b20`.
+Detailed control data remains private; no retail control file is published.
+
+This is a second authored success route alongside the controller's separately
+scheduled20-second delayed event. Its later nominal timestamp does not prove
+that it executes after that event in a running session: observer scheduling,
+cinematic command budgeting, original sync-time rounding and session teardown
+need matching runtime evidence. Nor does this establish that all cinematic
+media has completed before success. Preserve both original routes rather than
+extending a timer or deleting an apparently redundant event from speculation.
 
 The M01 failure calls in prisoner/death-related scripts remain separate from
 these success producers. Source completion does not establish whether the
@@ -153,7 +172,8 @@ owners. No second carried-state reset defect was established by this pass.
 
 - Verify the tutorial officer/death/counter/timer chain and M01 prisoner/SAM/
   cinematic/delayed-event chain above with matching runtime evidence. Trace
-  producers for the additional M01 success entrances before counting them.
+  the direct finale event's actual delivery as distinct from the20-second
+  controller timer. The conversation entrance remains unproven.
 - Observe natural M13 success, score statistics, movie completion/skip, next
   map selection and restored campaign state with matching candidate identity.
 - Verify inventory preservation through the clean session handoff. Original

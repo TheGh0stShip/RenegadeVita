@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Zone identity ambiguity — 2026-10-03
+
+Completed: duplicate base-object fields rejected before metadata identity lookup;
+valid synthetic factories verify unsigned32 IDs and original zone field widths.
+Evidence:33 focused Python checks; fresh read-only retail scan preserves31/16/138
+zone records and original star-only/all-smart filters. No native gate closed.
+Build/launch hold remains; no retail mutation.
+See [script-zone owner review](SCRIPT_ZONE_OWNER_REVIEW.md).
+
 ## Zone basis and all-smart owners — 2026-10-03
 
 Completed: zero-extent/basis-quality leads and factory-container counterexamples;

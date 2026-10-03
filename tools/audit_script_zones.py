@@ -76,6 +76,11 @@ def scan(payload, definitions=False):
                 raise ValueError('ambiguous zone definition identity')
             result.append({'definition_id': ids[0], **decode_definition(variables[0].data)})
         else:
+            # The shared inventory reader uses a dictionary for base fields.
+            # Reject duplicates here before that reader can select a last ID.
+            for node in flatten(factory.children[1].children):
+                if node.kind == 910991407:
+                    unique_fields(node.data)
             objects = level_records([factory])['objects']
             if len(objects) != 1:
                 raise ValueError('ambiguous zone object identity')

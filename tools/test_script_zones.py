@@ -7,7 +7,37 @@ def field(kind, payload):
     return bytes((kind, len(payload))) + payload
 
 
+def chunk(kind, payload, nested=False):
+    return struct.pack('<II', kind, len(payload) | (0x80000000 if nested else 0)) + payload
+
+
+def factory(body):
+    return chunk(123, chunk(0x100100, struct.pack('<I', 0xf1234567)) +
+                 chunk(0x100101, body, True), True)
+
+
 class ZoneDecoderTests(unittest.TestCase):
+    def test_valid_instance_preserves_unsigned_disk_ids(self):
+        identity = field(2, struct.pack('<I', 0xf0000001)) + field(3, struct.pack('<I', 100376))
+        bounds = field(1, struct.pack('<15f', *([1, 0, 0, 0, 1, 0, 0, 0, 1] +
+                                             [10, -20, 30, 1, 2, 3])))
+        rows = scan(factory(chunk(910991407, identity) + chunk(922991807, bounds)))
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['definition_id'], 0xf0000001)
+        self.assertEqual(rows[0]['instance_id'], 100376)
+        self.assertEqual(rows[0]['center'], [10, -20, 30])
+        self.assertEqual(rows[0]['findings'], [])
+        with self.assertRaisesRegex(ValueError, 'duplicate zone field'):
+            scan(factory(chunk(910991407, identity + field(3, struct.pack('<I', 99))) +
+                         chunk(922991807, bounds)))
+
+    def test_valid_definition_retains_false_filter_and_signed_type(self):
+        identity = field(1, struct.pack('<I', 0xf0000001)) + field(3, b'SyntheticZone\0')
+        variables = field(3, b'\0') + field(4, struct.pack('<i', -1)) + field(5, b'\1')
+        rows = scan(factory(chunk(0x100, identity) + chunk(1111991133, variables)), definitions=True)
+        self.assertEqual(rows, [{'definition_id': 0xf0000001, 'check_stars_only': False,
+                                'environment_zone': True, 'zone_type': -1}])
+
     def test_basis_quality_and_zero_extents_are_only_leads(self):
         identity = [1, 0, 0, 0, 1, 0, 0, 0, 1]
         row = decode_bounds(field(1, struct.pack('<15f', *(identity + [0, 0, 0, 1, 1, 1]))))

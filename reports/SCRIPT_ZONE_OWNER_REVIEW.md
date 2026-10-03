@@ -75,7 +75,7 @@ physics broadphase gathering, spawn positions or saved reference remapping.
 Zero bounds findings means no nonfinite values or negative extents in the
 decoded scope, not proof that a zone has valid placement or nonzero volume.
 
-Thirty-one focused Python checks pass, including eight synthetic decoder/container
+Thirty-three focused Python checks pass, including ten synthetic decoder/container
 counterexamples and existing level-owner/binding checks. Detailed rows remain
 private in `build/script-zones-20261003.json`, with map/member/global-definition
 and original source hashes. Reproduce with:
@@ -98,3 +98,10 @@ collection rather than globally forcing star-only gathering. The gunboat
 hovercraft-zone script's callbacks are commented out in original source; an
 attached name alone is not an active Entered handler or evidence of a lost port
 callback. No commented retail behavior was re-enabled.
+
+Valid synthetic factory cases now verify unsigned32 object/definition IDs,
+oriented-box field layout, false star-only filters and signed zone types through
+the complete scanner route. Duplicate base-object identity fields are rejected
+before the shared inventory reader can silently select the last value. A fresh
+read-only retail scan retains the counts and zero findings above. These checks
+validate metadata interpretation, not native loading or callback execution.

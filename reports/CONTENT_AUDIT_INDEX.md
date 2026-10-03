@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Deeper voice work: [soldier dialogue and original event routes](MISSION_VOICE_ROUTE_COVERAGE.md)
+links global voice findings to preset/serialized options without assuming
+playback. Most candidates are DIE tables with no direct Combat caller;
+M01's idle-to-search record remains a concrete conditional lead. 220 focused
+source/Python checks pass; build/launch hold and native gates remain unchanged.
+
 Deeper cinematic event work: [caller and callback provenance](CINEMATIC_EVENT_ROUTES.md)
 retains 1,140 source event sites, 3,231 parameter contexts and five unresolved
 parser contexts. Source callback/actor rules narrow the prior slot and voice

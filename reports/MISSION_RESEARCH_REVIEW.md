@@ -6,6 +6,12 @@ behavior or recommendation. The previous reconciliation checked the mission
 manifest deeply but explicitly left aggregate media counts and runtime systems
 unverified. Those limits remain. No complete-content or native gate is closed.
 
+The deeper [soldier voice audit](MISSION_VOICE_ROUTE_COVERAGE.md) now traces
+global voice findings into preset and serialized dialogue tables. Most affected
+options are DIE tables without a direct Combat caller; M01 has a concrete
+idle-to-search record requiring branch/runtime verification. 220 focused
+source/Python tests pass; this does not certify every linkage in the overview.
+
 The reproducible source-owner review is `tools/audit_mission_research.py`.
 It checks all 16 system groups, 13 mission source units, additional script
 files, the eight prominent call counts and review scope for the architecture,

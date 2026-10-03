@@ -2,6 +2,13 @@
 
 ## Current diagnostics work — 2026-10-03
 
+The deeper voice audit traces global findings into 8,111 preset options and
+separate serialized dialogue records. Tutorial/M13 findings are DIE tables;
+M01 has an idle-to-search record106050 with an original observer caller.
+Weights, zero IDs, partial dependency scope and sentinels remain metadata,
+not proof of gameplay or playback. 220 source/Python checks pass; build/launch
+hold and 0/10 native gates remain. See [voice routes](MISSION_VOICE_ROUTE_COVERAGE.md).
+
 The event/callback sweep adds source caller and parameter provenance for
 1,140 custom-event sites across Tutorial/M13/M01, including unbound mission
 scripts and actual header links. Five parser contexts and four prior slot

@@ -1,5 +1,9 @@
 # Mission conversation coverage — 2026-10-03
 
+Deeper follow-up: [soldier dialogue and event routes](MISSION_VOICE_ROUTE_COVERAGE.md)
+adds weighted preset/serialized option provenance and original event callers.
+It narrows global voice leads without claiming missing gameplay or playback.
+
 Follow-up: [direct text, control hints and computed dialogue](MISSION_TEXT_AND_PROMPT_COVERAGE.md)
 adds original HUD/objective lookup tracing, eleven missing prompt replacements
 and additional absent-name leads from variable/cinematic parameters. Counts

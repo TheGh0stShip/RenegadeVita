@@ -1,5 +1,11 @@
 # Capability matrix
 
+2026-10-03 voice audit adds original soldier preset/serialized dialogue,
+weighted option provenance, event callers and distinct speech/duration sentinel
+semantics. Partial binding scope and zero IDs do not prove live playback.
+220 Python/source checks pass; native gates remain 0/10. See
+[soldier voice coverage](MISSION_VOICE_ROUTE_COVERAGE.md).
+
 2026-10-03 event audit retains source callers, actual header constants, authored
 parameter contexts and unbound mission scripts without claiming runtime flow.
 Objects.ddb/map/control hashes are checked. 1,140 call sites, five unresolved

@@ -156,6 +156,7 @@ DECLARE_SCRIPT(Orphan, "") { Commands->Find_Object(999); };'''
                     result = audit_map(root, data, 'M13.mix')
                 self.assertEqual({r['name'] for r in result['discovered_scripts']}, {'RootScript', 'ChildScript'})
                 self.assertEqual(result['discovered_definition_count'], 2)
+                self.assertEqual(result['discovered_definition_ids'], [10, 20])
                 self.assertEqual(result['literal_object_lookups'][0]['classification'], 'serialized_game_object')
                 self.assertEqual(result['structural_metadata_gate_passed'], not unknown)
                 self.assertEqual(result['summary']['unknown_shipped_scripts'], ['notshipped'] if unknown else [])

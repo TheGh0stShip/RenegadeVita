@@ -1,5 +1,12 @@
 # Renegade Vita port status
 
+2026-10-03 voice continuation links unresolved global references to 8,111
+soldier preset options and separate Tutorial/M13/M01 serialized dialogue.
+Most affected options are DIE tables; original death audio has a different
+owner. M01 object106050 has an idle-to-search voice lead. 220 focused source/
+Python checks pass; no C++ build, launch or native gate. See
+[soldier voice coverage](MISSION_VOICE_ROUTE_COVERAGE.md).
+
 2026-10-03 event/callback continuation traces 1,140 source call sites and
 3,231 binding contexts across Tutorial/M13/M01. No resolved slot-fill candidate
 is found in this scope; five parser contexts and the four previous slot leads

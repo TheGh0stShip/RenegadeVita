@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 soldier voice audit finds 244 global conversations with voice
+findings referenced by 1,231 options in 92 presets. Tutorial/M13 serialized
+findings are confined to DIE tables with no direct Combat caller; original
+death audio uses a separate preset. M01 also has one idle-to-search record
+at object106050. Preset/instance overrides, zero IDs, conditional AI state,
+voice playback and wider global findings remain open. 220 source/Python
+checks pass; no native gate. See [voice routes](MISSION_VOICE_ROUTE_COVERAGE.md).
+
 2026-10-03 event/callback continuation finds no resolved slot-fill candidate
 among inspected Tutorial/M13/M01 source/data contexts, but does not establish
 absence of all external writers. Five parser contexts, four normal slot leads,

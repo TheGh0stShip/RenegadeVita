@@ -1,5 +1,22 @@
 # Live engineering progress
 
+## Soldier dialogue and voice-event provenance — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Now: publish the deeper original-owner voice-reference assessment.
+Completed: 8,111 preset options and separate serialized Tutorial/M13/M01
+dialogue records traced. Global/string candidates, weights, zero IDs and
+speech-versus-duration sentinels retain provenance. Original event scan finds
+11 literal callers plus one unresolved variable; death sound has another owner.
+Evidence: 22 new counterexamples and 220 focused Python/source tests pass;
+definition/overlay/member hashes verified. No C++ build or game/device action.
+Next: conditional dialogue and command behavior; candidate-bound playback,
+actor/AI state and complete progression only after the existing hold.
+Blocker: native mission/runtime proof remains open under the build/launch hold.
+See [soldier voice audit](MISSION_VOICE_ROUTE_COVERAGE.md).
+
 ## Cinematic event routing and callback provenance — 2026-10-03
 
 Renegade Vita — v3.5 active

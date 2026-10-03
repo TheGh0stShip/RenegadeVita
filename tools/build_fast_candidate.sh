@@ -135,6 +135,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_script_lookup_telemetry \
 		tools.test_thread_publication_contract tools.test_mission_research \
 		tools.test_mission_event_routes \
+		tools.test_mission_voice_routes \
 		tools.test_vita_mission_ranks \
 		tools.test_vita_text_readiness \
 		tools.test_wwui_resource_styles \

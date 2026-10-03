@@ -4,6 +4,8 @@
 // renderer without implementing or emulating Direct3D itself.
 
 #include "dx8wrapper.h"
+#include "dx8renderer.h"
+#include "decalmsh.h"
 #include "ww3d_vita_renderer.h"
 #include "ddsfile.h"
 #include "dx8rendererdebugger.h"
@@ -32,6 +34,43 @@ extern "C" GLboolean vglRenegadeUploadDXTChain(GLuint id, GLenum format,
 #endif
 
 bool DX8Wrapper::_EnableTriangleDraw = true;
+// Native WW3D submits base meshes directly and retains the original decal
+// list owner here, without constructing the desktop category renderer.
+DX8MeshRendererClass TheDX8MeshRenderer;
+
+DX8MeshRendererClass::DX8MeshRendererClass()
+	: enable_lighting(true), camera(NULL),
+	  texture_category_container_list_skin(NULL), visible_decal_meshes(NULL) {}
+DX8MeshRendererClass::~DX8MeshRendererClass() {}
+void DX8MeshRendererClass::Invalidate() {}
+
+// Retain the original decal list owner while native base meshes submit directly.
+void DX8MeshRendererClass::Add_To_Render_List(DecalMeshClass *decalmesh)
+{
+	WWASSERT(decalmesh != NULL);
+	decalmesh->Set_Next_Visible(visible_decal_meshes);
+	visible_decal_meshes = decalmesh;
+}
+
+void DX8MeshRendererClass::Render_Decal_Meshes(void)
+{
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_ZBIAS, 8);
+	DecalMeshClass *decal_mesh = visible_decal_meshes;
+	while (decal_mesh != NULL) {
+		decal_mesh->Render();
+		decal_mesh = decal_mesh->Peek_Next_Visible();
+	}
+	visible_decal_meshes = NULL;
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_ZBIAS, 0);
+}
+
+void DX8MeshRendererClass::Flush(void)
+{
+	if (!camera) return;
+	Render_Decal_Meshes();
+	DX8Wrapper::Set_Vertex_Buffer(NULL);
+	DX8Wrapper::Set_Index_Buffer(NULL, 0);
+}
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT)
 bool DX8Wrapper::Is_Native_Device_Ready()
 {

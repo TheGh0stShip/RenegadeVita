@@ -1,8 +1,10 @@
 # Known gaps
 
-2026-10-03 effect sweep confirms two native decal omissions: MeshClass::Render
-does not queue populated decal meshes, and rigid/skinned decal Render methods
-return unsupported. Original explosion definitions can still generate decals
+2026-10-03 effect sweep confirms native decal omissions. A source correction
+restores original traversal/distance queueing, native flush and rigid/skinned
+draw bodies through the original DX8MeshRenderer list owner. Four source-only
+restoration checks pass; uncompiled. Native D3DRS_ZBIAS mapping remains missing,
+so depth placement and presentation are not closed. Original explosions generate decals
 through PhysicsScene::Create_Decal. Existing release-range correction does not
 restore presentation. Original queue order, parent transforms/deformation,
 material runs and indexed geometry must be preserved in the correction.

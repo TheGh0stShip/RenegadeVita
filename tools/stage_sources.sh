@@ -1052,6 +1052,14 @@ test "$(sha256sum "$rv_stage/ww3d2/ww3d.cpp" | cut -d' ' -f1)" = \
 	"32fdca663f7bfffede2b64b1fbafcc1bd0af81b15f46e4dc24aef84e59bd55c6"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-original-dazzle-lifecycle.patch"
+test "$(sha256sum "$rv_stage/ww3d2/ww3d.cpp" | cut -d' ' -f1)" = \
+	"a6880363b1bcf43e65d69ace09b3f29248da5483c9d80258ddbad630066ebeb3"
+test "$(sha256sum "$rv_stage/ww3d2/decalmsh.cpp" | cut -d' ' -f1)" = \
+	"a235a5a53c279f59d92099b1efb7ccaa039ba83cec176b9162ede5c7e1d64d4b"
+test "$(sha256sum "$rv_stage/ww3d2/mesh.cpp" | cut -d' ' -f1)" = \
+	"628232c017e9ffe25ec68d4732e133b31f13094c2653322c95a5e06319d137ca"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-original-decal-submission.patch"
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()
 	for rv_dir in "${rv_managed_stage_dirs[@]}"; do

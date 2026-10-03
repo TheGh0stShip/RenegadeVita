@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Original decal submission source restoration — 2026-10-03
+
+Completed: traversal/distance gate, original list owner/flush/reset, and original
+rigid/skinned draw bodies restored in source. List ownership moved to shared
+renderer boundary so optional frontend selection does not control availability.
+Evidence: four source-only decal/dazzle checks; temporary zero-fuzz replay;
+unchanged upstream draw bodies; shell syntax. Uncompiled, active staging unchanged.
+Next: D3DRS_ZBIAS platform mapping and native resource/visual validation.
+Depth placement remains open. No build/launch; gates0/10.
+
 ## Decal queue and depth placement dependencies — 2026-10-03
 
 Completed: source restoration prerequisites traced beyond early returns: native

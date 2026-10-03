@@ -1,0 +1,56 @@
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -1114,6 +1114,8 @@
+ void WW3D::Flush(RenderInfoClass & rinfo)
+ {
+ #if defined(RENEGADE_VITA_PORT)
++	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
++	TheDX8MeshRenderer.Flush();
+ 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
+ #if defined(RENEGADE_ORIGINAL_SORTING)
+ 	SortingRendererClass::Flush();
+--- a/decalmsh.cpp
++++ b/decalmsh.cpp
+@@ -293,7 +293,7 @@
+  *=============================================================================================*/
+ void RigidDecalMeshClass::Render(void)
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
+ 	RenegadeVitaRenderer::Submit_Decals_Unsupported();
+ 	return;
+ #else
+@@ -781,7 +781,7 @@
+  *=============================================================================================*/
+ void SkinDecalMeshClass::Render(void)
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
+ 	RenegadeVitaRenderer::Submit_Decals_Unsupported();
+ 	return;
+ #else
+--- a/mesh.cpp
++++ b/mesh.cpp
+@@ -738,11 +738,17 @@
+ 			if (render_base_passes) {
+ 				RenegadeVitaRenderer::Submit_Mesh(*this, rinfo);
+ 			}
+-			/* A retained but empty decal mesh is a no-op in the original
+-			** DecalMeshClass::Render path.  Do not classify that no-op as an
+-			** unsupported draw; an actual decal remains explicit. */
+-			if (rinfo.Additional_Pass_Count() > 0 ||
+-				(DecalMesh != NULL && DecalMesh->Decal_Count() > 0)) {
++			if (	(DecalMesh != NULL) && 
++					((rinfo.Current_Override_Flags() & RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY) == 0))
++			{
++				const SphereClass & ws_sphere = Get_Bounding_Sphere();
++				Vector3 cam_space_sphere_center;
++				rinfo.Camera.Transform_To_View_Space(cam_space_sphere_center,ws_sphere.Center);
++				if (-cam_space_sphere_center.Z - ws_sphere.Radius < WW3D::Get_Decal_Rejection_Distance()) {
++					TheDX8MeshRenderer.Add_To_Render_List(DecalMesh);
++				}
++			}
++			if (rinfo.Additional_Pass_Count() > 0) {
+ 				RenegadeVitaRenderer::Submit_Unsupported(this);
+ 			}
+ #else

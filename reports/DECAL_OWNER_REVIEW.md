@@ -5,7 +5,19 @@ unfinished. Original explosion code generates configured decals through
 PhysicsScene::Create_Decal; mesh ownership creates rigid or skinned decal meshes.
 This is an active original effect producer, not merely an unused renderer.
 
-Four connected omissions must be resolved:
+Source correction now restores the original traversal/distance gate, list
+prepend/flush/reset and rigid/skinned rendering bodies on Vita. The original
+DX8MeshRenderer list owner moved from the optional frontend compatibility object
+to the shared native renderer boundary, with initialized camera/list fields.
+Native flush sets its camera before consuming the list. Base meshes continue
+to submit through the existing native boundary. Headless host draw skips and
+unsupported additional procedural passes remain explicit. The source patch
+is hash anchored after dazzle restoration and replays with zero fuzz.
+Four combined restoration checks pass, including exact original decal draw-body
+comparisons. Active staging, compilation and native execution are unchanged.
+The depth-bias dependency below remains unresolved; effect closure is not claimed.
+
+Four connected omissions were found (first three now corrected in source):
 
 1. Native MeshClass::Render reports populated decal meshes unsupported instead
    of queueing them. Original traversal excludes additional-passes-only draws,

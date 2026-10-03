@@ -85,13 +85,6 @@ void IMEManager::GetTargetClause(unsigned long &start, unsigned long &end)
 
 } // namespace IME
 
-// Native WW3D owns mesh submission. This compatibility object supplies the
-// one GameInitMgr invalidation call without constructing a Direct3D renderer.
-DX8MeshRendererClass TheDX8MeshRenderer;
-
-DX8MeshRendererClass::DX8MeshRendererClass() {}
-DX8MeshRendererClass::~DX8MeshRendererClass() {}
-void DX8MeshRendererClass::Invalidate() {}
 
 void Get_Version_Number(unsigned long *major, unsigned long *minor)
 {

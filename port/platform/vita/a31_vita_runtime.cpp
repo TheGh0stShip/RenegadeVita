@@ -3690,8 +3690,19 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							campaign_state_size, campaign_source);
 					}
 					#endif
-					EncyclopediaMgrClass::Initialize();
-					A30_Vita_Log("A3.5 EVA: original encyclopedia discovery tables initialized\n");
+#if !RENEGADE_VITA_M00_DEMO
+					if (campaign_source != NULL) {
+						// End_Game stored discoveries alongside cGod's inventory.
+						// Initialize calls Store_Data and would overwrite that copy
+						// after the preceding session's Shutdown cleared live vectors.
+						EncyclopediaMgrClass::Restore_Data();
+						A30_Vita_Log("A4 campaign: original encyclopedia discoveries restored across session handoff\n");
+					} else
+#endif
+					{
+						EncyclopediaMgrClass::Initialize();
+						A30_Vita_Log("A3.5 EVA: original encyclopedia discovery tables initialized\n");
+					}
 					A30_Vita_Log("A3.5 loading screen: original CampaignManager catalog initialized\n");
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 					if (GameModeManager::Find("Combat") == NULL) {

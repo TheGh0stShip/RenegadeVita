@@ -93,6 +93,44 @@ these success producers. Source completion does not establish whether the
 finale renders, plays all media, retains actors for its duration or reaches the
 score/movie/next-map flow.
 
+## Inventory and encyclopedia continuation correction
+
+Original `InventoryClass` stores scalar defense values and weapon ID/ammunition/
+ownership records; it does not store pointers to departing soldiers or weapons.
+Restore merges larger health/armor values into the new soldier and raises ammo
+to the stored count, preserving the original unlimited-ammo sentinel. This is
+not an exact replacement of the new preset's inventory. Keys belong to the
+soldier's separate KeyRing/save state and are not in this cross-level inventory.
+
+`cGod::LevelStartInventory` survives the in-process native teardown:
+`cGod::Reset` changes only its state machine, and campaign Init/Shutdown do not
+reset inventory. Fresh campaign, replay and explicit load actions have separate
+original reset calls. Original single-player game data enables Remember_Inventory
+and `cGod` restores it when spawning a mission soldier. Runtime merging still
+requires verification; no weapon/health policy was changed.
+
+A source-confirmed EVA discovery loss was found alongside that route.
+`cGod::Store_Inventory` also calls `EncyclopediaMgrClass::Store_Data`, copying
+live discovery vectors. Native session cleanup calls Encyclopedia Shutdown,
+which clears live vectors but leaves the stored copy. The following runtime
+previously called Initialize unconditionally; Initialize builds fresh vectors
+and calls Store_Data, overwriting the carried discoveries before the new spawn
+could restore them. Original desktop startup initializes the encyclopedia once,
+not between every campaign level.
+
+The native boundary now calls original Restore_Data for a validated non-demo
+campaign handoff, after the existing campaign-state/source validation and Load.
+Fresh sessions and checkpoint routes retain Initialize. Original inventory,
+encyclopedia implementations and save formats are unchanged. This correction
+is uncompiled and unverified on native hardware under the build/launch hold.
+Verify discoveries in each category across natural M13-to-M01 continuation,
+then fresh campaign/replay/load reset behavior and repeated session teardown.
+
+Nine focused source checks pass (`test_campaign_discovery_handoff`,
+`test_requested_mission_owner_contract`, `test_campaign_profile_defaults`).
+The three new lifecycle checks verify source selection/order and original
+copy ownership; they do not execute vector copying or mission progression.
+
 ## Remaining verification
 
 - Verify the tutorial officer/death/counter/timer chain and M01 prisoner/SAM/

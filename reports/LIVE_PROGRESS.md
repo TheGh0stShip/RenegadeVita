@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Campaign encyclopedia handoff — 2026-10-03
+
+Completed: source-confirmed saved-discovery overwrite corrected at native
+session initialization, using original Restore_Data for validated continuation.
+Original inventory scalars/weapon IDs persist separately; keys are not carried
+by cross-level inventory. Fresh/checkpoint initialization remains unchanged.
+Evidence: source lifecycle checks; C++ correction uncompiled under hold.
+Next: native discoveries/inventory across M13-to-M01 and reset/load paths.
+Native/runtime gates remain0/10; no build, launch or device action.
+See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
+
 ## Tutorial and M01 ending producers — 2026-10-03
 
 Completed: original tutorial officer death/counter/endgame timer route and

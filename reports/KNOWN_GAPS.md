@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-10-03 campaign EVA handoff: repeated native encyclopedia Initialize
+overwrote the discoveries saved by original End_Game/cGod inventory storage.
+Validated campaign continuation now restores the original copy in source;
+fresh/checkpoint initialization remains unchanged. Correction is uncompiled.
+Native discovery persistence and inventory merge/reset behavior remain open.
+See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
+
 2026-10-03 ending-producer review: tutorial completion requires the mock
 invasion's two officer death notifications and a three-second timer after the
 MCT demonstration. M01's natural finale checks prisoner/SAM state, launches

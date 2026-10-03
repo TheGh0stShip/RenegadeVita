@@ -1,9 +1,20 @@
 import unittest
 
-from audit_sweep_port_guards import apply_reviews, directives, macro_definitions, mask_noncode, patch_guards, stage_patch_selection, wrapper_references
+from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, stage_patch_selection, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_nested_else_and_elif_contexts_remain_uninterpreted(self):
+        text = ('#if FEATURE\n#if defined(__vita__)\nvoid real() {}\n'
+                '#else\nvoid fallback() {}\n#endif\n#elif OTHER\nvoid other() {}\n'
+                '#endif\nvoid always() {}')
+        contexts = branch_contexts(text, [3, 5, 8, 10])
+        self.assertEqual(len(contexts[3]), 2)
+        self.assertEqual(contexts[5][-1]['branch'], '#else')
+        self.assertEqual(contexts[5][-1]['condition'], '#if defined(__vita__)')
+        self.assertEqual(contexts[8][0]['branch'], '#elif OTHER')
+        self.assertEqual(contexts[10], [])
+
     def test_macro_function_body_is_not_lost_from_denominator(self):
         text = '#define STUB(name) \\\n+          int name() { return 0; }\n#define CONSTANT (0)\n/* #define HIDDEN() {} */'
         rows = macro_definitions(text)

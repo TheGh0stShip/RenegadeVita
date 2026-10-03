@@ -167,6 +167,38 @@ def macro_definitions(text):
     return result
 
 
+def branch_contexts(text, wanted_lines):
+    """Retain surrounding branch syntax; do not guess whether it is active."""
+    lines = text.splitlines()
+    masked = mask_noncode(text).splitlines()
+    wanted = set(wanted_lines)
+    contexts, stack = {}, []
+    i = 0
+    while i < len(lines):
+        first = i
+        for line in (i + 1,):
+            if line in wanted:
+                contexts[line] = [dict(frame) for frame in stack]
+        while lines[i].rstrip().endswith('\\') and i + 1 < len(lines):
+            i += 1
+            if i + 1 in wanted:
+                contexts[i + 1] = [dict(frame) for frame in stack]
+        match = re.match(r'\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b', masked[first])
+        if match:
+            directive = '\n'.join(lines[first:i + 1])
+            kind = match[1]
+            if kind in ('if', 'ifdef', 'ifndef'):
+                stack.append({'opening_line': first + 1, 'condition': directive,
+                              'branch_line': first + 1, 'branch': directive})
+            elif kind in ('else', 'elif') and stack:
+                stack[-1]['branch_line'] = first + 1
+                stack[-1]['branch'] = directive
+            elif kind == 'endif' and stack:
+                stack.pop()
+        i += 1
+    return contexts
+
+
 def audit(root=ROOT, include_functions=False):
     stage = root / 'tools/stage_sources.sh'
     selection = stage_patch_selection(stage.read_text())
@@ -205,12 +237,14 @@ def audit(root=ROOT, include_functions=False):
                                  'status': 'unknown', 'evidence_class': 'current_source', **row})
             if directory == 'port' and include_functions:
                 inventory = function_inventory(text, cpp_parser)
+                contexts = branch_contexts(text, [r['line'] for r in inventory['functions']])
                 function_files.append({'file': relative,
                                        'functions': len(inventory['functions']),
                                        'parse_errors': len(inventory['parse_errors']),
                                        'root_has_error': inventory['root_has_error']})
                 for row in inventory['functions']:
                     rows.append({'kind': 'port_function', 'file': relative,
+                                 'entry_preprocessor_context': contexts.get(row['line'], []),
                                  'status': 'unknown', 'evidence_class': 'source_syntax', **row})
                 for row in inventory['parse_errors']:
                     rows.append({'kind': 'port_parse_unknown', 'file': relative,

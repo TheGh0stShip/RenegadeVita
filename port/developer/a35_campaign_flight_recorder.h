@@ -113,6 +113,9 @@ void A35_Campaign_Flight_Observer_Timer_Miss(int32_t object_id,
 	int32_t observer_id, int32_t timer_id);
 void A35_Campaign_Flight_Action_Observer_Miss(int32_t object_id,
 	int32_t observer_id, int32_t action_id, int32_t reason);
+// Focused M01 detention stimuli only; entry records are not observer delivery proof.
+void A35_Campaign_Flight_Logical_Stimulus(bool heard_entry, int32_t sound_id,
+	int32_t type, int32_t receiver_id, int32_t creator_id, bool observers_active);
 // outcome: 0 inserted, 1 already present, 2 capacity rejected, 3 call attempted.
 void A35_Campaign_Flight_Conversation_Monitor(uint32_t outcome, uint64_t instance,
 	int32_t conversation_id, int32_t action_id, int32_t object_id,

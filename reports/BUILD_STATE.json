@@ -1,4 +1,16 @@
 {
+  "logical_stimulus_diagnostics_20261003": {
+    "state": "FOCUSED_OPT_IN_SOURCE_HOOKS_UNCOMPILED",
+    "focused_source_checks_passed": 9,
+    "registered_staging_patches": 302,
+    "shared_queue_capacity": 128,
+    "source_and_callback_entry_observations": true,
+    "prisoner_callback_delivery_proven": false,
+    "typed_offline_consumer_complete": false,
+    "staging_receipt_regenerated": false,
+    "build_or_launch_performed": false,
+    "native_runtime_gates_closed": 0
+  },
   "shared_source_discovery_regression_20261003": {
     "state": "SOURCE_ONLY_REGRESSION_PASSED_NATIVE_UNVERIFIED",
     "source_python_tests_passed": 218,

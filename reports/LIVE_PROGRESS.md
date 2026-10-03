@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Focused logical stimulus source diagnostics — 2026-10-03
+
+Completed:opt-in numeric M01 detention stimulus configuration/hearing-entry
+hooks added to original owners, sharing bounded128-entry queue and owner drain.
+Evidence:9 source checks, anchored zero-fuzz/no-offset replay;302 registered
+patches. C++/typed consumer/native delivery unverified; save/scheduling unchanged.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Logical hearing and prisoner rescue ownership — 2026-10-03
 
 Completed:original logical stimulus→four-listener scene budget→SmartGameObj

@@ -1,0 +1,49 @@
+--- a/scriptcommands.cpp
++++ b/scriptcommands.cpp
+@@ -35,6 +35,9 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ #include "scriptcommands.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "a35_campaign_flight_recorder.h"
++#endif
+ #if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
+ #include "a35_script_lookup_telemetry.h"
+ #endif
+@@ -1066,6 +1069,11 @@
+ 			sound->Set_Single_Shot( true );
+ 			sound->Set_DropOff_Radius( radius );
+ 			sound->Set_Position( position );
++
++#if defined(RENEGADE_VITA_PORT)
++			A35_Campaign_Flight_Logical_Stimulus(false, sound_id, type, 0,
++				creator ? static_cast<int32_t>(creator->Get_ID()) : 0, false);
++#endif
+ 			sound->Add_To_Scene ();
+ 			sound->Release_Ref();
+ 		}
+--- a/smartgameobj.cpp
++++ b/smartgameobj.cpp
+@@ -39,6 +39,9 @@
+ **	Includes
+ */
+ #include "smartgameobj.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "a35_campaign_flight_recorder.h"
++#endif
+ #include "renegade_client_effects.h"
+ #include "gameobjmanager.h"
+ #include "weapons.h"
+@@ -898,6 +901,12 @@
+ 		sound.Creator = NULL;
+ 	}
+ 
++#if defined(RENEGADE_VITA_PORT)
++	A35_Campaign_Flight_Logical_Stimulus(true, static_cast<int32_t>(sound_obj->Get_ID()),
++		static_cast<int32_t>(sound.Type), static_cast<int32_t>(Get_ID()),
++		sound.Creator ? static_cast<int32_t>(sound.Creator->Get_ID()) : 0,
++		CombatManager::Are_Observers_Active());
++#endif
+ 	// Notify observers
+ 	if (CombatManager::Are_Observers_Active()) {
+ 		const GameObjObserverList & observer_list = Get_Observers();

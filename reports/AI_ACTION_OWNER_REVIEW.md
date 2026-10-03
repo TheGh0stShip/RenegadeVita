@@ -106,6 +106,18 @@ Native instructor control restoration, vehicle entry/exit, action acceptance and
 save/load during training remain unverified. No build, launch or retail mutation.
 # Logical hearing and M01 prisoner progression — 2026-10-03
 
+Source-only diagnostics now record the two original detention stimulus types at
+configuration before scene insertion and SmartGameObj hearing-callback entry.
+The numeric payload retains sound ID, type, receiver/creator IDs and observer
+activity. Hooks run before original scene insertion/observer callbacks, with no
+post-callback object inspection. Ordinary combat sound types are filtered out.
+The existing opt-in, mutex-protected128-entry queue, owner-thread drain and
+saturating overflow counter are reused. Queue/ring loss prevents absence claims.
+No save fields or original listener scheduling change. Both source files have
+SHA-anchored zero-fuzz staging registration;302 patches are registered. Nine
+focused source checks pass; C++ compilation, typed offline analysis and native
+delivery remain open. Entry events never prove prisoner callback completion.
+
 Original Create_Logical_Sound creates a single-shot scene stimulus with creator
 reference, type, position and radius; it does not require audible playback.
 Original WWAudio collects logical sounds on its primary sound page. SoundScene

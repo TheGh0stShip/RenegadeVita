@@ -144,6 +144,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_action_observer_miss_telemetry \
 		tools.test_required_level_load_failure \
 		tools.test_cinematic_filename_diagnostics \
+		tools.test_logical_stimulus_telemetry \
 		tools.test_vita_mission_ranks \
 		tools.test_vita_text_readiness \
 		tools.test_wwui_resource_styles \

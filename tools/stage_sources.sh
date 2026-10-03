@@ -1036,6 +1036,12 @@ test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-filename-diagnostics.patch"
 # Compare final patched contents, never an intermediate source revision.
+test "$(sha256sum "$rv_stage/combat/scriptcommands.cpp" | cut -d' ' -f1)" = \
+	"6cfd546a6b22eea05940a5e084301722a2ac877f25b13fb2943d44feae0f96fc"
+test "$(sha256sum "$rv_stage/combat/smartgameobj.cpp" | cut -d' ' -f1)" = \
+	"56b807fe528a576e72274f78660f5eade8c6260611a4b71772197daa87f38dbd"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-logical-stimulus-telemetry.patch"
 test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
 	"4196cdbae396e06dd4a5e1d5946509be01191f75735274763c223aea50c64d97"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \

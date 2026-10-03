@@ -77,6 +77,17 @@ previous. Unsupported RGB operations pass through previous. These are
 Source references, retail value reachability, independent routes and pixels
 remain open. Current totals: 25 missing, 26 boundary-replaced, 2,001 unknown.
 
+Texture-coordinate index and transform flags have source-reviewed emulation
+paths. Mesh/indexed submissions capture retained DX8 state, reset GL texture
+matrices and emit CPU-generated pass-through, camera normal/position or reflection
+coordinates. CPU row transforms handle count/projected flags with a near-zero
+divisor guard and emit 2D output. Indexed UV selection uses UV1 only for source
+1 and otherwise UV0. Direct boundary matrix loading is also present; route
+ownership, count/value domains, nonuniform-scale normals and double-transform
+avoidance remain verification tasks. These two rows are boundary-replaced,
+not accepted environment/projector behavior. Totals: 25 missing, 28 replaced,
+1,999 unknown.
+
 Candidate ancestry identifies 25 render-object definitions, 14 prototype-loader
 definitions and 14 prototype definitions. These counts include the base classes.
 The graph follows transitive/multiple inheritance but does not resolve namespaces,

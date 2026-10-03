@@ -1155,5 +1155,48 @@
     ],
     "acceptance_open": "Enumerate requested operations and arguments, modifiers, address/filter values and sampler alias/cache lifetime; preserve required original semantics and verify Vita/PSTV pixels."
   }
+    ,
+  {
+    "symbol": "D3DTSS_TEXCOORDINDEX",
+    "status": "boundary_replaced",
+    "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-coordinate state and original material mappers",
+    "behavior": "State retained at DX8 edge and captured by native mesh/indexed paths, which reset the GL texture matrix before CPU coordinate emission. Pass-through, camera normal, camera position and reflection-vector modes exist. CPU row-matrix transformation handles count and projected flags, with a near-zero divisor guard. Output uses 2D coordinates; indexed UV selection picks UV1 only for source 1, otherwise UV0. Direct boundary also loads a GL texture matrix; route ownership and avoidance of double transformation require validation.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:228-256 and :2143 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:568-688 and :691-882"
+    ],
+    "affected_scope": [
+      "Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open."
+    ],
+    "acceptance_open": "Verify UV source domains, matrix/count/projected semantics, normals under scaling, divisor handling, cache invalidation and route ownership; compare Vita/PSTV environment/projected texture pixels."
+  },
+  {
+    "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS",
+    "status": "boundary_replaced",
+    "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
+    "inputs_sha256": {
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+      "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+    },
+    "original_owner": "Original DX8Wrapper texture-coordinate state and original material mappers",
+    "behavior": "State retained at DX8 edge and captured by native mesh/indexed paths, which reset the GL texture matrix before CPU coordinate emission. Pass-through, camera normal, camera position and reflection-vector modes exist. CPU row-matrix transformation handles count and projected flags, with a near-zero divisor guard. Output uses 2D coordinates; indexed UV selection picks UV1 only for source 1, otherwise UV0. Direct boundary also loads a GL texture matrix; route ownership and avoidance of double transformation require validation.",
+    "evidence": [
+      "port/renderer/vita/ww3d_dx8_boundary.cpp:228-256 and :2143 and :2225-2274",
+      "port/renderer/vita/ww3d_vita_renderer.cpp:568-688 and :691-882"
+    ],
+    "affected_scope": [
+      "Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open."
+    ],
+    "acceptance_open": "Verify UV source domains, matrix/count/projected semantics, normals under scaling, divisor handling, cache invalidation and route ownership; compare Vita/PSTV environment/projected texture pixels."
+  }
   ]
 }

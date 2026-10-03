@@ -259,7 +259,7 @@
     "tools/audit_sweep_renderer.py": "b63db7f1cff69d1ed49767b6bdc85e1a78f0ec858844ec631dfedcbe93cc854a",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/renderer.json": "b1de3772fd328cbec9571d1a166a41ff7c10527e999eda386d02d11a474d1ce0"
+    "tools/sweep_reviews/renderer.json": "7d134263e797a7b040b722f41be39dcec886a6d9a64bfbed5950c049e28bb50a"
   },
   "review_identity_issues": [],
   "rows": [
@@ -30713,9 +30713,10 @@
       "symbol": "D3DTSS_TCI_PASSTHRU"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
       "references": [
         {
           "column": 7,
@@ -30868,14 +30869,36 @@
           "line": 1233
         }
       ],
+      "review": {
+        "acceptance_open": "Verify UV source domains, matrix/count/projected semantics, normals under scaling, divisor handling, cache invalidation and route ownership; compare Vita/PSTV environment/projected texture pixels.",
+        "affected_scope": [
+          "Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open."
+        ],
+        "behavior": "State retained at DX8 edge and captured by native mesh/indexed paths, which reset the GL texture matrix before CPU coordinate emission. Pass-through, camera normal, camera position and reflection-vector modes exist. CPU row-matrix transformation handles count and projected flags, with a near-zero divisor guard. Output uses 2D coordinates; indexed UV selection picks UV1 only for source 1, otherwise UV0. Direct boundary also loads a GL texture matrix; route ownership and avoidance of double transformation require validation.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:228-256 and :2143 and :2225-2274",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:568-688 and :691-882"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
+        "original_owner": "Original DX8Wrapper texture-coordinate state and original material mappers",
+        "status": "boundary_replaced",
+        "symbol": "D3DTSS_TEXCOORDINDEX"
+      },
       "row_id": "a44681b75f8d29609667819f16aa5de546f0cad9cc1d36d550e559696ce47d39",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DTSS_TEXCOORDINDEX"
     },
     {
+      "classification_evidence_class": "source_review",
       "evidence_class": "source_token_aggregation",
       "kind": "draw_state_symbol",
-      "native_mapping": "unreviewed",
+      "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
       "references": [
         {
           "column": 7,
@@ -31023,8 +31046,29 @@
           "line": 1236
         }
       ],
+      "review": {
+        "acceptance_open": "Verify UV source domains, matrix/count/projected semantics, normals under scaling, divisor handling, cache invalidation and route ownership; compare Vita/PSTV environment/projected texture pixels.",
+        "affected_scope": [
+          "Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open."
+        ],
+        "behavior": "State retained at DX8 edge and captured by native mesh/indexed paths, which reset the GL texture matrix before CPU coordinate emission. Pass-through, camera normal, camera position and reflection-vector modes exist. CPU row-matrix transformation handles count and projected flags, with a near-zero divisor guard. Output uses 2D coordinates; indexed UV selection picks UV1 only for source 1, otherwise UV0. Direct boundary also loads a GL texture matrix; route ownership and avoidance of double transformation require validation.",
+        "evidence": [
+          "port/renderer/vita/ww3d_dx8_boundary.cpp:228-256 and :2143 and :2225-2274",
+          "port/renderer/vita/ww3d_vita_renderer.cpp:568-688 and :691-882"
+        ],
+        "inputs_sha256": {
+          "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+          "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
+          "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+          "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
+        },
+        "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
+        "original_owner": "Original DX8Wrapper texture-coordinate state and original material mappers",
+        "status": "boundary_replaced",
+        "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS"
+      },
       "row_id": "9ae7f58de98f363d109c46304c7ff7d895302903d5019efa7b3b0a9cc18ab58c",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS"
     },
     {
@@ -31634,9 +31678,9 @@
       "required_feature": 28
     },
     "by_status": {
-      "boundary_replaced": 26,
+      "boundary_replaced": 28,
       "missing": 25,
-      "unknown": 2001
+      "unknown": 1999
     },
     "candidate_roles": {
       "prototype": 14,

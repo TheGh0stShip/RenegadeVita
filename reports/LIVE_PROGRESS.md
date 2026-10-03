@@ -2,6 +2,10 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+S2 texture-coordinate batch: two retained-state/CPU-emulation paths reviewed.
+Projected/count domains, indexed UV fallback and matrix route ownership remain
+open. Totals: 25 missing, 28 replaced, 1,999 unknown. No native behavior changed.
+
 S2 combiner/sampler batch: eleven partial native mappings source-reviewed.
 Address/filter and argument/operation fallbacks are explicit risks, not support
 claims. Totals reconcile at 25 missing, 26 replaced and 2,001 unknown; seven

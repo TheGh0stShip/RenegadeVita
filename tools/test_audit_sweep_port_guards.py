@@ -4,6 +4,16 @@ from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, 
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_unchanged_body_in_changed_preprocessor_branch_invalidates_review(self):
+        row = {'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
+               'body_sha256': 'same', 'status': 'unknown',
+               'entry_preprocessor_context': [{'condition': '#if NEW', 'branch': '#else'}]}
+        review = {'file': 'port/a.cpp', 'declarator': 'f()', 'body_sha256': 'same',
+                  'status': 'stubbed_or_noop',
+                  'entry_preprocessor_context': [{'condition': '#if OLD', 'branch': '#else'}]}
+        self.assertEqual(len(apply_reviews([row], [review])), 1)
+        self.assertEqual(row['status'], 'unknown')
+
     def test_guard_review_requires_source_pin_and_exact_directive(self):
         row = {'kind': 'current_source_guard', 'file': 'staging/a.cpp', 'line': 4,
                'directive': '#if __vita__', 'status': 'unknown'}

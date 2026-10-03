@@ -2,6 +2,11 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+Review validity batch: function classifications now bind surrounding build
+conditions as well as body/definition identity. A changed branch invalidates
+an unchanged body review. Inventory records generator and parser-input hashes.
+Twenty-seven tests pass; counts remain 3,531 rows with 3,493 unknown.
+
 Native material batch: two transition guards and the mesh procedural-pass guard
 classified. Original spawn/death/healing/electrocution producers and stealth
 base-suppression path are retained as caller evidence. S1 reconciles at 31 stubs,

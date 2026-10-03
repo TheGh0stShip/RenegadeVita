@@ -36,7 +36,8 @@
       "affected_scope": [
         "All native modes using original DX8Wrapper capability queries; effects affected by unavailable features require S2 and all-map data closure"
       ],
-      "acceptance_open": "Reconcile every original queried capability with actual Vita submission support and physical effects. Native source selection and fixed capability flags do not prove feature completeness."
+      "acceptance_open": "Reconcile every original queried capability with actual Vita submission support and physical effects. Native source selection and fixed capability flags do not prove feature completeness.",
+      "entry_preprocessor_context": []
     },
     {
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
@@ -52,7 +53,8 @@
       "affected_scope": [
         "All modes reaching original projector render-target allocation; per-map instances remain unverified"
       ],
-      "acceptance_open": "Original target allocation, binding, projected shadows and rendered results on Vita/PSTV. Source caller evidence is not physical acceptance."
+      "acceptance_open": "Original target allocation, binding, projected shadows and rendered results on Vita/PSTV. Source caller evidence is not physical acceptance.",
+      "entry_preprocessor_context": []
     },
     {
       "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
@@ -69,7 +71,8 @@
       "affected_scope": [
         "Modes reaching additional mesh passes or enabled box display masks; per-map instances and display-mask settings remain unverified"
       ],
-      "acceptance_open": "Additional-pass and box submission ownership, build-profile reachability and native pixels. Box-display diagnostic use is not proof of retail exclusion."
+      "acceptance_open": "Additional-pass and box submission ownership, build-profile reachability and native pixels. Box-display diagnostic use is not proof of retail exclusion.",
+      "entry_preprocessor_context": []
     },
     {
       "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
@@ -85,7 +88,8 @@
       "affected_scope": [
         "Host port profiles taking the non-__vita__ decal guard; native decal restoration and depth-bias results remain separate open gates"
       ],
-      "acceptance_open": "Native decal queue/body/flush execution and depth-bias presentation, plus explicit host profile selection. Do not classify the native path from this diagnostic helper alone."
+      "acceptance_open": "Native decal queue/body/flush execution and depth-bias presentation, plus explicit host profile selection. Do not classify the native path from this diagnostic helper alone.",
+      "entry_preprocessor_context": []
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -103,7 +107,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -121,7 +133,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -139,7 +159,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -157,7 +185,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -175,7 +211,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -193,7 +237,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -211,7 +263,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a4_binkmovie_boundary.cpp",
@@ -229,7 +289,15 @@
       "affected_scope": [
         "Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified."
       ],
-      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates."
+      "acceptance_open": "Verify build-profile selection and linked owner across all supported configurations; retain native A/V timing and playback acceptance as separate gates.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#else",
+          "branch_line": 1375,
+          "condition": "#if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)",
+          "opening_line": 4
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -245,7 +313,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -261,7 +337,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -277,7 +361,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -293,7 +385,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -309,7 +409,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -325,7 +433,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -341,7 +457,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -357,7 +481,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -373,7 +505,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -389,7 +529,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -405,7 +553,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -421,7 +577,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -437,7 +601,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -453,7 +625,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -469,7 +649,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -485,7 +673,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -501,7 +697,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -517,7 +721,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -533,7 +745,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "file": "port/platform/a31_gameplay_boundary.cpp",
@@ -549,7 +769,15 @@
       "affected_scope": [
         "No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead."
       ],
-      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness."
+      "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "branch_line": 1088,
+          "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
+          "opening_line": 1088
+        }
+      ]
     },
     {
       "kind": "current_source_guard",

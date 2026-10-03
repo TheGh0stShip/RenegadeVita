@@ -90,7 +90,11 @@ build/sweep-parser-venv/bin/python -m unittest discover -s tools -p test_sweep_c
 build/sweep-parser-venv/bin/python tools/audit_sweep_port_guards.py --include-functions --output reports/generated/sweeps/port_guards.json
 ```
 
-Twenty-six parser/review tests pass locally. Guard reviews additionally require
+Twenty-seven parser/review tests pass locally. Function reviews bind their
+preprocessor context, preventing an unchanged body moved into another build
+branch from retaining its old profile verdict. Generator, function-parser and
+pinned dependency-file hashes are included in inventory input identity.
+Guard reviews additionally require
 the exact directive, unique source location and an unchanged whole-source hash.
 CI includes the pinned parser
 setup, these tests and an artifact of its partial inventory. Evidence remains

@@ -54,6 +54,8 @@ def apply_reviews(rows, reviews, expected_inputs=None, current_inputs=None):
             matches = [row for row in rows if row['kind'] == 'port_function' and
                    row['file'] == review['file'] and row['declarator'] == review['declarator'] and
                    row.get('body_sha256') == review['body_sha256'] and
+                   ('entry_preprocessor_context' not in review or
+                    row.get('entry_preprocessor_context') == review['entry_preprocessor_context']) and
                    ('definition_sha256' not in review or row.get('definition_sha256') ==
                     review['definition_sha256'])]
         if len(matches) != 1:
@@ -294,6 +296,11 @@ def audit(root=ROOT, include_functions=False):
             rows.append({'kind': 'link_wrapper_reference', 'file': relative,
                          'status': 'unknown', 'evidence_class': 'build_source', **row})
     inputs['tools/stage_sources.sh'] = digest(stage)
+    for name in ('audit_sweep_port_guards.py', 'sweep_cpp_functions.py',
+                 'sweep-parser-requirements.txt'):
+        path = root / 'tools' / name
+        if path.exists():
+            inputs[path.relative_to(root).as_posix()] = digest(path)
     review_path = root / 'tools/sweep_reviews/port_guards.json'
     review_issues = []
     if include_functions and review_path.exists():

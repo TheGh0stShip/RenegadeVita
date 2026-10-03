@@ -73,6 +73,7 @@ def validate_bundle(root: Path, expected_candidate: str | None = None) -> dict:
         raise BundleError("frame monotonic timestamps are not strictly increasing")
 
     event_count = 0
+    sequence_mode, last_event_sequence = None, None
     try:
         for line, raw in enumerate(events_path.read_text(encoding="utf-8").splitlines(), 1):
             if not raw.strip():
@@ -81,6 +82,19 @@ def validate_bundle(root: Path, expected_candidate: str | None = None) -> dict:
                 event = json.loads(raw)
             except json.JSONDecodeError as error:
                 raise BundleError(f"{events_path.name}:{line}: invalid JSON") from error
+            if not isinstance(event, dict):
+                raise BundleError(f"{events_path.name}:{line}: event must be an object")
+            has_sequence = "event_sequence" in event
+            if sequence_mode is not None and has_sequence != sequence_mode:
+                raise BundleError("mixed sequenced and legacy event records")
+            sequence_mode = has_sequence
+            if has_sequence:
+                sequence = event["event_sequence"]
+                if type(sequence) is not int or not 0 <= sequence <= 0xffffffffffffffff:
+                    raise BundleError("invalid event sequence")
+                if last_event_sequence is not None and sequence != last_event_sequence + 1:
+                    raise BundleError("event sequences are not contiguous")
+                last_event_sequence = sequence
             if event.get("candidate") != candidate:
                 raise BundleError(
                     f"{events_path.name}:{line}: candidate {event.get('candidate')!r} "

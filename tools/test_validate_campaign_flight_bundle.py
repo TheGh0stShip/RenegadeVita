@@ -7,6 +7,42 @@ from tools.validate_campaign_flight_bundle import BundleError, validate_bundle
 
 
 class CampaignFlightBundleTests(unittest.TestCase):
+    def test_export_uses_ring_sequence_not_frame_as_identity(self):
+        source = Path(__file__).resolve().parents[1] / 'port/developer/a35_campaign_flight_recorder.cpp'
+        body = source.read_text().split('void Write_Events(', 1)[1].split('void Write_Frames', 1)[0]
+        self.assertIn('event_sequence', body)
+        self.assertIn('sequence, event.frame, event.monotonic_us', body)
+
+    def sequenced_events(self, values):
+        records = [{'candidate': 'A3.5-dev188', **value} for value in values]
+        (self.root / 'campaign-flight-events.jsonl').write_text(
+            '\n'.join(json.dumps(row) for row in records) + '\n')
+        (self.root / 'campaign-flight-summary.json').write_text(json.dumps(
+            {'candidate': 'A3.5-dev188', 'frames_recorded': 2, 'events_recorded': len(records)}))
+
+    def test_retained_sequence_may_start_after_eviction(self):
+        self.sequenced_events([{'event_sequence': 900}, {'event_sequence': 901}])
+        self.assertEqual(validate_bundle(self.root)['events'], 2)
+
+    def test_rejects_sequence_holes_duplicates_and_reversal(self):
+        for second in (9, 10, 12):
+            with self.subTest(second=second):
+                self.sequenced_events([{'event_sequence': 10}, {'event_sequence': second}])
+                with self.assertRaisesRegex(BundleError, 'not contiguous'):
+                    validate_bundle(self.root)
+
+    def test_rejects_invalid_sequence_types_and_widths(self):
+        for value in (True, -1, 2**64, '0', 0.0):
+            with self.subTest(value=value):
+                self.sequenced_events([{'event_sequence': value}])
+                with self.assertRaisesRegex(BundleError, 'invalid event sequence'):
+                    validate_bundle(self.root)
+
+    def test_rejects_mixed_sequence_modes(self):
+        self.sequenced_events([{'event_sequence': 0}, {}])
+        with self.assertRaisesRegex(BundleError, 'mixed sequenced'):
+            validate_bundle(self.root)
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)

@@ -262,8 +262,8 @@ void Write_Events(FILE *file, uint64_t start, uint64_t end)
 		fprintf(file, ",\"load_source\":");
 		Json_String(file, gRecorder.load_source);
 		fprintf(file,
-			",\"frame\":%u,\"monotonic_us\":%" PRIu64 ",\"category\":",
-			event.frame, event.monotonic_us);
+			",\"event_sequence\":%" PRIu64 ",\"frame\":%u,\"monotonic_us\":%" PRIu64 ",\"category\":",
+			sequence, event.frame, event.monotonic_us);
 		Json_String(file, event.category);
 		fprintf(file, ",\"name\":");
 		Json_String(file, event.name);

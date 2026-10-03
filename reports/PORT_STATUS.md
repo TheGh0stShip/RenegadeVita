@@ -1,5 +1,14 @@
 # Renegade Vita port status
 
+2026-10-03 shared discovery regression:218 source/Python checks across16 modules
+pass after global general/HUD settings and default-loiter roots, factory-scoped
+sound references, ordered loiter entries and conservative enum evaluation.
+Fresh Tutorial/M13/M01 receipts retain unresolved findings. Global WAV and fixed
+HUD texture members were inspected read-only; playback/rendering remains open.
+The cinematic primary-ID buffer correction is source-only and uncompiled;
+301 registered patches, active staging receipt unchanged. No build or launch;
+native/runtime gates0/10. See [complete review](MISSION_RESEARCH_REVIEW.md).
+
 2026-10-03 authored audio audit: Tutorial221/M13566 candidate WAV headers
 admitted; M01 has111 admitted and11 oversized RIFF declarations. Original
 3D sample loading now forwards actual allocation length through a bounded

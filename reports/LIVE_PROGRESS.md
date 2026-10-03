@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Shared source discovery regression — 2026-10-03
+
+Completed:218 source/Python tests across16 modules pass after the recent shared
+discovery changes. Authoritative build/status records updated;301 registered
+patches, primary-ID buffer fix remains uncompiled. Current receipts preserve
+unresolved content findings. No native visual/gameplay acceptance claimed.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Default loiter internal animation identity — 2026-10-03
 
 Completed:authored path→basename→skeleton prefix→WW3D load-on-demand route traced;

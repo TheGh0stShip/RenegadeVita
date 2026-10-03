@@ -1,4 +1,17 @@
 {
+  "shared_source_discovery_regression_20261003": {
+    "state": "SOURCE_ONLY_REGRESSION_PASSED_NATIVE_UNVERIFIED",
+    "source_python_tests_passed": 218,
+    "source_python_modules": 16,
+    "registered_staging_patches": 301,
+    "coverage": ["authored_bindings", "script_zones", "cinematic_slots_and_events", "conversations_and_voice", "wave_headers", "text_routes", "command_table", "research_and_source_selection", "required_load_failure", "cinematic_diagnostics"],
+    "new_dependency_roots": ["general_settings", "hud_settings", "default_loiter"],
+    "cinematic_primary_id_buffer_fix_compiled": false,
+    "staging_receipt_regenerated": false,
+    "build_or_launch_performed": false,
+    "native_runtime_gates_closed": 0,
+    "report": "reports/MISSION_RESEARCH_REVIEW.md"
+  },
   "cinematic_filename_diagnostics_20261003": {
     "state": "SOURCE_DIAGNOSTIC_BUFFER_REMOVAL_UNCOMPILED",
     "focused_source_python_checks_passed": 15,

@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Cinematic HLOD child discovery — 2026-10-03
+
+Completed: read-only fixed-width/count-checked LOD/aggregate decoder; proxy names
+excluded from render-object dependencies, repeated child records retained.
+Evidence: seven combined tests; matching member hashes;6/43/56 HLOD owners with
+3/93/104 child records by map, no parse findings.
+Next: original asset-cache/name resolution and child geometry dependencies.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Cinematic shared-model candidates — 2026-10-03
 
 Completed: reached control hashes checked;6/48/65 Create_Object filename candidates

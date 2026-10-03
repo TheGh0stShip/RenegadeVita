@@ -303,6 +303,24 @@ resources. Private receipt:
 Next follow original hierarchy aggregate child resolution. No retail mutation,
 build, launch or native acceptance.
 
+The original HLOD constructor creates render objects for every decoded LOD child
+and aggregate child. The read-only `audit_hlod_dependencies` decoder now preserves
+these ordered names, bone indices, duplicate records and hierarchy names, with
+explicit little-endian fields and fixed-width/count checks. Proxy records remain
+outside render-object dependencies. Missing headers, count mismatches, short
+child records and unterminated names fail explicitly. This decoder does not
+instantiate models or certify hierarchy bones, animation, cache resolution or
+the entire original loader's compatibility behavior.
+
+Seven combined HLOD/prelit checks pass. With prior cinematic-member hashes
+reverified, the decoded candidates expose6/43/56 HLOD owners and3/93/104 child
+records in Tutorial/M13/M01, with no parse findings. Some HLODs have no child
+records; an HLOD count does not imply geometry. Private receipt:
+`build/cinematic-hlod-child-candidates-20261003.json`.
+Child names require original asset-cache resolution before load-on-demand filename
+fallback; treating every child as a separate file would create false missing
+dependencies. That resolution remains the next open discovery step.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

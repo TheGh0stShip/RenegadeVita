@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S4 first all-map binding reconciliation — 2026-10-03
+
+26 supplied maps audited: 12 campaign/tutorial, 13 multiplayer and Skirmish00.
+27 rows retained with missing M09 input explicit. Six script-name leads in
+M04/M05/M11 lack matching registrar symbols. Detailed metadata stays private;
+public summary contains counts/hashes/leads. Two tests pass. No runtime gate
+closed; verify locally found M09 backup, then expand full asset/factory closure.
+
 ## S3 factory and unmatched-script classification — 2026-10-03
 
 Defined-symbol matches now total 1,861: 1,636 script, 140 persist, 57 definition,

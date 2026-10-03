@@ -57,6 +57,20 @@ class PrelitCandidates(unittest.TestCase):
         self.assertEqual(passes[1]['texture_stages'][0]['alternate_field_candidates'], [])
         self.assertFalse(passes[0]['alternate_material_candidate'])
 
+    def test_root_passes_keep_order_and_illumination_state(self):
+        dig = chunk(0x3c, struct.pack('<I', 0))
+        root_pass = chunk(0x38, dig)
+        wrapper = chunk(0x24, chunk(0x28, bytes(16)) + chunk(0x38, dig))
+        rows = inspect_prelit(mesh(0x02000000, root_pass + wrapper + root_pass), 0)
+        passes = rows[0]['passes']
+        self.assertEqual([p['source_scope'] for p in passes],
+                         ['mesh_root', 'selected_prelit_wrapper', 'mesh_root'])
+        self.assertEqual([p['load_pass_index'] for p in passes], [0, 1, 2])
+        self.assertEqual(passes[0]['alternate_field_candidates'], [])
+        self.assertEqual(passes[1]['alternate_field_candidates'], ['diffuse_illumination'])
+        self.assertEqual(passes[2]['alternate_field_candidates'], ['diffuse_illumination'])
+        self.assertEqual(len(inspect_prelit(mesh(0, root_pass), 0)[0]['passes']), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

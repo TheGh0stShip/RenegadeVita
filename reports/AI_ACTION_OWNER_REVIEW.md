@@ -263,6 +263,22 @@ the expanded fields retains111/0/62 candidate meshes for Tutorial/M13/M01 in
 each hypothetical mode, with no parse findings. Private receipt:
 `build/three-map-prelit-expanded-fields-20261003.json`. No native acceptance.
 
+Ordered root material passes are now included alongside the selected wrapper,
+with per-pass source scope and load index. The inspected original material-info
+reader changes pass count but does not reset CurPass or LoadedDIG; illumination
+tracking therefore spans root→selected-wrapper→root. Texture-stage numbering
+remains local to each pass. Ambiguous selected wrappers retain findings and are
+not used to manufacture a resolved wrapper sequence; root passes stay visible.
+
+Five counterexample tests pass, including this cross-container order and plain
+non-prelit root material passes. Fresh inspection with unchanged member hashes
+adds467/329/832 root passes for Tutorial/M13/M01 in each requested mode, retaining
+111/0/62 candidate meshes. Private receipt:
+`build/three-map-prelit-root-pass-state-20261003.json`.
+The earlier root-pass omission is corrected. Legacy root vertex-color effects,
+material-array/index validity, full error/short-read flow and native loading
+remain outside this structural model. No full loader or visual acceptance claim.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

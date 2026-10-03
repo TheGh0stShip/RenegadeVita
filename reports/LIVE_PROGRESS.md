@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Ordered root/prelit pass discovery — 2026-10-03
+
+Completed: root passes included in file order with selected wrapper passes;
+load index/source scope and cross-container illumination state retained.
+Evidence: five tests; unchanged member hashes;467/329/832 additional root passes
+by map in each mode. Candidate totals remain111/0/62.
+Open: legacy color initialization, indices, complete loader flow and native pixels.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Expanded alternate-material field discovery — 2026-10-03
 
 Completed: shader/color/illumination and stage-owned texture/UV candidates added;

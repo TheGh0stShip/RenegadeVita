@@ -37,11 +37,16 @@ def inspect_prelit(data, mode):
             findings.append('selected_wrapper_missing_or_ambiguous')
         passes = []
         loaded_dig = False
-        if len(wrappers) == 1:
-            # Known container ownership, not an assumption about its high bit.
-            for node in chunks(wrappers[0].data):
-                if node.kind != 0x38:
-                    continue
+        ordered_passes = []
+        for child in mesh.children:
+            if child.kind == 0x38:
+                ordered_passes.append(('mesh_root', child))
+            elif child.kind == selected and len(wrappers) == 1:
+                # Known container ownership, not an assumption about its high bit.
+                ordered_passes.extend(('selected_prelit_wrapper', node)
+                                      for node in chunks(child.data) if node.kind == 0x38)
+        if ordered_passes:
+            for scope, node in ordered_passes:
                 fields = chunks(node.data)
                 counts = Counter(field.kind for field in fields)
                 candidates = []
@@ -64,6 +69,8 @@ def inspect_prelit(data, mode):
                         stage_candidates.append('uv')
                     stages.append({'alternate_field_candidates': stage_candidates})
                 passes.append({'field_counts': {hex(k): v for k, v in sorted(counts.items())},
+                               'source_scope': scope,
+                               'load_pass_index': len(passes),
                                'alternate_material_candidate': counts[0x39] > 1,
                                'alternate_field_candidates': candidates,
                                'texture_stages': stages})

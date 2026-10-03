@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S8 pinned OpenW3D file denominator — 2026-10-03
+
+3,782 unknown rows compare pinned EA/OpenW3D trees: 2,830 different blobs,
+652 identical, 145 EA-only and 155 reference-only. Truncated/duplicate/mismatched
+inputs rejected; two tests pass and output reproduces. No source imported,
+adoption or behavior claim. Per-fix, TT/changelog/mod and retail-binary coverage
+remain open. Native gates remain 0/10.
+
 ## S7 initial performance and memory denominator — 2026-10-03
 
 80 unknown rows retain 43 ledger sections, 23 table records, nine required cost

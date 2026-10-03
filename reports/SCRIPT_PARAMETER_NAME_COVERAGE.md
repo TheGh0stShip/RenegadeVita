@@ -40,3 +40,10 @@ the sound script. The601-byte M00_Action descriptor is not in this scoped
 binding/dependency closure. Ten focused source/Python checks pass. Authored
 binding counts are not executed callback counts, and this scope excludes
 dynamic scripts that literal discovery cannot establish.
+
+Prepared C++ regression source exercises the original ScriptImpClass through
+a synthetic ScriptFactory. It covers valid triples, trailing text, partial
+conversion, malformed input, null/empty input, out-of-range indexes, case-
+insensitive names and an absent Offset. It supplies no replacement parser and
+has not been compiled, linked or run. Host linkage and native validation remain
+open under the hold; these prepared cases are not passing runtime evidence.

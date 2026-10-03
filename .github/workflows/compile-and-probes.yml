@@ -25,7 +25,7 @@ jobs:
       - name: Install host dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build g++ ccache pkg-config libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg imagemagick python3-yaml llvm clang
+          sudo apt-get install -y cmake ninja-build g++ ccache pkg-config libfreetype-dev libcurl4-openssl-dev zlib1g-dev ffmpeg imagemagick python3-yaml python3-venv llvm clang
       - name: Prepare native SDK and pinned renderer test inputs
         if: matrix.sanitizer == 'asan-ubsan'
         run: |
@@ -46,6 +46,14 @@ jobs:
           bash tools/stage_sources.sh
           python3 tools/audit_script_call_defaults.py --strict
           python3 -m unittest tools.test_script_call_defaults
+      - name: Source inventory parser contracts
+        if: matrix.sanitizer == 'asan-ubsan'
+        run: |
+          python3 -m venv build/sweep-parser-venv
+          build/sweep-parser-venv/bin/python -m pip install -r tools/sweep-parser-requirements.txt
+          build/sweep-parser-venv/bin/python -m unittest discover -s tools -p 'test_audit_sweep_port_guards.py'
+          build/sweep-parser-venv/bin/python -m unittest discover -s tools -p 'test_sweep_cpp_functions.py'
+          build/sweep-parser-venv/bin/python tools/audit_sweep_port_guards.py --include-functions --output build/ci-s1-inventory-progress.json
       - name: Sanitized retail-free host probes
         env:
           RV_SANITIZER: ${{ matrix.sanitizer }}
@@ -72,6 +80,7 @@ jobs:
             build/ci-host-*/probe-logs/*.log
             build/python-contract-summary.json
             build/ci-excluded-host*
+            build/ci-s1-inventory-progress.json
           if-no-files-found: warn
 
   arm:

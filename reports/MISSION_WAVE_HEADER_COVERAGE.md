@@ -26,6 +26,24 @@ Source inspection confirms strict decoding rejects an oversized RIFF image;
 matching original-provider compatibility evidence is needed before accepting
 these eleven files with a different parsing policy.
 
+Conversation timing also needs validation. Original SoundBuffer statistics
+initialize duration to zero and populate it only when bounded header inspection
+succeeds. AudibleSound copies that duration from the buffer. Soldier dynamic
+dialogue starts with a two-second default, but replaces it with the duration
+of any created speech object, including zero. ActiveConversation assigns that
+result to its next-remark timer and advances after the timer expires, subject
+to audience checks. Thus a created speech object with failed statistics could
+advance on the next update rather than retaining the default pause.
+
+The provider's statistics mode allows truncated data chunks for header-only
+inspection; it still rejects an overlong non-data chunk. The raw trailers in
+the eleven files are therefore relevant to both statistics and playback.
+This is a conditional source-path risk, not observed mission behavior. Sound
+creation, preset choice, actor state and actual statistics must be captured
+before claiming that a particular conversation or callback advances early.
+Get_Conversation_Time separately falls back to two seconds when the summed
+duration is nonpositive; that fallback does not clamp each spoken remark.
+
 The new boundary is uncompiled and untested at runtime under the existing
 build/launch hold. The eleven files' decode compatibility remains open.
 PCM/ADPCM sample reconstruction, audible presentation, logical sounds,

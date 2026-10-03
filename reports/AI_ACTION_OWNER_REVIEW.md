@@ -164,6 +164,29 @@ Private definition/source hash receipt:
 `build/tutorial-building-power-owner-20261003.json`. No missing generic building
 implementation was established in this inspected scope. No build or launch.
 
+## Native alternate-material consumption
+
+The omitted DX8MeshRenderer invalidation does not by itself demonstrate a native
+stale-material defect. Original MeshClass's Vita branch submits its owning model
+through Submit_Mesh. MeshModel pass/UV/color/material/texture/shader getters use
+CurMatDesc. Submit_Mesh rereads those getters, initializes per-pass texture and
+material grouping state, and selects each triangle's current textures/material/
+shader. The inspected path does not retain a DX8 material-category list across
+building power changes.
+
+Optional material-color scratch advances generation at every pass, clears all
+allocated generations on wrap, and keys hits by generation, vertex and material.
+It therefore does not carry a color value from an earlier material pass through
+this cache. Global texture/shader state caches remain separate; this source
+review does not establish all backend invalidation or lighting behavior.
+
+An alternate description is selected only if it exists; otherwise the original
+model keeps its default description. Actual tutorial meshes, alternate payloads,
+lighting caches, native uploads and power-on/off pixels still need corresponding
+asset and runtime evidence. No renderer rewrite or speculative invalidation was
+introduced. Six source identities are retained privately in
+`build/tutorial-alternate-material-native-owner-20261003.json`.
+
 ## Tutorial startup and input-follow discovery
 
 The binding audit previously omitted CombatManager's serialized start/respawn

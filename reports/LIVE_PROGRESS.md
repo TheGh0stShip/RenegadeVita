@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Native tutorial alternate-material consumption — 2026-10-03
+
+Completed: MeshClass submission→current-description getters→per-triangle native
+material selection traced; optional color scratch renews generation each pass.
+Evidence: six private source hashes. Omitted DX8 category invalidation alone
+does not establish a native stale-material defect; no speculative change.
+Open: actual alternate mesh payloads, lighting and power-toggle pixels.
+No build, launch or retail mutation; native/runtime gates0/10.
+
 ## Tutorial building-power and vehicle station owners — 2026-10-03
 
 Completed: four generic building presets and original power/material/light owners

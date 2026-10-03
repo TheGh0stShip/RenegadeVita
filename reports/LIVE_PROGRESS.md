@@ -8619,3 +8619,13 @@ Evidence: source inspection only; no missing success forwarding established.
 Next: natural tutorial/M01 ending producers and inventory/objective restoration.
 Blocker: runtime proof remains open under the build/launch hold.
 See [completion owner review](MISSION_COMPLETION_OWNER_REVIEW.md).
+# S3 staged translation-unit denominator — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: reproducible staged-unit inventory: 837 rows, all unknown; 604
+selected by Dev209 and mentioned in its map, 233 not selected.
+Evidence: authored selection/map distinction test passes. No runtime change.
+Next: absent upstream units, registrars, section retention and retail factory IDs.
+Blocker: none for discovery; physical acceptance remains unverified.

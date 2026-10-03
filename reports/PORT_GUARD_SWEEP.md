@@ -3,8 +3,8 @@
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
 source contains 3,531 records with 31 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, 3 host
-presentation guards as `disabled_by_port_guard`, and 3,496
+`stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, 6
+guards as `disabled_by_port_guard`, and 3,493
 records still `unknown`. All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -62,6 +62,18 @@ Reviewed entries and risks:
 Movie reviews now also pin current build definitions and original movie/dialog
 caller sources. A matching method signature in another preprocessor branch
 cannot inherit a review: the body and optional definition hash must match.
+
+The three additional material guards are native omissions, unlike the three
+headless presentation guards. Transition Render_Push/Render_Pop return before
+original mapper/material/base-override work; MeshClass replaces procedural task
+registration with diagnostic-only submission. Original producers include spawn
+(`physicalgameobj.cpp:317`), death (`powerup.cpp:875`), healing (`soldier.cpp:3747`)
+and electrocution (`soldier.cpp:4738`). Stealth pushes an additional pass and can
+suppress base geometry (`stealtheffect.cpp:230-234`). Thus suppressed-base
+geometry has no effect submission in this inspected native path. This is a
+source defect, not an observed physical disappearance. Per-map occurrence,
+original deferred ordering, skin/cull/translucent semantics and native pixels
+remain acceptance requirements. No repair is included in this inventory batch.
 
 Reviews invalidate when their recorded function or caller/context identity
 changes. Constructor initializers belong to definition identity. The tool

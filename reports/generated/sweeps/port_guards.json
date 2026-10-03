@@ -3691,7 +3691,7 @@
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
     "tools/stage_sources.sh": "54fd1a9a00645c71da6198b69e994aae18ac35b4fbf0b1b44d8fcb867a8eee22",
-    "tools/sweep_reviews/port_guards.json": "73505ff9d1d54d970d57332d1a3b5c15068f2fbec04d54e89e713aa075f74b74",
+    "tools/sweep_reviews/port_guards.json": "747f5fef0e320b79d13955266a3347ba9f7de16a4fc1934d4f83103dcb59d987",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -124835,14 +124835,30 @@
       "status": "unknown"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT)",
       "end_line": 728,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/mesh.cpp",
       "kind": "current_source_guard",
       "line": 728,
+      "review": {
+        "acceptance_open": "Preserve original pass ownership, skin geometry, translucent filtering, deferred ordering and cull selection; restore native submission and verify representative effects physically. No runtime omission observation is claimed from this source review.",
+        "affected_scope": [
+          "All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified."
+        ],
+        "behavior": "Port base-mesh submission replaces original polygon renderer/category task registration. Original additional material passes are replaced by diagnostic-only Submit_Unsupported; decal traversal is retained. Additional-only overrides can suppress base geometry without drawing the effect.",
+        "callers": [
+          "staging/combat/physicalgameobj.cpp:317 spawn",
+          "staging/combat/powerup.cpp:875 death",
+          "staging/combat/soldier.cpp:3747 healing and :4738 electrocution",
+          "staging/wwphys/stealtheffect.cpp:230-234 material push and suppressed-base override",
+          "Original Phys material-effect and render-object traversal; exact per-map instances unresolved"
+        ],
+        "original_owner": "TransitionEffectClass push/pop and MeshClass original procedural material scheduling"
+      },
       "row_id": "15101597907502f016c7a0996fd9cc261f934a5ce50775cb0e779b7c8c08ad7d",
-      "status": "unknown"
+      "status": "disabled_by_port_guard"
     },
     {
       "directive": "#if !defined(RENEGADE_VITA_PORT)",
@@ -126515,24 +126531,56 @@
       "status": "unknown"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT)",
       "end_line": 165,
       "evidence_class": "current_source",
       "file": "staging/wwphys/transitioneffect.cpp",
       "kind": "current_source_guard",
       "line": 165,
+      "review": {
+        "acceptance_open": "Preserve original pass ownership, skin geometry, translucent filtering, deferred ordering and cull selection; restore native submission and verify representative effects physically. No runtime omission observation is claimed from this source review.",
+        "affected_scope": [
+          "All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified."
+        ],
+        "behavior": "Native and host port return before original material push/pop, mapper update and base-pass override. Spawn/death/healing/electrocution transition presentation is skipped.",
+        "callers": [
+          "staging/combat/physicalgameobj.cpp:317 spawn",
+          "staging/combat/powerup.cpp:875 death",
+          "staging/combat/soldier.cpp:3747 healing and :4738 electrocution",
+          "staging/wwphys/stealtheffect.cpp:230-234 material push and suppressed-base override",
+          "Original Phys material-effect and render-object traversal; exact per-map instances unresolved"
+        ],
+        "original_owner": "TransitionEffectClass push/pop and MeshClass original procedural material scheduling"
+      },
       "row_id": "2deef83041b297a47314b948285d604b3afd30c22f44c0b18dc28279f46cef45",
-      "status": "unknown"
+      "status": "disabled_by_port_guard"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT)",
       "end_line": 199,
       "evidence_class": "current_source",
       "file": "staging/wwphys/transitioneffect.cpp",
       "kind": "current_source_guard",
       "line": 199,
+      "review": {
+        "acceptance_open": "Preserve original pass ownership, skin geometry, translucent filtering, deferred ordering and cull selection; restore native submission and verify representative effects physically. No runtime omission observation is claimed from this source review.",
+        "affected_scope": [
+          "All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified."
+        ],
+        "behavior": "Native and host port return before original material push/pop, mapper update and base-pass override. Spawn/death/healing/electrocution transition presentation is skipped.",
+        "callers": [
+          "staging/combat/physicalgameobj.cpp:317 spawn",
+          "staging/combat/powerup.cpp:875 death",
+          "staging/combat/soldier.cpp:3747 healing and :4738 electrocution",
+          "staging/wwphys/stealtheffect.cpp:230-234 material push and suppressed-base override",
+          "Original Phys material-effect and render-object traversal; exact per-map instances unresolved"
+        ],
+        "original_owner": "TransitionEffectClass push/pop and MeshClass original procedural material scheduling"
+      },
       "row_id": "2df478b228456b7cc8f21f2f6d7644a65dd545c8ff601944b1f8fd5897052725",
-      "status": "unknown"
+      "status": "disabled_by_port_guard"
     },
     {
       "directive": "#ifdef _UNIX",
@@ -127138,9 +127186,9 @@
     },
     "by_status": {
       "boundary_replaced": 1,
-      "disabled_by_port_guard": 3,
+      "disabled_by_port_guard": 6,
       "stubbed_or_noop": 31,
-      "unknown": 3496
+      "unknown": 3493
     },
     "patch_files": 310,
     "rows": 3531,

@@ -2,6 +2,12 @@
 
 ## Clean CI and S1 inventory foundation — 2026-10-03
 
+Native material batch: two transition guards and the mesh procedural-pass guard
+classified. Original spawn/death/healing/electrocution producers and stealth
+base-suppression path are retained as caller evidence. S1 reconciles at 31 stubs,
+one replaced boundary, six disabled guards and 3,493 unknown. No behavior repair
+or physical visual acceptance is claimed.
+
 Dazzle/decal guard batch: three headless-host early returns classified with
 exact directive/location and whole-source hash binding. Native selects original
 bodies; queue execution, depth bias and pixels remain open. S1 reconciles at

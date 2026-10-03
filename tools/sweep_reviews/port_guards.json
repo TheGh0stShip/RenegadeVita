@@ -13,7 +13,13 @@
     "staging/commando/movie.cpp": "57f5bbf0188a8fa8fd896c3e819681c354bc0107863f942723010c07bcf4524e",
     "staging/commando/dlgmovieoptions.cpp": "49032fb0849ec72e432d5c0780c477d46b93c52c2a57a8891897e5f68d7bea03",
     "staging/combat/scriptcommands.cpp": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
-    "staging/ww3d2/dazzle.cpp": "d6feb4183fb7f2cec11394f573ab48847488cf563a8c56da69bb1d43ac9a0211"
+    "staging/ww3d2/dazzle.cpp": "d6feb4183fb7f2cec11394f573ab48847488cf563a8c56da69bb1d43ac9a0211",
+    "staging/wwphys/transitioneffect.cpp": "7acebf3163a8e94a109713568a6212996a0d732ab72b3bdd7ca96682f776011b",
+    "staging/wwphys/stealtheffect.cpp": "ac3aba63afbe5673468af4a6e45f839b9f575dd7ba2b49263b99ad40d0e74d7a",
+    "staging/combat/combatmaterialeffectmanager.cpp": "ce2b01c4e90f4a5b082c3177137bd70593b73b1d6138266738c0c08b518ad6f1",
+    "staging/combat/physicalgameobj.cpp": "c6e69c617bd1e5b1e8152af8e82174c36612c541ff546c991e2860ae08e5fb94",
+    "staging/combat/soldier.cpp": "3c251db6ab2d5ba6d31c9875f372eda959112f79ed289c90c9392aa7566c7a30",
+    "staging/combat/powerup.cpp": "f4d47f55cc0e2b5a331a1c6e2787df0d2a783837f00b038888291ff00e359306"
   },
   "reviews": [
     {
@@ -592,6 +598,66 @@
         "Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified."
       ],
       "acceptance_open": "Native body, traversal/flush, render state and physical effects; do not use this host guard as evidence of native omission."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/wwphys/transitioneffect.cpp",
+      "row_id": "2deef83041b297a47314b948285d604b3afd30c22f44c0b18dc28279f46cef45",
+      "directive": "#if defined(RENEGADE_VITA_PORT)",
+      "status": "disabled_by_port_guard",
+      "original_owner": "TransitionEffectClass push/pop and MeshClass original procedural material scheduling",
+      "behavior": "Native and host port return before original material push/pop, mapper update and base-pass override. Spawn/death/healing/electrocution transition presentation is skipped.",
+      "callers": [
+        "staging/combat/physicalgameobj.cpp:317 spawn",
+        "staging/combat/powerup.cpp:875 death",
+        "staging/combat/soldier.cpp:3747 healing and :4738 electrocution",
+        "staging/wwphys/stealtheffect.cpp:230-234 material push and suppressed-base override",
+        "Original Phys material-effect and render-object traversal; exact per-map instances unresolved"
+      ],
+      "affected_scope": [
+        "All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified."
+      ],
+      "acceptance_open": "Preserve original pass ownership, skin geometry, translucent filtering, deferred ordering and cull selection; restore native submission and verify representative effects physically. No runtime omission observation is claimed from this source review."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/wwphys/transitioneffect.cpp",
+      "row_id": "2df478b228456b7cc8f21f2f6d7644a65dd545c8ff601944b1f8fd5897052725",
+      "directive": "#if defined(RENEGADE_VITA_PORT)",
+      "status": "disabled_by_port_guard",
+      "original_owner": "TransitionEffectClass push/pop and MeshClass original procedural material scheduling",
+      "behavior": "Native and host port return before original material push/pop, mapper update and base-pass override. Spawn/death/healing/electrocution transition presentation is skipped.",
+      "callers": [
+        "staging/combat/physicalgameobj.cpp:317 spawn",
+        "staging/combat/powerup.cpp:875 death",
+        "staging/combat/soldier.cpp:3747 healing and :4738 electrocution",
+        "staging/wwphys/stealtheffect.cpp:230-234 material push and suppressed-base override",
+        "Original Phys material-effect and render-object traversal; exact per-map instances unresolved"
+      ],
+      "affected_scope": [
+        "All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified."
+      ],
+      "acceptance_open": "Preserve original pass ownership, skin geometry, translucent filtering, deferred ordering and cull selection; restore native submission and verify representative effects physically. No runtime omission observation is claimed from this source review."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/mesh.cpp",
+      "row_id": "15101597907502f016c7a0996fd9cc261f934a5ce50775cb0e779b7c8c08ad7d",
+      "directive": "#if defined(RENEGADE_VITA_PORT)",
+      "status": "disabled_by_port_guard",
+      "original_owner": "TransitionEffectClass push/pop and MeshClass original procedural material scheduling",
+      "behavior": "Port base-mesh submission replaces original polygon renderer/category task registration. Original additional material passes are replaced by diagnostic-only Submit_Unsupported; decal traversal is retained. Additional-only overrides can suppress base geometry without drawing the effect.",
+      "callers": [
+        "staging/combat/physicalgameobj.cpp:317 spawn",
+        "staging/combat/powerup.cpp:875 death",
+        "staging/combat/soldier.cpp:3747 healing and :4738 electrocution",
+        "staging/wwphys/stealtheffect.cpp:230-234 material push and suppressed-base override",
+        "Original Phys material-effect and render-object traversal; exact per-map instances unresolved"
+      ],
+      "affected_scope": [
+        "All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified."
+      ],
+      "acceptance_open": "Preserve original pass ownership, skin geometry, translucent filtering, deferred ordering and cull selection; restore native submission and verify representative effects physically. No runtime omission observation is claimed from this source review."
     }
   ]
 }

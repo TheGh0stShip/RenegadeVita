@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## Vector parameter initialization — 2026-10-03
+
+Completed: deterministic initialization before the original vector scan;
+source name audit retains20 mismatch leads and original retail names.
+Evidence:9 source/Python checks and6 future-entry checks pass; zero-fuzz replay.
+Next: authored binding hashes and compiled parser/native mission evidence.
+Native/runtime gates remain0/10; build/launch hold remains active.
+See [parameter coverage](SCRIPT_PARAMETER_NAME_COVERAGE.md).
+
 ## Monitor registration and observer attempts — 2026-10-03
 
 Completed: original registration outcomes and pre-call observer attempts now

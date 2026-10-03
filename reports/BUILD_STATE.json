@@ -1,4 +1,14 @@
 {
+  "script_parameter_parser_20261003": {
+    "state": "VECTOR_INITIALIZATION_SOURCE_FIX_UNCOMPILED_BINDINGS_OPEN",
+    "report": "reports/SCRIPT_PARAMETER_NAME_COVERAGE.md",
+    "literal_name_calls": 1166,
+    "numeric_or_unsupported_calls": 35,
+    "lookup_mismatch_sites": 20,
+    "focused_tests_passed": 9,
+    "registered_staging_patches": 296,
+    "native_runtime_gates_closed": 0
+  },
   "conversation_transition_diagnostics_20261003": {
     "state": "OPT_IN_BOUNDED_ORIGINAL_OWNER_HOOKS_UNCOMPILED",
     "report": "reports/CONVERSATION_TRANSITION_DIAGNOSTICS.md",

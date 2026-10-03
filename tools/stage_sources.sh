@@ -1013,6 +1013,10 @@ test "$(sha256sum "$rv_stage/combat/activeconversation.h" | cut -d' ' -f1)" = \
 	"c8d0c60aa32eaa222d6a584dae8ddc6a5a99102401ea81c1c4e8fdf007788938"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-conversation-transition-telemetry.patch"
+test "$(sha256sum "$rv_stage/scripts/scripts.cpp" | cut -d' ' -f1)" = \
+	"ac9ffd308e636f6d715bedf20c34daccc113d0982eed31beda5dfc6cb496eca7"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-vector-parameter-initialization.patch"
 # Compare final patched contents, never an intermediate source revision.
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()

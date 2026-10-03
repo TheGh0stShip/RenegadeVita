@@ -1,0 +1,11 @@
+--- a/scripts.cpp
++++ b/scripts.cpp
+@@ -502,7 +502,7 @@
+ ******************************************************************************/
+ Vector3 ScriptImpClass::Get_Vector3_Parameter( int index )
+ {
+-	float		x,y,z;
++	float		x = 0.0f, y = 0.0f, z = 0.0f;
+ 	::sscanf( Get_Parameter( index ), "%f %f %f", &x, &y, &z );
+ 	return Vector3( x,y,z );
+ }

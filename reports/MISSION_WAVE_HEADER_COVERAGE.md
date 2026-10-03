@@ -20,6 +20,12 @@ decoder retains its strict checks. No retail file is changed. The legacy
 pointer-only API remains for compatibility and cannot independently establish
 allocation bounds; the original engine caller uses the bounded API.
 
+The stream path independently reads the actual file size and passes the vector's
+size to decoding. It does not share the original pointer-only 3D caller defect.
+Source inspection confirms strict decoding rejects an oversized RIFF image;
+matching original-provider compatibility evidence is needed before accepting
+these eleven files with a different parsing policy.
+
 The new boundary is uncompiled and untested at runtime under the existing
 build/launch hold. The eleven files' decode compatibility remains open.
 PCM/ADPCM sample reconstruction, audible presentation, logical sounds,

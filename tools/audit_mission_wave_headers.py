@@ -10,6 +10,11 @@ from collections import Counter
 import json
 from pathlib import Path
 import struct
+import sys
+
+# Support the documented tools/path.py invocation from any working directory.
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.audit_mission_content_bindings import MAPS, ROOT
 from tools.audit_mission_conversations import digest, file_digest

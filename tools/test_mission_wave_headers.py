@@ -3,6 +3,8 @@ import contextlib
 import io
 from pathlib import Path
 import struct
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -10,6 +12,16 @@ from unittest.mock import patch
 from tools.audit_mission_wave_headers import ROOT, audit, basename, candidate_bytes, inspect_wave, main
 from tools.audit_mission_conversations import digest
 from tools.test_mission_conversations import FakeArchive
+
+
+class WaveAuditEntrypoint(unittest.TestCase):
+    def test_direct_script_help_outside_repository(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [sys.executable, str(ROOT / 'tools/audit_mission_wave_headers.py'), '--help'],
+                cwd=directory, capture_output=True, text=True, check=True)
+        self.assertIn('--conversations-directory', result.stdout)
+        self.assertEqual(result.stderr, '')
 
 
 def wave_chunk(kind, data, pad=True):

@@ -1,9 +1,24 @@
 import unittest
 
-from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, stage_patch_selection, wrapper_references
+from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, stage_patch_selection, validate_inventory, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
+    def test_reconciliation_rejects_missing_and_duplicate_rows(self):
+        row = {'kind': 'port_function', 'file': 'a.cpp', 'line': 1,
+               'status': 'unknown', 'evidence_class': 'source_syntax'}
+        result = {'rows': [row], 'complete': False,
+                  'totals': {'rows': 1, 'by_kind': {'port_function': 1}, 'by_status': {'unknown': 1}}}
+        validate_inventory(result)
+        self.assertEqual(len(row['row_id']), 64)
+        self.assertFalse(result['complete'])
+        result['rows'].append(row.copy())
+        with self.assertRaisesRegex(ValueError, 'total'):
+            validate_inventory(result)
+        result['totals'] = {'rows': 2, 'by_kind': {'port_function': 2}, 'by_status': {'unknown': 2}}
+        with self.assertRaisesRegex(ValueError, 'Duplicate'):
+            validate_inventory(result)
+
     def test_nested_else_and_elif_contexts_remain_uninterpreted(self):
         text = ('#if FEATURE\n#if defined(__vita__)\nvoid real() {}\n'
                 '#else\nvoid fallback() {}\n#endif\n#elif OTHER\nvoid other() {}\n'
@@ -107,7 +122,8 @@ class PortGuardInventoryTest(unittest.TestCase):
         self.assertEqual(stage_patch_selection('< "$rv_root/port/patches/one.patch"'),
                          ['port/patches/one.patch'])
         self.assertEqual(wrapper_references('-Wl,--wrap=shark_init\n-Wl,--wrap,pthread_create'),
-                         [{'symbol': 'shark_init', 'line': 1}, {'symbol': 'pthread_create', 'line': 2}])
+                         [{'symbol': 'shark_init', 'line': 1, 'column': 5},
+                          {'symbol': 'pthread_create', 'line': 2, 'column': 5}])
 
 
 if __name__ == '__main__':

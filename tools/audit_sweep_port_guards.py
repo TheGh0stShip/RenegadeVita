@@ -141,8 +141,34 @@ def stage_patch_selection(text):
 
 
 def wrapper_references(text):
-    return [{'symbol': match[1], 'line': text.count('\n', 0, match.start()) + 1}
+    return [{'symbol': match[1], 'line': text.count('\n', 0, match.start()) + 1,
+             'column': match.start() - text.rfind('\n', 0, match.start())}
             for match in re.finditer(r'--wrap(?:=|,)([A-Za-z_][A-Za-z_0-9]*)', text)]
+
+
+def row_identity(row):
+    fields = ('kind', 'file', 'line', 'end_line', 'column', 'start_byte', 'end_byte',
+              'target', 'patch_lines', 'change', 'symbol', 'name', 'node_type', 'missing')
+    location = {key: row[key] for key in fields if key in row}
+    return hashlib.sha256(json.dumps(location, sort_keys=True).encode()).hexdigest()
+
+
+def validate_inventory(result):
+    """Reject inconsistent denominators without equating reconciliation to closure."""
+    rows, totals = result['rows'], result['totals']
+    if totals['rows'] != len(rows):
+        raise ValueError('Row total does not reconcile')
+    if totals['by_kind'] != dict(Counter(row['kind'] for row in rows)):
+        raise ValueError('Kind totals do not reconcile')
+    if totals['by_status'] != dict(Counter(row['status'] for row in rows)):
+        raise ValueError('Status totals do not reconcile')
+    if any(row['status'] not in STATUSES or not row.get('evidence_class') for row in rows):
+        raise ValueError('Invalid status or missing evidence class')
+    identities = [row_identity(row) for row in rows]
+    if len(set(identities)) != len(identities):
+        raise ValueError('Duplicate row locations in inventory')
+    for row, identity in zip(rows, identities):
+        row['row_id'] = identity
 
 
 def macro_definitions(text):
@@ -299,6 +325,7 @@ def main():
                         help='Require the pinned C++ syntax parser and enumerate all port functions')
     args = parser.parse_args()
     result = audit(args.root, include_functions=args.include_functions)
+    validate_inventory(result)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
     print(json.dumps({'complete': result['complete'], **result['totals']}))

@@ -37,6 +37,7 @@ def function_inventory(text, cpp_parser=None):
     for node in walk(tree.root_node):
         if node.type == 'ERROR' or node.is_missing:
             errors.append({'line': node.start_point.row + 1,
+                           'start_byte': node.start_byte, 'end_byte': node.end_byte,
                            'end_line': node.end_point.row + 1,
                            'node_type': node.type, 'missing': node.is_missing,
                            'snippet': value(node)[:160]})
@@ -57,6 +58,7 @@ def function_inventory(text, cpp_parser=None):
                            ('default_method_clause', 'delete_method_clause')), None)
             if clause:
                 functions.append({'line': node.start_point.row + 1,
+                                  'start_byte': node.start_byte, 'end_byte': node.end_byte,
                                   'end_line': node.end_point.row + 1,
                                   'node_type': node.type, 'body_kind': clause,
                                   'scope': '::'.join(reversed(scopes)),
@@ -68,6 +70,7 @@ def function_inventory(text, cpp_parser=None):
                                   'parse_has_error': node.has_error})
             else:
                 errors.append({'line': node.start_point.row + 1,
+                               'start_byte': node.start_byte, 'end_byte': node.end_byte,
                                'end_line': node.end_point.row + 1,
                                'node_type': 'function_without_body', 'missing': True,
                                'snippet': value(node)[:160]})
@@ -109,6 +112,7 @@ def function_inventory(text, cpp_parser=None):
         if markers:
             signals.append('unsupported_or_todo_marker')
         functions.append({'line': node.start_point.row + 1,
+                          'start_byte': node.start_byte, 'end_byte': node.end_byte,
                           'end_line': node.end_point.row + 1,
                           'node_type': node.type,
                           'scope': '::'.join(reversed(scopes)),

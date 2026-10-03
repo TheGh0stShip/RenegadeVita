@@ -1,5 +1,14 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+ARM symbol reconciliation finds retained function candidates for all 202
+staged command-slot assignments. Each row carries demangled symbol, address
+and symbol-type metadata; the input symbol file is hash-pinned. Matching uses
+exact unqualified function-name prefixes and retains overload alternatives.
+Data symbols and qualified member functions do not satisfy this comparison.
+Eight authored slot/table tests pass. This closes the missing-function-symbol
+question for these lexical assignments only; signature/ABI compatibility,
+active platform branches, stub bodies and runtime initialization remain open.
+
 The inventory contains every original ScriptCommands function-pointer slot:
 202 rows, each with original/staged assignment candidates and direct shipped
 script-owner candidates. All 202 have exactly one lexical staged assignment.
@@ -17,7 +26,7 @@ to the ScriptCommands structure, ignores comments and rejects a missing
 structure explicitly. Rows retain source lines, identities, input hashes and
 parent build-inventory identity. Repeated generation reproduces exactly.
 
-Run `python3 -m tools.audit_sweep_scripts --link-inventory
+Run `python3 -m tools.audit_sweep_scripts --symbols <matching-symbol-file> --link-inventory
 reports/generated/sweeps/link.json --output <inventory.json>`.
 
 Next: complete command body/guard classification, default-argument CI checks,

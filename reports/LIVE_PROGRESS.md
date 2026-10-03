@@ -1,5 +1,12 @@
 # Live engineering progress
 
+## S5 retained command function-symbol reconciliation — 2026-10-03
+
+All 202 command assignments have retained ARM function candidates; symbols,
+addresses/types and input identity preserved. Eight tests pass. Overloads,
+ABI/signatures, command bodies and initialized runtime pointers remain open;
+no behavior or native acceptance claim follows from symbol presence.
+
 ## S5 complete script command and project-unit denominator — 2026-10-03
 
 202 command slots retained with one staged assignment each; 179 directly used

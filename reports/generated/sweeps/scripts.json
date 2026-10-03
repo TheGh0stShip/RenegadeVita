@@ -17,6 +17,17 @@
       "staged_assignment_candidates": [
         "Debug_Message"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Debug_Message(char*, ...)",
+          "matches": [
+            {
+              "address": "81121420",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -57,6 +68,17 @@
       "staged_assignment_candidates": [
         "Action_Reset"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Reset(ScriptableGameObj*, float)",
+          "matches": [
+            {
+              "address": "81121784",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -95,6 +117,17 @@
       "staged_assignment_candidates": [
         "Action_Goto"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Goto(ScriptableGameObj*, ActionParamsStruct const&)",
+          "matches": [
+            {
+              "address": "811217b4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "DrMobius.cpp",
         "Mission00.cpp",
@@ -131,6 +164,17 @@
       ],
       "staged_assignment_candidates": [
         "Action_Attack"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Attack(ScriptableGameObj*, ActionParamsStruct const&)",
+          "matches": [
+            {
+              "address": "811217d4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -172,6 +216,17 @@
       "staged_assignment_candidates": [
         "Action_Play_Animation"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Play_Animation(ScriptableGameObj*, ActionParamsStruct const&)",
+          "matches": [
+            {
+              "address": "811217f4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission02.cpp",
@@ -205,6 +260,17 @@
       "staged_assignment_candidates": [
         "Action_Enter_Exit"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Enter_Exit(ScriptableGameObj*, ActionParamsStruct const&)",
+          "matches": [
+            {
+              "address": "81121814",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp"
       ],
@@ -220,6 +286,17 @@
       ],
       "staged_assignment_candidates": [
         "Action_Face_Location"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Face_Location(ScriptableGameObj*, ActionParamsStruct const&)",
+          "matches": [
+            {
+              "address": "81121834",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -242,6 +319,17 @@
       "staged_assignment_candidates": [
         "Action_Dock"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Dock(ScriptableGameObj*, ActionParamsStruct const&)",
+          "matches": [
+            {
+              "address": "81121854",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
         "Test_PDS.cpp"
@@ -258,6 +346,17 @@
       ],
       "staged_assignment_candidates": [
         "Action_Follow_Input"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Action_Follow_Input(ScriptableGameObj*, ActionParamsStruct const&)",
+          "matches": [
+            {
+              "address": "81121874",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -276,6 +375,17 @@
       ],
       "staged_assignment_candidates": [
         "Modify_Action"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Modify_Action(ScriptableGameObj*, int, ActionParamsStruct const&, bool, bool)",
+          "matches": [
+            {
+              "address": "81121730",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -303,6 +413,17 @@
       "staged_assignment_candidates": [
         "Get_Action_ID"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Action_ID(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121428",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission05.cpp",
         "Mission06.cpp",
@@ -323,6 +444,17 @@
       "staged_assignment_candidates": [
         "Get_Action_Params"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Action_Params(ScriptableGameObj*, ActionParamsStruct&)",
+          "matches": [
+            {
+              "address": "81122b1c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -336,6 +468,17 @@
       ],
       "staged_assignment_candidates": [
         "Is_Performing_Pathfind_Action"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Is_Performing_Pathfind_Action(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121768",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission02.cpp",
@@ -356,6 +499,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Position"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Position(ScriptableGameObj*, Vector3 const&)",
+          "matches": [
+            {
+              "address": "8112314c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -383,6 +537,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Position"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Position(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121444",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "DrMobius.cpp",
@@ -431,6 +596,17 @@
       "staged_assignment_candidates": [
         "Get_Bone_Position"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Bone_Position(ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "811235c8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp",
         "Test_RMV.cpp",
@@ -448,6 +624,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Facing"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Facing(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121898",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -481,6 +668,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Facing"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Facing(ScriptableGameObj*, float)",
+          "matches": [
+            {
+              "address": "811231e0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -520,6 +718,17 @@
       "staged_assignment_candidates": [
         "Disable_All_Collisions"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Disable_All_Collisions(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811218e4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
         "Mission06.cpp",
@@ -540,6 +749,17 @@
       ],
       "staged_assignment_candidates": [
         "Disable_Physical_Collisions"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Disable_Physical_Collisions(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121900",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -566,6 +786,17 @@
       "staged_assignment_candidates": [
         "Enable_Collisions"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Collisions(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "8112191c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission04.cpp",
@@ -585,6 +816,17 @@
       ],
       "staged_assignment_candidates": [
         "Destroy_Object"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Destroy_Object(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "8112147c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -622,6 +864,17 @@
       ],
       "staged_assignment_candidates": [
         "Find_Object"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Find_Object(int)",
+          "matches": [
+            {
+              "address": "81121958",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -672,6 +925,17 @@
       "staged_assignment_candidates": [
         "Create_Object"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_Object(char const*, Vector3 const&)",
+          "matches": [
+            {
+              "address": "81123938",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -714,6 +978,17 @@
       "staged_assignment_candidates": [
         "Create_Object_At_Bone"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_Object_At_Bone(ScriptableGameObj*, char const*, char const*)",
+          "matches": [
+            {
+              "address": "81123d3c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -743,6 +1018,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_ID"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_ID(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121488",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -786,6 +1072,17 @@
       "staged_assignment_candidates": [
         "Get_Preset_ID"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Preset_ID(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81122f00",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -799,6 +1096,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Preset_Name"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Preset_Name(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81122ed4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission05.cpp",
@@ -819,6 +1127,17 @@
       ],
       "staged_assignment_candidates": [
         "Attach_Script"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Attach_Script(ScriptableGameObj*, char const*, char const*)",
+          "matches": [
+            {
+              "address": "81122780",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -862,6 +1181,17 @@
       "staged_assignment_candidates": [
         "Add_To_Dirty_Cull_List"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Add_To_Dirty_Cull_List(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811219c8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -877,6 +1207,17 @@
       ],
       "staged_assignment_candidates": [
         "Start_Timer"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Start_Timer(ScriptableGameObj*, ScriptClass*, float, int)",
+          "matches": [
+            {
+              "address": "811228cc",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "DrMobius.cpp",
@@ -926,6 +1267,17 @@
       "staged_assignment_candidates": [
         "Trigger_Weapon"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Trigger_Weapon(ScriptableGameObj*, bool, Vector3 const&, bool)",
+          "matches": [
+            {
+              "address": "811219f4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_RAD.cpp"
       ],
@@ -941,6 +1293,17 @@
       ],
       "staged_assignment_candidates": [
         "Select_Weapon"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Select_Weapon(ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "81121a4c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -967,6 +1330,17 @@
       ],
       "staged_assignment_candidates": [
         "Send_Custom_Event"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Send_Custom_Event(ScriptableGameObj*, ScriptableGameObj*, int, int, float)",
+          "matches": [
+            {
+              "address": "81122990",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1014,6 +1388,17 @@
       "staged_assignment_candidates": [
         "Send_Damaged_Event"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Send_Damaged_Event(ScriptableGameObj*, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811229f0",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -1027,6 +1412,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Random"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Random(float, float)",
+          "matches": [
+            {
+              "address": "81121a78",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1069,6 +1465,17 @@
       "staged_assignment_candidates": [
         "Get_Random_Int"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Random_Int(int, int)",
+          "matches": [
+            {
+              "address": "81121ad8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -1098,6 +1505,17 @@
       "staged_assignment_candidates": [
         "Find_Random_Simple_Object"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Find_Random_Simple_Object(char const*)",
+          "matches": [
+            {
+              "address": "81123fe4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_RMV_Toolkit.cpp"
       ],
@@ -1113,6 +1531,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Model"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Model(ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "81121b0c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1142,6 +1571,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Animation"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Animation(ScriptableGameObj*, char const*, bool, char const*, float, float, bool)",
+          "matches": [
+            {
+              "address": "81124428",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1177,6 +1617,17 @@
       "staged_assignment_candidates": [
         "Set_Animation_Frame"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Animation_Frame(ScriptableGameObj*, char const*, int)",
+          "matches": [
+            {
+              "address": "81121bb0",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission02.cpp",
@@ -1201,6 +1652,17 @@
       ],
       "staged_assignment_candidates": [
         "Create_Sound"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_Sound(char const*, Vector3 const&, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81123870",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1232,6 +1694,17 @@
       "staged_assignment_candidates": [
         "Create_2D_Sound"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_2D_Sound(char const*)",
+          "matches": [
+            {
+              "address": "81123ab8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -1258,6 +1731,17 @@
       "staged_assignment_candidates": [
         "Create_2D_WAV_Sound"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_2D_WAV_Sound(char const*)",
+          "matches": [
+            {
+              "address": "81123a44",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Toolkit_Sounds.cpp"
       ],
@@ -1274,6 +1758,17 @@
       "staged_assignment_candidates": [
         "Create_3D_WAV_Sound_At_Bone"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_3D_WAV_Sound_At_Bone(char const*, ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "81123ea8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Toolkit_Sounds.cpp"
       ],
@@ -1289,6 +1784,17 @@
       ],
       "staged_assignment_candidates": [
         "Create_3D_Sound_At_Bone"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_3D_Sound_At_Bone(char const*, ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "81123de4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1314,6 +1820,17 @@
       ],
       "staged_assignment_candidates": [
         "Create_Logical_Sound"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_Logical_Sound(ScriptableGameObj*, int, Vector3 const&, float)",
+          "matches": [
+            {
+              "address": "81124204",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1345,6 +1862,17 @@
       "staged_assignment_candidates": [
         "Start_Sound"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Start_Sound(int)",
+          "matches": [
+            {
+              "address": "81123080",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission11.cpp",
@@ -1362,6 +1890,17 @@
       ],
       "staged_assignment_candidates": [
         "Stop_Sound"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Stop_Sound(int, bool)",
+          "matches": [
+            {
+              "address": "81121bf0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1387,6 +1926,17 @@
       "staged_assignment_candidates": [
         "Monitor_Sound"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Monitor_Sound(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "81123630",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission04.cpp",
@@ -1409,6 +1959,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Background_Music"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Background_Music(char const*)",
+          "matches": [
+            {
+              "address": "81121c58",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission02.cpp",
@@ -1433,6 +1994,17 @@
       "staged_assignment_candidates": [
         "Fade_Background_Music"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Fade_Background_Music(char const*, int, int)",
+          "matches": [
+            {
+              "address": "81121c3c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "MissionX0.cpp",
         "Test_DLS.cpp",
@@ -1451,6 +2023,17 @@
       "staged_assignment_candidates": [
         "Stop_Background_Music"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Stop_Background_Music()",
+          "matches": [
+            {
+              "address": "81121c70",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -1464,6 +2047,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Health"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Health(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121c84",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1501,6 +2095,17 @@
       "staged_assignment_candidates": [
         "Get_Max_Health"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Max_Health(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121cac",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -1533,6 +2138,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Health"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Health(ScriptableGameObj*, float)",
+          "matches": [
+            {
+              "address": "81121cd4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1568,6 +2184,17 @@
       "staged_assignment_candidates": [
         "Get_Shield_Strength"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Shield_Strength(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121d04",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission02.cpp",
         "Mission07.cpp",
@@ -1588,6 +2215,17 @@
       "staged_assignment_candidates": [
         "Get_Max_Shield_Strength"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Max_Shield_Strength(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121d2c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -1607,6 +2245,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Shield_Strength"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Shield_Strength(ScriptableGameObj*, float)",
+          "matches": [
+            {
+              "address": "81121d54",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1633,6 +2282,17 @@
       "staged_assignment_candidates": [
         "Set_Shield_Type"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Shield_Type(ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "81121d84",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -1653,6 +2313,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Player_Type"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Player_Type(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121490",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1679,6 +2350,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Player_Type"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Player_Type(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "811214ac",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1709,6 +2391,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Distance"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Distance(Vector3 const&, Vector3 const&)",
+          "matches": [
+            {
+              "address": "81123304",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1741,6 +2434,17 @@
       "staged_assignment_candidates": [
         "Set_Camera_Host"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Camera_Host(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811228dc",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -1757,6 +2461,17 @@
       "staged_assignment_candidates": [
         "Force_Camera_Look"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Force_Camera_Look(Vector3 const&)",
+          "matches": [
+            {
+              "address": "81121db4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp"
       ],
@@ -1772,6 +2487,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_The_Star"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_The_Star()",
+          "matches": [
+            {
+              "address": "811214cc",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_BMG.cpp",
@@ -1790,6 +2516,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_A_Star"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_A_Star(Vector3 const&)",
+          "matches": [
+            {
+              "address": "81121e04",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1818,6 +2555,17 @@
       "staged_assignment_candidates": [
         "Find_Closest_Soldier"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Find_Closest_Soldier(Vector3 const&, float, float, bool)",
+          "matches": [
+            {
+              "address": "811236d8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "DrMobius.cpp",
         "Mission02.cpp",
@@ -1837,6 +2585,17 @@
       ],
       "staged_assignment_candidates": [
         "Is_A_Star"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Is_A_Star(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121dcc",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
@@ -1867,6 +2626,17 @@
       "staged_assignment_candidates": [
         "Control_Enable"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Control_Enable(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811214f4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission02.cpp",
@@ -1888,6 +2658,17 @@
       "staged_assignment_candidates": [
         "Get_Damage_Bone_Name"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Damage_Bone_Name()",
+          "matches": [
+            {
+              "address": "811214dc",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -1902,6 +2683,17 @@
       "staged_assignment_candidates": [
         "Get_Damage_Bone_Direction"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Damage_Bone_Direction()",
+          "matches": [
+            {
+              "address": "811214e8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -1915,6 +2707,17 @@
       ],
       "staged_assignment_candidates": [
         "Is_Object_Visible"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Is_Object_Visible(ScriptableGameObj*, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121ee0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -1935,6 +2738,17 @@
       ],
       "staged_assignment_candidates": [
         "Enable_Enemy_Seen"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Enemy_Seen(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "8112150c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -1966,6 +2780,17 @@
       "staged_assignment_candidates": [
         "Set_Display_Color"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Display_Color(unsigned char, unsigned char, unsigned char)",
+          "matches": [
+            {
+              "address": "81121524",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -1979,6 +2804,17 @@
       ],
       "staged_assignment_candidates": [
         "Display_Text"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_Text(int)",
+          "matches": [
+            {
+              "address": "8112412c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [],
       "status": "unknown",
@@ -1994,6 +2830,17 @@
       "staged_assignment_candidates": [
         "Display_Float"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_Float(float, char const*)",
+          "matches": [
+            {
+              "address": "81123400",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -2008,6 +2855,17 @@
       "staged_assignment_candidates": [
         "Display_Int"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_Int(int, char const*)",
+          "matches": [
+            {
+              "address": "81123390",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -2021,6 +2879,17 @@
       ],
       "staged_assignment_candidates": [
         "Save_Data"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Save_Data(ScriptSaver&, int, int, void*)",
+          "matches": [
+            {
+              "address": "81123364",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
@@ -2038,6 +2907,17 @@
       "staged_assignment_candidates": [
         "Save_Pointer"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Save_Pointer(ScriptSaver&, int, void*)",
+          "matches": [
+            {
+              "address": "811227b8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -2051,6 +2931,17 @@
       ],
       "staged_assignment_candidates": [
         "Load_Begin"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Load_Begin(ScriptLoader&, int*)",
+          "matches": [
+            {
+              "address": "81122ae4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
@@ -2068,6 +2959,17 @@
       "staged_assignment_candidates": [
         "Load_Data"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Load_Data(ScriptLoader&, int, void*)",
+          "matches": [
+            {
+              "address": "8112333c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -2084,6 +2986,17 @@
       "staged_assignment_candidates": [
         "Load_Pointer"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Load_Pointer(ScriptLoader&, void**)",
+          "matches": [
+            {
+              "address": "811227dc",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -2097,6 +3010,17 @@
       ],
       "staged_assignment_candidates": [
         "Load_End"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Load_End(ScriptLoader&)",
+          "matches": [
+            {
+              "address": "81121f20",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
@@ -2114,6 +3038,17 @@
       "staged_assignment_candidates": [
         "Begin_Chunk"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Begin_Chunk(ScriptSaver&, unsigned int)",
+          "matches": [
+            {
+              "address": "81121f28",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -2129,6 +3064,17 @@
       ],
       "staged_assignment_candidates": [
         "End_Chunk"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "End_Chunk(ScriptSaver&)",
+          "matches": [
+            {
+              "address": "81121f30",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
@@ -2146,6 +3092,17 @@
       "staged_assignment_candidates": [
         "Open_Chunk"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Open_Chunk(ScriptLoader&, unsigned int*)",
+          "matches": [
+            {
+              "address": "81122aac",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -2161,6 +3118,17 @@
       ],
       "staged_assignment_candidates": [
         "Close_Chunk"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Close_Chunk(ScriptLoader&)",
+          "matches": [
+            {
+              "address": "81121f38",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
@@ -2178,6 +3146,17 @@
       "staged_assignment_candidates": [
         "Clear_Radar_Markers"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Clear_Radar_Markers()",
+          "matches": [
+            {
+              "address": "81125f74",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -2191,6 +3170,17 @@
       ],
       "staged_assignment_candidates": [
         "Clear_Radar_Marker"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Clear_Radar_Marker(int)",
+          "matches": [
+            {
+              "address": "81122034",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -2213,6 +3203,17 @@
       "staged_assignment_candidates": [
         "Add_Radar_Marker"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Add_Radar_Marker(int, Vector3 const&, int, int)",
+          "matches": [
+            {
+              "address": "81125fbc",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission04.cpp"
@@ -2229,6 +3230,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Obj_Radar_Blip_Shape"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Obj_Radar_Blip_Shape(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "81122038",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -2248,6 +3260,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Obj_Radar_Blip_Color"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Obj_Radar_Blip_Color(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "81122070",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -2270,6 +3293,17 @@
       "staged_assignment_candidates": [
         "Enable_Radar"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Radar(bool)",
+          "matches": [
+            {
+              "address": "8112209c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -2288,6 +3322,17 @@
       "staged_assignment_candidates": [
         "Clear_Map_Cell"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Clear_Map_Cell(int, int)",
+          "matches": [
+            {
+              "address": "81122918",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Test_PDS.cpp"
@@ -2305,6 +3350,17 @@
       "staged_assignment_candidates": [
         "Clear_Map_Cell_By_Pos"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Clear_Map_Cell_By_Pos(Vector3 const&)",
+          "matches": [
+            {
+              "address": "81122d38",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_PDS.cpp"
       ],
@@ -2321,6 +3377,17 @@
       "staged_assignment_candidates": [
         "Clear_Map_Cell_By_Pixel_Pos"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Clear_Map_Cell_By_Pixel_Pos(int, int)",
+          "matches": [
+            {
+              "address": "81121f40",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -2334,6 +3401,17 @@
       ],
       "staged_assignment_candidates": [
         "Clear_Map_Region_By_Pos"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Clear_Map_Region_By_Pos(Vector3 const&, int)",
+          "matches": [
+            {
+              "address": "81121fdc",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission02.cpp"
@@ -2350,6 +3428,17 @@
       ],
       "staged_assignment_candidates": [
         "Reveal_Map"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Reveal_Map()",
+          "matches": [
+            {
+              "address": "81121fec",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -2369,6 +3458,17 @@
       "staged_assignment_candidates": [
         "Shroud_Map"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Shroud_Map()",
+          "matches": [
+            {
+              "address": "81122008",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -2382,6 +3482,17 @@
       ],
       "staged_assignment_candidates": [
         "Show_Player_Map_Marker"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Show_Player_Map_Marker(bool)",
+          "matches": [
+            {
+              "address": "81121568",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission11.cpp"
@@ -2398,6 +3509,17 @@
       ],
       "staged_assignment_candidates": [
         "Get_Safe_Flight_Height"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Safe_Flight_Height(float, float)",
+          "matches": [
+            {
+              "address": "81122018",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission10.cpp",
@@ -2417,6 +3539,17 @@
       ],
       "staged_assignment_candidates": [
         "Create_Explosion"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_Explosion(char const*, Vector3 const&, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81122e64",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2448,6 +3581,17 @@
       "staged_assignment_candidates": [
         "Create_Explosion_At_Bone"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_Explosion_At_Bone(char const*, ScriptableGameObj*, char const*, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811234e4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
         "Test_Cinematic.cpp",
@@ -2468,6 +3612,17 @@
       "staged_assignment_candidates": [
         "Enable_HUD"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_HUD(bool)",
+          "matches": [
+            {
+              "address": "811220a4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "MissionDemo.cpp",
         "Test_Cinematic.cpp"
@@ -2484,6 +3639,17 @@
       ],
       "staged_assignment_candidates": [
         "Mission_Complete"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Mission_Complete(bool)",
+          "matches": [
+            {
+              "address": "811220a8",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -2515,6 +3681,17 @@
       "staged_assignment_candidates": [
         "Give_PowerUp"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Give_PowerUp(ScriptableGameObj*, char const*, bool)",
+          "matches": [
+            {
+              "address": "81122808",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission02.cpp",
@@ -2541,6 +3718,17 @@
       ],
       "staged_assignment_candidates": [
         "Innate_Disable"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Disable(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81124620",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "DrMobius.cpp",
@@ -2577,6 +3765,17 @@
       "staged_assignment_candidates": [
         "Innate_Enable"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Enable(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81124640",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -2607,6 +3806,17 @@
       "staged_assignment_candidates": [
         "Innate_Soldier_Enable_Enemy_Seen"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Soldier_Enable_Enemy_Seen(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81124660",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Test_DAY.cpp"
@@ -2623,6 +3833,17 @@
       ],
       "staged_assignment_candidates": [
         "Innate_Soldier_Enable_Gunshot_Heard"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Soldier_Enable_Gunshot_Heard(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811246a0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2641,6 +3862,17 @@
       ],
       "staged_assignment_candidates": [
         "Innate_Soldier_Enable_Footsteps_Heard"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Soldier_Enable_Footsteps_Heard(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811246e0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2663,6 +3895,17 @@
       "staged_assignment_candidates": [
         "Innate_Soldier_Enable_Bullet_Heard"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Soldier_Enable_Bullet_Heard(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81124720",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -2681,6 +3924,17 @@
       "staged_assignment_candidates": [
         "Innate_Soldier_Enable_Actions"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Soldier_Enable_Actions(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81124760",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_DAY.cpp"
       ],
@@ -2696,6 +3950,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Innate_Soldier_Home_Location"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Innate_Soldier_Home_Location(ScriptableGameObj*, Vector3 const&, float)",
+          "matches": [
+            {
+              "address": "811220ac",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2729,6 +3994,17 @@
       "staged_assignment_candidates": [
         "Set_Innate_Aggressiveness"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Innate_Aggressiveness(ScriptableGameObj*, float)",
+          "matches": [
+            {
+              "address": "811220e0",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -2751,6 +4027,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Innate_Take_Cover_Probability"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Innate_Take_Cover_Probability(ScriptableGameObj*, float)",
+          "matches": [
+            {
+              "address": "81122104",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2776,6 +4063,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Innate_Is_Stationary"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Innate_Is_Stationary(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81122128",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2804,6 +4102,17 @@
       "staged_assignment_candidates": [
         "Innate_Force_State_Bullet_Heard"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Force_State_Bullet_Heard(ScriptableGameObj*, Vector3 const&)",
+          "matches": [
+            {
+              "address": "8112214c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Test_DLS.cpp"
@@ -2821,6 +4130,17 @@
       "staged_assignment_candidates": [
         "Innate_Force_State_Footsteps_Heard"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Force_State_Footsteps_Heard(ScriptableGameObj*, Vector3 const&)",
+          "matches": [
+            {
+              "address": "81122184",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_DLS.cpp"
       ],
@@ -2836,6 +4156,17 @@
       ],
       "staged_assignment_candidates": [
         "Innate_Force_State_Gunshots_Heard"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Force_State_Gunshots_Heard(ScriptableGameObj*, Vector3 const&)",
+          "matches": [
+            {
+              "address": "811221bc",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2854,6 +4185,17 @@
       ],
       "staged_assignment_candidates": [
         "Innate_Force_State_Enemy_Seen"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Innate_Force_State_Enemy_Seen(ScriptableGameObj*, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81122888",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -2874,6 +4216,17 @@
       ],
       "staged_assignment_candidates": [
         "Static_Anim_Phys_Goto_Frame"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Static_Anim_Phys_Goto_Frame(int, float, char const*)",
+          "matches": [
+            {
+              "address": "811221f4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
@@ -2897,6 +4250,17 @@
       "staged_assignment_candidates": [
         "Static_Anim_Phys_Goto_Last_Frame"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Static_Anim_Phys_Goto_Last_Frame(int, char const*)",
+          "matches": [
+            {
+              "address": "8112224c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -2918,6 +4282,17 @@
       "staged_assignment_candidates": [
         "Get_Sync_Time"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Sync_Time()",
+          "matches": [
+            {
+              "address": "81121574",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp",
         "Test_GTH.cpp"
@@ -2934,6 +4309,17 @@
       ],
       "staged_assignment_candidates": [
         "Add_Objective"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Add_Objective(int, int, int, int, char*, int)",
+          "matches": [
+            {
+              "address": "811222a0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -2964,6 +4350,17 @@
       "staged_assignment_candidates": [
         "Remove_Objective"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Remove_Objective(int)",
+          "matches": [
+            {
+              "address": "811222b0",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Toolkit_Objectives.cpp"
       ],
@@ -2979,6 +4376,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Objective_Status"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Objective_Status(int, int)",
+          "matches": [
+            {
+              "address": "811222b4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3009,6 +4417,17 @@
       "staged_assignment_candidates": [
         "Change_Objective_Type"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Change_Objective_Type(int, int)",
+          "matches": [
+            {
+              "address": "811222b8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Toolkit_Objectives.cpp"
       ],
@@ -3024,6 +4443,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Objective_Radar_Blip"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Objective_Radar_Blip(int, Vector3 const&)",
+          "matches": [
+            {
+              "address": "811222bc",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3044,6 +4474,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Objective_Radar_Blip_Object"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Objective_Radar_Blip_Object(int, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811222d8",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -3071,6 +4512,17 @@
       "staged_assignment_candidates": [
         "Set_Objective_HUD_Info"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Objective_HUD_Info(int, float, char const*, int)",
+          "matches": [
+            {
+              "address": "811222f4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission03.cpp",
@@ -3094,6 +4546,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Objective_HUD_Info_Position"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Objective_HUD_Info_Position(int, float, char const*, int, Vector3 const&)",
+          "matches": [
+            {
+              "address": "811222fc",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3123,6 +4586,17 @@
       "staged_assignment_candidates": [
         "Shake_Camera"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Shake_Camera(Vector3 const&, float, float, float)",
+          "matches": [
+            {
+              "address": "81122848",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
         "Mission06.cpp",
@@ -3143,6 +4617,17 @@
       ],
       "staged_assignment_candidates": [
         "Enable_Spawner"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Spawner(int, bool)",
+          "matches": [
+            {
+              "address": "81122304",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
@@ -3171,6 +4656,17 @@
       "staged_assignment_candidates": [
         "Trigger_Spawner"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Trigger_Spawner(int)",
+          "matches": [
+            {
+              "address": "81122308",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -3196,6 +4692,17 @@
       "staged_assignment_candidates": [
         "Enable_Engine"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Engine(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "8112230c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission02.cpp",
         "Mission03.cpp",
@@ -3220,6 +4727,17 @@
       "staged_assignment_candidates": [
         "Get_Difficulty_Level"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Difficulty_Level()",
+          "matches": [
+            {
+              "address": "81121580",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission02.cpp",
@@ -3241,6 +4759,17 @@
       ],
       "staged_assignment_candidates": [
         "Grant_Key"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Grant_Key(ScriptableGameObj*, int, bool)",
+          "matches": [
+            {
+              "address": "8112158c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3268,6 +4797,17 @@
       "staged_assignment_candidates": [
         "Has_Key"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Has_Key(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "811215d4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -3288,6 +4828,17 @@
       ],
       "staged_assignment_candidates": [
         "Enable_Hibernation"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Hibernation(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811230ec",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3321,6 +4872,17 @@
       "staged_assignment_candidates": [
         "Attach_To_Object_Bone"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Attach_To_Object_Bone(ScriptableGameObj*, ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "81122330",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission03.cpp",
@@ -3350,6 +4912,17 @@
       ],
       "staged_assignment_candidates": [
         "Create_Conversation"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Create_Conversation(char const*, int, float, bool)",
+          "matches": [
+            {
+              "address": "81123b8c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3385,6 +4958,17 @@
       "staged_assignment_candidates": [
         "Join_Conversation"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Join_Conversation(ScriptableGameObj*, int, bool, bool, bool)",
+          "matches": [
+            {
+              "address": "81123c34",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -3419,6 +5003,17 @@
       "staged_assignment_candidates": [
         "Join_Conversation_Facing"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Join_Conversation_Facing(ScriptableGameObj*, int, int)",
+          "matches": [
+            {
+              "address": "81123cbc",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission10.cpp",
         "MissionX0.cpp"
@@ -3435,6 +5030,17 @@
       ],
       "staged_assignment_candidates": [
         "Start_Conversation"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Start_Conversation(int, int)",
+          "matches": [
+            {
+              "address": "81123998",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3470,6 +5076,17 @@
       "staged_assignment_candidates": [
         "Monitor_Conversation"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Monitor_Conversation(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "81123b38",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -3501,6 +5118,17 @@
       "staged_assignment_candidates": [
         "Start_Random_Conversation"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Start_Random_Conversation(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81122398",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "mission08.cpp"
       ],
@@ -3516,6 +5144,17 @@
       ],
       "staged_assignment_candidates": [
         "Stop_Conversation"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Stop_Conversation(int)",
+          "matches": [
+            {
+              "address": "81122384",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -3535,6 +5174,17 @@
       "staged_assignment_candidates": [
         "Stop_All_Conversations"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Stop_All_Conversations()",
+          "matches": [
+            {
+              "address": "81122380",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission02.cpp",
@@ -3553,6 +5203,17 @@
       "staged_assignment_candidates": [
         "Lock_Soldier_Facing"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Lock_Soldier_Facing(ScriptableGameObj*, ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811223b0",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "MissionX0.cpp"
       ],
@@ -3569,6 +5230,17 @@
       "staged_assignment_candidates": [
         "Unlock_Soldier_Facing"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Unlock_Soldier_Facing(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811223f4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "MissionX0.cpp"
       ],
@@ -3584,6 +5256,17 @@
       ],
       "staged_assignment_candidates": [
         "Apply_Damage"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Apply_Damage(ScriptableGameObj*, float, char const*, ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81122418",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3619,6 +5302,17 @@
       "staged_assignment_candidates": [
         "Set_Loiters_Allowed"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Loiters_Allowed(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81121600",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -3643,6 +5337,17 @@
       "staged_assignment_candidates": [
         "Set_Is_Visible"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Is_Visible(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81121620",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission11.cpp"
       ],
@@ -3658,6 +5363,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Is_Rendered"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Is_Rendered(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "8112347c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -3685,6 +5401,17 @@
       "staged_assignment_candidates": [
         "Get_Points"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Points(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81125dd8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -3698,6 +5425,17 @@
       ],
       "staged_assignment_candidates": [
         "Give_Points"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Give_Points(ScriptableGameObj*, float, bool)",
+          "matches": [
+            {
+              "address": "811224d0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -3716,6 +5454,17 @@
       "staged_assignment_candidates": [
         "Get_Money"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Money(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81125d74",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -3729,6 +5478,17 @@
       ],
       "staged_assignment_candidates": [
         "Give_Money"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Give_Money(ScriptableGameObj*, float, bool)",
+          "matches": [
+            {
+              "address": "8112254c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_GTH.cpp",
@@ -3747,6 +5507,17 @@
       "staged_assignment_candidates": [
         "Get_Building_Power"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Get_Building_Power(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81121640",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission02.cpp",
         "Toolkit.cpp"
@@ -3763,6 +5534,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Building_Power"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Building_Power(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811225c8",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -3783,6 +5565,17 @@
       "staged_assignment_candidates": [
         "Play_Building_Announcement"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Play_Building_Announcement(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "811225e4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -3796,6 +5589,17 @@
       ],
       "staged_assignment_candidates": [
         "Find_Nearest_Building_To_Pos"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Find_Nearest_Building_To_Pos(Vector3 const&, char const*)",
+          "matches": [
+            {
+              "address": "81122f68",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [],
       "status": "unknown",
@@ -3811,6 +5615,17 @@
       "staged_assignment_candidates": [
         "Find_Nearest_Building"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Find_Nearest_Building(ScriptableGameObj*, char const*)",
+          "matches": [
+            {
+              "address": "81123058",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -3825,6 +5640,17 @@
       "staged_assignment_candidates": [
         "Team_Members_In_Zone"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Team_Members_In_Zone(ScriptableGameObj*, int)",
+          "matches": [
+            {
+              "address": "81122604",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -3838,6 +5664,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Clouds"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Clouds(float, float, float)",
+          "matches": [
+            {
+              "address": "81122624",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
@@ -3856,6 +5693,17 @@
       "staged_assignment_candidates": [
         "Set_Lightning"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Lightning(float, float, float, float, float, float)",
+          "matches": [
+            {
+              "address": "81122628",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission09.cpp"
@@ -3873,6 +5721,17 @@
       "staged_assignment_candidates": [
         "Set_War_Blitz"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_War_Blitz(float, float, float, float, float, float)",
+          "matches": [
+            {
+              "address": "8112262c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -3886,6 +5745,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Wind"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Wind(float, float, float, float)",
+          "matches": [
+            {
+              "address": "81122634",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -3905,6 +5775,17 @@
       "staged_assignment_candidates": [
         "Set_Rain"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Rain(float, float, bool)",
+          "matches": [
+            {
+              "address": "81122638",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission09.cpp"
@@ -3922,6 +5803,17 @@
       "staged_assignment_candidates": [
         "Set_Snow"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Snow(float, float, bool)",
+          "matches": [
+            {
+              "address": "81122640",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [],
       "status": "unknown",
       "evidence_class": "source_metadata"
@@ -3935,6 +5827,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Ash"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Ash(float, float, bool)",
+          "matches": [
+            {
+              "address": "81122648",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
@@ -3953,6 +5856,17 @@
       "staged_assignment_candidates": [
         "Set_Fog_Enable"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Fog_Enable(bool)",
+          "matches": [
+            {
+              "address": "8112165c",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission09.cpp"
       ],
@@ -3969,6 +5883,17 @@
       "staged_assignment_candidates": [
         "Set_Fog_Range"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Fog_Range(float, float, float)",
+          "matches": [
+            {
+              "address": "81122650",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission09.cpp"
       ],
@@ -3984,6 +5909,17 @@
       ],
       "staged_assignment_candidates": [
         "Enable_Stealth"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Stealth(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81122654",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission10.cpp",
@@ -4004,6 +5940,17 @@
       "staged_assignment_candidates": [
         "Cinematic_Sniper_Control"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Cinematic_Sniper_Control(bool, float)",
+          "matches": [
+            {
+              "address": "81122670",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -4019,6 +5966,17 @@
       ],
       "staged_assignment_candidates": [
         "Text_File_Open"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Text_File_Open(char const*)",
+          "matches": [
+            {
+              "address": "8112197c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
@@ -4036,6 +5994,17 @@
       "staged_assignment_candidates": [
         "Text_File_Get_String"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Text_File_Get_String(int, char*, int)",
+          "matches": [
+            {
+              "address": "81121674",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -4052,6 +6021,17 @@
       "staged_assignment_candidates": [
         "Text_File_Close"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Text_File_Close(int)",
+          "matches": [
+            {
+              "address": "811216bc",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -4067,6 +6047,17 @@
       ],
       "staged_assignment_candidates": [
         "Enable_Vehicle_Transitions"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Vehicle_Transitions(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81122688",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission02.cpp",
@@ -4085,6 +6076,17 @@
       "staged_assignment_candidates": [
         "Display_GDI_Player_Terminal"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_GDI_Player_Terminal()",
+          "matches": [
+            {
+              "address": "81122a38",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Toolkit.cpp"
       ],
@@ -4100,6 +6102,17 @@
       ],
       "staged_assignment_candidates": [
         "Display_NOD_Player_Terminal"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_NOD_Player_Terminal()",
+          "matches": [
+            {
+              "address": "81122e2c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Toolkit.cpp"
@@ -4117,6 +6130,17 @@
       "staged_assignment_candidates": [
         "Display_Mutant_Player_Terminal"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_Mutant_Player_Terminal()",
+          "matches": [
+            {
+              "address": "81122df4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Toolkit.cpp"
       ],
@@ -4132,6 +6156,17 @@
       ],
       "staged_assignment_candidates": [
         "Reveal_Encyclopedia_Character"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Reveal_Encyclopedia_Character(int)",
+          "matches": [
+            {
+              "address": "811226b0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -4157,6 +6192,17 @@
       "staged_assignment_candidates": [
         "Reveal_Encyclopedia_Weapon"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Reveal_Encyclopedia_Weapon(int)",
+          "matches": [
+            {
+              "address": "811226b8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
         "Mission01.cpp",
@@ -4175,6 +6221,17 @@
       ],
       "staged_assignment_candidates": [
         "Reveal_Encyclopedia_Vehicle"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Reveal_Encyclopedia_Vehicle(int)",
+          "matches": [
+            {
+              "address": "811226c0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -4197,6 +6254,17 @@
       "staged_assignment_candidates": [
         "Reveal_Encyclopedia_Building"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Reveal_Encyclopedia_Building(int)",
+          "matches": [
+            {
+              "address": "811226c8",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission02.cpp",
@@ -4214,6 +6282,17 @@
       ],
       "staged_assignment_candidates": [
         "Display_Encyclopedia_Event_UI"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_Encyclopedia_Event_UI()",
+          "matches": [
+            {
+              "address": "811226d0",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission05.cpp",
@@ -4234,6 +6313,17 @@
       "staged_assignment_candidates": [
         "Scale_AI_Awareness"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Scale_AI_Awareness(float, float)",
+          "matches": [
+            {
+              "address": "811216e4",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "MissionX0.cpp",
         "Test_DLS.cpp"
@@ -4250,6 +6340,17 @@
       ],
       "staged_assignment_candidates": [
         "Enable_Cinematic_Freeze"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Cinematic_Freeze(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811216f4",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -4270,6 +6371,17 @@
       "staged_assignment_candidates": [
         "Expire_Powerup"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Expire_Powerup(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "811226e0",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Toolkit_Powerup.cpp"
       ],
@@ -4285,6 +6397,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_HUD_Help_Text"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_HUD_Help_Text(int, Vector3 const&)",
+          "matches": [
+            {
+              "address": "81124d68",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission00.cpp",
@@ -4315,6 +6438,17 @@
       "staged_assignment_candidates": [
         "Enable_HUD_Pokable_Indicator"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_HUD_Pokable_Indicator(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81122714",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
         "Mission04.cpp",
@@ -4340,6 +6474,17 @@
       "staged_assignment_candidates": [
         "Enable_Innate_Conversations"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Innate_Conversations(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "811216fc",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Mission00.cpp"
       ],
@@ -4355,6 +6500,17 @@
       ],
       "staged_assignment_candidates": [
         "Display_Health_Bar"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Display_Health_Bar(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81122f24",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission01.cpp",
@@ -4373,6 +6529,17 @@
       "staged_assignment_candidates": [
         "Enable_Shadow"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Shadow(ScriptableGameObj*, bool)",
+          "matches": [
+            {
+              "address": "81122a70",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -4388,6 +6555,17 @@
       ],
       "staged_assignment_candidates": [
         "Clear_Weapons"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Clear_Weapons(ScriptableGameObj*)",
+          "matches": [
+            {
+              "address": "81122744",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_BMG.cpp",
@@ -4405,6 +6583,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Num_Tertiary_Objectives"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Num_Tertiary_Objectives(int)",
+          "matches": [
+            {
+              "address": "81121724",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Mission03.cpp",
@@ -4424,6 +6613,17 @@
       "staged_assignment_candidates": [
         "Enable_Letterbox"
       ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Enable_Letterbox(bool, float)",
+          "matches": [
+            {
+              "address": "81122774",
+              "type": "T"
+            }
+          ]
+        }
+      ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp"
       ],
@@ -4439,6 +6639,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Screen_Fade_Color"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Screen_Fade_Color(float, float, float, float)",
+          "matches": [
+            {
+              "address": "81122778",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp",
@@ -4456,6 +6667,17 @@
       ],
       "staged_assignment_candidates": [
         "Set_Screen_Fade_Opacity"
+      ],
+      "retained_function_symbol_candidates": [
+        {
+          "symbol": "Set_Screen_Fade_Opacity(float, float)",
+          "matches": [
+            {
+              "address": "8112277c",
+              "type": "T"
+            }
+          ]
+        }
       ],
       "original_script_owner_candidates": [
         "Test_Cinematic.cpp",
@@ -4739,6 +6961,8 @@
   ],
   "script_unit_total": 45,
   "selected_script_units": 44,
+  "symbols_sha256": "85de2fa8b32944d522f208ff4ee7c1901206ba8d92996459de281e5ad3c64bf1",
+  "command_slots_with_retained_function_candidates": 202,
   "inputs": [
     {
       "source": "upstream/CnC_Renegade/Code/Scripts/scriptcommands.h",

@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## S7 initial performance and memory denominator — 2026-10-03
+
+80 unknown rows retain 43 ledger sections, 23 table records, nine required cost
+families and five physical budget gates. Source owners and clock/memory probe
+locations retained; two tests pass and output reproduces. Historical measurement
+artifacts and costs outside the ledger remain unreconciled. No optimization or
+runtime acceptance; physical gates remain 0/10.
+
 ## S5 retained command function-symbol reconciliation — 2026-10-03
 
 All 202 command assignments have retained ARM function candidates; symbols,

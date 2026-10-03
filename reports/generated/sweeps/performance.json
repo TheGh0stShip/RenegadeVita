@@ -1,0 +1,1114 @@
+{
+  "schema": 1,
+  "sweep": "S7",
+  "complete": false,
+  "total": 80,
+  "counts": {
+    "unknown": 80
+  },
+  "kind_counts": {
+    "ledger_section": 43,
+    "ledger_table_row": 23,
+    "required_budget_gate": 5,
+    "required_cost_family": 9
+  },
+  "rows": [
+    {
+      "kind": "ledger_section",
+      "label": "Performance hypothesis ledger",
+      "line": 1,
+      "end_line": 2,
+      "content_sha256": "14ce341050cfc9a4e533a6154aa901e5d773ce7c7e34e20ec59fabbdb8a0f770",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "625de5e34ab70c42e167eaf8f18b01453a573a45e56ce7f27f3d3926a6e16f86",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 TT Audio Reference Check",
+      "line": 3,
+      "end_line": 27,
+      "content_sha256": "3990d6f064317ed0ab4b1313e854d90543222ecf7099c3318970a9d45293c098",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "f52848a221eeb4f0092f285b15b00eef3a791c65da5cdc04b9808b6c3290d7d2",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Delayed Audio Flush Synchronization",
+      "line": 28,
+      "end_line": 54,
+      "content_sha256": "d555ca6d810ac920e0108199544db607fd98aa6f68db2d4c604e9099743fb04e",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "189a5833819da25875c02f6ed07b5d812069b091a2ae5ba54f3b2ae946190316",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Source Integration and Shared Loop Review",
+      "line": 55,
+      "end_line": 79,
+      "content_sha256": "3b4973a214438fbf43bf10a314a55faddb040ec7964d11c9927e53b19b803095",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "e6031fb229f0e7726320fc38e4c3ca5915b1b24441e4bec85257fe9e2c508ab1",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Phys3 collision recursion",
+      "section": "2026-09-27 Source Integration and Shared Loop Review",
+      "line": 68,
+      "content_sha256": "41fc72db826cf26ce3853dfe33a1e054d5d769b9023ef639e5d35d9ad279df9a",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "2231f3b07c58d4ac807df8a8543d42d0b7780f2e1a1a1e1cfa3572989ff558cb",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Phys3 movement loop",
+      "section": "2026-09-27 Source Integration and Shared Loop Review",
+      "line": 69,
+      "content_sha256": "c3a5989e6fe20be8e17c61087e30b3c10dd165848592daea66421a2660612e1e",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "81662fc93d6069daca1ac97dc1e70dd3110f214546b521c165c683665b242df6",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Scene substeps",
+      "section": "2026-09-27 Source Integration and Shared Loop Review",
+      "line": 70,
+      "content_sha256": "4e3c77dd805c3225aaaee45e776390b20fd198a0d4aa606e35c17f460210d6c1",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "ab232c54730494488c6d0f47d185fe17eaade930ab77229819c52f5e6f13d36b",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Script timer queues",
+      "section": "2026-09-27 Source Integration and Shared Loop Review",
+      "line": 71,
+      "content_sha256": "72261289145358ffa4681ec0c85a23dbc28803e15c1054f4b985ef884b51f8a2",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "b4678b3b406ab2c7a5f406d9641757a3ce6310be4b03ef94f2bbda3fe73ca1b2",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Script deletion",
+      "section": "2026-09-27 Source Integration and Shared Loop Review",
+      "line": 72,
+      "content_sha256": "3e9b7f5b390f1ad6b47ff0e55a0ac8ad4d835995fdda633005b665862107f0b9",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "a47ee2f91f48f32c8b2344f2bbfeb99b164745f84534c0a6e5cdc22b9b90c691",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Audio shutdown",
+      "section": "2026-09-27 Source Integration and Shared Loop Review",
+      "line": 73,
+      "content_sha256": "c5cf78540c4dc178236f7865216587fe4298f493b5c9135047a78545eab2d2e0",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "cb709f5957bb62eef28f6ebf597d3021d75827d94652259a9f041b73d630fae6",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Audio Completion Ownership Audit",
+      "line": 80,
+      "end_line": 106,
+      "content_sha256": "de85669dcea634f2dd8c154f4e3cf69f6cf7da6f018af0586593f3f172850684",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "9702a418ff41f7a046c5782acc60a783a8f33f673481e30122e289009f09bbb0",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Repeated Tank Render State",
+      "line": 107,
+      "end_line": 132,
+      "content_sha256": "8cfa499e151b84d58d48690ce541bf7faf032a3a041aa552890f1389cb889cb0",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "3c4d3950bcec1865365ccaa827dcd838354c3e3e697bca33af770f9cfc92e1ab",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Saved M13 and Explosion Audio Coverage",
+      "line": 133,
+      "end_line": 153,
+      "content_sha256": "0d7a50cfddf554dcdc4b5dc463511bf0582baa851ec615ca051a2286500a791b",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "20479f97d841be98a2aa8bbf0c22d90b079d2c4062816a9bb5d1d70c555372a0",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Continuous Sound Removal Boundary",
+      "line": 154,
+      "end_line": 177,
+      "content_sha256": "5a3ba7dc7975b55a18b2ece17acf635dac47414a41f0d0c0bb87114e253f7dce",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "08218482f7cb447c236587af656a516f7be0c8e7eaace82e52bdfa2e63dd61df",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Original-Audio M01 Lifecycle Regression",
+      "line": 178,
+      "end_line": 217,
+      "content_sha256": "c4e6c8c714c077a81ad53adb66e4077931d3a074fa22f33be5dbb3005adbff32",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "4267b1ad00c0d24288157b02c4128875287a41cd1a5a820885b5f7684269764f",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Reproduced Audio Release Deadlock",
+      "line": 218,
+      "end_line": 244,
+      "content_sha256": "891f91ee7e144b20b052fcb9a732c271f1e438f1a01b76aa2b3498d234f79ad9",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "35f9e278fba5b8bd4938f49288897c68490702fb4e4431134ddedbbcc9ce5587",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Original audio host boundary",
+      "line": 245,
+      "end_line": 263,
+      "content_sha256": "390b0961c91a4454170fbc17fd2a0f04c5bce155abe9be52fdd3a4e0dd1ba7a8",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "5b19e6208b33bb89c7eeb7e3938ba6e92a25523055c43250c7372daf88a078f5",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Sorted-effect capacity and ordering",
+      "line": 264,
+      "end_line": 310,
+      "content_sha256": "5ccd3318b81e0f125a0317873fb523fe743c7551a548bb8d098f272e6ccb0e8a",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "7c40c2e39469efe652b811de9d5491f8ff89e73ea080748a9f07057ad14ed5ad",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Original sorted-effect submission restored",
+      "line": 311,
+      "end_line": 362,
+      "content_sha256": "b7658e293069c55f72bb182461a758c321c810834b81a74c62de6ae1fa0953e7",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "8cc79de6347b0b98a49f75f438e0b059e2d4281cc257190757a1264bf345c725",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Long-timestep explosion-decal lifetime",
+      "line": 363,
+      "end_line": 402,
+      "content_sha256": "c06df2697c9b5f8b41a34400f9d00aed8fc1800c0cd03af0c5c21e509c6d6e3f",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "dd5338ca47b1ae5bc84581954faeb018b26c91df0b156f53b27db835884d663f",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Saved-path ownership verification",
+      "line": 403,
+      "end_line": 428,
+      "content_sha256": "9091953dd89225be9677c02a0b12a534b1e7f6c040519648b6c6c307d34ed11a",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "f0fc6b2791d7cbf2c2856d4606ee8fa5b21e326abcb857ea50ac9094462ebc0e",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Original raw-animation output regression",
+      "line": 429,
+      "end_line": 442,
+      "content_sha256": "4c6875b4d9fc90e1e56a9073129810c44e419c9b98a934db4da701553767568b",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "ef15abd4c390f24ca7cf28474f90530c551c7b48a80fb2ec92f1d8618f27e90a",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "2026-09-27 Ion audio save-path boundary check",
+      "line": 443,
+      "end_line": 464,
+      "content_sha256": "219c95a6cceac96ee0cfe9f6eaddf22e339629d18aed4b7d96a54a897d52abdf",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "285de5fd0fffea22e487754d4697c3cecb749874d88cfefeb15b22142ef974fb",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Unbuilt M13/M01 source pass (2026-09-27)",
+      "line": 465,
+      "end_line": 552,
+      "content_sha256": "0bcf8d1ab9c984d1e40caa62a9b68afd7bbc0e3679b6ff92191c561ab8ecccd1",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "709c391d5bc04d7f220b2d09e9f0b47c287f73349196ae2bf38ebbfd99ca650d",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev200 RenCorner Glacier bounded Vita3K run (2026-09-27)",
+      "line": 553,
+      "end_line": 562,
+      "content_sha256": "5767e63063f64593eea95b248992f1e764be92def62d23b63074d985a7ccde5a",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "cb170f356c4f7a320bd3440aaa52f8c8164b79a18884e9378e638bdab1803048",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev197 M01 short-save freeze boundary (2026-09-26)",
+      "line": 563,
+      "end_line": 568,
+      "content_sha256": "5fd9836fa4eae40cb993386c25ea62f01809c3370e6cfd67ef2b1a3e808585e3",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "1785bd33a6204a9b016742661b866f209dbcd95f697d86d0bc325d8269b48919",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "M13 authored intro and shared effects preparation (2026-09-23)",
+      "line": 569,
+      "end_line": 601,
+      "content_sha256": "ca73e31d83a4fa1f3f3d2cfd8aa35e3dd84a5d29c537fc7141f6b24672f4b702",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "8ea1c0d32fc1a7bc9874dcd73512e98be2b4e67b91f8c99bd121794ddf59ece2",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "M13 randomized explosion preparation: cover every retail choice (2026-09-23)",
+      "line": 602,
+      "end_line": 631,
+      "content_sha256": "15a38cc2f20a0545b9c8bcef4394af8c9af803be670f58ca97003159b4896856",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "dd8512982af099b02254c97d2208573079250139cfb294f9286eea96a3455a7e",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "M13 SAM death: repeated unresolved W3D prototype loads (2026-09-23)",
+      "line": 632,
+      "end_line": 666,
+      "content_sha256": "d427dcf2adfb45b8eab66efd651e619c3926fc5416e91977dffd4d29b870a4a8",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "8e2a08ff7b4994ef0d91b8c27dbc09e44d52e7f4df3774f1aeb26fc685067d7c",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "M13 SAM death: aggregate fallback repeated the on-demand load (2026-09-23)",
+      "line": 667,
+      "end_line": 701,
+      "content_sha256": "e14be1bb62d7e91b04bc5db3c2670ec5bcbf61629e343b7844fcd97977dd5049",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "de2dab50f187a9cd2cdb0186a9dbdf8beb3586248725accf88a8f6c59d71cd0e",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "M13 steady mesh submission: original WW3D and pinned vitaGL review (2026-09-23)",
+      "line": 702,
+      "end_line": 740,
+      "content_sha256": "45913bd3fbcd8e7a0351bf97d3354b3828fc28e678262d6838250299c12d3347",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "5d5ba502454e44b086e5efbbd46c86bea2b918d443d6835183f2fe3bb6056530",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "M13 script-linked host sanitizer and WWMath layout (2026-09-23)",
+      "line": 741,
+      "end_line": 771,
+      "content_sha256": "f75150085a9cfff488d0809753e5cbb03e182c41fd7fa934346b16b69a75632d",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "299e2c9bd58926dc9c24ff49e03f1d3ed0bcea8945b1a6ed5163ce204a2d92cc",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Internal Dev195 M13 first-use preparation and recorder gate (2026-09-23)",
+      "line": 772,
+      "end_line": 802,
+      "content_sha256": "4e8be232212d9dd5d7e1c97abd36013fecda81a4be5bbc11069d01623c7682d4",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "cb7b7f012920c834067f0818a18106fa0721090aad23f500297fb6fcd7473fb1",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev194 runtime: synchronous flight-recorder amplification (superseded by internal Dev195 compile)",
+      "line": 803,
+      "end_line": 834,
+      "content_sha256": "22db2a0e33f8a079095bfcc43739a39e339201d8a14375c69065dcab220dc253",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "079c833e95872a0fb52f88f112d0968625befe3df31cafed1aba6431bd85e23b",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev194: prevent retained-instance reuse in the M01 opening sequence",
+      "line": 835,
+      "end_line": 866,
+      "content_sha256": "c577fb298b688384cfe171a97142ef8a51fb9ec93dd6b4d7b8a5912ce972d820",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "0a736af42e02129e9a639083eaf3d24694b1aac765f77bc298924c866fa4065f",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev193: sampled PostThink object timing restored after preservation patch",
+      "line": 867,
+      "end_line": 892,
+      "content_sha256": "69174e3cd684f6afa0e6630583828157eb1b14dd7f9339f61c6a2df41de95934",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "aaa6cc5fe3dbbaace50d19e09976a919222672d07594d9a772b6225cba308be9",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev192: campaign log sync overhead and truncated records (2026-09-23)",
+      "line": 893,
+      "end_line": 915,
+      "content_sha256": "6b7464fd593de32c28aed2cc8511f05b64ca2e2808bf427ca3f4bce8645742b6",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "d298fc2cfad9165cb5bc7d378e342867d8ad39b9e36ee2b7d4a6d00d9cf7e92e",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev191 tracked-vehicle UV time-unit correction (2026-09-23)",
+      "line": 916,
+      "end_line": 944,
+      "content_sha256": "fe77eaa70b9f0c6fdb71749fa99d4afc9d18da1401f9887a4574f3e30c413df8",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "c6ddf0a983074b021da438ee566013d5f31cbb96827b1757a44bada4eec26b3c",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev190 measured regressions and corrective candidate (2026-09-23)",
+      "line": 945,
+      "end_line": 991,
+      "content_sha256": "ed5b3173495eeb20ef125162c981324525781140416587c463d6afee320281a1",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "611b6021ad20bba8f15719004803311295d602d712e9fd4c3fd9f512ec78f780",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev189 source/build closure (2026-09-23)",
+      "line": 992,
+      "end_line": 1014,
+      "content_sha256": "362d7c63040100e7b8cabf98c19f77f66d0e389cc7cbd29632a95836d9a696b5",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "195f743e96a4d65bcbb216508f59d524b0916beb1c42ae65e900c2df9ca1ad4f",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev188 build closure (2026-09-23)",
+      "line": 1015,
+      "end_line": 1023,
+      "content_sha256": "04f183f751002dc361879f4d7e75aa30461dac4a33460b56d0153d386502d528",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "ea5b67846c7fac2acfc356a5733e716144b35e9b7ac86edccd5a00571c046377",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev187 invalid HUD geometry and prefixed tread names (2026-09-23)",
+      "line": 1024,
+      "end_line": 1042,
+      "content_sha256": "b54f7732b43f00d5c23a43b3cf9842aec2ff82539bebe81b9355047b28eaf356",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "bb3ee1c23cdc56d94f0f9c1eea85457e5dabb1353d416bee1facab4c564b9e5d",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev186 track animation and Vita mapper-state cache (2026-09-23)",
+      "line": 1043,
+      "end_line": 1066,
+      "content_sha256": "b29ddcdeb60de336ce53d741b7db17475c2c24396bd8654aa14d024652e6b978",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "7e40cbc2315de43b2da06ea9f06b7a994bc275731d5c653f8dd7b1dfc7b8ab8f",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev185 retained cinematic/effect physics models (2026-09-23)",
+      "line": 1067,
+      "end_line": 1095,
+      "content_sha256": "7c923b451d8e17aa47c7b0608baab02243e08a76e8427757de4204b37fc6251b",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "b16d5fc36bc9d64e6abb760260f909ebed8e8515004ddf0f6a183ea4e7326b47",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev182 volatile render-object warm-only correction (2026-09-23)",
+      "line": 1096,
+      "end_line": 1122,
+      "content_sha256": "a1bdbf8b5402a1b2da0d930a918b00de27c04f76e7786e68db752597631d8d15",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "c9663050c3db90a175c629f5c27197da47c6768696f84659c1c3e0af42380611",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev159 persistent runtime-log handles (2026-09-22)",
+      "line": 1123,
+      "end_line": 1138,
+      "content_sha256": "ff567143c4338077461f01acd915dedce08ef417bf48c76e6462f38323e90e1e",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "47182addbefbfb27b0d5e6bb91681715f97c1f9d31683ecdf88362bdc7f2f482",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1139,
+      "end_line": 1265,
+      "content_sha256": "e5eeeee5db65fe8c5fcf055a69a4c32478ef739ede9c5a7be1e71ec767122a4a",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "907c22d8bfc100580fc73b33dfd83b48d67dc5910e5ceb88e3c7afcb8594c2ef",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "No dependency preload, 4x MSAA",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1218,
+      "content_sha256": "864d750eb7d5a531fbf0029b1e109d5ad9db3d9b13d0c5918dcbcd40847bec56",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "3b770d49e438a006d517793c5b9fe46fad1efa1e41cfea1bdc6eaff2d54441d1",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Original global + mission `.dep`, 4x",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1219,
+      "content_sha256": "4624257ae7356c28f739d070a2826d732868cf90f027ad6965f0e0baa616870c",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "1c4ee0eda2e067dbc1193c83b408dba3e93fd44806b2f7ce3811a8348b2330d6",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Mission `.dep` only, 4x",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1220,
+      "content_sha256": "ab1c3be3309157dcbb34eebe94288e83a79dcd7701de2b3bb0a4618a602d18c3",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "5d9897411781383868c4e373253995d2ff9a4badbc1428f3c44bb369c1bcf6c2",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Mission `.dep` only, MSAA off",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1221,
+      "content_sha256": "426e1563a8b289d89a1d5dfb290a2055c87b5d72d90e66a1251fc958b5f1c32a",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "fa795fbed24bafbfdcd2ed77fd7ab22b8aea35ccf4e7f870e1db8596d3c60ab0",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Discarded textured-character RGB",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1242,
+      "content_sha256": "cc491dd43ae288c54d03a0071437617cfc5cca3c15f13f14b89897390644a8af",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "b9d0a9f9213f2d541295e3573c515fa1e32547ec17de08a04bff6195305c5e41",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Native YUV movie sampling",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1243,
+      "content_sha256": "bfaad76cc4e2ffe9a5156f1aef00e53590f1c71cf43230287a7beaa702364254",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "0191ece5497e2bc8c1c0014e9aaf33cf7a2b1e8fa617740ee00d63f8d95083a5",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Persistent geometry and render handoff",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1244,
+      "content_sha256": "34a03c9b207927c2ecba832cea31c707cdc1d07787568557b6de0360285da2b8",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "64458845fe13c63f65cbaa37c1de8a49f4c00b88016c5e190f19042eba62664a",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "The project needs explicit 60/50/30/20 FPS gates before optimizing larger M00/M01 scenes",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1256,
+      "content_sha256": "4e9e636f9738f0eeb4966706220595075229f6ca9acf05034689f28dc0d5d807",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "346e953fa3f78704eb2fa0313963fabcfd883f280f9d509c5ce9dd3342d038c1",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Existing renderer state cache cannot be tuned responsibly without knowing skip/applied ratios",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1257,
+      "content_sha256": "e13e9afb2c53c5804db4219b79774961973d0217477a4683c7d073e92258dbee",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "2f2448f3e8f268550cf52832d437a2c4c6b792dc74c13cdb4fe051c633f7836f",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "CPU-side projected normal meshes lose homogeneous W and expand indexed triangles",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1258,
+      "content_sha256": "07d9402ed4db473c2c46be2ea748d970a12e124aec6eeac961189fb6a1f25bfa",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "98539676b33e67323440f5a8da151b1de80e54eae2b277da5d9ffb41c70e6f6c",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Immediate-mode expanded triangles cause avoidable vertex/submission work",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1259,
+      "content_sha256": "eb0f2cdc937c006abaaf11dc104e9cdbccde8341efabd0910e5d50c6493f0d03",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "c028c9e70b3298a4c321e60581785dfe67b7f42119350c7d611d54d0fb4adc1b",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Texture/state churn dominates render CPU time",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1260,
+      "content_sha256": "9def9702a1a6b3925084712638cbb977a63eff2779fd96ee940b82c600654291",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "9f8c25accde08ad2e892e43cf6f65744e8e419664ac7fb9214fd350631bb4bb8",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "4x MSAA / fill rate harms pacing",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1261,
+      "content_sha256": "70209682676bd75c923f5bff876b031c281bfc521d91701c6e03b3c935fb98a6",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "b9c41c65723c917fd46212b931c584931ef2c850a32f7d7f83d885c883fbf31c",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Deferred no-output audio boundary performs repeated work",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1262,
+      "content_sha256": "87f442071b939035c9f768efdbd2f528d5a5cfdf4c90cad6387658d746131f9a",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "7882169a18cfc0e3f98a0bcfd734b906265d986ed08119b7d15f3aa314b08369",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "vitaGL's default 16 MiB system-RAM reserve leaves too little non-pool memory during M00 static-object creation",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1263,
+      "content_sha256": "6fd3bbbd96cae2959da1eddcb806515dce5df38b87ec1e9cc2e0778407d7fc04",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "2cbcbc1d1b6d90945ca47a70117c12837880470b1c76c547aa00ca2f7f67e387",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "M00 scene pre-warm repeats full original scene rendering and loading-overlay viewport transitions after assets are already resident",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1264,
+      "content_sha256": "74fe4716d16fbde7d28432b3531cecc6b450d579a265ebba5750fadaf9f49163",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "f0240c2c58a08d92bd462fba709b80123570e43d4b1f0e93a43902261751e9c2",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_table_row",
+      "label": "Steady M00 pacing is limited by renderer state/bind churn",
+      "section": "Dev147 campaign preparation and MSAA (2026-09-21)",
+      "line": 1265,
+      "content_sha256": "9099b66984cd16ec33d260714ed2f38d2c24e3c8a3f1f6c9d4aadec1a4bece51",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "8070ad074ef71763d4ca50b0569060a2b810903445a9099de28a3c9374ff8b26",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev149 M13 ambush freeze attribution (2026-09-22)",
+      "line": 1266,
+      "end_line": 1361,
+      "content_sha256": "44b2be40cd927d635fc7004a7e9037f2ddf5559e093d22856960f0033e144bf9",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "a9c0a9e3fc1421291a33ef1e367b75f0793f3913ce61648269d4c53a68391166",
+      "status": "unknown"
+    },
+    {
+      "kind": "ledger_section",
+      "label": "Dev201 Glacier texture and text replay (2026-09-27)",
+      "line": 1362,
+      "end_line": 1369,
+      "content_sha256": "7db281af6a247709a45f6224def7cc80326896534c56cb896119baf011af740e",
+      "source": "reports/PERFORMANCE_HYPOTHESIS_LEDGER.md",
+      "evidence_class": "historical_report_metadata",
+      "measurement_verification": "matching raw artifacts not reconciled by this inventory",
+      "id": "fac6df7f6e34d39122e882010ab5e7f3d6207286ae8ca4161e1c7292a7f362f3",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "synchronous_asset_loads",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/ww3d2/assetmgr.cpp",
+          "exists": true,
+          "sha256": "2c20b620dc46c423981eafb434c699dc1bca002cb9c57293be08e7b9820e3203"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/ww3d2/textureloader.cpp",
+          "exists": true,
+          "sha256": "74c48f038fc0768585cbf00d0c7de5072b497566cf6f95807c168cb7450ee890"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "d1a28b822dae006cda569140048bdffb5902ec918ff29724532d2fad791b2055",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "per_frame_allocation",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/ww3d2/mesh.cpp",
+          "exists": true,
+          "sha256": "ddc210e0bcf5bf57acb513e76c563a6da2d29303231b2546ca7c5c631d02cd63"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/Combat/gameobjmanager.cpp",
+          "exists": true,
+          "sha256": "250547fbcbc427282f0266d65480cb2c656427b14fe3ba440cdafb2b40f5aa0b"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "ddc350c951f1439238102c203f6d372e28c9dbc70705d3c4e1819357e1baa1d5",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "pathfind_solves",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/wwphys/Pathfind.cpp",
+          "exists": true,
+          "sha256": "df1a26b351f685dd50876e859d69f395dcced4f9a2f887e3073f5b57a9090738"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "0a9d100d062123eaa059f38b13fb2e96d87841cb119717c2f4b6efff0d98d521",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "visibility_culling",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/wwphys/pscene_vis.cpp",
+          "exists": true,
+          "sha256": "f659babfdc330ca6b931f305ec461b83fbda54ec747ac08e1155bcf3c86ad6cb"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/wwphys/pscene.cpp",
+          "exists": true,
+          "sha256": "95e148b3e44e85deaccc837e58b41941a8858d451da5537e5eb23e9743427985"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "f73c48b01b793fc328e713d2fb8b2fa041eaf69c1efd9c3aaa416f84702dcbba",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "sorting",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/ww3d2/sortingrenderer.cpp",
+          "exists": true,
+          "sha256": "b4687cdd516789a73ae2b99d7c80486c476a6a6613fd2cffbd275fe60363a609"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "55ae112a458c30b50125a113ec7b8cf2b9fc4d3efa86a96db8532444c18e8a2b",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "particles",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/ww3d2/part_emt.cpp",
+          "exists": true,
+          "sha256": "017191ecd04552ae42f290fe4bc73b99d3e1c62f8302af8b02b50d76326eaf8c"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "97afd7e3ee6ab2653a98ea5a2a219f4da38fc49ce87594043e73775688846dc1",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "audio_decode",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/WWAudio/SoundBuffer.cpp",
+          "exists": true,
+          "sha256": "16c206582d343b57aa10860bc2563a35e83690474f924ba9e3063ab9d42a7fce"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/WWAudio/WWAudio.cpp",
+          "exists": true,
+          "sha256": "58c94640093565774b5dddc1a2571d6c03a848900dcfeb321219a742deb20b8a"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "6ce76126160b90a805a5fd911a25f9523530c4fdd30ec65e4b7ad78591686e4c",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "lock_contention",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/WWAudio/Threads.cpp",
+          "exists": true,
+          "sha256": "f7dcf05634c9f9075df84757c5473de1945237fdd9b433643f43ba63db2a2ec1"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/wwlib/thread.cpp",
+          "exists": true,
+          "sha256": "ddd771d5c5de5f6d41f44d0302f0890e1799cbf49db769af1232c4fb0d299b1a"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "04520d6ca2467aa11c3c0f3829f8fbde9f7462b402260d227abed457ce2dc831",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_cost_family",
+      "label": "first_frame_long_load",
+      "original_owner_candidates": [
+        {
+          "source": "upstream/CnC_Renegade/Code/Commando/gamemode.cpp",
+          "exists": true,
+          "sha256": "ee8935c95147ca478ffb032d8883e66d3a70c8b563bcb15fffb95aadf59efcf3"
+        },
+        {
+          "source": "upstream/CnC_Renegade/Code/ww3d2/assetmgr.cpp",
+          "exists": true,
+          "sha256": "2c20b620dc46c423981eafb434c699dc1bca002cb9c57293be08e7b9820e3203"
+        }
+      ],
+      "evidence_class": "source_metadata",
+      "measurement": null,
+      "id": "1c819818044daca4d843140779c8805367b412a7bc2fd755ffdeebc58e316d40",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_budget_gate",
+      "label": "available_app_cores_and_actual_clock",
+      "evidence_class": "required_physical_measurement",
+      "measurement": null,
+      "id": "a98f60b9c79e0d6ea428146ae6514ead0b12b6fd57a9b122e1205ad50d157ada",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_budget_gate",
+      "label": "user_ram_free_and_high_water",
+      "evidence_class": "required_physical_measurement",
+      "measurement": null,
+      "id": "d7ce51bfe212d642fc55beaee6514399bc4ac21219d09b9e8311c304d7274937",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_budget_gate",
+      "label": "cdram_free_and_high_water",
+      "evidence_class": "required_physical_measurement",
+      "measurement": null,
+      "id": "f24d32c22aff00ffd0be5aa948f9729ff97f72d7cb8c89a65b41d684bdf1487a",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_budget_gate",
+      "label": "draw_calls_at_960x544",
+      "evidence_class": "required_physical_measurement",
+      "measurement": null,
+      "id": "e3b950ee1953738979145e552867cd49fe8febeb0b14eb9b016a9654401c04fe",
+      "status": "unknown"
+    },
+    {
+      "kind": "required_budget_gate",
+      "label": "frame_time_median_p95_p99_worst",
+      "evidence_class": "required_physical_measurement",
+      "measurement": null,
+      "id": "cc9467689128bd742d384789c80fee7d8fd74a2f0c6f80199edcb302bab1b413",
+      "status": "unknown"
+    }
+  ],
+  "ledger_sha256": "fc9bece74fa3c376eba271c8130b154909aaa2d217664655cd51e85c65b46c7c",
+  "budget_instrumentation_candidates": [
+    {
+      "source": "port/platform/vita/a30_main.cpp",
+      "line": 145,
+      "token": "scePowerSetArmClockFrequency",
+      "sha256": "863eb626919ed8c1b428a0a1e8c34101948bcbdc752f1572dcad15fb3a3ab441"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 1583,
+      "token": "sceKernelGetFreeMemorySize",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 1641,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 1652,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 1654,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 1658,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 1660,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 3539,
+      "token": "sceKernelGetFreeMemorySize",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 3547,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 3549,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    },
+    {
+      "source": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "line": 3553,
+      "token": "vglMemFree",
+      "sha256": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d"
+    }
+  ],
+  "profiling_priorities": [
+    {
+      "rank": 1,
+      "map": "M05",
+      "scenario": "town square"
+    },
+    {
+      "rank": 2,
+      "map": "M10",
+      "scenario": "open base"
+    },
+    {
+      "rank": 3,
+      "map": "M06",
+      "scenario": "collapse"
+    },
+    {
+      "rank": 4,
+      "map": "M08",
+      "scenario": "canyon"
+    }
+  ],
+  "priority_basis": "provisional workload coverage; not measured cost ranking",
+  "scope": "Every ledger heading and table data row plus required cost families and physical budget gates",
+  "open_risks": [
+    "Historical reports require matching raw artifact verification",
+    "Costs documented outside this ledger and undocumented costs",
+    "Owner candidates are not causal attribution or caller closure",
+    "No current fixed-route physical memory or frame-time measurements",
+    "Ledger records can overlap and do not count unique defects"
+  ]
+}

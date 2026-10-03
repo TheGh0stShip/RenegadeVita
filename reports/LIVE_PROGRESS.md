@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Native decal omissions found — 2026-10-03
+
+Completed: traced explosion decal creation to original mesh ownership and found
+two retained rendering blocks: native traversal rejects populated decals; rigid
+and skinned draw methods return unsupported. Release-range patch is separate.
+Evidence: original/staged source inspection; no runtime claim.
+Next: restore original decal queue/flush and draw bodies with transform,
+deformation, material-run and index-range semantics retained.
+No build or launch; native effect evidence gates remain open.
+
 ## Dazzle retail definition and texture candidates — 2026-10-03
 
 Completed: both core INI versions inspected; 27 texture references each have

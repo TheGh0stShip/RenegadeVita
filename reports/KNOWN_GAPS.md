@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 effect sweep confirms two native decal omissions: MeshClass::Render
+does not queue populated decal meshes, and rigid/skinned decal Render methods
+return unsupported. Original explosion definitions can still generate decals
+through PhysicsScene::Create_Decal. Existing release-range correction does not
+restore presentation. Original queue order, parent transforms/deformation,
+material runs and indexed geometry must be preserved in the correction.
+Source finding only; no per-mission decal count or physical effect claim.
+
 2026-10-03 cinematic HLOD review connects15 M01 helicopter light child records
 to the native DazzleRenderObjClass::Render early return. A source correction
 restores the unchanged original body on Vita, original DAZZLE.INI initialization

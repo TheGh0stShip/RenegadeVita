@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Required procedural effect omissions — 2026-10-03
+
+Completed: transition omission linked to original spawn/death/healing/shock;
+stealth base suppression linked to rejected added pass. Original translucent
+filtering, delayed order, skin and cull-volume dependencies identified.
+Evidence: source inspection only; physical disappearance not claimed.
+Next: preserve original pass owners and connect their geometry/state boundary.
+See [procedural material review](PROCEDURAL_MATERIAL_OWNER_REVIEW.md).
+No build or launch; gates0/10.
+
 ## Dazzle/decal pristine source composition — 2026-10-03
 
 Completed: four original files replayed through11 ordered touching patches in

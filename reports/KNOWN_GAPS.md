@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-03 procedural material review confirms spawn/death/healing/electrocution
+transition push/pop are skipped natively. Stealth still pushes a pass and can
+suppress base rendering, while native mesh rejects added passes. Original
+material renderer depends on polygon/category registration bypassed by native
+base submission, so enabling its caller alone is insufficient. Per-mission
+instances and pixels remain unverified. See
+[procedural material owners](PROCEDURAL_MATERIAL_OWNER_REVIEW.md).
+
 2026-10-03 effect sweep confirms native decal omissions. A source correction
 restores original traversal/distance queueing, native flush and rigid/skinned
 draw bodies through the original DX8MeshRenderer list owner. Four source-only

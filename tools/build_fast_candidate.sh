@@ -98,6 +98,9 @@ export CCACHE_BASEDIR="$rv_root"
 echo "Verifying the pinned Bink-enabled Vita FFmpeg dependency..."
 bash "$rv_root/tools/build_ffmpeg_bink_vita.sh"
 bash "$rv_root/tools/build_vitagl_demo.sh"
+if [[ "$rv_m00_demo" == "0" ]]; then
+	bash "$rv_root/tools/build_ttfs_https_vita.sh"
+fi
 
 rv_upstream="$rv_root/upstream/CnC_Renegade"
 test "$(git -C "$rv_upstream" rev-parse --show-toplevel)" = "$rv_upstream"

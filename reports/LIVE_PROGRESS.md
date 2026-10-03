@@ -4,8 +4,10 @@
 
 27 visibility chunks pass variable/ID/pairing/compressed-size checks with zero
 parser errors or findings. Duplicate variables and unknown compressed-table
-children are explicitly reported; five focused parser checks pass. Decompression,
-repeated chunks, linkage and runtime culling remain unverified. No engine change.
+children are explicitly reported; six focused parser checks pass. Every matching
+occurrence is checked and reconciled against the parent inventory, with archive
+index identity retained. Decompression, linkage and runtime culling remain
+unverified. No engine change.
 
 ## S4 spatial chunk owner reconciliation — 2026-10-03
 

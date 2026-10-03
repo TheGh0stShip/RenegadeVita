@@ -7,6 +7,40 @@ from pathlib import Path
 import struct
 from tools.audit_m13_level_owners import chunks, microchunks
 from tools.renegade_cinematic_dependency_scan import MixArchive
+from tools.audit_level_spatial_presence import SIGNATURES
+
+
+def matching_chunks(data, signature):
+    """Keep every occurrence under its full original loader ancestry."""
+    expected = tuple(int(value, 16) for value in signature)
+    found = []
+    def visit(nodes, ancestry=()):
+        for node in nodes:
+            path = ancestry + (node.kind,)
+            if path == expected:
+                found.append(node)
+            visit(node.children, path)
+    visit(chunks(data))
+    return found
+
+
+def audit_candidate(data, candidate):
+    if hashlib.sha256(data).hexdigest() != candidate['member_sha256']:
+        raise ValueError('Member identity mismatch')
+    nodes = matching_chunks(data, SIGNATURES['visibility_tables'])
+    if (len(nodes) != candidate['count'] or not nodes or
+            nodes[0].offset != candidate['first_offset'] or
+            sum(len(n.data) for n in nodes) != candidate['payload_bytes_sum']):
+        raise ValueError('Visibility occurrence inventory mismatch')
+    rows = []
+    for node in nodes:
+        row = {'offset': node.offset}
+        try:
+            row.update(validate(node.data))
+        except ValueError:
+            row['parser_error'] = True
+        rows.append(row)
+    return rows
 
 
 def validate(data):
@@ -75,26 +109,29 @@ def main():
             continue
         archive = MixArchive(args.data / owner['map'])
         for candidate in owner['candidates']:
-            data = archive.read_binary(candidate['member'])
-            if hashlib.sha256(data).hexdigest() != candidate['member_sha256']:
-                raise ValueError('Member identity mismatch')
-            offset = candidate['first_offset']
-            kind, size = struct.unpack_from('<II', data, offset)
-            end = offset + 8 + (size & 0x7fffffff)
-            if kind != 0x4700 or end > len(data):
-                raise ValueError('Visibility chunk boundary mismatch')
-            row = {'map': owner['map'], 'member': candidate['member'], 'offset': offset,
+            member, _, offset, size = archive.entry_records[candidate['index_record']]
+            if member != candidate['member']:
+                raise ValueError('Archive index identity mismatch')
+            with archive.path.open('rb') as stream:
+                stream.seek(offset)
+                data = stream.read(size)
+            if len(data) != size:
+                raise ValueError('Truncated member')
+            for result in audit_candidate(data, candidate):
+                row = {'map': owner['map'], 'member': member,
+                   'index_record': candidate['index_record'],
                    'status': 'unknown', 'evidence_class': 'retail_serialization_bounds',
                    'member_sha256': candidate['member_sha256']}
-            try:
-                row.update(validate(data[offset+8:end]))
-            except ValueError:
-                row['parser_error'] = True
-            rows.append(row)
-    args.output.write_text(json.dumps({'schema': 1, 'complete': False, 'rows': rows,
+                row.update(result)
+                rows.append(row)
+    root = Path(__file__).resolve().parents[1]
+    args.output.write_text(json.dumps({'schema': 2, 'complete': False, 'rows': rows,
         'presence_sha256': hashlib.sha256(receipt).hexdigest(),
+        'parser_inputs': [{'source': source, 'sha256': hashlib.sha256((root / source).read_bytes()).hexdigest()}
+                          for source in ('tools/audit_visibility_bounds.py', 'tools/audit_m13_level_owners.py',
+                                         'tools/audit_level_spatial_presence.py', 'tools/renegade_cinematic_dependency_scan.py')],
         'limits': ['No LZO decompression or visibility correctness proof',
-                   'First matching chunk occurrence only; repeated chunks require separate review']}, indent=2)+'\n')
+                   'Only exact reviewed visibility ancestry; other data families remain open']}, indent=2)+'\n')
     print(json.dumps({'rows': len(rows), 'parser_errors': sum(bool(r.get('parser_error')) for r in rows),
                       'findings': sum(len(r.get('findings', [])) for r in rows)}))
 

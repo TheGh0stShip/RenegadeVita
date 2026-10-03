@@ -9,6 +9,9 @@ from pathlib import Path
 SWEEPS = ('port_guards', 'renderer', 'link', 'retail', 'scripts', 'systems',
           'performance', 'external')
 ISSUES = dict(zip(SWEEPS, range(5, 13)))
+SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
+               'w3d_chunks', 'w3d_consumers', 'dds_formats')
+ISSUES.update({name: 8 for name in SUPPLEMENTS})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -16,7 +19,8 @@ STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
 
 def status_records(value, pointer='', inherited_map=None):
     if isinstance(value, dict):
-        mission = value.get('map', inherited_map)
+        archive=value.get('archive','')
+        mission = value.get('map', archive if archive.lower().endswith('.mix') else inherited_map)
         if 'status' in value:
             if value['status'] not in STATUSES:
                 raise ValueError(f'Unexpected status at {pointer}')
@@ -34,19 +38,54 @@ def status_records(value, pointer='', inherited_map=None):
             yield from status_records(child, pointer + '/' + str(index), inherited_map)
 
 
+def root_records(name, value):
+    """Reconcile heterogeneous denominators without rewriting JSON pointers."""
+    if name not in SUPPLEMENTS:
+        rows=value['rows']
+        expected=value.get('total', value.get('totals', {}).get('rows'))
+        if expected != len(rows):
+            raise ValueError(f'{name}: root denominator mismatch')
+        if dict(Counter(r['status'] for r in rows)) != value.get('counts', value.get('totals', {}).get('by_status')):
+            raise ValueError(f'{name}: status reconciliation failed')
+        return rows
+    rows=value['archives'] if name=='w3d_chunks' else value['rows']
+    totals=value.get('totals',{})
+    if name=='level_chunks':
+        if totals.get('maps')!=len(rows) or totals.get('members')!=sum(len(r['members']) for r in rows):
+            raise ValueError('Level member denominator mismatch')
+    elif name=='w3d_chunks':
+        measured={'archives':len(rows),'w3d_members':sum(len(r['members']) for r in rows),
+                  'chunk_occurrences':sum(sum(c['count'] for c in r['chunk_paths']) for r in rows),
+                  'archive_chunk_paths':sum(len(r['chunk_paths']) for r in rows),
+                  'distinct_chunk_ids':len({k for r in rows for c in r['chunk_paths'] for k in c['chunk_path']}),
+                  'parser_errors':sum(len(r['errors']) for r in rows)}
+        if measured!=totals or any(r['w3d_files']!=len(r['members']) for r in rows):
+            raise ValueError('W3D denominator mismatch')
+    elif name=='w3d_consumers' and value['total']!=len(rows):
+        raise ValueError('W3D consumer denominator mismatch')
+    elif name=='dds_formats':
+        if totals.get('dds_members')!=len(rows) or totals.get('by_format')!=dict(Counter(r['format'] for r in rows)):
+            raise ValueError('DDS denominator mismatch')
+    return rows
+
+
 def consolidate(inputs):
+    inputs=list(inputs)
+    identities={name:hashlib.sha256(data).hexdigest() for name,data in inputs}
+    dependencies={'spatial_presence':('chunk_inventory_sha256','level_chunks'),
+                  'visibility_bounds':('presence_sha256','spatial_presence'),
+                  'w3d_consumers':('inventory_sha256','w3d_chunks')}
     rows = []
     receipts = []
     for name, data in inputs:
         value = json.loads(data)
-        root_rows = value['rows']
-        expected = value.get('total', value.get('totals', {}).get('rows'))
-        if expected != len(root_rows):
-            raise ValueError(f'{name}: root denominator mismatch')
-        actual = dict(Counter(r['status'] for r in root_rows))
-        declared = value.get('counts', value.get('totals', {}).get('by_status'))
-        if actual != declared:
-            raise ValueError(f'{name}: status reconciliation failed')
+        if name in dependencies:
+            field,parent=dependencies[name]
+            if parent in identities and value.get(field)!=identities[parent]:
+                raise ValueError(f'{name}: stale parent inventory identity')
+        if name=='w3d_consumers' and 'link' in identities and value.get('link_inventory_sha256')!=identities['link']:
+            raise ValueError('W3D consumers: stale link inventory identity')
+        root_rows = root_records(name, value)
         count = 0
         for pointer, record, mission in status_records(value):
             if record['status'] == 'original_compiled':
@@ -55,7 +94,7 @@ def consolidate(inputs):
             severity = ('visual' if name == 'renderer' and status == 'missing' else
                         'missing_behavior' if status in {'missing', 'stubbed_or_noop', 'disabled_by_port_guard'}
                         else 'unclassified')
-            label = next((record[k] for k in ('name', 'label', 'symbol', 'source', 'file', 'map', 'chunk_id')
+            label = next((record[k] for k in ('name', 'label', 'symbol', 'source', 'file', 'map', 'chunk_id', 'member', 'chunk_path')
                           if k in record), pointer)
             review = record.get('review', {})
             rows.append({'id': hashlib.sha256((name + pointer).encode()).hexdigest(),
@@ -64,17 +103,17 @@ def consolidate(inputs):
                          'severity_basis': 'scoped inventory finding' if severity != 'unclassified' else 'requires impact review',
                          'affected_missions_modes': [mission] if mission else review.get('affected_scope', ['unknown; callers and retail usage require reconciliation']),
                          'original_owner': review.get('original_owner', 'requires original-owner review'),
-                         'acceptance_open': review.get('acceptance_open', 'requires caller, behavior and evidence-class review'),
+                         'acceptance_open': review.get('acceptance_open', record.get('acceptance_open', 'requires caller, behavior and evidence-class review')),
                          'review_evidence_pointer': pointer + '/review' if review else None,
                          'evidence_class': record.get('evidence_class', 'parent_inventory_metadata'),
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
-                         'cluster': name})
+                         'cluster': 'retail' if name in SUPPLEMENTS else name})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),
                          'issue_url': f'https://github.com/TheGh0stShip/RenegadeVita/issues/{ISSUES[name]}' if name in ISSUES else None,
                          'root_rows': len(root_rows), 'retained_status_records': count,
                          'complete': value.get('complete', False),
-                         'coverage_risks': value.get('open_risks', value.get('coverage_open', []))})
+                         'coverage_risks': value.get('open_risks', value.get('coverage_open', value.get('limits', [])))})
     priority = {'crash_freeze': 0, 'progression_blocker': 1, 'missing_behavior': 2,
                 'wrong_behavior': 3, 'visual': 4, 'audio': 5, 'performance': 6, 'unclassified': 7}
     rows.sort(key=lambda r: (priority[r['severity']], r['sweep'], r['inventory_pointer']))
@@ -83,6 +122,7 @@ def consolidate(inputs):
             'severity_counts': dict(sorted(Counter(r['severity'] for r in rows).items())),
             'inputs': receipts, 'rows': rows,
             'limitations': ['Counts are evidence records, not unique defects',
+                            'Supplementary inventories overlap; records are not deduplicated across evidence layers',
                             'Nested status records retained separately; matching review statuses merged with parent findings',
                             'Unclassified rows have no established impact severity',
                             'Excluded and replaced records remain for proof/acceptance review',
@@ -94,7 +134,8 @@ def markdown(result):
         return str(value).replace('|', '\\|').replace('\n', ' ')
     lines = ['# Full port gap register', '',
              'Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`',
-             'status record in the eight inventories is retained, including nested records.',
+             'status record in the eight sweeps and six supplements is retained, including nested records.',
+             'Supplementary inventories overlap; their counts are not unique missing features.',
              'Rows count evidence records, not unique defects. Unknown impact is unclassified;',
              'it is not silently ranked as a confirmed crash or progression blocker.', '',
              'Reproduce with `python3 -m tools.consolidate_sweep_gaps`.', '',
@@ -122,7 +163,7 @@ def main():
     parser.add_argument('--markdown', type=Path, default=Path('reports/FULL_PORT_GAP_REGISTER.md'))
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    result = consolidate([(name, (root / f'reports/generated/sweeps/{name}.json').read_bytes()) for name in SWEEPS])
+    result = consolidate([(name, (root / f'reports/generated/sweeps/{name}.json').read_bytes()) for name in SWEEPS + SUPPLEMENTS])
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     args.markdown.write_text(markdown(result))
     print(json.dumps({'total': result['total'], 'counts': result['counts']}))

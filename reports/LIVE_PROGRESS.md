@@ -1,5 +1,13 @@
 # Live engineering progress
 
+## Consolidated supplemental evidence — 2026-10-03
+
+The gap register now includes six supplemental retail inventories with original
+JSON pointers and input hashes. Nested records and overlapping evidence remain
+explicit; stale parent identities fail generation. DDS headers were refreshed
+over all 31 archives: 3,463 members, zero archive errors. Evidence counts are not
+unique defects or accepted features. No engine change or device access.
+
 ## S4 W3D consumer candidates — 2026-10-03
 
 All 97 retail chunk IDs reconciled: 61 have symbolic case candidates; four

@@ -1,5 +1,16 @@
 # S4 retail closure — all-map binding discovery in progress
 
+Six supplemental inventories are now included in the consolidated gap register:
+level chunks, spatial presence, visibility bounds, W3D chunks, W3D consumer
+candidates and DDS formats. Their nested status records retain original JSON
+pointers and input hashes. Parent-inventory identity mismatches fail generation.
+Records overlap across evidence layers; they are not unique defects. All
+supplemental statuses remain unknown pending behavior/impact/acceptance review.
+The DDS header inventory was refreshed over all 31 current archives, including
+M09: 3,463 DDS members (2,985 DXT1, 474 DXT5, four DXT3), zero archive errors.
+The earlier 30-archive HUD literal-reference search remains a separate limited
+receipt and is not included as a status inventory.
+
 W3D consumer reconciliation retains all 97 observed IDs and their retail parent
 paths. 61 IDs have staged symbolic case-label candidates; six have no global
 symbolic source reference, including four absent from the global chunk enum.
@@ -31,7 +42,8 @@ Reproduce with `python3 -m tools.audit_w3d_loader_coverage --data DATA --output 
 The optional historical `--build` census still covers only four bootstrap
 loaders; it is not used to classify this full asset denominator. Loose W3D,
 nested archives, full staged-loader mapping, per-member nested-path provenance,
-mission dependency closure and consolidated-gap integration remain open.
+mission dependency closure remain open. Consolidated-gap integration is now
+included in the six-supplement reconciliation above.
 
 Optional host LZO2 safe decoding checks all 25,784 visibility tables across
 27 maps: zero decode errors and zero decoded-size mismatches. Expected sizes
@@ -182,5 +194,5 @@ The existing reader deliberately leaves ConversationMgr's
 No guessed recursion or raw payload is published. Parser input hashes are retained.
 
 Source-to-chunk owner reconciliation, pathfinding/visibility semantic validation,
-geometry dependencies and integration into the consolidated gap register remain
-open. This supplement does not close S4 or establish runtime level correctness.
+geometry dependencies remain open. Consolidated-gap integration is now included
+above. This supplement does not close S4 or establish runtime level correctness.

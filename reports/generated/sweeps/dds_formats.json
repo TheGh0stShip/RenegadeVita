@@ -163,6 +163,13 @@
       "unique_names": 286
     },
     {
+      "archive": "M09.mix",
+      "bytes": 30721980,
+      "members": 185,
+      "sha256": "3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7",
+      "unique_names": 185
+    },
+    {
       "archive": "M10.mix",
       "bytes": 17140974,
       "members": 149,
@@ -26476,6 +26483,70 @@
       "offset": 46964264,
       "pixel_flags": 4,
       "row_id": "3b6a261f6cced451a81dbe0a2d2fc3aea0ef2e89eb3a91b40873868e7a8a3f3c",
+      "status": "unknown",
+      "width": 256
+    },
+    {
+      "archive": "M09.mix",
+      "bytes": 43832,
+      "evidence_class": "retail_header_metadata",
+      "format": "DXT1",
+      "header_sha256": "56e152cbe29bea4068b7ce8e6630a6d073f2a413f8bb8d853f1928e4592dac3d",
+      "height": 256,
+      "index_record": 106,
+      "member": "l09_tunls_lm+\\1.dds",
+      "mip_count_declared": 9,
+      "offset": 12550960,
+      "pixel_flags": 4,
+      "row_id": "ab35f4f3bd9bce2705347adae3db5eaaa1b448790e396fa3c40940500913a3ee",
+      "status": "unknown",
+      "width": 256
+    },
+    {
+      "archive": "M09.mix",
+      "bytes": 43832,
+      "evidence_class": "retail_header_metadata",
+      "format": "DXT1",
+      "header_sha256": "56e152cbe29bea4068b7ce8e6630a6d073f2a413f8bb8d853f1928e4592dac3d",
+      "height": 256,
+      "index_record": 115,
+      "member": "l09_tunls_lm+\\0.dds",
+      "mip_count_declared": 9,
+      "offset": 18587200,
+      "pixel_flags": 4,
+      "row_id": "649997eb235943ffe0062a2a9f17e3bfe9bd2d7158efcc450cb65a25535fe244",
+      "status": "unknown",
+      "width": 256
+    },
+    {
+      "archive": "M09.mix",
+      "bytes": 43832,
+      "evidence_class": "retail_header_metadata",
+      "format": "DXT1",
+      "header_sha256": "56e152cbe29bea4068b7ce8e6630a6d073f2a413f8bb8d853f1928e4592dac3d",
+      "height": 256,
+      "index_record": 151,
+      "member": "l09_tunls_lm+\\2.dds",
+      "mip_count_declared": 9,
+      "offset": 26539016,
+      "pixel_flags": 4,
+      "row_id": "e7bccf4fd33169a76a44c7d49b9d619e12f030fe697b7266bc27df79b88abf4f",
+      "status": "unknown",
+      "width": 256
+    },
+    {
+      "archive": "M09.mix",
+      "bytes": 43832,
+      "evidence_class": "retail_header_metadata",
+      "format": "DXT1",
+      "header_sha256": "56e152cbe29bea4068b7ce8e6630a6d073f2a413f8bb8d853f1928e4592dac3d",
+      "height": 256,
+      "index_record": 170,
+      "member": "l09_tunls_lm+\\3.dds",
+      "mip_count_declared": 9,
+      "offset": 28006552,
+      "pixel_flags": 4,
+      "row_id": "48f77c65e6141c939856392cf2007cf3d02f3593e39e5c78cbf7de9005b462d9",
       "status": "unknown",
       "width": 256
     },
@@ -55571,10 +55642,10 @@
   "schema_version": 1,
   "totals": {
     "by_format": {
-      "DXT1": 2981,
+      "DXT1": 2985,
       "DXT3": 4,
       "DXT5": 474
     },
-    "dds_members": 3459
+    "dds_members": 3463
   }
 }

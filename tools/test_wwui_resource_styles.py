@@ -44,6 +44,28 @@ def controls(data):
 
 
 class ResourceStyleTests(unittest.TestCase):
+    def test_vita_options_page_routes_to_supported_technical_settings(self):
+        definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
+        options_id = definitions['IDD_MENU_OPTIONS']
+        self.assertIn(options_id, generator.CAMPAIGN_IDS)
+        self.assertNotIn(options_id, generator.IDS)
+        generated = generator.parse(SOURCE/'chat.rc', definitions, generator.CAMPAIGN_IDS)
+        present = {struct.unpack_from('<H', header, 16)[0]
+                   for header, _, _ in controls(generated[options_id])}
+        required = ('IDC_MENU_TECH_BUTTON', 'IDC_MENU_BACK_BUTTON')
+        for name in required:
+            self.assertIn(definitions[name] & 0xffff, present, name)
+
+        source = (ROOT/'staging/commando/dialogtests.cpp').read_text(encoding='latin1')
+        vita_route = source.split('OptionsMenuClass::On_Init_Dialog (void)', 1)[1]
+        vita_route = vita_route.split('#endif', 1)[0]
+        for name in ('IDC_MENU_CONTROLS_BUTTON', 'IDC_MENU_MOVIES_BUTTON',
+                     'IDC_MENU_CREDITS_BUTTON', 'IDC_MENU_MULTIPLAY_OPTS_BUTTON'):
+            self.assertIn(name, vita_route)
+        command = vita_route.split('OptionsMenuClass::On_Command', 1)[1]
+        self.assertIn('IDC_MENU_TECH_BUTTON', command)
+        self.assertIn('START_DIALOG (TechOptionsMenuClass)', command)
+
     def test_multiplayer_resources_are_opt_in_and_complete(self):
         definitions = generator.macros((SOURCE/'resource.h', SOURCE/'dialogresource.h'))
         generated = generator.parse(SOURCE/'chat.rc', definitions, generator.MULTIPLAYER_IDS)

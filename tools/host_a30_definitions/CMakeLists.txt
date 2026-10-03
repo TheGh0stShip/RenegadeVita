@@ -672,6 +672,11 @@ add_executable(a31_interactive_runtime
   ${RV_SCRIPT_SOURCE}/scripts.cpp
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
   ${RV_SCRIPT_SOURCE}/MissionX0.cpp
+  ${RV_SCRIPT_SOURCE}/Mission03.cpp
+  ${RV_SCRIPT_SOURCE}/Mission11.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DAK.cpp
+  ${RV_SCRIPT_SOURCE}/Test_RMV_Toolkit.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Sounds.cpp
   ${RV_SCRIPT_SOURCE}/Mission01.cpp
   ${RV_SCRIPT_SOURCE}/Test_RAD.cpp
   ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
@@ -795,7 +800,11 @@ add_executable(a31_interactive_runtime
 set_target_properties(a31_interactive_runtime PROPERTIES
   OUTPUT_NAME a31_m00_interactive_runtime
 )
-target_sources(a31_interactive_runtime PRIVATE ${RV_STAGE}/ww3d2/sortingrenderer.cpp)
+target_sources(a31_interactive_runtime PRIVATE
+  ${RV_STAGE}/ww3d2/sortingrenderer.cpp
+  ${RV_STAGE}/ww3d2/sphereobj.cpp
+  ${RV_STAGE}/ww3d2/ringobj.cpp
+  ${RV_STAGE}/ww3d2/soundrobj.cpp)
 target_compile_definitions(a31_interactive_runtime PRIVATE RENEGADE_ORIGINAL_SORTING=1)
 if(RENEGADE_HOST_ORIGINAL_AUDIO)
   target_sources(a31_interactive_runtime PRIVATE
@@ -898,6 +907,10 @@ set_source_files_properties(
 set_property(SOURCE
   ${RV_SCRIPT_SOURCE}/Mission00.cpp
   ${RV_SCRIPT_SOURCE}/MissionX0.cpp
+  ${RV_SCRIPT_SOURCE}/Mission03.cpp
+  ${RV_SCRIPT_SOURCE}/Test_DAK.cpp
+  ${RV_SCRIPT_SOURCE}/Test_RMV_Toolkit.cpp
+  ${RV_SCRIPT_SOURCE}/Toolkit_Sounds.cpp
   ${RV_SCRIPT_SOURCE}/Test_DLS.cpp
   ${RV_SCRIPT_SOURCE}/Test_DAY.cpp
   ${RV_SCRIPT_SOURCE}/Toolkit.cpp
@@ -907,6 +920,10 @@ set_property(SOURCE
   APPEND PROPERTY
   COMPILE_OPTIONS
   "-include${RV_COMPAT}/renegade_script_call_defaults.h")
+set_property(SOURCE
+  ${RV_SCRIPT_SOURCE}/Mission11.cpp
+  APPEND PROPERTY COMPILE_OPTIONS
+  "-include${RV_COMPAT}/renegade_m01_script_defaults.h")
 set_property(SOURCE
   ${RV_SCRIPT_SOURCE}/Mission01.cpp
   APPEND PROPERTY COMPILE_OPTIONS

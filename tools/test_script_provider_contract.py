@@ -134,6 +134,18 @@ class ScriptProviderContractTests(unittest.TestCase):
         self.assertEqual(len(shared), 1)
         for owner in ("MissionX0.cpp", "Test_DLS.cpp", "Toolkit.cpp", "Toolkit_Objects.cpp"):
             self.assertIn("${RENEGADE_SCRIPT_SOURCE}/" + owner, shared[0])
+        for owner in ("Mission03.cpp", "Test_DAK.cpp", "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"):
+            self.assertIn("${RENEGADE_SCRIPT_SOURCE}/" + owner, shared[0])
+        campaign_block = re.search(
+            r"set\(RENEGADE_CAMPAIGN_SCRIPT_SOURCES\s+(.*?)\)", cmake, re.S
+        ).group(1)
+        for owner in ("Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp",
+                      "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"):
+            self.assertIn("${RENEGADE_SCRIPT_SOURCE}/" + owner, campaign_block)
+        host = (ROOT / "tools/host_a30_definitions/CMakeLists.txt").read_text(encoding="utf-8")
+        for owner in ("Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp",
+                      "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"):
+            self.assertIn("${RV_SCRIPT_SOURCE}/" + owner, host)
         area2 = [block for block in blocks
                  if 'renegade_m13_area2_script_defaults.h' in block]
         self.assertEqual(len(area2), 1)

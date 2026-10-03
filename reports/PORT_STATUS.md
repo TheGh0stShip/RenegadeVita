@@ -10,15 +10,15 @@ projector render targets remain unsupported. Nested W3D scan finds 14 unresolved
 texture names as leads, not confirmed asset defects. 81 Python checks pass,
 no build/launch or native acceptance. See [follow-up audit](DEEP_AUDIT_FOLLOWUP.md).
 
-2026-09-27 cross-system deep audit supersedes the narrower historical audit
-counts below. All nine requested areas reviewed across 17 maps: four original
-WW3D loader registrations missing (three owners unselected), five required
-script owners unselected, Options/death/failure UI gaps, unchecked save-write
-feedback, and multiplayer resource/event omissions. Mission11.cpp is confirmed
-for M01; its earlier M13-only lead remains distinct. 77 Python checks pass;
-the standalone coverage guard correctly reports INCOMPLETE (73 grouped
-findings). No compilation, launch or new native acceptance. Restore original
-owners and routes before claiming coverage. Details and reproduction:
+2026-10-02 source-only follow-up: all five required script owners and three
+W3D owners from the cross-system audit are now source-selected; Vita startup
+registers their four original loaders and restores particle lifetime/LOD
+defaults. The original Options template and its supported Tech Options route
+are selected; unsupported entries are hidden. Static sweep reports no
+unselected script/persistence owners across the 17 maps. Changes are
+uncompiled. M01's attached `X01_ConYardDrop.txt` remains absent; death,
+failure, save/load and multiplayer gaps remain open. 36 focused Python tests
+pass; no build, launch or native acceptance. See
 [cross-system deep audit](CROSS_SYSTEM_DEEP_AUDIT.md).
 
 Earlier audit snapshots follow; their counts are historical.

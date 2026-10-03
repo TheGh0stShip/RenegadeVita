@@ -46,6 +46,7 @@
 #include "god.h"
 #include "translatedb.h"
 #include "string_ids.h"
+#include "dlgtechoptions.h"
 
 #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 #include "tabctrl.h"
@@ -100,6 +101,40 @@
 ////////////////////////////////////////////////////////////////
 QuitVerificationDialogClass *	QuitVerificationDialogClass::_TheInstance	= NULL;
 bool	SplashIntroMenuDialogClass::IsComplete = false;
+
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+////////////////////////////////////////////////////////////////
+//	OptionsMenuClass — expose only the original Vita-supported route.
+////////////////////////////////////////////////////////////////
+void
+OptionsMenuClass::On_Init_Dialog (void)
+{
+	const int unsupported_options[] = {
+		IDC_MENU_CONTROLS_BUTTON,
+		IDC_MENU_MOVIES_BUTTON,
+		IDC_MENU_CREDITS_BUTTON,
+		IDC_MENU_MULTIPLAY_OPTS_BUTTON
+	};
+	for (unsigned index = 0; index < sizeof(unsupported_options) / sizeof(unsupported_options[0]); ++index) {
+		DialogControlClass *control = Get_Dlg_Item (unsupported_options[index]);
+		if (control != NULL) {
+			control->Enable (false);
+			control->Show (false);
+		}
+	}
+	MenuDialogClass::On_Init_Dialog ();
+}
+
+void
+OptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
+{
+	if (ctrl_id == IDC_MENU_TECH_BUTTON) {
+		START_DIALOG (TechOptionsMenuClass);
+		return;
+	}
+	MenuDialogClass::On_Command (ctrl_id, message_id, param);
+}
+#endif
 
 #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 

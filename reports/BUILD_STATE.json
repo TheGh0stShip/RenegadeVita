@@ -30,6 +30,20 @@
     "new_build_or_launch": false,
     "new_native_acceptance_gates": 0
   },
+  "source_only_followup_20261002": {
+    "state": "OWNERS_AND_OPTIONS_ROUTE_SELECTED_NOT_COMPILED",
+    "report": "reports/CROSS_SYSTEM_DEEP_AUDIT.md",
+    "script_units_added": ["Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp", "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"],
+    "w3d_owners_added": ["sphereobj.cpp", "ringobj.cpp", "soundrobj.cpp"],
+    "original_prototype_loaders_registered": 4,
+    "particle_lod_defaults_restored": 17,
+    "options_template_added": 135,
+    "options_tech_route_added": true,
+    "unresolved_m01_cinematic": "X01_ConYardDrop.txt",
+    "focused_python_tests_passed": 36,
+    "new_build_or_launch": false,
+    "new_native_acceptance_gates": 0
+  },
   "m00_aggressive_discovery": {
     "state": "TEST_DAK_MISSING_NOT_INTEGRATED",
     "missing_original_units": ["Test_DAK.cpp"],

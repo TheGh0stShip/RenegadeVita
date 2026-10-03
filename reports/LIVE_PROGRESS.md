@@ -1,5 +1,28 @@
 # Live engineering progress
 
+## Source gaps narrowed; runtime evidence still open
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 mission/runtime evidence gates closed`
+
+Now: continue source-only gap tracing across M01 content and shared UI routes;
+no build work per the user's latest direction.
+Completed: selected five additional original script units in native and host
+targets; selected sphere/ring/sound-render owners; registered all four original
+W3D loaders; restored original particle lifetime and 17 LOD defaults in Vita
+bootstrap. Restored the Options template and its supported Tech Options route;
+unsupported Options entries are hidden. Added static source-contract
+assertions. The 17-map sweep now finds no unselected script owners or
+persistence-factory owners for required map content in the configured native
+source graph.
+Evidence: 36 focused Python tests pass; existing Dev207 symbol reports remain
+historical and do not validate these source changes. No C++ build, package,
+install or launch was performed.
+Next: classify remaining definition references; trace the attached but absent
+M01 `X01_ConYardDrop.txt` sequence and frontend/options ownership.
+Blocker: the missing M01 cinematic data has not been located; do not invent or
+alias its sequence. Native compile/link/runtime evidence remains open.
+
 ## Follow-up sweep — source findings retained
 
 Renegade Vita — v3.5 active

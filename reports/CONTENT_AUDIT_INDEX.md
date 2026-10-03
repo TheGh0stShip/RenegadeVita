@@ -29,16 +29,25 @@ Python checks. The broader standalone coverage guard remains INCOMPLETE with
 
 ## Source and runtime status
 
-Five previously omitted script units are source-selected with scoped bridges:
-Test_RAD.cpp, Test_DAY.cpp, Toolkit.cpp, Toolkit_Objects.cpp and mission08.cpp.
-These changes remain uncompiled and unexecuted. Five further required script
-owners and three W3D owners remain unintegrated. The reports distinguish source
-selection, historical executable evidence and runtime acceptance.
+The latest source-only sweep selected five additional required script units
+(Mission03.cpp, Mission11.cpp, Test_DAK.cpp, Test_RMV_Toolkit.cpp and
+Toolkit_Sounds.cpp), plus the sphere, ring and sound-render-object owners. The
+native runtime now registers the four original prototype loaders and applies
+the original particle lifetime and 17 LOD defaults. Static closure checks find
+no remaining unselected script or persistence-factory owners for the 17 maps.
+The source changes have not been compiled or executed. The historical Dev207
+symbol inventory is not evidence for the current source graph. M01 still has
+an attached but unavailable `X01_ConYardDrop.txt` sequence; frontend/options,
+save/load and multiplayer gaps remain in the audit reports. The original
+Options template and its supported Tech Options route are now source-selected;
+unsupported Controls, Movies, Credits and Multiplayer Options entries are
+hidden pending their original owners and routes.
 
-No build, game launch, installation, retail/save modification or new native
-acceptance occurred during these sweeps. Local asset-derived receipts remain
-under build/; published material contains source, tests and findings rather
-than retail assets or saves.
+No C++ build, game launch, installation, retail/save modification or new
+native acceptance occurred during this source-only continuation. The latest
+36 focused static tests pass. Local asset-derived receipts remain under
+build/; published material contains source, tests and findings rather than
+retail assets or saves.
 
 ## Repository status
 

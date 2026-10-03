@@ -5,7 +5,7 @@ from pathlib import Path
 
 # Original EVA shell and all seven child tabs must travel together.
 IDS = {128,130,131,145,169,209,210,211,231,232,233,243,255,256} | set(range(146,154))
-CAMPAIGN_IDS = IDS | {196,197,239}
+CAMPAIGN_IDS = IDS | {135,196,197,239}
 # Purchase catalog, terminal, chat popup/child, and access-denied dialog.
 MULTIPLAYER_IDS = {220,221,229,230,236}
 FLAGS = {'DS_MODALFRAME':0x80,'DS_SETFONT':0x40,'WS_POPUP':0x80000000,'WS_CAPTION':0x00C00000,'WS_GROUP':0x20000,'WS_TABSTOP':0x10000,

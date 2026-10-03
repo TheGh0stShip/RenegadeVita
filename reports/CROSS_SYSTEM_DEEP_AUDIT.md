@@ -5,6 +5,30 @@ omissions as well as missing scripts. It does not restore them or establish
 runtime acceptance. No C++ compilation, game execution, server contact,
 installation, device access or retail/save modification occurred.
 
+## Source-only follow-up — 2026-10-02
+
+The five additional original script owners and three W3D object owners listed
+below have since been added to the native and host source graphs. The Vita
+startup now registers the original particle-emitter, sphere, ring and
+sound-render-object loaders and restores the original particle lifetime and
+17 LOD defaults. A fresh static sweep of Tutorial, Practice, M13, M01 and 13
+installed C&C maps reports no unselected required script or persistence-
+factory owners in the configured native source graph. This closes source
+selection findings only; the source has not been compiled or runtime-tested.
+
+The same sweep retains two M01 content leads: `X01_ConYardDrop.txt` is attached
+by `M01_ConDropZone_JDG` but absent from the inspected retail archives/loose
+files, while the HONEscort text member's three unresolved script names have no
+proved attachment path. Do not implement or alias the latter without reachability
+evidence. Remaining UI/options, save/load and multiplayer gaps below are open.
+
+The original `IDD_MENU_OPTIONS` template and its Tech Options route have now
+been added to the Vita single-player frontend source path. The Vita page hides
+Controls, Movies, Credits and Multiplayer Options because their original
+owners/routes are still unavailable. Static tests verify the generated
+template controls and route. This source change remains uncompiled; it does not
+close the Controls/Movies/Credits or broader frontend findings below.
+
 This supersedes the narrower scope/counts in the preceding M00/M13 audits.
 Those earlier persistence-factory checks did not cover WW3D prototype loader
 registration, dialog resources, network events or all global cinematics.
@@ -34,7 +58,11 @@ hits are in global archives. These counts describe available content, not
 proof that every asset appears on every route. Restoring a loader still
 requires correct original rendering/audio behavior and native validation.
 
-### 2. Five original script files remain absent from both current source lists
+### 2. Five original script files were absent from the audited baseline
+
+The following are historical baseline findings. The source-only follow-up
+above has selected these owners; current compile/link/runtime status is not
+established.
 
 | Requested area | Unselected required script owners |
 | --- | --- |
@@ -71,14 +99,18 @@ well beyond cosmetic tutorial camera shake.
   this audit has not proved its runtime trigger/reachability. These remain
   unresolved source/data contract findings, not invented missing filenames.
 
-### 4. Main-menu Options has both resource and routing gaps
+### 4. Main-menu Options exposed a resource and routing gap
 
-`OptionsMenuClass` requests **IDD_MENU_OPTIONS (135)**, absent from both the
-full-port template selection and the existing generated templates. The
-full-port defines RENEGADE_VITA_FRONTEND_SINGLEPLAYER; its reduced
-renegadedialogmgr.cpp FactoryArray leaves controls, technical options,
-movies, credits and other original routes null. This flag remains enabled
-even when RENEGADE_VITA_M00_DEMO=0.
+The audited baseline showed `OptionsMenuClass` requesting
+**IDD_MENU_OPTIONS (135)**, absent from both the full-port template selection
+and generated templates. Source now selects that original template, routes its
+Tech button to the supported `TechOptionsMenuClass`, and hides the four
+unavailable routes. These changes remain uncompiled. The full-port defines
+RENEGADE_VITA_FRONTEND_SINGLEPLAYER; its reduced
+renegadedialogmgr.cpp FactoryArray still leaves Controls, Movies, Credits and
+other original routes null. The supported Tech Options route now opens
+directly from the Options page. This flag remains enabled even when
+RENEGADE_VITA_M00_DEMO=0.
 
 The relevant omitted original owners include dlgcontrols.cpp,
 dlgcontrolslisttab.cpp, dlgcontroltabs.cpp, dlgcontrolsaveload.cpp,

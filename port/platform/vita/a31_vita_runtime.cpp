@@ -25,6 +25,12 @@
 #include "assetmgr.h"
 #include "assetdep.h"
 #include "assets.h"
+#include "part_ldr.h"
+#include "part_emt.h"
+#include "part_buf.h"
+#include "sphereobj.h"
+#include "ringobj.h"
+#include "soundrobj.h"
 #include "campaign.h"
 #include "ccamera.h"
 #include "encyclopediamgr.h"
@@ -3572,7 +3578,22 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					"load-on-demand and fog activation remain original-owned");
 				asset_manager = new WW3DAssetManager;
 				asset_manager->Set_WW3D_Load_On_Demand(true);
+				asset_manager->Register_Prototype_Loader(&_ParticleEmitterLoader);
+				asset_manager->Register_Prototype_Loader(&_SphereLoader);
+				asset_manager->Register_Prototype_Loader(&_RingLoader);
+				asset_manager->Register_Prototype_Loader(&_SoundRenderObjLoader);
 				asset_manager->Set_Activate_Fog_On_Load(true);
+				ParticleEmitterClass::Set_Default_Remove_On_Complete(false);
+				static const float particle_lod_max_screen_sizes[17] = {
+					0.0025f, 0.0050f, 0.0075f, 0.0100f, 0.0300f,
+					0.0500f, 0.0700f, 0.0900f, 0.1000f, 0.3000f,
+					0.5000f, 1.0000f, 1.2500f, 1.5000f, 1.7500f,
+					2.0000f, WWMATH_FLOAT_MAX
+				};
+				for (unsigned lod = 0; lod < 17U; ++lod) {
+					ParticleBufferClass::Set_LOD_Max_Screen_Size(
+						static_cast<int>(lod), particle_lod_max_screen_sizes[lod]);
+				}
 				Draw_Engine_Setup_Screen(startup_screen_result,
 					"Starting vitaGL renderer",
 					"visible status remains until vitaGL replaces the framebuffer");

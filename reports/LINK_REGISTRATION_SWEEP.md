@@ -1,5 +1,29 @@
 # S3 link and registration closure — inventory in progress
 
+## All-map level persistence reconciliation — 2026-10-03
+
+The 27-map LSD/LDD metadata inventory contains 83,622 candidate simple-factory
+envelopes using 33 persistence chunk IDs. Every ID has a retained Dev220 ARM
+template Load symbol and a matching original host registry lookup. No missing
+ARM symbol or host lookup was found in this scoped denominator. All 33 behavior
+rows remain unknown. No runtime source or binary changed.
+
+The detector requires sibling OBJPOINTER `0x00100100` and OBJDATA `0x00100101`
+ancestries with equal counts and four-byte pointer-token payloads. Arbitrary
+leaf chunk IDs are not treated as factory requests. Aggregated metadata cannot
+prove sibling ordering within each instance. Six focused tests and two existing
+chunk-parser tests pass; retained metadata parser hashes match current source,
+and all 140 ARM/host template IDs agree. No malformed candidate envelope was
+found in the supplied metadata.
+
+Reproduce with `tools/audit_level_persist_closure.py`; evidence lives in
+`reports/generated/sweeps/level_persist_closure.json`, including input hashes,
+map/member provenance, counts and source classes. The remaining denominator
+includes objects.ddb, saves, manual/non-template factories, opaque subsystem
+payloads and definition class IDs. Actual Load/Save behavior and physical Vita
+registration remain unverified. This receipt supplements the S3 ledger; it does
+not change the consolidated ARM behavior classifications.
+
 ## Original host persistence lookup — 2026-10-03
 
 The retained ASan/UBSan host runtime resolves all 140 template persistence

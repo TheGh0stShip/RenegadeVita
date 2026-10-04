@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## All-map persistence reconciliation — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: 27 maps yield 83,622 candidate persistence envelopes and 33 chunk IDs;
+all have ARM template Load symbols and matching original host registry lookups.
+Evidence: eight focused parser/reconciliation tests pass; source receipt hashes
+match. All 33 behavior rows remain unknown. No runtime code changed.
+Next: objects.ddb, definition-class and non-template registry reconciliation.
+Blocker: none for discovery; actual loading and physical acceptance remain open.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Original host persistence lookup — 2026-10-03
 
 Renegade Vita — v3.5 active

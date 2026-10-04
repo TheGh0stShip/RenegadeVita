@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Mono IMA final predictor and sample-count compatibility — 2026-10-03
+
+All ten formerly rejected IMA files now match the original Miles decoder's
+complete PCM SHA-256 and frame counts. The bounded final predictor and zero
+padding correction passes five compiled sanitizer tests and forty inventory
+regressions. All-archive decoding passes 10,240/10,241 with empty wind4r.wav
+the sole rejection and no sanitizer stderr. Dev211 fast ARM compile/link and
+artifact checks pass all 634 actions; canonical packaging is running.
+No launch or physical acceptance. See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 ## Bounded WAV compatibility and Dev210 package — 2026-10-03
 
 The provider now decodes 10,230 of 10,241 archive WAV entries under sanitizers,

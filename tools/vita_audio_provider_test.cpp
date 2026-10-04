@@ -190,6 +190,34 @@ int main()
 		ima_fact.data(), ima_fact.size(), &ima_fact_info) != 0 &&
 		ima_fact_info.samples == 5 && ima_fact_info.rate == 8000,
 		"IMA ADPCM fact-count WAVE metadata differs");
+	for (size_t tail = 0; tail <= 3; ++tail) {
+		std::vector<uint8_t> samples = {0, 0, 0, 0, 17, 17, 17, 17};
+		if (tail != 0) samples.push_back(0x34);
+		if (tail > 1) samples.push_back(0x12);
+		if (tail > 2) samples.push_back(0);
+		std::vector<uint8_t> image = Wave(0x11, 1, 8000, 8, 4, ima_extension, samples, 15);
+		if (tail == 1) image.back() = 0x12; // Physical RIFF pad participates in predictor.
+		passed &= Require(RenegadeVitaAudio::Decode_Wave(image.data(), image.size(), &decoded),
+			"mono IMA final predictor/fact padding decode failed");
+		std::vector<int16_t> expected = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+		if (tail != 0) expected.push_back(0x1234);
+		expected.resize(15, 0);
+		passed &= Require(decoded.samples == expected &&
+			decoded.untrimmed_sample_frames == (tail == 0 ? 9U : 10U),
+			"mono IMA final predictor or zero padding differs");
+		if (tail == 1) {
+			image.pop_back();
+			passed &= Require(!RenegadeVitaAudio::Decode_Wave(image.data(), image.size(), &decoded),
+				"mono IMA predictor read beyond missing RIFF pad");
+		}
+	}
+	const auto standalone_ima_tail = Wave(0x11, 1, 8000, 8, 4, ima_extension, {1, 2, 0}, 15);
+	passed &= Require(!RenegadeVitaAudio::Decode_Wave(standalone_ima_tail.data(), standalone_ima_tail.size(), &decoded),
+		"mono IMA admitted an unverified standalone partial block");
+	const auto huge_ima_fact = Wave(0x11, 1, 8000, 8, 4, ima_extension,
+		{0, 0, 0, 0, 17, 17, 17, 17}, UINT32_MAX);
+	passed &= Require(!RenegadeVitaAudio::Decode_Wave(huge_ima_fact.data(), huge_ima_fact.size(), &decoded),
+		"mono IMA fact count bypassed decoded sample ceiling");
 
 	const std::vector<uint8_t> ima_stereo = Wave(0x11, 2, 8000, 16, 4,
 		ima_extension, {
@@ -202,6 +230,15 @@ int main()
 	passed &= Require(decoded.channels == 2 && decoded.Frame_Count() == 9 &&
 		decoded.samples == std::vector<int16_t>(18, 0),
 		"stereo IMA ADPCM frame contract differs");
+	std::vector<uint8_t> short_stereo_samples(16, 0);
+	short_stereo_samples.insert(short_stereo_samples.end(), {1, 2, 0});
+	const auto short_stereo = Wave(0x11, 2, 8000, 16, 4, ima_extension, short_stereo_samples, 15);
+	passed &= Require(!RenegadeVitaAudio::Decode_Wave(short_stereo.data(), short_stereo.size(), &decoded),
+		"unverified stereo partial block was admitted");
+	const auto no_fact_tail = Wave(0x11, 1, 8000, 8, 4, ima_extension,
+		{0, 0, 0, 0, 17, 17, 17, 17, 1, 2, 0});
+	passed &= Require(!RenegadeVitaAudio::Decode_Wave(no_fact_tail.data(), no_fact_tail.size(), &decoded),
+		"partial mono block without a fact count was admitted");
 
 	std::vector<uint8_t> ms_extension;
 	Write_U16(ms_extension, 8);

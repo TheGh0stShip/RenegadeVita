@@ -1,0 +1,123 @@
+{
+  "schema": "renegade.retail_ima_tail_contract.v1",
+  "evidence_class": "windows_x86_reference_and_host_sanitized_cpp",
+  "dll_sha256": "b4adfadcd8b873cd8f1117c4f6f160e3a925688096d4d2969ff83e5dbd502360",
+  "decoder_source": "port/audio/vita/renegade_wave_decoder.cpp",
+  "decoder_sha256": "33b9ff16f53d31cbccf7deb959308565b9143218c251cb1a6617c5545e4ffc55",
+  "private_reference_probe_sha256": "1669090fcb9f21876217b89b79b9f1ac74299e94e5aabf328f8fc1af8228b904",
+  "private_host_probe_sha256": "18f60eb88020bc88f1d0504b416de6bdb3db484e1a9209dce6197d6dac956cac",
+  "private_reference_verdicts_sha256": "295ec2540245e804a3482135a9d1882b8a58c553c3aebb890a876c626cc98ca9",
+  "compared_members": 10,
+  "complete_pcm_matches": 10,
+  "rows": [
+    {
+      "member": "m00gnod_hesx0006i3nomg_snd.wav",
+      "source_sha256": "55b12fba1410cf7919cc32b1e931603da7060e2f034da4746e8db3e7fd5eadea",
+      "reference_frames": 52230,
+      "complete_block_frames": 51867,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m05dsgn_dsgn0049r1nomg_snd.wav",
+      "source_sha256": "03998885d4b0ef097cdaab1e2cfbeab2cd3952efd0423cd8b08a417ebe025da2",
+      "reference_frames": 154627,
+      "complete_block_frames": 153567,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m00gnod_hesx0018i1nomg_snd.wav",
+      "source_sha256": "fc2ea44bd52daba96e71d26adccefb996662a31bf5b59885be3b8898a0698e19",
+      "reference_frames": 55302,
+      "complete_block_frames": 54918,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "mxxdsgn_dsgn0109i1nomg_snd.wav",
+      "source_sha256": "8acddc4850c6570995122289f3ab392b9fdef8d43e2c5c702b54222e62aff229",
+      "reference_frames": 27652,
+      "complete_block_frames": 27459,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m00gnod_hesx0007r2nomg_snd.wav",
+      "source_sha256": "aa8d814c4657cf9b40916abd9c7a6f28efbdc4ef31abdde5e785f2d555c7b63a",
+      "reference_frames": 46082,
+      "complete_block_frames": 45765,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m00gnod_kill0008i2nomg_snd.wav",
+      "source_sha256": "bbfca1a128cba6a51ddbf162a90ed1fcc5a66b6088d770d780fbe67e4f066b95",
+      "reference_frames": 78850,
+      "complete_block_frames": 78309,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m05dsgn_dsgn0035i1nomg_snd.wav",
+      "source_sha256": "a9b0564f36974476fff2107f83bf500ccf95966aa83a3bd261dba71a23f46e19",
+      "reference_frames": 163845,
+      "complete_block_frames": 162720,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m00gnod_hesx0041i2nomg_snd.wav",
+      "source_sha256": "4e1bc88e1e97c3af3c0d8070a07fca2dbaa8904a7caef5b020e0cadbb7e3a20d",
+      "reference_frames": 38915,
+      "complete_block_frames": 38646,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m00gnod_hesx0029r1nomg_snd.wav",
+      "source_sha256": "3ec0b935f7560fbd3d23f1b4d53c33a28b42e752a4651384f94f3eb72479ceb4",
+      "reference_frames": 22530,
+      "complete_block_frames": 22374,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    },
+    {
+      "member": "m00gnod_gcon0006i1nomg_snd.wav",
+      "source_sha256": "40316c9759348858b05a45adca4bb0abc85a53c7272e9d736706fc0e630a03f2",
+      "reference_frames": 57349,
+      "complete_block_frames": 56952,
+      "pcm_sha256_matches": true,
+      "frame_counts_match": true,
+      "final_predictor_matches": true,
+      "post_prefix_nonzero_bytes": 2
+    }
+  ],
+  "retail_modified": false,
+  "pcm_exported": false,
+  "native_playback_verified": false,
+  "limits": [
+    "Evidence covers ten supplied mono IMA members with one-to-three-byte final tails.",
+    "One-byte predictors use the physical RIFF pad within actual source bounds.",
+    "Stereo or standalone incomplete blocks and missing pads remain rejected.",
+    "Host sample agreement does not establish native playback, mixing or timing."
+  ]
+}

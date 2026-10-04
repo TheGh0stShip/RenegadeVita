@@ -1,4 +1,16 @@
 {
+  "ima_tail_compatibility_20261003": {
+    "state": "HOST_SAMPLE_AGREEMENT_SANITIZERS_ARM_LINK_PASS_CANONICAL_PENDING",
+    "candidate": "A3.5-dev211",
+    "arm_compile_link_actions": 634,
+    "reference_complete_pcm_matches": 10,
+    "archive_wave_entries": 10241,
+    "decoded_entries": 10240,
+    "remaining_rejections": 1,
+    "canonical_package_passed": false,
+    "native_acceptance_gates_closed": 0,
+    "evidence": "reports/generated/retail_ima_tail_contract.json"
+  },
   "wave_compatibility_20261003": {
     "state": "HOST_SANITIZERS_ARM_CANONICAL_PACKAGE_PASS_NATIVE_AUDIO_UNVERIFIED",
     "canonical_candidate": "A3.5-dev210",

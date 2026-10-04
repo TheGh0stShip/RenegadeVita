@@ -205,13 +205,29 @@ bool Decode_Ima_Block(const uint8_t *block, size_t bytes,
 	return true;
 }
 
-bool Decode_Ima(const uint8_t *data, const WaveInfo &info,
+bool Decode_Ima(const uint8_t *data, size_t source_bytes, const WaveInfo &info,
 	DecodedWave *decoded, const char **error)
 {
 	const uint8_t *source = data + info.data_offset;
 	for (size_t offset = 0; offset < info.data_bytes;) {
 		const size_t block_bytes = std::min<size_t>(
 			info.block_align, info.data_bytes - offset);
+		if (info.channels == 1U && block_bytes < 4U && offset >= info.block_align &&
+			info.fact_sample_frames != 0U) {
+			// Original mono decoding emits the final predictor even without a
+			// complete block header. A one-byte tail uses the physical RIFF pad;
+			// never read beyond the actual supplied image or decode absent nibbles.
+			const size_t position = info.data_offset + offset;
+			if (position > source_bytes || source_bytes - position < 2U) {
+				return Fail("truncated IMA ADPCM predictor", error);
+			}
+			const int16_t predictor = Read_S16(data + position);
+			if (!Append_Frame(decoded, &predictor)) {
+				return Fail("decoded sample ceiling exceeded", error);
+			}
+			offset += block_bytes;
+			continue;
+		}
 		if (!Decode_Ima_Block(source + offset, block_bytes, info, decoded, error)) {
 			return false;
 		}
@@ -573,6 +589,10 @@ bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 	output.sample_rate = info.sample_rate;
 	output.fact_sample_frames = info.fact_sample_frames;
 	output.estimated_sample_frames = info.estimated_sample_frames;
+	if (info.encoding == WaveEncoding::ImaAdpcm && info.channels == 1U &&
+		info.fact_sample_frames > kMaximumDecodedSamples) {
+		return Fail("IMA fact sample ceiling exceeded", error);
+	}
 	if (info.encoding != WaveEncoding::Pcm) {
 		// Avoid repeatedly reallocating/copying the growing PCM vector for each
 		// ADPCM block. This is a capacity hint, not a replacement for per-frame
@@ -592,7 +612,7 @@ bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 			success = Decode_Pcm(data, info, &output, error);
 			break;
 		case WaveEncoding::ImaAdpcm:
-			success = Decode_Ima(data, info, &output, error);
+			success = Decode_Ima(data, bytes, info, &output, error);
 			break;
 		case WaveEncoding::MicrosoftAdpcm:
 			success = Decode_Microsoft_Adpcm(data, info, &output, error);
@@ -605,6 +625,13 @@ bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 	}
 	const size_t untrimmed_frames = output.Frame_Count();
 	output.untrimmed_sample_frames = Saturating_U64_To_U32(untrimmed_frames);
+	// The original mono provider returns the declared fact count, zero-filling
+	// the remainder after the bounded encoded samples. Keep decoded-frame
+	// telemetry before this padding and preserve the existing smaller-fact trim.
+	if (info.encoding == WaveEncoding::ImaAdpcm && info.channels == 1U &&
+		info.fact_sample_frames > output.Frame_Count()) {
+		output.samples.resize(info.fact_sample_frames, 0);
+	}
 	if (info.sample_frames != 0U && output.Frame_Count() > info.sample_frames) {
 		output.trimmed_sample_frames = Saturating_U64_To_U32(
 			output.Frame_Count() - info.sample_frames);

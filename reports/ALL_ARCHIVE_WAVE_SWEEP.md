@@ -236,3 +236,27 @@ SELF `c9b1bbd8aa1eebc2e965957fff6967938de85818d10680a97d12987f29f3c87a`,
 VPK `12f6a244c46673fd21cb68c8a103fe12569e013dfe73890a47fcf6fc5353efbd`.
 All seven packaged files match the installed title. Retail data is unchanged;
 no emulator launch, physical deployment or native acceptance occurred.
+
+## Mono IMA final-block correction
+
+The ten remaining compressed files now decode with complete PCM SHA-256 and
+frame counts matching the supplied original Miles DLL. The comparison covers
+every returned sample, including the last predictor and fact-count padding;
+audio payloads remain private. Provenance and scoped verdicts are retained in
+`generated/retail_ima_tail_contract.json`.
+
+The bounded decoder admits a final one-to-three-byte mono predictor only after
+a complete block and with a fact count. A one-byte predictor requires its
+second byte to exist in the physical source image (the RIFF pad in the supplied
+files). It never decodes absent nibbles. Remaining declared frames are zero-
+filled within the existing 16-million-sample ceiling. Smaller fact counts still
+trim. Standalone partial blocks, stereo partial headers, missing padding and
+oversized fact counts retain explicit rejection tests.
+
+Five focused compiled-provider/probe tests pass. The full C++ archive run now
+decodes 10,240 of 10,241 entries with zero sanitizer stderr. Only wind4r.wav's
+zero-byte PCM payload remains rejected; its runtime meaning remains open.
+Strict metadata still reports 265 header anomalies, and no retail file changed.
+Dev211 passes all 634 fast ARM compile/link actions and artifact checks.
+Canonical package validation is running. Native playback and timing remain
+unverified; the Dev210 package described above predates this correction.

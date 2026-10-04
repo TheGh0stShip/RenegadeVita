@@ -287,86 +287,16 @@
       "status": "unknown",
       "evidence_class": "host_cpp_decode",
       "wave_members": 10100,
-      "decoded_members": 10089,
-      "decoded_frames": 512929506,
-      "rejected_members": 11,
+      "decoded_members": 10099,
+      "decoded_frames": 513730781,
+      "rejected_members": 1,
       "failures": [
-        {
-          "member": "m00gnod_hesx0006i3nomg_snd.wav",
-          "index_record": 258,
-          "offset": 7323944,
-          "sha256": "55b12fba1410cf7919cc32b1e931603da7060e2f034da4746e8db3e7fd5eadea",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "m05dsgn_dsgn0049r1nomg_snd.wav",
-          "index_record": 1211,
-          "offset": 45134088,
-          "sha256": "03998885d4b0ef097cdaab1e2cfbeab2cd3952efd0423cd8b08a417ebe025da2",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "m00gnod_hesx0018i1nomg_snd.wav",
-          "index_record": 2339,
-          "offset": 86906680,
-          "sha256": "fc2ea44bd52daba96e71d26adccefb996662a31bf5b59885be3b8898a0698e19",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "mxxdsgn_dsgn0109i1nomg_snd.wav",
-          "index_record": 2934,
-          "offset": 109847600,
-          "sha256": "8acddc4850c6570995122289f3ab392b9fdef8d43e2c5c702b54222e62aff229",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "m00gnod_hesx0007r2nomg_snd.wav",
-          "index_record": 4363,
-          "offset": 151283544,
-          "sha256": "aa8d814c4657cf9b40916abd9c7a6f28efbdc4ef31abdde5e785f2d555c7b63a",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "m00gnod_kill0008i2nomg_snd.wav",
-          "index_record": 5505,
-          "offset": 192163224,
-          "sha256": "bbfca1a128cba6a51ddbf162a90ed1fcc5a66b6088d770d780fbe67e4f066b95",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "m05dsgn_dsgn0035i1nomg_snd.wav",
-          "index_record": 7900,
-          "offset": 266764864,
-          "sha256": "a9b0564f36974476fff2107f83bf500ccf95966aa83a3bd261dba71a23f46e19",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "m00gnod_hesx0041i2nomg_snd.wav",
-          "index_record": 8967,
-          "offset": 298450112,
-          "sha256": "4e1bc88e1e97c3af3c0d8070a07fca2dbaa8904a7caef5b020e0cadbb7e3a20d",
-          "error": "truncated IMA ADPCM block"
-        },
-        {
-          "member": "m00gnod_hesx0029r1nomg_snd.wav",
-          "index_record": 9385,
-          "offset": 313412352,
-          "sha256": "3ec0b935f7560fbd3d23f1b4d53c33a28b42e752a4651384f94f3eb72479ceb4",
-          "error": "truncated IMA ADPCM block"
-        },
         {
           "member": "wind4r.wav",
           "index_record": 12902,
           "offset": 443938888,
           "sha256": "d67337728a9790c84430bc8ebc30248011fe677c1ffbfedd3903c44ebb74ad6a",
           "error": "decoded WAVE is empty"
-        },
-        {
-          "member": "m00gnod_gcon0006i1nomg_snd.wav",
-          "index_record": 14429,
-          "offset": 487722864,
-          "sha256": "40316c9759348858b05a45adca4bb0abc85a53c7272e9d736706fc0e630a03f2",
-          "error": "truncated IMA ADPCM block"
         }
       ]
     },
@@ -523,11 +453,11 @@
   ],
   "totals": {
     "wave_members": 10241,
-    "decoded_members": 10230,
-    "rejected_members": 11
+    "decoded_members": 10240,
+    "rejected_members": 1
   },
-  "probe_sha256": "acb6ad63b89fa51eea2a4d18ee9533a8945aeb15afc792a6bb9be30b4fd3b154",
-  "wave_inventory_sha256": "9f3be36cc05cfb5415f9ec064b4de9b4b244b599bdbad3ebc8cc1c6dc6af6775",
+  "probe_sha256": "0c92e450ad0ca10a3cd4e1251dff646dcb1be41a3434247ca02eaa3c3826a4da",
+  "wave_inventory_sha256": "3103b640463320d013990d4e8442b93c52d5f01814d9403a166c0eb0cfd90c9d",
   "sanitizer_stderr_bytes": 0,
   "parser_inputs": [
     {
@@ -544,7 +474,7 @@
     },
     {
       "source": "port/audio/vita/renegade_wave_decoder.cpp",
-      "sha256": "db5d2cda08d829cf6411396984471a3f655f7e1246dbbbbfce35624a7bdc9715"
+      "sha256": "33b9ff16f53d31cbccf7deb959308565b9143218c251cb1a6617c5545e4ffc55"
     },
     {
       "source": "port/audio/vita/renegade_wave_decoder.h",

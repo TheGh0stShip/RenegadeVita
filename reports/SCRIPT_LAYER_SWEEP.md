@@ -414,3 +414,22 @@ dependency set before executing branches. Prefix/case matching, parameter and
 slot validity, object lifetime, platform selection and effects remain separate
 execution requirements. Runtime source and Dev221 artifacts are unchanged.
 See [dispatch dependencies](generated/sweeps/cinematic_dispatch_dependencies.json).
+
+## Original cinematic dispatch execution — 2026-10-04
+
+All 18 original Parse_Command title branches execute through bounded synthetic
+callbacks under ASan/UBSan. Assertions verify routed arguments for animation,
+explosion, scripted attachment, custom-event slot references, sniper/shake,
+shadow, letterbox and fades, plus object-slot creation/move state. Primary
+attachment handles MyID=2147483647 through its previously repaired buffer.
+Camera release calls restore camera/input/HUD in original order. Original
+case-insensitive title-prefix behavior is retained; unknown titles invoke no
+callback. Seven focused tests pass.
+
+The [execution receipt](generated/sweeps/host_cinematic_dispatch.json) pins the
+retained executable and original/fixture sources. Opaque object identity is
+never dereferenced as an engine object. This verifies dispatch and conversion
+contracts, not actual creation, rendering, animation/audio playback or callbacks
+from live objects. One success route per title leaves alternative/failure and
+lifetime paths open. Native-only branches, ARM dispatch and physical acceptance
+remain unverified. Production runtime and Dev221 artifacts are unchanged.

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_cinematic_dispatch_asan_ubsan",
+  "branches_passed": 18,
+  "camera_release_passed": true,
+  "title_prefix_passed": true,
+  "unknown_title_no_callback_passed": true,
+  "binary_sha256": "b288c595155ed007e80655b376db51331c6ae56314ba072da28e5cb925219123",
+  "source_sha256": {
+    "tools/host_cinematic_dispatch_test.cpp": "5f26d05631dfd061e2d81ad8ce07318bcb92e7384d236965625338e425b283db",
+    "tools/test_cinematic_dispatch.py": "9ce37e038ba1b7cf8a87c405c582be23349ffe94b4cc9e468f443957e26d1c90",
+    "tools/host_cinematic_save_test.cpp": "e7dc333ba5a44349d387575298646e911d4f4d1d8a3f6864c9724e1bbd861c82",
+    "staging/scripts/Test_Cinematic.cpp": "de1ba39ba0b572009bcf2676e61e774c0bc86fb48822f77e715e71c23912e4f6"
+  },
+  "limits": [
+    "Bounded synthetic callbacks and opaque object identity; no real engine effects.",
+    "One success route per title; alternative, failure and lifetime paths remain open.",
+    "Native-only telemetry/platform branches and ARM/physical dispatch remain untested."
+  ]
+}

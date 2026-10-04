@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Original cinematic dispatch execution — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:18 original title branches pass bounded callback routing/arguments,
+slot changes and max32-bit primary ID;camera release/prefix/unknown checks pass.
+Evidence:retained host ASan/UBSan executable/logs/receipt;seven tests pass.
+Next:alternative/failure paths and real engine object/callback integration.
+Blocker:none for source work;native effects/acceptance remain open.
+
 ## Cinematic dispatch dependency denominator — 2026-10-04
 
 Renegade Vita — v3.5 active

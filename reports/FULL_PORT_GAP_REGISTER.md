@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 17 supplements is retained, including nested records.
+status record in the eight sweeps and 18 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -37,6 +37,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | host_definition_registry | 57 | 57 | False |
 | database_definition_closure | 65 | 65 | False |
 | definition_instances | 28 | 28 | False |
+| missing_definition_callers | 28 | 28 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -26188,6 +26189,34 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | link /upstream_rows/997 | upstream/CnC_Renegade/Code/Tools/wdump/wdeview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | link /upstream_rows/998 | upstream/CnC_Renegade/Code/Tools/wdump/wdlview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | link /upstream_rows/999 | upstream/CnC_Renegade/Code/Tools/wdump/wdtview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| missing_definition_callers /rows/0 | /rows/0 | unknown | unclassified | M01.mix, M02.mix, M03.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
+| missing_definition_callers /rows/1 | /rows/1 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M04.mix, M05.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
+| missing_definition_callers /rows/10 | /rows/10 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix |
+| missing_definition_callers /rows/11 | /rows/11 | unknown | unclassified | M00_Tutorial.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix |
+| missing_definition_callers /rows/12 | /rows/12 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M03.mix, M04.mix, M05.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| missing_definition_callers /rows/13 | /rows/13 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M00_Tutorial.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix, Skirmish00.mix |
+| missing_definition_callers /rows/14 | /rows/14 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M00_Tutorial.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
+| missing_definition_callers /rows/15 | /rows/15 | unknown | unclassified | M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
+| missing_definition_callers /rows/16 | /rows/16 | unknown | unclassified | M02.mix |
+| missing_definition_callers /rows/17 | /rows/17 | unknown | unclassified | M01.mix |
+| missing_definition_callers /rows/18 | /rows/18 | unknown | unclassified | M02.mix, M03.mix, M05.mix, M07.mix, M10.mix, M13.mix |
+| missing_definition_callers /rows/19 | /rows/19 | unknown | unclassified | M01.mix, M02.mix, M05.mix, M06.mix, M07.mix, M08.mix, M10.mix, M11.mix, M13.mix |
+| missing_definition_callers /rows/2 | /rows/2 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M03.mix, M04.mix, M05.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| missing_definition_callers /rows/20 | /rows/20 | unknown | unclassified | M01.mix, M02.mix, M05.mix, M06.mix, M07.mix, M08.mix, M10.mix, M13.mix |
+| missing_definition_callers /rows/21 | /rows/21 | unknown | unclassified | M02.mix, M10.mix |
+| missing_definition_callers /rows/22 | /rows/22 | unknown | unclassified | M01.mix, M03.mix, M07.mix, M08.mix, M10.mix, M13.mix, Skirmish00.mix |
+| missing_definition_callers /rows/23 | /rows/23 | unknown | unclassified | M01.mix, M02.mix, M03.mix, M10.mix, M13.mix |
+| missing_definition_callers /rows/24 | /rows/24 | unknown | unclassified | M02.mix, M10.mix |
+| missing_definition_callers /rows/25 | /rows/25 | unknown | unclassified | M02.mix, M10.mix |
+| missing_definition_callers /rows/26 | /rows/26 | unknown | unclassified | M02.mix, M10.mix |
+| missing_definition_callers /rows/27 | /rows/27 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M00_Tutorial.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix, Skirmish00.mix |
+| missing_definition_callers /rows/3 | /rows/3 | unknown | unclassified | M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
+| missing_definition_callers /rows/4 | /rows/4 | unknown | unclassified | M00_Tutorial.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix |
+| missing_definition_callers /rows/5 | /rows/5 | unknown | unclassified | M01.mix |
+| missing_definition_callers /rows/6 | /rows/6 | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
+| missing_definition_callers /rows/7 | /rows/7 | unknown | unclassified | M02.mix, M03.mix, M05.mix, M07.mix, M10.mix, M13.mix |
+| missing_definition_callers /rows/8 | /rows/8 | unknown | unclassified | M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M11.mix |
+| missing_definition_callers /rows/9 | /rows/9 | unknown | unclassified | M01.mix, M02.mix, M05.mix, M06.mix, M07.mix, M08.mix, M10.mix, M11.mix, M13.mix |
 | performance /rows/0 | Performance hypothesis ledger | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | performance /rows/1 | 2026-09-27 TT Audio Reference Check | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | performance /rows/10 | 2026-09-27 Audio Completion Ownership Audit | unknown | unclassified | unknown; callers and retail usage require reconciliation |

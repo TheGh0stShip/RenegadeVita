@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Missing-definition original callers — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: 28 missing targets grouped into14 muzzle effects,10 shell effects
+and4 twiddler choices. Six original caller bodies match pristine upstream;
+null checks preserve conditional skips/returns. Runtime impact remains open.
+Evidence: 15 focused tests pass; body/parent hashes and affected maps retained.
+Register: 41,582 overlapping records,41,318 unknowns. No runtime code changed.
+Next: other registrar forms and broader all-map asset/field coverage.
+Blocker: none for discovery; native effects and actual twiddler choices unverified.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Definition instance graph breadth — 2026-10-03
 
 Renegade Vita — v3.5 active

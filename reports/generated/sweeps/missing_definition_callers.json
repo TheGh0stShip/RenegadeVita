@@ -1,0 +1,972 @@
+{
+  "schema_version": 1,
+  "complete": false,
+  "total": 28,
+  "rows": [
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2163,
+      "affected_maps": [
+        "M01.mix",
+        "M02.mix",
+        "M03.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix"
+      ],
+      "owner_definition_ids": [
+        1388
+      ],
+      "field_occurrences": 9,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2164,
+      "affected_maps": [
+        "C&C_Canyon.mix",
+        "C&C_City.mix",
+        "C&C_City_Flying.mix",
+        "C&C_Complex.mix",
+        "C&C_Field.mix",
+        "C&C_Glacier_Flying.mix",
+        "C&C_Hourglass.mix",
+        "C&C_Islands.mix",
+        "C&C_Mesa.mix",
+        "C&C_Under.mix",
+        "C&C_Volcano.mix",
+        "C&C_Walls.mix",
+        "C&C_Walls_Flying.mix",
+        "M01.mix",
+        "M02.mix",
+        "M04.mix",
+        "M05.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix"
+      ],
+      "owner_definition_ids": [
+        1361
+      ],
+      "field_occurrences": 22,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2166,
+      "affected_maps": [
+        "C&C_Canyon.mix",
+        "C&C_City.mix",
+        "C&C_City_Flying.mix",
+        "C&C_Complex.mix",
+        "C&C_Field.mix",
+        "C&C_Glacier_Flying.mix",
+        "C&C_Hourglass.mix",
+        "C&C_Islands.mix",
+        "C&C_Mesa.mix",
+        "C&C_Under.mix",
+        "C&C_Volcano.mix",
+        "C&C_Walls.mix",
+        "C&C_Walls_Flying.mix",
+        "M02.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        1131
+      ],
+      "field_occurrences": 23,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2759,
+      "affected_maps": [
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix"
+      ],
+      "owner_definition_ids": [
+        2264
+      ],
+      "field_occurrences": 8,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2760,
+      "affected_maps": [
+        "M00_Tutorial.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix"
+      ],
+      "owner_definition_ids": [
+        2263
+      ],
+      "field_occurrences": 8,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2761,
+      "affected_maps": [
+        "M01.mix"
+      ],
+      "owner_definition_ids": [
+        2712
+      ],
+      "field_occurrences": 1,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2763,
+      "affected_maps": [
+        "M01.mix",
+        "M02.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix"
+      ],
+      "owner_definition_ids": [
+        2713
+      ],
+      "field_occurrences": 11,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2765,
+      "affected_maps": [
+        "M02.mix",
+        "M03.mix",
+        "M05.mix",
+        "M07.mix",
+        "M10.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        1392
+      ],
+      "field_occurrences": 6,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2766,
+      "affected_maps": [
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M11.mix"
+      ],
+      "owner_definition_ids": [
+        2715
+      ],
+      "field_occurrences": 8,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_EJECT_PHYS_DEF_ID",
+      "target_id": 2767,
+      "affected_maps": [
+        "M01.mix",
+        "M02.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M10.mix",
+        "M11.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        1368
+      ],
+      "field_occurrences": 9,
+      "caller_review": {
+        "owners": [
+          "eject",
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips casing creation.",
+        "condition": "Caller requires star owner, weapon model and eject bone outside first-person route."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2170,
+      "affected_maps": [
+        "C&C_Canyon.mix",
+        "C&C_City.mix",
+        "C&C_City_Flying.mix",
+        "C&C_Complex.mix",
+        "C&C_Field.mix",
+        "C&C_Glacier_Flying.mix",
+        "C&C_Hourglass.mix",
+        "C&C_Islands.mix",
+        "C&C_Mesa.mix",
+        "C&C_Under.mix",
+        "C&C_Volcano.mix",
+        "C&C_Walls.mix",
+        "C&C_Walls_Flying.mix"
+      ],
+      "owner_definition_ids": [
+        1128
+      ],
+      "field_occurrences": 13,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2573,
+      "affected_maps": [
+        "M00_Tutorial.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix"
+      ],
+      "owner_definition_ids": [
+        2263
+      ],
+      "field_occurrences": 8,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2575,
+      "affected_maps": [
+        "C&C_Canyon.mix",
+        "C&C_City.mix",
+        "C&C_City_Flying.mix",
+        "C&C_Complex.mix",
+        "C&C_Field.mix",
+        "C&C_Glacier_Flying.mix",
+        "C&C_Hourglass.mix",
+        "C&C_Islands.mix",
+        "C&C_Mesa.mix",
+        "C&C_Under.mix",
+        "C&C_Volcano.mix",
+        "C&C_Walls.mix",
+        "C&C_Walls_Flying.mix",
+        "M02.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        1131
+      ],
+      "field_occurrences": 23,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2576,
+      "affected_maps": [
+        "C&C_Canyon.mix",
+        "C&C_City.mix",
+        "C&C_City_Flying.mix",
+        "C&C_Complex.mix",
+        "C&C_Field.mix",
+        "C&C_Hourglass.mix",
+        "C&C_Islands.mix",
+        "C&C_Mesa.mix",
+        "C&C_Under.mix",
+        "C&C_Volcano.mix",
+        "C&C_Walls.mix",
+        "C&C_Walls_Flying.mix",
+        "M00_Tutorial.mix",
+        "M01.mix",
+        "M02.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix",
+        "M13.mix",
+        "Skirmish00.mix"
+      ],
+      "owner_definition_ids": [
+        1393
+      ],
+      "field_occurrences": 26,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2577,
+      "affected_maps": [
+        "C&C_Canyon.mix",
+        "C&C_City.mix",
+        "C&C_City_Flying.mix",
+        "C&C_Complex.mix",
+        "C&C_Field.mix",
+        "C&C_Glacier_Flying.mix",
+        "C&C_Hourglass.mix",
+        "C&C_Islands.mix",
+        "C&C_Mesa.mix",
+        "C&C_Under.mix",
+        "C&C_Volcano.mix",
+        "C&C_Walls.mix",
+        "C&C_Walls_Flying.mix",
+        "M00_Tutorial.mix",
+        "M01.mix",
+        "M02.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix"
+      ],
+      "owner_definition_ids": [
+        1129
+      ],
+      "field_occurrences": 25,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2579,
+      "affected_maps": [
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix"
+      ],
+      "owner_definition_ids": [
+        2264
+      ],
+      "field_occurrences": 8,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2648,
+      "affected_maps": [
+        "M02.mix"
+      ],
+      "owner_definition_ids": [
+        2459
+      ],
+      "field_occurrences": 1,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2753,
+      "affected_maps": [
+        "M01.mix"
+      ],
+      "owner_definition_ids": [
+        2712
+      ],
+      "field_occurrences": 1,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2754,
+      "affected_maps": [
+        "M02.mix",
+        "M03.mix",
+        "M05.mix",
+        "M07.mix",
+        "M10.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        1392
+      ],
+      "field_occurrences": 6,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2755,
+      "affected_maps": [
+        "M01.mix",
+        "M02.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M10.mix",
+        "M11.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        1368
+      ],
+      "field_occurrences": 9,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2756,
+      "affected_maps": [
+        "M01.mix",
+        "M02.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M10.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        2732
+      ],
+      "field_occurrences": 8,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2757,
+      "affected_maps": [
+        "M02.mix",
+        "M10.mix"
+      ],
+      "owner_definition_ids": [
+        2722
+      ],
+      "field_occurrences": 2,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2758,
+      "affected_maps": [
+        "M01.mix",
+        "M03.mix",
+        "M07.mix",
+        "M08.mix",
+        "M10.mix",
+        "M13.mix",
+        "Skirmish00.mix"
+      ],
+      "owner_definition_ids": [
+        2725
+      ],
+      "field_occurrences": 7,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "MICROCHUNKID_WEAPON_DEF_MUZZLE_FLASH_PHYS_DEF_ID",
+      "target_id": 2813,
+      "affected_maps": [
+        "M01.mix",
+        "M02.mix",
+        "M03.mix",
+        "M10.mix",
+        "M13.mix"
+      ],
+      "owner_definition_ids": [
+        2812
+      ],
+      "field_occurrences": 5,
+      "caller_review": {
+        "owners": [
+          "muzzle",
+          "lookup"
+        ],
+        "source_outcome": "Missing definition skips optional muzzle effect creation.",
+        "condition": "Nonzero ID; firing effects only outside the first-person star route; time must advance."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "twiddler_choice",
+      "target_id": 2247,
+      "affected_maps": [
+        "M02.mix",
+        "M10.mix"
+      ],
+      "owner_definition_ids": [
+        3418
+      ],
+      "field_occurrences": 2,
+      "caller_review": {
+        "owners": [
+          "twiddle",
+          "create",
+          "lookup",
+          "audio"
+        ],
+        "source_outcome": "Selected missing choice returns null; Create returns null. Audio ID caller guards null.",
+        "condition": "Choice is random; other twiddler callers and actual choice invocation require review."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "twiddler_choice",
+      "target_id": 2249,
+      "affected_maps": [
+        "M02.mix",
+        "M10.mix"
+      ],
+      "owner_definition_ids": [
+        3418
+      ],
+      "field_occurrences": 2,
+      "caller_review": {
+        "owners": [
+          "twiddle",
+          "create",
+          "lookup",
+          "audio"
+        ],
+        "source_outcome": "Selected missing choice returns null; Create returns null. Audio ID caller guards null.",
+        "condition": "Choice is random; other twiddler callers and actual choice invocation require review."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "twiddler_choice",
+      "target_id": 2250,
+      "affected_maps": [
+        "M02.mix",
+        "M10.mix"
+      ],
+      "owner_definition_ids": [
+        3418
+      ],
+      "field_occurrences": 2,
+      "caller_review": {
+        "owners": [
+          "twiddle",
+          "create",
+          "lookup",
+          "audio"
+        ],
+        "source_outcome": "Selected missing choice returns null; Create returns null. Audio ID caller guards null.",
+        "condition": "Choice is random; other twiddler callers and actual choice invocation require review."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    },
+    {
+      "field": "twiddler_choice",
+      "target_id": 3413,
+      "affected_maps": [
+        "C&C_Canyon.mix",
+        "C&C_City.mix",
+        "C&C_City_Flying.mix",
+        "C&C_Complex.mix",
+        "C&C_Field.mix",
+        "C&C_Glacier_Flying.mix",
+        "C&C_Hourglass.mix",
+        "C&C_Islands.mix",
+        "C&C_Mesa.mix",
+        "C&C_Under.mix",
+        "C&C_Volcano.mix",
+        "C&C_Walls.mix",
+        "C&C_Walls_Flying.mix",
+        "M00_Tutorial.mix",
+        "M01.mix",
+        "M02.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix",
+        "M13.mix",
+        "Skirmish00.mix"
+      ],
+      "owner_definition_ids": [
+        3354
+      ],
+      "field_occurrences": 27,
+      "caller_review": {
+        "owners": [
+          "twiddle",
+          "create",
+          "lookup",
+          "audio"
+        ],
+        "source_outcome": "Selected missing choice returns null; Create returns null. Audio ID caller guards null.",
+        "condition": "Choice is random; other twiddler callers and actual choice invocation require review."
+      },
+      "reviewed_bodies_match_upstream": true,
+      "status": "unknown",
+      "evidence_class": "retail_reference_and_original_source_review"
+    }
+  ],
+  "counts": {
+    "unknown": 28
+  },
+  "owners": {
+    "muzzle": {
+      "source": "staging/combat/weapons.cpp",
+      "method": "WeaponClass::Do_Firing_Effects",
+      "line": 1014,
+      "source_sha256": "ec5300b75921b2659a76eb2d4c311dff446e87bdd7123a8fcceaea1a3682838f",
+      "body_sha256": "1e32b7fdb7af5e4a26e84df5e3ce11e242da180324609dfc48426cf917eb0c56",
+      "upstream": "upstream/CnC_Renegade/Code/Combat/weapons.cpp",
+      "upstream_line": 1010,
+      "upstream_body_sha256": "1e32b7fdb7af5e4a26e84df5e3ce11e242da180324609dfc48426cf917eb0c56",
+      "matches_upstream": true
+    },
+    "eject": {
+      "source": "staging/combat/weapons.cpp",
+      "method": "WeaponClass::Make_Shell_Eject",
+      "line": 1226,
+      "source_sha256": "ec5300b75921b2659a76eb2d4c311dff446e87bdd7123a8fcceaea1a3682838f",
+      "body_sha256": "a53799658fc4b888cd6c794cd24cb503c52353526c9028faa2bc6a6d6104ea5f",
+      "upstream": "upstream/CnC_Renegade/Code/Combat/weapons.cpp",
+      "upstream_line": 1222,
+      "upstream_body_sha256": "a53799658fc4b888cd6c794cd24cb503c52353526c9028faa2bc6a6d6104ea5f",
+      "matches_upstream": true
+    },
+    "twiddle": {
+      "source": "staging/wwsaveload/twiddler.cpp",
+      "method": "TwiddlerClass::Twiddle",
+      "line": 106,
+      "source_sha256": "c52ac839ac2f56109e5baffe1fa68bd53c32d4dfbab20f262505a5e739ef16a7",
+      "body_sha256": "49025ea95607f36694360303b594a9b37a2d8270e26c26fbec282aa094886544",
+      "upstream": "upstream/CnC_Renegade/Code/wwsaveload/twiddler.cpp",
+      "upstream_line": 106,
+      "upstream_body_sha256": "49025ea95607f36694360303b594a9b37a2d8270e26c26fbec282aa094886544",
+      "matches_upstream": true
+    },
+    "create": {
+      "source": "staging/wwsaveload/twiddler.cpp",
+      "method": "TwiddlerClass::Create",
+      "line": 135,
+      "source_sha256": "c52ac839ac2f56109e5baffe1fa68bd53c32d4dfbab20f262505a5e739ef16a7",
+      "body_sha256": "dcc846fd26df2f4b0e759ce51589f40e46a59cc374bc2d32f437abeb14bff891",
+      "upstream": "upstream/CnC_Renegade/Code/wwsaveload/twiddler.cpp",
+      "upstream_line": 135,
+      "upstream_body_sha256": "dcc846fd26df2f4b0e759ce51589f40e46a59cc374bc2d32f437abeb14bff891",
+      "matches_upstream": true
+    },
+    "lookup": {
+      "source": "staging/wwsaveload/definitionmgr.cpp",
+      "method": "DefinitionMgrClass::Find_Definition",
+      "line": 110,
+      "source_sha256": "b72181aa48081321b1636151027a6658d88d3e134e813c32ba62ff3fc19e0fdd",
+      "body_sha256": "f5155f96ab53652b4d38df055b2e444f391c15e89e2cb86f66648fa86fddbc91",
+      "upstream": "upstream/CnC_Renegade/Code/wwsaveload/definitionmgr.cpp",
+      "upstream_line": 110,
+      "upstream_body_sha256": "f5155f96ab53652b4d38df055b2e444f391c15e89e2cb86f66648fa86fddbc91",
+      "matches_upstream": true
+    },
+    "audio": {
+      "source": "staging/wwaudio/WWAudio.cpp",
+      "method": "WWAudioClass::Create_Sound",
+      "line": 1015,
+      "source_sha256": "b5746b324dce77935005ab183af15822dd94854740a57623558f4fbd57f7fa57",
+      "body_sha256": "68f2c97be0b6477e371f1d2425c00655c5335670f8e95f52ffc339de2b1766cb",
+      "upstream": "upstream/CnC_Renegade/Code/WWAudio/WWAudio.cpp",
+      "upstream_line": 1005,
+      "upstream_body_sha256": "68f2c97be0b6477e371f1d2425c00655c5335670f8e95f52ffc339de2b1766cb",
+      "matches_upstream": true
+    }
+  },
+  "inventory_sha256": "bfdf5d1a5f6bff19a250dbabfffd42f62128755053114159b842feba42cfc753",
+  "parser_sha256": "286fde7d03b9f349ce24ead16b55a02882abc8e7af75138d07c90d804732797d",
+  "limits": [
+    "Source equality does not prove rendered effects or audio playback.",
+    "Only missing map-rooted parsed edges are covered; database-only and computed edges remain open.",
+    "Optional effect omission remains a fidelity question; retail behavior is preserved.",
+    "Twiddler call-site context, runtime choice and stale-data provenance remain unverified."
+  ]
+}

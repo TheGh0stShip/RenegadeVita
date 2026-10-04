@@ -5,6 +5,20 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_missing_caller_maps_and_parent_identity(self):
+        parent={'total':0,'counts':{},'rows':[]}
+        data=json.dumps(parent).encode()
+        child={'total':1,'counts':{'unknown':1},'rows':[{
+            'status':'unknown','affected_maps':['M01.mix','M02.mix']}],
+            'inventory_sha256':hashlib.sha256(data).hexdigest()}
+        result=consolidate([('definition_instances',data),
+                            ('missing_definition_callers',json.dumps(child).encode())])
+        self.assertEqual(result['rows'][0]['affected_missions_modes'],['M01.mix','M02.mix'])
+        child['inventory_sha256']='stale'
+        with self.assertRaisesRegex(ValueError,'stale parent'):
+            consolidate([('definition_instances',data),
+                         ('missing_definition_callers',json.dumps(child).encode())])
+
     def test_definition_reference_edge_partition(self):
         value={'total':1,'counts':{'unknown':1},'rows':[{
             'map':'M01.mix','status':'unknown','typed_reference_fields':2,

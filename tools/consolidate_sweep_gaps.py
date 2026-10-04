@@ -12,7 +12,8 @@ ISSUES = dict(zip(SWEEPS, range(5, 13)))
 SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
                'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts',
                'database_chunks', 'level_persist_closure', 'database_persist_closure',
-               'host_definition_registry', 'database_definition_closure', 'definition_instances')
+               'host_definition_registry', 'database_definition_closure', 'definition_instances',
+               'missing_definition_callers')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 ISSUES['procedural_fvf_layouts'] = 6
 ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_closure',
@@ -55,7 +56,10 @@ def root_records(name, value):
         return rows
     rows=value['archives'] if name=='w3d_chunks' else value['rows']
     totals=value.get('totals',{})
-    if name=='definition_instances':
+    if name=='missing_definition_callers':
+        if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
+            raise ValueError('Missing-definition caller denominator mismatch')
+    elif name=='definition_instances':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
             raise ValueError('Definition instance scope denominator mismatch')
         for row in rows:
@@ -140,7 +144,8 @@ def consolidate(inputs):
     dependencies={'spatial_presence':('chunk_inventory_sha256','level_chunks'),
                   'visibility_bounds':('presence_sha256','spatial_presence'),
                   'w3d_consumers':('inventory_sha256','w3d_chunks'),
-                  'wave_decode':('wave_inventory_sha256','wave_headers')}
+                  'wave_decode':('wave_inventory_sha256','wave_headers'),
+                  'missing_definition_callers':('inventory_sha256','definition_instances')}
     rows = []
     receipts = []
     for name, data in inputs:
@@ -172,7 +177,7 @@ def consolidate(inputs):
                          'sweep': name, 'inventory_pointer': pointer,
                          'label': str(label), 'status': status, 'severity': severity,
                          'severity_basis': 'scoped inventory finding' if severity != 'unclassified' else 'requires impact review',
-                         'affected_missions_modes': [mission] if mission else review.get('affected_scope', ['unknown; callers and retail usage require reconciliation']),
+                         'affected_missions_modes': [mission] if mission else record.get('affected_maps', review.get('affected_scope', ['unknown; callers and retail usage require reconciliation'])),
                          'original_owner': review.get('original_owner', 'requires original-owner review'),
                          'acceptance_open': review.get('acceptance_open', record.get('acceptance_open', 'requires caller, behavior and evidence-class review')),
                          'review_evidence_pointer': pointer + '/review' if review else None,

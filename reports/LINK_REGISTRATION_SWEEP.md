@@ -1,5 +1,38 @@
 # S3 link and registration closure — inventory in progress
 
+## Missing-target original caller review — 2026-10-03
+
+All 28 map-rooted missing target IDs now have a scoped original caller review:
+14 muzzle-flash physics IDs, ten shell-ejection physics IDs and four twiddler
+choices. There are no additional missing-root IDs without field provenance in
+this denominator. Six inspected staged method bodies match pristine upstream
+exactly: firing effects, shell ejection, definition-ID lookup, twiddling,
+twiddler creation and ID-based sound creation.
+
+Original firing effects skip muzzle-flash creation when the definition lookup
+returns null. The caller excludes the first-person star route and requires
+simulation time to advance. Shell ejection requires the star owner, a weapon
+model and an eject bone on that route; its original method checks definition
+presence and ProjectileDef type before creation. These missing IDs establish
+conditional omitted effects, not a progression blocker caused by the port.
+Rendered weapon/effect fidelity remains open.
+
+An original twiddler randomly picks a listed definition ID and returns null
+when that choice is absent. Its Create method guards null, as does original
+ID-based WWAudio sound creation. Which choices run and how other callers react
+remain unverified. This source preservation is not a reason to remove content,
+change retail data or replace original random-selection behavior.
+
+`tools/audit_missing_definition_callers.py` reproduces the 28 rows, map sets,
+owner IDs, conditions and staged/upstream body hashes. The public receipt is
+`reports/generated/sweeps/missing_definition_callers.json`. Fifteen focused
+body-parser/changed-owner/consolidation tests pass. Stale parent receipts reject,
+and the gap register now carries the verified affected-map sets for these rows.
+It retains 41,582 overlapping records, including 41,318 unknowns. All 28 caller
+rows remain unknown behavior; no runtime code changed and no runtime proof is
+claimed. Next: broaden non-template/static registrar execution and remaining
+all-map field/asset coverage; actual effect/choice return needs runtime evidence.
+
 ## Definition instance graph breadth — 2026-10-03
 
 The whole parsed `objects.ddb` graph and 27 map-rooted graphs are now separate

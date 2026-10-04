@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## S4 flagged WAV translation/conversation chains — 2026-10-03
+
+Both translation databases and 55 LDD/LSD/CDB entries are inspected: 207
+flagged files have direct translation sound-ID candidates; 36 have authored
+conversation remarks across eight campaign maps and global conversations.
+IDs, hashes and remark ordinals/offsets are retained without dialogue payloads.
+Thirty-nine focused tests pass. Database precedence, triggers, twiddler/direct
+audio routes and retail post-data handling remain open; native gates stay 0/10.
+See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 ## S4 flagged WAV definition references — 2026-10-03
 
 215 of 265 flagged files have authored filename-basename references in the

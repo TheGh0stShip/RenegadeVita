@@ -1,11 +1,17 @@
 import unittest
 import struct
-from tools.audit_all_wave_headers import summarize, physical_chunks, match_definitions
+from tools.audit_all_wave_headers import summarize, physical_chunks, match_definitions, translation_links
 from tools.audit_mission_wave_headers import inspect_wave
 from tools.test_mission_wave_headers import wave, fmt, wave_chunk
 
 
 class AllWaveTests(unittest.TestCase):
+    def test_translation_links_keep_numeric_ids_without_exporting_dialogue(self):
+        records = {10: {'sound_id': 4, 'description': 'private'},
+                   11: {'sound_id': 4}, 12: {'sound_id': 0}, 13: {'sound_id': None}}
+        self.assertEqual(translation_links(records, {4}),
+                         [{'text_id': 10, 'sound_id': 4}, {'text_id': 11, 'sound_id': 4}])
+
     def test_definition_matching_retains_duplicates_and_labels_basename_candidates(self):
         definitions = {1: {'filename': 'Voice.WAV', 'name': 'a', 'offset': 10},
                        2: {'filename': 'voice.wav', 'name': 'b', 'offset': 20},

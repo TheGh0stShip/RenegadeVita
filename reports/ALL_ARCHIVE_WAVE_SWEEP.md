@@ -96,3 +96,25 @@ script or other data paths; they are not classified as unused. Definition
 duplicates are retained, and the matcher does not choose a winning provider.
 Thirty-eight focused tests pass. The exact retail post-data handling and
 conversation/caller chains remain the next compatibility evidence requirements.
+
+## Translation and authored conversation chains
+
+The reference pass inspects both strings.tdb alternatives and all 55 supplied
+LDD/LSD/CDB index entries. Their member hashes, index identities, record totals
+and matched translation totals remain in the public receipt. No dialogue text
+or audio is exported. Unsupported translation schema fails the pass.
+
+207 flagged WAVs have direct numeric translation sound references, totaling
+414 candidates across the two database alternatives. Thirty-six flagged WAVs
+also have authored conversation remarks, totaling 38 remark occurrences.
+Those occurrences appear in M01 (13), M04 (3), M05 (4), M06 (5), M08 (2),
+M09 (5), M10 (3), M11 (1) and the global always.dbs conversation database (2).
+These are overlapping reference occurrences, not a runtime play count.
+
+The receipt retains conversation IDs/names, remark ordinals/offsets and text
+IDs without copying spoken text. A translation candidate does not prove the
+selected database, and an authored remark does not prove its conversation is
+triggered. Direct scripted/cinematic audio and indirect twiddler references
+remain separate coverage risks. Thirty-nine focused tests pass. The next
+compatibility step is original playback-caller and retail post-data handling
+review; physical audio and progression remain unaccepted.

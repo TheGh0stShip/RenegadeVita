@@ -7,7 +7,8 @@ import json
 import struct
 from pathlib import Path
 from tools.audit_mission_wave_headers import inspect_wave
-from tools.audit_mission_conversations import sound_definitions
+from tools.audit_mission_conversations import sound_definitions, translations
+from tools.audit_deep_saved_content import conversations
 from tools.audit_m13_level_owners import chunks
 from tools.renegade_cinematic_dependency_scan import MixArchive
 
@@ -145,6 +146,59 @@ def definition_references(directory, rows):
     return databases
 
 
+def translation_links(records, sound_ids):
+    return [{'text_id': key, 'sound_id': row['sound_id']}
+            for key, row in sorted(records.items()) if row.get('sound_id') in sound_ids]
+
+
+def conversation_references(directory, rows):
+    findings = [f for row in rows for f in row['findings']]
+    sound_ids = {d['definition_id'] for f in findings for d in f.get('definition_candidates', [])}
+    databases, translation_rows, conversation_rows = [], [], []
+    for path in sorted(directory.iterdir()):
+        if not path.is_file() or path.suffix.lower() not in ('.mix', '.dat', '.dbs'):
+            continue
+        archive = MixArchive(path)
+        with path.open('rb') as stream:
+            for index, (name, _, offset, size) in enumerate(archive.entry_records):
+                is_translation = name.casefold() == 'strings.tdb'
+                if not is_translation and not name.lower().endswith(('.ldd', '.lsd', '.cdb')):
+                    continue
+                stream.seek(offset)
+                data = stream.read(size)
+                if len(data) != size:
+                    raise ValueError('truncated conversation/translation member')
+                identity = {'archive': path.name, 'member': name, 'index_record': index,
+                            'sha256': hashlib.sha256(data).hexdigest()}
+                nodes = chunks(data)
+                if is_translation:
+                    records, issues = translations(nodes)
+                    if issues:
+                        raise ValueError('unsupported translation schema')
+                    links = translation_links(records, sound_ids)
+                    translation_rows.extend(identity | link for link in links)
+                    databases.append(identity | {'kind': 'translation', 'records': len(records), 'matched_records': len(links)})
+                else:
+                    records = conversations(nodes, allow_legacy_category=False)
+                    conversation_rows.extend((identity, record) for record in records)
+                    databases.append(identity | {'kind': 'conversation', 'records': len(records)})
+    by_sound, by_text = {}, {}
+    for link in translation_rows:
+        by_sound.setdefault(link['sound_id'], []).append(link)
+    for identity, record in conversation_rows:
+        for ordinal, remark in enumerate(record['remarks']):
+            by_text.setdefault(remark['text_id'], []).append(identity | {
+                'conversation_id': record['id'], 'conversation_name': record['name'],
+                'conversation_offset': record['offset'], 'remark_ordinal': ordinal,
+                'remark_offset': remark['offset'], 'text_id': remark['text_id']})
+    for finding in findings:
+        ids = {d['definition_id'] for d in finding.get('definition_candidates', [])}
+        finding['translation_candidates'] = [link for identifier in sorted(ids) for link in by_sound.get(identifier, [])]
+        text_ids = {link['text_id'] for link in finding['translation_candidates']}
+        finding['conversation_candidates'] = [link for identifier in sorted(text_ids) for link in by_text.get(identifier, [])]
+    return databases
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data', type=Path, required=True)
@@ -156,12 +210,15 @@ def main():
         parser.error('detailed receipts must remain under private build/')
     rows, archives, receipts = scan(args.data)
     databases = definition_references(args.data, rows)
+    reference_databases = conversation_references(args.data, rows)
     sources = ('tools/audit_all_wave_headers.py', 'tools/audit_mission_wave_headers.py',
                'tools/renegade_cinematic_dependency_scan.py', 'tools/audit_mission_conversations.py',
-               'tools/audit_m13_level_owners.py', 'port/audio/vita/renegade_wave_decoder.cpp')
+               'tools/audit_m13_level_owners.py', 'tools/audit_deep_saved_content.py',
+               'port/audio/vita/renegade_wave_decoder.cpp')
     result = {'schema': 1, 'complete': False, 'rows': rows, 'total': len(rows),
               'counts': {'unknown': len(rows)}, 'archives': archives,
               'definition_databases': databases,
+              'reference_databases': reference_databases,
               'totals': {key: sum(row[key] for row in rows)
                          for key in ('wave_members', 'header_finding_members', 'block_finding_members')},
               'parser_inputs': [{'source': source, 'sha256': hashlib.sha256((root / source).read_bytes()).hexdigest()}
@@ -170,6 +227,7 @@ def main():
                          'Loose WAVs, music and movie streams are separate denominators.',
                          'Strict RIFF failures may prevent format identification; these are not unknown-codec verdicts.',
                          'Sound-definition matches retain every database alternative; active callers and mount precedence remain open.',
+                         'Translation links use direct sound IDs; indirect twiddler chains and direct audio callers remain separate.',
                          'Metadata checks prove no PCM decode, runtime selection, playback or physical acceptance.']}
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     if args.private_output:

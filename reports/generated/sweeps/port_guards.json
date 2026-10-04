@@ -3737,7 +3737,7 @@
     "tools/stage_sources.sh": "7fe78a596982b60c6c5b3a27b4c63cfe1ebd9209e51dfe0490af2c8d1cff3839",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "9c465726d4fde7ce36a7d75df8a30c75e64338106d96129d6b873f7b0cccde8c",
-    "tools/sweep_reviews/port_guards.json": "c2f9b823332649c31aa219c140759bad03d969abd69e53408564aa699fbd347a",
+    "tools/sweep_reviews/port_guards.json": "c6d27f5588cb49f586c97b632798440f3b58df4dd6af96b1bfdba1677e33b8be",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -13742,6 +13742,7 @@
     },
     {
       "change": "removed",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/dazzle.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -13756,14 +13757,26 @@
       "patch_lines": [
         7
       ],
+      "review": {
+        "acceptance_open": "Compile/link evidence and source selection do not establish delayed-layer execution or physical pixels.",
+        "affected_scope": [
+          "Vita/PSTV native rendering regains the original body; headless host presentation remains skipped"
+        ],
+        "behavior": "The selected patch removes the broad all-port early-return guard and replaces it in the same hunk with a headless-host-only guard. The native __vita__ branch therefore reaches the retained original body.",
+        "callers": [
+          "Original render-object traversal into DazzleRenderObjClass::Render"
+        ],
+        "original_owner": "DazzleRenderObjClass::Render original visibility and delayed-layer submission"
+      },
       "row_id": "1bdf6e8eeafe1c2a8646f937efaa137c2af7616102cb83093b824b730426fea2",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "original_patched",
       "target": "b/dazzle.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/dazzle.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)",
@@ -13780,10 +13793,21 @@
       "patch_lines": [
         13
       ],
+      "review": {
+        "acceptance_open": "Physical Dazzle appearance and queue/layer execution remain unverified.",
+        "affected_scope": [
+          "Headless host profiles omit Dazzle presentation; Vita/PSTV source selection retains it"
+        ],
+        "behavior": "The replacement guard skips presentation only when RENEGADE_VITA_PORT is set without __vita__. Native Vita takes the alternative original body; the exact directive survives once in current staged source.",
+        "callers": [
+          "Original render-object traversal and current staging/ww3d2/dazzle.cpp guard"
+        ],
+        "original_owner": "DazzleRenderObjClass::Render original visibility and delayed-layer submission"
+      },
       "row_id": "e34b0992b5746cc5455daca7af7729938995a605fc37c7fd77cad1d0b4ee9f51",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "disabled_by_port_guard",
       "target": "b/dazzle.cpp"
     },
     {
@@ -14350,6 +14374,7 @@
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/dazzle.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -14364,10 +14389,21 @@
       "patch_lines": [
         175
       ],
+      "review": {
+        "acceptance_open": "Current native traversal, delayed-layer flush and physical dazzle pixels remain separate gates.",
+        "affected_scope": [
+          "Superseded historical behavior only; it does not describe the current Vita path"
+        ],
+        "behavior": "This early port patch added a broad RENEGADE_VITA_PORT return that skipped Dazzle rendering in every port profile. A later selected patch removes this exact directive, and no exact broad guard survives in the staged target.",
+        "callers": [
+          "Historical ww3d2-a22-vita-boundaries.patch hunk for staging/ww3d2/dazzle.cpp"
+        ],
+        "original_owner": "DazzleRenderObjClass::Render original visibility and delayed-layer submission"
+      },
       "row_id": "48da41950f2909bfe1ab1a85b03fc94320905ae159add162a0036e1d9c59e1fe",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/dazzle.cpp"
     },
     {
@@ -133032,11 +133068,11 @@
     },
     "by_status": {
       "boundary_replaced": 5,
-      "disabled_by_port_guard": 6,
-      "excluded_with_proof": 1,
-      "original_patched": 1,
+      "disabled_by_port_guard": 7,
+      "excluded_with_proof": 2,
+      "original_patched": 2,
       "stubbed_or_noop": 51,
-      "unknown": 3463
+      "unknown": 3460
     },
     "patch_files": 318,
     "rows": 3527,

@@ -38,8 +38,55 @@
     "staging/wwaudio/FilteredSound.cpp": "a66d37b7ce1bd3505310d04fee57b6f99d5afabf74dcee0fe98654a3280291a0",
     "port/audio/vita/renegade_miles_provider.cpp": "17ea96994e3a7bc37160f4c50a9533b7d75e09c191719bac2237a46e684461d4",
     "port/renderer/vita/original_dx8_light_environment.inc": "66a3761498a9bc4c7e68f49847ce45eb696c64f4aaaf1145feb4954b8c5a16a1"
+    ,"port/patches/ww3d-a35-original-dazzle-lifecycle.patch": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
+    ,"port/patches/ww3d2-a22-vita-boundaries.patch": "524a088677405ca879efdac19738e7ab5a1c1cabca054f6287fab9f133dc4bf5"
   },
   "reviews": [
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a22-vita-boundaries.patch",
+      "row_id": "48da41950f2909bfe1ab1a85b03fc94320905ae159add162a0036e1d9c59e1fe",
+      "status": "excluded_with_proof",
+      "original_owner": "DazzleRenderObjClass::Render original visibility and delayed-layer submission",
+      "behavior": "This early port patch added a broad RENEGADE_VITA_PORT return that skipped Dazzle rendering in every port profile. A later selected patch removes this exact directive, and no exact broad guard survives in the staged target.",
+      "callers": [
+        "Historical ww3d2-a22-vita-boundaries.patch hunk for staging/ww3d2/dazzle.cpp"
+      ],
+      "affected_scope": [
+        "Superseded historical behavior only; it does not describe the current Vita path"
+      ],
+      "acceptance_open": "Current native traversal, delayed-layer flush and physical dazzle pixels remain separate gates."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
+      "row_id": "1bdf6e8eeafe1c2a8646f937efaa137c2af7616102cb83093b824b730426fea2",
+      "status": "original_patched",
+      "original_owner": "DazzleRenderObjClass::Render original visibility and delayed-layer submission",
+      "behavior": "The selected patch removes the broad all-port early-return guard and replaces it in the same hunk with a headless-host-only guard. The native __vita__ branch therefore reaches the retained original body.",
+      "callers": [
+        "Original render-object traversal into DazzleRenderObjClass::Render"
+      ],
+      "affected_scope": [
+        "Vita/PSTV native rendering regains the original body; headless host presentation remains skipped"
+      ],
+      "acceptance_open": "Compile/link evidence and source selection do not establish delayed-layer execution or physical pixels."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
+      "row_id": "e34b0992b5746cc5455daca7af7729938995a605fc37c7fd77cad1d0b4ee9f51",
+      "status": "disabled_by_port_guard",
+      "original_owner": "DazzleRenderObjClass::Render original visibility and delayed-layer submission",
+      "behavior": "The replacement guard skips presentation only when RENEGADE_VITA_PORT is set without __vita__. Native Vita takes the alternative original body; the exact directive survives once in current staged source.",
+      "callers": [
+        "Original render-object traversal and current staging/ww3d2/dazzle.cpp guard"
+      ],
+      "affected_scope": [
+        "Headless host profiles omit Dazzle presentation; Vita/PSTV source selection retains it"
+      ],
+      "acceptance_open": "Physical Dazzle appearance and queue/layer execution remain unverified."
+    },
     {
       "kind": "link_wrapper_reference",
       "file": "CMakeLists.txt",

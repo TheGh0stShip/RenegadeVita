@@ -1,8 +1,8 @@
 # S1 port guards and stubs — inventory in progress
 
 2026-10-04 linker-wrapper/parser refresh: 3,527 source records contain
-51 stubs, one patched original body, five replaced boundaries, six disabled
-guards, one host-only exclusion and 3,463 unknowns. All four `--wrap` rows now
+51 stubs, two patched-original rows, five replaced boundaries, seven disabled
+guards, two exclusions and 3,460 unknowns. All four `--wrap` rows now
 have exact location identities and whole build-file hash pins. The production
 and ARM-closure `shark_init` wrappers preserve the real call and result while
 recording shader-compiler diagnostics. The movie-capture clock wrapper is a
@@ -20,9 +20,9 @@ evidence and does not close S1 or native acceptance.
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
 source contains 3,527 records with 51 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, one original light-state method as `original_patched`, five
-boundaries as `boundary_replaced`, six guards as `disabled_by_port_guard`, one
-test-only wrapper as `excluded_with_proof`, and 3,463 records still `unknown`.
+`stubbed_or_noop`, two rows as `original_patched`, five boundaries as
+`boundary_replaced`, seven guards as `disabled_by_port_guard`, two rows as
+`excluded_with_proof`, and 3,460 records still `unknown`.
 All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -117,6 +117,12 @@ classifications do not close the sweep.
   and the two decal render-body guards are reviewed: only port profiles lacking
   `__vita__` take the early returns. Native takes the original bodies. Physical
   appearance, traversal/flush execution and decal depth bias remain open.
+- Dazzle's historical guard chain is now explicit. The early A2.2 patch that
+  returned for every `RENEGADE_VITA_PORT` build is proven superseded. The later
+  selected lifecycle patch removes that broad guard and introduces the current
+  `RENEGADE_VITA_PORT && !__vita__` host-only guard. Thus the current native
+  source reaches the original Dazzle body; delayed-layer execution and physical
+  pixels remain open rather than being inferred from selection.
 - Native-profile preprocessing and configured graph evidence select original
   audio and seven nonempty movie-provider methods. Header parse uncertainties
   prevent treating syntax absence alone as complete exclusion or playback proof.

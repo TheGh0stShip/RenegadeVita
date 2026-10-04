@@ -620,7 +620,8 @@ bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 		case WaveEncoding::MpegLayer3:
 			return Fail("MPEG decoder unavailable", error);
 	}
-	if (!success || output.samples.empty()) {
+	if (!success || (output.samples.empty() &&
+		(info.encoding != WaveEncoding::Pcm || info.data_bytes != 0U))) {
 		return success ? Fail("decoded WAVE is empty", error) : false;
 	}
 	const size_t untrimmed_frames = output.Frame_Count();

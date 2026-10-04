@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Empty PCM compatibility batch and Dev211 receipt — 2026-10-03
+
+Valid empty PCM is admitted without activating native mixer voices. Five
+compiled ASan/LSan/UBSan tests pass, including retained empty-format, invalid
+format, active replacement, 3D duration and looping-silence regressions.
+The refreshed source-bound scan decodes 10,241/10,241 WAV entries in all 31
+archives with zero sanitizer stderr. Archive acceptance remains unknown.
+Dev211 canonical build, complete manifest and installed SELF hashes pass;
+Vita3K was installed without launch. Dev212 ARM compile/link passes 634 actions
+and ELF identity checks; this latest fix has not been packaged or launched.
+Original audio owners and retail assets are unchanged. Native gates remain
+0/10; no physical device was touched. See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 ## Mono IMA final predictor and sample-count compatibility — 2026-10-03
 
 All ten formerly rejected IMA files now match the original Miles decoder's

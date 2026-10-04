@@ -287,18 +287,10 @@
       "status": "unknown",
       "evidence_class": "host_cpp_decode",
       "wave_members": 10100,
-      "decoded_members": 10099,
+      "decoded_members": 10100,
       "decoded_frames": 513730781,
-      "rejected_members": 1,
-      "failures": [
-        {
-          "member": "wind4r.wav",
-          "index_record": 12902,
-          "offset": 443938888,
-          "sha256": "d67337728a9790c84430bc8ebc30248011fe677c1ffbfedd3903c44ebb74ad6a",
-          "error": "decoded WAVE is empty"
-        }
-      ]
+      "rejected_members": 0,
+      "failures": []
     },
     {
       "archive": "always.dbs",
@@ -453,10 +445,10 @@
   ],
   "totals": {
     "wave_members": 10241,
-    "decoded_members": 10240,
-    "rejected_members": 1
+    "decoded_members": 10241,
+    "rejected_members": 0
   },
-  "probe_sha256": "0c92e450ad0ca10a3cd4e1251dff646dcb1be41a3434247ca02eaa3c3826a4da",
+  "probe_sha256": "480cf926dd5e4e40ef2c9a1f7c82e4f1825a3f6c9f9bcda15a1944e4e2c27f8b",
   "wave_inventory_sha256": "3103b640463320d013990d4e8442b93c52d5f01814d9403a166c0eb0cfd90c9d",
   "sanitizer_stderr_bytes": 0,
   "parser_inputs": [
@@ -474,7 +466,7 @@
     },
     {
       "source": "port/audio/vita/renegade_wave_decoder.cpp",
-      "sha256": "33b9ff16f53d31cbccf7deb959308565b9143218c251cb1a6617c5545e4ffc55"
+      "sha256": "da793fbd75f7bddba2a83ee0f44c505a668871ae2d51178e42d0e0ce7c1e6f60"
     },
     {
       "source": "port/audio/vita/renegade_wave_decoder.h",

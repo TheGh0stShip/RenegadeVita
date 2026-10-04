@@ -1,13 +1,31 @@
 {
+  "empty_pcm_compatibility_20261003": {
+    "state": "HOST_SANITIZERS_ALL_ARCHIVE_DECODE_ARM_LINK_PASS_NATIVE_AUDIO_UNVERIFIED",
+    "candidate": "A3.5-dev212",
+    "arm_compile_link_actions": 634,
+    "elf_sha256": "626a0cd126bed9da99bac60c24d3cca07b59fe8b0fc38e3ef4640d1b5738a14d",
+    "archive_wave_entries": 10241,
+    "decoded_entries": 10241,
+    "remaining_rejections": 0,
+    "sanitizer_stderr_bytes": 0,
+    "canonical_package_passed": false,
+    "native_acceptance_gates_closed": 0,
+    "evidence": "reports/generated/sweeps/wave_decode.json"
+  },
   "ima_tail_compatibility_20261003": {
-    "state": "HOST_SAMPLE_AGREEMENT_SANITIZERS_ARM_LINK_PASS_CANONICAL_PENDING",
+    "state": "HOST_SAMPLE_AGREEMENT_SANITIZERS_ARM_CANONICAL_PACKAGE_PASS_NATIVE_UNVERIFIED",
     "candidate": "A3.5-dev211",
     "arm_compile_link_actions": 634,
     "reference_complete_pcm_matches": 10,
     "archive_wave_entries": 10241,
     "decoded_entries": 10240,
     "remaining_rejections": 1,
-    "canonical_package_passed": false,
+    "canonical_package_passed": true,
+    "canonical_arm_build_actions": 661,
+    "vita3k_install": "INSTALLED_NOT_LAUNCHED_SELF_HASH_VERIFIED",
+    "canonical_elf_sha256": "5c6e46212023890add750cb5298527a13e54c3bf39427b8ba5c8c71b023e09e3",
+    "canonical_vpk_sha256": "1034e40aba72e093122c7ab71da3fc1061a3e78bf781fd8e8d0401f1fa2291b3",
+    "installed_self_sha256": "af9195d5d0b9980662020efb415ddd3214e419c9793690d424b2b13de38dd604",
     "native_acceptance_gates_closed": 0,
     "evidence": "reports/generated/retail_ima_tail_contract.json"
   },

@@ -44,6 +44,7 @@ class VitaAudioProviderTest(unittest.TestCase):
             )
             self.assertIn("vita_audio_provider=passed", completed.stdout)
             self.assertIn("vita_audio_continuous_lifecycle=passed", completed.stdout)
+            self.assertIn("vita_audio_empty_pcm=passed", completed.stdout)
 
 
 if __name__ == "__main__":

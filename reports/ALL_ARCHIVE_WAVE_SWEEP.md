@@ -1,5 +1,34 @@
 # All-archive WAV metadata sweep
 
+## Empty PCM admission and package checkpoint — 2026-10-03
+
+The decoder now admits valid zero-byte PCM while retaining rejection of invalid
+PCM formats and empty compressed payloads. Retained sanitizer regressions cover
+all four mono/stereo 8/16-bit combinations, replacing an active sample, zero
+3D duration, infinite-loop start/resume, and silent mixing. Original WWAudio
+ownership is unchanged: a separate authored plain-host original-owner probe
+observes zero provider duration and logical PLAYING until explicit Stop. That
+probe is not an original-owner sanitizer or physical-audio claim.
+
+The integrated decoder bytes match the previously tested candidate exactly
+(`da793fbd75f7bddba2a83ee0f44c505a668871ae2d51178e42d0e0ce7c1e6f60`).
+The refreshed public source-bound sanitizer scan decodes all 10,241 WAV entries
+across 31 archives with zero rejections and zero sanitizer stderr.
+The empty sound has a Wind definition reference; this does not establish
+runtime selection or imply that it is unused. Original audio-owner behavior,
+retail assets and strict metadata findings remain unchanged.
+
+Dev211 canonical packaging completed all 661 ARM actions and installed into
+Vita3K without launching. ELF SHA-256:
+`5c6e46212023890add750cb5298527a13e54c3bf39427b8ba5c8c71b023e09e3`;
+VPK: `1034e40aba72e093122c7ab71da3fc1061a3e78bf781fd8e8d0401f1fa2291b3`;
+installed SELF: `af9195d5d0b9980662020efb415ddd3214e419c9793690d424b2b13de38dd604`.
+Dev211 contains the earlier IMA correction, before empty PCM admission.
+Dev212 completes all 634 compile/link actions and ELF identity checks. Its ELF
+SHA-256 is `626a0cd126bed9da99bac60c24d3cca07b59fe8b0fc38e3ef4640d1b5738a14d`.
+This latest fix has not been packaged or launched. Physical acceptance remains
+open. The source-bound scan receipt is `generated/sweeps/wave_decode.json`.
+
 The read-only archive inventory counts every WAV index entry across all 31
 supplied MIX/DAT/DBS archives, including duplicate names and uppercase suffixes.
 The reproducible public receipt is `generated/sweeps/wave_headers.json`;

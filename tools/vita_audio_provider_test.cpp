@@ -578,8 +578,58 @@ int main()
 	AIL_waveOutClose(driver);
 	AIL_shutdown();
 
+	// Valid empty PCM is admitted without activating a voice. Replacing a
+	// playing sample must also discard its previous audible payload.
+	const auto empty_pcm = Wave(1, 1, 22050, 2, 16, {}, {});
+	for (uint16_t channels : {uint16_t(1), uint16_t(2)}) {
+		for (uint16_t bits : {uint16_t(8), uint16_t(16)}) {
+			const auto empty = Wave(1, channels, 22050, channels * bits / 8, bits, {}, {});
+			passed &= Require(RenegadeVitaAudio::Decode_Wave(empty.data(), empty.size(), &decoded) &&
+				decoded.channels == channels && decoded.sample_rate == 22050 && decoded.Frame_Count() == 0,
+				"empty PCM metadata or admission differs");
+		}
+	}
+	const auto invalid_empty = Wave(1, 1, 0, 2, 16, {}, {});
+	const auto empty_ima = Wave(17, 1, 22050, 8, 4, ima_extension, {});
+	passed &= Require(!RenegadeVitaAudio::Decode_Wave(invalid_empty.data(), invalid_empty.size(), &decoded) &&
+		!RenegadeVitaAudio::Decode_Wave(empty_ima.data(), empty_ima.size(), &decoded),
+		"empty admission relaxed invalid PCM or compressed audio");
+	AIL_startup();
+	HSAMPLE empty_sample = AIL_allocate_sample_handle(nullptr);
+	passed &= Require(empty_sample != nullptr &&
+		AIL_set_named_sample_file(empty_sample, nullptr, pcm.data(), pcm.size(), 0) != 0,
+		"empty replacement fixture setup failed");
+	AIL_set_sample_loop_count(empty_sample, 0);
+	AIL_start_sample(empty_sample);
+	RenegadeMilesRuntimeStats empty_stats{};
+	Renegade_Miles_Get_Runtime_Stats(&empty_stats);
+	passed &= Require(empty_stats.active_samples == 1, "replacement fixture was not active");
+	passed &= Require(AIL_set_named_sample_file(empty_sample, nullptr, empty_pcm.data(), empty_pcm.size(), 0) != 0,
+		"empty PCM sample replacement failed");
+	AIL_start_sample(empty_sample);
+	AIL_resume_sample(empty_sample);
+	Renegade_Miles_Get_Runtime_Stats(&empty_stats);
+	passed &= Require(empty_stats.active_samples == 0, "empty replacement retained an active voice");
+	AIL_release_sample_handle(empty_sample);
+	H3DSAMPLE empty_spatial = AIL_allocate_3D_sample_handle(1);
+	passed &= Require(empty_spatial != nullptr &&
+		AIL_set_3D_sample_file_bounded(empty_spatial, empty_pcm.data(), empty_pcm.size()) != 0 &&
+		AIL_3D_sample_length(empty_spatial) == 0, "empty 3D PCM admission or duration differs");
+	AIL_set_3D_sample_loop_count(empty_spatial, 0);
+	AIL_start_3D_sample(empty_spatial);
+	AIL_resume_3D_sample(empty_spatial);
+	Renegade_Miles_Get_Runtime_Stats(&empty_stats);
+	std::fill(std::begin(continuous), std::end(continuous), 1234);
+	passed &= Require(empty_stats.active_samples == 0 &&
+		Renegade_Miles_Mix_For_Test(continuous, 16) &&
+		std::all_of(std::begin(continuous), std::end(continuous), [](int16_t v) { return v == 0; }),
+		"empty looping PCM activated or mixed stale audio");
+	AIL_release_3D_sample_handle(empty_spatial);
+	AIL_shutdown();
+
 	if (!passed) return 1;
 	std::puts("vita_audio_continuous_lifecycle=passed stop=1 resume=1 end=1 reuse=1 release=1");
+	std::puts("vita_audio_empty_pcm=passed formats=4 invalid=2 replacement=1 spatial=1");
 	std::puts("vita_audio_provider=passed pcm=3 ima_adpcm=2 ms_adpcm=2 bounds=2 mixer=1 spatial=2 stream=3");
 	return 0;
 }

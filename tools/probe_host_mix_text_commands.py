@@ -29,11 +29,14 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ('binary','retail-root','work','output'):
         p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--level-mix',default='M00_Tutorial.mix')
+    p.add_argument('--level-only',action='store_true')
     args = p.parse_args()
     archives = {x.name.lower():x for x in (args.retail_root/'Data').iterdir()}
     candidates = {}
     identities = {}
-    for name in ('always2.dat','always.dbs','always.dat'):
+    selected = (args.level_mix.lower(),) if args.level_only else ('always2.dat','always.dbs','always.dat')
+    for name in selected:
         path = archives[name]; archive = MixArchive(path)
         identities[name] = hashlib.sha256(path.read_bytes()).hexdigest()
         for member in archive.entries:
@@ -60,7 +63,8 @@ print('MIX_TEXT_JSON:'+json.dumps(rows))
     for root in roots[1:]: root.mkdir(parents=True,exist_ok=True)
     result=subprocess.run(['gdb','-q','-batch','-ex','set debuginfod enabled off',
        '-ex','set pagination off','-ex','break a31_interactive_main.cpp:1182',
-       '-ex','run '+' '.join(shlex.quote(str(root)) for root in roots),'-ex','python exec('+repr(script)+')',
+       '-ex','run '+' '.join(shlex.quote(str(root)) for root in roots)+' '+shlex.quote(args.level_mix),
+       '-ex','python exec('+repr(script)+')',
        str(args.binary.resolve())],capture_output=True,text=True,timeout=180,
        env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
     (args.work/'debugger.log').write_text(result.stdout+result.stderr)
@@ -71,8 +75,9 @@ print('MIX_TEXT_JSON:'+json.dumps(rows))
     receipt={'schema_version':1,'evidence_class':'host_original_mix_text_command_execution',
        'binary_sha256':hashlib.sha256(args.binary.read_bytes()).hexdigest(),
        'probe_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-       'archive_sha256':identities,'total':len(rows),'matched':sum(x['matches_archive_candidate'] for x in rows),
-       'rows':rows,'limits':['Shared archives only; per-map controls and always3.dat remain outside this denominator.',
+       'archive_sha256':identities,'level_mix':args.level_mix,'level_only':args.level_only,
+       'total':len(rows),'matched':sum(x['matches_archive_candidate'] for x in rows),
+       'rows':rows,'limits':['Only the selected archive members are enumerated; this is not command dispatch coverage.',
           'Debugger stops after original factory setup; no world, script dispatch or playback.',
           'Leak checking disabled for debugger; host I/O does not prove physical I/O.']}
     args.output.parent.mkdir(parents=True,exist_ok=True)

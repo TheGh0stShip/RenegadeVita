@@ -356,3 +356,23 @@ transport, beyond the synthetic seam, without cinematic command dispatch.
 Per-map members, always3.dat, ordinary startup sequencing, world/playback and
 physical I/O remain outside this evidence. Leak checking is disabled for GDB.
 Runtime sources and Dev221 compiled artifacts remain unchanged.
+
+## All-map local text transport — 2026-10-04
+
+All 27 retail .mix map archives are inventoried. Eleven contain 142 local .txt
+member names; original host text commands through each map's actual factory
+stack match all 142 line hashes/counts. This includes campaign maps M01–M06,
+M08/M09/M11/M13 and multiplayer C&C_Glacier_Flying. The other 16 archives have
+zero local text members; they are inventoried, not runtime-tested here.
+
+The reproducible all-map driver retains archive/binary/probe identities and
+individual map receipts. Explicit reuse requires matching binary, probe,
+archive, level selection and successful totals; it does not infer execution
+from a lock or state label. Independent summary regeneration is byte-identical.
+Four focused boundary/reference tests pass. The current always3.dat index also
+contains zero text members; no transport claim is inferred from that absence.
+
+See [all-map metadata](generated/sweeps/host_all_map_text_commands.json).
+Shared transport remains a separate historical receipt. These are archive-member
+denominators, not a complete cinematic-reference/dispatch or playback proof.
+Runtime source and Dev221 artifacts are unchanged; no emulator/device action.

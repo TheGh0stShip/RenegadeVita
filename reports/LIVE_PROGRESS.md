@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## All-map local text transport — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:27 archives inventoried;142 local text members across11 maps match
+original host FileFactory/MIX text transport.16 zero-member maps remain explicit.
+Evidence:bounded debugger runs,four tests and exact retained-receipt replay pass.
+Next:original cinematic parsing/dispatch and full all-map dependency closure.
+Blocker:none for source work;native playback and gameplay remain open.
+
 ## Shared retail MIX text transport — 2026-10-04
 
 Renegade Vita — v3.5 active

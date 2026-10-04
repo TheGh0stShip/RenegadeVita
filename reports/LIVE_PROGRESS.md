@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Surface normal transformation — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: direct lighting and direct/indexed generated coordinates use inverse
+transpose normals, preserving matrix conventions and translation independence.
+Evidence: original nonuniform-scale assertion fails;1,000 production-body normal
+cases pass sanitizers;492 focused contracts and six Dev228 ARM actions pass.
+Next: projective texture divisor must survive dependency storage/shader paths;
+pinned vitaGL only exposes two-component immediate coordinates. Physical pixels,
+performance and mixed wchar_t ABI remain open. See
+[normal and projective boundary](NORMAL_TRANSFORM_AND_PROJECTIVE_BOUNDARY.md).
+
 ## DX8 ambient state identifier — 2026-10-04
 
 Renegade Vita — v3.5 active

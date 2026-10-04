@@ -1,6 +1,7 @@
 #include "ww3d_vita_renderer.h"
 #include "ww3d_vita_texture_transform.h"
 #include "category_fvf_layout.h"
+#include "normal_transform.h"
 
 #include "camera.h"
 #include "d3d8.h"
@@ -625,18 +626,34 @@ Vector3 Compute_Camera_Space_Position(const Matrix3D &world_transform,
 Vector3 Compute_Camera_Space_Normal(const Matrix3D &world_transform,
 	const Matrix3D &view_transform, const Vector3 &normal)
 {
-	Vector3 world_normal;
-	Matrix3D::Rotate_Vector(world_transform, normal, &world_normal);
-	Vector3 camera_normal;
-	Matrix3D::Rotate_Vector(view_transform, world_normal, &camera_normal);
+	float source[3] = { normal.X, normal.Y, normal.Z };
+	float world_normal[3] = {}, camera_components[3] = {};
+	float world[9], view[9];
+	for (unsigned row = 0; row < 3U; ++row) {
+		for (unsigned column = 0; column < 3U; ++column) {
+			world[row*3+column] = world_transform[row][column];
+			view[row*3+column] = view_transform[row][column];
+		}
+	}
+	if (!Transform_Normal_Inverse_Transpose(world, source, world_normal) ||
+		!Transform_Normal_Inverse_Transpose(view, world_normal, camera_components))
+		return Vector3(0.0f, 0.0f, 1.0f);
+	const Vector3 camera_normal(camera_components[0], camera_components[1], camera_components[2]);
 	return Normalize_Or_Default(camera_normal, Vector3(0.0f, 0.0f, 1.0f));
 }
 
 Vector3 Compute_World_Space_Normal(const Matrix3D &world_transform,
 	const Vector3 &normal)
 {
-	Vector3 world_normal;
-	Matrix3D::Rotate_Vector(world_transform, normal, &world_normal);
+	float world[9];
+	for (unsigned row = 0; row < 3U; ++row)
+		for (unsigned column = 0; column < 3U; ++column)
+			world[row*3+column] = world_transform[row][column];
+	const float source[3] = { normal.X, normal.Y, normal.Z };
+	float components[3] = {};
+	if (!Transform_Normal_Inverse_Transpose(world, source, components))
+		return Vector3(0.0f, 0.0f, 1.0f);
+	const Vector3 world_normal(components[0], components[1], components[2]);
 	return Normalize_Or_Default(world_normal, Vector3(0.0f, 0.0f, 1.0f));
 }
 
@@ -781,17 +798,6 @@ Vector3 Transform_DX8_Row_Point(const float *matrix, const Vector3 &position)
 			position.Z * matrix[10] + matrix[14]);
 }
 
-Vector3 Rotate_DX8_Row_Vector(const float *matrix, const Vector3 &vector)
-{
-	return Vector3(
-		vector.X * matrix[0] + vector.Y * matrix[4] +
-			vector.Z * matrix[8],
-		vector.X * matrix[1] + vector.Y * matrix[5] +
-			vector.Z * matrix[9],
-		vector.X * matrix[2] + vector.Y * matrix[6] +
-			vector.Z * matrix[10]);
-}
-
 Vector3 Compute_Indexed_Camera_Space_Position(const float *world_transform,
 	const float *view_transform, const float position[3])
 {
@@ -803,10 +809,17 @@ Vector3 Compute_Indexed_Camera_Space_Position(const float *world_transform,
 Vector3 Compute_Indexed_Camera_Space_Normal(const float *world_transform,
 	const float *view_transform, const float normal[3])
 {
-	const Vector3 world_normal = Rotate_DX8_Row_Vector(world_transform,
-		Vector3(normal[0], normal[1], normal[2]));
-	const Vector3 camera_normal = Rotate_DX8_Row_Vector(view_transform,
-		world_normal);
+	const float world[9] = {world_transform[0], world_transform[4], world_transform[8],
+		world_transform[1], world_transform[5], world_transform[9],
+		world_transform[2], world_transform[6], world_transform[10]};
+	const float view[9] = {view_transform[0], view_transform[4], view_transform[8],
+		view_transform[1], view_transform[5], view_transform[9],
+		view_transform[2], view_transform[6], view_transform[10]};
+	float world_normal[3] = {}, components[3] = {};
+	if (!Transform_Normal_Inverse_Transpose(world, normal, world_normal) ||
+		!Transform_Normal_Inverse_Transpose(view, world_normal, components))
+		return Vector3(0.0f, 0.0f, 1.0f);
+	const Vector3 camera_normal(components[0], components[1], components[2]);
 	return Normalize_Or_Default(camera_normal, Vector3(0.0f, 0.0f, 1.0f));
 }
 

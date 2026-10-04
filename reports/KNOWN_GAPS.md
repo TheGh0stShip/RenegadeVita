@@ -1,5 +1,13 @@
 # Known gaps
 
+2026-10-04 Dev228 corrects the direct/generated-coordinate normal transform
+under nonuniform scale/shear.1,000 host cases,492 contracts and ARM link pass;
+native lighting and performance remain unverified. Projected texture coordinates
+still divide before interpolation: pinned vitaGL immediate storage/API and fixed
+function shader varyings carry only two components, so application-only changes
+cannot preserve the divisor. Full projective support and mixed wchar_t ABI remain
+open. See [normal/projective boundaries](NORMAL_TRANSFORM_AND_PROJECTIVE_BOUNDARY.md).
+
 2026-10-04 the retained ambient26/139 numeric mismatch is corrected. Dev227
 passes the literal-state regression,492 focused tests and136 ARM compile/link
 actions. This establishes API identity, not physical lighting correctness;

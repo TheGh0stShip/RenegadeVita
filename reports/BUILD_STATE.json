@@ -1,4 +1,18 @@
 {
+  "surface_normal_transform_20261004": {
+    "state": "NONUNIFORM_SCALE_REGRESSION_REPRODUCED_HOST_SANITIZERS_ARM_LINK_PASS",
+    "candidate": "A3.5-dev228",
+    "production_normal_cases_passed": 1000,
+    "host_fast_contract_tests_passed": 492,
+    "arm_compile_link_actions": 6,
+    "elf_sha256": "6a14599c7348c0f17d57606d45c29c3f8f7f116af4ade31900334b92ebcfa47c",
+    "map_sha256": "d34b2c8fa147d936db50450bae7150ec5828da221a4404e0ff43f4fc0b5e8b61",
+    "report": "reports/NORMAL_TRANSFORM_AND_PROJECTIVE_BOUNDARY.md",
+    "projective_texture_interpolation_open": true,
+    "mixed_wchar_t_abi_warning_open": true,
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "dx8_ambient_state_identifier_20261004": {
     "state": "NUMERIC_API_REGRESSION_REPRODUCED_HOST_ARM_LINK_PASS",
     "candidate": "A3.5-dev227",

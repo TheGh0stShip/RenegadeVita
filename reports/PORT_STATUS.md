@@ -1,5 +1,12 @@
 # Renegade Vita port status
 
+2026-10-04 Dev228 corrects nonuniform-scale/shear normal transforms in direct
+lighting and direct/indexed generated coordinates. The pre-fix assertion fails;
+1,000 normal cases pass sanitizers,492 contracts and six ARM actions pass.
+Projective texture interpolation needs dependency/shader support and remains
+open, as do native pixels, performance and mixed wchar_t ABI. See
+[renderer normal evidence](NORMAL_TRANSFORM_AND_PROJECTIVE_BOUNDARY.md).
+
 2026-10-04 Dev227 corrects the ambient render-state identifier from26 to139.
 Two numeric API regression failures are reproduced before the fix;13 executable
 checks,492 focused tests and136 ARM compile/link actions pass. Physical lighting

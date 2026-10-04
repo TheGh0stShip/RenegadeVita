@@ -17,11 +17,14 @@ class MaterialCacheTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='renegade-material-') as temporary:
             directory = Path(temporary)
             (directory / 'material-production.inc').write_text('\n'.join([
+                '#include "normal_transform.h"\nusing RenegadeVitaRenderer::Transform_Normal_Inverse_Transpose;',
                 section('Vector3 Normalize_Or_Default(', 'Vector3 Compute_Camera_Space_Position('),
-                section('Vector3 Compute_World_Space_Normal(', 'Vector3 Compute_Camera_Space_Reflection('),
+                section('Vector3 Compute_Camera_Space_Normal(', 'Vector3 Compute_Camera_Space_Reflection('),
+                section('Vector3 Compute_Indexed_Camera_Space_Normal(', 'Vector3 Compute_Indexed_Camera_Space_Reflection('),
                 section('float Clamp01(', 'void Log_System_Memory(').replace('#if defined(__vita__)\n', '', 1)]))
             command = ['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
-                       '-I' + temporary, str(ROOT / 'tools/vita_material_cache_test.cpp'),
+                       '-I' + temporary, '-I' + str(ROOT / 'port/renderer/vita'),
+                       str(ROOT / 'tools/vita_material_cache_test.cpp'),
                        '-o', str(directory / 'material')]
             if os.environ.get('RENEGADE_MATERIAL_SANITIZE') == '1':
                 command[2:3] = ['-O1', '-g', '-fsanitize=address,undefined',

@@ -24,6 +24,7 @@ struct Vector3 {
 };
 struct Matrix3D {
     float m[9] = {0,-2,0, 1,0,0, 0,0,0.5f};
+    const float *operator[](int row) const { return m + row*3; }
     static void Rotate_Vector(const Matrix3D &a, Vector3 v, Vector3 *o) {
         *o={a.m[0]*v.X+a.m[1]*v.Y+a.m[2]*v.Z,
             a.m[3]*v.X+a.m[4]*v.Y+a.m[5]*v.Z,
@@ -66,6 +67,50 @@ void equal(const MaterialVertexColor &a, const MaterialVertexColor &b) {
     assert(a.lighting==b.lighting && a.light_count==b.light_count);
 }
 int main() {
+    // A normal must remain perpendicular to transformed surface tangents.
+    // Rotation plus nonuniform scale requires inverse transpose, not rotation.
+    Matrix3D normal_world;
+    const Vector3 normal_result = Compute_World_Space_Normal(normal_world, {1,1,1});
+    const float normal_length = std::sqrt(0.25f + 1.0f + 4.0f);
+    assert(std::fabs(normal_result.X + 0.5f/normal_length) < 0.00001f);
+    assert(std::fabs(normal_result.Y - 1.0f/normal_length) < 0.00001f);
+    assert(std::fabs(normal_result.Z - 2.0f/normal_length) < 0.00001f);
+    unsigned normal_cases = 0;
+    for (unsigned i=0; i<1000; ++i) {
+        Matrix3D world_case, view_case;
+        // Nonuniform scale, shear, reflection, rotation and independent view.
+        const float sx = (i%2 ? -1.0f : 1.0f)*(0.25f + (i%17)*0.1f);
+        const float sy = 0.5f + (i%13)*0.15f, sz=0.75f + (i%7)*0.2f;
+        const float data[9] = {0,-sy,0.3f, sx,0,0.1f, 0,0,sz};
+        std::copy(data, data+9, world_case.m);
+        const float view_data[9] = {1,0,0, 0,0,-1, 0,1,0};
+        std::copy(view_data, view_data+9, view_case.m);
+        Vector3 tangent; Matrix3D::Rotate_Vector(world_case, {1,-1,0}, &tangent);
+        Vector3 transformed = Compute_World_Space_Normal(world_case, {1,1,1});
+        assert(std::fabs(Vector3::Dot_Product(tangent, transformed)) < 0.00001f);
+        float world_row[16] = {}, view_row[16] = {};
+        for (unsigned row=0; row<3; ++row) for (unsigned col=0; col<3; ++col) {
+            world_row[col*4+row]=world_case.m[row*3+col];
+            view_row[col*4+row]=view_case.m[row*3+col];
+        }
+        world_row[15]=view_row[15]=1;
+        // Translation must not affect normals.
+        world_row[12]=1000; view_row[13]=-900;
+        const float input[3] = {1,1,1};
+        Vector3 direct = Compute_Camera_Space_Normal(world_case, view_case, {1,1,1});
+        Vector3 indexed = Compute_Indexed_Camera_Space_Normal(world_row, view_row, input);
+        assert(std::fabs(direct.X-indexed.X) < 0.00001f);
+        assert(std::fabs(direct.Y-indexed.Y) < 0.00001f);
+        assert(std::fabs(direct.Z-indexed.Z) < 0.00001f);
+        Vector3 camera_tangent; Matrix3D::Rotate_Vector(view_case, tangent, &camera_tangent);
+        assert(std::fabs(Vector3::Dot_Product(camera_tangent, direct)) < 0.00001f);
+        ++normal_cases;
+    }
+    Matrix3D singular;
+    std::fill(singular.m, singular.m+9, 0.0f);
+    const Vector3 fallback = Compute_World_Space_Normal(singular, {1,1,1});
+    assert(fallback.X==0 && fallback.Y==0 && fallback.Z==1);
+    printf("normal transform perpendicularity/parity PASS cases=%u singular=1\n", normal_cases);
     fail_scratch_allocation=true;
     assert(!Begin_Material_Color_Pass(17));
     assert(g_material_color_scratch==nullptr && g_material_color_capacity==0);

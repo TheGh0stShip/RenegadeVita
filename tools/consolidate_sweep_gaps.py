@@ -13,11 +13,12 @@ SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
                'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts',
                'database_chunks', 'level_persist_closure', 'database_persist_closure',
                'host_definition_registry', 'database_definition_closure', 'definition_instances',
-               'missing_definition_callers')
+               'missing_definition_callers', 'host_script_registry', 'live_script_bindings')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 ISSUES['procedural_fvf_layouts'] = 6
 ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_closure',
-                                  'host_definition_registry', 'database_definition_closure')})
+                                  'host_definition_registry', 'database_definition_closure', 'host_script_registry')})
+ISSUES['live_script_bindings'] = 9
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -56,7 +57,20 @@ def root_records(name, value):
         return rows
     rows=value['archives'] if name=='w3d_chunks' else value['rows']
     totals=value.get('totals',{})
-    if name=='missing_definition_callers':
+    if name=='host_script_registry':
+        if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)) or value['registry_count']!=len(value['registry_entries']):
+            raise ValueError('Live script registry denominator mismatch')
+        if value['matched_candidates']!=sum(r['name_matches'] for r in rows) or value['unmatched_candidates']!=sum(not r['found'] for r in rows):
+            raise ValueError('Live script registry candidate partition mismatch')
+    elif name=='live_script_bindings':
+        if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
+            raise ValueError('Live script binding denominator mismatch')
+        for row in rows:
+            if row['bindings']!=row['registered_bindings']+row['unregistered_bindings'] or row['unregistered_bindings']!=len(row['missing']):
+                raise ValueError('Live script binding partition mismatch')
+        if totals!={key:sum(r[key] for r in rows) for key in ('bindings','registered_bindings','unregistered_bindings')}:
+            raise ValueError('Live script binding totals mismatch')
+    elif name=='missing_definition_callers':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
             raise ValueError('Missing-definition caller denominator mismatch')
     elif name=='definition_instances':
@@ -145,7 +159,9 @@ def consolidate(inputs):
                   'visibility_bounds':('presence_sha256','spatial_presence'),
                   'w3d_consumers':('inventory_sha256','w3d_chunks'),
                   'wave_decode':('wave_inventory_sha256','wave_headers'),
-                  'missing_definition_callers':('inventory_sha256','definition_instances')}
+                  'missing_definition_callers':('inventory_sha256','definition_instances'),
+                  'host_script_registry':('inventory_sha256','link'),
+                  'live_script_bindings':('registry_sha256','host_script_registry')}
     rows = []
     receipts = []
     for name, data in inputs:
@@ -161,6 +177,8 @@ def consolidate(inputs):
                 raise ValueError(f'{name}: stale parent inventory identity')
         if name=='w3d_consumers' and 'link' in identities and value.get('link_inventory_sha256')!=identities['link']:
             raise ValueError('W3D consumers: stale link inventory identity')
+        if name=='live_script_bindings' and 'retail' in identities and value.get('retail_sha256')!=identities['retail']:
+            raise ValueError('Live script bindings: stale retail inventory identity')
         root_rows = root_records(name, value)
         count = 0
         for pointer, record, mission in status_records(value):
@@ -184,7 +202,8 @@ def consolidate(inputs):
                          'evidence_class': record.get('evidence_class', 'parent_inventory_metadata'),
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
                          'cluster': ('renderer' if name=='procedural_fvf_layouts' else
-                                     'link' if name in {'host_definition_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
+                                     'link' if name in {'host_definition_registry', 'host_script_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
+                                     'scripts' if name=='live_script_bindings' else
                                      'retail' if name in SUPPLEMENTS else name)})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),

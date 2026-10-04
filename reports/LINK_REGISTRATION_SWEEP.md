@@ -1,5 +1,50 @@
 # S3 link and registration closure — inventory in progress
 
+## Live script registry and all-map bindings — 2026-10-03
+
+The retained host binary has 1,636 live script factories. Original
+`ScriptRegistrar::Count` agrees with a bounded registry traversal, and original
+`GetScriptFactory(int)` returns the matching factory at every index. There are
+no duplicate registry names or names absent from source candidates. Out-of-range
+index lookup and CreateScript for a deliberately absent name return null; no
+valid script is instantiated. Name-only GetScriptFactory was not retained in
+this ELF, so candidate matching uses the live index-verified names rather than
+claiming execution of that unavailable method.
+
+Of 1,745 source candidates (1,744 distinct names), 1,636 match the live registry.
+The 109 unmatched candidates partition into 49 selected-unit declarations,
+59 unselected-unit declarations and one header macro candidate. All 49 selected
+misses also lack ARM symbols and were independently rechecked inside original
+constant-disabled upstream branches. Source candidates retain unknown behavior;
+the host result does not accept ARM registration or mission callbacks.
+
+All 27 map receipts match the retained retail archive/database hashes. Of 8,314
+authored bindings, 8,311 match the live host registry: 7,083 persisted scripts,
+367 spawner scripts, 858 definition scripts and six combat startup scripts.
+Three unregistered M11 spawner bindings remain, with no matching declaration
+located in staged or pristine EA Scripts sources:
+
+| Script | Spawner | Member offset |
+|---|---:|---:|
+| M11_ObeliskWall_FodderGuy01_JDG | 100581 | 650090 |
+| M11_ObeliskWall_FodderGuy02_JDG | 100582 | 650279 |
+| M11_TempleRoof_FodderGuy02_JDG | 100586 | 650468 |
+
+The binding counts partition the denominator, not the matched subset. The three
+misses are authored data/source discrepancy leads; retail DLL behavior and actual
+spawner activation are required before assigning behavior or blaming the port.
+Computed names, parameter semantics and callback execution remain open.
+
+Reproduce with `tools/probe_host_script_registry.py` and
+`python3 -m tools.audit_live_script_bindings`. Public receipts are
+`host_script_registry.json` and `live_script_bindings.json` under
+`reports/generated/sweeps/`. Registry parameter descriptions are hashed;
+debugger logs and detailed bindings stay private. Seventeen focused tests pass.
+The consolidated register includes both receipts, validates partitions and parent
+identities, and retains 43,354 overlapping records, including 43,090 unknowns.
+No runtime source or compiled artifact changed; no device or emulator launch.
+Next: other registrar forms and retail evidence for the three missing M11 names.
+
 ## Missing-target original caller review — 2026-10-03
 
 All 28 map-rooted missing target IDs now have a scoped original caller review:

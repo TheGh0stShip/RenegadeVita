@@ -1,5 +1,14 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+Live host index lookup verifies 1,636 script factories. Across27 hash-matched map
+receipts,8,311/8,314 authored bindings match those factories. Three M11 spawner
+names remain unmatched; their source declarations are absent from the supplied
+EA Scripts tree. Retail DLL behavior and spawner activation remain open.
+The49 selected-unit source candidates absent from the live registry are inside
+original constant-disabled branches. None of this accepts script creation,
+parameter semantics, callbacks or ARM/physical execution. Seventeen focused
+tests pass. See [live registration evidence](LINK_REGISTRATION_SWEEP.md).
+
 ARM symbol reconciliation finds retained function candidates for all 202
 staged command-slot assignments. Each row carries demangled symbol, address
 and symbol-type metadata; the input symbol file is hash-pinned. Matching uses

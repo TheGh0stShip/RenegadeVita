@@ -5,6 +5,22 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_live_script_registry_and_binding_partitions(self):
+        registry={'total':1,'counts':{'unknown':1},'registry_count':1,
+                  'registry_entries':[{'name':'A'}], 'matched_candidates':1,
+                  'unmatched_candidates':0,'rows':[{'status':'unknown','name_matches':True,'found':True}]}
+        data=json.dumps(registry).encode()
+        bindings={'total':1,'counts':{'unknown':1},'registry_sha256':hashlib.sha256(data).hexdigest(),
+                  'totals':{'bindings':2,'registered_bindings':1,'unregistered_bindings':1},
+                  'rows':[{'map':'M11.mix','status':'unknown','bindings':2,
+                           'registered_bindings':1,'unregistered_bindings':1,'missing':[{'name':'B'}]}]}
+        result=consolidate([('host_script_registry',data),('live_script_bindings',json.dumps(bindings).encode())])
+        self.assertEqual(result['total'],2)
+        self.assertEqual({r['cluster'] for r in result['rows']},{'link','scripts'})
+        bindings['rows'][0]['unregistered_bindings']=0
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('live_script_bindings',json.dumps(bindings).encode())])
+
     def test_missing_caller_maps_and_parent_identity(self):
         parent={'total':0,'counts':{},'rows':[]}
         data=json.dumps(parent).encode()

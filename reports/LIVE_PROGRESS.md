@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Live script registration and bindings — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: original Count/index APIs verify1,636 factories. Source matches1,636
+of1,745 candidates;49 selected misses are original disabled declarations.
+Across27 maps,8,311/8,314 authored bindings match; three M11 spawner names remain.
+Evidence:17 focused tests pass; original indexed lookup, negative controls,
+retail receipt identities and stale-parent checks retained. No runtime change.
+Next: other registries and retail DLL/activation evidence for the M11 names.
+Blocker:none for discovery; valid creation/callbacks/native registration open.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Missing-definition original callers — 2026-10-03
 
 Renegade Vita — v3.5 active

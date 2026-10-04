@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Original text-file command boundary — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: three original commands pass ASan/UBSan with real host pointer tokens;
+line/EOF/truncation/open/close behavior is retained, including original size+1
+buffer convention. Cinematic caller uses the matching 200/199 allocation.
+Evidence: retained compiled fixture, runtime logs and public source-hash receipt.
+Next: actual file-factory/MIX transport and remaining changed command owners.
+Blocker: none for source work; native I/O/playback remain unverified.
+
 ## Command-to-port dependency candidates — 2026-10-04
 
 Renegade Vita — v3.5 active

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_text_file_commands_asan_ubsan",
+  "binary_sha256": "949673f14df447fcf53d775c3d10a68bd53394572b00882ddabde0ff9589dcc5",
+  "owner_sha256": "41d23acbaff05b40c9fb680b296caba8b24ce2d564239acec1fca73b29a6823a",
+  "probe_sha256": "f93e6f8c51326774f957c54a4add7d46da935e847981cc7cfb6ef13a06a4370a",
+  "token_owner_sha256": "b8e1b30815e24685427a2900135cdb0375682aca3e7cbf7a667474ed33d94391",
+  "commands": {
+    "Text_File_Open": "2451753fd21f867d65ea6b44d54f2e6b41c4d1a5150d595b68887e5bb21ba707",
+    "Text_File_Get_String": "8ff724d6e0294f195a9776f070be18383b809f5a6da1583fb7fd94fafee87929",
+    "Text_File_Close": "9680503b0c5073e9c5a68fc144d008c643caa26c62aba4ab26ca1ee330ffa07b"
+  },
+  "passed": true,
+  "limits": [
+    "Synthetic file seam; no retail archive or physical I/O.",
+    "size is original maximum characters; caller must allocate size+1 bytes.",
+    "Zero capacity consumes a line and returns false; invalid native pointer handles remain untested.",
+    "Host LP64 token map evidence does not prove Vita ILP32 behavior."
+  ]
+}

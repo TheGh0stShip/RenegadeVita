@@ -316,3 +316,24 @@ Nine focused tests pass; independent regeneration matches exactly. Parent hashes
 pin both inventories, whose current source identity needs revalidation before
 fixing a candidate. Runtime code and Dev221 artifacts are unchanged.
 See [dependency candidates](generated/sweeps/script_command_port_dependencies.json).
+
+## Original text-file boundary execution — 2026-10-04
+
+The three staged original text-file command bodies execute against a synthetic
+FileClass/factory seam and the real host pointer-token implementation under
+ASan/UBSan. Missing/unavailable files, CRLF, multiple lines, final unterminated
+lines, EOF, truncation while consuming the remainder, zero capacity, invalid
+host handles and repeated close pass. Retained executable, logs and source hashes
+are available locally; the public [receipt](generated/sweeps/host_script_text_file_boundary.json)
+contains no retail payloads.
+
+The original size argument is maximum characters, excluding final NUL. The
+shipped cinematic caller allocates 200 bytes and passes 199. Zero capacity
+consumes a line and returns false; this original behavior is preserved rather
+than changed as a guessed port defect. Host tokens avoid LP64 pointer truncation
+and are removed on close. Native ILP32 uses original pointer handles, so invalid
+native handle behavior is not established by this host test.
+
+This closes a focused boundary contract, not MIX/file-factory integration,
+cinematic playback or physical I/O. Runtime source and Dev221 artifacts are
+unchanged; the test compiles the actual three staged method bodies.

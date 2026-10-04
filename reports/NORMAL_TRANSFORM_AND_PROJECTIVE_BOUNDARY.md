@@ -1,5 +1,9 @@
 # Surface normal transforms and projective texture boundary
 
+Follow-up: the [projective source correction](PROJECTIVE_TEXTURE_COORDINATES.md)
+implements opt-in divisor storage and fragment division. The Dev228 discovery
+below remains historical; native shader/pixel acceptance is still open.
+
 ## Corrected normal transformations
 
 The direct native mesh lighting path previously multiplied a normal by the
@@ -45,7 +49,7 @@ No SELF/VPK packaging, emulator launch or physical action occurred.
 
 Retained log: `local-builder/logs/a35-dev228-fast-20261004-125126-build.log`.
 
-## Projective interpolation remains open
+## Projective boundary found at Dev228
 
 Original `upstream/CnC_Renegade/Code/ww3d2/mapper.cpp` sends camera-space position
 with `D3DTTFF_PROJECTED | D3DTTFF_COUNT3` and constructs its texture transform

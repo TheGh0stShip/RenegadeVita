@@ -138,6 +138,9 @@ void glVertex3f(float x,float y,float z) {
     assert(open);current[0]=x;current[1]=y;current[2]=z;emitted.push_back(current);++calls;
 }
 void glBegin(unsigned mode) { assert(mode==GL_TRIANGLES && !open);open=true;emitted.clear(); }
+// Coordinate math/storage is validated separately; this sink observes the
+// unchanged production pass/batch sequence through its new begin boundary.
+void Begin_Texture_Coordinate_Primitive(const OriginalTextureCoordinateState *) { glBegin(GL_TRIANGLES); }
 void glEnd() {
     assert(open);open=false;++draws;
     if(capture) for(const auto &a:emitted) recorded.push_back({a,state});

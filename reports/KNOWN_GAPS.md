@@ -1,5 +1,14 @@
 # Known gaps
 
+2026-10-04 Dev229 replaces the per-vertex projected-UV division with opt-in
+divisor storage and fragment division.494 contracts and ARM link pass, with
+production storage/interpolation and48 shader-source interface checks retained.
+Native GPU shader compilation and projected pixels remain unverified. Original
+additional procedural passes, projector targets and actual mapper/effect routes
+remain independent open boundaries. Mixed wchar_t ABI remains open. The older
+float2-only discovery below describes Dev228, not current patched dependency
+source. See [projective evidence](PROJECTIVE_TEXTURE_COORDINATES.md).
+
 2026-10-04 Dev228 corrects the direct/generated-coordinate normal transform
 under nonuniform scale/shear.1,000 host cases,492 contracts and ARM link pass;
 native lighting and performance remain unverified. Projected texture coordinates

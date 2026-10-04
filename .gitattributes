@@ -1,2 +1,3 @@
 # Patch files carry exact upstream context, including legacy indentation.
 port/patches/*.patch -whitespace
+port/renderer/vita/dependency-patches/*.patch -whitespace

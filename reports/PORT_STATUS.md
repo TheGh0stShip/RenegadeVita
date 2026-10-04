@@ -1,5 +1,13 @@
 # Renegade Vita port status
 
+2026-10-04 Dev229 implements opt-in projective UV/divisor storage and fragment
+division through the established renderer/vitaGL path. Host production-body
+and shader-source checks pass;494 focused tests and six ARM actions pass.
+The dependency's30 archive members retain ARMv7/VFP-register attributes.
+Native shader compilation, projected pixels, additional procedural/projector
+execution, physical acceptance and mixed wchar_t ABI remain open. See
+[projective correction](PROJECTIVE_TEXTURE_COORDINATES.md).
+
 2026-10-04 Dev228 corrects nonuniform-scale/shear normal transforms in direct
 lighting and direct/indexed generated coordinates. The pre-fix assertion fails;
 1,000 normal cases pass sanitizers,492 contracts and six ARM actions pass.

@@ -10,6 +10,7 @@ layout_patch="$root/port/renderer/vita/dependency-patches/vitagl-compact-unlit.p
 indexed_patch="$root/port/renderer/vita/dependency-patches/vitagl-indexed-immediate.patch"
 upload_patch="$root/port/renderer/vita/dependency-patches/vitagl-full-rgba-upload.patch"
 dds_patch="$root/port/renderer/vita/dependency-patches/vitagl-dds-chain.patch"
+projective_patch="$root/port/renderer/vita/dependency-patches/vitagl-projective-immediate.patch"
 work="$root/build/deps/vitagl-demo"
 mkdir -p "$work"
 exec 9>"$work/build.lock"
@@ -27,7 +28,7 @@ fi
 # Command-line CFLAGS replace the upstream defaults and feature appends.
 # Keep these defines explicit. Do not inherit upstream global fast-math.
 flags='-g -Wl,-q -O3 -mtune=cortex-a9 -mfpu=neon -mfp16-format=ieee -Wno-incompatible-pointer-types -Wno-stringop-overflow -DVGL_GIT_HASH=\"6e7fe40\" -Isource -DSKIP_ERROR_HANDLING -DSKIP_SPLASHSCREEN -DHAVE_SHADER_CACHE -DHAVE_VITA3K_SUPPORT -DDISABLE_HW_ETC1'
-identity=$( { sha256sum "$root/tools/build_vitagl_demo.sh" "$work/source.tar.gz" "$layout_patch" "$indexed_patch" "$upload_patch" "$dds_patch"; arm-vita-eabi-gcc --version; printf '%s\n' "$flags"; } | sha256sum | cut -d' ' -f1)
+identity=$( { sha256sum "$root/tools/build_vitagl_demo.sh" "$work/source.tar.gz" "$layout_patch" "$indexed_patch" "$upload_patch" "$dds_patch" "$projective_patch"; arm-vita-eabi-gcc --version; printf '%s\n' "$flags"; } | sha256sum | cut -d' ' -f1)
 if [[ -f "$work/libvitaGL.a" && -f "$work/build.identity" &&
       $(cat "$work/build.identity") == "$identity" ]]; then
     printf 'Pinned demo vitaGL already built: %s\n' "$work/libvitaGL.a"
@@ -36,11 +37,14 @@ fi
 # Always stage the patched file from the pinned archive. Repeated dependency
 # builds cannot stack the patch or depend on prior generated source contents.
 tar -xzf "$work/source.tar.gz" --strip-components=1 -C "$work/source" \
-    "vitaGL-$revision/source/ffp.c" "vitaGL-$revision/source/textures.c"
+    "vitaGL-$revision/source/ffp.c" "vitaGL-$revision/source/textures.c" \
+    "vitaGL-$revision/source/gxm.c" "vitaGL-$revision/source/shared.h" \
+    "vitaGL-$revision/source/shaders/ffp_v.h" "vitaGL-$revision/source/shaders/ffp_f.h"
 patch --batch --fuzz=0 --no-backup-if-mismatch -d "$work/source" -p1 < "$layout_patch"
 patch --batch --fuzz=0 --no-backup-if-mismatch -d "$work/source" -p1 < "$indexed_patch"
 patch --batch --fuzz=0 --no-backup-if-mismatch -d "$work/source" -p1 < "$upload_patch"
 patch --batch --fuzz=0 --no-backup-if-mismatch -d "$work/source" -p1 < "$dds_patch"
+patch --batch --fuzz=0 --no-backup-if-mismatch -d "$work/source" -p1 < "$projective_patch"
 make -C "$work/source" -B -j"${RENEGADE_BUILD_JOBS:-8}" CFLAGS="$flags"
 cp "$work/source/libvitaGL.a" "$work/libvitaGL.a"
 {
@@ -51,7 +55,8 @@ cp "$work/source/libvitaGL.a" "$work/libvitaGL.a"
     printf 'indexed_immediate=original_ffp_with_transient_copied_indices\n'
     printf 'full_rgba_replacement=skip_old_pixel_copy_preserve_gpu_retirement\n'
     printf 'dds_chain=single_allocation_native_blocks_transactional_surface_fallback\n'
-    sha256sum "$layout_patch" "$indexed_patch" "$upload_patch" "$dds_patch" "$work/source/source/ffp.c" "$work/source/source/textures.c"
+    printf 'projective_immediate=opt_in_float3_uv_divisor_fragment_division_distinct_shader_key\n'
+    sha256sum "$layout_patch" "$indexed_patch" "$upload_patch" "$dds_patch" "$projective_patch" "$work/source/source/ffp.c" "$work/source/source/textures.c" "$work/source/source/gxm.c" "$work/source/source/shared.h" "$work/source/source/shaders/ffp_v.h" "$work/source/source/shaders/ffp_f.h"
     sha256sum "$work/source.tar.gz" "$work/libvitaGL.a" "$work/source/source/vitaGL.h"
     arm-vita-eabi-gcc --version
 } > "$work/provenance.txt"

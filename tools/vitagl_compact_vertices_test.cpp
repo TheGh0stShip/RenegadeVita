@@ -12,7 +12,7 @@
 #define LEGACY_VERTEX_STRIDE 24
 #define LEGACY_MT_VERTEX_STRIDE 26
 #define LEGACY_NT_VERTEX_STRIDE 22
-#define FFP_VERTEX_ATTRIBS_NUM 10
+#define FFP_VERTEX_ATTRIBS_NUM 8
 #define FFP_ATTRIB_MASK_ALL 15
 #define FFP_ATTRIB_POSITION 0
 #define FFP_ATTRIB_TEX0 1
@@ -22,13 +22,18 @@
 using GLfloat=float;
 using GLsizei=int;
 using GLushort=uint16_t;
+using GLboolean=bool;
+using GLenum=unsigned;
 enum {GL_TRIANGLES,GL_QUADS,GL_LINE_STRIP,GL_LINE_LOOP,
-      SCE_GXM_INDEX_SOURCE_INDEX_16BIT,SCE_GXM_INDEX_FORMAT_U16,GL_OUT_OF_MEMORY};
+      SCE_GXM_INDEX_SOURCE_INDEX_16BIT,SCE_GXM_INDEX_FORMAT_U16,GL_OUT_OF_MEMORY,
+      GL_TEXTURE0, GL_TEXTURE1, GL_INVALID_ENUM};
+#define SET_GL_ERROR_WITH_VALUE(error,value) assert(false);
 int vgl_error=0;
 bool fail_index_allocation=false;
 struct V2 {float x,y;}; struct V3 {float x,y,z;}; struct V4 {float x,y,z,w;};
 struct { V2 uv; V4 clr,amb,diff,spec,emiss; V3 nor; V2 uv2; } current_vtx;
 float storage[2000000], *legacy_pool=storage, *legacy_pool_ptr=storage;
+float *legacy_pool_end=storage+2000000;
 bool lighting_state=false, ffp_dirty_frag=false, ffp_dirty_vert=false;
 struct { unsigned state,tex_id[2]; } texture_units[2];
 struct texture {
@@ -37,7 +42,10 @@ struct texture {
 } texture_slots[2];
 struct sampler {int min_filter,mip_filter,u_mode,v_mode; bool use_mips;};
 sampler *samplers[2]={};
-struct Attribute {int unused;}; struct Stream {unsigned stride;};
+struct Attribute {unsigned offset=0,componentCount=0;}; struct Stream {unsigned stride;};
+using SceGxmVertexAttribute=Attribute;
+using SceGxmVertexStream=Stream;
+void scene_reset() {}
 Attribute legacy_vertex_attrib_config[9],legacy_mt_vertex_attrib_config[10],legacy_nt_vertex_attrib_config[8];
 Stream legacy_vertex_stream_config[9],legacy_mt_vertex_stream_config[10],legacy_nt_vertex_stream_config[8];
 unsigned vertex_count=0,ffp_mode=GL_TRIANGLES,prim=0;
@@ -48,13 +56,23 @@ unsigned observed_stride=0, draws=0;
 std::vector<float> expected;
 std::vector<float> expanded_expected;
 std::vector<uint16_t> copied_indices;
-unsigned populated() {return (texture_units[1].state ? 7 : texture_units[0].state ? 5 : 3)+(lighting_state ? 19 : 4);}
-unsigned stride() {return (texture_units[1].state ? 26 : texture_units[0].state ? 24 : 22)-((COMPACT && !lighting_state) ? 15 : 0);}
-void reload_ffp_shaders(Attribute*,Stream *streams,int) {
+bool expected_projective=false;
+unsigned added_q() {return expected_projective ? (texture_units[1].state ? 2 : texture_units[0].state ? 1 : 0) : 0;}
+unsigned populated() {return (texture_units[1].state ? 7 : texture_units[0].state ? 5 : 3)+(lighting_state ? 19 : 4)+added_q();}
+unsigned stride() {return (texture_units[1].state ? 26 : texture_units[0].state ? 24 : 22)-((COMPACT && !lighting_state) ? 15 : 0)+added_q();}
+void reload_ffp_shaders(Attribute *attrs,Stream *streams,int) {
     ffp_vertex_num_params=2;
     observed_stride=streams[0].stride;
     assert(observed_stride==stride()*sizeof(float));
     assert(streams[1].stride==observed_stride);
+    if (expected_projective) {
+        const unsigned uv_count=texture_units[1].state ? 2 : 1;
+        for(unsigned i=0;i<uv_count;++i) {
+            assert(attrs[1+i].componentCount==3);
+            assert(attrs[1+i].offset==(3+i*3)*4);
+        }
+        assert(attrs[1+uv_count].offset==(3+uv_count*3)*4);
+    }
 }
 void gl_primitive_to_gxm(unsigned,unsigned &primitive,unsigned) { primitive=0; }
 template<class... T> void vglSetTexMinFilter(T...) {}
@@ -89,6 +107,67 @@ void sceGxmDraw(int,unsigned,int,const uint16_t *indices,uint32_t count) {
     ++draws;
 }
 #include "production.inc"
+#if PROJECTIVE
+static void test_projective() {
+    unsigned cases=0;
+    for(unsigned lights=0;lights<2;++lights) for(unsigned textures=1;textures<3;++textures)
+    for(unsigned use_indices=0;use_indices<2;++use_indices) for(unsigned mode=0;mode<3;++mode) {
+        lighting_state=lights; texture_units[0].state=1;texture_units[1].state=textures>1;
+        expected_projective=true;legacy_pool=legacy_pool_ptr=storage;
+        expected.clear();expanded_expected.clear();
+        vglRenegadeBeginProjective(GL_TRIANGLES);
+        for(unsigned v=0;v<3;++v) {
+            current_vtx={{1.25f,2.75f},{.1f,.2f,.3f,.4f},
+                {1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,16},{17,18,19},{3.5f,4.5f}};
+            const float q0=v==0 ? 0.0f : v==1 ? -2.0f : 4.0f;
+            const float q1=3.0f+v;
+            if(mode!=1) vglRenegadeTexCoord3f(GL_TEXTURE0,1.25f,2.75f,q0);
+            else glMultiTexCoord2f(GL_TEXTURE0,1.25f,2.75f);
+            if(mode!=0) vglRenegadeTexCoord3f(GL_TEXTURE1,3.5f,4.5f,q1);
+            else glMultiTexCoord2f(GL_TEXTURE1,3.5f,4.5f);
+            expected.insert(expected.end(),{float(v),float(v+1),float(v+2),1.25f,2.75f,mode==1 ? 1.0f:q0});
+            if(textures>1) expected.insert(expected.end(),{3.5f,4.5f,mode==0 ? 1.0f:q1});
+            const float *p=lights ? &current_vtx.amb.x : &current_vtx.clr.x;
+            expected.insert(expected.end(),p,p+(lights ? 19 : 4));
+            glVertex3f(v,v+1,v+2);
+        }
+        const uint16_t indices[6]={2,0,1,1,2,0};
+        if(use_indices) {
+            for(unsigned i:indices)
+                expanded_expected.insert(expanded_expected.end(),expected.begin()+i*populated(),expected.begin()+(i+1)*populated());
+            vglRenegadeEndIndexed(6,indices);
+        } else glEnd();
+        assert(!renegade_projective_immediate && legacy_pool==legacy_pool_ptr);
+        assert(legacy_pool-storage==3*stride());
+        expected_projective=false;
+        glBegin(GL_TRIANGLES);
+        assert(!renegade_projective_immediate && renegade_texture_q[0]==1 && renegade_texture_q[1]==1);
+        ++cases;
+    }
+    std::printf("projective immediate storage/attributes/indexed/reset PASS cases=%u\n",cases);
+    // Too little space for a full next vertex: preserve the canary, reject
+    // the whole indexed primitive, keep the error and release extension state.
+    expected_projective=true;lighting_state=false;texture_units[0].state=texture_units[1].state=1;
+    legacy_pool=legacy_pool_ptr=storage;legacy_pool_end=storage+25;
+    storage[13]=123456;
+    vglRenegadeBeginProjective(GL_TRIANGLES);
+    glVertex3f(0,0,0);glVertex3f(1,0,0);glVertex3f(0,1,0);
+    const unsigned old_draws=draws;
+    const uint16_t triangle[3]={0,1,2};
+    vglRenegadeEndIndexed(3,triangle);
+    assert(draws==old_draws && storage[13]==123456 && vgl_error==GL_OUT_OF_MEMORY);
+    assert(!renegade_projective_immediate && !renegade_projective_failed);
+    assert(legacy_pool==legacy_pool_ptr && legacy_pool_ptr==storage+13);
+    legacy_pool_end=storage+2000000;expected_projective=false;
+    legacy_pool=legacy_pool_ptr=legacy_pool_end=nullptr;
+    vglRenegadeBeginProjective(GL_TRIANGLES);
+    glVertex3f(0,0,0);
+    glEnd();
+    assert(draws==old_draws && vgl_error==GL_OUT_OF_MEMORY && !renegade_projective_immediate);
+    legacy_pool=legacy_pool_ptr=storage;legacy_pool_end=storage+2000000;
+    std::puts("projective immediate pool failure PASS: no overwrite or partial draw");
+}
+#endif
 #if INDEXED
 static void test_indexed() {
     static VitaIndexedMeshBatch batch;
@@ -154,6 +233,10 @@ int main() {
     for (auto &s:legacy_vertex_stream_config) s.stride=24*4;
     for (auto &s:legacy_mt_vertex_stream_config) s.stride=26*4;
     for (auto &s:legacy_nt_vertex_stream_config) s.stride=22*4;
+    const unsigned single_offsets[7]={0,3,5,9,13,17,21};
+    const unsigned multi_offsets[8]={0,3,5,7,11,15,19,23};
+    for(unsigned i=0;i<7;++i) legacy_vertex_attrib_config[i].offset=single_offsets[i]*4;
+    for(unsigned i=0;i<8;++i) legacy_mt_vertex_attrib_config[i].offset=multi_offsets[i]*4;
     unsigned written_bytes=0;
     for(unsigned round=0;round<8;++round) for(unsigned lights=0;lights<2;++lights)
         for(unsigned textures=0;textures<3;++textures) {
@@ -176,5 +259,8 @@ int main() {
     std::printf("vitaGL stream PASS compact=%d draws=%u reserved_bytes=%u\n",COMPACT,draws,written_bytes);
 #if INDEXED
     test_indexed();
+#endif
+#if PROJECTIVE
+    test_projective();
 #endif
 }

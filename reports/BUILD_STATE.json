@@ -1,4 +1,23 @@
 {
+  "projective_texture_coordinates_20261004": {
+    "state": "PRODUCTION_REGRESSION_REPRODUCED_DEPENDENCY_HOST_ARM_LINK_PASS_GPU_UNVERIFIED",
+    "candidate": "A3.5-dev229",
+    "production_interpolation_cases_passed": 1000,
+    "production_storage_draw_cases_passed": 24,
+    "shader_source_interface_variants_passed": 48,
+    "host_fast_contract_tests_passed": 494,
+    "arm_compile_link_actions": 6,
+    "vitagl_archive_members_armv7_vfp_checked": 30,
+    "elf_sha256": "d20f154a7531010bac465b4d6caf834eb0a8f741b9233ceb6928f13913dc4e1d",
+    "map_sha256": "2566226fda99bdde7f310ddeab6ed4767926e420b3082de5ce08d5b13a294a0b",
+    "vitagl_archive_sha256": "26992c253486e1eeaac0b9ef6f3ee7062e161491d07ca4465a60c075fe3f83b9",
+    "report": "reports/PROJECTIVE_TEXTURE_COORDINATES.md",
+    "gpu_shader_compilation_verified": false,
+    "projected_pixels_verified": false,
+    "mixed_wchar_t_abi_warning_open": true,
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "surface_normal_transform_20261004": {
     "state": "NONUNIFORM_SCALE_REGRESSION_REPRODUCED_HOST_SANITIZERS_ARM_LINK_PASS",
     "candidate": "A3.5-dev228",

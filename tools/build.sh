@@ -284,6 +284,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_vita_mp3_decode tools.test_vita_bink_audio_output \
 	tools.test_vita_tutorial_help \
 	tools.test_vitagl_compact_vertices \
+	tools.test_vita_projective_coordinates \
 	tools.test_vita_mesh_batch \
 	tools.test_vitagl_full_upload \
 	tools.test_vitagl_dds_chain \

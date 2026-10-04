@@ -1,0 +1,371 @@
+--- a/source/ffp.c
++++ b/source/ffp.c
+@@ -81,6 +81,14 @@
+ 
+ // Internal stuffs
+ static uint32_t vertex_count = 0; // Vertex counter for vertex list
++// Opt-in Renegade immediate path. Ordinary arrays and immediate draws retain
++// their original UV layouts and shader keys.
++static GLboolean renegade_projective_immediate = GL_FALSE;
++static GLboolean renegade_projective_failed = GL_FALSE;
++static float renegade_texture_q[2] = {1.0f, 1.0f};
++#ifdef HAVE_HIGH_FFP_TEXUNITS
++#error Renegade projective extension requires the pinned two-stage configuration
++#endif
+ static SceGxmPrimitiveType prim; // Current in use primitive for rendering
+ 
+ #ifdef HAVE_UNPURE_TEXCOORDS
+@@ -210,11 +218,12 @@
+ 		uint32_t point_sprite : 1; // Frag
+ 		uint32_t fast_perspective_correction : 1; // Frag/Vert
+ 		uint32_t srgb_mode : 1; // Frag
++		uint32_t projective : 1; // Frag/Vert, reserved high bit
+ 	};
+ 	uint32_t raw;
+ } shader_mask;
+-#define VERTEX_SHADER_MASK   (0b0101111111000000111111100111000)
+-#define FRAGMENT_SHADER_MASK (0b1110000001111111111100011111111)
++#define VERTEX_SHADER_MASK   (0b0101111111000000111111100111000 | 0x80000000U)
++#define FRAGMENT_SHADER_MASK (0b1110000001111111111100011111111 | 0x80000000U)
+ #endif
+ #ifndef DISABLE_TEXTURE_COMBINER
+ typedef union {
+@@ -458,6 +467,11 @@
+ 	mask.fixed_mask = ffp_vertex_attrib_fixed_mask;
+ 	mask.pos_fixed_mask = ffp_vertex_attrib_fixed_pos_mask;
+ 	mask.fast_perspective_correction = fast_perspective_correction_hint;
++	mask.projective = attrs && renegade_projective_immediate;
++	if (mask.projective) {
++		mask.fast_perspective_correction = 0;
++		mask.fixed_mask = mask.pos_fixed_mask = 0;
++	}
+ 	mask.srgb_mode = srgb_mode;
+ 	uint16_t draw_mask_state = ffp_vertex_attrib_state;
+ 
+@@ -666,7 +680,7 @@
+ 
+ 			// Compiling the new shader
+ 			char vshader[8192];
+-			sprintf(vshader, ffp_vert_src, mask.clip_planes_num, mask.num_textures, mask.has_colors, mask.lights_num, mask.shading_mode, mask.normalize, mask.fixed_mask, mask.pos_fixed_mask, WVP_ON_GPU, mask.fast_perspective_correction);
++			sprintf(vshader, ffp_vert_src, mask.clip_planes_num, mask.num_textures, mask.has_colors, mask.lights_num, mask.shading_mode, mask.normalize, mask.fixed_mask, mask.pos_fixed_mask, WVP_ON_GPU, mask.fast_perspective_correction, mask.projective);
+ 			uint32_t size = strlen(vshader);
+ 			SceGxmProgram *t = shark_compile_shader_extended(vshader, &size, SHARK_VERTEX_SHADER, compiler_opts, compiler_fastmath, compiler_fastprecision, compiler_fastint);
+ 			ffp_vertex_program = (SceGxmProgram *)vglMalloc(size);
+@@ -939,13 +953,13 @@
+ 				(mask.tex_env_mode_pass0 != COMBINE) ? mask.tex_env_mode_pass0 : TEX0_ENV_PASS_COMBINE,
+ 				(mask.tex_env_mode_pass1 != COMBINE) ? mask.tex_env_mode_pass1 : TEX1_ENV_PASS_COMBINE,
+ 				(mask.tex_env_mode_pass2 != COMBINE) ? mask.tex_env_mode_pass2 : TEX2_ENV_PASS_COMBINE,
+-				mask.lights_num, mask.shading_mode, mask.point_sprite, mask.fast_perspective_correction, mask.srgb_mode);
++				mask.lights_num, mask.shading_mode, mask.point_sprite, mask.fast_perspective_correction, mask.srgb_mode, mask.projective);
+ #else
+ 			sprintf(fshader, ffp_frag_src, texenv_shad, alpha_op,
+ 				mask.num_textures, mask.has_colors, mask.fog_mode,
+ 				(mask.tex_env_mode_pass0 != COMBINE) ? mask.tex_env_mode_pass0 : TEX0_ENV_PASS_COMBINE,
+ 				(mask.tex_env_mode_pass1 != COMBINE) ? mask.tex_env_mode_pass1 : TEX1_ENV_PASS_COMBINE,
+-				mask.lights_num, mask.shading_mode, mask.point_sprite, mask.fast_perspective_correction, mask.srgb_mode);
++				mask.lights_num, mask.shading_mode, mask.point_sprite, mask.fast_perspective_correction, mask.srgb_mode, mask.projective);
+ #endif
+ 			uint32_t size = strlen(fshader);
+ 			SceGxmProgram *t = shark_compile_shader_extended(fshader, &size, SHARK_FRAGMENT_SHADER, compiler_opts, compiler_fastmath, compiler_fastprecision, compiler_fastint);
+@@ -1945,10 +1959,36 @@
+ 	}
+ #endif
+ 
++	if (renegade_projective_immediate) {
++		const int uv_count = texture_units[1].state ? 2 : texture_units[0].state ? 1 : 0;
++		const int stride = 3 + uv_count * 3 + (lighting_state ? 19 : 4);
++		if (renegade_projective_failed || !legacy_pool_ptr || !legacy_pool_end || legacy_pool_ptr > legacy_pool_end ||
++			legacy_pool_end - legacy_pool_ptr < stride) {
++			vgl_error = GL_OUT_OF_MEMORY;
++			renegade_projective_failed = GL_TRUE;
++			return;
++		}
++	}
+ 	legacy_pool_ptr[0] = x;
+ 	legacy_pool_ptr[1] = y;
+ 	legacy_pool_ptr[2] = z;
+-	if (texture_units[1].state) { // Multitexturing enabled
++	if (renegade_projective_immediate && (texture_units[0].state || texture_units[1].state)) {
++		const int uv_count = texture_units[1].state ? 2 : 1;
++		const int color_offset = 3 + uv_count * 3;
++		legacy_pool_ptr[3] = current_vtx.uv.x;
++		legacy_pool_ptr[4] = current_vtx.uv.y;
++		legacy_pool_ptr[5] = renegade_texture_q[0];
++		if (uv_count == 2) {
++			legacy_pool_ptr[6] = current_vtx.uv2.x;
++			legacy_pool_ptr[7] = current_vtx.uv2.y;
++			legacy_pool_ptr[8] = renegade_texture_q[1];
++		}
++		const int material_count = lighting_state ? 19 : 4;
++		vgl_fast_memcpy(legacy_pool_ptr + color_offset,
++			lighting_state ? &current_vtx.amb.x : &current_vtx.clr.x,
++			sizeof(float) * material_count);
++		legacy_pool_ptr += color_offset + material_count;
++	} else if (texture_units[1].state) { // Multitexturing enabled
+ 		vgl_fast_memcpy(legacy_pool_ptr + 3, &current_vtx.uv.x, sizeof(float) * 2);
+ 		vgl_fast_memcpy(legacy_pool_ptr + 5, &current_vtx.uv2.x, sizeof(float) * 2);
+ 		if (lighting_state) {
+@@ -2397,6 +2437,7 @@
+ 
+ 	current_vtx.uv.x = s;
+ 	current_vtx.uv.y = t;
++	renegade_texture_q[0] = 1.0f;
+ }
+ 
+ void glTexCoord2fv(GLfloat *f) {
+@@ -2430,10 +2471,12 @@
+ 	case GL_TEXTURE0:
+ 		current_vtx.uv.x = s;
+ 		current_vtx.uv.y = t;
++		renegade_texture_q[0] = 1.0f;
+ 		break;
+ 	case GL_TEXTURE1:
+ 		current_vtx.uv2.x = s;
+ 		current_vtx.uv2.y = t;
++		renegade_texture_q[1] = 1.0f;
+ 		break;
+ 	default:
+ 		SET_GL_ERROR_WITH_VALUE(GL_INVALID_ENUM, target)
+@@ -2474,6 +2517,43 @@
+ 
+ 	// Resetting vertex count
+ 	vertex_count = 0;
++	renegade_projective_immediate = GL_FALSE;
++	renegade_projective_failed = GL_FALSE;
++	renegade_texture_q[0] = renegade_texture_q[1] = 1.0f;
++}
++
++void vglRenegadeBeginProjective(GLenum mode) {
++	glBegin(mode);
++	renegade_projective_immediate = GL_TRUE;
++}
++
++void vglRenegadeTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat q) {
++	glMultiTexCoord2f(target, s, t);
++	if (target == GL_TEXTURE0) renegade_texture_q[0] = q;
++	else if (target == GL_TEXTURE1) renegade_texture_q[1] = q;
++}
++
++// Copy the existing immediate descriptors, changing only UV widths, offsets
++// and stride. The original lighting/material and index ownership stay intact.
++static void renegade_reload_projective(SceGxmVertexAttribute *attrs,
++	SceGxmVertexStream *streams, int uv_count) {
++	SceGxmVertexAttribute projective_attrs[FFP_VERTEX_ATTRIBS_NUM];
++	SceGxmVertexStream projective_streams[FFP_VERTEX_ATTRIBS_NUM];
++	const int count = FFP_VERTEX_ATTRIBS_NUM - (uv_count == 1 ? 1 : 0);
++	const int color_index = 1 + uv_count;
++	const int stride = (3 + uv_count * 3 + (lighting_state ? 19 : 4)) * sizeof(float);
++	for (int i = 0; i < count; ++i) {
++		projective_attrs[i] = attrs[i];
++		projective_streams[i] = streams[i];
++		projective_streams[i].stride = stride;
++		if (i > 0 && i < color_index) {
++			projective_attrs[i].componentCount = 3;
++			projective_attrs[i].offset = (3 + (i - 1) * 3) * sizeof(float);
++		} else if (i >= color_index) {
++			projective_attrs[i].offset += uv_count * sizeof(float);
++		}
++	}
++	reload_ffp_shaders(projective_attrs, projective_streams, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
+ }
+ 
+ static const uint16_t *renegade_immediate_indices = NULL;
+@@ -2481,6 +2561,13 @@
+ 
+ void glEnd(void) {
+ 	THREAD_SAFE()
++	if (renegade_projective_failed) {
++		// Reject the whole primitive rather than draw a partially written
++		// vertex/index stream. Keep the error and retire only written storage.
++		legacy_pool = legacy_pool_ptr;
++		renegade_projective_immediate = renegade_projective_failed = GL_FALSE;
++		return;
++	}
+ 
+ #ifdef HAVE_DLISTS
+ 	// Enqueueing function to a display list if one is being compiled
+@@ -2515,7 +2602,9 @@
+ 		for (int i = 0; i < FFP_VERTEX_ATTRIBS_NUM; ++i)
+ 			legacy_mt_vertex_stream_config[i].stride = sizeof(float) *
+ 				(lighting_state ? LEGACY_MT_VERTEX_STRIDE : LEGACY_MT_VERTEX_STRIDE - 15);
+-		reload_ffp_shaders(legacy_mt_vertex_attrib_config, legacy_mt_vertex_stream_config, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
++		if (renegade_projective_immediate)
++			renegade_reload_projective(legacy_mt_vertex_attrib_config, legacy_mt_vertex_stream_config, 2);
++		else reload_ffp_shaders(legacy_mt_vertex_attrib_config, legacy_mt_vertex_stream_config, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
+ 		for (int i = 0; i < 2; i++) {
+ 			texture *tex = &texture_slots[texture_units[i].tex_id[texture_units[i].state > 1 ? 0 : 1]];
+ #ifdef HAVE_TEX_CACHE
+@@ -2548,7 +2637,9 @@
+ 		for (int i = 0; i < FFP_VERTEX_ATTRIBS_NUM - 1; ++i)
+ 			legacy_vertex_stream_config[i].stride = sizeof(float) *
+ 				(lighting_state ? LEGACY_VERTEX_STRIDE : LEGACY_VERTEX_STRIDE - 15);
+-		reload_ffp_shaders(legacy_vertex_attrib_config, legacy_vertex_stream_config, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
++		if (renegade_projective_immediate)
++			renegade_reload_projective(legacy_vertex_attrib_config, legacy_vertex_stream_config, 1);
++		else reload_ffp_shaders(legacy_vertex_attrib_config, legacy_vertex_stream_config, SCE_GXM_INDEX_SOURCE_INDEX_16BIT);
+ 		texture *tex = &texture_slots[texture_units[0].tex_id[texture_units[0].state > 1 ? 0 : 1]];
+ #ifdef HAVE_TEX_CACHE
+ 		restore_tex_cache(tex);
+@@ -2637,6 +2728,7 @@
+ 
+ 	// Restore polygon mode if a GL_LINES/GL_POINTS has been rendered
+ 	restore_polygon_mode(prim);
++	renegade_projective_immediate = GL_FALSE;
+ }
+ 
+ 
+--- a/source/shaders/ffp_v.h
++++ b/source/shaders/ffp_v.h
+@@ -16,6 +16,13 @@
+ #define fixed_mode_pos %d
+ #define calculate_wvp %d
+ #define interp %d
++#define projective %d
++
++#if projective
++#define RenegadeUV float3
++#else
++#define RenegadeUV float2
++#endif
+ 
+ #if interp == 1
+ #define TEXCOORD0 TEXCOORD0_HALF
+@@ -80,9 +87,9 @@
+ void main(
+ 	float4 Nposition,
+ #if num_textures > 0
+-	float2 Otexcoord0,
++	RenegadeUV Otexcoord0,
+ #if num_textures > 1
+-	float2 Utexcoord1,
++	RenegadeUV Utexcoord1,
+ #endif
+ #endif
+ #if has_colors == 1 || lights_num > 0
+@@ -95,9 +102,9 @@
+ 	float3 Tnormals,
+ #endif
+ #if num_textures > 0
+-	float2 out vTexcoord : TEXCOORD0,
++	RenegadeUV out vTexcoord : TEXCOORD0,
+ #if num_textures > 1
+-	float2 out vTexcoord2 : TEXCOORD1,
++	RenegadeUV out vTexcoord2 : TEXCOORD1,
+ #endif
+ #endif
+ #if lights_num > 0 && shading_mode == 1 // GL_PHONG_WIN
+@@ -174,14 +181,22 @@
+ #if (fixed_mode_mask & 0x02) == 0x02
+ 	Otexcoord0 = GLFixed2ToFloat2(Otexcoord0);
+ #endif
++#if projective
++	vTexcoord = mul(Ktexmat[0], float4(Otexcoord0.xy, 0.f, Otexcoord0.z)).xyw;
++#else
+ 	vTexcoord = mul(Ktexmat[0], float4(Otexcoord0, 0.f, 1.f)).xy;
++#endif
+ #if num_textures > 1
+ #if (fixed_mode_mask & 0x04) == 0x04
+ 	Utexcoord1 = GLFixed2ToFloat2(Utexcoord1);
+ #endif
++#if projective
++	vTexcoord2 = mul(Ktexmat[1], float4(Utexcoord1.xy, 0.f, Utexcoord1.z)).xyw;
++#else
+ 	vTexcoord2 = mul(Ktexmat[1], float4(Utexcoord1, 0.f, 1.f)).xy;
+ #endif
+ #endif
++#endif
+ #if lights_num > 0
+ #if shading_mode < 1 // GL_SMOOTH/GL_FLAT
+ 	vColor = Semission + Pcolor * Flight_global_ambient;
+--- a/source/shaders/ffp_f.h
++++ b/source/shaders/ffp_f.h
+@@ -15,6 +15,15 @@
+ #define point_sprite %d
+ #define interp %d
+ #define srgb_mode %d
++#define projective %d
++
++#if projective
++#define RenegadeUV float3
++#define RenegadeSampleUV(uv) ((uv).xy / (uv).z)
++#else
++#define RenegadeUV float2
++#define RenegadeSampleUV(uv) (uv)
++#endif
+ 
+ #if interp == 1
+ #define TEXCOORD0 TEXCOORD0_HALF
+@@ -73,9 +82,9 @@
+ 
+ float4 main(
+ #if num_textures > 0
+-	float2 vTexcoord : TEXCOORD0,
++	RenegadeUV vTexcoord : TEXCOORD0,
+ #if num_textures > 1
+-	float2 vTexcoord2 : TEXCOORD1,
++	RenegadeUV vTexcoord2 : TEXCOORD1,
+ #endif
+ #endif
+ #if lights_num > 0 && shading_mode == 1 // GL_PHONG_WIN
+@@ -127,13 +136,17 @@
+ #endif
+ #if num_textures > 0
+ #if point_sprite > 0
++#if projective
++	vTexcoord = float3(point_coords, 1.f);
++#else
+ 	vTexcoord = point_coords;
+ #endif
++#endif
+ 	// Texture Environment
+ 	float4 prevColor = vColor;
+-	prevColor = pass0_func(tex[0], vTexcoord, prevColor, vColor, ItexEnvColor[0]);
++	prevColor = pass0_func(tex[0], RenegadeSampleUV(vTexcoord), prevColor, vColor, ItexEnvColor[0]);
+ #if num_textures > 1
+-	prevColor = pass1_func(tex[1], vTexcoord2, prevColor, vColor, ItexEnvColor[1]);
++	prevColor = pass1_func(tex[1], RenegadeSampleUV(vTexcoord2), prevColor, vColor, ItexEnvColor[1]);
+ #endif
+ 	float4 texColor = prevColor;
+ #else
+--- a/source/shared.h
++++ b/source/shared.h
+@@ -867,9 +867,7 @@
+ extern int legacy_pool_size; // Mempool size for GL1 immediate draw pipeline
+ extern float *legacy_pool; // Mempool for GL1 immediate draw pipeline
+ extern float *legacy_pool_ptr; // Current address for vertices population for GL1 immediate draw pipeline
+-#ifndef SKIP_ERROR_HANDLING
+ extern float *legacy_pool_end; // Address of the end of the GL1 immediate draw pipeline vertex pool
+-#endif
+ extern uint32_t vgl_framecount; // Current frame number since application started
+ extern SceGxmVertexAttribute legacy_vertex_attrib_config[FFP_VERTEX_ATTRIBS_NUM - 1];
+ extern SceGxmVertexStream legacy_vertex_stream_config[FFP_VERTEX_ATTRIBS_NUM - 1];
+--- a/source/gxm.c
++++ b/source/gxm.c
+@@ -98,9 +98,7 @@
+ 
+ float *legacy_pool = NULL; // Mempool for GL1 immediate draw pipeline
+ float *legacy_pool_ptr = NULL; // Current address for vertices population for GL1 immediate draw pipeline
+-#ifndef SKIP_ERROR_HANDLING
+ float *legacy_pool_end = NULL; // Address of the end of the GL1 immediate draw pipeline vertex pool
+-#endif
+ uint32_t vgl_framecount = 0; // Current frame number since application started
+ 
+ void *frame_purge_list[FRAME_PURGE_FREQ][FRAME_PURGE_LIST_SIZE]; // Purge list for internal elements
+@@ -584,9 +582,7 @@
+ 			if (legacy_pool_size) {
+ 				legacy_pool = (float *)gpu_alloc_mapped_temp(legacy_pool_size);
+ 				legacy_pool_ptr = legacy_pool;
+-#ifndef SKIP_ERROR_HANDLING
+-				legacy_pool_end = (float *)((uint8_t *)legacy_pool + legacy_pool_size);
+-#endif
++				legacy_pool_end = legacy_pool ? (float *)((uint8_t *)legacy_pool + legacy_pool_size) : NULL;
+ 			}
+ 			needs_end_scene = GL_TRUE;
+ 		}
+@@ -1000,4 +996,4 @@
+ 	}
+ #endif
+ 	gxm_display_rt_size = size;
+-}
+\ No newline at end of file
++}

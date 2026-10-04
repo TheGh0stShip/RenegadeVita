@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Projective coordinate storage and shaders — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: original projected S/T/divisor survives opt-in immediate/indexed
+storage and fragment division; ordinary layouts/cache keys are retained.
+Evidence: previous production assertion fails;1,000 interpolation cases,
+24 storage/draw cases, pool/null failure checks and48 shader-source interfaces
+pass. Dev229 passes494 contracts,30 archive ABI checks and six ARM actions.
+Next: native shader compilation and fixed-scene pixels, then original additional
+material-pass/projector execution. Runtime remains held; mixed wchar_t ABI,
+memory/frame-time and physical acceptance remain open. See
+[projective evidence](PROJECTIVE_TEXTURE_COORDINATES.md).
+
 ## Surface normal transformation — 2026-10-04
 
 Renegade Vita — v3.5 active

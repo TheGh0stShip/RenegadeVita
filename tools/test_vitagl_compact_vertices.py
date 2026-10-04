@@ -22,11 +22,23 @@ class VitaGLCompactVerticesTest(unittest.TestCase):
                 'port/renderer/vita/dependency-patches/vitagl-indexed-immediate.patch')],
                 cwd=directory, check=True, capture_output=True)
             indexed = (directory / 'source/ffp.c').read_text()
+            subprocess.run(['patch', '--batch', '--fuzz=0', '-p1', '-i', str(ROOT /
+                'port/renderer/vita/dependency-patches/vitagl-projective-immediate.patch')],
+                cwd=directory, check=True, capture_output=True)
+            projective = (directory / 'source/ffp.c').read_text()
             for variant, source in [('baseline', pristine), ('compact', patched),
-                                    ('indexed', indexed)]:
+                                    ('indexed', indexed), ('projective', projective)]:
                 parts = []
+                if variant == 'projective':
+                    parts.append('static GLboolean renegade_projective_immediate = GL_FALSE;\n'
+                                 'static GLboolean renegade_projective_failed = GL_FALSE;\n'
+                                 'static float renegade_texture_q[2] = {1.0f,1.0f};')
+                    start = source.index('void glMultiTexCoord2f(')
+                    parts.append(source[start:source.index('void glMultiTexCoord2fv(', start)])
+                    start = source.index('void glBegin(')
+                    parts.append(source[start:source.index('static const uint16_t *renegade_immediate_indices', start)])
                 for start, end in [('inline void glVertex3f(', 'void glClientActiveTexture('),
-                                   ('static const uint16_t *renegade_immediate_indices' if variant == 'indexed'
+                                   ('static const uint16_t *renegade_immediate_indices' if variant in ('indexed','projective')
                                     else 'void glEnd(void)', 'void glTexEnvfv(')]:
                     offset = source.index(start)
                     parts.append(source[offset:source.index(end, offset)])
@@ -34,7 +46,8 @@ class VitaGLCompactVerticesTest(unittest.TestCase):
                 subprocess.run(['g++', '-std=c++17', '-O1', '-g', '-Wall', '-Wextra',
                     '-Werror', '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
                     '-DCOMPACT=' + ('0' if variant == 'baseline' else '1'),
-                    '-DINDEXED=' + ('1' if variant == 'indexed' else '0'),
+                    '-DINDEXED=' + ('1' if variant in ('indexed','projective') else '0'),
+                    '-DPROJECTIVE=' + ('1' if variant == 'projective' else '0'),
                     '-I'+str(ROOT / 'port/renderer/vita'), '-I'+folder,
                     str(ROOT / 'tools/vitagl_compact_vertices_test.cpp'),
                     '-o', str(directory / variant)], check=True)

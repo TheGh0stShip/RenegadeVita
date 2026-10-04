@@ -39,6 +39,8 @@ void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
 #include <vitaGL.h>
 #include "ww3d_vita_indexed_mesh_batch.h"
 extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
+extern "C" void vglRenegadeBeginProjective(GLenum mode);
+extern "C" void vglRenegadeTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat q);
 #endif
 
 namespace RenegadeVitaRenderer {
@@ -674,16 +676,15 @@ Vector3 Compute_Camera_Space_Reflection(const Matrix3D &world_transform,
 
 void Apply_DX8_Texture_Transform(const OriginalTextureCoordinateState &state,
 	float in_s, float in_t, float in_r, float in_q, float *out_s,
-	float *out_t)
+	float *out_t, float *out_q)
 {
 	float transformed[4] = { in_s, in_t, in_r, in_q };
 	const DWORD coordinate_count = state.texture_transform_flags & 0xffU;
 	if (coordinate_count != D3DTTFF_DISABLE) {
 		const D3DMATRIX &matrix = state.texture_transform;
-		// D3D's 2D texture matrix translates UVs through _31/_32. The
-		// implicit third coordinate of a pass-through UV pair is one.
-		const bool passthrough_uv2 = coordinate_count == D3DTTFF_COUNT2 &&
-			Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;
+		// D3D extends a pass-through UV pair with a homogeneous third
+		// coordinate of one, including projected texture transforms.
+		const bool passthrough_uv2 = Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU;
 		float source[4];
 		Build_DX8_Texture_Source(passthrough_uv2, in_s, in_t, in_r, in_q,
 			source);
@@ -695,17 +696,28 @@ void Apply_DX8_Texture_Transform(const OriginalTextureCoordinateState &state,
 				source[3] * matrix.m[3][column];
 		}
 	}
-	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U &&
+	const bool projected = (state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U &&
 		coordinate_count >= D3DTTFF_COUNT2 &&
-		coordinate_count <= D3DTTFF_COUNT4) {
-		const float divisor = transformed[coordinate_count - 1U];
-		if (divisor < -0.000001f || divisor > 0.000001f) {
-			transformed[0] /= divisor;
-			transformed[1] /= divisor;
+		coordinate_count <= D3DTTFF_COUNT4;
+	// Preserve the divisor until fragment interpolation. Predividing here
+	// interpolates vertex ratios rather than the original projected coordinate.
+	*out_q = projected ? transformed[coordinate_count - 1U] : 1.0f;
+	*out_s = transformed[0];
+	*out_t = coordinate_count == D3DTTFF_COUNT1 ||
+		(projected && coordinate_count == D3DTTFF_COUNT2) ? 0.0f : transformed[1];
+}
+
+void Begin_Texture_Coordinate_Primitive(const OriginalTextureCoordinateState *states)
+{
+	for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage) {
+		const DWORD flags = states[stage].texture_transform_flags;
+		const DWORD count = flags & 0xffU;
+		if ((flags & D3DTTFF_PROJECTED) && count >= D3DTTFF_COUNT2 && count <= D3DTTFF_COUNT4) {
+			vglRenegadeBeginProjective(GL_TRIANGLES);
+			return;
 		}
 	}
-	*out_s = transformed[0];
-	*out_t = coordinate_count == D3DTTFF_COUNT1 ? 0.0f : transformed[1];
+	glBegin(GL_TRIANGLES);
 }
 
 bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
@@ -772,16 +784,19 @@ bool Emit_Original_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	}
 	float s = 0.0f;
 	float t = 0.0f;
+	float q = 1.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
-		&s, &t);
-	glMultiTexCoord2f(texture_unit, s, t);
+		&s, &t, &q);
+	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U)
+		vglRenegadeTexCoord3f(texture_unit, s, t, q);
+	else glMultiTexCoord2f(texture_unit, s, t);
 	if (!g_logged_first_generated_texture_coordinate &&
 		Uses_Generated_Texture_Coordinates(state)) {
 		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
-			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) final=(%.3f,%.3f)",
+			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) homogeneous=(%.3f,%.3f,%.3f)",
 			stage, static_cast<unsigned>(mode),
 			static_cast<unsigned>(state.texture_transform_flags),
-			source_s, source_t, source_r, s, t);
+			source_s, source_t, source_r, s, t, q);
 		g_logged_first_generated_texture_coordinate = true;
 	}
 	return true;
@@ -893,16 +908,19 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 
 	float s = 0.0f;
 	float t = 0.0f;
+	float q = 1.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
-		&s, &t);
-	glMultiTexCoord2f(texture_unit, s, t);
+		&s, &t, &q);
+	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U)
+		vglRenegadeTexCoord3f(texture_unit, s, t, q);
+	else glMultiTexCoord2f(texture_unit, s, t);
 	if (!g_logged_first_generated_texture_coordinate &&
 		Uses_Generated_Texture_Coordinates(state)) {
 		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
-			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) final=(%.3f,%.3f)",
+			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) homogeneous=(%.3f,%.3f,%.3f)",
 			stage, static_cast<unsigned>(mode),
 			static_cast<unsigned>(state.texture_transform_flags),
-			source_s, source_t, source_r, s, t);
+			source_s, source_t, source_r, s, t, q);
 		g_logged_first_generated_texture_coordinate = true;
 	}
 	return true;
@@ -3166,7 +3184,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 					g_logged_first_stage1_mesh = true;
 				}
 				if (indexed_batch) g_indexed_mesh_batch.Reset();
-				glBegin(GL_TRIANGLES);
+				Begin_Texture_Coordinate_Primitive(current_texture_coordinates);
 				primitive_open = true;
 			}
 			const TriIndex &triangle = triangles[triangle_index];
@@ -3190,7 +3208,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			if (indexed_batch && g_indexed_mesh_batch.Full()) {
 				end_batch();
 				g_indexed_mesh_batch.Reset();
-				glBegin(GL_TRIANGLES);
+				Begin_Texture_Coordinate_Primitive(current_texture_coordinates);
 			}
 			for (int corner = 0; corner < 3; ++corner) {
 				const unsigned vertex_index = vertex_indices[corner];
@@ -3537,12 +3555,12 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		} else glEnd();
 	};
 	if (indexed_batch) g_indexed_mesh_batch.Reset();
-	glBegin(GL_TRIANGLES);
+	Begin_Texture_Coordinate_Primitive(texture_coordinates);
 	for (uint32_t triangle = 0; triangle < submission.triangle_count; ++triangle) {
 		if (indexed_batch && g_indexed_mesh_batch.Full()) {
 			end_indexed_batch();
 			g_indexed_mesh_batch.Reset();
-			glBegin(GL_TRIANGLES);
+			Begin_Texture_Coordinate_Primitive(texture_coordinates);
 		}
 		for (uint32_t corner = 0; corner < 3U; ++corner) {
 			const uint32_t relative_index = submission.index_data[

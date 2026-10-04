@@ -376,3 +376,26 @@ See [all-map metadata](generated/sweeps/host_all_map_text_commands.json).
 Shared transport remains a separate historical receipt. These are archive-member
 denominators, not a complete cinematic-reference/dispatch or playback proof.
 Runtime source and Dev221 artifacts are unchanged; no emulator/device action.
+
+## All-archive original cinematic scheduling — 2026-10-04
+
+The original Test_Cinematic::Load_Control_File and Add_Control_Line execute
+under ASan/UBSan over all 426 .txt archive occurrences in the 31-archive install.
+All 10,955 scheduled records match reference timestamp float bits, stable order
+and command-byte fingerprints. Not every .txt is a cinematic: credits.txt is
+included deliberately as a member-level coverage case, not a playback claim.
+The fixture supplies original-compatible line transport; real MIX transport has
+separate shared/all-map evidence. Effects and callbacks are not dispatched.
+
+An initial 425/426 comparison exposed a reference defect on credits.txt. Original
+signed-char comparisons treat high-bit bytes as whitespace at trim/token edges;
+the reference now preserves this behavior. This is not a retail asset correction.
+Failed attempt logs remain private and the final run succeeds. Three reference
+tests and the existing cinematic sanitizer regression pass. Source, binary and
+archive identities are retained in the public
+[scheduling receipt](generated/sweeps/host_retail_cinematic_parser.json), with no
+command payloads. Native char/compiler behavior and real playback remain open.
+
+The new fixture compiles original script/framework code using the existing
+isolated MSVC-default compatibility flags. Production runtime source and Dev221
+ARM artifacts remain unchanged; no device or emulator action occurred.

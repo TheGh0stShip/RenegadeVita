@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## All-archive original cinematic scheduling — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:426 text occurrences in31 archives match original compiled scheduling;
+10,955 records agree on timestamp bits/order/command fingerprints under sanitizers.
+Evidence:retained executable/logs/metadata receipt;four focused tests pass.
+Reference signed-char token handling corrected;retail data/runtime unchanged.
+Next:command dispatch dependencies and native presentation/playback evidence.
+Blocker:none for source work;native acceptance remains open.
+
 ## All-map local text transport — 2026-10-04
 
 Renegade Vita — v3.5 active

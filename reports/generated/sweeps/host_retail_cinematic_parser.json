@@ -1,0 +1,3890 @@
+{
+  "schema_version": 1,
+  "evidence_class": "all_archive_original_cinematic_load_parser_asan_ubsan",
+  "total_archives": 31,
+  "total_members": 426,
+  "matched": 426,
+  "command_records": 10955,
+  "binary_sha256": "534fcfac5d7255deedaa5ef7e00334288ced6186916679177745164671e2f52d",
+  "archive_sha256": {
+    "Always2.dat": "6cec7388c51b5b8591d8aa0cce974243621701990576574eda28dcd03c5e1611",
+    "C&C_Canyon.mix": "8045026fed95044666eeec1016bb78a9963c21601b7c45f69d4aa018aa4296ba",
+    "C&C_City.mix": "3a48c5b173629a71826e009d97bd13cff531315a2f256f02a6321c3b6ea4018e",
+    "C&C_City_Flying.mix": "c3a9c65c5a1f3d480941b29034f5ba57aed2391aea64461ef1afccd0fffda4c3",
+    "C&C_Complex.mix": "e63f94f76648be6cdcacb7727911350fff6a3733b614deb2f88c65b1413c4531",
+    "C&C_Field.mix": "ef8884b15a4c77e59f09d96dbf0885ea48cdfb9e58c9543a0b742820d8414c40",
+    "C&C_Glacier_Flying.mix": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+    "C&C_Hourglass.mix": "28c3fc1a26e6aba0f29886e9ca37954eec63ce8d6cd2d24ebffebe57075a47ee",
+    "C&C_Islands.mix": "d73959a3dd4a2dd9e292f3a8e4e2bce3a7ba4f5547aed323379f8c218e80d1fd",
+    "C&C_Mesa.mix": "400190c56b4763109070a901c9c57c2a5df1ffbd3a1e58e035b31b488994bb0c",
+    "C&C_Under.mix": "5c57d3206046a2906bd1dbe57c3c0fd4c67afa0d0d44625f250aa1695a2ac02a",
+    "C&C_Volcano.mix": "0bc5cb096bbd8431ed8ad5932467dbbe31f1b2301ec9c5889bbb432e180bbad4",
+    "C&C_Walls.mix": "72e960d37c39d2bb7f4dea979758b6c8e07106cfa2125d3f73496df1224b25d8",
+    "C&C_Walls_Flying.mix": "fda92665671f8c7951f258e32e72710d9e51df2870651b8c142e5fc04c4850df",
+    "M00_Tutorial.mix": "84f14f6267dd8a88563b3d31540bf857df0b8e111144944cb582edd246f2d438",
+    "M01.mix": "3d814a11fb306b425da74d40648f17053644e6a58ce521182d7c178683b354eb",
+    "M02.mix": "f098e9190802dba8c9b453e479cb393a0e4777c5f5b038c3bb0376010d64b3a1",
+    "M03.mix": "e49d5a6233635228ad91c73cd2614f3f33e09cbc37d0650eb79683f35aa47d79",
+    "M04.mix": "1d084c9088474c6664dcb30eb08cd7fc86a265e200fbfcebb606ac56e9530ffa",
+    "M05.mix": "d3b38752890e0d2102a5ba8f57d10c832b8b60749afc4d0512333ca3f64446ca",
+    "M06.mix": "cf98d879ac8cf23e60589407b61eb4c2a43c238c979b54485a25938f7679573a",
+    "M07.mix": "479f72c76ec145c0289f331a856201d0f4249fa86854a5d664c6e8d4edc08664",
+    "M08.mix": "b95c738add5ce7887ec386d839838d595986a05c2f5240b90fe2cebaa7075429",
+    "M09.mix": "3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7",
+    "M10.mix": "c9bdaa94686f29a69a16c148671c7a6c05c617f61694fb4aec01185e4c3720ec",
+    "M11.mix": "f29a8a4bf4e94d928b8e49c0d4eecade0d35f54ff683ec0fd5b2e4bedbac80eb",
+    "M13.mix": "54d41ea011bf7c4d273064422de961af76ccc38f32dd9b5368ebfbca365bbfc4",
+    "Skirmish00.mix": "1ac0110faceb596c2b66993ec5034051e9b116acdf5732fb4383e4e8d2984738",
+    "always.dat": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a",
+    "always.dbs": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+    "always3.dat": "8c84590dfb33b25243fa3252777b59b0b4c3a09bbd2b4d5a59444b79a1e08156"
+  },
+  "rows": [
+    {
+      "archive": "Always2.dat",
+      "member": "x5d_c130troopdrop7.txt",
+      "payload_sha256": "f8d19bf09e78dd3e037985af7aaf27d72f7a161083df7ae658fff7e46e8da9a5",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "ea1f2bd09bb26e95eabef7652f285218174bf67d99eb923571bc9c77aa46dd19"
+    },
+    {
+      "archive": "C&C_Glacier_Flying.mix",
+      "member": "asset_report.txt",
+      "payload_sha256": "fd75d197b68f675f54c6d87625bd80a9063d3152a4aa5cc3b10ff43fc7c00abd",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "311e8744e36c627832ed00fae275a36e7bc7c8d7cc10b8e298c6ca1f9e0f4ec2"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1b_intro.txt",
+      "payload_sha256": "48bd893fa9923d954481d629fd28d277c361f2cb2ce3fd79e4137ab92025c382",
+      "status": "unknown",
+      "command_records": 43,
+      "records_match": true,
+      "records_sha256": "675bf2dda68a23b4dd1f681e3cc846f2c63ee1f12951fd113ec6b21e0f648a76"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1c_intro.txt",
+      "payload_sha256": "13292835c3adfb94ab6a9eb3b3602ea2f208b8bfe6e00244aebfa9750c96c13b",
+      "status": "unknown",
+      "command_records": 18,
+      "records_match": true,
+      "records_sha256": "93b881817c8aa91ef5734cbe37e4c3c2c9f38ffdeceae5391e88ffdbd7d64ca2"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1d_fodderhover_mtank.txt",
+      "payload_sha256": "b0189e42139b61dc9d2adf37a2a24666a8a4209e6eae338d46190eebe967a344",
+      "status": "unknown",
+      "command_records": 19,
+      "records_match": true,
+      "records_sha256": "378567d0a7e2f2aed51dd3c769bd65018bb00cb2eab2c71d7bceb4e58ea12d64"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1d_gdipow_flaredrop.txt",
+      "payload_sha256": "26f91b5fbf0c18b4cc87168bab26f77f0f99e5464c7d34b0722638a89329fd98",
+      "status": "unknown",
+      "command_records": 25,
+      "records_match": true,
+      "records_sha256": "7be6e2c4877ecc06c995bc0ab2504659bebb51a49b9a3e9e58ae31f9199ed955"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1d_gdipowerupdrop.txt",
+      "payload_sha256": "8e5696b292db1d35e6405f4a462a5e1a1e8d3f3d28eda6e0d186eafa993e9402",
+      "status": "unknown",
+      "command_records": 38,
+      "records_match": true,
+      "records_sha256": "83836058dc92f5966edb7ea91da51a15b5a46b5a47ade7226aad9161f1c250ba"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1d_gtower_flaredrop.txt",
+      "payload_sha256": "1883f84be512c0806cad225d17afe8567a02efde6d6433ff1fba51470a03ebe2",
+      "status": "unknown",
+      "command_records": 38,
+      "records_match": true,
+      "records_sha256": "8da1f75b84cab2b84717f6509ba5d30e78027f7f7749275e16ca598ffca219e2"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1d_hover_mtank.txt",
+      "payload_sha256": "4535f2b1f8725d0a7b7c064d75e441aac5de6f07b26e088a88680b3a2b45695c",
+      "status": "unknown",
+      "command_records": 14,
+      "records_match": true,
+      "records_sha256": "83a743990a2938731d426fce0fe115f72d30747a2532088f41ca36e484ab5101"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1d_intro.txt",
+      "payload_sha256": "0f4de37090a953039641bf3a30b132925c1944a6d0922f10992ce18ecbbb420b",
+      "status": "unknown",
+      "command_records": 15,
+      "records_match": true,
+      "records_sha256": "6965f16647c4ef9d87f9308ca1199dbbd345690fe9ca48dd04c2c09252e4a64b"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1g_a-10_strike.txt",
+      "payload_sha256": "d97cffe2756f3afe0a69fa7da55e9b39fb2c20daff3f637d7fff75c695316afc",
+      "status": "unknown",
+      "command_records": 12,
+      "records_match": true,
+      "records_sha256": "d5e16f49afffa2028e55afece146fd13415eef10f1f8befab1af9a1ba7cae8c4"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1i_gdi_drop_mediumtank.txt",
+      "payload_sha256": "3ddcb0c5614ab8847499912c6ba4b6817fad63304e1992bc0d91a5667bf7af04",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "a5f6c623f8fb7d35a98bda925d088f6977712f3380e61e0f5209ffcb6ba19747"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "x1z_finale.txt",
+      "payload_sha256": "62821a4434bd705be36b1ce6f3478d59d0278971e6fac6d891cb9903b28d8b20",
+      "status": "unknown",
+      "command_records": 92,
+      "records_match": true,
+      "records_sha256": "37132ed5633a058e491819eb1c6dc54688e7693f6886d72bbfa3b86bb7670d9a"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "xg_ap_vs_trn.txt",
+      "payload_sha256": "6982d19112c8a0fafe6f8c2ebe9892ea307fd94cdc3e60890e3ec80fce8f5f80",
+      "status": "unknown",
+      "command_records": 20,
+      "records_match": true,
+      "records_sha256": "fe5126d06e8672429f33564cc00cd6ac1a960b0bafd3dace23362ff8afeb1da2"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "xg_ev5.txt",
+      "payload_sha256": "c155b1257e3ea1433f5f1fb12fb1cfa2c385437e9bf950a6a2403ab49337db30",
+      "status": "unknown",
+      "command_records": 23,
+      "records_match": true,
+      "records_sha256": "b8b59ba6a52a16999b5c0759140a2b7bedbf879206fbd7b9035a27bb22ff30a8"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "xg_m01_barnarea_evacanim.txt",
+      "payload_sha256": "765ef2fe17fa7415e224bf7cfce3c90e7154e89d46605af2daec993cedd410c7",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "963a5623cf47da1e0d842fd364f3e01e5ba7cd927c9ec49b959a297d0576b46a"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "xg_m01_churcharea_evacanim.txt",
+      "payload_sha256": "03a767a5a330828aa315e0b589e3e0927c1ea9040c70da2d4e17c4b96904fb36",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "3ca532035de0551d6de5ae464d3f77bcdfde5fff65b18c8b72cee9eb56dbcd8c"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "xg_m01_gdibasecommander_evacanim.txt",
+      "payload_sha256": "9049fe08e9d7a91a1f35cdd91e6d82983f695a1d2e3ad0802c66fe88e797984f",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "43615f5eafeb5c809afd75965feb185d59de2c6d0a1ed958a9644a736c165f12"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "xg_m01_gdibasepow_evacanim.txt",
+      "payload_sha256": "c8aa2f2e432a86b889a75577d160325411c785c45fbc75e674a5c44cd38c86ff",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "9229a07ac720a82d0ca3c2e83c0cf519ecbdc1005c9d7caf62e467ff8fe8e7ab"
+    },
+    {
+      "archive": "M01.mix",
+      "member": "xg_m01_honescort_evacanim.txt",
+      "payload_sha256": "ef2b812588eca82f8c3bfe73c4a07961d2c91a5f28190fb46d0ef073add8206b",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "f2efa08ae7660caa9ca3feecc9c07d3492b837e413a74fe40ff7af04326614fc"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2a_orcastrike.txt",
+      "payload_sha256": "a788d2436a5be3170e109d8aa6d72fbd6381ec09defe8fd25881144206ab6bba",
+      "status": "unknown",
+      "command_records": 6,
+      "records_match": true,
+      "records_sha256": "ed650d7279be528a28a04d7615aa2e1023bc037a5714f6d4d9172a2a628fb631"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2b_orcatunnel.txt",
+      "payload_sha256": "2b6a3c568a03354eafb1a5083317899cb1ccc20b637091c11c161f3ce0293db5",
+      "status": "unknown",
+      "command_records": 3,
+      "records_match": true,
+      "records_sha256": "914a90c583f4858e3098e08f6ba56777e2c30def6c30eae6a09eada0d6aa77cd"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2c_mammothdlv.txt",
+      "payload_sha256": "e386522c4782960ff29508ba50c6ad5b23ddcff37e577e2b5263f15279b97950",
+      "status": "unknown",
+      "command_records": 39,
+      "records_match": true,
+      "records_sha256": "172578478c7d0a070e3357ae7f80f8a5cbf563c91d0dd839319987ed2d1a97d3"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2d_mtank_slip.txt",
+      "payload_sha256": "f188966d245fbddf601ae38e489f4c30fc9977bf9795a21ee91381f05f0349e1",
+      "status": "unknown",
+      "command_records": 26,
+      "records_match": true,
+      "records_sha256": "e54fa8f2e6455ae7619921b9f27827c32edabcafe5759de7ed5eaff947160fed"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2e_c130drop.txt",
+      "payload_sha256": "3958282300dd16d5a32596742ab4fc72cabbc3b694abf998c0fc994bf1196f51",
+      "status": "unknown",
+      "command_records": 22,
+      "records_match": true,
+      "records_sha256": "3b1649890b883beb30c55fa2dadc1f09cf46ebd505056b407ff4a1d9c87afb5c"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2f_orcasam.txt",
+      "payload_sha256": "59dd455935239efac08066820717da9e37624f6510dc461b5b96efbd16363756",
+      "status": "unknown",
+      "command_records": 10,
+      "records_match": true,
+      "records_sha256": "852dd292db159dea811ec7537ede7ef60f686c88c3851092845c6070a225ed6b"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2g_aircrash.txt",
+      "payload_sha256": "4262b51be39397feeb37d173d3a91488c9ca626403810f4700d7cd05aebfb352",
+      "status": "unknown",
+      "command_records": 10,
+      "records_match": true,
+      "records_sha256": "7cdc5b9d669ba16cddd59c24064d801a66b901cf9869f248c584ac4a172103fb"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2h_apachespray.txt",
+      "payload_sha256": "16b30ff50090ae325e4369c198406c15067878f92e22c93f279e52374fc56ee2",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "29baf3a05f1d79c36ee7108d1272d3508befc8821287c4531c194513c70ed4f7"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area00.txt",
+      "payload_sha256": "a3650fbec94d613ca623087699c3632f5d0c08c9075366a342d5e243663240f9",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "c5fd042bb3e7b57f3813509c7b0abc1367f885da23ae8d7992c30784580c986b"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area01.txt",
+      "payload_sha256": "38b3ce9a5ce1d44827d3cb9772704a8967590618bcd5aa2dbfd21bfcb4536346",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "bdc7496f6a3edbd5c3b3079205921567f124692ae60534111c2c17521b3aff2f"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area02.txt",
+      "payload_sha256": "021277eee54fee91f4349f1689ce30052e8af1272a41ed9cbb886ebb84da9b42",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "4bff235f9f267aeebd7d1dd3b7e49d89f11654f65a8f6b7175189a6964bdd862"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area03.txt",
+      "payload_sha256": "230c37574e3513bad0fd71af9e46b33e80e44f96e44500273a76103c48f3711a",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "32bd5691ff2693cc50d88f0e5ccc6a6e4fd820477424ff579bc406c2ec579202"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area04.txt",
+      "payload_sha256": "c22b492d653d4a8cf9b621a67186f1f9200c94ece9aba632f1e208a0bfce1da3",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "9e18f6fec8fb30a13c55246cc9888e73a4013a5cbed6c90e0434751017114231"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area06.txt",
+      "payload_sha256": "edba337eda77adc2c67ee94948fb5a47b2691d1e81a8f02a216314877ffaa7f0",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "9b34caf0af0ef002134b5e540e97b4267eb9440f93f9b575e046f168371f6078"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area08.txt",
+      "payload_sha256": "123767b7a7c7e1296ba1971c34236cba9dfb8bcf4f5ecfd0444ec0a823ba5333",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "e0c83e8d15fb45b60cc4137d8d6c3a5de4cb1d11f2fc3e2424b42f7844045ea3"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area09.txt",
+      "payload_sha256": "b8dbde3c9fcaf023505f53bea394472cb1a3e3c687fd984d40a22ae6fd4c6eb3",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "d1d2517aa96557d86263432ae8d8814d25e3835248a7c46a65bb0914d0c01e64"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area10.txt",
+      "payload_sha256": "d0107c6adcf3117fa581683d0af0ec23653cdaa45a6d4acbf3810c89f5047f5d",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "9dbaaf89cdaf13e9f6b6b5fee3bc0a68e5ae60004d8424d13976efea3da5f8b8"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area11.txt",
+      "payload_sha256": "1db0066eed6b686aa1e44575436d40ccdaa439ba5870a51ec556994fea3aab56",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "ad0937f75115c52106e09595f9a75e3992def14beb5c4bc7ee0c887ff308b0f3"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area21.txt",
+      "payload_sha256": "a3940698b1720ebcdcbbe90e70f71e5b8aa111a6b8cfbdbf9f699b4984f0ceb0",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "63c326bff9589a354e809f72c21e2bb16725010a076f3f920eb36a90332cfaf8"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop02_area25.txt",
+      "payload_sha256": "daa234a84034c17eaf758d9724c356796755926a311097578059f09ae3329ae5",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "1facebba15b43eb341b70d27d0a8450937291efab9d15a8b4268f68e62bc96b7"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area00.txt",
+      "payload_sha256": "a2a97a16e408c00adde1c698851a86dbd7def72205b66924d7bbe6cd2fb60ed4",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "c3fd8079798f7564ec8421ec5a9098077e0f83ee021106327ed97976c0653b3d"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area01.txt",
+      "payload_sha256": "2cdb8932e0d62dbe135cedf00082ace5292ff9f360647ff145653a6d154cb108",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "3c60e1be2c42fe650d10d903a5198546a0ad3b476d190fb1a1543bbf12b8de7f"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area02.txt",
+      "payload_sha256": "670d0a5bb102cafd34affa326c8fa6d82617e8c83ba89b1b18541e32141ef685",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "de70ac10b9fe72b67bf1ef3a06f55eda2a4f83a43ad74a3f3105a0b48452596f"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area03.txt",
+      "payload_sha256": "3658cd4cd71e304b0709679b873c8960615d8bc41de68f426bbbab9db3a2642f",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "fb2e59be5e3d2920915e3d09e478d27af14f3a2ecda264a3266e7b7af6cafe40"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area04.txt",
+      "payload_sha256": "f529cde2d7e14f8a8d4341ee2f425600403ff38c870f499f6ef738573af5b841",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "0b0ebc7d5706506dd8f3e634845672a90fe8ea37a43cee24ae41189a3bc97dbc"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area06.txt",
+      "payload_sha256": "a50abdbc54aab65a01ae1eead1822ca487cd0bd11adc08f91abc43b2ad818b55",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "5b1178698c88bbf7dc83d1fc1af73c76421e0d2e83d0db602b87516b5b67d6e1"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area08.txt",
+      "payload_sha256": "f89ba53c78ec784474be08ccff239dd09f2bb276b95b4e933bf10dabbb880797",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "3e51c3b752bc6cbc9e73340c37dcd7ad002d559a6344413311fb285defd99b6f"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area09.txt",
+      "payload_sha256": "dce26b174f4b41124f7adba26352c3f472f5dff14f2e3451dba664e9c271b672",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "c848dfa65105d59ebd6ae84a18194adb25ce69a6d47822e8673675cb4fa5196b"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area10.txt",
+      "payload_sha256": "c8535c99260cb3648f34a86ddc0ae8da8787ca978520a55a60c7b44fb25332c8",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "cf2926c7e318780c4befb5d44a258e17a249a5a6744df00594db24a5640c62e5"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area11.txt",
+      "payload_sha256": "c01775d7341dec952be4a7de4f2f0cb6a9794a9f8ca553b00c3934724f2690f4",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "da5b00475a59a7e8f21f4efcbd4a570855e04c40cb248e0c9ca0671471075861"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area21.txt",
+      "payload_sha256": "14132eb32313fc2537651727f503d49893924602ea6f68667c4794611b54e3c8",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "fbd6f923d765edbc6163b54f3e42cd1236dff42ed15dc28575b237908f4bc7d3"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_drop03_area25.txt",
+      "payload_sha256": "c243485f12a2701b3c678f04292e986f8ceebf6b701d9bb9f7c6d1596b82eff9",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "ed0e7df752f8926da7099f86bc106c711834acee3d66984cc061e81388b3bd5f"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_gdi_drop02_rocket.txt",
+      "payload_sha256": "f1def21c1ee2248f25a175fdd69ca492b0ea54b376337045d3859417073cd680",
+      "status": "unknown",
+      "command_records": 62,
+      "records_match": true,
+      "records_sha256": "2a7f709c3f3b86bf8a1d9a9e278b43c0b7d4f626277b94546e5d4af91b7835f8"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_gdi_drop02_rocket_2.txt",
+      "payload_sha256": "ac75710bcaf3321a5d38413d2519d04052fcdf7be48cf5c6c653b8a40a43813d",
+      "status": "unknown",
+      "command_records": 62,
+      "records_match": true,
+      "records_sha256": "7fdafb863eb14b7e993100068b6dcfa83a8c9edda08697d090d042458af208c7"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_gdi_drop02_rocket_24.txt",
+      "payload_sha256": "cea9362f733344759343a0e3390f90450b64ae9202aa35271234fa53bd233c21",
+      "status": "unknown",
+      "command_records": 62,
+      "records_match": true,
+      "records_sha256": "966b2dfc6101d73aff66dba4173122f18d178b6356f1f8a3b9201a18861157b4"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_gdi_drop03_minigunner.txt",
+      "payload_sha256": "020999c8d19d7c1f33bcbdbed69795da777424057eedae7dbbde8f48637e8d29",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "88b50811f41a79e652b75d88b0b171cf080649bcba1d517767d50b85e868bf08"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_gdi_drop_mammoth.txt",
+      "payload_sha256": "75bf70c5352b9d9b791309d81f46e3ec104e6f69c3477739915ad8da35a0c545",
+      "status": "unknown",
+      "command_records": 22,
+      "records_match": true,
+      "records_sha256": "8edb9aaae4977f9b663977f9e93a3733cb784eb86f13b9a02e30f3ff08c18eab"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_gdi_drop_mediumtank.txt",
+      "payload_sha256": "dc369c7046e8c93050c638ce4683ede6b596ba5e643ceef5e34d10005558bfe7",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "a6c762f8ef396f233018bbfb39e648073fafa7216a6588ec7d6a991e3ec4c622"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_gdi_drop_powerup.txt",
+      "payload_sha256": "84c4563366502db5eb7dc602aa3fd33cb505ea31f5552356953e482dcde95525",
+      "status": "unknown",
+      "command_records": 37,
+      "records_match": true,
+      "records_sha256": "57a99cecb9fac2b6a14672c30433329db7dfbd6a8c2551dce9d7905c81ab501a"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_learjet.txt",
+      "payload_sha256": "76118fead7731a679bb313393a885b5a2851aceda04a8ec55fa4865eb9102c9b",
+      "status": "unknown",
+      "command_records": 3,
+      "records_match": true,
+      "records_sha256": "9cc0a8496b6f2632f18c81e2b37dec318da043f8c1c7302eef7d9f5999d49a7d"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area00.txt",
+      "payload_sha256": "a47b1c855d4b85479328b24884296259e1c1d1c7d6d0c07c0656ce8e65670518",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "68b8db52826cfb4e00ea0a3a97e217be0e9d5b301b86b336efca3600be0327db"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area01.txt",
+      "payload_sha256": "d4a6371ae0bdfef2f8ebefb317820215806a2834c00e40c50cd44e541e9b04cb",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "0a3cb6244412817b4fdff83248a12f4acd3460f285089c6abe04d136c6fbef34"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area02.txt",
+      "payload_sha256": "b08e44a0ab5a6214cc4fbb56a17ee2e71f14c4bebf64256bf083ac39c78a220a",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "05759ceca1c404a59f519d27a993eaa2a34e22736d56e2ce89d2e9c8fbcd94e4"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area03.txt",
+      "payload_sha256": "377aada779ed674896e8d593c8c7fbf9551aee91ebf624d695f13a1da69cad75",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "385ced27634331724e74dc0e21b8de9a846f9a5dff19cc8cbf8a1f5be4854105"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area04.txt",
+      "payload_sha256": "1578f8668d6637633f4548c5ab203b63b19b30a3f8dc31a941c7985304d01757",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "daf6733b29ac7cae579abd0e6e8c119adcc2e4a1d3d5974d939a13d48b5094ae"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area06.txt",
+      "payload_sha256": "9ab445ac0199b6dfa0558e16a4d78b1502a078abd8ca34f8d4e150be7e3346a7",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "a9f8a20c4eaa457bd5d218142c795d6cf536ed2ab1906c44d10985e47e349c87"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area08.txt",
+      "payload_sha256": "f8aa627c447fed1b53d0f44b8b22c1b6c15b5f10f170ecb22c1d2f48b39c8cc3",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "a20420f2cad40de5757ccddd58deab212ed6d3d99fc34e6529f75b71fc556d70"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area09.txt",
+      "payload_sha256": "8dd131979941b8beac6902866574a33bcb9a5c62035182f69b8b73ab3202c5b8",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "0dbd762d6c6ad298f4a4c32c78b8f49226dffcaed16973b1a5a36ea740da1d3c"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area21.txt",
+      "payload_sha256": "cd3fad480aff1333409ca922c96e8c1f1a5b64318ae7ba596010100b126bb98d",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "2553a1c15103f6f0c05233150a0bd1ff3a0f2ed2fcfb814344488feea959b05f"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2i_para03_area25.txt",
+      "payload_sha256": "a65538cdbfcd5c9c422bcb15edb13dae907d63eb25581dfde3ffc9052279c02b",
+      "status": "unknown",
+      "command_records": 36,
+      "records_match": true,
+      "records_sha256": "0344f58410cdbf2450718d9057fe272b6df6c60c6b797be8a0c810b840c1eee5"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2j_apache-av.txt",
+      "payload_sha256": "3bdd108a51269015c87a3106983c54cd810f9d5ea35be3392f5920f1473b034b",
+      "status": "unknown",
+      "command_records": 12,
+      "records_match": true,
+      "records_sha256": "d7d7ed45e31ddc30a3fce9a4d8cf3ef78cae03524e44cecc622d61df775a8c0e"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "x2k_midtro.txt",
+      "payload_sha256": "f1ac25dcea64618c9f436900f0e635a2d9d863eccd032f4594609c97f3005e2b",
+      "status": "unknown",
+      "command_records": 104,
+      "records_match": true,
+      "records_sha256": "06ef5f8c4e7c6de7821b42de37b4eb859a2e90f303509b3d3c042791fbed01d0"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "xg_democam.txt",
+      "payload_sha256": "3c0ae97cbc81a867483d9c3d5f047732434eac3fff7d6d7584af66773eaed6d2",
+      "status": "unknown",
+      "command_records": 4,
+      "records_match": true,
+      "records_sha256": "fb4e5c57d6e4d871ccd994d6780417db3f8533f4c31f3618a5da483bcffca302"
+    },
+    {
+      "archive": "M02.mix",
+      "member": "xg_rope_evac_f.txt",
+      "payload_sha256": "f66a97f01f5b093fb396e77098b2a7011d53b093764e731d3a1e37defffcf0ce",
+      "status": "unknown",
+      "command_records": 18,
+      "records_match": true,
+      "records_sha256": "21d9366e6dd3ba126f6d4c3478b362f443b8289effc091e0ed81f80df94be53b"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_finale.txt",
+      "payload_sha256": "510af8783b06dacf02914ce48eb7fe265cee0093d4324b0e41ae2eef3b6664aa",
+      "status": "unknown",
+      "command_records": 19,
+      "records_match": true,
+      "records_sha256": "e52df6793a17a4c67d79a17271de530493e71b99c9a9b396c35b6f3f5608ad1b"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_havexp.txt",
+      "payload_sha256": "10d69cb17c6af51eb6d384422db08124fbe99ce8c1f35cb8a76af04a3e9d301b",
+      "status": "unknown",
+      "command_records": 0,
+      "records_match": true,
+      "records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_havhandl.txt",
+      "payload_sha256": "5148752d0e73a56b842c8184c05a7a58c86467e4ad8a09ead896f2acbfe56b33",
+      "status": "unknown",
+      "command_records": 0,
+      "records_match": true,
+      "records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_havhandr.txt",
+      "payload_sha256": "9779326c697f988411d364e454e53d322a8137824548f3ea738c2ea146f6eb83",
+      "status": "unknown",
+      "command_records": 0,
+      "records_match": true,
+      "records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_havmouth.txt",
+      "payload_sha256": "553b3b5c7e66082bc6b4b200f0977fb35f0ff2c01e8233c3ea3b857bf4a500b2",
+      "status": "unknown",
+      "command_records": 0,
+      "records_match": true,
+      "records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_intro.txt",
+      "payload_sha256": "68f313fde623fa4aca4444a53cedd562b7cf557aa0ff9ba85d7e751b127a42c4",
+      "status": "unknown",
+      "command_records": 42,
+      "records_match": true,
+      "records_sha256": "270cefca1888b4e279a3103b814c70f508aa1e625549091609ce3d9e890c8e67"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_sakexp.txt",
+      "payload_sha256": "b0fa2a35317c8a7b9933a32969791a666bd8a89866b0c7d2bf8cf8a41c970261",
+      "status": "unknown",
+      "command_records": 0,
+      "records_match": true,
+      "records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_sakhandl.txt",
+      "payload_sha256": "fc57eb1c67715c1f58ef188925a5b351fd1add40f6646f7afec39296e3c82e5e",
+      "status": "unknown",
+      "command_records": 0,
+      "records_match": true,
+      "records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3_sakhandr.txt",
+      "payload_sha256": "a8d315af82d1ad70afa7bd4c52578c5d3b1af9ba033dabd5947ae6d37c04afdb",
+      "status": "unknown",
+      "command_records": 0,
+      "records_match": true,
+      "records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3b_hoverxplode.txt",
+      "payload_sha256": "0a5dc9654caf85afd1031af35bdd565f9c01582710819a57654ca77e06cbeb8e",
+      "status": "unknown",
+      "command_records": 23,
+      "records_match": true,
+      "records_sha256": "92326c1065d2bbcd83a9fd074a463fb07336c322aa83195d047a5fc9ac0e4dd3"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3c_bigguns.txt",
+      "payload_sha256": "e278cc0e641df7f71ad99bf20ce5bb13b2979f8b12a761d80e25e2a3c44e543d",
+      "status": "unknown",
+      "command_records": 19,
+      "records_match": true,
+      "records_sha256": "73cc428e1c65fa3f4c4c68a3b39f1034d316108c6ac3daee63ec8aba1e0cc34a"
+    },
+    {
+      "archive": "M03.mix",
+      "member": "x3c_bigguns2.txt",
+      "payload_sha256": "c7c1c389487c85a6059bd941a932bf63bb59c3641bdefab0a7efd0b0873f9cc6",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "a6b2cc7b040ffa39cbafd67ebb04147586623d3bdf541870db80d7eb43422d98"
+    },
+    {
+      "archive": "M04.mix",
+      "member": "x4a_midtro.txt",
+      "payload_sha256": "a8e95d19ec439b08c09e28b4e519601152d4b20606f8c4893988fc19aff6c5f7",
+      "status": "unknown",
+      "command_records": 62,
+      "records_match": true,
+      "records_sha256": "65b28f603bfa626f930def5a79c12c726b4d12a9cdd09dddb99f94a9f2347a56"
+    },
+    {
+      "archive": "M05.mix",
+      "member": "x5a_bcollapse.txt",
+      "payload_sha256": "d95f202b63d90a3b324681e3e9618fad53c4d9c8ebaf5b433e0dca65cea25abb",
+      "status": "unknown",
+      "command_records": 5,
+      "records_match": true,
+      "records_sha256": "05aeba4d4c7a2be0a7914dbfa0f2f5457befc11d3f0dc87e693ab3e8aa16b26e"
+    },
+    {
+      "archive": "M05.mix",
+      "member": "x5b_ch_down.txt",
+      "payload_sha256": "e317a783f0f0db0816593ee06c7ea4392a3e22d50771114ffc640dc845a237f0",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "f6e8989589d3d065b030fbc8a62600478edc3d0f77c2a7fd91f4fe8453346dad"
+    },
+    {
+      "archive": "M05.mix",
+      "member": "x5e_tibspill.txt",
+      "payload_sha256": "3d3e17ff5dfc4c1203dedf27e120a512e37ddbc65e8e298efa0aa48193cedcbc",
+      "status": "unknown",
+      "command_records": 52,
+      "records_match": true,
+      "records_sha256": "1349bbe60c4109ef883fa01a4334d698373f51fda22ad6b037e4605997c57ea4"
+    },
+    {
+      "archive": "M05.mix",
+      "member": "x5m_midtro_a.txt",
+      "payload_sha256": "5fa8f7ae909614375e804556e3f7fafa6a8e1e3605fb03acd052aa9244f524ed",
+      "status": "unknown",
+      "command_records": 34,
+      "records_match": true,
+      "records_sha256": "3862e378b5df26bdf0ecc11c6e20853c2c45ba4fb426dd420b33b208d15bee05"
+    },
+    {
+      "archive": "M05.mix",
+      "member": "x5n_midtro_b.txt",
+      "payload_sha256": "c3c901c3185bf30f5b834528d8db157b167ab46f3b8cec03c097a36ff9baac6b",
+      "status": "unknown",
+      "command_records": 34,
+      "records_match": true,
+      "records_sha256": "ed84798ae53191b67b4de04dbf5479ea9cda30a2aaf4c4b451bccf7a78dc9e71"
+    },
+    {
+      "archive": "M06.mix",
+      "member": "x6b_midtro.txt",
+      "payload_sha256": "faa21672cbff93622f60a163e50457f6861486a4468f6a6967ec5679ee751811",
+      "status": "unknown",
+      "command_records": 144,
+      "records_match": true,
+      "records_sha256": "305c1461f2320d8a6df064523b4cea53d196407b1ebf4baa1d4681f8cd287557"
+    },
+    {
+      "archive": "M06.mix",
+      "member": "x6c_midtro.txt",
+      "payload_sha256": "53cb3b956d9ce1fdae3c6cf31fef392b53ca097be4a265b0a6525cce17b61637",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "377a3d4e7d49a26ce8463b5c15c14af98aa005f5dc3de08280e9a2cbcd88f7be"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8a_midtro.txt",
+      "payload_sha256": "cc0451a3b74145a4da9da204b8f75b67117a20b8ade750a321f20168cec07029",
+      "status": "unknown",
+      "command_records": 92,
+      "records_match": true,
+      "records_sha256": "b0c2cb35a357c2e9c0d49d56128673af61724fcabcb28aa9e43a079b34cbff49"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8a_midtro_bak.txt",
+      "payload_sha256": "a13f141f80acd1a289b1e3454c032b1e72631eb80b18ed457eeab7c95407d7a6",
+      "status": "unknown",
+      "command_records": 60,
+      "records_match": true,
+      "records_sha256": "175b7e466c5ed788e2dc74953183dbce8270ee90ba05fa5de7a74da39d0ef229"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_apache_00.txt",
+      "payload_sha256": "67f961499b0ff251cb11684b23ca210ee2dcdf02742f411732a8f850e3d88190",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "39356c91f7f75b719475357a0706945050049b1e9d420d5c056eeb63e798d7a0"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_apache_01.txt",
+      "payload_sha256": "1b7f5e2f75599a43ea262809f8a5a57f4e4a2c0534f4b81949c58ae1bbc236ef",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "4f35b7d3e5480cd7945c97d22868e61133ea78dd5ba565c40516e6f7fd6431e8"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_apache_02.txt",
+      "payload_sha256": "9445e7a8115da4be6b91ba2aa10668ad91134639535962a9a3a31a53d26286eb",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "bbd10d97921229560556d4bbe2900cd7efec20e6c26672a8c5c4452d36c8eaeb"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_apache_03.txt",
+      "payload_sha256": "8c43bb18944a0eb7eba7c9e27f166c3e53685ff8b66ba29a279fef5955eb13de",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "c6f9b3432231915ab0b946d736f45d8d3f80034dfd6f535773008090d5aa1e7d"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_trnspt_00.txt",
+      "payload_sha256": "cbc5a5f5839201ccc19e0d62319865b6bd4d75df2f1441f8d1f93f5a37d343f2",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "960643401fa42b4feead37bcda19d475743dabfaeb7842261fb31189cdd2f3ae"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_trnspt_01.txt",
+      "payload_sha256": "e81befe34f175eaaa4ef71c2ce95a71738f0d2737ccb7debb131b608d1077347",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9231130d7a2de3201e138008892e90becfca2ae9645d2dde41d868ccd3a944ae"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_trnspt_02.txt",
+      "payload_sha256": "7bd77829be2065ff72867f9e7b2b59c83bbce2a371baa0288d468a8b624187c1",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "1902c8ea072a6cc39e0c9b597a9c9f06473c354ab6f83f3e7f63ad7d4f2edbfe"
+    },
+    {
+      "archive": "M08.mix",
+      "member": "x8b_trnspt_03.txt",
+      "payload_sha256": "7bd77829be2065ff72867f9e7b2b59c83bbce2a371baa0288d468a8b624187c1",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "1902c8ea072a6cc39e0c9b597a9c9f06473c354ab6f83f3e7f63ad7d4f2edbfe"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_apache_00.txt",
+      "payload_sha256": "8380d1227caec5b652706ae69784fda6048975577e6eabdcb3ac8f67bfcae1e2",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "a02a595c70821dfbc5a6c183f8610042f47d71dae0f5053f7bf35af527462eb4"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_apache_01.txt",
+      "payload_sha256": "d1fcc598052be69b5638244669f6b9f773c2bf7710cd6b3891f3192d47985033",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "b43ebe70e092e021ab1e5d30a28f0acca960d6643128d35651679fd4ba718d16"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_apache_02.txt",
+      "payload_sha256": "1fbb3064bba1656a773e88368c40d420361ebd002ae56375344327b756f4d055",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ea9994032cf7fb09ed776b956e5bcecadb27b0da8bbe408a78aa422b1cacb7cf"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_apache_03.txt",
+      "payload_sha256": "e89d57429d9456dd81c307a498b3b2e8f5572eebe11e531123c500dafc824132",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "8e9a8a621f035b2e51aae5f6388be7681b52a1b759aca5358b2e35f845706064"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_trnspt_00.txt",
+      "payload_sha256": "772529b857aeaf2fe2bdcc45805857ebc4bf344e31386fdb5ec94254aca01ada",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "45e8320d224da8612e67e4fe04ef785ce5635bbb2ef5efa3ae83250b85a88a87"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_trnspt_01.txt",
+      "payload_sha256": "554a456602f84d12cee0b753a5b36c878ddeb0cb8fe9abf055480179f9b00a91",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "1c6b7687cf6c56d70643cf1f9ba5076b9710fa4216ed9c77c8ad50bad18276ab"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_trnspt_02.txt",
+      "payload_sha256": "eced038e2ab8561125318ff9e39ff932d2a941a952af2e0098118e1c64916ba4",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9a93b357190315a9309e701c64cd6b579de0845a4f30a935151a4e8efdcea7ac"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9a_trnspt_03.txt",
+      "payload_sha256": "719881eb3ab154c90aa23e52070a649222580685fa68c9d4b0683c4de8fab22e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "b7e02ce1cbbcb217bcc7fe1fc7972276877fee002cd1286fd8ba14c0998770f9"
+    },
+    {
+      "archive": "M09.mix",
+      "member": "x9c_midtro.txt",
+      "payload_sha256": "bc127d5720f8eb82eadac090296a366831d1a10aaaabd5222edc4824c4b691b8",
+      "status": "unknown",
+      "command_records": 41,
+      "records_match": true,
+      "records_sha256": "675370a3e1db4ce97ab33259214968e92cbf8da97ebc73e4bbdf1fecec927b3e"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11d_repel_part1.txt",
+      "payload_sha256": "e27653c7c45eb8ccf710f3266e99ab0958ce2cde7cc21c1558199642d1edb458",
+      "status": "unknown",
+      "command_records": 14,
+      "records_match": true,
+      "records_sha256": "0ab1282ac91004882c131255db976fd2b71f60b036f557dfffe5ed9b628e76f5"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11d_repel_part1b.txt",
+      "payload_sha256": "06eed3344a77d7234f9020ab5086123233c37a18dab5b11721737c8dfd08e715",
+      "status": "unknown",
+      "command_records": 14,
+      "records_match": true,
+      "records_sha256": "3460c8e95ad9ed2018188c7e45e6f609f03c6b5db6194b867fe3d4ac21817781"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11d_repel_part2.txt",
+      "payload_sha256": "1751871578dc4f434ff4ca6ea4262205af41bf0798095aa60121ec7f21b9f074",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "0ced423026719c29063943a0b7b08a7e7ef72e4a8d766e511c9c4fcd4e06f619"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11d_repel_part3.txt",
+      "payload_sha256": "88bf584d51af8366dad0be2c3d099532cef25dc1215a28eb7de980bdb43714f8",
+      "status": "unknown",
+      "command_records": 14,
+      "records_match": true,
+      "records_sha256": "913c015345e22ff4a564018b5f62f3d718f0c0bab0ccf0bd7c7f782b4c2affe7"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11d_repel_part4.txt",
+      "payload_sha256": "94895562fe4c796dd1c1a7d938b969a3b3aed7b996dc322c3ee548290e502d98",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "913d5f052e36ecf3148184aa2483383a13a677f958e8d116d07ca84e2330e89a"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11e_escape.txt",
+      "payload_sha256": "07de102c90d65b249a012be88896d4ae7b3c4d115255124cd61863a1b4f3a941",
+      "status": "unknown",
+      "command_records": 13,
+      "records_match": true,
+      "records_sha256": "5e0b3ecc6d80d85ed12453ee5f570a1caeed8ad8e83e77bc80354f855a70fcdf"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11m_midtro.txt",
+      "payload_sha256": "fc392adab8646984d491ce56448edf9da28bba3cc4a7c3885361287306eebc8b",
+      "status": "unknown",
+      "command_records": 39,
+      "records_match": true,
+      "records_sha256": "16103de5547464c7e8e8cc216fdcde77c4cb92092ffbb0c853b144d5639ea367"
+    },
+    {
+      "archive": "M11.mix",
+      "member": "x11n_midtro.txt",
+      "payload_sha256": "c84be73e2b610fa398e677ce42f6b00eaf4cb01eda66bdc2da09fdafa0bad943",
+      "status": "unknown",
+      "command_records": 35,
+      "records_match": true,
+      "records_sha256": "884e246d96fb246516d2b36ef9d0be0986b8435e9657cd4ca462ad69f764dedc"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "asset_report.txt",
+      "payload_sha256": "fd75d197b68f675f54c6d87625bd80a9063d3152a4aa5cc3b10ff43fc7c00abd",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "311e8744e36c627832ed00fae275a36e7bc7c8d7cc10b8e298c6ca1f9e0f4ec2"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "mx0_a03_gdi_troopdrop.txt",
+      "payload_sha256": "4eef705a142182268824c96730994cce4beb04ae75f26c3130ad11b60b61379a",
+      "status": "unknown",
+      "command_records": 73,
+      "records_match": true,
+      "records_sha256": "e21ed10b391709058ec50e776e85647a41aea8877ea9def3551ef9576b77c8a7"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "mx0_a03_humveedrop.txt",
+      "payload_sha256": "0e6ad9f6d2eb1b86e74a58389745ad7f7615d7c222b9b69c569504f93311b751",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "97174b3a1b3a5c3f770fd2284ca932424147676da635a1e049647b5e3d0d621e"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "mx0_a03_nod_ledgedrop.txt",
+      "payload_sha256": "ce67170b79ad31cc124cb8fda840cf5c59c16cb4ba5d5c59590f204d44ed41c3",
+      "status": "unknown",
+      "command_records": 61,
+      "records_match": true,
+      "records_sha256": "e45a1f6ebf2ab980d0787f0748e4781874b245fb4833b559d7243cdeea0f76b0"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "mx0_a03_tankdrop.txt",
+      "payload_sha256": "a08137c12730031fde6d550e690303007d1715c851b95d7f6f1feeb49f208da7",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "db56fe126423744d6cf974ef6bb5f681940d24116031425c2e4cdcde874e5783"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "mx0_c130troopdrop.txt",
+      "payload_sha256": "a18b0e03388c3b7ed921b355d84532ba4f08e9102570a9201a6359cb701e32c8",
+      "status": "unknown",
+      "command_records": 28,
+      "records_match": true,
+      "records_sha256": "d18a9435f5e6e52dfab7d873d840dc1a47a3999e3ade7892c30edc21e120264e"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "mx0_c130troopdrop2.txt",
+      "payload_sha256": "86abaf2b185d446cc287b5a65e9530d8233fc423d047ad75ba547bcf66d8137b",
+      "status": "unknown",
+      "command_records": 20,
+      "records_match": true,
+      "records_sha256": "c47a2ba9ea34d961f654b98e8094782d76ecba60076ea1d7d4b14c0f9743f468"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "mx0_troopdrop_2x.txt",
+      "payload_sha256": "c496717189d01107eefc274bccea227fe73940b61665492be0b0d9584c68fe92",
+      "status": "unknown",
+      "command_records": 53,
+      "records_match": true,
+      "records_sha256": "b3bc03c49644729846e312daa56385df11f352570fdfa0729fe9c7c6557b7892"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x00_intro.txt",
+      "payload_sha256": "1c290d5c8411c569e0f9214f22d9f24454a427ce861ed859a9e9a8776f8cd38f",
+      "status": "unknown",
+      "command_records": 250,
+      "records_match": true,
+      "records_sha256": "682f35db24c6cc9ce767c96202f8cbe2494257b9e3d8938a0b5df5e2fdbef00a"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0c_flyovers.txt",
+      "payload_sha256": "4f1b3b89ab4667026bc99700e1d2255dc1b443fa80de498706ae2f89afa65c63",
+      "status": "unknown",
+      "command_records": 14,
+      "records_match": true,
+      "records_sha256": "e3e72c491ecd3a1eb32863db2c1a5c1cadb380f1b93ad593f36b847108d9afce"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0c_flyovers_01.txt",
+      "payload_sha256": "e5b9ad327f88866dd67c77a2b6c7caaaec2be4b299709d2180424201204b45d5",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "6e5b317b982f366bc353d3b711170bfe30a9863dde1959e3939950da53bc7ab6"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0c_flyovers_02.txt",
+      "payload_sha256": "31f82943956991cbfec41853f75627872b7092bc7bc9a5e575be92c885694b28",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "3da213de6f32cf49d110aaed20bb41c07e6d41b9c102950c925148517be00ce0"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0d_a10_crash.txt",
+      "payload_sha256": "c5dab8e33fa3d2abfc2bda1bab62010aaee500e6c4fcb728ca0bc6b04d914b97",
+      "status": "unknown",
+      "command_records": 14,
+      "records_match": true,
+      "records_sha256": "f49f5d3222730002e770435d03b28a6e220b5d3a9418cf1b8069092fa7463b38"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0e_obelisk.txt",
+      "payload_sha256": "b25409035de73539c27ff60b223eb76360808969dbc2907556821c70b7e0d9fa",
+      "status": "unknown",
+      "command_records": 20,
+      "records_match": true,
+      "records_sha256": "e1eaa6159db507fd834835d9d63799bb58679ac1c535603ee01074d5338c619e"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0f_harvester.txt",
+      "payload_sha256": "44dac9519d4b09c1b9fbc1ccc72d46f6857cbad33b5153e6d6a1b5ba41b1b924",
+      "status": "unknown",
+      "command_records": 12,
+      "records_match": true,
+      "records_sha256": "8189295589e7874bdb8b40c1b7d684e8709d16fe226746e18a0bd8274689bc93"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0i_drop02_a02_e01.txt",
+      "payload_sha256": "7ae3c6154f19b30bcdee16c73c2b74e928dc067fdf1118cd64acdcc53adb14a8",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "2e4163a5057275904435f165845fdc35a09151b84ea9b3e251c65198e2bf0200"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0i_drop02_a02_e02.txt",
+      "payload_sha256": "bba2823b6a58d30861df330b612bb1138690e79a86fa096d72fdb4cfe9772ea4",
+      "status": "unknown",
+      "command_records": 64,
+      "records_match": true,
+      "records_sha256": "ed95b410b4ea9e3a2b2437b5348295a2a102a56f111c27e0f37a5ef50a2e87fe"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0i_gdi_drop02_engineer.txt",
+      "payload_sha256": "78831922792f59d5d280732c22e78892acb34318e5649da211334f2cff9da498",
+      "status": "unknown",
+      "command_records": 70,
+      "records_match": true,
+      "records_sha256": "79d7818c8cb1eabb3985ca47ad7e566417a4bb7bdc9a4c86d53e5a2f792399e3"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "x0z_finale.txt",
+      "payload_sha256": "f32d947be6731f4319c70ed74b07777940e37b733920dc26baa79667bbfcb74d",
+      "status": "unknown",
+      "command_records": 73,
+      "records_match": true,
+      "records_sha256": "716de843e667701e63b23271432d57c68190415acba81d47b24703f6531b1023"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "xg_a03_humveedrop_b.txt",
+      "payload_sha256": "57541d52086385c5a0abc3a3f9c9b4bad1338ef31a4b429c4647bec566fa5dc8",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "687d1859fb41c92eceb3892325e04c0cc96c7058a081f698d311a4ef2a83aef1"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "xg_a03_tank_drop.txt",
+      "payload_sha256": "09a416a13ff9bd9bc6ddca2a28f08d3eb60e1a7e046a431c9a3aa3688f8e9dbe",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "b1fb6a753904c9cbc9da575cdbe025ec219176ee135852ab1fc8b6373dcd0966"
+    },
+    {
+      "archive": "M13.mix",
+      "member": "xg_humveedrop_b.txt",
+      "payload_sha256": "f29900daee2e904a854cd473d4c6c8f8b3e04397495c843e16b6b438db2afdd9",
+      "status": "unknown",
+      "command_records": 18,
+      "records_match": true,
+      "records_sha256": "b78fe8a3c4f4ce0f4bb842f647c557bd263040d63963d25ba95bf5fb702978cb"
+    },
+    {
+      "archive": "always.dat",
+      "member": "a-10_1.txt",
+      "payload_sha256": "86e11cd444d3d6c4e26c0230ef90f91102b076f3bedd0643c46d087e49caf61d",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "9df5beb18027ca1b712fcf955d9cf679261b8cc374a90641ac270b19a21ba5d6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "a-10_2.txt",
+      "payload_sha256": "5a0d9aaed60cd206a2485e041561c44ec8404b70848adb7be3d68b1400872768",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "ad3c4d84aa09c2a71ae5fac6a14d2528cb6ac3e3349e162c9d2e264d4c633ed8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "a-10_3.txt",
+      "payload_sha256": "33087d349f3ee9d218bbd417734dafe153fdde6f19c2180f82e5628a61d6ac73",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "a8c90b40ce18200576120dc1f2c584818194887647f1f29c80d6db50c88fc671"
+    },
+    {
+      "archive": "always.dat",
+      "member": "a-10_4.txt",
+      "payload_sha256": "03fe68152c7d77d50d3b25a99fa661247704d25809571727da3a840fc6debaaa",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "c4edba150ee6cc69258fd9e36c29f8e9a45287a36e5dd00d3da0f5721147005a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "a-10_5.txt",
+      "payload_sha256": "18cdbd26c25f5fd0d1a99fc20fb0582ee5d45ec88cd16cf5c38cbb2fd6315979",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "62080cbfa25beab083800545cd84702987d8e14b6ac583999ef98a8a199d1469"
+    },
+    {
+      "archive": "always.dat",
+      "member": "a-10_6.txt",
+      "payload_sha256": "f9451608484e56158e928616b6a148666102c42b293505089eb196fd8e39af33",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "38d0a2ed625c46bdd4ae651d07954443d4e05020c3d6ab9fd5b4a9c6fbee8730"
+    },
+    {
+      "archive": "always.dat",
+      "member": "c130_1.txt",
+      "payload_sha256": "0ae3a7687285cb2f374eda7c68596c039235fbc9d4a75bf57dd90edaccce40f4",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "eab93cd1c369a95bb30bb12689243eaaa3a77dc24d34fd2dadbdea76888cabf4"
+    },
+    {
+      "archive": "always.dat",
+      "member": "c130_2.txt",
+      "payload_sha256": "bd756f4fad4346fa53a398ea2a507064c30ddb9fbf0d2f61d6e56d0978d782fa",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "0618f7c171c108092ff08b210c7d0103d49d16b38d79b46d2ed8ce4b380c1012"
+    },
+    {
+      "archive": "always.dat",
+      "member": "chinook_1.txt",
+      "payload_sha256": "5e330649f04cedce80486152e4631eab44c82ec72ed4649cb15b882655d89d96",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "37eb03758c91f2e2c40e3ef24acea0131a6d729c01c1231f20f9293b809f511b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "chinook_2.txt",
+      "payload_sha256": "69012df76063de1f31509a0d9bda8c308c57855db4812379c1276c069c49a08b",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "8173cff724e1c65cb00de1f83fb532220f17d7ef92c9f5d37ae6f1c373cb941d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "chinooktest.txt",
+      "payload_sha256": "e51fcccd20ef101ab8359dbb786b7adc5e09b129e83c0362e3bc6bf9eccf6e20",
+      "status": "unknown",
+      "command_records": 38,
+      "records_match": true,
+      "records_sha256": "54ca783291881eb4a6e6a1c95b10765877afe8ab5fb51d4d9e89c7fe1b31b3ae"
+    },
+    {
+      "archive": "always.dat",
+      "member": "cnc_c130drop.txt",
+      "payload_sha256": "0534f7fcde2f6d0877102b5234d24b48caeac9fbfbe819e25910d5717dec9961",
+      "status": "unknown",
+      "command_records": 6,
+      "records_match": true,
+      "records_sha256": "0e82ec24f789ae7beabcce8047520616d7ed37d1ffbd22e7e6514bac0677ef87"
+    },
+    {
+      "archive": "always.dat",
+      "member": "comanche_1.txt",
+      "payload_sha256": "2b69b0a7539aca9e17d5318f59c12b1e41eaf2856b5828ad6651cdca30e40377",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "fb3c3a7c771e05a9b4c1b7f05bf2214511dcd3d7fd32a3d715b565a97becb484"
+    },
+    {
+      "archive": "always.dat",
+      "member": "comanche_2.txt",
+      "payload_sha256": "bebdf23080e2842e0a1bf7acdf34ebd3d4ea3f58fe3e013ab57759da55709a9a",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "50eb4985446878be6f78ce1c6a73fad51d58ee0f3f96356ffeef6c7d432f8573"
+    },
+    {
+      "archive": "always.dat",
+      "member": "comanche_3.txt",
+      "payload_sha256": "74d754fc5626fda13a5d30c8d8e5fcd270f435ab4fed5c8c022860025a9c03d1",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "5e4740a2e60f09f98a42cda5f40ada61c5a6dec5ecb4083b46a7e87c83988dc0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "comanche_4.txt",
+      "payload_sha256": "f5186b8e546bba863aa46c4d0308b39c313905cdb8e43b7fc9ff5eaaadf8f097",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "2e8130b541834502d2aedc75bd3a5b8f6659059cc796b28f6d355c03b7949f27"
+    },
+    {
+      "archive": "always.dat",
+      "member": "comanche_5.txt",
+      "payload_sha256": "c20338d14058160b20c65b0ad4bea3dd8edf23d67a560755b246013ce64c95e6",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "13ae85a18f4bd7c8db281ded94c8e6d47cffbee87073e77c946ea33fd5353d11"
+    },
+    {
+      "archive": "always.dat",
+      "member": "credits.txt",
+      "payload_sha256": "ad636b11c72c9813f7bf2088641d05cf36c64c317b370658eb12fbfa45dedbb0",
+      "status": "unknown",
+      "command_records": 426,
+      "records_match": true,
+      "records_sha256": "35ccc8c2d4a9df0f05f7ac179289b59e0be007c2c6e7f422fd9dc9c48ef2198c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "flyover.txt",
+      "payload_sha256": "da12a9683445b61c874f3b0489d1042c2e120cd30b3cf9f2cc5dd71ca01f8298",
+      "status": "unknown",
+      "command_records": 10,
+      "records_match": true,
+      "records_sha256": "d742d1ae47df509ee4fab204c319b6007e5318b32cd3fe6ba7c2f68e3e224d63"
+    },
+    {
+      "archive": "always.dat",
+      "member": "gamemodes.txt",
+      "payload_sha256": "9e92cd3952d404db0b693bf0782957fca3f2a2c13adb08ec1c9bb5751974c844",
+      "status": "unknown",
+      "command_records": 87,
+      "records_match": true,
+      "records_sha256": "37d63dd4d8cfbf6ec7224e2a1154aa6c44c9c15f4724a3fa8b855da6672991f6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m05_xg_vehicledrop2.txt",
+      "payload_sha256": "89a891d470671bc44f7fb45b1a0e909ad5df47300254315d8de654d9db3f5092",
+      "status": "unknown",
+      "command_records": 23,
+      "records_match": true,
+      "records_sha256": "6ca752079da45d485ab7086209be179967c438103998d52b906d5857f959038d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m05_xg_vehicledrop3.txt",
+      "payload_sha256": "f8cdd247c4b104a0a94970b401051713b6d50cdfa58c195febac202a6946f6a7",
+      "status": "unknown",
+      "command_records": 25,
+      "records_match": true,
+      "records_sha256": "ef00046c3c1810d637b52892ab3632ee7a641e7621b25eaf829fb96607fea692"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m05_xg_vehicledrop4.txt",
+      "payload_sha256": "23a82813a0a0cab17dea1d7dddc452ff171f5fde1131198cab2224eeb6068288",
+      "status": "unknown",
+      "command_records": 24,
+      "records_match": true,
+      "records_sha256": "d27a81f54e73104e9b0b7ca383b9e1158c29a44460fa4861b245f054fab28266"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m05_xg_vehicledrop5.txt",
+      "payload_sha256": "aa5b079c888dd8c66738b663a172607790240b4d42add2feecca7e362cf95de6",
+      "status": "unknown",
+      "command_records": 24,
+      "records_match": true,
+      "records_sha256": "c4784bea3c89996206cda2a411178e0f70263fddc47e49ed2b0cd25c72132230"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m05_xg_vehicledrop6.txt",
+      "payload_sha256": "d7a1dd35c33ccac72fec0e84a0345a6ffb90945c4e8aad3d445975ea97a49672",
+      "status": "unknown",
+      "command_records": 24,
+      "records_match": true,
+      "records_sha256": "547295993b8856df66210a741e16ed07a70dbef15ec7f12e0da9ee0a1c1f71da"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m06_xg_ev2_1.txt",
+      "payload_sha256": "0a89b28d27f2069e59e98f548b51fc9c852266492ced474513f304399e62fac2",
+      "status": "unknown",
+      "command_records": 12,
+      "records_match": true,
+      "records_sha256": "40c00606cd754b708872271d7878cb47c5546488cbd0c018d1c8688d390fbd2a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m06_xg_ev4.txt",
+      "payload_sha256": "aa18d5b345d26fd7439a1800524d55a0418aa3b7f0af544dcfb8f429d7017f45",
+      "status": "unknown",
+      "command_records": 13,
+      "records_match": true,
+      "records_sha256": "2a56fb4b67824386ddc708d59567d9c2b659e155d7f28ab2edff1cbe5210d15d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m06_xg_ev4_1.txt",
+      "payload_sha256": "aa18d5b345d26fd7439a1800524d55a0418aa3b7f0af544dcfb8f429d7017f45",
+      "status": "unknown",
+      "command_records": 13,
+      "records_match": true,
+      "records_sha256": "2a56fb4b67824386ddc708d59567d9c2b659e155d7f28ab2edff1cbe5210d15d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m07_xg_ev3_1.txt",
+      "payload_sha256": "2077433f4fb6ed59023b99a19ca295f51aa0c01baf31b07cacac2ec471d46859",
+      "status": "unknown",
+      "command_records": 12,
+      "records_match": true,
+      "records_sha256": "1f0b611a72f121cd6119769c41244b4d6bf59274bec89adcdf45678cc704f4bb"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m07_xg_vehicledrop1.txt",
+      "payload_sha256": "40373c596f34e0d81612ac3220338ecb2380225b68aef3feb54aad3894495716",
+      "status": "unknown",
+      "command_records": 24,
+      "records_match": true,
+      "records_sha256": "a2c4000159973ce941bf5be25bcf3a8c55cbe5ea037ea815867ff1fc425095e5"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m07_xg_vehicledrop2.txt",
+      "payload_sha256": "5e0a33f7129df412de9f54107fac970d5721f967126d39e829a68617e4376e4f",
+      "status": "unknown",
+      "command_records": 23,
+      "records_match": true,
+      "records_sha256": "7365d3be4b79242a4de0c26032c5dcc193c96865bf9375116804fcc3570166e6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m07_xg_vehicledrop3.txt",
+      "payload_sha256": "ddc4f3a9a09b1bc4dbeca5ce6f6351c15879f72b61895d1316158c44b4763b13",
+      "status": "unknown",
+      "command_records": 24,
+      "records_match": true,
+      "records_sha256": "704159424688862787164286fa1263e70a48ba2b3b079a787afd83da10abb6cc"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m07_xg_vehicledrop4.txt",
+      "payload_sha256": "871ef0a8b5cf177a393d582e8b236c7eefac6eb16dd1bb5c50f27c2ec4f06534",
+      "status": "unknown",
+      "command_records": 24,
+      "records_match": true,
+      "records_sha256": "826d107127ee23b06c33e44b8e70a166a2507d88dfd3cf38df40a4f492c4cdf0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m08_xg_vehicledrop1.txt",
+      "payload_sha256": "0ed1f2f64ef909f431794a496897ed24c071b7861bea5f8375f4fdf4c7521231",
+      "status": "unknown",
+      "command_records": 23,
+      "records_match": true,
+      "records_sha256": "7e04f4b30e52d60ac7e85001a2d5cc8c9a8e0c03f62bbd678dc6191720dc9ac3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m10_gdi_drop_hummvee.txt",
+      "payload_sha256": "3fbe40954f18c2bef8c76cba4819605245e02f124a10c27d1e77e621c3448807",
+      "status": "unknown",
+      "command_records": 22,
+      "records_match": true,
+      "records_sha256": "bbdaf0eafc9283feeb4231553746e403bd13f29af1b9900c8bf8c02bc26efa03"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m10_x3i_gdi_troopdrop1.txt",
+      "payload_sha256": "d83f3fc45b5bb6f5cdf5e7682937e89a8e30c0551d121760281db6ee0469abbf",
+      "status": "unknown",
+      "command_records": 75,
+      "records_match": true,
+      "records_sha256": "9dfc682a20042dcde95dab45b45e3cca6e249833aaf3dc34ecea022670a429f1"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m10_xg_vehicledrop1.txt",
+      "payload_sha256": "e6cc8f43e753a213fdf5f7234a508d9ff5a87bc095fe716c3ee86427ca6b77fa",
+      "status": "unknown",
+      "command_records": 25,
+      "records_match": true,
+      "records_sha256": "3a74942dd775b852f315892b7fce179b2bb33d0e26f855248c395ca3b838acd1"
+    },
+    {
+      "archive": "always.dat",
+      "member": "m10_xg_vehicledrop2.txt",
+      "payload_sha256": "73021b992c2240aa078cf9d323afe222e41e84bc9d15bd210807fcb77b07364b",
+      "status": "unknown",
+      "command_records": 26,
+      "records_match": true,
+      "records_sha256": "24adcc20d9753a417833905ea16b8bacfa70c6d56a9a241e572762c9c3530873"
+    },
+    {
+      "archive": "always.dat",
+      "member": "mx0_gdi_reinforce_area4.txt",
+      "payload_sha256": "2cd88a0413706419d41bfb610725e234080ac4a09c404e1407744e4afc3a184d",
+      "status": "unknown",
+      "command_records": 62,
+      "records_match": true,
+      "records_sha256": "c4760da0575ec968caf1f1dc3ebe66291a2d80e1f392b1aa904d75ffc0ffc422"
+    },
+    {
+      "archive": "always.dat",
+      "member": "mx0_gdi_troopdrop_area4.txt",
+      "payload_sha256": "1ce69be40c3ad9870fa8e1cc0593ec3cff920da9eefdfeb96b0bf3752c8c862d",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "cbf23ff87baf70f2792749a7d03028c8c8e94694465d122fec791e6df30ff5dd"
+    },
+    {
+      "archive": "always.dat",
+      "member": "orca_1.txt",
+      "payload_sha256": "aa53f962b6b9c1ec6b8c813869da88f19ff7a02b29018b2a48299cc0f0c6710f",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "95d7c6d86da65d933df7174c0674614c6140b0ec6602832ff83b22d40799b3ce"
+    },
+    {
+      "archive": "always.dat",
+      "member": "orca_2.txt",
+      "payload_sha256": "b27eb31fbe9da9890254dc2cb90f0b56d0a8b40a328c7ec412b8be73056ff7dd",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "baab91ba97d8f12dfc889d840daed36e04d409159781953f11e769643f8efbbc"
+    },
+    {
+      "archive": "always.dat",
+      "member": "orca_3.txt",
+      "payload_sha256": "d2efa392be4ce0272f29a4e0c86949925f69ff87c3b1acc0c6c6fd94c1409e03",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "1ea70d6e01e9307d31911fa5f3a81b45966b6cf8c6d2d5942526f03d9627ceb1"
+    },
+    {
+      "archive": "always.dat",
+      "member": "orca_4.txt",
+      "payload_sha256": "cea54e151a671c26720aab15eae626a15dbd87e63f76e35466bded5c282f99b2",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "1c0ed301318c597ccf803438ffe124ac52a772a5ef498c331df869c5b6c20e3f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "orca_5.txt",
+      "payload_sha256": "8f84748ea3dc84c10310d57d183c695cacb6942c578648cb38fa6f1ded0b7cfc",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "72271d4f653fc14057a8f07570c26730b61735262a5061af91710facd1080a7b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "orca_6.txt",
+      "payload_sha256": "a9fb776d9277f1a483d053642b6b506e627ffcce66d72aba81c35debcc38c259",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "30937a00c0b0698e103abcbadfc07febe163d520d446012acdb9460a44c4cdac"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x01d_c130troopdrop.txt",
+      "payload_sha256": "e821811266cbac74722ed92f85be0cd248826426f67b461ff91e371893fc523b",
+      "status": "unknown",
+      "command_records": 45,
+      "records_match": true,
+      "records_sha256": "dd2b0b9d5e70bae857400df2f428d2f888e667bab42ff0b10b6c4508d6710321"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x0i_drop02.txt",
+      "payload_sha256": "caec6d1daf99c595a3cf0caf1161a404db8a46e9553f53585c22e7f2f8b68b37",
+      "status": "unknown",
+      "command_records": 63,
+      "records_match": true,
+      "records_sha256": "042f29766b098dcd47e7d5a65208bb4dda4c067bbe4a07afcb1ba059933a14b3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x10d_chtroopdrop1.txt",
+      "payload_sha256": "b41aaa9938926443c908cc78be078dea6ec0478a6e01cb1f47c1bf52dc5ca1e5",
+      "status": "unknown",
+      "command_records": 50,
+      "records_match": true,
+      "records_sha256": "477a03df88a2a7fc79bba974ac517cd0b7a994fcac4612c8ac2997b671f9240d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x10i_gdi_drop_powerup.txt",
+      "payload_sha256": "1b46c16bf7970ac52e9a13505fd6b97a14804ec4ef23049dd6be86a9dac5ca26",
+      "status": "unknown",
+      "command_records": 18,
+      "records_match": true,
+      "records_sha256": "2093f642129029ddf3add640ae9a5d794b2806372cc89e27a11bd7cf46abaccd"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x10i_troopdrop.txt",
+      "payload_sha256": "5d69746bf7899cb36fad2d1d212abb3d293b501be246bc24aed5a7beb65f4ab9",
+      "status": "unknown",
+      "command_records": 76,
+      "records_match": true,
+      "records_sha256": "3c39a06c9fd5258a6fd490456a0e0eb0d4c20e94ada7ba677dbbad9fa8c6377e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11a_flyover_01.txt",
+      "payload_sha256": "af0fe34776c2f24164d9c928617aeb26182412b4c060c165f97ce6c5f531c977",
+      "status": "unknown",
+      "command_records": 17,
+      "records_match": true,
+      "records_sha256": "8d408e5286956b75a0c0a3c130207038d7e5af61c833ac396970285268046b16"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11a_flyover_02.txt",
+      "payload_sha256": "ab021b13b58cd3cff07614545cc537cfac5b4685d60d01801987957a925fe5f0",
+      "status": "unknown",
+      "command_records": 17,
+      "records_match": true,
+      "records_sha256": "0a8dad3d2f7a2502d051903b3d7e3304d986f075e7a777aec95a968b63f16a3c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11a_flyover_03.txt",
+      "payload_sha256": "1930a060f8d362a5867a12960d8d4124d5dc45c27af8d578af1a35a61144293f",
+      "status": "unknown",
+      "command_records": 17,
+      "records_match": true,
+      "records_sha256": "398bcf7a41f336fbfa5ba66b2cbe839286717984bb846c9c5b67d96272ac09c5"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11a_flyover_04.txt",
+      "payload_sha256": "345a62eeb65390449f3918c38f4df20d23ec3c2da9270a4f24510030f324504f",
+      "status": "unknown",
+      "command_records": 13,
+      "records_match": true,
+      "records_sha256": "35a05fffae1cfb089d541a6b13dcdbd6ab4b7f82dc4ea72dbd285f1a1c91e161"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11a_flyover_05.txt",
+      "payload_sha256": "77976c6d17e52910267bfbeb8bfcc79fe467b162ffa833a18f4792210cd2a637",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "b3cacf9324df95db8858e6983f4b6dfee8233ed067e78b8f6c6376a31c449012"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11a_flyover_06.txt",
+      "payload_sha256": "b63e1a06c5c801dca7b2eb2a7f64b4f6f7e8aa3ff7622a9f36afd71418edd9fa",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "df0b08b2317ecbe113e2bc3d37229071562d1df64ddf07267174c80234125aca"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11a_flyover_07.txt",
+      "payload_sha256": "7679d2802fed579e0e41ac782f4d441c85a83ace57eee56a9b9f47ef8fb84464",
+      "status": "unknown",
+      "command_records": 7,
+      "records_match": true,
+      "records_sha256": "61366977d2e160f868287d61aaa55539bd1eb6b2a927140603967510150afd1c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x11d_c130troopdrop.txt",
+      "payload_sha256": "c1445aa42a82af4d65ba4ade0e79e2896464ec4799a2b47484df9d401cc15ccc",
+      "status": "unknown",
+      "command_records": 45,
+      "records_match": true,
+      "records_sha256": "358dc0e7627f7d5cde9cc025def6d94a0c54dd235e2deb21968749a709486ed3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_apache_orca_chase_01.txt",
+      "payload_sha256": "6a1754524a6f540aaf74a04edff85f30dff18c773cc2cf39f39f50b043259473",
+      "status": "unknown",
+      "command_records": 16,
+      "records_match": true,
+      "records_sha256": "20aa873b8901f58a7efbe91499997e413dbd6c13a44ef8aa6d658f0596861d8b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_apache_orca_chase_02.txt",
+      "payload_sha256": "882027aa20f29ce8188eb8f8a132c3f6a18c83e02b2174db52fdf7bbc8bee3cd",
+      "status": "unknown",
+      "command_records": 16,
+      "records_match": true,
+      "records_sha256": "91ca3961b6f49a110cb6f6004ad4f4ebb94385a0e1f1ee945ee6d8b9e0c63324"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_apache_orca_chase_03.txt",
+      "payload_sha256": "c7e987b2af143ca685f480c4b40e4d46bab63c1e85e89b9d250355f5dfab100f",
+      "status": "unknown",
+      "command_records": 16,
+      "records_match": true,
+      "records_sha256": "592f58faf89c4644be4326c9043658a6e374c84acd0063e040f6d01cb9f1b981"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_apache_orca_chase_04.txt",
+      "payload_sha256": "9d3de881d0885e6efefc33529e363921a35f07655eb6224e4c2b15d1ae4572eb",
+      "status": "unknown",
+      "command_records": 16,
+      "records_match": true,
+      "records_sha256": "5ce86eca722f9cdb16a43341f32a3400bf760a89e490ee359ad48c3f6ae71436"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_03.txt",
+      "payload_sha256": "0a784bca7b87ce951f8ffc48377cf486366c3cebedf44490301584dcc921a894",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "2d22e77c56e37387a12e12130f6cdd565929946e8d975ac30ea5c03bb16cb3be"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_04.txt",
+      "payload_sha256": "00e244bcc16eeb8b4b04920ce0941a7d2795f4757e31a157b139861ba2b748b8",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "c8bf39009794d554a1e22b86329afd63bbf17e6354acffe8059b6a863abff719"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_05.txt",
+      "payload_sha256": "888b18f4e8ff7942d1c56c798834412af47c39f46d05787737b6c46e0241fbeb",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "1ac8d82a4477e5b61c2185609fb427dd8771b149b885b5b0cf4f3c94d7b76db9"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_06.txt",
+      "payload_sha256": "55a1891b585b1c83334aaed5461f6dc365e29f3388f33164c726b2d9615885b9",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "c347b3863cee54e343671e5802a8af783670ffb7158f0e71f612fd71738d0057"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_07.txt",
+      "payload_sha256": "acfde6a374a4f89f4334e54049116b66ad60de592b485d1d2ba49de201e8545e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "76fceebc378ef20e0613ee95beb4df8e691f607531b54a5d2e53af981e9a4d50"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_08.txt",
+      "payload_sha256": "2ee03d81ce0d15022629909e3047da399593cdcb1046a8619592160ee455c680",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "e8509bb471983e6b2b0bee441f1d73dbab91eae8f5f6dca12fd2a4262069ebf0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_09.txt",
+      "payload_sha256": "df5b22d4e427418e4ea8ece13ce1588625e91c72e9e421e76adfc1c8318596e0",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f27f260da3a181b8ee42c83372467a38d6805023c7c14e0e0ccdf23a5ab9f10e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_10.txt",
+      "payload_sha256": "8f7f8de2645891da1887774f25f22689646304816f30adbe323125679daa9345",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3942bb2f4b2144ac8e1a93ccc43c017f3c40e833aa54193efd45b25e213635d7"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_11.txt",
+      "payload_sha256": "844305db7fe4894ef7add5f943990356585e6227ed3c96623f734ad971c040b8",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "da24f8fabb935ca739ce95f7195d9e3241dcdbf429c23c56f48488f61ed0f476"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_12.txt",
+      "payload_sha256": "ca52fbad199e1d993d40bc748686707cde59e0a44661f9946053fb072440a29b",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "361cef8216f0a0a48bae32cd0ccc9e36a69aa1f77bb5b1f5f11388cbc221e804"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_13.txt",
+      "payload_sha256": "68b4af122d3316fc4e33f88105c8b8dd7f9d39f54b983ec9af46a726b36bb414",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "cb5b0bf3b0f7656858c570f971b788d5f2b68441d73576a913cf49bda71b1c4e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_14.txt",
+      "payload_sha256": "7d13248ae2e1105f34f36016cd3886dec30106b1379ff6f91a654b35883420fb",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "09dcf4ff3077c9055ab664e028a0272f83fd8070188a5ec2b74ed1657444c2f7"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_15.txt",
+      "payload_sha256": "74f9fcfb40d8bbec5a938932c581c1687c313dbc32aedc59377eedcaacd49e72",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9d068c7581727a4235ffaaa9705e937a650fb66f08c5452644e6c490944c1725"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_16.txt",
+      "payload_sha256": "cb767014941979bee1561ba9d3e66b5527c7371fdade60ea8466d7b02a23f679",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "17790e6c3828a3b48ccfda49004f361ed6354d8e855684bbc2c712df5c11fbcb"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_17.txt",
+      "payload_sha256": "8fdd37eeb427ea615a4820a553b4d47dff63fd647a284193941f3c3a5a55714c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "df1c31e70f9f91dc44771902c97cd51db4ee5a9b3268dde4d1b71e3ea9d35a67"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_18.txt",
+      "payload_sha256": "83b1c5505d4708aa79689256d9dc1d370236ef549e258811915d422d89a1562e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ff03b745a58706e0c8006b02bc8a3d180fa538d3ccb1dc27e502a203fcf0198c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_19.txt",
+      "payload_sha256": "c8c8bc5b6817510757cb287926ad0ec8ae9612efb6908a9528677f78029a0471",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "644b7034a64ba644e7054ac8329ef3c73cc92ad7e7e46b2207d7740fb652df75"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_20.txt",
+      "payload_sha256": "61840fcf42e299696efdc01389d54768ca2e129cfde852971a41d4e1e54ad22b",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "00d3a5a35af44e09f97d1b48249c03c2ceb095cdacefbaa19399774c183b9f93"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_a10_21.txt",
+      "payload_sha256": "a66eecdc0b3af80ab2d1e70cc18e2c0b9be7e787515945bc6a940e7af15d5f0b",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ee8ada12209f9017fc3159a5645a9480c5159175100c170cf17f6b189d0bfcaf"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_01.txt",
+      "payload_sha256": "c537ce30d172e03a37eb2177d2c8c056f5c0a7290568d6894a29be6c8a040599",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "20fe4bdac6dc785a043daffe42ceb8506ece1bfdfc6e7ca9c5bb6447a537a630"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_02.txt",
+      "payload_sha256": "593063adac6a898d942f22afc05ba86abb62a49599ca16f12ab87cc49385af2d",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "4c84bf7d9f960f1f2c78c6659650c4374db8e5e71adce96344011a28e56c242f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_03.txt",
+      "payload_sha256": "bd5b6e1b676fb97621c52ee59b2289dfc0fc34e6feb772461c98a48fa219f166",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "75c2496f516d6272cba258613b19ba35c0b03e7839867197b3e74dc51ca52261"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_04.txt",
+      "payload_sha256": "ce3d6cfa35d4dbce92ea3e16910c3bbf1ed213b373b02e285f57e6976b7f15ac",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "c889d2669a0e766f11854712ff16f2c47ba58c8907d48ca5fb49ceecee4214f6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_05.txt",
+      "payload_sha256": "9381ab0f255b9a6bbbd8bd4d8b5a13e67d87c37f450334450a46ffb2c3e77378",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "93792be49ddcea2e8fd615d06edda5090490b52d10ef88c28b3191eea286f3ab"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_06.txt",
+      "payload_sha256": "28b00e7a1058bf345e83fcd56ea470b5cda724a1d0ede17a50d335ca83e05f4c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "763b16024d5582b6212917b638eb9770162e9f0c61c0430755bbfc2ca2416e3c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_07.txt",
+      "payload_sha256": "c2d430efc4e1daf7c6025476e5aed08d99e1261b1603bb905ce91f7c4f777a27",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "92efdb7c0f31ddd0b44803da07ff7d27878e4e04e322c5ad636dff8429070967"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_08.txt",
+      "payload_sha256": "aa3b08959d2c99e80f46fb0f3bd7e154baa2d09058a9b9e112b03c2a04b23280",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "c983b38773200e09b562a18a6a2a02d0c484139ecad5b5657c20e74fbe8b883e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_09.txt",
+      "payload_sha256": "c3f1b7918f5179d157b727b332e96c0affffab6582e81ab3774bd0964d3541a7",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "d1dd1255c505db534ef3ef9ac8dd608b9fdedceedfdbbac4a03606441bdf0f25"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_10.txt",
+      "payload_sha256": "88c351a4edfd665ece5ef8fb44aa57c1d054e45ea1eef81712595e675ae7777e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3f20fa6d1631a73e7bf87ee96a95e40236fb9dc17dec98cdd654e345733fede5"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_11.txt",
+      "payload_sha256": "d6665345145be711c616765a309a822cfe5b662159ea55917a159b6d5fa25936",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "b2b966ad5c1a7d94d78b956e37b2e3829c6d18975e6bba71175dbede81966b8d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_12.txt",
+      "payload_sha256": "56caa36cc339d52a4b9b3bc0edd7bbfcb972dfc90852f02b60237423ae44e6dc",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "332d9c2e75e3ccc3ca6328e8a3f4d8332218e972b7684842b9c8fd116fb402c4"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_13.txt",
+      "payload_sha256": "dedbe60c4898f66a2f83a00e2619eb884670fce89cbedcabfb1f50715913a093",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3a53e2c312dda24696390cff19b1e817c37abae2c21490ac0c6768e9c3079413"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_14.txt",
+      "payload_sha256": "4094daa85fa8f5f957d8faf88029e6c9e5eb6fa115d66ed4150a7e30f51a66f3",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "16fc7a384b6dbcdb3a0e40b92fadf5e3dc866b7f9d6ed862f5f980b96b77d3da"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_15.txt",
+      "payload_sha256": "1892813067837698c9256261d382daa57ed89af3bbf8189441dd593bb5ecdb5c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "597db24407df5e0e7d221e7ab71d6d286d3afb0da92c27d2188921121a7e6c81"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_16.txt",
+      "payload_sha256": "2a2541e2d9231307f436819c10b81433c65af9a405369c4d6c8f4408dd01edce",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f347a5816f8bea3bc8c2e8f89bfe9868515c64c1276bd6c9764db811736c8e4c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_17.txt",
+      "payload_sha256": "2344234cec9042658a7aaaad66efcefa9e851a76263b65cf9807ea01362d7982",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "bb636783e089ebd15f46d0b9d8ba23adb2777a7712e995acaecd05b7dcea2140"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_18.txt",
+      "payload_sha256": "dc38d6da48307bf24614d3cdf68392c8abaa478bb2fefc9ad9c632b345bb8fce",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "d7a638d091f1fb40a8f18cd5f5e3d4fc33c277f4d357ee8a37966f1740c4f54f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_19.txt",
+      "payload_sha256": "aea0097aabb3d01e6e7afd81aa7edfff01b51b43d15e4ba0f08c43e228dd6a70",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "a75e5788516bb972a762b9f3e1cb6d55571deefedac80dedb635a2e1260115e7"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_20.txt",
+      "payload_sha256": "53b86f08969e664002070de516070239d00062ee0ce70eca628532dda59bfd07",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "e20a90ee5cc18b36bf2f859ea04d89e730f9d395afcf6d8095afd3cacfcc4199"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_apache_21.txt",
+      "payload_sha256": "3597dda751885d813ee8b12cf673d508f2442e6a12ea16d2afbb2305f078665b",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "dae3cd921cbfcb401b70194db410ed3c8db01a6887eab6b4e742a6958c569143"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_01.txt",
+      "payload_sha256": "f5c7e673f09cf0fb7f401e0a1bea48c53bee09b982bed34429476e0961c15c86",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3c8bbec34e756cfd3a37c30747764feacac061fe18c3671ac153f7e2748e227f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_02.txt",
+      "payload_sha256": "59959e9dba8dd4f7b9ab76e0012444d169c3cb0173748fe0c7275367d8a1abbb",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "5dd1ee82bb82babe79a46be09eb22c3c15468bd29fa653bc384816a049cf5b91"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_03.txt",
+      "payload_sha256": "b4db8fa80295c6f6148ee12cfe7d1d3dcc1b65c07ce2699984ec566f46c4121c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ea8c88ac6abf8967da5d0006862f990fcecf6228a5a3c2d1cfa356e3693982fc"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_04.txt",
+      "payload_sha256": "14e2b36ce7f6a27c8247cb3836fee72e0862ddcee084b19238ded0258b9e41be",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9fe6e058cb6af1a0b02a7fdb36007e00ec95c32247f02e833731dde85e278698"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_05.txt",
+      "payload_sha256": "b65196493f0c0ea1924baaeac10cc8a0c936805db827abcdeda8c8418c15f2e6",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "2e2f621d93c7f5998bc874547ff2febb7e4db5a31506734df1414fa1f4ac89a8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_06.txt",
+      "payload_sha256": "fd4b84f14cd24840acb7fcaa9dbd123a4b1c6b0f11382e45d3d9ca062326df62",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "bd30b6b514bf69bd58c5f5eb19cc4f45632d154155d91b8e27d5e7aed8959186"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_07.txt",
+      "payload_sha256": "a206c15af2270a1f31b0c1c783bad6b3957d04468904d4a9112cb9e37190066f",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "916523533c94b87d4ff62feff9ba4320db66f06b8325beec683a4f9e82035ee1"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_08.txt",
+      "payload_sha256": "d6a8942f9d8d290cce5ae534f3013d7a090b40f1781a24cda93af0ef9c399354",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "54c5a7ba1bbb8dcb2a3e3b6046923faf5fe5a6f15550b907b6e2de697ebef760"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_09.txt",
+      "payload_sha256": "0f1742a44a74ed6e47508e2d21f986de4e70d6064a9a450adf3433dfb42c0997",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "bb6717305d346948ce3ff7982f9e8f544b633f70727b91a9a221bd06cdd0cb0f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_10.txt",
+      "payload_sha256": "5e56c6dfc7b5ca81b0de4901102f11073b09d96df18111e972e46847c4bc7f6f",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "77120c38768543380c55fe46bdc29cfbb8bec0aafd391cb886134ef4ee952b09"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_11.txt",
+      "payload_sha256": "d1d657f7778bd0acf0b0f08db4ff31d67d1f65b02c498d6c06b35d7a3b75418e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "be05db581b3e8c15ee9e7382239756c03064be4b39569daf2309a422b5f7a253"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_12.txt",
+      "payload_sha256": "267419d8e543bdd37e0aece36e5fa7dd374867b329b23136c8938f22ed35a79e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9043d6611d89d1bb5a93c18f130c8fbac4378aeab016deb5407e7d0692286671"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_13.txt",
+      "payload_sha256": "15d22b14709368aa45ca00106691fc141806825bc5c9b7cb5b7d83e24bb0f77c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "1c3f207f9e208262257459e6d4b99cbc08e132ee901d66b4b598cb2b1f7e2d29"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_14.txt",
+      "payload_sha256": "8f03719d5a090b223490965a4918c8cb1cf084a93fc9332fa4a1c46629abc123",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "6fb7d894ec1196a9be2c6f086601c0ad03ad39edde53ec01e5f6f6f94fb74fae"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_15.txt",
+      "payload_sha256": "c01f5685de34e03de6105dae51d9d4b2f3eb43413f7f0f95a19bbc735094555d",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "10806941e86badefc0614209c3c210033e5139f4cdd7b60885f08cb5abde2840"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_16.txt",
+      "payload_sha256": "97950ee771cf70b88acde5bc6be74be51348ed4758122cec34dc2e25404b3fb3",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "d8c2a81a55062000437923288b672dbf2974b33261a53ecf324ab70e6a48c68c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_17.txt",
+      "payload_sha256": "2c24f56b6bae029cf0c31ff1ebb588659573fe5d0482b89d1f1062dd6ecebd52",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "979668555ee7d11bbf79c0f3159a798a4e460e0ef0e9994bd12a5dbf1e07f04d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_18.txt",
+      "payload_sha256": "c058c19a21ba24af4b6b44311ddee468be8a0f2dfe3e1874383fbec97d34e52c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "e492f5fb95ad47676429ebfe448dc9a7b306030a6c6756623472c0017a9d8a78"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_19.txt",
+      "payload_sha256": "f17b52b844e76bbf22e0af2243cae12f982752e985799ccad41a15dc060cccd1",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "6e544f51513b461c78b4dd36fdec89c13f880875306ac67081e4421c5466dde8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_20.txt",
+      "payload_sha256": "6e1621a7c32c67bdd0461f13783dec16e09efafdfa2f4021a90fa3dcf9166c24",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "b9762fa2182ebe27aaab1e219f850e26041fac840558e520350d922edc7de3f9"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_gdi_chinook_21.txt",
+      "payload_sha256": "9133789f31c2e39e4ddb10ce1dd94cf0ffa520620c9209ac60f345d9bdb1a3c1",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "980002e7fed831a37648be1d8cf86377ea934d2d8b1f95762b176e3ef35f0a82"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_01.txt",
+      "payload_sha256": "4f17ade5114b956120e89a0f2ce9bb4753300baa69bc842cbcd74cb694193648",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "07ed5fceac067fb70e3a7ffa744c943201d9cba58317c322ac51d31b58fa1707"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_02.txt",
+      "payload_sha256": "4b3a19ec6511dc44587201a817a0ac5f1101a9f9578cf633effb4dbc4abfe41e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "2332a9a6bb42983e2b1b16286a95068c9d5d25df932af1d693f23dca93e4354c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_03.txt",
+      "payload_sha256": "685a9176272ac5c92c6ad7e4f8c77f4e9569c4c2ddb99bd0bde1ade5243b22e8",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "5cc26176d10430b0388b2ce65d7d7dfb275ae6c72cdc3afd6812c9aa196ba9f4"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_04.txt",
+      "payload_sha256": "f7c8f1b0cbb86b244528994f4acc3ed85d8bdab397554c40e238913ab9d9aef3",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3fba3782bc419404c720fe1b6b7ee0f6a44a9ff5318a51aa8c0c2cf12a979f06"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_05.txt",
+      "payload_sha256": "1f0cfaa00791153ccefb6ad1cf83736c9bfaec2aabf4648eb57c25b73cff1c15",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f9b23154f82367092f2406ce5bbc7ced3f62e4bc2845e927d6e1ca494cd02c57"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_06.txt",
+      "payload_sha256": "cfa3667fdfb893e345814c6f4c3f3d4b71f852a2fa734815310d3afbd12f6217",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "4dc487c7c057de298a02a49122c34d6bd06544ef5b524dd7f0049b6a49528d59"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_07.txt",
+      "payload_sha256": "a500975d5b31ee1fed2486e446bf3f9214ce8c2d7bf2451a4a6c4000882a5332",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "e5410922f95d7407b2fec2d0c5f3688d17a89322754842359500246b7b2cc44e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_08.txt",
+      "payload_sha256": "df58ae7836bc9e4a4e0c3e30a76fa836bb1a004a0790742400cabbe512670aa5",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "885cf4f672e5cf0f4b968b33d7f76686d23c7195c68fae7ee9fec4ce38cc29c0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_09.txt",
+      "payload_sha256": "964a32bd6a00cbcc9064b5b1b0b50ec98d9acd5ba360b414313f3d6666c64078",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ec6cb1dc9b7b1ca547ddbd279cf79e39041b38968cf8262ab039ed8ae79e5f13"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_10.txt",
+      "payload_sha256": "097cc0de88f403bc7efa9d32095dddfaff4c4815d51f083c5016598552729831",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "b663b045c8f70a78e6b8e199e9a87d9510bf5b45c1096d0088500653a1c42403"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_11.txt",
+      "payload_sha256": "081b69b4372ff5d8b03a7a51ae71da7e02891923960372e01b98d80f1ca1014c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "7f2051129c5ffafc7cf68c11ef2fd8f2f468047b24bec381d28510158db664d3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_12.txt",
+      "payload_sha256": "86e2bba08dbff60e88c3e10c83b039953760c571659e9a32cf5b9b78c68b6bd8",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "d587da329cacc27ac3d7ecc2da2b1aee5c7abaf092558d3e2d09821b369a9fb8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_13.txt",
+      "payload_sha256": "3ff6130c7c9b3c15a39c5533c1a7af6ee11c987d3fbddf93c2de953cb1ea51d6",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f67cbe7f717141ec8b4315dda4a61a99b284febe259c3cb21f6a6d506d11eabf"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_14.txt",
+      "payload_sha256": "11a4e4fee7b4da855e8f94302e99cd8d98af79cc0b192b5b82f8de4f9317704f",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "e2c77c1f3193a5f1b26045fe24a6fca9d983e7c8b01710a73801d827c42ddeda"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_15.txt",
+      "payload_sha256": "bcfae4a7145ca51f7a1a839d806ed678387028138b408501f22f214232e3e0b4",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "df3f596eaf2cdb8e1f8c5cf14a92a0a576bdc7c9017dab1010f65ab7f5a1f8ad"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_16.txt",
+      "payload_sha256": "5d67717dc6002283a4e7a4ea8b82ff2ad23e5aea78389d8293f3d4ffb2794933",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3b3cc4ca1e2ec0e3a4867a54ac666dde142f1c51edd941277dfcad839f9398a8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_17.txt",
+      "payload_sha256": "1ce302cd30426904b92640acc880cca80a2959f1f8d0573a6a321bce885a7fc2",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "34a98537152db874ea85c4865c0645b86b46c4c362e07eba4a3f71b4d802d361"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_18.txt",
+      "payload_sha256": "3d4ebd83709a23f4ef7e0f9e258f359dd8af63c1f061b3dd4c00bde4d3d5d46c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "890ffa15e262aa008502283f77b7fa564b4d37f2c983ea4412c91695b02ea2b5"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_19.txt",
+      "payload_sha256": "25ac922975d5cd015515e51b2df26da7e8ffc52d49ff120731c1c153a19fe48e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ce54574603682ae7a2109eee14b44272a29763c465c01f4587c1fb37f683c103"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_20.txt",
+      "payload_sha256": "d548fb410502f803210aefd23a70190f23c067c0c8966424f7ef5568d9254527",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "2905097db8f531d6e3380db799ed1b4cad411165e58b40b75011aba6bb4533cf"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nod_chinook_21.txt",
+      "payload_sha256": "78d9c20c6416633de994769df1883ab75269e23466409c2f3743f46a776049bf",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ec716b9d970d85a3f29624669b6d9dc0a4c99bdbdb234fab90e7509ab37bf67d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_03.txt",
+      "payload_sha256": "fd3e9c4eba4e46c770f1a3b3dffcc88fee4845819181a3c71336560e45b44a1b",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "1ed90060c6914cb22ab8515fded5d63bd813a35046c8df1fe1aa7ab1d74e8114"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_04.txt",
+      "payload_sha256": "a0917f3f6a37787f729613bd8150b9634d18edd7b4334d1c2e2942772e541f52",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "32164b634e05766f68a74f342b500f7daf90c588b8325408322fa17abdda63bf"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_05.txt",
+      "payload_sha256": "cc3f3813ec35c4793485b77227ae9543dfda79c1a7bf1a25c2abfc58b442914d",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "63ed66cbb4b810ea11a0e52ab8d09797a3aed818cc798fd5408ec87577989f58"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_06.txt",
+      "payload_sha256": "a51dd496b9981591f43dcafd4c5befe4ecced0b9879dda89ef572b16c17acd00",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "312777ec26557827dcf3da6c887e62d9b61b5bc3313fb1fd7647f2a3ca30f170"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_07.txt",
+      "payload_sha256": "13106fe2b38f66224a6cc64e5e663475d9acb26401b0edc3fd7292961fc246a9",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "6be24aa31171df0e2333b43eb35431063381ce66bf7169bbcfc1596cca3dfd61"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_08.txt",
+      "payload_sha256": "e323c332444064e437e1ddf0d767f62e4e904e29e50960680fa830cbefb2f285",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "8cd3fd5ca377162ea7e1a074f79431f678169d703ef8e86b0492881641d67493"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_09.txt",
+      "payload_sha256": "0f6639e0f740f6336dc72c030212353198a192fbc4e761d9577e32cfd913f231",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f2193ecf44640c3ab64f57b53d5d2c9b06f3631c6492ed9f1581f02e58a2b180"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_10.txt",
+      "payload_sha256": "a5dd00e845c5889cf2bc373530e367a8e5ec2f8662ed905aa142c1e6ce886091",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "c642b95a6b51bdfb36946b755380229cb14d7fe7a848c90f65135ce413e8cd4b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_11.txt",
+      "payload_sha256": "6af1c98c0b62cc0edec8c734c9b10b7c4cc1dc988b7904fafb588f3f77212166",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "0b7a8b2f6927f92f2bcabc1230e36a1db9dc03abf838c3b6823d2097d7a86ca9"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_12.txt",
+      "payload_sha256": "1a1a29dc0616eb8ee4eae6dce64ecf06aada405551ec15396be4212ec1f08374",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ebe4b0d9845a93ccb758a04d75262ca12b2d9e7b3761e995a5f79144315b7539"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_13.txt",
+      "payload_sha256": "560b6ebb56704fd04b22c2143190bfd9d651fd24f29db67c39f95b26647cd189",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "7144f1593071fd59e9d1794a29f78671a3f3ebd4a59c0fb5bafcf3af6b81fcfa"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_14.txt",
+      "payload_sha256": "19a575e4363986391a82024652fe50885c5894e9332e30cc7be0f78c4184a7a3",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "5cd3aff6d0b3cd98d7897f1df67c70d6277f2c3d028a38bf90ef424e9f01d91d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_15.txt",
+      "payload_sha256": "a1400421eeaf3a7ad6c362d3272fc207a822838fffdfb91934f728bcd69aed45",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "a79d5a653c6a12e3a99919891e4c57d4d46eb6ec7850832fc14261c16ca66727"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_16.txt",
+      "payload_sha256": "b1def3ddea9ebd3528b3f7ac5d1b6ec5c6ef1e02b2e884a06f2a077ccf424296",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "5db3018d91f2949eed0b37c543547234f3da798c37d623b5ab9ee43d2d70e61d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_17.txt",
+      "payload_sha256": "732260aecbb14c7cede75b77eddf017f80292558342b28293cc8ae0539b8c93a",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "78d8d36f249f456641d8c2c3baa42d2ad7c6e3041868b2e87f7c0b4a2755409d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_18.txt",
+      "payload_sha256": "a61baad332cd827f6723b1241a90a8630aefd9230235196b36dd6d955ed3ce47",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "e257bee277db7b50896c391fac4f2d555bc85a27f485221161ffefa716b444ae"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_19.txt",
+      "payload_sha256": "70f9c19320a395e5ab0e1763b3db99eb136b510f9ff15e5506656364702e26f5",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "6a96456e5ce1993c47b3e3c49a60a88537aba96e602c1515579239692ea7fe47"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_20.txt",
+      "payload_sha256": "3a5217f67a563706cd2c81ab8d24889ee0c9a3ed1260e2f05a1f8a18ef05eb3b",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "a9f4d17df4e1dcbda6bac554dda95edcae33182387732bd459cbbe0409b90e18"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_nodcargo_21.txt",
+      "payload_sha256": "487ae8b37e29e4e1be351fd6b5ef247c9c16bd76a85e4526316ccf6b4f6a9254",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "aa69cb5ce615646246451e381893f10bb1e030b2a8040e389be25f4e5631943a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_01.txt",
+      "payload_sha256": "4d801cf345822ad2998348bd115095823bee9eda88aa0fe3d668171fc4420c54",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9779bd99c0f9652e9ad873fd55bfa8893ee2685649a332404e0b4b0d84e4791a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_02.txt",
+      "payload_sha256": "4e608c2d1acb691bde0acba2ab2b80818d3af8b3a0988e459a5212974c935965",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "fdea773511b5be1d40e467073c91a73f9e6a6432f6809ef42f22b341a637c9b6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_03.txt",
+      "payload_sha256": "72611cebce922c692ecd6bfa11a30e3c08a936e656dd9e1b6a2208bdbe12077d",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "a51fd4c46a23f461f7dccd59d0426cf13cebc8af3e413c34dce15042157874ae"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_04.txt",
+      "payload_sha256": "2d6a72a3b4f1f05332cd02126dc8348cdd6feed1d65b6dbda66593d81d97e499",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "4b9a4661a631cce795a392da9e8f0d611aae642c4ef37768cd82dda1961a86ee"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_05.txt",
+      "payload_sha256": "af464f8a3cb116db0cbed807b7a075e972debfa2356294367572473bf79c6ac5",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "fc2942c07ca1c8d2b5d28b4fdc61949d6f4cabfa4c9bbbd130518f3e48f81506"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_06.txt",
+      "payload_sha256": "7cd5a89671f42dd8f32af6c58e34abc86acc42058abdbd8953c6a248a114f6c8",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "5471d729f454f9e26dc430f324c95f011154fd08751778dcee8d56756435aff7"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_07.txt",
+      "payload_sha256": "ae9df55e52984cf68e0edcadeddcf9b87578393d03ab75ffa65408cccf13735e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9059586090ed9a0253a74c156afd5eedd60ca8a2308f6b58da4ed40606c66cb8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_08.txt",
+      "payload_sha256": "e28153e3da2cdadccdae5fc041d4b14a38952fa8c3e6b26a6b6fb21ac38437b7",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3d985a404a6dfde57c8f74a587d55ba53238a3113b4d39130f5e5274d0d8b53f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_09.txt",
+      "payload_sha256": "85a32f0098a8ca37f04cbe6bdeb899a0b05e40f55ff6948bfd84f3d28b28fa8c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ef2019e872c4939ff9e9467204c0571aa59d9db8ea92f36b506709c2d0c42d3d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_10.txt",
+      "payload_sha256": "fc4faf328cdded0a7f33f0b2853539e1b8d87585ed4e3109b36be1614d36952c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "8a034efdc656c4e931abd08f80fa8262e67db854a807cdd603ca3ee63014fe4b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_11.txt",
+      "payload_sha256": "3b5fa7a239afea3eac1ba5dcd5ca40516860de380d2241e4f67cbe548b042847",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "26f8b6ad00f0d4453d7bfaedb741ba7429626f53016df34a64b7dd96f62d7f82"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_12.txt",
+      "payload_sha256": "7668e10674f2c7e02a34444b7b688e0c9d3e78d1bcdeafece07c43e277ff016a",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "5e21e006c7674e4859312a2e3d56095be1001ae2c48621c5a130fa6de3aaa85b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_13.txt",
+      "payload_sha256": "bfa681c1ce41b390f2a479a437d4adb79737b3478e44c0398e03dc6cf0dd339e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "37052d991a8baf25cb63a9008a88a73c9b31a5d6b787bb4564fd9485b2a8306e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_14.txt",
+      "payload_sha256": "3fbf54a732d0d2fa9fb59a818d78ced63c1120d3d739bd3af40d6a5d07690e54",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "fb1d008656ec513cbe6dd48d7423056ee544da18270b262b1623d7d3bffe1b38"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_15.txt",
+      "payload_sha256": "c3df71a1bf7cb0cb07728962012a481e3a37ba06604f0ae2ecdced9f4b51daa2",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "a704577619d4b9da1c28031f0d2578753dd10b6670c7746cb6c00b75dad5c6b6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_16.txt",
+      "payload_sha256": "9cb5e5a0e03496a7da2e7c91e53a92f7d61ac2b396e1635031deff88e87d12cc",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "a7a8e865b54a56c7e278610c1a5b01a28ed583a1e4370245fe6ed5b9d395b6fe"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_17.txt",
+      "payload_sha256": "d81bb2d7354c5f2839d2ff1ce17f2fe7091261f2a0bbe59142493c8d65f5ced4",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "5c6a036bfd8477cade005f1cfeb37c2aafc9c54ed6ac37a392afb53806055c34"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_18.txt",
+      "payload_sha256": "6f2ccb862fa13d1d91f7ab87bcbd62dfee9d91a8cd186317acad2a58811341c7",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f04e36f3316340d9aa5e02c74c31c67d4ebaa0f93482fb941ae5b38d08b989ef"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_19.txt",
+      "payload_sha256": "ca76dd6deef6613f4bdeb0a0c9cdfe87ab2cfcc49d9859afab783e96c13042c4",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "23d67e1c53140710165cb5c75817faa298c6e12a4b07571f7aa38f8c937706de"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_20.txt",
+      "payload_sha256": "f35dfd4292da0568779ede5f6b2dece03f3460e101d501fa90af47c9935a7cfe",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "903d2f559769d2b1428907f958dce6a07d98581d5eedf3845b475753a0107f8c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_solo_orca_21.txt",
+      "payload_sha256": "7ea2313135ed3b29e46fd30bcf7d820ef46c8ad4df52ed112c8156350b09b496",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "d84181f0b0f6cadace5079971f583ac0cf88ed5f4b76c95bb6f86711b3014ad3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_tailgun_apache_01.txt",
+      "payload_sha256": "5ef4f2138e5c5f656e5c01a75a90b0dbe3cef9560027cc08e592624b35d0837c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "75c51aac6b98ff58275ceaac14f1859fe5c2c366b4b4cae97349b55e9c2a6f2f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1a_tailgun_apache_02.txt",
+      "payload_sha256": "80b9e1f3218bb986371239479b87ac9531965fa457ebc2bfa861fa3d34eb145e",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "9a3aa9997b7ab8abf1d2ca9849a1e2e7799c961aaea65dcb8b650b3dda49e1b0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1e_hover_troop.txt",
+      "payload_sha256": "db84bc187a8e3312f998588537cf9022fbd3d7b3cf39ec53809f8a0b53b080ef",
+      "status": "unknown",
+      "command_records": 25,
+      "records_match": true,
+      "records_sha256": "3cf1da55194a68488eaa75a55662cada81922e04d5cadbb411131674e490b486"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1h_hover_troop.txt",
+      "payload_sha256": "bcf3c7eb445c077178190762a7a88a1ad0a3ca5f697f7fbe425d6dacd956a996",
+      "status": "unknown",
+      "command_records": 20,
+      "records_match": true,
+      "records_sha256": "20ad3a4fbd6459caeb4d33c4b28b1b247cf14c23baab77215b777328c166d78d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_easynodchinook.txt",
+      "payload_sha256": "4ef5b389c00fb26af9a1be189100ae6514fb0515578df09841caef0adead9bca",
+      "status": "unknown",
+      "command_records": 61,
+      "records_match": true,
+      "records_sha256": "e638518d92c3cb7a5ef1e31fdb0579fb065d5c77ee89cdd54b6619430f611719"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_easynodchinook01.txt",
+      "payload_sha256": "be0042e48d57dad67b976d91e6f0c3e79e3b2780c53d43d2da26e51529148557",
+      "status": "unknown",
+      "command_records": 61,
+      "records_match": true,
+      "records_sha256": "2e96e7554d3404c17ffeae506e9f95a76eb395336902d550fbe3363740e33580"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_gdi_church_troopdrop.txt",
+      "payload_sha256": "5fa7b3c90bac593923b86d727237457a41428863a2d1a05d058261fadb5b498a",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "9288b9a75ef7475d53d6b597f569af857caefc4cd25e9dbbac21ff53d3d83e04"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_gdi_commcenter_troopdrop.txt",
+      "payload_sha256": "08c5d667e2f3e25d40fb7349f198c349196df60ad944be95fc58d84493694775",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "d2d13156f947a5a0b7f2a0cd12cea72bf0a12f4019c4ccf54c3b9e5e627b1c56"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_gdi_hon_troopdrop01a.txt",
+      "payload_sha256": "300e8026466f6caaf41fff7f1793ca95756573bb7fa0686293de4c7b47057d37",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "3979fd5dd51ac673f2070382b38675a88085dfdd16d6b3da58652bba61a152e3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_gdi_hon_troopdrop01b.txt",
+      "payload_sha256": "2c8d4b89e35c5381673ccf0c11643ddfcc8c427c82c0849b3c7b2ca8cc207292",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "0dc604a036f591dcd9ecbec94870c85ed0cb56a3006f0c46b2f28e83a701557d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_gdibaseprimarynodchinook.txt",
+      "payload_sha256": "1935f8b034d6d2e2d5a722a25878a5058d6a25afdeea8bbd21cfe475f282f6fd",
+      "status": "unknown",
+      "command_records": 46,
+      "records_match": true,
+      "records_sha256": "bf52bb1c0d30dccf993bd2460fe4c483d4bd5506b46ce3857bc439c1116d1438"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_hon_medlab_chinook.txt",
+      "payload_sha256": "3e5ef1855234dff13afe0c111b0b3326188d71b55c0a8d1de8a5d63e711f4a3b",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "e56b7d8e92980d0ea26c1eb2e1460a4d805e570aeaa1f88d68df49b75030a616"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x1i_nod_turretbeach_troopdrop.txt",
+      "payload_sha256": "95318634dfa3ef1d1ce52e6bc4108a4603f4839749d528c509feb77707b1e6e0",
+      "status": "unknown",
+      "command_records": 46,
+      "records_match": true,
+      "records_sha256": "67526a6bb56113d1e905145271da19c950d82471929e3e67f29900c980c3251b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x2i_gdi_drop_hummvee.txt",
+      "payload_sha256": "dac82dcfd0dbe61f32cde7e8b0686a6c0d370b534253620debbe925e81853c1e",
+      "status": "unknown",
+      "command_records": 22,
+      "records_match": true,
+      "records_sha256": "ee1e86980f147a509465100fd129013179021918c0ad0cdc2d6d30f2d722459e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x3d_sakuracrash.txt",
+      "payload_sha256": "ad46ff752f58fe74ef794ba8de377e093f88e2b66a8718dcabd536973cca3172",
+      "status": "unknown",
+      "command_records": 23,
+      "records_match": true,
+      "records_sha256": "12ca9292ad77fb5bca648917474b091c7d92988d4924e980438f7814ed8a4fa2"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x3d_volcano.txt",
+      "payload_sha256": "69044a616f272ff9085df67e13d2801de7b97ce22bd74d4319e41907340006a6",
+      "status": "unknown",
+      "command_records": 2,
+      "records_match": true,
+      "records_sha256": "acd04278233355024944f5f1126ee3a9a480d4e9b2cd586ac6df5258cef9b01f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x3i_gdi_drop_powerup.txt",
+      "payload_sha256": "355d448ea7f186aa30ef025733de2b2fac8d76ae296d6a9cbbb0e18c8a603c8c",
+      "status": "unknown",
+      "command_records": 17,
+      "records_match": true,
+      "records_sha256": "8a1a970a8c0f1521108f015c95476e8d1452e7e6ef62cf9285ba9aabc7516018"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x3i_troopdrop1.txt",
+      "payload_sha256": "c3ef0f62ef1ba67e60ac04130fd264c748cb2d3d78b3df97a52b7f5bfbd3c6b2",
+      "status": "unknown",
+      "command_records": 72,
+      "records_match": true,
+      "records_sha256": "87d71c75511cc3fc2e04a7758a51406be71d3c34a77d8ade8c23f598e9a13679"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x3i_troopdrop2.txt",
+      "payload_sha256": "8e91be00f9220cd601979c3e930274d27d7ec75b5d034a3b98e627369563627d",
+      "status": "unknown",
+      "command_records": 72,
+      "records_match": true,
+      "records_sha256": "62286c7ad0e0a3aa40378c0e625c15102ad3e001d6f6b9fa3cbc09ad435357b9"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x3i_troopdrop3.txt",
+      "payload_sha256": "2a0a1faa986d90726c1b67a048870fcb87bdd5f43b92b7aa0ccacba7a39dc1cb",
+      "status": "unknown",
+      "command_records": 72,
+      "records_match": true,
+      "records_sha256": "10fd0c248e7e08f9a4b44aaac716fa739944754533328aa622e04757f342343d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops01.txt",
+      "payload_sha256": "31a5664dffd3086ed27f27041f996a60d2f7cff0eda58690315537cdfb23c8a2",
+      "status": "unknown",
+      "command_records": 27,
+      "records_match": true,
+      "records_sha256": "16a0632f97c418dbff68700bf64453e014252f6f6a1c165919c65b23dcea6549"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops02.txt",
+      "payload_sha256": "dad8dbedce53ac869f8e559147fbd3c561447544c6a658e06109bb54e414e814",
+      "status": "unknown",
+      "command_records": 27,
+      "records_match": true,
+      "records_sha256": "6ebc7db68f61d7ae3693478f4e3ec007afb40ce4427d94e0bae4edd44f16833d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops03.txt",
+      "payload_sha256": "75b2c156d75c10d7f5f252008702b27323178d6f0f1b896d6af7e467360e73fa",
+      "status": "unknown",
+      "command_records": 27,
+      "records_match": true,
+      "records_sha256": "b64336eef281d22cb565859384e83d3773ee09fd809398952b6511bbdc30169a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops04.txt",
+      "payload_sha256": "3453f1967378e29cd8fae27609481f7afb38968f1bdf92b244da50ab719112f5",
+      "status": "unknown",
+      "command_records": 27,
+      "records_match": true,
+      "records_sha256": "235957a6fb27c386c9a056a3f7388e9f9b2d8864b4f3d8d9c64559a56bea84e8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops05.txt",
+      "payload_sha256": "762e490e0143b4eb1925666c54457ec15cd8f1b89706cdcdccdbdf20ee46460d",
+      "status": "unknown",
+      "command_records": 28,
+      "records_match": true,
+      "records_sha256": "a87ab7256d79e6a86dbd95ef02c3b0bfbb89a1114a848cbacd159a739ddbb615"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops06.txt",
+      "payload_sha256": "58f3439edf95ff4afb4c44e183b554ea78851ff2eb47e84f42934abc5ecd31ac",
+      "status": "unknown",
+      "command_records": 26,
+      "records_match": true,
+      "records_sha256": "350978bd728a6bf7b8418580f22d5dacf2cfcb2dc74a2132c1174949666ebb4c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops07.txt",
+      "payload_sha256": "9ff9cb0328e895b8be409ae48677330aba364f3f781e109e3bdd934288b6205d",
+      "status": "unknown",
+      "command_records": 26,
+      "records_match": true,
+      "records_sha256": "2be235d2e8f0e2aa81c7710d47a41a45ba386966d776baaf792863fe355dad66"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops08.txt",
+      "payload_sha256": "b6302e488fb9bfca51ad88618c525309117ed8e5194ac6fe05c7479d397e5542",
+      "status": "unknown",
+      "command_records": 27,
+      "records_match": true,
+      "records_sha256": "86dc19dd63a53091e042dbb4a52097cd292a90c444bdaba72e08406955084ab7"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops11.txt",
+      "payload_sha256": "ee594c2c1832a3fc2881461ff4f01e69a3da667bb9a576536edb5b8f7dfc8023",
+      "status": "unknown",
+      "command_records": 28,
+      "records_match": true,
+      "records_sha256": "b542b9e30853a9e496c6db367352ef400b0941b2ede66df058afab0c481c4505"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops18.txt",
+      "payload_sha256": "c7e2fe37976feb20b62c8fadd5ce42f57788e630cd21fb9a472aef484605f7b7",
+      "status": "unknown",
+      "command_records": 28,
+      "records_match": true,
+      "records_sha256": "2fbac107f30afe69eb2ec6bec1b5514fb945defc92e11eb6a77b313727574ee9"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5c_wintroops21.txt",
+      "payload_sha256": "dc9c075f2e47e3df835eed402cfaaf0a5109b21f58533cd2ef698ed0a8ada5fc",
+      "status": "unknown",
+      "command_records": 28,
+      "records_match": true,
+      "records_sha256": "82e23d5ae1ddaa950a8166ba7538469c2c4b27f9f2893f986ca1f4df70c9e28d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_c130troopdrop1.txt",
+      "payload_sha256": "95e376421f656100400b0b8408bc6c0fac0e9277b8be41fffc263e53222b8471",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "58aa29d0774ca1c42702bddf1236f6ede615ff6946fe90bf48cb472d9d3786d8"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_c130troopdrop2.txt",
+      "payload_sha256": "6f5fa3bea9dfd7b701fcd368ed1cc8d72205ef2e73bc28c90174cdb38339feab",
+      "status": "unknown",
+      "command_records": 44,
+      "records_match": true,
+      "records_sha256": "80b8644a47b17cff623acd81974e298a4487b84db35dd8e83a7267c63223bcc6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_c130troopdrop3.txt",
+      "payload_sha256": "c76fbd1ff23cba7850f425818de8e499ecdc74390f1e100a7649dd2a9a50f932",
+      "status": "unknown",
+      "command_records": 20,
+      "records_match": true,
+      "records_sha256": "a27080a2efde7993ec0921b11512ccf7f7e64061e4ea4068922b8bc0ef39be1e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_c130troopdrop4.txt",
+      "payload_sha256": "25f206be9ca1281d06e08fbb43ad91da9a63d754506ad582957c5b4ac3731eec",
+      "status": "unknown",
+      "command_records": 20,
+      "records_match": true,
+      "records_sha256": "a27080a2efde7993ec0921b11512ccf7f7e64061e4ea4068922b8bc0ef39be1e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_c130troopdrop5.txt",
+      "payload_sha256": "61e22d7498a057a54d72f184de7bb42e213b15791b1177ad8ca6038db9ca598b",
+      "status": "unknown",
+      "command_records": 20,
+      "records_match": true,
+      "records_sha256": "4fae46888d3f2eedb41676f57836eecab29c885875f63eb0ba942840fcacd524"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_c130troopdrop7.txt",
+      "payload_sha256": "a68ce32230bf481f0172a45c1bbbf5a20b2ec96c1eb43299ab90d1ea093f4bd1",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "04b3ad3bd4af23f2758cfcdbb30597f4689a26409a066dd6470a55165acf0efa"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_c130troopdrop8.txt",
+      "payload_sha256": "263b338c8c7f952a71f87b8b62732c2d7ccc36d142a795a9fbc4ad2c874afdc0",
+      "status": "unknown",
+      "command_records": 45,
+      "records_match": true,
+      "records_sha256": "4c83f275f3214d8892513b029c24026b62a161197379ecba35fe6cf3b6501b88"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop1.txt",
+      "payload_sha256": "c5a5592506cde096ef587cacb51154feb65c20aa78c6c239511a5a37017b99c8",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "8692f1bf14006c519a26614b394d56e29f82af78d5f02bd0e1a228e597b23b6a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop10.txt",
+      "payload_sha256": "f8a055e7a6e0141df1248a7d83ec36f8b519875df9e7e6355b8a678d88245d39",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "9cb54f4f89ae8bf73a7df51cc8dda6e09cba9b4cf63dca4fe4dc306bec850c88"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop2.txt",
+      "payload_sha256": "2a154f164105fcc67c5895ddd79da7a345074319577ade39bfddfe0d1241480c",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "70b3c604702329d501541905626f7f4de78794906bd0e5422745e47caecab5fc"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop3.txt",
+      "payload_sha256": "97b92696ea34f9f954d249de9da7b4919a8ca9cf29ef61bb6a1a5ef0871051af",
+      "status": "unknown",
+      "command_records": 43,
+      "records_match": true,
+      "records_sha256": "d86be1e861df93a138cf901e88d6b44fab3123d911453d4677348399ade9ac8c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop4.txt",
+      "payload_sha256": "72c95cace80f3f0c29278b2f4980fe934fddf26b57840c159a95b4ead802844a",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "0fe76f22bc704fe33f5642896ae59bd33c1bc74e7fe3641c7cb1abce6b5f5517"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop5.txt",
+      "payload_sha256": "e0f36e8f19e4f10ffec24abd6fc0019f453d133f046c6ce60f01000015e73bdd",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "64916741a96196058aa4782e889a4360d96bc7a25e477c2baa99080e58f32839"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop6.txt",
+      "payload_sha256": "decbb6d18b844be80362578eb33d58bbef259634da32001bd70b225c5a61bacd",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "d884546681b18abefd2336b2b2f82f8b58227f48dd036c92e93ca20ca15e65c0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop7.txt",
+      "payload_sha256": "2b8e21b9a894ddaee72067b2ef09b1fa74929933ea54a549aef05170c6c22a9d",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "729ddffea308020105c0bae0a6aa7e4f9043504cd8deaf7070add35d23ca9d65"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop8.txt",
+      "payload_sha256": "c60fd57456f7ed7f24e36767337dbcedc675cf2411caad7415ba7bc304ab1fae",
+      "status": "unknown",
+      "command_records": 21,
+      "records_match": true,
+      "records_sha256": "07e83e3df665ad149a4286f466f4ceeea475059ecf08549265ebae1e0c88cf61"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5d_chtroopdrop9.txt",
+      "payload_sha256": "a11c6b8bad184fc437fb366337ea9e1781709dc550d7e2ff3cb556c30df8bfb0",
+      "status": "unknown",
+      "command_records": 32,
+      "records_match": true,
+      "records_sha256": "7dd5c440df2be1629551ac0ce5a314aa1403c422c2dc25b00383772c58a00e66"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5h_apache_1.txt",
+      "payload_sha256": "81d2aab726e57d3e6014ded34ab9efa676de451f08dfb62562cc88f1c6a5b04f",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "a1c9d0c291173bd913f45b6de2c28a688dc1baafddc85468c5a4b9d916cc639d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5h_apache_2.txt",
+      "payload_sha256": "417324c91e459ac8977b771be4b880a1a08a37ed117762d1aa2191df2330f54c",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "33ca7b2959fb89743665ca645d5bd951121053a61f0c7872062497f69cd11a53"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5h_apache_3.txt",
+      "payload_sha256": "f4072cc5e4a2efe8069b7d159a0c699cb34091fe51f04d322285ed263b5afce9",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "6ff3a1657ab10c9ef76b49611719a500a07d21ccf2ffd8731a401309c2d80a65"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5h_chinook_1.txt",
+      "payload_sha256": "953cb69cb10458ad16aeeee6bd6068c63cea95655ca6e15658c767223691c78f",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "94a75134fe06e46b5f6c1349853468effa12b75822232f070b0a46747d56ce02"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5h_chinook_2.txt",
+      "payload_sha256": "fd3e6dbd7de953d041b48043cc103adc31c57fb8c3ea1894ceb645a7e89364bc",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "13a52056de73518ebafe2e250a56cd15ea4e01e57dadd3c9018aebe01007b1a2"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5h_chinook_3.txt",
+      "payload_sha256": "de83984e854abdff22bd780696d71a6d4ef3db09d9f77ff27e874ed47dfcde9e",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "823626fcc86bcb166e31d40299c2e16fb5b0586b25f87977604837befdd1b3f1"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5h_chinook_4.txt",
+      "payload_sha256": "d8d4aa707d64db1075249a854a88fb5e27690761cc6cbec2d83d9f6967ab2441",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "3007b2404f509052028a921d1616b66bb6077181284b79d6be900c7bdeeefc69"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5i_troopdrop1.txt",
+      "payload_sha256": "42df42e606ff03d45194d3d221af9322ba0ad969b3f481084012ff863bf854b9",
+      "status": "unknown",
+      "command_records": 58,
+      "records_match": true,
+      "records_sha256": "d5fcb86bce651ad92f516658a5ed342af346514d6c2c927a4970703cb3c0b68e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5i_troopdrop2.txt",
+      "payload_sha256": "ed34055b6f8a0af27241f0ee8601a26b58c9f8c4a30a40879057093c9418c349",
+      "status": "unknown",
+      "command_records": 47,
+      "records_match": true,
+      "records_sha256": "d39146214bac4bdd77a2c17431523aed4296061910f84fe2029750417828b07f"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5i_troopdrop3.txt",
+      "payload_sha256": "e37c0c525adea704ffc925764cbb039faf7cd64bb9dd2f99268e6f4ad464a63f",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "437a192bb5d9077db6d58474f2a3c588954cfe69758925ebbc500c1643f877e5"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x5i_troopdrop7.txt",
+      "payload_sha256": "fc02bd77fd891960416aa85e5fe4f8d0c28ec145f048d23184dad5451e9030dc",
+      "status": "unknown",
+      "command_records": 46,
+      "records_match": true,
+      "records_sha256": "a2732af1e8fbe6f51b2aab879e083b76fb2def5bdae1bac5f5a1172821d1185e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_01.txt",
+      "payload_sha256": "c9a47c6de0882927819c3f4332ee091c37d771aaa0d0e3b6bfda1a054485c8d4",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "b5fb1c93d1874db41774e5b31ab286ac85b91ea15ff9669edcc579f00d92acf9"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_02.txt",
+      "payload_sha256": "3d30967b48239a85e438687c03a3d4cb2a90455c7c8dad3565988d6342fddcb0",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "e1778a113ea10903222027ce2431183254babf99b64a0f6f089d7524622e64f0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_03.txt",
+      "payload_sha256": "d69fd49ac6d618f7ba457fb1a60b72a5758155f5f1d142f1ee1f54d5abb09acc",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "de8be22c85aa4726ed27cccf1da2a12e2f944f5c34ad62c5e11a70edc0ddc882"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_04.txt",
+      "payload_sha256": "1afde3a21e833b06e0c6ccd7a8bc0e30d2ccd1505d6a7571a7f5cae19e9755d2",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "cd5391aa460431c1b275365ea5ef6b665470fd2138873cfd9c5f151572e263b6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_05.txt",
+      "payload_sha256": "e552b46df61386b8955221e760dd378843a070c2116f6d95a3deee709c4e0906",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "2fb919abd411b9c2a2b85156147012dc9d90817f6f4060f77d7b9b3ce15a03a1"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_06.txt",
+      "payload_sha256": "a6a284e05d28ff6c1d3e783b8ee742e2c21c3d96a18c6a9c4e12ef4ed36b19a2",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f95d12401ec17418292acd5f0f10116b9f1460564d0dbbd0731d299998c3161a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_07.txt",
+      "payload_sha256": "a7991bbf73eb2b184032d430752900255d66dbcd034807df435faa23527aa12c",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "ed122230cd75a23e8cb545ebf2df939c3f0dd046942707d6b447781ee8f94f74"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_08.txt",
+      "payload_sha256": "d7019d471e69bd8220e9161fbb2dbb5294e362b7cb6ce0fa9e0f2fd0afc03413",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "83bdf93b8b616b1ba5432a999ff3f19372489da220eaa5c05bb83899fcfaf500"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6a_apache_09.txt",
+      "payload_sha256": "faab9f6eabf1e8ad20c65ad30a58a34bfa1e3b57bafcbbee9fdd09176add925f",
+      "status": "unknown",
+      "command_records": 8,
+      "records_match": true,
+      "records_sha256": "f1c4284ca7a68e388c88a9d0b4af0b73bbfb2cd4e8dad15f8918f716b6e6eee4"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x6i_troopdrop1.txt",
+      "payload_sha256": "85ad19dd682e89eadfbc6499988acaa68928daa9684213b7003cedf8ca8aa2e3",
+      "status": "unknown",
+      "command_records": 61,
+      "records_match": true,
+      "records_sha256": "a8f43ceeadb91961fd9703207fa1926c68393085269939928740d2896c289268"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7c_wintroops01.txt",
+      "payload_sha256": "874887fa1fcf3915d30a5d571aa83793a253ca73f11021f40e12e08761e1dfea",
+      "status": "unknown",
+      "command_records": 27,
+      "records_match": true,
+      "records_sha256": "1b69f84c1ce93b9604c4b6baee9a43f607be6d02f6eb2c35d249edc9f8d2324d"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7d_chtroopdrop2.txt",
+      "payload_sha256": "c64f94eacdd23a236a2f43052c2068fcee1a3cc79ed2e237d87b9d2f55c5912f",
+      "status": "unknown",
+      "command_records": 31,
+      "records_match": true,
+      "records_sha256": "5fcb7605dc6b0ada4e3e8bb5855d5f9a7806756f4e45683c8bdf2e6bb9daab28"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7d_chtroopdrop3.txt",
+      "payload_sha256": "8f885bf274c70ef58568ba6e1bfa6869dbc6e46186dcc3242cea49089f8d745d",
+      "status": "unknown",
+      "command_records": 43,
+      "records_match": true,
+      "records_sha256": "5e5ed6f50c6ac8744fe9fe7a054503ba5a4900e79672a0d5b07985f73eb021e3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7d_chtroopdrop4.txt",
+      "payload_sha256": "1a0105ffa02f7ff78fdd7871dbb0cc878851709808f411f1d8cf02b73db30595",
+      "status": "unknown",
+      "command_records": 43,
+      "records_match": true,
+      "records_sha256": "f972389702e7338109dda20b9d1ad9c4daab6d6800f95619dfd201dd8864bead"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7d_chtroopdrop5.txt",
+      "payload_sha256": "2d85234f3607267a5a37392424639ad0b9fe71be5a9d104677162be0f9854071",
+      "status": "unknown",
+      "command_records": 19,
+      "records_match": true,
+      "records_sha256": "de66be266c64a4ecc9ef17b8958810f5054b9fb88e6529b78e5bbbe2d4dc2000"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7d_chtroopdrop6.txt",
+      "payload_sha256": "dd4ce182e1f14379c16fe310454f5297924262ff2ed00cf6a34305bd29b59f3a",
+      "status": "unknown",
+      "command_records": 19,
+      "records_match": true,
+      "records_sha256": "438aa421ac8cae962ba91747a1a9dc375c3f99a3700378d395395537ea65ba9a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7d_chtroopdrop7.txt",
+      "payload_sha256": "0e32ba92a215daaac994fda6bd8277e0f9d2410ffd30ac97cf02d5fa6957ac2f",
+      "status": "unknown",
+      "command_records": 19,
+      "records_match": true,
+      "records_sha256": "0fe6f2e03417ca456a310fe2a55bceb78abf2953690d7432537f90ecf3aeb66e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x7i_troopdrop1.txt",
+      "payload_sha256": "0f7d3d8de1f909956adcab15600051a7a500d29ff118a8ab4eb41a903425be12",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "ea515dfa50e8c0d6c71de1e4f61fc85334a78ca5453605111c547498e182222c"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8d_chtroopdrop1.txt",
+      "payload_sha256": "b96cded5bece97c4e6b448550b2f66c9dee191de085e842db3618275640dd0fe",
+      "status": "unknown",
+      "command_records": 29,
+      "records_match": true,
+      "records_sha256": "0ff53bd997b0edf48271356a31c2cad8e54d3c387d3044e517469eb93863f638"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8d_chtroopdrop2.txt",
+      "payload_sha256": "f564ae766059514a8ad58086c4824578e63c84f337bd3c734040d77ecbd5efe1",
+      "status": "unknown",
+      "command_records": 29,
+      "records_match": true,
+      "records_sha256": "3ba4867d95c6e7592b4c5fbc2678158417ef97922b27886a2680b46269c14189"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropa1.txt",
+      "payload_sha256": "5a1795bcce91faf4a8cf2041a3cdd9607c0507505919d4b4d6e6454d7e17017b",
+      "status": "unknown",
+      "command_records": 60,
+      "records_match": true,
+      "records_sha256": "0f068f04f4c04a938a259fb6b8c8d16606da9dcdaadda1f91c66c0a17eb6103a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropa2.txt",
+      "payload_sha256": "198142fb3a9b58f066625d4e238be8fd54e54dcc62ab01f3d1e913586d93b5a5",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "81edc7e4d9f96c384372abdff0f875a2029bac6089943e07c6000c659f2b2ed6"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropa3.txt",
+      "payload_sha256": "9afbc52c7b1dae9abcb38c184026da16ea2899d3c53868ab0654f908a6dcf856",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "53e3558436559ddf671f129ee26e702b2649b27e20b810331d75d32fc734e60b"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropb1.txt",
+      "payload_sha256": "99c3c368b074ecd9b5c2908a9cf32bb5053fb13e4c3e938372404db7ef1d22c6",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "707e00b0b1865b3d29c275ca5bdc28e4f5709736d9eb009c491e2a26695e4188"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropb2.txt",
+      "payload_sha256": "cf7291f776f899c238c91a57650b7ff29009cf408d11206cdfbbf4b102cda2c4",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "bd47ab521c19eb9c5c37ca4d074c4c03642dd56eaf80b5763cbb97e5f1e08402"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropb3.txt",
+      "payload_sha256": "4a223e6b0436b4ff6dddf06fc4e192725974d8f14bbceb408412ef6dc8d24c9d",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "6e8fec39a1b1f2b1212025c5a49dda53098c4daba94cd74183b339048a45d0ad"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropc1.txt",
+      "payload_sha256": "98958e31ea3b76198f41ddf1463710366c2a94ac825595ffdddf8ae447f3c7a4",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "47982d4590984c12f6543aaac468e590b4c7d9e4e605842309ba0547393c1956"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropc2.txt",
+      "payload_sha256": "ceeb63b478c73d1117ae0d2d3660fa59f91317a16eac3c52c5aa83129bbfafe6",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "789cf3dd72ef5a930a6ff3787c80b948626950f81390b2d1a18e50448b0e4172"
+    },
+    {
+      "archive": "always.dat",
+      "member": "x8i_troopdropc3.txt",
+      "payload_sha256": "b07be0534ce2e2b6c76b25707f5ce803e3a6fbef1d566810e336e75410fa81c8",
+      "status": "unknown",
+      "command_records": 59,
+      "records_match": true,
+      "records_sha256": "926baecb721532e5b03640aed649323aab4d7e3c0b5d36f4379d4cf759df49fe"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ev1.txt",
+      "payload_sha256": "1b34df0745ee881bf12c44d13c0ba36a3e27008755323b15e0f4077e2292a025",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "647b2003c336cb35726ed9ee151460eac9b4b9f25d4fe702a924708cdd07caac"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ev2.txt",
+      "payload_sha256": "f3734e9d27f8d0bfef173a7c997c9eef99d94023134373faf28a7718709b98f8",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "b1f2aaa5c19899f41f9cba4a27a1ba4e0fa63db04737f07aeb02e4824efb32ba"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ev3.txt",
+      "payload_sha256": "e5a3d9f06ddfa192df276c750b62ed26e6c8e02fbb75f93cb510d382b22fd025",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "d45ab1fe4951d9a4f9925b3aed2859934874cca0cd39aa5d277f72bcb64f2353"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ev4.txt",
+      "payload_sha256": "40c9270c5aa36a507bb387b9c66430112e7d4bef4eebfc12acdddedd847ef832",
+      "status": "unknown",
+      "command_records": 11,
+      "records_match": true,
+      "records_sha256": "ce83388790db60f980f5d968e1d6ce52e2f1b69c359ef5c3843f79238498a7c3"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_humveedrop.txt",
+      "payload_sha256": "2d33ed43b65f4d8e5fb2bdb01864a19d2e8895b7dc691a4fda1de3d2856b90c7",
+      "status": "unknown",
+      "command_records": 18,
+      "records_match": true,
+      "records_sha256": "f53e38384fd03c5833afb2ca1f16a6381ff1c5c71372d6522e3345a15cf5d2d5"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_nukestrike.txt",
+      "payload_sha256": "3eb694a5988d1ee279f060dec092bb6d647001c7e927f44b21f2f45dbccde4a9",
+      "status": "unknown",
+      "command_records": 9,
+      "records_match": true,
+      "records_sha256": "72720f29d9535c6bb7038a5b24588e00ace381f641112a9bce2e591be6aba6f0"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ropetroops.txt",
+      "payload_sha256": "588bc28331de39863fc0e5ac998fab1094be76b6a6747aa20de03dc3a95cb749",
+      "status": "unknown",
+      "command_records": 45,
+      "records_match": true,
+      "records_sha256": "da49e4b469540a860dcf038816a7a40b0d2b747b445e83194bc8dfd39f52c7ed"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ropetroops2x.txt",
+      "payload_sha256": "0428604ad74af6b06914b7a5505aab8e551de7f187fd19f13bd334d1fcd6319f",
+      "status": "unknown",
+      "command_records": 57,
+      "records_match": true,
+      "records_sha256": "ed4d42919b4f6d1c7da221e37ab57b4721962e7b970b926f2367f65a3cc6ae6a"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ropetroops3x.txt",
+      "payload_sha256": "d2cefc7b18d82a1a819177efff68195d9d22b12e2a735a0f57ccdbde2bfaeaa6",
+      "status": "unknown",
+      "command_records": 69,
+      "records_match": true,
+      "records_sha256": "a04c21557bd4dba6640feedc7561955fdb049e0ee98a6d0a802fca1a02f4009e"
+    },
+    {
+      "archive": "always.dat",
+      "member": "xg_ropetroops_gdi.txt",
+      "payload_sha256": "e82845864f7a4e42b5185b049ed45ff937d64c4ff0e538e93d207e98de3dcdaf",
+      "status": "unknown",
+      "command_records": 58,
+      "records_match": true,
+      "records_sha256": "35b44845d80b82a9ab68e2227d32c564ce41fa32172114a2fa35218d29efd7c4"
+    }
+  ],
+  "source_sha256": {
+    "tools/host_cinematic_control_parse_test.cpp": "e494a8a3601049e33c32632780f337bb02d169fe8988388e6522e770ed619327",
+    "tools/host_cinematic_save_test.cpp": "e7dc333ba5a44349d387575298646e911d4f4d1d8a3f6864c9724e1bbd861c82",
+    "tools/probe_retail_cinematic_control_parser.py": "563fb21533d5ca099706881a3c82576c6a008b1adc05d52f45fe8337d7a2ee6c",
+    "staging/scripts/Test_Cinematic.cpp": "de1ba39ba0b572009bcf2676e61e774c0bc86fb48822f77e715e71c23912e4f6"
+  },
+  "limits": [
+    "All .txt members are tested; not every member is a cinematic control.",
+    "Synthetic line transport; real MIX transport has separate host receipts.",
+    "Scheduling parse only; no command dispatch, effects, mission completion or physical evidence.",
+    "FNV hashes compare exact command bytes alongside float bits/order; hashes do not validate effects."
+  ]
+}

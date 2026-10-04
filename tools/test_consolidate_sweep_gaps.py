@@ -5,6 +5,14 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_load_destinations_parse_partition(self):
+        value={'total':1,'counts':{'unknown':1},'parse_complete':1,
+               'rows':[{'status':'unknown','parse_complete':True}]}
+        self.assertEqual(consolidate([('script_load_destinations',json.dumps(value).encode())])['rows'][0]['cluster'],'scripts')
+        value['parse_complete']=0
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('script_load_destinations',json.dumps(value).encode())])
+
     def test_parameter_surface_separates_definitions(self):
         value={'total':1,'counts':{'unknown':1},'categories':{'outside_live_body_read_inventory':1},
                'syntax_kinds':{'definition_candidate':1},

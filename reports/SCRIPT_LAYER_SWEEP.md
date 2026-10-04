@@ -1,5 +1,35 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Shared save-data boundary and destinations — 2026-10-04
+
+All 45 shipped script units contain eight explicit Commands->Load_Data call
+sites; all eight argument lists parse completely. They are retained separately
+from cinematic round-trip evidence. `Combat/scriptcommands.cpp::Load_Data`
+reads Cur_Micro_Chunk_Length bytes into the supplied destination; the size
+relationship is checked by WWASSERT, with no explicit runtime rejection before
+the read. Assertion configuration and original chunk transport need independent
+verification before claiming malformed fields are bounded.
+
+The cinematic saved-command caller tests len < 200, without requiring positive
+length, initializes neither its local character buffer nor explicit termination,
+then passes it to Add_Control_Line/strdup. A shared boundary fix must validate
+destination capacity, while the caller must handle length and string termination.
+The current sanitizer fixture validates normal round trips and parser strings;
+it does not exercise malformed saved fields or the real shared Load_Data owner.
+
+`python3 -m tools.audit_script_load_destinations` reproduces the eight source
+locations, size/destination expressions and parser/source/shared-owner hashes.
+Public receipt: `reports/generated/sweeps/script_load_destinations.json`.
+Twenty-two focused parser/consolidation tests pass. The register now contains
+45,927 overlapping records, with 45,663 unknowns. Runtime source/artifacts are
+unchanged; no malformed save, device or emulator execution occurred.
+
+Next fix cluster: original shared boundary rejection plus deterministic cinematic
+command-buffer handling, focused malformed-field host regressions, retained
+sanitizers and matching ARM compile/link. Valid disk chunk widths and original
+save ordering must remain unchanged. Broader indirect/auto-variable load routes
+remain outside the eight explicit script-call denominator.
+
 ## Original cinematic parser sanitizer fixture — 2026-10-04
 
 The original Test_Cinematic implementation now passes seven mutable-input

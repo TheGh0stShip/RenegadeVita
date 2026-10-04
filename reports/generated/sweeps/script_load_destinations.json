@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "complete": false,
+  "total": 8,
+  "rows": [
+    {
+      "line": 378,
+      "arguments": [
+        "loader",
+        "sizeof( sync_diff )",
+        "&sync_diff"
+      ],
+      "parse_complete": true,
+      "size_expression": "sizeof( sync_diff )",
+      "destination_expression": "&sync_diff",
+      "status": "unknown",
+      "source": "Test_Cinematic.cpp"
+    },
+    {
+      "line": 384,
+      "arguments": [
+        "loader",
+        "sizeof( Time )",
+        "&Time"
+      ],
+      "parse_complete": true,
+      "size_expression": "sizeof( Time )",
+      "destination_expression": "&Time",
+      "status": "unknown",
+      "source": "Test_Cinematic.cpp"
+    },
+    {
+      "line": 389,
+      "arguments": [
+        "loader",
+        "sizeof( PrimaryKilled )",
+        "&PrimaryKilled"
+      ],
+      "parse_complete": true,
+      "size_expression": "sizeof( PrimaryKilled )",
+      "destination_expression": "&PrimaryKilled",
+      "status": "unknown",
+      "source": "Test_Cinematic.cpp"
+    },
+    {
+      "line": 404,
+      "arguments": [
+        "loader",
+        "sizeof( ObjectSlots[id] )",
+        "&ObjectSlots[id]"
+      ],
+      "parse_complete": true,
+      "size_expression": "sizeof( ObjectSlots[id] )",
+      "destination_expression": "&ObjectSlots[id]",
+      "status": "unknown",
+      "source": "Test_Cinematic.cpp"
+    },
+    {
+      "line": 421,
+      "arguments": [
+        "loader",
+        "sizeof( time )",
+        "&time"
+      ],
+      "parse_complete": true,
+      "size_expression": "sizeof( time )",
+      "destination_expression": "&time",
+      "status": "unknown",
+      "source": "Test_Cinematic.cpp"
+    },
+    {
+      "line": 424,
+      "arguments": [
+        "loader",
+        "sizeof( len )",
+        "&len"
+      ],
+      "parse_complete": true,
+      "size_expression": "sizeof( len )",
+      "destination_expression": "&len",
+      "status": "unknown",
+      "source": "Test_Cinematic.cpp"
+    },
+    {
+      "line": 430,
+      "arguments": [
+        "loader",
+        "len",
+        "&load_command[0]"
+      ],
+      "parse_complete": true,
+      "size_expression": "len",
+      "destination_expression": "&load_command[0]",
+      "status": "unknown",
+      "source": "Test_Cinematic.cpp"
+    },
+    {
+      "line": 651,
+      "arguments": [
+        "loader",
+        "var->Get_Data_Size()",
+        "var->Get_Data_Ptr()"
+      ],
+      "parse_complete": true,
+      "size_expression": "var->Get_Data_Size()",
+      "destination_expression": "var->Get_Data_Ptr()",
+      "status": "unknown",
+      "source": "scripts.cpp"
+    }
+  ],
+  "counts": {
+    "unknown": 8
+  },
+  "shipped_units": 45,
+  "parse_complete": 8,
+  "source_sha256": {
+    "DLLmain.cpp": "ac0ec21192f5226784e53bbd9620310e9e27032fdb1d23840b50e965b8da3eb8",
+    "DPrint.cpp": "f64d3570dd8ade92dbc403bd296409d5625f19a8afb5371757c86f6fad01ffb7",
+    "DrMobius.cpp": "8d9a2ecd3ad71359fddb818be0405cd46951f37fc519384aeb36213730a17e84",
+    "Mission00.cpp": "704c72f791dd2baf7cfad41cc1f188e604fe67f7cb41bd4aa7ea82654fe63de7",
+    "Mission01.cpp": "ebc0373a57ecf2b751fd3e8b009a6d51892b6a162b9f59fdc7033a215cfabd56",
+    "Mission02.cpp": "e9779feff38fd4b8aa00a80cc1d8537c2f51ae99f27d7b9f29d06a7a13b13f20",
+    "Mission03.cpp": "55cbb02352268af68437387ed75daac299d08d31be0f286c6f0769c4d793ac41",
+    "Mission04.cpp": "a065ab27dcd288b55f1fcab506d6badf3b35f1725c52444f32522d0fa3774657",
+    "Mission05.cpp": "7a5864f158dc8bab09619f06f0e763ff50149a40613c0e781cef31aa966c2a9f",
+    "Mission06.cpp": "0cb75ea11d0a75828e1f981625c5cf1108c18f625150ed7bf5e9e284c2f2a063",
+    "Mission07.cpp": "c20fc975b32bc8daf1cb6de3c4a6051bcbd16247a13288439728361c03dc10cd",
+    "Mission09.cpp": "d84a63190a795ae41d57ebc21e997544980971ad42c063dbc014ca147bb6e9cf",
+    "Mission10.cpp": "43914b8899442aff649c5f383503d4b5bcbcde6a8391a8698215adbdf878ed2f",
+    "Mission11.cpp": "8bc76b128c280985f90c5ab5da9847ff4697725fe86e1975d9129139e912d462",
+    "MissionDemo.cpp": "49f218e09c014e7752fd36d5c8bba17e4c246600248cfce61f36486e8e3fff04",
+    "MissionX0.cpp": "14f5012f9d870f4ef8d727e3d8cf576174476dca90eee8d5da0ff765417c3e64",
+    "ScriptFactory.cpp": "b536f6f5b740117b2054cd70e10c4bec4f20a03531a53654cc04017753cb1988",
+    "ScriptRegistrar.cpp": "a3f7b2627e23ef7547ae018d0b7aedca430a7e0b3123e904c21199c91bc1de75",
+    "Test_BMG.cpp": "954946dcb10983853cdd0e4391e4693a7253743200ac5900d5f47db76bbab43c",
+    "Test_Cinematic.cpp": "40c5538ed77202f342ee2a3f9325ce22abcf25861147bfb3c814f49f410a845c",
+    "Test_DAK.cpp": "d297706ac535d26eb50ff3e24e4c14a460e70b71250b37dcb596206e3c8c1e1b",
+    "Test_DAY.cpp": "ce1c0938feb4cf8e30a3f40f2d70cfa9ca50c2fa0ad1f17f741e04e6af7779be",
+    "Test_DLS.cpp": "cc7ba0e57c9ee612188909ccd7c4c3d2e153d20c9c6628603e42cea33da82d14",
+    "Test_DME.cpp": "27aa94bbb6e2248ce1e2ef8390ae74403f9a7aad897ca80e905c76e3c5ad177d",
+    "Test_GTH.cpp": "acd73b9e9b146d309df759fa76dc444ec992beb66ba9d11f408edd95e106fc0d",
+    "Test_JDG_EVA.cpp": "24c60cb0abb82b9b6f054cba7ab5aef5a117d513e778172bf2438e124614dff7",
+    "Test_PDS.cpp": "2cb8bfe32e2b7379d78c779853edb5b5c6bef6c39b27ba9741acbcc3c7b87089",
+    "Test_RAD.cpp": "5699f1fc5df5441cc33b9ccc50b09d9017068bff776b2a99e98912bf4c87753a",
+    "Test_RMV.cpp": "d9a57c2a38ebf726a7d1bf756016b0ff96f0633b7907abdeb7388aac1cbf934f",
+    "Test_RMV_Toolkit.cpp": "2fa9123f853cab4166abc137dfff48dc6e992fc3d5cca1009be066345c35d6c2",
+    "Toolkit.cpp": "5dae4242f086d558623a9f6423770e7181eb1366057b40036c00c2e30335946b",
+    "Toolkit_Actions.cpp": "2f0c5e49fc1dbafd395d94e78734003c51d24aaab1ba4a0b0de0a2b00324314a",
+    "Toolkit_Animations.cpp": "fd25ec2354a0288c7298169b62a3f11f3bafb3cfecfab7e4c705f052346711ae",
+    "Toolkit_Broadcaster.cpp": "804bf998fbf4365d35a9fc9cccfcf04ace8419d024c396e07de5604232d24ace",
+    "Toolkit_Explosions.cpp": "d2460a3c03eaf6f164e9cae1eb88d1a72e2e213cf9b6d1f76d035f1e57d75f21",
+    "Toolkit_Objectives.cpp": "c5e704e48fea3228064745dc2a307a4982b02e97221ef1a1d6115d6a9938f965",
+    "Toolkit_Objects.cpp": "d0bdb057623476b214c3d2382916c573ecc3882fbb09fd1b785170b1b8263ea3",
+    "Toolkit_Powerup.cpp": "7abd493cbb400dfdd9a6167395d50d5a8679ae2064e6a1f68b8bbfce0c9f0b9f",
+    "Toolkit_Siege.cpp": "aeae5fb506e9c5951f4b01a015fcbf19720f4b2ccc8f1479676a8e82f6298b2a",
+    "Toolkit_Sounds.cpp": "6f4be24348eed4766da5712866f14b75e55008b96c60b2b6f3081c3f80fb2269",
+    "Toolkit_Spawners.cpp": "defb69df51dd47a99b8e65b9ad0a5b2f5f2ba88adb6cdd92c1306c347db7c6b2",
+    "Toolkit_Triggers.cpp": "8afbd8dcf80298b796f29fed691b035fca6337b42e24b89982d35f31825582bb",
+    "mission08.cpp": "1384b63c785e8aedf2aa77e57473ee3e60466ac202dfc0dbd716179d3cdeec53",
+    "scripts.cpp": "c7b19ad9855aa9d78f63bba9843bcf687ce9ac573b5b16d40742e168dd9ec1ac",
+    "strtrim.cpp": "c73c0234bb52627ac788f299e7a41de303aaaa5feb54eff32b70d9985d2e09d6"
+  },
+  "parser_sha256": "f0be097d669c72938e47b1613ca0e5bb0eaa822ead28517ff72771046641b549",
+  "shared_owner_sha256": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
+  "shared_owner": "Combat/scriptcommands.cpp::Load_Data",
+  "review": [
+    "Shared owner reads Cur_Micro_Chunk_Length bytes; destination capacity is assertion-only.",
+    "Cinematic saved-command caller uses len < 200 without a positive-length check.",
+    "Shared runtime bounds plus destination initialization/termination require a tested fix cluster."
+  ],
+  "limits": [
+    "Lexical explicit Commands->Load_Data calls in shipped units only.",
+    "Computed pointers, arrays, helper indirection and actual destination capacities require review.",
+    "No malformed save executed; valid runtime loads and native behavior remain unverified."
+  ]
+}

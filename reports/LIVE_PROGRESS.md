@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Script save-data boundary inventory — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:all45 shipped units yield eight explicit Load_Data destinations.
+Source review identifies assertion-only shared capacity validation and missing
+positive-length/termination checks in the cinematic saved-command caller.
+Evidence:22 focused tests pass; source and original shared-owner hashes retained.
+Next:shared bounds/cinematic buffer fix with sanitizer regressions and ARM link.
+Blocker:none for engineering. Existing round trips do not prove malformed loads.
+No runtime source change, device action or emulator launch.
+See [script ledger](SCRIPT_LAYER_SWEEP.md).
+
 ## Original cinematic parser sanitizers — 2026-10-04
 
 Renegade Vita — v3.5 active

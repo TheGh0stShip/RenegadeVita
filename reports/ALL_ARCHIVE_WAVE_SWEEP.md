@@ -118,3 +118,36 @@ triggered. Direct scripted/cinematic audio and indirect twiddler references
 remain separate coverage risks. Thirty-nine focused tests pass. The next
 compatibility step is original playback-caller and retail post-data handling
 review; physical audio and progression remain unaccepted.
+
+## Compiled all-archive decode evidence
+
+The current C++ provider decoder was compiled with GCC 13.3.0 C++17, `-O2`,
+`-fsanitize=address,undefined`, `-fno-omit-frame-pointer` and strict warnings.
+The host-only framed probe feeds actual archive bytes directly through a pipe;
+it emits decode verdicts and frame totals, never PCM. Source lengths are
+explicit little-endian uint32, allocation is bounded and malformed probe
+frames fail. Each decoded sample vector is released before the next record.
+
+Across all 10,241 WAV entries, 9,975 decode and 266 are rejected. The rejected
+set contains the previously identified 264 oversized RIFF declarations and
+one trailing chunk failure, plus `wind4r.wav`, whose decoded output is empty.
+The run exits successfully with no ASan/LSan/UBSan stderr. Decoding success
+does not establish waveform agreement with retail, audible timing, mixing,
+memory performance or Vita playback. The rejected audio remains unchanged.
+
+The new probe also compiles as an ARMv7 object; ELF attributes report Thumb-2
+and VFP register arguments. This is compilation evidence only, not an ARM
+decode run or a packaged candidate. The game runtime and Dev209 artifacts are
+unchanged. No emulator or physical device was launched.
+
+Receipt: `generated/sweeps/wave_decode.json`, bound to the WAV inventory hash,
+archive hashes, decoder/probe source hashes and exact executable hash. The
+consolidated register checks decoded/rejected partitions and parent identity.
+All 43 focused probe/parser/register tests pass. Installed compiler macros
+confirm host LP64 versus target little-endian ARMv7 ILP32 and VFP argument ABI.
+Reproduce the host build/run with:
+
+```sh
+g++ -std=c++17 -O2 -fsanitize=address,undefined -fno-omit-frame-pointer -Wall -Wextra -Werror -Iport/audio/vita tools/host_wave_archive_probe.cpp port/audio/vita/renegade_wave_decoder.cpp -o build/host-wave-archive-probe
+python3 -m tools.audit_wave_decoder_runtime --data "$RENEGADE_RETAIL_ROOT" --probe build/host-wave-archive-probe --output reports/generated/sweeps/wave_decode.json --stderr build/wave-decoder-sanitizers.log
+```

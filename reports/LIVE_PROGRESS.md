@@ -1,5 +1,14 @@
 # Live engineering progress
 
+## S4 compiled all-archive WAV decoder — 2026-10-03
+
+Current C++ decoder under ASan/LSan/UBSan: 9,975 of 10,241 WAV entries decode;
+266 reject, including the 265 header/trailer findings and empty wind4r.wav.
+No sanitizer stderr; PCM is discarded, not exported. Host-only probe also
+compiles as ARMv7 with VFP argument ABI; no native execution or package change.
+Next: retail compatibility handling for the rejected set. Playback, timing and
+physical acceptance remain open. See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 ## S4 flagged WAV translation/conversation chains — 2026-10-03
 
 Both translation databases and 55 LDD/LSD/CDB entries are inspected: 207

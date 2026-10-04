@@ -10,7 +10,7 @@ SWEEPS = ('port_guards', 'renderer', 'link', 'retail', 'scripts', 'systems',
           'performance', 'external')
 ISSUES = dict(zip(SWEEPS, range(5, 13)))
 SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
-               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers')
+               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
@@ -72,6 +72,15 @@ def root_records(name, value):
             measured[row['kind']]=measured.get(row['kind'],0)+row['reference_occurrences']
         if value['total']!=len(rows) or measured!=value['reference_counts']:
             raise ValueError('W3D reference denominator mismatch')
+    elif name=='wave_decode':
+        fields=('wave_members','decoded_members','rejected_members')
+        if value['total']!=len(rows) or totals!={k:sum(r[k] for r in rows) for k in fields}:
+            raise ValueError('WAV decode denominator mismatch')
+        for row in rows:
+            if row['wave_members']!=row['decoded_members']+row['rejected_members'] or row['rejected_members']!=len(row['failures']):
+                raise ValueError('WAV decode result partition mismatch')
+        if value['counts']!=dict(Counter(r['status'] for r in rows)):
+            raise ValueError('WAV decode status reconciliation failed')
     elif name=='wave_headers':
         fields=('wave_members','header_finding_members','block_finding_members')
         if value['total']!=len(rows) or totals!={k:sum(r[k] for r in rows) for k in fields}:
@@ -99,7 +108,8 @@ def consolidate(inputs):
     identities={name:hashlib.sha256(data).hexdigest() for name,data in inputs}
     dependencies={'spatial_presence':('chunk_inventory_sha256','level_chunks'),
                   'visibility_bounds':('presence_sha256','spatial_presence'),
-                  'w3d_consumers':('inventory_sha256','w3d_chunks')}
+                  'w3d_consumers':('inventory_sha256','w3d_chunks'),
+                  'wave_decode':('wave_inventory_sha256','wave_headers')}
     rows = []
     receipts = []
     for name, data in inputs:

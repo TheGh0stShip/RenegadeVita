@@ -5,6 +5,18 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_decode_results_reconcile_and_reject_bad_partition(self):
+        row={'archive':'M01.mix','status':'unknown','wave_members':2,
+             'decoded_members':1,'rejected_members':1,'failures':[{'member':'bad.wav'}]}
+        value={'total':1,'counts':{'unknown':1},'rows':[row],
+               'totals':{k:row[k] for k in ('wave_members','decoded_members','rejected_members')}}
+        result=consolidate([('wave_decode',json.dumps(value).encode())])
+        self.assertEqual(result['total'],1)
+        row['decoded_members']=0
+        value['totals']['decoded_members']=0
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('wave_decode',json.dumps(value).encode())])
+
     def test_wave_partitions_and_nested_findings(self):
         row={'archive':'M03.mix','status':'unknown','wave_members':2,
              'formats':[{'format':None,'members':2}], 'header_finding_members':1,

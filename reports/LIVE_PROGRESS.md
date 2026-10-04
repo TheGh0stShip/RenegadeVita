@@ -9536,11 +9536,10 @@ Completed: all four linker-wrapper rows are exact-identity classified. The two
 shader initialization entries are diagnostic boundary replacements, the host
 replay clock is a host-only deterministic boundary, and pthread failure/delay
 injection is excluded from production by its test-only target.
-Evidence: 3,544 S1 rows reconcile to 51 stubs, one patched body, five boundary
-replacements, six disabled guards, one exclusion and 3,480 unknowns; twenty-nine
+Evidence: 3,527 S1 rows reconcile to 51 stubs, one patched body, five boundary
+replacements, six disabled guards, one exclusion and 3,463 unknowns; thirty
 focused parser/reviewer tests pass with zero stale identities. Same-width parser
-normalization removed 53 grammar-only rows; 16 conditional-branch uncertainties
-remain in the Vita interactive runtime.
-Next: parse the mutually exclusive runtime profiles independently, then classify
-current guards and historical patch guards.
+normalization and eight explicit runtime build-profile combinations remove all
+69 original parser uncertainties and one malformed-tree false function row.
+Next: classify current guards and reconcile historical patch guards.
 Blocker: none for local discovery; physical runtime evidence remains open.

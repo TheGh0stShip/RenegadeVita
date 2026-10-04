@@ -1,7 +1,7 @@
 import importlib.util
 import unittest
 
-from sweep_cpp_functions import function_inventory, normalize_parser_source
+from sweep_cpp_functions import conditional_macro_view, function_inventory, function_inventory_for_boolean_profiles, normalize_parser_source
 
 
 @unittest.skipUnless(importlib.util.find_spec('tree_sitter') and
@@ -77,6 +77,22 @@ class CppFunctionInventoryTest(unittest.TestCase):
         result = function_inventory(text)
         self.assertFalse(result['root_has_error'])
         self.assertEqual(len(result['functions']), 1)
+
+    def test_boolean_profile_union_retains_both_branch_definitions(self):
+        text = ('#if FEATURE\nint enabled() { return 1; }\n#else\n'
+                'int disabled() { return 0; }\n#endif\nint common() { return 2; }\n')
+        off = conditional_macro_view(text, 'FEATURE', False)
+        on = conditional_macro_view(text, 'FEATURE', True)
+        self.assertEqual(len(off), len(text))
+        self.assertEqual(len(on), len(text))
+        self.assertIn('disabled()', off)
+        self.assertNotIn('enabled()', off)
+        self.assertIn('enabled()', on)
+        result = function_inventory_for_boolean_profiles(text, 'FEATURE')
+        self.assertFalse(result['root_has_error'])
+        self.assertEqual([row['declarator'] for row in result['functions']],
+                         ['enabled()', 'disabled()', 'common()'])
+        self.assertEqual(result['parse_errors'], [])
 
 
 if __name__ == '__main__':

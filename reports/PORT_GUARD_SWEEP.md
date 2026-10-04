@@ -1,35 +1,37 @@
 # S1 port guards and stubs — inventory in progress
 
-2026-10-04 linker-wrapper/parser refresh: 3,544 source records contain
+2026-10-04 linker-wrapper/parser refresh: 3,527 source records contain
 51 stubs, one patched original body, five replaced boundaries, six disabled
-guards, one host-only exclusion and 3,480 unknowns. All four `--wrap` rows now
+guards, one host-only exclusion and 3,463 unknowns. All four `--wrap` rows now
 have exact location identities and whole build-file hash pins. The production
 and ARM-closure `shark_init` wrappers preserve the real call and result while
 recording shader-compiler diagnostics. The movie-capture clock wrapper is a
 host replay boundary excluded by CMake from cross-builds. The `pthread_create`
 wrapper belongs only to its host thread-publication regression executable.
-Twenty-nine focused parser/reviewer tests pass and all review identities
+Thirty focused parser/reviewer tests pass and all review identities
 reconcile. A same-width parser view removes 53 known grammar false positives
-without changing original source offsets or hashes. Sixteen uncertainties remain,
-all within mutually exclusive branches of the Vita runtime's large interactive
-function. This remains source/build evidence and does not close S1 or native
-acceptance.
+without changing original source offsets or hashes. Eight explicit combinations
+of the tutorial, original-frontend and development-checkpoint flags retain the
+union of branch-specific definitions while eliminating all remaining parser
+uncertainties. One prior false function row was an `if` statement recovered as a
+definition by the malformed unpreprocessed tree. This remains source/build
+evidence and does not close S1 or native acceptance.
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,544 records with 51 fallback/diagnostic functions reviewed as
+source contains 3,527 records with 51 fallback/diagnostic functions reviewed as
 `stubbed_or_noop`, one original light-state method as `original_patched`, five
 boundaries as `boundary_replaced`, six guards as `disabled_by_port_guard`, one
-test-only wrapper as `excluded_with_proof`, and 3,480 records still `unknown`.
+test-only wrapper as `excluded_with_proof`, and 3,463 records still `unknown`.
 All statuses reconcile to the total.
 
 | Inventory kind | Records |
 | --- | ---: |
 | Changed patch guards, including removals | 526 |
 | Current port/staged source guards | 849 |
-| Port function and lambda definitions | 1,663 |
+| Port function and lambda definitions | 1,662 |
 | Port macro definitions | 486 |
-| Syntax parse uncertainties | 16 |
+| Syntax parse uncertainties | 0 |
 | Linker wrapper references | 4 |
 
 The 318 patch files and 315 literal staging references are separate inventories.

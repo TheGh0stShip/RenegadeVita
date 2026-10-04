@@ -962,9 +962,9 @@
     },
     {
       "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "functions": 109,
-      "parse_errors": 16,
-      "root_has_error": true
+      "functions": 108,
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/platform/vita/a31_vita_runtime.h",
@@ -3715,7 +3715,7 @@
     "staging/wwui/wwuiinput.cpp": "109a9633239da9c1ecbb147036ef31f7ebb52c826e7bea2fe8cb148120ea9a1b",
     "staging/wwui/wwuiinput.h": "d99c2d5bd4b47a6f77b27ce5cf127e677359dd619c9e4f618abe39a25c46d61a",
     "staging/wwutil/mathutil.cpp": "50e5d6c436636fb236949b262b8882102e92f32b8cdfa74f9feedfc25e54d07f",
-    "tools/audit_sweep_port_guards.py": "29a8a53d2be23bb4bd1cc4fd7357b4ca01c036f5c6908620024e00a1d10baca0",
+    "tools/audit_sweep_port_guards.py": "e19b919f7e4f55b5a61bd105035b523cab8a6214dedb1a2dbb37a952b5362d39",
     "tools/build.sh": "450dc1b23fb5db79053637f9ed19868072db34689a3d1eb1530935476b43d939",
     "tools/build_fast_candidate.sh": "d5d3175148ee272a167dc377359a37f1ab798165ed8632f752f9fbe7c132b0a3",
     "tools/build_ffmpeg_bink_vita.sh": "4ad1fe96c6543d1ef7243bcc24f7f335ba086035b4f681a5325a798e98d42e7c",
@@ -3736,7 +3736,7 @@
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
     "tools/stage_sources.sh": "7fe78a596982b60c6c5b3a27b4c63cfe1ebd9209e51dfe0490af2c8d1cff3839",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
-    "tools/sweep_cpp_functions.py": "1edcbf29cc072bec2a16890714a057a1d2c6897413a1ff8522b910b5fcadcef0",
+    "tools/sweep_cpp_functions.py": "9c465726d4fde7ce36a7d75df8a30c75e64338106d96129d6b873f7b0cccde8c",
     "tools/sweep_reviews/port_guards.json": "c2f9b823332649c31aa219c140759bad03d969abd69e53408564aa699fbd347a",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
@@ -82659,11 +82659,6 @@
       "body_sha256": "cc32bb97ee0d8d54729a06fb3c186b872436890423e1af2213b964517db3632f",
       "calls": [
         {
-          "callee": "cGameData::Get_Mission_Number_From_Map_Name",
-          "callee_node_type": "qualified_identifier",
-          "line": 1476
-        },
-        {
           "callee": "CampaignManager::Select_Backdrop_Number_By_MP_Type",
           "callee_node_type": "qualified_identifier",
           "line": 1484
@@ -82778,24 +82773,14 @@
       "file": "port/platform/vita/a31_vita_runtime.cpp",
       "kind": "port_function",
       "line": 1467,
-      "literal_returns": [
-        {
-          "expression": "false",
-          "line": 1472
-        }
-      ],
+      "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
-      "nonfinal_return_lines": [
-        1472
-      ],
+      "nonfinal_return_lines": [],
       "parse_has_error": false,
       "row_id": "49e040511ebdbdac49ae4df93eba93660ce7f17f021a941f5c45d8ac4a7fbc14",
       "scope": "A31VitaLoadingPresenter",
-      "signals": [
-        "literal_return",
-        "nonfinal_return_candidate"
-      ],
+      "signals": [],
       "start_byte": 54477,
       "status": "unknown"
     },
@@ -84504,13 +84489,7 @@
     {
       "body_kind": "compound_statement",
       "body_sha256": "42b5906a537ad49b16758930a04e6294b033712de75886bd99ff42bd981e870a",
-      "calls": [
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 2378
-        }
-      ],
+      "calls": [],
       "declarator": "Add(uint32_t sync_us, uint32_t simulation_us, uint32_t render_us,\n\t\tuint32_t frame_duration_us)",
       "definition_sha256": "f35b52c5be61bd3c2a7e847fd1caf4e3f8eb4b4d20bbf2983dfdbc84180d8368",
       "end_byte": 96114,
@@ -84688,68 +84667,7 @@
     {
       "body_kind": "compound_statement",
       "body_sha256": "495ae3edd65228a97dfa36d16b8e50e5d34f2244eb7a2b02bd8122620e85937c",
-      "calls": [
-        {
-          "callee": "A31_Interactive_Get_Simulation_Stage_Totals",
-          "callee_node_type": "identifier",
-          "line": 2431
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 2435
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2437
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2438
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2439
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2440
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2441
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2442
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2443
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2444
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2445
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 2446
-        }
-      ],
+      "calls": [],
       "declarator": "Log_Campaign_Simulation_Stages()",
       "definition_sha256": "c51fd9839a6f72c95c815a0e55e00048429a560b84bc4957d86292d084913fdd",
       "end_byte": 98705,
@@ -84762,14 +84680,12 @@
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
-      "nonfinal_return_lines": [
-        2432
-      ],
+      "nonfinal_return_lines": [],
       "parse_has_error": false,
       "row_id": "4d54ac33fef0e08aae361d161c1af52d6b060b272ce0373b9256d116bdf5d2b4",
       "scope": "",
       "signals": [
-        "nonfinal_return_candidate"
+        "empty_body"
       ],
       "start_byte": 97540,
       "status": "unknown"
@@ -85314,16 +85230,6 @@
           "callee": "Renegade_Vita_Input_Route_Replay_Exit_Requested",
           "callee_node_type": "identifier",
           "line": 2619
-        },
-        {
-          "callee": "sceCtrlPeekBufferPositive",
-          "callee_node_type": "identifier",
-          "line": 2622
-        },
-        {
-          "callee": "Renegade_Vita_Input_Route_Replay_Exit_Requested",
-          "callee_node_type": "identifier",
-          "line": 2624
         }
       ],
       "declarator": "Is_Start_Pressed()",
@@ -85338,16 +85244,11 @@
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
-      "nonfinal_return_lines": [
-        2619,
-        2622
-      ],
+      "nonfinal_return_lines": [],
       "parse_has_error": false,
       "row_id": "15fc9521c72b3ce0da9efc581963ca606b2c281a1331c3d721da65d2b090e4e3",
       "scope": "",
-      "signals": [
-        "nonfinal_return_candidate"
-      ],
+      "signals": [],
       "start_byte": 109462,
       "status": "unknown"
     },
@@ -85721,10 +85622,6 @@
         {
           "expression": "false",
           "line": 2707
-        },
-        {
-          "expression": "false",
-          "line": 2715
         }
       ],
       "markers": [],
@@ -85732,9 +85629,7 @@
       "nonfinal_return_lines": [
         2692,
         2702,
-        2707,
-        2713,
-        2715
+        2707
       ],
       "parse_has_error": false,
       "row_id": "a915c3f15e0c7cd2dc6f9bfbf74f3681869e122e0db0664a18139c6b35f8e703",
@@ -85845,10 +85740,6 @@
         {
           "expression": "false",
           "line": 2744
-        },
-        {
-          "expression": "false",
-          "line": 2752
         }
       ],
       "markers": [],
@@ -85856,9 +85747,7 @@
       "nonfinal_return_lines": [
         2726,
         2740,
-        2744,
-        2750,
-        2752
+        2744
       ],
       "parse_has_error": false,
       "row_id": "d8b283201258b3adeead8ef2962295681882cc2bd3f59333ce36a8989f4d8d20",
@@ -85967,10 +85856,6 @@
         {
           "expression": "true",
           "line": 2778
-        },
-        {
-          "expression": "false",
-          "line": 2781
         }
       ],
       "markers": [],
@@ -85979,9 +85864,7 @@
         2759,
         2763,
         2771,
-        2775,
-        2778,
-        2781
+        2775
       ],
       "parse_has_error": false,
       "row_id": "96563d8ea0a6b3fc024265d37858fbfb8f253939c3a05b33153ff7c0d931aef5",
@@ -86090,10 +85973,6 @@
         {
           "expression": "true",
           "line": 2807
-        },
-        {
-          "expression": "false",
-          "line": 2810
         }
       ],
       "markers": [],
@@ -86102,9 +85981,7 @@
         2788,
         2792,
         2800,
-        2804,
-        2807,
-        2810
+        2804
       ],
       "parse_has_error": false,
       "row_id": "3b9727f0d2be92787e7873dfafa4e4d28e0490b1effe8030fa2a3670f965045f",
@@ -86213,10 +86090,6 @@
         {
           "expression": "true",
           "line": 2836
-        },
-        {
-          "expression": "false",
-          "line": 2839
         }
       ],
       "markers": [],
@@ -86225,9 +86098,7 @@
         2817,
         2821,
         2829,
-        2833,
-        2836,
-        2839
+        2833
       ],
       "parse_has_error": false,
       "row_id": "974abb44d4363571bde98f521486e959040e816e61daf5bc586228a3ddf7f178",
@@ -86499,18 +86370,12 @@
         {
           "expression": "true",
           "line": 2921
-        },
-        {
-          "expression": "false",
-          "line": 2924
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2851,
-        2921,
-        2924
+        2851
       ],
       "parse_has_error": false,
       "row_id": "be2b1cc013c33bc9bc3eae7b4ab76c4c6233aebc962f22c68b649de70b190721",
@@ -87218,11 +87083,6 @@
           "line": 3110
         },
         {
-          "callee": "Try_Begin_Direct_Client",
-          "callee_node_type": "identifier",
-          "line": 3114
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 3117
@@ -87236,16 +87096,6 @@
           "callee": "A4_Frontend_Is_Tutorial_Source",
           "callee_node_type": "identifier",
           "line": 3122
-        },
-        {
-          "callee": "A4_Frontend_Resolve_Single_Player_Archive",
-          "callee_node_type": "identifier",
-          "line": 3126
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3128
         },
         {
           "callee": "RenegadeDialogMgrClass::Goto_Location",
@@ -87473,21 +87323,6 @@
           "line": 3206
         },
         {
-          "callee": "remote_join.Poll",
-          "callee_node_type": "field_expression",
-          "line": 3211
-        },
-        {
-          "callee": "A4_Frontend_Resolve_Skirmish_Archive",
-          "callee_node_type": "identifier",
-          "line": 3213
-        },
-        {
-          "callee": "A4_Frontend_Resolve_Single_Player_Archive",
-          "callee_node_type": "identifier",
-          "line": 3215
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 3218
@@ -87523,19 +87358,9 @@
           "line": 3233
         },
         {
-          "callee": "GameModeManager::Remove",
-          "callee_node_type": "qualified_identifier",
-          "line": 3235
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 3238
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3240
         },
         {
           "callee": "GameModeManager::Remove",
@@ -87585,7 +87410,7 @@
       "nonfinal_return_lines": [
         3106
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "57ff5e854b46a9ed1c0c757c946fb6ae63ab6d18c953ea778be4d238285578f7",
       "scope": "",
       "signals": [
@@ -87593,49 +87418,6 @@
         "nonfinal_return_candidate"
       ],
       "start_byte": 128050,
-      "status": "unknown"
-    },
-    {
-      "body_kind": "compound_statement",
-      "body_sha256": "fff67731241c1eab652c8c97055933b15626a01b9681f683d19fbf212fee28ba",
-      "calls": [
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3146
-        }
-      ],
-      "declarator": "if (Try_Latch_Development_Campaign_Mission())",
-      "definition_sha256": "0b3ed06c686ea6b4f8b2b8111b9029da6647ef80cd4c0ae05176cee88667d226",
-      "end_byte": 130992,
-      "end_line": 3147,
-      "entry_preprocessor_context": [
-        {
-          "branch": "#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)",
-          "branch_line": 2628,
-          "condition": "#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)",
-          "opening_line": 2628
-        },
-        {
-          "branch": "#if !RENEGADE_VITA_M00_DEMO",
-          "branch_line": 3144,
-          "condition": "#if !RENEGADE_VITA_M00_DEMO",
-          "opening_line": 3144
-        }
-      ],
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_function",
-      "line": 3145,
-      "literal_returns": [],
-      "markers": [],
-      "node_type": "function_definition",
-      "nonfinal_return_lines": [],
-      "parse_has_error": false,
-      "row_id": "681bc7ee8a80a87cd33aed602f9996f6342f5748a760d4f218c6537f96204f69",
-      "scope": "",
-      "signals": [],
-      "start_byte": 130846,
       "status": "unknown"
     },
     {
@@ -88655,51 +88437,6 @@
           "line": 3669
         },
         {
-          "callee": "A4_Frontend_Resolve_Single_Player_Archive",
-          "callee_node_type": "identifier",
-          "line": 3677
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3679
-        },
-        {
-          "callee": "memcpy",
-          "callee_node_type": "identifier",
-          "line": 3684
-        },
-        {
-          "callee": "state_file.Open",
-          "callee_node_type": "field_expression",
-          "line": 3686
-        },
-        {
-          "callee": "CampaignManager::Load",
-          "callee_node_type": "qualified_identifier",
-          "line": 3688
-        },
-        {
-          "callee": "state_file.Close",
-          "callee_node_type": "field_expression",
-          "line": 3689
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3691
-        },
-        {
-          "callee": "EncyclopediaMgrClass::Restore_Data",
-          "callee_node_type": "qualified_identifier",
-          "line": 3700
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3701
-        },
-        {
           "callee": "EncyclopediaMgrClass::Initialize",
           "callee_node_type": "qualified_identifier",
           "line": 3705
@@ -88728,16 +88465,6 @@
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 3713
-        },
-        {
-          "callee": "GameModeManager::Find",
-          "callee_node_type": "qualified_identifier",
-          "line": 3716
-        },
-        {
-          "callee": "GameModeManager::Add",
-          "callee_node_type": "qualified_identifier",
-          "line": 3717
         },
         {
           "callee": "Run_Original_Frontend_Intro_And_Menu",
@@ -88840,26 +88567,6 @@
           "line": 3767
         },
         {
-          "callee": "remote_join.Begin_World_Load",
-          "callee_node_type": "field_expression",
-          "line": 3770
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3771
-        },
-        {
-          "callee": "GameInitMgrClass::Initialize_Skirmish",
-          "callee_node_type": "qualified_identifier",
-          "line": 3773
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3774
-        },
-        {
           "callee": "GameInitMgrClass::Initialize_SP",
           "callee_node_type": "qualified_identifier",
           "line": 3778
@@ -88895,114 +88602,9 @@
           "line": 3788
         },
         {
-          "callee": "A4_Frontend_Resolve_Skirmish_Archive",
-          "callee_node_type": "identifier",
-          "line": 3798
-        },
-        {
-          "callee": "A4_Frontend_Resolve_Single_Player_Archive",
-          "callee_node_type": "identifier",
-          "line": 3800
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3802
-        },
-        {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 3806
-        },
-        {
-          "callee": "A31ClientConnect::Is_Prepared_Map",
-          "callee_node_type": "qualified_identifier",
-          "line": 3807
-        },
-        {
-          "callee": "snprintf",
-          "callee_node_type": "identifier",
-          "line": 3809
-        },
-        {
-          "callee": "selected_mission_factory.reset",
-          "callee_node_type": "field_expression",
-          "line": 3810
-        },
-        {
-          "callee": "selected_mission_factory->Is_Valid",
-          "callee_node_type": "field_expression",
-          "line": 3812
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3813
-        },
-        {
-          "callee": "factory_list.Add_FileFactory",
-          "callee_node_type": "field_expression",
-          "line": 3817
-        },
-        {
-          "callee": "selected_mission_factory.get",
-          "callee_node_type": "field_expression",
-          "line": 3817
-        },
-        {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 3822
-        },
-        {
-          "callee": "glacier_retail_texture_factory.reset",
-          "callee_node_type": "field_expression",
-          "line": 3824
-        },
-        {
-          "callee": "glacier_retail_texture_factory->Is_Valid",
-          "callee_node_type": "field_expression",
-          "line": 3826
-        },
-        {
-          "callee": "factory_list.Add_FileFactory",
-          "callee_node_type": "field_expression",
-          "line": 3827
-        },
-        {
-          "callee": "glacier_retail_texture_factory.get",
-          "callee_node_type": "field_expression",
-          "line": 3827
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3829
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3831
-        },
-        {
-          "callee": "glacier_retail_texture_factory.reset",
-          "callee_node_type": "field_expression",
-          "line": 3832
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3835
-        },
-        {
           "callee": "combat_mode->Activate",
           "callee_node_type": "field_expression",
           "line": 3838
-        },
-        {
-          "callee": "combat_mode->Suspend",
-          "callee_node_type": "field_expression",
-          "line": 3841
         },
         {
           "callee": "The_Game()->Set_Map_Name",
@@ -89013,16 +88615,6 @@
           "callee": "The_Game",
           "callee_node_type": "identifier",
           "line": 3848
-        },
-        {
-          "callee": "The_Game()->Set_Map_Cycle",
-          "callee_node_type": "field_expression",
-          "line": 3850
-        },
-        {
-          "callee": "The_Game",
-          "callee_node_type": "identifier",
-          "line": 3850
         },
         {
           "callee": "_Force_Link_Soldier",
@@ -89110,6 +88702,11 @@
           "line": 3899
         },
         {
+          "callee": "loading_presenter.Initialize",
+          "callee_node_type": "field_expression",
+          "line": 3902
+        },
+        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 3911
@@ -89183,41 +88780,6 @@
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 3944
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 3946
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3947
-        },
-        {
-          "callee": "AssetDependencyManager::Load_Level_Assets",
-          "callee_node_type": "qualified_identifier",
-          "line": 3949
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 3950
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 3952
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 3952
-        },
-        {
-          "callee": "loading_presenter.Render_Original_Progress",
-          "callee_node_type": "field_expression",
-          "line": 3954
         },
         {
           "callee": "A4_Frontend_Is_Tutorial_Source",
@@ -89440,11 +89002,6 @@
           "line": 4036
         },
         {
-          "callee": "combat_mode->Resume",
-          "callee_node_type": "field_expression",
-          "line": 4040
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 4042
@@ -89590,41 +89147,6 @@
           "line": 4090
         },
         {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 4092
-        },
-        {
-          "callee": "DefinitionMgrClass::Find_Named_Definition",
-          "callee_node_type": "qualified_identifier",
-          "line": 4094
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4096
-        },
-        {
-          "callee": "static_cast<void *>",
-          "callee_node_type": "template_function",
-          "line": 4097
-        },
-        {
-          "callee": "cinematic_definition->Get_Class_ID",
-          "callee_node_type": "field_expression",
-          "line": 4098
-        },
-        {
-          "callee": "cinematic_definition->Is_Valid_Config",
-          "callee_node_type": "field_expression",
-          "line": 4100
-        },
-        {
-          "callee": "cinematic_error.Peek_Buffer",
-          "callee_node_type": "field_expression",
-          "line": 4101
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 4104
@@ -89650,161 +89172,6 @@
           "line": 4115
         },
         {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 4119
-        },
-        {
-          "callee": "A35_Vita_Clear_Prepared_Render_Objs",
-          "callee_node_type": "identifier",
-          "line": 4120
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 4171
-        },
-        {
-          "callee": "A35_Vita_Prepare_Render_Obj",
-          "callee_node_type": "identifier",
-          "line": 4172
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4176
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 4182
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 4182
-        },
-        {
-          "callee": "loading_presenter.Render_Original_Progress",
-          "callee_node_type": "field_expression",
-          "line": 4183
-        },
-        {
-          "callee": "WW3DAssetManager::Get_Instance()->Get_HAnim",
-          "callee_node_type": "field_expression",
-          "line": 4211
-        },
-        {
-          "callee": "WW3DAssetManager::Get_Instance",
-          "callee_node_type": "qualified_identifier",
-          "line": 4211
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4212
-        },
-        {
-          "callee": "animation->Get_Num_Frames",
-          "callee_node_type": "field_expression",
-          "line": 4214
-        },
-        {
-          "callee": "animation->Release_Ref",
-          "callee_node_type": "field_expression",
-          "line": 4215
-        },
-        {
-          "callee": "loading_presenter.Render_Original_Progress",
-          "callee_node_type": "field_expression",
-          "line": 4216
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 4225
-        },
-        {
-          "callee": "Prepare_Explosion_Definition",
-          "callee_node_type": "identifier",
-          "line": 4226
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4227
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 4229
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 4229
-        },
-        {
-          "callee": "loading_presenter.Render_Original_Progress",
-          "callee_node_type": "field_expression",
-          "line": 4230
-        },
-        {
-          "callee": "Warm_M13_World_Killed_Explosions",
-          "callee_node_type": "identifier",
-          "line": 4232
-        },
-        {
-          "callee": "Warm_Original_Campaign_Referenced_Textures",
-          "callee_node_type": "identifier",
-          "line": 4233
-        },
-        {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 4235
-        },
-        {
-          "callee": "A35_Vita_Clear_Prepared_Render_Objs",
-          "callee_node_type": "identifier",
-          "line": 4236
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 4277
-        },
-        {
-          "callee": "A35_Vita_Prepare_Render_Obj",
-          "callee_node_type": "identifier",
-          "line": 4278
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4282
-        },
-        {
-          "callee": "static_cast<unsigned long long>",
-          "callee_node_type": "template_function",
-          "line": 4288
-        },
-        {
-          "callee": "sceKernelGetProcessTimeWide",
-          "callee_node_type": "identifier",
-          "line": 4288
-        },
-        {
-          "callee": "loading_presenter.Render_Original_Progress",
-          "callee_node_type": "field_expression",
-          "line": 4289
-        },
-        {
-          "callee": "Warm_Original_Campaign_Referenced_Textures",
-          "callee_node_type": "identifier",
-          "line": 4291
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 4294
@@ -89813,11 +89180,6 @@
           "callee": "local_player_name.Convert_From",
           "callee_node_type": "field_expression",
           "line": 4297
-        },
-        {
-          "callee": "local_player_name.Convert_From",
-          "callee_node_type": "field_expression",
-          "line": 4299
         },
         {
           "callee": "remote_join.Complete_World_Load",
@@ -90195,16 +89557,6 @@
           "line": 4401
         },
         {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 4405
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4406
-        },
-        {
           "callee": "Warm_Original_M00_Interactive_Presentation_Cache",
           "callee_node_type": "identifier",
           "line": 4411
@@ -90250,61 +89602,6 @@
           "line": 4429
         },
         {
-          "callee": "fopen",
-          "callee_node_type": "identifier",
-          "line": 4435
-        },
-        {
-          "callee": "fclose",
-          "callee_node_type": "identifier",
-          "line": 4437
-        },
-        {
-          "callee": "CombatManager::Get_The_Star",
-          "callee_node_type": "qualified_identifier",
-          "line": 4438
-        },
-        {
-          "callee": "PlayerTerminalClass::Get_Instance",
-          "callee_node_type": "qualified_identifier",
-          "line": 4439
-        },
-        {
-          "callee": "star->Get_Player_Data",
-          "callee_node_type": "field_expression",
-          "line": 4440
-        },
-        {
-          "callee": "star->Get_Player_Type",
-          "callee_node_type": "field_expression",
-          "line": 4441
-        },
-        {
-          "callee": "star->Get_Player_Type",
-          "callee_node_type": "field_expression",
-          "line": 4442
-        },
-        {
-          "callee": "remove",
-          "callee_node_type": "identifier",
-          "line": 4443
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4444
-        },
-        {
-          "callee": "terminal->Display_Default_Terminal_For_Player",
-          "callee_node_type": "field_expression",
-          "line": 4446
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4447
-        },
-        {
           "callee": "Try_Arm_Development_M13_Completion",
           "callee_node_type": "identifier",
           "line": 4454
@@ -90318,26 +89615,6 @@
           "callee": "Try_Arm_Development_M13_A03_Field",
           "callee_node_type": "identifier",
           "line": 4458
-        },
-        {
-          "callee": "remote_join.Poll",
-          "callee_node_type": "field_expression",
-          "line": 4467
-        },
-        {
-          "callee": "remote_join.Poll",
-          "callee_node_type": "field_expression",
-          "line": 4468
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4469
-        },
-        {
-          "callee": "remote_join.Poll",
-          "callee_node_type": "field_expression",
-          "line": 4470
         },
         {
           "callee": "demo_ending.Timeline.Active",
@@ -90560,41 +89837,6 @@
           "line": 4570
         },
         {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 4575
-        },
-        {
-          "callee": "A31_Interactive_Get_HUD_State",
-          "callee_node_type": "identifier",
-          "line": 4579
-        },
-        {
-          "callee": "CombatManager::Get_Camera",
-          "callee_node_type": "qualified_identifier",
-          "line": 4580
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4581
-        },
-        {
-          "callee": "intro_camera->Is_Using_Host_Model",
-          "callee_node_type": "field_expression",
-          "line": 4583
-        },
-        {
-          "callee": "static_cast<void *>",
-          "callee_node_type": "template_function",
-          "line": 4586
-        },
-        {
-          "callee": "CombatManager::Get_The_Star",
-          "callee_node_type": "qualified_identifier",
-          "line": 4586
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 4592
@@ -90638,11 +89880,6 @@
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 4616
-        },
-        {
-          "callee": "Run_Original_Campaign_Intermission",
-          "callee_node_type": "identifier",
-          "line": 4621
         },
         {
           "callee": "A30_Vita_Log",
@@ -91010,16 +90247,6 @@
           "line": 4878
         },
         {
-          "callee": "stricmp",
-          "callee_node_type": "identifier",
-          "line": 4881
-        },
-        {
-          "callee": "Log_M13_Nearby_Actor_Snapshot",
-          "callee_node_type": "identifier",
-          "line": 4882
-        },
-        {
           "callee": "Log_Timing_Statistics",
           "callee_node_type": "identifier",
           "line": 4885
@@ -91053,11 +90280,6 @@
           "callee": "A30_Vita_Log_Flush",
           "callee_node_type": "identifier",
           "line": 4891
-        },
-        {
-          "callee": "RENEGADE_VITA_M00_DEMO",
-          "callee_node_type": "identifier",
-          "line": 4896
         },
         {
           "callee": "capture_history->Count",
@@ -91280,36 +90502,6 @@
           "line": 4990
         },
         {
-          "callee": "GameModeManager::Find",
-          "callee_node_type": "qualified_identifier",
-          "line": 4993
-        },
-        {
-          "callee": "frontend_movie_mode.Is_Inactive",
-          "callee_node_type": "field_expression",
-          "line": 4994
-        },
-        {
-          "callee": "frontend_movie_mode.Deactivate",
-          "callee_node_type": "field_expression",
-          "line": 4995
-        },
-        {
-          "callee": "GameModeManager::Safely_Deactivate",
-          "callee_node_type": "qualified_identifier",
-          "line": 4997
-        },
-        {
-          "callee": "GameModeManager::Remove",
-          "callee_node_type": "qualified_identifier",
-          "line": 4998
-        },
-        {
-          "callee": "A30_Vita_Log",
-          "callee_node_type": "identifier",
-          "line": 4999
-        },
-        {
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 5009
@@ -91408,26 +90600,6 @@
           "callee": "A30_Vita_Log",
           "callee_node_type": "identifier",
           "line": 5039
-        },
-        {
-          "callee": "frontend_score_mode.Is_Inactive",
-          "callee_node_type": "field_expression",
-          "line": 5043
-        },
-        {
-          "callee": "frontend_score_mode.Deactivate",
-          "callee_node_type": "field_expression",
-          "line": 5044
-        },
-        {
-          "callee": "GameModeManager::Safely_Deactivate",
-          "callee_node_type": "qualified_identifier",
-          "line": 5046
-        },
-        {
-          "callee": "GameModeManager::Remove",
-          "callee_node_type": "qualified_identifier",
-          "line": 5047
         },
         {
           "callee": "EncyclopediaMgrClass::Shutdown",
@@ -91708,7 +90880,7 @@
         3454,
         3554
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "7f8ecf22b669b1b5b6ff57b6badaf9a6d8e2fb4dec31cf22e134f2a4af23bf55",
       "scope": "",
       "signals": [
@@ -91716,230 +90888,6 @@
         "unsupported_or_todo_marker"
       ],
       "start_byte": 139847,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 131050,
-      "end_line": 3149,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3149,
-      "missing": true,
-      "node_type": ";",
-      "row_id": "d9484cd7539f1c0ed67cf4b77291494671bbf19f3a21e3efdb3f131a9c185bc7",
-      "snippet": "",
-      "start_byte": 131050,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 156818,
-      "end_line": 3702,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3702,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "cb67782d375733c6c2e89a46346ccf404308913d8c5ac1e036a151727a232d7b",
-      "snippet": "else",
-      "start_byte": 156814,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 160369,
-      "end_line": 3775,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3775,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "36e3a3caf62ff3661c525d94ea05d42f80591d82198e56e8c421891fd2b7ca2a",
-      "snippet": "else",
-      "start_byte": 160365,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 165766,
-      "end_line": 3902,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3902,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "cdf309806e667fc05ec666309da265c5561daab5d725bafb8029e46d5455d967",
-      "snippet": "if (!loading_presenter.Initialize(",
-      "start_byte": 165732,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 165810,
-      "end_line": 3904,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3904,
-      "missing": true,
-      "node_type": ";",
-      "row_id": "6b0e90ddd7f3f478b78d8888333be91fb9b4907fef404a9cde7431e264d5a082",
-      "snippet": "",
-      "start_byte": 165810,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 165907,
-      "end_line": 3909,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3908,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "b948971a976846f44fbc269a048668ef0034952a67c5b0a7b930194e2d946dc3",
-      "snippet": "#endif\n\t\t\t\t))",
-      "start_byte": 165894,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 165941,
-      "end_line": 3910,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3910,
-      "missing": true,
-      "node_type": "}",
-      "row_id": "c9031212d984ded5ff1f5121dc4cbfac29c85151d992e470a2f804f6b1d05f95",
-      "snippet": "",
-      "start_byte": 165941,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 166050,
-      "end_line": 3913,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3913,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "5acb4213302ea59cb61472da0ab379ed4d1b0aa3b96a6e6f3bdfc1d603103a3d",
-      "snippet": "}",
-      "start_byte": 166049,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 166480,
-      "end_line": 3922,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3922,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "b07809610d7c4021f19180e07dcc3c236e4e0c0df51d5916cd8ca92f61195a3d",
-      "snippet": "#if",
-      "start_byte": 166477,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 166534,
-      "end_line": 3924,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3924,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "4016f0c5e572716fc13d3c1773e4a37c461ad8e7409845de13b7c6151cea470c",
-      "snippet": "#else",
-      "start_byte": 166529,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 166564,
-      "end_line": 3926,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 3926,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "e1eed71a7618998fb424a52e0295a08545ffef527a6e990a830d27efece9f404",
-      "snippet": "#endif",
-      "start_byte": 166558,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 189835,
-      "end_line": 4408,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 4408,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "50b6b3fe9fb56c33804df99d9608943e5da7b3ffe88bfb15b7a33eeff902128c",
-      "snippet": "else",
-      "start_byte": 189831,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 193248,
-      "end_line": 4490,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 4490,
-      "missing": true,
-      "node_type": ";",
-      "row_id": "9b14b65ea26b1286dc0339bcf40c92e599a091e075efbeeb384b3c0f138d9044",
-      "snippet": "",
-      "start_byte": 193248,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 213562,
-      "end_line": 4896,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 4896,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "e6006c37a86a646d77d2939985319b187c87d680f950d43c9a5ed2fafbf38e78",
-      "snippet": "#if",
-      "start_byte": 213559,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 213739,
-      "end_line": 4899,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 4899,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "51021c8550ee38210c34acbdb437483aa744a9d26fe2ab3ce21bcdb67c561af1",
-      "snippet": ")",
-      "start_byte": 213738,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 222296,
-      "end_line": 5079,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a31_vita_runtime.cpp",
-      "kind": "port_parse_unknown",
-      "line": 5079,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "fe43836fe3311c1ae2c75e9e40ed835d511d1dd30fbf864f92419e5d3e1c4232",
-      "snippet": "else",
-      "start_byte": 222292,
       "status": "unknown"
     },
     {
@@ -128364,9 +127312,8 @@
       "current_source_guard": 849,
       "link_wrapper_reference": 4,
       "patch_guard": 526,
-      "port_function": 1663,
-      "port_macro_definition": 486,
-      "port_parse_unknown": 16
+      "port_function": 1662,
+      "port_macro_definition": 486
     },
     "by_status": {
       "boundary_replaced": 5,
@@ -128374,10 +127321,10 @@
       "excluded_with_proof": 1,
       "original_patched": 1,
       "stubbed_or_noop": 51,
-      "unknown": 3480
+      "unknown": 3463
     },
     "patch_files": 318,
-    "rows": 3544,
+    "rows": 3527,
     "stage_patch_references": 315
   }
 }

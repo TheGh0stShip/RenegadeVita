@@ -5,6 +5,7 @@ errors and missing nodes remain inventory rows. The unpreprocessed syntax tree
 does not establish active build branches, generated functions or call reachability.
 """
 import hashlib
+import itertools
 import re
 
 MARKER = re.compile(r'Submit_Unsupported|\bTODO\b|unsupported|not\s+implemented|\bstub\w*\b', re.I)
@@ -81,8 +82,74 @@ def parser():
     return Parser(Language(tree_sitter_cpp.language()))
 
 
-def function_inventory(text, cpp_parser=None):
-    source = text.encode('utf-8')
+def conditional_macro_view(text, macro, enabled):
+    """Select simple #if MACRO/#if !MACRO branches without moving bytes.
+
+    This is intentionally narrower than a C preprocessor. Unknown directives
+    remain in active text; nested text under an inactive managed branch is
+    blanked. Running both values retains definitions from both supported build
+    profiles while removing impossible cross-branch syntax.
+    """
+    lines = text.splitlines(keepends=True)
+    stack = []
+    active = True
+    output = []
+    positive = re.compile(r'^\s*#\s*(?:if\s+' + re.escape(macro) +
+                          r'|ifdef\s+' + re.escape(macro) + r'|if\s+defined\s*\(\s*' +
+                          re.escape(macro) + r'\s*\))\s*(?://.*)?$')
+    negative = re.compile(r'^\s*#\s*(?:if\s+!' + re.escape(macro) +
+                          r'|ifndef\s+' + re.escape(macro) + r'|if\s+!defined\s*\(\s*' +
+                          re.escape(macro) + r'\s*\))\s*(?://.*)?$')
+
+    def blank(line):
+        return ''.join(char if char in '\r\n' else ' ' for char in line)
+
+    for line in lines:
+        stripped = line.rstrip('\r\n')
+        directive = re.match(r'^\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b', stripped)
+        if directive and directive.group(1) in ('if', 'ifdef', 'ifndef'):
+            condition = enabled if positive.match(stripped) else (
+                not enabled if negative.match(stripped) else None)
+            stack.append({'parent': active, 'managed': condition is not None,
+                          'condition': condition})
+            if condition is not None:
+                active = active and condition
+                output.append(blank(line))
+            else:
+                output.append(line if active else blank(line))
+        elif directive and directive.group(1) == 'else' and stack:
+            frame = stack[-1]
+            if frame['managed']:
+                active = frame['parent'] and not frame['condition']
+                output.append(blank(line))
+            else:
+                output.append(line if active else blank(line))
+        elif directive and directive.group(1) == 'elif' and stack:
+            frame = stack[-1]
+            if frame['managed']:
+                # No target-macro elif exists in the audited source. Retain an
+                # explicit uncertainty if one is introduced instead of guessing.
+                active = False
+                output.append(line if frame['parent'] else blank(line))
+            else:
+                output.append(line if active else blank(line))
+        elif directive and directive.group(1) == 'endif' and stack:
+            frame = stack.pop()
+            was_managed = frame['managed']
+            active = frame['parent']
+            output.append(blank(line) if was_managed or not active else line)
+        else:
+            output.append(line if active else blank(line))
+    if stack:
+        raise ValueError('Unbalanced preprocessor directives')
+    result = ''.join(output)
+    if len(result.encode()) != len(text.encode()):
+        raise ValueError('Conditional view changed source offsets')
+    return result
+
+
+def function_inventory(text, cpp_parser=None, identity_text=None):
+    source = (identity_text if identity_text is not None else text).encode('utf-8')
     parser_source = normalize_parser_source(text).encode('utf-8')
     if len(parser_source) != len(source):
         raise ValueError('Parser normalization changed source offsets')
@@ -185,3 +252,28 @@ def function_inventory(text, cpp_parser=None):
                           'parse_has_error': node.has_error})
     return {'functions': functions, 'parse_errors': errors,
             'root_has_error': tree.root_node.has_error}
+
+
+def function_inventory_for_boolean_profiles(text, macros, cpp_parser=None):
+    """Union definitions and uncertainties from all values of build flags."""
+    if isinstance(macros, str):
+        macros = [macros]
+    profiles = [dict(zip(macros, values))
+                for values in itertools.product((False, True), repeat=len(macros))]
+    inventories = []
+    for profile in profiles:
+        view = text
+        for macro, enabled in profile.items():
+            view = conditional_macro_view(view, macro, enabled)
+        inventories.append(function_inventory(view, cpp_parser, identity_text=text))
+    functions = {}
+    errors = {}
+    for inventory in inventories:
+        for row in inventory['functions']:
+            functions[(row['start_byte'], row['end_byte'], row['node_type'])] = row
+        for row in inventory['parse_errors']:
+            errors[(row['start_byte'], row['end_byte'], row['node_type'], row['missing'])] = row
+    return {'functions': sorted(functions.values(), key=lambda row: (row['start_byte'], row['end_byte'])),
+            'parse_errors': sorted(errors.values(), key=lambda row: (row['start_byte'], row['end_byte'])),
+            'root_has_error': any(inventory['root_has_error'] for inventory in inventories),
+            'profiles': profiles}

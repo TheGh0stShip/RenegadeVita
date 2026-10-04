@@ -253,7 +253,7 @@ def audit(root=ROOT, include_functions=False):
     rows, inputs, patch_inventory, function_files = [], {}, [], []
     cpp_parser = None
     if include_functions:
-        from sweep_cpp_functions import function_inventory, parser
+        from sweep_cpp_functions import function_inventory, function_inventory_for_boolean_profiles, parser
         cpp_parser = parser()
     for patch in patches:
         relative = patch.relative_to(root).as_posix()
@@ -282,7 +282,13 @@ def audit(root=ROOT, include_functions=False):
                     rows.append({'kind': 'port_macro_definition', 'file': relative,
                                  'status': 'unknown', 'evidence_class': 'current_source', **row})
             if directory == 'port' and include_functions:
-                inventory = function_inventory(text, cpp_parser)
+                if relative == 'port/platform/vita/a31_vita_runtime.cpp':
+                    inventory = function_inventory_for_boolean_profiles(
+                        text, ['RENEGADE_VITA_M00_DEMO',
+                               'RENEGADE_A4_ORIGINAL_FRONTEND',
+                               'RENEGADE_VITA_DEVELOPMENT_CHECKPOINT'], cpp_parser)
+                else:
+                    inventory = function_inventory(text, cpp_parser)
                 contexts = branch_contexts(text, [r['line'] for r in inventory['functions']])
                 function_files.append({'file': relative,
                                        'functions': len(inventory['functions']),

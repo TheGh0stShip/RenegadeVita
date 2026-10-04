@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## S4 physical WAV chunk bounds — 2026-10-03
+
+All 265 flagged files have data payloads within their actual source bounds.
+Failure occurs in post-data trailing content; 264 outer RIFF sizes additionally
+exceed source length by seven or eight bytes. This is a concrete compatibility
+lead, not evidence of truncated audio or accepted playback. Thirty-seven
+focused tests pass; original duration and 3D loading owners are traced.
+Next: exact reference reconciliation and retail post-data handling evidence.
+No engine or device mutation; native gates remain 0/10.
+See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 ## S4 WAV reconciliation and compiled boundary check — 2026-10-03
 
 Completed: 31 archive rows and 265 nested findings reconciled into 39,994

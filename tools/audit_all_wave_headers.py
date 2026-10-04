@@ -4,9 +4,51 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import struct
 from pathlib import Path
 from tools.audit_mission_wave_headers import inspect_wave
 from tools.renegade_cinematic_dependency_scan import MixArchive
+
+
+def physical_chunks(data):
+    """Walk actual source bounds independently of the outer RIFF declaration.
+
+    This is forensic metadata, never a compatibility decoder or repaired file.
+    """
+    result = {'source_bytes': len(data), 'chunks': [], 'errors': []}
+    if len(data) < 12 or data[:4] != b'RIFF' or data[8:12] != b'WAVE':
+        result['errors'].append('not_complete_riff_wave_header')
+        return result
+    result['declared_bytes'] = struct.unpack_from('<I', data, 4)[0] + 8
+    result['declared_minus_source_bytes'] = result['declared_bytes'] - len(data)
+    offset = 12
+    while offset + 8 <= len(data):
+        kind, size = struct.unpack_from('<4sI', data, offset)
+        payload = offset + 8
+        available = len(data) - payload
+        result['chunks'].append({'kind_hex': kind.hex(), 'offset': offset,
+                                 'declared_payload_bytes': size, 'available_payload_bytes': min(size, available)})
+        if size > available:
+            result['errors'].append('chunk_exceeds_actual_source')
+            break
+        offset = payload + size
+        if size & 1:
+            if offset == len(data):
+                result['final_odd_padding_absent'] = True
+                break
+            offset += 1
+    result['remaining_source_bytes'] = len(data) - offset
+    if not result['errors'] and result['remaining_source_bytes']:
+        result['errors'].append('incomplete_chunk_header_trailer')
+    counts = Counter(c['kind_hex'] for c in result['chunks'])
+    result['single_format_and_data'] = counts[b'fmt '.hex()] == counts[b'data'.hex()] == 1
+    data_chunks = [c for c in result['chunks'] if c['kind_hex'] == b'data'.hex()]
+    result['data_payloads_within_source'] = bool(data_chunks) and all(
+        c['declared_payload_bytes'] == c['available_payload_bytes'] for c in data_chunks)
+    if len(data_chunks) == 1 and result['data_payloads_within_source']:
+        chunk = data_chunks[0]
+        result['bytes_after_data_payload'] = len(data) - chunk['offset'] - 8 - chunk['declared_payload_bytes']
+    return result
 
 
 def summarize(archive, members):
@@ -19,7 +61,8 @@ def summarize(archive, members):
         if metadata['header_findings'] or metadata['block_findings']:
             findings.append({k: member[k] for k in ('member', 'index_record', 'offset', 'bytes', 'sha256')} |
                             {'header_findings': metadata['header_findings'],
-                             'block_findings': metadata['block_findings'], 'status': 'unknown'})
+                             'block_findings': metadata['block_findings'],
+                             'physical_chunk_bounds': member.get('physical_chunk_bounds'), 'status': 'unknown'})
     return {'archive': archive, 'status': 'unknown', 'evidence_class': 'retail_wave_metadata',
             'wave_members': len(members),
             'formats': [{'format': list(key) if key else None, 'members': count}
@@ -45,8 +88,12 @@ def scan(directory):
                 data = stream.read(size)
                 if len(data) != size:
                     raise ValueError('truncated archive member')
-                members.append({'member': name, 'index_record': index, 'offset': offset, 'bytes': size,
-                                'sha256': hashlib.sha256(data).hexdigest(), 'metadata': inspect_wave(data)})
+                metadata = inspect_wave(data)
+                member = {'member': name, 'index_record': index, 'offset': offset, 'bytes': size,
+                          'sha256': hashlib.sha256(data).hexdigest(), 'metadata': metadata}
+                if metadata['header_findings'] or metadata['block_findings']:
+                    member['physical_chunk_bounds'] = physical_chunks(data)
+                members.append(member)
         rows.append(summarize(path.name, members))
         receipts.append({'archive': path.name, 'members': members})
     return rows, archives, receipts

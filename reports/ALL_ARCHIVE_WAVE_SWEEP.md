@@ -48,6 +48,33 @@ bounded 3D oversized-RIFF case. The 34 focused inventory/parser/register tests
 also pass. No provider behavior was changed.
 
 These authored regressions prove the current rejection boundary, not retail
-compatibility. Next: classify the 265 original files by actual chunk bounds,
-trace their active callers and compare documented retail behavior before
-considering any compatibility change. Keep malformed data bounded throughout.
+compatibility.
+
+## Actual source-bound follow-up
+
+An independent, bounded metadata walk ignores the outer RIFF length solely to
+inspect physical chunk placement. All 265 flagged files contain one format and
+one data chunk; every declared data payload fits within the actual source.
+Each walk subsequently reaches trailing bytes that fail chunk bounds. There
+are 12–3,312 bytes after the data payload. Of the 264 oversized outer lengths,
+141 exceed the source by seven bytes and 123 by eight. One file has an exact
+outer length but still fails the trailing chunk check. No file was repaired,
+decoded or modified.
+
+Filename prefixes span m00 (178), m01 (16), m04 (3), m05 (15), m06 (8), m08 (2),
+m09 (2), m10 (3), m11 (1), mxx (36) and cor (1). These are naming evidence,
+not established mission usage. In particular, m00 includes shared voices and
+does not prove that all 178 files are tutorial dependencies.
+
+The staged original `SoundBufferClass::Load_From_File` reads the actual file
+size and calls `Determine_Stats`; its patched bounded statistics provider can
+also encounter the trailing-chunk failure. The original 3D handle passes the
+actual allocation length to the bounded sample-file provider. Thus duration
+and playback both require compatibility investigation; the duration truncation
+flag alone does not solve this trailing-content case.
+
+Thirty-seven inventory/parser/register tests pass, including intact data with
+an oversized outer length, truncated data, short trailing headers and final
+odd padding. Next: reconcile definition/conversation references to these exact
+files and establish retail handling of post-data content before changing the
+provider. Physical playback and audio timing remain open.

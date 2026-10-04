@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_custom_event_delivery_asan_ubsan",
+  "original_body_equals_staged": true,
+  "owner_line": 650,
+  "contracts_passed": [
+    "inline_order",
+    "reentrant_order",
+    "stack_mutation",
+    "negative_delay",
+    "null_sender",
+    "positive_queue",
+    "null_target",
+    "empty_observers",
+    "int32_extremes"
+  ],
+  "binary_sha256": "c9e72a2a32bb14115908578376b53054cbd4fe51d5e0abd3afa2c0e18d2ebf58",
+  "source_sha256": {
+    "upstream/CnC_Renegade/Code/Combat/scriptcommands.cpp": "5eabc047306bc9826b13029413dbc0fe500ebf2faa39914fe6efbd2007cd2632",
+    "staging/combat/scriptcommands.cpp": "41d23acbaff05b40c9fb680b296caba8b24ce2d564239acec1fca73b29a6823a",
+    "staging/combat/gameobjobserver.h": "3638e741d5f6862737142c90946dc148be3e8737d06816b4ea8ccbe9f15efb2b",
+    "tools/test_custom_event_delivery.py": "f9de6561c8d94179e92dc7616985c891d8b693355ad7825cc1678ccc7568c57d"
+  },
+  "body_sha256": "a0d53c05201e79a5d7167e650e455dd0f7bd67f6593cf23062c81d18d2a617e2",
+  "arm_compile": {
+    "object_sha256": "aeaabc9b5f88e27777b9afcd22b53932be25ac2d59acc9dd95bcf5095ada1134",
+    "attributes_sha256": "e361307473248dfbaa7b9cd2d431a0287df95a72123f8f33979d45c637476756",
+    "armv7_little_endian_vfp_arguments": true,
+    "executed": false
+  },
+  "limits": [
+    "Synthetic observer list and timer queue; real observer lifetime and timer expiry remain open.",
+    "Captured stack variable mutation proves inline timing, not Mission03 pointer-width compatibility.",
+    "Trace logging omitted; null-target return and original assert predicate retained.",
+    "No original Mission03 callbacks, ARM execution or native mission acceptance."
+  ]
+}

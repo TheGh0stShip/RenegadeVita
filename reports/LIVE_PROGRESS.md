@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Original custom-event timing — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:unchanged original command verifies inline/reentrant observer delivery
+and stack mutation before return;positive delays preserve queue arguments.
+Evidence:nine host ASan/UBSan contracts;ARMv7 hard-float object compile passes.
+Next:host pointer-exchange compatibility and actual Mission03 callback evidence.
+Blocker:none for source work;real timers/observers and native acceptance remain open.
+
 ## Whole-script compiler assumptions — 2026-10-04
 
 Renegade Vita — v3.5 active

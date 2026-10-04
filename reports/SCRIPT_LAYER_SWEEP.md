@@ -1,5 +1,34 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Original custom-event timing contract — 2026-10-04
+
+The original and staged `Send_Custom_Event` bodies match exactly. Its default
+delay is0; delay<=0 iterates the target's observers and invokes `Custom` inline.
+Positive delay calls `Start_Custom_Timer`; original timer expiry later iterates
+observers in `ScriptableGameObj::Post_Think`. Thus Mission03's three default-delay
+pointer exchanges rely on synchronous delivery and stack writes before return.
+Their host LP64 pointer conversions remain unresolved.
+
+The extracted original command passes host ASan/UBSan for nine contracts:
+inline observer order, nested/reentrant order, stack mutation, negative delay,
+null sender, positive-delay queue arguments, null target, empty observer list
+and signed32-bit extremes. The fixture's callback list/timer queue are bounded
+seams; actual mission callbacks, observer mutation/lifetime and timer expiry
+are not executed. Trace logging is omitted; the original null-target guard and
+assert predicate remain. No original command-table layout or event width changes.
+
+The same fixture compiles to an ELF32 little-endian ARMv7 object with VFP-register
+arguments. This is object compilation, not native execution or a linked game
+candidate. Matching host executable, ARM object, compile/runtime/attribute logs
+and receipt are retained in
+`build/procedural-renderer-dependencies/custom-event-delivery/`. Public metadata:
+[delivery receipt](generated/sweeps/host_custom_event_delivery.json).
+
+Reproduce host checks with `python3 -m unittest tools.test_custom_event_delivery`.
+Set `RENEGADE_CUSTOM_EVENT_PROBE_DIRECTORY` to retain artifacts and
+`RENEGADE_CUSTOM_EVENT_ARM_COMPILER` to the installed Vita compiler for the
+optional ARM object gate. Production runtime and Dev221 artifacts are unchanged.
+
 ## Whole script compiler-assumption surface — 2026-10-04
 
 `python3 -m tools.audit_script_portability` inventories every original DSP unit

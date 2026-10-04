@@ -35,15 +35,18 @@ class CinematicDispatchTests(unittest.TestCase):
             if retained:(path/'runtime.log').write_text(result.stdout+result.stderr)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
             self.assertIn('PASS branches=18 camera_release=1 title_prefix=1 unknown=1',result.stdout)
+            self.assertIn('alternatives=5 guarded_no_effect=18 slot_preservation=2',result.stdout)
             if retained:
                 digest=lambda file:hashlib.sha256(file.read_bytes()).hexdigest()
                 receipt={'schema_version':1,'evidence_class':'host_original_cinematic_dispatch_asan_ubsan',
                     'branches_passed':18,'camera_release_passed':True,'title_prefix_passed':True,
                     'unknown_title_no_callback_passed':True,'binary_sha256':digest(executable),
+                    'alternative_routes_passed':5,'guarded_no_effect_cases_passed':18,
+                    'slot_preservation_cases_passed':2,
                     'source_sha256':{name:digest(ROOT/name) for name in
                         ('tools/host_cinematic_dispatch_test.cpp','tools/test_cinematic_dispatch.py',
                          'tools/host_cinematic_save_test.cpp','staging/scripts/Test_Cinematic.cpp')},
                     'limits':['Bounded synthetic callbacks and opaque object identity; no real engine effects.',
-                              'One success route per title; alternative, failure and lifetime paths remain open.',
+                              'Selected alternative/failure routes tested; exhaustive parameter and lifetime coverage remains open.',
                               'Native-only telemetry/platform branches and ARM/physical dispatch remain untested.']}
                 (path/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')

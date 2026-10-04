@@ -5,16 +5,19 @@
   "camera_release_passed": true,
   "title_prefix_passed": true,
   "unknown_title_no_callback_passed": true,
-  "binary_sha256": "b288c595155ed007e80655b376db51331c6ae56314ba072da28e5cb925219123",
+  "binary_sha256": "44ea654d604cbb7fe25ef257609e39d3103b9eae2bc79bd32e82278fe014539c",
+  "alternative_routes_passed": 5,
+  "guarded_no_effect_cases_passed": 18,
+  "slot_preservation_cases_passed": 2,
   "source_sha256": {
-    "tools/host_cinematic_dispatch_test.cpp": "5f26d05631dfd061e2d81ad8ce07318bcb92e7384d236965625338e425b283db",
-    "tools/test_cinematic_dispatch.py": "9ce37e038ba1b7cf8a87c405c582be23349ffe94b4cc9e468f443957e26d1c90",
+    "tools/host_cinematic_dispatch_test.cpp": "6cc8aa570767e3643e3c639967c72cd44579741dc13e0ff05aec084bd2f68d33",
+    "tools/test_cinematic_dispatch.py": "5497f5b41493a197f4db8ae713cbe7668fd1a66794c88816283e60204249231e",
     "tools/host_cinematic_save_test.cpp": "e7dc333ba5a44349d387575298646e911d4f4d1d8a3f6864c9724e1bbd861c82",
     "staging/scripts/Test_Cinematic.cpp": "de1ba39ba0b572009bcf2676e61e774c0bc86fb48822f77e715e71c23912e4f6"
   },
   "limits": [
     "Bounded synthetic callbacks and opaque object identity; no real engine effects.",
-    "One success route per title; alternative, failure and lifetime paths remain open.",
+    "Selected alternative/failure routes tested; exhaustive parameter and lifetime coverage remains open.",
     "Native-only telemetry/platform branches and ARM/physical dispatch remain untested."
   ]
 }

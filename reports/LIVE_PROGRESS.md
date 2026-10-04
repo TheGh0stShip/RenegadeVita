@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Cinematic alternative/failure execution — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:25 additional original dispatch cases cover audio/detachment/creation,
+failed creation, guarded no-effect paths and slot preservation.
+Evidence:retained host ASan/UBSan executable/logs and matching public receipt.
+Next:real engine object/callback integration and remaining system coverage.
+Blocker:none for source work;native acceptance remains open.
+
 ## Command and dispatch gap reconciliation — 2026-10-04
 
 Renegade Vita — v3.5 active

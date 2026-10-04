@@ -1,5 +1,21 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Cinematic alternative and failure execution — 2026-10-04
+
+The original dispatch sanitizer fixture now also passes 25 cases: five
+alternative/failure routes, 18 guarded no-effect routes and two slot-preservation
+checks. These cover bone-positioned 3D sound, bone detachment, standalone real
+object creation, failed decoration/real creation, empty or explicitly guarded
+invalid slots, absent custom targets and same-slot/invalid-destination moves.
+Failed creation retains an occupied destination slot, matching the original
+handler. No production code changes were needed.
+
+The retained executable, logs and metadata receipt live under
+`build/procedural-renderer-dependencies/cinematic-dispatch-alternatives/`.
+The public dispatch receipt matches that retained receipt exactly. Host
+ASan/UBSan passes; real object lifetime, callbacks, exhaustive input coverage,
+ARM dispatch and native effects remain open. Dev221 runtime artifacts are unchanged.
+
 ## Command and dispatch register reconciliation — 2026-10-04
 
 The full gap register now retains 202 command bodies, 202 lexical dependency

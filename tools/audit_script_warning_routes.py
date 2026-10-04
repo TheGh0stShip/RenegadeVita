@@ -13,7 +13,7 @@ from tools.audit_script_binding_occurrences import inventory as binding_inventor
 OWNERS = {
     'Mission10.cpp': ('M10_Apache_Controller', 'M10_Apache'),
     'mission08.cpp': ('M08_Apache_Controller', 'M08_Apache'),
-    'Test_PDS.cpp': ('PDS_Test_Inventory',),
+    'Test_PDS.cpp': ('PDS_Test_Inventory', 'PDS_Test_Controller'),
     'Test_RMV_Toolkit.cpp': ('RMV_Engineer_Wander',),
 }
 
@@ -43,18 +43,27 @@ def inventory(root, directory):
                 raise ValueError('Stale compiler source identity')
             owner = OWNERS[unit['name']][0]
             section = script_section(data.decode('latin1'), owner)
-            rows.append({'unit': unit['name'], 'script': owner, 'status': 'unknown',
+            status = 'excluded_with_proof' if owner == 'PDS_Test_Inventory' else 'unknown'
+            rows.append({'unit': unit['name'], 'script': owner, 'status': status,
                          'evidence_class': 'compiler_diagnostic_and_source_owner_review',
                          'diagnostic': candidate, 'source_sha256': unit['source_sha256'],
                          'script_section_sha256': hashlib.sha256(section.encode('latin1')).hexdigest()})
     surfaces = []
+    surface_status = {'M10_Apache_Controller': 'original_patched',
+                      'M10_Apache': 'original_compiled',
+                      'M08_Apache_Controller': 'original_patched',
+                      'M08_Apache': 'original_compiled',
+                      'PDS_Test_Inventory': 'excluded_with_proof',
+                      'PDS_Test_Controller': 'excluded_with_proof',
+                      'RMV_Engineer_Wander': 'original_patched'}
     for unit, names in OWNERS.items():
         for name in names:
             binding = binding_inventory(directory, retail, name)
-            surfaces.append({'unit': unit, 'script': name, 'status': 'unknown',
+            surfaces.append({'unit': unit, 'script': name, 'status': surface_status[name],
                              'maps_scanned': binding['total'], 'bindings': binding['binding_count'],
                              'map_rows': binding['rows']})
-    return {'schema_version': 1, 'complete': False, 'total': len(rows),
+    return {'schema_version': 1, 'complete': all(row['status'] != 'unknown' for row in rows),
+            'total': len(rows),
             'rows': rows, 'counts': dict(Counter(row['status'] for row in rows)),
             'compiler_inventory_sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
             'binding_surfaces': surfaces,
@@ -62,7 +71,7 @@ def inventory(root, directory):
                        'Apache valid indices are 0..2; area -1 is a distinct no-active-area sentinel.',
                        'The sprintf warnings cover full int range; array/index provenance must be assessed first.',
                        'The technician reconstructs a pointer then replaces it with a literal before animation use.',
-                       'No medkit pointer sender was established; a receiver cast alone does not authorize token substitution.',
+                       'PDS inventory and its sole attaching controller have zero retained all-map bindings; no medkit pointer sender exists in the selected script set.',
                        'Uninitialized omitted Apache slots and save/reload values require further evidence.']}
 
 

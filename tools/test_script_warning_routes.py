@@ -34,16 +34,15 @@ class WarningRouteTests(unittest.TestCase):
             rmv = sources['Test_RMV_Toolkit.cpp']
             shared = [pds[pds.index('\nenum\n{\n\tINVENTORY_EMPTY'):pds.index('DECLARE_SCRIPT(PDS_Test_Inventory')],
                       rmv[rmv.index('\nenum {'):rmv.index('DECLARE_SCRIPT(RMV_Trigger_Zone')],
-                      script_section(sources['Test_PDS.cpp'], 'PDS_Test_Inventory'),
-                      script_section(sources['Test_RMV_Toolkit.cpp'], 'RMV_Engineer_Wander')]
+                      script_section(sources['Test_PDS.cpp'], 'PDS_Test_Inventory')]
             self.assertEqual(shared[2], script_section(originals['Test_PDS.cpp'], 'PDS_Test_Inventory'))
-            self.assertEqual(shared[3], script_section(originals['Test_RMV_Toolkit.cpp'], 'RMV_Engineer_Wander'))
             headers = {}
             binaries = {}
             environment = os.environ.copy()
             environment.setdefault('ASAN_OPTIONS', 'detect_leaks=0')
             for label, selected in (('original', originals), ('corrected', sources)):
                 sections = shared[:]
+                sections.append(script_section(selected['Test_RMV_Toolkit.cpp'], 'RMV_Engineer_Wander'))
                 for name, owner in (('Mission10.cpp', 'M10_Apache_Controller'),
                                     ('mission08.cpp', 'M08_Apache_Controller')):
                     sections.append(script_section(selected[name], owner))

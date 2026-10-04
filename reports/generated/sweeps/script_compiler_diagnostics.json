@@ -474,40 +474,16 @@
       "status": "unknown",
       "compile_command_matches": 1,
       "evidence_class": "optimized_host_compiler_diagnostics",
-      "source_sha256": "2fa9123f853cab4166abc137dfff48dc6e992fc3d5cca1009be066345c35d6c2",
+      "source_sha256": "0dea06ff32299c1bef39c52590e096bae7218e772aca262c00dddc812d893c86",
       "returncode": 0,
-      "object_sha256": "7e00cb1289264d5779bb349b27ba376066926709edfa6b92a5ee150b37aff8f1",
+      "object_sha256": "887630b9b51b48612333e6355a17952d01f14f93d1b77aab2eddfdc0073cacdb",
       "diagnostic_counts": {
         "-Wattributes": 7,
-        "-Wint-to-pointer-cast": 2,
         "-Wwrite-strings": 9,
-        "-fpermissive": 40
+        "-fpermissive": 39
       },
       "dataflow_warning_count": 0,
-      "review_candidates": [
-        {
-          "status": "unknown",
-          "option": "-Wint-to-pointer-cast",
-          "message": "cast to pointer from integer of different size",
-          "locations": [
-            {
-              "source": "staging/scripts/Test_RMV_Toolkit.cpp",
-              "line": 195
-            }
-          ]
-        },
-        {
-          "status": "unknown",
-          "option": "-Wint-to-pointer-cast",
-          "message": "cast to pointer from integer of different size",
-          "locations": [
-            {
-              "source": "staging/scripts/Test_RMV_Toolkit.cpp",
-              "line": 218
-            }
-          ]
-        }
-      ]
+      "review_candidates": []
     },
     {
       "name": "Toolkit.cpp",
@@ -735,10 +711,10 @@
   "diagnostic_counts": {
     "-Wattributes": 280,
     "-Wconversion-null": 11,
-    "-Wint-to-pointer-cast": 3,
+    "-Wint-to-pointer-cast": 1,
     "-Wpointer-arith": 3,
     "-Wwrite-strings": 1177,
-    "-fpermissive": 1522,
+    "-fpermissive": 1521,
     "note": 6,
     "warning": 6
   },

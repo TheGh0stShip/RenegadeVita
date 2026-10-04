@@ -1,5 +1,14 @@
 # Renegade Vita port status
 
+2026-10-04 Dev225 closes the selected script compiler review denominator. Two
+live M03 `RMV_Engineer_Wander` bindings no longer perform a dead int-pointer-int
+round trip before using a fixed animation literal; their saved field and slot
+remain unchanged. The sole warning left is an unbound PDS test receiver whose
+only attaching controller is also unbound across all 27 maps, classified with
+proof rather than changed. All 491 fast contracts and 634 ARM actions pass.
+Native M03 behavior and the mixed wchar_t ABI remain open. See
+[script cluster](SCRIPT_LAYER_SWEEP.md).
+
 2026-10-04 Dev224 is the current fast compile/link candidate. The duplicated
 M08/M10 Apache controllers now reject negative and gap timer/event indices,
 preserve the authored `-1` exit sentinel, and reload the reporting Apache's

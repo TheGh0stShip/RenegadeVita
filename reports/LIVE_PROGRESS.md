@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Selected script warning closure — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: two live M03 RMV bindings keep integer payload/save semantics while
+dropping a dead pointer round trip; the unbound PDS test warning is excluded
+with all-map and caller proof. Evidence:45-unit denominator reconciles;491 fast
+contracts and634 ARM actions pass as Dev225. Next: resume S1 skipped-behavior
+classification and S2 renderer gaps. Blocker:mixed wchar_t ABI/native acceptance.
+
 ## Mission08/Mission10 Apache controller bounds — 2026-10-04
 
 Renegade Vita — v3.5 active

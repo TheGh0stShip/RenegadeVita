@@ -1,12 +1,20 @@
 # Known gaps
 
+2026-10-04 the optimized selected-script review denominator is classified.
+The two live M03 RMV pointer warnings are removed without changing payload,
+animation or save-slot behavior. The remaining PDS pointer receiver and its
+sole attaching controller have zero bindings across27 maps and no selected
+sender, so the row is `excluded_with_proof`. Dev225 passes491 contracts and634
+ARM actions. Native M03 engineer behavior remains open; this warning closure is
+not mission acceptance. See [script cluster evidence](SCRIPT_LAYER_SWEEP.md).
+
 2026-10-04 M08/M10 Apache controller bounds are corrected. Eight unchanged
 original invalid callback routes reproduce under UBSan; corrected routes,
 valid slots and high reload IDs pass. Dev224 passes491 fast contracts and634
 ARM actions. The all-map metadata surface retains one M10 controller binding
 but no M08 controller/child binding, so native callback reachability and mission
 behavior remain open. Three PDS/RMV pointer-cast warnings and the mixed wchar_t
-ABI warning remain. See [script cluster evidence](SCRIPT_LAYER_SWEEP.md).
+ABI warning remained at that checkpoint. See [script cluster evidence](SCRIPT_LAYER_SWEEP.md).
 
 2026-10-04 M09 camera overrun is corrected:the original callback fails at index
 five under UBSan;the bounded five-slot callback passes four cases and host/ARM

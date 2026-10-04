@@ -1,5 +1,31 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Selected script warning closure — 2026-10-04
+
+The current optimized compile inventory covers all45 Scripts.dsp units:44
+selected units compile and DLLmain is deliberately replaced by the static
+provider. The two remaining live warnings belonged to `RMV_Engineer_Wander`,
+which has two persisted bindings in M03 with payload `Custom_Param_1=1`.
+Original code converted that integer to a pointer and back into the saved
+`int_anim` field, later reconstructed a pointer, then overwrote it with the
+literal `s_a_human.h_a_con2` before animation playback. The zero-fuzz correction
+assigns the integer directly and initializes the same literal directly. It
+retains field type, save slot5, action IDs, callback order and animation.
+
+Actual original and corrected registrations pass the bounded host callback
+fixture for INT_MIN,0 and INT_MAX payloads; both produce the same literal
+animation. The warning-route ledger classifies both live bindings as
+`original_patched`. Dev225 passes491 fast contracts, a clean315-patch restage
+and all634 ARM compile/link actions.
+
+The only optimized warning left is `PDS_Test_Inventory`'s pointer-return
+receiver. Across27 retained maps it has zero bindings; its sole attaching
+`PDS_Test_Controller` also has zero bindings, and the selected script set has
+no sender for `CUSTOM_HAS_MEDKIT`. The original source remains compiled and is
+classified `excluded_with_proof`, avoiding an invented host token path for an
+unreached designer test. Computed external attachments and omitted maps remain
+an explicit limit. Native M03 execution and the wchar_t ABI warning remain open.
+
 ## Mission08/Mission10 Apache controller bounds — 2026-10-04
 
 The two copied three-slot Apache controllers had the same unchecked routes.

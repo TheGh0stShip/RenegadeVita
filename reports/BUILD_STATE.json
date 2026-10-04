@@ -1,4 +1,22 @@
 {
+  "selected_script_warning_closure_20261004": {
+    "state": "LIVE_RMV_DEAD_POINTER_ROUNDTRIP_REMOVED_PDS_TEST_EXCLUDED_WITH_PROOF_ARM_LINK_PASS",
+    "candidate": "A3.5-dev225",
+    "dsp_units": 45,
+    "selected_units_compiled": 44,
+    "all_map_bindings_scanned": 27,
+    "rmv_live_bindings": 2,
+    "remaining_review_warnings": 1,
+    "excluded_with_proof": 1,
+    "host_fast_contract_tests_passed": 491,
+    "arm_compile_link_actions": 634,
+    "registered_staging_patches": 315,
+    "elf_sha256": "532e16a6b5741d807964bc96511929a8846844d5b6e3261e3c685e6baea582f9",
+    "map_sha256": "8e71397afa818de4fc940ecb685ca898fd61c149d84decdc4be8dc012d0bfe69",
+    "receipt": "reports/generated/sweeps/script_warning_routes.json",
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "m08_m10_apache_bounds_20261004": {
     "state": "ORIGINAL_CALLBACK_UB_REPRODUCED_CORRECTED_HOST_SANITIZERS_ARM_LINK_PASS",
     "candidate": "A3.5-dev224",
@@ -29,11 +47,11 @@
     "canonical_package_passed": false
   },
   "script_compiler_diagnostics_20261004": {
-    "state": "HOST_OPTIMIZED_COMPILE_PASS_M09_AND_APACHE_WARNINGS_CORRECTED_THREE_POINTER_WARNINGS_OPEN",
+    "state": "HOST_OPTIMIZED_COMPILE_PASS_LIVE_WARNINGS_CORRECTED_ONE_PDS_TEST_WARNING_EXCLUDED_WITH_PROOF",
     "dsp_units": 45,
     "selected_units_compiled": 44,
     "diagnostic_parse_failures": 0,
-    "review_warning_candidates": 3,
+    "review_warning_candidates": 1,
     "tool_tests_passed": 7,
     "runtime_cpp_changed": true,
     "receipt": "reports/generated/sweeps/script_compiler_diagnostics.json",

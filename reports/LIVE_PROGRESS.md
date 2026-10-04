@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Original script parameter execution — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:14/14 synthetic cases exercise original script creation and parameter
+APIs. Underscore mismatch, missing values, empty-set retention, trailing commas
+and numeric/vector conversions are verified on host; mission callbacks are open.
+Evidence:matching retained host ELF and seven source hashes;17 consolidation
+tests pass. No runtime source change, device action or emulator launch.
+Next: helper/macro parameter coverage and startup game-mode activation.
+Blocker:none for engineering; full mission/native acceptance remains open.
+See [script ledger](SCRIPT_LAYER_SWEEP.md).
+
 ## Original script parameter reads — 2026-10-04
 
 Renegade Vita — v3.5 active

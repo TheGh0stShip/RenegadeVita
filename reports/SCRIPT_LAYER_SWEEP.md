@@ -1,5 +1,36 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Original parameter API execution — 2026-10-04
+
+Fourteen synthetic cases pass through the retained original host APIs after
+creating three scripts with ScriptRegistrar::CreateScript. No Created, Killed,
+timer or other mission callback is invoked; no gameplay object or retail data
+is loaded. Results distinguish executable parser behavior from prior lexical
+and authored metadata inventories.
+
+M00_Damage_Modifier_DME resolves the correctly underscored declared name at
+index four, including case-insensitive spelling. The original Killable_ByNotStar
+read resolves to -1 and integer zero. Its float value converts as expected.
+M03_Killed_Sound returns empty text and integer zero for an absent Location;
+setting an empty string retains the prior Officer argument. A trailing comma
+creates an empty second argument. Nonnumeric integer text becomes zero and
+numeric-prefix text becomes its leading integer. M06_Hedgemaze_Patrol returns
+the supplied vector, while nonnumeric vector text yields zero components.
+
+These tests preserve original behavior. They do not prove M03's authored binding
+callback activates, mission completion, damage scaling, save/load or native ABI
+correctness. Numeric overflow, locale, long descriptions and embedded NUL remain
+open. Three bounded allocations live until debugger process exit; destruction
+and leak freedom are not claimed and debugger leak checking is disabled.
+
+Reproduce using `tools/probe_host_script_parameters.py`; receipt is
+`reports/generated/sweeps/host_script_parameters.json`. It binds the retained
+host ELF, probe and seven original parser/factory/script owner source hashes.
+All 14 receipt rows retain unknown full-game behavior. Seventeen consolidation
+tests pass. The register contains 44,634 overlapping records, with 44,370
+unknowns. Runtime source and compiled artifacts are unchanged. No emulator
+launch, physical-device action or adjacent D3D modification occurred.
+
 ## Named parameter-read inventory — 2026-10-04
 
 The 1,636 live original script bodies contain 1,201 lexically identified

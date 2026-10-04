@@ -13,7 +13,7 @@ SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
                'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts',
                'database_chunks', 'level_persist_closure', 'database_persist_closure',
                'host_definition_registry', 'database_definition_closure', 'definition_instances',
-               'missing_definition_callers', 'host_script_registry', 'live_script_bindings', 'host_network_registry', 'host_prototype_registry', 'live_script_parameters', 'script_parameter_reads')
+               'missing_definition_callers', 'host_script_registry', 'live_script_bindings', 'host_network_registry', 'host_prototype_registry', 'live_script_parameters', 'script_parameter_reads', 'host_script_parameters')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 ISSUES['procedural_fvf_layouts'] = 6
 ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_closure',
@@ -23,6 +23,7 @@ ISSUES['host_network_registry'] = 7
 ISSUES['host_prototype_registry'] = 7
 ISSUES['live_script_parameters'] = 9
 ISSUES['script_parameter_reads'] = 9
+ISSUES['host_script_parameters'] = 9
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -61,7 +62,10 @@ def root_records(name, value):
         return rows
     rows=value['archives'] if name=='w3d_chunks' else value['rows']
     totals=value.get('totals',{})
-    if name=='script_parameter_reads':
+    if name=='host_script_parameters':
+        if value['total']!=len(rows) or value['matched']!=sum(r['matches'] for r in rows):
+            raise ValueError('Host script parameter partition mismatch')
+    elif name=='script_parameter_reads':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)) or value['categories']!=dict(Counter(r['category'] for r in rows)):
             raise ValueError('Script parameter read partition mismatch')
     elif name=='host_script_registry':
@@ -230,7 +234,7 @@ def consolidate(inputs):
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
                          'cluster': ('renderer' if name=='procedural_fvf_layouts' else
                                      'link' if name in {'host_definition_registry', 'host_script_registry', 'host_network_registry', 'host_prototype_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
-                                     'scripts' if name in {'live_script_bindings','live_script_parameters','script_parameter_reads'} else
+                                     'scripts' if name in {'live_script_bindings','live_script_parameters','script_parameter_reads','host_script_parameters'} else
                                      'retail' if name in SUPPLEMENTS else name)})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),

@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_script_creation_and_parameter_execution",
+  "binary_sha256": "bb685247f73b1e85377e9f209c55586d06a159d55c9021254873f5145c47b5a2",
+  "parser_sha256": "6c694c4f527b35699b7a6dd9b8022062d59c82cc14f0bc8b06f52168ca9381ab",
+  "owner_source_sha256": {
+    "staging/scripts/scripts.cpp": "22558a594370767c103e90490d1ec9c9c174e8371c8e4d958af402ee4cf398b0",
+    "staging/scripts/scripts.h": "21c9bd302689f4ed88941384f3986fbe669547aa50b93c0d7d329280c5024e9b",
+    "staging/scripts/ScriptRegistrar.cpp": "a3f7b2627e23ef7547ae018d0b7aedca430a7e0b3123e904c21199c91bc1de75",
+    "staging/scripts/ScriptRegistrant.h": "f02562ed328d1d52cada54648faa5e383bf341df0521fd79a25c744aae69c3b6",
+    "staging/scripts/Toolkit.cpp": "5dae4242f086d558623a9f6423770e7181eb1366057b40036c00c2e30335946b",
+    "staging/scripts/Mission03.cpp": "55cbb02352268af68437387ed75daac299d08d31be0f286c6f0769c4d793ac41",
+    "staging/scripts/Mission06.cpp": "0cb75ea11d0a75828e1f981625c5cf1108c18f625150ed7bf5e9e284c2f2a063"
+  },
+  "total": 14,
+  "matched": 14,
+  "rows": [
+    {
+      "label": "case insensitive declared name",
+      "actual": 4,
+      "expected": 4,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "original underscore mismatch index",
+      "actual": -1,
+      "expected": -1,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "original underscore mismatch integer",
+      "actual": 0,
+      "expected": 0,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "declared underscore integer",
+      "actual": 1,
+      "expected": 1,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "float conversion",
+      "actual": 0.15000000596046448,
+      "expected": 0.15,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "missing named value text",
+      "actual": "",
+      "expected": "",
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "missing named value integer",
+      "actual": 0,
+      "expected": 0,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "empty set preserves previous arguments",
+      "actual": 1,
+      "expected": 1,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "trailing comma argument count",
+      "actual": 2,
+      "expected": 2,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "trailing comma text",
+      "actual": "",
+      "expected": "",
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "nonnumeric integer text",
+      "actual": 0,
+      "expected": 0,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "integer numeric prefix",
+      "actual": 17,
+      "expected": 17,
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "vector conversion",
+      "actual": [
+        1.5,
+        -2.25,
+        3.0
+      ],
+      "expected": [
+        1.5,
+        -2.25,
+        3.0
+      ],
+      "matches": true,
+      "status": "unknown"
+    },
+    {
+      "label": "nonnumeric vector text",
+      "actual": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "expected": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "matches": true,
+      "status": "unknown"
+    }
+  ],
+  "scripts_created": 3,
+  "limits": [
+    "Synthetic values; no authored parameter payloads, gameplay objects or callbacks executed.",
+    "No mission impact, script state save/load, destruction or ARM/physical acceptance proof.",
+    "Three allocations live until bounded debugger process exit; leak checking disabled.",
+    "Numeric overflow, arbitrary locales, embedded NUL and long descriptions remain open."
+  ]
+}

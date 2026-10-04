@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 24 supplements is retained, including nested records.
+status record in the eight sweeps and 25 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -44,6 +44,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | host_prototype_registry | 9 | 9 | False |
 | live_script_parameters | 27 | 27 | False |
 | script_parameter_reads | 1201 | 1201 | False |
+| host_script_parameters | 14 | 14 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -8750,6 +8751,20 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | host_prototype_registry /rows/6 | 1536 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_prototype_registry /rows/7 | 1872 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_prototype_registry /rows/8 | 2304 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/0 | case insensitive declared name | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/1 | original underscore mismatch index | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/10 | nonnumeric integer text | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/11 | integer numeric prefix | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/12 | vector conversion | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/13 | nonnumeric vector text | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/2 | original underscore mismatch integer | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/3 | declared underscore integer | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/4 | float conversion | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/5 | missing named value text | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/6 | missing named value integer | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/7 | empty set preserves previous arguments | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/8 | trailing comma argument count | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_script_parameters /rows/9 | trailing comma text | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/0 | Dr_Mobius_Script | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/1 | MXX_Group_Member_DEL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/10 | MTU_Nod_Apache | unknown | unclassified | unknown; callers and retail usage require reconciliation |

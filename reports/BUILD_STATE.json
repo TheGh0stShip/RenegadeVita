@@ -1,4 +1,23 @@
 {
+  "fresh_recruit_start_20261004": {
+    "failed_physical_candidate": "A3.5-dev233",
+    "failed_process": 38281373,
+    "dump_sha256": "95195162bd97e0a451f8253bcc0a41db1412b1f055b8ef306a937e37b986007b",
+    "linked_pc": "0x8116e4fc",
+    "diagnosis": "Combat Suspend hides objectives viewer before TextWindow initialization",
+    "correction_candidate": "A3.5-dev234",
+    "compiled_input_lifecycle_tests_passed": 4,
+    "state": "HOST_ARM_PACKAGE_PASS_INSTALLED_LAUNCH_CONFIRMED_GAMEPLAY_PENDING",
+    "physical_installed_hash_verified": true,
+    "physical_launch_process": 44638429,
+    "host_tests_passed": 502,
+    "arm_compile_link_actions": 6,
+    "package_actions": 7,
+    "vita3k_installed_hash_verified": true,
+    "self_sha256": "2311c5b24d70f46f84b4601ec56cdd274fa6829ac452ab0f6f51cb20e1ba5354",
+    "physical_corrected_route_verified": false,
+    "development_save_reload_verified": false
+  },
   "m13_gate_crash_20261004": {
     "physical_candidate": "A3.5-dev230",
     "difficulty": "Recruit",

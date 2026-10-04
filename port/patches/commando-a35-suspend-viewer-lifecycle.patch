@@ -1,0 +1,15 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -1662,7 +1662,11 @@
+ 	//
+ 	//	Hide the objective viewer
+ 	//
+-	ObjectiveManager::Display_Viewer (false);
++	// Native frontend can suspend Combat before its first level initializes
++	// the viewer. A hidden viewer needs no window access during that edge.
++	if (ObjectiveManager::Is_Viewer_Displayed()) {
++		ObjectiveManager::Display_Viewer (false);
++	}
+ 
+ 	GameMajorModeClass::Suspend();
+ 	return ;

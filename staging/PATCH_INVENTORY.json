@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "65fa7a09f326a420191ffe10b375ad87bf2888beface248028e56a2af67f5cfd",
-  "patch_count": 316,
+  "stage_script_sha256": "78fad8655b9860f4039ad1b8095beea76183b63175ab4a52d7960a9aa487e9ea",
+  "patch_count": 317,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1583,7 +1583,12 @@
       "path": "port/patches/ww3d-a35-pointgroup-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "cb339a1b3872803ba8fbdd375d16c1c6263c0d0e9ddb5f30881b8d95b9a14c9c"
+    },
+    {
+      "path": "port/patches/commando-a35-suspend-viewer-lifecycle.patch",
+      "stage_directory": "commando",
+      "sha256": "3a7e7d9cb809fb293757c9db97ab7ee1b39baf170766e520cee8748dc80c1faf"
     }
   ],
-  "registry_sha256": "82729601ed8bae0a34906cba0c8346eec610f29c9eeedaff0ced30c1647df25a"
+  "registry_sha256": "a4244d5a74d6635d6e8d0ec7e3f8ead5bdc6ecd3f7419cbaa9d5c7c8ff980553"
 }

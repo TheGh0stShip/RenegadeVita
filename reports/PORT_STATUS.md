@@ -1,5 +1,13 @@
 # Renegade Vita port status
 
+2026-10-04 Dev233 fresh New Game/Recruit crashed before M13 load: original
+Combat suspension attempted to hide the uninitialized objectives window.
+Matching dump/source/disassembly identifies this lifecycle defect; dev234
+guards hidden-viewer access and passes compiled lifecycle/input tests.
+All502 host tests and ARM/package validation pass; Vita3K installed hashes
+match without launch. Development save/reload and physical
+fresh-start recovery remain open. See [current evidence](LIVE_PROGRESS.md).
+
 2026-10-04 Recruit M13 play on dev230 reached the final gate then crashed
 before mission completion. User reports largely intact ambush/rope/script/tank
 progression with slowdown and unexpected cutscene audio. Matching dump leads

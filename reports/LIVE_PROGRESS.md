@@ -1,5 +1,25 @@
 # Live engineering progress
 
+## Fresh Recruit start crash — 2026-10-04
+
+Dev233 failed on the fresh New Game/Recruit route before M13 loading. The
+matching process dump relocates to TextWindowClass::Display, called by the
+original objectives viewer, whose window has not yet been initialized.
+Combat suspension unconditionally hid that window; the earlier dev230 route
+had first initialized it through Tutorial. Dev234 patches original Suspend
+to hide only a displayed viewer, preserving message-window and base-mode
+suspension. All502 host tests and ARM/package checks pass. Vita3K installed
+hashes match without launch. Dev234 is installed by hash-guarded executable
+replacement and independently hash-verified; process44638429 launch confirmed.
+Corrected New Game/Recruit gameplay and save/reload remain unverified.
+This is separate from the dev230 end-gate audio allocation lead. Development
+save write/reload testing is pending startup recovery.
+
+Private dev233 log SHA-256:
+`c34069a984823febf84bf542bd8af90240c135fa0ab1ce2e3215407c82b993ac`;
+dump SHA-256:
+`95195162bd97e0a451f8253bcc0a41db1412b1f055b8ef306a937e37b986007b`.
+
 ## Dev233 installed; development checkpoints — 2026-10-04
 
 At the user's request, dev233 replaced only the Renegade executable after

@@ -13,6 +13,41 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class VitaCameraInputContractTests(unittest.TestCase):
+    def test_original_combat_suspend_before_viewer_initialization(self) -> None:
+        source = (ROOT / "staging/commando/combatgmode.cpp").read_text()
+        start = source.index("void\tCombatGameModeClass::Suspend(void)")
+        method = source[start:source.index("\n}", start) + 2]
+        fixture = r'''
+        #include <cstdlib>
+        int hides=0, suspends=0, message_hides=0;
+        struct MessageWindow { void Force_Display(bool on) { if(on) std::abort(); ++message_hides; } };
+        MessageWindow message;
+        struct CombatManager { static MessageWindow *Get_Message_Window() { return &message; } };
+        struct ObjectiveManager {
+            static bool visible, initialized;
+            static bool Is_Viewer_Displayed() { return visible; }
+            static void Display_Viewer(bool on) { if (!initialized || on) std::abort(); visible=false; ++hides; }
+        };
+        bool ObjectiveManager::visible=false, ObjectiveManager::initialized=false;
+        struct GameMajorModeClass { void Suspend() { ++suspends; } };
+        struct CombatGameModeClass : GameMajorModeClass { void Suspend(); };
+        ''' + method + r'''
+        int main() {
+            CombatGameModeClass mode;
+            mode.Suspend();
+            if (hides || suspends!=1 || message_hides!=1) return 1;
+            ObjectiveManager::initialized=true; ObjectiveManager::visible=true;
+            mode.Suspend(); mode.Suspend();
+            if (hides!=1 || suspends!=3 || message_hides!=3) return 2;
+        }
+        '''
+        with tempfile.TemporaryDirectory(prefix="renegade-suspend-viewer-") as temporary:
+            cpp = pathlib.Path(temporary) / "suspend.cpp"
+            binary = pathlib.Path(temporary) / "suspend"
+            cpp.write_text(fixture)
+            subprocess.run(["g++", "-std=c++17", "-Wall", "-Wextra", "-Werror", str(cpp), "-o", str(binary)], check=True)
+            subprocess.run([str(binary)], check=True)
+
     def test_original_secondary_fire_coupling_survives_vita_bindings(self) -> None:
         original = (ROOT / "staging/combat/input.cpp").read_text()
         boundary = (ROOT / "port/platform/a31_gameplay_boundary.cpp").read_text()

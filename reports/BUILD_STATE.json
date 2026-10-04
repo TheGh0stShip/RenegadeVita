@@ -1,4 +1,17 @@
 {
+  "category_fvf_decoder_20261003": {
+    "state": "HOST_SANITIZERS_ARM_LINK_PASS_ADMISSION_AND_NATIVE_PIXELS_OPEN",
+    "candidate": "A3.5-dev218",
+    "arm_compile_link_actions": 6,
+    "elf_sha256": "b0cffb2dbf464f2d0dbdb537e011818676047e68ea781a4839da25ed6b816ebb",
+    "map_sha256": "f0659836307fa3b1e8767debe5262750a351f6c4df22405806744c3275f5b237",
+    "original_layout_offset_cases": 72,
+    "focused_tests_passed": 22,
+    "host_renderer_sanitizer_cases_passed": 10,
+    "admitted_layouts": 2,
+    "additional_layout_admission_gaps": 70,
+    "native_acceptance_gates_closed": 0
+  },
   "procedural_renderer_compile_prerequisites_20261003": {
     "state": "HOST_ARM_ORIGINAL_OBJECT_AND_NATIVE_LINK_PASS_RUNTIME_INTEGRATION_OPEN",
     "candidate": "A3.5-dev217",

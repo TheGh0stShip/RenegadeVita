@@ -1,5 +1,6 @@
 #include "ww3d_vita_renderer.h"
 #include "ww3d_vita_texture_transform.h"
+#include "category_fvf_layout.h"
 
 #include "camera.h"
 #include "d3d8.h"
@@ -3229,6 +3230,14 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		submission.vertex_stride == 36U;
 	const bool dynamic_two_uv_layout = submission.vertex_format == render2d_fvf &&
 		submission.vertex_stride == 44U;
+	CategoryFVFLayout category_layout = {};
+	if (!Decode_Category_FVF(submission.vertex_format, category_layout) ||
+		category_layout.stride != submission.vertex_stride) {
+		++g_statistics.unsupported_submissions;
+		++g_statistics.rejected_indexed_submissions;
+		Log_Indexed_Rejection("unsupported category FVF/stride", submission.vertex_format);
+		return INDEXED_SUBMISSION_UNSUPPORTED_FVF;
+	}
 	if (!mesh_layout && !dynamic_two_uv_layout) {
 		++g_statistics.unsupported_submissions;
 		++g_statistics.rejected_indexed_submissions;
@@ -3299,7 +3308,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 			float position[3];
 			uint32_t diffuse = 0U;
 			memcpy(position, vertex, sizeof(position));
-			memcpy(&diffuse, vertex + 24U, sizeof(diffuse));
+			memcpy(&diffuse, vertex + category_layout.diffuse_offset, sizeof(diffuse));
 			checksum = Mix_Checksum(checksum, relative_index);
 			checksum = Mix_Checksum(checksum, actual_index);
 			checksum = Mix_Checksum(checksum, Float_Bits(position[0]));
@@ -3331,7 +3340,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		float position[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		uint32_t diffuse = 0;
 		memcpy(position, vertex, 3U * sizeof(float));
-		const uint32_t diffuse_offset = 24U;
+		const uint32_t diffuse_offset = category_layout.diffuse_offset;
 		memcpy(&diffuse, vertex + diffuse_offset, sizeof(diffuse));
 
 		checksum = Mix_Checksum(checksum, relative_index);
@@ -3356,9 +3365,10 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		Capture_Original_Texture_Coordinate_State(stage,
 			&texture_coordinates[stage]);
 	}
-	const uint32_t diffuse_offset = 24U;
-	const uint32_t uv0_offset = 28U;
-	const uint32_t uv1_offset = dynamic_two_uv_layout ? 36U : uv0_offset;
+	const uint32_t diffuse_offset = category_layout.diffuse_offset;
+	const uint32_t uv0_offset = category_layout.uv_offsets[0];
+	const uint32_t uv1_offset = category_layout.uv_count > 1U ?
+		category_layout.uv_offsets[1] : uv0_offset;
 
 	const bool indexed_batch = fused_index_preparation;
 	auto emit_indexed_vertex = [&](uint32_t actual_index, bool emit_position) {
@@ -3374,7 +3384,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		 * the populated first UV. Its leading position/normal/diffuse
 		 * layout is therefore identical to the mesh layout. */
 		memcpy(&diffuse, vertex + diffuse_offset, sizeof(diffuse));
-		memcpy(normal, vertex + 12U, 3U * sizeof(float));
+		memcpy(normal, vertex + category_layout.normal_offset, 3U * sizeof(float));
 		memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
 		memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
 		glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),

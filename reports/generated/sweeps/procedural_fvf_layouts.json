@@ -3,7 +3,7 @@
   "evidence_class": "verbatim selector host sanitizer and ARM object contract",
   "inputs_sha256": {
     "staging/ww3d2/dx8renderer.cpp": "25f0855a910f1a86e0d63c0e8337622f76485bdfa68506afdd809e02e00bd515",
-    "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+    "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
     "tools/test_original_renderer_fvf_selection.py": "0e88b62ec69cb38f26e7ca2cd16a0cab1a9cecad6dc54c21dc7ece1e91d35324"
   },
   "total": 72,

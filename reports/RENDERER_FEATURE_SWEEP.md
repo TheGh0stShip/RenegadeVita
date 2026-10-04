@@ -1,5 +1,23 @@
 # S2 renderer features — inventory in progress
 
+## Category vertex-layout decoder — 2026-10-03
+
+The indexed boundary now derives normal, color and UV offsets from a bounded
+FVF descriptor. All 72 original category layouts match the original FVFInfo
+offset calculation; invalid layouts leave the output unchanged. Production
+admission remains two layouts: lighting, materials and additional UV channels
+must be preserved before enabling the other 70.
+
+Twenty-two focused tests and ten original-engine host renderer cases pass with
+ASan/LSan/UBSan coverage. Dev218 passes ARM compile/link and artifact identity.
+ELF SHA-256: `b0cffb2dbf464f2d0dbdb537e011818676047e68ea781a4839da25ed6b816ebb`.
+No package, emulator launch or physical acceptance is claimed.
+
+Refreshed S2 inventory: 3,116 rows, 92 missing, 42 replaced and 2,982 unknown.
+Existing state-review verdicts remain unchanged: their state handler bodies
+are unchanged; strip/statistics and indexed offsets have separate validation.
+All review identities reconcile. This supersedes earlier inventory totals.
+
 ## Original procedural renderer integration prerequisites — 2026-10-03
 
 The original dx8renderer.cpp now stages through a hash-checked zero-fuzz patch

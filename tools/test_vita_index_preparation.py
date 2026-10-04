@@ -25,6 +25,7 @@ class IndexPreparationTest(unittest.TestCase):
                 section('bool Build_Indexed_Transform_Matrices(', 'bool Map_Native_Pixel_To_Logical('), prefix]))
             (directory / 'test.cpp').write_text(r'''
 #include "ww3d_vita_renderer.h"
+#include "category_fvf_layout.h"
 #include <cstdio>
 #include <cstring>
 #include <cassert>

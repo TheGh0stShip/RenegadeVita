@@ -9030,3 +9030,16 @@ nine policy/consolidation tests pass. Retail occurrence remains unknown.
 Next: variable-layout decoding and original lighting/material behavior before
 category activation. No production renderer behavior changed in this batch.
 Blocker: none for source work; native pixels and mission acceptance remain open.
+
+# Category vertex-layout decoder — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: production indexed decoding uses original-compatible offsets;
+72 layout comparisons, 22 focused tests and ten host sanitizer cases pass.
+Dev218 ARM compile/link passes. Two admitted layouts remain unchanged.
+S1: 3,574 rows; S2: 3,116 rows; source review identities reconcile.
+Next: original lighting/material and additional UV behavior, then category
+ownership activation. Seventy layout admission gaps remain open.
+Blocker: none for source work; native pixels and mission acceptance remain open.

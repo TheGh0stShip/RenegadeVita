@@ -579,8 +579,10 @@ class VitaIndexedStateContractTests(unittest.TestCase):
 
         for needle in (
             "const bool dynamic_two_uv_layout",
-            "const uint32_t uv0_offset = 28U;",
-            "const uint32_t uv1_offset = dynamic_two_uv_layout ? 36U : uv0_offset;",
+            "Decode_Category_FVF(submission.vertex_format, category_layout)",
+            "const uint32_t uv0_offset = category_layout.uv_offsets[0];",
+            "const uint32_t uv1_offset = category_layout.uv_count > 1U ?",
+            "category_layout.uv_offsets[1] : uv0_offset;",
             "memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));",
             "memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));",
             "Capture_Original_Texture_Coordinate_State(stage,",

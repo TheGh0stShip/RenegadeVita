@@ -6,8 +6,8 @@
       "status": "missing",
       "native_mapping": "missing",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -29,8 +29,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -51,8 +51,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -73,8 +73,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -95,8 +95,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -117,8 +117,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -139,8 +139,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -161,8 +161,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -183,8 +183,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -205,8 +205,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -227,8 +227,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -249,8 +249,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -271,8 +271,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -293,8 +293,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -315,8 +315,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -337,8 +337,8 @@
       "status": "boundary_replaced",
       "native_mapping": "source_path_present_values_and_pixels_unverified",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -359,8 +359,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -381,8 +381,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -403,8 +403,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -425,8 +425,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -447,8 +447,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -469,8 +469,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -491,8 +491,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -513,8 +513,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -535,8 +535,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -557,8 +557,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -579,8 +579,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -601,8 +601,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -623,8 +623,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -645,8 +645,8 @@
       "status": "missing",
       "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
       "inputs_sha256": {
-        "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-        "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+        "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+        "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
         "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
         "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
       },
@@ -668,8 +668,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -694,8 +694,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -720,8 +720,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -746,8 +746,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -772,8 +772,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -798,8 +798,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -824,8 +824,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -850,8 +850,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -876,8 +876,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -902,8 +902,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/mapper.cpp": "dcb50ce33bd23c74bf20b97faaf0f90aaa486602948fc6c5e00e2ace824fc681",
@@ -929,8 +929,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -950,8 +950,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -971,8 +971,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -992,8 +992,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1013,8 +1013,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1034,8 +1034,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1055,8 +1055,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1076,8 +1076,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1097,8 +1097,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1118,8 +1118,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1139,8 +1139,8 @@
     "status": "boundary_replaced",
     "native_mapping": "partial_value_domain_source_path_present_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1161,8 +1161,8 @@
     "status": "boundary_replaced",
     "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1182,8 +1182,8 @@
     "status": "boundary_replaced",
     "native_mapping": "source_coordinate_emulation_present_domains_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1204,8 +1204,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1226,8 +1226,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1248,8 +1248,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1270,8 +1270,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1292,8 +1292,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1314,8 +1314,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1336,8 +1336,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1358,8 +1358,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1380,8 +1380,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1402,8 +1402,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1424,8 +1424,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1446,8 +1446,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1468,8 +1468,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1490,8 +1490,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1512,8 +1512,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1534,8 +1534,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1556,8 +1556,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1578,8 +1578,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1600,8 +1600,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1622,8 +1622,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1644,8 +1644,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1666,8 +1666,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1688,8 +1688,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1710,8 +1710,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1732,8 +1732,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1754,8 +1754,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1776,8 +1776,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1798,8 +1798,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1820,8 +1820,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1842,8 +1842,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1864,8 +1864,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1886,8 +1886,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1908,8 +1908,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1930,8 +1930,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1952,8 +1952,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1974,8 +1974,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -1996,8 +1996,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2018,8 +2018,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2040,8 +2040,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2062,8 +2062,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2084,8 +2084,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2106,8 +2106,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2128,8 +2128,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2150,8 +2150,8 @@
     "status": "missing",
     "native_mapping": "direct_state_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2173,8 +2173,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2193,8 +2193,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2213,8 +2213,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2233,8 +2233,8 @@
     "status": "missing",
     "native_mapping": "direct_texture_stage_route_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2254,8 +2254,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2275,8 +2275,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2296,8 +2296,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2317,8 +2317,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2338,8 +2338,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2359,8 +2359,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2380,8 +2380,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2401,8 +2401,8 @@
     "status": "boundary_replaced",
     "native_mapping": "cpu_surface_rgba_conversion_present_upload_and_pixels_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2423,8 +2423,8 @@
     "status": "missing",
     "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2444,8 +2444,8 @@
     "status": "missing",
     "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2465,8 +2465,8 @@
     "status": "missing",
     "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2486,8 +2486,8 @@
     "status": "missing",
     "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2507,8 +2507,8 @@
     "status": "missing",
     "native_mapping": "cpu_surface_conversion_missing_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163"
     },
@@ -2529,8 +2529,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2552,8 +2552,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2575,8 +2575,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2598,8 +2598,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2621,8 +2621,8 @@
     "status": "boundary_replaced",
     "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2644,8 +2644,8 @@
     "status": "boundary_replaced",
     "native_mapping": "indexed_layout_gate_present_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2667,8 +2667,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2690,8 +2690,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2713,8 +2713,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2736,8 +2736,8 @@
     "status": "missing",
     "native_mapping": "indexed_layout_gate_rejects_other_routes_unreviewed",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/dx8fvf.h": "5d2b2480abbbf2c204f8a2600a904b6482b9191b4a332ac100b35527c86de80e"
@@ -2760,8 +2760,8 @@
     "status": "boundary_replaced",
     "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2782,8 +2782,8 @@
     "status": "missing",
     "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2804,8 +2804,8 @@
     "status": "missing",
     "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2826,8 +2826,8 @@
     "status": "missing",
     "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2848,8 +2848,8 @@
     "status": "boundary_replaced",
     "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2870,8 +2870,8 @@
     "status": "boundary_replaced",
     "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2892,8 +2892,8 @@
     "status": "missing",
     "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2914,8 +2914,8 @@
     "status": "missing",
     "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2936,8 +2936,8 @@
     "status": "missing",
     "native_mapping": "accepted_dds_per_pixel_decode_returns_white",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"
@@ -2958,8 +2958,8 @@
     "status": "boundary_replaced",
     "native_mapping": "dds_decode_and_eligible_compressed_upload_present_unverified",
     "inputs_sha256": {
-      "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
-      "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+      "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+      "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
       "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
       "staging/ww3d2/dx8wrapper.h": "d6bc6e7fc6a3454814af90190b24c4d580a22a70e9e401ff2fa6fd8307f29163",
       "staging/ww3d2/ddsfile.cpp": "7f82eefbd17d7a7accbb07290d2b0f1c4c9227e3f91fb9552e5c483a08bc9116"

@@ -1,5 +1,34 @@
 # Live engineering progress
 
+## Recruit M13 final-gate crash — 2026-10-04
+
+User-observed rope/ambush/NPC/script/tank progression was mostly intact,
+with slowdowns and unexpected cutscene combat/chatter/reload audio. Dev230
+crashed before mission completion. Matching new process dump and log are
+retained privately; relocated PC is libc's abort trap. A bounded heuristic
+stack scan and matching disassembly support uncaught allocation failure in
+production WAVE decoding. Dev233 returns the existing provider failure result
+on bad allocation, preserving prior output. Forced-failure and sanitized audio
+tests and all501 host checks pass. Decoder-only exception handling closes the
+initial ARM compile failure; repeated ARM/package checks pass and Vita3K
+installed hashes match without launch. Heap pressure,
+unexpected audio, final score screen and M01 transition remain open.
+See [crash evidence](M13_GATE_CRASH.md). No device mutation or PSTV claim.
+
+## Physical tutorial completion — 2026-10-04
+
+The user reports completing Tutorial on dev230. The retained candidate log
+corroborates all six original objectives accomplished at frames27904–27905;
+subsequent multiplayer-primer conversations continue. This is physical Vita
+completion evidence for this run, not full-game or PSTV acceptance. The
+reported scope binding and rotating-light defects remain open on dev230.
+Dev232 is packaged but not deployed. The intended M13 ion-beacon save was
+not present according to the user; save loading and M13-to-M01 transition
+were not tested. Next route is original New Game campaign progression.
+
+Private log: `build/device-evidence/A3.5-dev230-20261004/runtime-tutorial-finished.log`,
+SHA-256 `bf071dcd591b9915be35e159e2593ee8384393b7a92cc8ea423ef01feee5b495`.
+
 ## Sniper scope binding — 2026-10-04
 
 Dev232 removes the Vita override that moved original UseWeapon from L to

@@ -577,7 +577,7 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 
 bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 	DecodedWave *decoded, WaveInfo *parsed_info, const char **error)
-{
+try {
 	if (decoded == nullptr) return Fail("decoded output is null", error);
 #if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
 	if (Is_Mpeg_Image(data, bytes)) return Decode_Mpeg(data, bytes, decoded, parsed_info, error);
@@ -642,6 +642,10 @@ bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 	*decoded = std::move(output);
 	if (parsed_info != nullptr) *parsed_info = std::move(info);
 	return true;
+} catch (const std::bad_alloc &) {
+	// Keep the caller's prior decoded image intact and use the provider's
+	// existing load-failure path instead of terminating the game on low RAM.
+	return Fail("WAVE decode allocation failed", error);
 }
 
 bool Is_Mpeg_Media(const uint8_t *data, size_t bytes)

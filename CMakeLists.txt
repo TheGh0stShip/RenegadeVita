@@ -566,6 +566,11 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -Wformat
   $<$<COMPILE_LANGUAGE:CXX>:-include${RENEGADE_COMPAT}/msvc_compat.h>
 )
+# The STL-backed platform decoder contains allocation failures locally. Enable
+# unwinding only here so its provider error return survives low-memory loads.
+set_property(SOURCE
+  ${RENEGADE_ROOT}/port/audio/vita/renegade_wave_decoder.cpp
+  APPEND PROPERTY COMPILE_OPTIONS "-fexceptions")
 # ScriptCommands is an ABI-fixed MSVC callback table. Its default values on
 # function-pointer members are accepted by the original compiler but rejected
 # by modern GCC; scope the legacy tolerance to the two original Combat script

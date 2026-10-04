@@ -1,5 +1,19 @@
 # Renegade Vita port status
 
+2026-10-04 Recruit M13 play on dev230 reached the final gate then crashed
+before mission completion. User reports largely intact ambush/rope/script/tank
+progression with slowdown and unexpected cutscene audio. Matching dump leads
+to uncaught WAVE decode allocation failure; dev233 containment passes focused
+audio tests, all501 host checks and ARM/package verification; Vita3K installed
+hashes match without launch. Physical correction, audio ownership and heap pressure remain open;
+no M01 transition acceptance. See [gate crash](M13_GATE_CRASH.md).
+
+2026-10-04 The user completed Tutorial on physical Vita dev230; matching log
+shows all six original objectives accomplished. Remaining scope/light defects,
+repeat/soak and PSTV acceptance stay open. The intended M13 save was absent;
+save restore and M13-to-M01 transition remain untested. Dev232 stays packaged
+and undeployed. See [physical completion](LIVE_PROGRESS.md).
+
 2026-10-04 Dev232 restores L for original edge-triggered weapon use/sniper
 scope, preserving Triangle Action and D-pad zoom. Compiled original-setter
 regression and all 500 host tests pass; ARM/package checks and Vita3K installed

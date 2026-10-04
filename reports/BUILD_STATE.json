@@ -1,4 +1,34 @@
 {
+  "m13_gate_crash_20261004": {
+    "physical_candidate": "A3.5-dev230",
+    "difficulty": "Recruit",
+    "mission_complete_verified": false,
+    "m01_transition_verified": false,
+    "dump_sha256": "3687c8433d3c4c2464be0009287a960df70a761dd362cb0ceb27664c16920ed5",
+    "log_sha256": "d6541fde3c03eaffeac4c6a1117f2ef875aef65ea0778c5c20f64935662733aa",
+    "diagnosis": "abort trap; heuristic stack/disassembly supports uncaught WAVE allocation failure",
+    "correction_candidate": "A3.5-dev233",
+    "audio_tests_passed": 2,
+    "state": "HOST_ARM_PACKAGE_PASS_PHYSICAL_PENDING",
+    "host_tests_passed": 501,
+    "arm_retry_compile_link_actions": 2,
+    "package_actions": 7,
+    "vita3k_installed_hash_verified": true,
+    "self_sha256": "dea8ae6ea2a389da0992e7838183145f7cb55770b83223e083c4ebd1b12a77db",
+    "unexpected_cutscene_audio_resolved": false,
+    "physical_correction_verified": false
+  },
+  "tutorial_completion_20261004": {
+    "candidate": "A3.5-dev230",
+    "evidence_class": "physical Vita user observation plus matching runtime log",
+    "user_reported_finished": true,
+    "original_objectives_accomplished": 6,
+    "objective_completion_frame": 27904,
+    "log_sha256": "bf071dcd591b9915be35e159e2593ee8384393b7a92cc8ea423ef01feee5b495",
+    "pstv_verified": false,
+    "m13_save_restore_tested": false,
+    "m13_to_m01_tested": false
+  },
   "sniper_scope_20261004": {
     "candidate": "A3.5-dev232",
     "state": "HOST_ARM_PACKAGE_PASS_PHYSICAL_PENDING",

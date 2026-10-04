@@ -1,5 +1,38 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Live parameter descriptors and all-map positions — 2026-10-04
+
+All 1,636 live registry parameter-description hashes match the literal original
+source descriptions. All 27 map receipts match the retained archive/database
+identities. The 8,314 authored bindings partition into 3,287 equal positional
+counts, 5,017 excess-value leads, one fewer-value lead, six unrecorded startup
+parameter strings and three unregistered names already identified in M11.
+Extra values frequently occur on scripts declaring an empty descriptor;
+this is not evidence of thousands of broken scripts.
+
+The original name parser uses a 511-byte description prefix and does not visit
+a final empty comma field. Independent source inspection corrected seven
+apparent M07_Custom_Activate shortages: its description ends with a comma,
+but it names only three parameters. A regression case preserves that behavior.
+No normalization of misspelled names or underscores is introduced.
+
+The remaining shorter binding is M03_Killed_Sound on definition 82050391: one
+serialized value for Officer and Location. Its original Killed callback reads
+both values and sends LOCATION/TROOP_KILLED events to object 2018061. Original
+Get_Parameter returns empty text outside supplied positions. Callback activation,
+integer conversion and mission impact require runtime evidence; no default or
+retail data correction is invented.
+
+`python3 -m tools.audit_live_script_parameters` reproduces the receipt from
+private all-map bindings, public retail/live registry receipts and pristine
+source declarations. Public JSON is `reports/generated/sweeps/live_script_parameters.json`;
+it preserves shape/provenance, not authored parameter values. Nineteen focused
+tests pass, including byte bounds, comma semantics and partition rejection.
+The gap register includes 43,419 overlapping records, with 43,155 unknowns.
+All parameter-map rows remain unknown behavior. Type coercion, named callback
+lookups, computed attachments and native execution remain open. Runtime source
+and compiled artifacts are unchanged; no emulator or device action occurred.
+
 Live host index lookup verifies 1,636 script factories. Across27 hash-matched map
 receipts,8,311/8,314 authored bindings match those factories. Three M11 spawner
 names remain unmatched; their source declarations are absent from the supplied

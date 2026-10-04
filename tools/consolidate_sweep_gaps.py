@@ -13,7 +13,7 @@ SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
                'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts',
                'database_chunks', 'level_persist_closure', 'database_persist_closure',
                'host_definition_registry', 'database_definition_closure', 'definition_instances',
-               'missing_definition_callers', 'host_script_registry', 'live_script_bindings', 'host_network_registry', 'host_prototype_registry')
+               'missing_definition_callers', 'host_script_registry', 'live_script_bindings', 'host_network_registry', 'host_prototype_registry', 'live_script_parameters')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 ISSUES['procedural_fvf_layouts'] = 6
 ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_closure',
@@ -21,6 +21,7 @@ ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_c
 ISSUES['live_script_bindings'] = 9
 ISSUES['host_network_registry'] = 7
 ISSUES['host_prototype_registry'] = 7
+ISSUES['live_script_parameters'] = 9
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -64,6 +65,16 @@ def root_records(name, value):
             raise ValueError('Live script registry denominator mismatch')
         if value['matched_candidates']!=sum(r['name_matches'] for r in rows) or value['unmatched_candidates']!=sum(not r['found'] for r in rows):
             raise ValueError('Live script registry candidate partition mismatch')
+    elif name=='live_script_parameters':
+        if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
+            raise ValueError('Script parameter denominator mismatch')
+        categories=Counter()
+        for row in rows:
+            if row['bindings']!=sum(row['categories'].values()) or len(row['leads'])!=row['bindings']-row['categories'].get('equal_count',0):
+                raise ValueError('Script parameter partition mismatch')
+            categories.update(row['categories'])
+        if dict(categories)!=value['categories'] or value['bindings']!=sum(categories.values()):
+            raise ValueError('Script parameter totals mismatch')
     elif name=='live_script_bindings':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
             raise ValueError('Live script binding denominator mismatch')
@@ -171,7 +182,8 @@ def consolidate(inputs):
                   'wave_decode':('wave_inventory_sha256','wave_headers'),
                   'missing_definition_callers':('inventory_sha256','definition_instances'),
                   'host_script_registry':('inventory_sha256','link'),
-                  'live_script_bindings':('registry_sha256','host_script_registry')}
+                  'live_script_bindings':('registry_sha256','host_script_registry'),
+                  'live_script_parameters':('registry_sha256','host_script_registry')}
     rows = []
     receipts = []
     for name, data in inputs:
@@ -187,7 +199,7 @@ def consolidate(inputs):
                 raise ValueError(f'{name}: stale parent inventory identity')
         if name=='w3d_consumers' and 'link' in identities and value.get('link_inventory_sha256')!=identities['link']:
             raise ValueError('W3D consumers: stale link inventory identity')
-        if name=='live_script_bindings' and 'retail' in identities and value.get('retail_sha256')!=identities['retail']:
+        if name in {'live_script_bindings','live_script_parameters'} and 'retail' in identities and value.get('retail_sha256')!=identities['retail']:
             raise ValueError('Live script bindings: stale retail inventory identity')
         root_rows = root_records(name, value)
         count = 0
@@ -213,7 +225,7 @@ def consolidate(inputs):
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
                          'cluster': ('renderer' if name=='procedural_fvf_layouts' else
                                      'link' if name in {'host_definition_registry', 'host_script_registry', 'host_network_registry', 'host_prototype_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
-                                     'scripts' if name=='live_script_bindings' else
+                                     'scripts' if name in {'live_script_bindings','live_script_parameters'} else
                                      'retail' if name in SUPPLEMENTS else name)})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),

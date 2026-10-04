@@ -5,6 +5,17 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_script_parameter_categories_partition(self):
+        receipt={'total':1,'counts':{'unknown':1},'bindings':2,
+                 'categories':{'equal_count':1,'excess_values':1},
+                 'rows':[{'status':'unknown','bindings':2,
+                          'categories':{'equal_count':1,'excess_values':1},'leads':[{}]}]}
+        result=consolidate([('live_script_parameters',json.dumps(receipt).encode())])
+        self.assertEqual(result['rows'][0]['cluster'],'scripts')
+        receipt['rows'][0]['leads']=[]
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('live_script_parameters',json.dumps(receipt).encode())])
+
     def test_prototype_registry_duplicate_chunks_rejected(self):
         receipt={'total':1,'matched':1,'rows':[{'chunk_id':0,'lookup_matches':True,'status':'unknown'}]}
         result=consolidate([('host_prototype_registry',json.dumps(receipt).encode())])

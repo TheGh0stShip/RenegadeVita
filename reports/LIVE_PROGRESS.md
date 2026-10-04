@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## All-map script parameter shapes — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: all 1,636 live descriptors match original source hashes. Across 27
+maps,8,314 bindings partition into3,287 equal counts,5,017 excess-value leads,
+one fewer-value lead,six unrecorded strings and three unregistered M11 names.
+Evidence:19 focused tests pass. Original trailing-comma semantics remove seven
+false M07 shortages; no authored parameter values or retail payloads published.
+Next: named parameter lookups and original conversion probes; mode activation.
+Blocker:none for discovery; callback/mission/native behavior remains open.
+See [script ledger](SCRIPT_LAYER_SWEEP.md).
+
 ## Original prototype registration — 2026-10-04
 
 Renegade Vita — v3.5 active

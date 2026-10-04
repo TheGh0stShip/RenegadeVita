@@ -43,21 +43,30 @@ def apply_reviews(rows, reviews, expected_inputs=None, current_inputs=None):
     for review in reviews:
         if review['status'] not in STATUSES:
             raise ValueError('Invalid review status: ' + review['status'])
-        if review.get('kind') == 'current_source_guard':
+        kind = review.get('kind', 'port_function')
+        if kind == 'current_source_guard':
             # Guard locations bind to the entire source, so branch/body edits
             # cannot silently inherit a verdict from an unchanged directive.
             matches = [row for row in rows if row['kind'] == 'current_source_guard' and
                        row['file'] == review['file'] and row_identity(row) == review['row_id'] and
                        row['directive'] == review['directive'] and
                        review['file'] in (expected_inputs or {})]
-        else:
+        elif kind == 'port_function':
             matches = [row for row in rows if row['kind'] == 'port_function' and
                    row['file'] == review['file'] and row['declarator'] == review['declarator'] and
                    row.get('body_sha256') == review['body_sha256'] and
                    ('entry_preprocessor_context' not in review or
                     row.get('entry_preprocessor_context') == review['entry_preprocessor_context']) and
-                   ('definition_sha256' not in review or row.get('definition_sha256') ==
+                    ('definition_sha256' not in review or row.get('definition_sha256') ==
                     review['definition_sha256'])]
+        else:
+            # Non-function denominators have no stable body hash. Bind their
+            # reviews to the exact source/build location identity and require
+            # the containing input file to retain its reviewed checksum.
+            matches = [row for row in rows if row['kind'] == kind and
+                       row['file'] == review['file'] and
+                       row_identity(row) == review['row_id'] and
+                       review['file'] in (expected_inputs or {})]
         if len(matches) != 1:
             issues.append({'file': review['file'], 'declarator': review.get('declarator'),
                            'reason': 'review identity absent, ambiguous or changed'})

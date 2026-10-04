@@ -10,6 +10,61 @@ import re
 MARKER = re.compile(r'Submit_Unsupported|\bTODO\b|unsupported|not\s+implemented|\bstub\w*\b', re.I)
 
 
+def normalize_parser_source(text):
+    """Work around known Tree-sitter grammar gaps without moving offsets.
+
+    These constructs are valid in the compiled sources but the standalone C++
+    grammar lacks the preprocessor expansion or compiler builtin needed to
+    recognize them. Replacements retain byte and newline counts so syntax-tree
+    locations still index the original source used for identities and review.
+    Unknown syntax remains an explicit parse-error row.
+    """
+    original = text
+
+    def padded(match, replacement):
+        assert len(replacement) <= len(match.group(0))
+        return replacement + (' ' * (len(match.group(0)) - len(replacement)))
+
+    # The grammar expects a name for fixed-underlying-type enums even though
+    # C++ permits anonymous declarations such as `enum : uint32_t { ... }`.
+    text = re.sub(r'\benum\s*:\s*[A-Za-z_][A-Za-z_0-9:]*',
+                  lambda match: padded(match, 'enum RVAnon'), text)
+    # va_arg is parsed as a compiler builtin with a restricted type grammar.
+    # Replace its type operand with an expression and treat it as an ordinary
+    # same-width call. Port uses contain only non-parenthesized type operands.
+    def va_arg_call(match):
+        first = match.group(1)
+        replacement = 'rv_arg(' + first + ',0)'
+        return padded(match, replacement)
+    text = re.sub(r'\bva_arg\(([^,()\n]+),\s*[^()\n]+\)', va_arg_call, text)
+    # inttypes format tokens and build-label macros expand to string literals.
+    # Supply a same-width empty literal so adjacent-string syntax stays valid.
+    def string_macro(match):
+        return padded(match, '""')
+    text = re.sub(r'\bPRI(?:d|i|o|u|x|X)(?:8|16|32|64|LEAST8|LEAST16|LEAST32|LEAST64|FAST8|FAST16|FAST32|FAST64|MAX|PTR)\b',
+                  string_macro, text)
+    text = re.sub(r'(?<="\s)RENEGADE_BUILD_[A-Za-z_0-9]+(?=\s")',
+                  string_macro, text)
+    # Miles declares callbacks through an empty calling-convention macro.
+    text = re.sub(r'\bAILCALLBACK\b', lambda match: ' ' * len(match.group(0)), text)
+    # Additional valid constructs rejected by the standalone grammar: unnamed
+    # pointer parameters with defaults, brace defaults on const references, and
+    # placement-new arrays whose element type is itself a pointer.
+    text = re.sub(r'(\b[A-Za-z_][A-Za-z_0-9:<>]*\s+\*)\s+(?==)',
+                  lambda match: match.group(1) + 'x' +
+                  (' ' * (len(match.group(0)) - len(match.group(1)) - 1)), text)
+    text = re.sub(r'=\s*\{\}', lambda match: padded(match, '= 0'), text)
+    text = re.sub(r'(?<=\w)\s+\*(?=\[[A-Za-z_])',
+                  lambda match: ' ' * len(match.group(0)), text)
+    # Never rewrite directive operands: blanking a macro name in #ifdef would
+    # create a parser error that the source itself does not contain.
+    original_lines = original.splitlines(keepends=True)
+    normalized_lines = text.splitlines(keepends=True)
+    text = ''.join(old if old.lstrip().startswith('#') else new
+                   for old, new in zip(original_lines, normalized_lines))
+    return text
+
+
 def walk(node):
     yield node
     for child in node.children:
@@ -28,7 +83,10 @@ def parser():
 
 def function_inventory(text, cpp_parser=None):
     source = text.encode('utf-8')
-    tree = (cpp_parser or parser()).parse(source)
+    parser_source = normalize_parser_source(text).encode('utf-8')
+    if len(parser_source) != len(source):
+        raise ValueError('Parser normalization changed source offsets')
+    tree = (cpp_parser or parser()).parse(parser_source)
 
     def value(node):
         return source[node.start_byte:node.end_byte].decode('utf-8', errors='replace')

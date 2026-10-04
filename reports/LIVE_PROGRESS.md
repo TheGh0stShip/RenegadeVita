@@ -9527,3 +9527,20 @@ Evidence: six capacity/four malformed command cases pass sanitizers; host
 runtime rebuild/light smoke and Dev221 ARM compile/link pass; 475 contracts pass.
 Next: real save transport and command behavior classification across all maps.
 Blocker: none for source work; native save/load and mission acceptance remain open.
+# S1 linker-wrapper classification — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: all four linker-wrapper rows are exact-identity classified. The two
+shader initialization entries are diagnostic boundary replacements, the host
+replay clock is a host-only deterministic boundary, and pthread failure/delay
+injection is excluded from production by its test-only target.
+Evidence: 3,544 S1 rows reconcile to 51 stubs, one patched body, five boundary
+replacements, six disabled guards, one exclusion and 3,480 unknowns; twenty-nine
+focused parser/reviewer tests pass with zero stale identities. Same-width parser
+normalization removed 53 grammar-only rows; 16 conditional-branch uncertainties
+remain in the Vita interactive runtime.
+Next: parse the mutually exclusive runtime profiles independently, then classify
+current guards and historical patch guards.
+Blocker: none for local discovery; physical runtime evidence remains open.

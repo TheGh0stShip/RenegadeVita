@@ -28,6 +28,24 @@ class PortGuardInventoryTest(unittest.TestCase):
         self.assertEqual(len(apply_reviews([row], [review], {'staging/a.cpp': 'hash'},
                                           {'staging/a.cpp': 'hash'})), 1)
 
+    def test_non_function_review_requires_exact_row_and_source_pin(self):
+        row = {'kind': 'link_wrapper_reference', 'file': 'CMakeLists.txt', 'line': 9,
+               'column': 4, 'symbol': 'wrapped', 'status': 'unknown'}
+        review = dict(row, row_id=row_identity(row), status='boundary_replaced',
+                      original_owner='platform library entry', behavior='observe call',
+                      callers=['native target'], affected_scope=['Vita'],
+                      acceptance_open='runtime evidence')
+        expected = {'CMakeLists.txt': 'same'}
+        self.assertEqual(apply_reviews([row], [review], expected, expected), [])
+        self.assertEqual(row['status'], 'boundary_replaced')
+        moved = dict(row, line=10, status='unknown')
+        self.assertEqual(len(apply_reviews([moved], [review], expected, expected)), 1)
+        self.assertEqual(moved['status'], 'unknown')
+        unchanged = dict(row, status='unknown')
+        self.assertEqual(len(apply_reviews([unchanged], [review], expected,
+                                           {'CMakeLists.txt': 'changed'})), 1)
+        self.assertEqual(unchanged['status'], 'unknown')
+
     def test_review_distinguishes_same_signature_in_alternative_branches(self):
         rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',
                  'body_sha256': body, 'status': 'unknown'} for body in ('native', 'fallback')]

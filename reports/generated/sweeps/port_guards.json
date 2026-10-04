@@ -21,8 +21,8 @@
     {
       "file": "port/audio/miles/mss.h",
       "functions": 0,
-      "parse_errors": 4,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/audio/vita/renegade_audio_output_buffers.h",
@@ -225,8 +225,8 @@
     {
       "file": "port/compatibility/include/a31_messagebox_stub.h",
       "functions": 2,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/compatibility/include/a31_multihud_stub.h",
@@ -381,8 +381,8 @@
     {
       "file": "port/compatibility/include/mutex.h",
       "functions": 17,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/compatibility/include/new.h",
@@ -477,8 +477,8 @@
     {
       "file": "port/compatibility/include/win32_compat.h",
       "functions": 77,
-      "parse_errors": 22,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/compatibility/include/windows.h",
@@ -501,26 +501,26 @@
     {
       "file": "port/developer/a31_capture_telemetry.cpp",
       "functions": 34,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/developer/a31_capture_telemetry.h",
       "functions": 0,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/developer/a35_campaign_flight_recorder.cpp",
       "functions": 31,
-      "parse_errors": 11,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/developer/a35_campaign_flight_recorder.h",
       "functions": 0,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/developer/a35_script_lookup_telemetry.cpp",
@@ -531,8 +531,8 @@
     {
       "file": "port/developer/a35_script_lookup_telemetry.h",
       "functions": 0,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/filesystem/renegade_cache_health.cpp",
@@ -627,8 +627,8 @@
     {
       "file": "port/filesystem/renegade_ttfs_factory.h",
       "functions": 0,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/filesystem/renegade_ttfs_prepare.cpp",
@@ -651,8 +651,8 @@
     {
       "file": "port/platform/a31_client_connect_boundary.h",
       "functions": 2,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/platform/a31_client_identity_boundary.cpp",
@@ -873,8 +873,8 @@
     {
       "file": "port/platform/renegade_vita_button_state_contract.h",
       "functions": 1,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/platform/renegade_vita_control_labels.h",
@@ -897,14 +897,14 @@
     {
       "file": "port/platform/renegade_vita_input_contract.h",
       "functions": 13,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/platform/renegade_vita_input_route.h",
       "functions": 8,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/platform/renegade_vita_input_telemetry.h",
@@ -939,8 +939,8 @@
     {
       "file": "port/platform/vita/a30_main.cpp",
       "functions": 7,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/platform/vita/a30_static_world_boundary.cpp",
@@ -1023,8 +1023,8 @@
     {
       "file": "port/renderer/vita/D3dx8core.h",
       "functions": 1,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/renderer/vita/D3dx8tex.h",
@@ -1041,8 +1041,8 @@
     {
       "file": "port/renderer/vita/d3d8.h",
       "functions": 7,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/renderer/vita/d3d8caps.h",
@@ -1107,8 +1107,8 @@
     {
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "functions": 118,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/renderer/vita/ww3d_vita_indexed_mesh_batch.h",
@@ -1131,8 +1131,8 @@
     {
       "file": "port/renderer/vita/ww3d_vita_renderer.h",
       "functions": 0,
-      "parse_errors": 1,
-      "root_has_error": true
+      "parse_errors": 0,
+      "root_has_error": false
     },
     {
       "file": "port/renderer/vita/ww3d_vita_texture_transform.h",
@@ -1503,6 +1503,7 @@
     "port/patches/commando-a4-singleplayer-frontend-routes.patch": "bf9aa91cfce21d99a4344823b9172d3fe13aad9181ca458e4d99e02316ffa4c6",
     "port/patches/commando-a4-textdisplay-vector-include.patch": "172227c6a7262c2a43c8c4ad8f5aaefd5e8ae226fdee937789d012f51811ca07",
     "port/patches/dev168-m13-loader-summary.patch": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0",
+    "port/patches/scripts-a35-apache-controller-bounds.patch": "7167c3c8cc3a88f83756b92ee5916a5ed4468d9db4bbcf881619670ad867f5cf",
     "port/patches/scripts-a35-cinematic-camera-save.patch": "4e86faf55954d4c67d77a6c96a3e51baadfd8a1391ea7da2592841d36a6c19c8",
     "port/patches/scripts-a35-cinematic-command-load-bounds.patch": "eb346e410975244ea99fcd63b94ac0e000c45f1065a1ad3afb4d7347ba695571",
     "port/patches/scripts-a35-cinematic-command-timing.patch": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef",
@@ -1515,6 +1516,7 @@
     "port/patches/scripts-a35-m09-camera-bounds.patch": "3e34362062fd5fed3a883851a23c64cdb5dd63f3685c10ac20b6f6f2b3ba26ce",
     "port/patches/scripts-a35-m13-slot19-phases.patch": "a9cccd8cc55507cb2e8ee69ffd2f348d0a99a3d1f8f938d20a7871e78ad0da28",
     "port/patches/scripts-a35-parameter-array-delete.patch": "49c60a18249dc3d708f9fc87f1856272978ba19160cd412e7d2b36d44f1f12de",
+    "port/patches/scripts-a35-rmv-engineer-dead-pointer-roundtrip.patch": "f79516454ff9c734df14ce2d527ed7157862c904c47ac6473ea0dccd56f0895c",
     "port/patches/scripts-a35-trim-overlap.patch": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701",
     "port/patches/scripts-a35-vector-parameter-initialization.patch": "fe9cb8e07ca64d74cbfd8da81dd88742a067ba09bc600c0ade4a88c86f9ab33e",
     "port/patches/scripts-a37-mx0-default-arguments.patch": "571a50a08c701e4130320853e254ade2697b14fab194c1786586258d057eb6bd",
@@ -2530,7 +2532,7 @@
     "staging/scripts/Mission07.cpp": "c20fc975b32bc8daf1cb6de3c4a6051bcbd16247a13288439728361c03dc10cd",
     "staging/scripts/Mission09.cpp": "ea9b979f8f7f84c838e2997123b8dacbed758c445625ae4b9d3b499c81e72142",
     "staging/scripts/Mission1.h": "6adf71f8a8bfa7b0241968e71cb8e1ba9d95a10bfc4a1b623b1a2e671d1c76b8",
-    "staging/scripts/Mission10.cpp": "43914b8899442aff649c5f383503d4b5bcbcde6a8391a8698215adbdf878ed2f",
+    "staging/scripts/Mission10.cpp": "73981e97edc8e06e484484b02d369b999beaa3f67ef59be720091f345705de39",
     "staging/scripts/Mission10.h": "5da498872174d03a59b7bf824003a10a12f0eb5c91e4359c049fa605d2964aa4",
     "staging/scripts/Mission11.cpp": "8bc76b128c280985f90c5ab5da9847ff4697725fe86e1975d9129139e912d462",
     "staging/scripts/Mission11.h": "389235dd809b139742836847d059aaabf9fd6721e7373b4a85f78762cc43fcb3",
@@ -2570,7 +2572,7 @@
     "staging/scripts/Test_RAD.cpp": "5699f1fc5df5441cc33b9ccc50b09d9017068bff776b2a99e98912bf4c87753a",
     "staging/scripts/Test_RAD.h": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "staging/scripts/Test_RMV.cpp": "d9a57c2a38ebf726a7d1bf756016b0ff96f0633b7907abdeb7388aac1cbf934f",
-    "staging/scripts/Test_RMV_Toolkit.cpp": "2fa9123f853cab4166abc137dfff48dc6e992fc3d5cca1009be066345c35d6c2",
+    "staging/scripts/Test_RMV_Toolkit.cpp": "0dea06ff32299c1bef39c52590e096bae7218e772aca262c00dddc812d893c86",
     "staging/scripts/Toolkit.cpp": "5dae4242f086d558623a9f6423770e7181eb1366057b40036c00c2e30335946b",
     "staging/scripts/Toolkit.h": "7479f6a0984174dcc96ec9e51159af753c93912acae9585b465f9bf1f7790076",
     "staging/scripts/Toolkit_Actions.cpp": "2f0c5e49fc1dbafd395d94e78734003c51d24aaab1ba4a0b0de0a2b00324314a",
@@ -2596,7 +2598,7 @@
     "staging/scripts/group.h": "7d8d0cce3adf9fcdca596e8b43fef191f12f0bdf262e7c5c60be441a3c57d645",
     "staging/scripts/groupcontrol.h": "9f9b5824360564fa0af5926620ea2f6642039534a04652e5ccfbeb7592a851f2",
     "staging/scripts/mission00.h": "8fb704eb379352e993926775b7c6d825b59181f70a88e6cd035e4d9968efdc86",
-    "staging/scripts/mission08.cpp": "1384b63c785e8aedf2aa77e57473ee3e60466ac202dfc0dbd716179d3cdeec53",
+    "staging/scripts/mission08.cpp": "907948c09f39766482ffac3f8b95940c5ecb08419dfd11a4eeda006e25d17cac",
     "staging/scripts/mission1.h": "6adf71f8a8bfa7b0241968e71cb8e1ba9d95a10bfc4a1b623b1a2e671d1c76b8",
     "staging/scripts/mission10.h": "5da498872174d03a59b7bf824003a10a12f0eb5c91e4359c049fa605d2964aa4",
     "staging/scripts/mission11.h": "389235dd809b139742836847d059aaabf9fd6721e7373b4a85f78762cc43fcb3",
@@ -3713,9 +3715,9 @@
     "staging/wwui/wwuiinput.cpp": "109a9633239da9c1ecbb147036ef31f7ebb52c826e7bea2fe8cb148120ea9a1b",
     "staging/wwui/wwuiinput.h": "d99c2d5bd4b47a6f77b27ce5cf127e677359dd619c9e4f618abe39a25c46d61a",
     "staging/wwutil/mathutil.cpp": "50e5d6c436636fb236949b262b8882102e92f32b8cdfa74f9feedfc25e54d07f",
-    "tools/audit_sweep_port_guards.py": "1df9fb0b56c3e1af48fb85007e27edd51168b60bd26a0a3e5928e5518c232c04",
+    "tools/audit_sweep_port_guards.py": "29a8a53d2be23bb4bd1cc4fd7357b4ca01c036f5c6908620024e00a1d10baca0",
     "tools/build.sh": "450dc1b23fb5db79053637f9ed19868072db34689a3d1eb1530935476b43d939",
-    "tools/build_fast_candidate.sh": "0006958ea5f09f17ea11d83b7c68326c811ba34d68004fc9259dbdaeeffc1ffa",
+    "tools/build_fast_candidate.sh": "d5d3175148ee272a167dc377359a37f1ab798165ed8632f752f9fbe7c132b0a3",
     "tools/build_ffmpeg_bink_vita.sh": "4ad1fe96c6543d1ef7243bcc24f7f335ba086035b4f681a5325a798e98d42e7c",
     "tools/build_renegade_demo_recorder_plugin.sh": "52741454aafa0f1deca309adbf10ddba8ddfecd509895926b9f23e796702fbde",
     "tools/build_ttfs_https_vita.sh": "b7a18b6bd4f455c8695cc58cdabce78231a4b992cca61d0303a78244efdf916a",
@@ -3732,10 +3734,10 @@
     "tools/run_a35_vita_physical_gate.sh": "fbc5ff0284650391969ad6445554f72a581aca074e50eca1c3ead498d80a0542",
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
-    "tools/stage_sources.sh": "e3fb83b473e0352b77ce4abdea93c20bbf28a98dbb0ac03660bb42cf8ba61c9a",
+    "tools/stage_sources.sh": "7fe78a596982b60c6c5b3a27b4c63cfe1ebd9209e51dfe0490af2c8d1cff3839",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
-    "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/port_guards.json": "6f22fe23c0ab42e4a62a1abba1d2135c8d1e5eaa1c1b2bc6abe5302bde9adef8",
+    "tools/sweep_cpp_functions.py": "1edcbf29cc072bec2a16890714a057a1d2c6897413a1ff8522b910b5fcadcef0",
+    "tools/sweep_reviews/port_guards.json": "c2f9b823332649c31aa219c140759bad03d969abd69e53408564aa699fbd347a",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -4509,6 +4511,11 @@
       "stage_reference_count": 1
     },
     {
+      "path": "port/patches/scripts-a35-apache-controller-bounds.patch",
+      "sha256": "7167c3c8cc3a88f83756b92ee5916a5ed4468d9db4bbcf881619670ad867f5cf",
+      "stage_reference_count": 1
+    },
+    {
       "path": "port/patches/scripts-a35-cinematic-camera-save.patch",
       "sha256": "4e86faf55954d4c67d77a6c96a3e51baadfd8a1391ea7da2592841d36a6c19c8",
       "stage_reference_count": 1
@@ -4566,6 +4573,11 @@
     {
       "path": "port/patches/scripts-a35-parameter-array-delete.patch",
       "sha256": "49c60a18249dc3d708f9fc87f1856272978ba19160cd412e7d2b36d44f1f12de",
+      "stage_reference_count": 1
+    },
+    {
+      "path": "port/patches/scripts-a35-rmv-engineer-dead-pointer-roundtrip.patch",
+      "sha256": "f79516454ff9c734df14ce2d527ed7157862c904c47ac6473ea0dccd56f0895c",
       "stage_reference_count": 1
     },
     {
@@ -14325,62 +14337,6 @@
       "status": "unknown"
     },
     {
-      "end_byte": 2062,
-      "end_line": 96,
-      "evidence_class": "source_syntax",
-      "file": "port/audio/miles/mss.h",
-      "kind": "port_parse_unknown",
-      "line": 96,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "bbb93838c31b9be75be4c3c1cc7203535a778332aaba8170d989afa8d0d1b920",
-      "snippet": "AILCALLBACK",
-      "start_byte": 2051,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 2147,
-      "end_line": 97,
-      "evidence_class": "source_syntax",
-      "file": "port/audio/miles/mss.h",
-      "kind": "port_parse_unknown",
-      "line": 97,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "137c9fe811c027fbc3f875f48f20bbed77d32487e2d57cd7f37dde63b5702a11",
-      "snippet": "AILCALLBACK",
-      "start_byte": 2136,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 2216,
-      "end_line": 98,
-      "evidence_class": "source_syntax",
-      "file": "port/audio/miles/mss.h",
-      "kind": "port_parse_unknown",
-      "line": 98,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "2df572354263d84c4fc75e30d1604ef9db74f9a1e67d101e679aab3993e0e686",
-      "snippet": "AILCALLBACK",
-      "start_byte": 2205,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 2294,
-      "end_line": 99,
-      "evidence_class": "source_syntax",
-      "file": "port/audio/miles/mss.h",
-      "kind": "port_parse_unknown",
-      "line": 99,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "41a8ac35b32a4bb8f82597d13d386417d5fab7900e014215800b62693d0651b6",
-      "snippet": "AILCALLBACK",
-      "start_byte": 2283,
-      "status": "unknown"
-    },
-    {
       "directive": "#ifndef RENEGADE_AUDIO_OUTPUT_BUFFERS_H",
       "end_line": 1,
       "evidence_class": "current_source",
@@ -22885,7 +22841,7 @@
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "3b1b433a1d6317d75867d6bcf17930d693eeaa0c2ecc54a6f5fcee2236414663",
       "scope": "DlgMsgBox",
       "signals": [
@@ -22923,20 +22879,6 @@
         "literal_return"
       ],
       "start_byte": 407,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 361,
-      "end_line": 9,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/a31_messagebox_stub.h",
-      "kind": "port_parse_unknown",
-      "line": 9,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "f4d6ae0a8c4da81cc4f472df5f08be1b63d54ea3f98d7a6a8eda2d25e1626969",
-      "snippet": "*",
-      "start_byte": 360,
       "status": "unknown"
     },
     {
@@ -27033,7 +26975,7 @@
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "267eff81cc9d60adc321b948d52fc80c4279f943c99016248dee0166e24810a8",
       "scope": "MutexClass",
       "signals": [],
@@ -27478,20 +27420,6 @@
       "scope": "FastCriticalSectionClass::LockClass",
       "signals": [],
       "start_byte": 2282,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 415,
-      "end_line": 32,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/mutex.h",
-      "kind": "port_parse_unknown",
-      "line": 32,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "54b276e864b21fb16b0820c684be89154fd42d4412922bfa4ce554bcba9fa9d0",
-      "snippet": "*",
-      "start_byte": 414,
       "status": "unknown"
     },
     {
@@ -35348,7 +35276,7 @@
         1203,
         1208
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "0eea3148b6c6108b12b2eb33d11a2e770f9fc68d06f77f8741229764027aaef9",
       "scope": "",
       "signals": [
@@ -35448,9 +35376,34 @@
           "line": 1343
         },
         {
+          "callee": "static_cast<WCHAR>",
+          "callee_node_type": "template_function",
+          "line": 1344
+        },
+        {
+          "callee": "va_arg",
+          "callee_node_type": "identifier",
+          "line": 1344
+        },
+        {
           "callee": "rv_utf16_format_append_char",
           "callee_node_type": "identifier",
           "line": 1347
+        },
+        {
+          "callee": "static_cast<WCHAR>",
+          "callee_node_type": "template_function",
+          "line": 1348
+        },
+        {
+          "callee": "static_cast<unsigned char>",
+          "callee_node_type": "template_function",
+          "line": 1348
+        },
+        {
+          "callee": "va_arg",
+          "callee_node_type": "identifier",
+          "line": 1348
         },
         {
           "callee": "rv_utf16_format_render_numeric",
@@ -35530,7 +35483,7 @@
         1219,
         1369
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "b47dc5652b53e4ebbca53fddddc39d1b371f47898013b827f6901399c1cad30d",
       "scope": "",
       "signals": [
@@ -35591,314 +35544,6 @@
         "nonfinal_return_candidate"
       ],
       "start_byte": 40997,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 33632,
-      "end_line": 1153,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1153,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "a4d90f55f1283aa24c6549faa511824d69e76b037a885bf3f48b34a889db40c0",
-      "snippet": ", int",
-      "start_byte": 33627,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 33857,
-      "end_line": 1158,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1158,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "e623e0dae2c3dbdcee38b3b77051702337aae43aafaa5822980b6e06cf285c3d",
-      "snippet": "long",
-      "start_byte": 33853,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 33954,
-      "end_line": 1160,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1160,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "de452c7f68154a9d3cfae4e0691a8522072cb2ddef81943df8a238de999c9885",
-      "snippet": ", ptrdiff_t",
-      "start_byte": 33943,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 34051,
-      "end_line": 1162,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1162,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "be6e963a3a46bb78d20a49b4f5fd1f3846ef48d704f5c036c673665852d5746d",
-      "snippet": ", ptrdiff_t",
-      "start_byte": 34040,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 34216,
-      "end_line": 1166,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1166,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "7cdf33b118686671016cee366360f1e562b27b750c8658f937e8737368b0c41d",
-      "snippet": ", int",
-      "start_byte": 34211,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 34454,
-      "end_line": 1176,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1176,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "02e311ac38983a1a79f8edcad56228cd8c715a5f4f2b98e67b2f8938c6d203e1",
-      "snippet": "int",
-      "start_byte": 34451,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 34555,
-      "end_line": 1178,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1178,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "984441cd4842828c3e74d7d41da6b871163a0d4ee3398672b51b603fd6866f63",
-      "snippet": "long",
-      "start_byte": 34551,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 34697,
-      "end_line": 1181,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1181,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "ee93f0e6f976f16456c9c775164beb1287ac727c420d2e612bca4b80c942c3d9",
-      "snippet": "long long",
-      "start_byte": 34688,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 34791,
-      "end_line": 1183,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1183,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "c243244b8b5cf3843ce2fee35972a4105aebbe4dedc909a3950ea092017e3722",
-      "snippet": ", size_t",
-      "start_byte": 34783,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 34912,
-      "end_line": 1186,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1186,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "4a4267771e8e4df5dd46bd25512f87db74bcb28c2c2c11f06ba428689f86d113",
-      "snippet": ", ptrdiff_t",
-      "start_byte": 34901,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 35088,
-      "end_line": 1190,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1190,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "915c51767a0b22e299ff5ca16e41e8959f5015428874c6856e42581d0711e9a7",
-      "snippet": "int",
-      "start_byte": 35085,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 35272,
-      "end_line": 1199,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1199,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "a5a7eb1030b196cccd0f95e076c955cf650396ffe184c20beb2d56048e31a077",
-      "snippet": "double",
-      "start_byte": 35266,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 35336,
-      "end_line": 1201,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1201,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "88a75277324d283eb1d6660d64cdffcee97622fe078e4a4028011fa3d8f562f6",
-      "snippet": ", double",
-      "start_byte": 35328,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 35407,
-      "end_line": 1203,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1203,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "a2a8efbef8537073fbd76ef71581da767bd7f91eb7546f3c0c70a45d98170d9f",
-      "snippet": ", void *",
-      "start_byte": 35399,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 36838,
-      "end_line": 1257,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1257,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "545a3fba6a86fb818f4d01604b2b4c27665fa18927230e10cc14527df7b95c2d",
-      "snippet": ", int",
-      "start_byte": 36833,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 37283,
-      "end_line": 1277,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1277,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "07c11b79005d0ea29a25fa62a23b82734015ea05fcf9505a0b4885ae86404559",
-      "snippet": ", int",
-      "start_byte": 37278,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 38762,
-      "end_line": 1332,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1332,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "812a26f9b65692b6773f45acf48c4c0c76bf8c78b027c3c19f23318a25a40154",
-      "snippet": "char *",
-      "start_byte": 38756,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 38910,
-      "end_line": 1335,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1335,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "4a1c4b964b19a3d3f14265d866f4a41d8735f280e0c3388ede9e3e91210c1c22",
-      "snippet": "WCHAR *",
-      "start_byte": 38903,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 39072,
-      "end_line": 1340,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1340,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "d317c8f81bc3b98563d43d09f878a16e66aa9b7a33ad3a018ba6ce727443d3fc",
-      "snippet": "char *",
-      "start_byte": 39066,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 39232,
-      "end_line": 1344,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1344,
-      "missing": true,
-      "node_type": "identifier",
-      "row_id": "5bc274dd3a0899f32274e1e338649f49110a9b400e94e0ebf5426e44babbe364",
-      "snippet": "",
-      "start_byte": 39232,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 39387,
-      "end_line": 1348,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1348,
-      "missing": true,
-      "node_type": "identifier",
-      "row_id": "4e5cef0dd3edb87e34dec453a0ab06051ec5d0189bf6a3bd55dd2672efc0c551",
-      "snippet": "",
-      "start_byte": 39387,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 39960,
-      "end_line": 1375,
-      "evidence_class": "source_syntax",
-      "file": "port/compatibility/include/win32_compat.h",
-      "kind": "port_parse_unknown",
-      "line": 1375,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "b7ca5878a5b5b5145ccccaee2711a8f70dc0297e2911de56d15aeda1e89382ae",
-      "snippet": ", int *",
-      "start_byte": 39953,
       "status": "unknown"
     },
     {
@@ -38587,7 +38232,7 @@
       "nonfinal_return_lines": [
         599
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "51082bbcb6e4a0560fd652c17209b1d2c4cd7cd39e75d6ebbc898f8bd2802f13",
       "scope": "",
       "signals": [
@@ -39041,34 +38686,6 @@
       "scope": "",
       "signals": [],
       "start_byte": 35119,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 29790,
-      "end_line": 604,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a31_capture_telemetry.cpp",
-      "kind": "port_parse_unknown",
-      "line": 604,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "aa12cfd522ad3bfc13146b2c73716a6d8cc860769a9e9be81ff17b6485279c15",
-      "snippet": "PRIu64",
-      "start_byte": 29784,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 59,
-      "end_line": 6,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a31_capture_telemetry.h",
-      "kind": "port_parse_unknown",
-      "line": 6,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "6538e940249af44730aca5a3247b8f881e5f64b49f6392669189a8df0a8c9bb3",
-      "snippet": "",
-      "start_byte": 59,
       "status": "unknown"
     },
     {
@@ -39603,7 +39220,7 @@
         264,
         265
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "c39990dd8e61791e6bd9a8daebcd423766fac467a0beaf1a6e9eae7fc24651ac",
       "scope": "",
       "signals": [
@@ -39759,7 +39376,7 @@
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "70e5df805143ca5dbdd749f8b76f5d432c30c9f8970617d81a2dd8e6c7109d7a",
       "scope": "",
       "signals": [],
@@ -39859,7 +39476,7 @@
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "1abc58496303633f9b2a8a6b1357721939e2326fa0b5f46972d9b72d8ee9da54",
       "scope": "",
       "signals": [],
@@ -40165,7 +39782,7 @@
       "nonfinal_return_lines": [
         504
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "e07f2cd39ddfa2520bd52cbdc132f524815b3b3447ef2c5067d43d422b064d63",
       "scope": "",
       "signals": [
@@ -40665,7 +40282,7 @@
       "nonfinal_return_lines": [
         696
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "80f65a6e2cb912e65ab3021f64a4e04685992df7290c33140eaf181dce4cc4d1",
       "scope": "",
       "signals": [
@@ -41005,174 +40622,6 @@
         "nonfinal_return_candidate"
       ],
       "start_byte": 30888,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 326,
-      "end_line": 19,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 19,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "857f010fe5041322900774422480702575b7578466fc389cd21913911e6b91eb",
-      "snippet": "",
-      "start_byte": 326,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 7187,
-      "end_line": 271,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 271,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "2349c2d0c0ef3dfd3f4ec4262526857b06621b948e881742acdaee1adb1ca629",
-      "snippet": "PRId32",
-      "start_byte": 7181,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 7647,
-      "end_line": 282,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 282,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "84d61df4a67f2663a1aedbc5bd5f9b3099bba7cc22c41efdbe6021de93cb46a0",
-      "snippet": "PRId32",
-      "start_byte": 7641,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 7991,
-      "end_line": 290,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 290,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "9c5b2189c34396dcc844619666a854d251d30cdb08abcf6b6dabf0792e679259",
-      "snippet": "PRId32",
-      "start_byte": 7985,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 8428,
-      "end_line": 300,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 300,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "06783ba2796303a6f6d3aecd12b0742926e9749f10698b8d65ac22cab3872e77",
-      "snippet": "PRIu64",
-      "start_byte": 8422,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 8830,
-      "end_line": 309,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 309,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "9409d9d1d238d215b15cf6475510258d93dab186bf23361335885a639fd50d9b",
-      "snippet": "PRIu64",
-      "start_byte": 8824,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 9340,
-      "end_line": 318,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 318,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "52d1fcba8c926ebfa087f65038192aa11c049fb774c55e875bf62eedcab105e4",
-      "snippet": "PRIu32",
-      "start_byte": 9334,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 10589,
-      "end_line": 355,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 355,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "6ebafca930988e3f6ad0cf180486e82e55471c056d63567635c21e41c3fdcde3",
-      "snippet": "PRIu64",
-      "start_byte": 10583,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 12007,
-      "end_line": 388,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 388,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "bfd003da7be8588fac9660c7eb0e9011f100c4de58c9b6f8553e83f2dcce8909",
-      "snippet": "PRIu64",
-      "start_byte": 12001,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 18504,
-      "end_line": 527,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 527,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "856f3db89de225095bb3509fbc8d09358d77a6b3e032b18520d593adb543f710",
-      "snippet": "PRId32",
-      "start_byte": 18498,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 27920,
-      "end_line": 761,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.cpp",
-      "kind": "port_parse_unknown",
-      "line": 761,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "fcbc89f708ebaa2b155248d5feb54f929057091ccbde466b3802f19386fafdd0",
-      "snippet": "PRIu64",
-      "start_byte": 27914,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 75,
-      "end_line": 7,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_campaign_flight_recorder.h",
-      "kind": "port_parse_unknown",
-      "line": 7,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "884cd0beadf07d207bc3690220917d7736b1d4a834a6c6f43bf11be1017a406d",
-      "snippet": "",
-      "start_byte": 75,
       "status": "unknown"
     },
     {
@@ -41554,20 +41003,6 @@
       "scope": "",
       "signals": [],
       "start_byte": 4584,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 368,
-      "end_line": 18,
-      "evidence_class": "source_syntax",
-      "file": "port/developer/a35_script_lookup_telemetry.h",
-      "kind": "port_parse_unknown",
-      "line": 18,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "a09a8642f901a3d3158ea58ed0306dc3cb186e4d128c43fcfcd7592b63c827d1",
-      "snippet": "",
-      "start_byte": 368,
       "status": "unknown"
     },
     {
@@ -49469,20 +48904,6 @@
       "status": "unknown"
     },
     {
-      "end_byte": 788,
-      "end_line": 19,
-      "evidence_class": "source_syntax",
-      "file": "port/filesystem/renegade_ttfs_factory.h",
-      "kind": "port_parse_unknown",
-      "line": 19,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "bcc5def08b62ab6b650af7a922b772b9514717727ed1ab3ca1af52761bb8e1c4",
-      "snippet": "",
-      "start_byte": 788,
-      "status": "unknown"
-    },
-    {
       "body_kind": "compound_statement",
       "body_sha256": "3822bf16e533929aac3cb429f811cf3d29002be290e969897dbdec48889d01b9",
       "calls": [
@@ -51422,20 +50843,6 @@
       "scope": "A31ClientConnect",
       "signals": [],
       "start_byte": 1670,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 957,
-      "end_line": 26,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/a31_client_connect_boundary.h",
-      "kind": "port_parse_unknown",
-      "line": 26,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "d504cfb85fd219bfd05226b70d95b9b829990571fa396338464b0c5b3249ec07",
-      "snippet": "",
-      "start_byte": 957,
       "status": "unknown"
     },
     {
@@ -73125,20 +72532,6 @@
       "status": "unknown"
     },
     {
-      "end_byte": 279,
-      "end_line": 10,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/renegade_vita_button_state_contract.h",
-      "kind": "port_parse_unknown",
-      "line": 10,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "7854e148278bc71a5235ca7c0b993de783d7646371f267dc56eb5db74c857455",
-      "snippet": "",
-      "start_byte": 279,
-      "status": "unknown"
-    },
-    {
       "body_kind": "compound_statement",
       "body_sha256": "845735c5cc02807e1a0fc887dfa03c24e58994a05032ecde82e66501e6314fd1",
       "calls": [],
@@ -74741,20 +74134,6 @@
       "status": "unknown"
     },
     {
-      "end_byte": 1033,
-      "end_line": 36,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/renegade_vita_input_contract.h",
-      "kind": "port_parse_unknown",
-      "line": 36,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "a1682a74a47f75db935058627145ebf4d445a468cd278040bae4efb78f41ed13",
-      "snippet": "",
-      "start_byte": 1033,
-      "status": "unknown"
-    },
-    {
       "body_kind": "compound_statement",
       "body_sha256": "391011bf70227c037a129d9a6b213f4fb013d7f55082f4a9fdb00b0b0647e8be",
       "calls": [
@@ -75016,20 +74395,6 @@
       "scope": "RenegadeVitaInputRoute",
       "signals": [],
       "start_byte": 2788,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 225,
-      "end_line": 16,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/renegade_vita_input_route.h",
-      "kind": "port_parse_unknown",
-      "line": 16,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "b1a5aaff239b469e90483c943e7c60a157789a724d20ef38d3bfc5872b857bb1",
-      "snippet": "",
-      "start_byte": 225,
       "status": "unknown"
     },
     {
@@ -76285,7 +75650,7 @@
       "nonfinal_return_lines": [
         31
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "ddf2e90d2c89427a4c63eb36abad22a238e8ce212147cd8915313151141060ac",
       "scope": "",
       "signals": [
@@ -76961,20 +76326,6 @@
         "nonfinal_return_candidate"
       ],
       "start_byte": 4290,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 837,
-      "end_line": 29,
-      "evidence_class": "source_syntax",
-      "file": "port/platform/vita/a30_main.cpp",
-      "kind": "port_parse_unknown",
-      "line": 29,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "be968131dd408ee0ea4e1d017b9b97df734a620d4e2a470702a9cc124438015c",
-      "snippet": "\"ux0:data/renegade/user/logs/\"",
-      "start_byte": 807,
       "status": "unknown"
     },
     {
@@ -94618,20 +93969,6 @@
       "status": "unknown"
     },
     {
-      "end_byte": 239,
-      "end_line": 9,
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/D3dx8core.h",
-      "kind": "port_parse_unknown",
-      "line": 9,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "ab36cc69505b99eaf82707745907cb44a3243cf3a05637a6f919b20482c843ae",
-      "snippet": ":",
-      "start_byte": 238,
-      "status": "unknown"
-    },
-    {
       "body_kind": "compound_statement",
       "body_sha256": "bcc36a86da957166f4d5800bfc9be5409d3603111940f0a6a635fe9bdd3ccc11",
       "calls": [],
@@ -95662,20 +94999,6 @@
       "scope": "IDirect3DIndexBuffer8",
       "signals": [],
       "start_byte": 5304,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 8056,
-      "end_line": 247,
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/d3d8.h",
-      "kind": "port_parse_unknown",
-      "line": 247,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "a19dcd9b6242c0605a66e9e94540db72323aad26dffea5ed1ff3c3496791b03e",
-      "snippet": "",
-      "start_byte": 8056,
       "status": "unknown"
     },
     {
@@ -100557,7 +99880,7 @@
         769,
         777
       ],
-      "parse_has_error": true,
+      "parse_has_error": false,
       "row_id": "c09c38761d923b6dc5d3b16898d84a3e6a70e3cc69bed24226991fbe7144c94f",
       "scope": "",
       "signals": [
@@ -105811,20 +105134,6 @@
       "scope": "",
       "signals": [],
       "start_byte": 93789,
-      "status": "unknown"
-    },
-    {
-      "end_byte": 26047,
-      "end_line": 761,
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
-      "kind": "port_parse_unknown",
-      "line": 761,
-      "missing": false,
-      "node_type": "ERROR",
-      "row_id": "53d7041812c17608af62d31c8acb500a6d9205ab7b75bbd9d2806c404bd5fba9",
-      "snippet": "*[mip_count]",
-      "start_byte": 26035,
       "status": "unknown"
     },
     {
@@ -116907,20 +116216,6 @@
       "kind": "current_source_guard",
       "line": 181,
       "row_id": "8feef0b91636d538eadf487aa08378892a556f05989f7bff7459ed3be61ba924",
-      "status": "unknown"
-    },
-    {
-      "end_byte": 4714,
-      "end_line": 148,
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/ww3d_vita_renderer.h",
-      "kind": "port_parse_unknown",
-      "line": 148,
-      "missing": true,
-      "node_type": "type_identifier",
-      "row_id": "be539d3cb4a856882e5cb9a53ca8dbe0b6a15d6d3a0e07c597ac877b789169ac",
-      "snippet": "",
-      "start_byte": 4714,
       "status": "unknown"
     },
     {
@@ -128974,43 +128269,91 @@
       "status": "unknown"
     },
     {
+      "classification_evidence_class": "source_review",
       "column": 7,
       "evidence_class": "build_source",
       "file": "CMakeLists.txt",
       "kind": "link_wrapper_reference",
       "line": 614,
+      "review": {
+        "acceptance_open": "ARM link-map retention and matching physical startup breadcrumbs; source inspection proves the selected boundary shape but not device execution.",
+        "affected_scope": [
+          "All Vita modes that initialize the vitaGL shader compiler"
+        ],
+        "behavior": "The production Vita link wraps shark_init. The wrapper records bounded diagnostics, calls __real_shark_init with the identical path, preserves its return value, and records compiler availability from the result.",
+        "callers": [
+          "Production RenegadeVita target through vitaGL shader initialization"
+        ],
+        "original_owner": "vitaGL shader-compiler initialization below the original WW3D renderer boundary"
+      },
       "row_id": "32fd9f0c62b2b75bb0fbd3ae31921f9fac00d8c5fea19fe9e60e0ef77613731b",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "shark_init"
     },
     {
+      "classification_evidence_class": "source_review",
       "column": 65,
       "evidence_class": "build_source",
       "file": "tools/host_a30_definitions/CMakeLists.txt",
       "kind": "link_wrapper_reference",
       "line": 184,
+      "review": {
+        "acceptance_open": "Keep the target-selection assertion reproducible; this exclusion does not establish physical Vita thread correctness.",
+        "affected_scope": [
+          "Retail-free host regression testing; no Vita game mode"
+        ],
+        "behavior": "The linker wrapper belongs only to a35_thread_publication_selftest and injects delayed or failed pthread creation so the probe can exercise original ThreadClass publication and cancellation paths. It is absent from the production target link options.",
+        "callers": [
+          "tools/host_a35_thread_publication_test.cpp test executable only"
+        ],
+        "original_owner": "Host-only ThreadClass completion/publication regression probe"
+      },
       "row_id": "aece3985b5eeb57abf0d91b092b40e55f4f313a38b6695b46c3ef8489ab514ba",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "symbol": "pthread_create"
     },
     {
+      "classification_evidence_class": "source_review",
       "column": 9,
       "evidence_class": "build_source",
       "file": "tools/host_a30_definitions/CMakeLists.txt",
       "kind": "link_wrapper_reference",
       "line": 1052,
+      "review": {
+        "acceptance_open": "Retain host replay tests and the CMake cross-build exclusion; this diagnostic seam is not evidence for Vita frame pacing.",
+        "affected_scope": [
+          "Deterministic host replay timing only; normal host execution forwards original behavior and Vita is excluded"
+        ],
+        "behavior": "The host interactive runtime wraps the original query only on non-cross builds. A fixed replay returns 1000/frame_ms; normal execution forwards to the original method unchanged. The cross-compiled ARM closure does not select this wrapper.",
+        "callers": [
+          "staging/combat/timemgr.cpp through the host interactive runtime"
+        ],
+        "original_owner": "Original WW3D movie-capture frame-rate query used by TimeManager"
+      },
       "row_id": "28013a111d6c5a08c9ef51e6f9e71e264b7855bedb4801534dc01055b4430679",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "_ZN4WW3D28Get_Movie_Capture_Frame_RateEv"
     },
     {
+      "classification_evidence_class": "source_review",
       "column": 9,
       "evidence_class": "build_source",
       "file": "tools/host_a30_definitions/CMakeLists.txt",
       "kind": "link_wrapper_reference",
       "line": 1079,
+      "review": {
+        "acceptance_open": "Verify retention in the ARM link map and production device startup separately.",
+        "affected_scope": [
+          "ARM link closure for the full original frontend and campaign source graph"
+        ],
+        "behavior": "The ARM closure selects the same shark_init diagnostic wrapper as production. It calls __real_shark_init with the identical path and preserves the return value while recording compiler availability.",
+        "callers": [
+          "Cross-compiled a31_interactive_runtime closure through vitaGL initialization"
+        ],
+        "original_owner": "vitaGL shader-compiler initialization in the ARM full-source closure target"
+      },
       "row_id": "8b837ebfb899895c3381131f530cb25f903b55db9cc9a1389b211ecf5e4bbbbf",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "symbol": "shark_init"
     }
   ],
@@ -129023,17 +128366,18 @@
       "patch_guard": 526,
       "port_function": 1663,
       "port_macro_definition": 486,
-      "port_parse_unknown": 69
+      "port_parse_unknown": 16
     },
     "by_status": {
-      "boundary_replaced": 2,
+      "boundary_replaced": 5,
       "disabled_by_port_guard": 6,
+      "excluded_with_proof": 1,
       "original_patched": 1,
       "stubbed_or_noop": 51,
-      "unknown": 3537
+      "unknown": 3480
     },
-    "patch_files": 316,
-    "rows": 3597,
-    "stage_patch_references": 313
+    "patch_files": 318,
+    "rows": 3544,
+    "stage_patch_references": 315
   }
 }

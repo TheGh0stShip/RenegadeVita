@@ -1,7 +1,7 @@
 import importlib.util
 import unittest
 
-from sweep_cpp_functions import function_inventory
+from sweep_cpp_functions import function_inventory, normalize_parser_source
 
 
 @unittest.skipUnless(importlib.util.find_spec('tree_sitter') and
@@ -64,6 +64,19 @@ class CppFunctionInventoryTest(unittest.TestCase):
         self.assertEqual([r['callee'] for r in calls],
                          ['Owner::Run', 'ptr->Stop', '(*callback)', 'l'])
         self.assertEqual(result['functions'][1]['calls'][0]['callee'], 'Hidden')
+
+    def test_parser_normalization_preserves_offsets_and_valid_constructs(self):
+        text = ('enum : uint32_t { A = 1 };\n'
+                'typedef void (AILCALLBACK *Callback)(int);\n'
+                'int f(va_list args) { printf("%" PRIu64, value); '
+                'return va_arg(args, int); }\n'
+                'const char *p = "root/" RENEGADE_BUILD_CANDIDATE_LABEL ".log";')
+        normalized = normalize_parser_source(text)
+        self.assertEqual(len(normalized.encode()), len(text.encode()))
+        self.assertEqual(normalized.count('\n'), text.count('\n'))
+        result = function_inventory(text)
+        self.assertFalse(result['root_has_error'])
+        self.assertEqual(len(result['functions']), 1)
 
 
 if __name__ == '__main__':

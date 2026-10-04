@@ -41,6 +41,78 @@
   },
   "reviews": [
     {
+      "kind": "link_wrapper_reference",
+      "file": "CMakeLists.txt",
+      "line": 614,
+      "column": 7,
+      "symbol": "shark_init",
+      "row_id": "32fd9f0c62b2b75bb0fbd3ae31921f9fac00d8c5fea19fe9e60e0ef77613731b",
+      "status": "boundary_replaced",
+      "original_owner": "vitaGL shader-compiler initialization below the original WW3D renderer boundary",
+      "behavior": "The production Vita link wraps shark_init. The wrapper records bounded diagnostics, calls __real_shark_init with the identical path, preserves its return value, and records compiler availability from the result.",
+      "callers": [
+        "Production RenegadeVita target through vitaGL shader initialization"
+      ],
+      "affected_scope": [
+        "All Vita modes that initialize the vitaGL shader compiler"
+      ],
+      "acceptance_open": "ARM link-map retention and matching physical startup breadcrumbs; source inspection proves the selected boundary shape but not device execution."
+    },
+    {
+      "kind": "link_wrapper_reference",
+      "file": "tools/host_a30_definitions/CMakeLists.txt",
+      "line": 184,
+      "column": 65,
+      "symbol": "pthread_create",
+      "row_id": "aece3985b5eeb57abf0d91b092b40e55f4f313a38b6695b46c3ef8489ab514ba",
+      "status": "excluded_with_proof",
+      "original_owner": "Host-only ThreadClass completion/publication regression probe",
+      "behavior": "The linker wrapper belongs only to a35_thread_publication_selftest and injects delayed or failed pthread creation so the probe can exercise original ThreadClass publication and cancellation paths. It is absent from the production target link options.",
+      "callers": [
+        "tools/host_a35_thread_publication_test.cpp test executable only"
+      ],
+      "affected_scope": [
+        "Retail-free host regression testing; no Vita game mode"
+      ],
+      "acceptance_open": "Keep the target-selection assertion reproducible; this exclusion does not establish physical Vita thread correctness."
+    },
+    {
+      "kind": "link_wrapper_reference",
+      "file": "tools/host_a30_definitions/CMakeLists.txt",
+      "line": 1052,
+      "column": 9,
+      "symbol": "_ZN4WW3D28Get_Movie_Capture_Frame_RateEv",
+      "row_id": "28013a111d6c5a08c9ef51e6f9e71e264b7855bedb4801534dc01055b4430679",
+      "status": "boundary_replaced",
+      "original_owner": "Original WW3D movie-capture frame-rate query used by TimeManager",
+      "behavior": "The host interactive runtime wraps the original query only on non-cross builds. A fixed replay returns 1000/frame_ms; normal execution forwards to the original method unchanged. The cross-compiled ARM closure does not select this wrapper.",
+      "callers": [
+        "staging/combat/timemgr.cpp through the host interactive runtime"
+      ],
+      "affected_scope": [
+        "Deterministic host replay timing only; normal host execution forwards original behavior and Vita is excluded"
+      ],
+      "acceptance_open": "Retain host replay tests and the CMake cross-build exclusion; this diagnostic seam is not evidence for Vita frame pacing."
+    },
+    {
+      "kind": "link_wrapper_reference",
+      "file": "tools/host_a30_definitions/CMakeLists.txt",
+      "line": 1079,
+      "column": 9,
+      "symbol": "shark_init",
+      "row_id": "8b837ebfb899895c3381131f530cb25f903b55db9cc9a1389b211ecf5e4bbbbf",
+      "status": "boundary_replaced",
+      "original_owner": "vitaGL shader-compiler initialization in the ARM full-source closure target",
+      "behavior": "The ARM closure selects the same shark_init diagnostic wrapper as production. It calls __real_shark_init with the identical path and preserves the return value while recording compiler availability.",
+      "callers": [
+        "Cross-compiled a31_interactive_runtime closure through vitaGL initialization"
+      ],
+      "affected_scope": [
+        "ARM link closure for the full original frontend and campaign source graph"
+      ],
+      "acceptance_open": "Verify retention in the ARM link map and production device startup separately."
+    },
+    {
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "declarator": "DX8Caps::DX8Caps(IDirect3D8 *direct3d, const D3DCAPS8 &caps,\n\tWW3DFormat display_format, const D3DADAPTER_IDENTIFIER8 &adapter_id)",
       "body_sha256": "601ea34d41e7ce6c0574312bf70e172ca0fc06847e80899802aa51c06e108bd5",

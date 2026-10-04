@@ -1,31 +1,38 @@
 # S1 port guards and stubs — inventory in progress
 
-2026-10-04 Dev222 refresh:3,597 source records retain51 stubs, one patched,
-two replaced boundaries, six disabled guards and3,537 unknown. The312-entry
-stage registry includes the three host-only Mission03 pointer exchanges;
-native preprocessing remains unchanged. Reviewed bodies and caller hashes
-reconcile after checking the prior Load_Data capacity-only delta. Seventy-three
-focused checks and485 fast contracts pass; this does not close S1 classification
-or native acceptance. See [script cluster](SCRIPT_LAYER_SWEEP.md).
+2026-10-04 linker-wrapper/parser refresh: 3,544 source records contain
+51 stubs, one patched original body, five replaced boundaries, six disabled
+guards, one host-only exclusion and 3,480 unknowns. All four `--wrap` rows now
+have exact location identities and whole build-file hash pins. The production
+and ARM-closure `shark_init` wrappers preserve the real call and result while
+recording shader-compiler diagnostics. The movie-capture clock wrapper is a
+host replay boundary excluded by CMake from cross-builds. The `pthread_create`
+wrapper belongs only to its host thread-publication regression executable.
+Twenty-nine focused parser/reviewer tests pass and all review identities
+reconcile. A same-width parser view removes 53 known grammar false positives
+without changing original source offsets or hashes. Sixteen uncertainties remain,
+all within mutually exclusive branches of the Vita runtime's large interactive
+function. This remains source/build evidence and does not close S1 or native
+acceptance.
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,574 records with 51 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, 1 original light-state method as `original_patched`,
-1 capability constructor as `boundary_replaced`, 6
-guards as `disabled_by_port_guard`, and 3,515
-records still `unknown`. All statuses reconcile to the total.
+source contains 3,544 records with 51 fallback/diagnostic functions reviewed as
+`stubbed_or_noop`, one original light-state method as `original_patched`, five
+boundaries as `boundary_replaced`, six guards as `disabled_by_port_guard`, one
+test-only wrapper as `excluded_with_proof`, and 3,480 records still `unknown`.
+All statuses reconcile to the total.
 
 | Inventory kind | Records |
 | --- | ---: |
-| Changed patch guards, including removals | 519 |
-| Current port/staged source guards | 840 |
-| Port function and lambda definitions | 1,656 |
+| Changed patch guards, including removals | 526 |
+| Current port/staged source guards | 849 |
+| Port function and lambda definitions | 1,663 |
 | Port macro definitions | 486 |
-| Syntax parse uncertainties | 69 |
+| Syntax parse uncertainties | 16 |
 | Linker wrapper references | 4 |
 
-The 312 patch files and 309 literal staging references are separate inventories.
+The 318 patch files and 315 literal staging references are separate inventories.
 Three files have no staging reference; they remain visible without being called
 retail exclusions. Historical hunk coordinates are not current staged line
 proof. Comments, strings, raw strings and continued comments are masked while
@@ -76,12 +83,12 @@ sites: two MSVC for-scope dependencies and four multiword functional casts.
 A private minimal syntax-only copy compiles as an ARM object; it is not selected,
 linked or a renderer fix. Integration and host behavior checks remain open.
 
-All four linker wrapper references remain in the denominator. Source inspection
-distinguishes shader diagnostics around original shark_init from host-only thread
-failure injection and fixed-clock movie capture. Their row classifications remain
-unknown until wrapper identity/build-profile reviews are integrated. Empty bodies,
-macros, hidden generated implementations and runtime call reachability still need
-separate review; the 15 classifications do not close this sweep.
+All four linker wrapper references remain in the denominator and are now
+classified. Non-function reviews require exact row identity plus an unchanged
+containing source/build file, so a moved link option or changed build profile
+cannot silently retain its verdict. Empty bodies, macros, hidden generated
+implementations and runtime call reachability still need separate review; these
+classifications do not close the sweep.
 
 - Render-target creation always returns NULL. Original projector allocation
   callers are recorded; render-to-texture restoration remains open.

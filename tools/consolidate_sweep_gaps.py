@@ -26,6 +26,10 @@ ISSUES['script_parameter_reads'] = 9
 ISSUES['host_script_parameters'] = 9
 ISSUES['script_parameter_surface'] = 9
 ISSUES['script_load_destinations'] = 9
+SCRIPT_SUPPLEMENTS = ('script_command_bodies', 'script_command_port_dependencies',
+                     'host_script_command_table', 'cinematic_dispatch_dependencies')
+SUPPLEMENTS += SCRIPT_SUPPLEMENTS
+ISSUES.update({name: 9 for name in SCRIPT_SUPPLEMENTS})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -64,7 +68,25 @@ def root_records(name, value):
         return rows
     rows=value['archives'] if name=='w3d_chunks' else value['rows']
     totals=value.get('totals',{})
-    if name=='script_load_destinations':
+    if name in SCRIPT_SUPPLEMENTS:
+        if value['total'] != len(rows):
+            raise ValueError(f'{name}: denominator mismatch')
+        if name == 'host_script_command_table':
+            for field, row_field in (('nonnull', 'nonnull'),
+                                     ('assigned_name_matches', 'assigned_name_match'),
+                                     ('arm_function_signatures_retained', 'arm_function_signature_retained')):
+                if value[field] != sum(bool(r[row_field]) for r in rows):
+                    raise ValueError(f'{name}: execution partition mismatch')
+        elif value['counts'] != dict(Counter(r['status'] for r in rows)):
+            raise ValueError(f'{name}: status partition mismatch')
+        if name == 'script_command_port_dependencies':
+            if value['commands_with_port_candidates'] != sum(bool(r['matched_calls']) for r in rows) or value['matched_call_names'] != sum(len(r['matched_calls']) for r in rows):
+                raise ValueError(f'{name}: candidate partition mismatch')
+        if name == 'cinematic_dispatch_dependencies':
+            calls = sorted({call['name'] for row in rows for call in row['command_calls']})
+            if value['unique_engine_commands'] != calls:
+                raise ValueError(f'{name}: command partition mismatch')
+    elif name=='script_load_destinations':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)) or value['parse_complete']!=sum(r['parse_complete'] for r in rows):
             raise ValueError('Script load destination partition mismatch')
     elif name=='script_parameter_surface':
@@ -206,6 +228,10 @@ def consolidate(inputs):
     receipts = []
     for name, data in inputs:
         value = json.loads(data)
+        if name == 'script_command_port_dependencies':
+            for key, parent in (('command_bodies', 'script_command_bodies'), ('port_guards', 'port_guards')):
+                if parent in identities and value['parent_sha256'].get(key) != identities[parent]:
+                    raise ValueError(f'{name}: stale parent inventory identity')
         if name in {'level_persist_closure', 'database_persist_closure', 'database_definition_closure'}:
             for parent in value.get('inputs', []):
                 parent_name=Path(parent['source']).stem
@@ -228,7 +254,7 @@ def consolidate(inputs):
             severity = ('visual' if name in {'renderer', 'procedural_fvf_layouts'} and status == 'missing' else
                         'missing_behavior' if status in {'missing', 'stubbed_or_noop', 'disabled_by_port_guard'}
                         else 'unclassified')
-            label = next((record[k] for k in ('name', 'label', 'symbol', 'source', 'file', 'map', 'chunk_id', 'member', 'chunk_path')
+            label = next((record[k] for k in ('name', 'title', 'label', 'symbol', 'source', 'file', 'map', 'chunk_id', 'member', 'chunk_path')
                           if k in record), pointer)
             review = record.get('review', {})
             rows.append({'id': hashlib.sha256((name + pointer).encode()).hexdigest(),
@@ -243,7 +269,7 @@ def consolidate(inputs):
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
                          'cluster': ('renderer' if name=='procedural_fvf_layouts' else
                                      'link' if name in {'host_definition_registry', 'host_script_registry', 'host_network_registry', 'host_prototype_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
-                                     'scripts' if name in {'live_script_bindings','live_script_parameters','script_parameter_reads','host_script_parameters','script_parameter_surface','script_load_destinations'} else
+                                     'scripts' if name in SCRIPT_SUPPLEMENTS or name in {'live_script_bindings','live_script_parameters','script_parameter_reads','host_script_parameters','script_parameter_surface','script_load_destinations'} else
                                      'retail' if name in SUPPLEMENTS else name)})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),

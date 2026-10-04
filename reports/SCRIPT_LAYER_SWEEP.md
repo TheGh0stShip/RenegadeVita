@@ -1,5 +1,21 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Command and dispatch register reconciliation — 2026-10-04
+
+The full gap register now retains 202 command bodies, 202 lexical dependency
+joins, 202 initialized host-table entries and 18 cinematic dispatch branches.
+Nested port candidates remain overlapping evidence records. Parent hashes,
+status totals, candidate totals, initialization partitions and unique dispatch
+commands are checked. Twenty-two consolidation tests pass, including stale-parent
+rejection.
+
+The register contains 46,695 records: 46,414 unknown, 160 missing, 68 stubbed/no-op,
+46 boundary replacements, six disabled guards and one patched record. These
+counts are not unique defects. Host checks retain unknown native acceptance;
+execution fixtures without status inventories remain linked evidence in this
+ledger. Runtime source and Dev221 artifacts are unchanged. Real objects,
+alternative dispatch routes and native effects still require execution evidence.
+
 ## Shared save-data boundary and destinations — 2026-10-04
 
 All 45 shipped script units contain eight explicit Commands->Load_Data call

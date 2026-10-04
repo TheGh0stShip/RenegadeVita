@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Command and dispatch gap reconciliation — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: four command/dispatch inventories and nested candidates retained in
+the full register; parent identities and measured partitions checked.
+Evidence:22 consolidation tests pass;46,695 overlapping records reconciled.
+Next:real engine object/callback integration and alternative dispatch paths.
+Blocker:none for source work;native effects and full-game acceptance remain open.
+
 ## Original cinematic dispatch execution — 2026-10-04
 
 Renegade Vita — v3.5 active

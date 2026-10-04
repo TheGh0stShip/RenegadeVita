@@ -5,6 +5,39 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_dispatch_dependency_partition_retains_unknown(self):
+        value = {'total': 1, 'counts': {'unknown': 1}, 'unique_engine_commands': ['Find_Object'],
+                 'rows': [{'title': 'Destroy_Object', 'status': 'unknown',
+                           'command_calls': [{'name': 'Find_Object'}]}]}
+        result = consolidate([('cinematic_dispatch_dependencies', json.dumps(value).encode())])
+        self.assertEqual(result['rows'][0]['cluster'], 'scripts')
+        self.assertEqual(result['rows'][0]['label'], 'Destroy_Object')
+        self.assertEqual(result['counts'], {'unknown': 1})
+        value['unique_engine_commands'] = []
+        with self.assertRaisesRegex(ValueError, 'command partition'):
+            consolidate([('cinematic_dispatch_dependencies', json.dumps(value).encode())])
+
+    def test_command_join_rejects_stale_parent(self):
+        parent = json.dumps({'total': 0, 'counts': {}, 'rows': []}).encode()
+        child = {'total': 0, 'counts': {}, 'rows': [], 'commands_with_port_candidates': 0,
+                 'matched_call_names': 0,
+                 'parent_sha256': {'command_bodies': hashlib.sha256(parent).hexdigest()}}
+        inputs = [('script_command_bodies', parent)]
+        self.assertEqual(consolidate(inputs + [('script_command_port_dependencies', json.dumps(child).encode())])['total'], 0)
+        child['parent_sha256']['command_bodies'] = 'stale'
+        with self.assertRaisesRegex(ValueError, 'stale parent'):
+            consolidate(inputs + [('script_command_port_dependencies', json.dumps(child).encode())])
+
+    def test_host_command_table_execution_partition(self):
+        value = {'total': 1, 'nonnull': 1, 'assigned_name_matches': 1,
+                 'arm_function_signatures_retained': 1,
+                 'rows': [{'status': 'unknown', 'nonnull': True,
+                           'assigned_name_match': True, 'arm_function_signature_retained': True}]}
+        self.assertEqual(consolidate([('host_script_command_table', json.dumps(value).encode())])['counts'], {'unknown': 1})
+        value['nonnull'] = 0
+        with self.assertRaisesRegex(ValueError, 'execution partition'):
+            consolidate([('host_script_command_table', json.dumps(value).encode())])
+
     def test_load_destinations_parse_partition(self):
         value={'total':1,'counts':{'unknown':1},'parse_complete':1,
                'rows':[{'status':'unknown','parse_complete':True}]}

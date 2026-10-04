@@ -9,6 +9,7 @@
 #include "ww3d_vita_renderer.h"
 
 #include "dx8wrapper.h"
+#include "statistics.h"
 #include "ww3d.h"
 #include "a30_vita_runtime.h"
 
@@ -214,10 +215,51 @@ void Release_Texture(uint32_t) {}
 void Submit_Unsupported(RenderObjClass *) { Note_Unreachable("Submit_Unsupported"); }
 void Submit_Decals_Unsupported() { Note_Unreachable("Submit_Decals_Unsupported"); }
 
-bool Capture_Resolved_Frame_RGBA(uint8_t *, size_t, bool)
+// Reads the presented frame through IDirect3DDevice8::GetFrontBuffer at the
+// current back-buffer size and lays it into the 960x544 RGBA8888 capture
+// (bottom-up rows, as the native renderer's readback produced) with the same
+// aspect-preserving letterbox VitaD3D presents.
+bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes, bool)
 {
-	// Frame capture reads the native colour surface; not provided here.
-	return false;
+	const size_t required = static_cast<size_t>(DISPLAY_WIDTH) * DISPLAY_HEIGHT * 4U;
+	IDirect3DDevice8 *device = DX8Wrapper::_Get_D3D_Device8();
+	if (output == NULL || output_bytes < required || device == NULL) return false;
+	int width = 0, height = 0, bits = 0;
+	bool windowed = false;
+	WW3D::Get_Device_Resolution(width, height, bits, windowed);
+	if (width <= 0 || height <= 0) return false;
+	IDirect3DSurface8 *surface = NULL;
+	if (device->CreateImageSurface(width, height, D3DFMT_A8R8G8B8, &surface) != D3D_OK) return false;
+	D3DLOCKED_RECT locked;
+	bool ok = device->GetFrontBuffer(surface) == D3D_OK &&
+		surface->LockRect(&locked, NULL, D3DLOCK_READONLY) == D3D_OK;
+	if (ok) {
+		memset(output, 0, required);
+		const float scale_x = static_cast<float>(DISPLAY_WIDTH) / static_cast<float>(width);
+		const float scale_y = static_cast<float>(DISPLAY_HEIGHT) / static_cast<float>(height);
+		const float scale = scale_x < scale_y ? scale_x : scale_y;
+		const float left = (static_cast<float>(DISPLAY_WIDTH) - width * scale) * 0.5F;
+		const float top = (static_cast<float>(DISPLAY_HEIGHT) - height * scale) * 0.5F;
+		for (uint32_t y = 0; y < DISPLAY_HEIGHT; ++y) {
+			const int sy = static_cast<int>((y + 0.5F - top) / scale);
+			if (sy < 0 || sy >= height) continue;
+			const uint32_t *row = reinterpret_cast<const uint32_t *>(
+				static_cast<const uint8_t *>(locked.pBits) + sy * locked.Pitch);
+			uint8_t *out = output + static_cast<size_t>(DISPLAY_HEIGHT - 1U - y) * DISPLAY_WIDTH * 4U;
+			for (uint32_t x = 0; x < DISPLAY_WIDTH; ++x) {
+				const int sx = static_cast<int>((x + 0.5F - left) / scale);
+				if (sx < 0 || sx >= width) continue;
+				const uint32_t argb = row[sx];
+				out[x * 4U + 0U] = static_cast<uint8_t>(argb >> 16);
+				out[x * 4U + 1U] = static_cast<uint8_t>(argb >> 8);
+				out[x * 4U + 2U] = static_cast<uint8_t>(argb);
+				out[x * 4U + 3U] = static_cast<uint8_t>(argb >> 24);
+			}
+		}
+		surface->UnlockRect();
+	}
+	surface->Release();
+	return ok;
 }
 
 bool Query_Backend_Memory(BackendMemoryStatistics &memory)
@@ -235,6 +277,16 @@ const Statistics &Get_Statistics()
 {
 	g_statistics.initialized = DX8Wrapper::_Get_D3D_Device8() != NULL;
 	g_statistics.frames = static_cast<uint32_t>(WW3D::Get_Frame_Count());
+	// The original renderer's own per-frame statistics for the last completed
+	// frame: Direct3D calls stand in for mesh submissions, and polygons and
+	// vertices include skinned and sorted geometry.
+	g_statistics.mesh_submissions = DX8Wrapper::Get_Last_Frame_DX8_Calls();
+	g_statistics.triangle_submissions = static_cast<uint32_t>(
+		Debug_Statistics::Get_DX8_Polygons() + Debug_Statistics::Get_DX8_Skin_Polygons() +
+		Debug_Statistics::Get_Sorting_Polygons());
+	g_statistics.vertex_submissions = static_cast<uint32_t>(
+		Debug_Statistics::Get_DX8_Vertices() + Debug_Statistics::Get_DX8_Skin_Vertices() +
+		Debug_Statistics::Get_Sorting_Vertices());
 	return g_statistics;
 }
 

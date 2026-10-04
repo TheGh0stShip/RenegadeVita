@@ -5,6 +5,15 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_network_custom_factory_partition_and_cluster(self):
+        receipt={'total':1,'matched':1,'rows':[{'class_id':1,'matches':True,'status':'unknown'}],
+                 'live_ids':[1,2],'live_factory_count':2,'live_non_template_ids':[2]}
+        result=consolidate([('host_network_registry',json.dumps(receipt).encode())])
+        self.assertEqual(result['rows'][0]['cluster'],'link')
+        receipt['live_non_template_ids']=[]
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('host_network_registry',json.dumps(receipt).encode())])
+
     def test_live_script_registry_and_binding_partitions(self):
         registry={'total':1,'counts':{'unknown':1},'registry_count':1,
                   'registry_entries':[{'name':'A'}], 'matched_candidates':1,

@@ -1,5 +1,31 @@
 # S3 link and registration closure — inventory in progress
 
+## Live network factory registry — 2026-10-04
+
+The retained host ELF contains 32 live factories after static initialization.
+All 29 template IDs pass original `NetworkObjectFactoryMgrClass::Find_Factory`
+lookup; virtual Get_Class_ID agrees with each traversed entry. A bounded list
+walk checks cycles, reverse links and duplicate IDs, including custom factories.
+An absent ID returns null. Dev220 ARM symbols contain the same 29 template IDs.
+
+Three live IDs fall outside the template denominator: 1000 is the original
+NetworkGameObjectFactoryClass in combat/basegameobj.cpp; 2004 and 2005 are the
+port's purchase and team-purchase factories. Their class symbols are also retained
+in the ARM listing. These are source/symbol associations, not ARM execution proof.
+No objects or packets were created and no network traffic or device action occurred.
+
+Reproduce using `tools/probe_host_network_registry.py` with the retained host
+binary and Dev220 symbol listing. The public `host_network_registry.json` receipt
+binds binary, symbol listings, parser and five factory-owner source hashes.
+All 29 template rows remain unknown behavior. Creation, serialization, packet
+dispatch, protocol compatibility and physical initialization remain open.
+Sixteen focused parser/consolidation tests pass. The register now retains 43,383
+overlapping records, including 43,119 unknowns. Runtime source/artifacts are unchanged.
+
+Coverage risk: source declarations absent from both compiled symbol denominators
+remain in the broader S3 inventory; a passing lookup does not excuse their omission.
+Further dynamic/custom registrars and game-mode/prototype activation remain open.
+
 ## Live script registry and all-map bindings — 2026-10-03
 
 The retained host binary has 1,636 live script factories. Original

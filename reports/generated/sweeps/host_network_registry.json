@@ -1,0 +1,445 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_network_lookup_and_arm_symbols",
+  "binary_sha256": "bb685247f73b1e85377e9f209c55586d06a159d55c9021254873f5145c47b5a2",
+  "symbol_listing_sha256": "e07a3e13a332c2f5285ff574e6e90d8c57fdab97bc5c428f78ada0eedc12490e",
+  "arm_symbols_sha256": "ac884987047dc2bc2316eadb3f9aa50f6f48b54e18e5695196041b674815df75",
+  "parser_sha256": "da925bad9286630493afaec4ed759a2dbb98ed70668731cd7b216c47288ea46f",
+  "owner_source_sha256": {
+    "staging/wwnet/networkobjectfactory.h": "4950b5c217218d6616a7009b869019b78a6992356683fcfc4abe06c208d8a596",
+    "staging/wwnet/networkobjectfactory.cpp": "f7595bbf207cd803e11c357a3f0ffbdddfad654e97ef4fc66e03cb652f138ddd",
+    "staging/wwnet/networkobjectfactorymgr.cpp": "8288776981944a611badcd4c1f2099d25a91b325490cb94b414744be8f1c81b1",
+    "staging/combat/basegameobj.cpp": "bfb14eeb3a5e32c0d58f1fb3b741b0a045ca54065e75d4408e511a3f29a157d7",
+    "port/platform/renegade_tt_purchase_network.cpp": "bd8908db63e2e0ba6a15decd53836c9d570e4b66686b9b0b8f2452280e66dd0f"
+  },
+  "total": 29,
+  "matched": 29,
+  "live_factory_count": 32,
+  "live_ids": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1012,
+    1013,
+    1014,
+    1015,
+    1016,
+    1017,
+    1018,
+    1019,
+    1021,
+    1024,
+    1025,
+    1026,
+    1027,
+    1032,
+    1033,
+    1034,
+    1037,
+    1038,
+    1040,
+    2003,
+    2004,
+    2005
+  ],
+  "live_non_template_ids": [
+    1000,
+    2004,
+    2005
+  ],
+  "arm_template_ids": 29,
+  "arm_only_ids": [],
+  "rows": [
+    {
+      "class_id": 1001,
+      "classes": [
+        "cScTextObj"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cScTextObj"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1002,
+      "classes": [
+        "cPlayerKill"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cPlayerKill"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1003,
+      "classes": [
+        "cWinEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cWinEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1004,
+      "classes": [
+        "cPurchaseResponseEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cPurchaseResponseEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1007,
+      "classes": [
+        "cSvrGoodbyeEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cSvrGoodbyeEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1008,
+      "classes": [
+        "cGameOptionsEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cGameOptionsEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1009,
+      "classes": [
+        "cEvictionEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cEvictionEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1010,
+      "classes": [
+        "cTeam"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cTeam"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1011,
+      "classes": [
+        "cPlayer"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cPlayer"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1012,
+      "classes": [
+        "cGameDataUpdateEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cGameDataUpdateEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1013,
+      "classes": [
+        "cScPingResponseEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cScPingResponseEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1014,
+      "classes": [
+        "cScExplosionEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cScExplosionEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1015,
+      "classes": [
+        "cScObeliskEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cScObeliskEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1016,
+      "classes": [
+        "SCAnnouncement"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "SCAnnouncement"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1017,
+      "classes": [
+        "cGameSpyScChallengeEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cGameSpyScChallengeEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1018,
+      "classes": [
+        "CClientControl"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "CClientControl"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1019,
+      "classes": [
+        "cCsTextObj"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cCsTextObj"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1021,
+      "classes": [
+        "cChangeTeamEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cChangeTeamEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1024,
+      "classes": [
+        "cPurchaseRequestEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cPurchaseRequestEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1025,
+      "classes": [
+        "cClientGoodbyeEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cClientGoodbyeEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1026,
+      "classes": [
+        "cBioEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cBioEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1027,
+      "classes": [
+        "cLoadingEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cLoadingEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1032,
+      "classes": [
+        "CClientFps"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "CClientFps"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1033,
+      "classes": [
+        "cCsPingRequestEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cCsPingRequestEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1034,
+      "classes": [
+        "cCsDamageEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cCsDamageEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1037,
+      "classes": [
+        "cCsHint"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cCsHint"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1038,
+      "classes": [
+        "CSAnnouncement"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "CSAnnouncement"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 1040,
+      "classes": [
+        "cGameSpyCsChallengeResponseEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "cGameSpyCsChallengeResponseEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 2003,
+      "classes": [
+        "(anonymous namespace)::RenegadeTTWeaponAmmoEvent"
+      ],
+      "found": true,
+      "matches": true,
+      "arm_classes": [
+        "(anonymous namespace)::RenegadeTTWeaponAmmoEvent"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    }
+  ],
+  "negative_control": "An absent ID returned null.",
+  "limits": [
+    "Host static initialization and lookup only; ARM initialization remains open.",
+    "No object creation, packet handling, network traffic or device interaction.",
+    "Template symbols do not enumerate custom factory subclasses.",
+    "Debugger leak checking disabled; sanitizer evidence remains separate."
+  ]
+}

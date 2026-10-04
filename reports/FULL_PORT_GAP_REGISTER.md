@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 20 supplements is retained, including nested records.
+status record in the eight sweeps and 21 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -40,6 +40,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | missing_definition_callers | 28 | 28 | False |
 | host_script_registry | 1745 | 1745 | False |
 | live_script_bindings | 27 | 27 | False |
+| host_network_registry | 29 | 29 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -8708,6 +8709,35 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | host_definition_registry /rows/7 | /rows/7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_definition_registry /rows/8 | /rows/8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_definition_registry /rows/9 | /rows/9 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/0 | /rows/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/1 | /rows/1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/10 | /rows/10 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/11 | /rows/11 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/12 | /rows/12 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/13 | /rows/13 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/14 | /rows/14 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/15 | /rows/15 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/16 | /rows/16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/17 | /rows/17 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/18 | /rows/18 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/19 | /rows/19 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/2 | /rows/2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/20 | /rows/20 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/21 | /rows/21 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/22 | /rows/22 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/23 | /rows/23 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/24 | /rows/24 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/25 | /rows/25 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/26 | /rows/26 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/27 | /rows/27 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/28 | /rows/28 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/3 | /rows/3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/4 | /rows/4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/5 | /rows/5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/6 | /rows/6 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/7 | /rows/7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/8 | /rows/8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_network_registry /rows/9 | /rows/9 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/0 | Dr_Mobius_Script | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/1 | MXX_Group_Member_DEL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/10 | MTU_Nod_Apache | unknown | unclassified | unknown; callers and retail usage require reconciliation |

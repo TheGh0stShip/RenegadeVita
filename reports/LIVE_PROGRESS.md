@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Live network factory registration — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: 29/29 template IDs pass original host lookup; a bounded traversal
+verifies 32 live factories, including three custom IDs. ARM template IDs agree.
+Evidence: 16 focused tests pass; binary/symbol/source hashes retained. No runtime
+source change, packet handling, traffic, emulator launch or device action.
+Next: game-mode/prototype activation and remaining all-map parameter coverage.
+Blocker: none for discovery; ARM execution and protocol behavior remain open.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Live script registration and bindings — 2026-10-03
 
 Renegade Vita — v3.5 active

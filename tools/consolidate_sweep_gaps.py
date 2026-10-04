@@ -13,12 +13,13 @@ SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
                'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts',
                'database_chunks', 'level_persist_closure', 'database_persist_closure',
                'host_definition_registry', 'database_definition_closure', 'definition_instances',
-               'missing_definition_callers', 'host_script_registry', 'live_script_bindings')
+               'missing_definition_callers', 'host_script_registry', 'live_script_bindings', 'host_network_registry')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 ISSUES['procedural_fvf_layouts'] = 6
 ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_closure',
                                   'host_definition_registry', 'database_definition_closure', 'host_script_registry')})
 ISSUES['live_script_bindings'] = 9
+ISSUES['host_network_registry'] = 7
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -87,9 +88,14 @@ def root_records(name, value):
             raise ValueError('Persistence denominator mismatch')
         if totals['without_arm_symbol']!=sum(not r['arm_load_symbol_present'] for r in rows) or totals['without_host_lookup']!=sum(not r['host_lookup_matches'] for r in rows):
             raise ValueError('Persistence evidence partition mismatch')
-    elif name=='host_definition_registry':
+    elif name in {'host_definition_registry', 'host_network_registry'}:
         if value['total']!=len(rows) or value['matched']!=sum(r['matches'] for r in rows):
             raise ValueError('Definition lookup denominator mismatch')
+        if name=='host_network_registry':
+            ids=value['live_ids']
+            expected={r['class_id'] for r in rows}
+            if value['live_factory_count']!=len(ids) or len(set(ids))!=len(ids) or value['live_non_template_ids']!=sorted(set(ids)-expected):
+                raise ValueError('Network live registry partition mismatch')
     elif name=='database_definition_closure':
         if totals['persistence_ids']!=len(rows) or totals['mapped']!=sum(bool(r['definition_class_ids']) for r in rows) or totals['unmapped']!=len(rows)-totals['mapped'] or totals['ambiguous']!=sum(r['class_id_mapping_ambiguous'] for r in rows):
             raise ValueError('Definition closure partition mismatch')
@@ -202,7 +208,7 @@ def consolidate(inputs):
                          'evidence_class': record.get('evidence_class', 'parent_inventory_metadata'),
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
                          'cluster': ('renderer' if name=='procedural_fvf_layouts' else
-                                     'link' if name in {'host_definition_registry', 'host_script_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
+                                     'link' if name in {'host_definition_registry', 'host_script_registry', 'host_network_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
                                      'scripts' if name=='live_script_bindings' else
                                      'retail' if name in SUPPLEMENTS else name)})
             count += 1

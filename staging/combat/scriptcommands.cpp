@@ -1634,6 +1634,10 @@ void	Load_Data( ScriptLoader & loader, int size, void * data )
 {
 	SCRIPT_PTR_CHECK( data );
 	unsigned int chunkSize = loader.CLoad.Cur_Micro_Chunk_Length();
+	if (size < 0 || chunkSize > static_cast<unsigned int>(size)) {
+		fprintf(stderr, "script load: field exceeds destination capacity\n");
+		return;
+	}
 	WWASSERT((unsigned)size >= chunkSize);
 	loader.CLoad.Read(data, chunkSize);
 	WWASSERT((unsigned)size <= 250);		// Make sure we don't save too much

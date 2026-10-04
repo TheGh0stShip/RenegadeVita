@@ -42,6 +42,7 @@ class CinematicSaveTests(unittest.TestCase):
             self.assertIn("Original cinematic command parameter parsing: 7 cases and independent cursors PASS", result.stdout)
             self.assertIn("Original cinematic save/load camera, clock, slots and commands PASS", result.stdout)
             self.assertIn("Original cinematic pending audio executes once after save/load PASS", result.stdout)
+            self.assertIn("Original cinematic malformed command lengths and termination: 4 cases PASS", result.stdout)
             if retained:
                 receipt = {
                     "schema_version": 1,
@@ -54,10 +55,11 @@ class CinematicSaveTests(unittest.TestCase):
                                      "staging/scripts/ScriptFactory.cpp", "staging/scripts/ScriptRegistrar.cpp",
                                      "staging/scripts/strtrim.cpp")},
                     "parameter_cases": 7, "independent_cursors_passed": True,
+                    "malformed_command_cases": 4,
                     "save_load_passed": True, "pending_audio_once_passed": True,
                     "asan_ubsan_passed": True,
                     "limits": ["Synthetic mutable strings and fixture chunk transport; no retail payloads.",
-                               "Full command dispatch, malformed save fields and retail playback remain open.",
+                               "Full command dispatch, other malformed save fields and retail playback remain open.",
                                "Host LP64 probe does not prove ARM ILP32 serialization or physical behavior."]
                 }
                 (Path(directory) / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")

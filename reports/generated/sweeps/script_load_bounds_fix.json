@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_sanitizers_and_arm_compile_link",
+  "candidate": "A3.5-dev221",
+  "fast_contract_tests_passed": 475,
+  "source_sha256": {
+    "staging/combat/scriptcommands.cpp": "41d23acbaff05b40c9fb680b296caba8b24ce2d564239acec1fca73b29a6823a",
+    "staging/scripts/Test_Cinematic.cpp": "de1ba39ba0b572009bcf2676e61e774c0bc86fb48822f77e715e71c23912e4f6",
+    "port/patches/combat-a35-script-load-capacity.patch": "8019baceb3ad790a7f32dcf247cc42a6c08e477b3a26f97999c491176d4818f9",
+    "port/patches/scripts-a35-cinematic-command-load-bounds.patch": "eb346e410975244ea99fcd63b94ac0e000c45f1065a1ad3afb4d7347ba695571",
+    "tools/test_script_load_capacity.py": "9ba08d1ec4454962e87f066ba00a5bb31173c78e018b853749bf274e8117f255",
+    "tools/host_cinematic_save_test.cpp": "e7dc333ba5a44349d387575298646e911d4f4d1d8a3f6864c9724e1bbd861c82",
+    "tools/test_cinematic_save.py": "277332c5c2f4d2f56d107e9c186d1aee9a3b967e816a5fc2a223832a28a26926",
+    "tools/build_fast_candidate.sh": "b29b018882dfc07dca56040681a7fc6f7b19e3674b17b4cbfeb3ca1c56b679af"
+  },
+  "elf_sha256": "1d8cf49d16c6b12b61619003e5404be132dace753f86619ec67e20b24a33b3e6",
+  "map_sha256": "45ff1e0a7e08f65026c43d98341ab5822f71158b3ebb265e77bf1514f4de49cc",
+  "host_runtime_sha256": "03d9be8e712794b8ef968a6d93dc4657f54b071cb7a5a43d665025c3e1494f34",
+  "load_capacity_cases": 6,
+  "malformed_cinematic_command_cases": 4,
+  "original_parser_cases": 7,
+  "host_sanitizers_passed": true,
+  "host_runtime_build_passed": true,
+  "arm_build_passed": true,
+  "canonical_package_passed": false,
+  "native_acceptance_gates_closed": 0,
+  "limits": [
+    "Fixture chunk transport; real save error propagation and other malformed fields remain open.",
+    "No Vita3K launch or physical test; no native gameplay acceptance.",
+    "Existing ARM wchar_t linker warnings remain unresolved; compile success does not prove cross-owner wide-character ABI."
+  ]
+}

@@ -7,6 +7,11 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+def remove_command_bounds_patch(path, args):
+    if 'if ( len > 0 && len < MAX_COMMAND_LOAD_SIZE )' in path.read_text():
+        patch = (ROOT / 'port/patches/scripts-a35-cinematic-command-load-bounds.patch').read_bytes()
+        subprocess.run(args + ['--reverse'], input=patch, capture_output=True, check=True)
+
 
 class CinematicFilenameDiagnosticsTests(unittest.TestCase):
     def test_primary_callback_buffer_covers_signed_32_bit_ids(self):
@@ -14,6 +19,7 @@ class CinematicFilenameDiagnosticsTests(unittest.TestCase):
             path = Path(directory) / 'Test_Cinematic.cpp'
             path.write_bytes((ROOT / 'staging/scripts/Test_Cinematic.cpp').read_bytes())
             args = ['patch', '--batch', '--fuzz=0', '--no-backup-if-mismatch', '-p1', '-d', directory]
+            remove_command_bounds_patch(path, args)
             filename_patch = (ROOT / 'port/patches/scripts-a35-cinematic-filename-diagnostics.patch').read_bytes()
             primary_patch = (ROOT / 'port/patches/scripts-a35-cinematic-primary-id-buffer.patch').read_bytes()
             if 'char id[12]' in path.read_text():
@@ -36,6 +42,7 @@ class CinematicFilenameDiagnosticsTests(unittest.TestCase):
             path = Path(directory) / 'Test_Cinematic.cpp'
             path.write_bytes((ROOT / 'staging/scripts/Test_Cinematic.cpp').read_bytes())
             args = ['patch', '--batch', '--fuzz=0', '--no-backup-if-mismatch', '-p1', '-d', directory]
+            remove_command_bounds_patch(path, args)
             if 'Failed to open DATA\\\\%s' in path.read_text():
                 if 'char id[12]' in path.read_text():
                     primary = (ROOT / 'port/patches/scripts-a35-cinematic-primary-id-buffer.patch').read_bytes()

@@ -440,10 +440,12 @@ public:
 						}
 						if ( id == CHUNKID_CONTROL_COMMAND ) {
 							#define	MAX_COMMAND_LOAD_SIZE 200
-							char load_command[MAX_COMMAND_LOAD_SIZE+1];
-							if ( len < MAX_COMMAND_LOAD_SIZE ) {
+							char load_command[MAX_COMMAND_LOAD_SIZE+1] = {};
+							if ( len > 0 && len < MAX_COMMAND_LOAD_SIZE ) {
 								Commands->Load_Data(loader, len, &load_command[0] );
-								Add_Control_Line( time, load_command );
+								if (load_command[len - 1] == '\0') {
+									Add_Control_Line( time, load_command );
+								}
 //Commands->Debug_Message( "Loading Command %f %s\n", time, load_command );
 							}
 						}

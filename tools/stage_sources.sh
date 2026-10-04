@@ -1046,6 +1046,10 @@ test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
 	"4196cdbae396e06dd4a5e1d5946509be01191f75735274763c223aea50c64d97"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-primary-id-buffer.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-script-load-capacity.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-command-load-bounds.patch"
 test "$(sha256sum "$rv_stage/ww3d2/dazzle.cpp" | cut -d' ' -f1)" = \
 	"2bbcba91d75327b7fa35b4c1f50718ab05d3b252a687a78d0b3c62a90dfefd58"
 test "$(sha256sum "$rv_stage/ww3d2/ww3d.cpp" | cut -d' ' -f1)" = \

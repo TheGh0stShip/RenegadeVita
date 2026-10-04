@@ -19,7 +19,7 @@ class MaterialCacheTests(unittest.TestCase):
             (directory / 'material-production.inc').write_text('\n'.join([
                 section('Vector3 Normalize_Or_Default(', 'Vector3 Compute_Camera_Space_Position('),
                 section('Vector3 Compute_World_Space_Normal(', 'Vector3 Compute_Camera_Space_Reflection('),
-                section('float Clamp01(', 'void Log_System_Memory(')]))
+                section('float Clamp01(', 'void Log_System_Memory(').replace('#if defined(__vita__)\n', '', 1)]))
             command = ['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
                        '-I' + temporary, str(ROOT / 'tools/vita_material_cache_test.cpp'),
                        '-o', str(directory / 'material')]

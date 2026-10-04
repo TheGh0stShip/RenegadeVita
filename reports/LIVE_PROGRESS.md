@@ -9292,3 +9292,16 @@ S1: 3,574 rows; S2: 3,116 rows; source review identities reconcile.
 Next: original lighting/material and additional UV behavior, then category
 ownership activation. Seventy layout admission gaps remain open.
 Blocker: none for source work; native pixels and mission acceptance remain open.
+
+# Script save-load bounds cluster — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: shared load capacity and cinematic command restore bounds; both
+regressions are in the fast-build gate. Stale renderer extraction fixtures
+now follow production layout decoding without changing renderer behavior.
+Evidence: six capacity/four malformed command cases pass sanitizers; host
+runtime rebuild/light smoke and Dev221 ARM compile/link pass; 475 contracts pass.
+Next: real save transport and command behavior classification across all maps.
+Blocker: none for source work; native save/load and mission acceptance remain open.

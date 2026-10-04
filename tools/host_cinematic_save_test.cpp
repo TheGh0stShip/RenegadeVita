@@ -63,6 +63,23 @@ static void Check_Command_Parameters()
 	puts("Original cinematic command parameter parsing: 7 cases and independent cursors PASS");
 }
 
+static void Check_Saved_Command_Bounds()
+{
+	static_assert(sizeof(int) == 4, "Original saved command length is 32-bit");
+	for (int length : {-1, 0, 200, 4}) {
+		SavedField size_field = {CHUNKID_CONTROL_COMMAND_SIZE, std::vector<unsigned char>(sizeof(length))};
+		memcpy(size_field.bytes.data(), &length, sizeof(length));
+		ScriptSaver saved;
+		saved.chunks.push_back({CHUNKID_CONTROL_LINES, {
+			size_field, {CHUNKID_CONTROL_COMMAND, {'n', 'o', 'n', 'e'}}}});
+		ScriptLoader loader(saved);
+		Test_Cinematic restored;
+		restored.Load(loader);
+		assert(restored.Controls == nullptr);
+	}
+	puts("Original cinematic malformed command lengths and termination: 4 cases PASS");
+}
+
 int main()
 {
 	Check_Command_Parameters();
@@ -108,6 +125,7 @@ int main()
 	};
 	commands.Load_End = [](ScriptLoader &loader) { ++loader.field; };
 	Commands = &commands;
+	Check_Saved_Command_Bounds();
 
 	for (bool camera : {false, true}) {
 		Test_Cinematic original;

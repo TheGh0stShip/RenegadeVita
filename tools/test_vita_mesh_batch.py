@@ -17,7 +17,7 @@ class MeshBatchTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='renegade-mesh-batch-') as folder:
             p = Path(folder)
             (p / 'production.inc').write_text(source[start:end])
-            start = source.index('\tconst uint32_t diffuse_offset = 24U;',
+            start = source.index('\tconst uint32_t diffuse_offset = category_layout.diffuse_offset;',
                                  source.index('OriginalTextureCoordinateState texture_coordinates[MAX_TEXTURE_STAGES]'))
             end = source.index('\n\tconst uint32_t emitted_triangles', start)
             (p / 'indexed-production.inc').write_text(source[start:end])

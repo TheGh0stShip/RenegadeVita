@@ -225,3 +225,23 @@ retail parameter matching across every map, original misspellings and MSVC
 semantic dependencies. Indirect/helper/global calls remain open coverage risks.
 The 179-command count is broader than campaign-only counts and does not
 contradict them. Full S5 and native mission acceptance remain incomplete.
+
+## Save-load bounds cluster — 2026-10-04
+
+The eight-call destination inventory exposed a shared capacity check that
+previously depended on assertions. Original Load_Data now rejects negative
+capacity and oversized microchunks before reading. Cinematic command restore
+initializes its buffer and requires a positive, bounded length and final NUL.
+Original chunk formats and valid command behavior remain unchanged.
+
+Six shared-boundary cases pass with assertions disabled under ASan/UBSan;
+four malformed cinematic cases, seven parser cases, cursor independence and
+saved pending-audio replay pass. Host runtime rebuild and light smoke pass.
+A3.5-dev221 ARM compile/link and artifact checks pass. The fast-build gate now
+includes both regressions. Two stale renderer extraction fixtures were repaired
+without changing the production renderer; sanitized batching equivalence passes.
+See [matching receipt](generated/sweeps/script_load_bounds_fix.json).
+
+Real save transport error propagation, other malformed fields and physical
+save/load remain open. Native mission acceptance stays 0/10. Earlier inventories
+and parser receipts retain their historical source/artifact identities.

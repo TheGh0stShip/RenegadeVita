@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <vector>
 #include "ww3d_vita_indexed_mesh_batch.h"
+#include "category_fvf_layout.h"
 #define __vita__ 1
 struct Vector2 { float X,Y; };
 struct Vector3 { float X,Y,Z; Vector3(float x=0,float y=0,float z=0):X(x),Y(y),Z(z){} };
@@ -13,7 +14,7 @@ struct Matrix3D { float offset; };
 struct RenderInfoClass {};
 struct MaterialLightDirections {};
 struct Name { const char *Peek_Buffer() const { return "fixture"; } };
-struct VertexMaterialClass { enum { COLOR1=1, COLOR2=2 }; unsigned id; };
+struct VertexMaterialClass { enum { COLOR1=1, COLOR2=2 }; unsigned id; bool Get_Lighting() const { return false; } };
 struct MeshMatDescClass { enum { MAX_TEX_STAGES=2 }; };
 struct OriginalTextureCoordinateState { unsigned texcoord_index=0,texture_transform_flags=0; };
 enum { GL_TEXTURE0=0, GL_TEXTURE1=1, GL_TRIANGLES=4, D3DTSS_TCI_PASSTHRU=0 };
@@ -157,15 +158,25 @@ static void run(MeshModelClass *model,MeshClass &mesh,RenderInfoClass &render_in
     const Matrix3D original_world_transform={.25f},original_view_transform={-.5f};
     #include "production.inc"
 }
+struct FixtureDrawState { VertexMaterialClass *material; };
 struct Submission {
     const unsigned char *vertex_data;
     const uint16_t *index_data;
     uint32_t vertex_stride,triangle_count,first_index,base_vertex_index;
     const float *world_transform,*view_transform;
     const char *texture_names[2];
+    const FixtureDrawState *draw_state=nullptr;
 };
+// This fixture checks unlit batching equivalence; lighting has separate probes.
+static bool Evaluate_Indexed_Primary_Color(const Submission &,uint32_t,float *) {
+    assert(false && "lighting is outside this batching fixture");
+    return false;
+}
 static void run_indexed(const Submission &submission,bool dynamic_two_uv_layout,bool fused_index_preparation) {
     const bool mesh_layout=!dynamic_two_uv_layout;
+    RenegadeVitaRenderer::CategoryFVFLayout category_layout={};
+    assert(RenegadeVitaRenderer::Decode_Category_FVF(dynamic_two_uv_layout ? 0x252U : 0x152U,category_layout));
+    assert(category_layout.stride==submission.vertex_stride);
     OriginalTextureCoordinateState texture_coordinates[2]={{0,2},{1,3}};
     #include "indexed-production.inc"
 }

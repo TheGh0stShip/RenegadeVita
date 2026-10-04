@@ -1,4 +1,13 @@
 {
+  "script_load_bounds_20261004": {
+    "state": "HOST_SANITIZERS_ARM_LINK_PASS_NATIVE_SAVE_LOAD_OPEN",
+    "candidate": "A3.5-dev221",
+    "load_capacity_cases_passed": 6,
+    "malformed_cinematic_cases_passed": 4,
+    "receipt": "reports/generated/sweeps/script_load_bounds_fix.json",
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "indexed_primary_lighting_20261003": {
     "state": "HOST_SANITIZERS_ARM_LINK_PASS_SECONDARY_AND_NATIVE_PIXELS_OPEN",
     "candidate": "A3.5-dev220",

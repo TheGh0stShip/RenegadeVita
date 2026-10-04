@@ -8,6 +8,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class OriginalDazzleLifecycle(unittest.TestCase):
+    def test_pointgroup_tables_follow_material_init_and_precede_teardown(self):
+        with tempfile.TemporaryDirectory() as directory:
+            replay(directory)
+            ww3d = Path(directory, 'ww3d.cpp').read_text()
+        init = ww3d.split('WW3DErrorType WW3D::Init(', 1)[1].split('#else', 1)[0]
+        shutdown = ww3d.split('WW3DErrorType WW3D::Shutdown(', 1)[1].split('#else', 1)[0]
+        self.assertEqual(init.count('PointGroupClass::_Init();'), 1)
+        self.assertLess(init.index('VertexMaterialClass::Init();'), init.index('PointGroupClass::_Init();'))
+        self.assertLess(init.index('PointGroupClass::_Init();'), init.index('IsInitted = true;'))
+        self.assertEqual(shutdown.count('PointGroupClass::_Shutdown();'), 1)
+        self.assertLess(shutdown.index('Free_Assets();'), shutdown.index('PointGroupClass::_Shutdown();'))
+        self.assertLess(shutdown.index('PointGroupClass::_Shutdown();'), shutdown.index('VertexMaterialClass::Shutdown();'))
+        self.assertLess(shutdown.index('PointGroupClass::_Shutdown();'), shutdown.index('RenegadeVitaRenderer::Shutdown();'))
+
     def test_anchored_replay_and_native_original_visibility_body(self):
         with tempfile.TemporaryDirectory() as directory:
             replay(directory)

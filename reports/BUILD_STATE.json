@@ -1,4 +1,25 @@
 {
+  "pointgroup_lifecycle_20261004": {
+    "candidate_failed_physical": "A3.5-dev229",
+    "failure": "tutorial crash before Logan conversation",
+    "movies_menu_user_observation": "visible smooth playback without audio issues; readable original menu; navigation confirmed",
+    "installed_self_sha256": "78e59ac9795e13983d4c70f871e1f88b81c8637c3fa8b759ecddf38d5c192fef",
+    "dump_sha256": "95580ca9175d5af53818fd59c9012fa42d912d9345b2527b9c1d1abf882b3449",
+    "diagnosis_evidence_class": "source-derived private notes plus matching ELF disassembly and source inspection",
+    "diagnosis": "original PointGroup initialization omitted by native WW3D boundary",
+    "candidate_correction": "A3.5-dev230",
+    "lifecycle_source_tests_passed": 3,
+    "host_focused_tests_passed": 494,
+    "arm_compile_link_actions": 6,
+    "self_vpk_actions": 7,
+    "elf_sha256": "197ce0440ad8fc74a60329c594bac83a18c58a79229b973fbcfba52db7b53cab",
+    "self_sha256": "7d63179f2fb2d4d3b318889d739bcca049928280cf2651bc95d4bb2203e59c95",
+    "vpk_sha256": "48ae69571849a3fcf0829b0650a383159f5fbebe8e95bfe5ec8bf96aeeb6f871",
+    "vita3k_installed_hash_verified": true,
+    "vita3k_launched": false,
+    "state": "HOST_ARM_PACKAGE_EMULATOR_INSTALL_PASS_PHYSICAL_REPEAT_PENDING",
+    "physical_gameplay_accepted": false
+  },
   "projective_texture_coordinates_20261004": {
     "state": "PRODUCTION_REGRESSION_REPRODUCED_DEPENDENCY_HOST_ARM_LINK_PASS_GPU_UNVERIFIED",
     "candidate": "A3.5-dev229",

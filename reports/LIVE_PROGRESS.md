@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Dev229 tutorial crash; Dev230 correction — 2026-10-04
+
+The user reported a crash before Logan's conversation. The matching runtime
+log and process-matched PSP2 dump are retained privately. Source-derived dump
+registers and relocated disassembly point to a null triangle UV table read in
+original PointGroup rendering. Native startup omitted the original PointGroup
+initialization after the material pool. Dev230 restores initialization and
+paired shutdown; 494 full contracts, three lifecycle source tests and ARM/
+package identity pass. Vita3K title installation is hash verified without
+launch; physical repeat is pending.
+Movie/menu success remains separate; mission/runtime
+acceptance remains 0/10. See [crash evidence](POINTGROUP_LIFECYCLE_CRASH.md).
+
 ## Dev229 physical frontend test — 2026-10-04
 
 Renegade Vita — v3.5 active

@@ -1090,6 +1090,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-options-staging-closure.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-trim-overlap.patch"
+test "$(sha256sum "$rv_stage/ww3d2/ww3d.cpp" | cut -d' ' -f1)" = \
+	"04b3d415f749585678b1f41f2483b3c2644da47b467a0bf35b70d84a4246bf91"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-pointgroup-lifecycle.patch"
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()
 	for rv_dir in "${rv_managed_stage_dirs[@]}"; do

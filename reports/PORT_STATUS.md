@@ -1,5 +1,14 @@
 # Renegade Vita port status
 
+2026-10-04 Dev229 failed physical Tutorial testing before Logan's conversation.
+The process-matched dump supports missing original PointGroup table
+initialization at native startup. Dev230 restores the original lifecycle;
+494 full host checks, three lifecycle checks and ARM/package identity pass.
+Vita3K title installation is hash verified without launch; physical repeat
+is pending. Movie/menu observations
+do not establish gameplay acceptance. See
+[particle lifecycle evidence](POINTGROUP_LIFECYCLE_CRASH.md).
+
 2026-10-04 Dev229 physical Vita frontend validation resumed. The installed
 SELF hash matches the packaged candidate; the original executable backup is
 verified. Physical launch, startup movie decoding/audio and main-menu

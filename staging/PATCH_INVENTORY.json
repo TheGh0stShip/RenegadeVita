@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "7fe78a596982b60c6c5b3a27b4c63cfe1ebd9209e51dfe0490af2c8d1cff3839",
-  "patch_count": 315,
+  "stage_script_sha256": "65fa7a09f326a420191ffe10b375ad87bf2888beface248028e56a2af67f5cfd",
+  "patch_count": 316,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1578,7 +1578,12 @@
       "path": "port/patches/scripts-a35-trim-overlap.patch",
       "stage_directory": "scripts",
       "sha256": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701"
+    },
+    {
+      "path": "port/patches/ww3d-a35-pointgroup-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "cb339a1b3872803ba8fbdd375d16c1c6263c0d0e9ddb5f30881b8d95b9a14c9c"
     }
   ],
-  "registry_sha256": "f04781e30ee10efa37336a7b397e0011efb19e96eec93461d6336932cf183a5e"
+  "registry_sha256": "82729601ed8bae0a34906cba0c8346eec610f29c9eeedaff0ced30c1647df25a"
 }

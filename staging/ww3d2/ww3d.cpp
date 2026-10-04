@@ -286,6 +286,9 @@ WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 	Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
 		RenegadeVitaRenderer::DISPLAY_WIDTH, RenegadeVitaRenderer::DISPLAY_HEIGHT));
 	VertexMaterialClass::Init();
+	// Restore the original device-dependent particle tables and index buffers.
+	// PointGroup initialization requires the material preset pool above.
+	PointGroupClass::_Init();
 	if (!lite) {
 		FileClass * dazzle_ini_file = _TheFileFactory->Get_File(DAZZLE_INI_FILENAME);
 		if (dazzle_ini_file) {
@@ -373,6 +376,7 @@ WW3DErrorType WW3D::Shutdown(void)
 	if (WW3DAssetManager::Get_Instance()) {
 		WW3DAssetManager::Get_Instance()->Free_Assets();
 	}
+	PointGroupClass::_Shutdown();
 	RenegadeVita_Font_Shutdown();
 	VertexMaterialClass::Shutdown();
 	delete [] DefaultStaticSortLists;

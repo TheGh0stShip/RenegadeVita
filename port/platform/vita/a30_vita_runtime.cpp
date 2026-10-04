@@ -2,6 +2,7 @@
 
 #include "a31_capture_telemetry.h"
 #include "a35_campaign_flight_recorder.h"
+#include "renegade_async_log.h"
 #include "renegade_build_identity.h"
 
 #include "camera.h"
@@ -49,6 +50,11 @@ int Ensure_Runtime_Log_File()
 
 int Write_Runtime_Log_Line(const char *line, unsigned length)
 {
+#if !RENEGADE_VITA_M00_DEMO
+	// The shared writer thread appends in order; the game thread never waits
+	// on the memory card for an ordinary log line.
+	if (Renegade_Runtime_Log_Enqueue(line, length)) return 0;
+#endif
 	const SceUID file = Ensure_Runtime_Log_File();
 	if (file < 0) return file;
 	unsigned offset = 0;
@@ -70,6 +76,11 @@ int Write_Runtime_Log_Line(const char *line, unsigned length)
 
 int Sync_Runtime_Log_File()
 {
+#if !RENEGADE_VITA_M00_DEMO
+	// Blocks until every queued line is written and synced (no-op without a
+	// writer thread, whose direct writes are synced below).
+	Renegade_Runtime_Log_Flush();
+#endif
 	const SceUID file = Ensure_Runtime_Log_File();
 	return file >= 0 ? sceIoSyncByFd(file, 0) : file;
 }

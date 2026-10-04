@@ -104,7 +104,12 @@ void A35_Campaign_Flight_Record_Resource_Snapshot(uint32_t frame,
 	uint32_t open_attempts, uint32_t open_failures, uint32_t available_attempts,
 	uint32_t availability_failures, uint32_t read_calls, uint32_t read_bytes,
 	uint32_t write_calls, uint32_t write_bytes);
+// Shutdown, pre-clean-exit, fatal and final flushes are synchronous. Other
+// reasons are queued to a background writer on Vita (synchronous on host
+// unless enabled below), so periodic checkpoints never block the game thread.
 bool A35_Campaign_Flight_Flush(const char *reason);
+void A35_Campaign_Flight_Set_Background_Flush(bool enabled);
+void A35_Campaign_Flight_Wait_For_Background_Flush(void);
 // Bounded thread-safe transition collection; owner-thread drain only.
 // Enabled with existing script coverage opt-in. Frame 0 means unavailable.
 // Instance tokens are process-local diagnostics, absent from save chunks.

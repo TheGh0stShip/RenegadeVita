@@ -798,10 +798,21 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 		return trace;
 	}
 
-	trace.static_object_count = Count_Physics_Objects(
-		scene->Get_Static_Object_Iterator());
-	trace.dynamic_object_count = Count_Physics_Objects(
-		scene->Get_Dynamic_Object_Iterator());
+	// The object census walks every static and dynamic physics object and
+	// only feeds logs and capture snapshots. Refresh it every 120 frames (and
+	// for each new scene) rather than paying the pointer chase every frame.
+	static const PhysicsSceneClass *census_scene = NULL;
+	static uint32_t census_age = 0U;
+	static uint32_t census_static = 0U;
+	static uint32_t census_dynamic = 0U;
+	if (census_scene != scene || census_age == 0U) {
+		census_scene = scene;
+		census_static = Count_Physics_Objects(scene->Get_Static_Object_Iterator());
+		census_dynamic = Count_Physics_Objects(scene->Get_Dynamic_Object_Iterator());
+	}
+	census_age = (census_age + 1U) % 120U;
+	trace.static_object_count = census_static;
+	trace.dynamic_object_count = census_dynamic;
 	trace.static_light_count = static_cast<uint32_t>(scene->Get_Static_Light_Count());
 	trace.visibility_table_size = static_cast<uint32_t>(scene->Get_Vis_Table_Size());
 	trace.visibility_table_count = static_cast<uint32_t>(scene->Get_Vis_Table_Count());

@@ -182,6 +182,7 @@ int main()
 		if (screen_result >= 0) {
 			psvDebugScreenFinish();
 		}
+		A30_Vita_Log_Flush();
 		sceKernelExitProcess(1);
 		return 1;
 	}
@@ -286,6 +287,8 @@ int main()
 	/* The native app reaches this only after START or a durable diagnosed
 	** failure. Never touch or deploy retail data during shutdown. */
 	const int exit_code = runtime_ok ? 0 : 1;
+	// Drain the background log writer before the process ends.
+	A30_Vita_Log_Flush();
 	sceKernelExitProcess(exit_code);
 	return exit_code;
 }

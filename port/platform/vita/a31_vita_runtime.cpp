@@ -2296,8 +2296,15 @@ A35CampaignFlightAudioState Make_Flight_Audio_State()
 
 void Copy_Flight_Memory(A31MemoryTelemetry &output)
 {
-	RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
-	if (!RenegadeVitaRenderer::Query_Backend_Memory(memory)) return;
+	// A kernel query plus seven vitaGL allocator statistics walks is too much
+	// diagnostic work for every frame; memory columns repeat the latest
+	// sample and refresh every 30 frames.
+	static RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+	static uint32_t sample_age = 0U;
+	if (sample_age == 0U &&
+		!RenegadeVitaRenderer::Query_Backend_Memory(memory)) memory = {};
+	sample_age = (sample_age + 1U) % 30U;
+	if (!memory.available) return;
 	output.available = true;
 	output.system_user_free = memory.system_user_free;
 	output.system_cdram_free = memory.system_cdram_free;
@@ -4886,7 +4893,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					Log_Input_Telemetry();
 					Log_Audio_Runtime_Statistics("checkpoint", result.frames);
 					A35_Campaign_Flight_Flush("checkpoint");
-					A30_Vita_Log_Flush();
+					// The background log writer syncs on its own cadence; a
+					// blocking flush here stalled every checkpoint frame.
 				}
 			}
 				result.clean_exit_requested = !result.render_error &&

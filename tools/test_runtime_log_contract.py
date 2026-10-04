@@ -47,7 +47,14 @@ class RuntimeLogContractTest(unittest.TestCase):
         checkpoint = interactive.index('A35_Campaign_Flight_Flush("checkpoint")')
         fatal = interactive.index('A35_Campaign_Flight_Flush("best-effort-fatal-snapshot")')
         final = interactive.index('A35_Campaign_Flight_Flush("final")')
-        self.assertIn("A30_Vita_Log_Flush();", interactive[checkpoint:checkpoint + 150])
+        # Checkpoints no longer block the game thread on a memory-card sync:
+        # the background runtime-log writer syncs on its own bounded cadence.
+        self.assertNotIn("A30_Vita_Log_Flush();", interactive[checkpoint:checkpoint + 150])
+        runtime = (ROOT / "port/platform/vita/a30_vita_runtime.cpp").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("Renegade_Runtime_Log_Enqueue(line, length)", runtime)
+        self.assertIn("Renegade_Runtime_Log_Flush();", runtime)
         self.assertIn("A30_Vita_Log_Flush();", interactive[fatal:fatal + 150])
         self.assertIn("A30_Vita_Log_Flush();", interactive[final:final + 100])
 

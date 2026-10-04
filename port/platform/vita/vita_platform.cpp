@@ -4,6 +4,13 @@
 
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
+#if !RENEGADE_VITA_M00_DEMO
+#include "renegade_async_log.h"
+
+#include <psp2/kernel/cpu.h>
+#include <psp2/kernel/threadmgr.h>
+#include <pthread.h>
+#endif
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -78,7 +85,85 @@ int Write_Durable_Log_Line(SceUID file, const char *line, unsigned length)
 	return sceIoSyncByFd(file, 0);
 }
 
+#if !RENEGADE_VITA_M00_DEMO
+// One writer thread owns every runtime-log append after the first line.
+RenegadeAsyncLogRing g_runtime_log_ring;
+SceUID g_runtime_log_writer_file = -1;
+pthread_mutex_t g_runtime_log_start_mutex = PTHREAD_MUTEX_INITIALIZER;
+bool g_runtime_log_start_attempted = false;
+bool g_runtime_log_writer_running = false;
+pthread_t g_runtime_log_thread;
+
+enum : uint32_t { kRuntimeLogSyncIntervalMs = 1000U };
+
+bool Runtime_Log_Writer_Write(void *, const char *data, unsigned length)
+{
+	if (g_runtime_log_writer_file < 0) {
+		g_runtime_log_writer_file = sceIoOpen(kLogPath,
+			SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
+		if (g_runtime_log_writer_file < 0) return false;
+	}
+	unsigned offset = 0;
+	while (offset < length) {
+		const int written = sceIoWrite(g_runtime_log_writer_file, data + offset,
+			length - offset);
+		if (written <= 0) return false;
+		offset += static_cast<unsigned>(written);
+	}
+	return true;
+}
+
+bool Runtime_Log_Writer_Sync(void *)
+{
+	return g_runtime_log_writer_file >= 0 &&
+		sceIoSyncByFd(g_runtime_log_writer_file, 0) >= 0;
+}
+
+void *Runtime_Log_Writer_Thread(void *)
+{
+	// Keep memory-card writes and syncs off the game thread's core.
+	(void)sceKernelChangeThreadCpuAffinityMask(SCE_KERNEL_THREAD_ID_SELF,
+		SCE_KERNEL_CPU_MASK_USER_2);
+	g_runtime_log_ring.Run(kRuntimeLogSyncIntervalMs);
+	return NULL;
+}
+
+bool Start_Runtime_Log_Writer()
+{
+	pthread_mutex_lock(&g_runtime_log_start_mutex);
+	if (!g_runtime_log_start_attempted) {
+		g_runtime_log_start_attempted = true;
+		g_runtime_log_ring.Configure(Runtime_Log_Writer_Write,
+			Runtime_Log_Writer_Sync, NULL);
+		// Without a writer every caller keeps its original direct write.
+		if (pthread_create(&g_runtime_log_thread, NULL,
+			Runtime_Log_Writer_Thread, NULL) == 0) {
+			g_runtime_log_ring.Mark_Running();
+			g_runtime_log_writer_running = true;
+		}
+	}
+	const bool running = g_runtime_log_writer_running;
+	pthread_mutex_unlock(&g_runtime_log_start_mutex);
+	return running;
+}
+#endif
+
 } // namespace
+
+#if !RENEGADE_VITA_M00_DEMO
+bool Renegade_Runtime_Log_Enqueue(const char *line, unsigned length)
+{
+	if (!Start_Runtime_Log_Writer()) return false;
+	// A full ring drops (and later reports) rather than stalling the game.
+	(void)g_runtime_log_ring.Enqueue(line, length);
+	return true;
+}
+
+void Renegade_Runtime_Log_Flush()
+{
+	if (Start_Runtime_Log_Writer()) g_runtime_log_ring.Flush();
+}
+#endif
 
 int Vita_Append_A22_Runtime_Breadcrumb(const char *subsystem,
 	const char *format, ...)
@@ -92,6 +177,20 @@ int Vita_Append_A22_Runtime_Breadcrumb(const char *subsystem,
 		return -1;
 	}
 
+#if !RENEGADE_VITA_M00_DEMO
+	const unsigned queued_sequence = __atomic_add_fetch(
+		&g_renderer_breadcrumb_sequence, 1U, __ATOMIC_RELAXED);
+	char queued[640];
+	const int queued_count = snprintf(queued, sizeof(queued),
+		"[%s %s %03u] %s\n", kRendererMilestone,
+		subsystem != NULL ? subsystem : "renderer", queued_sequence, message);
+	if (queued_count > 0) {
+		const unsigned length = static_cast<unsigned>(
+			queued_count < static_cast<int>(sizeof(queued)) ? queued_count :
+			static_cast<int>(sizeof(queued) - 1));
+		if (Renegade_Runtime_Log_Enqueue(queued, length)) return 0;
+	}
+#endif
 	const SceUID file = Ensure_Renderer_Breadcrumb_Log();
 	if (file < 0) {
 		return file;

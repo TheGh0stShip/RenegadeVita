@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 32 supplements is retained, including nested records.
+status record in the eight sweeps and 33 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -52,6 +52,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | host_script_command_table | 202 | 202 | False |
 | cinematic_dispatch_dependencies | 18 | 18 | False |
 | script_portability | 90 | 6371 | False |
+| script_compiler_diagnostics | 45 | 51 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -37082,6 +37083,57 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | script_command_port_dependencies /rows/97 | Clear_Map_Region_By_Pos | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_command_port_dependencies /rows/98 | Reveal_Map | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_command_port_dependencies /rows/99 | Shroud_Map | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/0 | DLLmain.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/1 | DPrint.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/10 | Mission07.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/11 | Mission09.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/11/review_candidates/0 | /rows/11/review_candidates/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/12 | Mission10.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/12/review_candidates/0 | /rows/12/review_candidates/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/13 | Mission11.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/14 | MissionDemo.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/15 | MissionX0.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/16 | ScriptFactory.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/17 | ScriptRegistrar.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/18 | Test_BMG.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/19 | Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/2 | DrMobius.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/20 | Test_DAK.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/21 | Test_DAY.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/22 | Test_DLS.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/23 | Test_DME.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/24 | Test_GTH.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/25 | Test_JDG_EVA.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/26 | Test_PDS.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/26/review_candidates/0 | /rows/26/review_candidates/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/27 | Test_RAD.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/28 | Test_RMV.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/29 | Test_RMV_Toolkit.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/29/review_candidates/0 | /rows/29/review_candidates/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/29/review_candidates/1 | /rows/29/review_candidates/1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/3 | Mission00.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/30 | Toolkit.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/31 | Toolkit_Actions.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/32 | Toolkit_Animations.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/33 | Toolkit_Broadcaster.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/34 | Toolkit_Explosions.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/35 | Toolkit_Objectives.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/36 | Toolkit_Objects.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/37 | Toolkit_Powerup.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/38 | Toolkit_Siege.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/39 | Toolkit_Sounds.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/4 | Mission01.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/40 | Toolkit_Spawners.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/41 | Toolkit_Triggers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/42 | mission08.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/42/review_candidates/0 | /rows/42/review_candidates/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/43 | scripts.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/44 | strtrim.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/5 | Mission02.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/6 | Mission03.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/7 | Mission04.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/8 | Mission05.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_compiler_diagnostics /rows/9 | Mission06.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_load_destinations /rows/0 | Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_load_destinations /rows/1 | Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_load_destinations /rows/2 | Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |

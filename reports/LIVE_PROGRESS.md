@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Whole-script optimized compiler diagnostics — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:45 DSP rows retained;44 selected units compile in isolated outputs.
+Evidence:all GCC JSON parses succeed;seven tests include a real warning fixture.
+Source confirms M09 camera[5] is read through ten loop iterations;five further
+warnings need range/pointer-lifetime review. Runtime source remains unchanged.
+Next:actual M09 camera callback sanitizer and all-map activation provenance.
+Blocker:none for source investigation;native acceptance remains open.
+
 ## Mission03 host pointer exchange fix — 2026-10-04
 
 Renegade Vita — v3.5 active

@@ -1,5 +1,14 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Optimized compiler diagnostic denominator — 2026-10-04
+
+All44 selected DSP units compile with actual host target flags plus optimized
+uninitialized/return diagnostics. DLLmain remains unselected; all45 behavioral
+statuses remain unknown. Six review warnings include a source-confirmed M09
+camera array overrun, two parameter-buffer range leads and three pointer-cast
+leads. Seven tooling tests pass; no runtime source or native artifact changed.
+See [diagnostic ledger](SCRIPT_COMPILER_DIAGNOSTICS.md).
+
 ## Mission03 host pointer-exchange compatibility — 2026-10-04
 
 The three verified Mission03 synchronous out-parameter events now use scoped

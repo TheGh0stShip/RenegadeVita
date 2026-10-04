@@ -1,0 +1,818 @@
+{
+  "schema_version": 1,
+  "complete": false,
+  "total": 45,
+  "counts": {
+    "unknown": 45
+  },
+  "rows": [
+    {
+      "name": "DLLmain.cpp",
+      "status": "unknown",
+      "compile_command_matches": 0,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "ac0ec21192f5226784e53bbd9620310e9e27032fdb1d23840b50e965b8da3eb8",
+      "diagnostic_counts": {},
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "DPrint.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "f64d3570dd8ade92dbc403bd296409d5625f19a8afb5371757c86f6fad01ffb7",
+      "returncode": 0,
+      "object_sha256": "eba2e41f6798b884c94ad68f6fbc0fae79fd7bf0358cf39867a47a7d517a3ab0",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "DrMobius.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "8d9a2ecd3ad71359fddb818be0405cd46951f37fc519384aeb36213730a17e84",
+      "returncode": 0,
+      "object_sha256": "b03434f78cb760f8b71fa7c302d155d17478601845bd895a12d2b2d7110e3afc",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission00.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "704c72f791dd2baf7cfad41cc1f188e604fe67f7cb41bd4aa7ea82654fe63de7",
+      "returncode": 0,
+      "object_sha256": "2337cdb7621170784fd4df2cdebc37fa3f847c726db407033d47f6b5970d8607",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wconversion-null": 1,
+        "-Wwrite-strings": 6,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission01.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "9c28882b6476c6631c3eec5fadeb8383af46e668c9fc1b198c017d4b474cb901",
+      "returncode": 0,
+      "object_sha256": "eaf086419b1141bf22fda378e798f21ca45ee45f3dbd4c5366be337250f9acbb",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wconversion-null": 3,
+        "-Wpointer-arith": 1,
+        "-Wwrite-strings": 538,
+        "-fpermissive": 38,
+        "note": 3,
+        "warning": 3
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission02.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "e9779feff38fd4b8aa00a80cc1d8537c2f51ae99f27d7b9f29d06a7a13b13f20",
+      "returncode": 0,
+      "object_sha256": "968a6eeeb4a82bf59a87eb12788bde5b1dd30906ad0e9e510f10cd4c6f3e4006",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission03.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "29bbd6ae7244984c872e303816eb4d89742ea03153996243d485d16bb406c29f",
+      "returncode": 0,
+      "object_sha256": "76199ac3ac6fa0423180be10161cfb632a47296f68c5ad9ac7f5db7ef887f753",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 93,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission04.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "a065ab27dcd288b55f1fcab506d6badf3b35f1725c52444f32522d0fa3774657",
+      "returncode": 0,
+      "object_sha256": "cd039ff9b300976d21eeaf01c25aab772a1ffa4ff27b33459de118135f174625",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wconversion-null": 7,
+        "-Wwrite-strings": 67,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission05.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "7a5864f158dc8bab09619f06f0e763ff50149a40613c0e781cef31aa966c2a9f",
+      "returncode": 0,
+      "object_sha256": "e1b1a465ec0c5072ffb87f18113b7bb8f7e65be9c12ee704c530594fc9751cff",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 13,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission06.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "0cb75ea11d0a75828e1f981625c5cf1108c18f625150ed7bf5e9e284c2f2a063",
+      "returncode": 0,
+      "object_sha256": "2b238395513ed17e5e1c10550ab6b80b7d8e2d02012240a2a86a540c82bcde79",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 19,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission07.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "c20fc975b32bc8daf1cb6de3c4a6051bcbd16247a13288439728361c03dc10cd",
+      "returncode": 0,
+      "object_sha256": "7f263adfe636e98d1c223275a1bfa021c33f404b533094fa9498bcbdf25d75b4",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 12,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Mission09.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "d84a63190a795ae41d57ebc21e997544980971ad42c063dbc014ca147bb6e9cf",
+      "returncode": 0,
+      "object_sha256": "b9fe4f039869bd9272a0b72e79bd8632b9bc1138277e8b4d680dc3af938eba6d",
+      "diagnostic_counts": {
+        "-Waggressive-loop-optimizations": 1,
+        "-Wattributes": 7,
+        "-Wwrite-strings": 45,
+        "-fpermissive": 38,
+        "note": 1
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": [
+        {
+          "status": "unknown",
+          "option": "-Waggressive-loop-optimizations",
+          "message": "iteration 5 invokes undefined behavior",
+          "locations": [
+            {
+              "source": "staging/scripts/Mission09.cpp",
+              "line": 4608
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mission10.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "43914b8899442aff649c5f383503d4b5bcbcde6a8391a8698215adbdf878ed2f",
+      "returncode": 0,
+      "object_sha256": "a0ebde252bddf75e55437d4d6e3f9aee61792f249877c76ad0323ba0912ace55",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wformat-overflow=": 1,
+        "-Wwrite-strings": 18,
+        "-fpermissive": 38,
+        "note": 2
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": [
+        {
+          "status": "unknown",
+          "option": "-Wformat-overflow=",
+          "message": "\u2018%d\u2019 directive writing between 1 and 11 bytes into a region of size 10",
+          "locations": [
+            {
+              "source": "staging/scripts/Mission10.cpp",
+              "line": 1309
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mission11.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "8bc76b128c280985f90c5ab5da9847ff4697725fe86e1975d9129139e912d462",
+      "returncode": 0,
+      "object_sha256": "91766cb0702f1e5156503b0f32ab39999198858f7e9296bf2643c48c73f86c59",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 126,
+        "-fpermissive": 38,
+        "note": 3,
+        "warning": 3
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "MissionDemo.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "49f218e09c014e7752fd36d5c8bba17e4c246600248cfce61f36486e8e3fff04",
+      "returncode": 0,
+      "object_sha256": "807cc0dd265f666a5b9a98eef7ac8a8fdf2ae9f1129b7dd0518c2b719b43024c",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 1,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "MissionX0.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "06bfdbb9d1fc04b62fe2a7a7c77ab0476cc99172cbd2d0a344dacf17e902ea11",
+      "returncode": 0,
+      "object_sha256": "2adc05cd563d50810d8563a1a6a15aff16f0381cb9e7b5626031b9ec0b217729",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 34,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "ScriptFactory.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "b536f6f5b740117b2054cd70e10c4bec4f20a03531a53654cc04017753cb1988",
+      "returncode": 0,
+      "object_sha256": "05fc209066c902174afb669a1b20a45b4a293189dd1d4a0ed052f11af9f310ba",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "ScriptRegistrar.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "a3f7b2627e23ef7547ae018d0b7aedca430a7e0b3123e904c21199c91bc1de75",
+      "returncode": 0,
+      "object_sha256": "cf1986828508080a7c8afa4e2e99d775ee77eaa5043bfbf9be00762545a5ef25",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_BMG.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "954946dcb10983853cdd0e4391e4693a7253743200ac5900d5f47db76bbab43c",
+      "returncode": 0,
+      "object_sha256": "e7043ec168cc5cfd76bdb15e1a18a4ce604b56e2e1b96dd07738851bc9f42564",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 2,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_Cinematic.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "de1ba39ba0b572009bcf2676e61e774c0bc86fb48822f77e715e71c23912e4f6",
+      "returncode": 0,
+      "object_sha256": "0d65b808957c14c98285dce57f1fbd1e92cea622be442556f58dcc7364d84ee7",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wpointer-arith": 1,
+        "-Wwrite-strings": 24,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_DAK.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "d297706ac535d26eb50ff3e24e4c14a460e70b71250b37dcb596206e3c8c1e1b",
+      "returncode": 0,
+      "object_sha256": "daf352f0a006b068b2ef7a10398e6fcba1a6986fcd30dbe82e48d7ca901d5546",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_DAY.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "ce1c0938feb4cf8e30a3f40f2d70cfa9ca50c2fa0ad1f17f741e04e6af7779be",
+      "returncode": 0,
+      "object_sha256": "a87e54c2ad126d672f02f938737c077a71745e294a45c5b9cefa1e91a03255f4",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 1,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_DLS.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "cc7ba0e57c9ee612188909ccd7c4c3d2e153d20c9c6628603e42cea33da82d14",
+      "returncode": 0,
+      "object_sha256": "46c11d34b4bc2d34eb1e47aa04293f3ba1630bb3c435c0baef2777084761b217",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 21,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_DME.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "27aa94bbb6e2248ce1e2ef8390ae74403f9a7aad897ca80e905c76e3c5ad177d",
+      "returncode": 0,
+      "object_sha256": "e6d77d48ff8cad014ea1d4e37b1eea6c880aaa5f20c7df842cfc55584d99dca3",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 6,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_GTH.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "acd73b9e9b146d309df759fa76dc444ec992beb66ba9d11f408edd95e106fc0d",
+      "returncode": 0,
+      "object_sha256": "ad5304660d27ef2e3163467c6680d2a11bd5591dfd6ba8e4971d0cda99a23390",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 1,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_JDG_EVA.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "24c60cb0abb82b9b6f054cba7ab5aef5a117d513e778172bf2438e124614dff7",
+      "returncode": 0,
+      "object_sha256": "b109997000a46f891fc964e979d6afddfaa32e6073c7157646309b07a8ce4611",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 43,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_PDS.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "2cb8bfe32e2b7379d78c779853edb5b5c6bef6c39b27ba9741acbcc3c7b87089",
+      "returncode": 0,
+      "object_sha256": "ba4aa3a95f13c23bd352beaa14feef8ea227ce433273ce5072c6f2c454a3e8cc",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wint-to-pointer-cast": 1,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": [
+        {
+          "status": "unknown",
+          "option": "-Wint-to-pointer-cast",
+          "message": "cast to pointer from integer of different size",
+          "locations": [
+            {
+              "source": "staging/scripts/Test_PDS.cpp",
+              "line": 761
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Test_RAD.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "5699f1fc5df5441cc33b9ccc50b09d9017068bff776b2a99e98912bf4c87753a",
+      "returncode": 0,
+      "object_sha256": "bc19e9716c34813789287729c95ebed507cedf80e8e04c4adc55b06f7df49e16",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 2,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_RMV.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "d9a57c2a38ebf726a7d1bf756016b0ff96f0633b7907abdeb7388aac1cbf934f",
+      "returncode": 0,
+      "object_sha256": "aa125f7ecde6b0940e3fdc93be68fb4c7bbf09d49cc601367015d7e003152958",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 4,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Test_RMV_Toolkit.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "2fa9123f853cab4166abc137dfff48dc6e992fc3d5cca1009be066345c35d6c2",
+      "returncode": 0,
+      "object_sha256": "7e00cb1289264d5779bb349b27ba376066926709edfa6b92a5ee150b37aff8f1",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wint-to-pointer-cast": 2,
+        "-Wwrite-strings": 9,
+        "-fpermissive": 40
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": [
+        {
+          "status": "unknown",
+          "option": "-Wint-to-pointer-cast",
+          "message": "cast to pointer from integer of different size",
+          "locations": [
+            {
+              "source": "staging/scripts/Test_RMV_Toolkit.cpp",
+              "line": 195
+            }
+          ]
+        },
+        {
+          "status": "unknown",
+          "option": "-Wint-to-pointer-cast",
+          "message": "cast to pointer from integer of different size",
+          "locations": [
+            {
+              "source": "staging/scripts/Test_RMV_Toolkit.cpp",
+              "line": 218
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Toolkit.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "5dae4242f086d558623a9f6423770e7181eb1366057b40036c00c2e30335946b",
+      "returncode": 0,
+      "object_sha256": "ad7e548e1a4b0a0d231e5a130afbf145e6c90c84c718c287fd80a120c4a1fb97",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 59,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Actions.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "2f0c5e49fc1dbafd395d94e78734003c51d24aaab1ba4a0b0de0a2b00324314a",
+      "returncode": 0,
+      "object_sha256": "4868e0db2e7dcdd7706311d120bc52508ea7253f44e9385d4534f7495e5e7dd7",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Animations.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "fd25ec2354a0288c7298169b62a3f11f3bafb3cfecfab7e4c705f052346711ae",
+      "returncode": 0,
+      "object_sha256": "34c6c08f00942f44bf34a65ddf39854e9da26ccfa8e09f06d1b4bf561bcfd5ba",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Broadcaster.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "804bf998fbf4365d35a9fc9cccfcf04ace8419d024c396e07de5604232d24ace",
+      "returncode": 0,
+      "object_sha256": "168fbf8123151ad0b37225c9b76db50014fa7c66b36ae82327210a3a17fd3233",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Explosions.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "d2460a3c03eaf6f164e9cae1eb88d1a72e2e213cf9b6d1f76d035f1e57d75f21",
+      "returncode": 0,
+      "object_sha256": "f3aa5fb34bb59dc2ecd2593b0cfec01a9cb96664aa418cf6c6a6ba8acc47127a",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Objectives.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "c5e704e48fea3228064745dc2a307a4982b02e97221ef1a1d6115d6a9938f965",
+      "returncode": 0,
+      "object_sha256": "3ecd15b86d9bfffc896828c79b364553902ba7df2ffbf127b974539cc032aef5",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Objects.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "d0bdb057623476b214c3d2382916c573ecc3882fbb09fd1b785170b1b8263ea3",
+      "returncode": 0,
+      "object_sha256": "1cb3f28471b2126417e8e4f94699035d59e8eaeb7be868c534378d6c4848e9c6",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 11,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Powerup.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "7abd493cbb400dfdd9a6167395d50d5a8679ae2064e6a1f68b8bbfce0c9f0b9f",
+      "returncode": 0,
+      "object_sha256": "8f2a61092d375feecf7dee35185dd9154a14ea652c5f1bcbf423e7f951ee7697",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Siege.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "aeae5fb506e9c5951f4b01a015fcbf19720f4b2ccc8f1479676a8e82f6298b2a",
+      "returncode": 0,
+      "object_sha256": "b22a28080145d9568e29d6a3cf96bc4c454366f0096b8d8b85243bd7ba0ae133",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Sounds.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "6f4be24348eed4766da5712866f14b75e55008b96c60b2b6f3081c3f80fb2269",
+      "returncode": 0,
+      "object_sha256": "38dd5fecb3b6a12c44eeb52401cd1f79a97ece706c3065e171ddb94018a92768",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wwrite-strings": 4,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Spawners.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "defb69df51dd47a99b8e65b9ad0a5b2f5f2ba88adb6cdd92c1306c347db7c6b2",
+      "returncode": 0,
+      "object_sha256": "08182735a21706c7888d18101ad9e57114b0553a1085f525b8bea798821441f6",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "Toolkit_Triggers.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "8afbd8dcf80298b796f29fed691b035fca6337b42e24b89982d35f31825582bb",
+      "returncode": 0,
+      "object_sha256": "fd860af26ea5e115c20f6bb67f85b2ce7e4de2b08b35b7cb1d143ae155544d35",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "mission08.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "1384b63c785e8aedf2aa77e57473ee3e60466ac202dfc0dbd716179d3cdeec53",
+      "returncode": 0,
+      "object_sha256": "7c22fc975a5cd697f19da28330b997e3d452b7a82eb7dfd36d098ee1e6e329ab",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wformat-overflow=": 1,
+        "-Wpointer-arith": 1,
+        "-Wwrite-strings": 11,
+        "-fpermissive": 38,
+        "note": 2
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": [
+        {
+          "status": "unknown",
+          "option": "-Wformat-overflow=",
+          "message": "\u2018%d\u2019 directive writing between 1 and 11 bytes into a region of size 10",
+          "locations": [
+            {
+              "source": "staging/scripts/mission08.cpp",
+              "line": 6404
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scripts.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "22558a594370767c103e90490d1ec9c9c174e8371c8e4d958af402ee4cf398b0",
+      "returncode": 0,
+      "object_sha256": "1df7d8cc400d411623ad7ccf80ce43d6b682691ad81ee41b957c677465bf30a5",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-Wmultichar": 2,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    },
+    {
+      "name": "strtrim.cpp",
+      "status": "unknown",
+      "compile_command_matches": 1,
+      "evidence_class": "optimized_host_compiler_diagnostics",
+      "source_sha256": "9fd9d877e95eb0070726f4cb131becb32e140a10814c5b628c3106fed258523a",
+      "returncode": 0,
+      "object_sha256": "02b0fb430df1fe176e9c469137fe2577033952e49a68b968766662a3c8f44ff5",
+      "diagnostic_counts": {
+        "-Wattributes": 7,
+        "-fpermissive": 38
+      },
+      "dataflow_warning_count": 0,
+      "review_candidates": []
+    }
+  ],
+  "dsp_sha256": "04323c97d93059a62a5e172c3489e1fc6b08513058e6ef498c7ec09f6debbbb6",
+  "diagnostic_counts": {
+    "-Waggressive-loop-optimizations": 1,
+    "-Wattributes": 308,
+    "-Wconversion-null": 11,
+    "-Wformat-overflow=": 2,
+    "-Wint-to-pointer-cast": 3,
+    "-Wmultichar": 2,
+    "-Wpointer-arith": 3,
+    "-Wwrite-strings": 1177,
+    "-fpermissive": 1674,
+    "note": 11,
+    "warning": 6
+  },
+  "limits": [
+    "Host LP64 diagnostics do not establish Vita behavior.",
+    "Compiler silence does not establish initialization correctness.",
+    "Unselected DSP units require separate ownership evidence.",
+    "Warnings include transitive headers; source locations retain provenance."
+  ],
+  "compiler_version_observed_at_summary": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+}

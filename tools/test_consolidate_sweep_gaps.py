@@ -5,6 +5,19 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_compiler_diagnostic_partition(self):
+        value = {'total': 1, 'counts': {'unknown': 1},
+                 'diagnostic_counts': {'-Wuninitialized': 1},
+                 'rows': [{'status': 'unknown', 'name': 'probe.cpp',
+                           'diagnostic_counts': {'-Wuninitialized': 1},
+                           'review_candidates': [{'status': 'unknown', 'option': '-Wuninitialized'}]}]}
+        result = consolidate([('script_compiler_diagnostics', json.dumps(value).encode())])
+        self.assertEqual(result['counts'], {'unknown': 2})
+        self.assertTrue(all(row['cluster'] == 'scripts' for row in result['rows']))
+        value['diagnostic_counts'] = {}
+        with self.assertRaisesRegex(ValueError, 'diagnostic partition'):
+            consolidate([('script_compiler_diagnostics', json.dumps(value).encode())])
+
     def test_portability_surface_and_nested_candidates(self):
         value = {'total':1,'counts':{'unknown':1},'dsp_units':1,'directory_headers':0,
                  'staged_present':1,'original_categories':{'integer_cast':1},'staged_categories':{},

@@ -1096,6 +1096,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-pointgroup-lifecycle.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-suspend-viewer-lifecycle.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-original-dispatch.patch"
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()
 	for rv_dir in "${rv_managed_stage_dirs[@]}"; do

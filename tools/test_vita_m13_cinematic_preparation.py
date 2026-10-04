@@ -1,5 +1,7 @@
 from pathlib import Path
 import unittest
+import subprocess
+import tempfile
 
 from tools import renegade_cinematic_dependency_scan as scan_tool
 
@@ -96,10 +98,53 @@ def test_decal_removal_releases_the_complete_offset_range():
     assert text.count('vi<decal->VertexStartIndex + decal->VertexCount') == 2
 
 
-def test_campaign_cinematic_budget_is_time_only():
+def test_campaign_cinematic_dispatch_completes_authored_due_batch():
     text = TEST_CINEMATIC.read_text(encoding="utf-8")
-    assert 'if (elapsed_us >= 4000U)' in text
-    assert 'vita_budget_command_count >= 2U' not in text
+    assert 'vita_budget_command_count' not in text
+    assert 'Vita_Is_Budgeted_Campaign_Cinematic' not in text
+    start = text.index('\tvoid\tParse_Commands( GameObject* obj ) {')
+    end = text.index('\n\t/*', start)
+    method = text[start:end]
+    fixture = r'''
+    #include <cstdlib>
+    struct GameObject {};
+    struct Provider {
+        unsigned tick=0; int timers=0, destroyed=0, freeze=0; float delay=0;
+        unsigned Get_Sync_Time() { return tick; }
+        int Get_ID(GameObject*) { return 1; }
+        template<class T> void Start_Timer(GameObject*,T*,float d,int) { ++timers; delay=d; }
+        void Destroy_Object(GameObject*) { ++destroyed; }
+        void Enable_Cinematic_Freeze(GameObject*,bool on) { if(on) std::abort(); ++freeze; }
+    } provider;
+    Provider *Commands=&provider;
+    struct Cinematic {
+        struct ControlLine { float Time; const char *Command; ControlLine *Next; };
+        static constexpr float LAST_VALID_TIMESTAMP=999999;
+        unsigned LastSyncTime=0; float Time=0, FrameSync=0;
+        int MyID=0, executed=0; bool PrimaryKilled=false, IsCameraCinematic=false;
+        ControlLine *Controls=nullptr;
+        void Remove_Head_Control_Line() { Controls=Controls->Next; }
+        void Parse_Command(const char *command) {
+            if (command[0] != '0'+executed) std::abort();
+            ++executed; if(executed==3) IsCameraCinematic=true;
+        }
+    ''' + method + r'''
+    };
+    int main() {
+        GameObject obj; Cinematic c;
+        Cinematic::ControlLine lines[]={{0,"0",nullptr},{0,"1",nullptr},{0,"2",nullptr},{0,"3",nullptr},{1,"4",nullptr}};
+        for(int i=0;i<4;++i) lines[i].Next=&lines[i+1];
+        c.Controls=lines; c.Parse_Commands(&obj);
+        if(c.executed!=4 || provider.timers!=1 || provider.delay!=1 || !c.IsCameraCinematic || provider.freeze!=1) return 1;
+        provider.tick=1500; c.Parse_Commands(&obj);
+        if(c.executed!=5 || provider.destroyed!=1 || c.Controls || c.FrameSync!=15) return 2;
+    }
+    '''
+    with tempfile.TemporaryDirectory(prefix="renegade-cinematic-dispatch-") as temporary:
+        cpp=Path(temporary)/"dispatch.cpp"; binary=Path(temporary)/"dispatch"
+        cpp.write_text(fixture)
+        subprocess.run(["g++","-std=c++17","-Wall","-Wextra","-Werror",str(cpp),"-o",str(binary)],check=True)
+        subprocess.run([str(binary)],check=True)
 
 
 def test_campaign_prepare_does_not_reuse_live_volatile_render_objects():
@@ -276,8 +321,8 @@ class RuntimeInstrumentationContracts(unittest.TestCase):
     def test_decal_removal_releases_the_complete_offset_range(self):
         test_decal_removal_releases_the_complete_offset_range()
 
-    def test_campaign_cinematic_budget_is_time_only(self):
-        test_campaign_cinematic_budget_is_time_only()
+    def test_campaign_cinematic_dispatch_completes_authored_due_batch(self):
+        test_campaign_cinematic_dispatch_completes_authored_due_batch()
 
 
 def test_vita_texture_transform_boundary_caches_identical_mapper_state():

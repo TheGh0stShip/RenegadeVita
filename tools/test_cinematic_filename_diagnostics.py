@@ -8,6 +8,10 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 
 def remove_command_bounds_patch(path, args):
+    # Reconstruct the historical anchor before testing these earlier patches.
+    if 'Vita_Is_Budgeted_Campaign_Cinematic' not in path.read_text():
+        dispatch = (ROOT / 'port/patches/scripts-a35-cinematic-original-dispatch.patch').read_bytes()
+        subprocess.run(args + ['--reverse'], input=dispatch, capture_output=True, check=True)
     if 'if ( len > 0 && len < MAX_COMMAND_LOAD_SIZE )' in path.read_text():
         patch = (ROOT / 'port/patches/scripts-a35-cinematic-command-load-bounds.patch').read_bytes()
         subprocess.run(args + ['--reverse'], input=patch, capture_output=True, check=True)

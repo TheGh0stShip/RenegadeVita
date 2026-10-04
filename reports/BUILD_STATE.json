@@ -1,4 +1,18 @@
 {
+  "m13_cinematic_dispatch_20261004": {
+    "observed_candidate": "A3.5-dev234",
+    "log_sha256": "ba31eabf4c73a7e16437525075ce48e06006f6c09ca71a4e63cee7be9f75650c",
+    "diagnosis": "port-added budget yields while zero-time commands remain, exposing partial camera/control setup",
+    "correction_candidate": "A3.5-dev235",
+    "preparation_tests_passed": 8,
+    "state": "HOST_ARM_PACKAGE_PASS_PHYSICAL_PENDING",
+    "host_tests_passed": 502,
+    "arm_compile_link_actions": 6,
+    "package_actions": 7,
+    "vita3k_installed_hash_verified": true,
+    "observed_pause_failure_dump_pending": true,
+    "physical_corrected_order_verified": false
+  },
   "fresh_recruit_start_20261004": {
     "failed_physical_candidate": "A3.5-dev233",
     "failed_process": 38281373,
@@ -15,7 +29,7 @@
     "package_actions": 7,
     "vita3k_installed_hash_verified": true,
     "self_sha256": "2311c5b24d70f46f84b4601ec56cdd274fa6829ac452ab0f6f51cb20e1ba5354",
-    "physical_corrected_route_verified": false,
+    "physical_corrected_route_verified": true,
     "development_save_reload_verified": false
   },
   "m13_gate_crash_20261004": {

@@ -1,5 +1,15 @@
 # Renegade Vita port status
 
+2026-10-04 User confirms dev234 fresh Recruit mission starts. Intro timing
+still fails: port-added cinematic budget exposes partial zero-time setup.
+Dev235 restores original due-command batches, with compiled parser tests
+passing, all502 host and ARM/package checks pass; Vita3K installed hashes match
+without launch. Dev234 then failed after Select+Start; user reports crash dump,
+log ends at pause entry, dump retrieval pending. Severe measured costs and
+audio allocation failures remain open. No newer candidate deployed;
+corrected visuals/audio and save/reload unverified.
+See [cinematic ordering](M13_CINEMATIC_DISPATCH.md).
+
 2026-10-04 Dev233 fresh New Game/Recruit crashed before M13 load: original
 Combat suspension attempted to hide the uninitialized objectives window.
 Matching dump/source/disassembly identifies this lifecycle defect; dev234

@@ -1,5 +1,21 @@
 # Live engineering progress
 
+## M13 cinematic ordering — 2026-10-04
+
+User confirms dev234 Recruit mission starts, closing the earlier null-viewer
+crash checkpoint. Intro camera/event order is still incorrect. Matching log
+proves port-added dispatch yielding exposes Havoc's ground view with control
+enabled while zero-time cinematic commands remain pending. Dev235 restores
+original complete due-command batches; eight focused preparation tests pass,
+including actual compiled parser ordering/timer/FrameSync checks. All502 host
+and ARM/package checks pass; Vita3K installed hashes match without launch.
+User subsequently reports Select+Start crash/dump; log ends at original pause
+entry, no new dump available yet. Recorded cumulative FPS13.382 at frame3960
+and continuing audio allocation failures confirm serious open costs.
+No new physical candidate deployed. Physical cinematic ordering,
+audio, final-gate recovery and save/reload remain open.
+See [dispatch evidence](M13_CINEMATIC_DISPATCH.md).
+
 ## Fresh Recruit start crash — 2026-10-04
 
 Dev233 failed on the fresh New Game/Recruit route before M13 loading. The

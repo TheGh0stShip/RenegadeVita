@@ -1,5 +1,13 @@
 # Renegade Vita port status
 
+2026-10-04 Dev229 physical Vita frontend validation resumed. The installed
+SELF hash matches the packaged candidate; the original executable backup is
+verified. Physical launch, startup movie decoding/audio and main-menu
+activation have matching logs. The user confirmed smooth visible movies,
+no audio issues and a readable menu. Navigation/tutorial, projected shader
+execution, mission correctness and soak acceptance remain pending; PSTV is
+untested. See [live physical progress](LIVE_PROGRESS.md).
+
 2026-10-04 Dev229 implements opt-in projective UV/divisor storage and fragment
 division through the established renderer/vitaGL path. Host production-body
 and shader-source checks pass;494 focused tests and six ARM actions pass.

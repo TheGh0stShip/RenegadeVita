@@ -1,5 +1,30 @@
 # Live engineering progress
 
+## Dev229 physical frontend test — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+PS Vita testing resumed with user authorization. Dev229 SELF/VPK identity
+passed; all seven installed Vita3K title members match the VPK, without an
+emulator launch. The original physical executable was backed up and verified
+before hash-checked replacement. Installed SELF SHA-256:
+`78e59ac9795e13983d4c70f871e1f88b81c8637c3fa8b759ecddf38d5c192fef`.
+
+Physical launch was confirmed. Candidate logs show both original startup
+movie routes and subsequent main-menu activation. The user observed movies
+playing correctly without audio issues or slowdown and confirmed the menu
+was visible and readable. This is user-observed frontend evidence, not a
+measured performance result or proof of projected shader execution.
+One automatically released 100 ms Down tap moved the highlight to Multiplayer
+Internet, confirmed by the user. Subsequent 100 ms Up and Cross taps completed;
+the user confirmed Tutorial highlighted in the Single Player dialog. A further
+100 ms Cross tap entered original M00 tutorial loading; the candidate log
+records CombatGameMode preload and retail dependency loading. Gameplay
+rendering, controls and mission progression remain pending. Local evidence is retained under
+`build/device-evidence/A3.5-dev229-20261004/`; original executable backup is
+under `build/device-backups/A3.5-dev229-20261004/`. PSTV remains untested.
+
 ## Projective coordinate storage and shaders — 2026-10-04
 
 Renegade Vita — v3.5 active
@@ -11,7 +36,7 @@ Evidence: previous production assertion fails;1,000 interpolation cases,
 24 storage/draw cases, pool/null failure checks and48 shader-source interfaces
 pass. Dev229 passes494 contracts,30 archive ABI checks and six ARM actions.
 Next: native shader compilation and fixed-scene pixels, then original additional
-material-pass/projector execution. Runtime remains held; mixed wchar_t ABI,
+material-pass/projector execution. Runtime resumed in the test above; mixed wchar_t ABI,
 memory/frame-time and physical acceptance remain open. See
 [projective evidence](PROJECTIVE_TEXTURE_COORDINATES.md).
 

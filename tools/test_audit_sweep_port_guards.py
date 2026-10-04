@@ -1,6 +1,6 @@
 import unittest
 
-from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, row_identity, stage_patch_selection, validate_inventory, wrapper_references
+from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, reconcile_patch_guards, row_identity, stage_patch_destinations, stage_patch_selection, validate_inventory, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
@@ -157,6 +157,31 @@ class PortGuardInventoryTest(unittest.TestCase):
                  '-#ifdef RENEGADE_VITA_PORT\n body();\n')
         rows = patch_guards(patch)
         self.assertEqual([(r['change'], r['hunk_lines']) for r in rows], [('removed', [4])])
+
+    def test_patch_guard_reconciliation_is_exact_and_nonclassifying(self):
+        rows = [
+            {'kind': 'patch_guard', 'file': 'port/patches/x.patch',
+             'target': 'b/combat/x.cpp', 'directive': '#if FEATURE',
+             'stage_destination': 'staging', 'status': 'unknown'},
+            {'kind': 'current_source_guard', 'file': 'staging/combat/x.cpp',
+             'line': 9, 'directive': '#if FEATURE', 'status': 'unknown'},
+            {'kind': 'current_source_guard', 'file': 'staging/combat/x.cpp',
+             'line': 20, 'directive': '#if OTHER', 'status': 'unknown'},
+        ]
+        reconcile_patch_guards(rows)
+        self.assertEqual(rows[0]['current_target'], 'staging/combat/x.cpp')
+        self.assertEqual(rows[0]['exact_current_guard_count'], 1)
+        self.assertEqual(rows[0]['exact_current_guard_lines'], [9])
+        self.assertEqual(rows[0]['status'], 'unknown')
+
+    def test_stage_patch_destinations_preserve_module_working_directory(self):
+        text = ('patch --batch \\\n  -d "$rv_stage/combat" -p1 < '
+                '"$rv_root/port/patches/combat-x.patch"\n'
+                'patch -d "$rv_stage" -p1 < "$rv_root/port/patches/root.patch"\n')
+        self.assertEqual(stage_patch_destinations(text), {
+            'port/patches/combat-x.patch': 'staging/combat',
+            'port/patches/root.patch': 'staging',
+        })
 
     def test_context_only_is_not_introduced_guard(self):
         patch = ('--- a/test.cpp\n+++ b/test.cpp\n@@ -1,2 +1,2 @@\n'

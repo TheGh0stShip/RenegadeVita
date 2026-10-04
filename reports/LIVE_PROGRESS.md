@@ -9543,3 +9543,17 @@ normalization and eight explicit runtime build-profile combinations remove all
 69 original parser uncertainties and one malformed-tree false function row.
 Next: classify current guards and reconcile historical patch guards.
 Blocker: none for local discovery; physical runtime evidence remains open.
+# S1 historical guard reconciliation — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: every historical patch guard now records its literal stage working
+directory, resolved current target and all exact current directive candidates.
+Evidence: 315 selected patches resolve to staged destinations; 522 of 526 guard
+edits have current targets, 508 have exact current spellings, and the four rows
+without targets belong to three explicitly unselected patches. Twenty-one
+focused reviewer tests pass; no behavior status was inferred from history.
+Next: review the 18 no-match edits and classify current guards by selected build
+profile, skipped original behavior and caller scope.
+Blocker: none for local discovery; physical runtime evidence remains open.

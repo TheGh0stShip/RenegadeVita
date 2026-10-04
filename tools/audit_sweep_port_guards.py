@@ -160,6 +160,18 @@ def stage_patch_selection(text):
     return re.findall(r'\$rv_root/(port/patches/[^"\s]+\.patch)', text)
 
 
+def stage_patch_destinations(text):
+    """Return literal patch -> staging working directory selections."""
+    result = {}
+    pattern = re.compile(
+        r'-d\s+"\$rv_stage(?P<subdir>/[^"\s]+)?"\s+-p\d+\s+<\s+'
+        r'"\$rv_root/(?P<patch>port/patches/[^"\s]+\.patch)"')
+    for match in pattern.finditer(text.replace('\\\n', ' ')):
+        destination = 'staging' + (match.group('subdir') or '')
+        result[match.group('patch')] = destination
+    return result
+
+
 def wrapper_references(text):
     return [{'symbol': match[1], 'line': text.count('\n', 0, match.start()) + 1,
              'column': match.start() - text.rfind('\n', 0, match.start())}
@@ -171,6 +183,37 @@ def row_identity(row):
               'target', 'patch_lines', 'change', 'symbol', 'name', 'node_type', 'missing')
     location = {key: row[key] for key in fields if key in row}
     return hashlib.sha256(json.dumps(location, sort_keys=True).encode()).hexdigest()
+
+
+def reconcile_patch_guards(rows):
+    """Link historical guard edits to exact directives in today's staging tree.
+
+    This is provenance only. A surviving spelling does not classify either
+    branch or prove the patch was applied, selected, linked, or executed.
+    """
+    current = {}
+    for row in rows:
+        if row['kind'] == 'current_source_guard':
+            current.setdefault((row['file'], row['directive']), []).append(row)
+    for row in rows:
+        if row['kind'] != 'patch_guard':
+            continue
+        target = re.sub(r'^[ab]/', '', row['target'])
+        destination = row.get('stage_destination')
+        staged = (destination + '/' + target) if destination else None
+        if staged is None:
+            row['current_target'] = None
+            row['current_target_exists'] = False
+            row['exact_current_guard_count'] = 0
+            row['exact_current_guard_lines'] = []
+            continue
+        matches = current.get((staged, row['directive']), [])
+        row['current_target'] = staged
+        row['current_target_exists'] = any(
+            current_row['file'] == staged for current_row in rows
+            if current_row['kind'] == 'current_source_guard') or (ROOT / staged).is_file()
+        row['exact_current_guard_count'] = len(matches)
+        row['exact_current_guard_lines'] = [match['line'] for match in matches]
 
 
 def validate_inventory(result):
@@ -248,6 +291,7 @@ def branch_contexts(text, wanted_lines):
 def audit(root=ROOT, include_functions=False):
     stage = root / 'tools/stage_sources.sh'
     selection = stage_patch_selection(stage.read_text())
+    destinations = stage_patch_destinations(stage.read_text())
     selected = set(selection)
     patches = sorted((root / 'port/patches').glob('*.patch'))
     rows, inputs, patch_inventory, function_files = [], {}, [], []
@@ -259,10 +303,12 @@ def audit(root=ROOT, include_functions=False):
         relative = patch.relative_to(root).as_posix()
         inputs[relative] = digest(patch)
         patch_inventory.append({'path': relative, 'sha256': inputs[relative],
-                                'stage_reference_count': selection.count(relative)})
+                                'stage_reference_count': selection.count(relative),
+                                'stage_destination': destinations.get(relative)})
         for row in patch_guards(patch.read_text(errors='replace')):
             rows.append({'kind': 'patch_guard', 'file': relative,
                          'selected_by_stage_script': relative in selected,
+                         'stage_destination': destinations.get(relative),
                          'status': 'unknown', 'evidence_class': 'source_patch', **row})
     for directory in ('port', 'staging'):
         for path in sorted((root / directory).rglob('*')):
@@ -323,6 +369,7 @@ def audit(root=ROOT, include_functions=False):
         review_document = json.loads(review_path.read_text())
         review_issues = apply_reviews(rows, review_document['reviews'],
                                      review_document.get('evidence_inputs_sha256'), inputs)
+    reconcile_patch_guards(rows)
     kinds = dict(sorted(Counter(row['kind'] for row in rows).items()))
     return {'schema_version': 1, 'sweep': 'S1', 'complete': False,
             'evidence_class': 'source_inventory',

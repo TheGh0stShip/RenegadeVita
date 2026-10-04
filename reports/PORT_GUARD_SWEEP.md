@@ -44,6 +44,15 @@ manual Miles mixing and ABI/profile choices omitted by the earlier filter.
 Two statistics stubs are removed: the original owner now records texture and
 sorting counters, with host sanitizer coverage of frame reset and snapshots.
 
+Stage-command working directories now resolve 315 selected patches to their
+actual staged module instead of assuming every patch target is rooted directly
+under `staging/`. Of 526 historical guard edits, 522 resolve to an existing
+current target; the four unresolved rows belong to the three unselected patches.
+508 rows have at least one exact current directive spelling and 18 have none.
+Repeated directives deliberately retain every candidate line: spelling and line
+proximity cannot prove that a historical hunk is the surviving branch. These
+links add review evidence without changing any row's behavior status.
+
 Function records retain signature/scope, byte positions, whole-definition and
 body hashes, literal and nonfinal return candidates, empty-body and unsupported
 markers, call syntax and surrounding preprocessor branches. These are discovery

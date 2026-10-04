@@ -3715,7 +3715,7 @@
     "staging/wwui/wwuiinput.cpp": "109a9633239da9c1ecbb147036ef31f7ebb52c826e7bea2fe8cb148120ea9a1b",
     "staging/wwui/wwuiinput.h": "d99c2d5bd4b47a6f77b27ce5cf127e677359dd619c9e4f618abe39a25c46d61a",
     "staging/wwutil/mathutil.cpp": "50e5d6c436636fb236949b262b8882102e92f32b8cdfa74f9feedfc25e54d07f",
-    "tools/audit_sweep_port_guards.py": "fa20a14cbd99ff4f0a83605b6bf7e3df1b109afcb51fac6128ac3b045527d33f",
+    "tools/audit_sweep_port_guards.py": "04bfadbe8a4ffa907117e4f0fdec5f366a3d19fd251794972dc2b20fe8c220ca",
     "tools/build.sh": "450dc1b23fb5db79053637f9ed19868072db34689a3d1eb1530935476b43d939",
     "tools/build_fast_candidate.sh": "d5d3175148ee272a167dc377359a37f1ab798165ed8632f752f9fbe7c132b0a3",
     "tools/build_ffmpeg_bink_vita.sh": "4ad1fe96c6543d1ef7243bcc24f7f335ba086035b4f681a5325a798e98d42e7c",
@@ -3737,7 +3737,7 @@
     "tools/stage_sources.sh": "7fe78a596982b60c6c5b3a27b4c63cfe1ebd9209e51dfe0490af2c8d1cff3839",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "9c465726d4fde7ce36a7d75df8a30c75e64338106d96129d6b873f7b0cccde8c",
-    "tools/sweep_reviews/port_guards.json": "9ee17a6916b3cca6f9c231480de8a62a4cc64613e5754fafbb3e149b767e7b66",
+    "tools/sweep_reviews/port_guards.json": "07dec4c4619e704b6e38b55bb1b05c0f81992228eef74eee8c398f7ce7a47707",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -130346,154 +130346,334 @@
       "status": "unknown"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 114,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 114,
+      "review": {
+        "acceptance_open": "Header selection does not prove asset loading, registration, memory use or device behavior.",
+        "affected_scope": [
+          "All native WW3D asset loading"
+        ],
+        "behavior": "Selects the Vita runtime breadcrumb boundary while leaving the original asset-manager declarations and algorithms below it intact.",
+        "callers": [
+          "Compilation of staging/ww3d2/assetmgr.cpp for the native target"
+        ],
+        "original_owner": "WW3DAssetManager platform includes"
+      },
       "row_id": "0e94b2cd82a5a9607d761122f225a0a4f20e45f1ab390fd140762102f7417bca",
-      "status": "unknown"
+      "status": "boundary_replaced"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if !RENEGADE_VITA_M00_DEMO",
       "end_line": 116,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 116,
+      "review": {
+        "acceptance_open": "No runtime asset behavior is accepted from an include guard.",
+        "affected_scope": [
+          "Full-game Vita diagnostics; tutorial profile excludes this dependency"
+        ],
+        "behavior": "Selects the Vita process-time header only for the full-game profile. It does not guard an original asset operation.",
+        "callers": [
+          "Full-game native asset-manager compilation"
+        ],
+        "original_owner": "WW3DAssetManager diagnostic clock dependency"
+      },
       "row_id": "7763ee3d570105d25264d286f939f16f77e70e1a519d107877d6b53914893210",
-      "status": "unknown"
+      "status": "boundary_replaced"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
       "end_line": 132,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 132,
+      "review": {
+        "acceptance_open": "This algorithmic patch needs all-map missing/prototype cases, cache reset/lifetime, bounded-capacity and physical load-stall evidence.",
+        "affected_scope": [
+          "Full-game port profiles; tutorial keeps original repeated retry behavior"
+        ],
+        "behavior": "Adds a bounded per-session name cache so a W3D that loaded successfully without producing the requested prototype is not reparsed on every request. Initial load, parent-directory fallback, Find_Prototype retry, missing-object reporting and original return semantics remain owned by WW3DAssetManager.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj and Free_Assets"
+        ],
+        "original_owner": "WW3DAssetManager load-on-demand retry for parsed files lacking the requested prototype"
+      },
       "row_id": "130a4781af94ae9a6c150709bb4325cd0ce1cdda40661045a1072d5cae3f6713",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
       "end_line": 456,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 456,
+      "review": {
+        "acceptance_open": "This algorithmic patch needs all-map missing/prototype cases, cache reset/lifetime, bounded-capacity and physical load-stall evidence.",
+        "affected_scope": [
+          "Full-game port profiles; tutorial keeps original repeated retry behavior"
+        ],
+        "behavior": "Adds a bounded per-session name cache so a W3D that loaded successfully without producing the requested prototype is not reparsed on every request. Initial load, parent-directory fallback, Find_Prototype retry, missing-object reporting and original return semantics remain owned by WW3DAssetManager.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj and Free_Assets"
+        ],
+        "original_owner": "WW3DAssetManager load-on-demand retry for parsed files lacking the requested prototype"
+      },
       "row_id": "32b8ca5eb9a07eec594a08f663a3e839cc7a499e1135937e70033a54bdf515d6",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 693,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 693,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "9dce00cf3e741d550ee2ebda66055dbed9dcad997a60d5cebefed13c3714c155",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 703,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 703,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "af2f537a56aeb0dc8c089ec991406128235f9445ba83304c414a6cbc3803b45b",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
       "end_line": 711,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 711,
+      "review": {
+        "acceptance_open": "This algorithmic patch needs all-map missing/prototype cases, cache reset/lifetime, bounded-capacity and physical load-stall evidence.",
+        "affected_scope": [
+          "Full-game port profiles; tutorial keeps original repeated retry behavior"
+        ],
+        "behavior": "Adds a bounded per-session name cache so a W3D that loaded successfully without producing the requested prototype is not reparsed on every request. Initial load, parent-directory fallback, Find_Prototype retry, missing-object reporting and original return semantics remain owned by WW3DAssetManager.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj and Free_Assets"
+        ],
+        "original_owner": "WW3DAssetManager load-on-demand retry for parsed files lacking the requested prototype"
+      },
       "row_id": "a7dacc9924863215806f75f00623a9e9feea5a73661500ad329e440e9ab08133",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 730,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 730,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "4083f1724c8b7906be7f3729864549ecce600fe0c4147d81aca8006d18c6e39a",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
       "end_line": 734,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 734,
+      "review": {
+        "acceptance_open": "This algorithmic patch needs all-map missing/prototype cases, cache reset/lifetime, bounded-capacity and physical load-stall evidence.",
+        "affected_scope": [
+          "Full-game port profiles; tutorial keeps original repeated retry behavior"
+        ],
+        "behavior": "Adds a bounded per-session name cache so a W3D that loaded successfully without producing the requested prototype is not reparsed on every request. Initial load, parent-directory fallback, Find_Prototype retry, missing-object reporting and original return semantics remain owned by WW3DAssetManager.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj and Free_Assets"
+        ],
+        "original_owner": "WW3DAssetManager load-on-demand retry for parsed files lacking the requested prototype"
+      },
       "row_id": "77c37bae3da35fe860c71e7b0c5cbb7654a539d2943cdf6d424b481030eb00d1",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 745,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 745,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "b7e57d446adf354c9a8fa8e21703c488d0591abb83326d0a11b0b47bcab0fe78",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
       "end_line": 751,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 751,
+      "review": {
+        "acceptance_open": "This algorithmic patch needs all-map missing/prototype cases, cache reset/lifetime, bounded-capacity and physical load-stall evidence.",
+        "affected_scope": [
+          "Full-game port profiles; tutorial keeps original repeated retry behavior"
+        ],
+        "behavior": "Adds a bounded per-session name cache so a W3D that loaded successfully without producing the requested prototype is not reparsed on every request. Initial load, parent-directory fallback, Find_Prototype retry, missing-object reporting and original return semantics remain owned by WW3DAssetManager.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj and Free_Assets"
+        ],
+        "original_owner": "WW3DAssetManager load-on-demand retry for parsed files lacking the requested prototype"
+      },
       "row_id": "eabb352df40897db183ccf22fada9299749e5afdad3610acc2f9bd9bf56f73f9",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 757,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 757,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "44f1f6df5999137e4040ae913cf21a5c31140ca948e32b252aa7e4731adc52ec",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 764,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 764,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "b3d02d4b870158e52bc57b1a0a71e60f8180d3d5d69a2bc60e15a9fdc50ea362",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 772,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 772,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "56c47303f94a672c436c99d4a7d698f68d385799467a4aaacf382e969a2f9c87",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
+      "classification_evidence_class": "source_review",
       "directive": "#if defined(__vita__)",
       "end_line": 777,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/assetmgr.cpp",
       "kind": "current_source_guard",
       "line": 777,
+      "review": {
+        "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open.",
+        "affected_scope": [
+          "All native modes creating render objects"
+        ],
+        "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+        "callers": [
+          "Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow"
+      },
       "row_id": "59409a2a6ca406288f8d579e7324bcf9bd6b19821770faaba08fa072b574dc45",
-      "status": "unknown"
+      "status": "original_patched"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -133259,12 +133439,12 @@
       "port_macro_definition": 486
     },
     "by_status": {
-      "boundary_replaced": 6,
+      "boundary_replaced": 8,
       "disabled_by_port_guard": 7,
       "excluded_with_proof": 12,
-      "original_patched": 7,
+      "original_patched": 20,
       "stubbed_or_noop": 51,
-      "unknown": 3444
+      "unknown": 3429
     },
     "patch_files": 318,
     "rows": 3527,

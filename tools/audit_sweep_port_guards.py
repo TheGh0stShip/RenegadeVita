@@ -79,6 +79,17 @@ def apply_reviews(rows, reviews, expected_inputs=None, current_inputs=None):
     return issues
 
 
+def expand_review_groups(document):
+    """Expand shared exact-row reviews without weakening row identity checks."""
+    reviews = list(document.get('reviews', []))
+    for group in document.get('review_groups', []):
+        shared = {key: value for key, value in group.items() if key != 'row_ids'}
+        if not group.get('row_ids'):
+            raise ValueError('Review group has no row_ids')
+        reviews.extend(dict(shared, row_id=row_id) for row_id in group['row_ids'])
+    return reviews
+
+
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -367,7 +378,7 @@ def audit(root=ROOT, include_functions=False):
     if include_functions and review_path.exists():
         inputs[review_path.relative_to(root).as_posix()] = digest(review_path)
         review_document = json.loads(review_path.read_text())
-        review_issues = apply_reviews(rows, review_document['reviews'],
+        review_issues = apply_reviews(rows, expand_review_groups(review_document),
                                      review_document.get('evidence_inputs_sha256'), inputs)
     reconcile_patch_guards(rows)
     kinds = dict(sorted(Counter(row['kind'] for row in rows).items()))

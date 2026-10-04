@@ -46,6 +46,7 @@
     ,"port/patches/dev168-m13-loader-summary.patch": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
     ,"port/patches/combat-a35-weaponview-reload-motion.patch": "73dcb67e6edbc3295ef599dbe1fcb1a966767350b6c6191fb472454793e7a032"
     ,"port/patches/combat-a35-weaponview-reload-visible-fallback.patch": "b7b5723971de0a1c6eb7a863a95189194211ba14b66433f2488bf312a8108d9f"
+    ,"staging/ww3d2/assetmgr.cpp": "4c515c364a0f2d0f6c9d1117b7b265d2d739bc1929d1da18f507130903c2f970"
   },
   "reviews": [
     {
@@ -1621,6 +1622,75 @@
         "Indexed lit material draws across modes; retail incidence and original category activation remain unverified."
       ],
       "acceptance_open": "Complete host sanitizer and ARM validation, forwarded-state probes, all material/normal/light cases, secondary composition and native Vita/PSTV pixel verification. No primary-only result accepts complete lighting."
+    }
+  ],
+  "review_groups": [
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/assetmgr.cpp",
+      "directive": "#if defined(__vita__)",
+      "status": "boundary_replaced",
+      "row_ids": [
+        "0e94b2cd82a5a9607d761122f225a0a4f20e45f1ab390fd140762102f7417bca"
+      ],
+      "original_owner": "WW3DAssetManager platform includes",
+      "behavior": "Selects the Vita runtime breadcrumb boundary while leaving the original asset-manager declarations and algorithms below it intact.",
+      "callers": ["Compilation of staging/ww3d2/assetmgr.cpp for the native target"],
+      "affected_scope": ["All native WW3D asset loading"],
+      "acceptance_open": "Header selection does not prove asset loading, registration, memory use or device behavior."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/assetmgr.cpp",
+      "directive": "#if !RENEGADE_VITA_M00_DEMO",
+      "status": "boundary_replaced",
+      "row_ids": [
+        "7763ee3d570105d25264d286f939f16f77e70e1a519d107877d6b53914893210"
+      ],
+      "original_owner": "WW3DAssetManager diagnostic clock dependency",
+      "behavior": "Selects the Vita process-time header only for the full-game profile. It does not guard an original asset operation.",
+      "callers": ["Full-game native asset-manager compilation"],
+      "affected_scope": ["Full-game Vita diagnostics; tutorial profile excludes this dependency"],
+      "acceptance_open": "No runtime asset behavior is accepted from an include guard."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/assetmgr.cpp",
+      "directive": "#if defined(__vita__)",
+      "status": "original_patched",
+      "row_ids": [
+        "9dce00cf3e741d550ee2ebda66055dbed9dcad997a60d5cebefed13c3714c155",
+        "af2f537a56aeb0dc8c089ec991406128235f9445ba83304c414a6cbc3803b45b",
+        "4083f1724c8b7906be7f3729864549ecce600fe0c4147d81aca8006d18c6e39a",
+        "b7e57d446adf354c9a8fa8e21703c488d0591abb83326d0a11b0b47bcab0fe78",
+        "44f1f6df5999137e4040ae913cf21a5c31140ca948e32b252aa7e4731adc52ec",
+        "b3d02d4b870158e52bc57b1a0a71e60f8180d3d5d69a2bc60e15a9fdc50ea362",
+        "56c47303f94a672c436c99d4a7d698f68d385799467a4aaacf382e969a2f9c87",
+        "59409a2a6ca406288f8d579e7324bcf9bd6b19821770faaba08fa072b574dc45"
+      ],
+      "original_owner": "WW3DAssetManager::Create_Render_Obj original lookup, load-on-demand and prototype construction flow",
+      "behavior": "Adds bounded depth/name breadcrumbs and balanced depth publication around the retained original operations. These guards do not replace return values, suppress loading or substitute construction.",
+      "callers": ["Every original Create_Render_Obj caller in frontend, world, cinematic and HUD asset paths"],
+      "affected_scope": ["All native modes creating render objects"],
+      "acceptance_open": "Balanced diagnostics need compile/runtime checks; original lookup, prototype registration, all-map creation and physical memory/performance remain open."
+    },
+    {
+      "kind": "current_source_guard",
+      "file": "staging/ww3d2/assetmgr.cpp",
+      "directive": "#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
+      "status": "original_patched",
+      "row_ids": [
+        "130a4781af94ae9a6c150709bb4325cd0ce1cdda40661045a1072d5cae3f6713",
+        "32b8ca5eb9a07eec594a08f663a3e839cc7a499e1135937e70033a54bdf515d6",
+        "a7dacc9924863215806f75f00623a9e9feea5a73661500ad329e440e9ab08133",
+        "77c37bae3da35fe860c71e7b0c5cbb7654a539d2943cdf6d424b481030eb00d1",
+        "eabb352df40897db183ccf22fada9299749e5afdad3610acc2f9bd9bf56f73f9"
+      ],
+      "original_owner": "WW3DAssetManager load-on-demand retry for parsed files lacking the requested prototype",
+      "behavior": "Adds a bounded per-session name cache so a W3D that loaded successfully without producing the requested prototype is not reparsed on every request. Initial load, parent-directory fallback, Find_Prototype retry, missing-object reporting and original return semantics remain owned by WW3DAssetManager.",
+      "callers": ["WW3DAssetManager::Create_Render_Obj and Free_Assets"],
+      "affected_scope": ["Full-game port profiles; tutorial keeps original repeated retry behavior"],
+      "acceptance_open": "This algorithmic patch needs all-map missing/prototype cases, cache reset/lifetime, bounded-capacity and physical load-stall evidence."
     }
   ]
 }

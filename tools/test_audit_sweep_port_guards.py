@@ -1,6 +1,6 @@
 import unittest
 
-from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, macro_definitions, mask_noncode, patch_guards, reconcile_patch_guards, row_identity, stage_patch_destinations, stage_patch_selection, validate_inventory, wrapper_references
+from audit_sweep_port_guards import apply_reviews, branch_contexts, directives, expand_review_groups, macro_definitions, mask_noncode, patch_guards, reconcile_patch_guards, row_identity, stage_patch_destinations, stage_patch_selection, validate_inventory, wrapper_references
 
 
 class PortGuardInventoryTest(unittest.TestCase):
@@ -45,6 +45,18 @@ class PortGuardInventoryTest(unittest.TestCase):
         self.assertEqual(len(apply_reviews([unchanged], [review], expected,
                                            {'CMakeLists.txt': 'changed'})), 1)
         self.assertEqual(unchanged['status'], 'unknown')
+
+    def test_review_groups_expand_shared_evidence_to_exact_rows(self):
+        document = {'reviews': [{'row_id': 'one'}], 'review_groups': [{
+            'kind': 'current_source_guard', 'file': 'staging/a.cpp',
+            'status': 'original_patched', 'row_ids': ['two', 'three'],
+            'original_owner': 'owner', 'behavior': 'behavior', 'callers': [],
+            'affected_scope': [], 'acceptance_open': 'runtime'}]}
+        reviews = expand_review_groups(document)
+        self.assertEqual([review['row_id'] for review in reviews], ['one', 'two', 'three'])
+        self.assertTrue(all('row_ids' not in review for review in reviews))
+        with self.assertRaisesRegex(ValueError, 'no row_ids'):
+            expand_review_groups({'review_groups': [{'row_ids': []}]})
 
     def test_review_distinguishes_same_signature_in_alternative_branches(self):
         rows = [{'kind': 'port_function', 'file': 'port/a.cpp', 'declarator': 'f()',

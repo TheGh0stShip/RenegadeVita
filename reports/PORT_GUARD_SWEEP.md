@@ -1,8 +1,8 @@
 # S1 port guards and stubs — inventory in progress
 
 2026-10-04 linker-wrapper/parser refresh: 3,527 source records contain
-51 stubs, seven patched-original rows, six replaced boundaries, seven disabled
-guards, 12 exclusions and 3,444 unknowns. All four `--wrap` rows now
+51 stubs, 20 patched-original rows, eight replaced boundaries, seven disabled
+guards, 12 exclusions and 3,429 unknowns. All four `--wrap` rows now
 have exact location identities and whole build-file hash pins. The production
 and ARM-closure `shark_init` wrappers preserve the real call and result while
 recording shader-compiler diagnostics. The movie-capture clock wrapper is a
@@ -20,9 +20,9 @@ evidence and does not close S1 or native acceptance.
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
 source contains 3,527 records with 51 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, seven rows as `original_patched`, six boundaries as
+`stubbed_or_noop`, 20 rows as `original_patched`, eight boundaries as
 `boundary_replaced`, seven guards as `disabled_by_port_guard`, 12 rows as
-`excluded_with_proof`, and 3,444 records still `unknown`.
+`excluded_with_proof`, and 3,429 records still `unknown`.
 All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -66,6 +66,16 @@ chain. Three guards introduced non-tutorial wall-clock diagnostics around
 removes those blocks. Current source retains the original lookup/load/create
 flow plus bounded static-load breadcrumbs. These classifications say nothing
 about correctness or hardware latency of the retained operations.
+
+All 15 current `assetmgr.cpp` guards are classified. Two select Vita-only
+headers below the platform boundary. Eight add bounded create-depth/name
+breadcrumbs around retained original operations. Five implement the full-game
+unresolved-prototype cache: a successfully parsed W3D that lacks the requested
+prototype is not reparsed on every request, while initial load, parent fallback,
+retry, missing-object reporting and return ownership remain original. This
+algorithmic patch still needs all-map cases, bounded-capacity/reset checks and
+physical load-stall evidence. Exact-row review groups reduce repeated metadata
+without weakening whole-source hash or row-identity invalidation.
 
 Function records retain signature/scope, byte positions, whole-definition and
 body hashes, literal and nonfinal return candidates, empty-body and unsupported

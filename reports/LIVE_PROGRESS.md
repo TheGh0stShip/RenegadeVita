@@ -9606,3 +9606,16 @@ open explicitly.
 Next: classify surviving current guards and their matching historical edits in
 owner clusters, starting with asset loading and renderer presentation.
 Blocker: none for source work; reload visuals require later runtime evidence.
+# S1 asset-manager current guards — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: classified all 15 surviving `assetmgr.cpp` guards and added exact-row
+review groups. Platform includes, bounded diagnostics and the unresolved-prototype
+cache retain separate evidence and acceptance requirements.
+Evidence: 22 reviewer tests pass with zero stale identities. S1 now has 3,429
+unknowns, 20 patched-original rows, eight boundary replacements, seven disabled
+guards and 12 exclusions.
+Next: review the renderer presentation guards in coherent source-owner clusters.
+Blocker: none for source work; all-map asset cases and hardware stalls remain open.

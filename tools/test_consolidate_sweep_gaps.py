@@ -5,6 +5,18 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_fvf_renderer_cluster_and_partition(self):
+        value={'total':2,'counts':{'missing':1,'unknown':1},'admitted_layouts':1,
+               'unsupported_layouts':1,'rows':[
+               {'status':'missing','native_layout_admitted':False,'name':'FVF 002'},
+               {'status':'unknown','native_layout_admitted':True,'name':'FVF 152'}]}
+        result=consolidate([('procedural_fvf_layouts',json.dumps(value).encode())])
+        self.assertTrue(all(r['cluster']=='renderer' for r in result['rows']))
+        self.assertEqual(result['rows'][0]['severity'],'visual')
+        value['admitted_layouts']=2
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('procedural_fvf_layouts',json.dumps(value).encode())])
+
     def test_decode_results_reconcile_and_reject_bad_partition(self):
         row={'archive':'M01.mix','status':'unknown','wave_members':2,
              'decoded_members':1,'rejected_members':1,'failures':[{'member':'bad.wav'}]}

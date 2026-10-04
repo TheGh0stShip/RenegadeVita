@@ -1,0 +1,1534 @@
+{
+  "schema": 1,
+  "evidence_class": "verbatim selector host sanitizer and ARM object contract",
+  "inputs_sha256": {
+    "staging/ww3d2/dx8renderer.cpp": "25f0855a910f1a86e0d63c0e8337622f76485bdfa68506afdd809e02e00bd515",
+    "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+    "tools/test_original_renderer_fvf_selection.py": "0e88b62ec69cb38f26e7ca2cd16a0cab1a9cecad6dc54c21dc7ece1e91d35324"
+  },
+  "total": 72,
+  "counts": {
+    "missing": 70,
+    "unknown": 2
+  },
+  "potential_layouts": 72,
+  "admitted_layouts": 2,
+  "unsupported_layouts": 70,
+  "rows": [
+    {
+      "fvf": "00000002",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 00000002",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 12,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000082",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 00000082",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 16,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000042",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 00000042",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 16,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000000c2",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 000000c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 20,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000012",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 00000012",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 24,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000092",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 00000092",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 28,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000052",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 00000052",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 28,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000000d2",
+      "texture_coordinates": 0,
+      "name": "Original category FVF 000000d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 32,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000102",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 00000102",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 20,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000182",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 00000182",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 24,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000142",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 00000142",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 24,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000001c2",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 000001c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 28,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000112",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 00000112",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 32,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000192",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 00000192",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 36,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000152",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 00000152",
+      "status": "unknown",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 36,
+      "native_layout_admitted": true,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000001d2",
+      "texture_coordinates": 1,
+      "name": "Original category FVF 000001d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 40,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000202",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 00000202",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 28,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000282",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 00000282",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 32,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000242",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 00000242",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 32,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000002c2",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 000002c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 36,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000212",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 00000212",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 40,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000292",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 00000292",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 44,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000252",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 00000252",
+      "status": "unknown",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 44,
+      "native_layout_admitted": true,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000002d2",
+      "texture_coordinates": 2,
+      "name": "Original category FVF 000002d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 48,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000302",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 00000302",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 36,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000382",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 00000382",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 40,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000342",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 00000342",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 40,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000003c2",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 000003c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 44,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000312",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 00000312",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 48,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000392",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 00000392",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 52,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000352",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 00000352",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 52,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000003d2",
+      "texture_coordinates": 3,
+      "name": "Original category FVF 000003d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 56,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000402",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 00000402",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 44,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000482",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 00000482",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 48,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000442",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 00000442",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 48,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000004c2",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 000004c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 52,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000412",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 00000412",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 56,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000492",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 00000492",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 60,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000452",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 00000452",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 60,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000004d2",
+      "texture_coordinates": 4,
+      "name": "Original category FVF 000004d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 64,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000502",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 00000502",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 52,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000582",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 00000582",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 56,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000542",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 00000542",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 56,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000005c2",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 000005c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 60,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000512",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 00000512",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 64,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000592",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 00000592",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 68,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000552",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 00000552",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 68,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000005d2",
+      "texture_coordinates": 5,
+      "name": "Original category FVF 000005d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 72,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000602",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 00000602",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 60,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000682",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 00000682",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 64,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000642",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 00000642",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 64,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000006c2",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 000006c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 68,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000612",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 00000612",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 72,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000692",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 00000692",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 76,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000652",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 00000652",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 76,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000006d2",
+      "texture_coordinates": 6,
+      "name": "Original category FVF 000006d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 80,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000702",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 00000702",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 68,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000782",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 00000782",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 72,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000742",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 00000742",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 72,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000007c2",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 000007c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 76,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000712",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 00000712",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 80,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000792",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 00000792",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 84,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000752",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 00000752",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 84,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000007d2",
+      "texture_coordinates": 7,
+      "name": "Original category FVF 000007d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 88,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000802",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 00000802",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": false,
+      "stride": 76,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000882",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 00000882",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": false,
+      "specular": true,
+      "stride": 80,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000842",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 00000842",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": false,
+      "stride": 80,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000008c2",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 000008c2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": false,
+      "diffuse": true,
+      "specular": true,
+      "stride": 84,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000812",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 00000812",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": false,
+      "stride": 88,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000892",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 00000892",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": false,
+      "specular": true,
+      "stride": 92,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "00000852",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 00000852",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": false,
+      "stride": 92,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    },
+    {
+      "fvf": "000008d2",
+      "texture_coordinates": 8,
+      "name": "Original category FVF 000008d2",
+      "status": "missing",
+      "evidence_class": "original selector contract and native admission source",
+      "normal": true,
+      "diffuse": true,
+      "specular": true,
+      "stride": 96,
+      "native_layout_admitted": false,
+      "review": {
+        "original_owner": "DX8FVFCategoryContainer::Define_FVF and original rigid category buffers",
+        "affected_scope": [
+          "Original category mesh draws across native modes; actual retail/layout incidence remains unknown"
+        ],
+        "acceptance_open": "Preserve original offsets, optional colors/normals and UV sources; validate lighting and materials on host, ARM and hardware"
+      },
+      "retail_incidence": "unknown",
+      "native_pixels": "unverified"
+    }
+  ],
+  "complete": false,
+  "physical_acceptance": false,
+  "scope": "Structural producer inputs; no claim that all occur in retail data. Mesh inputs are test doubles. Sorted meshes select dynamic FVF when sorting is enabled."
+}

@@ -309,3 +309,25 @@ These are CPU call/counter contracts, not measured GPU cost or native pixels.
 Source-count compile definitions currently invalidate all ARM objects when the
 selected-unit count changes; the unused A31 count macro is a build-efficiency
 lead to remove alongside the next source-selection change.
+
+Original category FVF prerequisite: the verbatim `Define_FVF` policy passes
+host ASan/LSan/UBSan and ARM object compilation over every combination of
+zero to eight UV channels, optional normal, diffuse and specular fields.
+It produces 72 structural layouts. Native indexed admission currently accepts
+only `0x152`/36 bytes and `0x252`/44 bytes: two admitted layouts and 70 rejected.
+Sorted meshes use the original dynamic FVF override when sorting is enabled;
+user lighting forces diffuse, while the selector's enable-lighting argument
+does not change its shipped normal decision. Mesh/sorting inputs are test doubles.
+
+Reproduce with `python3 tools/audit_original_renderer_fvf.py --output
+reports/generated/sweeps/procedural_fvf_layouts.json`. The supplementary rows
+are retained in the renderer gap cluster. These are possible producer outputs,
+not 70 demonstrated retail failures. Current direct mesh submission is a
+different route; its existence does not close original category behavior.
+Before activation, preserve variable offsets/stride, optional colors and normals,
+all UV-source selectors, material sources, lighting and specular behavior.
+The current indexed emitter reads fixed color/normal/UV offsets; simply removing
+its layout rejection would permit invalid reads and incorrect rendering.
+Original light-environment device methods remain empty, while direct mesh
+submission separately evaluates CPU material lighting. Nine policy/consolidation
+tests pass. Pixels, actual map incidence and full category activation remain open.

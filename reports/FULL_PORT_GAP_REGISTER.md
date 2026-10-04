@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 10 supplements is retained, including nested records.
+status record in the eight sweeps and 11 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -30,6 +30,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | hlod_names | 31 | 98 | False |
 | wave_headers | 31 | 296 | False |
 | wave_decode | 31 | 31 | False |
+| procedural_fvf_layouts | 72 | 72 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -99,6 +100,76 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/644 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
 | port_guards /rows/647 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
 | port_guards /rows/648 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| procedural_fvf_layouts /rows/0 | Original category FVF 00000002 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/1 | Original category FVF 00000082 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/10 | Original category FVF 00000142 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/11 | Original category FVF 000001c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/12 | Original category FVF 00000112 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/13 | Original category FVF 00000192 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/15 | Original category FVF 000001d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/16 | Original category FVF 00000202 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/17 | Original category FVF 00000282 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/18 | Original category FVF 00000242 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/19 | Original category FVF 000002c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/2 | Original category FVF 00000042 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/20 | Original category FVF 00000212 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/21 | Original category FVF 00000292 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/23 | Original category FVF 000002d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/24 | Original category FVF 00000302 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/25 | Original category FVF 00000382 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/26 | Original category FVF 00000342 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/27 | Original category FVF 000003c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/28 | Original category FVF 00000312 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/29 | Original category FVF 00000392 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/3 | Original category FVF 000000c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/30 | Original category FVF 00000352 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/31 | Original category FVF 000003d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/32 | Original category FVF 00000402 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/33 | Original category FVF 00000482 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/34 | Original category FVF 00000442 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/35 | Original category FVF 000004c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/36 | Original category FVF 00000412 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/37 | Original category FVF 00000492 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/38 | Original category FVF 00000452 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/39 | Original category FVF 000004d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/4 | Original category FVF 00000012 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/40 | Original category FVF 00000502 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/41 | Original category FVF 00000582 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/42 | Original category FVF 00000542 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/43 | Original category FVF 000005c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/44 | Original category FVF 00000512 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/45 | Original category FVF 00000592 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/46 | Original category FVF 00000552 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/47 | Original category FVF 000005d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/48 | Original category FVF 00000602 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/49 | Original category FVF 00000682 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/5 | Original category FVF 00000092 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/50 | Original category FVF 00000642 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/51 | Original category FVF 000006c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/52 | Original category FVF 00000612 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/53 | Original category FVF 00000692 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/54 | Original category FVF 00000652 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/55 | Original category FVF 000006d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/56 | Original category FVF 00000702 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/57 | Original category FVF 00000782 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/58 | Original category FVF 00000742 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/59 | Original category FVF 000007c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/6 | Original category FVF 00000052 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/60 | Original category FVF 00000712 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/61 | Original category FVF 00000792 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/62 | Original category FVF 00000752 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/63 | Original category FVF 000007d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/64 | Original category FVF 00000802 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/65 | Original category FVF 00000882 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/66 | Original category FVF 00000842 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/67 | Original category FVF 000008c2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/68 | Original category FVF 00000812 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/69 | Original category FVF 00000892 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/7 | Original category FVF 000000d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/70 | Original category FVF 00000852 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/71 | Original category FVF 000008d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/8 | Original category FVF 00000102 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/9 | Original category FVF 00000182 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
 | renderer /rows/2846 | D3DFMT_A8L8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
 | renderer /rows/2847 | D3DFMT_A8P8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
 | renderer /rows/2848 | D3DFMT_A8R3G3B2 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
@@ -28345,6 +28416,8 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/997 | RV_M01_ANIM_6 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/998 | RV_M01_ANIM_7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/999 | Set_Animation | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| procedural_fvf_layouts /rows/14 | Original category FVF 00000152 | unknown | unclassified | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
+| procedural_fvf_layouts /rows/22 | Original category FVF 00000252 | unknown | unclassified | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
 | renderer /rows/0 | RenderStateStruct | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/1 | DX8Wrapper | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/10 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |

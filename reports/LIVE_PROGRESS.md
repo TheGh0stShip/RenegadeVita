@@ -9017,3 +9017,16 @@ S1 now enumerates all RENEGADE guard families: 3,573 rows, 52 stubs, one
 boundary, six disabled guards and 3,514 unknown; review identities match.
 Next: original procedural renderer ownership, lighting and category activation.
 Blocker: none for source work; native pixels and mission acceptance remain open.
+# Original category vertex-layout denominator — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: original selector contract covers 72 potential FVF layouts, sorting
+override, user lighting and the shipped normal decision. Native indexed
+admission accepts two; 70 rejected layouts are retained as renderer prerequisites.
+Evidence: original method passes host sanitizers and ARM object compilation;
+nine policy/consolidation tests pass. Retail occurrence remains unknown.
+Next: variable-layout decoding and original lighting/material behavior before
+category activation. No production renderer behavior changed in this batch.
+Blocker: none for source work; native pixels and mission acceptance remain open.

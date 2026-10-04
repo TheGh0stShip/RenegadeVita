@@ -10,8 +10,9 @@ SWEEPS = ('port_guards', 'renderer', 'link', 'retail', 'scripts', 'systems',
           'performance', 'external')
 ISSUES = dict(zip(SWEEPS, range(5, 13)))
 SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
-               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode')
+               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
+ISSUES['procedural_fvf_layouts'] = 6
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -50,7 +51,13 @@ def root_records(name, value):
         return rows
     rows=value['archives'] if name=='w3d_chunks' else value['rows']
     totals=value.get('totals',{})
-    if name=='level_chunks':
+    if name=='procedural_fvf_layouts':
+        if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
+            raise ValueError('Procedural FVF denominator/status mismatch')
+        admitted=sum(r['native_layout_admitted'] for r in rows)
+        if value['admitted_layouts']!=admitted or value['unsupported_layouts']!=len(rows)-admitted:
+            raise ValueError('Procedural FVF admission partition mismatch')
+    elif name=='level_chunks':
         if totals.get('maps')!=len(rows) or totals.get('members')!=sum(len(r['members']) for r in rows):
             raise ValueError('Level member denominator mismatch')
     elif name=='w3d_chunks':
@@ -126,7 +133,7 @@ def consolidate(inputs):
             if record['status'] == 'original_compiled':
                 continue
             status = record['status']
-            severity = ('visual' if name == 'renderer' and status == 'missing' else
+            severity = ('visual' if name in {'renderer', 'procedural_fvf_layouts'} and status == 'missing' else
                         'missing_behavior' if status in {'missing', 'stubbed_or_noop', 'disabled_by_port_guard'}
                         else 'unclassified')
             label = next((record[k] for k in ('name', 'label', 'symbol', 'source', 'file', 'map', 'chunk_id', 'member', 'chunk_path')
@@ -142,7 +149,8 @@ def consolidate(inputs):
                          'review_evidence_pointer': pointer + '/review' if review else None,
                          'evidence_class': record.get('evidence_class', 'parent_inventory_metadata'),
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
-                         'cluster': 'retail' if name in SUPPLEMENTS else name})
+                         'cluster': ('renderer' if name=='procedural_fvf_layouts' else
+                                     'retail' if name in SUPPLEMENTS else name)})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),
                          'issue_url': f'https://github.com/TheGh0stShip/RenegadeVita/issues/{ISSUES[name]}' if name in ISSUES else None,

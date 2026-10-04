@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Dev234 pause-route allocation lead — 2026-10-04
+
+The user confirms crash-dump screen after Select+Start. The process-matched
+temporary dump is incomplete; four ELF segments exceed its bounds. Intact
+bounded notes and available stack bytes support another allocation-failure
+lead in AIL_open_stream_by_sample's encoded image allocation. Dev236 uses
+checked non-throwing image storage, closing the source on failure and retaining
+original callback/decoder ownership. Two audio tests pass, including forced
+image failure/close/retry and sanitized mixer validation. All 502 host checks,
+six ARM compile/link and seven package actions pass. Vita3K installed hashes
+match without launch. Dev236 physical executable replacement is independently
+hash-verified; corrected hardware behavior remains pending.
+Pause, checkpoint write/reload, heap pressure and severe M13 costs remain open.
+See [partial-dump evidence](M13_PAUSE_STREAM_ALLOCATION.md).
+
 ## M13 cinematic ordering — 2026-10-04
 
 User confirms dev234 Recruit mission starts, closing the earlier null-viewer

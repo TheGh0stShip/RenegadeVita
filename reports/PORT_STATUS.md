@@ -1,5 +1,14 @@
 # Renegade Vita port status
 
+2026-10-04 Dev234 Select+Start failure has a matching incomplete temporary
+dump; intact notes/heuristic stack/disassembly support uncaught encoded audio
+stream image allocation. Dev236 checks that allocation and closes the source
+on failure, with production failure/retry tests passing. All 502 host checks
+and ARM/package checks pass; Vita3K installed hashes match without launch.
+Dev236 physical executable is installed and independently hash-verified;
+pause/save/reload and performance acceptance remain open.
+See [stream allocation evidence](M13_PAUSE_STREAM_ALLOCATION.md).
+
 2026-10-04 User confirms dev234 fresh Recruit mission starts. Intro timing
 still fails: port-added cinematic budget exposes partial zero-time setup.
 Dev235 restores original due-command batches, with compiled parser tests

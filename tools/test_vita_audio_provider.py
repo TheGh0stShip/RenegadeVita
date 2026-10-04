@@ -15,6 +15,7 @@ class VitaAudioProviderTest(unittest.TestCase):
     def test_decoder_allocation_failure_preserves_previous_output(self) -> None:
         source = r'''
         #include "renegade_wave_decoder.h"
+        #include "mss.h"
         #include <cstdlib>
         #include <new>
         #include <cstring>
@@ -26,6 +27,21 @@ class VitaAudioProviderTest(unittest.TestCase):
         }
         void operator delete(void *p) noexcept { std::free(p); }
         void operator delete(void *p, std::size_t) noexcept { std::free(p); }
+        void *operator new[](std::size_t n) { return ::operator new(n); }
+        void operator delete[](void *p) noexcept { std::free(p); }
+        void operator delete[](void *p, std::size_t) noexcept { std::free(p); }
+        static const unsigned char *file_data=nullptr;
+        static U32 file_bytes=0, file_position=0; static int closes=0;
+        U32 AILCALLBACK Open(const char*,AIL_FILE_HANDLE *h) { *h=1; file_position=0; return 1; }
+        void AILCALLBACK Close(AIL_FILE_HANDLE) { ++closes; }
+        S32 AILCALLBACK Seek(AIL_FILE_HANDLE,S32 offset,U32 type) {
+            if(type==AIL_FILE_SEEK_END) return file_bytes;
+            file_position=offset; return file_position;
+        }
+        U32 AILCALLBACK Read(AIL_FILE_HANDLE,void *out,U32 bytes) {
+            if(bytes>file_bytes-file_position) bytes=file_bytes-file_position;
+            std::memcpy(out,file_data+file_position,bytes);file_position+=bytes;return bytes;
+        }
         int main() {
             const unsigned char wave[] = {
                 'R','I','F','F',38,0,0,0,'W','A','V','E',
@@ -42,13 +58,24 @@ class VitaAudioProviderTest(unittest.TestCase):
             if (decoded.samples.size()!=1 || decoded.samples[0]!=77 || decoded.sample_rate!=123 || info.sample_rate!=456) return 3;
             if (!RenegadeVitaAudio::Decode_Wave_With_Info(wave,sizeof(wave),&decoded,&info,&error)) return 4;
             if (decoded.samples[0]!=1 || decoded.sample_rate!=44100) return 5;
+            AIL_startup();
+            file_data=wave; file_bytes=sizeof(wave);
+            AIL_set_file_callbacks(Open,Close,Seek,Read);
+            HSAMPLE sample=AIL_allocate_sample_handle(nullptr);
+            if(!sample) return 6;
+            fail_next=true;
+            if(AIL_open_stream_by_sample(nullptr,sample,"fixture.wav",0)) return 7;
+            if(closes!=1 || std::strcmp(AIL_last_error(),"stream image allocation failed")) return 8;
+            HSTREAM stream=AIL_open_stream_by_sample(nullptr,sample,"fixture.wav",0);
+            if(!stream || closes!=2) return 9;
+            AIL_close_stream(stream); AIL_release_sample_handle(sample); AIL_shutdown();
         }
         '''
         with tempfile.TemporaryDirectory(prefix="renegade-wave-oom-") as temporary:
             cpp = pathlib.Path(temporary) / "oom.cpp"
             binary = pathlib.Path(temporary) / "oom"
             cpp.write_text(source)
-            subprocess.run(["g++", "-std=c++17", "-Wall", "-Wextra", "-Werror", "-I" + str(ROOT / "port/audio/vita"), str(cpp), str(ROOT / "port/audio/vita/renegade_wave_decoder.cpp"), "-o", str(binary)], check=True)
+            subprocess.run(["g++", "-std=c++17", "-Wall", "-Wextra", "-Werror", "-pthread", "-D_UNIX=1", "-DRENEGADE_MILES_MANUAL_MIX=1", "-I" + str(ROOT / "port/audio/vita"), "-I" + str(ROOT / "port/audio/miles"), "-I" + str(ROOT / "port/compatibility/include"), str(cpp), str(ROOT / "port/audio/vita/renegade_wave_decoder.cpp"), str(ROOT / "port/audio/vita/renegade_miles_provider.cpp"), "-o", str(binary)], check=True)
             subprocess.run([str(binary)], check=True)
 
     def test_decoder_and_manual_mixer(self) -> None:

@@ -546,9 +546,10 @@ void Release_Sample(RenegadeMilesSample *sample)
 	delete sample;
 }
 
-bool Read_Stream_Image(const char *name, std::vector<uint8_t> *image)
+bool Read_Stream_Image(const char *name, std::unique_ptr<uint8_t[]> *image,
+	size_t *image_bytes)
 {
-	if (name == nullptr || image == nullptr || g_file_open == nullptr ||
+	if (name == nullptr || image == nullptr || image_bytes == nullptr || g_file_open == nullptr ||
 		g_file_close == nullptr || g_file_seek == nullptr || g_file_read == nullptr) {
 		Set_Error("stream file callbacks are unavailable");
 		return false;
@@ -565,14 +566,20 @@ bool Read_Stream_Image(const char *name, std::vector<uint8_t> *image)
 		Set_Error("stream source size is invalid");
 		return false;
 	}
-	image->resize(static_cast<size_t>(file_size));
-	const U32 read = g_file_read(handle, image->data(), static_cast<U32>(image->size()));
+	std::unique_ptr<uint8_t[]> pending(new (std::nothrow) uint8_t[static_cast<size_t>(file_size)]);
+	if (!pending) {
+		g_file_close(handle);
+		Set_Error("stream image allocation failed");
+		return false;
+	}
+	const U32 read = g_file_read(handle, pending.get(), static_cast<U32>(file_size));
 	g_file_close(handle);
-	if (read != image->size()) {
-		image->clear();
+	if (read != static_cast<U32>(file_size)) {
 		Set_Error("stream source read was incomplete");
 		return false;
 	}
+	*image = std::move(pending);
+	*image_bytes = static_cast<size_t>(file_size);
 	g_stats.stream_bytes_read += read;
 	return true;
 }
@@ -961,10 +968,11 @@ HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 	++g_stats.stream_open_attempts;
 	std::snprintf(g_stats.last_stream_name, sizeof(g_stats.last_stream_name), "%s",
 		name != nullptr ? name : "");
-	std::vector<uint8_t> image;
+	std::unique_ptr<uint8_t[]> image;
+	size_t image_bytes = 0U;
 	RenegadeMilesStream *stream = nullptr;
-	if (sample != nullptr && Read_Stream_Image(name, &image) &&
-		Decode_Into_Sample(sample, image.data(), image.size())) {
+	if (sample != nullptr && Read_Stream_Image(name, &image, &image_bytes) &&
+		Decode_Into_Sample(sample, image.get(), image_bytes)) {
 		stream = new (std::nothrow) RenegadeMilesStream;
 		if (stream != nullptr) {
 			stream->sample = sample;

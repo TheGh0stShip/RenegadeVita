@@ -9775,8 +9775,9 @@
     "without_host_lookup": 0,
     "metadata_risks": 0
   },
+  "inventory_scope": "All LSD/LDD index records in supplied MIX maps; chunk ancestry retained",
   "limits": [
-    "LSD/LDD only; objects.ddb, saves and other data remain outside this denominator.",
+    "Only supplied chunk metadata is covered; other data and saves remain open.",
     "Aggregated paths identify candidate envelopes, not exact sibling ordering.",
     "Manual/non-template factories and opaque subsystem payloads remain open.",
     "Symbols and host lookup do not prove ARM registration or Load/Save behavior.",
@@ -9796,5 +9797,5 @@
       "sha256": "d991610e271fa398b1c8caf1c160f13f471da3a4b54dfd7638067c00013ef791"
     }
   ],
-  "parser_sha256": "885ea2d4633f639cd77233735ccd0c29c32fb15bd9caf5b7288f310a6be90ece"
+  "parser_sha256": "54089f80de6fad40d22ef63f2b41ad2850886fd7f35ddc64b641fa5eeeda16e0"
 }

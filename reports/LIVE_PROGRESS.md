@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Database persistence denominator — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: 31 archives, two DDB members, 28,414 candidate envelopes and 65 IDs.
+Fifty-five IDs match ARM symbols/host lookups; ten unmatched IDs map to original
+editor owners and remain open leads. All 65 behavior rows are unknown.
+Evidence: nine focused tests pass; parser/source/member identities retained.
+Next: definition class IDs and runtime references to skipped editor definitions.
+Blocker: none for discovery; no runtime or physical acceptance claimed.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## All-map persistence reconciliation — 2026-10-03
 
 Renegade Vita — v3.5 active

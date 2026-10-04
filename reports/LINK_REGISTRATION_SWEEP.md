@@ -1,5 +1,47 @@
 # S3 link and registration closure — inventory in progress
 
+## Database envelope denominator — 2026-10-03
+
+The database scanner covers all 31 supplied MIX/DAT/DBS archives, preserving
+duplicate index records and missing expected inputs. It finds two DDB members:
+`objects.ddb` in `always.dbs`, and `C&C_Glacier_Flying.ddb` in the Glacier archive.
+They contain 28,414 candidate persistence envelopes using 65 IDs. Fifty-five IDs
+have both retained ARM template Load symbols and matching host lookups; ten have
+neither. All 65 behavior rows remain unknown. The level/database union has 98
+IDs. Nine focused scope/chunk/reconciliation tests pass. Runtime source and
+compiled artifacts are unchanged.
+
+The ten unmatched IDs cover 14,608 envelopes and map to the original editor
+chunk enum in `Code/Tools/LevelEdit/EditorChunkIDs.h`:
+
+| Chunk ID | Original editor owner | Envelopes |
+|---|---|---:|
+| 0x00050000 | TerrainDefinition | 400 |
+| 0x00050001 | TileDefinition | 904 |
+| 0x00050002 | LightDefinition | 1 |
+| 0x00050003 | WaypathDefinition | 4 |
+| 0x00050007 | Preset | 13,261 |
+| 0x00050016 | VisPointDefinition | 1 |
+| 0x00050018 | PathfindStartDefinition | 1 |
+| 0x00050019 | DummyObjectDefinition | 24 |
+| 0x0005001C | CoverSpotDefinition | 1 |
+| 0x00050026 | EditorOnlyDefinition | 11 |
+
+Original `DefinitionMgrClass::Load_Objects` looks up persistence factories and
+skips a chunk when no factory exists. Some editor records also occur outside
+that subsystem. Editor range and LevelEdit project membership alone do not prove
+that skipping every record is harmless. These remain investigation leads;
+they are not newly established gameplay omissions or proven exclusions.
+
+Reproduce with `python3 -m tools.audit_database_chunk_inventory --data DATA
+--output OUTPUT`, then feed that receipt to `tools/audit_level_persist_closure.py`.
+Public receipts are `database_chunks.json` and `database_persist_closure.json`
+under `reports/generated/sweeps/`; payloads remain private. Source-owner and
+parser hashes are retained. The reconciliation receipt now records the actual
+input scope, avoiding an LSD/LDD-only label on database evidence. Next: resolve
+definition class IDs and verify whether runtime references require any skipped
+editor definitions. Physical registration and full loading remain unverified.
+
 ## All-map level persistence reconciliation — 2026-10-03
 
 The 27-map LSD/LDD metadata inventory contains 83,622 candidate simple-factory

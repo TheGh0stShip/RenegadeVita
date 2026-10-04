@@ -1,0 +1,1922 @@
+{
+  "schema_version": 1,
+  "complete": false,
+  "rows": [
+    {
+      "chunk_id": 258,
+      "chunk_id_hex": "0x00000102",
+      "candidate_instances": 260,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00000102"
+          ],
+          "first_pointer_offset": 184016,
+          "candidate_instances": 260
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "TwiddlerClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132352,
+      "chunk_id_hex": "0x00020500",
+      "candidate_instances": 406,
+      "occurrences": [
+        {
+          "map": "C&C_Glacier_Flying.mix",
+          "archive_sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+          "member": "C&C_Glacier_Flying.ddb",
+          "member_sha256": "50fe3af905c6f5fd83280ca8bd2102177f85f9160310c94baf6033c6c4304ec9",
+          "index_record": 18,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020500"
+          ],
+          "first_pointer_offset": 1294,
+          "candidate_instances": 1
+        },
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020500"
+          ],
+          "first_pointer_offset": 50200,
+          "candidate_instances": 405
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "DecorationPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132353,
+      "chunk_id_hex": "0x00020501",
+      "candidate_instances": 219,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020501"
+          ],
+          "first_pointer_offset": 3559045,
+          "candidate_instances": 219
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "HumanPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132355,
+      "chunk_id_hex": "0x00020503",
+      "candidate_instances": 8,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020503"
+          ],
+          "first_pointer_offset": 57515,
+          "candidate_instances": 8
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "MotorcycleDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132357,
+      "chunk_id_hex": "0x00020505",
+      "candidate_instances": 97,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020505"
+          ],
+          "first_pointer_offset": 52395,
+          "candidate_instances": 97
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "Phys3DefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132358,
+      "chunk_id_hex": "0x00020506",
+      "candidate_instances": 5,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020506"
+          ],
+          "first_pointer_offset": 3653266,
+          "candidate_instances": 5
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "ProjectileDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132360,
+      "chunk_id_hex": "0x00020508",
+      "candidate_instances": 44,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020508"
+          ],
+          "first_pointer_offset": 50687,
+          "candidate_instances": 44
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "StaticPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132361,
+      "chunk_id_hex": "0x00020509",
+      "candidate_instances": 23,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020509"
+          ],
+          "first_pointer_offset": 55357,
+          "candidate_instances": 23
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "WheeledVehicleDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132362,
+      "chunk_id_hex": "0x0002050A",
+      "candidate_instances": 101,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0002050A"
+          ],
+          "first_pointer_offset": 88424,
+          "candidate_instances": 101
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "StaticAnimPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132363,
+      "chunk_id_hex": "0x0002050B",
+      "candidate_instances": 102,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0002050B"
+          ],
+          "first_pointer_offset": 75400,
+          "candidate_instances": 102
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "TimedDecorationPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132365,
+      "chunk_id_hex": "0x0002050D",
+      "candidate_instances": 47,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0002050D"
+          ],
+          "first_pointer_offset": 71108,
+          "candidate_instances": 47
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "TrackedVehicleDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132366,
+      "chunk_id_hex": "0x0002050E",
+      "candidate_instances": 26,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0002050E"
+          ],
+          "first_pointer_offset": 73850,
+          "candidate_instances": 26
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "VTOLVehicleDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132367,
+      "chunk_id_hex": "0x0002050F",
+      "candidate_instances": 49,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0002050F"
+          ],
+          "first_pointer_offset": 3685710,
+          "candidate_instances": 49
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "DynamicAnimPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 132369,
+      "chunk_id_hex": "0x00020511",
+      "candidate_instances": 25,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020511"
+          ],
+          "first_pointer_offset": 3695901,
+          "candidate_instances": 25
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "AccessiblePhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 134144,
+      "chunk_id_hex": "0x00020C00",
+      "candidate_instances": 102,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020C00"
+          ],
+          "first_pointer_offset": 58019,
+          "candidate_instances": 102
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "DoorPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 134145,
+      "chunk_id_hex": "0x00020C01",
+      "candidate_instances": 64,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020C01"
+          ],
+          "first_pointer_offset": 323425,
+          "candidate_instances": 64
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "ElevatorPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 134146,
+      "chunk_id_hex": "0x00020C02",
+      "candidate_instances": 331,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020C02"
+          ],
+          "first_pointer_offset": 261526,
+          "candidate_instances": 331
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "DamageableStaticPhysDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 134147,
+      "chunk_id_hex": "0x00020C03",
+      "candidate_instances": 249,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00020C03"
+          ],
+          "first_pointer_offset": 235048,
+          "candidate_instances": 249
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "BuildingAggregateDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 196608,
+      "chunk_id_hex": "0x00030000",
+      "candidate_instances": 10004,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00030000"
+          ],
+          "first_pointer_offset": 15916,
+          "candidate_instances": 10004
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "AudibleSoundDefinitionClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262403,
+      "chunk_id_hex": "0x00040103",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040103"
+          ],
+          "first_pointer_offset": 94871,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "C4GameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262407,
+      "chunk_id_hex": "0x00040107",
+      "candidate_instances": 105,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040107"
+          ],
+          "first_pointer_offset": 52023,
+          "candidate_instances": 105
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "PowerUpGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262409,
+      "chunk_id_hex": "0x00040109",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040109"
+          ],
+          "first_pointer_offset": 30401,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "SAMSiteGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262411,
+      "chunk_id_hex": "0x0004010B",
+      "candidate_instances": 289,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004010B"
+          ],
+          "first_pointer_offset": 44530,
+          "candidate_instances": 289
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "SimpleGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262415,
+      "chunk_id_hex": "0x0004010F",
+      "candidate_instances": 217,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004010F"
+          ],
+          "first_pointer_offset": 392546,
+          "candidate_instances": 217
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "SoldierGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262433,
+      "chunk_id_hex": "0x00040121",
+      "candidate_instances": 273,
+      "occurrences": [
+        {
+          "map": "C&C_Glacier_Flying.mix",
+          "archive_sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+          "member": "C&C_Glacier_Flying.ddb",
+          "member_sha256": "50fe3af905c6f5fd83280ca8bd2102177f85f9160310c94baf6033c6c4304ec9",
+          "index_record": 18,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040121"
+          ],
+          "first_pointer_offset": 1425,
+          "candidate_instances": 1
+        },
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040121"
+          ],
+          "first_pointer_offset": 32,
+          "candidate_instances": 272
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "SpawnerDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262435,
+      "chunk_id_hex": "0x00040123",
+      "candidate_instances": 15,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040123"
+          ],
+          "first_pointer_offset": 15789,
+          "candidate_instances": 15
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "ScriptZoneGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262437,
+      "chunk_id_hex": "0x00040125",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040125"
+          ],
+          "first_pointer_offset": 43459,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "TransitionGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262439,
+      "chunk_id_hex": "0x00040127",
+      "candidate_instances": 145,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040127"
+          ],
+          "first_pointer_offset": 46915,
+          "candidate_instances": 145
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "WeaponDefinitionClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262440,
+      "chunk_id_hex": "0x00040128",
+      "candidate_instances": 140,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040128"
+          ],
+          "first_pointer_offset": 48806,
+          "candidate_instances": 140
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "AmmoDefinitionClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262441,
+      "chunk_id_hex": "0x00040129",
+      "candidate_instances": 160,
+      "occurrences": [
+        {
+          "map": "C&C_Glacier_Flying.mix",
+          "archive_sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+          "member": "C&C_Glacier_Flying.ddb",
+          "member_sha256": "50fe3af905c6f5fd83280ca8bd2102177f85f9160310c94baf6033c6c4304ec9",
+          "index_record": 18,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040129"
+          ],
+          "first_pointer_offset": 32,
+          "candidate_instances": 1
+        },
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040129"
+          ],
+          "first_pointer_offset": 53026,
+          "candidate_instances": 159
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "VehicleGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262442,
+      "chunk_id_hex": "0x0004012A",
+      "candidate_instances": 96,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004012A"
+          ],
+          "first_pointer_offset": 75232,
+          "candidate_instances": 96
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "ExplosionDefinitionClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262444,
+      "chunk_id_hex": "0x0004012C",
+      "candidate_instances": 110,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004012C"
+          ],
+          "first_pointer_offset": 78761,
+          "candidate_instances": 110
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "CinematicGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262446,
+      "chunk_id_hex": "0x0004012E",
+      "candidate_instances": 3,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004012E"
+          ],
+          "first_pointer_offset": 174487,
+          "candidate_instances": 3
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "DamageZoneGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262448,
+      "chunk_id_hex": "0x00040130",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040130"
+          ],
+          "first_pointer_offset": 1129551,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "SpecialEffectsGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262450,
+      "chunk_id_hex": "0x00040132",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040132"
+          ],
+          "first_pointer_offset": 1129864,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "SakuraBossGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262452,
+      "chunk_id_hex": "0x00040134",
+      "candidate_instances": 30,
+      "occurrences": [
+        {
+          "map": "C&C_Glacier_Flying.mix",
+          "archive_sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+          "member": "C&C_Glacier_Flying.ddb",
+          "member_sha256": "50fe3af905c6f5fd83280ca8bd2102177f85f9160310c94baf6033c6c4304ec9",
+          "index_record": 18,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040134"
+          ],
+          "first_pointer_offset": 1575,
+          "candidate_instances": 2
+        },
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040134"
+          ],
+          "first_pointer_offset": 4136783,
+          "candidate_instances": 28
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "BuildingGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262454,
+      "chunk_id_hex": "0x00040136",
+      "candidate_instances": 4,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040136"
+          ],
+          "first_pointer_offset": 1131113,
+          "candidate_instances": 4
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "BeaconGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262456,
+      "chunk_id_hex": "0x00040138",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040138"
+          ],
+          "first_pointer_offset": 4145528,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "RefineryGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262458,
+      "chunk_id_hex": "0x0004013A",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004013A"
+          ],
+          "first_pointer_offset": 4146198,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "PowerPlantGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262460,
+      "chunk_id_hex": "0x0004013C",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004013C"
+          ],
+          "first_pointer_offset": 4146826,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "SoldierFactoryGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262464,
+      "chunk_id_hex": "0x00040140",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040140"
+          ],
+          "first_pointer_offset": 4147447,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "AirStripGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262466,
+      "chunk_id_hex": "0x00040142",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040142"
+          ],
+          "first_pointer_offset": 4147810,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "WarFactoryGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262468,
+      "chunk_id_hex": "0x00040144",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040144"
+          ],
+          "first_pointer_offset": 4148152,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "ComCenterGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262470,
+      "chunk_id_hex": "0x00040146",
+      "candidate_instances": 4,
+      "occurrences": [
+        {
+          "map": "C&C_Glacier_Flying.mix",
+          "archive_sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+          "member": "C&C_Glacier_Flying.ddb",
+          "member_sha256": "50fe3af905c6f5fd83280ca8bd2102177f85f9160310c94baf6033c6c4304ec9",
+          "index_record": 18,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040146"
+          ],
+          "first_pointer_offset": 2177,
+          "candidate_instances": 2
+        },
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040146"
+          ],
+          "first_pointer_offset": 4148778,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "RepairBayGameObjDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262474,
+      "chunk_id_hex": "0x0004014A",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004014A"
+          ],
+          "first_pointer_offset": 1132754,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "MendozaBossGameObjDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 262476,
+      "chunk_id_hex": "0x0004014C",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0004014C"
+          ],
+          "first_pointer_offset": 1133657,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "RaveshawBossGameObjDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263681,
+      "chunk_id_hex": "0x00040601",
+      "candidate_instances": 3,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040601"
+          ],
+          "first_pointer_offset": 186125,
+          "candidate_instances": 3
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "HumanLoiterGlobalSettingsDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263682,
+      "chunk_id_hex": "0x00040602",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040602"
+          ],
+          "first_pointer_offset": 4177872,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "GlobalSettingsDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263683,
+      "chunk_id_hex": "0x00040603",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040603"
+          ],
+          "first_pointer_offset": 4178403,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "HUDGlobalSettingsDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263684,
+      "chunk_id_hex": "0x00040604",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040604"
+          ],
+          "first_pointer_offset": 4179707,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "EvaSettingsDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263685,
+      "chunk_id_hex": "0x00040605",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040605"
+          ],
+          "first_pointer_offset": 4179981,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "CharacterClassSettingsDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263686,
+      "chunk_id_hex": "0x00040606",
+      "candidate_instances": 10,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040606"
+          ],
+          "first_pointer_offset": 4180639,
+          "candidate_instances": 10
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "HumanAnimOverrideDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263687,
+      "chunk_id_hex": "0x00040607",
+      "candidate_instances": 13,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040607"
+          ],
+          "first_pointer_offset": 4182421,
+          "candidate_instances": 13
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "PurchaseSettingsDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263688,
+      "chunk_id_hex": "0x00040608",
+      "candidate_instances": 2,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040608"
+          ],
+          "first_pointer_offset": 4194165,
+          "candidate_instances": 2
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "TeamPurchaseSettingsDefClass"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 263689,
+      "chunk_id_hex": "0x00040609",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00040609"
+          ],
+          "first_pointer_offset": 4194810,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": true,
+      "arm_classes": [
+        "CNCModeSettingsDef"
+      ],
+      "host_lookup_matches": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327680,
+      "chunk_id_hex": "0x00050000",
+      "candidate_instances": 400,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050000"
+          ],
+          "first_pointer_offset": 239,
+          "candidate_instances": 400
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327681,
+      "chunk_id_hex": "0x00050001",
+      "candidate_instances": 904,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050001"
+          ],
+          "first_pointer_offset": 44224,
+          "candidate_instances": 904
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327682,
+      "chunk_id_hex": "0x00050002",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050002"
+          ],
+          "first_pointer_offset": 60479,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327683,
+      "chunk_id_hex": "0x00050003",
+      "candidate_instances": 4,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050003"
+          ],
+          "first_pointer_offset": 95264,
+          "candidate_instances": 4
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327687,
+      "chunk_id_hex": "0x00050007",
+      "candidate_instances": 13261,
+      "occurrences": [
+        {
+          "map": "C&C_Glacier_Flying.mix",
+          "archive_sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+          "member": "C&C_Glacier_Flying.ddb",
+          "member_sha256": "50fe3af905c6f5fd83280ca8bd2102177f85f9160310c94baf6033c6c4304ec9",
+          "index_record": 18,
+          "chunk_path": [
+            "0x00050008",
+            "0x00000101",
+            "0x00050007"
+          ],
+          "first_pointer_offset": 2843,
+          "candidate_instances": 6
+        },
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00050008",
+            "0x00000101",
+            "0x00050007"
+          ],
+          "first_pointer_offset": 4196298,
+          "candidate_instances": 13255
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327702,
+      "chunk_id_hex": "0x00050016",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050016"
+          ],
+          "first_pointer_offset": 179,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327704,
+      "chunk_id_hex": "0x00050018",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050018"
+          ],
+          "first_pointer_offset": 24408,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327705,
+      "chunk_id_hex": "0x00050019",
+      "candidate_instances": 24,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050019"
+          ],
+          "first_pointer_offset": 113593,
+          "candidate_instances": 24
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327708,
+      "chunk_id_hex": "0x0005001C",
+      "candidate_instances": 1,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x0005001C"
+          ],
+          "first_pointer_offset": 161181,
+          "candidate_instances": 1
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    },
+    {
+      "chunk_id": 327718,
+      "chunk_id_hex": "0x00050026",
+      "candidate_instances": 11,
+      "occurrences": [
+        {
+          "map": "always.dbs",
+          "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+          "member": "objects.ddb",
+          "member_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+          "index_record": 1,
+          "chunk_path": [
+            "0x00000101",
+            "0x00000101",
+            "0x00050026"
+          ],
+          "first_pointer_offset": 4038977,
+          "candidate_instances": 11
+        }
+      ],
+      "arm_load_symbol_present": false,
+      "arm_classes": [],
+      "host_lookup_matches": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_arm_symbols_and_host_lookup"
+    }
+  ],
+  "risks": [],
+  "totals": {
+    "maps": 31,
+    "factory_ids": 65,
+    "candidate_instances": 28414,
+    "without_arm_symbol": 10,
+    "without_host_lookup": 10,
+    "metadata_risks": 0
+  },
+  "inventory_scope": "Every DDB index record in supplied MIX/DAT/DBS archives, including duplicate names",
+  "limits": [
+    "Only supplied chunk metadata is covered; other data and saves remain open.",
+    "Aggregated paths identify candidate envelopes, not exact sibling ordering.",
+    "Manual/non-template factories and opaque subsystem payloads remain open.",
+    "Symbols and host lookup do not prove ARM registration or Load/Save behavior.",
+    "Definition class IDs are distinct from persistence chunk IDs."
+  ],
+  "inputs": [
+    {
+      "source": "reports/generated/sweeps/database_chunks.json",
+      "sha256": "f8b2ee17ab943096ed7be2986e337430a4049da9fa7d11e7b59c9d82f6e68165"
+    },
+    {
+      "source": "reports/generated/sweeps/link.json",
+      "sha256": "43fe278752fb0c784d8efd99201bc740c0f78239911c67838bb7587b7b30f408"
+    },
+    {
+      "source": "reports/generated/sweeps/host_persist_registry.json",
+      "sha256": "d991610e271fa398b1c8caf1c160f13f471da3a4b54dfd7638067c00013ef791"
+    }
+  ],
+  "parser_sha256": "54089f80de6fad40d22ef63f2b41ad2850886fd7f35ddc64b641fa5eeeda16e0"
+}

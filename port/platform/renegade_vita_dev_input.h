@@ -3,6 +3,7 @@
 // Opt-in local development input below original DirectInput/game ownership.
 // No socket, emulator hook, save-state mutation or background desktop input.
 #include <psp2/ctrl.h>
+#include "renegade_user_root.h"
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
 #include <psp2/kernel/processmgr.h>
@@ -14,10 +15,10 @@
 
 namespace RenegadeVitaDevInput {
 
-static const char *const kEnable = "ux0:data/renegade/user/config/dev-input-enable.flag";
-static const char *const kSession = "ux0:data/renegade/user/config/dev-input-session.txt";
-static const char *const kCommand = "ux0:data/renegade/user/config/dev-input-command.txt";
-static const char *const kAck = "ux0:data/renegade/user/config/dev-input-ack.txt";
+static const char *const kEnable = RENEGADE_VITA_USER_ROOT "/config/dev-input-enable.flag";
+static const char *const kSession = RENEGADE_VITA_USER_ROOT "/config/dev-input-session.txt";
+static const char *const kCommand = RENEGADE_VITA_USER_ROOT "/config/dev-input-command.txt";
+static const char *const kAck = RENEGADE_VITA_USER_ROOT "/config/dev-input-ack.txt";
 static const uint32_t kButtonMask = 0x0000f3f9U;
 
 struct State {

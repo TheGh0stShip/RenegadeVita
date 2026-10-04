@@ -1,4 +1,5 @@
 #include "a31_vita_runtime.h"
+#include "renegade_user_root.h"
 
 #include "a30_vita_runtime.h"
 #include "a31_interactive_runtime_policy.h"
@@ -265,7 +266,7 @@ bool g_gameplay_pause_requested = false;
 
 const RenegadePathRoots kVitaRoots = {
 	"ux0:data/renegade/retail",
-	"ux0:data/renegade/user",
+	RENEGADE_VITA_USER_ROOT,
 	"ux0:data/renegade/cache",
 	"ux0:data/renegade/mods"
 };
@@ -2687,7 +2688,7 @@ bool Try_Latch_Development_M00_Checkpoint()
 {
 #if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 	const char *const request_path =
-		"ux0:data/renegade/user/config/dev-checkpoint-launch-v1.txt";
+		RENEGADE_VITA_USER_ROOT "/config/dev-checkpoint-launch-v1.txt";
 	FILE *file = fopen(request_path, "rb");
 	if (file == NULL) return false;
 	char request[77];
@@ -2721,7 +2722,7 @@ bool Try_Latch_Development_Campaign_Mission()
 {
 #if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 	const char *const request_path =
-		"ux0:data/renegade/user/config/dev-mission-launch-v1.txt";
+		RENEGADE_VITA_USER_ROOT "/config/dev-mission-launch-v1.txt";
 	FILE *file = fopen(request_path, "rb");
 	if (file == NULL) return false;
 	char request[32];
@@ -2758,7 +2759,7 @@ bool Try_Arm_Development_M13_Completion(const char *load_source)
 #if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 	if (load_source == NULL || stricmp(load_source, "M13.mix") != 0) return false;
 	const char *const request_path =
-		"ux0:data/renegade/user/config/dev-m13-completion-v1.txt";
+		RENEGADE_VITA_USER_ROOT "/config/dev-m13-completion-v1.txt";
 	FILE *file = fopen(request_path, "rb");
 	if (file == NULL) return false;
 	char request[32];
@@ -2787,7 +2788,7 @@ bool Try_Arm_Development_M13_Death(const char *load_source)
 #if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 	if (load_source == NULL || stricmp(load_source, "M13.mix") != 0) return false;
 	const char *const request_path =
-		"ux0:data/renegade/user/config/dev-m13-death-v1.txt";
+		RENEGADE_VITA_USER_ROOT "/config/dev-m13-death-v1.txt";
 	FILE *file = fopen(request_path, "rb");
 	if (file == NULL) return false;
 	char request[32];
@@ -2816,7 +2817,7 @@ bool Try_Arm_Development_M13_A03_Field(const char *load_source)
 #if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 	if (load_source == NULL || stricmp(load_source, "M13.mix") != 0) return false;
 	const char *const request_path =
-		"ux0:data/renegade/user/config/dev-m13-a03-field-v1.txt";
+		RENEGADE_VITA_USER_ROOT "/config/dev-m13-a03-field-v1.txt";
 	FILE *file = fopen(request_path, "rb");
 	if (file == NULL) return false;
 	char request[32];
@@ -3055,7 +3056,7 @@ void Warm_M13_World_Killed_Explosions(A31VitaLoadingPresenter &presenter)
 #if !RENEGADE_VITA_M00_DEMO
 int Try_Begin_Direct_Client(A31ClientConnect &join, bool &network_initialized)
 {
-	const char *path = "ux0:data/renegade/user/config/direct-ip-launch-v1.txt";
+	const char *path = RENEGADE_VITA_USER_ROOT "/config/direct-ip-launch-v1.txt";
 	FILE *file = fopen(path, "rb");
 	if (!file) return 0;
 	char text[64] = {};
@@ -3082,7 +3083,7 @@ int Try_Begin_Direct_Client(A31ClientConnect &join, bool &network_initialized)
 		text, tt_client ? "TT-experimental" : "legacy");
 	if (!join.Begin()) return -1;
 	join.Configure_Resources("ux0:data/renegade/cache/ttfs",
-		"ux0:data/renegade/user/config/cacert.pem");
+		RENEGADE_VITA_USER_ROOT "/config/cacert.pem");
 	return 1;
 }
 #endif
@@ -3514,7 +3515,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		WWAudioClass application_audio(false);
 		application_audio.Initialize();
 		const bool options_loaded = RenegadeVitaUserSettings::Configure(
-			"ux0:data/renegade/user/config/options-v1.cfg");
+			RENEGADE_VITA_USER_ROOT "/config/options-v1.cfg");
 		const RenegadeResolvedPath ranks_path = Renegade_Resolve_Path(
 			kVitaRoots, "user/config/mission-ranks-v1.cfg", RENEGADE_PATH_WRITE);
 		const char *ranks_key = Build_Registry_Location_String(
@@ -3927,7 +3928,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				A31VitaScopedLoadingPresenterCallback loading_callback(
 					loading_presenter);
 				FILE *lookup_request = fopen(
-					"ux0:data/renegade/user/config/script-coverage.flag", "rb");
+					RENEGADE_VITA_USER_ROOT "/config/script-coverage.flag", "rb");
 				const bool lookup_enabled = lookup_request != NULL;
 				if (lookup_request != NULL) fclose(lookup_request);
 				A35_Campaign_Flight_Reset(RENEGADE_BUILD_CANDIDATE_LABEL,
@@ -4444,7 +4445,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if !RENEGADE_VITA_M00_DEMO
 				if (remote_client) {
 					const char *const terminal_request =
-						"ux0:data/renegade/user/config/dev-tt-purchase-menu-once.flag";
+						RENEGADE_VITA_USER_ROOT "/config/dev-tt-purchase-menu-once.flag";
 					FILE *request = fopen(terminal_request, "rb");
 					if (request != NULL) {
 						const bool request_closed = fclose(request) == 0;

@@ -40,10 +40,18 @@ if(RENEGADE_VITA_M00_DEMO)
 else()
   set(RENEGADE_BUILD_PROFILE "FULL-PORT-DEVELOPMENT")
 endif()
+# Writable root (settings, saves, logs, captures). The VitaD3D graphics
+# variant keeps its own so it never shares writable state with the default
+# build installed on the same device.
+if(RENEGADE_GRAPHICS_D3DVITA)
+  set(RENEGADE_VITA_USER_ROOT "ux0:data/renegade/user-d3dvita")
+else()
+  set(RENEGADE_VITA_USER_ROOT "ux0:data/renegade/user")
+endif()
 set(RENEGADE_RUNTIME_LOG_PATH
-  "ux0:data/renegade/user/logs/${RENEGADE_CANDIDATE_STEM}-runtime.log")
+  "${RENEGADE_VITA_USER_ROOT}/logs/${RENEGADE_CANDIDATE_STEM}-runtime.log")
 set(RENEGADE_STARTUP_PRECACHE_RECEIPT_PATH
-  "ux0:data/renegade/user/logs/${RENEGADE_CANDIDATE_STEM}-startup-precache.txt")
+  "${RENEGADE_VITA_USER_ROOT}/logs/${RENEGADE_CANDIDATE_STEM}-startup-precache.txt")
 
 # VitaDevBridge's package installer requires a bounded non-empty CONTENT_ID in
 # sce_sys/param.sfo. Keep it under the same RNEGA3101 title so the package
@@ -573,6 +581,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   UMBRASUPPORT=0
   RENEGADE_RUNTIME_READ_ONLY=1
   RENEGADE_VITA_PORT=1
+  "RENEGADE_VITA_USER_ROOT=\"${RENEGADE_VITA_USER_ROOT}\""
   RENEGADE_VITA_A30=1
   RENEGADE_VITA_A31=1
   RENEGADE_A35_ORIGINAL_WWAUDIO=1

@@ -1,4 +1,5 @@
 #include "a30_vita_runtime.h"
+#include "renegade_user_root.h"
 #include "a31_vita_runtime.h"
 #include "renegade_build_identity.h"
 #include "vita_platform.h"
@@ -26,7 +27,7 @@ void Write_Boot_Trace(const char *phase, unsigned result, bool reset = false)
 	const int flags = SCE_O_WRONLY | SCE_O_CREAT |
 		(reset ? SCE_O_TRUNC : SCE_O_APPEND);
 	const SceUID file = sceIoOpen(
-		"ux0:data/renegade/user/logs/" RENEGADE_BUILD_CANDIDATE_LABEL "-boot-v1.log",
+		RENEGADE_VITA_USER_ROOT "/logs/" RENEGADE_BUILD_CANDIDATE_LABEL "-boot-v1.log",
 		flags, 0666);
 	if (file < 0) return;
 	char line[128];

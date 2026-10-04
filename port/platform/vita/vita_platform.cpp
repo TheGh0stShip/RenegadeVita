@@ -1,4 +1,5 @@
 #include "vita_platform.h"
+#include "renegade_user_root.h"
 #include "vita_runtime_log.h"
 #include "renegade_build_identity.h"
 
@@ -122,12 +123,12 @@ VitaBootstrapStatus Vita_Initialize_Filesystem()
 	VitaBootstrapStatus status = {};
 	const char *const writable_directories[] = {
 		"ux0:data/renegade",
-		"ux0:data/renegade/user",
-		"ux0:data/renegade/user/save",
-		"ux0:data/renegade/user/saves",
-		"ux0:data/renegade/user/config",
-		"ux0:data/renegade/user/logs",
-		"ux0:data/renegade/user/screenshots",
+		RENEGADE_VITA_USER_ROOT,
+		RENEGADE_VITA_USER_ROOT "/save",
+		RENEGADE_VITA_USER_ROOT "/saves",
+		RENEGADE_VITA_USER_ROOT "/config",
+		RENEGADE_VITA_USER_ROOT "/logs",
+		RENEGADE_VITA_USER_ROOT "/screenshots",
 		"ux0:data/renegade/cache",
 		"ux0:data/renegade/mods",
 	};

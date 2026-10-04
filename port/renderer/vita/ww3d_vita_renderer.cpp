@@ -1,4 +1,5 @@
 #include "ww3d_vita_renderer.h"
+#include "renegade_user_root.h"
 #include "ww3d_vita_texture_transform.h"
 
 #include "camera.h"
@@ -260,7 +261,7 @@ void Invalidate_Texture_Object_Samplers()
 void Read_Render_Work_Cache_Mode()
 {
 	g_render_work_cache_mode = 15U;
-	FILE *file = fopen("ux0:data/renegade/user/config/render-work-cache-v1.flag", "rb");
+	FILE *file = fopen(RENEGADE_VITA_USER_ROOT "/config/render-work-cache-v1.flag", "rb");
 	if (file != NULL) {
 		char value[9] = {};
 		const size_t size = fread(value, 1U, sizeof(value), file);

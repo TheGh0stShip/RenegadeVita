@@ -1,4 +1,5 @@
 #include "binkmovie.h"
+#include "renegade_user_root.h"
 #include "a4_frontend_lifecycle_boundary.h"
 
 #if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)
@@ -71,7 +72,7 @@ constexpr uint32_t kSkipButtonMask =
 
 const RenegadePathRoots kVitaRoots = {
 	"ux0:data/renegade/retail",
-	"ux0:data/renegade/user",
+	RENEGADE_VITA_USER_ROOT,
 	"ux0:data/renegade/cache",
 	"ux0:data/renegade/mods"
 };

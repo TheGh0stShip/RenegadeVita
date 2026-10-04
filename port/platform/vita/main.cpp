@@ -1,4 +1,5 @@
 #include "vita_platform.h"
+#include "renegade_user_root.h"
 #include "wwbitpack_selftest.h"
 #include "a22_w3d_selftest.h"
 
@@ -123,7 +124,7 @@ int main()
 	VitaBootstrapStatus status = Vita_Initialize_Filesystem();
 	const RenegadePathRoots roots = {
 		"ux0:data/renegade/retail",
-		"ux0:data/renegade/user",
+		RENEGADE_VITA_USER_ROOT,
 		"ux0:data/renegade/cache",
 		"ux0:data/renegade/mods"
 	};

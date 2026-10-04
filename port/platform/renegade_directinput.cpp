@@ -4,6 +4,7 @@
 // established logical button and axis tables.
 
 #include "directinput.h"
+#include "renegade_user_root.h"
 #include "dinput.h"
 #include "renegade_vita_button_state_contract.h"
 #include "renegade_vita_input_contract.h"
@@ -56,13 +57,13 @@ using RenegadeVitaInputRoute::Sample;
 using RenegadeVitaInputRoute::TimedSample;
 
 const char *const kRecordMarker =
-	"ux0:data/renegade/user/config/input-record-once.flag";
+	RENEGADE_VITA_USER_ROOT "/config/input-record-once.flag";
 const char *const kReplayMarker =
-	"ux0:data/renegade/user/config/input-replay-once.flag";
+	RENEGADE_VITA_USER_ROOT "/config/input-replay-once.flag";
 const char *const kRoutePath =
-	"ux0:data/renegade/user/config/input-route-v1.bin";
+	RENEGADE_VITA_USER_ROOT "/config/input-route-v1.bin";
 const char *const kRouteTemporaryPath =
-	"ux0:data/renegade/user/config/input-route-v1.tmp";
+	RENEGADE_VITA_USER_ROOT "/config/input-route-v1.tmp";
 
 TimedSample *g_route_samples = NULL;
 uint32_t g_route_sample_count = 0U;
@@ -499,7 +500,7 @@ void DirectInput::Init(void)
 	memset(&g_vita_input_telemetry, 0, sizeof(g_vita_input_telemetry));
 #if !defined(RENEGADE_HOST_ABI_TEST)
 	g_select_capture_enabled = Is_Regular_File(
-		"ux0:data/renegade/user/config/input-capture-select.flag");
+		RENEGADE_VITA_USER_ROOT "/config/input-capture-select.flag");
 	Initialize_Route_Mode();
 	RenegadeVitaDevInput::Initialize(g_route_mode == RenegadeVitaInputRoute::MODE_PASSTHROUGH);
 #endif

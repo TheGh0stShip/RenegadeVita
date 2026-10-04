@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_cinematic_parser_and_save_load_asan_ubsan",
+  "binary_sha256": "f934b25a78ccad8fff592fda4b740802d8ad8f073bb8bedcd5792a9b5d10d783",
+  "runtime_log_sha256": "aefd796b70f29fa2daa948980758183b890e6ef72c39b1744d9428991c869331",
+  "source_sha256": {
+    "tools/host_cinematic_save_test.cpp": "61bb01f6c5799b694647bbe0cbe7fdc309aafd2a2aeed402241953d2ea69002f",
+    "tools/test_cinematic_save.py": "bfa7577a3f100bc2787794ab8587c10a1a2a3fcc0600b969dae6229447499431",
+    "staging/scripts/Test_Cinematic.cpp": "27d313ac1704b6e3e6f38b9e9bd8b6e7714f3202d0d09d69e75bd46cf8a2023c",
+    "staging/scripts/scripts.cpp": "22558a594370767c103e90490d1ec9c9c174e8371c8e4d958af402ee4cf398b0",
+    "staging/scripts/ScriptFactory.cpp": "b536f6f5b740117b2054cd70e10c4bec4f20a03531a53654cc04017753cb1988",
+    "staging/scripts/ScriptRegistrar.cpp": "a3f7b2627e23ef7547ae018d0b7aedca430a7e0b3123e904c21199c91bc1de75",
+    "staging/scripts/strtrim.cpp": "9fd9d877e95eb0070726f4cb131becb32e140a10814c5b628c3106fed258523a"
+  },
+  "parameter_cases": 7,
+  "independent_cursors_passed": true,
+  "save_load_passed": true,
+  "pending_audio_once_passed": true,
+  "asan_ubsan_passed": true,
+  "limits": [
+    "Synthetic mutable strings and fixture chunk transport; no retail payloads.",
+    "Full command dispatch, malformed save fields and retail playback remain open.",
+    "Host LP64 probe does not prove ARM ILP32 serialization or physical behavior."
+  ]
+}

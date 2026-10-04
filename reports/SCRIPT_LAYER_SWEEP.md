@@ -1,5 +1,31 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Original cinematic parser sanitizer fixture — 2026-10-04
+
+The original Test_Cinematic implementation now passes seven mutable-input
+parameter cases under ASan/UBSan: empty input, surrounding whitespace, a quoted
+comma, empty comma fields, an unterminated quote, repeated end-of-input reads,
+and a 600-character parameter. Two simultaneous script instances also retain
+independent parameter cursors. Constructor, parser and destructor run directly;
+the tests do not replace the parser with a reimplementation.
+
+The combined fixture also passes the existing original save/load camera, clock,
+slot and control-command checks, plus pending audio executing once after
+save/load. Chunk transport and playback callbacks are synthetic fixture seams.
+This bounded test does not establish arbitrary malformed-save handling, full
+command dispatch, retail movie/audio synchronization or cinematic presentation.
+
+Reproduce with `python3 -m unittest tools.test_cinematic_save`. Set
+RENEGADE_CINEMATIC_PROBE_DIRECTORY to a private build directory to retain the
+matching executable, compiler/runtime logs and receipt. The public sanitized
+receipt is `reports/generated/sweeps/host_cinematic_parser.json`; it binds the
+host executable and seven source hashes. Host LP64 behavior is distinct from
+ARM ILP32 serialization, alignment and physical acceptance.
+
+Only the host fixture/harness changed. Original runtime source and the Dev220
+ARM candidate are unchanged. No device, emulator or adjacent D3D modification
+occurred; native acceptance remains open.
+
 ## Parameter syntax beyond live bodies — 2026-10-04
 
 All 45 Scripts.dsp translation units and all 45 supplied Scripts headers now

@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Original cinematic parser sanitizers — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:seven original parser cases and independent cursors pass under
+ASan/UBSan, alongside camera/clock/slot/control save-load and pending audio once.
+Evidence:retained matching host executable, compiler/runtime logs and source-hash
+receipt. Runtime sources and retained ARM candidate are unchanged.
+Next: cinematic command dispatch and malformed-save bounds; startup modes.
+Blocker:none for engineering; retail playback/native acceptance remain open.
+No device action or emulator launch.
+See [script ledger](SCRIPT_LAYER_SWEEP.md).
+
 ## Parameter-method surface breadth — 2026-10-04
 
 Renegade Vita — v3.5 active

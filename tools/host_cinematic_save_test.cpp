@@ -33,8 +33,39 @@ public:
 static unsigned Clock = 1000;
 static std::vector<std::string> PlayedCues;
 
+static void Check_Command_Parameters()
+{
+	const std::vector<std::pair<std::string, std::vector<std::string>>> cases = {
+		{"", {"", ""}},
+		{" a , b ", {"a", "b", ""}},
+		{"\"a,b\", c", {"a,b", "c", ""}},
+		{",x,", {"", "x", "", ""}},
+		{"\"unterminated", {"unterminated", ""}},
+		{"one", {"one", "", ""}},
+		{std::string(600, 'x') + ",end", {std::string(600, 'x'), "end", ""}},
+	};
+	for (const auto &item : cases) {
+		Test_Cinematic script;
+		assert(strcmp(script.Get_Next_Parameter(), "") == 0);
+		std::string input = item.first;
+		for (size_t i = 0; i < item.second.size(); ++i) {
+			const char *value = i == 0 ? script.Get_First_Parameter(input.data()) : script.Get_Next_Parameter();
+			assert(value != nullptr && item.second[i] == value);
+		}
+	}
+	Test_Cinematic first, second;
+	char first_input[] = "a,b";
+	char second_input[] = "c,d";
+	assert(strcmp(first.Get_First_Parameter(first_input), "a") == 0);
+	assert(strcmp(second.Get_First_Parameter(second_input), "c") == 0);
+	assert(strcmp(first.Get_Next_Parameter(), "b") == 0);
+	assert(strcmp(second.Get_Next_Parameter(), "d") == 0);
+	puts("Original cinematic command parameter parsing: 7 cases and independent cursors PASS");
+}
+
 int main()
 {
+	Check_Command_Parameters();
 	ScriptCommands commands = {};
 	commands.Get_Sync_Time = []() { return Clock; };
 	commands.Get_ID = [](GameObject *) { return 1; };

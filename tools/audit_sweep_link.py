@@ -26,12 +26,18 @@ def registration_candidates(code):
         'definition': r'\bDECLARE_DEFINITION_FACTORY\s*\(\s*(\w+)\s*,\s*(\w+)\s*,[^)]*\)\s*(\w+)',
         'network': r'\bDECLARE_NETWORKOBJECT_FACTORY\s*\(\s*(\w+)\s*,\s*(\w+)',
         'persist': r'\bSimplePersistFactoryClass\s*<\s*(\w+)\s*,\s*(\w+)\s*>\s*(\w+)\s*[;(]',
+        'prototype_install': r'\bRegister_Prototype_Loader\s*\(\s*&\s*(\w+)\s*\)',
+        'console_install': r'\bFunctionList\s*\.\s*Add\s*\(\s*new\s+(\w+)\s*(?:\(\s*\))?\s*\)',
+        'game_mode_install': r'\bGameModeManager\s*::\s*Add\s*\(\s*new\s+(\w+)\s*(?:\(\s*\))?\s*\)',
+        'game_mode_reference_install': r'\bGameModeManager\s*::\s*Add\s*\(\s*&\s*(\w+)\s*\)',
+        'manual_factory_call': r'\b(SaveLoadSystemClass::Register_Persist_Factory|DefinitionFactoryMgrClass::Register_Factory)\s*\(\s*(this|\w+)\s*\)',
     }
     found = []
     for kind, expression in expressions.items():
         for match in re.finditer(expression, masked):
             found.append({'kind': kind, 'arguments': list(match.groups()),
                           'line': code.count('\n', 0, match.start()) + 1,
+                          'column': match.start() - code.rfind('\n', 0, match.start()),
                           'status': 'unknown', 'evidence_class': 'source_candidate'})
     return sorted(found, key=lambda r: (r['line'], r['kind']))
 
@@ -58,11 +64,21 @@ def inventory(root, database, target, map_bytes, symbol_bytes=b''):
     symbols = defined_symbols(symbol_bytes)
     rows = []
     registrars = []
-    for source in sorted((root / 'staging').rglob('*')):
-        if source.suffix.lower() not in ('.cpp', '.c', '.cc', '.cxx'):
+    registration_sources = []
+    translation_extensions = {'.cpp', '.c', '.cc', '.cxx'}
+    source_extensions = translation_extensions | {'.h', '.hh', '.hpp', '.hxx', '.inl', '.inc', '.ipp'}
+    source_paths = sorted(source for directory in ('staging', 'port')
+                          for source in (root / directory).rglob('*'))
+    for source in source_paths:
+        if source.suffix.lower() not in source_extensions or not source.is_file():
             continue
         name = source.relative_to(root).as_posix()
         obj = selected.get(source.resolve())
+        translation_unit = source.suffix.lower() in translation_extensions
+        registration_sources.append({'source': name,
+            'source_sha256': digest(source.read_bytes()),
+            'source_origin': name.split('/')[0],
+            'source_kind': 'translation_unit' if translation_unit else 'header_or_fragment'})
         for candidate in registration_candidates(source.read_text(errors='replace')):
             expected = None
             if candidate['kind'] == 'script':
@@ -73,12 +89,17 @@ def inventory(root, database, target, map_bytes, symbol_bytes=b''):
                 expected = candidate['arguments'][2]
             elif candidate['kind'] == 'network':
                 expected = candidate['arguments'][0] + 'Factory'
+            elif candidate['kind'] == 'prototype_install':
+                expected = candidate['arguments'][0]
             registrars.append(dict(candidate, source=name,
-                                   id=digest(f'{name}:{candidate["line"]}:{candidate["kind"]}'.encode()),
-                                   selected_for_target=obj is not None,
+                                   id=digest(f'{name}:{candidate["line"]}:{candidate["column"]}:{candidate["kind"]}'.encode()),
+                                   selected_for_target=(obj is not None if translation_unit else None),
+                                   source_kind='translation_unit' if translation_unit else 'header_or_fragment',
                                    expected_symbol=expected,
                                    defined_symbol_matches=symbols.get(expected, []),
                                    registration_verified=False))
+        if not translation_unit or not name.startswith('staging/'):
+            continue
         rows.append({'id': digest(name.encode()), 'source': name,
                      'source_sha256': digest(source.read_bytes()),
                      'selected_for_target': obj is not None,
@@ -102,8 +123,9 @@ def inventory(root, database, target, map_bytes, symbol_bytes=b''):
     return {'schema': 1, 'sweep': 'S3', 'target': target, 'complete': False,
             'scope': 'All staged C/C++ translation units; includes potential non-runtime units',
             'open_risks': ['Runtime versus editor/tool upstream classification',
-                           'Manual, templated, alternate and header registrars',
-                           'Console/game-mode/prototype registrations',
+                           'Computed/manual arguments, alternate templates and macro expansions',
+                           'Header inclusion and constructor/installation execution',
+                           'Raw-string lexical masking and registration forms not matched by the explicit patterns',
                            'Inactive preprocessor registration candidates',
                            'Discarded versus retained sections', 'Retail factory IDs',
                            'Selected sources may differ from the retained build inputs'],
@@ -122,11 +144,16 @@ def inventory(root, database, target, map_bytes, symbol_bytes=b''):
             'upstream_without_staged_candidate': sum(not r['staged_candidates'] for r in upstream_rows),
             'upstream_rows': upstream_rows,
             'registration_candidate_total': len(registrars),
+            'registration_scope': 'Explicit matched declarations/install calls in staging and port sources, headers and fragments; unpreprocessed candidates only',
+            'registration_source_total': len(registration_sources),
+            'registration_sources': registration_sources,
             'registration_candidates_with_defined_symbol': sum(bool(r['defined_symbol_matches']) for r in registrars),
             'unmatched_selected_script_candidates': sum(r['kind'] == 'script' and
-                r['selected_for_target'] and not r['defined_symbol_matches'] for r in registrars),
+                r['selected_for_target'] is True and not r['defined_symbol_matches'] for r in registrars),
             'unmatched_unselected_script_candidates': sum(r['kind'] == 'script' and
-                not r['selected_for_target'] and not r['defined_symbol_matches'] for r in registrars),
+                r['selected_for_target'] is False and not r['defined_symbol_matches'] for r in registrars),
+            'script_candidates_with_unknown_selection': sum(r['kind'] == 'script' and
+                r['selected_for_target'] is None for r in registrars),
             'registration_candidates': registrars}
 
 

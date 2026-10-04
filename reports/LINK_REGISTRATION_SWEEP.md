@@ -1,5 +1,45 @@
 # S3 link and registration closure — inventory in progress
 
+## Header and installation discovery — 2026-10-03
+
+Registration discovery now scans 2,150 source files: 1,947 staged files and
+203 port files, including headers and fragments. The translation-unit
+denominator remains 837 staged units. Dev220 selects 605, and its matching map
+mentions all 605 objects. These observations do not prove section retention.
+
+The inventory contains 2,215 registration candidates: 1,745 script declarations,
+140 persist factories, 58 definition factories, 41 network declarations,
+194 console installations, 17 prototype-loader installations, 10 allocated
+game-mode installations, eight borrowed game-mode installations and two manual
+factory-registration calls. There are 1,878 defined-symbol candidate matches.
+Every registration candidate retains unknown behavior and unverified execution.
+
+Header membership in a compiled target is unknown; it is no longer counted as
+an unselected translation unit. One header script candidate is retained with
+unknown membership. Macro declarations and inactive branches remain candidates,
+not additional proven runtime registrations. Same-line candidates have distinct
+column-based identities, avoiding accidental row collapse.
+
+Four prototype installations are present both in unselected original init.cpp
+and the selected native startup replacement. Borrowed game-mode installations
+are also present in port startup. This establishes source routes, not executed
+installation or complete equivalence. The adjacent D3D variant separately
+selects the original DX8 renderer owners; it was inspected without modification.
+Registration discovery applies to either graphics path.
+
+Twenty-one focused discovery/consumer/consolidation tests pass. The W3D consumer
+receipt was regenerated against the new link inventory, preserving its 98 chunk
+rows and reviewed consumer evidence. Consolidation rejects stale dependent
+identities. The gap register now contains 40,424 overlapping records, including
+40,160 unknowns; these are not counts of distinct defects. Runtime source and
+the retained Dev220 host/ARM binaries are unchanged by this tooling batch.
+
+Remaining risks include computed arguments, alternate/template and expanded
+macro forms, raw strings, header inclusion, active branches, discarded sections,
+constructor execution and retail factory IDs. Next: probe live original factory
+lookup on host, then reconcile numeric IDs across all retail maps. Host results
+will remain separate from physical Vita/PSTV acceptance.
+
 The retained ARM symbol inventory now includes 140 numeric persist Load
 methods, with class, chunk ID, symbol/address/type evidence. This supports
 all-map retail chunk-ID reconciliation without evaluating symbolic constants

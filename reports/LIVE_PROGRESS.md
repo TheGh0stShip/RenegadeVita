@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Registration discovery expansion — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: S3 scans headers/fragments and port startup replacements, retaining
+console, prototype, game-mode and manual factory calls. Same-line candidate IDs
+are distinct; header target membership remains unknown. Dependent W3D consumer
+identities and the consolidated gap register reconcile.
+Evidence: 21 focused tests pass; Dev220 matching map/symbols show605 selected
+staged units and1,878 defined-symbol candidate matches. No runtime code changed.
+Next: original-engine live factory lookup and all-map numeric-ID reconciliation.
+Blocker: none for source work; registration execution and native acceptance open.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Indexed primary lighting batch — 2026-10-03
 
 Renegade Vita — v3.5 active

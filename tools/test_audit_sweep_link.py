@@ -5,6 +5,71 @@ from tools.audit_sweep_link import inventory, registration_candidates, defined_s
 
 
 class LinkInventoryTests(unittest.TestCase):
+    def test_same_line_registrations_have_distinct_identities(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'staging').mkdir()
+            (root / 'staging/a.cpp').write_text('DECLARE_SCRIPT(A, ""); DECLARE_SCRIPT(B, "");')
+            result = inventory(root, [], 'native', b'')
+            rows = result['registration_candidates']
+            self.assertEqual(len(rows), 2)
+            self.assertEqual(len({row['id'] for row in rows}), 2)
+            self.assertEqual([row['line'] for row in rows], [1, 1])
+            self.assertLess(rows[0]['column'], rows[1]['column'])
+
+    def test_manual_installation_forms_are_candidates(self):
+        code = '''Register_Prototype_Loader(&_MeshLoader);
+FunctionList.Add(new FogConsoleFunctionClass());
+GameModeManager::Add(new CombatGameModeClass);
+GameModeManager::Add(&frontend_combat_mode);
+SaveLoadSystemClass::Register_Persist_Factory(this);
+DefinitionFactoryMgrClass::Register_Factory(this);
+// GameModeManager::Add(new Fake);
+const char *s = "Register_Prototype_Loader(&Fake)";
+'''
+        rows = registration_candidates(code)
+        self.assertEqual([r['kind'] for r in rows], ['prototype_install', 'console_install',
+            'game_mode_install', 'game_mode_reference_install', 'manual_factory_call', 'manual_factory_call'])
+        self.assertEqual(rows[0]['arguments'], ['_MeshLoader'])
+        self.assertTrue(all(r['status'] == 'unknown' for r in rows))
+
+    def test_header_candidate_has_unknown_target_membership(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'staging').mkdir()
+            (root / 'staging/a.cpp').write_text('Register_Prototype_Loader(&_MeshLoader);')
+            (root / 'staging/factory.H').write_text('DECLARE_SCRIPT(HeaderScript, "")')
+            (root / 'staging/ignore.txt').write_text('DECLARE_SCRIPT(Ignored, "")')
+            result = inventory(root, [], 'native', b'', b'81200000 B _MeshLoader\n')
+            self.assertEqual(result['total'], 1)
+            self.assertEqual(result['registration_source_total'], 2)
+            self.assertEqual(result['registration_candidate_total'], 2)
+            header = next(r for r in result['registration_candidates'] if r['kind'] == 'script')
+            self.assertIsNone(header['selected_for_target'])
+            self.assertEqual(result['unmatched_unselected_script_candidates'], 0)
+            self.assertEqual(result['script_candidates_with_unknown_selection'], 1)
+            prototype = next(r for r in result['registration_candidates'] if r['kind'] == 'prototype_install')
+            self.assertEqual(prototype['expected_symbol'], '_MeshLoader')
+            self.assertTrue(prototype['defined_symbol_matches'])
+            self.assertFalse(prototype['registration_verified'])
+
+    def test_port_replacement_calls_do_not_change_staged_unit_denominator(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'staging').mkdir()
+            (root / 'staging/a.cpp').write_text('')
+            (root / 'port').mkdir()
+            (root / 'port/startup.cpp').write_text('GameModeManager::Add(new CombatGameModeClass);')
+            db = [{'directory': folder, 'file': 'port/startup.cpp',
+                   'output': 'CMakeFiles/native.dir/port/startup.cpp.obj'}]
+            result = inventory(root, db, 'native', b'')
+            self.assertEqual(result['total'], 1)
+            self.assertEqual(result['registration_source_total'], 2)
+            row = result['registration_candidates'][0]
+            self.assertEqual(row['source'], 'port/startup.cpp')
+            self.assertTrue(row['selected_for_target'])
+            self.assertFalse(row['registration_verified'])
+
     def test_defined_symbols_reject_undefined_and_keep_duplicate_addresses(self):
         result = defined_symbols(b'81700000 B _Example\n81700004 b _Example\n U _Absent\n00000000 U _Absent2\n81200000 T a function()\n')
         self.assertEqual(len(result['_Example']), 2)

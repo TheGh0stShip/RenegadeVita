@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "e57a7bad1b29729ba3aaa7fb0c803156162662c512d079d3591d9ea228280b80",
-  "patch_count": 308,
+  "stage_script_sha256": "afe9171cdd82668e96821cf79e831b0639cf3bb642aeacef567e1d9c59f40a5a",
+  "patch_count": 309,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1535,6 +1535,11 @@
       "sha256": "027962c92ac86bce20036a7cfeedfb58dc85f795c955a5296bb6d31e93a9d7e0"
     },
     {
+      "path": "port/patches/ww3d-a35-original-statistics-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "6311de080c87c5e0f5dbe186641775f7d1b8bac7ead4c9e4f4d91aea312012d1"
+    },
+    {
       "path": "port/patches/commando-a35-options-staging-closure.patch",
       "stage_directory": "commando",
       "sha256": "7f8d5b6d947fd7f354ada6c4f6524d58edb5cf044a965416bcc1745ceeb5191c"
@@ -1545,5 +1550,5 @@
       "sha256": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701"
     }
   ],
-  "registry_sha256": "d14f55ec755859d2eb6d5cd838c7db81daecb6a765dd43bc6f4aac9811366818"
+  "registry_sha256": "557973ee43bc4b611f65d04964986d29acbfa101a87ff64d6e614d16406acd45"
 }

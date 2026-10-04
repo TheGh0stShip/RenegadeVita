@@ -116,6 +116,7 @@ def main():
     commands = subprocess.check_output(
         ['ninja', '-C', str(build), '-t', 'commands', args.target], text=True)
     selected_objects = selected_compile_objects(commands, build)
+    selected_sources = set(selected_objects.values())
     object_definitions = target_object_definitions(args.nm, selected_objects) \
         if args.link_elf is not None else None
     rows = []
@@ -134,7 +135,10 @@ def main():
                          if result.returncode == 0 else None,
                      'log': str(log),
                      'log_sha256': hashlib.sha256(log.read_bytes()).hexdigest(),
-                     'runtime_status': 'excluded from current runtime graph; integration remains open'})
+                     'selected_by_current_target': source.resolve() in selected_sources,
+                     'runtime_status': ('selected by current target; behavior remains unverified'
+                         if source.resolve() in selected_sources else
+                         'excluded from current runtime graph; integration remains open')})
         if result.returncode == 0 and args.link_elf is not None:
             rows[-1]['link_closure'] = link_closure(args.nm, output, args.link_elf, object_definitions)
     report.write_text(json.dumps({'evidence_class': 'object compilation only',

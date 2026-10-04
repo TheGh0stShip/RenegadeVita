@@ -1051,6 +1051,12 @@
       "root_has_error": false
     },
     {
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "functions": 12,
+      "parse_errors": 0,
+      "root_has_error": false
+    },
+    {
       "file": "port/renderer/vita/renegade_freetype_font_provider.cpp",
       "functions": 13,
       "parse_errors": 0,
@@ -1082,7 +1088,7 @@
     },
     {
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
-      "functions": 120,
+      "functions": 118,
       "parse_errors": 1,
       "root_has_error": true
     },
@@ -1215,7 +1221,7 @@
   ],
   "function_inventory_requested": true,
   "inputs_sha256": {
-    "CMakeLists.txt": "0757dd0c364282eaccc45c422ac22d97359244a8bf42bc401c170c8ee17260f6",
+    "CMakeLists.txt": "3dcb221e2a4f227edf7c65b9f14d35abfa6667745765ea482db402dbb2297c70",
     "cmake/A22OriginalSources.cmake": "481f244feee3d6c283b64f92f59311cf0e3fcad4b1e6e6af3e1413e4bdcbb34c",
     "cmake/A30OriginalSources.cmake": "3494c44ad61008464a285bb0e7c647f49375eb92caca7a552890a0b1a75aa7e7",
     "cmake/A31OriginalSources.cmake": "86a4f22e481cb3a340fa90742109569f64dc8d41a6503bccab24610d69b6075d",
@@ -1495,6 +1501,7 @@
     "port/patches/ww3d-a35-original-decal-submission.patch": "aea7db40c16a9e86ad00e3125d675b3ff43022103b09847062fe2784cf763102",
     "port/patches/ww3d-a35-original-sorting-lifecycle.patch": "eea4162324e51c7261780c9a0f77159aba5d413af6a926706050b029f94c1119",
     "port/patches/ww3d-a35-original-sorting-port.patch": "18dc2f9c451d9eafcfdace1a9a9b95bb53125e0b033fa7980fd2e076c8b136cc",
+    "port/patches/ww3d-a35-original-statistics-lifecycle.patch": "6311de080c87c5e0f5dbe186641775f7d1b8bac7ead4c9e4f4d91aea312012d1",
     "port/patches/ww3d-a35-raw-animation-frame-floor.patch": "ccc4e8917d1340b674ba0867b6e8189bdace1f92ba24aa7da49a823b49510615",
     "port/patches/ww3d-a35-texture-worker-cancellation.patch": "a6d3fb9861e4ef30b7111516983584836d2cc953e04c1d1e6d3a38f4a8e6a086",
     "port/patches/ww3d2-a22-gcc15.patch": "961e7b6a09649ffc465969f6fa1ab8bae0f6d8c4cdc321202ad8c3426c6431b0",
@@ -1706,12 +1713,13 @@
     "port/renderer/vita/d3d8caps.h": "67c58644d040b72a827fb96853544f0d6fe0418624bd46a60d2c6f5b4f040e02",
     "port/renderer/vita/d3d8types.h": "cdd03ec076dcc397ff49fef29f5ee3f6511d475dedee0de6e74dab6ca5d27644",
     "port/renderer/vita/dynamic_buffer_growth.h": "94e3142ebbaeef11304797486a2d6f0e86a05a7623cbc9ed3152d86972457681",
+    "port/renderer/vita/original_dx8_statistics.inc": "0f2965532ff423a260e5fc5a285374f8a4cbd736eb0cd3540ef443f2bb3bd640",
     "port/renderer/vita/renegade_freetype_font_provider.cpp": "3160f4ca269ddc7c41d5903692527b8846bb56dd3609fd5656f6e2313ffc6587",
     "port/renderer/vita/renegade_freetype_font_provider.h": "6b01bd1a14ef1eca95c4822021c1045ff3ce80836578d05a0c6305e54230718e",
     "port/renderer/vita/surface_boundary.cpp": "7d0d65187debed964255d414181aadc00c93a94a2d309143fd268c53befedfa5",
     "port/renderer/vita/texture_upload_contract.h": "08cf532e6829f56292a1927339b17cc821fe593ae0df13068e19688f46fbe3a2",
     "port/renderer/vita/triangle_strip_indices.h": "0f3ad4475dc079f1650ab5257fe2a3096e64b4a0cff842f243f820d088f7d3e6",
-    "port/renderer/vita/ww3d_dx8_boundary.cpp": "80872f81616dfae73f47837e01d73a76fb74bd221c5b6c58887f5b3c7c22770b",
+    "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
     "port/renderer/vita/ww3d_vita_indexed_mesh_batch.h": "2389b9374fba23b73f09ff7f7472779db6b17fa1e160c5036230f19882068978",
     "port/renderer/vita/ww3d_vita_render_state_contract.h": "c5aab1e1930fe28d166aec17bb6bf114125012a6330b80fcbac64c633c34e20b",
     "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
@@ -2817,7 +2825,7 @@
     "staging/ww3d2/w3d_util.cpp": "d8fb4895f7a6bc6b8ff3d9bf923f0327ceb9fc692ab4ece9b349135acbed661a",
     "staging/ww3d2/w3d_util.h": "a938f397478752c68621bcd4bae46835e1df9495c632843d191ec7234fea2286",
     "staging/ww3d2/w3derr.h": "bca41163cccd7d4bad7e07e232f146de38acc3865eab456ee4a37a28bbd9df68",
-    "staging/ww3d2/ww3d.cpp": "5c1da6c509710ceb40668b4a2c8c139294812fdf82e21a79cef85187e64e785b",
+    "staging/ww3d2/ww3d.cpp": "04b3d415f749585678b1f41f2483b3c2644da47b467a0bf35b70d84a4246bf91",
     "staging/ww3d2/ww3d.h": "e7a02c7e45816346e89b43417ab03afd7a611c2993fd9308eaadea9690431ea1",
     "staging/ww3d2/ww3dformat.cpp": "ccb1e90ec6ac9cfdcc59629ef713729a9157b23a9650a3f2dd1b40a5a2a08dde",
     "staging/ww3d2/ww3dformat.h": "8eca86440f7141ce4e87746fe44c86aa5e9e059f94ac3d7da24ca62961ff4955",
@@ -3680,7 +3688,7 @@
     "staging/wwui/wwuiinput.cpp": "109a9633239da9c1ecbb147036ef31f7ebb52c826e7bea2fe8cb148120ea9a1b",
     "staging/wwui/wwuiinput.h": "d99c2d5bd4b47a6f77b27ce5cf127e677359dd619c9e4f618abe39a25c46d61a",
     "staging/wwutil/mathutil.cpp": "50e5d6c436636fb236949b262b8882102e92f32b8cdfa74f9feedfc25e54d07f",
-    "tools/audit_sweep_port_guards.py": "f8eb8890c85ef4faba32631830698ef0bbcd075c4d1bd95852b87e5bd85e012b",
+    "tools/audit_sweep_port_guards.py": "1df9fb0b56c3e1af48fb85007e27edd51168b60bd26a0a3e5928e5518c232c04",
     "tools/build.sh": "450dc1b23fb5db79053637f9ed19868072db34689a3d1eb1530935476b43d939",
     "tools/build_fast_candidate.sh": "d82e5de7ba116464610c1f1656a1c8e184c850fcf49687a43f9649f320f38c64",
     "tools/build_ffmpeg_bink_vita.sh": "4ad1fe96c6543d1ef7243bcc24f7f335ba086035b4f681a5325a798e98d42e7c",
@@ -3691,7 +3699,7 @@
     "tools/collect_a35_diagnostics.sh": "b80c476329e3c6ba4ec9d8ec6a3dcff3ea71a28d00e2e8dfc44293382333dbc1",
     "tools/collect_latest_vita_crash_dump.sh": "5410242c5090a78440e104d560ae0d810fd8036b41432ae6429dbb727d77af08",
     "tools/fetch_tt_484_reference.sh": "e73a5d0a0f537ac51d9891c3f627fb4f2a5fa1f6f86daa34eb557d6ac754a852",
-    "tools/host_a30_definitions/CMakeLists.txt": "37a948d345a0862c9b768bfe9b48f2d167bc844b55083437ea29a602d2dac495",
+    "tools/host_a30_definitions/CMakeLists.txt": "e02f1d0456cbb99d2782d1bb767f7e89ffe07a3b373ed132d863174a1b93e51a",
     "tools/install_vita3k_candidate.sh": "3138784f8aa7e29e30efa3af293279807c7f6c6ca8af7f9544d23fff558e44d1",
     "tools/run_a22_host.sh": "f35dff58e32ba204050b107d13d2dd41dcaa3c005b9943b9c3b0a25a7a988ff7",
     "tools/run_a30_host.sh": "47ee4f87738853271ed23f7b6ef27a1abd3af49e5697773b763ffb3d48c9954f",
@@ -3699,10 +3707,10 @@
     "tools/run_a35_vita_physical_gate.sh": "fbc5ff0284650391969ad6445554f72a581aca074e50eca1c3ead498d80a0542",
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
-    "tools/stage_sources.sh": "e57a7bad1b29729ba3aaa7fb0c803156162662c512d079d3591d9ea228280b80",
+    "tools/stage_sources.sh": "afe9171cdd82668e96821cf79e831b0639cf3bb642aeacef567e1d9c59f40a5a",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/port_guards.json": "1966c41a65d5e2cd8a5642ca7b378913a0de786706e4146bf7673c4ea68bacd6",
+    "tools/sweep_reviews/port_guards.json": "a48907bd4f76ba716ef6a687fb4bfd72839bf05565e3d3cdd50c2e6d1506b0de",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -4558,6 +4566,11 @@
     {
       "path": "port/patches/ww3d-a35-original-sorting-port.patch",
       "sha256": "18dc2f9c451d9eafcfdace1a9a9b95bb53125e0b033fa7980fd2e076c8b136cc",
+      "stage_reference_count": 1
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-statistics-lifecycle.patch",
+      "sha256": "6311de080c87c5e0f5dbe186641775f7d1b8bac7ead4c9e4f4d91aea312012d1",
       "stage_reference_count": 1
     },
     {
@@ -10302,6 +10315,57 @@
     },
     {
       "change": "added",
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/ww3d-a35-original-sorting-lifecycle.patch",
+      "hunk_lines": [
+        359
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        9
+      ],
+      "row_id": "0f86fa7c0e9af286a4b0b75e495e4a5b4be035597ad012ce6d4e881fb6051ee1",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/ww3d.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/ww3d-a35-original-sorting-lifecycle.patch",
+      "hunk_lines": [
+        1107
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        19
+      ],
+      "row_id": "a860af9426e8b9ef3d6ac37dbdbe31349c18827f87b8bb6710bb0de5d4f8c9d1",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/ww3d.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/ww3d-a35-original-sorting-lifecycle.patch",
+      "hunk_lines": [
+        1143
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        29
+      ],
+      "row_id": "626e4550d650db58c3372972744ea2e8748b9151bbd4dbe4dfacea8143bedfd1",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/ww3d.cpp"
+    },
+    {
+      "change": "added",
       "directive": "#if defined(RENEGADE_VITA_PORT)",
       "evidence_class": "source_patch",
       "file": "port/patches/ww3d-a35-original-sorting-port.patch",
@@ -10316,6 +10380,40 @@
       "selected_by_stage_script": true,
       "status": "unknown",
       "target": "b/sortingrenderer.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/ww3d-a35-original-statistics-lifecycle.patch",
+      "hunk_lines": [
+        854
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        7
+      ],
+      "row_id": "18617c776578c10d7bd0ff399aea2730096e080d7c77a49c2521cb69bb28a54c",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/ww3d.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/ww3d-a35-original-statistics-lifecycle.patch",
+      "hunk_lines": [
+        1165
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        17
+      ],
+      "row_id": "a3a91ad533303fb60dcb6858aca7aa9e8c1bc079d9c72bc62a7d8bc819a69a91",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/ww3d.cpp"
     },
     {
       "change": "added",
@@ -12308,6 +12406,23 @@
     },
     {
       "change": "added",
+      "directive": "#if !defined(RENEGADE_RUNTIME_READ_ONLY)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/wwlib-a21-posix.patch",
+      "hunk_lines": [
+        597
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        213
+      ],
+      "row_id": "41e3809d766a3d45a5ed54318e7b8ba34b1923cb0efea1b457d1f76a978868a5",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/mixfile.cpp"
+    },
+    {
+      "change": "added",
       "directive": "#ifndef _UNIX",
       "evidence_class": "source_patch",
       "file": "port/patches/wwlib-a31-gcc15.patch",
@@ -14167,6 +14282,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#if !defined(RENEGADE_MILES_MANUAL_MIX)",
+      "end_line": 67,
+      "evidence_class": "current_source",
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "kind": "current_source_guard",
+      "line": 67,
+      "row_id": "fa92e179f296f6a87eb56aa4c96277ea5394fb2114f624da79ab197a39e3f12b",
+      "status": "unknown"
+    },
+    {
       "directive": "#if defined(__vita__)",
       "end_line": 71,
       "evidence_class": "current_source",
@@ -14184,6 +14309,16 @@
       "kind": "current_source_guard",
       "line": 301,
       "row_id": "fe2f37285ed05786af116dd312ac2c3eb523706b48912f331818ff34197669b3",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if !defined(RENEGADE_MILES_MANUAL_MIX)",
+      "end_line": 439,
+      "evidence_class": "current_source",
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "kind": "current_source_guard",
+      "line": 439,
+      "row_id": "5e20c237671fa0ebc263f18b9d39a464780a19b5435572e028453dad05a77a7b",
       "status": "unknown"
     },
     {
@@ -14207,6 +14342,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#if defined(RENEGADE_MILES_MANUAL_MIX)",
+      "end_line": 483,
+      "evidence_class": "current_source",
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "kind": "current_source_guard",
+      "line": 483,
+      "row_id": "b896812aa57016db1dbd4661490c058ce077eeb98f8e260fdb69fd1c93c40cdb",
+      "status": "unknown"
+    },
+    {
       "directive": "#if defined(__vita__)",
       "end_line": 490,
       "evidence_class": "current_source",
@@ -14224,6 +14369,16 @@
       "kind": "current_source_guard",
       "line": 503,
       "row_id": "2fdbef65d09e1b66eaff4215bd0aa065c9e03f607fd8fa4a714a04d2489e18f0",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if !defined(RENEGADE_MILES_MANUAL_MIX)",
+      "end_line": 517,
+      "evidence_class": "current_source",
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "kind": "current_source_guard",
+      "line": 517,
+      "row_id": "f5f89f0ec99855dfc638c40342e8b5f2e786363f5a2afffc6b8f8b1e280d9e74",
       "status": "unknown"
     },
     {
@@ -27284,6 +27439,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#ifndef RENEGADE_CAMPAIGN_SCRIPT_DEFAULTS_H",
+      "end_line": 2,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/renegade_campaign_script_defaults.h",
+      "kind": "current_source_guard",
+      "line": 2,
+      "row_id": "fb687412ee7e24de71e2f027a5c3e2ba3f41ccb6c77fcc2978686d398fc7d74e",
+      "status": "unknown"
+    },
+    {
       "contains_brace": false,
       "contains_return_token": false,
       "directive": "#define RENEGADE_CAMPAIGN_SCRIPT_DEFAULTS_H",
@@ -27718,6 +27883,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#ifndef RENEGADE_M01_SCRIPT_DEFAULTS_H",
+      "end_line": 1,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/renegade_m01_script_defaults.h",
+      "kind": "current_source_guard",
+      "line": 1,
+      "row_id": "68180b99b59c59ecd862f68fb25d62461b97ab41a64f428d2ec0ea5b5c6c5c87",
+      "status": "unknown"
+    },
+    {
       "contains_brace": false,
       "contains_return_token": false,
       "directive": "#define RENEGADE_M01_SCRIPT_DEFAULTS_H",
@@ -28096,6 +28271,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#ifndef RENEGADE_M08_SCRIPT_DEFAULTS_H",
+      "end_line": 4,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/renegade_m08_script_defaults.h",
+      "kind": "current_source_guard",
+      "line": 4,
+      "row_id": "db03260bdb354852b5c44c37911170b009868a4a730979c0f6cb3416e2af83e0",
+      "status": "unknown"
+    },
+    {
       "contains_brace": false,
       "contains_return_token": false,
       "directive": "#define RENEGADE_M08_SCRIPT_DEFAULTS_H",
@@ -28219,6 +28404,16 @@
       "line": 18,
       "name": "Create_Explosion",
       "row_id": "a1a735388f74b886c14bcaba092108e646c88c4a321653cadb6a74ca3aa02f21",
+      "status": "unknown"
+    },
+    {
+      "directive": "#ifndef RENEGADE_M13_AREA2_SCRIPT_DEFAULTS_H",
+      "end_line": 5,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/renegade_m13_area2_script_defaults.h",
+      "kind": "current_source_guard",
+      "line": 5,
+      "row_id": "764f78b40521c04afcb4c3fb5ec90e9a6528dee6989cae0d88680f9f80c2c5c6",
       "status": "unknown"
     },
     {
@@ -28366,6 +28561,16 @@
       "scope": "",
       "signals": [],
       "start_byte": 114,
+      "status": "unknown"
+    },
+    {
+      "directive": "#ifndef RENEGADE_SCRIPT_CALL_DEFAULTS_H",
+      "end_line": 9,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/renegade_script_call_defaults.h",
+      "kind": "current_source_guard",
+      "line": 9,
+      "row_id": "7d5bb0057d237bca66882dd5afbb02e71c8d168c6bb037e25f5cdee8909affb0",
       "status": "unknown"
     },
     {
@@ -29648,6 +29853,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#ifndef RENEGADE_WIN32_COMPAT_H",
+      "end_line": 3,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/win32_compat.h",
+      "kind": "current_source_guard",
+      "line": 3,
+      "row_id": "1f7aafc0b1623d5efe15708ddf826362970c06f6d3876ceb9b4fd177a38e6c95",
+      "status": "unknown"
+    },
+    {
       "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
       "end_line": 27,
       "evidence_class": "current_source",
@@ -29658,6 +29873,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#if defined(RENEGADE_SHORT_WCHAR_ABI)",
+      "end_line": 45,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/win32_compat.h",
+      "kind": "current_source_guard",
+      "line": 45,
+      "row_id": "da4831781538e900915de4545b6775f46955cddb8a8030873c968f4f5ff16c58",
+      "status": "unknown"
+    },
+    {
       "directive": "#if !defined(__vita__)",
       "end_line": 277,
       "evidence_class": "current_source",
@@ -29665,6 +29890,26 @@
       "kind": "current_source_guard",
       "line": 277,
       "row_id": "c301c03af1b945c69934c491d76bf4b88b1ecc5c4d5e5285162e9e6d7c4661ef",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if !defined(RENEGADE_SHORT_WCHAR_ABI)",
+      "end_line": 774,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/win32_compat.h",
+      "kind": "current_source_guard",
+      "line": 774,
+      "row_id": "ad57017dbe90f2defcb401feb947a80c99be124a8852e216650edda3aaad4aed",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if !defined(RENEGADE_SHORT_WCHAR_ABI) && !defined(wcstrim)",
+      "end_line": 1413,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/win32_compat.h",
+      "kind": "current_source_guard",
+      "line": 1413,
+      "row_id": "445929323cc82650d01b0e82bfba07a04f2265a6882c76c4342e31f0cddf156b",
       "status": "unknown"
     },
     {
@@ -52041,6 +52286,16 @@
       "kind": "current_source_guard",
       "line": 1450,
       "row_id": "ad826bc6e0200e12db19e158ad561a6d85e425f09ca001c0e15c1abb0b959bfc",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if !defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 1487,
+      "evidence_class": "current_source",
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "kind": "current_source_guard",
+      "line": 1487,
+      "row_id": "448f549dca0c16b0ba3dc0e7a394a09b6cf90263fc55247fa30954e63f7f385c",
       "status": "unknown"
     },
     {
@@ -95067,6 +95322,294 @@
     },
     {
       "body_kind": "compound_statement",
+      "body_sha256": "215190393f894e67ed72258b0b0b90d425dac2c864bf1fc2e197fc331ee6ed51",
+      "calls": [],
+      "declarator": "DX8Wrapper::Reset_Statistics()",
+      "definition_sha256": "66054fa5f2f815be0a82ad6073b61895ac64b8af87d5c0b778f3da25ea628827",
+      "end_byte": 1494,
+      "end_line": 39,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 18,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "da123694a943fbbdcd99bee3e4ef340a3cad594727ac630840a42bcb9919a1c0",
+      "scope": "",
+      "signals": [],
+      "start_byte": 901,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "6d577dc88767ea4a6251897f10cc71d3c7c9bef3f6996eb2648aa50004d25486",
+      "calls": [],
+      "declarator": "DX8Wrapper::Begin_Statistics()",
+      "definition_sha256": "2e31b191d292a8008d3b873230f090b088c0ccc02a34a8e851acb1fb4b286258",
+      "end_byte": 1749,
+      "end_line": 52,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 41,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "8a5a2ed5433f6e47a513334a56377f81b15a34aeaa47f38e15a9aa5e349cef6c",
+      "scope": "",
+      "signals": [],
+      "start_byte": 1496,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "8d7ecaad18e7690351113578312f833ea98b5c5dc24ce2c174b0799a45d76cd5",
+      "calls": [],
+      "declarator": "DX8Wrapper::End_Statistics()",
+      "definition_sha256": "732a550332a54d5320f25a6d569d7a2c2da1324f01f0774a8f9573e92971a7f8",
+      "end_byte": 2259,
+      "end_line": 65,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 54,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "0dd4e63c529b86e280b0deabfda5e47f7e6fb9199b87e71323118838e7055cd4",
+      "scope": "",
+      "signals": [],
+      "start_byte": 1751,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "f654daceb63a5989d81c0ff666279b0ab6bf005d6a8b00174ece83001547cc32",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Matrix_Changes()",
+      "definition_sha256": "c6aec52d6209df820d8592353eb99e4b4f6e51c57eadecb988b1c4702288651a",
+      "end_byte": 2353,
+      "end_line": 67,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 67,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "593343506a285a8f75dd1a743f2800f8357a78baab7b33c64e859c17e0dbf632",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2261,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "cab0664b63b961f3eafd9faef727a4b20426c6eaf5e0eee16b92841447e403de",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Material_Changes()",
+      "definition_sha256": "894253c793cf33a849ab2daf63a0e5826f26ec931cae7df8c5fa1f3de4bb10dc",
+      "end_byte": 2449,
+      "end_line": 68,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 68,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "73f748067e9bceb9512719f8ca8140511a6cf141945f70d9bd94d6ed6b156b62",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2354,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "a515f68dbafbde37cdd13235f6dfc679fb8d0f1eb772a87afefdf4d6be513dd7",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Vertex_Buffer_Changes()",
+      "definition_sha256": "f7b35964dd07cb066bd868b17396708cace91858e2d487e5af4924cc604f1202",
+      "end_byte": 2554,
+      "end_line": 69,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 69,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "fbb62561b8694b47a7a358f5857de8df3e689f5ff985d52fbdba736338b6f77c",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2450,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "94218fc0337e411aad8aec0c7879214c350a9c6fdc618b62024b59800c825653",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Index_Buffer_Changes()",
+      "definition_sha256": "aa0a417b5ae2604efcfaf90aaacfb774bc69069eac80fbc6b593127d80c1d8d0",
+      "end_byte": 2657,
+      "end_line": 70,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 70,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "2f749adc7b4b6deae7477fca24987632573c13842b63b1a2e2bd05c2e5a8b307",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2555,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "33499ae50f70661a5830b1d19ada2421f10fafadb207a4fcde23d44e76c14d1c",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Light_Changes()",
+      "definition_sha256": "d6856f9acc330462757ac3e27c17a84cbd99d90f1f0d455ed6eb9c727187f442",
+      "end_byte": 2748,
+      "end_line": 71,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 71,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "08288839ca18186981fadedb6cd22ff7d6d58b96301dfe1cb2686163afc8b808",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2658,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "73b025cfc4581052eae8ac304ba2535cf0a8a872abae8897c9fdb338207b2e35",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Texture_Changes()",
+      "definition_sha256": "6411b0fd5ecfffd4eadec6a33b7b3937c1a8ef3ad8aab51b2812e242b10e6278",
+      "end_byte": 2843,
+      "end_line": 72,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 72,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "7601ec2f2e92f28a581ce12aa68e8a0454e39a7b5dae56b63a561d352c180012",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2749,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "f025db1cf0442a884aff25a8263c6488c72e13aba333f79c39c15d2aceb81989",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Render_State_Changes()",
+      "definition_sha256": "739077ddc33cee38ab68baabec2a9536275dcb4115e4dcc802687884e9b62603",
+      "end_byte": 2946,
+      "end_line": 73,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 73,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "4f1663b8348d00adab5b4736261fd83417247ba1e09a22cc106376f29db2e9ff",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2844,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "1ab41740c7481cd66ef7ed4f11844864d67ff10dfacd5740fe07153a2d419cc7",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_Texture_Stage_State_Changes()",
+      "definition_sha256": "a92e51b3d5d8679fa3e6326a2bb1439d795adad1ac5cbfce8e1cacf1b27339de",
+      "end_byte": 3063,
+      "end_line": 74,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 74,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "682fbac3014a6470de2ba56a58810859c5836b4d1e88f339c9537dd602ff97bb",
+      "scope": "",
+      "signals": [],
+      "start_byte": 2947,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "2b82cb2ab46a7fdf84cdf75cc65d7e035c610de2369aec93c9990c76c5bfc928",
+      "calls": [],
+      "declarator": "DX8Wrapper::Get_Last_Frame_DX8_Calls()",
+      "definition_sha256": "96da46dfdaf8cbdce0614b5837021e6aee3fdfe5ede9661fb33fba11fb3b9c56",
+      "end_byte": 3158,
+      "end_line": 75,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/original_dx8_statistics.inc",
+      "kind": "port_function",
+      "line": 75,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "619637a8548120778285fae10dab44bd853780cd1c4a0f88c56481bf768227be",
+      "scope": "",
+      "signals": [],
+      "start_byte": 3064,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
       "body_sha256": "51c83e5d7a2995bf767391d1caf7e0f684c6c80c163d4b331798caba28bb07ed",
       "calls": [
         {
@@ -97048,6 +97591,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#if !defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 98,
+      "evidence_class": "current_source",
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "kind": "current_source_guard",
+      "line": 98,
+      "row_id": "60bfb20e7b6e7659c0da200b5793ce934a6767bbc6b3b89654be213a08dc4a98",
+      "status": "unknown"
+    },
+    {
       "directive": "#if defined(__vita__)",
       "end_line": 233,
       "evidence_class": "current_source",
@@ -97189,32 +97742,42 @@
     },
     {
       "directive": "#if defined(__vita__)",
-      "end_line": 2380,
+      "end_line": 2371,
       "evidence_class": "current_source",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "current_source_guard",
-      "line": 2380,
-      "row_id": "ee0664c98caa567cf6d4a2ea11f05b5dd48da9a9d7b805577d245862c61f485f",
+      "line": 2371,
+      "row_id": "a6937ad2ed413220cdd0e66b1d82c7ddda9fda465827a6ebae60e77346eff210",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__)",
-      "end_line": 2408,
+      "end_line": 2399,
       "evidence_class": "current_source",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "current_source_guard",
-      "line": 2408,
-      "row_id": "80c53740331a5fcf9fa0b526a5f6c26f08cb9fc3a9dfdb938d02e61b0f3990a4",
+      "line": 2399,
+      "row_id": "c25b4dab0e17d643a62855ee83e3e3f825f488dad43da1ef7acdf911bc51555d",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__)",
-      "end_line": 2435,
+      "end_line": 2426,
       "evidence_class": "current_source",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "current_source_guard",
-      "line": 2435,
-      "row_id": "4b29f896c6510a8b2d805e6ae49a090d274e641d7056b51a432795ed01d8c85b",
+      "line": 2426,
+      "row_id": "7ee0ae19e13e995a0e8214223b3caae2aa0aaf855b70a1d4b599635127fa6ab4",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 2556,
+      "evidence_class": "current_source",
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "kind": "current_source_guard",
+      "line": 2556,
+      "row_id": "9faf108d6a18ac4a4a41198c4843fb57725f50fd9e1cbeb5122e112e4f3867ac",
       "status": "unknown"
     },
     {
@@ -102080,140 +102643,62 @@
     },
     {
       "body_kind": "compound_statement",
-      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "calls": [],
-      "classification_evidence_class": "source_review",
-      "declarator": "Record_Texture(TextureClass *)",
-      "definition_sha256": "9fac1f5eea9044cd8697157ed00a1549b3485300e3f9f0579d384fde4d518583",
-      "end_byte": 61037,
-      "end_line": 1650,
-      "entry_preprocessor_context": [],
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
-      "kind": "port_function",
-      "line": 1650,
-      "literal_returns": [],
-      "markers": [],
-      "node_type": "function_definition",
-      "nonfinal_return_lines": [],
-      "parse_has_error": false,
-      "review": {
-        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
-        "affected_scope": [
-          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
-        ],
-        "behavior": "Empty method: does not update original texture memory/change accounting or sorting polygon/vertex counters. Alternative native telemetry exists but equivalence is unverified.",
-        "callers": [
-          "staging/ww3d2/statistics.h:72 DX8_RECORD_TEXTURE",
-          "staging/ww3d2/statistics.h:75 DX8_RECORD_SORTING_RENDER; macro expansion and build-mode reachability remain open"
-        ],
-        "original_owner": "Original Debug_Statistics texture and sorting counters"
-      },
-      "row_id": "ea583a19886dccd06fba703fdde866601f40b65828da3070208d58a8de8775df",
-      "scope": "Debug_Statistics",
-      "signals": [
-        "empty_body"
-      ],
-      "start_byte": 60999,
-      "status": "stubbed_or_noop"
-    },
-    {
-      "body_kind": "compound_statement",
-      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "calls": [],
-      "classification_evidence_class": "source_review",
-      "declarator": "Record_Sorting_Polys_And_Vertices(int, int)",
-      "definition_sha256": "0076d13acffe8c526f5a17ef3fe8d794987f4fd62af3684e1a5f32728f9da412",
-      "end_byte": 61240,
-      "end_line": 1653,
-      "entry_preprocessor_context": [],
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
-      "kind": "port_function",
-      "line": 1653,
-      "literal_returns": [],
-      "markers": [],
-      "node_type": "function_definition",
-      "nonfinal_return_lines": [],
-      "parse_has_error": false,
-      "review": {
-        "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission.",
-        "affected_scope": [
-          "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
-        ],
-        "behavior": "Empty method: does not update original texture memory/change accounting or sorting polygon/vertex counters. Alternative native telemetry exists but equivalence is unverified.",
-        "callers": [
-          "staging/ww3d2/statistics.h:72 DX8_RECORD_TEXTURE",
-          "staging/ww3d2/statistics.h:75 DX8_RECORD_SORTING_RENDER; macro expansion and build-mode reachability remain open"
-        ],
-        "original_owner": "Original Debug_Statistics texture and sorting counters"
-      },
-      "row_id": "d51a97d8ccfaf8435c3969defce4a0cfda3bea00e84d81982d5cc95015672305",
-      "scope": "Debug_Statistics",
-      "signals": [
-        "empty_body"
-      ],
-      "start_byte": 61189,
-      "status": "stubbed_or_noop"
-    },
-    {
-      "body_kind": "compound_statement",
       "body_sha256": "33c320d0dbebf3afb1d7ff9771cf7ee7d6c6d49ac7b09da22963df191fa99fe2",
       "calls": [
         {
           "callee": "WW3DFormat_To_D3DFormat",
           "callee_node_type": "identifier",
-          "line": 1659
+          "line": 1650
         },
         {
           "callee": "Surface_Bytes_Per_Pixel",
           "callee_node_type": "identifier",
-          "line": 1660
+          "line": 1651
         },
         {
           "callee": "surface->Get_Data",
           "callee_node_type": "field_expression",
-          "line": 1663
+          "line": 1654
         },
         {
           "callee": "surface->Release",
           "callee_node_type": "field_expression",
-          "line": 1664
+          "line": 1655
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 1665
+          "line": 1656
         }
       ],
       "declarator": "*DX8Wrapper::_Create_DX8_Surface(unsigned int width,\n\tunsigned int height, WW3DFormat format)",
       "definition_sha256": "9a5dd56916b86ea65be76f4687b2400f1b3cb594ed71c86d5595dbf75d384813",
-      "end_byte": 61798,
-      "end_line": 1669,
+      "end_byte": 61334,
+      "end_line": 1660,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1656,
+      "line": 1647,
       "literal_returns": [
         {
           "expression": "NULL",
-          "line": 1666
+          "line": 1657
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1666
+        1657
       ],
       "parse_has_error": false,
-      "row_id": "fe4ace82e6368657b0db80953b9a0e2dfe799d3848508d058675fc19fafd7c3d",
+      "row_id": "eb6516565f9050b78b27109c5679f660bf90f8887c1c49a524dd8455146d3c4b",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 61244,
+      "start_byte": 60780,
       "status": "unknown"
     },
     {
@@ -102223,117 +102708,121 @@
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Source_Missing",
           "callee_node_type": "qualified_identifier",
-          "line": 1674
+          "line": 1665
         },
         {
           "callee": "targa.Open",
           "callee_node_type": "field_expression",
-          "line": 1678
+          "line": 1669
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Source_Missing",
           "callee_node_type": "qualified_identifier",
-          "line": 1679
+          "line": 1670
         },
         {
           "callee": "targa.Load",
           "callee_node_type": "field_expression",
-          "line": 1687
+          "line": 1678
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Decode_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 1688
+          "line": 1679
         },
         {
           "callee": "Get_WW3D_Format",
           "callee_node_type": "identifier",
-          "line": 1693
+          "line": 1684
         },
         {
           "callee": "targa.GetImage",
           "callee_node_type": "field_expression",
-          "line": 1696
+          "line": 1687
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Invalid_Data",
           "callee_node_type": "qualified_identifier",
-          "line": 1697
+          "line": 1688
         },
         {
           "callee": "_Create_DX8_Surface",
           "callee_node_type": "identifier",
-          "line": 1700
+          "line": 1691
         },
         {
           "callee": "surface->LockRect",
           "callee_node_type": "field_expression",
-          "line": 1704
+          "line": 1695
         },
         {
           "callee": "static_cast<int>",
           "callee_node_type": "template_function",
-          "line": 1705
+          "line": 1696
         },
         {
           "callee": "surface->Release",
           "callee_node_type": "field_expression",
-          "line": 1706
+          "line": 1697
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 1707
+          "line": 1698
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 1710
+          "line": 1701
         },
         {
           "callee": "memcpy",
           "callee_node_type": "identifier",
-          "line": 1712
+          "line": 1703
         },
         {
           "callee": "static_cast<unsigned char *>",
           "callee_node_type": "template_function",
-          "line": 1712
+          "line": 1703
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 1713
+          "line": 1704
         },
         {
           "callee": "reinterpret_cast<const unsigned char *>",
           "callee_node_type": "template_function",
-          "line": 1714
+          "line": 1705
         },
         {
           "callee": "targa.GetImage",
           "callee_node_type": "field_expression",
-          "line": 1714
+          "line": 1705
         },
         {
           "callee": "surface->UnlockRect",
           "callee_node_type": "field_expression",
-          "line": 1717
+          "line": 1708
         }
       ],
       "declarator": "*DX8Wrapper::_Create_DX8_Surface(const char *filename)",
       "definition_sha256": "6d1c85e2a9ce4fcb6a2e5818f97507effb01762aecccb24912f17264f2bb15c5",
-      "end_byte": 63753,
-      "end_line": 1719,
+      "end_byte": 63289,
+      "end_line": 1710,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1671,
+      "line": 1662,
       "literal_returns": [
         {
           "expression": "NULL",
-          "line": 1675
+          "line": 1666
+        },
+        {
+          "expression": "NULL",
+          "line": 1671
         },
         {
           "expression": "NULL",
@@ -102345,35 +102834,31 @@
         },
         {
           "expression": "NULL",
-          "line": 1698
+          "line": 1693
         },
         {
           "expression": "NULL",
-          "line": 1702
-        },
-        {
-          "expression": "NULL",
-          "line": 1708
+          "line": 1699
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1675,
+        1666,
+        1671,
         1680,
         1689,
-        1698,
-        1702,
-        1708
+        1693,
+        1699
       ],
       "parse_has_error": false,
-      "row_id": "15974e5890e12dc96629d15032cc19c42449b34b8f3630d6031a8811e664f91b",
+      "row_id": "33a70b79fa39419d61c34a080aff7ad449814830c0c74113534277726cc183b9",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 61800,
+      "start_byte": 61336,
       "status": "unknown"
     },
     {
@@ -102383,27 +102868,27 @@
         {
           "callee": "Create_Texture_From_Surface",
           "callee_node_type": "identifier",
-          "line": 1724
+          "line": 1715
         }
       ],
       "declarator": "*DX8Wrapper::_Create_DX8_Texture(IDirect3DSurface8 *surface,\n\tTextureClass::MipCountType mip_level_count)",
       "definition_sha256": "4e8036700fc9f958dc81191745685b5c251ec9603bb2a13aa6fd88b47b2bf696",
-      "end_byte": 63945,
-      "end_line": 1725,
+      "end_byte": 63481,
+      "end_line": 1716,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1721,
+      "line": 1712,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "681645294a33291217c35e5a075dd548d31d782a16e50bdc05e3dc6afc7af1c8",
+      "row_id": "f4535f5fd44ff36f1a427870a97e4adc5b0475279a1191c0e045ff0cf1dc39e6",
       "scope": "",
       "signals": [],
-      "start_byte": 63755,
+      "start_byte": 63291,
       "status": "unknown"
     },
     {
@@ -102413,178 +102898,178 @@
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Invalid_Data",
           "callee_node_type": "qualified_identifier",
-          "line": 1735
+          "line": 1726
         },
         {
           "callee": "WW3DFormat_To_D3DFormat",
           "callee_node_type": "identifier",
-          "line": 1738
+          "line": 1729
         },
         {
           "callee": "Surface_Format_Can_Convert_To_RGBA",
           "callee_node_type": "identifier",
-          "line": 1740
+          "line": 1731
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Unsupported_Format",
           "callee_node_type": "qualified_identifier",
-          "line": 1741
+          "line": 1732
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 1746
+          "line": 1737
         },
         {
           "callee": "memset",
           "callee_node_type": "identifier",
-          "line": 1749
+          "line": 1740
         },
         {
           "callee": "Calculate_Texture_Mip_Count",
           "callee_node_type": "identifier",
-          "line": 1752
+          "line": 1743
         },
         {
           "callee": "Calculate_Texture_Resident_Bytes",
           "callee_node_type": "identifier",
-          "line": 1755
+          "line": 1746
         },
         {
           "callee": "Allocate_Texture_Surface_Levels",
           "callee_node_type": "identifier",
-          "line": 1761
+          "line": 1752
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 1763
+          "line": 1754
         },
         {
           "callee": "Texture_Level_Dimension",
           "callee_node_type": "identifier",
-          "line": 1767
+          "line": 1758
         },
         {
           "callee": "Texture_Level_Dimension",
           "callee_node_type": "identifier",
-          "line": 1768
+          "line": 1759
         },
         {
           "callee": "Surface_Bytes_Per_Pixel",
           "callee_node_type": "identifier",
-          "line": 1771
+          "line": 1762
         },
         {
           "callee": "surface->Get_Data",
           "callee_node_type": "field_expression",
-          "line": 1772
+          "line": 1763
         },
         {
           "callee": "surface->Release",
           "callee_node_type": "field_expression",
-          "line": 1773
+          "line": 1764
         },
         {
           "callee": "Destroy_Texture_Surface_Levels",
           "callee_node_type": "identifier",
-          "line": 1774
+          "line": 1765
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 1776
+          "line": 1767
         },
         {
           "callee": "surface->Set_Texture_Owner",
           "callee_node_type": "field_expression",
-          "line": 1779
+          "line": 1770
         },
         {
           "callee": "Upload_Texture_Level_From_Surface",
           "callee_node_type": "identifier",
-          "line": 1781
+          "line": 1772
         },
         {
           "callee": "Destroy_Texture_Surface_Levels",
           "callee_node_type": "identifier",
-          "line": 1782
+          "line": 1773
         },
         {
           "callee": "RenegadeVitaRenderer::Release_Texture",
           "callee_node_type": "qualified_identifier",
-          "line": 1784
+          "line": 1775
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 1787
+          "line": 1778
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload",
           "callee_node_type": "qualified_identifier",
-          "line": 1791
+          "line": 1782
         }
       ],
       "declarator": "*DX8Wrapper::_Create_DX8_Texture(unsigned int width,\n\tunsigned int height, WW3DFormat format,\n\tTextureClass::MipCountType mip_level_count, D3DPOOL pool,\n\tbool rendertarget)",
       "definition_sha256": "dfff4273f436fd1e0ee502f9bcea488bef31898c7381d16e4b9c6f6cc4b0afc6",
-      "end_byte": 66396,
-      "end_line": 1793,
+      "end_byte": 65932,
+      "end_line": 1784,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1727,
+      "line": 1718,
       "literal_returns": [
         {
           "expression": "NULL",
-          "line": 1736
+          "line": 1727
         },
         {
           "expression": "NULL",
-          "line": 1742
+          "line": 1733
         },
         {
           "expression": "NULL",
-          "line": 1747
+          "line": 1738
         },
         {
           "expression": "NULL",
-          "line": 1764
+          "line": 1755
         },
         {
           "expression": "NULL",
-          "line": 1777
+          "line": 1768
         },
         {
           "expression": "NULL",
-          "line": 1788
+          "line": 1779
         }
       ],
       "markers": [
         {
-          "line": 1741,
+          "line": 1732,
           "text": "Unsupported"
         }
       ],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1736,
-        1742,
-        1747,
-        1764,
-        1777,
-        1788
+        1727,
+        1733,
+        1738,
+        1755,
+        1768,
+        1779
       ],
       "parse_has_error": false,
-      "row_id": "bc4ab7911b897549265c467c9e26f9b76d6ddec82b36735d786a61c3293a4bba",
+      "row_id": "f483e3e1b62f034d105dd8a961e6a21b892a54d30191fb8104c6efb11d70dcb3",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate",
         "unsupported_or_todo_marker"
       ],
-      "start_byte": 63947,
+      "start_byte": 63483,
       "status": "unknown"
     },
     {
@@ -102594,78 +103079,78 @@
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Request",
           "callee_node_type": "qualified_identifier",
-          "line": 1798
+          "line": 1789
         },
         {
           "callee": "Log_Texture_Fallback",
           "callee_node_type": "identifier",
-          "line": 1800
+          "line": 1791
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Source_Missing",
           "callee_node_type": "qualified_identifier",
-          "line": 1801
+          "line": 1792
         },
         {
           "callee": "Create_Checkerboard_Fallback",
           "callee_node_type": "identifier",
-          "line": 1802
+          "line": 1793
         },
         {
           "callee": "Load_DDS_Texture",
           "callee_node_type": "identifier",
-          "line": 1805
+          "line": 1796
         },
         {
           "callee": "Filename_Has_Extension",
           "callee_node_type": "identifier",
-          "line": 1808
+          "line": 1799
         },
         {
           "callee": "Load_Targa_Texture",
           "callee_node_type": "identifier",
-          "line": 1809
+          "line": 1800
         },
         {
           "callee": "Log_Texture_Fallback",
           "callee_node_type": "identifier",
-          "line": 1811
+          "line": 1802
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Source_Missing",
           "callee_node_type": "qualified_identifier",
-          "line": 1812
+          "line": 1803
         },
         {
           "callee": "Create_Checkerboard_Fallback",
           "callee_node_type": "identifier",
-          "line": 1813
+          "line": 1804
         }
       ],
       "declarator": "*DX8Wrapper::_Create_DX8_Texture(const char *filename,\n\tTextureClass::MipCountType mip_level_count)",
       "definition_sha256": "c651cc98953f343f0c81cf4270cadb0b690e86ebd2fa295663f0f703833dc321",
-      "end_byte": 67191,
-      "end_line": 1814,
+      "end_byte": 66727,
+      "end_line": 1805,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1795,
+      "line": 1786,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1802,
-        1807,
-        1809
+        1793,
+        1798,
+        1800
       ],
       "parse_has_error": false,
-      "row_id": "fd3ee0154fe380853583bde5a758331c444189e9e0692ea087b2152c4008eb3e",
+      "row_id": "c3a0bed4128413f99240c14b1e8dd6a168882f75f657e19fd9503305b137b975",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 66398,
+      "start_byte": 65934,
       "status": "unknown"
     },
     {
@@ -102674,22 +103159,22 @@
       "calls": [],
       "declarator": "IDirect3DBaseTexture8::AddRef()",
       "definition_sha256": "aae9e6989b4d352742b1d12cec4a03eee7bc77be298ebd202a729a3d05bb659c",
-      "end_byte": 67260,
-      "end_line": 1819,
+      "end_byte": 66796,
+      "end_line": 1810,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1816,
+      "line": 1807,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "0402ef7c8b8d5c38b274b9fb167958941ed20766a223a32dfe9a242d3e1b5056",
+      "row_id": "20d58b6099c81cc78ca0d19c528896bd2f1c643720cb0a0793d6977ae73f52e6",
       "scope": "",
       "signals": [],
-      "start_byte": 67193,
+      "start_byte": 66729,
       "status": "unknown"
     },
     {
@@ -102699,57 +103184,57 @@
         {
           "callee": "Destroy_Texture_Surface_Levels",
           "callee_node_type": "identifier",
-          "line": 1826
+          "line": 1817
         },
         {
           "callee": "static_cast<IDirect3DTexture8 *>",
           "callee_node_type": "template_function",
-          "line": 1826
+          "line": 1817
         },
         {
           "callee": "RenegadeVitaRenderer::Release_Texture",
           "callee_node_type": "qualified_identifier",
-          "line": 1827
+          "line": 1818
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Release",
           "callee_node_type": "qualified_identifier",
-          "line": 1828
+          "line": 1819
         },
         {
           "callee": "static_cast<IDirect3DTexture8 *>",
           "callee_node_type": "template_function",
-          "line": 1829
+          "line": 1820
         }
       ],
       "declarator": "IDirect3DBaseTexture8::Release()",
       "definition_sha256": "eb1e7143a5b1cfeb88e8dbb68a8568b905618ed3aebd03f4480726738e33a97d",
-      "end_byte": 67673,
-      "end_line": 1832,
+      "end_byte": 67209,
+      "end_line": 1823,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1821,
+      "line": 1812,
       "literal_returns": [
         {
           "expression": "0U",
-          "line": 1823
+          "line": 1814
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1823
+        1814
       ],
       "parse_has_error": false,
-      "row_id": "5b8d42834810a99d409d29b18fb13adf85eebe4bc07c6da0539dfa5f088d2a86",
+      "row_id": "312c65dcc5d152f4fd87ff82b655dd3eec4054fa1d7c0bb96f368caa7b62fcce",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 67262,
+      "start_byte": 66798,
       "status": "unknown"
     },
     {
@@ -102758,22 +103243,22 @@
       "calls": [],
       "declarator": "IDirect3DTexture8::GetLevelCount()",
       "definition_sha256": "48971674c935e9d623db040a2deeabedbd66d229e0b12d9b257ea5ccb3197534",
-      "end_byte": 67990,
-      "end_line": 1840,
+      "end_byte": 67526,
+      "end_line": 1831,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1834,
+      "line": 1825,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "95b5642047432170cb21d0018c778e989898f42b77912e094013da1cf35b6df1",
+      "row_id": "846b7258fce504ec32726bee4f503b9872a43d586eb003ac8e6a43a1ba586c5b",
       "scope": "",
       "signals": [],
-      "start_byte": 67675,
+      "start_byte": 67211,
       "status": "unknown"
     },
     {
@@ -102783,51 +103268,51 @@
         {
           "callee": "GetLevelCount",
           "callee_node_type": "identifier",
-          "line": 1844
+          "line": 1835
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 1844
+          "line": 1835
         },
         {
           "callee": "memset",
           "callee_node_type": "identifier",
-          "line": 1845
+          "line": 1836
         },
         {
           "callee": "static_cast<UINT>",
           "callee_node_type": "template_function",
-          "line": 1851
+          "line": 1842
         },
         {
           "callee": "Surface_Bytes_Per_Pixel",
           "callee_node_type": "identifier",
-          "line": 1852
+          "line": 1843
         }
       ],
       "declarator": "IDirect3DTexture8::GetLevelDesc(UINT level, D3DSURFACE_DESC *description)",
       "definition_sha256": "e920a9b75e01e7aa4d0781992129e4e2f50637777c733d8ff2a6263134efe664",
-      "end_byte": 68596,
-      "end_line": 1854,
+      "end_byte": 68132,
+      "end_line": 1845,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1842,
+      "line": 1833,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1844
+        1835
       ],
       "parse_has_error": false,
-      "row_id": "1280253ca99dc8e8ae49bd6d28e50a322ac5f6bfcf00df52f869769829c363ba",
+      "row_id": "c5c6963d3f2b37746e3f3bf8b74e1875f7d46944335602521a323dfd1f7a23f3",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 67992,
+      "start_byte": 67528,
       "status": "unknown"
     },
     {
@@ -102837,6 +103322,21 @@
         {
           "callee": "GetLevelCount",
           "callee_node_type": "identifier",
+          "line": 1850
+        },
+        {
+          "callee": "static_cast<HRESULT>",
+          "callee_node_type": "template_function",
+          "line": 1851
+        },
+        {
+          "callee": "SurfaceLevels[level]->AddRef",
+          "callee_node_type": "field_expression",
+          "line": 1854
+        },
+        {
+          "callee": "GetLevelDesc",
+          "callee_node_type": "identifier",
           "line": 1859
         },
         {
@@ -102845,66 +103345,51 @@
           "line": 1860
         },
         {
-          "callee": "SurfaceLevels[level]->AddRef",
-          "callee_node_type": "field_expression",
-          "line": 1863
-        },
-        {
-          "callee": "GetLevelDesc",
-          "callee_node_type": "identifier",
-          "line": 1868
-        },
-        {
-          "callee": "static_cast<HRESULT>",
-          "callee_node_type": "template_function",
-          "line": 1869
-        },
-        {
           "callee": "Surface_Bytes_Per_Pixel",
           "callee_node_type": "identifier",
-          "line": 1873
+          "line": 1864
         },
         {
           "callee": "descriptor_surface->Get_Data",
           "callee_node_type": "field_expression",
-          "line": 1874
+          "line": 1865
         },
         {
           "callee": "descriptor_surface->Release",
           "callee_node_type": "field_expression",
-          "line": 1875
+          "line": 1866
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 1876
+          "line": 1867
         }
       ],
       "declarator": "IDirect3DTexture8::GetSurfaceLevel(UINT level, IDirect3DSurface8 **surface)",
       "definition_sha256": "c34adbe36f447c3192dbc5d4dadb6ba03dd7f2ab90f2f981cb3f67762f099e2c",
-      "end_byte": 69554,
-      "end_line": 1880,
+      "end_byte": 69090,
+      "end_line": 1871,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1856,
+      "line": 1847,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
+        1851,
+        1856,
         1860,
-        1865,
-        1869,
-        1876
+        1867
       ],
       "parse_has_error": false,
-      "row_id": "6351d5bce730570d6eee9be862c9a2a5d1f1cf32f5efa64158fa1527ac7a9c05",
+      "row_id": "81f9f5159571d842bb9c8de2a8afebc3dc0e23b3bbe7a67cf4c20cab84ad7d4b",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 68598,
+      "start_byte": 68134,
       "status": "unknown"
     },
     {
@@ -102914,41 +103399,41 @@
         {
           "callee": "GetLevelCount",
           "callee_node_type": "identifier",
-          "line": 1885
+          "line": 1876
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 1889
+          "line": 1880
         },
         {
           "callee": "SurfaceLevels[level]->LockRect",
           "callee_node_type": "field_expression",
-          "line": 1891
+          "line": 1882
         }
       ],
       "declarator": "IDirect3DTexture8::LockRect(UINT level, D3DLOCKED_RECT *locked,\n\tconst RECT *rectangle, DWORD flags)",
       "definition_sha256": "71774e57aceacf3ed34a4ef73fb43903040f5991bf3e15511daee24f9a434686",
-      "end_byte": 70153,
-      "end_line": 1899,
+      "end_byte": 69689,
+      "end_line": 1890,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1882,
+      "line": 1873,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1889
+        1880
       ],
       "parse_has_error": false,
-      "row_id": "92e6da0994abba129800e766d431635cd33c5ac033603105f979c4041663f73d",
+      "row_id": "a8abf676fc9835f1ee8a0e0ab8deabbd0d821ebdca25418e21d2abfde8fdc646",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 69556,
+      "start_byte": 69092,
       "status": "unknown"
     },
     {
@@ -102958,43 +103443,43 @@
         {
           "callee": "GetLevelCount",
           "callee_node_type": "identifier",
-          "line": 1903
+          "line": 1894
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 1906
+          "line": 1897
         },
         {
           "callee": "SurfaceLevels[level]->UnlockRect",
           "callee_node_type": "field_expression",
-          "line": 1908
+          "line": 1899
         }
       ],
       "declarator": "IDirect3DTexture8::UnlockRect(UINT level)",
       "definition_sha256": "60e53dd815bc0effee360f4bcbd2a34a6fda3ce8fdd77ea993619e947c009e12",
-      "end_byte": 70805,
-      "end_line": 1917,
+      "end_byte": 70341,
+      "end_line": 1908,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1901,
+      "line": 1892,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1906,
-        1914,
-        1915
+        1897,
+        1905,
+        1906
       ],
       "parse_has_error": false,
-      "row_id": "105256baf036b2f23c1df406bc404dd9a90b5338aa1607fb5e26b2e59b2d3905",
+      "row_id": "ae3d810953eaf0cb13c52fe8679be7c9e2f684476a15041b316f054d460445ee",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 70155,
+      "start_byte": 69691,
       "status": "unknown"
     },
     {
@@ -103003,22 +103488,22 @@
       "calls": [],
       "declarator": "IDirect3DTexture8::GetPriority()",
       "definition_sha256": "86a4df0647bc54ad4d027e1cf83af3bdba1be5a0ed18d83811ced78d05b69b29",
-      "end_byte": 70867,
-      "end_line": 1922,
+      "end_byte": 70403,
+      "end_line": 1913,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1919,
+      "line": 1910,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "23ecb147fd3b78cbf5f56600c6ea4f63f787c01b454606d141fa7a57fe30f038",
+      "row_id": "b4824e3d1c2331fb2c0e2299a5d21134e9cddc9fd454da4449a09874a7499c0d",
       "scope": "",
       "signals": [],
-      "start_byte": 70807,
+      "start_byte": 70343,
       "status": "unknown"
     },
     {
@@ -103027,22 +103512,22 @@
       "calls": [],
       "declarator": "IDirect3DTexture8::SetPriority(DWORD priority)",
       "definition_sha256": "030255adf54a470e2d510df440616415096c264eb0a95d90ddf04e03859869ca",
-      "end_byte": 70999,
-      "end_line": 1929,
+      "end_byte": 70535,
+      "end_line": 1920,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1924,
+      "line": 1915,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "f434cdc96ca20f7a80694df1cbcffd1d8a62db78cec0be171fc6f57d87e459a1",
+      "row_id": "7e4abb5cab1d32c675a16fe61bbe5ae4cbe48559b944c4d48f9d80d1948db179",
       "scope": "",
       "signals": [],
-      "start_byte": 70869,
+      "start_byte": 70405,
       "status": "unknown"
     },
     {
@@ -103052,32 +103537,32 @@
         {
           "callee": "memset",
           "callee_node_type": "identifier",
-          "line": 1950
+          "line": 1941
         }
       ],
       "declarator": "IDirect3DSurface8::IDirect3DSurface8(UINT width, UINT height,\n\tD3DFORMAT format, UINT bytes_per_pixel)",
       "definition_sha256": "4a01e22ff26846da4496d3ff2720ab07659d1dcaaf2e0522756c22c92923e2a9",
-      "end_byte": 71698,
-      "end_line": 1952,
+      "end_byte": 71234,
+      "end_line": 1943,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1931,
+      "line": 1922,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1938,
-        1942
+        1929,
+        1933
       ],
       "parse_has_error": false,
-      "row_id": "ff41d762e5213852fd556eda43542410721a757a695e9d89f0910807214414ff",
+      "row_id": "f9685f3ce3c3c391c4bf28b1c31c6bf522d47f23d08a5fd3fe1cf45865f48f6b",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 71001,
+      "start_byte": 70537,
       "status": "unknown"
     },
     {
@@ -103086,22 +103571,22 @@
       "calls": [],
       "declarator": "IDirect3DSurface8::~IDirect3DSurface8()",
       "definition_sha256": "67f757951f68b1fdc40ac808d6017af58450aadbe2601e8aa60d456ced2eaa98",
-      "end_byte": 71763,
-      "end_line": 1957,
+      "end_byte": 71299,
+      "end_line": 1948,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1954,
+      "line": 1945,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "742183249bb03d01526da7eec47b01a6d91b60982adea99da22c6ecf7b53e4cb",
+      "row_id": "5096bc272651c5aa3de0fcf20462c32a297e9f24d5d177154b1fd7e0e5cacf40",
       "scope": "",
       "signals": [],
-      "start_byte": 71700,
+      "start_byte": 71236,
       "status": "unknown"
     },
     {
@@ -103110,22 +103595,22 @@
       "calls": [],
       "declarator": "IDirect3DSurface8::AddRef()",
       "definition_sha256": "43dc9a80ae7af60d838120f9354ee4eaba53efeccd22e8ab9e98bc25c7a1ab5e",
-      "end_byte": 71828,
-      "end_line": 1962,
+      "end_byte": 71364,
+      "end_line": 1953,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1959,
+      "line": 1950,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "7c280d9c1035aace77e5eff3c38a532808d3ad6ca4e67c5d50d9167a1fe70854",
+      "row_id": "2c69b4e1cd51097fac8756bce1e3b0f2e6b195476dda033d63a733db254b3cec",
       "scope": "",
       "signals": [],
-      "start_byte": 71765,
+      "start_byte": 71301,
       "status": "unknown"
     },
     {
@@ -103134,32 +103619,32 @@
       "calls": [],
       "declarator": "IDirect3DSurface8::Release()",
       "definition_sha256": "830b7782726e12a6d4fc9d1b0c7ff9c38c4fe95a34ab5e6738860c0ebabf8dc6",
-      "end_byte": 72003,
-      "end_line": 1970,
+      "end_byte": 71539,
+      "end_line": 1961,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1964,
+      "line": 1955,
       "literal_returns": [
         {
           "expression": "0U",
-          "line": 1966
+          "line": 1957
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1966
+        1957
       ],
       "parse_has_error": false,
-      "row_id": "9e9ce972b8b5c794e10e8745c31af92da0ef9269c2113946e5d71683e9f6d3fb",
+      "row_id": "8eab7d766b0077dcf4934103e63667e2e4e0920ceb8b4eb899502fd897cee7f8",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 71830,
+      "start_byte": 71366,
       "status": "unknown"
     },
     {
@@ -103169,36 +103654,36 @@
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 1974
+          "line": 1965
         },
         {
           "callee": "memset",
           "callee_node_type": "identifier",
-          "line": 1975
+          "line": 1966
         }
       ],
       "declarator": "IDirect3DSurface8::GetDesc(D3DSURFACE_DESC *description)",
       "definition_sha256": "29c9322c2060757bb8f6f7f2b6204691684d43d05f82cf0ffd3a33b6a0d40da1",
-      "end_byte": 72355,
-      "end_line": 1981,
+      "end_byte": 71891,
+      "end_line": 1972,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1972,
+      "line": 1963,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1974
+        1965
       ],
       "parse_has_error": false,
-      "row_id": "e4ec05f3cb3ca05fb6224b2d1713a1be9d5d1c4367c0feea395bcaf996e1b390",
+      "row_id": "2e64ff409029e53aedcdbf85891579d5f73661559dffda7d69843acdb39e4837",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 72005,
+      "start_byte": 71541,
       "status": "unknown"
     },
     {
@@ -103208,77 +103693,77 @@
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 1987
+          "line": 1978
         },
         {
           "callee": "static_cast<UINT>",
           "callee_node_type": "template_function",
-          "line": 1993
+          "line": 1984
         },
         {
           "callee": "static_cast<UINT>",
           "callee_node_type": "template_function",
-          "line": 1994
+          "line": 1985
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 1994
+          "line": 1985
         },
         {
           "callee": "static_cast<UINT>",
           "callee_node_type": "template_function",
-          "line": 1995
+          "line": 1986
         },
         {
           "callee": "static_cast<UINT>",
           "callee_node_type": "template_function",
-          "line": 1996
+          "line": 1987
         },
         {
           "callee": "static_cast<int>",
           "callee_node_type": "template_function",
-          "line": 1998
+          "line": 1989
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 1999
+          "line": 1990
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 2000
+          "line": 1991
         },
         {
           "callee": "Surface_Bytes_Per_Pixel",
           "callee_node_type": "identifier",
-          "line": 2000
+          "line": 1991
         }
       ],
       "declarator": "IDirect3DSurface8::LockRect(D3DLOCKED_RECT *locked,\n\tconst RECT *rectangle, DWORD flags)",
       "definition_sha256": "d350e632995d5149e099bb6220cb97b24b0c4481230a2e0203a9b7d8ef9a96bc",
-      "end_byte": 73208,
-      "end_line": 2004,
+      "end_byte": 72744,
+      "end_line": 1995,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 1983,
+      "line": 1974,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        1987,
-        1994
+        1978,
+        1985
       ],
       "parse_has_error": false,
-      "row_id": "425002ccde937acd68f377f5ad3f4ee7cd9bfdd60c698442dcb88e100d95603c",
+      "row_id": "c9133f969b98776624e863c9a3efb733ed64f3d27e20d8b0c201757300c07f58",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 72357,
+      "start_byte": 71893,
       "status": "unknown"
     },
     {
@@ -103288,37 +103773,37 @@
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2008
+          "line": 1999
         },
         {
           "callee": "Upload_Texture_Owner",
           "callee_node_type": "identifier",
-          "line": 2013
+          "line": 2004
         }
       ],
       "declarator": "IDirect3DSurface8::UnlockRect()",
       "definition_sha256": "8f9896e925f7bd2b61280c19a32a445332ac7aedbca5fb6a69d154d04476a16f",
-      "end_byte": 73468,
-      "end_line": 2014,
+      "end_byte": 73004,
+      "end_line": 2005,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2006,
+      "line": 1997,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2008,
-        2012
+        1999,
+        2003
       ],
       "parse_has_error": false,
-      "row_id": "726d123d628c6abe1734fac887e392e9160645fd9648fffa5653773d4ad56df2",
+      "row_id": "8e29fcb97bd22b9877bf12a15933fbea98014c219f9db0309dfb77ab90f76a1b",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 73210,
+      "start_byte": 72746,
       "status": "unknown"
     },
     {
@@ -103327,22 +103812,22 @@
       "calls": [],
       "declarator": "IDirect3DSurface8::Set_Texture_Owner(IDirect3DTexture8 *texture, UINT level)",
       "definition_sha256": "7ba2ead111ce6eeb9ac8f8a041b0a0ae4e0a90a0b4d9962a73fcc0875d3821be",
-      "end_byte": 73608,
-      "end_line": 2020,
+      "end_byte": 73144,
+      "end_line": 2011,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2016,
+      "line": 2007,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "4f0580ea38ba37167670c2c0b9471dc63272b7e438d9adbb3a15f7bfab528126",
+      "row_id": "30748bbcb927655e4eed0deaa9239c4993317d9dd11be2531bfd763c83f76008",
       "scope": "",
       "signals": [],
-      "start_byte": 73470,
+      "start_byte": 73006,
       "status": "unknown"
     },
     {
@@ -103352,53 +103837,53 @@
         {
           "callee": "OwnerTexture->GetLevelCount",
           "callee_node_type": "field_expression",
-          "line": 2026
+          "line": 2017
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2028
+          "line": 2019
         },
         {
           "callee": "Upload_Texture_Level_From_Surface",
           "callee_node_type": "identifier",
-          "line": 2030
+          "line": 2021
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Upload_Failure",
           "callee_node_type": "qualified_identifier",
-          "line": 2031
+          "line": 2022
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2032
+          "line": 2023
         }
       ],
       "declarator": "IDirect3DSurface8::Upload_Texture_Owner()",
       "definition_sha256": "a5c0ab54a2c3c60ec4deca6448ded9990b5613ad65509bcd2912aa10edc23ccd",
-      "end_byte": 74122,
-      "end_line": 2035,
+      "end_byte": 73658,
+      "end_line": 2026,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2022,
+      "line": 2013,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2024,
-        2028,
-        2032
+        2015,
+        2019,
+        2023
       ],
       "parse_has_error": false,
-      "row_id": "4fd15e0ef89f64ae69fb78f58f8025eab105d1851ab384260d973e16530b099d",
+      "row_id": "e42a8db1ebd6671bc66f24b2c9f5e44d8c11f6e8ab0b22e7e3365def8016f494",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 73610,
+      "start_byte": 73146,
       "status": "unknown"
     },
     {
@@ -103408,42 +103893,62 @@
         {
           "callee": "source->Get_Data",
           "callee_node_type": "field_expression",
-          "line": 2041
+          "line": 2032
         },
         {
           "callee": "destination->Get_Data",
           "callee_node_type": "field_expression",
+          "line": 2033
+        },
+        {
+          "callee": "static_cast<HRESULT>",
+          "callee_node_type": "template_function",
+          "line": 2035
+        },
+        {
+          "callee": "source->GetDesc",
+          "callee_node_type": "field_expression",
+          "line": 2039
+        },
+        {
+          "callee": "destination->GetDesc",
+          "callee_node_type": "field_expression",
+          "line": 2040
+        },
+        {
+          "callee": "Surface_Format_Is_Block_Compressed",
+          "callee_node_type": "identifier",
           "line": 2042
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2044
-        },
-        {
-          "callee": "source->GetDesc",
-          "callee_node_type": "field_expression",
-          "line": 2048
-        },
-        {
-          "callee": "destination->GetDesc",
-          "callee_node_type": "field_expression",
-          "line": 2049
-        },
-        {
-          "callee": "Surface_Format_Is_Block_Compressed",
-          "callee_node_type": "identifier",
-          "line": 2051
-        },
-        {
-          "callee": "static_cast<HRESULT>",
-          "callee_node_type": "template_function",
-          "line": 2052
+          "line": 2043
         },
         {
           "callee": "Surface_Bytes_Per_Pixel",
           "callee_node_type": "identifier",
-          "line": 2055
+          "line": 2046
+        },
+        {
+          "callee": "static_cast<HRESULT>",
+          "callee_node_type": "template_function",
+          "line": 2047
+        },
+        {
+          "callee": "Validate_Surface_Copy_Rect",
+          "callee_node_type": "identifier",
+          "line": 2051
+        },
+        {
+          "callee": "Validate_Surface_Destination_Rect",
+          "callee_node_type": "identifier",
+          "line": 2052
+        },
+        {
+          "callee": "Copy_Surface_Rect_Bytes",
+          "callee_node_type": "identifier",
+          "line": 2054
         },
         {
           "callee": "static_cast<HRESULT>",
@@ -103451,83 +103956,63 @@
           "line": 2056
         },
         {
+          "callee": "destination->Upload_Texture_Owner",
+          "callee_node_type": "field_expression",
+          "line": 2058
+        },
+        {
           "callee": "Validate_Surface_Copy_Rect",
           "callee_node_type": "identifier",
-          "line": 2060
-        },
-        {
-          "callee": "Validate_Surface_Destination_Rect",
-          "callee_node_type": "identifier",
-          "line": 2061
-        },
-        {
-          "callee": "Copy_Surface_Rect_Bytes",
-          "callee_node_type": "identifier",
-          "line": 2063
-        },
-        {
-          "callee": "static_cast<HRESULT>",
-          "callee_node_type": "template_function",
           "line": 2065
         },
         {
-          "callee": "destination->Upload_Texture_Owner",
-          "callee_node_type": "field_expression",
-          "line": 2067
-        },
-        {
-          "callee": "Validate_Surface_Copy_Rect",
-          "callee_node_type": "identifier",
-          "line": 2074
-        },
-        {
           "callee": "Validate_Surface_Destination_Rect",
           "callee_node_type": "identifier",
-          "line": 2076
+          "line": 2067
         },
         {
           "callee": "Copy_Surface_Rect_Bytes",
           "callee_node_type": "identifier",
-          "line": 2078
+          "line": 2069
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2080
+          "line": 2071
         },
         {
           "callee": "destination->Upload_Texture_Owner",
           "callee_node_type": "field_expression",
-          "line": 2083
+          "line": 2074
         }
       ],
       "declarator": "IDirect3DDevice8::CopyRects(IDirect3DSurface8 *source,\n\tconst RECT *source_rects, UINT count, IDirect3DSurface8 *destination,\n\tconst POINT *destination_points)",
       "definition_sha256": "49155c6e2871484a6108b31ef2c10e0ef6ccd19b2b50a309904bb37628887580",
-      "end_byte": 76204,
-      "end_line": 2084,
+      "end_byte": 75740,
+      "end_line": 2075,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2037,
+      "line": 2028,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2044,
-        2052,
+        2035,
+        2043,
+        2047,
         2056,
-        2065,
-        2067,
-        2080
+        2058,
+        2071
       ],
       "parse_has_error": false,
-      "row_id": "fe93b02179b7201638c6973b1a11b56761a834336b90e4f23983190dca0b73ca",
+      "row_id": "3349f6a4b61539630582ffde4e13ade1211882199939fb89f506bb215efb7c5a",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 74124,
+      "start_byte": 73660,
       "status": "unknown"
     },
     {
@@ -103537,130 +104022,130 @@
         {
           "callee": "destination->Get_Data",
           "callee_node_type": "field_expression",
-          "line": 2093
+          "line": 2084
         },
         {
           "callee": "source->Get_Data",
           "callee_node_type": "field_expression",
-          "line": 2093
+          "line": 2084
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2094
+          "line": 2085
         },
         {
           "callee": "source->GetDesc",
           "callee_node_type": "field_expression",
-          "line": 2100
+          "line": 2091
         },
         {
           "callee": "destination->GetDesc",
           "callee_node_type": "field_expression",
-          "line": 2101
+          "line": 2092
         },
         {
           "callee": "Validate_Surface_Copy_Rect",
           "callee_node_type": "identifier",
-          "line": 2102
+          "line": 2093
         },
         {
           "callee": "Validate_Surface_Copy_Rect",
           "callee_node_type": "identifier",
-          "line": 2104
+          "line": 2095
         },
         {
           "callee": "static_cast<HRESULT>",
+          "callee_node_type": "template_function",
+          "line": 2097
+        },
+        {
+          "callee": "static_cast<UINT>",
+          "callee_node_type": "template_function",
+          "line": 2100
+        },
+        {
+          "callee": "static_cast<UINT>",
+          "callee_node_type": "template_function",
+          "line": 2102
+        },
+        {
+          "callee": "static_cast<UINT>",
+          "callee_node_type": "template_function",
+          "line": 2104
+        },
+        {
+          "callee": "static_cast<UINT>",
           "callee_node_type": "template_function",
           "line": 2106
         },
         {
-          "callee": "static_cast<UINT>",
-          "callee_node_type": "template_function",
-          "line": 2109
-        },
-        {
-          "callee": "static_cast<UINT>",
-          "callee_node_type": "template_function",
-          "line": 2111
-        },
-        {
-          "callee": "static_cast<UINT>",
-          "callee_node_type": "template_function",
-          "line": 2113
-        },
-        {
-          "callee": "static_cast<UINT>",
-          "callee_node_type": "template_function",
-          "line": 2115
-        },
-        {
           "callee": "Surface_Format_Is_Block_Compressed",
           "callee_node_type": "identifier",
-          "line": 2118
+          "line": 2109
         },
         {
           "callee": "Surface_Bytes_Per_Pixel",
           "callee_node_type": "identifier",
-          "line": 2120
+          "line": 2111
         },
         {
           "callee": "Copy_Surface_Rect_Bytes",
           "callee_node_type": "identifier",
-          "line": 2121
+          "line": 2112
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2123
+          "line": 2114
         },
         {
           "callee": "destination->Upload_Texture_Owner",
           "callee_node_type": "field_expression",
-          "line": 2125
+          "line": 2116
         },
         {
           "callee": "Load_Surface_Rect_Filtered",
           "callee_node_type": "identifier",
-          "line": 2127
+          "line": 2118
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2129
+          "line": 2120
         },
         {
           "callee": "destination->Upload_Texture_Owner",
           "callee_node_type": "field_expression",
-          "line": 2131
+          "line": 2122
         }
       ],
       "declarator": "D3DXLoadSurfaceFromSurface(IDirect3DSurface8 *destination,\n\tconst void *destination_palette, const RECT *destination_rect,\n\tIDirect3DSurface8 *source, const void *source_palette,\n\tconst RECT *source_rect, DWORD filter, D3DCOLOR color_key)",
       "definition_sha256": "a62065a34f3f1ed076a70dc94581309b54c742c0a7db1f616cc5585ac135200a",
-      "end_byte": 78357,
-      "end_line": 2132,
+      "end_byte": 77893,
+      "end_line": 2123,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2086,
+      "line": 2077,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2094,
-        2106,
-        2123,
-        2125,
-        2129
+        2085,
+        2097,
+        2114,
+        2116,
+        2120
       ],
       "parse_has_error": false,
-      "row_id": "3be60c56fcb0498e427f624f32c5d5532308efa8887a4837c9c12120af0274b0",
+      "row_id": "8b2bd6c66dd8ed0dda318ca90fcea27cfa5881db2a23e8cec74c584dbddcaf7b",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 76206,
+      "start_byte": 75742,
       "status": "unknown"
     },
     {
@@ -103670,53 +104155,53 @@
         {
           "callee": "texture->GetLevelCount",
           "callee_node_type": "field_expression",
-          "line": 2137
+          "line": 2128
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2139
+          "line": 2130
         },
         {
           "callee": "texture->GetLevelCount",
           "callee_node_type": "field_expression",
-          "line": 2141
+          "line": 2132
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2145
+          "line": 2136
         },
         {
           "callee": "D3DXLoadSurfaceFromSurface",
           "callee_node_type": "identifier",
-          "line": 2147
+          "line": 2138
         }
       ],
       "declarator": "D3DXFilterTexture(IDirect3DTexture8 *texture, const void *palette,\n\tUINT source_level, DWORD filter)",
       "definition_sha256": "f0929f0cb2465877858b4298c4990a348b051d74b441d026d7a7cafc86eeed32",
-      "end_byte": 79143,
-      "end_line": 2153,
+      "end_byte": 78679,
+      "end_line": 2144,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2134,
+      "line": 2125,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2139,
-        2145,
-        2150
+        2130,
+        2136,
+        2141
       ],
       "parse_has_error": false,
-      "row_id": "9a85e19b8505a11fbbcee456021d47fe7df1c29df60bba864595d764b26baab9",
+      "row_id": "e2923ea466a1af9078f422c691e8f7db9be6b1f4c1692e27e19bd8219961d7fe",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 78359,
+      "start_byte": 77895,
       "status": "unknown"
     },
     {
@@ -103726,27 +104211,27 @@
         {
           "callee": "Release_Bound_Texture_Stages",
           "callee_node_type": "identifier",
-          "line": 2157
+          "line": 2148
         }
       ],
       "declarator": "RenegadeVita_Release_DX8_Bound_Textures()",
       "definition_sha256": "9b0eaba3d6b6cde93bf0d403e0a2d86e8f7b0a7c921196f05b984a5b83ebf895",
-      "end_byte": 79228,
-      "end_line": 2158,
+      "end_byte": 78764,
+      "end_line": 2149,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2155,
+      "line": 2146,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "9ad8d5a9918253fd2f5e11f5b6c2c9708d378c067723ed6e3674380f5954ebeb",
+      "row_id": "35c78c9df6374ddad7c3fc08f19adabec2456a2360cf2fee25b17cf6da9fd4f8",
       "scope": "",
       "signals": [],
-      "start_byte": 79145,
+      "start_byte": 78681,
       "status": "unknown"
     },
     {
@@ -103755,36 +104240,36 @@
       "calls": [],
       "declarator": "RenegadeVita_Get_DX8_Texture_Coordinate_State(DWORD stage,\n\tDWORD *texcoord_index, DWORD *texture_transform_flags,\n\tD3DMATRIX *texture_transform)",
       "definition_sha256": "0d8c9b79ac912a3aec60693edebd434ce4ae8a00c679397fd1df27c7db9d1956",
-      "end_byte": 79812,
-      "end_line": 2176,
+      "end_byte": 79348,
+      "end_line": 2167,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2160,
+      "line": 2151,
       "literal_returns": [
         {
           "expression": "false",
-          "line": 2164
+          "line": 2155
         },
         {
           "expression": "true",
-          "line": 2175
+          "line": 2166
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2164
+        2155
       ],
       "parse_has_error": false,
-      "row_id": "c9cc20591fad7b2f08adc0411336fa639a4497645ef9942d98825060cda2fcf3",
+      "row_id": "def1360504044e14672f336290f76f2257fda8fd60afa5bcdf47a469a09821d0",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 79230,
+      "start_byte": 78766,
       "status": "unknown"
     },
     {
@@ -103793,22 +104278,22 @@
       "calls": [],
       "declarator": "RenegadeVita_Invalidate_DX8_Texture_Stage_Transform(DWORD stage)",
       "definition_sha256": "08aeedf746ba2edf07a866303825c39108594eedaea2e9d8e1a7ba9fe1253b9c",
-      "end_byte": 79977,
-      "end_line": 2183,
+      "end_byte": 79513,
+      "end_line": 2174,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2178,
+      "line": 2169,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "c52bc8f46d3237ce9515bcc544c09e5149dad9d8a2fce90d36aab7040989b085",
+      "row_id": "86abd4cd4d56db926d32c18d25048bd1f03c5b174a49af64c7322fa63653129d",
       "scope": "",
       "signals": [],
-      "start_byte": 79814,
+      "start_byte": 79350,
       "status": "unknown"
     },
     {
@@ -103818,46 +104303,46 @@
         {
           "callee": "static_cast<D3DTRANSFORMSTATETYPE>",
           "callee_node_type": "template_function",
-          "line": 2191
+          "line": 2182
         },
         {
           "callee": "static_cast<DWORD>",
           "callee_node_type": "template_function",
-          "line": 2192
+          "line": 2183
         },
         {
           "callee": "Apply_Texture_Stage_Transform",
           "callee_node_type": "identifier",
-          "line": 2193
+          "line": 2184
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2194
+          "line": 2185
         }
       ],
       "declarator": "IDirect3DDevice8::SetTransform(D3DTRANSFORMSTATETYPE state,\n\tconst D3DMATRIX *matrix)",
       "definition_sha256": "47f53b5602364605c9095d4430c92d71dc218dc8543839268da9286d2109784a",
-      "end_byte": 80470,
-      "end_line": 2198,
+      "end_byte": 80006,
+      "end_line": 2189,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2185,
+      "line": 2176,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2193
+        2184
       ],
       "parse_has_error": false,
-      "row_id": "c978a07d2638ffdf373425a44662b695144522b3c87587503c7ed18ea7888161",
+      "row_id": "f5cd041018cffece39a8ae8e5652f8ce2c9b3f31c2f83f19907195cd72715042",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 79979,
+      "start_byte": 79515,
       "status": "unknown"
     },
     {
@@ -103867,31 +104352,31 @@
         {
           "callee": "memset",
           "callee_node_type": "identifier",
-          "line": 2209
+          "line": 2200
         }
       ],
       "declarator": "IDirect3DDevice8::GetTransform(D3DTRANSFORMSTATETYPE state,\n\tD3DMATRIX *matrix)",
       "definition_sha256": "973dd80bbb0e9be3eae6f7b1584b038a22614f21e580bbd0973cd3a4b121cd32",
-      "end_byte": 80736,
-      "end_line": 2212,
+      "end_byte": 80272,
+      "end_line": 2203,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2200,
+      "line": 2191,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2204
+        2195
       ],
       "parse_has_error": false,
-      "row_id": "76432be262f991feb497ffd2e125fa54d91a66062c20018c754e5b6ad8d358e2",
+      "row_id": "a96f41342bfdaa01cfe27f468d10f618ffbafb5971decb1d26aea7849cb0413f",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 80472,
+      "start_byte": 80008,
       "status": "unknown"
     },
     {
@@ -103901,36 +104386,36 @@
         {
           "callee": "RenegadeVitaRenderer::Apply_Viewport",
           "callee_node_type": "qualified_identifier",
-          "line": 2216
+          "line": 2207
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2220
+          "line": 2211
         }
       ],
       "declarator": "IDirect3DDevice8::SetViewport(const D3DVIEWPORT8 *viewport)",
       "definition_sha256": "46bee685428fa13bee981b155378c120581af345a602bc1382e4eb5a018bccde",
-      "end_byte": 81131,
-      "end_line": 2224,
+      "end_byte": 80667,
+      "end_line": 2215,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2214,
+      "line": 2205,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2220
+        2211
       ],
       "parse_has_error": false,
-      "row_id": "6d98326c217ebd7ef40901aa1de2fa62f1d1c20a7224b0c090b0ad6ed1430608",
+      "row_id": "b18c98818426003da389ae3bd4744adecfb214882f4635cb02ee84ac06a9c9de",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 80738,
+      "start_byte": 80274,
       "status": "unknown"
     },
     {
@@ -103940,31 +104425,31 @@
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2229
+          "line": 2220
         }
       ],
       "declarator": "IDirect3DDevice8::GetViewport(D3DVIEWPORT8 *viewport)",
       "definition_sha256": "6e2d845c335c065413ecd59c3195b4e8dd9a43fd021bfe33e6b59734e5c86065",
-      "end_byte": 81327,
-      "end_line": 2233,
+      "end_byte": 80863,
+      "end_line": 2224,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2226,
+      "line": 2217,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2229
+        2220
       ],
       "parse_has_error": false,
-      "row_id": "d96d04d1bc5f4743bac1f7068e591f983f3c4d40fdf7559991bc7b3b82a39d75",
+      "row_id": "b9276e5424339314bca3a0c6ef2e378dc1c37e714ef4338801c5737be978f56c",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 81133,
+      "start_byte": 80669,
       "status": "unknown"
     },
     {
@@ -103974,42 +104459,42 @@
         {
           "callee": "RenegadeVitaRenderer::Apply_DX8_Render_State",
           "callee_node_type": "qualified_identifier",
-          "line": 2237
+          "line": 2228
         },
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 2238
+          "line": 2229
         },
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 2238
+          "line": 2229
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2239
+          "line": 2230
         }
       ],
       "declarator": "IDirect3DDevice8::SetRenderState(D3DRENDERSTATETYPE state, DWORD value)",
       "definition_sha256": "cd4eaa4dfc0a2e385d5767e22a43cad2dac9e41c4d9734091254b3a4a0653d55",
-      "end_byte": 81583,
-      "end_line": 2240,
+      "end_byte": 81119,
+      "end_line": 2231,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2235,
+      "line": 2226,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "b937cc63625dc40297e3224e50940d5b59c1aa6c969f05ce9881399f20d53e5c",
+      "row_id": "8f15a1530114b934fe69d562a318d2cd20425f3754aa27a91fd52423b22685a5",
       "scope": "",
       "signals": [],
-      "start_byte": 81329,
+      "start_byte": 80865,
       "status": "unknown"
     },
     {
@@ -104019,20 +104504,40 @@
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Unsupported_Stage",
           "callee_node_type": "qualified_identifier",
-          "line": 2246
+          "line": 2237
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2247
+          "line": 2238
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Unsupported_Stage",
           "callee_node_type": "qualified_identifier",
-          "line": 2270
+          "line": 2261
         },
         {
           "callee": "Apply_Texture_Stage_Combiner",
+          "callee_node_type": "identifier",
+          "line": 2271
+        },
+        {
+          "callee": "static_cast<HRESULT>",
+          "callee_node_type": "template_function",
+          "line": 2272
+        },
+        {
+          "callee": "Apply_Texture_Stage_Transform",
+          "callee_node_type": "identifier",
+          "line": 2275
+        },
+        {
+          "callee": "static_cast<HRESULT>",
+          "callee_node_type": "template_function",
+          "line": 2276
+        },
+        {
+          "callee": "Apply_Texture_Stage_Sampler",
           "callee_node_type": "identifier",
           "line": 2280
         },
@@ -104040,67 +104545,47 @@
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
           "line": 2281
-        },
-        {
-          "callee": "Apply_Texture_Stage_Transform",
-          "callee_node_type": "identifier",
-          "line": 2284
-        },
-        {
-          "callee": "static_cast<HRESULT>",
-          "callee_node_type": "template_function",
-          "line": 2285
-        },
-        {
-          "callee": "Apply_Texture_Stage_Sampler",
-          "callee_node_type": "identifier",
-          "line": 2289
-        },
-        {
-          "callee": "static_cast<HRESULT>",
-          "callee_node_type": "template_function",
-          "line": 2290
         }
       ],
       "declarator": "IDirect3DDevice8::SetTextureStageState(DWORD stage,\n\tD3DTEXTURESTAGESTATETYPE state, DWORD value)",
       "definition_sha256": "06471f7fca2acfaed8bafe5864289d7e4ff3aa9cdb96bfa4365370786996e6b0",
-      "end_byte": 83713,
-      "end_line": 2291,
+      "end_byte": 83249,
+      "end_line": 2282,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2242,
+      "line": 2233,
       "literal_returns": [],
       "markers": [
         {
-          "line": 2246,
+          "line": 2237,
           "text": "Unsupported"
         },
         {
-          "line": 2267,
+          "line": 2258,
           "text": "unsupported"
         },
         {
-          "line": 2270,
+          "line": 2261,
           "text": "Unsupported"
         }
       ],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2247,
+        2238,
+        2262,
         2271,
-        2280,
-        2284
+        2275
       ],
       "parse_has_error": false,
-      "row_id": "c50df8f84f7c2031efb5b2779221622c2d9f3e501cc1682dd0cede8490861045",
+      "row_id": "94c190a7eabf084e6010fb7aae36773a662dc45c921c464fcf71c9952ac1cdf5",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate",
         "unsupported_or_todo_marker"
       ],
-      "start_byte": 81585,
+      "start_byte": 81121,
       "status": "unknown"
     },
     {
@@ -104110,90 +104595,90 @@
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Unsupported_Stage",
           "callee_node_type": "qualified_identifier",
-          "line": 2296
+          "line": 2287
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2297
+          "line": 2288
         },
         {
           "callee": "Retain_Bound_Texture_Stage",
           "callee_node_type": "identifier",
-          "line": 2299
+          "line": 2290
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2300
+          "line": 2291
         },
         {
           "callee": "RenegadeVitaRenderer::Disable_Texture_Stage",
           "callee_node_type": "qualified_identifier",
-          "line": 2303
+          "line": 2294
         },
         {
           "callee": "RenegadeVitaRenderer::Record_Texture_Checkerboard_Bind",
           "callee_node_type": "qualified_identifier",
-          "line": 2307
+          "line": 2298
         },
         {
           "callee": "RenegadeVitaRenderer::Bind_Texture_Stage",
           "callee_node_type": "qualified_identifier",
-          "line": 2309
+          "line": 2300
         },
         {
           "callee": "Apply_Texture_Stage_Sampler",
           "callee_node_type": "identifier",
-          "line": 2311
+          "line": 2302
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2312
+          "line": 2303
         },
         {
           "callee": "Apply_Texture_Stage_Combiner",
           "callee_node_type": "identifier",
-          "line": 2314
+          "line": 2305
         },
         {
           "callee": "static_cast<HRESULT>",
           "callee_node_type": "template_function",
-          "line": 2315
+          "line": 2306
         }
       ],
       "declarator": "IDirect3DDevice8::SetTexture(DWORD stage, IDirect3DBaseTexture8 *texture)",
       "definition_sha256": "37c7451519f9d9aa5cfcffa5b4cbe5ea4699bcf724428fef0c2d7afc2ac0754d",
-      "end_byte": 84582,
-      "end_line": 2316,
+      "end_byte": 84118,
+      "end_line": 2307,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2293,
+      "line": 2284,
       "literal_returns": [],
       "markers": [
         {
-          "line": 2296,
+          "line": 2287,
           "text": "Unsupported"
         }
       ],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2297,
-        2300,
-        2304,
-        2312
+        2288,
+        2291,
+        2295,
+        2303
       ],
       "parse_has_error": false,
-      "row_id": "bfe20f887a302b3ac97b02144cf16552d0e644403d785e76e3b1a7524625243e",
+      "row_id": "e613aa9a04008ddef4a5c02ccbac3faa1c1e3827e79d3fcd5c258716a5f1cd27",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate",
         "unsupported_or_todo_marker"
       ],
-      "start_byte": 83715,
+      "start_byte": 83251,
       "status": "unknown"
     },
     {
@@ -104202,22 +104687,22 @@
       "calls": [],
       "declarator": "DX8Wrapper::Get_DX8_Texture_Stage_State_Value_Name(StringClass &name,\n\tD3DTEXTURESTAGESTATETYPE state, unsigned value)",
       "definition_sha256": "cce75283e913737a453240098c424174c62476fca47f9e06b770f10600343aae",
-      "end_byte": 84763,
-      "end_line": 2324,
+      "end_byte": 84299,
+      "end_line": 2315,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2318,
+      "line": 2309,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "40aee818bbdfe07b7de14f251b43998a9bb51e5e25483dec36b0592735a48004",
+      "row_id": "e22b72cac2e66550d2741c825b727ee3fdd74fdcb1aaf6597f14ab68d52a2bec",
       "scope": "",
       "signals": [],
-      "start_byte": 84584,
+      "start_byte": 84120,
       "status": "unknown"
     },
     {
@@ -104226,7 +104711,37 @@
       "calls": [],
       "declarator": "DX8Wrapper::Get_Device_Resolution(int &width, int &height, int &bits,\n\tbool &windowed)",
       "definition_sha256": "8e46ca117d4b276a91715e7acc878bc0938fe32ac18c2db94df9f6683651475e",
-      "end_byte": 84956,
+      "end_byte": 84492,
+      "end_line": 2324,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "kind": "port_function",
+      "line": 2317,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "4c45d681d7fde0fbe1d92625f314e1020cf569852e024d00bd98d1546b7b0d9b",
+      "scope": "",
+      "signals": [],
+      "start_byte": 84301,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "9d23b2af7725f1680658a424895b7468d598a18b0a445e10518e04e0b5517262",
+      "calls": [
+        {
+          "callee": "Get_Device_Resolution",
+          "callee_node_type": "identifier",
+          "line": 2332
+        }
+      ],
+      "declarator": "DX8Wrapper::Get_Render_Target_Resolution(int &width, int &height,\n\tint &bits, bool &windowed)",
+      "definition_sha256": "5f8a2f0d6512aa722ce50fc0a1c8ddaded450a151f3645a5c15e357d7af12ba3",
+      "end_byte": 84840,
       "end_line": 2333,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -104238,40 +104753,10 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "bbbd21678c76967832d9e2b3a6d3d408de7de63267b91852a64bdf568edccc17",
+      "row_id": "ff4e6f2d1c36e000ec7295767a6b40a0d9310bf62e240d3a6a438fab1076871a",
       "scope": "",
       "signals": [],
-      "start_byte": 84765,
-      "status": "unknown"
-    },
-    {
-      "body_kind": "compound_statement",
-      "body_sha256": "9d23b2af7725f1680658a424895b7468d598a18b0a445e10518e04e0b5517262",
-      "calls": [
-        {
-          "callee": "Get_Device_Resolution",
-          "callee_node_type": "identifier",
-          "line": 2341
-        }
-      ],
-      "declarator": "DX8Wrapper::Get_Render_Target_Resolution(int &width, int &height,\n\tint &bits, bool &windowed)",
-      "definition_sha256": "5f8a2f0d6512aa722ce50fc0a1c8ddaded450a151f3645a5c15e357d7af12ba3",
-      "end_byte": 85304,
-      "end_line": 2342,
-      "entry_preprocessor_context": [],
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
-      "kind": "port_function",
-      "line": 2335,
-      "literal_returns": [],
-      "markers": [],
-      "node_type": "function_definition",
-      "nonfinal_return_lines": [],
-      "parse_has_error": false,
-      "row_id": "04484b2d8237a9e81c91c15eae1e6777eddf1c162e054957006cd6b3a8fabb82",
-      "scope": "",
-      "signals": [],
-      "start_byte": 84958,
+      "start_byte": 84494,
       "status": "unknown"
     },
     {
@@ -104281,93 +104766,93 @@
         {
           "callee": "Render2DClass::Set_Screen_Resolution",
           "callee_node_type": "qualified_identifier",
-          "line": 2369
+          "line": 2360
         },
         {
           "callee": "RectClass",
           "callee_node_type": "identifier",
-          "line": 2369
+          "line": 2360
         },
         {
           "callee": "static_cast<float>",
           "callee_node_type": "template_function",
-          "line": 2370
+          "line": 2361
         },
         {
           "callee": "static_cast<float>",
           "callee_node_type": "template_function",
-          "line": 2371
+          "line": 2362
         },
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 2372
+          "line": 2363
         },
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 2373
+          "line": 2364
         },
         {
           "callee": "RenegadeVitaRenderer::Get_Statistics",
           "callee_node_type": "qualified_identifier",
-          "line": 2381
+          "line": 2372
         },
         {
           "callee": "RenegadeVitaRenderer::Apply_Viewport",
           "callee_node_type": "qualified_identifier",
-          "line": 2382
+          "line": 2373
         },
         {
           "callee": "Vita_Append_A22_Runtime_Breadcrumb",
           "callee_node_type": "identifier",
-          "line": 2387
+          "line": 2378
         }
       ],
       "declarator": "DX8Wrapper::Set_Device_Resolution(int width, int height, int bits,\n\tint windowed, bool resize_window)",
       "definition_sha256": "7e8bc874a4f344751b6cf674adf992f10e9afaa397c83d7d31670d301be0a117",
-      "end_byte": 87412,
-      "end_line": 2397,
+      "end_byte": 86948,
+      "end_line": 2388,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2344,
+      "line": 2335,
       "literal_returns": [
         {
           "expression": "false",
-          "line": 2355
+          "line": 2346
         },
         {
           "expression": "false",
-          "line": 2359
+          "line": 2350
         },
         {
           "expression": "false",
-          "line": 2363
+          "line": 2354
         },
         {
           "expression": "true",
-          "line": 2395
+          "line": 2386
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2355,
-        2359,
-        2363,
-        2393,
-        2395
+        2346,
+        2350,
+        2354,
+        2384,
+        2386
       ],
       "parse_has_error": false,
-      "row_id": "4168b51d9fba970504b10fd139ff6309596dffda485589755faf38427e6962b9",
+      "row_id": "0f7dd9ecfdd526b0ee580cb612a747381073f786f4940e5bddbf86d361812dc5",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 85306,
+      "start_byte": 84842,
       "status": "unknown"
     },
     {
@@ -104377,33 +104862,33 @@
         {
           "callee": "Vita_Append_A22_Runtime_Breadcrumb",
           "callee_node_type": "identifier",
-          "line": 2411
+          "line": 2402
         },
         {
           "callee": "static_cast<unsigned>",
           "callee_node_type": "template_function",
-          "line": 2413
+          "line": 2404
         }
       ],
       "classification_evidence_class": "source_review",
       "declarator": "*DX8Wrapper::Create_Render_Target(int width, int height,\n\tWW3DFormat format)",
       "definition_sha256": "dd2a2e2ec7a7b4101094b2b748bd38540a335ca158cc259db78b2dfaa569b789",
-      "end_byte": 88391,
-      "end_line": 2422,
+      "end_byte": 87927,
+      "end_line": 2413,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2399,
+      "line": 2390,
       "literal_returns": [
         {
           "expression": "NULL",
-          "line": 2421
+          "line": 2412
         }
       ],
       "markers": [
         {
-          "line": 2412,
+          "line": 2403,
           "text": "unsupported"
         }
       ],
@@ -104422,13 +104907,13 @@
         ],
         "original_owner": "DX8Wrapper::Create_Render_Target; PhysicsSceneClass projector allocation"
       },
-      "row_id": "e66da6267ceaa2c90157b78bd4fbd6dce21ae3d44a808be3286311697b54aa47",
+      "row_id": "b10ff85b5e2bf6ba77fb6d12aa136d9903811f44f462cb714fcb3e752dd92975",
       "scope": "",
       "signals": [
         "literal_return",
         "unsupported_or_todo_marker"
       ],
-      "start_byte": 87414,
+      "start_byte": 86950,
       "status": "stubbed_or_noop"
     },
     {
@@ -104438,37 +104923,37 @@
         {
           "callee": "DX8_THREAD_ASSERT",
           "callee_node_type": "identifier",
-          "line": 2426
+          "line": 2417
         },
         {
           "callee": "DX8CALL",
           "callee_node_type": "identifier",
-          "line": 2427
+          "line": 2418
         },
         {
           "callee": "SetViewport",
           "callee_node_type": "identifier",
-          "line": 2427
+          "line": 2418
         }
       ],
       "declarator": "DX8Wrapper::Set_Viewport(const D3DVIEWPORT8 *viewport)",
       "definition_sha256": "2018a22a521b8694fdb5cbed451d076250bb33618841a17867f2c005362040a4",
-      "end_byte": 88511,
-      "end_line": 2428,
+      "end_byte": 88047,
+      "end_line": 2419,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2424,
+      "line": 2415,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "8c5062b4900a54216db856cdd3d68858731d48681b42adea5fa25d498382ce59",
+      "row_id": "0a7ad556c56dd15e28ad73b5f478f1df88ccbe6fd6a0e4b359377b7dddd0184d",
       "scope": "",
       "signals": [],
-      "start_byte": 88393,
+      "start_byte": 87929,
       "status": "unknown"
     },
     {
@@ -104478,56 +104963,56 @@
         {
           "callee": "Vita_Append_A22_Runtime_Breadcrumb",
           "callee_node_type": "identifier",
-          "line": 2438
+          "line": 2429
         },
         {
           "callee": "render_state.shader.Apply",
           "callee_node_type": "field_expression",
-          "line": 2454
+          "line": 2445
         },
         {
           "callee": "render_state.Textures[stage]->Apply",
           "callee_node_type": "field_expression",
-          "line": 2461
+          "line": 2452
         },
         {
           "callee": "TextureClass::Apply_Null",
           "callee_node_type": "qualified_identifier",
-          "line": 2463
+          "line": 2454
         },
         {
           "callee": "_Set_DX8_Transform",
           "callee_node_type": "identifier",
-          "line": 2468
+          "line": 2459
         },
         {
           "callee": "_Set_DX8_Transform",
           "callee_node_type": "identifier",
-          "line": 2471
+          "line": 2462
         }
       ],
       "declarator": "DX8Wrapper::Apply_Render_State_Changes()",
       "definition_sha256": "050cdbf4dda1e6b6fa501be5818d3abdc11d6a06846bf06603e638db35561c3d",
-      "end_byte": 90571,
-      "end_line": 2487,
+      "end_byte": 90107,
+      "end_line": 2478,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2430,
+      "line": 2421,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        2432
+        2423
       ],
       "parse_has_error": false,
-      "row_id": "a2074e556d2b6926cede113958eba8363c70f07fb2dd4d82b24e426436fc3f2f",
+      "row_id": "648bb0c1bbde47008ac0f2aea73e85edf0359de567b61a748c2648a481ccd9f2",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 88513,
+      "start_byte": 88049,
       "status": "unknown"
     },
     {
@@ -104537,47 +105022,47 @@
         {
           "callee": "render_state.vertex_buffer->Release_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2494
+          "line": 2485
         },
         {
           "callee": "REF_PTR_SET",
           "callee_node_type": "identifier",
-          "line": 2496
+          "line": 2487
         },
         {
           "callee": "const_cast<VertexBufferClass *>",
           "callee_node_type": "template_function",
-          "line": 2497
+          "line": 2488
         },
         {
           "callee": "vertex_buffer->Add_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2499
+          "line": 2490
         },
         {
           "callee": "vertex_buffer->Type",
           "callee_node_type": "field_expression",
-          "line": 2500
+          "line": 2491
         }
       ],
       "declarator": "DX8Wrapper::Set_Vertex_Buffer(const VertexBufferClass *vertex_buffer)",
       "definition_sha256": "7af8971f06c9b855747db9873fd259ba9b5b0f91cd77e5834c5d678da8399690",
-      "end_byte": 91208,
-      "end_line": 2506,
+      "end_byte": 90744,
+      "end_line": 2497,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2489,
+      "line": 2480,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "dd615a2d9b991d5f33f0df5aee5c972b38f239ca325b031d1d53e5158880f4dd",
+      "row_id": "c41a684160794eaa3f45ec007d72e80d2abd24e28e1a780bfebda172d2cca9dd",
       "scope": "",
       "signals": [],
-      "start_byte": 90573,
+      "start_byte": 90109,
       "status": "unknown"
     },
     {
@@ -104587,47 +105072,47 @@
         {
           "callee": "render_state.index_buffer->Release_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2513
+          "line": 2504
         },
         {
           "callee": "REF_PTR_SET",
           "callee_node_type": "identifier",
-          "line": 2515
+          "line": 2506
         },
         {
           "callee": "const_cast<IndexBufferClass *>",
           "callee_node_type": "template_function",
-          "line": 2516
+          "line": 2507
         },
         {
           "callee": "index_buffer->Add_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2519
+          "line": 2510
         },
         {
           "callee": "index_buffer->Type",
           "callee_node_type": "field_expression",
-          "line": 2520
+          "line": 2511
         }
       ],
       "declarator": "DX8Wrapper::Set_Index_Buffer(const IndexBufferClass *index_buffer,\n\tunsigned short index_base_offset)",
       "definition_sha256": "d15914ec430781becfe2e1d670b6b87cfc504d8c5b788ecaab04fba1bc252411",
-      "end_byte": 91824,
-      "end_line": 2525,
+      "end_byte": 91360,
+      "end_line": 2516,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2508,
+      "line": 2499,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "e0d098343928d200eab0c0b8ae79a7cd7ab972ac7853c9ab77a9279d336709fe",
+      "row_id": "cac94c42ec7f21b789d1165d897ea3f26b20f55218c19e2a993be1867dc6b7c3",
       "scope": "",
       "signals": [],
-      "start_byte": 91210,
+      "start_byte": 90746,
       "status": "unknown"
     },
     {
@@ -104637,52 +105122,52 @@
         {
           "callee": "render_state.vertex_buffer->Release_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2530
+          "line": 2521
         },
         {
           "callee": "const_cast<DynamicVBAccessClass &>",
           "callee_node_type": "template_function",
-          "line": 2533
+          "line": 2524
         },
         {
           "callee": "access.Get_Type",
           "callee_node_type": "field_expression",
-          "line": 2534
+          "line": 2525
         },
         {
           "callee": "access.Get_Vertex_Count",
           "callee_node_type": "field_expression",
-          "line": 2536
+          "line": 2527
         },
         {
           "callee": "REF_PTR_SET",
           "callee_node_type": "identifier",
-          "line": 2537
+          "line": 2528
         },
         {
           "callee": "render_state.vertex_buffer->Add_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2538
+          "line": 2529
         }
       ],
       "declarator": "DX8Wrapper::Set_Vertex_Buffer(const DynamicVBAccessClass &access_const)",
       "definition_sha256": "f0bccd521fe349e5db3865880a4e74244eebb4819a2ed59e4c7c5890300588c3",
-      "end_byte": 92454,
-      "end_line": 2541,
+      "end_byte": 91990,
+      "end_line": 2532,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2527,
+      "line": 2518,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "b8eae77750cc0fbd4a8a239568561de945edab3f84c41aa3b78bbd94f054d7a1",
+      "row_id": "44b8636735a241571d8c282fd23083a322d57115386732a65145c86a589d976d",
       "scope": "",
       "signals": [],
-      "start_byte": 91826,
+      "start_byte": 91362,
       "status": "unknown"
     },
     {
@@ -104692,47 +105177,47 @@
         {
           "callee": "render_state.index_buffer->Release_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2547
+          "line": 2538
         },
         {
           "callee": "const_cast<DynamicIBAccessClass &>",
           "callee_node_type": "template_function",
-          "line": 2550
+          "line": 2541
         },
         {
           "callee": "access.Get_Type",
           "callee_node_type": "field_expression",
-          "line": 2552
+          "line": 2543
         },
         {
           "callee": "REF_PTR_SET",
           "callee_node_type": "identifier",
-          "line": 2554
+          "line": 2545
         },
         {
           "callee": "render_state.index_buffer->Add_Engine_Ref",
           "callee_node_type": "field_expression",
-          "line": 2555
+          "line": 2546
         }
       ],
       "declarator": "DX8Wrapper::Set_Index_Buffer(const DynamicIBAccessClass &access_const,\n\tunsigned short index_base_offset)",
       "definition_sha256": "1fdcedb595bce31e813be6626bc65a331a5c852bc15520d68bb798b137afa8e9",
-      "end_byte": 93063,
-      "end_line": 2557,
+      "end_byte": 92599,
+      "end_line": 2548,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2543,
+      "line": 2534,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "71df225426b7a74b62db66b7b42ae9b294ad6bbc643ca43036d2002c86b17441",
+      "row_id": "018c15339ddb3ae301510e0422afeef97a02ab96219248c4b2e8dc8bb3a54ce4",
       "scope": "",
       "signals": [],
-      "start_byte": 92456,
+      "start_byte": 91992,
       "status": "unknown"
     },
     {
@@ -104742,18 +105227,58 @@
         {
           "callee": "SortingRendererClass::Insert_Triangles",
           "callee_node_type": "qualified_identifier",
-          "line": 2566
+          "line": 2557
         },
         {
           "callee": "RenegadeVitaRenderer::Reject_Indexed_Submission",
           "callee_node_type": "qualified_identifier",
-          "line": 2569
+          "line": 2560
         },
         {
           "callee": "RenegadeVitaRenderer::Reject_Indexed_Submission",
           "callee_node_type": "qualified_identifier",
-          "line": 2576
+          "line": 2567
         },
+        {
+          "callee": "Apply_Render_State_Changes",
+          "callee_node_type": "identifier",
+          "line": 2571
+        },
+        {
+          "callee": "Submit_Bound_Triangles",
+          "callee_node_type": "identifier",
+          "line": 2572
+        }
+      ],
+      "declarator": "DX8Wrapper::Draw_Triangles(unsigned buffer_type,\n\tunsigned short start_index, unsigned short polygon_count,\n\tunsigned short min_vertex_index, unsigned short vertex_count)",
+      "definition_sha256": "8d34aef2a924257b8255f5e41baa7c030727fae4f71f7dc131742881a7c74803",
+      "end_byte": 93463,
+      "end_line": 2574,
+      "entry_preprocessor_context": [],
+      "evidence_class": "source_syntax",
+      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+      "kind": "port_function",
+      "line": 2550,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [
+        2563,
+        2569
+      ],
+      "parse_has_error": false,
+      "row_id": "a4189fd2e3579c05cb4507a354edbd0c22105fb3f91e29229d0f0948458519c4",
+      "scope": "",
+      "signals": [
+        "nonfinal_return_candidate"
+      ],
+      "start_byte": 92601,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "0976bfb0139458cb3825eb222b293fb672232dd01afe964beb14818b9a8ad718",
+      "calls": [
         {
           "callee": "Apply_Render_State_Changes",
           "callee_node_type": "identifier",
@@ -104765,34 +105290,29 @@
           "line": 2581
         }
       ],
-      "declarator": "DX8Wrapper::Draw_Triangles(unsigned buffer_type,\n\tunsigned short start_index, unsigned short polygon_count,\n\tunsigned short min_vertex_index, unsigned short vertex_count)",
-      "definition_sha256": "8d34aef2a924257b8255f5e41baa7c030727fae4f71f7dc131742881a7c74803",
-      "end_byte": 93927,
+      "declarator": "DX8Wrapper::Draw_Triangles(unsigned short start_index,\n\tunsigned short polygon_count, unsigned short min_vertex_index,\n\tunsigned short vertex_count)",
+      "definition_sha256": "c6d2843d64ed1723567de19958737de72fe02639e552dde4f63331726f7b5697",
+      "end_byte": 93754,
       "end_line": 2583,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
       "kind": "port_function",
-      "line": 2559,
+      "line": 2576,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
-      "nonfinal_return_lines": [
-        2572,
-        2578
-      ],
+      "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "8cbe4878ba9e19cf9fa3f10a08379668fc0afb796ebfa67f393ee72e0801e8af",
+      "row_id": "f8673cd6fe29b7e195fcda44398998f9b0ef92ab0684c918b050128d6dd6c074",
       "scope": "",
-      "signals": [
-        "nonfinal_return_candidate"
-      ],
-      "start_byte": 93065,
+      "signals": [],
+      "start_byte": 93465,
       "status": "unknown"
     },
     {
       "body_kind": "compound_statement",
-      "body_sha256": "0976bfb0139458cb3825eb222b293fb672232dd01afe964beb14818b9a8ad718",
+      "body_sha256": "229893212f22e4347561898222af25f4d43ea286b59157151ee4f1283fea5a90",
       "calls": [
         {
           "callee": "Apply_Render_State_Changes",
@@ -104805,9 +105325,9 @@
           "line": 2590
         }
       ],
-      "declarator": "DX8Wrapper::Draw_Triangles(unsigned short start_index,\n\tunsigned short polygon_count, unsigned short min_vertex_index,\n\tunsigned short vertex_count)",
-      "definition_sha256": "c6d2843d64ed1723567de19958737de72fe02639e552dde4f63331726f7b5697",
-      "end_byte": 94218,
+      "declarator": "DX8Wrapper::Draw_Strip(unsigned short start_index,\n\tunsigned short polygon_count, unsigned short min_vertex_index,\n\tunsigned short vertex_count)",
+      "definition_sha256": "e89ecfed905c28c433086cc7b83d986126660f983afb07a35ee29f9d96dab3b3",
+      "end_byte": 94047,
       "end_line": 2592,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -104819,45 +105339,10 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "2ccdcf5e092d51a4393cea5655e2cb60a826ecd7dba2d851bd086a1dc81fb974",
+      "row_id": "cd0b4eb9eadcab4aad143bf5129d9f25f24042f2b6756205fcdb46501b816dda",
       "scope": "",
       "signals": [],
-      "start_byte": 93929,
-      "status": "unknown"
-    },
-    {
-      "body_kind": "compound_statement",
-      "body_sha256": "229893212f22e4347561898222af25f4d43ea286b59157151ee4f1283fea5a90",
-      "calls": [
-        {
-          "callee": "Apply_Render_State_Changes",
-          "callee_node_type": "identifier",
-          "line": 2598
-        },
-        {
-          "callee": "Submit_Bound_Triangles",
-          "callee_node_type": "identifier",
-          "line": 2599
-        }
-      ],
-      "declarator": "DX8Wrapper::Draw_Strip(unsigned short start_index,\n\tunsigned short polygon_count, unsigned short min_vertex_index,\n\tunsigned short vertex_count)",
-      "definition_sha256": "e89ecfed905c28c433086cc7b83d986126660f983afb07a35ee29f9d96dab3b3",
-      "end_byte": 94511,
-      "end_line": 2601,
-      "entry_preprocessor_context": [],
-      "evidence_class": "source_syntax",
-      "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
-      "kind": "port_function",
-      "line": 2594,
-      "literal_returns": [],
-      "markers": [],
-      "node_type": "function_definition",
-      "nonfinal_return_lines": [],
-      "parse_has_error": false,
-      "row_id": "348c92ce4416f172a4f104c7cfd29dbb659ee6a9b9303126bca396936e8aab8f",
-      "scope": "",
-      "signals": [],
-      "start_byte": 94220,
+      "start_byte": 93756,
       "status": "unknown"
     },
     {
@@ -105606,6 +106091,26 @@
       "kind": "current_source_guard",
       "line": 491,
       "row_id": "0ad35d1dec72b7851b9a24af9ef9d5a6845c9ff83b7d496a0e453ff28a069438",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_VITAGL_HAS_PHYCONT_MEM) && RENEGADE_VITAGL_HAS_PHYCONT_MEM",
+      "end_line": 1631,
+      "evidence_class": "current_source",
+      "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "kind": "current_source_guard",
+      "line": 1631,
+      "row_id": "9638af56545bf04ebbae6713e0392d937a8699f3938057d9813b95b487f1f650",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_VITAGL_HAS_PHYCONT_MEM) && RENEGADE_VITAGL_HAS_PHYCONT_MEM",
+      "end_line": 1640,
+      "evidence_class": "current_source",
+      "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "kind": "current_source_guard",
+      "line": 1640,
+      "row_id": "0f17236b8515e897bfa35b33f8d0c45d4c4f296c4666214704f96e3c16bc62ba",
       "status": "unknown"
     },
     {
@@ -125720,6 +126225,16 @@
       "status": "unknown"
     },
     {
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 367,
+      "evidence_class": "current_source",
+      "file": "staging/ww3d2/ww3d.cpp",
+      "kind": "current_source_guard",
+      "line": 367,
+      "row_id": "0e3c56e4f7dd9870e2ff7167166bd65ab939dd5481a4fca7f97ff4e3abf6410c",
+      "status": "unknown"
+    },
+    {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
       "end_line": 847,
       "evidence_class": "current_source",
@@ -125730,83 +126245,123 @@
       "status": "unknown"
     },
     {
-      "directive": "#if defined(RENEGADE_VITA_PORT)",
-      "end_line": 989,
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 854,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 989,
-      "row_id": "3d3e0326247c62d57e75691a6e01236819c0d4a17da071ad24551b61224ea163",
+      "line": 854,
+      "row_id": "f08884e634002acc0ad636ec8992a5bb0ff82050c97d371ada32b0a0adfc1ef4",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_VITA_PORT)",
+      "end_line": 992,
+      "evidence_class": "current_source",
+      "file": "staging/ww3d2/ww3d.cpp",
+      "kind": "current_source_guard",
+      "line": 992,
+      "row_id": "cd9ef650676987a015cc2a4baacdcce9818708104ae99cd7afb6e70e19270d0a",
       "status": "unknown"
     },
     {
       "directive": "#if !defined(RENEGADE_VITA_PORT)",
-      "end_line": 998,
+      "end_line": 1001,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 998,
-      "row_id": "5d91a580b586b622693dadd9a52f8145baa29f7c2a14aacd77afa28208f9326e",
+      "line": 1001,
+      "row_id": "73bfbc33a233836aefe4d580d5d40215584af6e753dbdf86467f29ffc6a03bda",
       "status": "unknown"
     },
     {
       "directive": "#if !defined(RENEGADE_VITA_PORT)",
-      "end_line": 1025,
+      "end_line": 1028,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 1025,
-      "row_id": "918b5ba705e4a24bd7413ab456734979a0bbf0de5285c0862b750d5aadd0d318",
+      "line": 1028,
+      "row_id": "68f437c100c010bf1ee278106d0db5dd3008551a95df39d0b7af7114ff4aada0",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
-      "end_line": 1067,
+      "end_line": 1070,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 1067,
-      "row_id": "c6397dc5861834c02a36dc1543c3090cfb731924784a4f4155baee46f9cd5a44",
+      "line": 1070,
+      "row_id": "090a0d0807ed90fc1355029187705dcda1a03fc6b4743f38baf0e33d1b6ab00e",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
-      "end_line": 1116,
+      "end_line": 1119,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 1116,
-      "row_id": "26242834c8a63a403b905eb80e5db3b516fc117b8e26aaed5055ae1507069d4a",
+      "line": 1119,
+      "row_id": "a36d0826b02e1ff3d4f4d846ea5f4f49aa7de13be8f464f39076c55454554d56",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 1123,
+      "evidence_class": "current_source",
+      "file": "staging/ww3d2/ww3d.cpp",
+      "kind": "current_source_guard",
+      "line": 1123,
+      "row_id": "025892693a58757074ed52ddc2cccd3f26e0dec43a6e4bda597ea3bbbb8e2867",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
-      "end_line": 1155,
+      "end_line": 1158,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 1155,
-      "row_id": "65d496f421fbf26bdcd24ecdae13ea4178428d1f7a16820f29be917d95d0f603",
+      "line": 1158,
+      "row_id": "bca02b9d418b951c2224a07cbed78674eb6dbe180bbfc73ae355c31b9140f233",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 1159,
+      "evidence_class": "current_source",
+      "file": "staging/ww3d2/ww3d.cpp",
+      "kind": "current_source_guard",
+      "line": 1159,
+      "row_id": "64d082b2b8a6ad18232815f8fe8364808c18b2ea3ebc5a610d4dfe982f96a377",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_ORIGINAL_SORTING)",
+      "end_line": 1165,
+      "evidence_class": "current_source",
+      "file": "staging/ww3d2/ww3d.cpp",
+      "kind": "current_source_guard",
+      "line": 1165,
+      "row_id": "acac1797fe884a09f46f28343bc52b330da588debbbd641ef8d262cf23dacadb",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
-      "end_line": 1364,
+      "end_line": 1370,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 1364,
-      "row_id": "a7aab11e534ca71714aadfdecfddbff6b16967568b9a82b00b1ebbd08150861f",
+      "line": 1370,
+      "row_id": "905c76eaa50eb2dc197f1c7d4398fa61c7090e5ecd07f477defa76709ebef61a",
       "status": "unknown"
     },
     {
       "directive": "#if !defined(RENEGADE_VITA_PORT)",
-      "end_line": 1996,
+      "end_line": 2002,
       "evidence_class": "current_source",
       "file": "staging/ww3d2/ww3d.cpp",
       "kind": "current_source_guard",
-      "line": 1996,
-      "row_id": "ebbb3d992275c2a9298e0a687734003e60d87fcefd1f067720c35fd0a476857a",
+      "line": 2002,
+      "row_id": "f5cdc6a0073f7b87c243d076fb3f39f9bc7f2db28c887f4a1bab65acd8d31b10",
       "status": "unknown"
     },
     {
@@ -126117,6 +126672,16 @@
       "kind": "current_source_guard",
       "line": 43,
       "row_id": "21664195c3d059ea6a70b8d1ca42a337e6c97186faade0ca01a0829f242e7649",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if !defined(RENEGADE_RUNTIME_READ_ONLY)",
+      "end_line": 622,
+      "evidence_class": "current_source",
+      "file": "staging/wwlib/mixfile.cpp",
+      "kind": "current_source_guard",
+      "line": 622,
+      "row_id": "5897a00597b4f082f93992d727b89eb17331936f7c374344c7b14d99dccfc522",
       "status": "unknown"
     },
     {
@@ -127626,8 +128191,8 @@
       "evidence_class": "build_source",
       "file": "CMakeLists.txt",
       "kind": "link_wrapper_reference",
-      "line": 613,
-      "row_id": "82a6e67ce6b21a47aa18a4634b07396c3b8c19d8b38b42e6458348a992766017",
+      "line": 614,
+      "row_id": "32fd9f0c62b2b75bb0fbd3ae31921f9fac00d8c5fea19fe9e60e0ef77613731b",
       "status": "unknown",
       "symbol": "shark_init"
     },
@@ -127646,8 +128211,8 @@
       "evidence_class": "build_source",
       "file": "tools/host_a30_definitions/CMakeLists.txt",
       "kind": "link_wrapper_reference",
-      "line": 1051,
-      "row_id": "8f75be007f6c2f58441e44952e26e3f986cef1e6967b88b476ccf0141fae5bda",
+      "line": 1052,
+      "row_id": "28013a111d6c5a08c9ef51e6f9e71e264b7855bedb4801534dc01055b4430679",
       "status": "unknown",
       "symbol": "_ZN4WW3D28Get_Movie_Capture_Frame_RateEv"
     },
@@ -127656,8 +128221,8 @@
       "evidence_class": "build_source",
       "file": "tools/host_a30_definitions/CMakeLists.txt",
       "kind": "link_wrapper_reference",
-      "line": 1078,
-      "row_id": "cdb3eb0466f17b8375ddd7eb23513fa9ee031bda5c3ac11b65d985fe740c951b",
+      "line": 1079,
+      "row_id": "8b837ebfb899895c3381131f530cb25f903b55db9cc9a1389b211ecf5e4bbbbf",
       "status": "unknown",
       "symbol": "shark_init"
     }
@@ -127666,21 +128231,21 @@
   "sweep": "S1",
   "totals": {
     "by_kind": {
-      "current_source_guard": 816,
+      "current_source_guard": 840,
       "link_wrapper_reference": 4,
-      "patch_guard": 513,
-      "port_function": 1645,
+      "patch_guard": 519,
+      "port_function": 1655,
       "port_macro_definition": 486,
       "port_parse_unknown": 69
     },
     "by_status": {
       "boundary_replaced": 1,
       "disabled_by_port_guard": 6,
-      "stubbed_or_noop": 54,
-      "unknown": 3472
+      "stubbed_or_noop": 52,
+      "unknown": 3514
     },
-    "patch_files": 311,
-    "rows": 3533,
-    "stage_patch_references": 308
+    "patch_files": 312,
+    "rows": 3573,
+    "stage_patch_references": 309
   }
 }

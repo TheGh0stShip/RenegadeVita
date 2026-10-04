@@ -295,3 +295,17 @@ Dev214 ARM compilation/link passed six incremental actions; ELF SHA-256 is
 `6daeb9be454d2b6f5acc2c175a113173418bd8be4c88b31d8c90f359ae335d46`.
 The same full-engine replay passes ASan/LSan/UBSan. Original procedural renderer
 activation, GPU pixels and physical Vita/PSTV acceptance remain open.
+
+Original statistics integration: `statistics.cpp` is selected in full-port
+host and ARM graphs; the two boundary recording stubs are removed. Original
+DX8 counter reset, begin/end snapshots and getters are retained verbatim in
+the platform boundary. A hash-checked, zero-fuzz patch restores statistics
+begin/end calls in native WW3D frames. Ten host renderer cases pass sanitizers;
+the extended statistics replay also verifies three actual WW3D frame cycles.
+Thirty focused tests pass. Dev216 passed 651 ARM actions after source selection;
+Dev217 passed six incremental actions after the lifecycle patch. Dev217 ELF
+SHA-256 is `8f961bc2b8952c058c92a019939d6e92f7de76855af877e354732c093fbbd6a0`.
+These are CPU call/counter contracts, not measured GPU cost or native pixels.
+Source-count compile definitions currently invalidate all ARM objects when the
+selected-unit count changes; the unused A31 count macro is a build-efficiency
+lead to remove alongside the next source-selection change.

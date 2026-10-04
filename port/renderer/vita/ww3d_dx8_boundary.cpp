@@ -1635,6 +1635,7 @@ bool DX8Wrapper::IsWindowed = false;
 unsigned DX8Wrapper::matrix_changes = 0;
 unsigned DX8Wrapper::texture_stage_state_changes = 0;
 unsigned DX8Wrapper::texture_changes = 0;
+#include "original_dx8_statistics.inc"
 int DX8Wrapper::ZBias = 0;
 float DX8Wrapper::ZNear = 0.1f;
 float DX8Wrapper::ZFar = 1000.0f;
@@ -1642,16 +1643,6 @@ Matrix4 DX8Wrapper::ProjectionMatrix(true);
 DX8Caps *DX8Wrapper::CurrentCaps = &g_vita_caps;
 bool DX8Wrapper::FogEnable = false;
 D3DCOLOR DX8Wrapper::FogColor = 0;
-
-namespace Debug_Statistics {
-// The original texture application records this optional desktop diagnostic.
-// Vita keeps the authoritative resource counters in RenegadeVitaRenderer;
-// this deliberately narrow compatibility sink preserves Apply's call path.
-void Record_Texture(TextureClass *) {}
-// Queue insertion is not a draw. Flushed sorting batches are counted by the
-// existing indexed submission counters, avoiding duplicate frame totals.
-void Record_Sorting_Polys_And_Vertices(int, int) {}
-}
 
 IDirect3DSurface8 *DX8Wrapper::_Create_DX8_Surface(unsigned int width,
 	unsigned int height, WW3DFormat format)

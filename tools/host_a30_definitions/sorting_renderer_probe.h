@@ -4,6 +4,7 @@
 #include "dx8vertexbuffer.h"
 #include "dx8indexbuffer.h"
 #include "sortingrenderer.h"
+#include "statistics.h"
 #include "ww3d_vita_renderer.h"
 #include <cstring>
 #include <cstdio>
@@ -165,6 +166,40 @@ static bool Check_Original_Sorting_Renderer()
 }
 
 static unsigned strip_observed;
+static bool Check_Original_Frame_Statistics()
+{
+	bool passed = true;
+	for (int cycle = 1; cycle <= 3; ++cycle) {
+		Debug_Statistics::Begin_Statistics();
+		Debug_Statistics::Record_Texture(NULL);
+		Debug_Statistics::Record_Sorting_Polys_And_Vertices(cycle * 2, cycle * 3);
+		Debug_Statistics::Record_DX8_Skin_Polys_And_Vertices(cycle * 4, cycle * 5);
+		Debug_Statistics::Record_DX8_Skin_Polys_And_Vertices(cycle, cycle);
+		Debug_Statistics::Record_DX8_Polys_And_Vertices(cycle * 6, cycle * 7, ShaderClass());
+		Debug_Statistics::End_Statistics();
+		passed = passed && Debug_Statistics::Get_Sorting_Polygons() == cycle * 2 &&
+			Debug_Statistics::Get_Sorting_Vertices() == cycle * 3 &&
+			Debug_Statistics::Get_DX8_Skin_Polygons() == cycle * 5 &&
+			Debug_Statistics::Get_DX8_Skin_Vertices() == cycle * 6 &&
+			Debug_Statistics::Get_DX8_Skin_Renders() == 2 &&
+			Debug_Statistics::Get_DX8_Polygons() == cycle * 6 &&
+			Debug_Statistics::Get_DX8_Vertices() == cycle * 7;
+	}
+	Debug_Statistics::Begin_Statistics();
+	Debug_Statistics::End_Statistics();
+	passed = passed && Debug_Statistics::Get_Sorting_Polygons() == 0 &&
+		Debug_Statistics::Get_DX8_Skin_Renders() == 0 && Debug_Statistics::Get_DX8_Polygons() == 0;
+	for (int cycle = 1; cycle <= 3; ++cycle) {
+		passed = passed && WW3D::Begin_Render(false, false, Vector3(0,0,0)) == WW3D_ERROR_OK;
+		Debug_Statistics::Record_DX8_Skin_Polys_And_Vertices(cycle, cycle * 2);
+		passed = passed && WW3D::End_Render(false) == WW3D_ERROR_OK;
+		passed = passed && Debug_Statistics::Get_DX8_Skin_Renders() == 1 &&
+			Debug_Statistics::Get_DX8_Skin_Polygons() == cycle &&
+			Debug_Statistics::Get_DX8_Skin_Vertices() == cycle * 2;
+	}
+	std::printf("original.statistics cycles=3 reset_snapshot=%d\n", passed ? 1 : 0);
+	return passed;
+}
 static bool strip_observation_valid;
 static void Observe_Strip_Submission(const RenegadeVitaRenderer::IndexedTriangleSubmission &submission)
 {

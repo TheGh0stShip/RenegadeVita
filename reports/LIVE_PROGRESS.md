@@ -9003,3 +9003,17 @@ on host/ARM. Dev214 native compile/link passes six incremental actions.
 Evidence: renderer ledger and generated procedural dependency receipt.
 Next: resolve original procedural-renderer providers and duplicate ownership.
 Blocker: none for source work; native pixels and mission acceptance remain open.
+# Original statistics owner and frame lifecycle batch — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: original statistics owner replaces two recording stubs; original
+DX8 snapshots and native WW3D begin/end statistics calls are restored.
+Evidence: ten host renderer cases and three actual frame cycles pass
+ASan/LSan/UBSan; thirty focused tests pass. Dev216 passes 651 ARM actions;
+Dev217 passes six incremental actions and artifact identities.
+S1 now enumerates all RENEGADE guard families: 3,573 rows, 52 stubs, one
+boundary, six disabled guards and 3,514 unknown; review identities match.
+Next: original procedural renderer ownership, lighting and category activation.
+Blocker: none for source work; native pixels and mission acceptance remain open.

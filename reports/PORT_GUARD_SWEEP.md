@@ -2,25 +2,29 @@
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,533 records with 54 fallback/diagnostic functions reviewed as
+source contains 3,573 records with 52 fallback/diagnostic functions reviewed as
 `stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, 6
-guards as `disabled_by_port_guard`, and 3,472
+guards as `disabled_by_port_guard`, and 3,514
 records still `unknown`. All statuses reconcile to the total.
 
 | Inventory kind | Records |
 | --- | ---: |
-| Changed patch guards, including removals | 513 |
-| Current port/staged source guards | 816 |
-| Port function and lambda definitions | 1,645 |
+| Changed patch guards, including removals | 519 |
+| Current port/staged source guards | 840 |
+| Port function and lambda definitions | 1,655 |
 | Port macro definitions | 486 |
 | Syntax parse uncertainties | 69 |
 | Linker wrapper references | 4 |
 
-The 311 patch files and 308 literal staging references are separate inventories.
+The 312 patch files and 309 literal staging references are separate inventories.
 Three files have no staging reference; they remain visible without being called
 retail exclusions. Historical hunk coordinates are not current staged line
 proof. Comments, strings, raw strings and continued comments are masked while
-retaining physical positions. Native `__vita__` guards are included.
+retaining physical positions. Native `__vita__` guards and every `RENEGADE_*`
+family are included. The broader family adds guards for original sorting,
+manual Miles mixing and ABI/profile choices omitted by the earlier filter.
+Two statistics stubs are removed: the original owner now records texture and
+sorting counters, with host sanitizer coverage of frame reset and snapshots.
 
 Function records retain signature/scope, byte positions, whole-definition and
 body hashes, literal and nonfinal return candidates, empty-body and unsupported

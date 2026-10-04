@@ -149,8 +149,10 @@ class PortGuardInventoryTest(unittest.TestCase):
         lines = ['#if RENEGADE_A4_ORIGINAL_FRONTEND', '#ifndef _UNIX',
                  '#elif RENEGADE_HOST_AUDIO', '#if MY_VITA_EXTENSION',
                  '#define VITA 1', '#ifdef OTHER', '#if defined(__vita__)',
-                 '#ifndef __VITA__']
-        self.assertEqual([r[0] for r in directives(lines)], [0, 1, 2, 6, 7])
+                 '#ifndef __VITA__', '#if RENEGADE_ORIGINAL_SORTING',
+                 '#ifdef RENEGADE_SHORT_WCHAR_ABI', '#if RENEGADE_MILES_MANUAL_MIX',
+                 '#if NOT_RENEGADE_ORIGINAL_SORTING']
+        self.assertEqual([r[0] for r in directives(lines)], [0, 1, 2, 6, 7, 8, 9, 10])
 
     def test_selection_and_both_wrapper_forms(self):
         self.assertEqual(stage_patch_selection('< "$rv_root/port/patches/one.patch"'),

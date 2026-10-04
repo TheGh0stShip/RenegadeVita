@@ -10,10 +10,10 @@
     "arm_incremental_actions": 6,
     "native_visual_acceptance": false
   },
-  "reference_link_candidate": "A3.5-dev214",
-  "reference_elf_sha256": "6daeb9be454d2b6f5acc2c175a113173418bd8be4c88b31d8c90f359ae335d46",
-  "selected_object_denominator": 652,
-  "target_commands_sha256": "be3242c2a981d70af463424c6e986ab89d89abf3a948645e2324881ad12216b2",
+  "reference_link_candidate": "A3.5-dev217",
+  "reference_elf_sha256": "8f961bc2b8952c058c92a019939d6e92f7de76855af877e354732c093fbbd6a0",
+  "selected_object_denominator": 653,
+  "target_commands_sha256": "454e1c56cba6053769ae6bf7a1a0cf72d28edc8074dc3a9f19932a8db8702182",
   "rows": [
     {
       "source": "staging/ww3d2/textureloader.cpp",
@@ -39,7 +39,6 @@
           "_ZN14MissingTexture20_Get_Missing_TextureEv",
           "_ZN14MissingTexture23_Create_Missing_SurfaceEv",
           "_ZN17IDirect3DTexture810UnlockRectEj",
-          "_ZN17IDirect3DTexture813GetLevelCountEv",
           "_ZN17IDirect3DTexture88LockRectEjP14D3DLOCKED_RECTPK5_RECTm",
           "_ZN18BitmapHandlerClass10Copy_ImageEPhjjj10WW3DFormatS0_jjjS1_PKhjb",
           "_ZN18BitmapHandlerClass26Copy_Image_Generate_MipmapEjjPhj10WW3DFormatS0_jS1_S0_j",
@@ -133,21 +132,14 @@
             {
               "source": "port/renderer/vita/ww3d_dx8_boundary.cpp",
               "kind": "T",
-              "object_sha256": "d4ced0337046cda13e30a420c3b1238244bb403dea1f4839ad8576dad39c4fe0"
-            }
-          ],
-          "_ZN17IDirect3DTexture813GetLevelCountEv": [
-            {
-              "source": "port/renderer/vita/ww3d_dx8_boundary.cpp",
-              "kind": "T",
-              "object_sha256": "d4ced0337046cda13e30a420c3b1238244bb403dea1f4839ad8576dad39c4fe0"
+              "object_sha256": "1c74df8139496d8521ba87d711fe54b704bbd48ecdf01b43dbd66b1202616cfd"
             }
           ],
           "_ZN17IDirect3DTexture88LockRectEjP14D3DLOCKED_RECTPK5_RECTm": [
             {
               "source": "port/renderer/vita/ww3d_dx8_boundary.cpp",
               "kind": "T",
-              "object_sha256": "d4ced0337046cda13e30a420c3b1238244bb403dea1f4839ad8576dad39c4fe0"
+              "object_sha256": "1c74df8139496d8521ba87d711fe54b704bbd48ecdf01b43dbd66b1202616cfd"
             }
           ],
           "_ZN18BitmapHandlerClass10Copy_ImageEPhjjj10WW3DFormatS0_jjjS1_PKhjb": [
@@ -180,7 +172,8 @@
           ]
         }
       },
-      "runtime_status": "excluded; integration unverified"
+      "runtime_status": "excluded from current runtime graph; integration remains open",
+      "selected_by_current_target": false
     },
     {
       "source": "staging/ww3d2/dx8renderer.cpp",
@@ -224,7 +217,7 @@
             {
               "source": "port/renderer/vita/ww3d_dx8_boundary.cpp",
               "kind": "T",
-              "object_sha256": "d4ced0337046cda13e30a420c3b1238244bb403dea1f4839ad8576dad39c4fe0"
+              "object_sha256": "1c74df8139496d8521ba87d711fe54b704bbd48ecdf01b43dbd66b1202616cfd"
             }
           ],
           "_ZN14MeshModelClass20Needs_Vertex_NormalsEv": [
@@ -232,6 +225,13 @@
               "source": "staging/ww3d2/meshmdl.cpp",
               "kind": "T",
               "object_sha256": "a2e615b57d93492b4ffd1cfa79c4c7673fe1b107b714e5712615c696d7ff77e6"
+            }
+          ],
+          "_ZN16Debug_Statistics34Record_DX8_Skin_Polys_And_VerticesEii": [
+            {
+              "source": "staging/ww3d2/statistics.cpp",
+              "kind": "T",
+              "object_sha256": "fefa416d993b25a9e655f8293404fe0e78237806a68c8c953dac1f4061a4d15c"
             }
           ],
           "_ZN16IndexBufferClass15AppendLockClassC1EPS_jj": [
@@ -266,7 +266,7 @@
             {
               "source": "port/renderer/vita/ww3d_dx8_boundary.cpp",
               "kind": "B",
-              "object_sha256": "d4ced0337046cda13e30a420c3b1238244bb403dea1f4839ad8576dad39c4fe0"
+              "object_sha256": "1c74df8139496d8521ba87d711fe54b704bbd48ecdf01b43dbd66b1202616cfd"
             }
           ],
           "_ZN21GenericMultiListClass18Internal_Add_AfterEP20MultiListObjectClassPKS0_b": [
@@ -292,7 +292,8 @@
           ]
         }
       },
-      "runtime_status": "excluded; integration unverified"
+      "runtime_status": "excluded from current runtime graph; integration remains open",
+      "selected_by_current_target": false
     },
     {
       "source": "staging/ww3d2/dx8polygonrenderer.cpp",
@@ -310,7 +311,8 @@
         "scope": "Symbol presence only; not selected-unit, behavior or runtime proof. Selected object definitions distinguish ELF omission from missing providers.",
         "definitions_in_selected_objects": {}
       },
-      "runtime_status": "excluded; integration unverified"
+      "runtime_status": "excluded from current runtime graph; integration remains open",
+      "selected_by_current_target": false
     },
     {
       "source": "staging/ww3d2/statistics.cpp",
@@ -321,27 +323,18 @@
       "arm_object_sha256": "fefa416d993b25a9e655f8293404fe0e78237806a68c8c953dac1f4061a4d15c",
       "link_closure": {
         "undefined_symbols": 20,
-        "absent_symbol_candidates": [
-          "_ZN10DX8Wrapper14End_StatisticsEv",
-          "_ZN10DX8Wrapper16Begin_StatisticsEv",
-          "_ZNK12TextureClass24Get_Texture_Memory_UsageEv"
-        ],
+        "absent_symbol_candidates": [],
         "strong_definition_overlap_candidates": [
+          "_ZN16Debug_Statistics14End_StatisticsEv",
           "_ZN16Debug_Statistics14Record_TextureEP12TextureClass",
+          "_ZN16Debug_Statistics16Begin_StatisticsEv",
           "_ZN16Debug_Statistics33Record_Sorting_Polys_And_VerticesEii"
         ],
         "scope": "Symbol presence only; not selected-unit, behavior or runtime proof. Selected object definitions distinguish ELF omission from missing providers.",
-        "definitions_in_selected_objects": {
-          "_ZNK12TextureClass24Get_Texture_Memory_UsageEv": [
-            {
-              "source": "staging/ww3d2/texture.cpp",
-              "kind": "T",
-              "object_sha256": "44dbd17366272fb9db11bf0339c600c50c5e9c55cf94859c751c8fd1380eb55b"
-            }
-          ]
-        }
+        "definitions_in_selected_objects": {}
       },
-      "runtime_status": "excluded; integration unverified"
+      "runtime_status": "selected by current target; behavior remains unverified",
+      "selected_by_current_target": true
     }
   ],
   "queue_contract": {
@@ -360,5 +353,15 @@
     "Selected-object definitions distinguish final-ELF omission from missing providers; archive/library providers and execution remain open.",
     "Raw undefined/overlapping symbol candidates include aliases, runtime-library contracts and disabled paths; these are not unique defects.",
     "Strip topology is restored at the native DX8 boundary; original procedural mesh activation remains open. Retail assets are unchanged."
-  ]
+  ],
+  "statistics_validation": {
+    "original_owner_selected": true,
+    "host_renderer_sanitizer_cases": 10,
+    "real_ww3d_frame_cycles": 3,
+    "focused_tests_passed": 30,
+    "arm_candidate": "A3.5-dev217",
+    "arm_incremental_actions": 6,
+    "host_sanitizers": "ASan_LSan_UBSan_PASS",
+    "physical_acceptance": false
+  }
 }

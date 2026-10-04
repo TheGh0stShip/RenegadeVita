@@ -914,6 +914,7 @@ set_target_properties(a31_interactive_runtime PROPERTIES
 )
 target_sources(a31_interactive_runtime PRIVATE
   ${RV_STAGE}/ww3d2/sortingrenderer.cpp
+  ${RV_STAGE}/ww3d2/statistics.cpp
   ${RV_STAGE}/ww3d2/sphereobj.cpp
   ${RV_STAGE}/ww3d2/ringobj.cpp
   ${RV_STAGE}/ww3d2/soundrobj.cpp)

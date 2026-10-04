@@ -851,6 +851,9 @@ WW3DErrorType WW3D::Begin_Render(bool clear,bool clearz,const Vector3 & color, v
 	WWASSERT(!IsRendering);
 	IsRendering = true;
 	RenegadeVitaRenderer::Begin_Frame(color.X, color.Y, color.Z);
+#if defined(RENEGADE_ORIGINAL_SORTING)
+	Debug_Statistics::Begin_Statistics();
+#endif
 	return WW3D_ERROR_OK;
 #else
 
@@ -1159,6 +1162,9 @@ WW3DErrorType WW3D::End_Render(bool flip_frame)
 	IsRendering = false;
 	RenegadeVitaRenderer::End_Frame(flip_frame);
 	FrameCount++;
+#if defined(RENEGADE_ORIGINAL_SORTING)
+	Debug_Statistics::End_Statistics();
+#endif
 	return WW3D_ERROR_OK;
 #else
 

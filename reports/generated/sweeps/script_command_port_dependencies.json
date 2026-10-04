@@ -1,0 +1,4507 @@
+{
+  "schema_version": 1,
+  "total": 202,
+  "counts": {
+    "unknown": 202
+  },
+  "commands_with_port_candidates": 47,
+  "matched_call_names": 76,
+  "rows": [
+    {
+      "name": "Debug_Message",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Script",
+        "Format_Args",
+        "SCRIPT_PTR_CHECK",
+        "string",
+        "va_end",
+        "va_start"
+      ]
+    },
+    {
+      "name": "Action_Reset",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [
+        {
+          "name": "Reset",
+          "candidates": [
+            {
+              "row_id": "7a1b6fe4a4db81493e94a5c4fe0754f0349f554502cf81c1f4dd9854b7897bd7",
+              "kind": "port_function",
+              "file": "port/developer/a31_capture_telemetry.cpp",
+              "line": 591,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "78e48ca0cc30b40d31e40ed1cc484f5c536f7e1a314a295c3ac520f705163e60"
+            },
+            {
+              "row_id": "cfeabcc0bc5518b8205bfbd184f341e264f1fbb84ca34431a329bf332387dd04",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 36,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "f980b448f5ba90088df174e2cb78d488bf56c71782be67999c08966a5b4d7657"
+            },
+            {
+              "row_id": "e65f08129a333afc47e44eebae8fc2a2f350f12c0e743945383391f631268601",
+              "kind": "port_function",
+              "file": "port/platform/a31_client_connect_boundary.cpp",
+              "line": 43,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "5ba4f0bb5e606c575f31eaa23334ae9f029ca31b3d88c4de80a38cc4fe49b754"
+            },
+            {
+              "row_id": "a6f5404ae10461c6d5a38f8e5cd8a2f10a3a8641900c41c47b40274644899a1c",
+              "kind": "port_function",
+              "file": "port/platform/a31_mission_completion_latch.h",
+              "line": 23,
+              "status": "unknown",
+              "scope": "A31MissionCompletionLatch",
+              "body_sha256": "3bc390381431e5a15c5f6fa58eefbd4b61e3d73848fa80fba96acfe8ac58f6af"
+            },
+            {
+              "row_id": "c579b14a6d3b71ee3c2d600ca8d9c421c2f5ffd90a58f53f562dc2ffe24e190b",
+              "kind": "port_function",
+              "file": "port/platform/renegade_tt_resources.h",
+              "line": 74,
+              "status": "unknown",
+              "scope": "RenegadeTTResources",
+              "body_sha256": "af2a2926e005e18f2d52e7c6c888a6eb44512b6386e23bb375c59452ab3c5852"
+            },
+            {
+              "row_id": "7bfb1ef166b83a4580c51c57dc3be670c77398206998c6af2c894a49e1fc5501",
+              "kind": "port_function",
+              "file": "port/platform/renegade_vita_input_contract.h",
+              "line": 19,
+              "status": "unknown",
+              "scope": "RenegadeVitaInput::SelectTap",
+              "body_sha256": "972c042e09803e9c4d71ec839922c6cf7e65f2042df21b79358f852d992b8559"
+            },
+            {
+              "row_id": "434ba2acefcb2658c164aa39d0d9167bdf63a610cdcea444c6da462e32400562",
+              "kind": "port_function",
+              "file": "port/renderer/vita/ww3d_vita_indexed_mesh_batch.h",
+              "line": 14,
+              "status": "unknown",
+              "scope": "VitaIndexedMeshBatch",
+              "body_sha256": "2800bde863b46fc081caaa0a8a01377e394416eff24a55725f43cc6d95ff581b"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Get_Action",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Action_Goto",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Get_Action",
+        "Get_ID",
+        "Goto",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Action_Attack",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Attack",
+        "Get_Action",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Action_Play_Animation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Get_Action",
+        "Get_ID",
+        "Play_Animation",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Action_Enter_Exit",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Enter_Exit",
+        "Get_Action",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Action_Face_Location",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Face_Location",
+        "Get_Action",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Action_Dock",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Dock_Vehicle",
+        "Get_Action",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Action_Follow_Input",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Follow_Input",
+        "Get_Action",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Modify_Action",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Get_Action",
+        "Get_ID",
+        "Get_Parameters",
+        "Modify",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Action_ID",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Get_Action",
+        "Get_ID",
+        "Get_Parameters",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Action_Params",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Get_Action",
+        "Get_ID",
+        "Get_Parameters",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Is_Performing_Pathfind_Action",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Get_Action",
+        "Get_ID",
+        "Is_Busy",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_Position",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Peek_Physical_Object",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Position"
+      ]
+    },
+    {
+      "name": "Get_Position",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_Position",
+        "SCRIPT_PTR_CHECK_RET",
+        "Vector3"
+      ]
+    },
+    {
+      "name": "Get_Bone_Position",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_Bone_Transform",
+        "Get_Translation",
+        "Peek_Model",
+        "SCRIPT_PTR_CHECK_RET",
+        "Vector3"
+      ]
+    },
+    {
+      "name": "Get_Facing",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_Facing",
+        "RAD_TO_DEG",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Set_Facing",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 11,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "DEG_TO_RAD",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Position",
+        "Rotate_Z",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Transform",
+        "Translate",
+        "tm"
+      ]
+    },
+    {
+      "name": "Disable_All_Collisions",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Collision_Group"
+      ]
+    },
+    {
+      "name": "Disable_Physical_Collisions",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Collision_Group"
+      ]
+    },
+    {
+      "name": "Enable_Collisions",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Collision_Group"
+      ]
+    },
+    {
+      "name": "Destroy_Object",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Delete_Pending"
+      ]
+    },
+    {
+      "name": "Find_Object",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [
+        {
+          "name": "A35_Script_Lookup_Record",
+          "candidates": [
+            {
+              "row_id": "4221cc344e4cfb1df54e754bf702210feb0e01e392f369e9f3e6df5719dfb4a2",
+              "kind": "port_function",
+              "file": "port/developer/a35_script_lookup_telemetry.cpp",
+              "line": 75,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "a417eec30beae0a5066fda7599c353103624c771bd601464b81aee3cb3901e35"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Find_ScriptableGameObj",
+        "defined"
+      ]
+    },
+    {
+      "name": "Create_Object",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 10,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Create_Object",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE",
+        "Set_Transform",
+        "Set_Translation",
+        "Start_Observers",
+        "WWASSERT",
+        "assert",
+        "tm"
+      ]
+    },
+    {
+      "name": "Create_Object_At_Bone",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 9,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Create_Object",
+        "Debug_Say",
+        "Get_Bone_Transform",
+        "Get_ID",
+        "Peek_Model",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE",
+        "Set_Transform"
+      ]
+    },
+    {
+      "name": "Get_ID",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_ID",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Get_Preset_ID",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_Definition",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Get_Preset_Name",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [
+        {
+          "name": "Get_Name",
+          "candidates": [
+            {
+              "row_id": "09c09a5a3fa53c7339fff626974c5312ce3c0facbce0cc226cde34669cce7eeb",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_mission_ranks.h",
+              "line": 219,
+              "status": "unknown",
+              "scope": "RenegadeMissionRanks",
+              "body_sha256": "6e2ac2cf0f1171c30c111811809d6260ffbbd5088281e267d669d9d290b4d8ae"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_Definition",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Attach_Script",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [
+        {
+          "name": "Create_Script",
+          "candidates": [
+            {
+              "row_id": "3f1c10271f7461400e886072712811729ee32345e8f44214599998f80fd48b11",
+              "kind": "port_function",
+              "file": "port/platform/renegade_script_static_provider.cpp",
+              "line": 14,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "a7072977720b0f7ca9aa93c37ea6c3f5b527a81af6b943043348a22205c9cfd5"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Add_Observer",
+        "SCRIPT_PTR_CHECK",
+        "Set_Parameters_String",
+        "WWDEBUG_SAY",
+        "assert"
+      ]
+    },
+    {
+      "name": "Add_To_Dirty_Cull_List",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_To_Dirty_Cull_List",
+        "As_PhysicalGameObj",
+        "Peek_Physical_Object",
+        "SCRIPT_PTR_CHECK"
+      ]
+    },
+    {
+      "name": "Start_Timer",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Start_Observer_Timer"
+      ]
+    },
+    {
+      "name": "Trigger_Weapon",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 10,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_ArmedGameObj",
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Weapon",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Primary_Triggered",
+        "Set_Secondary_Triggered",
+        "Set_Targeting"
+      ]
+    },
+    {
+      "name": "Select_Weapon",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_ArmedGameObj",
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Weapon_Bag",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Select_Weapon_Name"
+      ]
+    },
+    {
+      "name": "Send_Custom_Event",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [
+        {
+          "name": "Count",
+          "candidates": [
+            {
+              "row_id": "acbf1fd96ae6058808ab924c766144cb14424c3c7dfe1a52310cd7e575c1a7f8",
+              "kind": "port_function",
+              "file": "port/developer/a31_capture_telemetry.cpp",
+              "line": 593,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "89321dafb9a11ea12b26786d4f521f2cbfa4710460d0d75354c4ee0ca0f47a26"
+            },
+            {
+              "row_id": "37c5c7b5b9fa46ca4725d6ad2e970ffd923facaf23b2ee7fcb2a7fbde44352d8",
+              "kind": "port_function",
+              "file": "port/renderer/vita/ww3d_vita_indexed_mesh_batch.h",
+              "line": 33,
+              "status": "unknown",
+              "scope": "VitaIndexedMeshBatch",
+              "body_sha256": "58ba23b5990502bec8c75e7c433ff69ab3c91f74c6406d33234a674239288298"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Custom",
+        "Get_ID",
+        "Get_Observers",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Start_Custom_Timer",
+        "WWASSERT"
+      ]
+    },
+    {
+      "name": "Send_Damaged_Event",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [
+        {
+          "name": "Count",
+          "candidates": [
+            {
+              "row_id": "acbf1fd96ae6058808ab924c766144cb14424c3c7dfe1a52310cd7e575c1a7f8",
+              "kind": "port_function",
+              "file": "port/developer/a31_capture_telemetry.cpp",
+              "line": 593,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "89321dafb9a11ea12b26786d4f521f2cbfa4710460d0d75354c4ee0ca0f47a26"
+            },
+            {
+              "row_id": "37c5c7b5b9fa46ca4725d6ad2e970ffd923facaf23b2ee7fcb2a7fbde44352d8",
+              "kind": "port_function",
+              "file": "port/renderer/vita/ww3d_vita_indexed_mesh_batch.h",
+              "line": 33,
+              "status": "unknown",
+              "scope": "VitaIndexedMeshBatch",
+              "body_sha256": "58ba23b5990502bec8c75e7c433ff69ab3c91f74c6406d33234a674239288298"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Damaged",
+        "Get_ID",
+        "Get_Observers",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Random",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [
+        {
+          "name": "Get_Float",
+          "candidates": [
+            {
+              "row_id": "f5df3317db035e6b58627bb3dfe55b60119c2bcba8441d882451ef8036b5aaee",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_registry.cpp",
+              "line": 216,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "afe917fffdc833ea7823d84d99c960bc96088fb71215200d96d5e090b73a4165"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": []
+    },
+    {
+      "name": "Get_Random_Int",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [
+        {
+          "name": "Get_Int",
+          "candidates": [
+            {
+              "row_id": "6b648592343798db065bc5483f07af4f4265670b63bd188fe5598fecf1648fae",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_registry.cpp",
+              "line": 187,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "237ce66f587800f3c1c63790f166bae2495c889858aab0320b4df330274cf462"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": []
+    },
+    {
+      "name": "Find_Random_Simple_Object",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 14,
+      "matched_calls": [
+        {
+          "name": "Add",
+          "candidates": [
+            {
+              "row_id": "299f8dc9df29e104766935f6ea72543cb62817f9d1aaa2d8c126caf46aec2deb",
+              "kind": "port_function",
+              "file": "port/platform/vita/a31_vita_runtime.cpp",
+              "line": 2354,
+              "status": "unknown",
+              "scope": "InteractiveTiming",
+              "body_sha256": "42b5906a537ad49b16758930a04e6294b033712de75886bd99ff42bd981e870a"
+            }
+          ]
+        },
+        {
+          "name": "Count",
+          "candidates": [
+            {
+              "row_id": "acbf1fd96ae6058808ab924c766144cb14424c3c7dfe1a52310cd7e575c1a7f8",
+              "kind": "port_function",
+              "file": "port/developer/a31_capture_telemetry.cpp",
+              "line": 593,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "89321dafb9a11ea12b26786d4f521f2cbfa4710460d0d75354c4ee0ca0f47a26"
+            },
+            {
+              "row_id": "37c5c7b5b9fa46ca4725d6ad2e970ffd923facaf23b2ee7fcb2a7fbde44352d8",
+              "kind": "port_function",
+              "file": "port/renderer/vita/ww3d_vita_indexed_mesh_batch.h",
+              "line": 33,
+              "status": "unknown",
+              "scope": "VitaIndexedMeshBatch",
+              "body_sha256": "58ba23b5990502bec8c75e7c433ff69ab3c91f74c6406d33234a674239288298"
+            }
+          ]
+        },
+        {
+          "name": "Get_Int",
+          "candidates": [
+            {
+              "row_id": "6b648592343798db065bc5483f07af4f4265670b63bd188fe5598fecf1648fae",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_registry.cpp",
+              "line": 187,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "237ce66f587800f3c1c63790f166bae2495c889858aab0320b4df330274cf462"
+            }
+          ]
+        },
+        {
+          "name": "Get_Name",
+          "candidates": [
+            {
+              "row_id": "09c09a5a3fa53c7339fff626974c5312ce3c0facbce0cc226cde34669cce7eeb",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_mission_ranks.h",
+              "line": 219,
+              "status": "unknown",
+              "scope": "RenegadeMissionRanks",
+              "body_sha256": "6e2ac2cf0f1171c30c111811809d6260ffbbd5088281e267d669d9d290b4d8ae"
+            }
+          ]
+        },
+        {
+          "name": "Next",
+          "candidates": [
+            {
+              "row_id": "7f5b3cf00446a3cb82a07b258374305ac3cd6548af3ef6fa5db9b6b4f01a30ec",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_audio_output_buffers.h",
+              "line": 15,
+              "status": "unknown",
+              "scope": "RenegadeAudioOutputBuffers",
+              "body_sha256": "7dea348da035895753d575f235287fafed86714fd6497328e044faba6a743130"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SimpleGameObj",
+        "Data",
+        "Get_Definition",
+        "Get_Game_Obj_List",
+        "Head",
+        "SCRIPT_TRACE",
+        "WWASSERT",
+        "stricmp"
+      ]
+    },
+    {
+      "name": "Set_Model",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 17,
+      "matched_calls": [
+        {
+          "name": "Get_Name",
+          "candidates": [
+            {
+              "row_id": "09c09a5a3fa53c7339fff626974c5312ce3c0facbce0cc226cde34669cce7eeb",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_mission_ranks.h",
+              "line": 219,
+              "status": "unknown",
+              "scope": "RenegadeMissionRanks",
+              "body_sha256": "6e2ac2cf0f1171c30c111811809d6260ffbbd5088281e267d669d9d290b4d8ae"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SimpleGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_Anim_Control",
+        "Get_Definition",
+        "Get_ID",
+        "Get_Is_Editor_Object",
+        "Hide_Muzzle_Flashes",
+        "Peek_Model",
+        "Peek_Physical_Object",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Model",
+        "Set_Model_By_Name",
+        "Set_Object_Dirty_Bit"
+      ]
+    },
+    {
+      "name": "Set_Animation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 29,
+      "matched_calls": [
+        {
+          "name": "Release_Ref",
+          "candidates": [
+            {
+              "row_id": "b2b46fb22e5edde828790dda43f0d6cd26c1b2f22f80eaf9668bc9e5ea538b3f",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 8,
+              "status": "unknown",
+              "scope": "DeathOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            },
+            {
+              "row_id": "9a6352be76e68ba7f0233a702a2b4037ee2ed4154782209c926f062cb1ee2b64",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": "FailedOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            }
+          ]
+        },
+        {
+          "name": "Set_Animation",
+          "candidates": [
+            {
+              "row_id": "5a7e22dc7fb0c3d4b22ce93ec5bc628187c433f54aebd54d1deb488155c3dcf6",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_m01_script_defaults.h",
+              "line": 25,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            },
+            {
+              "row_id": "cf5a0779204d06cc1409c7d9bf30f6d8c1b773e59ba90c2171d207eb8b5be8a3",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_script_call_defaults.h",
+              "line": 111,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_CinematicGameObj",
+        "As_DynamicAnimPhysClass",
+        "As_PhysicalGameObj",
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_Action",
+        "Get_Anim_Control",
+        "Get_Animation_Manager",
+        "Get_HAnim",
+        "Get_ID",
+        "Get_Instance",
+        "Get_Sub_Object_By_Name",
+        "Is_Animating",
+        "Peek_Model",
+        "Peek_Physical_Object",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Animation_Mode",
+        "Set_Blended_Animation",
+        "Set_Current_Frame",
+        "Set_Mode",
+        "Set_Object_Dirty_Bit",
+        "Set_Target_Frame",
+        "Set_Target_Frame_End",
+        "WWASSERT",
+        "WWDEBUG_SAY"
+      ]
+    },
+    {
+      "name": "Set_Animation_Frame",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 10,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SmartGameObj",
+        "Debug_Say",
+        "Get_Action",
+        "Get_ID",
+        "Is_Animating",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Animation_Frame",
+        "WWASSERT"
+      ]
+    },
+    {
+      "name": "Create_Sound",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [
+        {
+          "name": "Create_Instant_Sound",
+          "candidates": [
+            {
+              "row_id": "41d86df78f485a1a4e4af3a6c3aec29705bd8797456c704b840e5cb15ebec434",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1407,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "6010883e21de9f1cdfe285eb1c31ad177cb1b3ed5eedf5993e2f4ddfe6317d19"
+            },
+            {
+              "row_id": "19e48c84d7b30afd1a1c60b4756b36494caec48cde5f23d1dce50179e0b02cae",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1429,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "df56cc654508d9fe9917d734d34c521a5453111b938c2f9b35b72625d6b95ba5"
+            },
+            {
+              "row_id": "818065d78bd5a6417dd1393007f88c167aa49ddcaf4d5273cf4e978d0ebf78a6",
+              "kind": "port_function",
+              "file": "port/platform/vita/a30_static_world_boundary.cpp",
+              "line": 59,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "864c9347ebcd7f874eb6d19f1f05cc5990bcb470899d53725dcae48486fbbc81"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_Instance",
+        "REF_PTR_RELEASE",
+        "SCRIPT_TRACE",
+        "Set_Ptr",
+        "Set_Translation",
+        "assert",
+        "matrix"
+      ]
+    },
+    {
+      "name": "Create_2D_Sound",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [
+        {
+          "name": "Create_Sound",
+          "candidates": [
+            {
+              "row_id": "5bc0c8a2d3cca2bb60eea5febd7f0868b4cf4111332613184b624b217e820ffa",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1393,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "6d45c70299ceeb0e55933bdcfb1a351cbc3bbe4ff82954f5b88805edf4e3c94d"
+            },
+            {
+              "row_id": "7e8ed18d2941f04fe95fa943fb7b06e43197a3dc6dbee5bb54cf88f33d327952",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1400,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "42d5f45a05090272a4cc105a107e4c7e274e4c3fa838684be8515ce38cbf3e7b"
+            }
+          ]
+        },
+        {
+          "name": "Play",
+          "candidates": [
+            {
+              "row_id": "b95fb66e3ec32f48fe3d8ebc27bc65b804af00985b2217ba4968de7d48c256c9",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1098,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "cc2df035ed3beb4c17438a69d08fb58f3ea5a6540c3e24de9f0efc36f396f1d5"
+            },
+            {
+              "row_id": "5d53f2b8a0dc0d868db033ffa84bffe9b90567dcc99e3a00bea04be330ea7f0c",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1412,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "a40484f614487d5fdde18cbf2942253e4d4f7db0501b9ded9f988048978f0dd0"
+            }
+          ]
+        },
+        {
+          "name": "Release_Ref",
+          "candidates": [
+            {
+              "row_id": "b2b46fb22e5edde828790dda43f0d6cd26c1b2f22f80eaf9668bc9e5ea538b3f",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 8,
+              "status": "unknown",
+              "scope": "DeathOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            },
+            {
+              "row_id": "9a6352be76e68ba7f0233a702a2b4037ee2ed4154782209c926f062cb1ee2b64",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": "FailedOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_ID",
+        "Get_Instance",
+        "assert"
+      ]
+    },
+    {
+      "name": "Create_2D_WAV_Sound",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [
+        {
+          "name": "Create_Sound_Effect",
+          "candidates": [
+            {
+              "row_id": "d61debd7edd5971004ff8c31a69141611e72f3839abe180494bba077009afc7e",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1271,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "c298206afd23af2457d02337fb7c8bd5527377df6c91f2ac33490f76f64be9a6"
+            }
+          ]
+        },
+        {
+          "name": "Play",
+          "candidates": [
+            {
+              "row_id": "b95fb66e3ec32f48fe3d8ebc27bc65b804af00985b2217ba4968de7d48c256c9",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1098,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "cc2df035ed3beb4c17438a69d08fb58f3ea5a6540c3e24de9f0efc36f396f1d5"
+            },
+            {
+              "row_id": "5d53f2b8a0dc0d868db033ffa84bffe9b90567dcc99e3a00bea04be330ea7f0c",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1412,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "a40484f614487d5fdde18cbf2942253e4d4f7db0501b9ded9f988048978f0dd0"
+            }
+          ]
+        },
+        {
+          "name": "Release_Ref",
+          "candidates": [
+            {
+              "row_id": "b2b46fb22e5edde828790dda43f0d6cd26c1b2f22f80eaf9668bc9e5ea538b3f",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 8,
+              "status": "unknown",
+              "scope": "DeathOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            },
+            {
+              "row_id": "9a6352be76e68ba7f0233a702a2b4037ee2ed4154782209c926f062cb1ee2b64",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": "FailedOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_ID",
+        "Get_Instance",
+        "Get_Loop_Count",
+        "WWASSERT",
+        "assert"
+      ]
+    },
+    {
+      "name": "Create_3D_WAV_Sound_At_Bone",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 18,
+      "matched_calls": [
+        {
+          "name": "Create_3D_Sound",
+          "candidates": [
+            {
+              "row_id": "55f8fd186c0ffc6c235baa566ad87890c28aa323975b426638f25f5fd8d36331",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1383,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "5268655cafa6efc00a38d74e41859b26e9256edebb0eca19dfc3c642aadc4903"
+            }
+          ]
+        },
+        {
+          "name": "Release_Ref",
+          "candidates": [
+            {
+              "row_id": "b2b46fb22e5edde828790dda43f0d6cd26c1b2f22f80eaf9668bc9e5ea538b3f",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 8,
+              "status": "unknown",
+              "scope": "DeathOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            },
+            {
+              "row_id": "9a6352be76e68ba7f0233a702a2b4037ee2ed4154782209c926f062cb1ee2b64",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": "FailedOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Add_To_Scene",
+        "As_PhysicalGameObj",
+        "Attach_To_Object",
+        "Debug_Say",
+        "Get_Bone_Index",
+        "Get_ID",
+        "Get_Instance",
+        "Peek_Model",
+        "Set_Definition",
+        "Set_DropOff_Radius",
+        "Set_Loop_Count",
+        "Set_Max_Vol_Radius",
+        "Set_Priority",
+        "Set_Type",
+        "Set_Volume",
+        "assert"
+      ]
+    },
+    {
+      "name": "Create_3D_Sound_At_Bone",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 11,
+      "matched_calls": [
+        {
+          "name": "Create_Sound",
+          "candidates": [
+            {
+              "row_id": "5bc0c8a2d3cca2bb60eea5febd7f0868b4cf4111332613184b624b217e820ffa",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1393,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "6d45c70299ceeb0e55933bdcfb1a351cbc3bbe4ff82954f5b88805edf4e3c94d"
+            },
+            {
+              "row_id": "7e8ed18d2941f04fe95fa943fb7b06e43197a3dc6dbee5bb54cf88f33d327952",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1400,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "42d5f45a05090272a4cc105a107e4c7e274e4c3fa838684be8515ce38cbf3e7b"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Add_To_Scene",
+        "As_PhysicalGameObj",
+        "Attach_To_Object",
+        "Debug_Say",
+        "Get_Bone_Index",
+        "Get_ID",
+        "Get_Instance",
+        "Peek_Model",
+        "REF_PTR_RELEASE",
+        "assert"
+      ]
+    },
+    {
+      "name": "Create_Logical_Sound",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 16,
+      "matched_calls": [
+        {
+          "name": "A35_Campaign_Flight_Logical_Stimulus",
+          "candidates": [
+            {
+              "row_id": "58e56d66772e5bc59b0291e49f8fc06c7c33cd1f78a814e695c807d925f8f8cc",
+              "kind": "port_function",
+              "file": "port/developer/a35_campaign_flight_recorder.cpp",
+              "line": 674,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "ba039f5449fc1c813ca7c8d4a40bf30d7d3965f956d4589d7fa10bcd5363a2d8"
+            }
+          ]
+        },
+        {
+          "name": "Create_Logical_Sound",
+          "candidates": [
+            {
+              "row_id": "538397e5ac2fa0fb1d1fec2fb3fa2778814d8f326dd3967da4c5b632bb48108e",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1367,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "9c8953bf5b556740fd3f8d0f100fab415304b179504c8be02e47129322c842a0"
+            }
+          ]
+        },
+        {
+          "name": "Release_Ref",
+          "candidates": [
+            {
+              "row_id": "b2b46fb22e5edde828790dda43f0d6cd26c1b2f22f80eaf9668bc9e5ea538b3f",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 8,
+              "status": "unknown",
+              "scope": "DeathOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            },
+            {
+              "row_id": "9a6352be76e68ba7f0233a702a2b4037ee2ed4154782209c926f062cb1ee2b64",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": "FailedOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Add_To_Scene",
+        "Get_ID",
+        "Get_Instance",
+        "REF_PTR_RELEASE",
+        "SCRIPT_TRACE",
+        "Set_DropOff_Radius",
+        "Set_Notify_Delay",
+        "Set_Position",
+        "Set_Ptr",
+        "Set_Single_Shot",
+        "Set_Type_Mask",
+        "Set_User_Data",
+        "defined"
+      ]
+    },
+    {
+      "name": "Start_Sound",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [
+        {
+          "name": "Find_Sound_Object",
+          "candidates": [
+            {
+              "row_id": "22a73a71d2dddb8819f431f90548bf86778dae7dc1502a64532362b5779f564b",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1374,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "1d9b67e58890ebb51722a9f17537cfbd24a77a1f77f5113407a2c8673585d5cb"
+            }
+          ]
+        },
+        {
+          "name": "Play",
+          "candidates": [
+            {
+              "row_id": "b95fb66e3ec32f48fe3d8ebc27bc65b804af00985b2217ba4968de7d48c256c9",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1098,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "cc2df035ed3beb4c17438a69d08fb58f3ea5a6540c3e24de9f0efc36f396f1d5"
+            },
+            {
+              "row_id": "5d53f2b8a0dc0d868db033ffa84bffe9b90567dcc99e3a00bea04be330ea7f0c",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1412,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "a40484f614487d5fdde18cbf2942253e4d4f7db0501b9ded9f988048978f0dd0"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Add_To_Scene",
+        "As_AudibleSoundClass",
+        "Get_Instance",
+        "Is_In_Scene",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Stop_Sound",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [
+        {
+          "name": "Find_Sound_Object",
+          "candidates": [
+            {
+              "row_id": "22a73a71d2dddb8819f431f90548bf86778dae7dc1502a64532362b5779f564b",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1374,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "1d9b67e58890ebb51722a9f17537cfbd24a77a1f77f5113407a2c8673585d5cb"
+            }
+          ]
+        },
+        {
+          "name": "Stop",
+          "candidates": [
+            {
+              "row_id": "ac16ed8795774ae14e56a77f8fb892e146b5cbc375199101bc3f23b304395c71",
+              "kind": "port_function",
+              "file": "port/developer/a31_capture_telemetry.cpp",
+              "line": 690,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "c4fd55273202c93677a5c78729dc6555764a23d80c36cc4115c764b52142bdaa"
+            },
+            {
+              "row_id": "6649359dde8ca41c90c41d102e5400af3a3724398979ee5ccd1de2be9b75712c",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1182,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "c94eff76d7cdd53fd58bd9058be8defe5ea4b12fccb2fad5232a69c42b946643"
+            },
+            {
+              "row_id": "c1a491a595db8f0a2b2e68476b0de89a2cabba70eddfa97e46b5e930c8d96fde",
+              "kind": "port_function",
+              "file": "port/platform/a4_binkmovie_boundary.cpp",
+              "line": 1419,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+            },
+            {
+              "row_id": "1756c6d48a4b47597c43574448a23c90271ce7ea7ab9a8a07dd0141f00a58cc0",
+              "kind": "port_function",
+              "file": "port/platform/renegade_network_provider.cpp",
+              "line": 107,
+              "status": "unknown",
+              "scope": "RenegadeNetworkProvider::LanDiscovery",
+              "body_sha256": "f851b877579d766fc2c04217de7c6748ffc16b18be5aa68fa8893c67c9a3e1af"
+            },
+            {
+              "row_id": "97a6f1f6320f118166cf0f8446163a300fb15fa6d792c1f511af955de602b05e",
+              "kind": "port_function",
+              "file": "port/platform/vita/a31_vita_runtime.cpp",
+              "line": 816,
+              "status": "unknown",
+              "scope": "A31ScopedStartupStatusRepaint",
+              "body_sha256": "54533b8329255797167f9969387148ed4350f3b02e3e316f8a076ca617275424"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_AudibleSoundClass",
+        "Get_Instance",
+        "Remove_From_Scene",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Monitor_Sound",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [
+        {
+          "name": "Find_Sound_Object",
+          "candidates": [
+            {
+              "row_id": "22a73a71d2dddb8819f431f90548bf86778dae7dc1502a64532362b5779f564b",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1374,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "1d9b67e58890ebb51722a9f17537cfbd24a77a1f77f5113407a2c8673585d5cb"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_ID",
+        "Get_Instance",
+        "Register_Callback",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_Background_Music",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [
+        {
+          "name": "Set_Background_Music",
+          "candidates": [
+            {
+              "row_id": "1fedd89d32ac9edf2f63b6517bbed17af4ff9b6043b0595b98c15cf3bf5378a7",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1169,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "c7458a473a562d4fabfe8d954d522b8e9c72550d1de9a28a1ec8b056ac975da1"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_Instance",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Fade_Background_Music",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [
+        {
+          "name": "Fade_Background_Music",
+          "candidates": [
+            {
+              "row_id": "7f0209e648729f9581b724f66c22562a10ee2e461ab34752d45270ae26729fa4",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1177,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "7fde3252256864c2c8801a5256cc6a65ee1b1aff664fdd6babac6b0f34e4e4b9"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_Instance",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Stop_Background_Music",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [
+        {
+          "name": "Set_Background_Music",
+          "candidates": [
+            {
+              "row_id": "1fedd89d32ac9edf2f63b6517bbed17af4ff9b6043b0595b98c15cf3bf5378a7",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1169,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "c7458a473a562d4fabfe8d954d522b8e9c72550d1de9a28a1ec8b056ac975da1"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Get_Instance",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Health",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_Defense_Object",
+        "Get_Health",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Get_Max_Health",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_Defense_Object",
+        "Get_Health_Max",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Set_Health",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_Defense_Object",
+        "SCRIPT_PTR_CHECK",
+        "Set_Health"
+      ]
+    },
+    {
+      "name": "Get_Shield_Strength",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_Defense_Object",
+        "Get_Shield_Strength",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Get_Max_Shield_Strength",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_Defense_Object",
+        "Get_Shield_Strength_Max",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Set_Shield_Strength",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_Defense_Object",
+        "SCRIPT_PTR_CHECK",
+        "Set_Shield_Strength"
+      ]
+    },
+    {
+      "name": "Set_Shield_Type",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_Armor_Type",
+        "Get_Defense_Object",
+        "SCRIPT_PTR_CHECK",
+        "Set_Shield_Type"
+      ]
+    },
+    {
+      "name": "Get_Player_Type",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_Player_Type",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Set_Player_Type",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "SCRIPT_PTR_CHECK",
+        "Set_Player_Type"
+      ]
+    },
+    {
+      "name": "Get_Distance",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Length"
+      ]
+    },
+    {
+      "name": "Set_Camera_Host",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Peek_Model",
+        "SCRIPT_TRACE",
+        "Set_Host_Model"
+      ]
+    },
+    {
+      "name": "Force_Camera_Look",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Force_Look",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_The_Star",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "return"
+      ]
+    },
+    {
+      "name": "Get_A_Star",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 9,
+      "matched_calls": [
+        {
+          "name": "Is_Human_Controlled",
+          "candidates": [
+            {
+              "row_id": "fa73bedef81338866f603dfe64b730384cf434dfc8bd5cf290c54ec31271c5c0",
+              "kind": "port_function",
+              "file": "port/platform/vita/a30_static_world_boundary.cpp",
+              "line": 44,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "77b455d6a54de6da53e4a1099bbbd8c54acd3238a835bac5fc0ca6b23a1dfaf6"
+            }
+          ]
+        },
+        {
+          "name": "Next",
+          "candidates": [
+            {
+              "row_id": "7f5b3cf00446a3cb82a07b258374305ac3cd6548af3ef6fa5db9b6b4f01a30ec",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_audio_output_buffers.h",
+              "line": 15,
+              "status": "unknown",
+              "scope": "RenegadeAudioOutputBuffers",
+              "body_sha256": "7dea348da035895753d575f235287fafed86714fd6497328e044faba6a743130"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_SoldierGameObj",
+        "Data",
+        "Get_Position",
+        "Get_Smart_Game_Obj_List",
+        "Head",
+        "Length2",
+        "Vector3"
+      ]
+    },
+    {
+      "name": "Find_Closest_Soldier",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 15,
+      "matched_calls": [
+        {
+          "name": "Is_Human_Controlled",
+          "candidates": [
+            {
+              "row_id": "fa73bedef81338866f603dfe64b730384cf434dfc8bd5cf290c54ec31271c5c0",
+              "kind": "port_function",
+              "file": "port/platform/vita/a30_static_world_boundary.cpp",
+              "line": 44,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "77b455d6a54de6da53e4a1099bbbd8c54acd3238a835bac5fc0ca6b23a1dfaf6"
+            }
+          ]
+        },
+        {
+          "name": "Next",
+          "candidates": [
+            {
+              "row_id": "7f5b3cf00446a3cb82a07b258374305ac3cd6548af3ef6fa5db9b6b4f01a30ec",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_audio_output_buffers.h",
+              "line": 15,
+              "status": "unknown",
+              "scope": "RenegadeAudioOutputBuffers",
+              "body_sha256": "7dea348da035895753d575f235287fafed86714fd6497328e044faba6a743130"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SmartGameObj",
+        "Collect_Objects",
+        "First",
+        "Get_Instance",
+        "Get_Observer",
+        "Get_Position",
+        "Is_Done",
+        "Length",
+        "Peek_Obj",
+        "Vector3",
+        "box",
+        "it"
+      ]
+    },
+    {
+      "name": "Is_A_Star",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [
+        {
+          "name": "Is_Human_Controlled",
+          "candidates": [
+            {
+              "row_id": "fa73bedef81338866f603dfe64b730384cf434dfc8bd5cf290c54ec31271c5c0",
+              "kind": "port_function",
+              "file": "port/platform/vita/a30_static_world_boundary.cpp",
+              "line": 44,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "77b455d6a54de6da53e4a1099bbbd8c54acd3238a835bac5fc0ca6b23a1dfaf6"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Control_Enable",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Control_Enable",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Damage_Bone_Name",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 0,
+      "matched_calls": [],
+      "unmatched_calls": []
+    },
+    {
+      "name": "Get_Damage_Bone_Direction",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 0,
+      "matched_calls": [],
+      "unmatched_calls": []
+    },
+    {
+      "name": "Is_Object_Visible",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SmartGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Is_Obj_Visible",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Enable_Enemy_Seen",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Enemy_Seen_Enabled"
+      ]
+    },
+    {
+      "name": "Set_Display_Color",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Vector3"
+      ]
+    },
+    {
+      "name": "Display_Text",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [
+        {
+          "name": "Create_Sound",
+          "candidates": [
+            {
+              "row_id": "5bc0c8a2d3cca2bb60eea5febd7f0868b4cf4111332613184b624b217e820ffa",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1393,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "6d45c70299ceeb0e55933bdcfb1a351cbc3bbe4ff82954f5b88805edf4e3c94d"
+            },
+            {
+              "row_id": "7e8ed18d2941f04fe95fa943fb7b06e43197a3dc6dbee5bb54cf88f33d327952",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1400,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "42d5f45a05090272a4cc105a107e4c7e274e4c3fa838684be8515ce38cbf3e7b"
+            }
+          ]
+        },
+        {
+          "name": "Display_Text",
+          "candidates": [
+            {
+              "row_id": "9f38f07a9e4294bd381fdf7698187bee89afed65793ba27264090c1407ecda1e",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 448,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "cc761dd65fb347eabbb05d16c726fc6c94bc3a0a460d4a9475d65fc8aea82afd"
+            }
+          ]
+        },
+        {
+          "name": "Get_String",
+          "candidates": [
+            {
+              "row_id": "25408a71b9276249afe3aed5f9ecb3bfd2d375e56ffefd57f6d94ae5f177194b",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_registry.cpp",
+              "line": 230,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "0bd00b5b1e726f08f2c3a6662c3ca2c1967ba9ca0e92955e73dee29a758caff2"
+            },
+            {
+              "row_id": "018d0e77c365ccd055ed871158c33bb05af0d9b1d431b3b0e5737e6f075b6783",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_registry.cpp",
+              "line": 241,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "1684953bb1e475be18ec415a4247740aefefb39a83654d2e8141ddd2f48f10e7"
+            },
+            {
+              "row_id": "8397d9417e88b8c448c6bca1676a660da4dc5512d4b215c975b44bad63373161",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_registry.cpp",
+              "line": 259,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "9e0310a63d87ac7daa255f5be9dfd9dbbce22f2f88006721e018b02956d6ead2"
+            },
+            {
+              "row_id": "a794cf264ac665676561445f892ac9b773197ee1ffde57e9dfbaf63f2a83e364",
+              "kind": "port_function",
+              "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+              "line": 104,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+            }
+          ]
+        },
+        {
+          "name": "Release_Ref",
+          "candidates": [
+            {
+              "row_id": "b2b46fb22e5edde828790dda43f0d6cd26c1b2f22f80eaf9668bc9e5ea538b3f",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 8,
+              "status": "unknown",
+              "scope": "DeathOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            },
+            {
+              "row_id": "9a6352be76e68ba7f0233a702a2b4037ee2ed4154782209c926f062cb1ee2b64",
+              "kind": "port_function",
+              "file": "port/compatibility/include/a31_god_ui_stub.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": "FailedOptionsPopupClass",
+              "body_sha256": "762168236996020124e4affb02cc2ae66d144ff4079a9a77f6e83d8285a9f94a"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Add_To_Scene",
+        "Find_Object",
+        "Get_Instance",
+        "Get_Sound_ID"
+      ]
+    },
+    {
+      "name": "Display_Float",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [
+        {
+          "name": "Display_Text",
+          "candidates": [
+            {
+              "row_id": "9f38f07a9e4294bd381fdf7698187bee89afed65793ba27264090c1407ecda1e",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 448,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "cc761dd65fb347eabbb05d16c726fc6c94bc3a0a460d4a9475d65fc8aea82afd"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Convert_From",
+        "Format"
+      ]
+    },
+    {
+      "name": "Display_Int",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [
+        {
+          "name": "Display_Text",
+          "candidates": [
+            {
+              "row_id": "9f38f07a9e4294bd381fdf7698187bee89afed65793ba27264090c1407ecda1e",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 448,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "cc761dd65fb347eabbb05d16c726fc6c94bc3a0a460d4a9475d65fc8aea82afd"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Convert_From",
+        "Format"
+      ]
+    },
+    {
+      "name": "Save_Data",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [
+        {
+          "name": "Write",
+          "candidates": [
+            {
+              "row_id": "7d2086efd2bde8c7f11cc2302f82bf8d89446ee73dce9d2c4225e3c00faf892f",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 202,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "fa91ec12299c5ed2d7c7e3501b21b58c8adf528593f565ffe0148c22fab77fe9"
+            },
+            {
+              "row_id": "c04ff22ce64df67ea182e72a95cf6ce7bd0cb290a66c7d4bffffa9f3b768aa40",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_download.cpp",
+              "line": 25,
+              "status": "unknown",
+              "scope": "RenegadeTTFS",
+              "body_sha256": "8c3510e397e53007885f0417f28119d78f48728b6bb6bacdf809ff84d359f505"
+            },
+            {
+              "row_id": "dc6905fadad47bde79f61ed0fbf66e2187fca8190476b6b6c785fb4e638148c6",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 30,
+              "status": "unknown",
+              "scope": "CachedFile",
+              "body_sha256": "44a1d2edf9e4dbfb6cf5697f921aa5104f0a5af5a53a8bed6c6ff5e8b76a95ae"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Begin_Micro_Chunk",
+        "End_Micro_Chunk",
+        "SCRIPT_PTR_CHECK",
+        "WWASSERT"
+      ]
+    },
+    {
+      "name": "Save_Pointer",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_PTR_CHECK",
+        "Save_Data"
+      ]
+    },
+    {
+      "name": "Load_Begin",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Cur_Micro_Chunk_ID",
+        "Open_Micro_Chunk",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Load_Data",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [
+        {
+          "name": "Read",
+          "candidates": [
+            {
+              "row_id": "9e6b0f9d232bdcbab061e0f64569d2ec5e0d8b38f421fea3c8c6ede3182005b2",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_wave_decoder.cpp",
+              "line": 667,
+              "status": "unknown",
+              "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
+              "body_sha256": "ae29a47d2f984686cabbe38fc1d78c25850b54775a5de039609a3701d809c728"
+            },
+            {
+              "row_id": "b2bed7a365545e1f72533f754b58d52397203fab63f94680eef50fd264345be9",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 191,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "b4b05d60115ebd994440ec15a3b1d9bd1fc29644ce8da3281bedd970344a2784"
+            },
+            {
+              "row_id": "90c61643e2d3b0f08ee839578e03dd404023fe1e97ef22ec68a1c9693a963047",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_mission_ranks.h",
+              "line": 61,
+              "status": "unknown",
+              "scope": "RenegadeMissionRanks",
+              "body_sha256": "5e1a1cf9c1728fbfff1fe99865a6ea091780e11d43774e9d5adb0f350b90e96f"
+            },
+            {
+              "row_id": "f86a6de76639bbe8361414d14def9a10bac010f9278bf333c3fde3541c8b7008",
+              "kind": "port_function",
+              "file": "port/platform/renegade_directinput.cpp",
+              "line": 542,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "051845974470dfa9e3ccdc2defb153137c60a8c2fea57dabd6edc136a37cba16"
+            },
+            {
+              "row_id": "dd929e65d5f9c25844ed73295f9cfe37bda828c1fed6aa7f312a9de32c35ea64",
+              "kind": "port_function",
+              "file": "port/platform/renegade_vita_ime_boundary.cpp",
+              "line": 39,
+              "status": "unknown",
+              "scope": "IME",
+              "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Cur_Micro_Chunk_Length",
+        "SCRIPT_PTR_CHECK",
+        "WWASSERT",
+        "fprintf"
+      ]
+    },
+    {
+      "name": "Load_Pointer",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Load_Data",
+        "REQUEST_POINTER_REMAP",
+        "SCRIPT_PTR_CHECK"
+      ]
+    },
+    {
+      "name": "Load_End",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Close_Micro_Chunk"
+      ]
+    },
+    {
+      "name": "Begin_Chunk",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Begin_Chunk"
+      ]
+    },
+    {
+      "name": "End_Chunk",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "End_Chunk"
+      ]
+    },
+    {
+      "name": "Open_Chunk",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Cur_Chunk_ID",
+        "Open_Chunk",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Close_Chunk",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Close_Chunk"
+      ]
+    },
+    {
+      "name": "Clear_Radar_Markers",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Clear_Markers",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Clear_Radar_Marker",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Clear_Marker",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Add_Radar_Marker",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Marker",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_Obj_Radar_Blip_Shape",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Reset_Radar_Blip_Shape_Type",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Radar_Blip_Shape_Type"
+      ]
+    },
+    {
+      "name": "Set_Obj_Radar_Blip_Color",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Reset_Radar_Blip_Color_Type",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Radar_Blip_Color_Type"
+      ]
+    },
+    {
+      "name": "Enable_Radar",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Set_Hidden"
+      ]
+    },
+    {
+      "name": "Clear_Map_Cell",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Map_Reveal",
+        "Clear_Cloud_Cell",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Clear_Map_Cell_By_Pos",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Map_Reveal",
+        "Clear_Cloud_Cell",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Clear_Map_Cell_By_Pixel_Pos",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Map_Reveal",
+        "Clear_Cloud_Cell_By_Pixel",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Clear_Map_Region_By_Pos",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Map_Reveal",
+        "Clear_Cloud_Cells",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Reveal_Map",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Map_Reveal",
+        "Clear_All_Cloud_Cells",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Shroud_Map",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Cloud_All_Cells",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Show_Player_Map_Marker",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Show_Player_Marker"
+      ]
+    },
+    {
+      "name": "Get_Safe_Flight_Height",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_Height",
+        "SCRIPT_TRACE",
+        "Vector3"
+      ]
+    },
+    {
+      "name": "Create_Explosion",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Create_Explosion_At",
+        "Find_Typed_Definition",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Create_Explosion_At_Bone",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 10,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SmartGameObj",
+        "Create_Explosion_At",
+        "Debug_Say",
+        "Find_Typed_Definition",
+        "Get_Bone_Transform",
+        "Get_ID",
+        "Peek_Model",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Enable_HUD",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [
+        {
+          "name": "Enable",
+          "candidates": [
+            {
+              "row_id": "c07092840a1d8906accf9126377f9caa94c04592f3e3b7b36fc9c841364653e5",
+              "kind": "port_function",
+              "file": "port/platform/a4_frontend_lifecycle_boundary.cpp",
+              "line": 79,
+              "status": "unknown",
+              "scope": "IME",
+              "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+            },
+            {
+              "row_id": "914ff0b1288d8e4368889a0bb45214aa72fae2c50aad5747cc5a019348f24409",
+              "kind": "port_function",
+              "file": "port/renderer/vita/ww3d_dx8_boundary.cpp",
+              "line": 103,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "2a36fc7c74b749d2045df5c69d58baa5d1528d64b4b5d7a3f53f9737a258c482"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Mission_Complete",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [
+        {
+          "name": "Mission_Complete",
+          "candidates": [
+            {
+              "row_id": "e83f8f17b2bcf65a9d3d93ce9def06f0d5b97469f7d1ff61efb0375b8edf3289",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 413,
+              "status": "unknown",
+              "scope": "A31VitaCombatMiscHandler",
+              "body_sha256": "f4ef23a01e66f34f74f74e04d7c3bdca009eee894d54b4f838920288073f3631"
+            },
+            {
+              "row_id": "0d317c5b0d5666a99009ad95a6b66280d53d513e22e0c619207032ae9b2dbe89",
+              "kind": "port_function",
+              "file": "port/platform/a31_mission_completion_latch.h",
+              "line": 30,
+              "status": "unknown",
+              "scope": "A31MissionCompletionLatch",
+              "body_sha256": "24ef07a10b92d1d39bd910ca155150d47ed71ab9a16d2840d0c8313168289592"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Give_PowerUp",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Debug_Say",
+        "Find_Typed_Definition",
+        "Get_ID",
+        "Grant",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Innate_Disable",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Innate_Soldier_Enable"
+      ]
+    },
+    {
+      "name": "Innate_Enable",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Innate_Soldier_Enable"
+      ]
+    },
+    {
+      "name": "Innate_Soldier_Enable_Enemy_Seen",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Innate_Soldier_Enable"
+      ]
+    },
+    {
+      "name": "Innate_Soldier_Enable_Gunshot_Heard",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Innate_Soldier_Enable"
+      ]
+    },
+    {
+      "name": "Innate_Soldier_Enable_Footsteps_Heard",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Innate_Soldier_Enable"
+      ]
+    },
+    {
+      "name": "Innate_Soldier_Enable_Bullet_Heard",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Innate_Soldier_Enable"
+      ]
+    },
+    {
+      "name": "Innate_Soldier_Enable_Actions",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Innate_Soldier_Enable"
+      ]
+    },
+    {
+      "name": "Set_Innate_Soldier_Home_Location",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Home_Location"
+      ]
+    },
+    {
+      "name": "Set_Innate_Aggressiveness",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Aggressiveness"
+      ]
+    },
+    {
+      "name": "Set_Innate_Take_Cover_Probability",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Take_Cover_Probability"
+      ]
+    },
+    {
+      "name": "Set_Innate_Is_Stationary",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Is_Stationary"
+      ]
+    },
+    {
+      "name": "Innate_Force_State_Bullet_Heard",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_State"
+      ]
+    },
+    {
+      "name": "Innate_Force_State_Footsteps_Heard",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_State"
+      ]
+    },
+    {
+      "name": "Innate_Force_State_Gunshots_Heard",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_State"
+      ]
+    },
+    {
+      "name": "Innate_Force_State_Enemy_Seen",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 9,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Innate_Controller",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_State",
+        "Vector3"
+      ]
+    },
+    {
+      "name": "Static_Anim_Phys_Goto_Frame",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [
+        {
+          "name": "Set_Animation",
+          "candidates": [
+            {
+              "row_id": "5a7e22dc7fb0c3d4b22ce93ec5bc628187c433f54aebd54d1deb488155c3dcf6",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_m01_script_defaults.h",
+              "line": 25,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            },
+            {
+              "row_id": "cf5a0779204d06cc1409c7d9bf30f6d8c1b773e59ba90c2171d207eb8b5be8a3",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_script_call_defaults.h",
+              "line": 111,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_StaticAnimPhysClass",
+        "Find_Static_Object",
+        "Get_Animation_Manager",
+        "SCRIPT_TRACE",
+        "Set_Animation_Mode",
+        "Set_Target_Frame"
+      ]
+    },
+    {
+      "name": "Static_Anim_Phys_Goto_Last_Frame",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 9,
+      "matched_calls": [
+        {
+          "name": "Set_Animation",
+          "candidates": [
+            {
+              "row_id": "5a7e22dc7fb0c3d4b22ce93ec5bc628187c433f54aebd54d1deb488155c3dcf6",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_m01_script_defaults.h",
+              "line": 25,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            },
+            {
+              "row_id": "cf5a0779204d06cc1409c7d9bf30f6d8c1b773e59ba90c2171d207eb8b5be8a3",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_script_call_defaults.h",
+              "line": 111,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_StaticAnimPhysClass",
+        "Find_Static_Object",
+        "Get_Animation_Manager",
+        "Get_Num_Frames",
+        "Peek_Animation",
+        "SCRIPT_TRACE",
+        "Set_Animation_Mode",
+        "Set_Target_Frame"
+      ]
+    },
+    {
+      "name": "Get_Sync_Time",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_Sync_Time"
+      ]
+    },
+    {
+      "name": "Add_Objective",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [
+        {
+          "name": "Add_Objective",
+          "candidates": [
+            {
+              "row_id": "11353f68a104f7264f0fa7d32c61ef55c603353a7aa503eaa4293b73f50cb1fb",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_campaign_script_defaults.h",
+              "line": 10,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Remove_Objective",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Remove_Objective",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_Objective_Status",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Set_Objective_Status"
+      ]
+    },
+    {
+      "name": "Change_Objective_Type",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Change_Objective_Type",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_Objective_Radar_Blip",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Set_Objective_Radar_Blip"
+      ]
+    },
+    {
+      "name": "Set_Objective_Radar_Blip_Object",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Objective_Radar_Blip"
+      ]
+    },
+    {
+      "name": "Set_Objective_HUD_Info",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Objective_HUD_Info"
+      ]
+    },
+    {
+      "name": "Set_Objective_HUD_Info_Position",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Objective_HUD_Info"
+      ]
+    },
+    {
+      "name": "Shake_Camera",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Camera_Shake",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Enable_Spawner",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Spawner_Enable"
+      ]
+    },
+    {
+      "name": "Trigger_Spawner",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Spawner_Trigger"
+      ]
+    },
+    {
+      "name": "Enable_Engine",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_VehicleGameObj",
+        "Enable_Engine",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Difficulty_Level",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Get_Difficulty_Level"
+      ]
+    },
+    {
+      "name": "Grant_Key",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Give_Key",
+        "Remove_Key",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Has_Key",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "As_SoldierGameObj",
+        "Has_Key"
+      ]
+    },
+    {
+      "name": "Enable_Hibernation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Enable_Hibernation",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Attach_To_Object_Bone",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Attach_To_Object_Bone",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "WWASSERT"
+      ]
+    },
+    {
+      "name": "Create_Conversation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 10,
+      "matched_calls": [
+        {
+          "name": "A35_Script_Lookup_Record",
+          "candidates": [
+            {
+              "row_id": "4221cc344e4cfb1df54e754bf702210feb0e01e392f369e9f3e6df5719dfb4a2",
+              "kind": "port_function",
+              "file": "port/developer/a35_script_lookup_telemetry.cpp",
+              "line": 75,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "a417eec30beae0a5066fda7599c353103624c771bd601464b81aee3cb3901e35"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Create_New_Conversation",
+        "Find_Conversation",
+        "Get_ID",
+        "REF_PTR_RELEASE",
+        "SCRIPT_TRACE",
+        "Set_Is_Interruptable",
+        "Set_Max_Dist",
+        "Set_Priority",
+        "defined"
+      ]
+    },
+    {
+      "name": "Join_Conversation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Orator",
+        "As_PhysicalGameObj",
+        "Find_Active_Conversation",
+        "Get_ID",
+        "REF_PTR_RELEASE",
+        "SCRIPT_TRACE",
+        "Set_Flag"
+      ]
+    },
+    {
+      "name": "Join_Conversation_Facing",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 9,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Orator",
+        "As_PhysicalGameObj",
+        "Find_Active_Conversation",
+        "Get_ID",
+        "REF_PTR_RELEASE",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Flag",
+        "Set_Look_At_Obj"
+      ]
+    },
+    {
+      "name": "Start_Conversation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [
+        {
+          "name": "Start_Conversation",
+          "candidates": [
+            {
+              "row_id": "7e17df8d70c913abffbbd396c0408a8bdb4164e2d3aa434a31119f2e663adfce",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_campaign_script_defaults.h",
+              "line": 41,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            },
+            {
+              "row_id": "b4aaaf2451b2574a760425d277885b804a41e34d37525ace9b6e6478ef9e2cb6",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_m13_area2_script_defaults.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Find_Active_Conversation",
+        "REF_PTR_RELEASE",
+        "SCRIPT_TRACE",
+        "Set_Action_ID"
+      ]
+    },
+    {
+      "name": "Monitor_Conversation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Find_Active_Conversation",
+        "Get_ID",
+        "REF_PTR_RELEASE",
+        "Register_Monitor",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Start_Random_Conversation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [
+        {
+          "name": "Start_Conversation",
+          "candidates": [
+            {
+              "row_id": "7e17df8d70c913abffbbd396c0408a8bdb4164e2d3aa434a31119f2e663adfce",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_campaign_script_defaults.h",
+              "line": 41,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            },
+            {
+              "row_id": "b4aaaf2451b2574a760425d277885b804a41e34d37525ace9b6e6478ef9e2cb6",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_m13_area2_script_defaults.h",
+              "line": 13,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Stop_Conversation",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Find_Active_Conversation",
+        "SCRIPT_TRACE",
+        "Stop_Conversation"
+      ]
+    },
+    {
+      "name": "Stop_All_Conversations",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Reset_Active_Conversations",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Lock_Soldier_Facing",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SoldierGameObj",
+        "Get_ID",
+        "Lock_Facing",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Unlock_Soldier_Facing",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SoldierGameObj",
+        "Get_ID",
+        "Lock_Facing",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Apply_Damage",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 10,
+      "matched_calls": [
+        {
+          "name": "Apply_Damage",
+          "candidates": [
+            {
+              "row_id": "67e672c2ed649925ad2df696a5d5ba405970aae79dab7c60307dde4124a751ae",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_m01_script_defaults.h",
+              "line": 38,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            },
+            {
+              "row_id": "856dd0621df77f30dd532c8d69b41d4309f941ef686fff7e0c4e6944a0ba74fe",
+              "kind": "port_macro_definition",
+              "file": "port/compatibility/include/renegade_script_call_defaults.h",
+              "line": 33,
+              "status": "unknown",
+              "scope": null,
+              "body_sha256": null
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Apply_Damage_Extended",
+        "As_DamageableGameObj",
+        "As_SmartGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Warhead_Type",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "offense"
+      ]
+    },
+    {
+      "name": "Set_Loiters_Allowed",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Loiters_Allowed"
+      ]
+    },
+    {
+      "name": "Set_Is_Visible",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_SoldierGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Is_Visible"
+      ]
+    },
+    {
+      "name": "Set_Is_Rendered",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Peek_Model",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Hidden",
+        "Set_Object_Dirty_Bit"
+      ]
+    },
+    {
+      "name": "Get_Points",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Debug_Say",
+        "Get_Player_Data",
+        "Get_Score"
+      ]
+    },
+    {
+      "name": "Give_Points",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 12,
+      "matched_calls": [
+        {
+          "name": "Next",
+          "candidates": [
+            {
+              "row_id": "7f5b3cf00446a3cb82a07b258374305ac3cd6548af3ef6fa5db9b6b4f01a30ec",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_audio_output_buffers.h",
+              "line": 15,
+              "status": "unknown",
+              "scope": "RenegadeAudioOutputBuffers",
+              "body_sha256": "7dea348da035895753d575f235287fafed86714fd6497328e044faba6a743130"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Data",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Player_Data",
+        "Get_Star_Game_Obj_List",
+        "Head",
+        "Increment_Score",
+        "Is_Teammate",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Money",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Debug_Say",
+        "Get_Money",
+        "Get_Player_Data"
+      ]
+    },
+    {
+      "name": "Give_Money",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 12,
+      "matched_calls": [
+        {
+          "name": "Next",
+          "candidates": [
+            {
+              "row_id": "7f5b3cf00446a3cb82a07b258374305ac3cd6548af3ef6fa5db9b6b4f01a30ec",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_audio_output_buffers.h",
+              "line": 15,
+              "status": "unknown",
+              "scope": "RenegadeAudioOutputBuffers",
+              "body_sha256": "7dea348da035895753d575f235287fafed86714fd6497328e044faba6a743130"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Data",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Player_Data",
+        "Get_Star_Game_Obj_List",
+        "Head",
+        "Increment_Money",
+        "Is_Teammate",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Get_Building_Power",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_BuildingGameObj",
+        "Debug_Say",
+        "Is_Power_Enabled",
+        "SCRIPT_PTR_CHECK_RET",
+        "return"
+      ]
+    },
+    {
+      "name": "Set_Building_Power",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_BuildingGameObj",
+        "Debug_Say",
+        "Enable_Power",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Play_Building_Announcement",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_BuildingGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "Play_Announcement",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Find_Nearest_Building_To_Pos",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 11,
+      "matched_calls": [
+        {
+          "name": "Next",
+          "candidates": [
+            {
+              "row_id": "7f5b3cf00446a3cb82a07b258374305ac3cd6548af3ef6fa5db9b6b4f01a30ec",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_audio_output_buffers.h",
+              "line": 15,
+              "status": "unknown",
+              "scope": "RenegadeAudioOutputBuffers",
+              "body_sha256": "7dea348da035895753d575f235287fafed86714fd6497328e044faba6a743130"
+            }
+          ]
+        },
+        {
+          "name": "lstrcmpi",
+          "candidates": [
+            {
+              "row_id": "444e1a64253701e9652cee4da47dc311a05c7b524d5d5a240cb0363d933d3db8",
+              "kind": "port_function",
+              "file": "port/compatibility/include/win32_compat.h",
+              "line": 628,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "04afb71b900c84b2f5c587d38dac89155b3dc1c641be286a57920690d0b21162"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "As_BuildingGameObj",
+        "Data",
+        "Get_Building_Game_Obj_List",
+        "Get_Name_Prefix",
+        "Get_Position",
+        "Head",
+        "Length2",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Find_Nearest_Building",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Find_Nearest_Building_To_Pos",
+        "Get_ID",
+        "Get_Position",
+        "SCRIPT_PTR_CHECK_RET",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Team_Members_In_Zone",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_ScriptZoneGameObj",
+        "Count_Team_Members_Inside",
+        "Debug_Say",
+        "SCRIPT_PTR_CHECK_RET"
+      ]
+    },
+    {
+      "name": "Set_Clouds",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_Clouds"
+      ]
+    },
+    {
+      "name": "Set_Lightning",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_Lightning"
+      ]
+    },
+    {
+      "name": "Set_War_Blitz",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_War_Blitz"
+      ]
+    },
+    {
+      "name": "Set_Wind",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_Wind"
+      ]
+    },
+    {
+      "name": "Set_Rain",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_Precipitation"
+      ]
+    },
+    {
+      "name": "Set_Snow",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_Precipitation"
+      ]
+    },
+    {
+      "name": "Set_Ash",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_Precipitation"
+      ]
+    },
+    {
+      "name": "Set_Fog_Enable",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 1,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Set_Fog_Enable"
+      ]
+    },
+    {
+      "name": "Set_Fog_Range",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Debug_Say",
+        "Set_Fog_Range"
+      ]
+    },
+    {
+      "name": "Enable_Stealth",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 5,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Enable_Stealth",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Cinematic_Sniper_Control",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Cinematic_Sniper_Control",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Text_File_Open",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 8,
+      "matched_calls": [
+        {
+          "name": "A35_Script_Lookup_Record",
+          "candidates": [
+            {
+              "row_id": "4221cc344e4cfb1df54e754bf702210feb0e01e392f369e9f3e6df5719dfb4a2",
+              "kind": "port_function",
+              "file": "port/developer/a35_script_lookup_telemetry.cpp",
+              "line": 75,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "a417eec30beae0a5066fda7599c353103624c771bd601464b81aee3cb3901e35"
+            }
+          ]
+        },
+        {
+          "name": "Get_File",
+          "candidates": [
+            {
+              "row_id": "1de682ac00514bfe23bfe1ab69495d7d5c13e90248693ea5cc58e3f2e241ae47",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 272,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "0db8bf3d81c6d8e66e8057308f8acd47d779c59ecedab87759d19551862e5800"
+            },
+            {
+              "row_id": "96657d839d7c06e13bc1d2eeee61954e7550d3c70a3d95c85784a6b7d0e086d1",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 69,
+              "status": "unknown",
+              "scope": "RenegadeTTFSFactory::PayloadFactory",
+              "body_sha256": "0424f596c62ff24c2be5c308a3b4aa5aca1864b9dd80f94eb315124e0ba81b58"
+            },
+            {
+              "row_id": "7a8778433ce69343aeb7639a0c1667513febc1ada5a1f3df6be264e7e63dc5e4",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 129,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "4411657b0a880d66e54875f56caa982d203e0885c8e56f041aacdd52b0ced764"
+            },
+            {
+              "row_id": "1cbde9762625347c15a6f2f3aa2a2ede1e9127d3694a2e6f5768326e29d07840",
+              "kind": "port_function",
+              "file": "port/platform/vita/a31_vita_runtime.cpp",
+              "line": 561,
+              "status": "unknown",
+              "scope": "A31AudioFileFactoryClass",
+              "body_sha256": "d9c08721c4253c997ea5de1cb33d81808bd96f336c60251b7362935853f21088"
+            }
+          ]
+        },
+        {
+          "name": "Is_Available",
+          "candidates": [
+            {
+              "row_id": "20fcb8c55f36acb7d16e0390d9576f3e9824b89cb4621ad1480274f4a82e607b",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 213,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "b0ddab2d9efac73eb111ff1bfa18b196187306194fad81fa11bf17fadddafc82"
+            },
+            {
+              "row_id": "f65852d4e8b4f5a3c5826fe0eb6345b60a2f852b51bbfa91c45546979db22113",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 27,
+              "status": "unknown",
+              "scope": "CachedFile",
+              "body_sha256": "4d3be756d4ab0923eb199c85800b95cb23682de80bc732fa1c813dbb7f3af039"
+            }
+          ]
+        },
+        {
+          "name": "Open",
+          "candidates": [
+            {
+              "row_id": "716ea93c75320358ed7d487352273dd5efaa2f9d19df675157ed3f7110b9551b",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_wave_decoder.cpp",
+              "line": 687,
+              "status": "unknown",
+              "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
+              "body_sha256": "58c482c681a09d8b500c6e0609c239ca84a78cd84f23bc2e64f6988f45064aa5"
+            },
+            {
+              "row_id": "5302ceaf85b6a53c8e8da43c937a6ac94deddab57e241b6bd21c3859a741a973",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 161,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "f649980938db12c94c7d17fe22d177b553b82124ac443029131214ecca71df05"
+            },
+            {
+              "row_id": "a948ee23ed4612ada4988a068611782bd3cdd966971191e81056759ee25377a1",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 167,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "2679b9ca9f963094d0dc4d2f70d1d2c0b621311ae34e087bc2afdb14cf7a7088"
+            },
+            {
+              "row_id": "ad439ca9f4ca9b335362f27c29a744bcf5392ccd0f4ad9245f135ed74f1f678b",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 23,
+              "status": "unknown",
+              "scope": "CachedFile",
+              "body_sha256": "7d307f350a79f55701f90d47b39da1902ca6ad189303834ce608d876d3b7b77f"
+            },
+            {
+              "row_id": "794b5f389b544f285258f50a41020e71f9c17b4d972cb3e4caa9266e1b0c3b83",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 24,
+              "status": "unknown",
+              "scope": "CachedFile",
+              "body_sha256": "930c741e1f74521bf8ddeaa10f53bd1c4ae35cf0187c70395267e906ad8afa62"
+            },
+            {
+              "row_id": "9cf6b34a0a94d4be1c8940487fd840cccc7e2315e5df9c325e44179bc1b83b03",
+              "kind": "port_function",
+              "file": "port/platform/renegade_network_provider.cpp",
+              "line": 25,
+              "status": "unknown",
+              "scope": "RenegadeNetworkProvider::UdpDatagramTransport",
+              "body_sha256": "c00899bcb203fccf2a9fda4373936ef0fa2ff5d29a57677a21ee922932a66ced"
+            },
+            {
+              "row_id": "1878bbd80a98221d46b665feb85d0dc1c94cfcdf559fd1adce1e76800ecb3e63",
+              "kind": "port_function",
+              "file": "port/platform/renegade_vita_ime_boundary.cpp",
+              "line": 29,
+              "status": "unknown",
+              "scope": "IME",
+              "body_sha256": "4fb38680023f1aadec352944220dbcbcaebdb24d8c92609d3a00d73457870d52"
+            },
+            {
+              "row_id": "4d66c009b70074452553ae5f45e1bf780b191beab33d6afec55315fb5fa4f487",
+              "kind": "port_function",
+              "file": "port/platform/vita/renegade_vita_text_entry.cpp",
+              "line": 15,
+              "status": "unknown",
+              "scope": "NativeKeyboard",
+              "body_sha256": "ae312958861fea671b00e604bea3b10e690fc5ebfc212fbe9e02f408690e3052"
+            }
+          ]
+        },
+        {
+          "name": "Renegade_Ui_Pointer_To_Token",
+          "candidates": [
+            {
+              "row_id": "0a9d903d309f42fcb3e8d8f7113fbb4cf61f3a28979d3fb5bcc4e89bba260efe",
+              "kind": "port_function",
+              "file": "port/platform/renegade_ui_pointer_tokens.cpp",
+              "line": 29,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "15b8f65a3e5449f9c81e9a8fc87159781b8f6a6df407abb2b92662c2ffedd069"
+            }
+          ]
+        },
+        {
+          "name": "Return_File",
+          "candidates": [
+            {
+              "row_id": "ddd3432ffaa338c568b8ed9a3912b97a18593d4671cd230ae4776259fffca398",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 278,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "28a8d308c7e062180bfa14b49a56deff639d0311a5b6d086c465f70d4aeef0b1"
+            },
+            {
+              "row_id": "578922b9676d6c0fb7f9ee2b2265b80f0a56da4b0b9d4ab0c689e76adec24a5b",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 70,
+              "status": "unknown",
+              "scope": "RenegadeTTFSFactory::PayloadFactory",
+              "body_sha256": "46ee867e5e07fabf8d64f716139dee31c47e01aa167948328ca61f73ecad984f"
+            },
+            {
+              "row_id": "bafeba233d62b6eb24a5f47bff0903cf963a6c22170389ac5bf65c1473a4835b",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 141,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "46ee867e5e07fabf8d64f716139dee31c47e01aa167948328ca61f73ecad984f"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "defined",
+        "return"
+      ]
+    },
+    {
+      "name": "Text_File_Get_String",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [
+        {
+          "name": "Read",
+          "candidates": [
+            {
+              "row_id": "9e6b0f9d232bdcbab061e0f64569d2ec5e0d8b38f421fea3c8c6ede3182005b2",
+              "kind": "port_function",
+              "file": "port/audio/vita/renegade_wave_decoder.cpp",
+              "line": 667,
+              "status": "unknown",
+              "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
+              "body_sha256": "ae29a47d2f984686cabbe38fc1d78c25850b54775a5de039609a3701d809c728"
+            },
+            {
+              "row_id": "b2bed7a365545e1f72533f754b58d52397203fab63f94680eef50fd264345be9",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 191,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "b4b05d60115ebd994440ec15a3b1d9bd1fc29644ce8da3281bedd970344a2784"
+            },
+            {
+              "row_id": "90c61643e2d3b0f08ee839578e03dd404023fe1e97ef22ec68a1c9693a963047",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_mission_ranks.h",
+              "line": 61,
+              "status": "unknown",
+              "scope": "RenegadeMissionRanks",
+              "body_sha256": "5e1a1cf9c1728fbfff1fe99865a6ea091780e11d43774e9d5adb0f350b90e96f"
+            },
+            {
+              "row_id": "f86a6de76639bbe8361414d14def9a10bac010f9278bf333c3fde3541c8b7008",
+              "kind": "port_function",
+              "file": "port/platform/renegade_directinput.cpp",
+              "line": 542,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "051845974470dfa9e3ccdc2defb153137c60a8c2fea57dabd6edc136a37cba16"
+            },
+            {
+              "row_id": "dd929e65d5f9c25844ed73295f9cfe37bda828c1fed6aa7f312a9de32c35ea64",
+              "kind": "port_function",
+              "file": "port/platform/renegade_vita_ime_boundary.cpp",
+              "line": 39,
+              "status": "unknown",
+              "scope": "IME",
+              "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+            }
+          ]
+        },
+        {
+          "name": "Renegade_Ui_Pointer_From_Token",
+          "candidates": [
+            {
+              "row_id": "e69585d6cd9fb4dfc6cdf6424d8a896b5aab7db3244724704553814f9e713685",
+              "kind": "port_function",
+              "file": "port/platform/renegade_ui_pointer_tokens.cpp",
+              "line": 38,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "1f0ace0304f91944a72611ab02a2d08c953aff12a13f61de50fe89fb4c9ebc2f"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "defined",
+        "return"
+      ]
+    },
+    {
+      "name": "Text_File_Close",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [
+        {
+          "name": "Close",
+          "candidates": [
+            {
+              "row_id": "6639e7478ac370ff8be4a3f4f1e550018b18ed8185e64794fadf4625ba0a392c",
+              "kind": "port_function",
+              "file": "port/platform/a31_network_options_boundary.cpp",
+              "line": 87,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+            },
+            {
+              "row_id": "260eaea852dd182af450d6f2e8494eea8e58c4d93ae6c902213a51c81c51bea8",
+              "kind": "port_function",
+              "file": "port/platform/renegade_network_provider.cpp",
+              "line": 51,
+              "status": "unknown",
+              "scope": "RenegadeNetworkProvider::UdpDatagramTransport",
+              "body_sha256": "9c447883faf046b1022c1990dcb099becf57b974ab08180e8c852fa41673085e"
+            },
+            {
+              "row_id": "67453742e36cfb2091d47c654df71adc8ef01faa38d0d57a284969e3cebd57f8",
+              "kind": "port_function",
+              "file": "port/platform/renegade_vita_ime_boundary.cpp",
+              "line": 41,
+              "status": "unknown",
+              "scope": "IME",
+              "body_sha256": "37eadaffdf963c2be3c0689f5a06435d5fa8b153152cf9d2c3b49b37bdf2f8ee"
+            },
+            {
+              "row_id": "ded3319d70410b7a68514df37f58c74af8d59f4a6de880ddb45a5d082efc6870",
+              "kind": "port_function",
+              "file": "port/platform/vita/renegade_vita_text_entry.cpp",
+              "line": 81,
+              "status": "unknown",
+              "scope": "NativeKeyboard",
+              "body_sha256": "2e72dcedf6bc72810ce7c21ec0dde38055e7767430034b8553bee736c1b7aed0"
+            }
+          ]
+        },
+        {
+          "name": "Renegade_Ui_Take_Pointer_Token",
+          "candidates": [
+            {
+              "row_id": "f63d3c5487040553cdc78b90b71ee5d7aae4275daad6141959fa6daf75c7a7fa",
+              "kind": "port_function",
+              "file": "port/platform/renegade_ui_pointer_tokens.cpp",
+              "line": 50,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "07b6da069deea96f7988397816b874704fa9bcc6663b24c81786c13a184acd11"
+            }
+          ]
+        },
+        {
+          "name": "Return_File",
+          "candidates": [
+            {
+              "row_id": "ddd3432ffaa338c568b8ed9a3912b97a18593d4671cd230ae4776259fffca398",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_file_factory.cpp",
+              "line": 278,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "28a8d308c7e062180bfa14b49a56deff639d0311a5b6d086c465f70d4aeef0b1"
+            },
+            {
+              "row_id": "578922b9676d6c0fb7f9ee2b2265b80f0a56da4b0b9d4ab0c689e76adec24a5b",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 70,
+              "status": "unknown",
+              "scope": "RenegadeTTFSFactory::PayloadFactory",
+              "body_sha256": "46ee867e5e07fabf8d64f716139dee31c47e01aa167948328ca61f73ecad984f"
+            },
+            {
+              "row_id": "bafeba233d62b6eb24a5f47bff0903cf963a6c22170389ac5bf65c1473a4835b",
+              "kind": "port_function",
+              "file": "port/filesystem/renegade_ttfs_factory.cpp",
+              "line": 141,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "46ee867e5e07fabf8d64f716139dee31c47e01aa167948328ca61f73ecad984f"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "defined"
+      ]
+    },
+    {
+      "name": "Enable_Vehicle_Transitions",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_VehicleGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Script_Enable_Transitions"
+      ]
+    },
+    {
+      "name": "Display_GDI_Player_Terminal",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Display_Terminal",
+        "Get_Instance",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Display_NOD_Player_Terminal",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Display_Terminal",
+        "Get_Instance",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Display_Mutant_Player_Terminal",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Display_Terminal",
+        "Get_Instance",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Reveal_Encyclopedia_Character",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Reveal_Object",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Reveal_Encyclopedia_Weapon",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Reveal_Object",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Reveal_Encyclopedia_Vehicle",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Reveal_Object",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Reveal_Encyclopedia_Building",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Reveal_Object",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Display_Encyclopedia_Event_UI",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 3,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Add_Data_Link",
+        "Display_Event_UI",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Scale_AI_Awareness",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Set_Global_Sight_Range_Scale"
+      ]
+    },
+    {
+      "name": "Enable_Cinematic_Freeze",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 4,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Enable_Cinematic_Freeze",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Expire_Powerup",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "As_PowerUpGameObj",
+        "Expire",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_HUD_Help_Text",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 13,
+      "matched_calls": [
+        {
+          "name": "Create_Instant_Sound",
+          "candidates": [
+            {
+              "row_id": "41d86df78f485a1a4e4af3a6c3aec29705bd8797456c704b840e5cb15ebec434",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1407,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "6010883e21de9f1cdfe285eb1c31ad177cb1b3ed5eedf5993e2f4ddfe6317d19"
+            },
+            {
+              "row_id": "19e48c84d7b30afd1a1c60b4756b36494caec48cde5f23d1dce50179e0b02cae",
+              "kind": "port_function",
+              "file": "port/platform/a31_gameplay_boundary.cpp",
+              "line": 1429,
+              "status": "stubbed_or_noop",
+              "scope": "",
+              "body_sha256": "df56cc654508d9fe9917d734d34c521a5453111b938c2f9b35b72625d6b95ba5"
+            },
+            {
+              "row_id": "818065d78bd5a6417dd1393007f88c167aa49ddcaf4d5273cf4e978d0ebf78a6",
+              "kind": "port_function",
+              "file": "port/platform/vita/a30_static_world_boundary.cpp",
+              "line": 59,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "864c9347ebcd7f874eb6d19f1f05cc5990bcb470899d53725dcae48486fbbc81"
+            }
+          ]
+        },
+        {
+          "name": "Renegade_Vita_Tutorial_Help",
+          "candidates": [
+            {
+              "row_id": "afbb771a06c40047a8940e7a229f148432bd249031c9e650cff29b996256b209",
+              "kind": "port_function",
+              "file": "port/platform/renegade_vita_tutorial_help.h",
+              "line": 8,
+              "status": "unknown",
+              "scope": "",
+              "body_sha256": "4ea4ea30b3810b27964140accf2cd6a13b60ba19a985b095fa05acfddd34516f"
+            }
+          ]
+        }
+      ],
+      "unmatched_calls": [
+        "Convert_From",
+        "Get_Current_Language",
+        "Get_Global_Settings",
+        "Get_HUD_Help_Text_Sound_ID",
+        "Get_Instance",
+        "Matrix3D",
+        "SCRIPT_TRACE",
+        "Set_HUD_Help_Text",
+        "TRANSLATE",
+        "assert",
+        "defined"
+      ]
+    },
+    {
+      "name": "Enable_HUD_Pokable_Indicator",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Enable_HUD_Pokable_Indicator",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Enable_Innate_Conversations",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Enable_Innate_Conversations",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Display_Health_Bar",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 6,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_DamageableGameObj",
+        "Debug_Say",
+        "Get_ID",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE",
+        "Set_Is_Health_Bar_Displayed"
+      ]
+    },
+    {
+      "name": "Enable_Shadow",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_PhysicalGameObj",
+        "Debug_Say",
+        "Enable_Shadow_Generation",
+        "Get_ID",
+        "Peek_Physical_Object",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Clear_Weapons",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 7,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "As_SmartGameObj",
+        "Clear_Weapons",
+        "Debug_Say",
+        "Get_ID",
+        "Get_Weapon_Bag",
+        "SCRIPT_PTR_CHECK",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_Num_Tertiary_Objectives",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Set_Num_Specified_Tertiary_Objectives"
+      ]
+    },
+    {
+      "name": "Enable_Letterbox",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "Enable_Letterbox",
+        "SCRIPT_TRACE"
+      ]
+    },
+    {
+      "name": "Set_Screen_Fade_Color",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Set_Screen_Overlay_Color"
+      ]
+    },
+    {
+      "name": "Set_Screen_Fade_Opacity",
+      "status": "unknown",
+      "evidence_class": "lexical_cross_inventory_candidates",
+      "call_total": 2,
+      "matched_calls": [],
+      "unmatched_calls": [
+        "SCRIPT_TRACE",
+        "Set_Screen_Overlay_Opacity"
+      ]
+    }
+  ],
+  "complete": false,
+  "limits": [
+    "Name-only matches can collide across classes and overloads.",
+    "Original staged downstream methods, virtual dispatch and transitive calls are not joined.",
+    "Guard inventory is a hash-pinned snapshot; current body identity must be verified before a fix.",
+    "Macro expansion, preprocessor selection and runtime reachability remain open."
+  ],
+  "parent_sha256": {
+    "command_bodies": "7f6c27a08e1367b6c850c7e5b3be4f23ef6c72937fc289484c44f5d1754529bf",
+    "port_guards": "29eb7d20831720e65fd88c3c73ecccd9b0bc1eb2c14d5866851cc39cf904b14c"
+  }
+}

@@ -295,3 +295,24 @@ log remains private. No callbacks, gameplay or authored retail data execute.
 Initialization is invoked at main by the debugger, so ordinary startup ordering
 and ARM initialization remain unproven. Leak checking is disabled for debugger
 operation. Behavior statuses remain unknown. Runtime source is unchanged.
+
+## Direct port dependency candidates — 2026-10-04
+
+All 202 command-body records are joined to the hash-pinned port-function and
+function-like macro inventory. Forty-seven commands have candidates across 76
+matched call names. Both overload bodies contribute discovery calls until a
+signature-aware source join selects one. Candidates retain guard row identity,
+file, line, scope, status and body hash; unmatched calls remain explicit.
+
+Distinct diagnostic, text-file pointer-token and tutorial HUD owners are visible,
+alongside sound creation/playback candidates. Generic names such as Read, Play,
+Next and Release_Ref can collide across classes. This is a review queue, not a
+call graph or a verdict that 47 commands are defective. Equal command bodies
+do not establish original downstream behavior, and no match proves absence of
+port changes. Staged original methods, virtual/transitive dispatch and active
+preprocessor branches remain the next coverage denominator.
+
+Nine focused tests pass; independent regeneration matches exactly. Parent hashes
+pin both inventories, whose current source identity needs revalidation before
+fixing a candidate. Runtime code and Dev221 artifacts are unchanged.
+See [dependency candidates](generated/sweeps/script_command_port_dependencies.json).

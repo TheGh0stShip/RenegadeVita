@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Command-to-port dependency candidates — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: all 202 command records joined to port function/macro candidates;
+47 commands have 76 matched call names. Collisions/unmatched calls stay explicit.
+Evidence: nine tests pass; regeneration matches. Runtime/Dev221 unchanged.
+Next: qualified original downstream methods, macro branches and transitive calls.
+Blocker: none for source work; behavior statuses and native acceptance remain open.
+
 ## Original command table initialization — 2026-10-04
 
 Renegade Vita — v3.5 active

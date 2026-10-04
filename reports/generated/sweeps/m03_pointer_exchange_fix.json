@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "candidate": "A3.5-dev222",
+  "evidence_class": "host_original_script_sanitizers_and_arm_compile_link",
+  "host_probe": {
+    "schema_version": 1,
+    "evidence_class": "host_original_m03_pointer_exchange_asan_ubsan",
+    "escort_states_passed": 3,
+    "area_queries_passed": 2,
+    "actual_sender_exchanges_passed": 3,
+    "scoped_release_passed": true,
+    "nested_tokens_passed": true,
+    "exact_callback_types": true,
+    "binary_sha256": "ba7e64af74db7f8947b0b95db9bc503cecbc05a4e5265b011b45f45005125a97",
+    "source_sha256": {
+      "tools/test_m03_pointer_exchange.py": "6c67d052ae1fef0c491d80f5da96a08179a5b47bda3d74e5798360479ff6d160",
+      "tools/host_m03_pointer_exchange_test.cpp": "67803a4c6c7747b93a14afb5b6a4ebe0feb8b6b2c7682c55757387a6ea58e74e",
+      "tools/host_cinematic_save_test.cpp": "e7dc333ba5a44349d387575298646e911d4f4d1d8a3f6864c9724e1bbd861c82",
+      "staging/scripts/Mission03.cpp": "29bbd6ae7244984c872e303816eb4d89742ea03153996243d485d16bb406c29f",
+      "port/compatibility/include/renegade_script_pointer_exchange.h": "2818f5823e1fbd25213ed7757154097ba57034cc98f9d7210a8c5e25ec0a0613",
+      "port/platform/renegade_ui_pointer_tokens.cpp": "b8e1b30815e24685427a2900135cdb0375682aca3e7cbf7a667474ed33d94391"
+    },
+    "limits": [
+      "Actual script registration/classes and selected callbacks; synthetic command transport and opaque objects.",
+      "No complete M03 gameplay, observer lifetime, delayed pointer events or native execution."
+    ]
+  },
+  "native_preprocessing": {
+    "arm_preprocessed_sources_equal": true,
+    "preprocessed_sha256": "402c358b3925f74d671e45a9cbca1eb820f6fe10b05b4af5de7111118a64f836",
+    "baseline_source_sha256": "55cbb02352268af68437387ed75daac299d08d31be0f286c6f0769c4d793ac41",
+    "staged_source_sha256": "29bbd6ae7244984c872e303816eb4d89742ea03153996243d485d16bb406c29f",
+    "limits": [
+      "Selected source preprocessing flags; native build and execution are separate gates."
+    ]
+  },
+  "fast_contract_tests_passed": 485,
+  "host_runtime_build_passed": true,
+  "host_runtime_sha256": "3be3d090d9fe51d70674988aa2bc4460356660fbe09c33400f04f7c531b99264",
+  "elf_sha256": "9c7f6c3f0307a9a49455d8db9bbfa39222bb96c619894f6194b1263c89193cb2",
+  "map_sha256": "2ebc1482066b08c8b462e6d5d01d2c44cafb4bdc3bcda7bf7405dbffbdfe4234",
+  "patch_registry_sha256": "2af5991b787fe64ecd69a92113c4d353191c52fa1c93f383d9e30563ce1dcbc5",
+  "source_sha256": {
+    "port/patches/scripts-a35-host-m03-pointer-exchange.patch": "726e47d7c0000b285ac995db9f527509681e9cc2b9ff552c1797c13efb3675ba",
+    "tools/stage_sources.sh": "b02d42791967ea565da56b3096871c0e108d37f3aab71e5cf9e270786085d585",
+    "tools/build_fast_candidate.sh": "0006958ea5f09f17ea11d83b7c68326c811ba34d68004fc9259dbdaeeffc1ffa"
+  },
+  "native_acceptance_gates_closed": 0,
+  "canonical_package_passed": false,
+  "limits": [
+    "Host-only compatibility; native preprocessor path unchanged under the retained comparison flags.",
+    "No complete M03 playthrough, delayed pointer transport, native dispatch or device acceptance.",
+    "Existing ARM wchar_t linker warnings remain unresolved; successful link does not establish wide-character ABI compatibility."
+  ]
+}

@@ -1,4 +1,15 @@
 {
+  "m03_host_pointer_exchange_20261004": {
+    "state": "HOST_ORIGINAL_CALLBACK_SANITIZERS_ARM_LINK_PASS_NATIVE_GAMEPLAY_OPEN",
+    "candidate": "A3.5-dev222",
+    "actual_sender_exchanges_passed": 3,
+    "fast_contract_tests_passed": 485,
+    "arm_compile_link_actions": 6,
+    "native_preprocessing_unchanged": true,
+    "receipt": "reports/generated/sweeps/m03_pointer_exchange_fix.json",
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "script_load_bounds_20261004": {
     "state": "HOST_SANITIZERS_ARM_LINK_PASS_NATIVE_SAVE_LOAD_OPEN",
     "candidate": "A3.5-dev221",

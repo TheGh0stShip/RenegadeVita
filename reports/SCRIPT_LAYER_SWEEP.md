@@ -1,5 +1,42 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Mission03 host pointer-exchange compatibility — 2026-10-04
+
+The three verified Mission03 synchronous out-parameter events now use scoped
+32-bit tokens under `RENEGADE_HOST_ABI_TEST`. Their receivers resolve full-width
+host pointers; each sender removes its token when the inline call returns.
+The original Vita branches, integer event ABI, command table and mission
+decisions are preserved. Tokens are process-local and cannot be retained by
+delayed events or serialized. No other integer event is reinterpreted.
+
+The actual registered Mission03 classes pass ASan/UBSan:three escort results
+0/1/-1, two area/target queries, all three real sender exchanges, nested token
+isolation and release/stale lookup. Opaque objects and synthetic command
+transport bound the fixture; real world/observer lifetime and complete M03
+gameplay remain open. Every fixture callback now has an exact compile-time
+function-pointer type check. Initial fixture setup failures and the permissive
+callback mismatch are corrected; the qualified retained run is the evidence.
+
+Host runtime rebuild/link passes, including133 initial and two final actions.
+Dev222 ARM compile/link passes six actions and485 fast contract tests. Native
+Mission03 preprocessing matches the pre-fix staged source byte-for-byte under
+the retained flags. This is compile/source evidence, not native dispatch or
+physical acceptance. Existing ARM wchar_t linker warnings remain open.
+
+The new patch is in the312-entry zero-fuzz stage registry. S1 is refreshed to
+3,597 records:51 stubs, one patched, two boundaries, six disabled guards and
+3,537 unknown. Its previously stale scriptcommands review hash is reconciled
+only after verifying that the sole difference is the already-tested Load_Data
+capacity guard; audio and other caller bodies are unchanged. Dependent command
+joins, portability metadata and the53,087-record gap register reconcile.
+
+The [cluster receipt](generated/sweeps/m03_pointer_exchange_fix.json) pins
+matching source, probe, host runtime, ELF, map and registry hashes. Retained
+artifacts and logs are under `build/procedural-renderer-dependencies/` with
+the `m03-pointer-` prefix; native artifacts are in `local-builder/dist/`.
+The regression is in the fast-build gate. No packaging, emulator launch,
+physical-device operation or adjacent D3D project change occurred.
+
 ## Original custom-event timing contract — 2026-10-04
 
 The original and staged `Send_Custom_Event` bodies match exactly. Its default

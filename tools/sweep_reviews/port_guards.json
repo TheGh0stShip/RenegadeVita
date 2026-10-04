@@ -12,7 +12,7 @@
     "port/platform/a31_gameplay_boundary.cpp": "24e861886345d0d61c2ae6e033d2f2a2af063cb2e6253cb4fb187dbfdd65b55c",
     "staging/commando/movie.cpp": "57f5bbf0188a8fa8fd896c3e819681c354bc0107863f942723010c07bcf4524e",
     "staging/commando/dlgmovieoptions.cpp": "49032fb0849ec72e432d5c0780c477d46b93c52c2a57a8891897e5f68d7bea03",
-    "staging/combat/scriptcommands.cpp": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
+    "staging/combat/scriptcommands.cpp": "41d23acbaff05b40c9fb680b296caba8b24ce2d564239acec1fca73b29a6823a",
     "staging/ww3d2/dazzle.cpp": "d6feb4183fb7f2cec11394f573ab48847488cf563a8c56da69bb1d43ac9a0211",
     "staging/wwphys/transitioneffect.cpp": "7acebf3163a8e94a109713568a6212996a0d732ab72b3bdd7ca96682f776011b",
     "staging/wwphys/stealtheffect.cpp": "ac3aba63afbe5673468af4a6e45f839b9f575dd7ba2b49263b99ad40d0e74d7a",

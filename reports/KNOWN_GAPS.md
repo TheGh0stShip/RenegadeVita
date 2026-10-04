@@ -1,5 +1,12 @@
 # Known gaps
 
+2026-10-04 Mission03 host-width correction:three verified pointer-through-int
+exchanges now use scoped process-local host tokens. Actual sender/receiver
+sanitizers, host runtime link, Dev222 ARM link and485 contracts pass. Native
+preprocessing remains unchanged; full M03 gameplay, other pointer assumptions,
+observer lifetime and physical acceptance remain open. See
+[script cluster evidence](SCRIPT_LAYER_SWEEP.md).
+
 2026-10-03 compile closure removes17 stale current compilation labels. Runtime
 gaps remain open; original textureloader.cpp compiles separately but remains
 outside the runtime graph. Canonical ASan trim overlap is repaired; the rebuilt

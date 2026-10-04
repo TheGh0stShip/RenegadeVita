@@ -1,5 +1,13 @@
 # S1 port guards and stubs — inventory in progress
 
+2026-10-04 Dev222 refresh:3,597 source records retain51 stubs, one patched,
+two replaced boundaries, six disabled guards and3,537 unknown. The312-entry
+stage registry includes the three host-only Mission03 pointer exchanges;
+native preprocessing remains unchanged. Reviewed bodies and caller hashes
+reconcile after checking the prior Load_Data capacity-only delta. Seventy-three
+focused checks and485 fast contracts pass; this does not close S1 classification
+or native acceptance. See [script cluster](SCRIPT_LAYER_SWEEP.md).
+
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
 source contains 3,574 records with 51 fallback/diagnostic functions reviewed as

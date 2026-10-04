@@ -439,6 +439,12 @@
       "root_has_error": false
     },
     {
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "functions": 6,
+      "parse_errors": 0,
+      "root_has_error": false
+    },
+    {
       "file": "port/compatibility/include/renegade_server_config.h",
       "functions": 4,
       "parse_errors": 0,
@@ -1311,6 +1317,7 @@
     "port/compatibility/include/renegade_m13_area2_script_defaults.h": "f356b19fc18d77e2a75e315d131a8c71e791784f563e2974cca1cb1d5178da50",
     "port/compatibility/include/renegade_optional_network_modes.h": "af13e191e8c010e390535e3a33aebe7a6df9e36246a4077afa3bcc0fca605394",
     "port/compatibility/include/renegade_script_call_defaults.h": "1f31f8a01540c0552dc7f40db686231626457da3bd3a10cd5f7a31bd885dd069",
+    "port/compatibility/include/renegade_script_pointer_exchange.h": "2818f5823e1fbd25213ed7757154097ba57034cc98f9d7210a8c5e25ec0a0613",
     "port/compatibility/include/renegade_server_config.h": "834690cc7c8c5231f23ce204f977a85b42b2f3bb0eda724db51f0cb93abe7f8d",
     "port/compatibility/include/renegade_target_abi.h": "0def741aa08aba46f60faddda5f824f791b2c8e67e052cfbf11736f94fe4ceef",
     "port/compatibility/include/targa.h": "14906d321fc7f97bf41dd60ee9aff7d5ae3878993eedadd443e053625241dd28",
@@ -1383,6 +1390,7 @@
     "port/patches/combat-a35-pathaction-borrowed-remap.patch": "d8cc36cb76ede248a09d5b5137df2b348fa7f929c2320970a18fc03e4b4e540f",
     "port/patches/combat-a35-postthink-owner-timing.patch": "9143a1d10da566176f2bf8b0108ec99af66a87d622e029113237d54c0b6c94c1",
     "port/patches/combat-a35-required-level-load-failure.patch": "b92add2f3139c92634345f8b27ac75b194023acae09a3fbf30724d53e09c80ea",
+    "port/patches/combat-a35-script-load-capacity.patch": "8019baceb3ad790a7f32dcf247cc42a6c08e477b3a26f97999c491176d4818f9",
     "port/patches/combat-a35-script-lookup-telemetry.patch": "81adef8442e9eb0f63023522023f9405490235a4ebf66307905aa5d3cb7081c8",
     "port/patches/combat-a35-script-timer-timing.patch": "3bff484128fa1bb5cc9caf9f41f71ed542dfb2d8d8e2e333671c8a6dd768df13",
     "port/patches/combat-a35-target-box-diagnostics.patch": "f9f22ce6ace78469ba4c7da2f112c7107416c6847cf57641e7fa9a4c3826c0cf",
@@ -1496,11 +1504,13 @@
     "port/patches/commando-a4-textdisplay-vector-include.patch": "172227c6a7262c2a43c8c4ad8f5aaefd5e8ae226fdee937789d012f51811ca07",
     "port/patches/dev168-m13-loader-summary.patch": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0",
     "port/patches/scripts-a35-cinematic-camera-save.patch": "4e86faf55954d4c67d77a6c96a3e51baadfd8a1391ea7da2592841d36a6c19c8",
+    "port/patches/scripts-a35-cinematic-command-load-bounds.patch": "eb346e410975244ea99fcd63b94ac0e000c45f1065a1ad3afb4d7347ba695571",
     "port/patches/scripts-a35-cinematic-command-timing.patch": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef",
     "port/patches/scripts-a35-cinematic-control-lifetime.patch": "ac2676873f36ab541033f782252d120de8090af76c88a7d098bd8e8c600437e8",
     "port/patches/scripts-a35-cinematic-filename-diagnostics.patch": "2c26a16c461bca615951961ef94cdf2a5be184842bf75996ac569bae927b3481",
     "port/patches/scripts-a35-cinematic-primary-id-buffer.patch": "0aa0532dd3b9ffe79c78870e51f881e40a1fd6f1c66324cc0ff5c94f303837dc",
     "port/patches/scripts-a35-cinematic-time-budget-only.patch": "dc904cab25938f1bc384e368e1f58adbabe45f1a530d2922ff5c095a7a1de7c7",
+    "port/patches/scripts-a35-host-m03-pointer-exchange.patch": "726e47d7c0000b285ac995db9f527509681e9cc2b9ff552c1797c13efb3675ba",
     "port/patches/scripts-a35-m01-duncan-beacon-handoff.patch": "939655508ca44caebc7b7a7d6bee0d1f54fce7e2b1d805e9c0c7a9d6cc4417e8",
     "port/patches/scripts-a35-m13-slot19-phases.patch": "a9cccd8cc55507cb2e8ee69ffd2f348d0a99a3d1f8f938d20a7871e78ad0da28",
     "port/patches/scripts-a35-parameter-array-delete.patch": "49c60a18249dc3d708f9fc87f1856272978ba19160cd412e7d2b36d44f1f12de",
@@ -1964,7 +1974,7 @@
     "staging/combat/screenfademanager.h": "bbef05129a69d4087100cbc817ca06f230170172d8ccc1185d64a93179aab163",
     "staging/combat/scriptablegameobj.cpp": "780b8296a6af0092fd07af65e2a4fba91d994fcdae03ea11158f8a1aa95ba958",
     "staging/combat/scriptablegameobj.h": "b461e9a6573329f44353ac8011a04e5ad73d5adee159023d0008470d3fe20fdc",
-    "staging/combat/scriptcommands.cpp": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
+    "staging/combat/scriptcommands.cpp": "41d23acbaff05b40c9fb680b296caba8b24ce2d564239acec1fca73b29a6823a",
     "staging/combat/scriptcommands.h": "53bb6d91e00e90a5ccc8bca6c5f7c67a6df47c99cd5762c9b895be4711cf04b3",
     "staging/combat/scriptevents.h": "d01e3cce3fca80d689061b5f0468783d597e5629576703770aec26191dca64c8",
     "staging/combat/scripts.cpp": "ed0ded8d0c71748ed9a87821f65456a6ad3a36e95fa549b7dc7fbf0292abbb6b",
@@ -2512,7 +2522,7 @@
     "staging/scripts/Mission00.h": "8fb704eb379352e993926775b7c6d825b59181f70a88e6cd035e4d9968efdc86",
     "staging/scripts/Mission01.cpp": "9c28882b6476c6631c3eec5fadeb8383af46e668c9fc1b198c017d4b474cb901",
     "staging/scripts/Mission02.cpp": "e9779feff38fd4b8aa00a80cc1d8537c2f51ae99f27d7b9f29d06a7a13b13f20",
-    "staging/scripts/Mission03.cpp": "55cbb02352268af68437387ed75daac299d08d31be0f286c6f0769c4d793ac41",
+    "staging/scripts/Mission03.cpp": "29bbd6ae7244984c872e303816eb4d89742ea03153996243d485d16bb406c29f",
     "staging/scripts/Mission04.cpp": "a065ab27dcd288b55f1fcab506d6badf3b35f1725c52444f32522d0fa3774657",
     "staging/scripts/Mission05.cpp": "7a5864f158dc8bab09619f06f0e763ff50149a40613c0e781cef31aa966c2a9f",
     "staging/scripts/Mission06.cpp": "0cb75ea11d0a75828e1f981625c5cf1108c18f625150ed7bf5e9e284c2f2a063",
@@ -2546,7 +2556,7 @@
     "staging/scripts/ScriptRegistrar.cpp": "a3f7b2627e23ef7547ae018d0b7aedca430a7e0b3123e904c21199c91bc1de75",
     "staging/scripts/ScriptRegistrar.h": "3bea471cb4749a5b57f77aea6a1c4423d790c3b12a9b2645cdf67b9de5a52b4f",
     "staging/scripts/Test_BMG.cpp": "954946dcb10983853cdd0e4391e4693a7253743200ac5900d5f47db76bbab43c",
-    "staging/scripts/Test_Cinematic.cpp": "27d313ac1704b6e3e6f38b9e9bd8b6e7714f3202d0d09d69e75bd46cf8a2023c",
+    "staging/scripts/Test_Cinematic.cpp": "de1ba39ba0b572009bcf2676e61e774c0bc86fb48822f77e715e71c23912e4f6",
     "staging/scripts/Test_DAK.cpp": "d297706ac535d26eb50ff3e24e4c14a460e70b71250b37dcb596206e3c8c1e1b",
     "staging/scripts/Test_DAY.cpp": "ce1c0938feb4cf8e30a3f40f2d70cfa9ca50c2fa0ad1f17f741e04e6af7779be",
     "staging/scripts/Test_DEL.cpp": "6711926b0101637211383a37ec27a7df435dfa6c120d80c97a58271f0cc330e9",
@@ -3704,7 +3714,7 @@
     "staging/wwutil/mathutil.cpp": "50e5d6c436636fb236949b262b8882102e92f32b8cdfa74f9feedfc25e54d07f",
     "tools/audit_sweep_port_guards.py": "1df9fb0b56c3e1af48fb85007e27edd51168b60bd26a0a3e5928e5518c232c04",
     "tools/build.sh": "450dc1b23fb5db79053637f9ed19868072db34689a3d1eb1530935476b43d939",
-    "tools/build_fast_candidate.sh": "d82e5de7ba116464610c1f1656a1c8e184c850fcf49687a43f9649f320f38c64",
+    "tools/build_fast_candidate.sh": "0006958ea5f09f17ea11d83b7c68326c811ba34d68004fc9259dbdaeeffc1ffa",
     "tools/build_ffmpeg_bink_vita.sh": "4ad1fe96c6543d1ef7243bcc24f7f335ba086035b4f681a5325a798e98d42e7c",
     "tools/build_renegade_demo_recorder_plugin.sh": "52741454aafa0f1deca309adbf10ddba8ddfecd509895926b9f23e796702fbde",
     "tools/build_ttfs_https_vita.sh": "b7a18b6bd4f455c8695cc58cdabce78231a4b992cca61d0303a78244efdf916a",
@@ -3721,10 +3731,10 @@
     "tools/run_a35_vita_physical_gate.sh": "fbc5ff0284650391969ad6445554f72a581aca074e50eca1c3ead498d80a0542",
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
-    "tools/stage_sources.sh": "afe9171cdd82668e96821cf79e831b0639cf3bb642aeacef567e1d9c59f40a5a",
+    "tools/stage_sources.sh": "b02d42791967ea565da56b3096871c0e108d37f3aab71e5cf9e270786085d585",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/port_guards.json": "9b58c26cc0b309e436e2b08496c1cd78189dce37f3ab8e2cb1c59a00c8a2baf8",
+    "tools/sweep_reviews/port_guards.json": "6f22fe23c0ab42e4a62a1abba1d2135c8d1e5eaa1c1b2bc6abe5302bde9adef8",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -3930,6 +3940,11 @@
     {
       "path": "port/patches/combat-a35-required-level-load-failure.patch",
       "sha256": "b92add2f3139c92634345f8b27ac75b194023acae09a3fbf30724d53e09c80ea",
+      "stage_reference_count": 1
+    },
+    {
+      "path": "port/patches/combat-a35-script-load-capacity.patch",
+      "sha256": "8019baceb3ad790a7f32dcf247cc42a6c08e477b3a26f97999c491176d4818f9",
       "stage_reference_count": 1
     },
     {
@@ -4498,6 +4513,11 @@
       "stage_reference_count": 1
     },
     {
+      "path": "port/patches/scripts-a35-cinematic-command-load-bounds.patch",
+      "sha256": "eb346e410975244ea99fcd63b94ac0e000c45f1065a1ad3afb4d7347ba695571",
+      "stage_reference_count": 1
+    },
+    {
       "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
       "sha256": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef",
       "stage_reference_count": 1
@@ -4520,6 +4540,11 @@
     {
       "path": "port/patches/scripts-a35-cinematic-time-budget-only.patch",
       "sha256": "dc904cab25938f1bc384e368e1f58adbabe45f1a530d2922ff5c095a7a1de7c7",
+      "stage_reference_count": 1
+    },
+    {
+      "path": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "sha256": "726e47d7c0000b285ac995db9f527509681e9cc2b9ff552c1797c13efb3675ba",
       "stage_reference_count": 1
     },
     {
@@ -10105,6 +10130,125 @@
       "selected_by_stage_script": true,
       "status": "unknown",
       "target": "b/Test_Cinematic.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "hunk_lines": [
+        43
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        7
+      ],
+      "row_id": "98294eff7e7f27fb616c37d1fcf69350bb370dc80b733917828ddd62b4a25d35",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/Mission03.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "hunk_lines": [
+        3096
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        17
+      ],
+      "row_id": "8c0f4a03327c9ec47fb7977ebf2fe9588863e8d6f983be78693bc6fb2666a506",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/Mission03.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "hunk_lines": [
+        3587
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        29
+      ],
+      "row_id": "85489889c010157c89c3d4ba54a33a4a0b081eb665adaee64e151f077262ba2d",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/Mission03.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "hunk_lines": [
+        4499
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        44
+      ],
+      "row_id": "7a22669b299cf50050d4fe42faef53a27b86b962d765f6d7c6389f5ef272fb4e",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/Mission03.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "hunk_lines": [
+        4523
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        56
+      ],
+      "row_id": "a4433690069bd0f27678aed5588c8c357697cc87de3d0ad1d2b25d9001d738d9",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/Mission03.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "hunk_lines": [
+        5878
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        70
+      ],
+      "row_id": "0da910a701634e16d2e34cac9a0ef2c1695954e3e18c9affe6aca0a662587a5f",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/Mission03.cpp"
+    },
+    {
+      "change": "added",
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "evidence_class": "source_patch",
+      "file": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "hunk_lines": [
+        5886
+      ],
+      "kind": "patch_guard",
+      "patch_lines": [
+        78
+      ],
+      "row_id": "67a429bd3147e71d44e534303b2c30d8fb0c104d6b06cf4c53a6f8ff8d3595b3",
+      "selected_by_stage_script": true,
+      "status": "unknown",
+      "target": "b/Mission03.cpp"
     },
     {
       "change": "added",
@@ -29089,6 +29233,230 @@
       "line": 111,
       "name": "Set_Animation",
       "row_id": "cf5a0779204d06cc1409c7d9bf30f6d8c1b773e59ba90c2171d207eb8b5be8a3",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 3,
+      "evidence_class": "current_source",
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "kind": "current_source_guard",
+      "line": 3,
+      "row_id": "7740746aa77c573fa93949ce204b001f67961e31db54ae4dc87578cb0d3808ef",
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "calls": [],
+      "declarator": "RenegadeHostScriptPointerExchange(int *pointer)",
+      "definition_sha256": "06e71720359de029a426758234f276421c81e8066fc19953f7728855717bb0e2",
+      "end_byte": 430,
+      "end_line": 12,
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 3,
+          "condition": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 3
+        }
+      ],
+      "evidence_class": "source_syntax",
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "kind": "port_function",
+      "line": 11,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "9275631bde05fe16c4730a8a5872fcd1bdd4171141d24069b39b30822910442c",
+      "scope": "RenegadeHostScriptPointerExchange",
+      "signals": [
+        "empty_body"
+      ],
+      "start_byte": 321,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "568a122d5e7542a7b9c95539343667e6587c1aa21bf3f9a25d0e95766f75671e",
+      "calls": [
+        {
+          "callee": "Renegade_Ui_Take_Pointer_Token",
+          "callee_node_type": "identifier",
+          "line": 13
+        }
+      ],
+      "declarator": "~RenegadeHostScriptPointerExchange()",
+      "definition_sha256": "d2c1d0773238d8996663602c26fbca24e6841560032c31efe13d47a5dc4ec736",
+      "end_byte": 512,
+      "end_line": 13,
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 3,
+          "condition": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 3
+        }
+      ],
+      "evidence_class": "source_syntax",
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "kind": "port_function",
+      "line": 13,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "82940a380ae5eb5e75f85e83bf6877d92c4846bca31d780aa90a3914f4d1e114",
+      "scope": "RenegadeHostScriptPointerExchange",
+      "signals": [],
+      "start_byte": 432,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "delete_method_clause",
+      "calls": [],
+      "declarator": "RenegadeHostScriptPointerExchange(const RenegadeHostScriptPointerExchange &)",
+      "definition_sha256": "a92117ef7789113b2636f3cda682588f2a326d6b343873805701e55f5b0df1e3",
+      "end_byte": 600,
+      "end_line": 14,
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 3,
+          "condition": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 3
+        }
+      ],
+      "evidence_class": "source_syntax",
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "kind": "port_function",
+      "line": 14,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "9dad9c9764f5154bfed1581ffbad0766ef346708c74c3235aba37e4d8a9fdf04",
+      "scope": "RenegadeHostScriptPointerExchange",
+      "signals": [],
+      "start_byte": 514,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "delete_method_clause",
+      "calls": [],
+      "declarator": "&operator=(const RenegadeHostScriptPointerExchange &)",
+      "definition_sha256": "3b2b1ed47318d3a111c27f26f6cacd8a99e40a2f0ae0f061f4fe2ded2a7d659f",
+      "end_byte": 699,
+      "end_line": 15,
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 3,
+          "condition": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 3
+        }
+      ],
+      "evidence_class": "source_syntax",
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "kind": "port_function",
+      "line": 15,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "07e6a9a0375f0626feef5a7572f0c2870e52b53050a0047156bf80e591f82684",
+      "scope": "RenegadeHostScriptPointerExchange",
+      "signals": [],
+      "start_byte": 602,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "bed2cfc79b271b6f8c2598d6ad7ed6030e3ca06fe0c68cdd9500316761506558",
+      "calls": [
+        {
+          "callee": "std::memcpy",
+          "callee_node_type": "qualified_identifier",
+          "line": 19
+        }
+      ],
+      "declarator": "Parameter() const",
+      "definition_sha256": "19fc508d162ee36fdc6b83c05834e3c2c41ccff481e79072ae3a29e340daa500",
+      "end_byte": 906,
+      "end_line": 21,
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 3,
+          "condition": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 3
+        }
+      ],
+      "evidence_class": "source_syntax",
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "kind": "port_function",
+      "line": 16,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "0931794922ea2f15a384a9371de1460ac5037218e0e3183845cefdd04e89af34",
+      "scope": "RenegadeHostScriptPointerExchange",
+      "signals": [],
+      "start_byte": 701,
+      "status": "unknown"
+    },
+    {
+      "body_kind": "compound_statement",
+      "body_sha256": "868cf42202fc2f5827cb32ed0d46e7f686f5f5039823c32834156b6efaee781d",
+      "calls": [
+        {
+          "callee": "std::memcpy",
+          "callee_node_type": "qualified_identifier",
+          "line": 24
+        },
+        {
+          "callee": "static_cast<int *>",
+          "callee_node_type": "template_function",
+          "line": 25
+        },
+        {
+          "callee": "Renegade_Ui_Pointer_From_Token",
+          "callee_node_type": "identifier",
+          "line": 25
+        }
+      ],
+      "declarator": "*Resolve(int parameter)",
+      "definition_sha256": "cac2223086a0b884e35ee3ffbdd073c79217601f185e479643b02171a3994a13",
+      "end_byte": 1083,
+      "end_line": 26,
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 3,
+          "condition": "#if defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 3
+        }
+      ],
+      "evidence_class": "source_syntax",
+      "file": "port/compatibility/include/renegade_script_pointer_exchange.h",
+      "kind": "port_function",
+      "line": 22,
+      "literal_returns": [],
+      "markers": [],
+      "node_type": "function_definition",
+      "nonfinal_return_lines": [],
+      "parse_has_error": false,
+      "row_id": "166feed8716da4462a53ad600d8ea75be3dd834d161106c1f29021e453037ea0",
+      "scope": "RenegadeHostScriptPointerExchange",
+      "signals": [],
+      "start_byte": 908,
       "status": "unknown"
     },
     {
@@ -123797,36 +124165,26 @@
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)",
-      "end_line": 2452,
+      "end_line": 2456,
       "evidence_class": "current_source",
       "file": "staging/combat/scriptcommands.cpp",
       "kind": "current_source_guard",
-      "line": 2452,
-      "row_id": "61abd66a9e8de9ad2c976c3dd5af5c8b30959c84b0f743db6b7466b00bc6a30a",
+      "line": 2456,
+      "row_id": "91de91f4709c53bbc114ce3702283b389e8cf7e56f9d8797410f7f00d42cd70e",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
-      "end_line": 3080,
+      "end_line": 3084,
       "evidence_class": "current_source",
       "file": "staging/combat/scriptcommands.cpp",
       "kind": "current_source_guard",
-      "line": 3080,
-      "row_id": "612c86c5e1648c62e87a0aada3ccd66e3968243991a7cb2aa40429cc2a15fd04",
+      "line": 3084,
+      "row_id": "bd20c28a4ed77546340407ca9a59a5f200c84b53c72f87ea3c9ec4c24d813159",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)",
-      "end_line": 3094,
-      "evidence_class": "current_source",
-      "file": "staging/combat/scriptcommands.cpp",
-      "kind": "current_source_guard",
-      "line": 3094,
-      "row_id": "435c5ac6fb5ae3feb9a579cd033857a3fd2bded5966fdc8059fc60d14a89e623",
-      "status": "unknown"
-    },
-    {
-      "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
       "end_line": 3098,
       "evidence_class": "current_source",
       "file": "staging/combat/scriptcommands.cpp",
@@ -123837,32 +124195,42 @@
     },
     {
       "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
-      "end_line": 3107,
+      "end_line": 3102,
       "evidence_class": "current_source",
       "file": "staging/combat/scriptcommands.cpp",
       "kind": "current_source_guard",
-      "line": 3107,
-      "row_id": "8fa0789345ff711d4ee58da766617c4327ae760256dccd6011fc355d8d4b980a",
+      "line": 3102,
+      "row_id": "6e07850173c00987930a3f1f2c3b82ed60e8a8d1d2461a7b4e1ca7628c2a58ae",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
-      "end_line": 3130,
+      "end_line": 3111,
       "evidence_class": "current_source",
       "file": "staging/combat/scriptcommands.cpp",
       "kind": "current_source_guard",
-      "line": 3130,
-      "row_id": "9dc17419b8d95c3060d5d366bf86fed34b98267a16616f8896bdd28d62d42add",
+      "line": 3111,
+      "row_id": "a81c82582b19ac32ffa1da6677760251a14e03691a68348333925d5ebe156b27",
+      "status": "unknown"
+    },
+    {
+      "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 3134,
+      "evidence_class": "current_source",
+      "file": "staging/combat/scriptcommands.cpp",
+      "kind": "current_source_guard",
+      "line": 3134,
+      "row_id": "8546d990c82823ef6013774db86e466e17c6b0c9b1d43dd345c68781a2a4544e",
       "status": "unknown"
     },
     {
       "directive": "#if defined(RENEGADE_VITA_PORT)",
-      "end_line": 3304,
+      "end_line": 3308,
       "evidence_class": "current_source",
       "file": "staging/combat/scriptcommands.cpp",
       "kind": "current_source_guard",
-      "line": 3304,
-      "row_id": "11281b8d47927b826f3c387874e2565012d846b600b35d79c9b58d83aa7a219a",
+      "line": 3308,
+      "row_id": "63f2bcd6c34844c0229a3e8ce40d28a9a095954bb43ea08fc3e46e1181777d9b",
       "status": "unknown"
     },
     {
@@ -125416,6 +125784,76 @@
       "status": "unknown"
     },
     {
+      "directive": "#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 43,
+      "evidence_class": "current_source",
+      "file": "staging/scripts/Mission03.cpp",
+      "kind": "current_source_guard",
+      "line": 43,
+      "row_id": "3d853df0c108672fddd57bf584bd4e5dab3192755426b2242a2a48e47a528c65",
+      "status": "unknown"
+    },
+    {
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 3096,
+      "evidence_class": "current_source",
+      "file": "staging/scripts/Mission03.cpp",
+      "kind": "current_source_guard",
+      "line": 3096,
+      "row_id": "79eb798ffd72f688430e83ced2580f3d15a12c344f639f1728d7c9b65da92075",
+      "status": "unknown"
+    },
+    {
+      "directive": "\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 3587,
+      "evidence_class": "current_source",
+      "file": "staging/scripts/Mission03.cpp",
+      "kind": "current_source_guard",
+      "line": 3587,
+      "row_id": "187a5bd4f79dc0c172622db5a1cb0f6a61de8bf4cec99295b4184ba6c44f4b02",
+      "status": "unknown"
+    },
+    {
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 4499,
+      "evidence_class": "current_source",
+      "file": "staging/scripts/Mission03.cpp",
+      "kind": "current_source_guard",
+      "line": 4499,
+      "row_id": "4e99ef2076e2232de6707c38059e930060d2ed4cf3a0a903df3f905ee78b480c",
+      "status": "unknown"
+    },
+    {
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 4523,
+      "evidence_class": "current_source",
+      "file": "staging/scripts/Mission03.cpp",
+      "kind": "current_source_guard",
+      "line": 4523,
+      "row_id": "df086e49cbb7de6adad8ab08ac3660129f65849568f4c93ff93ed7a11bcd606f",
+      "status": "unknown"
+    },
+    {
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 5878,
+      "evidence_class": "current_source",
+      "file": "staging/scripts/Mission03.cpp",
+      "kind": "current_source_guard",
+      "line": 5878,
+      "row_id": "79b86a335c88cb224b88247511ab397a1e7138025201490ecec0db2af4de4980",
+      "status": "unknown"
+    },
+    {
+      "directive": "\t\t\t#if defined(RENEGADE_HOST_ABI_TEST)",
+      "end_line": 5886,
+      "evidence_class": "current_source",
+      "file": "staging/scripts/Mission03.cpp",
+      "kind": "current_source_guard",
+      "line": 5886,
+      "row_id": "cc3beaf0752b5a45816121a7dcbe5105d57de1be6b829cee19ff0433dc7e07a4",
+      "status": "unknown"
+    },
+    {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
       "end_line": 41,
       "evidence_class": "current_source",
@@ -125427,132 +125865,132 @@
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 487,
+      "end_line": 489,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 487,
-      "row_id": "d46210dfb3d6a460b993c83ae97a2ec7b7317fc236bb27a741de4a5423b24592",
+      "line": 489,
+      "row_id": "20f5c2d11b8a52fc055d9611a439350e6183eaf010e7ce877a7cfc1978dea2f0",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 492,
+      "end_line": 494,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 492,
-      "row_id": "0863b67fc02f3f533d6a777c09268b1b213ec3b05ece885ed37e55450aa8e615",
+      "line": 494,
+      "row_id": "cf93814f9df12f1f8f7e1fe878163d114cb0bfb864e351c5e174f57e62f63b80",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 498,
+      "end_line": 500,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 498,
-      "row_id": "00778cfb97a7231c998200dc8a9873ab6268864002011e32553b27650f3a9148",
+      "line": 500,
+      "row_id": "3490c041984fb44e79c9c1a52d4546d69897afa2dabf18cfcca4034fdc88586d",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 508,
+      "end_line": 510,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 508,
-      "row_id": "78a268eace6a4733f1151870acb8bf639a60cb8c1f98bd13727c77fde07ae155",
+      "line": 510,
+      "row_id": "eb0c3a86c3a409006e1e608921410034c6672c2dc31428f7c168b8c47128f899",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 512,
+      "end_line": 514,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 512,
-      "row_id": "44748cd886415d43455d2a6ea9ed8637ed731866b0dbbe7e4ecdbcf61f0f1e0c",
+      "line": 514,
+      "row_id": "a1ed86fb02d827e534c305ce4e78ed8d6365c9d841a5d47bb7cf6f9094d6003e",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 555,
+      "end_line": 557,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 555,
-      "row_id": "cf4da9a9013a2103f7eef0239a1b99d0c55be36a377b012da6fd61f7ac0425e5",
+      "line": 557,
+      "row_id": "bd6055b82bfb437138f21b06a518e18f16ddd3c183c4e92404acb7fef4469faa",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 569,
+      "end_line": 571,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 569,
-      "row_id": "cb27578004f2338bf5a57e9ed6e2c981bfb859c1562a19388e439e10fdd93084",
+      "line": 571,
+      "row_id": "db01dbdc5c34849204a643eacaca4444b26731a0db660338cba91435182d438e",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 713,
+      "end_line": 715,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 713,
-      "row_id": "11781a441feacbf60f962b7e027fc92624938372ee6d8995c813515d55223fc8",
+      "line": 715,
+      "row_id": "456a3fbd3f43c65b3a7a58327791b3c2f821a40b238a751abc451c158feba10e",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 981,
+      "end_line": 983,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 981,
-      "row_id": "c467f0198e6f37e986cf6c29505198609015d5091a8c9bc2c9a1fd4e234e9ac9",
+      "line": 983,
+      "row_id": "c2c035c654e927e287fe59771164dd217b6c4837fc0a64de75937f58839f6839",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 1008,
+      "end_line": 1010,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 1008,
-      "row_id": "6133437850ea8156aaf0fa8539e3d3cbd347968caaba98052566524c2b2cc39a",
+      "line": 1010,
+      "row_id": "f31cd4af889c8f00a1aac8399b8ae33b5ad011686b97ac14bedd540354a6e3ad",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 1027,
+      "end_line": 1029,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 1027,
-      "row_id": "9d68d4f7e87d8a4ac0f41f5eb77a9608e12eda27a8194d2836afed03326e31bc",
+      "line": 1029,
+      "row_id": "479d0a512942b8640b6304deffec7c5425ff76d8109a2acfafd6d3c3cf4c5a81",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 1052,
+      "end_line": 1054,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 1052,
-      "row_id": "e8057d09f0a3860405121a0db887fcddaf4a1b1d956af67578eb2f6cb04746fb",
+      "line": 1054,
+      "row_id": "cf25365299fc5af12340e6a176f9e8f9f7d85d4a8f376e30cc98711eb27cc9d1",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO",
-      "end_line": 1077,
+      "end_line": 1079,
       "evidence_class": "current_source",
       "file": "staging/scripts/Test_Cinematic.cpp",
       "kind": "current_source_guard",
-      "line": 1077,
-      "row_id": "bc83ccbb43b6dd55823356856e275399dc081664274eb8d26f6d5fbda95fbdc3",
+      "line": 1079,
+      "row_id": "1ccbc967f705e941476879994330b2aaf911816cbfdda10949cae6cb4e0e238d",
       "status": "unknown"
     },
     {
@@ -128574,10 +129012,10 @@
   "sweep": "S1",
   "totals": {
     "by_kind": {
-      "current_source_guard": 841,
+      "current_source_guard": 849,
       "link_wrapper_reference": 4,
-      "patch_guard": 519,
-      "port_function": 1657,
+      "patch_guard": 526,
+      "port_function": 1663,
       "port_macro_definition": 486,
       "port_parse_unknown": 69
     },
@@ -128586,10 +129024,10 @@
       "disabled_by_port_guard": 6,
       "original_patched": 1,
       "stubbed_or_noop": 51,
-      "unknown": 3516
+      "unknown": 3537
     },
-    "patch_files": 312,
-    "rows": 3576,
-    "stage_patch_references": 309
+    "patch_files": 315,
+    "rows": 3597,
+    "stage_patch_references": 312
   }
 }

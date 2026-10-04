@@ -1,5 +1,13 @@
 # Renegade Vita port status
 
+2026-10-04 Dev222 is the current fast compile/link candidate. Three verified
+Mission03 synchronous pointer exchanges gain host-only scoped tokens; actual
+script callbacks pass sanitizers and native preprocessing remains unchanged.
+Host runtime link, ARM six actions,485 fast contracts and73 focused checks
+pass. Dev210 remains the latest canonical package; full M03 gameplay, native
+acceptance and the existing wchar_t ABI warning remain open. See
+[script cluster](SCRIPT_LAYER_SWEEP.md).
+
 2026-10-03 Dev210 supersedes Dev209 as the latest canonical package: host gates,
 661 ARM actions, artifact/diagnostics validation and Vita3K install-only hash
 verification pass. The bounded audio correction recovers 255 WAVs; eleven

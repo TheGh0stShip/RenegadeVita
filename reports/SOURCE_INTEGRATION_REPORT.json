@@ -1,11 +1,11 @@
 {
-  "milestone": "A3.5-dev211",
+  "milestone": "A3.5-dev222",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
   "original_source_manifest": "cmake/A31OriginalSources.cmake",
   "original_source_files_discovered": 1490,
-  "original_source_files_compiled": 572,
+  "original_source_files_compiled": 573,
   "original_translation_units": [
     "Code/Combat/CNCModeSettings.cpp",
     "Code/Combat/SoundEnvironment.cpp",
@@ -364,6 +364,7 @@
     "Code/ww3d2/sortingrenderer.cpp",
     "Code/ww3d2/soundrobj.cpp",
     "Code/ww3d2/sphereobj.cpp",
+    "Code/ww3d2/statistics.cpp",
     "Code/ww3d2/texproject.cpp",
     "Code/ww3d2/texture.cpp",
     "Code/ww3d2/vertmaterial.cpp",
@@ -633,7 +634,7 @@
     "port/platform/a4_binkmovie_boundary.cpp"
   ],
   "sdk_framebuffer_helper_files": 1,
-  "compatibility_headers": 61,
+  "compatibility_headers": 62,
   "compatibility_header_paths": [
     "port/compatibility/include/DialogControl.h",
     "port/compatibility/include/GameMode.h",
@@ -687,6 +688,7 @@
     "port/compatibility/include/renegade_m13_area2_script_defaults.h",
     "port/compatibility/include/renegade_optional_network_modes.h",
     "port/compatibility/include/renegade_script_call_defaults.h",
+    "port/compatibility/include/renegade_script_pointer_exchange.h",
     "port/compatibility/include/renegade_server_config.h",
     "port/compatibility/include/renegade_target_abi.h",
     "port/compatibility/include/targa.h",
@@ -697,8 +699,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 307,
-  "mechanically_patched_upstream_files": 391,
+  "patch_count": 312,
+  "mechanically_patched_upstream_files": 395,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -896,6 +898,7 @@
     "Code/ww3d2/distlod.cpp",
     "Code/ww3d2/dllist.h",
     "Code/ww3d2/dx8indexbuffer.cpp",
+    "Code/ww3d2/dx8renderer.cpp",
     "Code/ww3d2/dx8renderer.h",
     "Code/ww3d2/dx8vertexbuffer.cpp",
     "Code/ww3d2/dx8wrapper.h",
@@ -1067,11 +1070,13 @@
     "patch-target/dev168-m13-loader-summary.patch/ww3d2/agg_def.cpp",
     "patch-target/dev168-m13-loader-summary.patch/ww3d2/assetmgr.cpp",
     "patch-target/scripts-a35-cinematic-camera-save.patch/Test_Cinematic.cpp",
+    "patch-target/scripts-a35-cinematic-command-load-bounds.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-cinematic-command-timing.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-cinematic-control-lifetime.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-cinematic-filename-diagnostics.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-cinematic-primary-id-buffer.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-cinematic-time-budget-only.patch/Test_Cinematic.cpp",
+    "patch-target/scripts-a35-host-m03-pointer-exchange.patch/Mission03.cpp",
     "patch-target/scripts-a35-m01-duncan-beacon-handoff.patch/Mission01.cpp",
     "patch-target/scripts-a35-m13-slot19-phases.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp",
@@ -1087,6 +1092,7 @@
     "patch-target/ww3d-a35-original-decal-submission.patch/ww3d.cpp",
     "patch-target/ww3d-a35-original-sorting-lifecycle.patch/ww3d.cpp",
     "patch-target/ww3d-a35-original-sorting-port.patch/sortingrenderer.cpp",
+    "patch-target/ww3d-a35-original-statistics-lifecycle.patch/ww3d.cpp",
     "patch-target/ww3d-a35-raw-animation-frame-floor.patch/hrawanim.cpp",
     "patch-target/ww3d-a35-texture-worker-cancellation.patch/textureloader.cpp",
     "patch-target/wwui-a35-chat-utf16-boundary.patch/commando/dlgmpingamechat.cpp",
@@ -4097,6 +4103,33 @@
       ]
     },
     {
+      "path": "port/patches/combat-a35-script-load-capacity.patch",
+      "stage_directory": "combat",
+      "sha256": "8019baceb3ad790a7f32dcf247cc42a6c08e477b3a26f97999c491176d4818f9",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "scriptcommands.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-cinematic-command-load-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "eb346e410975244ea99fcd63b94ac0e000c45f1065a1ad3afb4d7347ba695571",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Test_Cinematic.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-host-m03-pointer-exchange.patch",
+      "stage_directory": "scripts",
+      "sha256": "726e47d7c0000b285ac995db9f527509681e9cc2b9ff552c1797c13efb3675ba",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Mission03.cpp"
+      ]
+    },
+    {
       "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1",
@@ -4125,6 +4158,24 @@
       "upstream_targets": [
         "prim_anim.h",
         "sphereobj.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d2-a35-dx8renderer-gcc-syntax.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "027962c92ac86bce20036a7cfeedfb58dc85f795c955a5296bb6d31e93a9d7e0",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "dx8renderer.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/ww3d-a35-original-statistics-lifecycle.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "6311de080c87c5e0f5dbe186641775f7d1b8bac7ead4c9e4f4d91aea312012d1",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "ww3d.cpp"
       ]
     },
     {
@@ -4201,7 +4252,7 @@
     },
     "ww3d2": {
       "status": "integrated-a3-world-runtime",
-      "compiled": 80,
+      "compiled": 81,
       "total": 105
     },
     "Combat": {

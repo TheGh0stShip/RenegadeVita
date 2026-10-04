@@ -245,3 +245,23 @@ See [matching receipt](generated/sweeps/script_load_bounds_fix.json).
 Real save transport error propagation, other malformed fields and physical
 save/load remain open. Native mission acceptance stays 0/10. Earlier inventories
 and parser receipts retain their historical source/artifact identities.
+
+## Command body denominator — 2026-10-04
+
+Every original ScriptCommands slot now has original/staged body candidates:
+202 rows, all unknown. There are 191 equal bodies, eight changed bodies and
+three unresolved extraction cases. Changes cover lookup/logical-sound telemetry,
+shared load capacity, conversation lookup, text-file host token boundaries and
+native HUD prompt routing. Create_Object, Enable_Enemy_Seen and Add_Radar_Marker
+remain ambiguous and require overload-aware extraction rather than guessing.
+
+The inventory retains body hashes, lines, preprocessor directives, lexical calls
+and return signals. None establishes an active branch, stub verdict or runtime
+behavior. Equal bodies can still invoke replaced downstream owners or macros.
+This is the main remaining coverage question: downstream command dependencies
+must be joined to the guard inventory before declaring behavior preserved.
+
+Six focused tests pass and independent regeneration is byte-identical.
+Runtime source and compiled Dev221 artifacts are unchanged. No device action.
+Run `python3 -m tools.audit_script_command_bodies --output <receipt.json>`.
+See [body records](generated/sweeps/script_command_bodies.json).

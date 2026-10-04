@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Script command body denominator — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: all 202 command slots have original/staged body records: 191 equal,
+eight changed, three unresolved; all behavior statuses remain unknown.
+Evidence: six tests pass; regeneration matches exactly. Runtime source and
+Dev221 host/ARM artifacts remain unchanged.
+Next: overload resolution and downstream owner/guard joins across all commands.
+Blocker: none for source work; physical acceptance remains open.
+
 ## Script save-data boundary inventory — 2026-10-04
 
 Renegade Vita — v3.5 active

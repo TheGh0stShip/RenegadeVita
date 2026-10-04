@@ -1,5 +1,24 @@
 # Live engineering progress
 
+## Dev233 installed; development checkpoints — 2026-10-04
+
+At the user's request, dev233 replaced only the Renegade executable after
+old/new hash checks, with a matching dev230 rollback artifact retained locally.
+Independent remote hash matches SELF
+`dea8ae6ea2a389da0992e7838183145f7cb55770b83223e083c4ebd1b12a77db`.
+Launch was accepted and process38281373 confirmed running. Corrected gameplay
+and final-gate behavior remain unverified; no synthetic inputs were sent.
+
+Original development checkpoint route already exists: Select+Square produces
+F5, original edge-triggered Quicksave calls CombatGameModeClass::Quick_Save,
+alternating `save/quicksaveA.sav` and `save/quicksaveB.sav`. Writes and reads
+resolve under `ux0:data/renegade/user/save/`, and the original Load Game dialog
+enumerates saves. The directory is currently empty on the device; no save
+write/reload success is claimed. User has been told the chord. Next hardware
+step is create one at a safe gameplay point, verify the written file, retain
+a distinct development copy and reload it through the original frontend.
+Saves remain private and excluded from Git and packages.
+
 ## Recruit M13 final-gate crash — 2026-10-04
 
 User-observed rope/ambush/NPC/script/tank progression was mostly intact,

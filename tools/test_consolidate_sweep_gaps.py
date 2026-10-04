@@ -5,6 +5,15 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_prototype_registry_duplicate_chunks_rejected(self):
+        receipt={'total':1,'matched':1,'rows':[{'chunk_id':0,'lookup_matches':True,'status':'unknown'}]}
+        result=consolidate([('host_prototype_registry',json.dumps(receipt).encode())])
+        self.assertEqual(result['rows'][0]['cluster'],'link')
+        receipt['rows'].append(receipt['rows'][0].copy())
+        receipt.update(total=2,matched=2)
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('host_prototype_registry',json.dumps(receipt).encode())])
+
     def test_network_custom_factory_partition_and_cluster(self):
         receipt={'total':1,'matched':1,'rows':[{'class_id':1,'matches':True,'status':'unknown'}],
                  'live_ids':[1,2],'live_factory_count':2,'live_non_template_ids':[2]}

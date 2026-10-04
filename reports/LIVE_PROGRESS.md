@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Original prototype registration — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: nine original constructor loaders pass host lookup, including Dazzle;
+absent chunk lookup returns null. WW3D init alone does not create the manager.
+Evidence: original constructor/virtual lookup receipt and 14 consolidation tests.
+Next: native extra-loader and game-mode activation, then parameter coverage.
+Blocker: none for discovery; native startup/rendering acceptance remains open.
+No runtime source change, retail loading, device action or emulator launch.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Live network factory registration — 2026-10-04
 
 Renegade Vita — v3.5 active

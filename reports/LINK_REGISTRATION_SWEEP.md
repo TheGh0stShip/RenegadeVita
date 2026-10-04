@@ -1,5 +1,34 @@
 # S3 link and registration closure — inventory in progress
 
+## Original prototype constructor registry — 2026-10-04
+
+The original asset-manager constructor installs nine live loaders: Mesh,
+HModel, Collection, Box, HLOD, DistLOD, Aggregate, Null and Dazzle. Every virtual
+Chunk_Type agrees with original Find_Prototype_Loader; chunk IDs are unique,
+the vector is bounded and an absent chunk ID returns null. This proves the
+constructor's host registration path, including Dazzle, without loading retail assets.
+
+WW3D::Init alone does not create this manager in the current native/host boundary.
+The probe first verifies its absence, allocates sizeof(WW3DAssetManager) with host
+pointer width intact, then calls the retained original constructor and verifies
+TheInstance. It ends the bounded debugger process without claiming destructor
+or shutdown coverage. Initial debugger admission failures and the successful
+constructor retry log remain private.
+
+Vita startup separately registers ParticleEmitter, Sphere, Ring and Sound loaders;
+that startup execution is not covered by the nine-loader constructor result.
+The four original Commando/init.cpp registrations are still outside the selected
+startup owner. Loader registration does not establish parsing or rendered pixels.
+Game-mode inspection likewise confirms distinct host headless registration and
+native borrowed-mode startup paths; neither the ten original init registrations
+nor complete native mode activation is accepted by this probe.
+
+Public receipt: `reports/generated/sweeps/host_prototype_registry.json`.
+Reproduce using `tools/probe_host_prototype_registry.py` and the retained host ELF.
+Fourteen consolidation tests pass, including duplicate-chunk rejection. The
+register contains 43,392 overlapping records, with 43,128 unknowns. All nine new
+rows remain unknown behavior; runtime sources and compiled artifacts are unchanged.
+
 ## Live network factory registry — 2026-10-04
 
 The retained host ELF contains 32 live factories after static initialization.

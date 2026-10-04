@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_ww3d_initialization_and_prototype_lookup",
+  "binary_sha256": "bb685247f73b1e85377e9f209c55586d06a159d55c9021254873f5145c47b5a2",
+  "parser_sha256": "3d8eab5e6967d6ed3016a4d84b0093c862811367bd1ba406c7e501e54df57245",
+  "owner_source_sha256": {
+    "staging/ww3d2/assetmgr.cpp": "4c515c364a0f2d0f6c9d1117b7b265d2d739bc1929d1da18f507130903c2f970",
+    "staging/ww3d2/assetmgr.h": "1eb29c09c3de730c32f911daeeda23d0217b6ac7fed9f1a0b0ae39bf0fe346a1",
+    "staging/ww3d2/ww3d.cpp": "04b3d415f749585678b1f41f2483b3c2644da47b467a0bf35b70d84a4246bf91"
+  },
+  "total": 9,
+  "matched": 9,
+  "rows": [
+    {
+      "index": 0,
+      "loader_class": "MeshLoaderClass",
+      "chunk_id": 0,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 1,
+      "loader_class": "HModelLoaderClass",
+      "chunk_id": 768,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 2,
+      "loader_class": "CollectionLoaderClass",
+      "chunk_id": 1056,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 3,
+      "loader_class": "BoxLoaderClass",
+      "chunk_id": 1856,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 4,
+      "loader_class": "HLodLoaderClass",
+      "chunk_id": 1792,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 5,
+      "loader_class": "DistLODLoaderClass",
+      "chunk_id": 1024,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 6,
+      "loader_class": "AggregateLoaderClass",
+      "chunk_id": 1536,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 7,
+      "loader_class": "NullLoaderClass",
+      "chunk_id": 1872,
+      "lookup_matches": true,
+      "status": "unknown"
+    },
+    {
+      "index": 8,
+      "loader_class": "DazzleLoaderClass",
+      "chunk_id": 2304,
+      "lookup_matches": true,
+      "status": "unknown"
+    }
+  ],
+  "negative_control": "An absent chunk ID returned null.",
+  "limits": [
+    "Host original asset-manager constructor only; Vita startup adds further loaders.",
+    "No retail data, prototype loading or rendering exercised.",
+    "ARM activation and physical correctness remain unverified.",
+    "Allocation lives until debugger process exit; destructor/shutdown untested.",
+    "Debugger leak checking disabled; sanitizer evidence is separate."
+  ]
+}

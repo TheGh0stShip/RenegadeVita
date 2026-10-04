@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 21 supplements is retained, including nested records.
+status record in the eight sweeps and 22 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -41,6 +41,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | host_script_registry | 1745 | 1745 | False |
 | live_script_bindings | 27 | 27 | False |
 | host_network_registry | 29 | 29 | False |
+| host_prototype_registry | 9 | 9 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -8738,6 +8739,15 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | host_network_registry /rows/7 | /rows/7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_network_registry /rows/8 | /rows/8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_network_registry /rows/9 | /rows/9 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/0 | 0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/1 | 768 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/2 | 1056 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/3 | 1856 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/4 | 1792 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/5 | 1024 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/6 | 1536 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/7 | 1872 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| host_prototype_registry /rows/8 | 2304 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/0 | Dr_Mobius_Script | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/1 | MXX_Group_Member_DEL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | host_script_registry /rows/10 | MTU_Nod_Apache | unknown | unclassified | unknown; callers and retail usage require reconciliation |

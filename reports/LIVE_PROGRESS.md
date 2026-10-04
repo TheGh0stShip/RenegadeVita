@@ -9576,3 +9576,33 @@ boundary replacements, seven disabled guards and five exclusions.
 Next: close the six unmatched asset-create timing rows, then classify current
 guards by selected profile and skipped original behavior.
 Blocker: none for source work; native text pixels remain unverified.
+# S1 asset-create diagnostic history — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: closed the six unmatched selected asset-create timing rows. Three
+obsolete wall-clock blocks are proven superseded; their later removal retains
+original prototype lookup, load-on-demand retry and construction paths plus
+bounded static-load breadcrumbs.
+Evidence: exact patch identities and current staged source reconcile with zero
+stale reviews. S1 now has 3,448 unknowns, seven patched-original rows, six
+boundary replacements, seven disabled guards and eight exclusions.
+Next: classify the four rows from three unselected weapon-view patches, then
+review current guards in coherent owner clusters.
+Blocker: none for source work; hardware asset correctness and latency remain open.
+# S1 unmatched historical guards closed — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: classified all 18 historical guard edits with no exact current
+spelling. The last four are unselected synthetic weapon-reload experiments with
+no stage destination; they remain absent rather than being adopted as substitutes
+for original authored animation.
+Evidence: S1 has 3,527 reconciled rows, 12 proven exclusions and 3,444 unknowns;
+all review identities match. Original reload HAnim/state runtime proof remains
+open explicitly.
+Next: classify surviving current guards and their matching historical edits in
+owner clusters, starting with asset loading and renderer presentation.
+Blocker: none for source work; reload visuals require later runtime evidence.

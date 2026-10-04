@@ -42,8 +42,122 @@
     ,"port/patches/ww3d2-a22-vita-boundaries.patch": "524a088677405ca879efdac19738e7ab5a1c1cabca054f6287fab9f133dc4bf5"
     ,"port/patches/ww3d2-a4-font3d-vita.patch": "a134848c2eea616de8704479070084479dbb61b3abbf35359f600a03acf9e2de"
     ,"port/patches/ww3d2-a4-freetype-fonts.patch": "7111549a10b6778ed1d85cbd435fb38ed60b5f889e972bb7f28669844db67180"
+    ,"port/patches/ww3d2-a35-create-depth-timing.patch": "ab86f375cf13e6a7ad0b7ed2ae67fe58f1da8f4ca095e1f72d3304a4f5c4cb45"
+    ,"port/patches/dev168-m13-loader-summary.patch": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
+    ,"port/patches/combat-a35-weaponview-reload-motion.patch": "73dcb67e6edbc3295ef599dbe1fcb1a966767350b6c6191fb472454793e7a032"
+    ,"port/patches/combat-a35-weaponview-reload-visible-fallback.patch": "b7b5723971de0a1c6eb7a863a95189194211ba14b66433f2488bf312a8108d9f"
   },
   "reviews": [
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/combat-a35-weaponview-reload-motion.patch",
+      "row_id": "6a6a6f1df479ccfc5828863d46e8a902eeb7ea39b6fcd77876e1b5bab2d388e6",
+      "status": "excluded_with_proof",
+      "original_owner": "WeaponViewClass first-person reload animation",
+      "behavior": "This unselected experimental patch adds synthetic camera-space reload motion. tools/stage_sources.sh has no reference or staging destination for it, so none of its code enters current staged or production sources.",
+      "callers": ["No selected build caller; patch artifact only"],
+      "affected_scope": ["No current mode; proposed fallback behavior is absent"],
+      "acceptance_open": "Verify original authored hands/weapon reload HAnim playback on host, Vita3K and physical Vita; exclusion is not proof reload visuals work."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/combat-a35-weaponview-reload-visible-fallback.patch",
+      "row_id": "7da09a8351c386e093357e45fdf0516048e8d5b8a4147e5d7c2627a77757c0de",
+      "status": "excluded_with_proof",
+      "original_owner": "WeaponViewClass reload-state fallback latch",
+      "behavior": "This unselected patch changes reload-state completion for a synthetic visible fallback. It has no stage-script reference or build destination and is absent from current source.",
+      "callers": ["No selected build caller; patch artifact only"],
+      "affected_scope": ["No current mode; proposed fallback state behavior is absent"],
+      "acceptance_open": "Original reload state, authored animation completion and rapid state transitions remain open runtime checks."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/combat-a35-weaponview-reload-visible-fallback.patch",
+      "row_id": "c7a0f2196e38740987cc15dff0792cf47543bf86ad7ddacc28f6baf2b3623357",
+      "status": "excluded_with_proof",
+      "original_owner": "WeaponViewClass reload pending-state lifetime",
+      "behavior": "This unselected patch keeps the reload pending latch active when synthetic fallback motion is needed. It is absent from stage selection and current source.",
+      "callers": ["No selected build caller; patch artifact only"],
+      "affected_scope": ["No current mode; proposed fallback latch behavior is absent"],
+      "acceptance_open": "The selected reload latch and original HAnim path require runtime validation for every weapon family."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/combat-a35-weaponview-reload-visible-fallback.patch",
+      "row_id": "94b9ec3ee9f3d174d41bb2ce1738b000a112b21959a7f421244743d39102e6e5",
+      "status": "excluded_with_proof",
+      "original_owner": "WeaponViewClass synthetic reload transform and timeout",
+      "behavior": "This unselected patch applies a synthetic transform and timeout when reload animation data is unavailable. No stage-script reference selects it, and current weaponview.cpp does not contain this fallback block.",
+      "callers": ["No selected build caller; patch artifact only"],
+      "affected_scope": ["No current mode; synthetic fallback visuals are absent"],
+      "acceptance_open": "Do not add synthetic motion as a substitute for retail content; prove original reload assets and state transitions, then treat missing authored data as a separate gap."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a35-create-depth-timing.patch",
+      "row_id": "fc9aa423c77c4e118e6ebbb240fcd1a21ee3cc65502683e9fe0bd02170d23d6d",
+      "status": "excluded_with_proof",
+      "original_owner": "WW3DAssetManager::Create_Render_Obj initial prototype lookup",
+      "behavior": "Historical non-tutorial Vita timing sampled the initial Find_Prototype boundary. The later selected loader-summary patch removes this exact timing block; no exact guard or timing variables survive in current staged source.",
+      "callers": ["Historical Create_Render_Obj diagnostic path"],
+      "affected_scope": ["Superseded M13/full-game timing instrumentation only"],
+      "acceptance_open": "Current bounded flight-recorder traces and real load performance remain separate evidence."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a35-create-depth-timing.patch",
+      "row_id": "7035bc19bbc8a89d8bcc069dfaa54076034167d09fb56cf5fa22832271b056f3",
+      "status": "excluded_with_proof",
+      "original_owner": "WW3DAssetManager::Create_Render_Obj load-on-demand timing",
+      "behavior": "Historical instrumentation sampled the end of load-on-demand work. The later selected loader-summary patch removes the timing assignment and its exact guard from current staged source.",
+      "callers": ["Historical Create_Render_Obj diagnostic path"],
+      "affected_scope": ["Superseded M13/full-game timing instrumentation only"],
+      "acceptance_open": "Measured asset-load cost on Vita/PSTV remains open."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a35-create-depth-timing.patch",
+      "row_id": "1cf77b4de16624c028165c72d2fa22ff57722939f41e24a5c6ddee2d13a3383c",
+      "status": "excluded_with_proof",
+      "original_owner": "WW3DAssetManager::Create_Render_Obj prototype construction",
+      "behavior": "Historical instrumentation logged creates exceeding 100 ms. The later selected loader-summary patch removes this exact block and guard while retaining the original proto->Create result path.",
+      "callers": ["Historical Create_Render_Obj diagnostic path"],
+      "affected_scope": ["Superseded M13/full-game timing instrumentation only"],
+      "acceptance_open": "Current performance telemetry and hardware load measurements remain open."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/dev168-m13-loader-summary.patch",
+      "row_id": "decc8c245b162ce485eed4e0e3082a2610b627b30b01240286c8df9e73c66b0e",
+      "status": "original_patched",
+      "original_owner": "WW3DAssetManager::Create_Render_Obj initial prototype lookup",
+      "behavior": "The selected patch removes obsolete wall-clock variables around Find_Prototype. The original lookup and bounded static-load trace remain selected in current source.",
+      "callers": ["WW3DAssetManager::Create_Render_Obj"],
+      "affected_scope": ["All native asset creation; only obsolete diagnostics are removed"],
+      "acceptance_open": "Original lookup correctness and hardware timing require their own evidence."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/dev168-m13-loader-summary.patch",
+      "row_id": "234566a033fae02552e50c1e4cdbadfafff137bf9494962a7f5142c015e39fc7",
+      "status": "original_patched",
+      "original_owner": "WW3DAssetManager::Create_Render_Obj load-on-demand path",
+      "behavior": "The selected patch removes an obsolete wall-clock assignment after load-on-demand. Original loading, retry and prototype lookup continue in current staged source.",
+      "callers": ["WW3DAssetManager::Create_Render_Obj"],
+      "affected_scope": ["All native load-on-demand asset creation"],
+      "acceptance_open": "All-map asset closure and hardware load latency remain open."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/dev168-m13-loader-summary.patch",
+      "row_id": "645c5c492c3db47fa472630895df39a6dedd0922bd3f165380e9d8ea904deb1a",
+      "status": "original_patched",
+      "original_owner": "WW3DAssetManager::Create_Render_Obj prototype construction",
+      "behavior": "The selected patch removes the obsolete slow-create log block. The original proto->Create call and return path remain selected, with bounded static-load breadcrumbs outside this removed block.",
+      "callers": ["WW3DAssetManager::Create_Render_Obj"],
+      "affected_scope": ["All native render-object construction"],
+      "acceptance_open": "Prototype registration, all-map creation and measured hardware cost remain open."
+    },
     {
       "kind": "patch_guard",
       "file": "port/patches/ww3d2-a22-vita-boundaries.patch",

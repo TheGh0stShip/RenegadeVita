@@ -3737,7 +3737,7 @@
     "tools/stage_sources.sh": "7fe78a596982b60c6c5b3a27b4c63cfe1ebd9209e51dfe0490af2c8d1cff3839",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "9c465726d4fde7ce36a7d75df8a30c75e64338106d96129d6b873f7b0cccde8c",
-    "tools/sweep_reviews/port_guards.json": "9c2f0b145748763497a7e33c0a0e0e7a105edd48b7a1296cf9f0f3f6de206ff6",
+    "tools/sweep_reviews/port_guards.json": "9ee17a6916b3cca6f9c231480de8a62a4cc64613e5754fafbb3e149b767e7b66",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -9709,6 +9709,7 @@
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": null,
       "current_target_exists": false,
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)",
@@ -9723,14 +9724,26 @@
       "patch_lines": [
         6
       ],
+      "review": {
+        "acceptance_open": "Verify original authored hands/weapon reload HAnim playback on host, Vita3K and physical Vita; exclusion is not proof reload visuals work.",
+        "affected_scope": [
+          "No current mode; proposed fallback behavior is absent"
+        ],
+        "behavior": "This unselected experimental patch adds synthetic camera-space reload motion. tools/stage_sources.sh has no reference or staging destination for it, so none of its code enters current staged or production sources.",
+        "callers": [
+          "No selected build caller; patch artifact only"
+        ],
+        "original_owner": "WeaponViewClass first-person reload animation"
+      },
       "row_id": "6a6a6f1df479ccfc5828863d46e8a902eeb7ea39b6fcd77876e1b5bab2d388e6",
       "selected_by_stage_script": false,
       "stage_destination": null,
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/weaponview.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": null,
       "current_target_exists": false,
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)",
@@ -9745,14 +9758,26 @@
       "patch_lines": [
         17
       ],
+      "review": {
+        "acceptance_open": "Original reload state, authored animation completion and rapid state transitions remain open runtime checks.",
+        "affected_scope": [
+          "No current mode; proposed fallback state behavior is absent"
+        ],
+        "behavior": "This unselected patch changes reload-state completion for a synthetic visible fallback. It has no stage-script reference or build destination and is absent from current source.",
+        "callers": [
+          "No selected build caller; patch artifact only"
+        ],
+        "original_owner": "WeaponViewClass reload-state fallback latch"
+      },
       "row_id": "7da09a8351c386e093357e45fdf0516048e8d5b8a4147e5d7c2627a77757c0de",
       "selected_by_stage_script": false,
       "stage_destination": null,
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/weaponview.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": null,
       "current_target_exists": false,
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)",
@@ -9767,14 +9792,26 @@
       "patch_lines": [
         30
       ],
+      "review": {
+        "acceptance_open": "The selected reload latch and original HAnim path require runtime validation for every weapon family.",
+        "affected_scope": [
+          "No current mode; proposed fallback latch behavior is absent"
+        ],
+        "behavior": "This unselected patch keeps the reload pending latch active when synthetic fallback motion is needed. It is absent from stage selection and current source.",
+        "callers": [
+          "No selected build caller; patch artifact only"
+        ],
+        "original_owner": "WeaponViewClass reload pending-state lifetime"
+      },
       "row_id": "c7a0f2196e38740987cc15dff0792cf47543bf86ad7ddacc28f6baf2b3623357",
       "selected_by_stage_script": false,
       "stage_destination": null,
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/weaponview.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": null,
       "current_target_exists": false,
       "directive": "#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_HOST_ABI_TEST)",
@@ -9789,10 +9826,21 @@
       "patch_lines": [
         61
       ],
+      "review": {
+        "acceptance_open": "Do not add synthetic motion as a substitute for retail content; prove original reload assets and state transitions, then treat missing authored data as a separate gap.",
+        "affected_scope": [
+          "No current mode; synthetic fallback visuals are absent"
+        ],
+        "behavior": "This unselected patch applies a synthetic transform and timeout when reload animation data is unavailable. No stage-script reference selects it, and current weaponview.cpp does not contain this fallback block.",
+        "callers": [
+          "No selected build caller; patch artifact only"
+        ],
+        "original_owner": "WeaponViewClass synthetic reload transform and timeout"
+      },
       "row_id": "94b9ec3ee9f3d174d41bb2ce1738b000a112b21959a7f421244743d39102e6e5",
       "selected_by_stage_script": false,
       "stage_destination": null,
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/weaponview.cpp"
     },
     {
@@ -12877,6 +12925,7 @@
     },
     {
       "change": "removed",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO",
@@ -12891,14 +12940,26 @@
       "patch_lines": [
         22
       ],
+      "review": {
+        "acceptance_open": "Original lookup correctness and hardware timing require their own evidence.",
+        "affected_scope": [
+          "All native asset creation; only obsolete diagnostics are removed"
+        ],
+        "behavior": "The selected patch removes obsolete wall-clock variables around Find_Prototype. The original lookup and bounded static-load trace remain selected in current source.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj initial prototype lookup"
+      },
       "row_id": "decc8c245b162ce485eed4e0e3082a2610b627b30b01240286c8df9e73c66b0e",
       "selected_by_stage_script": true,
       "stage_destination": "staging",
-      "status": "unknown",
+      "status": "original_patched",
       "target": "b/ww3d2/assetmgr.cpp"
     },
     {
       "change": "removed",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO",
@@ -12913,14 +12974,26 @@
       "patch_lines": [
         34
       ],
+      "review": {
+        "acceptance_open": "All-map asset closure and hardware load latency remain open.",
+        "affected_scope": [
+          "All native load-on-demand asset creation"
+        ],
+        "behavior": "The selected patch removes an obsolete wall-clock assignment after load-on-demand. Original loading, retry and prototype lookup continue in current staged source.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj load-on-demand path"
+      },
       "row_id": "234566a033fae02552e50c1e4cdbadfafff137bf9494962a7f5142c015e39fc7",
       "selected_by_stage_script": true,
       "stage_destination": "staging",
-      "status": "unknown",
+      "status": "original_patched",
       "target": "b/ww3d2/assetmgr.cpp"
     },
     {
       "change": "removed",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO",
@@ -12935,10 +13008,21 @@
       "patch_lines": [
         45
       ],
+      "review": {
+        "acceptance_open": "Prototype registration, all-map creation and measured hardware cost remain open.",
+        "affected_scope": [
+          "All native render-object construction"
+        ],
+        "behavior": "The selected patch removes the obsolete slow-create log block. The original proto->Create call and return path remain selected, with bounded static-load breadcrumbs outside this removed block.",
+        "callers": [
+          "WW3DAssetManager::Create_Render_Obj"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj prototype construction"
+      },
       "row_id": "645c5c492c3db47fa472630895df39a6dedd0922bd3f165380e9d8ea904deb1a",
       "selected_by_stage_script": true,
       "stage_destination": "staging",
-      "status": "unknown",
+      "status": "original_patched",
       "target": "b/ww3d2/assetmgr.cpp"
     },
     {
@@ -15490,6 +15574,7 @@
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO",
@@ -15504,14 +15589,26 @@
       "patch_lines": [
         17
       ],
+      "review": {
+        "acceptance_open": "Current bounded flight-recorder traces and real load performance remain separate evidence.",
+        "affected_scope": [
+          "Superseded M13/full-game timing instrumentation only"
+        ],
+        "behavior": "Historical non-tutorial Vita timing sampled the initial Find_Prototype boundary. The later selected loader-summary patch removes this exact timing block; no exact guard or timing variables survive in current staged source.",
+        "callers": [
+          "Historical Create_Render_Obj diagnostic path"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj initial prototype lookup"
+      },
       "row_id": "fc9aa423c77c4e118e6ebbb240fcd1a21ee3cc65502683e9fe0bd02170d23d6d",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/assetmgr.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO",
@@ -15526,14 +15623,26 @@
       "patch_lines": [
         23
       ],
+      "review": {
+        "acceptance_open": "Measured asset-load cost on Vita/PSTV remains open.",
+        "affected_scope": [
+          "Superseded M13/full-game timing instrumentation only"
+        ],
+        "behavior": "Historical instrumentation sampled the end of load-on-demand work. The later selected loader-summary patch removes the timing assignment and its exact guard from current staged source.",
+        "callers": [
+          "Historical Create_Render_Obj diagnostic path"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj load-on-demand timing"
+      },
       "row_id": "7035bc19bbc8a89d8bcc069dfaa54076034167d09fb56cf5fa22832271b056f3",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/assetmgr.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO",
@@ -15548,10 +15657,21 @@
       "patch_lines": [
         27
       ],
+      "review": {
+        "acceptance_open": "Current performance telemetry and hardware load measurements remain open.",
+        "affected_scope": [
+          "Superseded M13/full-game timing instrumentation only"
+        ],
+        "behavior": "Historical instrumentation logged creates exceeding 100 ms. The later selected loader-summary patch removes this exact block and guard while retaining the original proto->Create result path.",
+        "callers": [
+          "Historical Create_Render_Obj diagnostic path"
+        ],
+        "original_owner": "WW3DAssetManager::Create_Render_Obj prototype construction"
+      },
       "row_id": "1cf77b4de16624c028165c72d2fa22ff57722939f41e24a5c6ddee2d13a3383c",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/assetmgr.cpp"
     },
     {
@@ -133141,10 +133261,10 @@
     "by_status": {
       "boundary_replaced": 6,
       "disabled_by_port_guard": 7,
-      "excluded_with_proof": 5,
-      "original_patched": 4,
+      "excluded_with_proof": 12,
+      "original_patched": 7,
       "stubbed_or_noop": 51,
-      "unknown": 3454
+      "unknown": 3444
     },
     "patch_files": 318,
     "rows": 3527,

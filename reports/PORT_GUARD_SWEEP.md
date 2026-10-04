@@ -1,8 +1,8 @@
 # S1 port guards and stubs — inventory in progress
 
 2026-10-04 linker-wrapper/parser refresh: 3,527 source records contain
-51 stubs, four patched-original rows, six replaced boundaries, seven disabled
-guards, five exclusions and 3,454 unknowns. All four `--wrap` rows now
+51 stubs, seven patched-original rows, six replaced boundaries, seven disabled
+guards, 12 exclusions and 3,444 unknowns. All four `--wrap` rows now
 have exact location identities and whole build-file hash pins. The production
 and ARM-closure `shark_init` wrappers preserve the real call and result while
 recording shader-compiler diagnostics. The movie-capture clock wrapper is a
@@ -20,9 +20,9 @@ evidence and does not close S1 or native acceptance.
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
 source contains 3,527 records with 51 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, four rows as `original_patched`, six boundaries as
-`boundary_replaced`, seven guards as `disabled_by_port_guard`, five rows as
-`excluded_with_proof`, and 3,454 records still `unknown`.
+`stubbed_or_noop`, seven rows as `original_patched`, six boundaries as
+`boundary_replaced`, seven guards as `disabled_by_port_guard`, 12 rows as
+`excluded_with_proof`, and 3,444 records still `unknown`.
 All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -52,6 +52,20 @@ current target; the four unresolved rows belong to the three unselected patches.
 Repeated directives deliberately retain every candidate line: spelling and line
 proximity cannot prove that a historical hunk is the surviving branch. These
 links add review evidence without changing any row's behavior status.
+
+All 18 historical guard edits without an exact current spelling are now
+classified. Four belong to three unselected weapon-view experiments. They add
+synthetic reload transforms and fallback timing, have no staging destination,
+and are absent from current source. Their exclusion does not accept reload
+visuals: the selected original HAnim/state path still needs per-weapon runtime
+evidence, and synthetic motion is not a substitute for retail behavior.
+
+The six unmatched asset-create timing rows form another complete supersession
+chain. Three guards introduced non-tutorial wall-clock diagnostics around
+`Find_Prototype`, load-on-demand and `proto->Create`; a later selected patch
+removes those blocks. Current source retains the original lookup/load/create
+flow plus bounded static-load breadcrumbs. These classifications say nothing
+about correctness or hardware latency of the retained operations.
 
 Function records retain signature/scope, byte positions, whole-definition and
 body hashes, literal and nonfinal return candidates, empty-body and unsupported

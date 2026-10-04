@@ -1,0 +1,1638 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_command_table_initialization",
+  "binary_sha256": "03d9be8e712794b8ef968a6d93dc4657f54b071cb7a5a43d665025c3e1494f34",
+  "probe_sha256": "6f1d00ca6c837dcc82fd0608b0eea5d325a47e14ea14a7db5ffbb4e033dc7281",
+  "source_sha256": {
+    "staging/combat/scriptcommands.cpp": "41d23acbaff05b40c9fb680b296caba8b24ce2d564239acec1fca73b29a6823a",
+    "upstream/CnC_Renegade/Code/Scripts/scriptcommands.h": "53bb6d91e00e90a5ccc8bca6c5f7c67a6df47c99cd5762c9b895be4711cf04b3"
+  },
+  "total": 202,
+  "nonnull": 202,
+  "assigned_name_matches": 202,
+  "rows": [
+    {
+      "name": "Debug_Message",
+      "nonnull": true,
+      "symbol": "Debug_Message(char*, ...)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Reset",
+      "nonnull": true,
+      "symbol": "Action_Reset(ScriptableGameObj*, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Goto",
+      "nonnull": true,
+      "symbol": "Action_Goto(ScriptableGameObj*, ActionParamsStruct const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Attack",
+      "nonnull": true,
+      "symbol": "Action_Attack(ScriptableGameObj*, ActionParamsStruct const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Play_Animation",
+      "nonnull": true,
+      "symbol": "Action_Play_Animation(ScriptableGameObj*, ActionParamsStruct const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Enter_Exit",
+      "nonnull": true,
+      "symbol": "Action_Enter_Exit(ScriptableGameObj*, ActionParamsStruct const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Face_Location",
+      "nonnull": true,
+      "symbol": "Action_Face_Location(ScriptableGameObj*, ActionParamsStruct const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Dock",
+      "nonnull": true,
+      "symbol": "Action_Dock(ScriptableGameObj*, ActionParamsStruct const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Action_Follow_Input",
+      "nonnull": true,
+      "symbol": "Action_Follow_Input(ScriptableGameObj*, ActionParamsStruct const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Modify_Action",
+      "nonnull": true,
+      "symbol": "Modify_Action(ScriptableGameObj*, int, ActionParamsStruct const&, bool, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Action_ID",
+      "nonnull": true,
+      "symbol": "Get_Action_ID(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Action_Params",
+      "nonnull": true,
+      "symbol": "Get_Action_Params(ScriptableGameObj*, ActionParamsStruct&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Is_Performing_Pathfind_Action",
+      "nonnull": true,
+      "symbol": "Is_Performing_Pathfind_Action(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Position",
+      "nonnull": true,
+      "symbol": "Set_Position(ScriptableGameObj*, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Position",
+      "nonnull": true,
+      "symbol": "Get_Position(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Bone_Position",
+      "nonnull": true,
+      "symbol": "Get_Bone_Position(ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Facing",
+      "nonnull": true,
+      "symbol": "Get_Facing(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Facing",
+      "nonnull": true,
+      "symbol": "Set_Facing(ScriptableGameObj*, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Disable_All_Collisions",
+      "nonnull": true,
+      "symbol": "Disable_All_Collisions(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Disable_Physical_Collisions",
+      "nonnull": true,
+      "symbol": "Disable_Physical_Collisions(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Collisions",
+      "nonnull": true,
+      "symbol": "Enable_Collisions(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Destroy_Object",
+      "nonnull": true,
+      "symbol": "Destroy_Object(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Find_Object",
+      "nonnull": true,
+      "symbol": "Find_Object(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_Object",
+      "nonnull": true,
+      "symbol": "Create_Object(char const*, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_Object_At_Bone",
+      "nonnull": true,
+      "symbol": "Create_Object_At_Bone(ScriptableGameObj*, char const*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_ID",
+      "nonnull": true,
+      "symbol": "Get_ID(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Preset_ID",
+      "nonnull": true,
+      "symbol": "Get_Preset_ID(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Preset_Name",
+      "nonnull": true,
+      "symbol": "Get_Preset_Name(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Attach_Script",
+      "nonnull": true,
+      "symbol": "Attach_Script(ScriptableGameObj*, char const*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Add_To_Dirty_Cull_List",
+      "nonnull": true,
+      "symbol": "Add_To_Dirty_Cull_List(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Start_Timer",
+      "nonnull": true,
+      "symbol": "Start_Timer(ScriptableGameObj*, ScriptClass*, float, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Trigger_Weapon",
+      "nonnull": true,
+      "symbol": "Trigger_Weapon(ScriptableGameObj*, bool, Vector3 const&, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Select_Weapon",
+      "nonnull": true,
+      "symbol": "Select_Weapon(ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Send_Custom_Event",
+      "nonnull": true,
+      "symbol": "Send_Custom_Event(ScriptableGameObj*, ScriptableGameObj*, int, int, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Send_Damaged_Event",
+      "nonnull": true,
+      "symbol": "Send_Damaged_Event(ScriptableGameObj*, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Random",
+      "nonnull": true,
+      "symbol": "Get_Random(float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Random_Int",
+      "nonnull": true,
+      "symbol": "Get_Random_Int(int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Find_Random_Simple_Object",
+      "nonnull": true,
+      "symbol": "Find_Random_Simple_Object(char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Model",
+      "nonnull": true,
+      "symbol": "Set_Model(ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Animation",
+      "nonnull": true,
+      "symbol": "Set_Animation(ScriptableGameObj*, char const*, bool, char const*, float, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Animation_Frame",
+      "nonnull": true,
+      "symbol": "Set_Animation_Frame(ScriptableGameObj*, char const*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_Sound",
+      "nonnull": true,
+      "symbol": "Create_Sound(char const*, Vector3 const&, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_2D_Sound",
+      "nonnull": true,
+      "symbol": "Create_2D_Sound(char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_2D_WAV_Sound",
+      "nonnull": true,
+      "symbol": "Create_2D_WAV_Sound(char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_3D_WAV_Sound_At_Bone",
+      "nonnull": true,
+      "symbol": "Create_3D_WAV_Sound_At_Bone(char const*, ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_3D_Sound_At_Bone",
+      "nonnull": true,
+      "symbol": "Create_3D_Sound_At_Bone(char const*, ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_Logical_Sound",
+      "nonnull": true,
+      "symbol": "Create_Logical_Sound(ScriptableGameObj*, int, Vector3 const&, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Start_Sound",
+      "nonnull": true,
+      "symbol": "Start_Sound(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Stop_Sound",
+      "nonnull": true,
+      "symbol": "Stop_Sound(int, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Monitor_Sound",
+      "nonnull": true,
+      "symbol": "Monitor_Sound(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Background_Music",
+      "nonnull": true,
+      "symbol": "Set_Background_Music(char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Fade_Background_Music",
+      "nonnull": true,
+      "symbol": "Fade_Background_Music(char const*, int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Stop_Background_Music",
+      "nonnull": true,
+      "symbol": "Stop_Background_Music()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Health",
+      "nonnull": true,
+      "symbol": "Get_Health(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Max_Health",
+      "nonnull": true,
+      "symbol": "Get_Max_Health(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Health",
+      "nonnull": true,
+      "symbol": "Set_Health(ScriptableGameObj*, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Shield_Strength",
+      "nonnull": true,
+      "symbol": "Get_Shield_Strength(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Max_Shield_Strength",
+      "nonnull": true,
+      "symbol": "Get_Max_Shield_Strength(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Shield_Strength",
+      "nonnull": true,
+      "symbol": "Set_Shield_Strength(ScriptableGameObj*, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Shield_Type",
+      "nonnull": true,
+      "symbol": "Set_Shield_Type(ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Player_Type",
+      "nonnull": true,
+      "symbol": "Get_Player_Type(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Player_Type",
+      "nonnull": true,
+      "symbol": "Set_Player_Type(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Distance",
+      "nonnull": true,
+      "symbol": "Get_Distance(Vector3 const&, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Camera_Host",
+      "nonnull": true,
+      "symbol": "Set_Camera_Host(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Force_Camera_Look",
+      "nonnull": true,
+      "symbol": "Force_Camera_Look(Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_The_Star",
+      "nonnull": true,
+      "symbol": "Get_The_Star()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_A_Star",
+      "nonnull": true,
+      "symbol": "Get_A_Star(Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Find_Closest_Soldier",
+      "nonnull": true,
+      "symbol": "Find_Closest_Soldier(Vector3 const&, float, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Is_A_Star",
+      "nonnull": true,
+      "symbol": "Is_A_Star(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Control_Enable",
+      "nonnull": true,
+      "symbol": "Control_Enable(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Damage_Bone_Name",
+      "nonnull": true,
+      "symbol": "Get_Damage_Bone_Name()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Damage_Bone_Direction",
+      "nonnull": true,
+      "symbol": "Get_Damage_Bone_Direction()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Is_Object_Visible",
+      "nonnull": true,
+      "symbol": "Is_Object_Visible(ScriptableGameObj*, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Enemy_Seen",
+      "nonnull": true,
+      "symbol": "Enable_Enemy_Seen(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Display_Color",
+      "nonnull": true,
+      "symbol": "Set_Display_Color(unsigned char, unsigned char, unsigned char)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_Text",
+      "nonnull": true,
+      "symbol": "Display_Text(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_Float",
+      "nonnull": true,
+      "symbol": "Display_Float(float, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_Int",
+      "nonnull": true,
+      "symbol": "Display_Int(int, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Save_Data",
+      "nonnull": true,
+      "symbol": "Save_Data(ScriptSaver&, int, int, void*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Save_Pointer",
+      "nonnull": true,
+      "symbol": "Save_Pointer(ScriptSaver&, int, void*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Load_Begin",
+      "nonnull": true,
+      "symbol": "Load_Begin(ScriptLoader&, int*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Load_Data",
+      "nonnull": true,
+      "symbol": "Load_Data(ScriptLoader&, int, void*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Load_Pointer",
+      "nonnull": true,
+      "symbol": "Load_Pointer(ScriptLoader&, void**)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Load_End",
+      "nonnull": true,
+      "symbol": "Load_End(ScriptLoader&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Begin_Chunk",
+      "nonnull": true,
+      "symbol": "Begin_Chunk(ScriptSaver&, unsigned int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "End_Chunk",
+      "nonnull": true,
+      "symbol": "End_Chunk(ScriptSaver&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Open_Chunk",
+      "nonnull": true,
+      "symbol": "Open_Chunk(ScriptLoader&, unsigned int*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Close_Chunk",
+      "nonnull": true,
+      "symbol": "Close_Chunk(ScriptLoader&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Clear_Radar_Markers",
+      "nonnull": true,
+      "symbol": "Clear_Radar_Markers()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Clear_Radar_Marker",
+      "nonnull": true,
+      "symbol": "Clear_Radar_Marker(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Add_Radar_Marker",
+      "nonnull": true,
+      "symbol": "Add_Radar_Marker(int, Vector3 const&, int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Obj_Radar_Blip_Shape",
+      "nonnull": true,
+      "symbol": "Set_Obj_Radar_Blip_Shape(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Obj_Radar_Blip_Color",
+      "nonnull": true,
+      "symbol": "Set_Obj_Radar_Blip_Color(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Radar",
+      "nonnull": true,
+      "symbol": "Enable_Radar(bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Clear_Map_Cell",
+      "nonnull": true,
+      "symbol": "Clear_Map_Cell(int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Clear_Map_Cell_By_Pos",
+      "nonnull": true,
+      "symbol": "Clear_Map_Cell_By_Pos(Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Clear_Map_Cell_By_Pixel_Pos",
+      "nonnull": true,
+      "symbol": "Clear_Map_Cell_By_Pixel_Pos(int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Clear_Map_Region_By_Pos",
+      "nonnull": true,
+      "symbol": "Clear_Map_Region_By_Pos(Vector3 const&, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Reveal_Map",
+      "nonnull": true,
+      "symbol": "Reveal_Map()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Shroud_Map",
+      "nonnull": true,
+      "symbol": "Shroud_Map()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Show_Player_Map_Marker",
+      "nonnull": true,
+      "symbol": "Show_Player_Map_Marker(bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Safe_Flight_Height",
+      "nonnull": true,
+      "symbol": "Get_Safe_Flight_Height(float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_Explosion",
+      "nonnull": true,
+      "symbol": "Create_Explosion(char const*, Vector3 const&, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_Explosion_At_Bone",
+      "nonnull": true,
+      "symbol": "Create_Explosion_At_Bone(char const*, ScriptableGameObj*, char const*, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_HUD",
+      "nonnull": true,
+      "symbol": "Enable_HUD(bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Mission_Complete",
+      "nonnull": true,
+      "symbol": "Mission_Complete(bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Give_PowerUp",
+      "nonnull": true,
+      "symbol": "Give_PowerUp(ScriptableGameObj*, char const*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Disable",
+      "nonnull": true,
+      "symbol": "Innate_Disable(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Enable",
+      "nonnull": true,
+      "symbol": "Innate_Enable(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Soldier_Enable_Enemy_Seen",
+      "nonnull": true,
+      "symbol": "Innate_Soldier_Enable_Enemy_Seen(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Soldier_Enable_Gunshot_Heard",
+      "nonnull": true,
+      "symbol": "Innate_Soldier_Enable_Gunshot_Heard(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Soldier_Enable_Footsteps_Heard",
+      "nonnull": true,
+      "symbol": "Innate_Soldier_Enable_Footsteps_Heard(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Soldier_Enable_Bullet_Heard",
+      "nonnull": true,
+      "symbol": "Innate_Soldier_Enable_Bullet_Heard(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Soldier_Enable_Actions",
+      "nonnull": true,
+      "symbol": "Innate_Soldier_Enable_Actions(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Innate_Soldier_Home_Location",
+      "nonnull": true,
+      "symbol": "Set_Innate_Soldier_Home_Location(ScriptableGameObj*, Vector3 const&, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Innate_Aggressiveness",
+      "nonnull": true,
+      "symbol": "Set_Innate_Aggressiveness(ScriptableGameObj*, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Innate_Take_Cover_Probability",
+      "nonnull": true,
+      "symbol": "Set_Innate_Take_Cover_Probability(ScriptableGameObj*, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Innate_Is_Stationary",
+      "nonnull": true,
+      "symbol": "Set_Innate_Is_Stationary(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Force_State_Bullet_Heard",
+      "nonnull": true,
+      "symbol": "Innate_Force_State_Bullet_Heard(ScriptableGameObj*, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Force_State_Footsteps_Heard",
+      "nonnull": true,
+      "symbol": "Innate_Force_State_Footsteps_Heard(ScriptableGameObj*, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Force_State_Gunshots_Heard",
+      "nonnull": true,
+      "symbol": "Innate_Force_State_Gunshots_Heard(ScriptableGameObj*, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Innate_Force_State_Enemy_Seen",
+      "nonnull": true,
+      "symbol": "Innate_Force_State_Enemy_Seen(ScriptableGameObj*, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Static_Anim_Phys_Goto_Frame",
+      "nonnull": true,
+      "symbol": "Static_Anim_Phys_Goto_Frame(int, float, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Static_Anim_Phys_Goto_Last_Frame",
+      "nonnull": true,
+      "symbol": "Static_Anim_Phys_Goto_Last_Frame(int, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Sync_Time",
+      "nonnull": true,
+      "symbol": "Get_Sync_Time()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Add_Objective",
+      "nonnull": true,
+      "symbol": "Add_Objective(int, int, int, int, char*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Remove_Objective",
+      "nonnull": true,
+      "symbol": "Remove_Objective(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Objective_Status",
+      "nonnull": true,
+      "symbol": "Set_Objective_Status(int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Change_Objective_Type",
+      "nonnull": true,
+      "symbol": "Change_Objective_Type(int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Objective_Radar_Blip",
+      "nonnull": true,
+      "symbol": "Set_Objective_Radar_Blip(int, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Objective_Radar_Blip_Object",
+      "nonnull": true,
+      "symbol": "Set_Objective_Radar_Blip_Object(int, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Objective_HUD_Info",
+      "nonnull": true,
+      "symbol": "Set_Objective_HUD_Info(int, float, char const*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Objective_HUD_Info_Position",
+      "nonnull": true,
+      "symbol": "Set_Objective_HUD_Info_Position(int, float, char const*, int, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Shake_Camera",
+      "nonnull": true,
+      "symbol": "Shake_Camera(Vector3 const&, float, float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Spawner",
+      "nonnull": true,
+      "symbol": "Enable_Spawner(int, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Trigger_Spawner",
+      "nonnull": true,
+      "symbol": "Trigger_Spawner(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Engine",
+      "nonnull": true,
+      "symbol": "Enable_Engine(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Difficulty_Level",
+      "nonnull": true,
+      "symbol": "Get_Difficulty_Level()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Grant_Key",
+      "nonnull": true,
+      "symbol": "Grant_Key(ScriptableGameObj*, int, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Has_Key",
+      "nonnull": true,
+      "symbol": "Has_Key(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Hibernation",
+      "nonnull": true,
+      "symbol": "Enable_Hibernation(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Attach_To_Object_Bone",
+      "nonnull": true,
+      "symbol": "Attach_To_Object_Bone(ScriptableGameObj*, ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Create_Conversation",
+      "nonnull": true,
+      "symbol": "Create_Conversation(char const*, int, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Join_Conversation",
+      "nonnull": true,
+      "symbol": "Join_Conversation(ScriptableGameObj*, int, bool, bool, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Join_Conversation_Facing",
+      "nonnull": true,
+      "symbol": "Join_Conversation_Facing(ScriptableGameObj*, int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Start_Conversation",
+      "nonnull": true,
+      "symbol": "Start_Conversation(int, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Monitor_Conversation",
+      "nonnull": true,
+      "symbol": "Monitor_Conversation(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Start_Random_Conversation",
+      "nonnull": true,
+      "symbol": "Start_Random_Conversation(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Stop_Conversation",
+      "nonnull": true,
+      "symbol": "Stop_Conversation(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Stop_All_Conversations",
+      "nonnull": true,
+      "symbol": "Stop_All_Conversations()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Lock_Soldier_Facing",
+      "nonnull": true,
+      "symbol": "Lock_Soldier_Facing(ScriptableGameObj*, ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Unlock_Soldier_Facing",
+      "nonnull": true,
+      "symbol": "Unlock_Soldier_Facing(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Apply_Damage",
+      "nonnull": true,
+      "symbol": "Apply_Damage(ScriptableGameObj*, float, char const*, ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Loiters_Allowed",
+      "nonnull": true,
+      "symbol": "Set_Loiters_Allowed(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Is_Visible",
+      "nonnull": true,
+      "symbol": "Set_Is_Visible(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Is_Rendered",
+      "nonnull": true,
+      "symbol": "Set_Is_Rendered(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Points",
+      "nonnull": true,
+      "symbol": "Get_Points(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Give_Points",
+      "nonnull": true,
+      "symbol": "Give_Points(ScriptableGameObj*, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Money",
+      "nonnull": true,
+      "symbol": "Get_Money(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Give_Money",
+      "nonnull": true,
+      "symbol": "Give_Money(ScriptableGameObj*, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Get_Building_Power",
+      "nonnull": true,
+      "symbol": "Get_Building_Power(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Building_Power",
+      "nonnull": true,
+      "symbol": "Set_Building_Power(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Play_Building_Announcement",
+      "nonnull": true,
+      "symbol": "Play_Building_Announcement(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Find_Nearest_Building_To_Pos",
+      "nonnull": true,
+      "symbol": "Find_Nearest_Building_To_Pos(Vector3 const&, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Find_Nearest_Building",
+      "nonnull": true,
+      "symbol": "Find_Nearest_Building(ScriptableGameObj*, char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Team_Members_In_Zone",
+      "nonnull": true,
+      "symbol": "Team_Members_In_Zone(ScriptableGameObj*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Clouds",
+      "nonnull": true,
+      "symbol": "Set_Clouds(float, float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Lightning",
+      "nonnull": true,
+      "symbol": "Set_Lightning(float, float, float, float, float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_War_Blitz",
+      "nonnull": true,
+      "symbol": "Set_War_Blitz(float, float, float, float, float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Wind",
+      "nonnull": true,
+      "symbol": "Set_Wind(float, float, float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Rain",
+      "nonnull": true,
+      "symbol": "Set_Rain(float, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Snow",
+      "nonnull": true,
+      "symbol": "Set_Snow(float, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Ash",
+      "nonnull": true,
+      "symbol": "Set_Ash(float, float, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Fog_Enable",
+      "nonnull": true,
+      "symbol": "Set_Fog_Enable(bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Fog_Range",
+      "nonnull": true,
+      "symbol": "Set_Fog_Range(float, float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Stealth",
+      "nonnull": true,
+      "symbol": "Enable_Stealth(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Cinematic_Sniper_Control",
+      "nonnull": true,
+      "symbol": "Cinematic_Sniper_Control(bool, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Text_File_Open",
+      "nonnull": true,
+      "symbol": "Text_File_Open(char const*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Text_File_Get_String",
+      "nonnull": true,
+      "symbol": "Text_File_Get_String(int, char*, int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Text_File_Close",
+      "nonnull": true,
+      "symbol": "Text_File_Close(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Vehicle_Transitions",
+      "nonnull": true,
+      "symbol": "Enable_Vehicle_Transitions(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_GDI_Player_Terminal",
+      "nonnull": true,
+      "symbol": "Display_GDI_Player_Terminal()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_NOD_Player_Terminal",
+      "nonnull": true,
+      "symbol": "Display_NOD_Player_Terminal()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_Mutant_Player_Terminal",
+      "nonnull": true,
+      "symbol": "Display_Mutant_Player_Terminal()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Reveal_Encyclopedia_Character",
+      "nonnull": true,
+      "symbol": "Reveal_Encyclopedia_Character(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Reveal_Encyclopedia_Weapon",
+      "nonnull": true,
+      "symbol": "Reveal_Encyclopedia_Weapon(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Reveal_Encyclopedia_Vehicle",
+      "nonnull": true,
+      "symbol": "Reveal_Encyclopedia_Vehicle(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Reveal_Encyclopedia_Building",
+      "nonnull": true,
+      "symbol": "Reveal_Encyclopedia_Building(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_Encyclopedia_Event_UI",
+      "nonnull": true,
+      "symbol": "Display_Encyclopedia_Event_UI()",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Scale_AI_Awareness",
+      "nonnull": true,
+      "symbol": "Scale_AI_Awareness(float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Cinematic_Freeze",
+      "nonnull": true,
+      "symbol": "Enable_Cinematic_Freeze(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Expire_Powerup",
+      "nonnull": true,
+      "symbol": "Expire_Powerup(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_HUD_Help_Text",
+      "nonnull": true,
+      "symbol": "Set_HUD_Help_Text(int, Vector3 const&)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_HUD_Pokable_Indicator",
+      "nonnull": true,
+      "symbol": "Enable_HUD_Pokable_Indicator(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Innate_Conversations",
+      "nonnull": true,
+      "symbol": "Enable_Innate_Conversations(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Display_Health_Bar",
+      "nonnull": true,
+      "symbol": "Display_Health_Bar(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Shadow",
+      "nonnull": true,
+      "symbol": "Enable_Shadow(ScriptableGameObj*, bool)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Clear_Weapons",
+      "nonnull": true,
+      "symbol": "Clear_Weapons(ScriptableGameObj*)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Num_Tertiary_Objectives",
+      "nonnull": true,
+      "symbol": "Set_Num_Tertiary_Objectives(int)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Enable_Letterbox",
+      "nonnull": true,
+      "symbol": "Enable_Letterbox(bool, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Screen_Fade_Color",
+      "nonnull": true,
+      "symbol": "Set_Screen_Fade_Color(float, float, float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    },
+    {
+      "name": "Set_Screen_Fade_Opacity",
+      "nonnull": true,
+      "symbol": "Set_Screen_Fade_Opacity(float, float)",
+      "status": "unknown",
+      "assigned_name_match": true,
+      "arm_function_signature_retained": true
+    }
+  ],
+  "limits": [
+    "Debugger calls original Get_Script_Commands at main; normal startup ordering is unproven.",
+    "No command callbacks, gameplay, retail data or ARM/physical execution tested.",
+    "Leak checking disabled for debugger operation; this is not a sanitizer or leak result."
+  ],
+  "arm_symbols_sha256": "114353d5616f691829edabea218600b1184b5bd382172bdcdbfc03a560d48349",
+  "arm_function_signatures_retained": 202
+}

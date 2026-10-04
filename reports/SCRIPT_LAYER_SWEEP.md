@@ -278,3 +278,20 @@ This prevents ambiguous selection from discarding downstream review evidence.
 Seven tests pass; regeneration is byte-identical. Runtime source and Dev221
 artifacts remain unchanged. Selecting overloads from the command signature and
 evaluating downstream platform branches remain open.
+
+## Initialized command table — 2026-10-04
+
+A bounded debugger call to original Get_Script_Commands in the retained host
+runtime initializes all 202 slots. Every pointer is non-null and resolves to
+its lexically assigned function name. The selected overloaded functions are
+Create_Object(char const*, Vector3 const&) and
+Add_Radar_Marker(int, Vector3 const&, int, int), agreeing with original slot
+types. All 202 exact host-selected function signatures are retained as function
+symbols in the hash-pinned Dev221 ARM symbol list.
+
+The public [table receipt](generated/sweeps/host_script_command_table.json)
+retains binary/probe/source identities and selected signatures; the debugger
+log remains private. No callbacks, gameplay or authored retail data execute.
+Initialization is invoked at main by the debugger, so ordinary startup ordering
+and ARM initialization remain unproven. Leak checking is disabled for debugger
+operation. Behavior statuses remain unknown. Runtime source is unchanged.

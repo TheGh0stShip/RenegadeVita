@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Original command table initialization — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: original host table initializes 202/202 non-null assigned functions;
+both overloaded selections resolve. All 202 exact signatures are retained in
+Dev221 ARM symbols. Receipt pins binary, source, probe and symbols.
+Evidence: bounded host debugger execution; no command callbacks or retail data.
+Next: downstream owner guards and normal startup/ARM initialization evidence.
+Blocker: none for source work; native gameplay acceptance remains open.
+
 ## Command definition identity correction — 2026-10-04
 
 Renegade Vita — v3.5 active

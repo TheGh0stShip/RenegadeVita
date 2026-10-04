@@ -298,3 +298,55 @@ const BackendLifecycleStatistics &Get_Backend_Lifecycle_Statistics()
 }
 
 } // namespace RenegadeVitaRenderer
+
+#include "renegade_user_root.h"
+#include "vita_runtime_log.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Bring-up evidence: the presented frame at a few early gameplay frames,
+// written as 24-bit BMPs under the variant's capture directory.
+void D3DVita_Capture_Gameplay_Frame(unsigned frame)
+{
+	if (frame != 30U && frame != 120U && frame != 300U) return;
+	const size_t bytes = static_cast<size_t>(RenegadeVitaRenderer::DISPLAY_WIDTH) *
+		RenegadeVitaRenderer::DISPLAY_HEIGHT * 4U;
+	uint8_t *rgba = static_cast<uint8_t *>(malloc(bytes));
+	if (rgba == NULL) return;
+	char path[128];
+	snprintf(path, sizeof(path), RENEGADE_VITA_USER_ROOT "/captures/d3dvita-gameplay-f%u.bmp", frame);
+	bool written = false;
+	if (RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(rgba, bytes, true)) {
+		if (FILE *file = fopen(path, "wb")) {
+			const uint32_t width = RenegadeVitaRenderer::DISPLAY_WIDTH;
+			const uint32_t height = RenegadeVitaRenderer::DISPLAY_HEIGHT;
+			const uint32_t image = width * height * 3U;
+			uint8_t header[54] = {'B', 'M'};
+			auto put32 = [&](unsigned at, uint32_t v) {
+				for (unsigned i = 0; i < 4; ++i) header[at + i] = static_cast<uint8_t>(v >> (8 * i));
+			};
+			put32(2, 54U + image); put32(10, 54U); put32(14, 40U);
+			put32(18, width); put32(22, height);
+			header[26] = 1; header[28] = 24; put32(34, image);
+			fwrite(header, 1, sizeof(header), file);
+			// The capture rows are already bottom-up, as BMP stores them.
+			uint8_t row[960 * 3];
+			for (uint32_t y = 0; y < height; ++y) {
+				const uint8_t *src = rgba + static_cast<size_t>(y) * width * 4U;
+				for (uint32_t x = 0; x < width; ++x) {
+					row[x * 3 + 0] = src[x * 4 + 2];
+					row[x * 3 + 1] = src[x * 4 + 1];
+					row[x * 3 + 2] = src[x * 4 + 0];
+				}
+				fwrite(row, 1, width * 3U, file);
+			}
+			fclose(file);
+			written = true;
+		}
+	}
+	free(rgba);
+	Vita_Append_A22_Runtime_Breadcrumb("d3dvita", "gameplay capture frame=%u written=%d path=%s",
+		frame, written ? 1 : 0, path);
+}
+

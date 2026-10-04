@@ -1,6 +1,10 @@
 #include "a31_vita_runtime.h"
 #include "renegade_user_root.h"
 #include "vita_runtime_log.h"
+#if defined(RENEGADE_D3DVITA)
+// Writes a BMP of selected early gameplay frames (VitaD3D bring-up).
+void D3DVita_Capture_Gameplay_Frame(unsigned frame);
+#endif
 
 #include "a30_vita_runtime.h"
 #include "a31_interactive_runtime_policy.h"
@@ -4818,6 +4822,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					break;
 				}
 				++result.frames;
+#if defined(RENEGADE_D3DVITA)
+				D3DVita_Capture_Gameplay_Frame(result.frames);
+#endif
 				Copy_Render_Statistics(result);
 				A31FrameTelemetry capture_frame = {};
 				capture_frame.frame_index = result.frames;

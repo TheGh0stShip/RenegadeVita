@@ -5,6 +5,16 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_definition_reference_edge_partition(self):
+        value={'total':1,'counts':{'unknown':1},'rows':[{
+            'map':'M01.mix','status':'unknown','typed_reference_fields':2,
+            'edge_counts':{'absent_target':1,'present_target':1}}]}
+        result=consolidate([('definition_instances',json.dumps(value).encode())])
+        self.assertEqual(result['total'],1)
+        value['rows'][0]['typed_reference_fields']=3
+        with self.assertRaisesRegex(ValueError,'edge partition'):
+            consolidate([('definition_instances',json.dumps(value).encode())])
+
     def test_definition_closure_partition_and_registry_parent(self):
         host={'total':1,'matched':1,'rows':[{'status':'unknown','matches':True}]}
         data=json.dumps(host).encode()

@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Definition instance graph breadth — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: whole database graph separated from 27 serialized/global-root map
+graphs. Database: 374 absent IDs/406 edges; map-rooted union: 28 absent IDs.
+No parsed edge targets an editor definition. Unparsed/script-computed edges open.
+Evidence: 14 graph/consolidation tests pass; private full graphs and public
+field/hash provenance retained. Register: 41,554 records,41,290 unknowns.
+Next: original field callers and required-versus-optional missing-target behavior.
+Blocker: none for source work; gameplay impact and native loading remain unverified.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Definition registry and consolidation — 2026-10-03
 
 Renegade Vita — v3.5 active

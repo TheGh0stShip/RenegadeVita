@@ -12,7 +12,7 @@ ISSUES = dict(zip(SWEEPS, range(5, 13)))
 SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
                'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts',
                'database_chunks', 'level_persist_closure', 'database_persist_closure',
-               'host_definition_registry', 'database_definition_closure')
+               'host_definition_registry', 'database_definition_closure', 'definition_instances')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 ISSUES['procedural_fvf_layouts'] = 6
 ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_closure',
@@ -55,7 +55,13 @@ def root_records(name, value):
         return rows
     rows=value['archives'] if name=='w3d_chunks' else value['rows']
     totals=value.get('totals',{})
-    if name=='database_chunks':
+    if name=='definition_instances':
+        if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
+            raise ValueError('Definition instance scope denominator mismatch')
+        for row in rows:
+            if not row.get('input_missing') and row['typed_reference_fields']!=sum(row['edge_counts'].values()):
+                raise ValueError('Definition reference edge partition mismatch')
+    elif name=='database_chunks':
         if totals['archives']!=len(rows) or totals['members']!=sum(len(r['members']) for r in rows):
             raise ValueError('Database member denominator mismatch')
     elif name in {'level_persist_closure', 'database_persist_closure'}:

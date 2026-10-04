@@ -1,5 +1,35 @@
 # S3 link and registration closure — inventory in progress
 
+## Definition instance graph breadth — 2026-10-03
+
+The whole parsed `objects.ddb` graph and 27 map-rooted graphs are now separate
+denominators. The database has 15,146 parsed definitions and 5,263 nonzero typed
+reference fields: 4,857 target a present definition, while 406 target 374 distinct
+absent IDs. The source schema also parses zero-valued optional fields; those are
+not counted as reference edges. Database-wide findings include unused content
+and do not establish mission impact.
+
+Across serialized object/spawner/physics roots and original global settings,
+the 27 maps reach 28 distinct absent IDs. Every supplied map remains unknown
+behavior. No parsed definition edge targets an editor definition, globally or
+in these map-rooted graphs. This does not cover every script-created preset,
+computed ID or definition field, and does not prove the ten editor-owned
+persistence IDs can all be excluded. Their investigation remains open.
+
+`tools/audit_definition_instance_references.py` retains each unresolved field's
+owner ID/factory, target ID, field ID/name, variable chunk and offset. Map and
+member hashes, overlay overrides and 19 original-owner source hashes bind the
+evidence. Full graphs stay private; the public receipt is
+`reports/generated/sweeps/definition_instances.json`. Reproduce with
+`python3 -m tools.audit_definition_instance_references --data DATA --output OUTPUT
+--private-output LOCAL_RECEIPT`.
+
+Fourteen graph/consolidation tests pass. Consolidation retains the new 28 scoped
+unknown rows and checks reference-edge partitions. The register now contains
+41,554 overlapping records, including 41,290 unknowns. No runtime code changed.
+Next: trace absent targets through original field callers and distinguish
+optional/stale authored values from required runtime dependencies before fixes.
+
 ## Original definition registry and consolidated coverage — 2026-10-03
 
 All 57 template definition class IDs in the retained host binary resolve through

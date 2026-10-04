@@ -3621,6 +3621,19 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					A30_Vita_Log("A3.1 interactive: WW3D init FAIL\n");
 					break;
 				}
+#if defined(RENEGADE_D3DVITA)
+				// The original DX8Wrapper creates its Direct3D 8 device when a
+				// render device is selected: full screen at the display size.
+				if (WW3D::Set_Render_Device(0,
+						static_cast<int>(RenegadeVitaRenderer::DISPLAY_WIDTH),
+						static_cast<int>(RenegadeVitaRenderer::DISPLAY_HEIGHT),
+						32, 0, false) != WW3D_ERROR_OK) {
+					A30_Vita_Log("[d3dvita] WW3D::Set_Render_Device FAIL\n");
+					break;
+				}
+				A30_Vita_Log("[d3dvita] WW3D render device ready %ux%u\n",
+					RenegadeVitaRenderer::DISPLAY_WIDTH, RenegadeVitaRenderer::DISPLAY_HEIGHT);
+#endif
 			if (!Apply_Original_Gameplay_Render_Resolution()) {
 				A30_Vita_Log("A3.5 HUD: FAIL native gameplay/HUD render resolution unavailable\n");
 				break;

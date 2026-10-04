@@ -26,7 +26,7 @@ def png_geometry_bytes(data: bytes) -> tuple[int, int, int]:
 
 
 def render(candidate: str, assets: Path, output: Path) -> None:
-    if not re.fullmatch(r"A[0-9]+\.[0-9]+-dev[0-9]+", candidate):
+    if not re.fullmatch(r"A[0-9]+\.[0-9]+-dev[0-9]+(-d3dvita)?", candidate):
         raise ValueError(f"invalid candidate label: {candidate}")
     convert = shutil.which("convert")
     if not convert:

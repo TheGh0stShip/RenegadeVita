@@ -1,0 +1,364 @@
+--- a/dx8wrapper.h
++++ b/dx8wrapper.h
+@@ -210,7 +210,7 @@
+ 	static void	Do_Onetime_Device_Dependent_Inits(void);
+ 	static void Do_Onetime_Device_Dependent_Shutdowns(void);
+ 
+-#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	static bool Is_Device_Lost() { return IsDeviceLost || !Is_Native_Device_Ready(); }
+ 	static bool Is_Initted(void) { return Is_Native_Device_Ready(); }
+ 	static bool Is_Native_Device_Ready();
+--- a/dx8vertexbuffer.cpp
++++ b/dx8vertexbuffer.cpp
+@@ -421,7 +421,7 @@
+ 	DX8_THREAD_ASSERT();
+ 	WWASSERT(!VertexBuffer);
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	(void)usage;
+ 	VertexBuffer = new (std::nothrow) IDirect3DVertexBuffer8(
+ 		FVF_Info().Get_FVF_Size() * VertexCount);
+@@ -786,7 +786,7 @@
+ 	// Create a new vb if one doesn't exist currently
+ 	if (!_DynamicDX8VertexBuffer) {
+ 		unsigned usage=DX8VertexBufferClass::USAGE_DYNAMIC;
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 		if (DX8Wrapper::Get_Current_Caps()->Support_NPatches()) {
+ 			usage|=DX8VertexBufferClass::USAGE_NPATCHES;
+ 		}
+--- a/dx8indexbuffer.cpp
++++ b/dx8indexbuffer.cpp
+@@ -292,7 +292,7 @@
+ {
+ 	DX8_THREAD_ASSERT();
+ 	WWASSERT(index_count);
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	(void)usage;
+ 	index_buffer = new (std::nothrow) IDirect3DIndexBuffer8(
+ 		static_cast<UINT>(sizeof(unsigned short) * index_count));
+@@ -505,7 +505,7 @@
+ 	// Create a new vb if one doesn't exist currently
+ 	if (!_DynamicDX8IndexBuffer) {
+ 		unsigned usage=DX8IndexBufferClass::USAGE_DYNAMIC;
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 		if (DX8Wrapper::Get_Current_Caps()->Support_NPatches()) {
+ 			usage|=DX8IndexBufferClass::USAGE_NPATCHES;
+ 		}
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -117,7 +117,7 @@
+ #include "dx8texman.h"
+ #include "formconv.h"
+ #include "animatedsoundmgr.h"
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ #include "ww3d_vita_renderer.h"
+ #endif
+ 
+@@ -269,7 +269,7 @@
+ 	_Hwnd = (HWND)hwnd;
+ 	Lite = lite;
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	// CPU surfaces and font atlases still require the original format table.
+ 	Init_D3D_To_WW3_Conversion();
+ 	(void)defaultpal;
+@@ -362,7 +362,7 @@
+ 	assert(Lite || IsInitted == true);
+ //	WWDEBUG_SAY(("WW3D::Shutdown\n"));
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	PredictiveLODOptimizerClass::Free();
+ #if defined(RENEGADE_ORIGINAL_SORTING)
+ 	SortingRendererClass::Deinit();
+@@ -844,7 +844,7 @@
+ 	WWPROFILE("WW3D::Begin_Render");
+ 	WWASSERT(IsInitted);
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	(void)clear;
+ 	(void)clearz;
+ 	(void)network_callback;
+@@ -986,7 +986,7 @@
+ 	cam->On_Frame_Update();
+ 	RenderInfoClass rinfo(*cam);
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	(void)clear;
+ 	(void)clearz;
+ 	(void)color;
+@@ -995,7 +995,7 @@
+ 	// Apply the camera and viewport (including depth range)
+ 	cam->Apply();
+ 
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 	// Clear the viewport
+ 	if (clear || clearz) {
+ 		DX8Wrapper::Clear(clear, clearz, color);
+@@ -1022,7 +1022,7 @@
+ 
+ 	// render the scene
+ 
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
+ #endif
+ 
+@@ -1064,7 +1064,7 @@
+ 		rinfo.Camera.On_Frame_Update();
+ 	}
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	obj.Render(rinfo);
+ 	Flush(rinfo);
+ 	return WW3D_ERROR_OK;
+@@ -1113,7 +1113,7 @@
+  *=============================================================================================*/
+ void WW3D::Flush(RenderInfoClass & rinfo)
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
+ 	TheDX8MeshRenderer.Flush();
+ 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
+@@ -1152,7 +1152,7 @@
+ 	assert(IsRendering);
+ 	assert(IsInitted);
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ #if defined(RENEGADE_ORIGINAL_SORTING)
+ 	SortingRendererClass::Flush();
+ #endif
+@@ -1361,7 +1361,7 @@
+ void WW3D::Make_Screen_Shot( const char * filename_base )
+ {
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	(void)filename_base;
+ 	return;
+ #else
+@@ -1993,7 +1993,7 @@
+ 			render=true;
+ 		}
+ 		if (render) {
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 			TheDX8MeshRenderer.Flush();
+ #endif
+ 		}
+--- a/boxrobj.cpp
++++ b/boxrobj.cpp
+@@ -104,7 +104,7 @@
+ #include "sortingrenderer.h"
+ #include "visrasterizer.h"
+ #include "meshgeometry.h"
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ #include "ww3d_vita_renderer.h"
+ #endif
+ 
+@@ -705,7 +705,7 @@
+  *=============================================================================================*/
+ void AABoxRenderObjClass::Render(RenderInfoClass & rinfo)
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	(void)rinfo;
+ 	if (Get_Box_Display_Mask() & Get_Collision_Type()) {
+ 		RenegadeVitaRenderer::Submit_Unsupported(this);
+@@ -1098,7 +1098,7 @@
+  *=============================================================================================*/
+ void OBBoxRenderObjClass::Render(RenderInfoClass & rinfo)
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	(void)rinfo;
+ 	if (Get_Box_Display_Mask() & Get_Collision_Type()) {
+ 		RenegadeVitaRenderer::Submit_Unsupported(this);
+--- a/mesh.cpp
++++ b/mesh.cpp
+@@ -105,7 +105,7 @@
+ #include "w3d_util.h"
+ #include "meshmdl.h"
+ #include "meshgeometry.h"
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ #include "ww3d_vita_renderer.h"
+ #endif
+ #include "ww3d.h"
+@@ -226,7 +226,7 @@
+ {
+ 	if (this != &that) {
+ 
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 		TheDX8MeshRenderer.Unregister_Mesh_Type(this);
+ #endif
+ 
+@@ -262,7 +262,7 @@
+  *=============================================================================================*/
+ MeshClass::~MeshClass(void) 
+ {
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 	TheDX8MeshRenderer.Unregister_Mesh_Type(this);
+ #endif
+ 	Free();
+@@ -725,7 +725,7 @@
+ 		if (	Model->Get_Flag(MeshGeometryClass::SKIN) ||
+ 				CollisionMath::Overlap_Test(frustum,Get_Bounding_Box())!=CollisionMath::OUTSIDE ) 
+ 		{
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 			bool render_base_passes = ((rinfo.Current_Override_Flags() &
+ 				RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY) == 0);
+ 			bool is_alpha =
+--- a/scene.cpp
++++ b/scene.cpp
+@@ -208,7 +208,7 @@
+  *=============================================================================================*/
+ void SceneClass::Render(RenderInfoClass & rinfo)
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	DX8Wrapper::Set_Fog(FogEnabled, FogColor, FogStart, FogEnd);
+ 	Customized_Render(rinfo);
+ #else
+@@ -549,7 +549,7 @@
+ 	// derived classes should use light environment
+ 	WWASSERT(rinfo.light_environment==NULL);
+ 	int count=0;
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 	// Turn off lights in case we have none
+ 	DX8Wrapper::Set_Light(0,NULL);
+ 	DX8Wrapper::Set_Light(1,NULL);
+--- a/meshmdl.cpp
++++ b/meshmdl.cpp
+@@ -445,7 +445,7 @@
+ 				compute_static_sort_levels();
+ 			
+ 			// TODO: Invalidate just this meshes DX8 data!!!
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 			TheDX8MeshRenderer.Invalidate();
+ #endif
+ 		}
+@@ -457,7 +457,7 @@
+ 				compute_static_sort_levels();
+ 
+ 			// TODO: Invalidate this meshes DX8 data!!!
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 			TheDX8MeshRenderer.Invalidate();
+ #endif
+ 		}
+--- a/texture.cpp
++++ b/texture.cpp
+@@ -124,7 +124,7 @@
+ 	default:
+ 		break;
+ 	}
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	D3DTexture = DX8Wrapper::_Create_DX8_Texture(width, height, format,
+ 		mip_level_count, pool, rendertarget);
+ #else
+@@ -202,7 +202,7 @@
+ 		// If requesting bumpmap format that isn't available we'll just return the surface in whatever color
+ 		// format the texture file is in. (This is illegal case, the format support should always be queried
+ 		// before creating a bump texture!)
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 		TextureFormat=WW3D_FORMAT_UNKNOWN;
+ #else
+ 		if (!DX8Wrapper::Is_Initted() || !DX8Wrapper::Get_Current_Caps()->Support_Texture_Format(TextureFormat)) {
+@@ -245,7 +245,7 @@
+ 	}
+ 
+ 	// Find original size from the thumbnail (but don't create thumbnail texture yet!)
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	// The native boundary loads the original DDS lazily through the file-factory
+ 	// chain in Init(); do not pretend that a GPU texture already exists.
+ #else
+@@ -266,7 +266,7 @@
+ 
+ 	// If the thumbnails are not enabled, init the texture at this point to avoid stalling when the
+ 	// mesh is rendered.
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 	if (!WW3D::Get_Thumbnail_Enabled()) {
+ 		if (TextureLoader::Is_DX8_Thread()) {
+ 			Init();
+@@ -381,7 +381,7 @@
+ 
+ TextureClass::~TextureClass(void)
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	if (D3DTexture) {
+ 		D3DTexture->Release();
+ 	}
+@@ -437,7 +437,7 @@
+ 
+ void TextureClass::Init()
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	if (Initialized) return;
+ 	D3DTexture=DX8Wrapper::_Create_DX8_Texture(Get_Full_Path(),MipLevelCount);
+ 	// A missing source must not cause a per-triangle retry storm.  The platform
+@@ -517,7 +517,7 @@
+ 
+ void TextureClass::Load_Locked_Surface()
+ {
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	D3DTexture=0;
+ 	Initialized=true;
+ #else
+@@ -1044,7 +1044,7 @@
+ 
+ 				case W3DTEXTURE_TYPE_BUMPMAP:
+ 				{
+-#if !defined(RENEGADE_VITA_PORT)
++#if !defined(RENEGADE_VITA_PORT) || defined(RENEGADE_D3DVITA)
+ 					if (DX8Wrapper::Is_Initted() && DX8Wrapper::Get_Current_Caps()->Support_Bump_Envmap()) {
+ 						// No mipmaps to bumpmap for now
+ 						mipcount=TextureClass::MIP_LEVELS_1;
+--- a/render2dsentence.cpp
++++ b/render2dsentence.cpp
+@@ -603,7 +603,7 @@
+ 		}
+ #endif
+ 		TextureClass *new_texture = NULL;
+-#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
++#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 		// The finished original atlas can seed the original texture directly.
+ 		// Avoid uploading an empty native texture before copying the same atlas.
+ 		if (desc.Format == WW3D_FORMAT_A4R4G4B4 &&
+--- a/sortingrenderer.cpp
++++ b/sortingrenderer.cpp
+@@ -445,7 +445,7 @@
+ 		DX8Wrapper::Set_Texture(i,render_state.Textures[i]);
+ 	}
+ 
+-#if defined(RENEGADE_VITA_PORT)
++#if defined(RENEGADE_VITA_PORT) && !defined(RENEGADE_D3DVITA)
+ 	for (unsigned i=0; i<4; ++i) {
+ 		DX8Wrapper::Set_Light(i, render_state.LightEnable[i] ? &render_state.Lights[i] : NULL);
+ 	}

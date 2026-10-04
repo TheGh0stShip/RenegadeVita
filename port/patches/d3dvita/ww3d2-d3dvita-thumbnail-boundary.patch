@@ -1,0 +1,18 @@
+--- a/texturethumbnail.cpp
++++ b/texturethumbnail.cpp
+@@ -487,6 +487,7 @@
+ }
+ 
+ // ----------------------------------------------------------------------------
++#if !defined(RENEGADE_D3DVITA)  // the port keeps thumbnail generation disabled
+ void ThumbnailManagerClass::Add_Thumbnail_Manager(const char* thumbnail_filename, const char* mix_filename)
+ {
+ 	// First loop over all thumbnail managers to see if we already have this one created. This isn't
+@@ -505,6 +506,7 @@
+ 	man=new ThumbnailManagerClass(thumbnail_filename,mix_filename);
+ 	ThumbnailManagerList.Add_Tail(man);
+ }
++#endif
+ // ----------------------------------------------------------------------------
+ void ThumbnailManagerClass::Remove_Thumbnail_Manager(const char* thumbnail_filename)
+ {

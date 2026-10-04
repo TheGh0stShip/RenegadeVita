@@ -4,7 +4,11 @@
 #if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)
 
 #include "renegade_paths.h"
+#if defined(RENEGADE_D3DVITA)
+#include "dx8wrapper.h"
+#else
 #include "ww3d_vita_renderer.h"
+#endif
 #include "vita/a30_vita_runtime.h"
 
 #include <algorithm>
@@ -22,7 +26,9 @@
 #include <psp2/ctrl.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
+#if !defined(RENEGADE_D3DVITA)
 #include <vitaGL.h>
+#endif
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -53,7 +59,12 @@ constexpr size_t kMaxPrefetchedVideoBytes = 8U * 1024U * 1024U;
 constexpr int64_t kVideoDropLatenessUs = 25000;
 constexpr int kMaxMovieUploadWidth = 320;
 constexpr int kMaxMovieUploadHeight = 240;
+#if defined(RENEGADE_D3DVITA)
+// D3DFMT_A8R8G8B8 is B, G, R, A in memory.
+constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_BGRA;
+#else
 constexpr AVPixelFormat kVideoUploadPixelFormat = AV_PIX_FMT_RGBA;
+#endif
 constexpr size_t kVideoUploadBytesPerPixel = 4U;
 constexpr uint32_t kSkipButtonMask =
 	SCE_CTRL_START | SCE_CTRL_CROSS | SCE_CTRL_CIRCLE | SCE_CTRL_TRIANGLE;
@@ -100,7 +111,13 @@ uint64_t g_uploaded_video_frames = 0U;
 uint64_t g_dropped_video_frames = 0U;
 int64_t g_last_video_upload_elapsed_us = 0;
 
+#if defined(RENEGADE_D3DVITA)
+IDirect3DTexture8 *g_video_texture = NULL;
+unsigned Video_Texture_Id() { return g_video_texture != NULL ? 1U : 0U; }
+#else
 GLuint g_video_texture = 0U;
+unsigned Video_Texture_Id() { return static_cast<unsigned>(g_video_texture); }
+#endif
 bool g_texture_allocated = false;
 int g_texture_width = 0;
 int g_texture_height = 0;
@@ -563,8 +580,13 @@ void Release_Decoder_State()
 	g_prefetched_video_bytes = 0U;
 	g_prefetched_video_high_water = 0U;
 	g_video_prefetch_failed = false;
+#if defined(RENEGADE_D3DVITA)
+	if (g_video_texture != NULL) g_video_texture->Release();
+	g_video_texture = NULL;
+#else
 	if (g_video_texture != 0U) glDeleteTextures(1, &g_video_texture);
 	g_video_texture = 0U;
+#endif
 	g_texture_allocated = false;
 	g_texture_width = 0;
 	g_texture_height = 0;
@@ -768,6 +790,37 @@ bool Upload_Pending_Video()
 {
 	if (!Convert_Pending_Video()) return false;
 	BinkStageTimer timing(g_video_upload_timing);
+#if defined(RENEGADE_D3DVITA)
+	IDirect3DDevice8 *device = DX8Wrapper::_Get_D3D_Device8();
+	if (device == NULL) return false;
+	if (!g_texture_allocated) {
+		g_texture_width = g_video_width;
+		g_texture_height = g_video_height;
+		const HRESULT created = device->CreateTexture(g_texture_width, g_texture_height,
+			1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &g_video_texture);
+		if (created != D3D_OK || g_video_texture == NULL) {
+			A30_Vita_Log("A4 Bink: D3D texture create failed hr=%08X storage=%dx%d movie=%s\n",
+				static_cast<unsigned>(created), g_texture_width, g_texture_height, g_movie_name);
+			g_video_texture = NULL;
+			g_texture_width = 0;
+			g_texture_height = 0;
+			return false;
+		}
+	}
+	D3DLOCKED_RECT locked;
+	const HRESULT lock_result = g_video_texture->LockRect(0, &locked, NULL, 0);
+	if (lock_result != D3D_OK) {
+		A30_Vita_Log("A4 Bink: D3D texture lock failed hr=%08X movie=%s\n",
+			static_cast<unsigned>(lock_result), g_movie_name);
+		return false;
+	}
+	const size_t row_bytes = static_cast<size_t>(g_video_width) * 4U;
+	for (int row = 0; row < g_video_height; ++row) {
+		memcpy(static_cast<uint8_t *>(locked.pBits) + static_cast<size_t>(row) * locked.Pitch,
+			g_pending_video_pixels.data() + static_cast<size_t>(row) * row_bytes, row_bytes);
+	}
+	g_video_texture->UnlockRect(0);
+#else
 	if (g_video_texture == 0U) glGenTextures(1, &g_video_texture);
 	if (g_video_texture == 0U) return false;
 	GLenum stale_error = GL_NO_ERROR;
@@ -834,10 +887,11 @@ bool Upload_Pending_Video()
 			g_movie_name);
 		return false;
 	}
+#endif
 	g_texture_allocated = true;
 	if (!g_video_first_upload_logged) {
 			A30_Vita_Log("A4 Bink: first video texture upload complete texture=%u source=%dx%d upload=%dx%d storage=%dx%d format=rgba8888 movie=%s\n",
-				static_cast<unsigned>(g_video_texture), g_source_video_width,
+				Video_Texture_Id(), g_source_video_width,
 				g_source_video_height, g_video_width, g_video_height,
 				g_texture_width, g_texture_height, g_movie_name);
 		g_video_first_upload_logged = true;
@@ -1296,6 +1350,56 @@ void BINKMovie::Render()
 			g_pending_video ? 1 : 0);
 		g_render_entry_logged = true;
 	}
+#if defined(RENEGADE_D3DVITA)
+	if (!g_active || !g_texture_allocated || g_video_texture == NULL) return;
+	IDirect3DDevice8 *device = DX8Wrapper::_Get_D3D_Device8();
+	if (device == NULL) return;
+	const float scale = std::min(960.0F / static_cast<float>(g_video_width),
+		544.0F / static_cast<float>(g_video_height));
+	const float draw_width = static_cast<float>(g_video_width) * scale;
+	const float draw_height = static_cast<float>(g_video_height) * scale;
+	// Pixel centres sit at integer coordinates in Direct3D 8.
+	const float x0 = (960.0F - draw_width) * 0.5F - 0.5F;
+	const float y0 = (544.0F - draw_height) * 0.5F - 0.5F;
+	struct MovieVertex { float x, y, z, rhw, u, v; };
+	const MovieVertex quad[4] = {
+		{x0, y0, 0.0F, 1.0F, 0.0F, 0.0F},
+		{x0 + draw_width, y0, 0.0F, 1.0F, 1.0F, 0.0F},
+		{x0, y0 + draw_height, 0.0F, 1.0F, 0.0F, 1.0F},
+		{x0 + draw_width, y0 + draw_height, 0.0F, 1.0F, 1.0F, 1.0F},
+	};
+	// State goes through DX8Wrapper so its render-state cache stays coherent.
+	D3DVIEWPORT8 full_screen = {0, 0, 960, 544, 0.0F, 1.0F};
+	DX8Wrapper::Set_Viewport(&full_screen);
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_ZENABLE, D3DZB_FALSE);
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_CULLMODE, D3DCULL_NONE);
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_ALPHABLENDENABLE, FALSE);
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_ALPHATESTENABLE, FALSE);
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_LIGHTING, FALSE);
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_FOGENABLE, FALSE);
+	DX8Wrapper::Set_DX8_Texture(0, g_video_texture);
+	DX8Wrapper::Set_DX8_Texture(1, NULL);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_TEXCOORDINDEX, 0);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_MIPFILTER, D3DTEXF_NONE);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+	DX8Wrapper::Set_DX8_Texture_Stage_State(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+	device->SetVertexShader(D3DFVF_XYZRHW | D3DFVF_TEX1);
+	device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(MovieVertex));
+	Start_Presentation_Clock("first-video-draw");
+	DX8Wrapper::Set_DX8_Texture(0, NULL);
+	// WW3D sets the FVF only when its vertex buffer changes; clearing the
+	// binding makes the next WW3D draw restore its own FVF.
+	DX8Wrapper::Set_Vertex_Buffer(static_cast<const VertexBufferClass *>(NULL));
+#else
 	if (!g_active || !g_texture_allocated || g_video_texture == 0U) return;
 	const GLfloat max_u = g_texture_width > 0 ?
 		static_cast<GLfloat>(g_video_width) / static_cast<GLfloat>(g_texture_width) : 1.0F;
@@ -1365,6 +1469,7 @@ void BINKMovie::Render()
 	if (blend_enabled) glEnable(GL_BLEND);
 	glViewport(previous_viewport[0], previous_viewport[1],
 		previous_viewport[2], previous_viewport[3]);
+#endif
 }
 
 bool BINKMovie::Is_Complete()

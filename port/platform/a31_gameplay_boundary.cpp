@@ -1462,6 +1462,7 @@ unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4 &color)
 	return D3DCOLOR_COLORVALUE(clamped.X, clamped.Y, clamped.Z, clamped.W);
 }
 
+#if !defined(RENEGADE_D3DVITA)  // the VitaD3D variant links the original DX8Wrapper
 void DX8Wrapper::Set_Render_Target(TextureClass *texture)
 {
 	if (texture != NULL) {
@@ -1483,6 +1484,7 @@ void DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)
 	// The accepted transitional MeshClass renderer retains engine-owned light
 	// state above this unimplemented fixed-function device edge.
 }
+#endif
 
 #if !defined(RENEGADE_ORIGINAL_SORTING)
 void SortingRendererClass::Insert_Triangles(const SphereClass &,

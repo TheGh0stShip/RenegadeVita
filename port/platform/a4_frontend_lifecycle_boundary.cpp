@@ -131,6 +131,7 @@ void CDVerifyClass::Display_UI(Observer<CDVerifyEvent> *observer)
 // The current Vita renderer performs texture decoding/upload synchronously at
 // its DX8 boundary. Keep the original loader's scheduling contract explicit:
 // these calls must not create a second desktop D3DX worker/queue.
+#if !defined(RENEGADE_D3DVITA)  // the VitaD3D variant links the original TextureLoader
 bool TextureLoader::TextureLoadSuspended = false;
 void TextureLoader::Init(void) {}
 void TextureLoader::Deinit(void) {}
@@ -151,6 +152,7 @@ void TextureLoader::Update(void (*network_callback)(void))
 bool TextureLoader::Is_DX8_Thread(void) { return true; }
 void TextureLoader::Suspend_Texture_Load(void) { TextureLoadSuspended = true; }
 void TextureLoader::Continue_Texture_Load(void) { TextureLoadSuspended = false; }
+#endif
 
 // The native bootstrap owns the rooted retail-data factories. This distinct
 // original global is required only for optional MOD-package enumeration.

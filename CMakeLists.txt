@@ -17,7 +17,7 @@ project(RenegadeVitaA31 VERSION 3.5.4 LANGUAGES C CXX)
 # overwrite the symbols and diagnostics that belong to an earlier one.
 set(RENEGADE_CANDIDATE_LABEL "A3.5-dev102" CACHE STRING
   "Validated hardware-candidate label (for example A3.5-dev2)")
-if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+$")
+if(NOT RENEGADE_CANDIDATE_LABEL MATCHES "^A[0-9]+\\.[0-9]+-dev[0-9]+(-d3dvita)?$")
   message(FATAL_ERROR "RENEGADE_CANDIDATE_LABEL must look like A3.5-dev2")
 endif()
 string(TOLOWER "${RENEGADE_CANDIDATE_LABEL}" RENEGADE_CANDIDATE_STEM)
@@ -82,6 +82,21 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(RENEGADE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 set(RENEGADE_UPSTREAM "${RENEGADE_ROOT}/upstream/CnC_Renegade")
 set(RENEGADE_STAGE "${RENEGADE_ROOT}/staging")
+# VitaD3D graphics variant: the original WW3D DX8 renderer runs on VitaD3D's
+# Direct3D 8 implementation instead of the native vitaGL boundary renderer.
+# tools/stage_d3dvita_sources.sh derives its staging tree from staging/.
+option(RENEGADE_GRAPHICS_D3DVITA
+  "Render through the original WW3D DX8 path on VitaD3D instead of vitaGL" OFF)
+if(RENEGADE_GRAPHICS_D3DVITA)
+  set(RENEGADE_STAGE "${RENEGADE_ROOT}/build/staging-d3dvita")
+  if(NOT EXISTS "${RENEGADE_STAGE}/ww3d2/dx8wrapper.cpp")
+    message(FATAL_ERROR "Run tools/stage_d3dvita_sources.sh before configuring the VitaD3D variant")
+  endif()
+  set(RENEGADE_D3DVITA_SOURCE_DIR "" CACHE PATH "VitaD3D source tree")
+  if(NOT EXISTS "${RENEGADE_D3DVITA_SOURCE_DIR}/include/vitad3d/d3d8.h")
+    message(FATAL_ERROR "RENEGADE_D3DVITA_SOURCE_DIR must name a VitaD3D source tree")
+  endif()
+endif()
 # Preserve the original generator's two's-complement arithmetic on this TU.
 set_property(SOURCE ${RENEGADE_STAGE}/wwlib/random.cpp APPEND PROPERTY COMPILE_OPTIONS -fwrapv)
 set(RENEGADE_COMPAT "${RENEGADE_ROOT}/port/compatibility/include")
@@ -353,17 +368,19 @@ list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
   ${RENEGADE_STAGE}/commando/scorescreen.cpp)
 list(LENGTH RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCE_COUNT)
 
-foreach(required_library
-    libvitaGL.a
-    libvitashark.a
-    libSceShaccCgExt.a
-    libSceShaccCg_stub.a
-    libSceAudio_stub.a)
+if(RENEGADE_GRAPHICS_D3DVITA)
+  set(RENEGADE_GRAPHICS_LIBRARIES libSceShaccCg_stub.a libSceAudio_stub.a)
+else()
+  set(RENEGADE_GRAPHICS_LIBRARIES
+    libvitaGL.a libvitashark.a libSceShaccCgExt.a libSceShaccCg_stub.a libSceAudio_stub.a)
+endif()
+foreach(required_library ${RENEGADE_GRAPHICS_LIBRARIES})
   if(NOT EXISTS "${VITASDK}/arm-vita-eabi/lib/${required_library}")
     message(FATAL_ERROR "Required A3.1 Vita renderer library is missing: ${required_library}")
   endif()
 endforeach()
 
+if(NOT RENEGADE_GRAPHICS_D3DVITA)
 set(RENEGADE_VITAGL_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/build/deps/vitagl-demo/libvitaGL.a"
   CACHE FILEPATH "Pinned no-splash, shader-cache-enabled demo vitaGL archive")
 if(NOT EXISTS "${RENEGADE_VITAGL_LIBRARY}")
@@ -382,6 +399,10 @@ else()
   set(RENEGADE_VITAGL_HAS_PHYCONT_MEM 0)
 endif()
 message(STATUS "vitaGL physical-contiguous memory enum: ${RENEGADE_VITAGL_PHYCONT_MEM}")
+else()
+  set(RENEGADE_VITAGL_PHYCONT_MEM "")
+  set(RENEGADE_VITAGL_HAS_PHYCONT_MEM 0)
+endif()
 
 foreach(required_path
     "${RENEGADE_UPSTREAM}/Code/wwbitpack/BitPacker.cpp"
@@ -444,6 +465,30 @@ set(RENEGADE_A30_PORT_SOURCES
 	${RENEGADE_ROOT}/port/platform/renegade_script_static_provider.cpp
 	${RENEGADE_ROOT}/port/platform/vita/a30_main.cpp
 )
+if(RENEGADE_GRAPHICS_D3DVITA)
+  list(REMOVE_ITEM RENEGADE_A30_PORT_SOURCES
+    ${RENEGADE_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp
+    ${RENEGADE_ROOT}/port/renderer/vita/ww3d_dx8_boundary.cpp
+    ${RENEGADE_ROOT}/port/renderer/vita/surface_boundary.cpp)
+  list(APPEND RENEGADE_A30_PORT_SOURCES
+    ${RENEGADE_ROOT}/port/d3dvita/renegade_d3dvita_presentation.cpp
+    ${RENEGADE_ROOT}/port/d3dvita/renegade_d3dvita_win32.cpp)
+  # The original WW3D DX8 layer that the native boundary replaces.
+  list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
+    ${RENEGADE_STAGE}/ww3d2/dx8wrapper.cpp
+    ${RENEGADE_STAGE}/ww3d2/dx8caps.cpp
+    ${RENEGADE_STAGE}/ww3d2/dx8renderer.cpp
+    ${RENEGADE_STAGE}/ww3d2/dx8polygonrenderer.cpp
+    ${RENEGADE_STAGE}/ww3d2/dx8texman.cpp
+    ${RENEGADE_STAGE}/ww3d2/surfaceclass.cpp
+    ${RENEGADE_STAGE}/ww3d2/textureloader.cpp
+    ${RENEGADE_STAGE}/ww3d2/missingtexture.cpp
+    ${RENEGADE_STAGE}/ww3d2/texturethumbnail.cpp
+    ${RENEGADE_STAGE}/ww3d2/statistics.cpp
+    ${RENEGADE_STAGE}/ww3d2/dx8rendererdebugger.cpp
+    ${RENEGADE_STAGE}/wwdebug/wwmemlog.cpp)
+  list(LENGTH RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCE_COUNT)
+endif()
 list(LENGTH RENEGADE_A30_PORT_SOURCES RENEGADE_A30_PORT_SOURCE_COUNT)
 if(NOT RENEGADE_A30_PORT_SOURCES)
   message(FATAL_ERROR "Native source manifest must not be empty")
@@ -610,11 +655,30 @@ endforeach()
 target_link_options(${PROJECT_NAME} PRIVATE
   -fshort-wchar
   -Wl,--gc-sections
-  -Wl,--wrap=shark_init
+  $<$<NOT:$<BOOL:${RENEGADE_GRAPHICS_D3DVITA}>>:-Wl,--wrap=shark_init>
 	"-Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.map"
 )
+if(RENEGADE_GRAPHICS_D3DVITA)
+  # VitaD3D is compiled with Renegade's Win32 types so both sides agree on
+  # every D3D8 type; it keeps its own exceptions-enabled flags.
+  set(VITAD3D_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(VITAD3D_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
+  set(VITAD3D_WIN32_TYPES_HEADER "renegade_d3dvita_win32_types.h" CACHE STRING "" FORCE)
+  set(VITAD3D_WIN32_TYPES_INCLUDE_DIRS
+    "${RENEGADE_ROOT}/port/d3dvita/include;${RENEGADE_COMPAT}" CACHE STRING "" FORCE)
+  add_subdirectory("${RENEGADE_D3DVITA_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/vitad3d")
+  # SDK-named headers resolve to VitaD3D ahead of the boundary's d3d8.h.
+  target_include_directories(${PROJECT_NAME} BEFORE PRIVATE
+    "${RENEGADE_ROOT}/port/d3dvita/include"
+    "${RENEGADE_D3DVITA_SOURCE_DIR}/include/sdk")
+  target_compile_definitions(${PROJECT_NAME} PRIVATE RENEGADE_D3DVITA=1)
+  target_compile_options(${PROJECT_NAME} PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-include${RENEGADE_ROOT}/port/d3dvita/include/renegade_d3dvita_win32.h>)
+  target_link_libraries(${PROJECT_NAME} vitad3dx8 vitad3d_core)
+else()
 target_include_directories(${PROJECT_NAME} BEFORE PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/build/deps/vitagl-demo/source/source")
+endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE
   RENEGADE_VITA_M00_DEMO=$<BOOL:${RENEGADE_VITA_M00_DEMO}>)
 target_link_libraries(${PROJECT_NAME}
@@ -624,7 +688,7 @@ target_link_libraries(${PROJECT_NAME}
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libswscale.a>
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libswresample.a>
   $<$<BOOL:${RENEGADE_A4_ORIGINAL_FRONTEND}>:${RENEGADE_BINK_FFMPEG_ROOT}/lib/libavutil.a>
-  "${RENEGADE_VITAGL_LIBRARY}"
+  $<$<NOT:$<BOOL:${RENEGADE_GRAPHICS_D3DVITA}>>:${RENEGADE_VITAGL_LIBRARY}>
   stdc++
   SceLibKernel_stub
   SceAppMgr_stub
@@ -641,8 +705,8 @@ target_link_libraries(${PROJECT_NAME}
   SceSysmodule_stub
   zip
   z
-  vitashark
-  SceShaccCgExt
+  $<$<NOT:$<BOOL:${RENEGADE_GRAPHICS_D3DVITA}>>:vitashark>
+  $<$<NOT:$<BOOL:${RENEGADE_GRAPHICS_D3DVITA}>>:SceShaccCgExt>
   taihen_stub
 	  SceShaccCg_stub
 	  SceKernelDmacMgr_stub
